@@ -31,6 +31,16 @@ YYYYMMDD_short_name/
 
 Git 忽略的 X21 readiness probe 已验证 8 个固定 EPFL Verilog 经 Yosys 规范化后与同 tag 官方 BLIF 的 ABC CEC 全部通过，stats 也一致；该 probe 不属于本目录的正式实验，尚未创建 EPFL case、batch config 或论文结果表。2026-07-20 已批准 Yosys JSON 作为 FAECO 权威内部格式，正式导入下一步是实现 JSON importer、case 构造和官方 BLIF 回验产物写回。同日 OpenSTA 已在 WSL2 中构建并通过 `tmp/faeco_opensta_smoke_20260720_01/` 最小 STA smoke，但尚未作为 Stage B runner 写入本目录正式实验表。
 
+2026-07-31 更新：Stage B 已端到端跑通。`20260731_epfl_8case_stage_b/` 含 ctrl/int2float/router/cavlc/dec/priority/adder/max 共 8 个 case 的 mapping+STA 完整产物，`tables/stage_b_case_summary.{json,md}` 和 `stage_b_runtime.{json,md}` 已落盘；`20260731_epfl_ctrl_sky130_mapping/` 保留 ctrl 的 SKY130 Liberty mapping 单 case 产物；`20260731_epfl_ctrl_stage_b/` 保留 ctrl 端到端试点产物。Stage B runner 命令：
+
+```bash
+python scripts/run_stage_b_pre_layout_sta.py \
+    --output-dir experiments/20260731_epfl_8case_stage_b \
+    --sta-command "wsl -d Ubuntu -- /usr/local/bin/sta"
+```
+
+CEC 形式回验（mapped-BLIF vs original-normalized）当前 SKY130 Liberty 不含 `sky130_fd_sc_hd__clkinv_1` 导致 ABC `cec` 不可达，所有 8 case CEC 跑出 `unavailable`，已记录于 `risk_register.md` R31-01 与 `STAGE_B_AGENT_HANDOFF.md` limitation 段落。`experiments/20260720_epfl_wave1_yosys_json/` 与 `experiments/20260728_epfl_wave2_yosys_json/` 是 X21 的 EPFL Yosys JSON 导入实验。
+
 ## 当前表格产物
 
 | 文件 | 说明 |
