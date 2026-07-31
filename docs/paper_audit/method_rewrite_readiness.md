@@ -22,23 +22,22 @@
 
 | ID | 方法要素 | 当前工程事实 | 状态 | 可写边界 | 缺口与依赖 |
 |---|---|---|---|---|---|
-| METH-01 | 问题输入与 case schema | original/resynthesized netlist、target output、metadata 和 metrics 路径已进入 case loader 与 runner | partial | 可定义当前组合逻辑、单目标输出的 Stage A 输入 | 当前 5-case 中 3 个第三方 ISCAS85 只可作本地 smoke；论文主集等待 X21 EPFL 导入 |
-| METH-02 | 网表规范化 | Yosys `simplemap` 到 BLIF 已在 c17/c432 独立 smoke 验证 | blocked | 只能写为已验证的接入路径，不能写成正式 flow 阶段 | X18 尚未把 Yosys/`yosys-abc`、版本、命令和产物接入 runner |
+| METH-01 | 问题输入与 case schema | original/resynthesized netlist、target output、metadata 和 metrics 路径已进入 case loader 与 runner | partial | 可定义当前组合逻辑、单目标输出的 Stage A 输入；X21 EPFL MIT 8-case 已规范化、license 与 blob SHA 已归档，可支撑论文主集 | Stage A case loader 仍只接 ISCAS-style Verilog；EPFL JSON 与 Yosys JSON 暂未直接喂入 case loader；需 [G24] |
 | METH-03 | 图模型与 cone extraction | 当前 parser 可构造门级有向图，并按 target output 抽取 fanin cone | partial | 可描述组合逻辑 fanin cone | 尚无 fanout、reg-to-reg 或 sequential cone；assign-style EPFL 输入需先规范化 |
 | METH-04 | 新旧网表等价点映射 | `equivalence_map` 只存在于目标算法文档输入定义 | blocked | 不得描述自动等价点发现或 mapping 质量 | 当前代码没有内部节点匹配、映射生成或映射验证 |
 | METH-05 | fixed/weighted cut 搜索 | fixed min-cut、weighted graph 和确定性 weighted s-t cut 已实现并有测试及 5-case smoke | ready | 可描述当前 Stage A cut graph、node cost 和确定性 cut 选择 | 仅在当前组合逻辑 cone 语义内成立，尚未由公开主 benchmark 验证扩展性 |
 | METH-06 | boundary closure 判定 | `build_case_metrics` 调用失败分类时把 `boundary_closed=True` 固定传入 | blocked | 只能说明字段和失败类型 F2 已预留 | 尚无悬空输入、未映射输出、多输出覆盖或 reconvergence closure 检查 |
 | METH-07 | Boolean patch synthesis | patch candidate 当前记录 selected gates、boundary、size 和等价字段 | blocked | 可描述候选表示，不得称为补丁函数综合 | 尚无 Boolean patch function、逻辑重建或可综合 patch 生成 |
-| METH-08 | 等价验证 | structural signature 已实现；ABC formal wrapper 能记录 pass/fail/error/timeout/unavailable；隔离 5-case 全网表 Yosys-BLIF-ABC 探针均 pass | partial | 必须分别描述结构签名、隔离探针和正式 formal 状态 | 正式 5-case 仍为 `unavailable`；探针比较 original/resynthesized 全部主输出，不是对候选 patched netlist 的闭环验证 |
+| METH-08 | 等价验证 | structural signature 已实现；ABC formal wrapper 能记录 pass/fail/error/timeout/unavailable；隔离 5-case 全网表 Yosys-BLIF-ABC 探针均 pass；Stage B mapped-BLIF equivalence wrapper (`check_mapped_blif_equivalence` in `src/rseco/yosys_abc.py`) 已实现 | partial | 必须分别描述结构签名、隔离探针、Stage A 5-case 5/5 pass 和 Stage B mapped-vs-original 形式回验框架 | Stage B mapped-vs-original CEC 受 SKY130 Liberty 不含 `clkinv_1` 限制，当前全部 8 case 跑出 `unavailable`；探针比较 original/resynthesized 全部主输出，不是对候选 patched netlist 的闭环验证 |
 | METH-09 | F1-F5 失败分类 | `classify_failures` 可按等价、边界、change ratio、logic-level reduction 和验证时间返回类型 | partial | 可写为当前分类接口及 Stage A 代理口径 | F2 输入被硬编码为通过，F5 时间被硬编码为 0；F3 未实现绝对 size 阈值，F4 尚无真实 timing gain |
 | METH-10 | failure-aware refinement | F1-F5 对应的确定性权重调整已实现，当前每个 case 记录一次动作 | blocked | 可描述单次反馈原型 | X19 需实现重新生成候选、重新分类 residual failures、停止原因和首次恢复轮次 |
-| METH-11 | candidate-specific timing 特征 | 当前逻辑级变化来自整网表目标输出，并向所有候选传入同一数值 | blocked | 只能称为 Stage A target-output logic-level proxy | 需 X19 的候选级重算；真实 WNS/TNS、critical path 和 timing gain 依赖 OpenSTA |
+| METH-11 | candidate-specific timing 特征 | 当前逻辑级变化来自整网表目标输出，并向所有候选传入同一数值 | blocked | 只能称为 Stage A target-output logic-level proxy | 需 X19 的候选级重算；Stage B OpenSTA 已接但 WNS/TNS/slack 因纯组合电路为 null，不能写入真实 timing gain |
 | METH-12 | deterministic ranking | score 公式、稳定排序和 equivalence penalty 已实现 | partial | 可描述 ranking 接口和确定性 tie handling | 当前候选 timing gain 相同、verification cost 均为 0，尚不能证明多目标特征有效 |
 | METH-13 | replacement | `internal_cone_replacement_v0` 能把 selected patch 写入 cone-level 内部表示并记录 `applied` | partial | 必须使用“内部表示替换”措辞 | 未生成可综合 Verilog、未回写完整网表、未对替换后网表做 formal/STA closure |
 | METH-14 | 迭代停止条件 | 算法文档定义 max iterations、成功和失败停止条件 | blocked | 可列为目标设计要求 | 当前 flow 没有迭代循环、residual failure 或停止原因字段 |
-| METH-15 | runtime 记录 | per-case schema 和 batch runtime breakdown 已覆盖 Python 阶段及外部 wrapper 状态 | partial | 可描述 schema 和已测 Python/wrapper runtime | ABC/OpenSTA 阶段尚无正式外部工具 runtime，不能写成完整 EDA flow 性能 |
+| METH-15 | runtime 记录 | per-case schema 和 batch runtime breakdown 已覆盖 Python 阶段及外部 wrapper 状态；Stage B 8-case 汇总写回 `tables/stage_b_runtime.{json,md}` 含 mapping / sta / total 秒 | ready | 可描述 schema 和 Stage A + Stage B 已测 Python/Yosys/ABC/OpenSTA runtime | 当前 YOSYS/ABC/OpenSTA 单进程 wall-clock；多线程/分布式 runtime 未测；OpenSTA 路径转换 (Windows→WSL2) 含 WSL PATH translation warning |
 | METH-16 | 方法输出 | metrics、candidate、ranking、replacement 和 batch 表已有结构化产物 | partial | 可描述实验记录结构 | 没有 `patched_netlist`、formal counterexample、STA report 或多轮 failure log |
-| METH-17 | 主实验支撑 | 5-case 本地 smoke、多个 baseline 接口、runtime 和 recovery proxy 表已形成；隔离探针已证明规范化/CEC/baseline 技术路径 | blocked | 只能作为工程原型和集成可行性证据 | 正式主表需 X18、X21、OpenSTA；正式 ABC baseline/formal 仍 unavailable，3 个大 case 许可未声明 |
+| METH-17 | 主实验支撑 | 5-case 本地 smoke、Stage A 多 baseline 接口、Stage B 8-case (ctrl/int2float/router/cavlc/dec/priority/adder/max) 全部 mapping+STA success | partial | 可写为 Stage A/B 端到端工程可行性证据；正式主表仍需多 PDK/多 corner 扩展 | Stage B CEC 当前 `unavailable` (L31-01)；3 个 ISCAS85 大 case 许可未声明；sequential EPFL case 尚未接入；Z3 candidate/boundary formal 未接入 |
 | METH-18 | failure-feedback 消融 | baseline protocol 已定义 without F1/F3/F4 等配置 | blocked | 只能写入实验计划 | 当前没有消融配置、运行结果或统计表，依赖 X19 |
 
 ## 3. 旧稿硬伤处置门槛
