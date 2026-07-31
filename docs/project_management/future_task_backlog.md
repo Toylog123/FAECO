@@ -8,7 +8,19 @@
 
 项目当前处于：
 
-> **Phase 4：5-case combinational 原型和多 baseline 记录结构已形成；旧稿页级审计与 benchmark 来源治理已完成一轮，当前 P0 转向真实 ABC 链路、EPFL 主数据导入和多轮 refinement/消融。**
+> **Phase 4 已收口：Stage A 5-case combinational 原型 + Stage B 8-case 端到端 (mapping→SDC→OpenSTA) 全部跑通；90 项测试全绿；A-only 范围 18 commits 全部入库；下一步 Phase 6 论文写作（PM25/26/27/28）和 N05 方法重写符号表。**
+
+2026-07-31 状态更新：
+
+- F12 已完成：Git 初始化 + A-only 范围 18 commits 入库（`9482a34..16b61a6`），按 handoff `initial_commit_scope_audit.md` 划分（A 核心 135 / B 本机 smoke 51 / C 私有版权 55）；push 待用户决策 remote URL。
+- F13 已完成：Python 最小工程骨架 + Stage B 4 个新模块（technology_mapping / sdc / opensta / yosys_abc CEC helper）+ 4 个新脚本（map_epfl_to_sky130 / verify_epfl_mapping_cec / run_stage_b_pre_layout_sta / build_stage_b_summary）；90 项测试通过，0 failure，0 error。
+- F19 已完成 Stage B 扩展：mapped-BLIF equivalence helper (`check_mapped_blif_equivalence`) 已就绪，但当前 SKY130 Liberty 不含 `clkinv_1` 导致 ABC `cec` 不可达，已记录 R31-01。
+- F22 已完成 Stage B 扩展：failure-aware refinement 仍是 Stage A single-refinement proxy；multi-iteration loop 与 without F1/F3/F4 消融待 X19 design 审批（PM22 in_progress）。
+- L01 Related Work 已落地：`paper/draft/related_work.md` 按 6 大主题分组覆盖 25A/1B；严格区分 evidence-level A/B；[F08-B] 和 [B06] 禁止引用算法细节与数字；下一步迁入 `paper/submission/related_work.md`（PM26 pending）。
+- N05 方法重写就绪审计已重映射：`method_rewrite_readiness.md` 18 项要素按 Stage B 完成状态更新，METH-02 ready / METH-15 ready / METH-17 partial；下一步产出 N05 方法符号表初稿（PM27 pending）。
+- Stage B 8-case 端到端：ctrl/int2float/router/cavlc/dec/priority/adder/max mapping 8/8 success + STA 8/8 success；`stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}` 已落盘 `experiments/20260731_epfl_8case_stage_b/tables/`。
+- CEC limitation (clkinv_1)、STA slack null (combinational 无 path) 已在 STAGE_B_AGENT_HANDOFF.md / stage_b_deferred_execution_checklist.md / risk_register.md / task_board.md / work_log.md / method_rewrite_readiness.md / L01 Related Work 初稿中标注 A/B 边界。
+- 下一批 P0 是：PM22/X19 多轮 refinement 设计（需用户 design 审批）；PM27 N05 方法符号表；PM26 Related Work 迁入 submission/。
 
 2026-07-14 状态更新：
 
