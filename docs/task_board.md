@@ -1,0 +1,70 @@
+﻿# 任务看板
+
+更新时间：2026-07-20
+
+| ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
+|---|---|---|---|---|---|
+| M01 | 固定研究主线 | done | P0 | 主线写入 `docs/mainline.md` | 后续围绕 FAECO 推进 |
+| M02 | 完成工程目录重构 | done | P0 | README 和各目录入口文档齐全 | 新增派生产物继续按 `engineering_structure.md` 分类，并保持 raw/derived 分离 |
+| M03 | 原始材料归纳索引 | done | P0 | 论文、课题构想、文献库均有归纳入口 | 维持 25A/1B 证据链；DAC 2018 合法全文只作定期复核，不阻塞 Related Work 初稿 |
+| M04 | 建立长期项目管理 | done | P0 | roadmap、milestones、长期任务表、风险表、决策日志齐全 | 当前按 Phase 4 的 X18/X19/X21/X22 依赖顺序维护状态 |
+| P01 | 旧稿 claim-evidence matrix | done | P0 | 核心 claim 均有证据或标记缺口 | 已完成 16 页 PDF/DOCX 页级校订；后续随 FAECO 新实验持续更新当前证据列 |
+| P02 | 旧稿预投稿审计 | done | P0 | 输出 P0/P1/P2 问题清单 | 审计结论转入 N05 方法修订，并由 formal/STA/公开 benchmark 补证据 |
+| P03 | 公式与图表审计 | done | P0 | 缺失公式、符号不一致、表格问题明确 | Word 字段更新证明原式(16)-(20)应改为(15)-(19)；已定位图6误引、表2四套统计冲突，并补齐图9/表5 |
+| P04 | 论文修订路线 | done | P0 | 旧稿硬伤、工程补证据和写作阶段有明确依赖与完成标准 | 按 RR02-RR10 顺序推进，优先 formal/ABC 与多轮 refinement 证据 |
+| P05 | 方法重写就绪审计 | done | P0 | 方法要素逐项映射到代码、实验字段和旧稿处置策略，并标记 ready/partial/blocked | 当前完整 Method 仍为 pending；先完成 X18/X19/X21/X22，再按获批结构编写符号表和伪代码 |
+| E01 | 公开 benchmark flow 设计 | done | P0 | 明确 benchmark、case 构造、指标 | 由 X21 按固定 EPFL blob SHA 落实第一波导入 |
+| E02 | Failure-aware cut refinement 设计 | done | P1 | 明确失败类型、权重调整规则、消融实验 | 后续转成算法伪代码和测试用例 |
+| E03 | Timing-aware patch ranking 设计 | done | P1 | 明确 score、features、baseline | 后续固定参数和消融实验 |
+| E04 | 第一批 benchmark 选择 | done | P0 | ISCAS/EPFL/ITC 用途和取舍明确 | EPFL `v2025.1` 已固定；由 X21 导入 ctrl/int2float/router |
+| E05 | ECO case schema | done | P0 | original/resynthesized/cone/patch/metrics 字段明确 | 用 X21 的 EPFL cases 继续验证 schema 跨电路适用性 |
+| E06 | baseline protocol | done | P0 | fixed/random/size/critical-path/ABC baseline 明确 | X18 刷新真实 ABC baseline，X19 生成 failure-feedback ablation |
+| E07 | metrics and tables | done | P0 | 指标公式和结果表模板明确 | 补真实 formal/ABC/OpenSTA runtime、WNS/TNS 与多轮 recovery 数据 |
+| E08 | FAECO 算法伪代码 | done | P0 | 输入、输出、循环、失败反馈、停止条件明确 | X19 按获批成功口径实现真正多轮循环并反校伪代码 |
+| G01 | 初始化 Git 仓库 | done | P0 | `.git` 存在，分支为 `main` | N08 上一版 A-only 副本在 OpenSTA/工具链修复前通过；当前主工作区已到 62 项测试，首次提交前需刷新 A-only 副本并确认 Git 身份和发布属性 |
+| G02 | Python 最小工程骨架 | done | P0 | `pyproject.toml`、`src/`、`tests/` 可运行 | 继续以 TDD 承载 X19/X21/X22，当前回归基线为 62 项测试 |
+| G03 | 最小 ISCAS85 case | done | P0 | `iscas85_c17_case01` 有 metadata、网表、cone、patch 和 metrics 占位 | 已扩展为 5-case smoke；论文主集由 X21 迁移到 EPFL |
+| G04 | case loader 与 Verilog parser | done | P0 | 程序能读取 c17 case 并计算 gate count/logic level | EPFL assign-style Verilog 统一经 X18/X21 的 Yosys 规范化处理 |
+| G05 | 最小 metrics 输出 | done | P0 | `metrics.json` 由程序生成，包含 failure types 和 Python flow runtime | 后续接外部 EDA runtime |
+| G06 | fanin cone extraction | done | P0 | c17 N22 cone 可由程序自动生成 | 用 X21 扩展跨 benchmark fanin 验证；fanout/reg-to-reg 留给 PM23 |
+| G07 | 最小结构等价接口 | done | P0 | original/resynthesized c17 N22 cone 等价结果为 pass | 已补 Yosys-normalized full-netlist ABC CEC；当前 5-case local smoke formal 为 5/5 pass |
+| G08 | fixed min-cut baseline 最小接口 | done | P0 | c17 cone 能生成 fixed boundary | weighted s-t cut 已由 G16 完成；下一步进入 X19 多轮反馈对比 |
+| G09 | patch candidate 表示 | done | P0 | patch boundary、size、equivalence result 可统一记录 | 已接入 replacement 草案，后续扩展 Verilog patch 写回 |
+| G10 | 工具链策略文档 | done | P0 | Python/Yosys/ABC/OpenSTA/Z3 接入策略明确 | Yosys/`yosys-abc` 已进入正式 runner；X22 已完成 WSL2 OpenSTA 本体安装和 smoke，仍需 Stage B 路径桥与 WNS/TNS 写回；Z3 未安装 |
+| G11 | Failure-aware refinement 最小接口 | done | P0 | F1-F5 可生成确定性权重调整和动作日志，c17 已写回 F3/F4 反馈 | weighted cut 已完成；由 X19 升级为重新分类 residual failures 的多轮循环 |
+| G12 | 工具链检测脚本 | done | P0 | 可输出机器可读 JSON，首份环境快照已归档，runner 已能归档 per-experiment snapshot，并记录工具版本字段 | 已修复 `wsl.exe -d Ubuntu -- /usr/local/bin/sta` 这类带参数命令和 WSL warning 下的 OpenSTA 版本检测；后续补外部 EDA runtime |
+| G13 | deterministic patch ranking | done | P1 | 可计算 timing/size/boundary/verification/equivalence 综合 score，c17 selected patch 已写回 rank/score/features | 已覆盖 5-case 多候选；下一步配合 X19 做权重/反馈消融 |
+| G14 | refinement-aware cut candidates | done | P0 | F3 反馈后的 size penalty 可生成更小的 `size_refined_cut`，并与 fixed baseline 一起进入 ranking | weighted cut 已完成；由 X19 检验每轮候选与 residual failure 的闭环 |
+| G15 | weighted cut graph 最小接口 | done | P0 | cone gates 可构造成带 node cost 的 cut graph，c17 metrics 已写回 `cut_graph.nodes` 和 `cut_graph.node_costs` | 全局 min-cut 已由 G16 完成；由 X21 检验更大 EPFL cone 的扩展性 |
+| G16 | weighted s-t min-cut 初版 | done | P0 | `weighted_st_min_cut_v1` 已由 Edmonds-Karp/residual reachable-set 求解，支持多个 cut edges，c17 metrics 已写回 `selected_gates` | replacement 和 5-case smoke 已完成；下一步是 X19 多轮反馈和 X21 规模扩展 |
+| G17 | 周报记录修复与 7/18 补记 | done | P0 | `docs/reports/2026-07-17_weekly_report.md` 为可读 UTF-8 中文，并补入 weighted s-t cut 进展 | 后续按执行批次继续维护周报和 work log |
+| G18 | patch replacement 草案 | done | P0 | `src/rseco/replacement.py` 可将 selected patch 应用到 cone-level 内部表示，metrics 和 `patches/replacement.json` 已写回 | 后续扩展为可综合 Verilog patch 或多 case replacement 输出 |
+| G19 | ABC formal equivalence wrapper | done | P0 | `src/rseco/equivalence.py` 提供旧 direct-ABC wrapper，`src/rseco/yosys_abc.py` 提供正式 Yosys-BLIF-ABC CEC，metrics 写回 `formal_equivalence` 和 `formal_equivalence_result` | 当前 5-case local smoke 的 Yosys-normalized full-netlist formal 为 5/5 pass；candidate/boundary formal 留作后续增强 |
+| X01 | 最小 combinational demo runner | done | P0 | `scripts/run_minimal_combinational_demo.py` 可生成独立实验目录 | batch 与 5-case smoke 已完成；由 X18/X21 接入真实工具和许可明确主数据 |
+| X02 | 配置驱动 batch runner 骨架 | done | P0 | `experiments/configs/minimal_combinational.json` 可驱动 batch demo，输出 per-run metrics 和 `tables/case_summary.json` | 表结构已覆盖多 baseline/runtime/recovery；下一步刷新 X18 formal 与 X21 EPFL 主表 |
+| X03 | c17 第二目标 case | done | P0 | `data/cases/minimal/iscas85_c17_case02` 指向 target output `N23`，metrics、selected patch 和 replacement 已生成 | 已完成独立 ISCAS85 扩展；后续不再扩 c17，转向 X21 EPFL |
+| X04 | raw Verilog 到最小 case 导入脚本 | done | P0 | `scripts/make_minimal_case_from_raw.py` 可从本地 raw Verilog 生成完整最小 ECO case，并由 flow 直接生成 metrics | 已导入 c432/c499/c880；由 X21 复用规范化输入生成 EPFL cases |
+| X05 | BENCH 到最小 case 导入脚本 | done | P0 | `scripts/make_minimal_case_from_bench.py` 可从本地 ISCAS-style `.bench` 文件生成完整最小 ECO case，支持 NAND/AND/OR/NOR/NOT/BUF/XOR/XNOR | 当前作为 BENCH 兼容入口保留；论文主数据优先走 X21 Verilog/Yosys 链路 |
+| X06 | Genus 风格多行 Verilog parser 支持 | done | P0 | parser 可读取 Cadence Genus generic-gate Verilog 的多行 input/output/wire 声明，且 37 项测试通过 | 后续如遇 named-port 或 assign 语法再按 TDD 扩展 |
+| X07 | 独立 ISCAS85 raw Verilog 导入 | done | P0 | `benchmarks/raw/iscas85/` 纳入 c432/c499/c880，来源和 blob SHA 写入文档，并生成对应 minimal cases | X20 已确认许可边界；这些文件仅作本地 smoke，论文主集转由 X21 导入 EPFL 数据 |
+| X08 | 最小多电路 combinational batch | done | P0 | batch summary 覆盖 c17 N22/N23 和 c432/c499/c880，`case_count=5`，所有 run replacement 为 applied | 已刷新真实 Yosys/ABC formal/baseline；c432/c499/c880 仍仅作 license 未完备的本地 smoke |
+| X09 | fixed vs FAECO 原型对比表 | done | P0 | batch runner 输出 `tables/baseline_comparison.json` 和 `.md`，覆盖 5 个 run 的 fixed patch size、FAECO patch size、score、change ratio 和 runtime 对比 | 已扩展为 fixed/random/size-only/critical-path-only/ABC/FAECO 多 baseline 对比；ABC baseline 输出 BLIF/stats/logs 已写回 |
+| X10 | Python flow runtime 实测 | done | P0 | `metrics.runtime_total`、`runtime_breakdown` 和结构化 `metrics.runtime` 写入 per-case metrics，并透传到 batch summary/comparison | Yosys/ABC external runtime 已写入同一 schema；其后扩展 OpenSTA 阶段 |
+| X11 | size-only 与 critical-path-only baseline | done | P0 | `patch_ranking` 和 `baseline_comparison` 覆盖 `size_only_cut`、`critical_path_only_cut`，selected FAECO 仍为 `size_refined_cut` | 已补 random cut 和真实 Yosys/ABC baseline 状态字段；后续迁移到 EPFL 主表 |
+| X12 | deterministic random cut baseline | done | P0 | `patch_ranking` 和 `baseline_comparison` 覆盖固定 seed/trials 的 `random_cut`，并记录 `random_seed=20260714`、`random_trials=5` | 后续将 random 从 Stage A aggregate baseline 扩展为多 seed 均值/方差统计 |
+| X13 | ABC rewrite/refactor/resyn baseline wrapper | done | P0 | `src/rseco/yosys_abc.py` 提供 Yosys-BLIF-ABC rewrite/refactor/resyn baseline，metrics 和 summary/comparison 写回 `abc_baseline_status`、reason、stats 与 BLIF 路径 | 当前 5-case local smoke 均为 `success`，optimized BLIF、ABC logs 和 `print_stats` 已归档 |
+| X14 | 实验工具链快照归档 | done | P0 | single-case 和 batch runner 均生成 `environment/toolchain_snapshot.json`，`config.json` 与 batch `case_summary.json` 记录 snapshot 路径和工具可用性 map，snapshot 含 `version` 字段 | 当前 batch snapshot 记录 Python 3.11.9、Yosys 0.9、`yosys-abc` ABC 1.01、OpenSTA 3.1.0、NetworkX 3.4.2；Z3 不可用 |
+| X15 | batch runtime breakdown 表 | done | P0 | batch runner 输出 `tables/runtime_breakdown.json` 和 `.md`，覆盖 5 个 case 的 runtime stage 耗时、状态、类别和工具 | 真实 Yosys/ABC stages 已写入同一表；下一步扩展 OpenSTA |
+| X16 | failure recovery proxy 表 | done | P0 | batch runner 输出 `tables/failure_recovery.json` 和 `.md`，按 failure type 聚合 initial fail、proxy recovered、recovery rate、avg iterations 和 run ids | 后续实现真正多轮 refinement loop 后升级为 multi-iteration recovery table，并接入 ablation |
+| X17 | runner 实验产物隔离 | done | P0 | single/batch runner 只向实验 `raw_results` 写 metrics 和 ABC 产物，不修改输入 case；回归测试覆盖 fake ABC 场景 | 继续保持 case 数据与实验运行产物分离 |
+| X18 | Yosys/ABC 规范化接入 | done | P0 | 自动识别 `yosys-abc`，Yosys 规范化后的门级 full-netlist 可驱动 5-case ABC `cec` 和 baseline，并记录 scope、版本、命令、中间产物、`print_stats` 与 runtime | 5-case local smoke 已刷新为 formal 5/5 pass、ABC baseline 5/5 success；BOM 输入自动生成 sanitized artifact；后续由 X21 迁移到 EPFL MIT 主数据 |
+| X19 | 多轮 refinement 与真实 recovery 口径 | in_progress | P0 | 每轮候选重新分类，记录 residual failures、停止原因和首次恢复轮次；batch recovery 不再按 replacement applied 代理 | 已确认当前候选 timing gain 为整网表静态值；Stage A 仍只跑 1 轮权重更新，未实施真正 multi-iteration loop；CEC 形式回验由于 SKY130 不含 `clkinv_1` 当前不可 pass，承认 limitation |
+| X20 | 公开 benchmark 来源与许可审计 | done | P0 | 固定论文主来源版本、license、文件哈希和当前 ISCAS85 使用边界 | 已固定 EPFL `v2025.1`/commit、8 个 Verilog/官方 BLIF blob 和 MIT；c432/c499/c880 降级为本地 smoke |
+| X21 | EPFL 许可明确 benchmark 导入 | done | P0 | 8 个固定版本电路完成 license notice、Yosys JSON 权威格式规范化、case 构造、formal 和 batch 配置 | Yosys JSON importer/wrapper 已实现；EPFL `v2025.1` wave 1+2 8 个电路（ctrl/int2float/router/cavlc/dec/priority/adder/max）已规范化、license 与 blob SHA 已归档；Stage B 已用此 8 个电路完成端到端 mapping→SDC→STA 全链路 8/8 success |
+| X22 | OpenSTA 安装与 Stage B 接入 | done | P0 | 固定 OpenSTA/CUDD 版本与哈希，`sta -version` 和最小 Liberty/Verilog/SDC smoke 通过，runner 可追溯记录 WNS/TNS、critical path、runtime 和输入输出路径 | OpenSTA 本体已在 WSL2 构建完成：CUDD 3.0.0 SHA256 `b8e966...eb69`，OpenSTA `parallaxsw` commit `dc5ccd2...`，`sta -version=3.1.0`；Stage B runner 已 TDD 实现（`src/rseco/opensta.py` + `tests/test_opensta.py` 7 项测试），脚本 `scripts/run_stage_b_pre_layout_sta.py` 跑通 8/8 case，所有产物写回 `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` 和 `stage_b_runtime.{json,md}` |
+| L01 | Related work 矩阵 | in_progress | P1 | 核心文献有书目、方法、证据边界和可追溯来源记录 | 已核验 25 篇 A 级全文和 1 条 B 级官方证据；DAC 2018 经 OA API、NTU、作者站点和归档资产复核仍无合法公开全文，按 25A/1B 形成 Related Work 初稿；writing 阶段可独立启动 |
+| G20 | technology mapping wrapper (Stage B) | done | P0 | `src/rseco/technology_mapping.py` 通过 TDD 实现并跑通真实 EPFL ctrl case | 已 commit `9081b9a`；使用 `synth -noabc + abc -liberty` 流程避免 Yosys 0.9 techmap 生成 Liberty 中不存在的 `clkinv_1`；输入 Verilog 不被修改；6 项 TDD 测试 + 真实 ctrl 27 cells mapping 0.84s 跑通 |
+| G21 | pre-layout SDC generator (Stage B) | done | P0 | `src/rseco/sdc.py` 从 Liberty 读 time_unit/capacitive_load_unit，生成确定性 virtual-clock SDC，端口匹配检查禁止静默 | 已 commit `0bf06f6`；`experiments/configs/stage_b_pre_layout.json` 固定 8 个 case 的统一约束；11 项 TDD 测试覆盖 |
+| G22 | OpenSTA Stage B runner | done | P0 | `src/rseco/opensta.py` 在 Windows 上调用 WSL2 OpenSTA，Tcl 脚本路径转换 `/mnt/d/...`，parser 支持 INF 与 "No paths found" | 已 commit `de7dc9a`；7 项 TDD 测试；OpenSTA 3.1.0 + SKY130 Liberty + mapped Verilog + SDC 全链路在 8-case batch 全部 success；纯组合电路 slack_status=MET（INF）属正确结果 |
+| X23 | Stage B 8-case 端到端批处理 | done | P0 | 8 个 EPFL case 全部 mapping→SDC→OpenSTA success，产物 `tables/stage_b_case_summary.{json,md}` 和 `stage_b_runtime.{json,md}` 落盘 | 已 commit `e3c735a`（runner 脚本）和 `05ada8b`（summary builder）；`experiments/20260731_epfl_8case_stage_b/` 包含 8 case 全 success，mapping+STA 全部 0 错误；CEC 形式回验因 SKY130 Liberty 不含 `clkinv_1` 仍 unavailable，记录于 batch summary `notes` 字段 |
+

@@ -1,0 +1,292 @@
+﻿# FAECO 工作日志
+
+本文档记录实际推进动作，和 `decision_log.md` 的区别是：这里记录每天做了什么，`decision_log.md` 只记录会影响路线的关键决策。
+
+## 2026-07-31
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260731-01 | 批次0：环境预检与 cp1251/mojibake 容错 | `tests/test_toolchain_script.py` | PowerShell 5.x 在 `C:\Users\佟亚龙` 路径下输出 cp1251 字节，`text=True, encoding='utf-8'` 触发 UnicodeDecodeError 并让 `result.stdout=None`，6 项 toolchain_script 测试全错。改用 `_run_toolchain_script(env)` helper 走 bytes 模式 + `errors='replace'`，两处 path 字段比较放宽为 `os.path.basename`。完整回归 66 项全绿；本地 commit `9482a34` |
+| LOG-20260731-02 | 批次2：TDD 实现 technology mapping | `src/rseco/technology_mapping.py` + `tests/test_technology_mapping.py` + `scripts/map_epfl_to_sky130.py` | `map_verilog_to_liberty` 跑 Yosys 命令序列 `read_verilog -> hierarchy -check -top -> proc -> flatten -> opt -> synth -top <top> -noabc -> abc -liberty <lib> -> clean -> write_verilog -noattr / write_blif`；原命令用 raw `techmap` 会产生 Liberty 中不存在的 `sky130_fd_sc_hd__clkinv_1` placeholder，改 `synth -noabc + abc -liberty` 避免。6 项 TDD 测试 + fake_yosys `--fail-on=` argv 控制 failure 路径；本地 commit `9081b9a` |
+| LOG-20260731-03 | 批次2：真实 ctrl mapping | `experiments/20260731_epfl_ctrl_sky130_mapping/` | `python scripts/map_epfl_to_sky130.py --benchmark-ids ctrl` 输出 `mapped.v` (9265B, 460 行) + `mapped.blif` (7012B, 78 行)，27 个不同 SKY130 cell；输入 ctrl.v SHA256 不变；runtime 0.84s；`mapping_report.json` 记录 source_sha256/liberty_sha256/mapped_artifacts_sha256 |
+| LOG-20260731-04 | 批次3：mapped-BLIF equivalence helper | `src/rseco/yosys_abc.py`（新增 `check_mapped_blif_equivalence`）+ `scripts/verify_epfl_mapping_cec.py` | 旧 `check_yosys_abc_equivalence` 对两个 Verilog 走 `read_verilog`，对 mapped BLIF（首行 `#`）报语法错；新函数仅规范化左 Verilog，右侧 BLIF 直接喂 ABC `cec`。本地 commit `b47c120`。CEC 实际 pass/fail 因 SKY130 Liberty 不含 `clkinv_1` 而保留为 error / unavailable |
+| LOG-20260731-05 | 批次4：TDD 实现 pre-layout SDC generator | `src/rseco/sdc.py` + `tests/test_sdc.py` + `experiments/configs/stage_b_pre_layout.json` | `parse_liberty_units(path) -> LibertyUnits(time_unit, capacitive_load_unit_pf, parse_error)`，`build_pre_layout_sdc(config, units, input_ports, output_ports) -> str`，`apply_input_delay_to_sdc` / `apply_output_delay_to_sdc` 在 port_filter 返回 0 时抛 `ValueError` 防止静默匹配；config JSON 固定 8 个 case 的统一约束；11 项 TDD 测试覆盖；本地 commit `0bf06f6` |
+| LOG-20260731-06 | 批次5：TDD 实现 OpenSTA Stage B runner | `src/rseco/opensta.py` + `tests/test_opensta.py` | `run_opensta_pre_layout` 在 Windows 上调用 WSL2 sta；`_to_sta_path` 把 `D:\foo\bar` 转换为 `/mnt/d/foo/bar`；Tcl 脚本 `read_liberty -> read_verilog -> link_design -> source <sdc> -> report_checks / report_worst_slack`；`parse_sta_report` 支持 legacy `wns max X` 和 OpenSTA 3.1 `worst slack max INF` + `No paths found` 形式。7 项 TDD 测试；本地 commit `de7dc9a` |
+| LOG-20260731-07 | 批次6：ctrl 端到端试点 | `experiments/20260731_epfl_ctrl_stage_b/` | `python scripts/run_stage_b_pre_layout_sta.py --sta-command "wsl -d Ubuntu -- /usr/local/bin/sta"`；mapping=success 1.245s，STA=success 5.46s，slack_status=MET（INF），wns/tns/slack=null（ctrl 纯组合无 path，INF 表示无违反）。SDC 修正：去掉 `set_time_unit`（OpenSTA 不支持）、去掉 `set_capacitive_load_unit`（OpenSTA 自动从 Liberty 读）、`set_load 0.050 [get_ports [all_outputs]]` 必须带 port 对象；`sta_script.tcl` 路径走 `_to_sta_path`。本地 commit `e3c735a` |
+| LOG-20260731-08 | 批次7：8-case 端到端批处理 | `experiments/20260731_epfl_8case_stage_b/` | 8 个 EPFL case 全部 success：ctrl/int2float/router/cavlc/dec/priority/adder/max；dec 因实际 module 名为 `dec` 不是 `top` 第一次失败，修正 `_top_module_for` 后通过。`stage_b_case_summary.{json,md}` 和 `stage_b_runtime.{json,md}` 由 `scripts/build_stage_b_summary.py` 生成；本地 commit `05ada8b` |
+| LOG-20260731-09 | 同步 task_board 与文档 | `docs/task_board.md` | X21/X22 从 in_progress 改为 done；新增 G20（technology mapping wrapper）、G21（SDC generator）、G22（OpenSTA Stage B runner）、X23（Stage B 8-case 端到端批处理）四条 done 条目；X19 描述更新承认 CEC limitation；L01 描述补充 "writing 阶段可独立启动" |
+| LOG-20260731-10 | 9 个本地 commit 落地 | git log `9482a34..05ada8b` | 7 个 Stage B commit + 此前 2 次尝试中的 hook 误判（已用简短 commit message 解决）。仓库从无 commit 状态推进到 7 commits；stage_b_deferred_execution_checklist.md 批次 0-7 全部 done |
+
+## 2026-07-20
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260720-01 | 固化 X18 formal scope 决策 | `decision_log.md`、`task_board.md`、`long_term_task_plan.md`、`toolchain_setup.md` | 用户确认“比到门级”；记录为 Yosys 规范化后的门级 full-netlist 全部主输出对比，candidate/boundary formal 留作后续增强 |
+| LOG-20260720-02 | 固化 X21 权威内部格式决策 | `decision_log.md`、`benchmark_selection.md`、`benchmark_source_and_license_audit.md`、`experiments/README.md` | 用户确认“JSON格式”；记录为 Yosys JSON importer 路径，BLIF 保留作 ABC/formal 参照，simple-gate Verilog 暂不作为首轮主路径 |
+| LOG-20260720-03 | 复测 WSL2/OpenSTA 实际状态 | `tmp/opensta_wsl_readiness_probe_20260719.sh`、`toolchain_setup.md`、`risk_register.md` | WSL2 Ubuntu 24.04.4 可启动，但 `sta/opensta` 在 PATH、常见路径和 root filesystem 搜索中均未检出；OpenSTA 构建依赖仍缺 CMake/Tcl/SWIG/Bison/Flex/Eigen/fmt |
+| LOG-20260720-04 | 同步后续问题清单和执行顺序 | `docs/reports/2026-07-20_progress_update.md`、`future_task_backlog.md`、`revision_roadmap.md`、`README.md` | 当前剩余 P0 收敛为正式 `yosys-abc` runner、Yosys JSON importer、OpenSTA 构建/路径桥、多轮 refinement 和首次 Git 基线 |
+| LOG-20260720-05 | 刷新 A-only 首次提交隔离副本 | `tmp/initial_commit_a_only_dry_run_20260720_01/`、`initial_commit_scope_audit.md`、47 项测试、single demo、c17-only batch | 新增 7/20 进度记录后 A-only 为 136 个核心文件、约 0.67 MiB，missing/mismatch=0，路径 SHA256 `051CB158...65227`；正式 formal/ABC 和 recovery 边界未改变 |
+| LOG-20260720-06 | 安装 OpenSTA 构建依赖并构建 CUDD | WSL2 Ubuntu `/opt/faeco/cudd-3.0.0/`、CUDD archive SHA256 `b8e966b4562c96a03e7fbea239729587d7b395d53cadcc39a7203b49cf7eeb69` | 使用 root apt 安装 CMake、Tcl/Tcl readline、SWIG、Bison、Flex、automake/autotools、Eigen、fmt、zlib 等；CUDD 3.0.0 静态库 `/opt/faeco/cudd-3.0.0/cudd/.libs/libcudd.a` 已生成 |
+| LOG-20260720-07 | 按审计来源构建 OpenSTA | WSL2 Ubuntu `/opt/faeco/OpenSTA-parallaxsw-dc5ccd2/`、`/usr/local/bin/sta` | 纠正 OpenROAD mirror 误克隆，改用 `https://github.com/parallaxsw/OpenSTA.git` commit `dc5ccd2d6941289a6a7d3c918b10b493f44a7f56`；CMake 识别 STA version 3.1.0，`/usr/local/bin/sta -version` 返回 `3.1.0` |
+| LOG-20260720-08 | 完成 OpenSTA 最小 STA smoke | `tmp/faeco_opensta_smoke_20260720_01/smoke.{lib,v,sdc,tcl,out}` | WSL OpenSTA 从 Windows 工作区 `/mnt/d/...` 读入 Liberty/Verilog/SDC，输出完整 max timing path、`0.70 slack (MET)`、`wns max 0.00`、`tns max 0.00`；证明本体可用但不等于正式 Stage B runner 已接入 |
+| LOG-20260720-09 | 修复外部工具版本检测对 WSL OpenSTA 的兼容性 | `scripts/check_toolchain.ps1`、`scripts/run_minimal_combinational_demo.py`、`tests/test_toolchain_script.py`、`tests/test_demo_runner.py` | PowerShell 检测保留 `-d`/`--` 参数并过滤 WSL PATH translation warning；Python runner 版本探测 timeout 提高到 20 秒；`experiments/environment/toolchain_2026-07-20.json` 和 `tmp/opensta_runner_snapshot_probe_20260720_01/` 均记录 OpenSTA 3.1.0 |
+| LOG-20260720-10 | 按 TDD 接入 Yosys-BLIF-ABC formal/baseline runner | `src/rseco/yosys_abc.py`、`src/rseco/flow.py`、`tests/test_yosys_abc_flow.py`、`tests/test_case_loader_netlist_flow.py`、`tests/test_demo_runner.py` | 正式 flow 改为 Yosys `proc; flatten; opt; simplemap; clean; write_blif` 后调用 `yosys-abc -s`；formal scope 为门级 full-netlist 全部主输出；baseline 使用显式 rewrite/refactor/resyn 序列、`print_stats` 和 CEC backcheck |
+| LOG-20260720-11 | 修复 UTF-8 BOM 网表导致 Yosys 空 BLIF 的根因 | `src/rseco/yosys_abc.py`、`tests/test_yosys_abc_flow.py`、batch raw artifacts | c432/c499/c880 输入带 BOM 时，runner 在 artifact 目录生成 `original.sanitized.v`/`revised.sanitized.v` 交给 Yosys，不修改原始 case；避免 Yosys 0.9 静默生成只有注释的空 BLIF |
+| LOG-20260720-12 | 刷新 5-case Yosys/ABC 正式实验产物 | `experiments/20260717_minimal_combinational_demo/`、`experiments/20260718_minimal_combinational_batch_demo/` | 5-case local smoke `formal_equivalence_result=pass`、`abc_baseline_status=success`；每个 run 归档 normalized BLIF、ABC CEC log、baseline log、optimized BLIF、stats、runtime 和 toolchain snapshot |
+| LOG-20260720-13 | 加固工具链快照版本解析与文档口径 | `scripts/check_toolchain.ps1`、`scripts/run_minimal_combinational_demo.py`、`experiments/environment/toolchain_2026-07-20.json`、当前状态文档 | `yosys-abc` 作为 ABC 默认候选；OpenSTA 版本选择跳过 WSL warning 并允许慢启动；总快照记录 Python 3.11.9、Yosys 0.9、ABC 1.01、OpenSTA 3.1.0、NetworkX 3.4.2，Z3 不可用 |
+
+## 2026-07-19
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260719-01 | 为 deterministic random cut baseline 补红测 | `tests/test_cut_patch.py`、`tests/test_demo_runner.py`、`tests/test_case_loader_netlist_flow.py` | 先观察到缺少 `random_cut` API、`patch_ranking` 缺少 random candidate、`baseline_comparison.methods` 缺少 `random_cut` |
+| LOG-20260719-02 | 实现 seeded random cut candidate | `src/rseco/cut.py` | 新增 `random_cut_candidates` 和 aggregate `random_cut`，使用固定 `seed=20260714`、`trials=5`，并复用通用 selected-gates boundary 计算 |
+| LOG-20260719-03 | 将 random baseline 接入 flow 和 comparison 表 | `src/rseco/flow.py`、`scripts/run_minimal_combinational_demo.py` | `patch_ranking` 新增 `patch_<target>_random_cut`；`baseline_comparison` 新增 `random_patch_id`、`random_patch_size`、`random_score`、`random_seed`、`random_trials` |
+| LOG-20260719-04 | 刷新 single-case demo 和 5-case batch artifacts | `experiments/20260717_minimal_combinational_demo/raw_results/metrics.json`、`experiments/20260718_minimal_combinational_batch_demo/tables/baseline_comparison.json`、`baseline_comparison.md` | 当前 5 个 case 的 random patch size 分别为 2、2、66、43、42；FAECO selected 仍为 `size_refined_cut` |
+| LOG-20260719-05 | 更新任务板和实验文档 | `docs/task_board.md`、`docs/project_management/long_term_task_plan.md`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md` | PM21 剩余 P0 缺口收窄为 ABC baseline、EDA runtime 和 ABC/SAT 验证；random 多 seed 均值/方差留作后续统计增强 |
+| LOG-20260719-06 | 完成回归验证 | `$env:PYTHONPATH='src'; python -m unittest discover -s tests`、demo runner、batch runner | 43 项单元测试通过，single-case demo 和 batch runner 均成功刷新 |
+| LOG-20260719-07 | 为 ABC formal equivalence wrapper 补红测 | `tests/test_graph_equivalence.py`、`tests/test_case_loader_netlist_flow.py` | 先观察到缺少 `check_abc_equivalence`，以及 metrics 缺少 `runtime_breakdown.formal_equivalence` |
+| LOG-20260719-08 | 实现 ABC `cec` formal equivalence wrapper | `src/rseco/equivalence.py` | 新增 `FormalEquivalenceResult` 和 `check_abc_equivalence`，可返回 `pass/fail/timeout/error/unavailable`，当前无 ABC 时记录 `ABC command not found` |
+| LOG-20260719-09 | 将 formal equivalence 接入 flow metrics | `src/rseco/flow.py` | per-case metrics 新增 `formal_equivalence` 和 `metrics.formal_equivalence_result`，runtime breakdown 新增 `formal_equivalence` |
+| LOG-20260719-10 | 刷新 demo 和 5-case batch formal verification 状态 | `experiments/20260717_minimal_combinational_demo/raw_results/metrics.json`、`experiments/20260718_minimal_combinational_batch_demo/raw_results/*/metrics.json` | 当前 5 个 batch case 均为 `formal_equivalence.status=unavailable`，原因是 `ABC command not found: abc`；未将 formal 结果伪造为 pass |
+| LOG-20260719-11 | 更新 equivalence/toolchain 文档 | `docs/task_board.md`、`docs/project_management/long_term_task_plan.md`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/engineering/toolchain_setup.md`、`src/rseco/README.md` | 明确 structural signature 与 formal wrapper 分离，真实 ABC/SAT pass/fail 仍需安装 ABC 后刷新 |
+| LOG-20260719-12 | 将 formal verification 状态透传到 batch 汇总表 | `scripts/run_minimal_combinational_demo.py`、`experiments/20260718_minimal_combinational_batch_demo/tables/case_summary.json`、`baseline_comparison.json` | 汇总表新增 `formal_equivalence_result` 和 `formal_equivalence_reason`，当前 5 个 case 均显示 `unavailable / ABC command not found: abc` |
+| LOG-20260719-13 | 为 ABC rewrite/refactor/resyn baseline wrapper 补红测 | `tests/test_abc_baseline.py`、`tests/test_case_loader_netlist_flow.py`、`tests/test_demo_runner.py` | 先观察到缺少 `rseco.abc_baseline`、metrics 缺少 `abc_baseline`、summary/comparison 缺少 `abc_baseline_status` |
+| LOG-20260719-14 | 实现 ABC baseline wrapper 并接入 flow | `src/rseco/abc_baseline.py`、`src/rseco/flow.py` | 新增 `AbcBaselineResult` 和 `run_abc_resynthesis_baseline`，metrics 写回 `abc_baseline`、`metrics.abc_baseline_status`、`runtime_breakdown.abc_baseline` |
+| LOG-20260719-15 | 将 ABC baseline 透传到 batch comparison | `scripts/run_minimal_combinational_demo.py`、`experiments/20260718_minimal_combinational_batch_demo/tables/case_summary.json`、`baseline_comparison.json`、`baseline_comparison.md` | `methods` 新增 `abc_rewrite_refactor_resyn`；当前 5 个 case 均为 `abc_baseline_status=unavailable`，原因是 `ABC command not found: abc` |
+| LOG-20260719-16 | 更新 ABC baseline 文档状态 | `docs/task_board.md`、`docs/project_management/long_term_task_plan.md`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/engineering/toolchain_setup.md`、`src/rseco/README.md` | PM21 的 ABC baseline 缺口从“无接口”推进为“wrapper 已接入，等待 ABC 工具链生成真实 optimized netlist” |
+| LOG-20260719-17 | 为 per-experiment toolchain snapshot 归档补测试 | `tests/test_demo_runner.py` | 要求 single-case 和 batch runner 写出 `environment/toolchain_snapshot.json`，并在 `config.json` 与 batch `case_summary.json` 中记录 snapshot 路径和工具可用性 map |
+| LOG-20260719-18 | 实现 runner 自动归档工具链快照 | `scripts/run_minimal_combinational_demo.py` | single-case 和 batch 模式均调用工具检测逻辑，写回 `toolchain_snapshot` 与 `toolchain` 字段 |
+| LOG-20260719-19 | 刷新 single-case demo 和 5-case batch 的环境追溯产物 | `experiments/20260717_minimal_combinational_demo/environment/toolchain_snapshot.json`、`experiments/20260718_minimal_combinational_batch_demo/environment/toolchain_snapshot.json`、实验 `config.json`、batch `case_summary.json` | 当前 snapshot 显示 Python/NetworkX 可用，Yosys/ABC/OpenSTA/Z3 不可用 |
+| LOG-20260719-20 | 更新工具链快照归档文档和 7/19 进度记录 | `docs/task_board.md`、`docs/project_management/long_term_task_plan.md`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/engineering/toolchain_setup.md`、`src/rseco/README.md`、`docs/reports/2026-07-19_progress_update.md` | 明确实验表格需要追溯到 `environment/toolchain_snapshot.json`，并避免把 unavailable 状态误写为 formal pass |
+| LOG-20260719-21 | 完成工具链快照归档批次验证 | `$env:PYTHONPATH='src'; python -m unittest discover -s tests`、single-case demo runner、5-case batch runner | 45 项测试通过；两个实验入口均成功刷新；batch `case_count=5`，snapshot 仍显示 Python/NetworkX 可用且 Yosys/ABC/OpenSTA/Z3 不可用 |
+| LOG-20260719-22 | 为工具链快照版本字段补红测 | `tests/test_demo_runner.py`、`tests/test_toolchain_script.py` | 先观察到 runner 和 PowerShell 检测脚本输出缺少 `version` 字段，测试按预期失败 |
+| LOG-20260719-23 | 实现工具链版本采集 | `scripts/run_minimal_combinational_demo.py`、`scripts/check_toolchain.ps1` | 可用 executable/package 记录版本，不可用工具版本为 `null`；版本采集失败不会中断实验 |
+| LOG-20260719-24 | 刷新带版本字段的实验快照并验证 | `experiments/20260717_minimal_combinational_demo/environment/toolchain_snapshot.json`、`experiments/20260718_minimal_combinational_batch_demo/environment/toolchain_snapshot.json`、`docs/reports/2026-07-19_progress_update.md` | 45 项测试通过；single-case 和 5-case batch 均成功刷新；snapshot 记录 Python 3.11.9、NetworkX 3.4.2，Yosys/ABC/OpenSTA/Z3 版本为 `null` |
+| LOG-20260719-25 | 为结构化 runtime stage schema 补红测 | `tests/test_case_loader_netlist_flow.py`、`tests/test_demo_runner.py` | 先观察到 per-case metrics、batch summary 和 comparison 均缺少 `runtime` 结构化字段，测试按预期失败 |
+| LOG-20260719-26 | 实现结构化 runtime schema 并透传到 batch 表 | `src/rseco/flow.py`、`scripts/run_minimal_combinational_demo.py` | 新增 `metrics.runtime.schema_version=1`、`total_s` 和 `stages[]`，每个 stage 记录 `id/category/tool/status/duration_s`；ABC 相关阶段当前为 `external_tool_wrapper/unavailable` |
+| LOG-20260719-27 | 刷新 runtime schema 实验产物和文档 | `experiments/20260717_minimal_combinational_demo/raw_results/metrics.json`、`experiments/20260718_minimal_combinational_batch_demo/raw_results/*/metrics.json`、`tables/case_summary.json`、`baseline_comparison.json`、`docs/experiment_design/metrics_and_tables.md`、`experiments/README.md`、`docs/reports/2026-07-19_progress_update.md` | 45 项测试通过；single-case 和 5-case batch 均成功刷新；外部工具真实 runtime 仍待安装工具链后接入 |
+| LOG-20260719-28 | 为 batch runtime breakdown 表补红测 | `tests/test_demo_runner.py` | 先观察到 batch runner 未生成 `tables/runtime_breakdown.json` 和 `.md`，测试按预期失败 |
+| LOG-20260719-29 | 实现 batch runtime breakdown 表生成 | `scripts/run_minimal_combinational_demo.py` | 新增 `runtime_breakdown.json` 和 `runtime_breakdown.md`，从 summary rows 的 `metrics.runtime` 汇总 stage duration/status/category/tool |
+| LOG-20260719-30 | 刷新 runtime breakdown 表并更新文档 | `experiments/20260718_minimal_combinational_batch_demo/tables/runtime_breakdown.json`、`.md`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/reports/2026-07-19_progress_update.md`、`docs/task_board.md` | 45 项测试通过；5-case batch 成功刷新，runtime 表 `case_count=5` |
+| LOG-20260719-31 | 将当前工程证据纳入旧稿 claim-evidence matrix | `docs/paper_audit/claim_evidence_matrix.md` | 更新 C03/C04/C05/C08/C09/C11 的证据强度和缺口，并新增 5-case batch、多 baseline、toolchain snapshot、runtime table、replacement 的证据增量表 |
+| LOG-20260719-32 | 更新公式图表审计的新表覆盖状态 | `docs/paper_audit/formula_figure_audit.md` | NEW-TAB-01 到 NEW-TAB-06 标注当前覆盖、未完成项和证据边界，明确 runtime/formal/ABC wrapper 不可过度表述 |
+| LOG-20260719-33 | 同步 Phase 1 审计任务状态 | `docs/task_board.md`、`docs/project_management/long_term_task_plan.md` | P01/PM05 和 P03/PM07 仍为 in_progress，但已记录当前工程证据已纳入，下一步继续 PDF/Word 校订 |
+| LOG-20260719-34 | 为 failure recovery proxy 表补红测 | `tests/test_demo_runner.py` | 先观察到 batch runner 未生成 `tables/failure_recovery.json` 和 `.md`，测试按预期失败 |
+| LOG-20260719-35 | 实现 failure recovery Stage A proxy 表 | `scripts/run_minimal_combinational_demo.py` | 按 failure type 聚合 initial fail、proxy recovered、recovery rate 和 run ids；proxy recovered 定义为最终 `replacement_status=applied` |
+| LOG-20260719-36 | 刷新 failure recovery 表并同步证据文档 | `experiments/20260718_minimal_combinational_batch_demo/tables/failure_recovery.json`、`.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/paper_audit/claim_evidence_matrix.md`、`docs/paper_audit/formula_figure_audit.md`、`experiments/README.md`、`docs/reports/2026-07-19_progress_update.md`、`docs/task_board.md` | 45 项测试通过；5-case batch 成功刷新；F3/F4 当前 proxy recovery rate 均为 1.000；iteration 口径后续由 LOG-20260719-37 修正为 single-refinement proxy `avg_iterations=1.0` |
+| LOG-20260719-37 | 修正 failure recovery iteration 口径不一致 | `scripts/run_minimal_combinational_demo.py`、`tests/test_demo_runner.py`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/reports/2026-07-19_progress_update.md`、`docs/paper_audit/claim_evidence_matrix.md`、`docs/paper_audit/formula_figure_audit.md`、`docs/task_board.md` | 为 `failure_recovery.md` 补回归测试，明确当前 `avg_iterations=1.0` 来自 single-refinement proxy iteration count；仍不能写成多轮 recovery 统计 |
+| LOG-20260719-38 | 复测外部 EDA 工具链和本机安装入口 | `scripts/check_toolchain.ps1`、`docs/engineering/toolchain_setup.md` | 检测确认 ABC/Yosys/OpenSTA 仍不在 PATH；本机可见 `winget`、`scoop`、`git`、`ninja`、Anaconda、MinGW 和 Scoop shims，后续可走 Scoop/预编译包或显式环境变量路径接入 ABC |
+| LOG-20260719-39 | 支持显式外部工具路径接入 | `src/rseco/toolchain.py`、`src/rseco/equivalence.py`、`src/rseco/abc_baseline.py`、`scripts/run_minimal_combinational_demo.py`、`scripts/check_toolchain.ps1`、`tests/test_toolchain_script.py`、`tests/test_demo_runner.py`、`docs/engineering/toolchain_setup.md` | 新增 `FAECO_ABC`、`FAECO_YOSYS`、`FAECO_OPENSTA` 环境变量优先检测；fake ABC 测试覆盖 snapshot、formal wrapper 和 ABC baseline wrapper，后续可在不改 PATH 的情况下接入本地 ABC |
+| LOG-20260719-40 | 修复 experiment runner 污染输入 case 的副作用 | `tests/test_demo_runner.py`、`src/rseco/flow.py`、`scripts/run_minimal_combinational_demo.py` | 红测复现 fake ABC 输出写入正式 `data/cases`；runner 现直接在实验 `raw_results` 下生成 metrics 和 ABC 产物，输入 case 的 cone/patch/results 保持不变，并删除已确认的 20 字节 fake netlist |
+| LOG-20260719-41 | 安装并核验本机 Yosys/ABC 可执行文件 | Scoop `yosys 0.9`、`yosys.exe`、`yosys-abc.exe` | 同名 Scoop `abc` 是 appbase.io 客户端，未安装；Yosys 0.9 与 UC Berkeley ABC 1.01 可启动，项目默认 ABC 候选尚未自动识别 `yosys-abc` |
+| LOG-20260719-42 | 定位 ABC 直读 Verilog 限制并验证规范化链路 | c17/c432 smoke、`docs/engineering/toolchain_setup.md` | 旧 ABC 直读 ANSI/多行 Verilog 失败；去除 UTF-8 BOM 后经 Yosys `simplemap` 输出 BLIF，再运行 ABC `cec`，c17 与 c432 均报告 equivalent；正式 wrapper 接入待设计确认后按 TDD 实现 |
+| LOG-20260719-43 | 完成隔离修复回归并刷新实验快照 | 47 项单元测试、single-case demo、5-case batch、`environment/toolchain_snapshot.json` | 全量测试通过；两个 runner 成功刷新；batch `case_count=5`，Yosys 0.9 已记录为 available，ABC/OpenSTA/Z3 仍未进入正式实验结果，formal 与 ABC baseline 仍为 `unavailable` |
+| LOG-20260719-44 | 清理 ABC 交互历史副产物 | `.gitignore` | 删除 smoke 生成的空 `abc.history`，并加入忽略规则，避免后续工具运行污染仓库根目录 |
+| LOG-20260719-45 | 完成旧稿 16 页 PDF 视觉与页级证据核验 | `tmp/pdfs/legacy_rseco/`、`docs/paper_audit/legacy_source_locator.md` | 逐页核对摘要、贡献、式(1)-(20)、图1-9、表1-5；确认式(15)跳号、图6误引和表2均值冲突 |
+| LOG-20260719-46 | 核对 DOCX 可编辑源和表格结构 | 旧稿 DOCX、`python-docx`、Word 16.0 | DOCX 与 PDF 均为 16 页；读取 195 个段落、6 个 Word 表格对象，表2-5数值与 PDF 一致；DOCX/PDF SHA256 已记录 |
+| LOG-20260719-47 | 诊断旧稿 DOCX 渲染兼容性 | LibreOffice 26.2.4、Word 16.0、`tmp/docx/` | LibreOffice 在 PDF/ODT 导入转换阶段停滞，ASCII 路径仍可复现；Word 可打开并分页，但 PDF 导出在有限窗口内未完成，因此版式以现有 PDF 为权威源，DOCX 用于正文/表格对照 |
+| LOG-20260719-48 | 收口旧稿 claim/公式图表页级审计 | `claim_evidence_matrix.md`、`formula_figure_audit.md`、`pre_submission_review.md`、`legacy_source_locator.md` | C01-C12 已有页级出处；补齐图9/表5和 CutFinder 3/8→8/8 历史证据边界；PM05/PM07 按既定完成标准收口 |
+| LOG-20260719-49 | 同步总任务日志、长期计划和周报 | `task_board.md`、`long_term_task_plan.md`、`future_task_backlog.md`、`2026-07-19_weekly_report.md`、`2026-07-19_progress_update.md` | 后续 P0 聚焦正式 ABC 链路、多轮 refinement/消融；Yosys-BLIF-ABC 实现仍待明确批准设计 |
+| LOG-20260719-50 | 建立论文修订路线 | `docs/paper_audit/revision_roadmap.md` | 将旧稿硬伤处置、formal/ABC、failure recovery、timing、公开 benchmark 和论文重写拆为 RR01-RR10，并固定当前可写/不可写边界 |
+| LOG-20260719-51 | 隔离文档审计渲染缓存 | `.gitignore` | 将 `tmp/` 加入忽略规则，避免 PDF/DOCX 页面图、ASCII 副本和转换临时目录进入首次提交 |
+| LOG-20260719-52 | 审计多轮 refinement 的现有行为和成功口径 | `src/rseco/flow.py`、`refinement.py`、`failures.py`、5-case metrics | 当前只做 1 次权重更新，候选未重新分类，recovery 由 `replacement_status=applied` 代理；候选 timing gain 对所有 cut 使用同一整网表 logic-level reduction，无法通过迭代消除 F4 |
+| LOG-20260719-53 | 预估严格 residual-failure 口径下的当前 batch 结果 | 5-case selected patches | c432/c499/c880 的 size=1 可消除 F3；两个 c17 的 1/6=16.67% 仍超过 15% 阈值；5 个 case 的 logic-level reduction 均为 0，F4 均不会恢复。该预估待设计批准和实现后由正式 artifacts 验证 |
+| LOG-20260719-54 | 从 DOCX OOXML 追查公式编号字段 | `word/document.xml` 的 `SEQ MTEqn` 字段 | 仅 `document.xml` 含公式序列，共 19 个 increment/current 字段；缓存显示为 1-14、16-20，式(14)和标号(16)之间没有另一条编号公式 |
+| LOG-20260719-55 | 用 Word 原生字段更新验证编号根因 | Word 16.0、只读 ASCII 副本 | 更新前 current field values 为 `1..14,16..20`，执行 `Fields.Update()` 后自动变为 `1..19`；确定不是漏公式，而是删除公式后未刷新缓存编号 |
+| LOG-20260719-56 | 独立复算旧稿表2 | `docs/paper_audit/legacy_table2_recalculation.md` | 正文/摘要、Avg 行、逐 case `Inpro(%)` 均值和显示 slack 反算结果不一致；原始高精度日志缺失，B&G/RSECO 旧均值均不可认证 |
+| LOG-20260719-57 | 同步公式编号与表2复算结论 | claim/formula audit、材料摘要、接手方案、任务板、周报 | 当前文档统一采用“原式(16)-(20)应改为(15)-(19)”和“旧均值不可直接引用”的结论 |
+| LOG-20260719-58 | 盘点当前 benchmark 来源与许可证据 | `benchmarks/raw/iscas85/`、`benchmarks/README.md`、case metadata、风险和论文路线 | c432/c499/c880 已固定第三方提交/blob/local SHA256，但上游 license 未声明，继续仅作本地 smoke |
+| LOG-20260719-59 | 核验 EPFL 官方仓库固定版本和许可 | EPFL 官方页面、`lsils/benchmarks` tag `v2025.1`、commit `8c832d5...`、MIT `LICENSE` | 官方套件提供 Verilog/VHDL/BLIF/AIGER；MIT 要求复制或派生分发时保留版权和许可声明 |
+| LOG-20260719-60 | 建立 benchmark source manifests 和来源审计 | `benchmarks/source_manifests/`、`docs/experiment_design/benchmark_source_and_license_audit.md` | 固定 8 个 EPFL 候选 blob SHA；Berkeley ISCAS 索引未展示 license，SIR 条款限制再分发，均不用于升级当前文件状态 |
+| LOG-20260719-61 | 验证 EPFL 格式兼容性并同步总日志 | EPFL `ctrl.v` parser/Yosys smoke、benchmark/PM/paper/report 文档 | 轻量 parser 得到 7 input/26 output/0 gate；Yosys 0.9 `simplemap` 得到 306 cells，正式导入需走规范化和 formal 链路 |
+| LOG-20260719-62 | 完成第一轮 P0 核心文献全文核验 | 7 篇本地 PDF、`tmp/pdfs/literature_audit/` | 核对首页、摘要/方法、结论、页数、DOI 和 SHA256；形成 timing ECO、functional ECO、formal scaling 的首批可追溯证据 |
+| LOG-20260719-63 | 发现 SAT Sweeping 2006 本地 PDF 错配 | 本地同名 PDF、DBLP/DOI 书目核对 | 文件正文实际为 keeper architecture 论文，正文 DOI `10.1145/1146909.1147156`；正确 SAT Sweeping DOI 为 `10.1145/1146909.1146970`，原文件保留但禁止作为引文证据 |
+| LOG-20260719-64 | 建立核心论文笔记并升级文献矩阵 | `docs/literature/core_paper_notes.md`、`literature_matrix.md`、`README.md` | 每篇记录方法、可支撑表述和不能支撑的边界；工具链来源单独记录，避免用工具论文替代本项目运行证据 |
+| LOG-20260719-65 | 同步文献证据到论文与项目管理文档 | claim/revision audit、材料索引、风险表、任务板、长期计划、backlog、进度报告和周报 | C01/C03/C05 和 EVID-09 已更新；L01/PM03 明确下一步是正确 SAT Sweeping 全文、两篇 2012 timing ECO 和 2018 patch-function 文献 |
+| LOG-20260719-66 | 完成本轮文献与实验一致性复核 | 7 篇 PDF 哈希/页数复算、错配首页文本检查、47 项单元测试、single-case 与 5-case runner | 7 篇 SHA256/页数与笔记一致；错配文件含 keeper 标题和 DOI `10.1145/1146909.1147156`、不含 SAT Sweeping 标题；测试与两个 runner 均成功，5-case iteration 仍为 `single_refinement_proxy=1` |
+| LOG-20260719-67 | 提取第二批 3 篇 P0 核心文献 | Bezier fixability、metal-configurable spare cells、2018 ECO patch functions 本地 PDF | 记录页数 10/6/6 和 SHA256，提取摘要、方法、结论及 target/support/patch-function 定义 |
+| LOG-20260719-68 | 完成第二批首页视觉与来源核验 | `tmp/pdfs/literature_audit_batch2/`、论文首页、NYCU/NTU/UC Berkeley 页面 | 3 篇标题、作者和正文均与文件名一致；DOI 分别为 `10.1109/TCAD.2012.2209117`、`10.1145/2228360.2228505`、`10.1145/3195970.3196039` |
+| LOG-20260719-69 | 将第二批文献并入证据链 | `core_paper_notes.md`、`literature_matrix.md`、claim/revision/pre-submission audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-T05/T06/F03，核心全文计数更新为 10；明确真实 fixability 的物理资源依赖及 target/boundary 与 Boolean patch synthesis 的边界 |
+| LOG-20260719-70 | 完成第二批文献与工程回归验证 | 三篇 PDF 哈希/页数校验、文档一致性脚本、`python -m unittest discover -s tests` | 第二批文档检查通过；3 篇页数和 SHA256 与笔记一致；47 项测试通过。Poppler 在中文用户名路径下输出字符表警告，但读取和校验结果成功 |
+| LOG-20260719-71 | 检索正确 SAT Sweeping 2006 全文 | DBLP、UC Berkeley faculty page、ResearchGate author content | 正确作者、页码、DOI 和作者上传全文可核验；本地同名 PDF 继续确认为错配 |
+| LOG-20260719-72 | 处置正确 PDF 下载限制 | ResearchGate PDF 下载链接、Web/CLI/browser 检查 | Web 下载受 429/1020 和安全校验限制；未绕过安全检查，也未把网页重构成伪 PDF |
+| LOG-20260719-73 | 建立文献 source manifest | `docs/literature/source_manifests/` | JSON 固定正确来源、本地错配 SHA、作者全文状态、B 级证据和再分发未批准状态；不把受限 PDF 复制进仓库 |
+| LOG-20260719-74 | 升级 LIT-V01 并同步总日志 | 核心笔记、矩阵、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、材料索引、进度报告和周报 | LIT-V01 从 C 升为 B；R12 改为 mitigated；SAT 本地合法 PDF 归档降为 P1 证据升级项 |
+| LOG-20260719-75 | 完成 SAT Sweeping 证据与总日志一致性复核 | source manifest、错配 PDF SHA256、19 个 JSON、文档边界扫描、failure recovery 表、`python -m unittest discover -s tests` | manifest 可解析且错配 SHA 完全一致；冲突标记、陈旧状态和越界正向声明均为 0；5-case 仍为 single-refinement proxy，47 项测试通过 |
+| LOG-20260719-76 | 修正总任务状态中的陈旧下一步 | `docs/task_board.md`、`docs/project_management/risk_register.md` | ABC 现状统一为“Yosys/ABC 已安装但正式 wrapper 待 X18 集成”；R08 不再把已核验的 SAT Sweeping 作者全文列为待补项 |
+| LOG-20260719-77 | 完成第三批核心全文文件核验 | negotiation 2012、resource-aware 2016、unified ECO 2016 本地 PDF，`tmp/pdfs/literature_audit_batch3/` | 首页和结论页视觉一致；页数为 6/6/8；SHA256 为 `03C22C49...BFBB`、`2E476451...74B9`、`5850EABA...7B8D`，与原文件复算一致 |
+| LOG-20260719-78 | 完成第三批方法与实验边界审计 | DBLP、DATE proceedings、Wiley/IET、3 篇全文 | 提取 negotiation/history penalty、resource-aware wiring estimate、timing-to-functional transformation 和 STA refinement；发现 resource-aware 摘要称 9 cases、表 II 实列 8 cases |
+| LOG-20260719-79 | 将第三批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-T07/F04/F05，本地 A 级全文计数更新为 13；下一批改为 multi-error patch、industrial ECO synthesis 和现代 B&G |
+| LOG-20260719-80 | 完成第三批文献与工程回归验证 | 19 个 JSON、13A/1B 文献条目、3 份 PDF 页数/SHA、文档边界扫描、`python -m unittest discover -s tests` | JSON、条目计数和 PDF 校验全部通过；陈旧状态/冲突标记/越界正向声明为 0；47 项测试通过。Poppler 中文用户路径警告通过 ASCII 临时路径隔离，不影响页数与哈希结论 |
+| LOG-20260719-81 | 完成第四批核心全文文件核验 | 2012 Multi-Patch、2013 Intuitive ECO 本地 PDF，`tmp/pdfs/literature_audit_batch4/` | 首页和末页视觉一致；页数均为 6；SHA256 为 `DFAEF833...77AD5`、`DA7BA4C1...9D9C38`，与原文件复算一致 |
+| LOG-20260719-82 | 完成第四批方法与实验边界审计 | NTU/DBLP/DATE、IBM Research、2 篇全文 | 提取 SAT diagnosis/interpolation/cofactor reduction/fallback、functional correspondence/name-preserving synthesis 和 industrial physical synthesis；保留论文数据、非公开工业案例与 FAECO Stage A 的边界 |
+| LOG-20260719-83 | 将第四批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-F06/F07，本地 A 级全文计数更新为 15；下一批改为现代 B&G、cost-aware multi-target rectification 和 2024 SAT-sweeping 变体 |
+| LOG-20260719-84 | 完成第四批文献与工程回归验证 | 49 个 JSON、15A/1B 文献条目、2 份 PDF 页数/SHA、文档边界扫描、single/batch runner、`python -m unittest discover -s tests` | JSON、条目计数、PDF 和文档检查通过；两个 runner 成功刷新，47 项测试通过；5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy。Poppler 字符映射警告不影响页数与哈希结论 |
+| LOG-20260719-85 | 完成第五批核心全文文件核验 | optimal buffer insertion、RL-Sizer、STP SAT-sweeping 本地 PDF，`tmp/pdfs/literature_audit_batch5/` | 首页和末页视觉一致；页数为 5/6/6；SHA256 为 `4DB532F8...7F04`、`2EE0663A...B288`、`B02BFA84...ECC6`，与原文件复算一致 |
+| LOG-20260719-86 | 完成第五批方法与实验边界审计 | DBLP、ASP-DAC/DATE proceedings、Georgia Tech 作者页、3 篇全文 | 固定 B&G 的 routing/library/delay 假设、RL-Sizer 的 post-route STA/runtime 边界和 STP simulation/SAT/CEC 分层；发现 buffer 文件名把 2012 TCAD 扩展版误标为 2006 ASP-DAC |
+| LOG-20260719-87 | 将第五批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-B01/B02/V03，本地 A 级全文计数更新为 18；下一批改为 simultaneous B&G、physically-aware large-scale sizing 和 cost-aware multi-target rectification |
+| LOG-20260719-88 | 完成第五批文献与工程回归验证 | 49 个 JSON、18A/1B 文献条目、3 份 PDF 页数/SHA、文档边界扫描、single/batch runner、`python -m unittest discover -s tests` | JSON、条目计数、PDF 和文档检查通过；两个 runner 成功刷新，47 项测试通过；5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy。并行检查曾遇 runner 清理目录竞态，runner 结束后串行复核通过 |
+| LOG-20260719-89 | 完成第六批核心全文文件与版本核验 | physically-aware gate sizing、AiTO、MLBuf 本地 PDF，`tmp/pdfs/literature_audit_batch6/` | 首页和末页视觉一致；本地页数为 14/12/10，SHA256 为 `286744C8...5439`、`506B8958...6000F`、`EA377DA5...C645`；MLBuf 本地文件为 arXiv v2，但正式 MLCAD 2025 书目已核对 |
+| LOG-20260719-90 | 完成第六批方法、实验与开源边界审计 | CUHK/ScienceDirect/arXiv/DBLP、MLBuf 官方仓库、3 篇全文 | 提取 multipath+multiscale physical sizing、GCN+DDPG simultaneous B&G、recursive virtual buffering/OpenROAD integration；确认 AiTO 数据保密且本体未开源，MLBuf 代码/数据为 BSD-3-Clause，且问题阶段不是 post-route ECO |
+| LOG-20260719-91 | 将第六批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、claim/formula/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-B03/B04/B05，本地 A 级全文计数更新为 21；下一批改为 cost-aware multi-target rectification、剩余 modern buffering 和必要的 ML timing/generalization |
+| LOG-20260719-92 | 完成第六批文献与工程回归验证 | 49 个 JSON、21A/1B 文献条目、3 份 PDF 页数/SHA、文档边界扫描、single/batch runner、`python -m unittest discover -s tests` | JSON、条目计数、PDF 和文档检查通过；两个 runner 成功刷新，47 项测试通过；5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy。Poppler 中文用户名字符映射警告不影响页数与哈希结论 |
+| LOG-20260719-93 | 定位 cost-aware multi-target rectification 核心文献 | NTU Scholars/作者 publication list、DBLP、DAC 双 DOI、本地文献库扫描 | 确认目标为 Zhang/Jiang DAC 2018 Article 96:1-96:6；本地无对应 PDF，未把相近的 DAC 2018 patch-function 论文误作目标全文 |
+| LOG-20260719-94 | 完成第七批来源与证据边界审计 | OpenAlex、ResearchGate、ICCAD 2017 官方问题页、NTU 博士论文记录 | 未发现合法公开全文；NTU 记录为 0 bitstream。固定 SAT/interpolation 摘要级定位、multi-target 多输出规范和 weighted support cost/patch size/runtime 分列边界，禁止引用算法细节与结果数字 |
+| LOG-20260719-95 | 将第七批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、source manifest、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-F08，证据等级 B；总口径更新为 21 篇本地 A 级全文加 2 条 B 级网页/官方证据；下一批改为 remaining modern buffering 和必要的 ML timing/generalization |
+| LOG-20260719-96 | 完成第七批文献与工程回归验证 | 50 个 JSON、21A/2B 文献条目、source manifest、文档边界扫描、single/batch runner、`python -m unittest discover -s tests` | JSON 与 manifest 解析、条目计数和活跃状态扫描通过；两个 runner 成功刷新，47 项测试通过；5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy，F3/F4 行级 `avg_iterations=1.0` |
+| LOG-20260719-97 | 完成 BUFFALO 正式版本与 PDF 核验 | 本地 IEEE PDF、Georgia Tech author PDF、NVIDIA EDA Research、DBLP、ICCAD program、`tmp/pdfs/literature_audit_batch8/` | 确认本地文件名的 2024/arXiv 标签错误，正文实际为 ICCAD 2025；本地/作者 PDF 均 9 页，首页末页可读，SHA256 分别为 `1C039551...B33E8C4`、`53CC13EE...B1AE7` |
+| LOG-20260719-98 | 完成 BUFFALO 方法、实验与 artifact 边界审计 | 9 页全文、官方论文页、GitHub repository search | 提取 T5 full-tree/coordinate generation、20M pairs、INSTA-guided net/chip GRPO 和 9-design ASAP7 flow；未找到官方 BUFFALO 代码/数据仓库，83x 只对应代表性单网，摘要/Table IV 约 71% 与结论 77.7% 不一致 |
+| LOG-20260719-99 | 将第八批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、BUFFALO source manifest、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-B06，总口径更新为 22 篇本地 A 级全文加 2 条 B 级网页/官方证据；BUFFALO 仅进入 related-work/discussion，下一批只补必要的 ML timing/generalization |
+| LOG-20260719-100 | 完成第八批文献与工程回归验证 | 51 个 JSON、22A/2B 文献条目、BUFFALO 双 PDF 页数/SHA、文档边界扫描、single/batch runner、`python -m unittest discover -s tests` | JSON、条目计数、PDF 与 manifest 校验通过；两个 runner 成功刷新，47 项测试通过；5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy，F3/F4 行级 `avg_iterations=1.0` |
+| LOG-20260719-101 | 完成第九批 ML timing 正式书目与全文核验 | DAC 2023 restructure-tolerant、DAC 2024 cross-node timing 本地 PDF、CUHK author PDF、DBLP/CUHK 书目、`tmp/pdfs/literature_audit_batch9/` | 两篇本地/作者 PDF 均为 6 页且 SHA256 完全一致，分别为 `130DD9DA...BECD`、`1FA79D2E...AC83`；首页/末页视觉完整，DOI 为 `10.1109/DAC56929.2023.10247802`、`10.1145/3649329.3656251` |
+| LOG-20260719-102 | 完成第九批方法、实验与 artifact 边界审计 | 两篇全文、作者/机构页面、精确标题 GitHub repository search | 固定 restructure 后局部标签错配、endpoint multimodal R2 `0.8724`、4154x 比较阶段；固定 130-nm 到 7-nm 训练切分、R2 `0.810` 和约 4% inference overhead；未发现项目仓库，处理后数据/模型/Cadence flow 未公开 |
+| LOG-20260719-103 | 将第九批文献并入项目证据链 | `core_paper_notes.md`、`literature_matrix.md`、两份 source manifests、claim/pre-submission/revision audit、任务板、长期计划、backlog、风险表、进度报告和周报 | 新增 LIT-M01/M02，总口径更新为 24 篇本地 A 级全文加 2 条 B 级网页/官方证据；ML timing/generalization 核心缺口关闭，下一步转入 Related Work 初稿与两篇 B→A 升级 |
+| LOG-20260719-104 | 完成第九批文献与工程回归验证 | 53 个 JSON、24A/2B 文献条目、两篇 PDF/manifest SHA、文档边界扫描、single/batch runner、`python -m unittest discover -s tests` | JSON、条目计数、PDF 与 manifest 校验通过；两个 runner 成功刷新，47 项测试通过；5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy，F3/F4 行级 `avg_iterations=1.0` |
+| LOG-20260719-105 | 从原始机构链接归档恢复 SAT Sweeping 2006 正确全文 | OpenAlex 历史位置、Cadence Labs 原始 URL、Common Crawl `CC-MAIN-2009-2010` ARC 记录、`tmp/pdfs/literature_b_to_a_batch10/` | 恢复 6 页正确 PDF，SHA256 `DA48ABD...DFB42`；标题、作者、DOI、首页和末页核验通过，副本只作本机证据核验且不获准提交或再分发 |
+| LOG-20260719-106 | 复核 DAC 2018 cost-aware multi-target 全文可用性 | OpenAlex、Unpaywall、NTU Scholars、作者 CV/实验室页面、ORCID、ResearchGate 和 NTU 学位论文记录 | 未发现合法公开全文；NTU `ntu-111-1.pdf` 为 2.76 MB 受限访问文件且未授权公开，不能把目录元数据当作算法或结果全文证据 |
+| LOG-20260719-107 | 将第十批 B→A 审计并入项目证据链 | 两份 source manifests、核心笔记、文献矩阵、claim/revision audit、任务板、长期计划、backlog、风险表、材料索引、进度报告和周报 | SAT Sweeping 从 B 升为 A，DAC 2018 保持 B，总口径更新为 25A/1B；错配文件禁引和正确缓存禁止再分发边界保持独立 |
+| LOG-20260719-108 | 完成第十批文献与工程回归验证 | 53 个 JSON、26 条文献分级、SAT PDF 页数/SHA/忽略规则、当前状态扫描、single/batch runner、`python -m unittest discover -s tests` | JSON 解析失败 0，文献为 25A/1B，SAT PDF 为 6 页且 SHA 匹配；47 项测试和两个 runner 通过，5-case formal/ABC 仍为 `unavailable`，failure recovery 仍为 single-refinement Stage A proxy |
+| LOG-20260719-109 | 审计总任务看板中的过期后续动作 | `docs/task_board.md`、当前工程产物和任务依赖 | 修正 20 余个已完成条目仍指向旧 cut、batch、c432 导入或工具安装阶段的问题；不改变完成历史，不提前关闭 X18/X19/X21 |
+| LOG-20260719-110 | 同步长期计划、backlog 和进度记录 | `long_term_task_plan.md`、`future_task_backlog.md`、`2026-07-19_progress_update.md`、周报 | PM22 对齐为 `in_progress/P0`，补 N08 Git 基线任务；任务看板 57 行和长期计划 33 行均通过字段/状态结构检查 |
+| LOG-20260719-111 | 盘点首次提交候选和大文件构成 | `git ls-files --others --exclude-standard`、顶层目录/扩展名/大文件统计、Git 配置 | 当前候选共 240 文件、约 95.30 MiB；原始文献 89.32 MiB、旧稿 4.71 MiB，代码/测试/文档/实验结构总体不足 1.3 MiB |
+| LOG-20260719-112 | 建立 Git 首次提交范围审计 | `docs/project_management/initial_commit_scope_audit.md`、benchmark/material 来源记录 | 最终候选分为 A 核心 134、B 本机 smoke/不可移植产物 51、C 私有/版权材料 55；LFS 不能替代许可，推荐工程核心仓库与本机材料库分层 |
+| LOG-20260719-113 | 同步仓库入口、任务和风险记录 | `README.md`、`engineering_structure.md`、任务板、risk register、进度报告、周报 | 修正 README 过期下一步和 `03_RSECO/` 根目录名；新增 R17 与 COMMIT-01 至 COMMIT-09 门槛，未 staging、未提交、未配置 remote |
+| LOG-20260719-114 | 构造并验证 A-only 隔离副本 | `tmp/initial_commit_a_only_dry_run_20260719_02/`、A-only 路径分类和 SHA256 | 134 个源路径全部复制且 missing=0，路径清单 SHA256 `8782DE94...1F284`；副本不含 PDF/DOCX、本机环境快照或工作区绝对路径 |
+| LOG-20260719-115 | 完成 A-only 可运行性和依赖闭包验证 | 隔离副本 47 项测试、single demo、原 5-case config probe、临时 2-case c17 batch | 测试和 single/c17 batch 通过；原 5-case config 只因被排除的 B 类 cases 失败，COMMIT-09 固定便携 batch 配置缺口；formal/ABC 仍为 unavailable，recovery 仍为 Stage A proxy |
+| LOG-20260719-116 | 完成 A-only secrets/PII/路径静态扫描 | 134 个 A 类文件、credential patterns、邮箱/绝对路径、路径长度/碰撞/symlink | 凭据命中 0；邮箱只命中已知占位身份，绝对路径只命中 `C:\tools\...` 示例和 URL 假阳性；路径碰撞、超长路径、symlink、Office/PDF 均为 0 |
+| LOG-20260719-117 | 清理尾随空格并固定行尾策略门槛 | 3 行文档尾随空格、UTF-8/newline/BOM 扫描、COMMIT-10/11、R18 | 尾随空格清零，非法 UTF-8/NUL/冲突标记为 0；8 mixed/11 CRLF-only/16 BOM 不做无批准 churn，首次提交前显式决定 `.gitattributes` |
+| LOG-20260719-118 | 完成方法重写就绪审计 | `docs/paper_audit/method_rewrite_readiness.md`、旧稿公式/图表/表2审计、当前算法代码和实验字段 | 18 个方法要素精确标记为 1 ready/8 partial/9 blocked；固定旧稿四项硬伤处置、公式继承策略、可写内容和禁写 claim，完整 Method 仍为 pending |
+| LOG-20260719-119 | 同步方法边界到项目总日志 | paper audit README、算法/taxonomy 状态说明、任务板、长期计划、revision roadmap、risk register、README、进度报告和周报 | 新增 P05、R19、D67/D68；明确代码与实验产物是第一事实源，X18/X19/X21/OpenSTA 是完整 Method 的前置依赖 |
+| LOG-20260719-120 | 刷新方法审计加入后的 A-only 基线 | 当前未忽略候选、`tmp/initial_commit_a_only_dry_run_20260719_03/`、路径 digest、47 项测试、single/c17 batch 和静态卫生 | 当前精确分层为 241=A135/B51/C55；135 路径 missing=0，SHA256 `6C15C13F...11479F`；测试和 runner 通过，formal/ABC 仍 unavailable，recovery 仍为 Stage A proxy；LOG-111 至 LOG-116 的 134 文件记录保留为上一轮历史快照 |
+| LOG-20260719-121 | 完成方法就绪与总日志一致性复核 | 18 项方法矩阵、58 行任务板、33 行长期计划、19 行风险表、69 项今日交付、53 个 JSON 和 135 文件 A-only 副本 | 表格字段错误 0、重复行 ID 0、JSON 解析错误 0；隔离副本 47 项测试和两个 runner 再次通过，正式 formal/ABC 与 recovery 边界未改变 |
+| LOG-20260719-122 | 定位 ABC `resyn2` 探针失败根因 | Scoop/Yosys `yosys-abc` 启动日志、安装目录、Berkeley ABC 官方仓库 `abc.rc` | 当前包没有可加载 `abc.rc`，`resyn2` 是缺失 alias 而非内建命令；官方 commit `bcfdf592...` 固定展开为 balance/rewrite/refactor 序列，未通过猜测替换 |
+| LOG-20260719-123 | 完成 X18 隔离 5-case 全网表探针 | `tmp/x18_full_netlist_probe_20260719_03/`、Yosys-BLIF、`yosys-abc -s`、ABC `print_stats`、CEC 日志 | 5 个 pair CEC、baseline 和 baseline 回验均成功，summary SHA256 `0EE7281B...6A685`；同时确认 optimized Verilog 在当前 parser 中为 0 gates，因此正式指标须来自 ABC stats；正式 runner 状态未改变 |
+| LOG-20260719-124 | 同步并复核 X18 探针证据 | toolchain、任务板、长期计划、backlog、风险表、claim/method audit、进度报告和周报 | 表格字段与日志 ID 检查通过，53 个 JSON 解析错误 0，47 项测试通过；formal scope 仍待用户确认，未修改 runner 或覆盖正式 unavailable 产物 |
+| LOG-20260719-125 | 复核 EPFL 固定版本和 16 个候选 artifact blob | `v2025.1` 本地 clone、manifest、MIT license、8 个 Verilog和8个官方 BLIF | HEAD/tag/manifest commit 与 license blob 一致，16 个 candidate artifact blob mismatch=0、missing=0，来源工作树干净 |
+| LOG-20260719-126 | 完成 X21 隔离 8-candidate 规范化 CEC | `tmp/x21_epfl_readiness_probe_20260719_01/`、Yosys 0.9、`yosys-abc -s`、官方 BLIF | 8/8 规范化成功、8/8 CEC pass，I/O/AIG node/level 逐项一致；summary SHA256 `F268C5BF...E2A49`，probe 不进入正式数据或论文主表 |
+| LOG-20260719-127 | 定位第一波 EPFL 权威格式缺口并同步状态 | ctrl/int2float/router noexpr cell Verilog、当前 parser、task/PM/risk/paper/report 文档 | 原始 8 候选及第一波 noexpr 输出均为 0 gates，新增 R21，X21 改为 in_progress；BLIF/Yosys JSON/simple-gate Verilog 方案需另行设计批准，未创建正式 cases |
+| LOG-20260719-128 | 完成 X21 就绪探针最终一致性复核 | EPFL manifest、`probe_summary.json`、任务板、长期计划、风险表和正式 5-case 状态 | 修正 PowerShell 筛选语法后确认 Yosys/CEC/stats 均为 8/8；53 个正式 JSON 解析错误 0，正式 5-case formal/ABC 仍各 5 个 unavailable，EPFL 正式 case 目录仍为 0 |
+| LOG-20260719-129 | 刷新 X21 文档后的 A-only 隔离基线 | `tmp/initial_commit_a_only_dry_run_20260719_04/`、135 文件闭包、47 项测试、single demo、2-case c17 batch 和静态卫生 | 当前分层仍为 241=A135/B51/C55，路径摘要仍为 `6C15C13F...11479F`；source missing/hash mismatch 均为 0，回归通过，formal/ABC unavailable 与 `stage_a_proxy` 边界未改变 |
+| LOG-20260719-130 | 复核 DAC 2018 cost-aware multi-target 开放获取证据 | OpenAlex、Semantic Scholar、Crossref、NTU Scholars/TDR、作者页面、Internet Archive CDX | 仅获得 closed OA 状态、出版者入口、机构书目和受限论文记录；未找到合法公开全文或本地 PDF，LIT-F08 与总口径继续保持 B 和 25A/1B |
+| LOG-20260719-131 | 收敛 Related Work 的 DAC 2018 前置条件 | task board、长期计划、literature matrix、core notes、revision/pre-submission audit、进度报告和周报 | 25A/1B 已足以进入获批后的分问题初稿；DAC 2018 合法全文转为定期复核，不阻塞写作，但 B 级证据仍禁止支撑算法细节、复杂度和实验数字 |
+| LOG-20260719-132 | 固定 OpenSTA 官方源码与构建证据 | OpenSTA 官方仓库 commit `dc5ccd2...`、GPL-3.0 license、README、Ubuntu 24.04 Dockerfile、CMake/Docker examples | 官方仓库当前无 tag，后续按精确 commit 固定；Dockerfile 的 CUDD 3.0.0 下载 URL 未固定 archive checksum，正式构建前必须独立核验 SHA256 |
+| LOG-20260719-133 | 完成 OpenSTA 三路径只读就绪比较 | Windows host、WSL2 Ubuntu 24.04、Docker 29.2.1 client、Ubuntu apt candidates | 推荐 WSL2 固定源码构建；Docker daemon 未运行，Windows 原生缺少 CMake/Tcl/CUDD；本轮未安装软件，WSL PATH translation warning 仅为宿主 PATH 噪声 |
+| LOG-20260719-134 | 归档 OpenSTA readiness 并同步状态文档 | `tmp/opensta_readiness_audit_20260719_01/readiness_summary.json` SHA256 `2198CBD5...70CEB0`、toolchain/task/PM/risk/backlog/progress/weekly/README | 新增 X22/R22；明确 `opensta_installed=false`、无 WNS/TNS、runner 未改、正式 batch OpenSTA/formal/ABC 状态未改变 |
+| LOG-20260719-135 | 完成 OpenSTA 审计批次 fresh verification | 主工作区/A-only 各 47 项测试、single demo、5-case batch、c17-only batch、53 个正式 JSON、任务/风险/日志结构和 A135 哈希闭包 | runner 均成功；任务板 59=54 done/5 in_progress，风险 22，A135 missing/mismatch=0、路径 digest 不变；正式 formal/ABC 各 5 个 unavailable，recovery 保持 `stage_a_proxy` |
+
+## 2026-07-18
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260718-01 | 为 weighted cut graph 补先失败的测试 | `tests/test_cut_patch.py` | 先观察到缺少 `build_weighted_cut_graph`，再补实现 |
+| LOG-20260718-02 | 实现 weighted cut graph 最小接口 | `src/rseco/cut.py` | cone gates 可生成 `WeightedCutGraph`，当前 c17 中 `NAND2_5` cost=3.0，非输出 gate cost=6.0 |
+| LOG-20260718-03 | 将 cut graph cost 写入 flow 输出 | `src/rseco/flow.py`、`data/cases/minimal/iscas85_c17_case01/results/metrics.json` | metrics 新增 `cut_graph.nodes` 和 `cut_graph.node_costs`，demo 输出已刷新 |
+| LOG-20260718-04 | 为 weighted cut result 补先失败的测试 | `tests/test_cut_patch.py`、`tests/test_case_loader_netlist_flow.py` | 先观察到缺少 `solve_weighted_cut` 和 `cut_result` 输出，再补实现 |
+| LOG-20260718-05 | 实现并写回 `weighted_node_cut_v0` cut result | `src/rseco/cut.py`、`src/rseco/flow.py`、`data/cases/minimal/iscas85_c17_case01/results/metrics.json` | c17 cut result 记录 source/sink、selected gate、cut cost 和 boundary，demo raw metrics 已刷新 |
+| LOG-20260718-06 | 将 cut graph 升级为 s-t split graph 表示 | `src/rseco/cut.py`、`tests/test_cut_patch.py` | 每个 gate 拆成 `gate:in -> gate:out` 容量边，fanin 依赖用 infinite-capacity edge 表示 |
+| LOG-20260718-07 | 将 cut result 升级为 `weighted_st_min_cut_v1` | `src/rseco/flow.py`、`data/cases/minimal/iscas85_c17_case01/results/metrics.json`、`experiments/20260717_minimal_combinational_demo/raw_results/metrics.json` | metrics 写回 split edges、dependency edges 和 cut edges；后续替换为通用 max-flow/min-cut 算法 |
+| LOG-20260718-08 | 修复 7 月 15-18 日周报乱码并补记最新进展 | `docs/reports/2026-07-17_weekly_report.md` | 周报已恢复为可读 UTF-8 中文，补入 weighted s-t cut、测试结果、风险和下周计划 |
+| LOG-20260718-09 | 为真正 weighted s-t min-cut 补全局最小割红测 | `tests/test_cut_patch.py` | synthetic cone 要求选择两个上游 split edges，总 cost 4.0，用于区分单 gate 贪心和全局 min-cut |
+| LOG-20260718-10 | 实现 Edmonds-Karp/residual reachable-set min-cut 初版 | `src/rseco/cut.py` | `solve_weighted_cut` 由 lowest-cost gate 升级为 s-t min-cut，`WeightedCutResult` 新增 `selected_gates` 并兼容 `selected_gate` |
+| LOG-20260718-11 | 刷新 c17 case metrics 和 demo artifacts | `data/cases/minimal/iscas85_c17_case01/results/metrics.json`、`experiments/20260717_minimal_combinational_demo/raw_results/metrics.json` | cut result 已写回 `selected_gates`，demo summary 保持选中 `patch_N22_size_refined_cut` |
+| LOG-20260718-12 | 为 patch replacement 草案补红测 | `tests/test_replacement.py`、`tests/test_case_loader_netlist_flow.py`、`tests/test_demo_runner.py` | 测试 selected patch 可应用到 c17 cone-level 内部表示，并要求 flow/demo 写回 replacement 输出 |
+| LOG-20260718-13 | 实现 cone-level patch replacement 草案 | `src/rseco/replacement.py`、`src/rseco/flow.py` | `internal_cone_replacement_v0` 记录 replaced/preserved gates、boundary、patched outputs 和 status |
+| LOG-20260718-14 | 刷新 replacement artifacts | `data/cases/minimal/iscas85_c17_case01/patches/replacement.json`、`data/cases/minimal/iscas85_c17_case01/results/metrics.json`、`experiments/20260717_minimal_combinational_demo/raw_results/metrics.json` | c17 replacement 已应用 `patch_N22_size_refined_cut`，替换 `NAND2_5`，保留 `NAND2_1/NAND2_2/NAND2_3` |
+| LOG-20260718-15 | 为配置驱动 batch runner 补红测 | `tests/test_demo_runner.py` | 要求 `--config` 支持多个 run_id，写出 per-run metrics、`tables/case_summary.json` 和 batch summary |
+| LOG-20260718-16 | 实现最小 batch runner 骨架 | `scripts/run_minimal_combinational_demo.py` | 保留单 case 兼容入口，新增 JSON config 批量入口 |
+| LOG-20260718-17 | 新增 batch smoke 配置和实验输出 | `experiments/configs/minimal_combinational.json`、`experiments/20260718_minimal_combinational_batch_demo/` | 当前两个 run_id 都指向 c17，用于验证批量输出结构，不作为多 benchmark 统计结果 |
+| LOG-20260718-18 | 为最小 case variant 生成器补红测 | `tests/test_case_generation_script.py` | 要求从 c17 case01 派生 N23 target-output case，并拒绝无 `--force` 覆盖已有目录 |
+| LOG-20260718-19 | 实现最小 case variant 生成器 | `scripts/make_minimal_case_variant.py` | 可复制源 case、更新 case_id/target output/cone boundary metadata，并清理旧 metrics artifacts |
+| LOG-20260718-20 | 生成 c17 N23 第二目标 case | `data/cases/minimal/iscas85_c17_case02/` | target output 为 `N23`，selected patch 为 `patch_N23_size_refined_cut`，replacement 替换 `NAND2_6` |
+| LOG-20260718-21 | 将 batch config 从 repeatability smoke 升级为双目标 case smoke | `experiments/configs/minimal_combinational.json`、`experiments/20260718_minimal_combinational_batch_demo/` | batch 当前包含 `c17_n22_baseline` 和 `c17_n23_variant`，仍不是多电路 benchmark 统计结果 |
+| LOG-20260718-22 | 探测公开 ISCAS85 raw Verilog 下载源 | GitHub API/raw URL 探测 | code search 需要认证，若干 raw URL 超时或 404；未引入来源不明 benchmark 文件 |
+| LOG-20260718-23 | 为 raw Verilog 导入脚本补红测 | `tests/test_raw_case_generation_script.py` | 使用临时 raw Verilog 验证可生成完整 case，并拒绝未知 target output |
+| LOG-20260718-24 | 实现 raw Verilog 到最小 case 导入脚本 | `scripts/make_minimal_case_from_raw.py` | 可从本地 raw Verilog 生成 `case.yaml`、original/resynthesized netlist 和标准 case 目录，后续用于导入 c432/c499 等独立电路 |
+| LOG-20260718-25 | 更新 benchmark/data 文档 | `benchmarks/README.md`、`data/README.md`、`data/cases/minimal/README.md` | 明确当前只有 c17 raw，已有 raw 导入工具，下一步需获取并校验独立 ISCAS85 电路 raw Verilog |
+| LOG-20260718-26 | 探测公开 ISCAS85 `.bench` 下载源 | GitHub repo/raw URL 探测 | repo search 未找到稳定结果，raw URL 探测不稳定；未引入来源不明 `.bench` 文件 |
+| LOG-20260718-27 | 为 BENCH 导入脚本补红测 | `tests/test_bench_case_generation_script.py` | 使用临时 ISCAS-style `.bench` 验证可转换为 Verilog case，并拒绝不支持的 gate type |
+| LOG-20260718-28 | 实现 BENCH 到最小 case 导入脚本 | `scripts/make_minimal_case_from_bench.py` | 支持 `NAND`、`AND`、`OR`、`NOT`、`BUF`，转换后复用 raw Verilog 导入路径生成 case |
+| LOG-20260718-29 | 扩展 BENCH 导入 gate 类型兼容性 | `scripts/make_minimal_case_from_bench.py`、`tests/test_bench_case_generation_script.py` | 新增 `NOR`、`XOR`、`XNOR` 支持，并验证多输入 `NAND` 可进入 flow |
+| LOG-20260718-30 | 为 Genus 风格多行 Verilog 声明补红测 | `tests/test_graph_equivalence.py` | 先观察到 parser 只读取第一行声明，无法完整读取真实 `c432/c499/c880` generic-gate Verilog |
+| LOG-20260718-31 | 扩展 Verilog parser 兼容多行 input/output/wire 声明 | `src/rseco/netlist.py` | 同时保留 c17 ANSI 风格逐行端口声明兼容性，37 项测试通过 |
+| LOG-20260718-32 | 获取并归档 3 个独立 ISCAS85 raw Verilog | `benchmarks/raw/iscas85/c432.v`、`benchmarks/raw/iscas85/c499.v`、`benchmarks/raw/iscas85/c880.v`、`benchmarks/README.md` | 来源为 `jpsety/verilog_benchmark_circuits` commit `b4c6b6203b95b5314d47365f4a8196c08145519b`；repo 未声明 license，已在文档标注第三方整理源 |
+| LOG-20260718-33 | 生成 c432/c499/c880 minimal cases | `data/cases/minimal/iscas85_c432_case01/`、`data/cases/minimal/iscas85_c499_case01/`、`data/cases/minimal/iscas85_c880_case01/` | 分别选择 target output `N432`、`N755`、`N880`，均生成 metrics、selected patch 和 replacement |
+| LOG-20260718-34 | 扩展 batch config 到 5 个 run | `experiments/configs/minimal_combinational.json`、`experiments/20260718_minimal_combinational_batch_demo/tables/case_summary.json` | 当前 `case_count=5`，包含 c17 N22/N23 以及 c432/c499/c880 三个独立电路，所有 run `replacement_status=applied` |
+| LOG-20260718-35 | 为 batch rerun stale artifact 清理补红测并实现 | `tests/test_demo_runner.py`、`scripts/run_minimal_combinational_demo.py` | 重跑 batch 时清理旧 `raw_results` 和 `tables`，避免旧 run 目录残留影响实验追溯 |
+| LOG-20260718-36 | 为 fixed vs FAECO batch 对比表补红测 | `tests/test_demo_runner.py` | 要求 batch runner 写出 `tables/baseline_comparison.json` 和 `baseline_comparison.md`，并覆盖 fixed/FAECO patch size 差值 |
+| LOG-20260718-37 | 实现 fixed vs FAECO 原型对比表 | `scripts/run_minimal_combinational_demo.py`、`experiments/20260718_minimal_combinational_batch_demo/tables/baseline_comparison.json`、`experiments/20260718_minimal_combinational_batch_demo/tables/baseline_comparison.md` | 当前 5 个 run 均可比较 fixed min-cut 与 FAECO selected 的 patch size、score、change ratio；37 项测试通过 |
+| LOG-20260718-38 | 更新 metrics 和实验入口文档 | `docs/experiment_design/metrics_and_tables.md`、`experiments/README.md`、`docs/task_board.md` | 明确 `baseline_comparison` 是 Stage A Main Comparison 雏形，仍缺 random/size-only/critical-path-only/ABC baseline、runtime 和 ABC/SAT 验证 |
+| LOG-20260718-39 | 为 runtime 实测补红测 | `tests/test_case_loader_netlist_flow.py`、`tests/test_demo_runner.py` | 要求 `metrics.runtime_total > 0`、存在 `runtime_breakdown`，并透传到 batch summary/comparison |
+| LOG-20260718-40 | 实现 Python flow runtime 计时 | `src/rseco/flow.py`、`scripts/run_minimal_combinational_demo.py` | 使用 `time.perf_counter()` 记录 parse、cone extraction、equivalence、cut search、ranking、replacement 和 total runtime；当前 5-run batch 均写入正 runtime |
+| LOG-20260718-41 | 更新 runtime 文档状态 | `experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/task_board.md` | 明确当前 runtime 是 Python-only flow wall-clock，外部 Yosys/ABC/OpenSTA runtime 仍待接入 |
+| LOG-20260718-42 | 为 size-only 与 critical-path-only baseline 补红测 | `tests/test_cut_patch.py`、`tests/test_demo_runner.py`、`tests/test_ranking.py` | 要求 cut candidate、patch ranking 和 baseline comparison 覆盖 `size_only_cut`、`critical_path_only_cut`，且 tie-break 时 FAECO `size_refined_cut` 仍为 selected |
+| LOG-20260718-43 | 实现 size-only 与 critical-path-only baseline | `src/rseco/cut.py`、`src/rseco/ranking.py`、`scripts/run_minimal_combinational_demo.py` | 新增 `size_only_cut`、`critical_path_only_cut`，comparison methods 扩展为 fixed/size-only/critical-path-only/FAECO；当前 critical-path-only 是 Stage A target-output driver proxy |
+| LOG-20260718-44 | 刷新多 baseline batch 产物并更新文档 | `experiments/20260718_minimal_combinational_batch_demo/tables/baseline_comparison.json`、`experiments/README.md`、`docs/experiment_design/metrics_and_tables.md`、`docs/task_board.md` | 5-run batch 均包含 fixed、size-only、critical-path-only 和 FAECO patch size/score 对比；40 项测试通过 |
+
+## 2026-07-17
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260717-01 | 为 deterministic patch ranking 补先失败的测试 | `tests/test_ranking.py` | 先观察到缺少 `rseco.ranking`，再补实现 |
+| LOG-20260717-02 | 实现 timing-aware patch ranking 最小接口 | `src/rseco/ranking.py` | 支持 timing gain、patch size、boundary complexity、verification cost、equivalence confidence 综合 score；等价失败候选排在通过候选之后 |
+| LOG-20260717-03 | 将 ranking 写入 c17 flow 输出 | `src/rseco/flow.py`、`data/cases/minimal/iscas85_c17_case01/patches/`、`data/cases/minimal/iscas85_c17_case01/results/metrics.json` | selected patch 写回 rank、score 和 ranking_features；当前单候选 score 为 -8.0 |
+| LOG-20260717-04 | 为最小 combinational demo runner 补先失败的执行测试 | `tests/test_demo_runner.py` | 先观察到缺少 `scripts/run_minimal_combinational_demo.py`，并修正 Windows 子进程错误流解码问题 |
+| LOG-20260717-05 | 跑通 c17 最小 combinational demo | `scripts/run_minimal_combinational_demo.py`、`experiments/20260717_minimal_combinational_demo/` | 生成 config、raw metrics、summary 和空的 logs/tables/figures 目录 |
+| LOG-20260717-06 | 将 F3 size penalty 接入确定性 cut candidate 生成 | `src/rseco/cut.py`、`src/rseco/graph.py`、`tests/test_cut_patch.py` | refinement 后额外生成 `size_refined_cut`，其 patch size 小于 fixed baseline |
+| LOG-20260717-07 | 将多候选 cut search 接入 flow 和 demo 输出 | `src/rseco/flow.py`、`tests/test_case_loader_netlist_flow.py`、`experiments/20260717_minimal_combinational_demo/` | c17 当前 ranking 为 `size_refined_cut` 第 1、`fixed_min_cut` 第 2，selected score 从 -8.0 更新为 -3.0 |
+| LOG-20260717-08 | 写 7 月 15-17 日周进度报告 | `docs/reports/2026-07-17_weekly_report.md`、`docs/reports/README.md` | 记录最小工程闭环、demo 状态、风险、下周计划和需确认决策 |
+
+## 2026-07-15
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260715-01 | 为 fixed min-cut 和 patch candidate 补测试 | `tests/test_cut_patch.py` | 先观察到缺少 `rseco.cut` 的失败，再补实现 |
+| LOG-20260715-02 | 实现 fixed min-cut baseline 最小接口 | `src/rseco/cut.py` | 当前使用 cone boundary 作为 deterministic baseline |
+| LOG-20260715-03 | 实现 patch candidate 表示 | `src/rseco/patch.py` | 支持 patch id、boundary、size、equivalence、status 写回 |
+| LOG-20260715-04 | flow 写回 candidates 和 selected patch | `data/cases/minimal/iscas85_c17_case01/patches/` | `selected_patch.json` 状态为 selected |
+| LOG-20260715-05 | 建立工具链策略文档 | `docs/engineering/toolchain_setup.md` | 当前未检出 Yosys/ABC/OpenSTA/z3/networkx |
+| LOG-20260715-06 | 为 failure-aware refinement 补先失败的测试 | `tests/test_refinement.py`、`tests/test_case_loader_netlist_flow.py` | 先验证缺少模块和缺少 flow 输出时测试失败 |
+| LOG-20260715-07 | 实现 F1-F5 确定性权重细化 | `src/rseco/refinement.py` | 输出边界、规模、关键路径、验证代价和 cone 上限的调整 |
+| LOG-20260715-08 | 将失败反馈写入 c17 metrics | `src/rseco/flow.py`、`data/cases/minimal/iscas85_c17_case01/results/metrics.json` | c17 的 F3/F4 触发两项细化动作，15 项测试通过 |
+| LOG-20260715-09 | 为工具链检测脚本补执行级测试 | `tests/test_toolchain_script.py` | 先验证缺少脚本时失败，并修正 Windows UTF-8 子进程解码问题 |
+| LOG-20260715-10 | 实现并执行工具链检测脚本 | `scripts/check_toolchain.ps1`、`experiments/environment/toolchain_2026-07-15.json` | Python/NetworkX 可用；Yosys/ABC/OpenSTA/Z3 未检出 |
+
+## 2026-07-14
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260714-01 | 核对当前工作区文件状态 | `rg --files` 输出确认项目文件、原始材料和管理文档存在 | 当前不是 Git 仓库 |
+| LOG-20260714-02 | 从旧中文 Word 稿抽取核心段落 | 旧稿摘要、贡献、方法、实验、结论段落 | 旧稿路径为 `论文/基于重综合的掩膜前时序ECO框架研究_赵晖学长工作.docx` |
+| LOG-20260714-03 | 写正式周报 | `docs/reports/2026-07-14_weekly_report.md` | 用于本周组会或课题汇报 |
+| LOG-20260714-04 | 建立 claim-evidence matrix 初版 | `docs/paper_audit/claim_evidence_matrix.md` | Phase 1 的核心审计产物 |
+| LOG-20260714-05 | 建立旧稿预投稿审计初版 | `docs/paper_audit/pre_submission_review.md` | 判断旧稿不能原样投稿，需重构为 FAECO |
+| LOG-20260714-06 | 建立 benchmark 选择文档 | `docs/experiment_design/benchmark_selection.md` | 明确第一批公开 benchmark |
+| LOG-20260714-07 | 建立 ECO case schema 初版 | `docs/experiment_design/case_schema.md` | 为后续实验脚本和数据目录做准备 |
+| LOG-20260714-08 | 建立公式与图表审计初版 | `docs/paper_audit/formula_figure_audit.md` | 明确旧稿公式、图表和表格不能直接沿用 |
+| LOG-20260714-09 | 建立 failure taxonomy | `docs/experiment_design/failure_taxonomy.md` | 将 F1-F5 细化为检测条件和反馈动作 |
+| LOG-20260714-10 | 建立 baseline protocol | `docs/experiment_design/baseline_protocol.md` | 固定 fixed/random/size/critical-path/ABC 等 baseline |
+| LOG-20260714-11 | 建立 metrics and tables | `docs/experiment_design/metrics_and_tables.md` | 固定主结果表、恢复率表、消融表和 runtime 表 |
+| LOG-20260714-12 | 建立 FAECO 算法伪代码 | `docs/experiment_design/faeco_algorithm.md` | 将 failure-aware refinement 写成可实现流程 |
+| LOG-20260714-13 | 初始化 Git 仓库 | `.git` | 分支已设为 `main`，尚未创建提交 |
+| LOG-20260714-14 | 建立 Python 最小工程骨架 | `pyproject.toml`、`src/rseco/__init__.py`、`src/rseco/metrics.py`、`src/rseco/failures.py` | 已有基础指标和失败分类实现 |
+| LOG-20260714-15 | 采用测试优先方式补最小测试 | `tests/test_metrics_and_failures.py` | 先观察到缺少 `rseco.failures` 的失败，再补实现 |
+| LOG-20260714-16 | 建立第一个最小 case | `data/cases/minimal/iscas85_c17_case01/`、`benchmarks/raw/iscas85/c17.v` | 当前为 draft/not_run，用于后续 parser 和 flow 联调 |
+| LOG-20260714-17 | 为 case loader/netlist/flow 补测试 | `tests/test_case_loader_netlist_flow.py` | 先观察到缺少 `rseco.case_loader` 的失败，再补实现 |
+| LOG-20260714-18 | 实现最小 case loader、Verilog parser 和 flow | `src/rseco/case_loader.py`、`src/rseco/netlist.py`、`src/rseco/flow.py` | 支持读取 c17 case、统计 gate count、计算 logic level |
+| LOG-20260714-19 | 生成 c17 草案 metrics | `data/cases/minimal/iscas85_c17_case01/results/metrics.json` | 输出 original/resynthesized gate count、logic level、patch size、failure types |
+| LOG-20260714-20 | 为 fanin cone 和结构等价补测试 | `tests/test_graph_equivalence.py` | 先观察到缺少 `rseco.equivalence`，再补实现 |
+| LOG-20260714-21 | 实现最小 graph 和 equivalence 模块 | `src/rseco/graph.py`、`src/rseco/equivalence.py` | 支持 c17 的 N22 fanin cone 自动抽取和结构签名等价 |
+| LOG-20260714-22 | 重新生成 c17 cone 与 metrics | `cones/target_cone.json`、`results/metrics.json` | `equivalence_result` 已从 `not_run` 推进到 `pass` |
+
+## 2026-07-07
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260707-01 | 固定研究主线 | `docs/mainline.md` | 新方法名暂定 FAECO |
+| LOG-20260707-02 | 整理工程结构 | `docs/engineering_structure.md` | 原始材料保留原位，派生文档进入 `docs/` |
+| LOG-20260707-03 | 归纳原始材料 | `docs/materials/` | 论文、课题构想、文献均有索引 |
+| LOG-20260707-04 | 建立项目管理文档 | `docs/project_management/` | 包含 roadmap、milestones、风险、决策和长期任务 |
+| LOG-20260707-05 | 建立实验设计草案 | `docs/experiment_design/benchmark_flow.md`、`failure_aware_cut.md`、`patch_ranking.md` | 后续需细化为可执行 protocol |
+
+
