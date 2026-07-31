@@ -22,6 +22,7 @@
 | LOG-20260731-14 | docs/ 57 个 markdown 全部入库 | `docs/` 9 个子目录全部 .md | 涵盖 mainline / engineering_structure / engineering/toolchain_setup / experiment_design (10 个) / literature (3 个 + source_manifests 5 个) / materials (5 个) / paper_audit (7 个) / planning (3 个) / project_management (12 个含 STAGE_B_AGENT_HANDOFF/stage_b_deferred_execution_checklist/task_board/work_log) / reports (9 个周报进度) / task_board；本地 commit `e34d1d3`、`f532400`；仓库从 7 commits 推进到 14 commits，A-only 范围全部入库完成 |
 | LOG-20260731-15 | A-only 全部入库并追写 work_log | git log `9482a34..2c33206` | README 改写（`040b7f1`）+ src/rseco 18 个模块（`9f0981c`）+ scripts 6+tests 15+experiments 配置（`b27f327`/`e57723e`/`1f2cfdc`）+ docs 全量 57 个（`e34d1d3`/`f532400`）+ work_log 追加（`2c33206`）；本会话共 15 个本地 commit，A-only 范围全部入库 |
 | LOG-20260731-16 | L01 Related work 初稿落地 | `paper/draft/related_work.md` | 按 6 大主题（Timing ECO / Functional ECO / Equivalence / B&G / ML Timing / 工具链来源）覆盖 25A/1B 文献；严格区分 evidence-level A/B；明确禁止 [F08-B] 和 [B06] 引用算法细节与实验数字；明确禁止 [T01]/[T02]/[T05]/[F01]/[F03]/[F07] 和 [B02]/[B03]/[B04]/[B05]/[M01]/[M02] 作为结果对比；与 FAECO 关系以"差异/边界"维度给出；后续 N05/N08 审定后迁入 `paper/submission/related_work.md`。本地 commit `a4bede4`；task_board L01 改 done |
+| LOG-20260731-17 | 7/31 周报 | `docs/reports/2026-07-31_weekly_report.md` | 按 7/20 周报格式写本轮 7 个段落（本轮目标 W31-01..10 / 可验证结果 90 项测试 17 commits 8-case 8/8 success / 4 项 limitation L31-01..04 / 5 项风险变化 R05/R22/R17/R18/R31-01 / 6 项下一批 N31-01..06 / 文档入口）；本轮 limitation 与风险变化逐项记录；下一批 N31-01..06 列出优先级与完成标准 |
 
 ## 2026-07-20
 
