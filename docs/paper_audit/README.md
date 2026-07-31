@@ -22,4 +22,4 @@
 | `pre_submission_review.md` | 已更新 | 已给出 P0/P1/P2 问题清单，并纳入编号与数值一致性风险 |
 | `formula_figure_audit.md` | 已完成页级校订一轮 | 已覆盖公式 (1)-(20)、图1-9、表1-5 和已确认问题 |
 | `revision_roadmap.md` | 已创建 | 已按旧稿硬伤、formal/ABC、failure recovery、timing 和写作阶段拆分完成标准 |
-| `method_rewrite_readiness.md` | 已创建 | 已逐项区分 ready/partial/blocked，并固定当前方法可写与禁写边界 |
+| `method_rewrite_readiness.md` | 已按 Stage B 完成状态重映射 (2026-07-31) | 18 项方法要素中 METH-02 ready（Yosys formal runner 接入）、METH-15 ready（Stage B 8-case runtime 写回）、METH-17 partial（Stage B 8-case 跑通但 CEC/ISCS85/sequential 三项限制）；其余维持原状态 |

@@ -17,7 +17,7 @@
 | Python | 可用 | 当前实验 snapshot 中可用，版本为 3.11.9 |
 | Yosys | 可用 | Scoop `yosys 0.9`，当前 batch snapshot 已记录版本和 shim 路径 |
 | ABC | 已安装并进入默认实验链路 | UC Berkeley ABC 1.01 由 Scoop Yosys 包提供，命令为 `yosys-abc.exe`；runner 和快照默认候选为 `yosys-abc` 后回退 `abc` |
-| OpenSTA | WSL2 已安装并通过最小 smoke | 2026-07-20 在 WSL2 Ubuntu 24.04.4 中按 `parallaxsw/OpenSTA` commit `dc5ccd2d6941289a6a7d3c918b10b493f44a7f56` 构建，`/usr/local/bin/sta -version` 返回 `3.1.0`；项目 `tmp/faeco_opensta_smoke_20260720_01/` 可从 Windows 工作区路径读入 Liberty/Verilog/SDC 并输出 timing path、WNS/TNS；Stage B runner 路径桥仍未接入 |
+| OpenSTA | WSL2 已安装并接入 Stage B runner (2026-07-31) | 2026-07-20 在 WSL2 Ubuntu 24.04.4 中按 `parallaxsw/OpenSTA` commit `dc5ccd2d6941289a6a7d3c918b10b493f44a7f56` 构建，`/usr/local/bin/sta -version` 返回 `3.1.0`；Stage B runner `src/rseco/opensta.py` + 7 项 TDD 测试已实现，`_to_sta_path` 把 Windows 路径转换为 `/mnt/d/...` WSL2 路径；8-case Stage B 端到端 mapping 8/8 success + STA 8/8 success，`experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}` 已落盘 |
 | z3 Python package | 未检出 | 后续可用于小 cone SAT/SMT 等价验证 |
 | networkx Python package | 可用 | 当前实验 snapshot 中可用，版本为 3.4.2；weighted cut 当前使用项目内 Edmonds-Karp 实现，后续可替换或交叉验证 |
 

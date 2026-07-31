@@ -9,6 +9,7 @@
 | `literature_matrix.md` | 已完成前十批核心文献核验更新 | 文献分组、核验状态和下一步精读优先级 |
 | `core_paper_notes.md` | 持续更新 | 25 篇 A 级全文、1 条 B 级官方证据、文件错配与工具来源边界 |
 | `source_manifests/` | 已建立 | 机器可读记录正确书目、全文来源、本地错配、证据等级和再分发状态 |
+| `../paper/draft/related_work.md` | L01 Related Work 初稿已落地 (2026-07-31) | 6 大主题（Timing ECO / Functional ECO / Equivalence / B&G / ML Timing / 工具链）覆盖 25A/1B；严格区分 evidence-level A/B；[F08-B] [B06] 禁止引用算法细节与数字；待 N05/N08 审定后迁入 `paper/submission/related_work.md` |
 
 建议分组：
 
