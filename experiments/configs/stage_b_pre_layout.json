@@ -55,6 +55,8 @@
     "All 8 cases share the same SDC baseline; per_case_overrides is empty.",
     "CEC verification between reference BLIF and mapped BLIF is admitted as unavailable due to clkinv_1 cell name mismatch with SKY130 Liberty; see work_log for details.",
     "Round 1 self-audit (paper/reviews/round1_self_audit.md) lists 1 P0 issue (Stage B CEC unavailable) requiring N31-03 ORFS techmap library, and 4 P1 issues (sequential cone / X19 multi-iteration / candidate timing gain / ISCS85 license) for follow-up work.",
-    "Stage B 8-case mapping 8/8 success + STA 8/8 success + slack_status=MET (INF) reflects correct absence of timing paths in combinational circuits; future work N31-05 SKY130 sequential ECO will extend to DFF/restore signals."
+    "Stage B 8-case mapping 8/8 success + STA 8/8 success + slack_status=MET (INF) reflects correct absence of timing paths in combinational circuits; future work N31-05 SKY130 sequential ECO will extend to DFF/restore signals.",
+    "N31-06 Z3 candidate/boundary formal wrapper design landed (paper/draft/method.md §7 + docs/engineering/z3_candidate_boundary_formal.md); implementation pending round 2 user decision; complement to Stage A/B ABC CEC, not replacement.",
+    "N31-04 N08 push to remote design landed (docs/engineering/n08_push_to_remote.md); push is irreversible and requires explicit user instruction with remote URL + real Git identity; current HEAD ae16371 / 7692906 / ea8a6af etc. are local-only."
   ]
 }
