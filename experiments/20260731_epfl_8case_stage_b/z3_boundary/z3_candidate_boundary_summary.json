@@ -1,0 +1,271 @@
+{
+  "source_summary": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b",
+  "epfl_source": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full",
+  "case_count": 8,
+  "per_case": [
+    {
+      "benchmark_id": "ctrl",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\ctrl.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\ctrl\\mapping\\mapped.v",
+      "boundary_ports": [
+        "opcode[0]",
+        "halt",
+        "reg_write",
+        "mem_write"
+      ],
+      "result": {
+        "status": "fail",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\ctrl.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\ctrl\\mapping\\mapped.v)",
+        "runtime_s": 0.010393799999292241,
+        "reason": "z3 sat: counterexample found",
+        "candidate_id": "",
+        "boundary_ports": [
+          "opcode[0]",
+          "halt",
+          "reg_write",
+          "mem_write"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": 0,
+        "counterexample_inputs": [
+          [
+            "opcode[0]",
+            0
+          ],
+          [
+            "halt",
+            0
+          ],
+          [
+            "reg_write",
+            0
+          ],
+          [
+            "mem_write",
+            0
+          ]
+        ],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\ctrl\\boundary_equivalence.smt2",
+        "smt2_output_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\ctrl\\boundary_equivalence.smt2.output"
+      }
+    },
+    {
+      "benchmark_id": "int2float",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\int2float.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\int2float\\mapping\\mapped.v",
+      "boundary_ports": [
+        "z0",
+        "z1",
+        "z2",
+        "z3"
+      ],
+      "result": {
+        "status": "error",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\int2float.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\int2float\\mapping\\mapped.v)",
+        "runtime_s": 0.0009472000001551351,
+        "reason": "could not extract assign expression from verilog",
+        "candidate_id": "",
+        "boundary_ports": [
+          "z0",
+          "z1",
+          "z2",
+          "z3"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": null,
+        "counterexample_inputs": [],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\int2float\\boundary_equivalence.smt2",
+        "smt2_output_path": null
+      }
+    },
+    {
+      "benchmark_id": "router",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\router.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\router\\mapping\\mapped.v",
+      "boundary_ports": [
+        "out_data[0]",
+        "out_data[1]",
+        "out_valid"
+      ],
+      "result": {
+        "status": "fail",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\router.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\router\\mapping\\mapped.v)",
+        "runtime_s": 0.004038499999296619,
+        "reason": "z3 sat: counterexample found",
+        "candidate_id": "",
+        "boundary_ports": [
+          "out_data[0]",
+          "out_data[1]",
+          "out_valid"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": 0,
+        "counterexample_inputs": [
+          [
+            "out_data[0]",
+            0
+          ],
+          [
+            "out_data[1]",
+            0
+          ],
+          [
+            "out_valid",
+            0
+          ]
+        ],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\router\\boundary_equivalence.smt2",
+        "smt2_output_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\router\\boundary_equivalence.smt2.output"
+      }
+    },
+    {
+      "benchmark_id": "cavlc",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\cavlc.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\cavlc\\mapping\\mapped.v",
+      "boundary_ports": [
+        "code[0]",
+        "code[1]"
+      ],
+      "result": {
+        "status": "error",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\cavlc.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\cavlc\\mapping\\mapped.v)",
+        "runtime_s": 0.0009866000000329223,
+        "reason": "could not extract assign expression from verilog",
+        "candidate_id": "",
+        "boundary_ports": [
+          "code[0]",
+          "code[1]"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": null,
+        "counterexample_inputs": [],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\cavlc\\boundary_equivalence.smt2",
+        "smt2_output_path": null
+      }
+    },
+    {
+      "benchmark_id": "dec",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\dec.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\dec\\mapping\\mapped.v",
+      "boundary_ports": [
+        "Z[0]",
+        "Z[1]"
+      ],
+      "result": {
+        "status": "error",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\dec.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\dec\\mapping\\mapped.v)",
+        "runtime_s": 0.0008783000012044795,
+        "reason": "could not extract assign expression from verilog",
+        "candidate_id": "",
+        "boundary_ports": [
+          "Z[0]",
+          "Z[1]"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": null,
+        "counterexample_inputs": [],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\dec\\boundary_equivalence.smt2",
+        "smt2_output_path": null
+      }
+    },
+    {
+      "benchmark_id": "priority",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\priority.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\priority\\mapping\\mapped.v",
+      "boundary_ports": [
+        "out[0]",
+        "out[1]"
+      ],
+      "result": {
+        "status": "error",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\random_control\\priority.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\priority\\mapping\\mapped.v)",
+        "runtime_s": 0.0009432999995624414,
+        "reason": "could not extract assign expression from verilog",
+        "candidate_id": "",
+        "boundary_ports": [
+          "out[0]",
+          "out[1]"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": null,
+        "counterexample_inputs": [],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\priority\\boundary_equivalence.smt2",
+        "smt2_output_path": null
+      }
+    },
+    {
+      "benchmark_id": "adder",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\arithmetic\\adder.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\adder\\mapping\\mapped.v",
+      "boundary_ports": [
+        "out[0]",
+        "out[1]"
+      ],
+      "result": {
+        "status": "error",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\arithmetic\\adder.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\adder\\mapping\\mapped.v)",
+        "runtime_s": 0.0018192000006820308,
+        "reason": "could not extract assign expression from verilog",
+        "candidate_id": "",
+        "boundary_ports": [
+          "out[0]",
+          "out[1]"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": null,
+        "counterexample_inputs": [],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\adder\\boundary_equivalence.smt2",
+        "smt2_output_path": null
+      }
+    },
+    {
+      "benchmark_id": "max",
+      "original_path": "D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\arithmetic\\max.v",
+      "mapped_path": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\max\\mapping\\mapped.v",
+      "boundary_ports": [
+        "out[0]",
+        "out[1]"
+      ],
+      "result": {
+        "status": "error",
+        "tool": "z3",
+        "command": "check_z3_candidate_boundary_equivalence(D:\\BaiduSyncdisk\\03_FAECO\\benchmarks\\raw\\epfl_v2025_1_full\\arithmetic\\max.v, D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260731_epfl_8case_stage_b\\max\\mapping\\mapped.v)",
+        "runtime_s": 0.002093099999910919,
+        "reason": "could not extract assign expression from verilog",
+        "candidate_id": "",
+        "boundary_ports": [
+          "out[0]",
+          "out[1]"
+        ],
+        "wns_unaffected_check": true,
+        "returncode": null,
+        "counterexample_inputs": [],
+        "stdout_tail": "",
+        "stderr_tail": "",
+        "smt2_problem_path": "experiments\\20260731_epfl_8case_stage_b\\z3_boundary\\max\\boundary_equivalence.smt2",
+        "smt2_output_path": null
+      }
+    }
+  ]
+}
