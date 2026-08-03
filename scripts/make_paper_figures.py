@@ -119,10 +119,46 @@ def stage_a_baseline() -> None:
     _save(fig, ROOT / "paper" / "figures" / "fig2_stage_a_baseline.png")
 
 
+def method_flow() -> None:
+    """FAECO three-stage pipeline flow diagram (Resynthesis / Cut&Refine / Verify&STA)."""
+    from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
+
+    fig, ax = plt.subplots(figsize=(9, 4.2))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 6)
+    ax.axis("off")
+
+    stages = [
+        (0.4, "Resynthesis", "synth -top <t> -noabc\n+ abc -liberty <lib>", SERIES[0]),
+        (4.4, "Cut & Refine", "fanin cone → weighted\ns-t min-cut → F1-F5 feedback", SERIES[1]),
+        (8.4, "Verify & STA", "ABC cec / Z3 boundary\n+ OpenSTA pre-layout", SERIES[2]),
+    ]
+    for x, title, body, color in stages:
+        box = FancyBboxPatch((x, 1.2), 3.2, 3.6,
+                             boxstyle="round,pad=0.12,rounding_size=0.25",
+                             linewidth=1.2, edgecolor=color, facecolor="#ffffff")
+        ax.add_patch(box)
+        ax.text(x + 1.6, 4.1, title, ha="center", va="center",
+                fontsize=11, fontweight="bold", color=color)
+        ax.text(x + 1.6, 2.6, body, ha="center", va="center",
+                fontsize=9, color=INK_PRIMARY, linespacing=1.4)
+
+    for x0, x1 in [(3.6, 4.4), (7.6, 8.4)]:
+        arrow = FancyArrowPatch((x0, 3.0), (x1, 3.0),
+                                arrowstyle="-|>", mutation_scale=18,
+                                linewidth=1.4, color=INK_MUTED)
+        ax.add_patch(arrow)
+
+    ax.text(6.0, 0.6, "FAECO three-stage pipeline (Stage A + Stage B implemented)",
+            ha="center", va="center", fontsize=10, color=INK_MUTED)
+    _save(fig, ROOT / "paper" / "figures" / "fig3_method_flow.png")
+
+
 def main() -> int:
     (ROOT / "paper" / "figures").mkdir(parents=True, exist_ok=True)
     stage_b_runtime()
     stage_a_baseline()
+    method_flow()
     return 0
 
 
