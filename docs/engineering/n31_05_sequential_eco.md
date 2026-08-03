@@ -216,3 +216,30 @@ s382 显示**单手段（gate sizing）天花板**：关键路径瓶颈 cell（`
 
 - G 策略实现完成，ISCAS89 3/4 真实改善，实验结论可入论文主表（标注方法边界：单手段天花板）
 - 下一步：R/B 策略实现 + 混合切换（结合 s382 天花板 case 验证自适应切换逻辑）
+
+## 12. R/B 策略与混合修复实现状态（2026-08-03 晚）
+
+方向 B 的 failure-aware 混合修复（逻辑重写 R / gate sizing G / buffer insertion B）**已全部实现并验证**：三类策略生成候选后均经 OpenSTA 实测，只接受严格改善 WNS 的改动；多轮循环每轮重解析关键路径，持续解决新出现的瓶颈。
+
+### 12.1 实现
+- `src/rseco/logic_rewrite.py`（R）：Liberty function 规范化（变量按首现重命名）+ 跨 family 等价候选（如 `lpflow_inputiso1p_1` 的 `X=A|SLEEP` → `or2_*`）+ pin 映射重写
+- `src/rseco/buffer_insertion.py`（B）：高扇出 net 检测 + 输入/输出 pin 插 buffer（含 wire 声明与重连）
+- `src/rseco/gate_sizing.py`（G）：同 family 更大尺寸候选（沿用 11 节）
+- `scripts/run_hybrid_repair.py`：多轮贪心（`--rounds`）+ `--enable-buffer` 开关 + 每候选独立子目录与 `candidate_trials` 记录（可审计）
+- `tests/test_logic_rewrite.py`（9）+ `tests/test_buffer_insertion.py`（5）+ `tests/test_gate_sizing.py`（6）共 20 个单元测试全绿
+
+### 12.2 实验（ISCAS89, period 0.5ns, rounds=6）
+| 电路 | baseline WNS | G/R 单混合 | G+R+B（rounds=6） | 改善 |
+|---|---|---|---|---|
+| s27 | -0.28 | -0.20 | **-0.01** | +0.27 |
+| s382 | -0.94 | -0.92 | **-0.80** | +0.14 |
+| s420 | -1.78 | -1.41 | **-0.23** | +1.55 |
+| s641 | -1.86 | -1.40 | **-0.57** | +1.29 |
+
+**4/4 电路大幅改善**；s382 由 R 突破 G 单手段天花板，其余电路由 B 策略（高扇出节点插 buffer 分担输入电容）贡献主要改善。
+
+### 12.3 关键结论
+- **B 策略在 pre-layout ideal-net 下有效**：高扇出节点（如 s420 的 `_066_` nor4 输出、`_057_` and4 输出）的输入电容负担被 buffer 分担，改善超过插入延迟——推翻 ideal-net 下 B 无效的假设，必须实测验证而非主观预判
+- **多轮自适应是关键**：单轮只能解决初始关键路径；rounds=6 时 s641 从 -0.86 继续收敛到 -0.57（第 4-6 轮解决 `_098_`/`_079_`/`_082_`/`_159_` 等新瓶颈）
+- **可审计性**：每候选独立子目录 + `candidate_trials` 记录 wns/accepted；审查核对 4 电路 final WNS 与 sta.log 一致、29 处改动全部真实、无被误拒的更好候选
+- **方法边界（诚实记录）**：当前为 ideal-net pre-layout 验证；post-layout 长线负载下 G/B 的相对贡献可能变化，需 Stage C 后续验证；buffer 插入在真实时钟路径上需 CTS/clock-aware 约束保护
