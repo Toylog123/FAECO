@@ -10,7 +10,7 @@
 |---|---|---|---|---|
 | 图 1 | `fig1_stage_b_runtime.png` | Stage B 8-case mapping + STA runtime 分组柱状图 | `experiments/20260731_epfl_8case_stage_b/tables/stage_b_runtime.md` | **已生成** (2026-08-03, 1162×618) |
 | 图 2 | `fig2_stage_a_baseline.png` | Stage A 5-case patch size 按 baseline 方法分组柱状图（fixed/random/size-only/FAECO） | `experiments/20260718_minimal_combinational_batch_demo/tables/baseline_comparison.md` | **已生成** (2026-08-03, 1156×619) |
-| 图 3 | `fig3_method_flow.png` | FAECO 三阶段流水线流程图（Resynthesis / Cut & Refine / Verify & STA） | `paper/draft/method.md` §1 | pending（method chapter 获批后） |
+| 图 3 | `fig3_method_flow.png` | FAECO 三阶段流水线流程图（Resynthesis / Cut & Refine / Verify & STA） | `paper/draft/method.md` §1 | **已生成** (2026-08-03, 1076×515) |
 | 图 4 | `fig4_cut_graph.png` | s-t split graph 示例（c17 N22 cone） | `src/rseco/cut.py` synthetic regression test | pending |
 | 图 5 | `fig5_failure_flow.png` | F1-F5 失败分类触发流程图 | `paper/draft/method.md` §6 + `src/rseco/failures.py` | pending |
 
