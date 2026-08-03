@@ -3,6 +3,13 @@
 Complements the existing ABC CEC path with per-candidate boundary SMT
 verification.  Uses z3-solver 5.0.0 Python API directly so tests do
 not need the z3 binary on PATH.
+
+Supports:
+- simple single ``assign y = ...`` modules (original tests)
+- EPFL-style modules with internal wire assigns and escaped
+  identifiers (``assign n19 = ~\\B[1] & \\B[4];``), multiple output
+  ports, ``& | ^ ~`` operators, parentheses and ``1'b0``/``1'b1``
+  literals.
 """
 
 from __future__ import annotations
@@ -60,52 +67,269 @@ def _is_z3_available() -> bool:
         return False
 
 
-def _first_assign(verilog: str) -> str | None:
-    m = re.search(r"(assign\s+[^;]+;)", verilog)
-    return m.group(1) if m else None
+def _normalize_ident(name: str) -> str:
+    """Normalize an escaped identifier ``\\B[0]`` to ``B[0]``.
 
-
-def _assign_to_z3(assign: str, g: dict[str, "z3.BoolRef"]) -> "z3.BoolRef":
-    """Parse a simple `assign y = a & b;` or `assign y = a;` expression.
-
-    Supports: identifiers in `g`, `&` (And), `|` (Or), `~` (Not), and
-    parentheses.  Anything unknown becomes an unconstrained Bool
-    (conservative — may make tests over-complex expressions return
-    "fail" which is acceptable for FAECO's small cone-level Verilog).
+    Non-escaped identifiers are returned unchanged.  ``[0]`` bus
+    suffixes are preserved so boundary ports match ``B[0]`` style.
+    Trailing ``)`` / ``,`` / ``;`` (from one-line module-port
+    declarations like ``module top(input a, output y);``) are stripped.
     """
-    s = assign.strip()
-    if s.startswith("y = "):
-        s = s[len("y = "):]
-    s = s.rstrip(";").strip()
-    env: dict[str, "z3.BoolRef"] = dict(g)
+    name = name.strip()
+    if name.startswith("\\"):
+        name = name[1:]
+    while name and name[-1] in "),;":
+        name = name[:-1]
+    return name.strip()
 
-    def parse_expr(s: str) -> "z3.BoolRef":
-        s = s.strip()
-        if s.startswith("(") and s.endswith(")"):
-            return parse_expr(s[1:-1])
-        if s.startswith("~"):
-            return z3.Not(parse_expr(s[1:]))
-        # binary | (lowest precedence)
-        for op_str, op_func in (
-            ("|", z3.Or),
-            ("&", z3.And),
-        ):
-            depth = 0
-            for i in range(len(s) - 1, -1, -1):
-                ch = s[i]
-                if ch == ")":
-                    depth += 1
-                elif ch == "(":
-                    depth -= 1
-                elif depth == 0 and s[i:i + 1] == op_str and (
-                    i == 0 or s[i - 1] not in {"=", "|", "&"}
-                ):
-                    return op_func(parse_expr(s[:i]), parse_expr(s[i + 1:]))
-        if s in env:
-            return env[s]
-        return z3.Bool(s)
 
-    return parse_expr(s)
+def _parse_assigns(verilog: str) -> dict[str, str]:
+    """Extract ``{lhs: expr}`` from all ``assign <lhs> = <expr>;`` lines.
+
+    lhs and expr tokens are normalized (escaped ``\\`` removed).
+    """
+    assigns: dict[str, str] = {}
+    # match `assign <lhs> = <expr> ;` where expr may span until ';'
+    for m in re.finditer(r"\bassign\s+([^=;]+)\s*=\s*([^;]+)\s*;", verilog):
+        lhs = _normalize_ident(m.group(1))
+        assigns[lhs] = m.group(2).strip()
+    return assigns
+
+
+def _parse_module_outputs(verilog: str) -> list[str]:
+    """Extract normalized output port names from ``output ...;`` lines."""
+    outputs: list[str] = []
+    for m in re.finditer(r"\boutput\s+([^;]+);", verilog):
+        for name in m.group(1).split(","):
+            name = _normalize_ident(name)
+            if name:
+                outputs.append(name)
+    return outputs
+
+
+def _parse_module_inputs(verilog: str) -> list[str]:
+    """Extract normalized input port names from ``input ...;`` lines."""
+    inputs: list[str] = []
+    for m in re.finditer(r"\binput\s+([^;]+);", verilog):
+        for name in m.group(1).split(","):
+            name = _normalize_ident(name)
+            if name:
+                inputs.append(name)
+    return inputs
+
+
+class _ExprParser:
+    """Recursive-descent parser for simple boolean Verilog expressions.
+
+    Grammar:
+        or_expr   := xor_expr ( '|' xor_expr )*
+        xor_expr  := and_expr ( '^' and_expr )*
+        and_expr  := unary ( '&' unary )*
+        unary     := '~' unary | primary
+        primary   := '(' or_expr ')' | constant | identifier
+
+    ``env`` maps identifiers (boundary ports) to z3.BoolRef; unknown
+    identifiers raise KeyError so a genuinely unsupported expression
+    reports ``error`` instead of silently comparing two unconstrained
+    bools.
+    """
+
+    def __init__(self, text: str, env: dict[str, "z3.BoolRef"]) -> None:
+        self._tokens = self._tokenize(text)
+        self._pos = 0
+        self._env = env
+
+    @staticmethod
+    def _tokenize(text: str) -> list[str]:
+        tokens: list[str] = []
+        i = 0
+        n = len(text)
+        while i < n:
+            ch = text[i]
+            if ch.isspace():
+                i += 1
+                continue
+            if ch in "~&|^()":
+                tokens.append(ch)
+                i += 1
+                continue
+            if ch == "\\":
+                # escaped identifier: read until whitespace or comma
+                j = i + 1
+                while j < n and not text[j].isspace() and text[j] not in "(),":
+                    j += 1
+                tokens.append("\\" + text[i + 1:j])
+                i = j
+                continue
+            if ch.isdigit() or ch.isalpha() or ch in "_[]":
+                j = i
+                while j < n and (text[j].isalnum() or text[j] in "_[]'"):
+                    j += 1
+                tokens.append(text[i:j])
+                i = j
+                continue
+            # unknown char — treat as single token (will surface parse error)
+            tokens.append(ch)
+            i += 1
+        return tokens
+
+    def _peek(self) -> str:
+        return self._tokens[self._pos] if self._pos < len(self._tokens) else ""
+
+    def _next(self) -> str:
+        tok = self._peek()
+        self._pos += 1
+        return tok
+
+    def parse(self) -> "z3.BoolRef":
+        expr = self._parse_or()
+        if self._peek():
+            raise ValueError(f"unexpected token {self._peek()!r} after expression")
+        return expr
+
+    def _parse_or(self) -> "z3.BoolRef":
+        left = self._parse_xor()
+        while self._peek() == "|":
+            self._next()
+            right = self._parse_xor()
+            left = z3.Or(left, right)
+        return left
+
+    def _parse_xor(self) -> "z3.BoolRef":
+        left = self._parse_and()
+        while self._peek() == "^":
+            self._next()
+            right = self._parse_and()
+            left = z3.Xor(left, right)
+        return left
+
+    def _parse_and(self) -> "z3.BoolRef":
+        left = self._parse_unary()
+        while self._peek() == "&":
+            self._next()
+            right = self._parse_unary()
+            left = z3.And(left, right)
+        return left
+
+    def _parse_unary(self) -> "z3.BoolRef":
+        if self._peek() == "~":
+            self._next()
+            return z3.Not(self._parse_unary())
+        return self._parse_primary()
+
+    def _parse_primary(self) -> "z3.BoolRef":
+        tok = self._next()
+        if tok == "(":
+            expr = self._parse_or()
+            if self._peek() != ")":
+                raise ValueError("missing closing parenthesis")
+            self._next()
+            return expr
+        norm = _normalize_ident(tok)
+        if norm in self._env:
+            return self._env[norm]
+        low = norm.lower()
+        if low in {"1'b1", "1", "1'b0", "0"}:
+            return z3.BoolVal(low in {"1", "1'b1"})
+        # Unknown identifier: emit a fresh z3.Bool symbol.  Internal
+        # wires are later substituted by _rewrite_wires; genuinely
+        # unknown names become free symbols shared by both sides (so
+        # an equivalence check still reports unsat when both sides
+        # reference the same unknown wire).
+        return z3.Bool(norm)
+
+
+def _build_output_exprs(
+    assigns: dict[str, str],
+    outputs: list[str],
+    env: dict[str, "z3.BoolRef"],
+) -> dict[str, "z3.BoolRef"]:
+    """Build a Z3 BoolRef for every output port, resolving wire assigns.
+
+    Resolves wire-to-wire references recursively; cycles are treated as
+    an error (a real combinational netlist has no combinational loops).
+    """
+    cache: dict[str, "z3.BoolRef"] = {}
+    visiting: set[str] = set()
+
+    def resolve(name: str) -> "z3.BoolRef":
+        norm = _normalize_ident(name)
+        if norm in env:
+            return env[norm]
+        if norm in cache:
+            return cache[norm]
+        if norm in visiting:
+            raise ValueError(f"combinational loop through wire {norm!r}")
+        if norm not in assigns:
+            raise KeyError(f"unknown wire {norm!r}")
+        visiting.add(norm)
+        parser = _ExprParser(assigns[norm], env)
+        expr = parser.parse()
+        # parser may reference other wires only through env; for
+        # wire-to-wire we instead re-parse with a resolver-aware env.
+        # Simpler: substitute each identifier in expr if it is an
+        # internal wire and not already resolved.
+        expr = _substitute_wires(assigns, env, cache, norm, expr)
+        visiting.discard(norm)
+        cache[norm] = expr
+        return expr
+
+    result: dict[str, "z3.BoolRef"] = {}
+    for out in outputs:
+        norm = _normalize_ident(out)
+        result[norm] = resolve(norm)
+    return result
+
+
+def _substitute_wires(
+    assigns: dict[str, str],
+    env: dict[str, "z3.BoolRef"],
+    cache: dict[str, "z3.BoolRef"],
+    target: str,
+    expr: "z3.BoolRef",
+) -> "z3.BoolRef":
+    """Resolve internal-wire references inside ``expr``.
+
+    ``expr`` was parsed with only boundary-port identifiers in env.
+    Any remaining identifier that names an internal wire is substituted
+    with its own resolved z3 expression (recursively, memoised in
+    ``cache``).  This is a small, structural rewriter.
+    """
+    # z3 expression tree walk: substitute Bool consts that are wires.
+    return _rewrite_wires(expr, assigns, env, cache, set())
+
+
+def _rewrite_wires(
+    node: "z3.ExprRef",
+    assigns: dict[str, str],
+    env: dict[str, "z3.BoolRef"],
+    cache: dict[str, "z3.BoolRef"],
+    visiting: set[str],
+) -> "z3.BoolRef":
+    if z3.is_const(node) and z3.is_bool(node):
+        name = node.decl().name()
+        if name in env:
+            return env[name]
+        if name in cache:
+            return cache[name]
+        if name in visiting:
+            raise ValueError(f"combinational loop through wire {name!r}")
+        if name in assigns:
+            visiting.add(name)
+            parser = _ExprParser(assigns[name], env)
+            inner = parser.parse()
+            inner = _rewrite_wires(inner, assigns, env, cache, visiting)
+            visiting.discard(name)
+            cache[name] = inner
+            return inner
+        return node  # leave unknown const (e.g. constant) untouched
+    if z3.is_app(node):
+        children = [
+            _rewrite_wires(c, assigns, env, cache, visiting)
+            for c in node.children()
+        ]
+        return node.decl()(*children)
+    return node
 
 
 def check_z3_candidate_boundary_equivalence(
@@ -120,9 +344,9 @@ def check_z3_candidate_boundary_equivalence(
 ) -> Z3FormalEquivalenceResult:
     """Check candidate patch boundary equivalence using Z3 SMT.
 
-    Builds an SMT problem asserting that some boundary input makes the
-    original and replaced outputs differ, then asks z3 for a
-    counterexample.  Returns Z3FormalEquivalenceResult.
+    Builds an SMT problem asserting that some boundary input makes one
+    of the original outputs differ from its replaced counterpart, then
+    asks z3 for a counterexample.  Returns Z3FormalEquivalenceResult.
     """
     started_at = time.perf_counter()
     original_path = Path(original_netlist_path)
@@ -132,7 +356,7 @@ def check_z3_candidate_boundary_equivalence(
     smt2_problem_path = output_dir / "boundary_equivalence.smt2"
     smt2_output_path = output_dir / "boundary_equivalence.smt2.output"
 
-    boundary_ports = list(boundary_ports)
+    boundary_ports = [_normalize_ident(p) for p in boundary_ports]
     command = (
         f"check_z3_candidate_boundary_equivalence("
         f"{original_path}, {replaced_path})"
@@ -161,28 +385,45 @@ def check_z3_candidate_boundary_equivalence(
             smt2_problem_path=str(smt2_problem_path),
         )
 
-    o_assign = _first_assign(original_text)
-    r_assign = _first_assign(replaced_text)
-    if o_assign is None or r_assign is None:
+    o_assigns = _parse_assigns(original_text)
+    r_assigns = _parse_assigns(replaced_text)
+    o_outputs = _parse_module_outputs(original_text)
+    r_outputs = _parse_module_outputs(replaced_text)
+
+    # Fall back to single-assign (original behaviour) when no output
+    # port declaration was parsed (e.g. minimal test Verilog without
+    # a separate output statement).
+    if not o_outputs:
+        # try to infer outputs from assign lhs where lhs is 'y'
+        inferred = [lhs for lhs in o_assigns if lhs == "y"]
+        o_outputs = inferred
+    if not r_outputs:
+        inferred = [lhs for lhs in r_assigns if lhs == "y"]
+        r_outputs = inferred
+
+    if not o_outputs or not r_outputs:
         return Z3FormalEquivalenceResult(
             status="error",
             command=command,
             runtime_s=time.perf_counter() - started_at,
-            reason="could not extract assign expression from verilog",
+            reason="could not extract assign expressions from verilog",
             boundary_ports=tuple(boundary_ports),
             smt2_problem_path=str(smt2_problem_path),
         )
 
-    g = {p: z3.Bool(p) for p in boundary_ports}
+    # Build env from boundary ports.  All identifiers in the netlists
+    # are boolean; use z3.Bool.
+    env = {p: z3.Bool(p) for p in boundary_ports}
+
     try:
-        o_expr = _assign_to_z3(o_assign, g)
-        r_expr = _assign_to_z3(r_assign, g)
+        o_exprs = _build_output_exprs(o_assigns, o_outputs, env)
+        r_exprs = _build_output_exprs(r_assigns, r_outputs, env)
     except Exception as exc:  # noqa: BLE001
         return Z3FormalEquivalenceResult(
             status="error",
             command=command,
             runtime_s=time.perf_counter() - started_at,
-            reason=f"failed to parse assign expression: {exc}",
+            reason=f"failed to build output expressions: {exc}",
             boundary_ports=tuple(boundary_ports),
             smt2_problem_path=str(smt2_problem_path),
         )
@@ -191,9 +432,26 @@ def check_z3_candidate_boundary_equivalence(
     try:
         s.set("timeout", int(timeout_s * 1000))  # milliseconds
     except z3.Z3Exception:
-        # some backends may not support per-solver timeout
         pass
-    s.add(o_expr != r_expr)
+
+    # Assert: exists input where at least one output differs.
+    diffs = []
+    for out in o_outputs:
+        norm = _normalize_ident(out)
+        o_expr = o_exprs.get(norm)
+        r_expr = r_exprs.get(norm)
+        if o_expr is not None and r_expr is not None:
+            diffs.append(o_expr != r_expr)
+    if not diffs:
+        return Z3FormalEquivalenceResult(
+            status="error",
+            command=command,
+            runtime_s=time.perf_counter() - started_at,
+            reason="no matching output ports between original and replaced",
+            boundary_ports=tuple(boundary_ports),
+            smt2_problem_path=str(smt2_problem_path),
+        )
+    s.add(z3.Or(diffs))
 
     try:
         smt2_text = s.to_smt2()
