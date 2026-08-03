@@ -29,7 +29,8 @@
 
 - `reviews/round1_self_audit.md`：1 P0（Stage B CEC）+ 4 P1 + 5 P2
 - `reviews/round1_revision_notes.md`：P0/P1/P2 处置与用户决定需求汇总
-- round 2 修订待 P0（N31-03 cells.v）解决后启动
+- `reviews/round2_self_audit.md`：round2 评估——P2-1（Z3）+ P2-4（主图）已关闭；round2 必改清单 5 项全部完成
+- round 3 待 P0（N31-03 cells.v）决策后启动（CEC pass 复现 + AIG→SMT 8-case 端到端 + 论文主表 final）
 
 ## 边界
 
