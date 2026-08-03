@@ -11,7 +11,7 @@
 | Introduction | `introduction.md` | PM25 | Draft 1 (2026-07-31) |
 | Related Work | `related_work.md` | L01 | Draft 1 (2026-07-31) |
 | Method (符号表与骨架) | `method_symbol_table.md` | N05 | Draft 1 (2026-07-31) |
-| Method (正文) | `method.md` | PM27 | pending（待基于 method_symbol_table.md 重排）|
+| Method (正文) | `method.md` | PM27 | Draft 1 (2026-07-31) |
 | Experiments | `experiments.md` | PM28 | Draft 1 (2026-07-31) |
 | Conclusion | `conclusion.md` | PM29 | Draft 1 (2026-07-31) |
 
@@ -25,10 +25,11 @@
 
 ## 章节修订顺序
 
-1. **PM27 Method 章节正文**：基于 `method_symbol_table.md` 扩充为论文正文段落，含具体算法伪代码与设计动机。**当前未启动**，等待 method_symbol_table 符号表获用户审定。
+1. **PM27 Method 章节正文**：已完成 Draft 1（`method.md`）。等待 method_symbol_table 符号表获用户审定后与 `method.md` 同步修订符号。
 2. **L01 Related Work 迁入**：当用户审定 `related_work.md` 后迁入 `paper/submission/related_work.md`，并按论文主风格重组。
 3. **PM25-29 迁入**：所有章节初稿获用户审定后迁入 `paper/submission/`。
-4. **figures/ 占位**：在 `paper/figures/` 添加论文主图占位（baseline comparison、stage_b_case_summary、stage_b_runtime 等）。
+4. **figures/ 占位**：已建立（`paper/figures/README.md`），等 method chapter 获批后渲染图 1-5。
+5. **tables/ 占位**：已建立（`paper/tables/README.md`），表 1-6 已在 `experiments/` 落盘 markdown。
 
 ## 当前 limitation（章节初稿中明确标注）
 
