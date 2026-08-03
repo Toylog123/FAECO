@@ -14,3 +14,4 @@
 | `2026-07-19_weekly_report.md` | 7 月 14-19 日 FAECO 周进度、证据边界、风险和下周任务汇总 |
 | `2026-07-20_progress_update.md` | 7 月 20 日路线决策、OpenSTA WSL2 安装/smoke、工具链快照修复和后续任务记录 |
 | `2026-07-20_weekly_report.md` | 7 月 20 日 OpenSTA 安装和工具链追溯补充周报 |
+| `2026-07-31_weekly_report.md` | 7 月 31 日 Stage B 端到端（mapping+SDC+OpenSTA）8/8 success + L01 Related Work 初稿 + A-only 22 commits 入库周报 |
