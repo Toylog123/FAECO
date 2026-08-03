@@ -99,7 +99,7 @@
 
 按优先级：
 
-1. **修订 introduction.md / method.md / experiments.md / conclusion.md**：根据自审稿结论，移除"未验证"表述（如"可能"、"后续"），改为更明确的实验支撑描述。**部分完成（2026-08-03）**：conclusion §2/§3 与 experiments §4 已补 N31-06 最新状态；method.md §6 已补 candidate-specific timing gain proxy 描述；introduction 仍保留（待 N31-03 cells.v 决策后与 method 同步）。
+1. **修订 introduction.md / method.md / experiments.md / conclusion.md**：根据自审稿结论，移除"未验证"表述（如"可能"、"后续"），改为更明确的实验支撑描述。**完成（2026-08-03）**：introduction (b) 补 Z3 三条等价验证路径（commit `38e1742`）；method §7 补 Z3 candidate/boundary 路径（commit `d9427d3`）；conclusion §2/§3 补 N31-06 状态（commit `0158681`）；experiments §4 补 N31-06 8-case 端到端 limitation 行（commit `eca0cb7`）。
 2. **重写 method.md §6**：candidate-specific timing gain 描述与代码一致。**已完成（2026-08-03）**：补"candidate-specific timing gain 当前是 Stage A proxy"说明（commit `d5dd5c3`）。
 3. **修订 experiments.md §3**：当 N31-03 ORFS techmap library 获取后更新。**部分完成（2026-08-03）**：已补 N31-06 8-case 端到端 limitation 行（commit `eca0cb7`）；N31-03 cells.v 获取后再补 CEC pass。
 4. **修订 conclusion.md §3**：N31-03 / N31-05 / N31-06 进展更新。**部分完成（2026-08-03）**：N31-06 已更新（commit `0158681`）；N31-03/N31-05 待用户决策后更新。
