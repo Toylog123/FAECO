@@ -28,18 +28,32 @@
 | 文档 | 位置 | 用途 |
 |---|---|---|
 | Z3 candidate/boundary wrapper 设计 | `docs/engineering/z3_candidate_boundary_formal.md` | N31-06 设计入口 |
+| N08 push to remote 设计 | `docs/engineering/n08_push_to_remote.md` | N31-04 设计入口 |
 | SKY130 techmap 缺失 limitation | `risk_register.md` R31-01 | N31-03 入口 |
 | Stage A 5-case 实验产物 | `experiments/20260718_minimal_combinational_batch_demo/` | Experiments 章数据源 |
 | Stage B 8-case 实验产物 | `experiments/20260731_epfl_8case_stage_b/` | Experiments 章数据源 |
 
 ## 章节修订顺序
 
-1. **PM27 Method 章节正文**：已完成 Draft 1（`method.md`）。等待 method_symbol_table 符号表获用户审定后与 `method.md` 同步修订符号。
+1. **PM27 Method 章节正文**：已完成 Draft 1（`method.md`）。本轮已按 round1 修订说明补 §6 candidate-specific timing gain proxy 描述。等待 method_symbol_table 符号表获用户审定后与 `method.md` 同步修订符号。
 2. **L01 Related Work 迁入**：当用户审定 `related_work.md` 后迁入 `paper/submission/related_work.md`，并按论文主风格重组。
 3. **PM25-29 迁入**：所有章节初稿获用户审定后迁入 `paper/submission/`。
-4. **figures/ 占位**：已建立（`paper/figures/README.md`），等 method chapter 获批后渲染图 1-5。
-5. **tables/ 占位**：已建立（`paper/tables/README.md`），表 1-6 已在 `experiments/` 落盘 markdown。
-6. **supplementary/ 占位**：`paper/submission/supplementary/` 等待各章节定稿后批量生成（PM32）。
+4. **N31-04 / N31-06 实施**：等用户决定 round 2 是否启动代码实现。
+5. **N31-03 ORFS techmap library**：等用户授权 PDK 下载，修复 CEC limitation。
+6. **figures/ 占位**：已建立（`paper/figures/README.md`），等 method chapter 获批后渲染图 1-5。
+7. **tables/ 占位**：已建立（`paper/tables/README.md`），表 1-6 已在 `experiments/` 落盘 markdown。
+8. **supplementary/ 占位**：`paper/submission/supplementary/` 等待各章节定稿后批量生成（PM32）。
+
+## 仓库 commits 历史
+
+本轮"持续推进"（`/goal 持续推进` hook active 期间）完成：
+
+- paper/ 框架 100% 完整（draft/ 6 章节 + submission/ + reviews/ + figures/ + tables/ 占位 + README 索引）
+- N31-06 Z3 candidate/boundary formal wrapper 设计文档
+- N31-04 N08 push to remote 设计文档
+- 7/31 周报 + work_log 同步到 LOG-20260731-22
+
+最新 commit hash 在 `git log --oneline` 第一行。
 
 ## 章节一致性
 
