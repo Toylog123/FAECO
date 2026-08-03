@@ -248,3 +248,5 @@ s382 显示**单手段（gate sizing）天花板**：关键路径瓶颈 cell（`
 - **多轮自适应是关键**：单轮只能解决初始关键路径；rounds=6 时 s641 从 -0.86 继续收敛到 -0.57（第 4-6 轮解决 `_098_`/`_079_`/`_082_`/`_159_` 等新瓶颈）
 - **可审计性**：每候选独立子目录 + `candidate_trials` 记录 wns/accepted；审查核对 4 电路 final WNS 与 sta.log 一致、29 处改动全部真实、无被误拒的更好候选; audit-trail fix (commit a82ecf8): round/trial_id fields, accepted by trial_id only, same-inst reset; re-run numbers unchanged, accepted==applied, strict per-round improvement
 - **方法边界（诚实记录）**：当前为 ideal-net pre-layout 验证；post-layout 长线负载下 G/B 的相对贡献可能变化，需 Stage C 后续验证；buffer 插入在真实时钟路径上需 CTS/clock-aware 约束保护
+
+- **弱改善电路根因（s820/s832）**：s820 卡在 -1.11（round2 关键路径 `_118_` 所有 R/G/B 候选均为 -1.11），s832 卡在 -1.11（round3 关键路径 `_129_` 所有候选均为 -1.11）；说明弱改善电路的瓶颈是库单元候选的时序上限（策略空间饱和），当前 G/R/B（含 buf_4）无法突破；post-layout 或新库单元才可能继续改善。
