@@ -13,7 +13,7 @@
 | W0803-03 | round1 自审稿 + 修订说明 | `paper/reviews/round1_self_audit.md`（1 P0 + 4 P1 + 5 P2）+ `round1_revision_notes.md` | `bb1f515` `66b9ef6` |
 | W0803-04 | 4 个 N31-* 设计文档 | N31-03(ORFS techmap) + N31-04(N08 push) + N31-05(sequential) + N31-06(Z3) | `0c6e681` `26d11a8` `a999ce6` `bf16d30` |
 | W0803-05 | N31-06 Z3 wrapper 实施（TDD） | `src/rseco/z3_formal.py` + `tests/test_z3_formal.py` 7 项测试全绿 | `c859bfa` |
-| W0803-06 | N31-06 8-case runner 端到端 | `scripts/run_z3_candidate_boundary_check.py` 跑 8-case；ctrl/router fail(expected)，6-case error(需 multi-output 扩展) | `534be02` |
+| W0803-06 | N31-06 8-case runner 端到端 + multi-output 扩展 | `scripts/run_z3_candidate_boundary_check.py` 跑 8-case；后扩展 wrapper 支持 multi-output/escaped/xor/constant（commit `4eaaa2a`，12 项测试全绿）；8-case 端到端 error 是诚实 limitation（mapped.v 门级实例化需 N31-03 cells.v） | `534be02` `4eaaa2a` |
 | W0803-07 | A-only 范围修正 | `git rm --cached` 移除误入库的 `z3_boundary/` 实验产物（保留工作区） | (untrack 修正 commit) |
 | W0803-08 | work_log 同步 | LOG-20260731-20 至 LOG-20260731-28 共 9 条 | `b37d012` 等 |
 
@@ -36,7 +36,7 @@
 | L31-01 / R31-01 | SKY130 Liberty 不含 `clkinv_1`，Stage B CEC unavailable | 论文主表不能写 "CEC pass" | N31-03 ORFS techmap library（需用户授权 PDK 下载） |
 | L31-02 | 8-case 全 combinational，STA slack=null / MET(INF) | 不能写真实 WNS/TNS 改善 | N31-05 sequential ECO（需用户决定 Stage C 启动） |
 | L31-04 / X19 | failure_recovery single-iteration proxy | `avg_iterations=1.0` | PM22 X19 multi-iteration（需用户 design 审批） |
-| N31-06 端到端 | wrapper 只支持 `assign y = ...` 简单形式，6/8 case error | EPFL 用 `assign n19 = ...` 内部 wire + escaped identifiers | 扩展 multi-output + escaped identifier 解析（代码层，A-only 内可做） |
+| N31-06 端到端 | wrapper multi-output/escaped/xor/constant 已支持（单元测试 12 项全绿），但 8-case 端到端 error | mapped.v 是 SKY130 门级实例化（0 assign）；Yosys aigmap 对 mapped.v 报 SKY130 模块 undefined | 8-case 端到端需 N31-03 cells.v（解锁 CEC + AIG→SMT 双路径，`4d26b1f` 验证记录） |
 
 ## 5. 风险变化
 
@@ -46,13 +46,13 @@
 | R08 | 文献综述不完整 | **mitigated**——L01 Related Work 6 主题 25A/1B 已落地 |
 | R09 | 无版本管理 | **mitigated**——~66 commits 本地基线，N31-04 N08 push 设计已就位 |
 | R31-01 | Stage B CEC limitation | **active**——N31-03 设计已就位，待用户授权 ORFS cells.v 下载 |
-| 新增 R0803-01 | N31-06 Z3 wrapper 对 EPFL multi-output 支持不足 | active——6/8 case 端到端 error；代码层可扩展，不做则保持 limitation |
+| 新增 R0803-01 | N31-06 Z3 wrapper 8-case 端到端受 mapped.v 门级实例化限制 | active——wrapper multi-output 已支持（单元测试），8-case 端到端 error 依赖 N31-03 cells.v（AIG→SMT 解锁）；不做则保持 limitation |
 
 ## 6. 下一批计划
 
 | ID | 任务 | 优先级 | 完成标准 |
 |---|---|---|---|
-| N0803-01 | N31-06 wrapper 扩展 multi-output | P1 | 支持 EPFL `assign n19 = ...` 内部 wire + escaped identifiers；8-case 从 2/8 推进到 8/8 可判定 |
+| N0803-01 | N31-06 AIG→SMT 路径 | P1 | wrapper multi-output 已支持（done）；8-case 端到端需 N31-03 cells.v 解锁 AIG→SMT；AIG→SMT 不独立可行（`4d26b1f` 验证） |
 | N0803-02 | X19 multi-iteration refinement 设计 | P0 | 待用户 design 审批；round1 自审 P1-2 |
 | N0803-03 | ORFS techmap library | P0 | 待用户授权；修复 CEC limitation（round1 自审 P0-1） |
 | N0803-04 | N08 push | P2 | 待用户给 remote URL + 真实 Git 身份 |
