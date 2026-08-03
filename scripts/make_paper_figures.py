@@ -154,11 +154,82 @@ def method_flow() -> None:
     _save(fig, ROOT / "paper" / "figures" / "fig3_method_flow.png")
 
 
+def cut_graph() -> None:
+    """c17 N22 fanin-cone s-t split-graph example (from target_cone.json)."""
+    fig, ax = plt.subplots(figsize=(7.5, 5.0))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 8)
+    ax.axis("off")
+
+    # manual layout: inputs row (y=6.5), gates row (y=3.5), output (y=1)
+    inputs = {"N1": (1.5, 6.5), "N2": (4.0, 6.5),
+              "N3": (6.5, 6.5), "N6": (9.0, 6.5)}
+    gates = {"NAND2_1": (1.5, 3.5), "NAND2_2": (4.0, 3.5),
+             "NAND2_3": (6.5, 3.5), "NAND2_5": (9.0, 3.5)}
+    output = {"N22": (5.0, 1.0)}
+
+    def node(x, y, label, color, radius=0.55):
+        ax.add_patch(plt.Circle((x, y), radius, facecolor="#ffffff",
+                                edgecolor=color, linewidth=1.4))
+        ax.text(x, y, label, ha="center", va="center", fontsize=8, color=INK_PRIMARY)
+
+    for name, (x, y) in inputs.items():
+        node(x, y, name, SERIES[1])
+    for name, (x, y) in gates.items():
+        node(x, y, name, SERIES[0], radius=0.7)
+    for name, (x, y) in output.items():
+        node(x, y, name, SERIES[2])
+
+    # edges: gate_inputs
+    gate_inputs = {
+        "NAND2_1": ["N1", "N3"],
+        "NAND2_2": ["N3", "N6"],
+        "NAND2_3": ["N2", "N11"],
+        "NAND2_5": ["N10", "N16"],
+    }
+    gate_outs = {"NAND2_1": "N10", "NAND2_2": "N11",
+                 "NAND2_3": "N16", "NAND2_5": "N22"}
+    # net positions: internal nets sit above their producing gate
+    net_pos = {"N10": (1.5, 4.9), "N11": (4.0, 4.9),
+               "N16": (6.5, 4.9)}
+
+    def edge(p1, p2, color=INK_MUTED):
+        ax.annotate("", xy=p2, xytext=p1,
+                    arrowprops=dict(arrowstyle="-|>", mutation_scale=12,
+                                    linewidth=1.0, color=color))
+
+    # input -> gate
+    for gate, ins in gate_inputs.items():
+        gx, gy = gates[gate]
+        for net in ins:
+            if net in inputs:
+                edge(inputs[net], (gx, gy + 0.55))
+    # gate -> gate (internal net)
+    for gate, out_net in gate_outs.items():
+        gx, gy = gates[gate]
+        if out_net in net_pos:
+            edge((gx, gy - 0.55), (net_pos[out_net][0], net_pos[out_net][1]))
+    # internal net -> consuming gate
+    for gate, ins in gate_inputs.items():
+        gx, gy = gates[gate]
+        for net in ins:
+            if net in net_pos:
+                edge((net_pos[net][0], net_pos[net][1]), (gx, gy + 0.55))
+    # gate NAND2_5 -> output N22
+    edge((gates["NAND2_5"][0], gates["NAND2_5"][1] - 0.55),
+         (output["N22"][0], output["N22"][1] + 0.55), SERIES[2])
+
+    ax.text(5.0, 7.6, "c17 N22 fanin cone (weighted s-t split graph)",
+            ha="center", va="center", fontsize=11, color=INK_PRIMARY)
+    _save(fig, ROOT / "paper" / "figures" / "fig4_cut_graph.png")
+
+
 def main() -> int:
     (ROOT / "paper" / "figures").mkdir(parents=True, exist_ok=True)
     stage_b_runtime()
     stage_a_baseline()
     method_flow()
+    cut_graph()
     return 0
 
 
