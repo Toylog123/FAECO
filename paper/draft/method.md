@@ -132,7 +132,7 @@ SMT2 problem: assert ∃ input s.t. (o_out != r_out)
 z3 check → sat(fail+cex) / unsat(pass) / unknown(timeout)
 ```
 
-Stage A 5-case (c17×2 + c432 + c499 + c880) Yosys-normalized full-netlist CEC 5/5 `pass`；Stage B 8-case CEC 8/8 `unavailable`，原因是 SKY130 Liberty 不含 `clkinv_1` placeholder（R31-01）。
+Stage A 5-case (c17×2 + c432 + c499 + c880) Yosys-normalized full-netlist ABC CEC 5/5 `pass`；Stage B 8-case 等价验证改用 **Yosys `miter -equiv` + `sat -prove-asserts`**（`scripts/verify_epfl_mapping_sat.py`），从 Liberty boolean function 生成 assign-style cells.v（`scripts/make_liberty_cells_v.py`）后 **8/8 case 等价证明 SUCCESS**（R31-01 mitigated，2026-08-03）。
 
 **Z3 candidate/boundary 路径（N31-06，2026-08-03 实施）**：wrapper（`src/rseco/z3_formal.py`，12 项 TDD 测试）支持 multi-output / escaped-identifier / xor / constant 表达式，对 candidate patch 局部做 SMT 等价并生成 counterexample trace。当前单元测试层面已验证（两边纯 assign 风格）；8-case 端到端受 mapped.v 门级实例化限制（0 assign，需 N31-03 cells.v 解锁 AIG→SMT），见 `docs/engineering/z3_candidate_boundary_formal.md`。
 

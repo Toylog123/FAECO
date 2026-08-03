@@ -29,7 +29,7 @@ FAECO（Failure-Aware Resynthesis-Assisted ECO）继承 RSECO 旧稿的"重综�
 
 | ID | limitation | 影响 | 后续工作 |
 |---|---|---|---|
-| L31-01 / R31-01 | SKY130 Liberty 不含 `clkinv_1` cell，Stage B 8-case CEC 全部 `unavailable` | mapped-BLIF 与 reference BLIF 的 ABC `cec` 不可达 | N31-03 获取 ORFS 配套 techmap library（`cells.v` + `cells.vh` + Liberty），需用户授权下载完整 PDK 部分 |
+| L31-01 / R31-01 | SKY130 Liberty cell model 解析 | **已解决（2026-08-03）**：ABC `cec` 无法建 subcircuit model，改用 Yosys miter+SAT（`scripts/verify_epfl_mapping_sat.py`，从 Liberty function 提取 assign cells.v），8/8 等价证明 SUCCESS | R31-01 mitigated；论文主表可写 "original==mapped 8/8 pass" |
 | L31-02 | 8-case 全 combinational，无 timing path | STA `wns/tns/slack=null` / `slack_status=MET (INF)` | N31-05 SKY130 sequential ECO 拓展（DFF/restore 进 SDC，准备 clock tree） |
 | L31-04 / X19 | failure_recovery 仍是 single-iteration proxy | `avg_iterations=1.0`，未实现真正 multi-iteration loop + without F1/F3/F4 消融 | PM22 X19 multi-iteration refinement 设计（需用户 design 审批） |
 | L31-03 | Z3 candidate/boundary formal 端到端受限 | wrapper 已实现（12 项 TDD 测试，含 multi-output / escaped-identifier / xor / constant），但 mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式 → 8-case 端到端 error | N31-06 AIG→SMT 路径（Yosys 把 original 和 mapped 都归约到 AIG 再 Z3 验证）；wrapper 单元测试层面已验证 |

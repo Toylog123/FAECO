@@ -177,22 +177,23 @@ write_blif <mapped.blif>
 
 按优先级：
 
-1. **决策 A 或 B（用户决定）**：决定 P0-1 修复路径
-2. **路径 A 优先**：保留 SKY130 timing 信息，论文主表可写真实 WNS/TNS
-3. **路径 B 兜底**：LUT mapping 是 fallback，论文标注 limitation
+1. **决策 A（用户已选，2026-08-03）**：用户选择路径 A（下载 cell 模型）。
+2. **实施结果（路径 A 变体）**：下载 skywater cells Verilog 模型（70 cells + UDP，296 KB）后发现 Yosys 0.9 不支持 UDP primitive；改用 **Liberty function 提取方案**（`scripts/make_liberty_cells_v.py` → assign-style `sky130_cells_v2.v`）。
+3. **最终解法**：`scripts/verify_epfl_mapping_sat.py` 用 Yosys `miter -equiv` + `sat -prove-asserts`，**8/8 EPFL case 等价证明 SUCCESS**。
 
-## 8. 当前状态总结
+## 8. 当前状态总结（2026-08-03 更新）
 
-- Stage B 8-case CEC unavailable (P0-1) 是当前唯一 P0 项
-- 修复路径 A 需用户授权 ORFS cells.v 下载
-- 修复路径 B 改用 LUT mapping 兜底
-- 不启动 N31-03 时，论文当前阶段可作为"combinational FAECO + CEC unavailable limitation"投稿
-- N31-03 启动时 `method_rewrite_readiness.md` METH-08 → ready，`risk_register.md` R31-01 → mitigated
+- **Stage B CEC limitation 已解决**：8/8 EPFL case Yosys miter+SAT 等价证明 SUCCESS（`tmp/sat_verify/sat_equivalence_summary.json`）
+- 原 ABC `cec` 路径不可用原因已诊断：ABC read_lib 对 Liberty subcircuit 建 model 普遍失败（连极简 Liberty 也失败）；Yosys read_liberty 把 cell 标 blackbox；下载的 skywater Verilog 模型含 UDP 且 Yosys 0.9 不支持
+- `risk_register.md` R31-01 → **mitigated**
+- 路径 B（LUT mapping 兜底）不再需要
+- 论文主表可写 "original==mapped 等价验证 8/8 pass"
 
 ## 9. 后续修订
 
-- 用户决定 N31-03 路径后，本文档第 4/5 节更新
-- 路径 A 实施后，Yosys 命令序列同步到 `src/rseco/technology_mapping.py`
+- 正式 Stage B runner（`scripts/run_stage_b_pre_layout_sta.py`）后续可把 `sat_equivalence_summary.json` 并入 per-case 表
+- `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.md` 可加 cec_sat 列（8/8 pass）
+- 论文 experiments/method/conclusion 章节 CEC 描述更新为 SAT 等价证明路径
 - 路径 A 修复后 Stage B 8-case CEC 全部 `pass`，`paper/draft/experiments.md` §3 表格更新
 - 路径 B 实施后 Stage B 8-case CEC 全部 `pass` 但 STA 标 `skipped`，`paper/draft/experiments.md` §3 表格更新
 

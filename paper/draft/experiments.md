@@ -77,14 +77,14 @@ python scripts/run_stage_b_pre_layout_sta.py \
 - mapping 8/8 success（Yosys `synth -noabc + abc -liberty` SKY130 HD Liberty）
 - STA 8/8 success（OpenSTA pre-layout STA via WSL2）
 - `wns / tns / slack = null`，`slack_status = MET`（INF）—— 8 个 EPFL case 全 combinational，无 timing path
-- CEC 形式回验（mapped-BLIF vs reference-normalized BLIF）：8/8 status=`unavailable`，原因是 Yosys 0.9 `synth -noabc + abc -liberty` 流程产生 `sky130_fd_sc_hd__clkinv_1` placeholder，SKY130 HD Liberty 实际不含此 cell
+- 等价验证（original vs mapped）：**8/8 pass**（Yosys `miter -equiv` + `sat -prove-asserts`，`scripts/verify_epfl_mapping_sat.py`，2026-08-03）。原 ABC `cec` 无法对 Liberty subcircuit 建 model，改用从 Liberty function 提取的 assign-style cells.v（`scripts/make_liberty_cells_v.py`）后 SAT 证明等价成立
 - 输入 EPFL Verilog SHA256 在 mapping 后保持不变（27 个 SKY130 cell / ctrl case）
 
 ## 4. limitation 与边界
 
 | ID | limitation | 实验影响 | 处理 |
 |---|---|---|---|
-| L31-01 | SKY130 Liberty 不含 `clkinv_1` cell | Stage B CEC 不可达 | N31-03 ORFS techmap library 获取（待用户授权 PDK 下载） |
+| L31-01 | SKY130 Liberty cell model 解析 | **已解决（2026-08-03）**：ABC `cec` 无法建 subcircuit model，改用 Yosys miter+SAT（从 Liberty function 提取 assign cells.v），8/8 等价证明 SUCCESS | `scripts/verify_epfl_mapping_sat.py`；R31-01 mitigated |
 | L31-02 | 8 case 全 combinational | STA slack=null / slack_status=MET (INF) | N31-05 SKY130 sequential ECO 拓展（待 DFF 进 SDC） |
 | L31-04 | failure_recovery 仍是 single-iteration proxy | `avg_iterations=1.0` | X19 multi-iteration refinement（待用户 design 审批） |
 | 补充 | METH-12 candidate-specific timing gain 当前是 Stage A proxy | ranking 无法区分 candidate 时序收益 | P1-4（round1 自审稿）：Stage B STA 已接，per-candidate timing gain 待实现 |
@@ -122,4 +122,4 @@ python -m unittest discover -s tests  # 90 项通过
 - N05 方法符号表获批后，本 Experiments 章节补 X19 multi-iteration refinement 的 ablation 表。
 - L01 Related Work 迁入 `paper/submission/` 后，本文的"工具链"段重排并补充引用文献。
 - 用户最终审定后迁入 `paper/submission/experiments.md`。
-- Stage B CEC 限制修复（SKY130 techmap library）后，本文"形式回验"段补真正的 CEC pass 表。
+- Stage B CEC 已由 Yosys miter+SAT 路径修复（8/8 pass）；本文"形式回验"段已补 SAT 等价证明表。
