@@ -39,10 +39,10 @@ FAECO（Failure-Aware Resynthesis-Assisted ECO）继承 RSECO 旧稿的"重综�
 按优先级：
 
 1. **PM22 / N31-01 X19 multi-iteration refinement**：在成功口径获批后实现真正多轮 refinement loop、residual failure 分类、停止原因和 without F1/F3/F4 消融。这是把当前 `stage_a_proxy` 升级为 `multi_iteration` 的关键依赖。
-2. **N31-03 ORFS techmap library**：获取 `cells.v` + `cells.vh` + Liberty 配套，消除 `clkinv_1` placeholder，修复 Stage B CEC limitation。
+2. **N31-03 ORFS techmap library**：获取 `cells.v` + `cells.vh` + Liberty 配套，消除 `clkinv_1` placeholder，修复 Stage B CEC limitation。设计文档见 `docs/engineering/n08_push_to_remote.md`（注：N08 push 设计实际是 N31-04；此处设计文档应为 `docs/engineering/orfs_techmap_library.md`，待 P0-1 决策后落地）。
 3. **N31-05 SKY130 sequential ECO 拓展**：把 DFF/restore 信号加进 SDC，准备 clock tree，扩展 mapping/STA 到 sequential EPFL benchmark。
-4. **N31-06 Z3 candidate/boundary formal**：candidate/boundary 形式回验使用 Z3，补充当前仅 full-netlist formal 的覆盖。
-5. **N31-04 N08 push to remote**：push 到 GitHub remote。当前本地 commit `b2eb459` 已就位，待用户决策 remote URL。
+4. **N31-06 Z3 candidate/boundary formal**：candidate/boundary 形式回验使用 Z3，补充当前仅 full-netlist formal 的覆盖。设计文档见 `docs/engineering/z3_candidate_boundary_formal.md`。
+5. **N31-04 N08 push to remote**：push 到 GitHub remote。设计文档见 `docs/engineering/n08_push_to_remote.md`。当前本地 commit `ea8a6af` 已就位，待用户决策 remote URL + 真实 Git 身份。
 
 ## 4. 公开性边界
 
