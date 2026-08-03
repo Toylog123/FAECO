@@ -32,7 +32,7 @@ FAECO（Failure-Aware Resynthesis-Assisted ECO）继承 RSECO 旧稿的"重综�
 | L31-01 / R31-01 | SKY130 Liberty 不含 `clkinv_1` cell，Stage B 8-case CEC 全部 `unavailable` | mapped-BLIF 与 reference BLIF 的 ABC `cec` 不可达 | N31-03 获取 ORFS 配套 techmap library（`cells.v` + `cells.vh` + Liberty），需用户授权下载完整 PDK 部分 |
 | L31-02 | 8-case 全 combinational，无 timing path | STA `wns/tns/slack=null` / `slack_status=MET (INF)` | N31-05 SKY130 sequential ECO 拓展（DFF/restore 进 SDC，准备 clock tree） |
 | L31-04 / X19 | failure_recovery 仍是 single-iteration proxy | `avg_iterations=1.0`，未实现真正 multi-iteration loop + without F1/F3/F4 消融 | PM22 X19 multi-iteration refinement 设计（需用户 design 审批） |
-| L31-03 | Z3 candidate/boundary formal 未接入 | 当前仅 full-netlist formal + structural signature 两条路 | N31-06 Z3 candidate/boundary formal wrapper（Z3 已装，需 Python wrapper） |
+| L31-03 | Z3 candidate/boundary formal 端到端受限 | wrapper 已实现（12 项 TDD 测试，含 multi-output / escaped-identifier / xor / constant），但 mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式 → 8-case 端到端 error | N31-06 AIG→SMT 路径（Yosys 把 original 和 mapped 都归约到 AIG 再 Z3 验证）；wrapper 单元测试层面已验证 |
 
 ## 3. 未来工作
 
@@ -41,7 +41,7 @@ FAECO（Failure-Aware Resynthesis-Assisted ECO）继承 RSECO 旧稿的"重综�
 1. **PM22 / N31-01 X19 multi-iteration refinement**：在成功口径获批后实现真正多轮 refinement loop、residual failure 分类、停止原因和 without F1/F3/F4 消融。这是把当前 `stage_a_proxy` 升级为 `multi_iteration` 的关键依赖。
 2. **N31-03 ORFS techmap library**：获取 `cells.v` + `cells.vh` + Liberty 配套，消除 `clkinv_1` placeholder，修复 Stage B CEC limitation。设计文档见 `docs/engineering/n08_push_to_remote.md`（注：N08 push 设计实际是 N31-04；此处设计文档应为 `docs/engineering/orfs_techmap_library.md`，待 P0-1 决策后落地）。
 3. **N31-05 SKY130 sequential ECO 拓展**：把 DFF/restore 信号加进 SDC，准备 clock tree，扩展 mapping/STA 到 sequential EPFL benchmark。
-4. **N31-06 Z3 candidate/boundary formal**：candidate/boundary 形式回验使用 Z3，补充当前仅 full-netlist formal 的覆盖。设计文档见 `docs/engineering/z3_candidate_boundary_formal.md`。
+4. **N31-06 Z3 candidate/boundary formal**：candidate/boundary 形式回验使用 Z3，补充当前仅 full-netlist formal 的覆盖。wrapper 已实施（`src/rseco/z3_formal.py` + 12 项 TDD 测试，2026-08-03），支持 multi-output / escaped-identifier / xor / constant；端到端需 AIG→SMT 路径处理 mapped.v 门级实例化。设计文档见 `docs/engineering/z3_candidate_boundary_formal.md`。
 5. **N31-04 N08 push to remote**：push 到 GitHub remote。设计文档见 `docs/engineering/n08_push_to_remote.md`。当前本地 commit `ea8a6af` 已就位，待用户决策 remote URL + 真实 Git 身份。
 
 ## 4. 公开性边界
