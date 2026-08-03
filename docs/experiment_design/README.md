@@ -27,5 +27,5 @@
 | `failure_aware_cut.md` | 已有草案 | 已被 `failure_taxonomy.md` 和 `faeco_algorithm.md` 细化，后续转测试用例 |
 | `patch_ranking.md` | 已有草案 | 需固定参数和消融方式 |
 | `baseline_protocol.md` | 已有初版 | 需在原型实现后校订运行参数 |
-| `metrics_and_tables.md` | 已有初版 | 需在实验后填入真实结果 |
+| `metrics_and_tables.md` | 已有初版 + Stage B 真实结果 | Stage A 5-case + Stage B 8-case 真实结果已分别落盘 `experiments/20260718_minimal_combinational_batch_demo/tables/*.json` 和 `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}` |
 | `faeco_algorithm.md` | 已有初版 | 后续按模块实现 |

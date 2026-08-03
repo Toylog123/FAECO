@@ -11,6 +11,8 @@
 | `risk_register.md` | 风险登记表 |
 | `decision_log.md` | 关键决策记录 |
 | `initial_commit_scope_audit.md` | 首次 Git 基线的文件分层、许可边界和提交门槛 |
+| `STAGE_B_AGENT_HANDOFF.md` | Stage B 智能体执行交接（状态、limitation、下一步） |
+| `stage_b_deferred_execution_checklist.md` | Stage B 批次 0-7 详细执行清单 |
 | `work_log.md` | 实际工作推进记录 |
 | `weekly_status_template.md` | 周进度汇报模板 |
 
