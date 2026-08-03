@@ -1,178 +1,203 @@
-# Stage B 智能体执行交接
+# FAECO 项目智能体交接
 
-更新时间：2026-07-31
+更新时间：2026-08-03
 
-未来接手智能体必须先读本文件，再读
-`docs/project_management/stage_b_deferred_execution_checklist.md`。不要依赖聊天记录推断状态。
+> **接手智能体必须首先读本文件**，再按第 9 节文档地图顺序读其余文档。不要依赖聊天记录或对话摘要推断状态——一切以本文件和 `docs/task_board.md`、`docs/project_management/work_log.md`、`docs/project_management/decision_log.md` 为准。
 
-**执行授权：当前状态为用户主动暂停（`paused_by_user`）。除非用户明确说“按 Stage B 清单恢复执行”或给出等价授权，否则只能阅读、核对和汇报，不能下载、安装、修改代码或启动实验。** 用户可逐项授权单一动作，例如"开始批次 1 下载"、"跑 ctrl 试点"或"实现 technology_mapping.py"。
+---
 
-## 1. 项目是什么
+## 1. 项目定位
 
-FAECO 的当前论文主线是面向逻辑 ECO 的 failure-aware refinement：以 EPFL
-组合逻辑基准作为主要数据，完成门级表示、形式等价检查、失败分类与恢复，并以
-OpenSTA Stage B 提供统一口径的 technology-mapped pre-layout 时序结果。
+FAECO（**F**ailure-**A**ware **E**CO）是中文工程类时序 ECO 研究项目，继承 RSECO 学长"重综合辅助 patch replacement"思路：
 
-本阶段的直接目标不是完整物理实现，而是：
+> 对时序约束变化后的 RTL 重新综合得到时序更优网表，在新旧网表间寻找等价局部子电路，将时序友好 patch 移植回原始网表；当切割失败、patch 过大或时序收益不足时，按 F1-F5 失败类型自适应调整搜索方向。
 
-1. 固定、校验并记录最小 SKY130 HD Liberty 时序资产。
-2. 把 EPFL Yosys JSON 网表映射到 Liberty 单元。
-3. 为 `ctrl` 建立可复现 SDC 和 Windows-to-WSL2 OpenSTA 执行路径。
-4. 先通过 `ctrl` 端到端试点，再扩展到固定版本的 8 个 EPFL case。
-5. 只报告 pre-layout STA；不得写成 signoff timing，也不得虚构 SPEF。
+**当前阶段**：combinational（组合逻辑 cone）。后续扩展 sequential。
 
-## 2. 当前做到哪一步
+---
 
-**2026-07-31 状态**：批次 0-7 全部完成，7 个本地 commit 落地，Stage B 8-case 端到端批处理 8/8 success。仓库已从无 commit 状态推进到 7 commits（`9482a34..05ada8b`）。
+## 2. 当前状态（2026-08-03 快照）
 
-当前已完成：
-- Python 3.11.9：项目 `.venv`，已验证。
-- Yosys 0.9、ABC 1.01：已安装并验证。
-- OpenSTA 3.1.0：位于 WSL2 Ubuntu 的 `/usr/local/bin/sta`，smoke test 已通过。
-- Z3 5.0.0、NetworkX 3.6.1：已安装并验证。
-- 最新完整回归基线：**90 项测试通过，0 failure，0 error**。
-- EPFL wave 1 和 wave 2 共 8 个 case 已完成 Yosys JSON 导入。
-- 有效 EPFL 源目录：`benchmarks/raw/epfl_v2025_1_full`。
-- 固定 EPFL commit：`8c832d5d07d822d28ba84dc6e95295367702401f`。
-- `benchmarks/raw/epfl_v2025_1` 是失败的 partial clone，必须忽略，不能作为数据源。
-- **SKY130 最小时序资产已下载**：`benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/`，5 个文件（Liberty 12,800,135 bytes + 4 license/source 文件），SHA256 全匹配 manifest。
-- **Technology mapping 已实现**（`src/rseco/technology_mapping.py` + `tests/test_technology_mapping.py` 6 项测试 + `scripts/map_epfl_to_sky130.py`）。
-- **SDC 生成器已实现**（`src/rseco/sdc.py` + `tests/test_sdc.py` 11 项测试 + `experiments/configs/stage_b_pre_layout.json`）。
-- **OpenSTA Stage B runner 已实现**（`src/rseco/opensta.py` + `tests/test_opensta.py` 7 项测试 + `scripts/run_stage_b_pre_layout_sta.py`）。
-- **8-case 端到端批处理已跑通**：8/8 success，所有产物落盘在 `experiments/20260731_epfl_8case_stage_b/`。
+### 核心指标
 
-当前已知 limitation：
-- **CEC 形式回验已解决（2026-08-03）**：原 ABC `cec` 无法对 Liberty subcircuit 建 model；改用 **Yosys miter + SAT** 路径（`scripts/verify_epfl_mapping_sat.py` + `scripts/make_liberty_cells_v.py`），**8/8 EPFL case 等价证明 SUCCESS**（`sat -prove-asserts` 不可满足）。`risk_register.md` R31-01 → mitigated。ABC `check_mapped_blif_equivalence` 保留但不再作为主路径。
-- **STA slack_status=MET**：所有 8 个 EPFL case 都是纯组合电路（无 flip-flop），OpenSTA 报 "No paths found." + "worst slack max INF"，正确反映"无 timing violation"。WNS/TNS/slack 均为 null。
-- **N31-06 Z3 wrapper 8-case 端到端 error（2026-08-03）**：wrapper 已实施（`src/rseco/z3_formal.py`，12 项 TDD 测试，multi-output/escaped/xor/constant），但 mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式；Yosys `aigmap` 对 mapped.v 报 SKY130 模块 undefined。**2026-08-03 更新**：N31-03 cells.v 下载后生成 assign-style cells.v（`sky130_cells_v2.v`，从 Liberty function 提取），Yosys miter+SAT 8/8 pass —— **等价验证已由 SAT 路径解决**；Z3 candidate/boundary wrapper 保留用于 patch 局部验证（单元测试层面）。验证记录见 `docs/engineering/z3_candidate_boundary_formal.md`。
-
-## 3. 已完成的关键工作
-
-| 工作项 | 状态 | 可核验证据 |
-|---|---|---|
-| Yosys JSON importer 与 normalization wrapper | 已完成 | `src/rseco/yosys_json.py` |
-| 常量网与常量输出的逻辑层级处理 | 已完成 | `src/rseco/netlist.py` 及相关测试 |
-| EPFL wave 1 JSON 导入 | 已完成 | `experiments/20260720_epfl_wave1_yosys_json/import_report.json` |
-| EPFL wave 2 JSON 导入 | 已完成 | `experiments/20260728_epfl_wave2_yosys_json/import_report.json` |
-| JSON case loader | 已完成 | 对应源码与测试；完整回归已覆盖 |
-| Python/Yosys/ABC/OpenSTA/Z3/NetworkX 环境 | 已完成 | `experiments/environment/toolchain_2026-07-30.json` |
-| OpenSTA 最小 smoke test | 已完成 | slack `0.70 MET`，WNS/TNS 为 0 |
-| SKY130 Liberty 获取与审计 | **已完成** | `benchmarks/source_manifests/sky130hd_openroad.json`，5 个文件 SHA256 全匹配 |
-| Liberty technology mapping | **已完成** | `src/rseco/technology_mapping.py` + `tests/test_technology_mapping.py` 6 项 |
-| mapped-BLIF CEC helper | **已完成** | `src/rseco/yosys_abc.py`（`check_mapped_blif_equivalence`）+ `scripts/verify_epfl_mapping_cec.py` |
-| 正式 SDC 与 Stage B runner | **已完成** | `src/rseco/sdc.py` + `src/rseco/opensta.py` + 18 项 TDD 测试 + `experiments/configs/stage_b_pre_layout.json` |
-| `ctrl` 端到端试点 | **已完成** | `experiments/20260731_epfl_ctrl_stage_b/`，mapping=success 1.245s, STA=success 5.46s, slack_status=MET |
-| 8-case Stage B 表格 | **已完成** | `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}`，8/8 success |
-| N31-06 Z3 candidate/boundary wrapper | **已完成（实施）** | `src/rseco/z3_formal.py` + `tests/test_z3_formal.py`(7) + `tests/test_z3_formal_multi.py`(5) + `scripts/run_z3_candidate_boundary_check.py`；12 项测试；8-case 端到端受 mapped.v 门级实例化限制（依赖 N31-03） |
-
-详细的 57 项可勾选步骤、命令、验收条件和停止条件都在
-`docs/project_management/stage_b_deferred_execution_checklist.md`。执行过程中应逐项更新，
-禁止最后一次性全部勾选。
-
-## 4. 当前阻塞与风险
-
-| 风险或阻塞 | 处理要求 |
+| 项 | 值 |
 |---|---|
-| 用户当前未授权继续执行 | 保持暂停，直到收到明确恢复指令 |
-| 缺少 SKY130 HD Liberty | 只获取清单指定的最小资产，不下载完整约 7 GB PDK |
-| Windows 与 WSL2 路径格式不同 | runner 必须集中转换路径，并对空格、非 ASCII 路径写测试 |
-| Yosys 0.9 较旧 | 当前阶段不得升级，以免改变既有 JSON 和门数口径 |
-| 映射后可能发生功能变化 | 每个 case 必须先通过 ABC CEC，失败即停止 STA |
-| 约束缺失会产生假结果 | 缺失 clock、I/O delay 或单位时必须标记 unavailable，不能填 0 |
-| OpenSTA smoke 不是正式结果 | 正式表格必须记录 Liberty、SDC、netlist、工具版本和命令 |
-| 仓库无初始提交且大部分文件 untracked | 禁止 `git add .`；未经用户授权不得 commit/push |
-| 失败 partial clone 可能被误用 | 永远使用 `benchmarks/raw/epfl_v2025_1_full` |
+| Git commits | **111**（main 分支） |
+| 远程仓库 | `https://github.com/Toylog123/FAECO.git`（**已 push 同步**） |
+| 回归测试 | **102 项通过，0 failure，0 error** |
+| Stage A | 5-case combinational 端到端（ABC CEC 5/5 pass + baseline 5/5） |
+| Stage B | 8-case EPFL mapping→SDC→OpenSTA 8/8 success |
+| **等价验证** | **8/8 EPFL case Yosys miter+SAT SUCCESS**（CEC 突破） |
+| 论文 | 6 章节 Draft 1 + 5 张主图 + round1/round2 自审稿 |
+| 执行授权 | 用户已恢复授权并持续推进；push 已执行 |
 
-任何一项出现来源不明、哈希不符、许可证不清、回归失败、CEC 失败或 OpenSTA
-日志解析不完整时，停止当前批次，保存原始日志并汇报，不得带病扩展到 8-case。
+### 已关闭的关键项
 
-## 5. 下一步最值得做的 3-5 项
+- **CEC limitation（R31-01）→ mitigated**：ABC `cec` 无法对 Liberty subcircuit 建 model，改用 Yosys miter+SAT（`scripts/verify_epfl_mapping_sat.py` + `scripts/make_liberty_cells_v.py`），8/8 等价证明 SUCCESS。
+- **Git push（N31-04）→ done**：111 commits 已推送 GitHub。
+- **N31-06 Z3 wrapper → 实施完成**：12 项 TDD 测试，单元测试层面完整。
+- **round2 必改清单 → 100%**：4 章节修订 + method §6 + 5 张主图。
 
-收到用户恢复授权后，严格按以下顺序推进：
+---
 
-| 优先级 | 下一任务 | 完成定义 |
+## 3. 已完成工作
+
+### 3.1 工具链
+
+| 工具 | 版本 | 位置/用途 |
 |---|---|---|
-| P0 | 批次 0：恢复与预检 | Python/toolchain 版本吻合；`pip check` 通过；至少 66 项测试通过；无残留下载进程 |
-| P0 | 批次 1：获取最小 SKY130 HD 资产 | Liberty 及许可证来源、commit、URL、SHA256、文件大小写入 manifest |
-| P0 | 批次 2-4：TDD 实现映射、CEC、SDC | 新测试先失败再通过；`ctrl` 映射后 CEC 通过；约束可追溯 |
-| P0 | 批次 5：实现 Windows-to-WSL2 Stage B runner | 结构化 JSON 记录状态、WNS、TNS、关键路径、错误和 provenance |
-| P1 | 批次 6-7：`ctrl` 试点后扩展 8-case | `ctrl` 全门通过后才能批量；失败项保持 unavailable 并附原因 |
+| Python | 3.11.9 | `.venv` |
+| Yosys | 0.9 | Verilog 规范化 / tech mapping / **miter+SAT 等价验证** |
+| ABC | 1.01（`yosys-abc`） | 综合/验证辅助（CEC 主路径不可用，SAT 替代） |
+| OpenSTA | 3.1.0 | WSL2 `/usr/local/bin/sta` |
+| Z3 | 5.0.0 | candidate/boundary 形式验证 |
+| NetworkX | 3.6.1 | 图算法 |
+| matplotlib | 3.11.1 | 论文主图 |
 
-未来智能体开始执行时的第一组命令：
+> **重要：Yosys 0.9 不支持 UDP primitive**（下载的 skywater cell Verilog 模型含 UDP），且 `read_liberty` 把 cell 标 blackbox。等价验证必须走 miter+SAT 路径（见第 5 节），不要回退到 ABC `cec` 或 `read_liberty` + equiv_simple。
+
+### 3.2 数据资产
+
+| 数据集 | commit | 许可 | 位置 | 入库 |
+|---|---|---|---|---|
+| EPFL v2025.1 | `8c832d5d...` | MIT | `benchmarks/raw/epfl_v2025_1_full/` | ❌（raw） |
+| SKY130 HD Liberty | `da8f092a...` | BSD-3/Apache-2.0 | `benchmarks/raw/openroad_flow_scripts_sky130hd/.../lib/` | ❌ |
+| skywater cells 模型 | `ac7fb61f...` | Apache-2.0 | `benchmarks/raw/skywater_cells_models/`（70 cells + UDP + cells_v2.v） | ❌ |
+| ISCAS85 c432/c499/c880 | `b4c6b620...` | 未声明 | `benchmarks/raw/iscas85/` | ❌（仅本地 smoke） |
+
+**A-only 范围**：入库的是 `src/` `tests/` `scripts/` `docs/` `paper/`（除 raw 材料）+ `experiments/configs` + `benchmarks/source_manifests`。raw 许可材料、实验产物、data/ **不入库**。
+
+### 3.3 关键脚本
+
+| 脚本 | 用途 |
+|---|---|
+| `scripts/run_stage_b_pre_layout_sta.py` | Stage B 8-case 端到端（mapping+SDC+OpenSTA） |
+| `scripts/verify_epfl_mapping_sat.py` | **等价验证主路径**（Yosys miter+SAT，8/8 pass） |
+| `scripts/make_liberty_cells_v.py` | 从 Liberty function 生成 assign-style cells.v |
+| `scripts/make_paper_figures.py` | 论文 5 张主图 |
+| `scripts/run_z3_candidate_boundary_check.py` | N31-06 Z3 candidate/boundary |
+| `scripts/run_minimal_combinational_demo.py` | Stage A batch |
+| `scripts/build_stage_b_summary.py` | Stage B 汇总表 |
+
+### 3.4 论文框架
+
+- `paper/draft/`：introduction / related_work / method_symbol_table / method / experiments / conclusion（全部 Draft 1）
+- `paper/figures/`：fig1-5 已生成
+- `paper/reviews/`：round1_self_audit + round1_revision_notes + round2_self_audit
+- `paper/submission/`：占位
+
+---
+
+## 4. 关键决策记录（decision_log 摘要）
+
+| 日期 | 决策 | 理由 |
+|---|---|---|
+| 2026-07-20 | Stage B tech mapping 用 `synth -noabc + abc -liberty` | 避免 Yosys techmap 生成 clkinv_1 placeholder |
+| 2026-07-31 | OpenSTA 接入 WSL2 via `_to_sta_path` | Windows→WSL 路径转换 |
+| 2026-08-03 | **等价验证改 Yosys miter+SAT** | ABC `cec` 对 Liberty subcircuit 建 model 失败（连极简 Liberty 也失败）；read_liberty 标 blackbox；skywater 模型含 UDP |
+| 2026-08-03 | **从 Liberty function 提取 assign cells.v** | 绕过 UDP（Yosys 0.9 不支持）和 blackbox |
+| 2026-08-03 | **GitHub push 到 Toylog123/FAECO** | 用户明确要求；仓库已有历史，未用 git init（会破坏） |
+
+完整记录：`docs/project_management/decision_log.md`。
+
+---
+
+## 5. 等价验证路径（重要）
+
+### 5.1 主路径：Yosys miter + SAT（8/8 pass）
+
+```bash
+python scripts/make_liberty_cells_v.py   # 生成 benchmarks/raw/skywater_cells_models/sky130_cells_v2.v
+python scripts/verify_epfl_mapping_sat.py --output-dir tmp/sat_verify
+```
+
+原理：从 Liberty boolean function 提取 assign-style cells.v（无 UDP/blackbox），Yosys `read_verilog` 读入后 `miter -equiv` 创建比较电路，`sat -prove-asserts` 证明不可满足（等价）。
+
+### 5.2 不用的路径（工具限制记录）
+
+- **ABC `cec`**：`read_blif` 对 Liberty subcircuit 建 model 普遍失败（连极简 Liberty 也失败）——不用
+- **Yosys `read_liberty` + equiv_simple**：read_liberty 把 cell 标 blackbox，无法展开——不用
+- **下载的 skywater Verilog 模型**：含 UDP primitive，Yosys 0.9 不支持——不用（只作许可证据）
+
+### 5.3 Z3 candidate/boundary（补充）
+
+`src/rseco/z3_formal.py`（12 项 TDD）用于 patch 局部等价（multi-output/escaped/xor/constant）。8-case 端到端受限（mapped.v 门级实例化），等价主路径已由 SAT 解决，Z3 保留为 patch 验证补充。
+
+---
+
+## 6. 已知 limitation
+
+| 项 | 说明 | 处理 |
+|---|---|---|
+| STA slack_status=MET | 8 case 全 combinational → slack=null / MET(INF) | 合理；N31-05 sequential 补 WNS/TNS |
+| failure_recovery proxy | `avg_iterations=1.0` | X19 multi-iteration（待 design 审批） |
+| N31-06 Z3 8-case 端到端 | mapped.v 门级实例化 | 等价主路径已由 SAT 解决 |
+| ISCAS85 许可 | c432/c499/c880 未声明 | 仅本地 smoke |
+
+---
+
+## 7. 剩余待办（按优先级）
+
+| 优先级 | 任务 | 依赖 |
+|---|---|---|
+| P0 | X19 multi-iteration refinement | 用户 design 审批（failure recovery 成功口径） |
+| P1 | N31-05 sequential Stage C | 用户决定启动（9-11 周工作量） |
+| P1 | SAT 验证并入正式 Stage B 表格 | 把 `sat_equivalence_summary.json` 并入 `stage_b_case_summary.md` |
+| P2 | 论文章节迁入 `paper/submission/` | 用户审定 6 章节 |
+| P2 | Z3 patch-level 集成 | FAECO patch ranking 产生多候选后 |
+
+---
+
+## 8. 执行规则
+
+1. **TDD**：行为变更必须先写失败测试再实现。
+2. **A-only 范围**：禁止 `git add .`；只 commit 代码/文档/配置，不 commit raw 许可材料/实验产物。
+3. **不升级 Yosys 0.9**（当前门数口径依赖）。
+4. **不下载完整 Sky130 PDK**（7 GB+）。
+5. **失败保留原始日志**，缺失值写 `unavailable` + 原因，禁止填 0。
+6. **每完成一项**：更新 `docs/task_board.md` + `docs/project_management/work_log.md`（带日期 LOG 条目）+ 必要时 `decision_log.md`。
+7. **push**：已配置 origin（Toylog123/FAECO）。push 前跑 102 项回归，push 后确认 `git status` 与 origin 同步。
+8. **工具链快照**：`experiments/environment/toolchain_YYYY-MM-DD.json`，不覆盖历史快照。
+
+---
+
+## 9. 文档地图（接手必读顺序）
+
+| 顺序 | 文档 | 内容 |
+|---|---|---|
+| 1 | `docs/project_management/STAGE_B_AGENT_HANDOFF.md` | **本文件** |
+| 2 | `docs/task_board.md` | 任务看板（含 X/N31 系列状态） |
+| 3 | `docs/project_management/work_log.md` | 每日日志（LOG-20260714 至 LOG-20260803-13） |
+| 4 | `docs/project_management/decision_log.md` | 关键决策 |
+| 5 | `docs/project_management/risk_register.md` | 风险登记 |
+| 6 | `docs/project_management/long_term_task_plan.md` | 长期规划 |
+| 7 | `docs/paper_audit/method_rewrite_readiness.md` | 18 项方法要素就绪矩阵 |
+| 8 | `docs/engineering/` | 工具链 + N31-03/04/05/06 设计 |
+| 9 | `paper/draft/README.md` | 论文章节索引 |
+| 10 | `paper/reviews/round2_self_audit.md` | 最新自审稿 |
+
+**起点命令**：
 
 ```powershell
 cd D:\BaiduSyncdisk\03_FAECO
 & .\.venv\Scripts\Activate.ps1
 $env:PYTHONPATH='src'
-python --version
-python -m pip check
-yosys -V
-yosys-abc -h
-wsl.exe -d Ubuntu -- /usr/local/bin/sta -version
-python -m unittest discover -s tests
+python -m unittest discover -s tests   # 期望 102 项通过
+git status                             # 期望 main 与 origin/main 同步
 ```
 
-若 Python 不是 3.11.9、核心工具版本与快照不符、测试少于 66 项，或出现任何 failure/error，
-立即停止，不进入下载或实现阶段。
+---
 
-随后从详细清单“批次 1”开始，不得跳过许可证、哈希、CEC 或 `ctrl` 试点门禁。
+## 10. 继续/恢复指令模板
 
-## 6. 关键文档与命令
-
-读取顺序：
-
-1. `docs/project_management/STAGE_B_AGENT_HANDOFF.md`
-2. `docs/project_management/stage_b_deferred_execution_checklist.md`
-3. `experiments/environment/toolchain_2026-07-30.json`
-4. `docs/task_board.md`
-5. `docs/project_management/long_term_task_plan.md`
-6. `docs/project_management/work_log.md`
-
-核心环境与来源文件：
-
-- `docs/engineering/toolchain_setup.md`
-- `experiments/environment/python_requirements_2026-07-30.txt`
-- `benchmarks/source_manifests/epfl_v2025.1.json`
-- `experiments/20260720_epfl_wave1_yosys_json/import_report.json`
-- `experiments/20260728_epfl_wave2_yosys_json/import_report.json`
-
-预计按 TDD 新增或完善的代码与产物：
-
-- `src/rseco/technology_mapping.py` 及其测试。
-- `src/rseco/sdc.py` 及其测试。
-- `src/rseco/opensta.py` 及其测试。
-- SKY130 最小资产 manifest，包含许可证、来源 commit、URL、SHA256 和大小。
-- `ctrl` Stage B 独立实验目录，保存原始日志、映射网表、SDC、结构化 JSON 和复现命令。
-- 8-case Stage B 汇总 JSON/CSV/Markdown 表格，失败与缺失值不得写成 0。
-
-代码变更规则：
-
-- 行为变更必须执行 TDD：先增加失败测试，再写最小实现，最后跑局部及完整回归。
-- 手工修改文件使用 `apply_patch`。
-- 保持 raw source、derived artifact、report 三层分离。
-- 不升级 Yosys/ABC，不安装完整 PDK/OpenROAD，不生成伪 SPEF。
-- 未经用户明确授权，不执行 `git add .`、commit、tag 或 push。
-
-恢复提示词可直接使用：
+接手后如要继续推进，可直接使用：
 
 ```text
-按 docs/project_management/STAGE_B_AGENT_HANDOFF.md 和
-docs/project_management/stage_b_deferred_execution_checklist.md 恢复执行。
-从批次0预检开始，ctrl端到端通过前不要扩展8-case，并逐项更新清单。
+按 docs/project_management/STAGE_B_AGENT_HANDOFF.md 继续项目。
+当前状态已核对（102 测试 / 8-case SAT 8/8 pass / GitHub push 完成）。
+下一步：[X19 设计 | N31-05 sequential | SAT 并入正式表 | 论文章节迁入]。
 ```
 
-## 7. 文档缺口与建议补齐项
+---
 
-后续智能体每完成一个批次，应同步：
-
-- 在详细清单中逐项勾选，并写入实际命令、版本、哈希和输出路径。
-- 在 `docs/project_management/work_log.md` 追加带日期的事实记录。
-- 在 `docs/task_board.md` 更新对应任务状态和下一动作。
-- 若工具版本、依赖或路径变化，重新生成
-  `experiments/environment/toolchain_YYYY-MM-DD.json`，不要覆盖历史快照。
-- 在正式实验 README 中明确报告层级：smoke、pilot、batch、paper table。
-- 对所有失败保留原始日志，并在结构化报告中写明错误类别。
-
-当前 Git 状态：分支 `main`，没有初始提交，工作区多数文件未跟踪。本次交接文档未 commit、
-未 push；这是为了遵守用户未授权版本控制操作的边界。未来如需建立 Git 基线，必须先列出
-拟纳入文件并取得用户确认，禁止直接暂存整个工作区。
+*本交接文档随项目进展持续更新。当前快照 2026-08-03（111 commits / 102 测试 / CEC 8/8 / GitHub 已 push）。*
