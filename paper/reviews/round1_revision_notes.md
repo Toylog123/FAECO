@@ -103,7 +103,7 @@
 2. **重写 method.md §6**：candidate-specific timing gain 描述与代码一致。**已完成（2026-08-03）**：补"candidate-specific timing gain 当前是 Stage A proxy"说明（commit `d5dd5c3`）。
 3. **修订 experiments.md §3**：当 N31-03 ORFS techmap library 获取后更新。**部分完成（2026-08-03）**：已补 N31-06 8-case 端到端 limitation 行（commit `eca0cb7`）；N31-03 cells.v 获取后再补 CEC pass。
 4. **修订 conclusion.md §3**：N31-03 / N31-05 / N31-06 进展更新。**部分完成（2026-08-03）**：N31-06 已更新（commit `0158681`）；N31-03/N31-05 待用户决策后更新。
-5. **生成论文主图**：从 `experiments/` 渲染图 1-5。**已完成（2026-08-03）**：`scripts/make_paper_figures.py` 生成 fig1（Stage B runtime）+ fig2（Stage A baseline），dataviz 调色板已验证；fig3-5（method flow / cut graph / failure flow）待 method chapter 获批后补。
+5. **生成论文主图**：从 `experiments/` 渲染图 1-5。**全部完成（2026-08-03）**：`scripts/make_paper_figures.py` 生成 fig1（Stage B runtime）+ fig2（Stage A baseline）+ fig3（method flow）+ fig4（c17 cut graph）+ fig5（F1-F5 failure flow），dataviz 调色板已验证（commits `8d5fae5` `a17c328` `ad2e5c5` `c2873dd`）。
 
 ## 5. 文档维护清单（round 2 之前必须同步）
 
