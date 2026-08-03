@@ -84,9 +84,10 @@ python scripts/run_stage_b_pre_layout_sta.py \
 
 | ID | limitation | 实验影响 | 处理 |
 |---|---|---|---|
-| L31-01 | SKY130 Liberty 不含 `clkinv_1` cell | Stage B CEC 不可达 | N31-03 ORFS techmap library 获取（待用户授权） |
+| L31-01 | SKY130 Liberty 不含 `clkinv_1` cell | Stage B CEC 不可达 | N31-03 ORFS techmap library 获取（待用户授权 PDK 下载） |
 | L31-02 | 8 case 全 combinational | STA slack=null / slack_status=MET (INF) | N31-05 SKY130 sequential ECO 拓展（待 DFF 进 SDC） |
 | L31-04 | failure_recovery 仍是 single-iteration proxy | `avg_iterations=1.0` | X19 multi-iteration refinement（待用户 design 审批） |
+| 补充 | METH-12 candidate-specific timing gain 当前是 Stage A proxy | ranking 无法区分 candidate 时序收益 | P1-4（round1 自审稿）：Stage B STA 已接，per-candidate timing gain 待实现 |
 
 ## 5. 工具链与可复现性
 
