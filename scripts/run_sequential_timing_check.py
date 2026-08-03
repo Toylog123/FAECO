@@ -78,13 +78,24 @@ def run_yosys_mapping(circuit: Path, output: Path) -> list[str]:
     return [l for l in (proc.stdout + proc.stderr).splitlines() if "ERROR" in l]
 
 
-def run_opensta(mapped: Path, period: float, output: Path) -> dict[str, Any]:
-    """OpenSTA via WSL2: read Liberty + mapped + create_clock -> report."""
+def run_opensta(mapped: Path, period: float, output: Path,
+                top_module: str | None = None) -> dict[str, Any]:
+    """OpenSTA via WSL2: read Liberty + mapped + create_clock -> report.
+
+    ``top_module`` is the design module name to link.  If omitted, it is
+    inferred from the first ``module <name>`` declaration in the mapped
+    Verilog (NOT from the parent directory name, which breaks when the
+    netlist lives under a subdirectory such as ``cand/``).
+    """
+    if top_module is None:
+        text = mapped.read_text(encoding="utf-8", errors="replace")
+        m = re.search(r"\bmodule\s+(\w+)", text)
+        top_module = m.group(1) if m else mapped.parent.name
     tcl = output / "sta.tcl"
     tcl.write_text(
         f"read_liberty {_to_wsl(LIB)}\n"
         f"read_verilog {_to_wsl(mapped)}\n"
-        f"link_design {mapped.parent.name}\n"
+        f"link_design {top_module}\n"
         f"create_clock -name clk -period {period} [get_ports CK]\n"
         "report_checks -path_delay max\n"
         "report_worst_slack -max\n"
