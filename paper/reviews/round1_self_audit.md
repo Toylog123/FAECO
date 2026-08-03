@@ -85,9 +85,9 @@
 
 ### P2（可接受 / 改进）
 
-1. Z3 candidate/boundary formal 未接入（N31-06）
-2. Sequential EPFL benchmark 未接入（N31-05）
-3. Git remote 未配置（N31-04）
+1. Z3 candidate/boundary formal wrapper 设计与代码已落地（`src/rseco/z3_formal.py` + 7 项 TDD 测试 + 8-case runner）；端到端 limitation：当前 wrapper 只支持 `assign y = ...` 简单形式，EPFL 8-case 仅 ctrl/router 跑通（fail 是 expected，因为 mapped 是 SKY130 cells 不是 abstract），其他 6 case 因 `assign n19 = ...` 内部 wire 形式需要扩展 multi-output + escaped identifiers（已在 N31-06 limitation 段落记录）
+2. Sequential EPFL benchmark 未接入（N31-05 设计已落地，pending 用户决定 Stage C 启动）
+3. Git remote 未配置（N31-04 设计已落地，pending 用户决定）
 4. 论文主图未渲染（pending figure rendering tool）
 5. 章节初稿需迁入 `paper/submission/`（待用户审定）
 
