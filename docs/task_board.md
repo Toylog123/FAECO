@@ -76,4 +76,5 @@
 | PM30 | round1 修订说明 | done | P1 | `paper/reviews/round1_revision_notes.md` 7 段 P0/P1/P2 处置 | 已 commit `66b9ef6`；按状态"保留到 round 2" / "接受保留" / "需用户决定"分类；round 2 必改清单 5 项；用户决定需求汇总 5 项（按优先级：N31-03 ORFS / N08 remote / 章节审定 / X19 口径 / PM23 sequential） |
 | N31-04 | N08 push to remote 设计 | done | P2 | `docs/engineering/n08_push_to_remote.md` 设计文档 | 已 commit `26d11a8`；9 段（仓库状态 / push 前关闭 / 命令模板 / 后验收 / 后保留 / 用户决定需求 / 不做的事 / 后续修订 / 当前总结）；push 操作是不可逆需用户明确指令；待用户给 remote URL + 真实 Git 身份 |
 | N31-06 | Z3 candidate/boundary wrapper 设计 | done | P2 | `docs/engineering/z3_candidate_boundary_formal.md` 设计文档 | 已 commit `bf16d30`；9 段；Z3FormalEquivalenceResult + check_z3_candidate_boundary_equivalence API；与 Stage A/B ABC CEC 互补不取代；TDD outline 7 项；实施计划 8 步；待用户决定 round 2 是否启动实施 |
+| N31-03 | ORFS techmap library 修复路径设计 | done | P0 | `docs/engineering/n31_03_orfs_techmap_library.md` 设计文档 | 已 commit `0c6e681`；10 段；路径 A（cells.v 配套，需用户授权 ORFS ~150 KB 下载）/ 路径 B（LUT mapping 兜底，不下载 ORFS）；按 handoff 禁止下载完整 Sky130 PDK；待用户决定路径 A 或 B 启动 |
 
