@@ -1,6 +1,9 @@
 # 主线定义：FAECO
 
-更新时间：2026-07-07
+更新时间：2026-07-31
+
+> 本文档为 FAECO 项目的宪法性主线定义，研究定位与成功标准于 2026-07-07 固定。
+> 当前状态以 `docs/task_board.md`、`docs/project_management/roadmap.md`、`docs/reports/2026-07-31_weekly_report.md` 与 `docs/project_management/STAGE_B_AGENT_HANDOFF.md` 为准。
 
 暂定题目：**基于验证反馈的重综合辅助时序 ECO 框架**
 
