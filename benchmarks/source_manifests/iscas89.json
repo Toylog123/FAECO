@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "asset_id": "iscas89_sequential_benchmarks",
+  "status": "acquired",
+  "acquired_on": "2026-08-03",
+  "intended_use": "sequential (reg-to-reg) timing ECO experiments",
+  "source_root": "benchmarks/raw/iscas89",
+  "repository": {
+    "id": "ispras_hdl_benchmarks",
+    "url": "https://github.com/ispras/hdl-benchmarks.git",
+    "branch": "master",
+    "commit": "10c3fb51d0810ce862659211862660dcc270a6af",
+    "license_path": "LICENSE",
+    "license_spdx": "Apache-2.0",
+    "license_sha256": "0311dacd7e4f7cea76cee7b9cd9bb1a3959c53cad94df1ac2efde09c8cccf365"
+  },
+  "circuits": [
+    {"id": "s27",  "file": "s27.v",  "sha256": "ec86b2a6b1b8394074b13fa994f41ec2c457af38fc10df25f9663385f6900cdb", "role": "small"},
+    {"id": "s298", "file": "s298.v", "sha256": "b66bb0c72fe7ef1df9003387304c001c6e27df1b47d393eb5ba0859289d1eb5a", "role": "small"},
+    {"id": "s344", "file": "s344.v", "sha256": "9796a5857e333227ae30497a600c0c20ec3eeaab7dfa50bd4ced5fa0a230b695", "role": "small"},
+    {"id": "s349", "file": "s349.v", "sha256": "ddf96a43d440dd20076a23a196136ba9fb8f3818493d0304b901665dd11b4525", "role": "small"},
+    {"id": "s382", "file": "s382.v", "sha256": "710cb7975489316be689ba74bc692f4ee023ee299981af97587d02a6ac7e76a7", "role": "small"},
+    {"id": "s386", "file": "s386.v", "sha256": "d9e68810a19d7db3f38d4cd259b4ad8a9dfb28fc16134d279d44bb59f5d2a7d3", "role": "small"},
+    {"id": "s400", "file": "s400.v", "sha256": "825126dfa42b32dca3b5f11ec43de49ec090c61bb2dc0bb1e858f98d60553705", "role": "small"},
+    {"id": "s420", "file": "s420.v", "sha256": "c5af6e6fbe6ff7a5a5cd7f9c58877eda47e478323f9ee201e17aa58cbaf76a23", "role": "small"},
+    {"id": "s444", "file": "s444.v", "sha256": "7ba17d3ff0768ef1c7afecbda9865bf5cc7da65670be5451ba7d4c21185a00e0", "role": "small"},
+    {"id": "s510", "file": "s510.v", "sha256": "5996ec6e08a6594be286ca110be238a60ae967ee06b6860a036e1db14d68c794", "role": "small"},
+    {"id": "s526", "file": "s526.v", "sha256": "95603bb25595ee818b46ed28ef4b910020f03c88fcabecfc0d5c584bea5af7cd", "role": "small"},
+    {"id": "s641", "file": "s641.v", "sha256": "0aa389a54f8d1bdd014728290d4f69fb7a68d39a7e0cd094843f3e6f09410a04", "role": "medium"},
+    {"id": "s713", "file": "s713.v", "sha256": "47e34f3a966cae437cf8ac23be09e5b8f50310dce194e1c9c74c8580c68d1a91", "role": "medium"},
+    {"id": "s820", "file": "s820.v", "sha256": "751b3cfae14983644650676a5da0a77c9062e5b74ad80085feeeff3ba5273e51", "role": "medium"},
+    {"id": "s832", "file": "s832.v", "sha256": "213d5a4ea1db1e95c0a451a40a7dac848b4821db1a7b590fc6303fce0125ec90", "role": "medium"},
+    {"id": "s838", "file": "s838.v", "sha256": "c4dac9fe44ce434665912f4e5967ad95cf7e89fee2e8ebf1ace10ce5c4bab905", "role": "medium"},
+    {"id": "s953", "file": "s953.v", "sha256": "f21151b1ba372f7e994cd64da5281f47305a14466692046da1722f9b960fe67b", "role": "medium"}
+  ],
+  "notes": [
+    "ISCAS89 sequential benchmark circuits (Verilog).",
+    "Contains dff modules (true sequential / reg-to-reg timing paths).",
+    "ISPRAS hdl-benchmarks: Apache-2.0 licensed (2019-2024).",
+    "Sourced from https://github.com/ispras/hdl-benchmarks commit 10c3fb51.",
+    "Used for N31-05 sequential ECO and failure-aware hybrid repair experiments."
+  ]
+}
