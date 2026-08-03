@@ -56,6 +56,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--period", type=float, default=0.5, help="Clock period (ns); tight to create violation")
     p.add_argument("--rounds", type=int, default=3, help="Multi-round greedy passes over the refreshed critical path")
     p.add_argument("--enable-buffer", action="store_true", help="Also try strategy B (buffer insertion); off by default because ideal-net pre-layout usually only adds delay")
+    p.add_argument("--buf-types", default="buf_1,buf_2", help="Comma-separated buffer sizes for strategy B (e.g. buf_1,buf_2,buf_4)")
     p.add_argument("--output-dir", type=Path, required=True)
     return p.parse_args()
 
@@ -188,7 +189,12 @@ def main() -> int:
                 cands.append((new_type, {}, "G"))
             if args.enable_buffer:
                 fanout = build_net_fanout(cells)
-                for pin, net, buf_type, new_net in buffer_candidates(cells, inst, fanout):
+                buf_short = [t.strip() for t in args.buf_types.split(",") if t.strip()]
+                buf_types = tuple(
+                    "sky130_fd_sc_hd__" + b if not b.startswith("sky130_fd_sc_hd__") else b
+                    for b in buf_short
+                )
+                for pin, net, buf_type, new_net in buffer_candidates(cells, inst, fanout, buf_types=buf_types):
                     # encode B candidate: kind B carries buf_type/pin/new_net
                     cands.append((f"buf:{buf_type}:{pin}:{new_net}", {}, "B"))
             if not cands:

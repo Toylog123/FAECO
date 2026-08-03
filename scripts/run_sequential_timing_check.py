@@ -56,11 +56,31 @@ def run_yosys_mapping(circuit: Path, output: Path) -> list[str]:
     """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist."""
     script = output / "map.ys"
     lib_posix = LIB.as_posix()
+    top_name = circuit.stem
+    src = circuit.read_text(encoding="utf-8", errors="replace")
+    # Some ISCAS89 netlists (s820/s832/s953) instantiate a plain ``dff``
+    # black box (``dff NAME(CK,D,Q)``) with no module definition.  Yosys
+    # cannot resolve it, so emit a preprocessed copy that (1) rewrites the
+    # instance to named ports and (2) appends a standard ``module dff``
+    # definition that dfflibmap can later map to a SKY130 flop.
+    pre = output / "circuit_pre.v"
+    if re.search(r"\bdff\s+\w+\s*\(", src) and "module dff" not in src:
+        def _fix_dff(m):
+            name = m.group(1)
+            args = [a.strip() for a in m.group(2).split(",")]
+            if len(args) == 3:
+                ck, q, d = args
+                return "dff " + name + "(.CK(" + ck + "), .D(" + d + "), .Q(" + q + "))"
+            return m.group(0)
+        src = re.sub(r"\bdff\s+(\w+)\s*\(\s*([^;]+?)\s*\)", _fix_dff, src)
+        src += "\nmodule dff(input CK, D, output Q);\n  reg Q;\n  always @(posedge CK) Q <= D;\nendmodule\n"
+        pre.write_text(src, encoding="utf-8")
+        circuit = pre
     script.write_text(
         "\n".join(
             [
                 f"read_verilog {circuit.as_posix()}",
-                "synth -top " + circuit.stem,
+                "synth -top " + top_name,
                 f"dfflibmap -liberty {lib_posix}",
                 f"abc -liberty {lib_posix}",
                 "clean",
