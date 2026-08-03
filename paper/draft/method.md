@@ -113,6 +113,8 @@ FAECO 的核心贡献是 F1-F5 失败分类驱动的 refinement：
 
 **当前实现是 single-iteration proxy**（Stage A）：failure_recovery 表 F3/F4 `avg_iterations=1.0`。**多轮 refinement**、residual failure 分类、停止原因和 without F1/F3/F4 消融待 PM22 (X19) 设计获批后启动。
 
+**candidate-specific timing gain 当前是 Stage A proxy**：所有 candidate 共用同一目标输出 logic-level reduction（来自整网表静态值）。Stage B 已接 OpenSTA，可把 per-candidate STA timing gain 作为 ranking feature；当前未实现 round1 self-audit 已记录 (METH-12 partial, P1-4)，待 N31-05 sequential 拓展时一并解决。
+
 ## 7. 形式回验
 
 FAECO 同时维护结构签名等价（`src/rseco/equivalence.py`）和形式等价（`src/rseco/yosys_abc.py`）两条路：

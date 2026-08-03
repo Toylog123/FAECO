@@ -74,4 +74,6 @@
 | PM29 | 写 Conclusion | done | P1 | `paper/draft/conclusion.md` 含 5 段 + 未来工作 | 已 commit `f337199`；基于 Introduction + Experiments + method_symbol_table + related_work；含 4 项 limitation 透明声明、5 项未来工作 (X19/ORFS techmap/SKY130 sequential/Z3/N08 push)、公开性边界 |
 | PM29-a | round1 自审稿报告 | done | P1 | `paper/reviews/round1_self_audit.md` 5 大维度评估 | 已 commit `bb1f515`；1 P0（METH-08 CEC unavailable）+ 4 P1（METH-01/09/10/12）+ 5 P2；处置建议：N31-03 优先，X19 第二，ISCS85 与 sequential 并行；自审结论："FAECO 当前阶段在 P0 CEC limitation 未解决前可作为受限方法+流程工作产出论文" |
 | PM30 | round1 修订说明 | done | P1 | `paper/reviews/round1_revision_notes.md` 7 段 P0/P1/P2 处置 | 已 commit `66b9ef6`；按状态"保留到 round 2" / "接受保留" / "需用户决定"分类；round 2 必改清单 5 项；用户决定需求汇总 5 项（按优先级：N31-03 ORFS / N08 remote / 章节审定 / X19 口径 / PM23 sequential） |
+| N31-04 | N08 push to remote 设计 | done | P2 | `docs/engineering/n08_push_to_remote.md` 设计文档 | 已 commit `26d11a8`；9 段（仓库状态 / push 前关闭 / 命令模板 / 后验收 / 后保留 / 用户决定需求 / 不做的事 / 后续修订 / 当前总结）；push 操作是不可逆需用户明确指令；待用户给 remote URL + 真实 Git 身份 |
+| N31-06 | Z3 candidate/boundary wrapper 设计 | done | P2 | `docs/engineering/z3_candidate_boundary_formal.md` 设计文档 | 已 commit `bf16d30`；9 段；Z3FormalEquivalenceResult + check_z3_candidate_boundary_equivalence API；与 Stage A/B ABC CEC 互补不取代；TDD outline 7 项；实施计划 8 步；待用户决定 round 2 是否启动实施 |
 
