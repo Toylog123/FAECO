@@ -85,7 +85,7 @@
 
 ### P2（可接受 / 改进）
 
-1. Z3 candidate/boundary formal wrapper 设计与代码已落地（`src/rseco/z3_formal.py` + 7 项 TDD 测试 + 8-case runner）；端到端 limitation：当前 wrapper 只支持 `assign y = ...` 简单形式，EPFL 8-case 仅 ctrl/router 跑通（fail 是 expected，因为 mapped 是 SKY130 cells 不是 abstract），其他 6 case 因 `assign n19 = ...` 内部 wire 形式需要扩展 multi-output + escaped identifiers（已在 N31-06 limitation 段落记录）
+1. Z3 candidate/boundary formal wrapper 设计与代码已落地（`src/rseco/z3_formal.py` + 12 项 TDD 测试（7 原 + 5 multi）+ 8-case runner）。multi-output / escaped-identifier / xor / constant 支持已实现（2026-08-03，`4eaaa2a`，完整回归 102 项全绿）。端到端剩余 limitation：mapped.v 是 SKY130 门级实例化（0 assign，含 `clkinv_1` placeholder），assign-only wrapper 无法构建 replaced 侧 Z3 表达式 → 8-case 全 error 是诚实结果；支持需 Yosys AIG→SMT 路径（N31-06 设计文档已声明边界，见 `docs/engineering/z3_candidate_boundary_formal.md`）
 2. Sequential EPFL benchmark 未接入（N31-05 设计已落地，pending 用户决定 Stage C 启动）
 3. Git remote 未配置（N31-04 设计已落地，pending 用户决定）
 4. 论文主图未渲染（pending figure rendering tool）
