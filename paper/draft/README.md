@@ -15,6 +15,32 @@
 | Experiments | `experiments.md` | PM28 | Draft 1 (2026-07-31) |
 | Conclusion | `conclusion.md` | PM29 | Draft 1 (2026-07-31) |
 
+## 自审稿与修订
+
+| 文档 | 位置 | 对应任务 | 状态 |
+|---|---|---|---|
+| Self-audit 检查清单 | `paper/reviews/README.md` | PM29 | pending（持续维护） |
+| Round 1 自审稿报告 | `paper/reviews/round1_self_audit.md` | PM29 | done (2026-07-31) |
+| Round 1 修订说明 | `paper/reviews/round1_revision_notes.md` | PM30 | done (2026-07-31) |
+
+## 配套设计与工程文档
+
+| 文档 | 位置 | 用途 |
+|---|---|---|
+| Z3 candidate/boundary wrapper 设计 | `docs/engineering/z3_candidate_boundary_formal.md` | N31-06 设计入口 |
+| SKY130 techmap 缺失 limitation | `risk_register.md` R31-01 | N31-03 入口 |
+| Stage A 5-case 实验产物 | `experiments/20260718_minimal_combinational_batch_demo/` | Experiments 章数据源 |
+| Stage B 8-case 实验产物 | `experiments/20260731_epfl_8case_stage_b/` | Experiments 章数据源 |
+
+## 章节修订顺序
+
+1. **PM27 Method 章节正文**：已完成 Draft 1（`method.md`）。等待 method_symbol_table 符号表获用户审定后与 `method.md` 同步修订符号。
+2. **L01 Related Work 迁入**：当用户审定 `related_work.md` 后迁入 `paper/submission/related_work.md`，并按论文主风格重组。
+3. **PM25-29 迁入**：所有章节初稿获用户审定后迁入 `paper/submission/`。
+4. **figures/ 占位**：已建立（`paper/figures/README.md`），等 method chapter 获批后渲染图 1-5。
+5. **tables/ 占位**：已建立（`paper/tables/README.md`），表 1-6 已在 `experiments/` 落盘 markdown。
+6. **supplementary/ 占位**：`paper/submission/supplementary/` 等待各章节定稿后批量生成（PM32）。
+
 ## 章节一致性
 
 - 5 个章节初稿共享以下基础：
