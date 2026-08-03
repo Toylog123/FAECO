@@ -39,7 +39,7 @@ python scripts/run_minimal_combinational_demo.py \
 | 文件 | 内容 |
 |---|---|
 | `tables/case_summary.json` | 每个 run 的 selected patch、rank、score、replacement status、failure types、structural equivalence、formal_equivalence、abc_baseline、runtime、toolchain_snapshot |
-| `tables/baseline_comparison.json` | fixed min-cut / seeded random cut / size-only / critical-path-only / ABC rewrite+refactor+resyn / FAECO selected 六种方法 patch size 与 score 对比 |
+| `tables/baseline_comparison.json` | fixed min-cut / seeded random cut / size-only / critical-path-only / ABC rewrite+refactor+resyn / FAECO selected 六种方法 patch size 与 score 对比（图 2，`paper/figures/fig2_stage_a_baseline.png` 给出 patch size 可视化） |
 | `tables/runtime_breakdown.json` | Python + Yosys/ABC 阶段 runtime stage 表 |
 | `tables/failure_recovery.json` | Stage A proxy failure recovery 表（F1-F5 initial fail / proxy recovered / recovery rate / avg_iterations） |
 
@@ -58,7 +58,7 @@ python scripts/run_stage_b_pre_layout_sta.py \
     --sta-command "wsl -d Ubuntu -- /usr/local/bin/sta"
 ```
 
-`experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.md`：
+`experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.md`（图 1，`paper/figures/fig1_stage_b_runtime.png` 给出 mapping+STA runtime 可视化）：
 
 | benchmark | mapping | mapping_s | sta | sta_s | slack_status |
 |---|---|---|---|---|---|

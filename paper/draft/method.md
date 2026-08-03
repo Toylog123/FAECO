@@ -14,7 +14,7 @@
 
 ## 1. 方法总览
 
-FAECO 在 RSECO 旧稿"重综合辅助 patch replacement"思路基础上，把修复过程形式化为图 1（占位）所示的三阶段流水线：
+FAECO 在 RSECO 旧稿"重综合辅助 patch replacement"思路基础上，把修复过程形式化为图 3（`paper/figures/fig3_method_flow.png`）所示的三阶段流水线：
 
 (a) **Resynthesis**：对原始网表 $G$（Verilog）经 Yosys `synth -top t -noabc + abc -liberty <lib>` 产生 mapped 网表 $G'$（SKY130 HD Liberty cells）；同时对原始网表用 Yosys `proc; flatten; opt; simplemap; clean; write_blif` 产生 reference BLIF $G_n$。
 
