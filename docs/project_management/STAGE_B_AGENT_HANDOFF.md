@@ -62,6 +62,7 @@ OpenSTA Stage B 提供统一口径的 technology-mapped pre-layout 时序结果�
 | 正式 SDC 与 Stage B runner | **已完成** | `src/rseco/sdc.py` + `src/rseco/opensta.py` + 18 项 TDD 测试 + `experiments/configs/stage_b_pre_layout.json` |
 | `ctrl` 端到端试点 | **已完成** | `experiments/20260731_epfl_ctrl_stage_b/`，mapping=success 1.245s, STA=success 5.46s, slack_status=MET |
 | 8-case Stage B 表格 | **已完成** | `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}`，8/8 success |
+| N31-06 Z3 candidate/boundary wrapper | **已完成（实施）** | `src/rseco/z3_formal.py` + `tests/test_z3_formal.py`(7) + `tests/test_z3_formal_multi.py`(5) + `scripts/run_z3_candidate_boundary_check.py`；12 项测试；8-case 端到端受 mapped.v 门级实例化限制（依赖 N31-03） |
 
 详细的 57 项可勾选步骤、命令、验收条件和停止条件都在
 `docs/project_management/stage_b_deferred_execution_checklist.md`。执行过程中应逐项更新，
