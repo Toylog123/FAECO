@@ -16,7 +16,7 @@
 | W0803-06 | N31-06 8-case runner 端到端 + multi-output 扩展 | `scripts/run_z3_candidate_boundary_check.py` 跑 8-case；后扩展 wrapper 支持 multi-output/escaped/xor/constant（commit `4eaaa2a`，12 项测试全绿）；8-case 端到端 error 是诚实 limitation（mapped.v 门级实例化需 N31-03 cells.v） | `534be02` `4eaaa2a` |
 | W0803-07 | A-only 范围修正 | `git rm --cached` 移除误入库的 `z3_boundary/` 实验产物（保留工作区） | (untrack 修正 commit) |
 | W0803-08 | work_log 同步 | LOG-20260731-20 至 LOG-20260731-28 共 9 条 | `b37d012` 等 |
-| W0803-09 | 论文主图生成 + round2 必改清单推进 | `scripts/make_paper_figures.py` 生成 `paper/figures/fig1_stage_b_runtime.png` + `fig2_stage_a_baseline.png`；dataviz 调色板验证通过 | round2 必改清单：method §6 done、主图 done、conclusion/experiments 部分完成（N31-06 已更新）；`8d5fae5` `7dda2db` 等 |
+| W0803-09 | 论文主图 5 张全生成 + round2 必改清单推进 | `scripts/make_paper_figures.py` 生成 `paper/figures/fig{1..5}.png`（Stage B runtime / Stage A baseline / method flow / c17 cut graph / F1-F5 failure flow）；dataviz 调色板验证通过 | round2 必改清单：method §6 done、主图 fig1-5 done、introduction/conclusion/experiments/method §7 已补 Z3 路径、PM30 in_progress；`8d5fae5` `a17c328` `ad2e5c5` `c2873dd` `38e1742` 等 |
 
 ## 3. 当前可验证结果
 
