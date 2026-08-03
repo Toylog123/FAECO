@@ -88,6 +88,7 @@ python scripts/run_stage_b_pre_layout_sta.py \
 | L31-02 | 8 case 全 combinational | STA slack=null / slack_status=MET (INF) | N31-05 SKY130 sequential ECO 拓展（待 DFF 进 SDC） |
 | L31-04 | failure_recovery 仍是 single-iteration proxy | `avg_iterations=1.0` | X19 multi-iteration refinement（待用户 design 审批） |
 | 补充 | METH-12 candidate-specific timing gain 当前是 Stage A proxy | ranking 无法区分 candidate 时序收益 | P1-4（round1 自审稿）：Stage B STA 已接，per-candidate timing gain 待实现 |
+| 补充 | N31-06 Z3 wrapper 8-case 端到端 error（2026-08-03） | mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式；Yosys aigmap 对 mapped.v 报 SKY130 模块 undefined | wrapper 单元测试层面（12 项，multi-output/escaped/xor/constant）已验证；8-case 端到端需 N31-03 cells.v（解锁 CEC + AIG→SMT 双路径） |
 
 ## 5. 工具链与可复现性
 
