@@ -165,6 +165,7 @@ write_blif <mapped.blif>
 - Stage B 8-case STA 8/8 success（不变）
 - **Stage B 8-case CEC 8/8 pass**（从 `unavailable` 升级为 `pass`）
 - mapped BLIF 含真实 SKY130 cells（非 placeholder）
+- **N31-06 AIG→SMT 解锁**：cells.v 提供 SKY130 cell 模型后，Yosys `aigmap` 可把 mapped.v 归约到 AIG（当前报 `Module '\sky130_fd_sc_hd__nand2b_1' ... is not part of the design`），从而打通 Z3 candidate/boundary 的 8-case 端到端（2026-08-03 验证，见 `docs/engineering/z3_candidate_boundary_formal.md`）
 
 路径 B 修复后：
 - Stage B 8-case mapping 8/8 success（不变）
