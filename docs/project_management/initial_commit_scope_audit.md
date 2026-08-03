@@ -10,14 +10,14 @@
 
 | 项 | 当前状态 | 影响 |
 |---|---|---|
-| Git 历史 | `main` 分支，尚无提交 | 首次提交会定义后续全部历史边界 |
-| 远端 | 未配置 remote | 当前不会自动外发，但不能依赖“暂时无远端”代替范围治理 |
-| 未忽略候选 | 241 个文件，约 95.32 MiB | 直接执行全量 `git add` 会纳入大量原始材料和 PDF |
+| Git 历史 | `main` 分支，22 commits (`9482a34..eb07e6e`) | A-only 范围 135 个核心文件已分批入库；按 handoff `initial_commit_scope_audit.md` 实际边界执行 |
+| 远端 | 未配置 remote | 仓库当前为本地基线，push 决策由用户决定 |
+| 未忽略候选 | 60 个 untracked 顶层目录/文件 | 剩余 untracked 包括 `.codex-handoff.json`、`benchmarks/raw/`、`data/`、`paper/`、`experiments/2026*_*`（实验产物）、`experiments/tmp_yosys_json_probe/`；按 A-only 范围不应入库 |
 | `.gitignore` | 已忽略 `tmp/`、Python cache、日志和构建产物 | SAT 正确核验缓存与文档渲染缓存不会进入提交 |
 | Git LFS | 已安装 3.7.1；未配置 `.gitattributes` | LFS 只能处理大文件存储，不能授予论文或 benchmark 再分发权 |
-| Git 身份 | 当前为 `Toylog <Toylog@example.com>` | 提交前应确认是否为真实、期望的作者身份 |
+| Git 身份 | 当前为 `Toylolog <Toylolog@local>`（local repo 临时身份） | push 前需用真实身份或保留 local 状态 |
 | 仓库许可 | 顶层无 `LICENSE`、`NOTICE` 或 `COPYING` | 在决定公开范围前不能把仓库称为公开可再分发项目 |
-| 行尾策略 | `core.autocrlf=true` | 首次提交前可接受，但若要求跨平台稳定应另行批准 `.gitattributes` 方案 |
+| 行尾策略 | `core.autocrlf=true` | 22 commits 全部接受 LF → CRLF warning；8 个 mixed / 11 个 CRLF-only / 16 个 BOM 文件仍 untracked；push 前显式决定 `.gitattributes` |
 
 ## 3. 文件分层
 
