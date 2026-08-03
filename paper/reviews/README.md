@@ -9,10 +9,11 @@
 ```
 paper/reviews/
 ├── README.md
-├── round1_self_audit.md     (PM29 第 1 轮自审)
-├── round1_external_audit.md (PM29 模拟审稿意见)
-├── round1_revision_notes.md (PM30 第 1 轮修订说明)
-├── round2_*.md                (PM30 第 2 轮)
+├── round1_self_audit.md       (PM29 第 1 轮自审 — 已落地 2026-07-31)
+├── round1_external_audit.md   (PM29 模拟审稿意见)
+├── round1_revision_notes.md   (PM30 第 1 轮修订说明 — 已落地 2026-07-31)
+├── round2_self_audit.md       (PM30 第 2 轮自审 — 已落地 2026-08-03)
+├── round2_*.md                (PM30 第 2 轮修订)
 └── final_review.md            (PM30 终审)
 ```
 
