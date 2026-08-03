@@ -67,6 +67,16 @@
 | `ranking` | timing-aware patch ranking |
 | `flow` | benchmark case generation 和端到端实验流程 |
 | `metrics` | success rate、patch size、logic level、runtime 等指标 |
+| `yosys_json` | EPFL Yosys JSON importer 和 wrapper (2026-07-19) |
+| `yosys_abc` | Yosys-normalized BLIF + ABC `cec` wrapper + ABC baseline wrapper (Stage A) + mapped-BLIF equivalence helper (2026-07-31) |
+| `technology_mapping` | Yosys `synth -noabc + abc -liberty` 流程，针对 SKY130 HD Liberty (2026-07-31) |
+| `sdc` | pre-layout SDC generator，从 Liberty 读 units、确定性 virtual-clock SDC、端口匹配检查 (2026-07-31) |
+| `opensta` | OpenSTA pre-layout STA runner，Windows→WSL2 路径转换、Tcl 脚本生成、parser 支持 INF 与 "No paths found" (2026-07-31) |
+| `yosys_json` | EPFL Yosys JSON importer 和 wrapper (2026-07-19) |
+| `yosys_abc` | Yosys-normalized BLIF + ABC `cec` wrapper + ABC baseline wrapper (Stage A) + mapped-BLIF equivalence helper (2026-07-31) |
+| `technology_mapping` | Yosys `synth -noabc + abc -liberty` 流程，针对 SKY130 HD Liberty (2026-07-31) |
+| `sdc` | pre-layout SDC generator，从 Liberty 读 units、确定性 virtual-clock SDC、端口匹配检查 (2026-07-31) |
+| `opensta` | OpenSTA pre-layout STA runner，Windows→WSL2 路径转换、Tcl 脚本生成、parser 支持 INF 与 "No paths found" (2026-07-31) |
 
 ## 4. 实验输出规范
 
