@@ -13,6 +13,8 @@
 | LOG-20260803-05 | N31-06 multi-output 扩展收尾 + 论文同步 | `paper/draft/conclusion.md` + `docs/engineering/z3_candidate_boundary_formal.md` | conclusion §2/§3 更新 N31-06 状态（12 项测试 + 端到端 limitation）；设计文档第 7 节改为"已实施状态 + 后续 AIG→SMT 路径"；commit `0158681` + `ef018a5` |
 | LOG-20260803-06 | AIG→SMT 依赖验证 | Yosys `aigmap` 探针 | Yosys aigmap 对 mapped.v 报 `Module '\sky130_fd_sc_hd__nand2b_1' ... is not part of the design`——SKY130 实例化在无 cells.v 时是黑盒，AIG→SMT 不独立可行，依赖 N31-03 cells.v；记录到 z3 设计文档 commit `4d26b1f` + experiments.md limitation 行 commit `eca0cb7` |
 | LOG-20260803-07 | METH-08 / paper README / task_board 同步 | `docs/paper_audit/method_rewrite_readiness.md` + `paper/README.md` + `docs/task_board.md` | METH-08 补 N31-06 Z3 补充路径（commit `7df8199`）；paper/README.md 重写反映 6 章节框架完整状态（commit `b554355`）；task_board N31-06 更新为"设计与实施 done"（commit `1be9f91`） |
+| LOG-20260803-08 | 论文主图生成（round2 必改清单） | `scripts/make_paper_figures.py` + `paper/figures/fig1_stage_b_runtime.png` + `fig2_stage_a_baseline.png` + `figures/README.md` | matplotlib 3.11.1；dataviz 默认 categorical palette（blue/orange/aqua/yellow）用 `validate_palette.js` 验证 4 色通过（CVD ΔE ≥ 9.1，normal-vision ≥ 22.9）；fig1 = Stage B 8-case mapping+STA runtime（1162×618）；fig2 = Stage A 5-case patch size by method（1156×619）；relief rule 用直接标签；commit（figures commit）|
+| LOG-20260803-09 | N31-06 文档全同步收尾 | `STAGE_B_AGENT_HANDOFF.md` + `risk_register.md` + `paper/draft/README.md` + `.gitignore` + `8/3 周报` | handoff 补 N31-06 limitation + 已完成表（commit `d72b886` `15d6e56`）；risk_register 补 R0803-01（commit `35f6145`）；paper/draft/README 配套设计表更新（commit `a659ad1`）；.gitignore 忽略 `experiments/tmp_*/`（commit `3e37af5`）；8/3 周报 W0803-06/N0803-01 更新 multi-output 状态（commit `9003431`） |
 
 ## 2026-07-31
 
