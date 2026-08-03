@@ -17,6 +17,7 @@
 | W0803-07 | A-only 范围修正 | `git rm --cached` 移除误入库的 `z3_boundary/` 实验产物（保留工作区） | (untrack 修正 commit) |
 | W0803-08 | work_log 同步 | LOG-20260731-20 至 LOG-20260731-28 共 9 条 | `b37d012` 等 |
 | W0803-09 | 论文主图 5 张全生成 + round2 必改清单推进 | `scripts/make_paper_figures.py` 生成 `paper/figures/fig{1..5}.png`（Stage B runtime / Stage A baseline / method flow / c17 cut graph / F1-F5 failure flow）；dataviz 调色板验证通过 | round2 必改清单：method §6 done、主图 fig1-5 done、introduction/conclusion/experiments/method §7 已补 Z3 路径、PM30 in_progress；`8d5fae5` `a17c328` `ad2e5c5` `c2873dd` `38e1742` 等 |
+| W0803-10 | round2 自审稿 + 必改清单 100% + 图引用补全 | `paper/reviews/round2_self_audit.md` + `paper/draft/{method,experiments,introduction}.md` 图引用 | round2 自审稿：P2-1（Z3）+ P2-4（主图）关闭；round2 必改清单 5 项全部完成；章节引用 fig1-3；`34687e9` `b79aaa7` `f811516` 等 |
 
 ## 3. 当前可验证结果
 
