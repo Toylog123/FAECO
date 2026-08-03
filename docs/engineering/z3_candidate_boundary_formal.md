@@ -173,7 +173,7 @@ Stage B CEC 当前因 `clkinv_1` 不兼容 unavailable（R31-01）。N31-06 Z3 w
 
 - mapped.v 是 SKY130 **门级实例化**（0 assign，含 `clkinv_1` placeholder），assign-only parser 无法构建 replaced 侧 Z3 表达式 → 8-case 端到端全 error
 - 单元测试层面（两边纯 assign 风格）已验证全部能力；8-case 端到端需 AIG→SMT 路径
-- **AIG→SMT 后续路径**：用 Yosys `aigmap`（或复用 `src/rseco/yosys_json.py`）把 original.v 和 mapped.v 都归约到 AIG，再对 AIG DAG 建 Z3 表达式断言 output 等价；这是 round 2 或 N0803-01 的候选方向
+- **AIG→SMT 后续路径**：用 Yosys `aigmap`（或复用 `src/rseco/yosys_json.py`）把 original.v 和 mapped.v 都归约到 AIG，再对 AIG DAG 建 Z3 表达式断言 output 等价；这是 round 2 或 N0803-01 的候选方向。**验证结论（2026-08-03）**：Yosys `aigmap` 对 mapped.v 报 `Module '\sky130_fd_sc_hd__nand2b_1' ... is not part of the design`——mapped.v 的 SKY130 实例化在无 `cells.v` 时是黑盒，无法 AIG 归约。**AIG→SMT 依赖 N31-03 cells.v**，不独立可行；N31-03 修复 CEC 的同时会解锁 AIG→SMT 8-case 端到端
 
 ### 7.3 后续计划
 
