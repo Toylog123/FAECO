@@ -228,15 +228,16 @@ s382 显示**单手段（gate sizing）天花板**：关键路径瓶颈 cell（`
 - `scripts/run_hybrid_repair.py`：多轮贪心（`--rounds`）+ `--enable-buffer` 开关 + 每候选独立子目录与 `candidate_trials` 记录（可审计）
 - `tests/test_logic_rewrite.py`（9）+ `tests/test_buffer_insertion.py`（5）+ `tests/test_gate_sizing.py`（6）共 20 个单元测试全绿
 
-### 12.2 实验（ISCAS89, period 0.5ns, rounds=6）
+### 12.2 ???ISCAS89, period 0.5ns, rounds=6/10 ?????
 | 电路 | baseline WNS | G/R 单混合 | G+R+B（rounds=6） | 改善 |
 |---|---|---|---|---|
 | s27 | -0.28 | -0.20 | **-0.01** | +0.27 |
 | s382 | -0.94 | -0.92 | **-0.80** | +0.14 |
 | s420 | -1.78 | -1.41 | **-0.23** | +1.55 |
-| s641 | -1.86 | -1.40 | **-0.57** | +1.29 |
+| s641 | -1.86 | -1.40 | **-0.36**?rounds=10? | +1.50 |
 
 **4/4 电路大幅改善**；s382 由 R 突破 G 单手段天花板，其余电路由 B 策略（高扇出节点插 buffer 分担输入电容）贡献主要改善。
+**????rounds=10 ???**?s27/s382/s420 ??? round 3/2/5 ???r6 ? r10 ??????? s641 ? round 7 ???? `_067_`?B?? -0.57 ??? **-0.36**?rounds=10 ????????? 6 ?? 3 ??????s641 ? 7 ??
 
 ### 12.3 关键结论
 - **B 策略在 pre-layout ideal-net 下有效**：高扇出节点（如 s420 的 `_066_` nor4 输出、`_057_` and4 输出）的输入电容负担被 buffer 分担，改善超过插入延迟——推翻 ideal-net 下 B 无效的假设，必须实测验证而非主观预判
