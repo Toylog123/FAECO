@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "asset_id": "itc99_benchmarks",
+  "status": "partial_acquired",
+  "acquired_on": "2026-08-03",
+  "intended_use": "larger-scale sequential timing ECO experiments (b01-b22)",
+  "source_root": "benchmarks/raw/itc99",
+  "repository": {
+    "id": "cad_polito_it_I99T",
+    "url": "https://github.com/cad-polito-it/I99T.git",
+    "branch": "master",
+    "commit": "8a2c3b500ee7ff20e7031de92592b737bedc6d8c",
+    "license_path": "LICENSE",
+    "license_spdx": "EUPL-1.2",
+    "license_sha256": null
+  },
+  "acquired_files": [
+    {"id": "b01", "format": "blif", "file": "b01.blif", "sha256": null, "note": "gate-level BLIF with .latch DFFs (no explicit clock in latch rows)"}
+  ],
+  "notes": [
+    "ITC-99 official benchmarks from Politecnico di Torino CAD Group (I99T repo).",
+    "Formats: bench / blif / edf / vhd. No native Verilog.",
+    "b01.blif acquired; its .latch rows lack explicit clock control -> Yosys optimizes latches away as transparent. Requires clock injection (GCLK) or VHDL synthesis to make DFFs edge-triggered.",
+    "Status partial: ISCAS89 (8 gate-level circuits) already provides sufficient sequential basis for method validation; ITC-99 deferred for larger-scale main experiments.",
+    "EUPL-1.2 licensed."
+  ]
+}
