@@ -159,16 +159,29 @@ Stage B CEC 当前因 `clkinv_1` 不兼容 unavailable（R31-01）。N31-06 Z3 w
 - max EPFL cone（最大 26 outputs）：约 5-30s
 - timeout=60s 默认值足够覆盖 8-case Stage B
 
-## 7. 实施计划（round 2 启动后）
+## 7. 实施状态与后续计划
 
-1. 创建 `src/rseco/z3_formal.py`（约 100 行）
-2. 创建 `tests/test_z3_formal.py`（约 150 行，7 项 TDD）
-3. 跑回归 90 + 7 = 97 项测试
-4. 在 `experiments/20260718_minimal_combinational_batch_demo` 加 candidate-level z3 formal 列
-5. 在 `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.md` 加 cec_z3 列
-6. 更新 `paper/draft/method.md` §7 形式回验段，添加 Z3 boundary 描述
-7. 更新 `paper/draft/experiments.md` 加 z3 column 表
-8. 更新 `paper/reviews/round2_self_audit.md` 把 P2-1 升级为 done
+### 7.1 已实施（2026-08-03）
+
+1. `src/rseco/z3_formal.py` 已创建（约 340 行）——递归下降 `_ExprParser` + wire DAG 解析（`_build_output_exprs` / `_rewrite_wires`）
+2. `tests/test_z3_formal.py`（7 项）+ `tests/test_z3_formal_multi.py`（5 项）共 12 项 TDD 全绿
+3. 完整回归 90 + 12 = **102 项测试全绿**
+4. 支持：multi-output / escaped-identifier（`\B[0]`→`B[0]`）/ `~ & | ^` / 括号 / `1'b0` `1'b1` / unknown-identifier → fresh symbol
+5. `scripts/run_z3_candidate_boundary_check.py` 8-case runner 已创建（commit `534be02` + `4eaaa2a`）
+
+### 7.2 端到端 limitation（诚实记录）
+
+- mapped.v 是 SKY130 **门级实例化**（0 assign，含 `clkinv_1` placeholder），assign-only parser 无法构建 replaced 侧 Z3 表达式 → 8-case 端到端全 error
+- 单元测试层面（两边纯 assign 风格）已验证全部能力；8-case 端到端需 AIG→SMT 路径
+- **AIG→SMT 后续路径**：用 Yosys `aigmap`（或复用 `src/rseco/yosys_json.py`）把 original.v 和 mapped.v 都归约到 AIG，再对 AIG DAG 建 Z3 表达式断言 output 等价；这是 round 2 或 N0803-01 的候选方向
+
+### 7.3 后续计划
+
+1. AIG→SMT 路径实现（解决 8-case 端到端 error）
+2. 在 `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.md` 加 cec_z3 列（AIG→SMT 后）
+3. 更新 `paper/draft/method.md` §7 形式回验段，添加 Z3 boundary 描述
+4. 更新 `paper/draft/experiments.md` 加 z3 column 表
+5. 更新 `paper/reviews/round2_self_audit.md` 把 P2-1 升级为 done
 
 ## 8. 边界声明
 
@@ -179,6 +192,6 @@ Stage B CEC 当前因 `clkinv_1` 不兼容 unavailable（R31-01）。N31-06 Z3 w
 
 ## 9. 后续修订
 
-- 用户决定 N31-06 是否进入 round 2 启动。
-- 如启动，按第 7 节实施计划批量完成。
-- 不启动时，本设计文档保留为后续工作的入口；N31-06 在 roadmap 中继续标 pending。
+- N31-06 wrapper 已实施（2026-08-03）；设计文档第 7 节已更新为"已实施状态 + 端到端 limitation + 后续 AIG→SMT 路径"。
+- 用户决定是否投入 AIG→SMT 路径（解决 8-case 端到端 error）。
+- 不投入时，N31-06 wrapper 在单元测试层面保持有效，8-case 端到端 error 作为诚实 limitation 保留；N31-06 在 roadmap 中标 partial。
