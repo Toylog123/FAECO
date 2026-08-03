@@ -224,12 +224,48 @@ def cut_graph() -> None:
     _save(fig, ROOT / "paper" / "figures" / "fig4_cut_graph.png")
 
 
+def failure_flow() -> None:
+    """F1-F5 failure classification trigger diagram (method.md §6)."""
+    from matplotlib.patches import FancyBboxPatch
+
+    fig, ax = plt.subplots(figsize=(9, 4.8))
+    ax.set_xlim(0, 12)
+    ax.set_ylim(0, 8)
+    ax.axis("off")
+
+    failures = [
+        (0.4, "F1 等价失败", "ABC cec ≠ pass\n→ 加权 verification cost", SERIES[1]),
+        (3.2, "F2 边界失败", "boundary_closed=False\n→ 收紧 cone 边界", SERIES[2]),
+        (6.0, "F3 size 过大", "size > threshold\n→ 提升高 fanout cost", SERIES[3]),
+        (8.8, "F4 timing 收益不足", "ΔWNS < threshold\n→ 重算 candidate gain", SERIES[0]),
+        (11.6, "F5 验证超时", "timeout > threshold\n→ 加权 verification cost", SERIES[1]),
+    ]
+    for x, title, body, color in failures:
+        box = FancyBboxPatch((x, 4.2), 2.6, 2.8,
+                             boxstyle="round,pad=0.1,rounding_size=0.2",
+                             linewidth=1.1, edgecolor=color, facecolor="#ffffff")
+        ax.add_patch(box)
+        ax.text(x + 1.3, 6.0, title, ha="center", va="center",
+                fontsize=9, fontweight="bold", color=color)
+        ax.text(x + 1.3, 5.0, body, ha="center", va="center",
+                fontsize=7.5, color=INK_PRIMARY, linespacing=1.4)
+
+    ax.text(6.0, 2.0,
+            "任何失败触发 → failure-aware refinement 调整 cut 权重 → 重新搜索候选",
+            ha="center", va="center", fontsize=10, color=INK_MUTED)
+    ax.text(6.0, 1.0,
+            "当前实现是 single-iteration proxy（failure_recovery avg_iterations=1.0）；X19 多轮待设计审批",
+            ha="center", va="center", fontsize=8, color=INK_MUTED)
+    _save(fig, ROOT / "paper" / "figures" / "fig5_failure_flow.png")
+
+
 def main() -> int:
     (ROOT / "paper" / "figures").mkdir(parents=True, exist_ok=True)
     stage_b_runtime()
     stage_a_baseline()
     method_flow()
     cut_graph()
+    failure_flow()
     return 0
 
 
