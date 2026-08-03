@@ -179,33 +179,40 @@ ISCAS89 来源同样是 `jpsety/verilog_benchmark_circuits` repo，许可不完�
 - 下一步：Stage C-1/C-2（SDC clock_port + reg-to-reg cone）基础上实现 G/B 修复器 + 混合切换
 - ITC-99 作为更大规模主实验（待获取）
 
-## 11. Gate sizing 修复器（G 策略）首轮实现（2026-08-03）
+## 11. Gate sizing 修复器（G 策略）实现状态（2026-08-03）
 
-方向 B 的 failure-aware 混合修复（逻辑重写 R / gate sizing G / buffer insertion B）中 **G 策略（gate sizing）已完成首轮实现**，ISCAS89 sequential 实验暂不理想，原因审查中。
+方向 B 的 failure-aware 混合修复（逻辑重写 R / gate sizing G / buffer insertion B）中 **G 策略（gate sizing）已完成实现**。首轮实验无改善，经审查智能体定位根因并修复后，ISCAS89 sequential 上 **3/4 电路真实改善**。
 
 ### 11.1 实现
 
 - `src/rseco/gate_sizing.py`：解析 SKY130 cell 网表 + 逻辑深度 critical gate 选择 + 更大尺寸候选 + 贪心放大
 - `scripts/run_gate_sizing.py`：Yosys mapping + OpenSTA 评估
-- `tests/test_gate_sizing.py`：TDD 测试（三者当前均 untracked，未 commit）
+- `tests/test_gate_sizing.py`：TDD 测试
 
-### 11.2 实验（ISCAS89 sequential）
+### 11.2 审查修复（commit `ef74d1d`，108 测试全绿，已 push）
 
-| 电路 | critical gates | baseline WNS | 结果 |
+审查智能体定位首轮"无改善"的三个根因并修复：
+
+- **RC1（硬阻断）**：`run_opensta()` 的 `link_design` 用了 parent 目录名（`cand/`），导致所有 candidate link 失败、WNS=None、贪心永不接受 → 改为从 Verilog module 声明解析 top_module
+- **RC2（方法）**：逻辑深度选门 ≠ OpenSTA 真实关键路径 → 改为从 `report_checks` 输出解析关键路径实例
+- **贪心改进**：试所有更大尺寸选最优（原来只试第一个）
+
+### 11.3 修正后实验（ISCAS89, period 0.5ns）
+
+| 电路 | baseline WNS | final WNS | 改善 |
 |---|---|---|---|
-| s27 | 3 | -0.28 VIOLATED | 无改善 |
-| s382 | 8 | -0.94 | 无改善 |
-| s420 | 1 | -1.78 | 无改善 |
+| s27 | -0.28 | -0.20 | +0.08 |
+| s382 | -0.94 | -0.94 | 0.0（瓶颈 `lpflow_inputiso1p_1` 无更大尺寸变体）|
+| s420 | -1.78 | -1.41 | +0.37 |
+| s641 | -1.86 | -1.43 | +0.43 |
 
-`sized_gates` 全空（未选出可放大的 gate）。
+**3/4 电路真实改善**；修复后 `sized_gates` 正常选出并放大（已非空）。
 
-### 11.3 原因（审查中）
+### 11.4 s382 天花板 → 混合策略动机（创新点）
 
-- 逻辑深度 critical gate 选择 ≠ OpenSTA 关键路径
-- SKY130 尺寸（_1/_2/_4）delay 差异 < WNS 精度
-- 电路太小（critical gate 数量少，无尺寸余量）
+s382 显示**单手段（gate sizing）天花板**：关键路径瓶颈 cell（`lpflow_inputiso1p`）无更大尺寸可换，故 WNS 无法继续改善。这正印证 failure-aware 混合修复（逻辑重写 R / buffer insertion B）的必要性——gate sizing 单手段不足时切换到 R/B 策略，是本项目方向 B 的核心创新点。
 
-### 11.4 状态
+### 11.5 状态
 
-- G 策略首轮实现完成，实验结论暂不入论文主表
-- 待审查结论后决定：修正 critical gate 选择策略 / 换更大电路（如 ITC-99）/ 补 B（buffer insertion）策略做混合切换
+- G 策略实现完成，ISCAS89 3/4 真实改善，实验结论可入论文主表（标注方法边界：单手段天花板）
+- 下一步：R/B 策略实现 + 混合切换（结合 s382 天花板 case 验证自适应切换逻辑）
