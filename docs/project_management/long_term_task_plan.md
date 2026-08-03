@@ -36,11 +36,11 @@
 | PM22 | Phase 4 | 多轮 recovery 与消融实验 | in_progress | P0 | recovery/ablation tables | 真正多轮 refinement 可记录 residual failures、停止原因和首次恢复轮次，并生成 without F1/F3/F4 表 |
 | PM23 | Phase 5 | sequential cone extraction 设计 | pending | P1 | design doc | reg-to-reg cone 边界明确 |
 | PM24 | Phase 5 | sequential 实验 | pending | P1 | experiment results | 路径级 ECO 有结果 |
-| PM25 | Phase 6 | 写 Introduction | pending | P1 | paper draft | 背景-缺口-方法-证据完整 |
-| PM26 | Phase 6 | 写 Related Work | pending | P1 | paper draft | 文献矩阵转成论文段落 |
-| PM27 | Phase 6 | 写 Method | pending | P1 | `method_rewrite_readiness.md`、paper draft | 已完成就绪审计；待 X18/X19/X21/X22 关闭阻塞项后，使符号、伪代码、流程和实现字段一致 |
-| PM28 | Phase 6 | 写 Experiments | pending | P1 | paper draft | 表格和结论一致 |
-| PM29 | Phase 7 | 模拟审稿 | pending | P1 | review report | P0/P1 问题明确 |
+| PM25 | Phase 6 | 写 Introduction | done | P1 | paper draft | 背景-缺口-方法-证据完整 |
+| PM26 | Phase 6 | 写 Related Work | done | P1 | paper draft | 文献矩阵转成论文段落 |
+| PM27 | Phase 6 | 写 Method | done | P1 | `method_rewrite_readiness.md`、paper draft | 已完成就绪审计；Stage B 8-case 跑通后已扩为正文段落；待 method_symbol_table 符号表获用户审定后与 method.md 同步 |
+| PM28 | Phase 6 | 写 Experiments | done | P1 | paper draft | 表格和结论一致；Stage A 5-case + Stage B 8-case 真实表格已落盘 |
+| PM29 | Phase 7 | 模拟审稿 | done | P1 | review report | P0/P1/P2 问题明确；round1 自审稿产出 1 P0 + 4 P1 + 5 P2 |
 | PM30 | Phase 7 | 修改论文 | pending | P1 | revised draft | 主要问题关闭 |
 | PM31 | Phase 8 | 确定投稿目标 | pending | P1 | venue note | 格式和范围明确 |
 | PM32 | Phase 8 | 准备投稿包 | pending | P1 | submission package | 可提交 |
