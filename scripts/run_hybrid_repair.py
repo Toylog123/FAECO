@@ -80,6 +80,28 @@ def _critical_instances_from_sta(sta_text: str) -> list[str]:
     return [i for i in insts if not (i in seen or seen.add(i))]
 
 
+def _mark_accepted(
+    candidate_trials: list[dict],
+    applied: dict[str, dict[str, str | int]],
+    inst: str,
+    kind: str,
+    new_type: str,
+    best_trial_id: int,
+) -> None:
+    """Record an accepted change for *inst*."""
+    # A later accepted change to the same instance supersedes the earlier
+    # one, so previously-accepted trials for this instance are reset to
+    # rejected. This keeps accepted == the final applied changes (one per
+    # instance) and makes the audit trail unambiguous.
+    applied[inst] = {"kind": kind, "new_type": new_type, "trial_id": best_trial_id}
+    for tr in candidate_trials:
+        if tr["instance"] == inst:
+            tr["accepted"] = False
+    for tr in candidate_trials:
+        if tr["trial_id"] == best_trial_id:
+            tr["accepted"] = True
+
+
 def _build_r_candidates(cell_type: str, lib: dict) -> list[tuple[str, dict]]:
     """Return [(new_type, pin_map)] for functionally-equivalent cells.
 
@@ -175,6 +197,7 @@ def main() -> int:
 
             best_wns = current_wns
             best: tuple[str, dict, str] | None = None
+            best_trial_id: int | None = None
             for new_type, pin_map, kind in cands:
                 if kind == "R":
                     candidate_text = apply_rewrite(text, inst, new_type, pin_map)
@@ -192,6 +215,7 @@ def main() -> int:
                 (cand_sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
                 res = run_opensta(cand_sub / "mapped.v", args.period, cand_sub, top_module=args.circuit)
                 wns = res["wns"]
+                trial_id = len(candidate_trials)
                 candidate_trials.append({
                     "instance": inst,
                     "kind": kind,
@@ -199,10 +223,13 @@ def main() -> int:
                     "to_type": new_type,
                     "wns": wns,
                     "accepted": False,
+                    "round": rnd + 1,
+                    "trial_id": trial_id,
                 })
                 if wns is not None and wns > best_wns:
                     best_wns = wns
                     best = (new_type, pin_map, kind)
+                    best_trial_id = trial_id
             if best is not None and best_wns > current_wns:
                 new_type, pin_map, kind = best
                 if kind == "R":
@@ -212,14 +239,7 @@ def main() -> int:
                     text = insert_buffer(text, inst, bpin, buf_type, new_net)
                 else:
                     text = apply_sizing(text, {inst: new_type})
-                applied[inst] = {"kind": kind, "new_type": new_type}
-                for tr in candidate_trials:
-                    if (
-                        tr["instance"] == inst
-                        and tr["to_type"] == new_type
-                        and tr["kind"] == kind
-                    ):
-                        tr["accepted"] = True
+                _mark_accepted(candidate_trials, applied, inst, kind, new_type, best_trial_id)
                 current_wns = best_wns
                 improved = True
                 print(f"  {kind} {inst}: {cell.cell_type}->{new_type} wns {best_wns}")
