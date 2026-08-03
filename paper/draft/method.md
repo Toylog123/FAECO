@@ -117,17 +117,24 @@ FAECO 的核心贡献是 F1-F5 失败分类驱动的 refinement：
 
 ## 7. 形式回验
 
-FAECO 同时维护结构签名等价（`src/rseco/equivalence.py`）和形式等价（`src/rseco/yosys_abc.py`）两条路：
+FAECO 同时维护结构签名等价（`src/rseco/equivalence.py`）、形式等价（`src/rseco/yosys_abc.py`）和 Z3 candidate/boundary 路径（`src/rseco/z3_formal.py`）三条路：
 
 ```
+# 路径 1：ABC full-netlist CEC（Stage A 主路径）
 ABC read_liberty <lib>
 ABC read_blif <reference.blif>
 ABC read_blif <mapped.blif>
 ABC cec <reference.blif> <mapped.blif>
 parse log → status ∈ {pass, fail, unavailable, error, timeout}
+
+# 路径 2：Z3 candidate/boundary（N31-06，boundary 级）
+SMT2 problem: assert ∃ input s.t. (o_out != r_out)
+z3 check → sat(fail+cex) / unsat(pass) / unknown(timeout)
 ```
 
 Stage A 5-case (c17×2 + c432 + c499 + c880) Yosys-normalized full-netlist CEC 5/5 `pass`；Stage B 8-case CEC 8/8 `unavailable`，原因是 SKY130 Liberty 不含 `clkinv_1` placeholder（R31-01）。
+
+**Z3 candidate/boundary 路径（N31-06，2026-08-03 实施）**：wrapper（`src/rseco/z3_formal.py`，12 项 TDD 测试）支持 multi-output / escaped-identifier / xor / constant 表达式，对 candidate patch 局部做 SMT 等价并生成 counterexample trace。当前单元测试层面已验证（两边纯 assign 风格）；8-case 端到端受 mapped.v 门级实例化限制（0 assign，需 N31-03 cells.v 解锁 AIG→SMT），见 `docs/engineering/z3_candidate_boundary_formal.md`。
 
 ## 8. Pre-Layout STA
 
