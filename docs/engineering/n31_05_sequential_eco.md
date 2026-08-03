@@ -169,9 +169,12 @@ ISCAS89 来源同样是 `jpsety/verilog_benchmark_circuits` repo，许可不完�
 - N31-05 启动时同步更新 `method_rewrite_readiness.md` METH-01 → ready
 - 当前 round 1 自审稿 P1-1 (sequential cone) 与 P1-2 (X19 multi-iteration) 在 Stage C 启动后升级为 done
 
-## 10. 当前状态总结
+## 10. 当前状态总结（2026-08-03 更新）
 
-- Stage A 5-case + Stage B 8-case 端到端（combinational）已落地
-- Stage C sequential ECO 拓展设计本文档已规划
-- 启动需用户决定：是否在 round 2 启动 Stage C？
-- 不启动时，论文当前阶段可作为"combinational FAECO"投稿，sequential 部分留作未来工作
+- **技术路径已验证**：ISCAS89 sequential 全链路跑通（s27/s382/s420/s641 等 8 个门级电路）
+  - Yosys `synth + dfflibmap + abc -liberty` → 纯 SKY130 cell（DFF → `dfxtp_1`）
+  - OpenSTA 输出真实 reg-to-reg timing path + slack（10ns→MET 7.6-9.2，0.5ns→VIOLATED -0.28 至 -1.86）
+- **数据已获取**：ISCAS89 17 电路（ispras，Apache-2.0，manifest 归档），8 个门级可直接用
+- **方向 B（时序 ECO）创新点已定**：failure-aware 混合修复（逻辑重写 R / gate sizing G / buffer insertion B 自适应切换）
+- 下一步：Stage C-1/C-2（SDC clock_port + reg-to-reg cone）基础上实现 G/B 修复器 + 混合切换
+- ITC-99 作为更大规模主实验（待获取）
