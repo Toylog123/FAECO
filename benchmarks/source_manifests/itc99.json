@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "asset_id": "itc99_benchmarks",
-  "status": "partial_acquired",
+  "status": "acquired",
   "acquired_on": "2026-08-03",
   "intended_use": "larger-scale sequential timing ECO experiments (b01-b22)",
   "source_root": "benchmarks/raw/itc99",
@@ -14,14 +14,38 @@
     "license_spdx": "EUPL-1.2",
     "license_sha256": null
   },
-  "acquired_files": [
-    {"id": "b01", "format": "blif", "file": "b01.blif", "sha256": null, "note": "gate-level BLIF with .latch DFFs (no explicit clock in latch rows)"}
+  "circuits": [
+    {"id": "b01", "file": "b01.blif", "sha256": "38b46657d7c955835522b488758bda2fa3c8d80c95a014d23206b477ef0c1da0"},
+    {"id": "b02", "file": "b02.blif", "sha256": "1a6a9e40a73159db0ce85a3bcbfd440193cb8373b4ddce48f03ed1d9dbd15951"},
+    {"id": "b03", "file": "b03.blif", "sha256": "1aa54111059a258fc9635ed07706773dea0100e389b1310c727f9823bd68a23b"},
+    {"id": "b04", "file": "b04.blif", "sha256": "4b4b2622171fa48fce182b920c5ab06a6bb3f87218eaa742a8a4946bd0241d86"},
+    {"id": "b05", "file": "b05.blif", "sha256": "fe357dee094817ae3a34cc4f4e526fa25a6121186885a1914890d58aa2d9601c"},
+    {"id": "b06", "file": "b06.blif", "sha256": "4b75cc40bd4067a2792534cb32e0b8eae58e38035e707418bb416edca792f2b1"},
+    {"id": "b07", "file": "b07.blif", "sha256": "395265748742617dd8ac313b70e34463bc8fcd2a221a0c7c8197f506d24d72e2"},
+    {"id": "b08", "file": "b08.blif", "sha256": "f8926183dbf475a0ef586a1eb89b41a1776682696a7710b5bb430539b0416623"},
+    {"id": "b09", "file": "b09.blif", "sha256": "5381de5ce80da8b8de8b667c46c38620e3a07fcaf6caaf4470ccb1969f8156bf"},
+    {"id": "b10", "file": "b10.blif", "sha256": "c9c762bc812665dda0ceccace1592c3cafd5caf3ec0e5412c6d4e763f22b3101"},
+    {"id": "b11", "file": "b11.blif", "sha256": "4c69d30b494ca9581368a2b8717f271879f575a9986800c5c9fcf2357df4f237"},
+    {"id": "b12", "file": "b12.blif", "sha256": "8a42bbd2bfb667f12b3ce399bc9db8bffd091ccfca80d27e235b8bee8986da84"},
+    {"id": "b13", "file": "b13.blif", "sha256": "439d7f77dbcbec26da227ec08aae2126433204eb0da551d6b52ac6499fff598d"},
+    {"id": "b14", "file": "b14.blif", "sha256": "be4131c0b4331fa5409a5f72019aeff79da7628684bcbf2e613307792124a975"},
+    {"id": "b15", "file": "b15.blif", "sha256": "53e950935c2906bcf0df43e4ae7daddd897eac4ad97c7f31b575d99faf397022"},
+    {"id": "b17", "file": "b17.blif", "sha256": "02cf8e1898e23b47a4cc57d83f34cb77fb808a9751f1cb81c08d5cd0c24105fd"},
+    {"id": "b18", "file": "b18.blif", "sha256": "2fe31b6930c7b9f2c7ac6fb43ac4a3a962d7e72433d11fd69ffebd5d3b2bcaa6"},
+    {"id": "b19", "file": "b19.blif", "sha256": "64ed6e8e44c457a68c8aa75c5de84ed9935af65899b1191b0b43e030e48c2c95"},
+    {"id": "b20", "file": "b20.blif", "sha256": "8132950f6ab0e5732929e6f50e9f63b8af4c2abbdc1cc44e3c56ee83de964356"},
+    {"id": "b21", "file": "b21.blif", "sha256": "8c04c32769fdb5681b177878a91e83be81245886464bb0e2b3385252a402a696"},
+    {"id": "b22", "file": "b22.blif", "sha256": "2893b482534539bd8ed6280bcd8f7c96f2a1fac8df98d68b2d35712f6154e685"}
+  ],
+  "missing_circuits": [
+    {"id": "b16", "note": "b16 does NOT exist in official I99T repo (verified by git clone; repo has b01-b15, b17-b22, b30)"}
   ],
   "notes": [
     "ITC-99 official benchmarks from Politecnico di Torino CAD Group (I99T repo).",
     "Formats: bench / blif / edf / vhd. No native Verilog.",
-    "b01.blif acquired; its .latch rows lack explicit clock control -> Yosys optimizes latches away as transparent. Requires clock injection (GCLK) or VHDL synthesis to make DFFs edge-triggered.",
-    "Status partial: ISCAS89 (8 gate-level circuits) already provides sufficient sequential basis for method validation; ITC-99 deferred for larger-scale main experiments.",
+    "All 21 available circuits (b01-b15, b17-b22) acquired as gate-level BLIF (6.5 MB).",
+    "BLIF .latch rows lack explicit clock control (I99T README: single-phase global clock GCLK implicit). Yosys reads them as transparent level-latches and optimizes them away.",
+    "Clock handling: need to inject GCLK as edge-triggered clock (or convert $dlatch->$dff) for timing ECO experiments. Deferred; ISCAS89 (8 gate-level circuits with real CK) already sufficient for method validation.",
     "EUPL-1.2 licensed."
   ]
 }
