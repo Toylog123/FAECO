@@ -44,6 +44,7 @@ OpenSTA Stage B 提供统一口径的 technology-mapped pre-layout 时序结果�
 当前已知 limitation：
 - **CEC 形式回验 fail**：ABC 0.9 报 `sky130_fd_sc_hd__clkinv_1 not found in liberty` —— Yosys 0.9 `synth -noabc + abc -liberty` 流程产生的 inverter placeholder 不在 SKY130 Liberty 实际 cell list。需 ORFS 配套 techmap library 才可完全修复（属 PDK 部分，按 handoff 禁止下载完整 PDK）。当前实现 `check_mapped_blif_equivalence` 已就绪，但跑出 `error / unavailable`，已在 stage_b_pre_layout.json `notes` 字段记录。
 - **STA slack_status=MET**：所有 8 个 EPFL case 都是纯组合电路（无 flip-flop），OpenSTA 报 "No paths found." + "worst slack max INF"，正确反映"无 timing violation"。WNS/TNS/slack 均为 null。
+- **N31-06 Z3 wrapper 8-case 端到端 error（2026-08-03）**：wrapper 已实施（`src/rseco/z3_formal.py`，12 项 TDD 测试，multi-output/escaped/xor/constant），但 mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式；Yosys `aigmap` 对 mapped.v 报 SKY130 模块 undefined —— **AIG→SMT 依赖 N31-03 cells.v**（解锁 CEC + AIG→SMT 双路径），不独立可行。验证记录见 `docs/engineering/z3_candidate_boundary_formal.md`。
 
 ## 3. 已完成的关键工作
 
