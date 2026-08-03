@@ -41,6 +41,8 @@ python scripts/run_stage_b_pre_layout_sta.py \
 
 CEC 形式回验（mapped-BLIF vs original-normalized）当前 SKY130 Liberty 不含 `sky130_fd_sc_hd__clkinv_1` 导致 ABC `cec` 不可达，所有 8 case CEC 跑出 `unavailable`，已记录于 `risk_register.md` R31-01 与 `STAGE_B_AGENT_HANDOFF.md` limitation 段落。`experiments/20260720_epfl_wave1_yosys_json/` 与 `experiments/20260728_epfl_wave2_yosys_json/` 是 X21 的 EPFL Yosys JSON 导入实验。
 
+2026-08-03 更新：N31-06 Z3 candidate/boundary formal wrapper 已实施（`src/rseco/z3_formal.py` + 12 项 TDD 测试）。`20260731_epfl_8case_stage_b/z3_boundary/` 是 N31-06 8-case runner 实验产物（`scripts/run_z3_candidate_boundary_check.py`），8-case 端到端全 error 是诚实 limitation（mapped.v 是 SKY130 门级实例化，assign-only wrapper 无法构建 replaced 侧表达式；需 N31-03 cells.v 解锁 AIG→SMT），记录于 R0803-01。该目录是实验产物，不进入 A-only 范围。
+
 ## 当前表格产物
 
 | 文件 | 说明 |
