@@ -2,6 +2,15 @@
 
 本文档记录实际推进动作，和 `decision_log.md` 的区别是：这里记录每天做了什么，`decision_log.md` 只记录会影响路线的关键决策。
 
+## 2026-08-03
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260803-01 | A-only 范围修正：移除误入库的实验产物 | `git rm --cached` 移除 `experiments/20260731_epfl_8case_stage_b/z3_boundary/` 下 5 个文件（保留工作区） | commit `534be02` 误把 N31-06 8-case runner 的实验产物（smt2/output/summary）纳入 A-only 范围；按 `initial_commit_scope_audit.md` 实验产物（`experiments/2026*_*`）必须 untracked，用 `git rm --cached` 修正（文件仍在磁盘，git 不再跟踪） |
+| LOG-20260803-02 | 8/3 周报落地 | `docs/reports/2026-08-03_weekly_report.md` | 记录 W0803-01..08：paper/draft/ 6 章节、round1 自审稿、4 个 N31-* 设计、N31-06 Z3 wrapper 实施、A-only 修正；97 项回归；风险新增 R0803-01（N31-06 对 EPFL multi-output 支持不足）；commit `16f14d0` |
+| LOG-20260803-03 | N31-06 wrapper multi-output 扩展（TDD） | `src/rseco/z3_formal.py` + `tests/test_z3_formal_multi.py`（5 项新测试） | 红测 5 项；重写为递归下降 parser（`_ExprParser`）+ wire DAG 解析（`_build_output_exprs`/`_rewrite_wires`）+ escaped identifier 归一化（`\B[0]`→`B[0]`）+ xor/constant 支持；unknown identifier 改 fresh symbol 而非 KeyError；12 项 z3 测试全绿，完整回归 102 项全绿；commit `4eaaa2a` |
+| LOG-20260803-04 | N31-06 8-case 端到端 limitation 诊断 | `experiments/20260731_epfl_8case_stage_b/z3_boundary/` | mapped.v 是 SKY130 门级实例化（0 assign，含 `sky130_fd_sc_hd__clkinv_1`），assign-only wrapper 无法构建 Z3 表达式 → 8-case 全 error 是诚实 limitation；支持需 Yosys AIG→SMT 路径（设计文档已声明） |
+
 ## 2026-07-31
 
 | ID | 动作 | 产物 | 备注 |
