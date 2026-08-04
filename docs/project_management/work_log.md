@@ -19,6 +19,7 @@
 | LOG-20260804-10 | 探索守卫修复 s820 迁移失败 | src/rseco/strategy_selector.py exploration_order + tests/test_strategy_selector.py（5 项）+ scripts/run_hybrid_repair.py | s820 决策层从 -1.03 恢复到 **-0.20**（与全搜索一致），trials 2402；150 测试全绿。结论：排序只影响轨迹，探索守卫保证每轮 G/R 参与，不劣化但也不省 trial（s832 仍省 15%） |
 | LOG-20260804-11 | leave-one-out 跨电路迁移离线评估 | docs/experiment_design/faeco_overall_architecture.md §8.5 | 用其他 7 电路归纳决策表，对任一电路 trial 预测 top-2 命中率 94.3%-98.2%（top-1 52%-74%）；证明策略选择规律跨电路高度稳定，是跨电路经验复用的离线证据 |
 | LOG-20260804-12 | 创新点与实证对照固化 | docs/experiment_design/faeco_overall_architecture.md §9 | 三根支柱（决策层/跨电路复用/效率可量化）+ 待补齐诚实声明（外环闭环未接、单特征决策层、8 电路规模） |
+| LOG-20260804-13 | 外环多轮闭环实现（X19） | src/rseco/refinement_loop.py + flow.py run_multi_iteration_case + tests（3 loop + 2 flow） | 真正 multi-iteration loop：cut->classify->refine_weights->re-cut；155 测试全绿。外环闭环从"未实现"变"已实现（模块+测试+flow 接入）" |
 
 ## 2026-08-03
 

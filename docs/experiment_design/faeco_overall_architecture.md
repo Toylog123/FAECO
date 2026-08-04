@@ -181,3 +181,14 @@ s820 迁移失败的根因：决策表把 B 排最前，改变了每轮贪心选
 - 决策层仅用 cell-type 单特征，未用输入电容/扇出等机理特征（§3 设计的特征向量未全实现）
 - 实验规模 8 电路，需更大 benchmark 验证
 
+
+## 10. 外环多轮闭环实现（X19, 2026-08-04）
+
+新增 src/rseco/refinement_loop.py：真正的 multi-iteration loop（cut -> classify -> refine_weights -> re-cut），直到成功或 max_iterations。
+
+- simulate_refinement_loop(evaluator, config)：evaluator 回调返回 (success, patch_id)，失败时用失败类型调 refine_weights 更新权重再重试
+- flow.py 新增 run_multi_iteration_case：把 Stage A 的单轮 proxy 升级为多轮，输出 refinement_iterations 历史
+- 单元测试 5 项（3 loop + 2 flow），全量回归 155 passed
+
+现状对照更新：外环闭环从"未实现"变为"已实现（模块 + 测试 + flow 接入）"。剩余：用真实 case（c17/c432）跑端到端多轮验证 + 消融（关反馈 vs 开反馈的 recovery 对比）。
+

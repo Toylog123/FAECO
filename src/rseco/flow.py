@@ -1,4 +1,4 @@
-﻿"""Minimal executable flow helpers for FAECO cases."""
+"""Minimal executable flow helpers for FAECO cases."""
 
 import json
 import time
@@ -286,3 +286,61 @@ def write_case_metrics(case_dir: str | Path) -> Path:
     output_path = case_dir / "results" / "metrics.json"
     output_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return output_path
+
+
+def run_multi_iteration_case(
+    case_dir: str | Path,
+    *,
+    max_iterations: int = 10,
+    artifact_dir: str | Path | None = None,
+) -> dict:
+    """Run the X19 multi-iteration failure-aware refinement loop.
+
+    Unlike build_case_metrics (single refinement proxy), this drives
+    cut -> classify -> refine -> re-cut until success or max_iterations.
+    It reuses refine_weights via simulate_refinement_loop.
+    """
+    from .refinement_loop import RefinementConfig, simulate_refinement_loop
+    case_dir = Path(case_dir)
+    artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
+    case = load_case(case_dir)
+    original = load_analysis_netlist(case.original_analysis_netlist_path)
+    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path)
+    cone = extract_fanin_cone(original, roots=[case.target_output])
+    equivalence = check_structural_equivalence(
+        original, resynthesized, outputs=[case.target_output]
+    )
+    logic_level_before = original.logic_level(case.target_output)
+    logic_level_after = resynthesized.logic_level(case.target_output)
+    reduction = logic_level_reduction(before=logic_level_before, after=logic_level_after)
+
+    def evaluator(failures, weights):
+        # one iteration: cut with current weights, build candidate, classify
+        boundary = fixed_min_cut(cone)
+        patch = make_patch_candidate(
+            case_id=case.case_id, boundary=boundary, equivalence=equivalence
+        )
+        failures.update(
+            classify_failures(
+                equivalence_passed=equivalence.status == "pass",
+                boundary_closed=True,
+                patch_size=patch.patch_size,
+                original_gate_count=original.gate_count,
+                logic_level_before=logic_level_before,
+                logic_level_after=logic_level_after,
+                verification_runtime_s=0.0,
+            )
+        )
+        if not failures and reduction >= 1:
+            return True, patch.patch_id
+        return False, None
+
+    result = simulate_refinement_loop(
+        evaluator, RefinementConfig(max_iterations=max_iterations)
+    )
+    result["case_id"] = case.case_id
+    result["logic_level_before"] = logic_level_before
+    result["logic_level_after"] = logic_level_after
+    result["logic_level_reduction"] = reduction
+    return result
+
