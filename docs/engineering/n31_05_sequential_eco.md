@@ -245,7 +245,7 @@ s382 显示**单手段（gate sizing）天花板**：关键路径瓶颈 cell（`
 ### 12.3 关键结论
 - **B 策略在 pre-layout ideal-net 下有效**：高扇出节点（如 s420 的 `_066_` nor4 输出、`_057_` and4 输出）的输入电容负担被 buffer 分担，改善超过插入延迟——推翻 ideal-net 下 B 无效的假设，必须实测验证而非主观预判
 - **多轮自适应是关键**：单轮只能解决初始关键路径；rounds=6 时 s641 从 -0.86 继续收敛到 -0.57（第 4-6 轮解决 `_098_`/`_079_`/`_082_`/`_159_` 等新瓶颈）
-- **可审计性**：每候选独立子目录 + `candidate_trials` 记录 wns/accepted；审查核对 4 电路 final WNS 与 sta.log 一致、29 处改动全部真实、无被误拒的更好候选; audit-trail fix (commit a82ecf8): round/trial_id fields, accepted by trial_id only, same-inst reset; re-run numbers unchanged, accepted==applied, strict per-round improvement
+- **可审计性**：每候选独立子目录 + `candidate_trials` 记录 wns/accepted；审查核对 4 电路 final WNS 与 sta.log 一致、24 处改动全部真实、无被误拒的更好候选; audit-trail fix (commit a82ecf8): round/trial_id fields, accepted by trial_id only, same-inst reset; re-run numbers unchanged, accepted==applied, strict per-round improvement
 - **方法边界（诚实记录）**：当前为 ideal-net pre-layout 验证；post-layout 长线负载下 G/B 的相对贡献可能变化，需 Stage C 后续验证；buffer 插入在真实时钟路径上需 CTS/clock-aware 约束保护
 
 - **原"策略空间饱和"结论已被推翻（重要）**：旧版 s820/s832 卡在 -1.11 的真实原因是 runner 仅从默认 `report_checks` 解析单条关键路径（6 实例），策略空间看似饱和；改为显式收集全部违例路径实例（multi_path=True，107+ 实例）后，s820 从 -1.42 到 **-0.63**、s832 从 -1.15 到 **-0.47**，证明瓶颈不是库单元上限而是关键路径覆盖不足。教训：时序修复必须先覆盖全部违例路径，否则会误判策略失效。
@@ -270,4 +270,23 @@ SKY130 库含 buf_1/2/4/8/16，原实验只用 1/2/4。用 buf_1/2/4/8/16 全试
 - runner 新增 --strategy-priorities auto：候选按决策表优先级排序，把"全搜索"变成"预测驱动"（src/rseco/strategy_selector.py + tests/test_strategy_selector.py 4 项测试）
 
 下一步：效率对比实验（同 WNS 下决策驱动 vs 全搜索的 STA 调用数）验证决策层价值。
+
+### 12.6 外环真实 WNS 闭环 + 决策层 + early-stop（2026-08-04 晚）
+
+G/R/B 内环之外，外环（patch 粒度）failure-aware refinement 已接真实 OpenSTA（src/rseco/opensta.py 的 run_opensta_sequential + src/rseco/real_wns.py 的 RealWnsEvaluator）：把 cut 门映射到真实 SKY130 网表，对关键路径实例生成 R/G/B 候选、每候选独立实测、只接受严格 WNS 改善。
+
+反馈消融（beam=1，8 电路）：6/8 需学习的电路（s27/s382/s420/s820/s832/s953）反馈 ON 第 2 轮经 critical_path_cover 成功、OFF 8 轮全失败；2/8 首候选可修（s641/s713）。决策层 + early-stop 全 8 电路（beam=1 + 反馈 ON，period 0.5ns）：
+
+| 电路 | 基线 WNS | 反馈ON beam1 STA | 决策层+early-stop STA | final WNS | 轮数 |
+|---|---|---|---|---|---|
+| s27 | -0.28 | 8 | **4** | -0.21 | 2 |
+| s382 | -0.94 | 12 | **8** | -0.93 | 2 |
+| s420 | -1.78 | 12 | **3** | -1.75 | 2 |
+| s641 | -1.86 | 3 | **1** | -1.85 | 1 |
+| s713 | -1.86 | 3 | **1** | -1.85 | 1 |
+| s820 | -1.42 | 18 | **3** | -1.36 | 2 |
+| s832 | -1.15 | 43 | **3** | -1.12 | 2 |
+| s953 | -1.48 | 11 | **4** | -1.38 | 2 |
+
+合计候选 STA 110→27（-75%），8/8 WNS 持平或更好。三层机制：外环 F4 反馈定位 critical_path_cover cut（学习哪里改）→ 内环决策层按 cell-type 优先级排序策略（经验复用怎么改）→ early-stop 首个严格改善即停（效率）。诚实边界：early-stop 是贪心，WNS 与全评估可能略异（本次 s382/s420/s820 反超，属贪心轨迹差异）；决策表对未见 cell type 回退 R,G,B 顺序。实验产物 experiments/20260804_outerloop_decision/（A-only 不入库）；全量 195 passed + 1 subtest。
 
