@@ -201,3 +201,13 @@ s820 迁移失败的根因：决策表把 B 排最前，改变了每轮贪心选
 - 但全部 case 失败：logic_level_reduction=0（这些 case 的重综合网表逻辑级数与原网表相同），F4（时序收益不足）永不满足
 - 诚实结论：**机制工作，case 数据限制**——要验证"恢复"，需用逻辑级数有下降空间的 case，或改用 WNS/TNS 作为成功标准（内环已有 OpenSTA WNS 数据，可迁移）
 
+
+### 10.2 WNS 驱动成功标准（2026-08-04）
+
+外环循环的 evaluator 回调天然支持 WNS 成功标准：evaluator 内部决定 success（如 WNS 改善即 True），循环只负责失败时调权重重试。测试验证（test_refinement_wns.py 2 项）：
+
+- WNS 序列 [-1.5, -1.2, -0.9] 下，第 3 次 WNS >= -1.0 时循环成功停止（iterations=3）
+- 首次即 success 时立即停止（iterations=1，无多余 refine）
+
+这解决了 10.1 的 case 限制：logic_level_reduction=0 时，改用 WNS 改善作为成功标准即可让外环真正"恢复"。真实接入需把 Stage A 的 patch 替换后跑 OpenSTA（复用 run_opensta，需 mapped netlist + clock），作为后续工程项。
+
