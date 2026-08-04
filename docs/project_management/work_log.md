@@ -14,6 +14,8 @@
 | LOG-20260804-05 | 相关领域检索与创新性评估 | docs/literature/eco_innovation_niche_analysis.md | 生态位空缺，创新性中上 |
 | LOG-20260804-06 | 决策层实现（strategy selector） | src/rseco/strategy_selector.py + strategy_priority_table.json + tests/test_strategy_selector.py（4 项测试）+ scripts/run_hybrid_repair.py --strategy-priorities auto | 从 8 电路 12205 条 trial 归纳 cell-type→策略优先级决策表（75 个 cell type）；绝大多数 cell type 下 B 是唯一正接受率策略（clkinv_1: B 0.15/R 0.00/G 0.00） |
 | LOG-20260804-07 | 决策层效率对比实验（s832） | experiments/20260804_strategy_selector/s832（A-only） | 决策层 auto vs 全搜索：**-0.45 vs -0.47（更好）**，trials 2275→1932（-15%），R trials 224→79，audit ok。证明"预测驱动"不仅省 STA 调用还找到略优解，是 failure-aware 名副其实的实证 |
+| LOG-20260804-08 | 决策层跨电路迁移实验（8/8 完成） | experiments/20260804_strategy_selector_8c/（A-only） | 7/8 持平或更好；s832 -0.45（-15% trials）、s820 **劣化** -1.03 vs -0.20（根因：优先级重排改变贪心轨迹提前收敛）；诚实记录迁移失败边界 |
+| LOG-20260804-09 | 架构文档 §8 跨电路迁移实验设计+结果 | docs/experiment_design/faeco_overall_architecture.md | 明确 leave-one-out 协议、8/8 结果表、s820 失败根因与改进方向（轮内多策略探索） |
 
 ## 2026-08-03
 
