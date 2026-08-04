@@ -374,9 +374,6 @@ def main() -> int:
                 improved = True
                 print(f"  {kind} {inst}: {cell.cell_type}->{new_type} wns {best_wns}")
                 best_by_inst[inst] = (kind, new_type, pin_map)
-            elif best is not None:
-                # record the best tried candidate even if not accepted (joint may combine it)
-                best_by_inst[inst] = (best[2], best[0], best[1])
 
         # joint 2-instance candidates: combine the best single-instance candidates
         if args.joint_pairs > 0 and len(best_by_inst) >= 2:
