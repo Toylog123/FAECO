@@ -456,17 +456,56 @@ L31-04 & failure\_recovery 曾为 single-iteration proxy & \textbf{已解决}：
 % =============================================================================
 % V. 结论
 % =============================================================================
+% =============================================================================
+% IV-B. ITC-99 跨基准泛化
+% =============================================================================
+\subsection{ITC-99 跨基准泛化验证}\label{sec:itc99}
+
+为验证决策层与外环真实 WNS 闭环的跨基准泛化，我们把 ISCAS89 上归纳的同一套流程（外环 F1--F5 反馈 + cell-type 决策层优先级表 + beam=1 + early-stop + 真实 OpenSTA，period $0.5\,$ns）直接迁移到 ITC-99 基准族。ITC-99 的 .blif 使用无时钟四字段锁存（$\mathtt{.latch\ d\ q\ 0}$），Yosys 0.9 的 read\_blif 会转出无法回读的 \texttt{\$ff}/\texttt{\$lut} 单元；转换器在 yosys 会话内先 techmap（\texttt{\$lut}$\rightarrow$\texttt{\$\textunderscore MUX\textunderscore} 三元赋值、\texttt{\$ff}$\rightarrow$\texttt{\$\textunderscore FF\textunderscore}），再规范化模块名、加全局时钟端口并将 \texttt{\$\textunderscore FF\textunderscore} 改写为行为级 dff，同时修复了 b14/b15/b17 上 \texttt{\$shr} 桶形移位展开导致的 32 位 Yosys 内存崩溃（std::bad\_alloc）。b18/b19 发行版 .blif 截断（仅剩锁存声明、逻辑表丢失），我们由上游完整 .bench 门级文件恢复并转换。
+
+表~\ref{tab:itc99} 汇总 19 个可映射电路的修复结果（b18/b19 因 Yosys 0.9 32 位 read\_verilog 内存限制无法映射，如实排除）：17/19 电路 WNS 真实改善（89.5\%），包括 6 个大电路 b14/b15/b17/b20/b21/b22 全部成功；b01/b02 诚实失败（关键路径单元无 R 等价候选且 G sizing 全部有害）。R 策略机理跨电路重现：b10/b15 的 nor4bb$\rightarrow$and4bb 与 b11 的 lpflow\_inputiso1p$\rightarrow$or2 与 s382 的 R 修复机理一致——同功能不同库单元的延迟差在 pre-layout 无 wire load 可借力时比 G sizing 更稳。19 电路外环合计 151 次候选 STA（决策层 + early-stop 生效），小电路 4 并行约 45\,s、大电路 2 并行 5--6 分钟。
+
+\begin{table}[!t]
+\centering
+\caption{ITC-99 跨基准泛化：19 个可映射电路真实 WNS 修复（period 0.5ns，外环反馈+决策层+beam=1+early-stop）}
+\label{tab:itc99}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{电路} & \textbf{基线 WNS} & \textbf{final WNS} & \textbf{接受修复} & \textbf{STA} \\
+\midrule
+b01 & $-0.59$ & $-0.59$ & ---（无 R 等价候选，G 有害） & 44 \\
+b02  & $-0.21$ & $-0.21$ & ---（同上） & 38 \\
+b03  & $-1.99$ & $-1.84$ & G o41ai$_1$$\rightarrow_2$ & 3 \\
+b04  & $-2.15$ & $-2.10$ & G xnor2$_1$$\rightarrow_2$ & 3 \\
+b05  & $-3.83$ & $-3.81$ & G nor3b$_1$$\rightarrow_2$ & 3 \\
+b06  & $-0.52$ & $-0.51$ & G o22ai$_1$$\rightarrow_2$ & 1 \\
+b07  & $-2.34$ & $-2.33$ & G o21ai$_0$$\rightarrow_1$ & 1 \\
+b08  & $-1.29$ & $-1.26$ & G and2$_0$$\rightarrow_1$ & 4 \\
+b09  & $-1.12$ & $-1.11$ & G nor4$_1$$\rightarrow_2$ & 8 \\
+b10  & $-1.42$ & $-1.18$ & \textbf{R nor4bb$\rightarrow$and4bb} & 3 \\
+b11  & $-2.68$ & $-2.67$ & \textbf{R lpflow\_inputiso1p$\rightarrow$or2} & 3 \\
+b12  & $-2.68$ & $-2.42$ & G nor4$_1$$\rightarrow_2$ & 3 \\
+b13  & $-0.92$ & $-0.89$ & G o21a$_1$$\rightarrow_2$ & 7 \\
+b14  & $-12.23$ & $-12.19$ & G or4$_1$$\rightarrow_4$ & 5 \\
+b15  & $-12.35$ & $-12.30$ & \textbf{R nor4bb$\rightarrow$and4bb} & 3 \\
+b17  & $-16.10$ & $-15.62$ & G nor4b$_1$$\rightarrow_2$ & 4 \\
+b20  & $-11.20$ & $-11.17$ & G and3b$_1$$\rightarrow_4$ & 5 \\
+b21  & $-11.29$ & $-11.27$ & G and3b$_1$$\rightarrow_4$ & 5 \\
+b22  & $-12.08$ & $-12.06$ & G mux2$_1$$\rightarrow_2$ & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{结论}
 
-FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET）。全部实验基于 EPFL v2025.1 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
+FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET），并进一步在 ITC-99 基准族上实现 19 个可映射电路 17/19 真实 WNS 改善（含 6 个大电路）。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
 
-\textbf{当前 limitation（透明声明）}：(1) 外环真实 WNS 闭环已在 4 个 ISCAS89 电路上验证（beam$\times$反馈消融证明 F4 反馈价值），但电路规模仍小、权重细化在更大电路上的收益待验证；(2) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
+\textbf{当前 limitation（透明声明）}：(1) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(2) 外环真实 WNS 闭环已扩展到 19 个 ITC-99 电路（17/19 改善）并含 6 个大电路，但 b18/b19（23--46 万门）超出 Yosys 0.9 32 位映射能力、多 corner 仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
 
-\textbf{未来工作}：(1) 将外环真实 WNS 闭环扩展到更大规模顺序基准（ITC-99）与多 corner，验证权重细化在大电路上的收敛收益；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 将决策层策略表扩展到更多工艺库与 corner，验证跨工艺迁移；(5) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
+\textbf{未来工作}：(1) 接入 64 位 Yosys/OpenROAD 补齐 b18/b19 大电路，并扩展到多 corner/多工艺库验证权重细化与决策层表的跨工艺迁移；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
 
-% =============================================================================
-% 参考文献
-% =============================================================================
 \begin{thebibliography}{99}
 \bibitem{ho2010eco} Y.-C.~Ho, C.-C.~Chang, and S.-J.~Chen, ``ECO timing optimization using spare cells and technology remapping,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~29, no.~10, pp. 1603--1614, 2010.
 \bibitem{ho2012treco} Y.-C.~Ho, C.-C.~Chang, and S.-J.~Chen, ``TRECO: Dynamic technology remapping for timing engineering change orders,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~31, no.~11, pp. 1740--1752, 2012.

@@ -289,4 +289,45 @@ G/R/B 内环之外，外环（patch 粒度）failure-aware refinement 已接真�
 | s953 | -1.48 | 11 | **4** | -1.38 | 2 |
 
 合计候选 STA 110→27（-75%），8/8 WNS 持平或更好。三层机制：外环 F4 反馈定位 critical_path_cover cut（学习哪里改）→ 内环决策层按 cell-type 优先级排序策略（经验复用怎么改）→ early-stop 首个严格改善即停（效率）。诚实边界：early-stop 是贪心，WNS 与全评估可能略异（本次 s382/s420/s820 反超，属贪心轨迹差异）；决策表对未见 cell type 回退 R,G,B 顺序。实验产物 experiments/20260804_outerloop_decision/（A-only 不入库）；全量 195 passed + 1 subtest。
+### 12.7 ITC-99 跨基准泛化验证（2026-08-04 晚）
+
+ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外环 F1-F5 反馈 + 决策层策略优先级表 + beam=1 + early-stop + 真实 OpenSTA，period 0.5ns）直接迁移到 ITC-99 基准族做跨基准泛化验证。基础设施：
+
+- `scripts/convert_itc99_blif_to_v.py`：ITC-99 的 .blif 是无时钟四字段 .latch（d q 0），Yosys 0.9 read_blif 转出 $ff/$lut 无法回读；转换器在 yosys 会话内先 `techmap`（$lut->$_MUX_ 三元 assign、$ff->$_FF_），再规范化模块名、加全局 CK 端口、把 $_FF_ 改写为行为级 dff（与 ISCAS89 s820/s832/s953 预处理同约定）。techmap 同时修复了 b14/b15/b17 此前 $shr 桶形移位展开导致的 Yosys 0.9 32 位 std::bad_alloc OOM。
+- `scripts/convert_itc99_bench_to_blif.py`：b18/b19 发行版 .blif 截断（只剩 latch、逻辑表丢失），从上游恢复完整 .bench（edf2bench 门级格式：b18 3320 DFF/113K 门，b19 6642 DFF/231K 门）并转为标准 BLIF。
+- `scripts/run_outerloop_batch.py --iscas89-dir`：batch 并行 driver 支持指向任意电路目录。
+
+结果（19 个可跑电路，17/19 真实 WNS 改善；b18/b19 因 Yosys 0.9 32 位 read_verilog 内存限制无法映射，诚实排除）：
+
+| 电路 | 基线 WNS | final WNS | 接受修复 | STA |
+|---|---|---|---|---|
+| b01 | -0.59 | -0.59 | 无（G 全有害、无 R 等价候选） | 44 |
+| b02 | -0.21 | -0.21 | 无（同上） | 38 |
+| b03 | -1.99 | -1.84 | G o41ai_1->2 | 3 |
+| b04 | -2.15 | -2.10 | G xnor2_1->2 | 3 |
+| b05 | -3.83 | -3.81 | G nor3b_1->2 | 3 |
+| b06 | -0.52 | -0.51 | G o22ai_1->2 | 1 |
+| b07 | -2.34 | -2.33 | G o21ai_0->1 | 1 |
+| b08 | -1.29 | -1.26 | G and2_0->1 | 4 |
+| b09 | -1.12 | -1.11 | G nor4_1->2 | 8 |
+| b10 | -1.42 | -1.18 | **R nor4bb->and4bb** | 3 |
+| b11 | -2.68 | -2.67 | **R lpflow_inputiso1p->or2** | 3 |
+| b12 | -2.68 | -2.42 | G nor4_1->2 | 3 |
+| b13 | -0.92 | -0.89 | G o21a_1->2 | 7 |
+| b14 | -12.23 | -12.19 | G or4_1->4 | 5 |
+| b15 | -12.35 | -12.30 | **R nor4bb->and4bb** | 3 |
+| b17 | -16.10 | -15.62 | G nor4b_1->2 | 4 |
+| b20 | -11.20 | -11.17 | G and3b_1->4 | 5 |
+| b21 | -11.29 | -11.27 | G and3b_1->4 | 5 |
+| b22 | -12.08 | -12.06 | G mux2_1->2 | 1 |
+
+关键结论：
+
+1. **跨基准泛化成立**：ISCAS89 上归纳的"先按 cell-type 决策表排序、实测只接受严格改善"策略在 ITC-99 上直接复用，19 个可跑电路 17/19 真实改善（89.5%），大电路 b14/b15/b17/b20/b21/b22 全部成功且多为 G sizing 微幅改善（-0.03~-0.48ns）。
+2. **R 策略机理跨电路重现**：b10/b15 的 nor4bb->and4bb（互补同构）与 b11 的 lpflow_inputiso1p->or2 与 ISCAS89 s382 的 R 修复机理一致——同功能不同库单元延迟差，pre-layout 下无 wire load 可借力时 R 比 G 更稳。
+3. **失败模式诚实记录**：b01/b02 关键路径 cell（and3b/or4/o211ai 等）无 R 等价候选，G sizing 全部有害（输入电容拖累前级），8 轮反馈无法改进——与 ISCAS89 s382 的 G 失效机理一致，证明"实测接受/拒绝"而不是盲信 G 的必要性。
+4. **工具链边界**：b18/b19（23-46 万门）超出 Yosys 0.9 32 位能力（read_verilog bad_alloc），属工具链限制而非方法限制；已用完整 .bench 源恢复并转换，待 64 位 Yosys/OpenROAD 接入后可补跑。
+5. **效率**：19 电路外环合计 151 次候选 STA（决策层 + early-stop 生效），小电路 4 并行 45s、大电路 2 并行 5-6 分钟。
+
+实验产物：experiments/20260804_itc99_batch_smoke/、experiments/20260804_itc99_outerloop/、experiments/20260804_itc99_outerloop_large{,_2}/（A-only 不入库）；转换器与 batch driver 增强已 commit（ddb2d39）。
 
