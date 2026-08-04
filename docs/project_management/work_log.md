@@ -55,6 +55,9 @@
 | LOG-20260804-43 | **b18/b19 外环修复 0.5ns 协议：b19 R 策略贡献 1.44ns 实质改善** | experiments/20260804_itc99_b18b19_repair/（A-only）| 直接复用现有外环 runner + WSL Yosys（run_yosys_mapping 增加 yosys_cmd/_to_wsl 绝对路径修复 + timeout 1500；runner 加 --yosys-wsl）。b18 -13.34→-13.27（唯一接受 G maj3_1→maj3_2，24 STA），b19 -17.44→-16.0（接受 R clkinv_1→bufinv_8，59 STA）。关键发现：0.5ns 是 27-36 倍过约束，非现实 ECO 场景；b19 的 R 修复证明 pre-layout 大电路上等价替换才是主力
 | LOG-20260804-44 | **现实 period 协议（95% CP）重跑 b18/b19：b19 达成 MET（-0.90→+0.54）** | experiments/20260804_itc99_realistic/（A-only）+ runner 新增 --skip-mapping（复用 mapped.v）| 按 95% 原始关键路径设 period（b18=13.15ns、b19=17.04ns），WNS 落在现实 ECO 区间（b18 -0.69 / b19 -0.90）。b18 -0.69→-0.62（G maj3_1→maj3_2，TNS -28.18→-24.7，24 STA）；b19 **-0.90→+0.54（MET，TNS 0.0）**（R clkinv_1→bufinv_8，59 STA）。结论：大电路上 failure-aware 修复在现实约束下可收敛时序；b18 改善小是结构边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，SKY130 无 R 候选，G 仅微调），诚实记录
 
+| LOG-20260804-45 | **b18/b19 大电路实验审查：数据核验 + 代码审查通过** | experiments/20260804_itc99_realistic/ + 20260804_itc99_b18b19_repair/（A-only 只读核验）+ scripts/run_sequential_timing_check.py + scripts/run_outerloop_real_wns.py | 逐电路核对 outerloop_result.json/eval_trials.json：b18 现实协议 -0.69→-0.62（G maj3_1→maj3_2，TNS -28.18→-24.7，24 STA）、b19 -0.90→+0.54（MET，TNS 0.0，R clkinv_1→bufinv_8，59 STA），与日志完全一致；代码审查：--skip-mapping/--yosys-wsl 参数向后兼容、_to_wsl resolve 修复正确、timeout 300→1500 合理；全量回归 214 passed + 1 subtest。审查结论：通过（小改进点：yosys_cmd[0].endswith("wsl.exe") 对不带 .exe 的 wsl 变体不识别，当前用途无影响） |
+
+
 
 
 
