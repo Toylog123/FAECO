@@ -35,6 +35,7 @@ from rseco.gate_sizing import (
 )
 from rseco.buffer_insertion import buffer_candidates, build_net_fanout, insert_buffer
 from rseco.logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
+from rseco.netlist_audit import audit_netlist
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -291,6 +292,7 @@ def main() -> int:
     # 4. final report
     (out / "mapped_hybrid.v").write_text(text, encoding="utf-8")
     final = run_opensta(out / "mapped_hybrid.v", args.period, out, top_module=args.circuit)
+    audit = audit_netlist(text, report=True)
     result = {
         "circuit": args.circuit,
         "period_ns": args.period,
@@ -308,6 +310,7 @@ def main() -> int:
             if baseline_wns is None or final["wns"] is None
             else round(final["wns"] - baseline_wns, 3)
         ),
+        "netlist_audit": audit,
     }
     summary_path = out / "hybrid_result.json"
     summary_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
