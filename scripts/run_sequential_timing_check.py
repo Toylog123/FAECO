@@ -143,13 +143,13 @@ def run_opensta(mapped: Path, period: float, output: Path,
         f"link_design {top_module}\n"
         f"create_clock -name clk -period {period} [get_ports CK]\n"
         "report_checks -path_delay max\n"
-        'puts "TNS_BEGIN"\n'
     )
     if multi_path:
+        # collect all violating-path instances for critical-instance parsing
         tcl_body += "report_checks -path_delay max -slack_max 0 -endpoint_count 100000\n"
-    else:
-        tcl_body += "report_tns\n"
     tcl_body += (
+        'puts "TNS_BEGIN"\n'
+        "report_tns\n"
         'puts "TNS_END"\n'
         "report_worst_slack -max\n"
         "report_worst_slack -min\n"
