@@ -323,6 +323,8 @@ def run_multi_iteration_case(
     artifact_dir: str | Path | None = None,
     equivalence_checker: object | None = None,
     wns_evaluator: object | None = None,
+    candidates_per_iteration: int = 8,
+    critical_instances: list[str] | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -345,6 +347,17 @@ def run_multi_iteration_case(
         default logic-level reduction >= 1, and records every measured WNS
         in "wns_history".  This is the real-STA hook: a runner can apply the
         candidate patch and call OpenSTA, then report whether WNS improved.
+
+    candidates_per_iteration: how many weighted-ordered cut candidates are
+        explored (and OpenSTA-measured) per iteration before refining the
+        F1-F5 weights.  A beam > 1 finds good cuts within one iteration;
+        beam == 1 isolates the pure failure-feedback loop (each iteration
+        retries only the top cut under the refined weights).
+
+    critical_instances: real critical-path instance names (from OpenSTA
+        report_checks).  When provided with an F4-capable wns_evaluator,
+        the weighted cut search can generate a critical-path-cover candidate
+        that actually targets the timing-critical gates after an F4 failure.
     """
     from .refinement_loop import RefinementConfig, simulate_refinement_loop
     case_dir = Path(case_dir)
@@ -376,9 +389,7 @@ def run_multi_iteration_case(
         reduction = 0
 
     wns_history: list[float] = []
-    #: candidate cuts explored per iteration (weighted-ordered list); a cap
-    #: keeps the real-STA cost of one iteration bounded.
-    max_candidates_per_iteration = 8
+    max_candidates_per_iteration = max(1, candidates_per_iteration)
     def evaluator(failures, weights):
         # one iteration: explore the weighted-ordered candidate cuts with the
         # current weights (so refinement actually changes the boundary /
@@ -386,7 +397,7 @@ def run_multi_iteration_case(
         # candidate whose real-STA WNS strictly improves.  Without an
         # injected wns_evaluator the classic reduction >= 1 criterion is used
         # on the first candidate (legacy behaviour).
-        candidates = weighted_cut_candidates(cone, weights)
+        candidates = weighted_cut_candidates(cone, weights, critical_instances)
         if not candidates:
             failures.add(FailureType.PATCH_TOO_LARGE)
             return False, None

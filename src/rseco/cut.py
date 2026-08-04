@@ -229,12 +229,24 @@ def solve_weighted_cut(cone: FaninCone, cut_graph: WeightedCutGraph) -> Weighted
     )
 
 
-def weighted_cut_candidates(cone: FaninCone, weights: object) -> list[CutBoundary]:
+def weighted_cut_candidates(
+    cone: FaninCone,
+    weights: object,
+    critical_instances: list[str] | None = None,
+) -> list[CutBoundary]:
     """Generate deterministic cut candidates from weighted graph costs.
 
     The weighted s-t min-cut solution (which uses every F1-F5 weight) is
     solved and included as the first candidate; the legacy fixed candidates
     remain as baselines.  Ordering is by total node cost.
+
+    ``critical_instances``: real critical-path instance names (e.g. parsed
+    from OpenSTA report_checks).  When provided, a ``critical_path_cover``
+    candidate is generated whose gate set is the *intersection* of the cone
+    with the critical instances, ordered so the deepest cone gate comes
+    last; this lets an F4 (timing gain insufficient) failure turn into a
+    candidate that actually covers the timing-critical gates.  As
+    critical_coverage_reward grows, that candidate is ranked first.
     """
     cut_graph = build_weighted_cut_graph(cone, weights)
     solved = solve_weighted_cut(cone, cut_graph)
@@ -247,9 +259,19 @@ def weighted_cut_candidates(cone: FaninCone, weights: object) -> list[CutBoundar
         size_refined = _size_refined_cut(cone)
         if size_refined.patch_size < fixed_min_cut(cone).patch_size:
             candidates.append(size_refined)
+    critical_reward = float(getattr(weights, "critical_coverage_reward", 1.0))
+    if critical_instances and critical_reward > 1.0:
+        cover = _critical_path_cover_cut(cone, critical_instances)
+        if cover is not None and cover.patch_size > 0:
+            candidates.append(cover)
+    # F4 feedback ranks the critical-path-cover cut first so beam-1 loops
+    # actually try the timing-targeted candidate after a timing failure
+    # (previously the 4-gate cover lost to every 1-gate cut by cost).
+    critical_first = critical_reward > 1.0 and bool(critical_instances)
     return sorted(
         _deduplicate_candidates(candidates),
         key=lambda candidate: (
+            0 if (critical_first and candidate.method == "critical_path_cover") else 1,
             _cut_cost(candidate, cut_graph),
             0 if candidate.method.startswith("weighted_st_min_cut") else 1,
             candidate.method,
@@ -308,6 +330,24 @@ def _fanout_counts(cone: FaninCone) -> dict[str, int]:
             if driver is not None:
                 counts[driver] += 1
     return counts
+
+
+
+
+def _critical_path_cover_cut(
+    cone: FaninCone, critical_instances: list[str]
+) -> CutBoundary | None:
+    """Cut over the cone gates that lie on the real critical path.
+
+    Only gates present in both the cone and the critical instances are
+    included, in critical-path order (deepest first) so the candidate
+    targets the timing bottleneck.  Returns None when no overlap exists.
+    """
+    cone_gate_set = set(cone.gates)
+    covered = [g for g in critical_instances if g in cone_gate_set]
+    if not covered:
+        return None
+    return _cut_for_selected_gates(cone, covered, method="critical_path_cover")
 
 
 def _size_refined_cut(cone: FaninCone) -> CutBoundary:

@@ -60,6 +60,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--period", type=float, default=0.5, help="Clock period (ns)")
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--max-iterations", type=int, default=6)
+    p.add_argument("--candidates-per-iteration", type=int, default=8,
+                   help="Cut candidates explored per iteration (beam width; 1 isolates feedback)")
+    p.add_argument("--no-feedback", action="store_true",
+                   help="Disable F1-F5 weight refinement (ablation control)")
     p.add_argument("--workers", type=int, default=4,
                    help="Parallel OpenSTA evaluations per candidate (1 = serial)")
     p.add_argument("--enable-buffer", action="store_true",
@@ -150,9 +154,11 @@ def main() -> int:
     result = run_multi_iteration_case(
         case_dir,
         max_iterations=args.max_iterations,
-        enable_feedback=True,
+        enable_feedback=not args.no_feedback,
         equivalence_checker=_trivial_equivalence,
         wns_evaluator=evaluator,
+        candidates_per_iteration=args.candidates_per_iteration,
+        critical_instances=critical,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period

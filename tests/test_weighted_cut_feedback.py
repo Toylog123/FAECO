@@ -104,3 +104,31 @@ def test_weights_enter_all_node_costs() -> None:
     assert default_graph.node_costs != reward_graph.node_costs
     # deeper gates get cheaper under the critical-coverage reward
     assert reward_graph.node_costs["G3"] < default_graph.node_costs["G3"]
+
+
+def test_critical_path_cover_candidate_appears_after_f4_reward() -> None:
+    """F4 feedback (critical_coverage_reward > 1) plus real critical-path
+    instances must yield a critical_path_cover candidate that includes the
+    timing-critical gates (previously the feedback could never change the
+    candidate set on real DAGs)."""
+    from rseco.cut import _critical_path_cover_cut
+
+    cover = _critical_path_cover_cut(CHAIN, ["G2", "G3", "NOPE"])
+    assert cover is not None
+    assert cover.method == "critical_path_cover"
+    assert set(cover.gates) == {"G2", "G3"}
+    # no overlap -> None
+    assert _critical_path_cover_cut(CHAIN, ["Z1"]) is None
+
+    # default weights (critical_coverage_reward=1) -> no cover candidate
+    plain = [c.method for c in weighted_cut_candidates(CHAIN, RefinementWeights())]
+    assert "critical_path_cover" not in plain
+    # F4 feedback -> cover candidate present
+    f4 = [
+        c.method
+        for c in weighted_cut_candidates(
+            CHAIN, RefinementWeights(critical_coverage_reward=2.0),
+            critical_instances=["G2", "G3"],
+        )
+    ]
+    assert "critical_path_cover" in f4
