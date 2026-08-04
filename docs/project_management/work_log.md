@@ -25,6 +25,7 @@
 | LOG-20260804-16 | 消融实验（反馈开关） | src/rseco/refinement_loop.py enable_feedback + tests（+3）+ 5 case 消融 | 关反馈时权重固定、不触发 refine（测试验证）；5 case 上 ON/OFF 失败集相同——weighted cut 对小 case 权重不敏感（F3 首轮消除、F4 reduction=0 永不满足），诚实记录为数据局限，需更大 case 或 WNS 标准体现反馈价值 |
 | LOG-20260804-17 | 论文 method §6.1 两环闭环 + 内环决策层 | paper/draft/method.md | 更新过时的 §6（多轮 refinement 已实现非待启动）；新增 §6.1：外环 patch 级 cut refinement + 内环 cell 级 R/G/B + 决策层衔接，含 8 电路实证、s832 效率、leave-one-out 迁移、buf_8/16 负面结论 |
 | LOG-20260804-18 | 论文 experiments 补 §3.1 ISCAS89 sequential 混合修复实验 | paper/draft/experiments.md | 在 §3 之后插入 §3.1：8 电路全搜索结果表（s27 -0.28→-0.01、s382 MET +0.02 等）、决策层 s832 效率（-0.45，STA 调用 -15%）、leave-one-out 跨电路迁移 top-2 命中 94.3%-98.2%、buf_8/16 pre-layout 负面结论（诚实记录）；数据源 experiments/20260803_sequential_hybrid_tns_fixed/（A-only 不入库） |
+| LOG-20260804-19 | 论文 experiments 补 §3.2 外环 X19 实验 + limitation/后续修订同步 | paper/draft/experiments.md | §3.2：5-case 外环闭环机制验证（c432/c499/c880 的 F3 被权重反馈消除）、数据局限（reduction=0 致 F4 永不满足）、WNS 驱动成功标准（test 验证：[-1.5,-1.2,-0.9] 第 3 次成功、首次 success 立即停止）、消融 enable_feedback ON/OFF 5 case 失败集相同（诚实记录数据局限）；L31-04 更新为已解决+新边界；§7 修订第一条同步 |
 
 ## 2026-08-03
 

@@ -1,11 +1,13 @@
 # FAECO Experiments 初稿（Draft 1）
 
-更新时间：2026-07-31
+更新时间：2026-08-04
 
 本文档为论文 Experiments 章节的初稿，基于：
 - `experiments/20260718_minimal_combinational_batch_demo/tables/*.json`（Stage A 5-case）
 - `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}`（Stage B 8-case）
 - `docs/experiment_design/benchmark_flow.md` / `case_schema.md` / `baseline_protocol.md` / `metrics_and_tables.md`
+- experiments/20260803_sequential_hybrid_tns_fixed/（N31-05 ISCAS89 8 电路混合修复，A-only 不入库）
+- X19 外环多轮闭环：src/rseco/refinement_loop.py + flow.run_multi_iteration_case + tests/test_refinement_wns.py（2026-08-04）
 
 尚未经用户最终审定；结构和措辞仅作为论文主体起点，禁止作为主表事实性表述。
 
@@ -110,13 +112,24 @@ python scripts/run_stage_b_pre_layout_sta.py \
 
 **负面结论（诚实记录）**：buf_8/16 大 buffer 在 pre-layout 下有害（s832 从 -0.47 恶化到 -0.61，1080 trials 全拒），已排除在候选集外；探索守卫（每轮至少一个 G/R 候选）修复了决策层在 s820 上的提前收敛（-1.03 恢复到 -0.20）。
 
+### 3.2 外环多轮闭环实验（X19, 2026-08-04）
+
+外环（patch 粒度）failure-aware refinement 在 Stage A 5-case（c17×2 / c432 / c499 / c880）上端到端验证：cut -> classify(F1-F5) -> refine_weights -> re-cut 循环（flow.run_multi_iteration_case + refinement_loop.simulate_refinement_loop，多轮 residual failure 与 actions 全记录）。
+
+**机制验证**：c432 / c499 / c880 初始 cut 产生 size 过大的 patch（F3），权重反馈提高 size penalty 后重切得到更小 cut，F3 在后续轮次消除——反馈确实改变 cut 边界，闭环机制工作（evaluator 已修复为 weighted cut，权重真实参与重切）。
+
+**数据局限（诚实记录）**：5 个最小 case 的 resynthesis 逻辑级 reduction 均为 0，F4（timing 收益不足）每轮必触发，全部 case 在 max_iterations 内不满足成功条件——不是方法失效，而是数据无下降空间。
+
+**WNS 驱动成功标准**（tests/test_refinement_wns.py 验证）：循环 evaluator 支持「WNS 改善即成功」——模拟 WNS 序列 [-1.5, -1.2, -0.9] 第 3 次迭代成功停止；首次 success 立即停止（iterations=1）。真实接入需 patch 后 OpenSTA 实测（后续工程项，与内环衔接见 method §6.1）。
+
+**消融（enable_feedback ON/OFF）**：关闭反馈时权重固定、不触发 refine（测试验证）；5 case 上 ON/OFF 失败集相同——weighted cut 对最小 case 的权重不敏感（F3 首轮即消除、F4 永不满足）。诚实记录为数据局限：需更大 case 或 WNS 标准才能体现反馈价值。
 ## 4. limitation 与边界
 
 | ID | limitation | 实验影响 | 处理 |
 |---|---|---|---|
 | L31-01 | SKY130 Liberty cell model 解析 | **已解决（2026-08-03）**：ABC `cec` 无法建 subcircuit model，改用 Yosys miter+SAT（从 Liberty function 提取 assign cells.v），8/8 等价证明 SUCCESS | `scripts/verify_epfl_mapping_sat.py`；R31-01 mitigated |
 | L31-02 | 8 case 全 combinational | STA slack=null / slack_status=MET (INF) | N31-05 SKY130 sequential ECO 拓展（待 DFF 进 SDC） |
-| L31-04 | failure_recovery 仍是 single-iteration proxy | `avg_iterations=1.0` | X19 multi-iteration refinement（待用户 design 审批） |
+| L31-04 | failure_recovery 曾是 single-iteration proxy | `avg_iterations=1.0` | **已解决（2026-08-04）**：X19 多轮闭环已实现并接入 Stage A（cut->classify->refine->re-cut），机制验证 F3 被反馈消除；新边界：5 最小 case reduction=0 致 F4 永不满足，消融 ON/OFF 无差异（数据局限），WNS 成功标准已测试验证待真实接入 |
 | 补充 | METH-12 candidate-specific timing gain 当前是 Stage A proxy | ranking 无法区分 candidate 时序收益 | P1-4（round1 自审稿）：Stage B STA 已接，per-candidate timing gain 待实现 |
 | 补充 | N31-06 Z3 wrapper 8-case 端到端 error（2026-08-03） | mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式；Yosys aigmap 对 mapped.v 报 SKY130 模块 undefined | wrapper 单元测试层面（12 项，multi-output/escaped/xor/constant）已验证；8-case 端到端需 N31-03 cells.v（解锁 CEC + AIG→SMT 双路径） |
 
@@ -149,7 +162,7 @@ python -m unittest discover -s tests  # 90 项通过
 
 ## 7. 后续修订
 
-- N05 方法符号表获批后，本 Experiments 章节补 X19 multi-iteration refinement 的 ablation 表。
+- X19 外环 ablation 表已在 §3.2（2026-08-04）；后续用更大 case 或真实 WNS 接入补足反馈价值实证。
 - L01 Related Work 迁入 `paper/submission/` 后，本文的"工具链"段重排并补充引用文献。
 - 用户最终审定后迁入 `paper/submission/experiments.md`。
 - Stage B CEC 已由 Yosys miter+SAT 路径修复（8/8 pass）；本文"形式回验"段已补 SAT 等价证明表。
