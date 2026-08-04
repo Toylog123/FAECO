@@ -316,8 +316,10 @@ def main() -> int:
             if args.workers > 1 and len(eval_args) > 1:
                 with ThreadPoolExecutor(max_workers=args.workers) as ex:
                     futures = [ex.submit(_eval_candidate, *a) for a in eval_args]
-                    for f in as_completed(futures):
-                        rinst, rkind, rtype, rpin_map, res = f.result()
+                    # collect ALL results in submission order, then pick the best
+                    # deterministically (independent of completion order)
+                    results = [f.result() for f in futures]
+                    for rinst, rkind, rtype, rpin_map, res in results:
                         wns = res["wns"]
                         tns = res.get("tns")
                         trial_id = len(candidate_trials)
@@ -332,11 +334,15 @@ def main() -> int:
                             "round": rnd + 1,
                             "trial_id": trial_id,
                         })
+                    # deterministic best: first (in submission order) that improves
+                    for (rinst, rkind, rtype, rpin_map, res), tr in zip(results, candidate_trials[-len(results):]):
+                        wns = res["wns"]
+                        tns = res.get("tns")
                         if _accepts(best_wns, best_tns, wns, tns, args.tns_aware):
                             best_wns = wns
                             best_tns = tns
                             best = (rtype, rpin_map, rkind)
-                            best_trial_id = trial_id
+                            best_trial_id = tr["trial_id"]
             else:
                 for new_type, pin_map, kind in cands:
                     _, _, _, _, res = _eval_candidate(inst, cell.cell_type, new_type, pin_map, kind, text, cand_dir, args.period, args.circuit)
