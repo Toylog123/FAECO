@@ -34,6 +34,7 @@
 | LOG-20260803-25 | 修复后重跑 s420 收汛 | experiments/20260803_sequential_hybrid_tns_fixed/s420 | buffer 多驱修复后 s420 从 -1.78 改善到 -0.01（TNS -15.09→-0.01），3 轮 35 个 B 变化，网表审计 ok（多驱 0）；旧版 -0.08，修复后更优。其余 6 电路重跑中。 |
 | LOG-20260803-26 | 并行一致性验证通过 | experiments/20260803_sequential_hybrid_tns_fixed_parallel/s27 | 用 --workers 4 重跑 s27（rounds=2）结果与串行完全一致：-0.28→-0.01，5 应用（4B+1R），119 trials，网表审计 True。证明并行分支不改变收敛轨迹，后续可放心用 --workers 加速大电路。 |
 | LOG-20260803-27 | 修复前后重跑全部完成 | experiments/20260803_sequential_hybrid_tns_fixed 8/8 | 修复前后重跑全部完成：s382 -0.94→+0.02(MET)、s27 -0.28→-0.01、s420 -1.78→-0.01、s641 -1.86→-0.02、s713 -1.86→-0.01、s820 -1.42→-0.20、s832 -1.15→-0.47、s953 -1.48→-0.09；全部 netlist_audit ok（0 多驱）。另修复审计 bufinv误报（Y 输出）commit 8004fcb。 |
+| LOG-20260803-28 | 联试了 joint 2-instance candidate联试了 | scripts/run_hybrid_repair.py --joint-pairs + _apply_single/_eval_joint (commit ae49402, fix 550a974) | s832 联试验证：JOINT 候选全部为 -0.87， 均被拒绝。 联试后确认：s832 的 -0.47 不是单实例候选覆盖不足， 而是预布局下路径真实极限， 组合无益。 功能保留， 默认关闭。 |
 
 ## 2026-07-31
 
