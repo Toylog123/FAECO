@@ -78,3 +78,35 @@ def test_insert_buffer_unknown_instance_noop():
     out = insert_buffer(NETLIST, "_nope_", "A1", "sky130_fd_sc_hd__buf_1", "x")
     assert out == NETLIST
 
+
+def test_buffer_candidates_new_net_unique_per_instance_pin():
+    cells = parse_mapped_netlist(NETLIST)
+    fanout = build_net_fanout(cells, output_pins={"X", "Q"})
+    cands = buffer_candidates(cells, "_070_", fanout, output_pins={"X"})
+    nets_by_pin = {pin: {c[3] for c in cands if c[0] == pin} for pin in ("A1", "A2", "B1")}
+    # different sink pins on the same net get different new nets (no collision)
+    assert len(nets_by_pin["A1"]) == 1 and len(nets_by_pin["A2"]) == 1
+    assert nets_by_pin["A1"] != nets_by_pin["A2"] != nets_by_pin["B1"]
+    a1 = next(iter(nets_by_pin["A1"]))
+    assert a1.endswith("__A1")
+
+
+def test_two_buffers_same_net_keep_single_driver():
+    cells = parse_mapped_netlist(NETLIST)
+    fanout = build_net_fanout(cells, output_pins={"X", "Q"})
+    cands = buffer_candidates(cells, "_070_", fanout, output_pins={"X"})
+    a1 = next(c for c in cands if c[0] == "A1")
+    a2 = next(c for c in cands if c[0] == "A2")
+    out = insert_buffer(NETLIST, "_070_", "A1", a1[2], a1[3])
+    out = insert_buffer(out, "_070_", "A2", a2[2], a2[3])
+    cells2 = parse_mapped_netlist(out)
+    drivers: dict[str, list[str]] = {}
+    for c in cells2:
+        for pin, net in c.pins.items():
+            if pin in ("X", "Y", "Q"):
+                drivers.setdefault(net, []).append(c.instance)
+    # only the nets created by buffer insertion must be single-driver
+    # (the test fixture itself contains a pre-existing multi-driver _01_)
+    new_nets = [n for n in drivers if "__buf_" in n]
+    assert all(len(drivers[n]) == 1 for n in new_nets)
+    assert "_00___buf__070__A1" in new_nets and "_00___buf__070__A2" in new_nets

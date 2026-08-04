@@ -59,7 +59,10 @@ def buffer_candidates(
         if len(fanout.get(net, [])) < min_fanout:
             continue
         for buf_type in buf_types:
-            out.append((pin, net, buf_type, net + "__buf"))
+            # Unique net per (instance, pin): a shared net + "__buf" would make
+            # several buffers drive one net (multi-driver, illegal in real
+            # hardware and inflates timing in STA as parallel buffers).
+            out.append((pin, net, buf_type, net + "__buf_" + inst + "_" + pin))
     return out
 
 
@@ -116,4 +119,3 @@ def insert_buffer(
     if em:
         text = text[: em.start()] + buffer_block + text[em.start():]
     return text
-

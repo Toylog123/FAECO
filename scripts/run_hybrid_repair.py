@@ -193,6 +193,10 @@ def main() -> int:
     round_v = out / "round_current.v"
     for rnd in range(args.rounds):
         round_v.write_text(text, encoding="utf-8")
+        # Re-parse the current netlist each round so inserted buffers and
+        # resized cells participate in later rounds (stale cells would skip
+        # new critical instances entirely).
+        cells = parse_mapped_netlist(text)
         sta = run_opensta(round_v, args.period, out, top_module=args.circuit, multi_path=True)
         sta_text = (out / "sta.log").read_text(encoding="utf-8", errors="replace")
         critical = _critical_instances_from_sta(sta_text)
@@ -212,12 +216,16 @@ def main() -> int:
                 cands.append((new_type, {}, "G"))
             if args.enable_buffer:
                 fanout = build_net_fanout(cells)
+                lc = lib.get(cell.cell_type)
+                output_pins = {lc.output_pin} if lc else None
                 buf_short = [t.strip() for t in args.buf_types.split(",") if t.strip()]
                 buf_types = tuple(
                     "sky130_fd_sc_hd__" + b if not b.startswith("sky130_fd_sc_hd__") else b
                     for b in buf_short
                 )
-                for pin, net, buf_type, new_net in buffer_candidates(cells, inst, fanout, buf_types=buf_types):
+                for pin, net, buf_type, new_net in buffer_candidates(
+                    cells, inst, fanout, buf_types=buf_types, output_pins=output_pins
+                ):
                     # encode B candidate: kind B carries buf_type/pin/new_net
                     cands.append((f"buf:{buf_type}:{pin}:{new_net}", {}, "B"))
             if not cands:
