@@ -80,6 +80,36 @@ python scripts/run_stage_b_pre_layout_sta.py \
 - 等价验证（original vs mapped）：**8/8 pass**（Yosys `miter -equiv` + `sat -prove-asserts`，`scripts/verify_epfl_mapping_sat.py`，2026-08-03）。原 ABC `cec` 无法对 Liberty subcircuit 建 model，改用从 Liberty function 提取的 assign-style cells.v（`scripts/make_liberty_cells_v.py`）后 SAT 证明等价成立
 - 输入 EPFL Verilog SHA256 在 mapping 后保持不变（27 个 SKY130 cell / ctrl case）
 
+### 3.1 ISCAS89 sequential 混合修复实验（N31-05, 2026-08-04）
+
+在 8 个 ISCAS89 sequential 电路（s27/s382/s420/s641/s713/s820/s832/s953）上用 SKY130 HD 标准单元验证 failure-aware 混合修复（R 逻辑重写 / G gate sizing / B buffer insertion）。流程：Yosys 映射到纯 SKY130 cell -> OpenSTA baseline（period 0.5ns 制造违例）-> 多轮（rounds=10）候选实测 -> 只接受严格改善 WNS 的改动 -> netlist_audit 校验。
+
+**主结果（全搜索 baseline）**：
+
+| 电路 | baseline WNS | final WNS | 策略 |
+|---|---|---|---|
+| s27 | -0.28 | **-0.01** | 4B+1R |
+| s382 | -0.94 | **+0.02 (MET)** | 53B+1G |
+| s420 | -1.78 | **-0.01** | 35B |
+| s641 | -1.86 | **-0.02** | 35B+3G+1R |
+| s713 | -1.86 | **-0.01** | 37B+6G+1R |
+| s820 | -1.42 | **-0.20** | 78B+3G+1R |
+| s832 | -1.15 | **-0.47** | 67B+4G+1R |
+| s953 | -1.48 | **-0.09** | 149B+6G+1R |
+
+8/8 全部改善，s382 收敛到 MET（+0.02）；全部 netlist_audit ok（0 多驱）。B（buffer insertion）在 pre-layout ideal-net 下是主力策略（高扇出节点输入电容分担），推翻"ideal-net 下 B 无效"的假设。
+
+**决策层效率**（s832，--strategy-priorities auto）：
+
+| 配置 | final WNS | STA 调用 | 备注 |
+|---|---|---|---|
+| 全搜索 | -0.47 | 2275 | baseline |
+| 决策层 | **-0.45** | **1932 (-15%)** | 更好且更省 |
+
+**跨电路迁移**（leave-one-out）：用其他 7 电路归纳的决策表预测第 8 电路 trial，top-2 命中率 94.3%-98.2%——策略选择规律跨 ISCAS89 电路高度稳定。
+
+**负面结论（诚实记录）**：buf_8/16 大 buffer 在 pre-layout 下有害（s832 从 -0.47 恶化到 -0.61，1080 trials 全拒），已排除在候选集外；探索守卫（每轮至少一个 G/R 候选）修复了决策层在 s820 上的提前收敛（-1.03 恢复到 -0.20）。
+
 ## 4. limitation 与边界
 
 | ID | limitation | 实验影响 | 处理 |

@@ -1,4 +1,4 @@
-﻿# FAECO 工作日志
+# FAECO 工作日志
 
 本文档记录实际推进动作，和 `decision_log.md` 的区别是：这里记录每天做了什么，`decision_log.md` 只记录会影响路线的关键决策。
 
@@ -24,6 +24,7 @@
 | LOG-20260804-15 | WNS 驱动成功标准验证 | tests/test_refinement_wns.py（2 项） | 循环 evaluator 回调天然支持 WNS 改善即成功：WNS [-1.5,-1.2,-0.9] 第 3 次成功停止；首次 success 立即停止。解决 10.1 的 reduction=0 限制，真实接入需 patch 后跑 OpenSTA（后续工程项） |
 | LOG-20260804-16 | 消融实验（反馈开关） | src/rseco/refinement_loop.py enable_feedback + tests（+3）+ 5 case 消融 | 关反馈时权重固定、不触发 refine（测试验证）；5 case 上 ON/OFF 失败集相同——weighted cut 对小 case 权重不敏感（F3 首轮消除、F4 reduction=0 永不满足），诚实记录为数据局限，需更大 case 或 WNS 标准体现反馈价值 |
 | LOG-20260804-17 | 论文 method §6.1 两环闭环 + 内环决策层 | paper/draft/method.md | 更新过时的 §6（多轮 refinement 已实现非待启动）；新增 §6.1：外环 patch 级 cut refinement + 内环 cell 级 R/G/B + 决策层衔接，含 8 电路实证、s832 效率、leave-one-out 迁移、buf_8/16 负面结论 |
+| LOG-20260804-18 | 论文 experiments 补 §3.1 ISCAS89 sequential 混合修复实验 | paper/draft/experiments.md | 在 §3 之后插入 §3.1：8 电路全搜索结果表（s27 -0.28→-0.01、s382 MET +0.02 等）、决策层 s832 效率（-0.45，STA 调用 -15%）、leave-one-out 跨电路迁移 top-2 命中 94.3%-98.2%、buf_8/16 pre-layout 负面结论（诚实记录）；数据源 experiments/20260803_sequential_hybrid_tns_fixed/（A-only 不入库） |
 
 ## 2026-08-03
 
