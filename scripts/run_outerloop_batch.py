@@ -52,6 +52,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--tns-aware", action="store_true")
     p.add_argument("--max-instances", type=int, default=8)
     p.add_argument("--priority-table", type=Path, default=None)
+    p.add_argument("--priority-table-dir", type=Path, default=None,
+                   help="Dir of per-circuit {circuit}_loocv.json tables; overrides --priority-table")
     p.add_argument("--early-stop", action="store_true")
     return p.parse_args()
 
@@ -80,8 +82,6 @@ def main() -> int:
         runner_cmd.append("--enable-buffer")
     if args.tns_aware:
         runner_cmd.append("--tns-aware")
-    if args.priority_table is not None:
-        runner_cmd += ["--priority-table", str(args.priority_table.resolve())]
     if args.early_stop:
         runner_cmd.append("--early-stop")
 
@@ -92,6 +92,12 @@ def main() -> int:
 
     def _launch(circuit):
         cmd = runner_cmd + ["--circuit", circuit, "--output-dir", str(out_root / circuit)]
+        if args.priority_table_dir is not None:
+            tbl = args.priority_table_dir / (circuit + "_loocv.json")
+            if tbl.exists():
+                cmd += ["--priority-table", str(tbl)]
+        elif args.priority_table is not None:
+            cmd += ["--priority-table", str(args.priority_table.resolve())]
         log_path = out_root / circuit / "runner.log"
         log_path.parent.mkdir(parents=True, exist_ok=True)
         fh = open(log_path, "w", encoding="utf-8")

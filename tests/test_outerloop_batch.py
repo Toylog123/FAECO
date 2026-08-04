@@ -36,11 +36,12 @@ class FakePopen:
         return FakePopen.rc
 
 
-def _args(tmp, circuits, parallel=2, early=False):
+def _args(tmp, circuits, parallel=2, early=False, priority_table_dir=None):
     return argparse.Namespace(
         output_dir=Path(tmp), circuits=circuits, parallel=parallel,
         workers_per_circuit=1, period=0.5, max_iterations=6,
         candidates_per_iteration=8, no_feedback=False, enable_buffer=False,
+        priority_table_dir=priority_table_dir,
         tns_aware=False, max_instances=8, priority_table=None, early_stop=early,
     )
 
@@ -109,6 +110,21 @@ class OuterLoopBatchTest(unittest.TestCase):
         summary = json.loads((Path(tmp) / "summary.json").read_text(encoding="utf-8"))
         self.assertIs(summary["circuits"]["s27"]["success"], True)
         self.assertIn("error", summary["circuits"]["s820"])
+
+    def test_priority_table_dir_per_circuit(self):
+        tmp = Path(tempfile.mkdtemp())
+        tbl_dir = Path(tempfile.mkdtemp())
+        (tbl_dir / "s27_loocv.json").write_text("{\"sky130_fd_sc_hd__nor3b_1\": [\"G\", \"B\"]}", encoding="utf-8")
+        (tbl_dir / "s382_loocv.json").write_text("{\"sky130_fd_sc_hd__o21a_1\": [\"R\", \"B\"]}", encoding="utf-8")
+        args = _args(tmp, "s27,s382", priority_table_dir=tbl_dir)
+        with mock.patch.object(self.batch, "parse_args", return_value=args), \
+             mock.patch.object(self.batch.subprocess, "Popen", FakePopen):
+            self.batch.main()
+        cmds = {c: cmd for cmd in FakePopen.created for c in ["s27", "s382"] if ("--circuit", c) in zip(cmd, cmd[1:])}
+        s27_cmd = next(cmd for cmd in FakePopen.created if "--circuit" in cmd and cmd[cmd.index("--circuit") + 1] == "s27")
+        s382_cmd = next(cmd for cmd in FakePopen.created if "--circuit" in cmd and cmd[cmd.index("--circuit") + 1] == "s382")
+        self.assertIn(str(tbl_dir / "s27_loocv.json"), s27_cmd)
+        self.assertIn(str(tbl_dir / "s382_loocv.json"), s382_cmd)
 
 
 if __name__ == "__main__":

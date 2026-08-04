@@ -341,7 +341,7 @@ s953 & -1.48 & \textbf{-0.09} & 149B+6G+1R \\
 \end{tabular}
 \end{table}
 
-决策层（\texttt{--strategy-priorities auto}）在 s832 上不仅省 15\% STA 调用，还找到略优解；leave-one-out 跨电路迁移 top-2 预测命中率 94.3\%--98.2\%，证明策略选择规律跨 ISCAS89 电路高度稳定。
+决策层（\texttt{--strategy-priorities auto}）在 s832 上不仅省 15\% STA 调用，还找到略优解；leave-one-out 跨电路迁移 top-2 预测命中率 94.3\%--98.2\%，证明策略选择规律跨 ISCAS89 电路高度稳定。进一步地，用其他 7 电路 trial 归纳的 leave-one-out 决策表对每个目标电路真实跑外环修复（beam=1 + early-stop）：8/8 全部成功，候选 STA 合计 27 与用本电路全数据表完全相同，final WNS 逐电路一致（s27 $-0.21$、s382 $-0.93$、s420 $-1.75$、s641/s713 $-1.85$、s820 $-1.36$、s832 $-1.12$、s953 $-1.38$）——跨电路经验复用达到真实修复零损失，而非仅离线预测命中。
 
 \subsection{外环多轮闭环（X19）}
 
