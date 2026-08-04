@@ -20,6 +20,7 @@ One leg of FAECO failure-aware hybrid repair.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import json
 import re
 import sys
@@ -60,6 +61,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--buf-types", default="buf_1,buf_2", help="Comma-separated buffer sizes for strategy B (e.g. buf_1,buf_2,buf_4)")
     p.add_argument("--tns-aware", action="store_true",
                    help="Accept candidates that keep WNS equal but improve TNS (total negative slack); default keeps strict-WNS-only acceptance")
+    p.add_argument("--workers", type=int, default=1,
+                   help="Number of parallel candidate STA evaluations per round (1 = serial; independent candidates may be evaluated concurrently)")
     p.add_argument("--output-dir", type=Path, required=True)
     return p.parse_args()
 
@@ -142,6 +145,41 @@ def _build_r_candidates(cell_type: str, lib: dict) -> list[tuple[str, dict]]:
         for t, pm in equivalence_candidates(cell, lib)
         if lib.get(t) is not None and lib[t].family != cell.family
     ]
+
+
+def _eval_candidate(
+    inst: str,
+    cell_type: str,
+    new_type: str,
+    pin_map: dict,
+    kind: str,
+    text: str,
+    cand_dir: Path,
+    period: float,
+    top_module: str,
+) -> tuple[str, str, str, dict]:
+    """Write one candidate netlist and evaluate it with OpenSTA.
+
+    Returns (inst, kind, new_type, pin_map, sta_result).  Pure wrt text: every
+    candidate is derived from the same round netlist, so evaluations are
+    independent and may run concurrently (worker pool in main).
+    """
+    if kind == "R":
+        candidate_text = apply_rewrite(text, inst, new_type, pin_map)
+    elif kind == "B":
+        _, buf_type, bpin, new_net = new_type.split(":")
+        candidate_text = insert_buffer(text, inst, bpin, buf_type, new_net)
+    else:
+        candidate_text = apply_sizing(text, {inst: new_type})
+    if kind == "B":
+        sub_name = new_type.replace(":", "_")
+    else:
+        sub_name = new_type.rsplit("_", 1)[-1]
+    cand_sub = cand_dir / f"{inst}_{kind}_{sub_name}"
+    cand_sub.mkdir(parents=True, exist_ok=True)
+    (cand_sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
+    res = run_opensta(cand_sub / "mapped.v", period, cand_sub, top_module=top_module)
+    return inst, kind, new_type, pin_map, res
 
 
 def main() -> int:
@@ -237,41 +275,57 @@ def main() -> int:
             best_tns = current_tns
             best: tuple[str, dict, str] | None = None
             best_trial_id: int | None = None
-            for new_type, pin_map, kind in cands:
-                if kind == "R":
-                    candidate_text = apply_rewrite(text, inst, new_type, pin_map)
-                elif kind == "B":
-                    _, buf_type, bpin, new_net = new_type.split(":")
-                    candidate_text = insert_buffer(text, inst, bpin, buf_type, new_net)
-                else:
-                    candidate_text = apply_sizing(text, {inst: new_type})
-                if kind == "B":
-                    sub_name = new_type.replace(":", "_")
-                else:
-                    sub_name = new_type.rsplit("_", 1)[-1]
-                cand_sub = cand_dir / f"{inst}_{kind}_{sub_name}"
-                cand_sub.mkdir(parents=True, exist_ok=True)
-                (cand_sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
-                res = run_opensta(cand_sub / "mapped.v", args.period, cand_sub, top_module=args.circuit)
-                wns = res["wns"]
-                tns = res.get("tns")
-                trial_id = len(candidate_trials)
-                candidate_trials.append({
-                    "instance": inst,
-                    "kind": kind,
-                    "from_type": cell.cell_type,
-                    "to_type": new_type,
-                    "wns": wns,
-                    "tns": tns,
-                    "accepted": False,
-                    "round": rnd + 1,
-                    "trial_id": trial_id,
-                })
-                if _accepts(best_wns, best_tns, wns, tns, args.tns_aware):
-                    best_wns = wns
-                    best_tns = tns
-                    best = (new_type, pin_map, kind)
-                    best_trial_id = trial_id
+            # evaluate all candidates of this instance (parallel when --workers > 1)
+            eval_args = [
+                (inst, cell.cell_type, new_type, pin_map, kind, text, cand_dir, args.period, args.circuit)
+                for new_type, pin_map, kind in cands
+            ]
+            if args.workers > 1 and len(eval_args) > 1:
+                with ThreadPoolExecutor(max_workers=args.workers) as ex:
+                    futures = [ex.submit(_eval_candidate, *a) for a in eval_args]
+                    for f in as_completed(futures):
+                        rinst, rkind, rtype, rpin_map, res = f.result()
+                        wns = res["wns"]
+                        tns = res.get("tns")
+                        trial_id = len(candidate_trials)
+                        candidate_trials.append({
+                            "instance": rinst,
+                            "kind": rkind,
+                            "from_type": cell.cell_type,
+                            "to_type": rtype,
+                            "wns": wns,
+                            "tns": tns,
+                            "accepted": False,
+                            "round": rnd + 1,
+                            "trial_id": trial_id,
+                        })
+                        if _accepts(best_wns, best_tns, wns, tns, args.tns_aware):
+                            best_wns = wns
+                            best_tns = tns
+                            best = (rtype, rpin_map, rkind)
+                            best_trial_id = trial_id
+            else:
+                for new_type, pin_map, kind in cands:
+                    _, _, _, _, res = _eval_candidate(inst, cell.cell_type, new_type, pin_map, kind, text, cand_dir, args.period, args.circuit)
+                    wns = res["wns"]
+                    tns = res.get("tns")
+                    trial_id = len(candidate_trials)
+                    candidate_trials.append({
+                        "instance": inst,
+                        "kind": kind,
+                        "from_type": cell.cell_type,
+                        "to_type": new_type,
+                        "wns": wns,
+                        "tns": tns,
+                        "accepted": False,
+                        "round": rnd + 1,
+                        "trial_id": trial_id,
+                    })
+                    if _accepts(best_wns, best_tns, wns, tns, args.tns_aware):
+                        best_wns = wns
+                        best_tns = tns
+                        best = (new_type, pin_map, kind)
+                        best_trial_id = trial_id
             if best is not None and _accepts(current_wns, current_tns, best_wns, best_tns, args.tns_aware):
                 new_type, pin_map, kind = best
                 if kind == "R":

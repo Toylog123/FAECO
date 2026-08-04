@@ -1,18 +1,19 @@
 """Tests for the hybrid-repair runner audit trail (scripts/run_hybrid_repair.py).
 
-The runner records one accepted change per instance in ``applied_changes`` and
+The runner records one accepted change per instance in applied_changes and
 marks the matching trial as accepted.  When the same instance is accepted again
 in a later round (a later change supersedes the earlier one), the earlier
-trial must be reset so ``accepted`` always equals the final applied changes.
+trial must be reset so accepted always equals the final applied changes.
 """
 from __future__ import annotations
 
 import importlib.util
-import unittest
-from pathlib import Path
-
-
 import sys
+import tempfile
+import pathlib
+import unittest
+import unittest.mock as mock
+from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,8 +45,6 @@ class HybridRunnerAuditTest(unittest.TestCase):
         self.assertFalse(trials[0]["accepted"])
 
     def test_later_accept_supersedes_earlier_for_same_instance(self):
-        # round 1 accepts _08_ -> buf:x (trial 2); round 3 later accepts
-        # _08_ -> buf:y (trial 5).  Only trial 5 stays accepted.
         trials = [
             {"instance": "_08_", "kind": "B", "to_type": "buf:x", "trial_id": 2, "accepted": True},
             {"instance": "_09_", "kind": "R", "to_type": "inv", "trial_id": 3, "accepted": False},
@@ -56,7 +55,6 @@ class HybridRunnerAuditTest(unittest.TestCase):
         self.assertEqual(applied["_08_"]["trial_id"], 5)
         self.assertTrue(trials[2]["accepted"])
         self.assertFalse(trials[0]["accepted"])
-        # other instance untouched
         self.assertFalse(trials[1]["accepted"])
 
     def test_applied_trial_count_matches_accepted_entries(self):
@@ -73,29 +71,32 @@ class HybridRunnerAuditTest(unittest.TestCase):
 
     def test_accepts_strict_wns_default(self):
         a = self.runner._accepts
-        # strictly better WNS accepted regardless of tns flag
         self.assertTrue(a(-0.5, -5.0, -0.4, -4.0, False))
-        # same WNS but better TNS rejected when not tns-aware
         self.assertFalse(a(-0.5, -5.0, -0.5, -4.0, False))
-        # worse WNS rejected even if TNS better
         self.assertFalse(a(-0.5, -5.0, -0.6, -4.0, False))
-        # None wns never accepted
         self.assertFalse(a(-0.5, -5.0, None, None, True))
-        # None previous treated as always accept (first candidate)
         self.assertTrue(a(None, None, -0.5, -5.0, True))
 
     def test_accepts_tns_aware_breaks_wns_plateau(self):
         a = self.runner._accepts
-        # same WNS but TNS improved -> accepted with --tns-aware
         self.assertTrue(a(-0.5, -5.0, -0.5, -4.0, True))
-        # same WNS and same TNS -> rejected
         self.assertFalse(a(-0.5, -5.0, -0.5, -5.0, True))
-        # same WNS but TNS worse -> rejected
         self.assertFalse(a(-0.5, -5.0, -0.5, -6.0, True))
-        # WNS strictly better still accepted (TNS irrelevant)
         self.assertTrue(a(-0.5, -5.0, -0.4, -6.0, True))
 
+    def test_eval_candidate_returns_pin_map_for_rewrite(self):
+        with tempfile.TemporaryDirectory() as td:
+            out = pathlib.Path(td)
+            with mock.patch.object(self.runner, "run_opensta", return_value={"wns": -0.4, "tns": -3.0}):
+                res = self.runner._eval_candidate(
+                    "_05_", "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+                    "sky130_fd_sc_hd__or2_1", {"A": "SLEEP", "B": "A", "X": "X"},
+                    "R", "module s382;", out, 0.5, "s382",
+                )
+                self.assertEqual(res[3], {"A": "SLEEP", "B": "A", "X": "X"})
+                self.assertEqual(res[4]["wns"], -0.4)
 
 
 if __name__ == "__main__":
     unittest.main()
+
