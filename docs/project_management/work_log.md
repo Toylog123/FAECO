@@ -16,6 +16,7 @@
 | LOG-20260804-07 | 决策层效率对比实验（s832） | experiments/20260804_strategy_selector/s832（A-only） | 决策层 auto vs 全搜索：**-0.45 vs -0.47（更好）**，trials 2275→1932（-15%），R trials 224→79，audit ok。证明"预测驱动"不仅省 STA 调用还找到略优解，是 failure-aware 名副其实的实证 |
 | LOG-20260804-08 | 决策层跨电路迁移实验（8/8 完成） | experiments/20260804_strategy_selector_8c/（A-only） | 7/8 持平或更好；s832 -0.45（-15% trials）、s820 **劣化** -1.03 vs -0.20（根因：优先级重排改变贪心轨迹提前收敛）；诚实记录迁移失败边界 |
 | LOG-20260804-09 | 架构文档 §8 跨电路迁移实验设计+结果 | docs/experiment_design/faeco_overall_architecture.md | 明确 leave-one-out 协议、8/8 结果表、s820 失败根因与改进方向（轮内多策略探索） |
+| LOG-20260804-10 | 探索守卫修复 s820 迁移失败 | src/rseco/strategy_selector.py exploration_order + tests/test_strategy_selector.py（5 项）+ scripts/run_hybrid_repair.py | s820 决策层从 -1.03 恢复到 **-0.20**（与全搜索一致），trials 2402；150 测试全绿。结论：排序只影响轨迹，探索守卫保证每轮 G/R 参与，不劣化但也不省 trial（s832 仍省 15%） |
 
 ## 2026-08-03
 

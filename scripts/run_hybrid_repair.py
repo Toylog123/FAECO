@@ -37,6 +37,7 @@ from rseco.gate_sizing import (
 from rseco.buffer_insertion import buffer_candidates, build_net_fanout, insert_buffer
 from rseco.logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
 from rseco.netlist_audit import audit_netlist
+from rseco.strategy_selector import exploration_order
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -336,6 +337,7 @@ def main() -> int:
                 order = prio.get(cell.cell_type, ("R", "G", "B"))
                 rank = {k: i for i, k in enumerate(order)}
                 cands.sort(key=lambda c: rank.get(c[2], len(order)))
+                cands = exploration_order(cands)
             if not cands:
                 print(f"  {inst}: {cell.cell_type} no R/G/B candidates")
                 continue

@@ -62,3 +62,16 @@ def test_selector_prediction_uses_features() -> None:
     pred = sel.predict(features={"from_type": "sky130_fd_sc_hd__lpflow_inputiso1p_1", "has_larger_size": False})
     assert pred[0] == "R"
 
+
+def test_exploration_guard_keeps_gr_ahead() -> None:
+    """Priority reorder must keep at least one G/R candidate ahead of a B-only
+    queue so multi-round greedy keeps logic-level exploration."""
+    from rseco.strategy_selector import exploration_order
+    cands = [("b1", {}, "B"), ("b2", {}, "B"), ("g1", {}, "G"), ("r1", {}, "R")]
+    out = exploration_order(cands)
+    kinds = [k for _, _, k in out]
+    # G/R group must come before any B
+    assert kinds[0] in ("G", "R")
+    assert kinds[1] in ("G", "R")
+    assert kinds[2] == "B"
+    assert set(kinds) == {"B", "G", "R"}

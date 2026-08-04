@@ -45,6 +45,23 @@ def strategy_stats(trials: list[dict]) -> dict[str, dict]:
     return dict(counts)
 
 
+def exploration_order(
+    cands: list[tuple[str, dict, str]],
+) -> list[tuple[str, dict, str]]:
+    """Keep at least one G/R candidate ahead of a B-dominated queue.
+
+    Pure priority reordering can collapse multi-round greedy onto buffer
+    insertion (observed on s820: 2 rounds, final -1.03 vs -0.20 full search).
+    This guard lifts every G/R candidate to the front so logic-level options
+    still compete each round.
+    """
+    gr = [c for c in cands if c[2] in ("G", "R")]
+    if gr and len(cands) > len(gr):
+        rest = [c for c in cands if c[2] not in ("G", "R")]
+        return gr + rest
+    return list(cands)
+
+
 @dataclass
 class StrategySelector:
     # Per-cell-type strategy acceptance table induced from trial history.
@@ -90,4 +107,3 @@ class StrategySelector:
     @staticmethod
     def _tie(kind: str) -> int:
         return {"R": 0, "G": 1, "B": 2}.get(kind, 9)
-
