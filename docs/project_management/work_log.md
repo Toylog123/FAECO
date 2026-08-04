@@ -33,6 +33,7 @@
 | LOG-20260803-24 | 修复并行候选评估（提高并行度） | scripts/run_hybrid_repair.py 新增 --workers N + _eval_candidate 抽视（commit 7322795） | 每轮候选完全独立（同一 round 网表派生），用 ThreadPoolExecutor 并行跑 OpenSTA（WSL 子进程，线程可扩展）；修复并行分支丢失 R 候选 pin_map 的隐患（_eval_candidate 现返回 pin_map），新增相应单元测试。40 项相关测试全绿。下一批重跑将用 --workers 4 加速。 |
 | LOG-20260803-25 | 修复后重跑 s420 收汛 | experiments/20260803_sequential_hybrid_tns_fixed/s420 | buffer 多驱修复后 s420 从 -1.78 改善到 -0.01（TNS -15.09→-0.01），3 轮 35 个 B 变化，网表审计 ok（多驱 0）；旧版 -0.08，修复后更优。其余 6 电路重跑中。 |
 | LOG-20260803-26 | 并行一致性验证通过 | experiments/20260803_sequential_hybrid_tns_fixed_parallel/s27 | 用 --workers 4 重跑 s27（rounds=2）结果与串行完全一致：-0.28→-0.01，5 应用（4B+1R），119 trials，网表审计 True。证明并行分支不改变收敛轨迹，后续可放心用 --workers 加速大电路。 |
+| LOG-20260803-27 | 修复前后重跑全部完成 | experiments/20260803_sequential_hybrid_tns_fixed 8/8 | 修复前后重跑全部完成：s382 -0.94→+0.02(MET)、s27 -0.28→-0.01、s420 -1.78→-0.01、s641 -1.86→-0.02、s713 -1.86→-0.01、s820 -1.42→-0.20、s832 -1.15→-0.47、s953 -1.48→-0.09；全部 netlist_audit ok（0 多驱）。另修复审计 bufinv误报（Y 输出）commit 8004fcb。 |
 
 ## 2026-07-31
 
