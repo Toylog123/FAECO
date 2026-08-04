@@ -24,6 +24,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from rseco.netlist_audit import audit_netlist
 from typing import Any
 
 
@@ -191,11 +192,14 @@ def main() -> int:
         return 1
 
     timing = run_opensta(mapped, args.period, out)
+    mapped_text = mapped.read_text(encoding="utf-8", errors="replace")
+    audit = audit_netlist(mapped_text, report=True)
     result = {
         "circuit": args.circuit,
         "period_ns": args.period,
         "mapping_errors": len(errors),
         "timing": timing,
+        "netlist_audit": audit,
     }
     summary_path = out / "timing_check.json"
     summary_path.write_text(json.dumps(result, indent=2), encoding="utf-8")
