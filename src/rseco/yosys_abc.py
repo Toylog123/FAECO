@@ -441,10 +441,14 @@ def _extract_cells_for_netlist(
     """Return a cells.v containing only modules instantiated by the netlist.
 
     The full extracted SKY130 cells library includes sequential / special
-    cells whose models use Yosys-internal primitives (e.g. `$mul`) that ABC
+    cells whose models use Yosys-internal primitives (e.g. $mul) that ABC
     cannot read.  Restricting the cells to the combinational cells actually
     instantiated keeps the flattened BLIF pure-Boolean and makes ABC CEC
     readable.
+
+    Raises ValueError when the netlist instantiates a SKY130 cell that is
+    missing from cells_library: silently falling back to the whole library
+    hides the coverage gap and reintroduces unreadable models.
     """
     netlist_text = netlist_path.read_text(encoding="utf-8", errors="replace")
     # gate_type in named-port or positional instantiation, e.g.
@@ -456,23 +460,31 @@ def _extract_cells_for_netlist(
             continue
         used.add(cell)
     if not used:
+        # assign-only netlist: no mapped SKY130 cells to inject
         return cells_library
 
     lib_text = cells_library.read_text(encoding="utf-8", errors="replace")
+    _module_re = lambda cell: re.compile(
+        r"module\s+" + re.escape(cell) + r"\s*\("
+    )
+    missing = sorted(c for c in used if not _module_re(c).search(lib_text))
+    if missing:
+        raise ValueError(
+            "cells_library is missing modules instantiated by the netlist: "
+            + ", ".join(missing)
+        )
     blocks: list[str] = []
     for cell in sorted(used):
-        start = lib_text.find(f"module {cell} ")
-        if start < 0:
+        start = _module_re(cell).search(lib_text)
+        if start is None:
             continue
+        start = start.start()
         end = lib_text.find("\nmodule ", start + 1)
         block = lib_text[start : end if end > 0 else len(lib_text)]
         blocks.append(block)
-    if not blocks:
-        return cells_library
     output_cells.parent.mkdir(parents=True, exist_ok=True)
     output_cells.write_text("\n".join(blocks) + "\n", encoding="utf-8")
     return output_cells
-
 
 def _prepare_yosys_input(netlist_path: Path, output_blif: Path) -> Path:
     try:
