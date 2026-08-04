@@ -1,0 +1,87 @@
+case_id: iscas85_c880_case01
+benchmark:
+  suite: ISCAS85
+  circuit: c880
+  type: combinational
+source:
+  original_source: https://github.com/jpsety/verilog_benchmark_circuits/blob/b4c6b6203b95b5314d47365f4a8196c08145519b/c880.v
+  license_note: Third-party GitHub benchmark collection; repository license not declared; original suite ISCAS85
+toolchain:
+  yosys_version: TBD
+  abc_version: TBD
+  opensta_version: optional
+generation:
+  original_script: local_raw_copy
+  resynthesized_script: local_raw_copy
+  target_constraint:
+    type: logic_level
+    value: 20
+target:
+  output: N880
+  critical_path_id: c880_path_to_N880
+  cone_roots:
+    - N880
+  cone_boundary_inputs:
+    - N1
+    - N8
+    - N13
+    - N17
+    - N26
+    - N29
+    - N42
+    - N51
+    - N55
+    - N59
+    - N68
+    - N72
+    - N73
+    - N75
+    - N80
+    - N96
+    - N101
+    - N106
+    - N111
+    - N116
+    - N121
+    - N126
+    - N138
+    - N143
+    - N146
+    - N149
+    - N152
+    - N153
+    - N156
+    - N171
+    - N177
+    - N183
+    - N189
+    - N195
+    - N201
+    - N210
+    - N219
+    - N228
+    - N237
+    - N246
+    - N261
+    - N268
+  cone_boundary_outputs:
+    - N880
+patch:
+  initial_cut_method: fixed_min_cut
+  refinement_method: failure_aware
+  ranking_method: deterministic_score
+metrics:
+  required:
+    - gate_count
+    - logic_level
+    - patch_size
+    - change_ratio
+    - equivalence_result
+    - runtime_total
+  optional:
+    - WNS
+    - TNS
+    - violating_paths
+status:
+  stage: generated_from_raw
+  verified: false

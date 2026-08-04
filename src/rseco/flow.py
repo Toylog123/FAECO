@@ -20,6 +20,22 @@ from .replacement import apply_patch_replacement
 from .yosys_abc import check_yosys_abc_equivalence, run_yosys_abc_resynthesis_baseline
 
 
+def _default_liberty_cells_v() -> Path | None:
+    """Path to the extracted assign-style SKY130 cells model if present.
+
+    Used to expand Liberty-mapped (named-port) netlists so ABC CEC can
+    read them.  None disables the expansion (plain gate-level CEC path).
+    """
+    candidate = (
+        Path(__file__).resolve().parents[2]
+        / "benchmarks"
+        / "raw"
+        / "skywater_cells_models"
+        / "sky130_cells_v2.v"
+    )
+    return candidate if candidate.exists() else None
+
+
 def build_case_metrics(
     case_dir: str | Path,
     *,
@@ -57,6 +73,7 @@ def build_case_metrics(
         case.resynthesized_netlist_path,
         outputs=[case.target_output],
         artifact_dir=artifact_dir / "formal_equivalence",
+        liberty_cells_v=_default_liberty_cells_v(),
     )
     mark("formal_equivalence", stage_started_at)
 

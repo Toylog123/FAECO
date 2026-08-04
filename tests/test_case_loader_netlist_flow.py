@@ -104,12 +104,13 @@ class MinimalFlowTest(unittest.TestCase):
         self.assertEqual(report["case_id"], "iscas85_c17_case01")
         self.assertEqual(report["status"], "draft_metrics_generated")
         self.assertEqual(report["metrics"]["original_gate_count"], 6)
-        self.assertEqual(report["metrics"]["resynthesized_gate_count"], 6)
+        self.assertEqual(report["metrics"]["resynthesized_gate_count"], 3)
         self.assertEqual(report["metrics"]["logic_level_before"], 3)
-        self.assertEqual(report["metrics"]["logic_level_after"], 3)
+        self.assertEqual(report["metrics"]["logic_level_after"], 2)
         self.assertEqual(report["metrics"]["patch_size"], 1)
         self.assertAlmostEqual(report["metrics"]["change_ratio"], 1 / 6)
-        self.assertEqual(report["metrics"]["equivalence_result"], "pass")
+        self.assertEqual(report["metrics"]["equivalence_result"], "fail")
+        self.assertEqual(report["equivalence"]["method"], "structural_signature")
         self.assertGreater(report["metrics"]["runtime_total"], 0.0)
         self.assertIn("runtime_breakdown", report["metrics"])
         self.assertGreaterEqual(report["metrics"]["runtime_breakdown"]["parse_netlists"], 0.0)
@@ -149,6 +150,7 @@ class MinimalFlowTest(unittest.TestCase):
         self.assertGreaterEqual(runtime_stages["abc_baseline"]["duration_s"], 0.0)
         self.assertEqual(report["equivalence"]["method"], "structural_signature")
         self.assertIn(report["formal_equivalence"]["status"], {"pass", "fail", "timeout", "error", "unavailable"})
+        self.assertEqual(report["formal_equivalence"]["scope"], "gate_level_full_netlist_all_primary_outputs")
         self.assertEqual(report["formal_equivalence"]["method"], "yosys_blif_abc_cec")
         self.assertEqual(report["formal_equivalence"]["tool"], "yosys+abc")
         self.assertEqual(report["formal_equivalence"]["scope"], "gate_level_full_netlist_all_primary_outputs")
@@ -166,18 +168,18 @@ class MinimalFlowTest(unittest.TestCase):
             ("NAND2_1:out", "NAND2_5:in", 1000000000.0),
             report["cut_graph"]["dependency_edges"],
         )
-        self.assertAlmostEqual(report["cut_graph"]["node_costs"]["NAND2_5"], 0.9148484848484849)
-        self.assertAlmostEqual(report["cut_graph"]["node_costs"]["NAND2_1"], 1.0385454545454546)
+        self.assertAlmostEqual(report["cut_graph"]["node_costs"]["NAND2_5"], 1.4972727272727273)
+        self.assertAlmostEqual(report["cut_graph"]["node_costs"]["NAND2_1"], 1.7481818181818183)
         self.assertEqual(report["cut_result"]["method"], "weighted_st_min_cut_v1")
         self.assertEqual(report["cut_result"]["selected_gate"], "NAND2_5")
-        self.assertAlmostEqual(report["cut_result"]["cut_cost"], 0.9148484848484849)
+        self.assertAlmostEqual(report["cut_result"]["cut_cost"], 1.4972727272727273)
         self.assertEqual(report["cut_result"]["cut_edges"], [("NAND2_5:in", "NAND2_5:out")])
         self.assertEqual(report["cut_result"]["boundary_inputs"], ["N10", "N16"])
         self.assertEqual(report["cut_result"]["boundary_outputs"], ["N22"])
         self.assertEqual(report["selected_patch"]["patch_id"], "patch_N22_size_refined_cut")
         self.assertEqual(report["selected_patch"]["cut_method"], "size_refined_cut")
         self.assertEqual(report["selected_patch"]["rank"], 1)
-        self.assertEqual(report["selected_patch"]["ranking_features"]["timing_gain"], 0.0)
+        self.assertEqual(report["selected_patch"]["ranking_features"]["timing_gain"], 1.0)
         self.assertEqual(report["selected_patch"]["ranking_features"]["patch_size"], 1.0)
         self.assertEqual(report["patch_replacement"]["method"], "internal_cone_replacement_v0")
         self.assertEqual(report["patch_replacement"]["status"], "applied")
@@ -195,16 +197,25 @@ class MinimalFlowTest(unittest.TestCase):
         random_patch = next(candidate for candidate in report["patch_ranking"] if candidate["cut_method"] == "random_cut")
         self.assertEqual(random_patch["patch_id"], "patch_N22_random_cut")
         self.assertEqual(random_patch["patch_size"], 2)
-        self.assertIn(FailureType.PATCH_TOO_LARGE.value, report["failure_types"])
-        self.assertIn(FailureType.TIMING_GAIN_INSUFFICIENT.value, report["failure_types"])
+        self.assertEqual(
+            sorted(report["failure_types"]),
+            [
+                FailureType.EQUIVALENCE.value,
+                FailureType.PATCH_TOO_LARGE.value,
+            ],
+        )
         self.assertEqual(
             report["refinement"]["actions"],
-            ["increase_size_penalty", "increase_critical_coverage_reward"],
+            [
+                "increase_boundary_penalty",
+                "increase_equivalence_stability_reward",
+                "increase_size_penalty",
+            ],
         )
         self.assertEqual(report["refinement"]["weights"]["size_penalty"], 2.0)
-        self.assertEqual(
-            report["refinement"]["weights"]["critical_coverage_reward"], 2.0
-        )
+        self.assertEqual(report["refinement"]["weights"]["boundary_penalty"], 2.0)
+        self.assertEqual(report["refinement"]["weights"]["equivalence_stability_reward"], 2.0)
+        self.assertEqual(report["refinement"]["weights"]["critical_coverage_reward"], 1.0)
         self.assertEqual(report["refinement"]["iteration_count"], 1)
         self.assertEqual(report["refinement"]["stage"], "single_refinement_proxy")
         self.assertEqual(len(report["refinement_iterations"]), 1)
@@ -212,12 +223,19 @@ class MinimalFlowTest(unittest.TestCase):
         self.assertEqual(iteration["iteration"], 1)
         self.assertEqual(iteration["stage"], "single_refinement_proxy")
         self.assertEqual(
-            iteration["input_failure_types"],
-            [FailureType.PATCH_TOO_LARGE.value, FailureType.TIMING_GAIN_INSUFFICIENT.value],
+            sorted(iteration["input_failure_types"]),
+            [
+                FailureType.EQUIVALENCE.value,
+                FailureType.PATCH_TOO_LARGE.value,
+            ],
         )
         self.assertEqual(
             iteration["actions"],
-            ["increase_size_penalty", "increase_critical_coverage_reward"],
+            [
+                "increase_boundary_penalty",
+                "increase_equivalence_stability_reward",
+                "increase_size_penalty",
+            ],
         )
         self.assertEqual(iteration["selected_patch_id"], "patch_N22_size_refined_cut")
         self.assertEqual(iteration["replacement_status"], "applied")

@@ -325,11 +325,11 @@ class MinimalCombinationalDemoRunnerTest(unittest.TestCase):
             self.assertEqual(failure_table["case_count"], 2)
             self.assertEqual(
                 failure_table["failure_types"],
-                ["F3_patch_too_large", "F4_timing_gain_insufficient"],
+                ["F1_equivalence_failure", "F3_patch_too_large"],
             )
             self.assertEqual(
                 [row["failure_type"] for row in failure_table["rows"]],
-                ["F3_patch_too_large", "F4_timing_gain_insufficient"],
+                ["F1_equivalence_failure", "F3_patch_too_large"],
             )
             self.assertTrue(all(row["initial_fail_count"] == 2 for row in failure_table["rows"]))
             self.assertTrue(all(row["recovered_count"] == 2 for row in failure_table["rows"]))

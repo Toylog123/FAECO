@@ -122,7 +122,7 @@ python scripts/run_stage_b_pre_layout_sta.py \
 
 **WNS 驱动成功标准**（tests/test_refinement_wns.py 验证）：循环 evaluator 支持「WNS 改善即成功」——模拟 WNS 序列 [-1.5, -1.2, -0.9] 第 3 次迭代成功停止；首次 success 立即停止（iterations=1）。真实接入需 patch 后 OpenSTA 实测（后续工程项，与内环衔接见 method §6.1）。
 
-**消融现状（诚实记录）**：关闭反馈时权重固定、不触发 refine（测试验证）。反馈惰性（F4 恒触发 + 权重不进 cut 选择）已修复——权重现真实参与 min-cut 求解；但 5 个最小 case 仍因 reduction=0（重综合网表即原副本）F4 每轮触发、无真实恢复空间，ON/OFF 差异需用真正重综合的 case 或 WNS 成功标准来体现。回归测试锁定：(a) 结构等价下 reduction>=1 必失败；(b) 功能等价下成功可达；(c) F1-F5 反馈改变 min-cut 解。
+**消融现状（2026-08-04 精确化，诚实记录）**：真实 resynthesized 网表落地后（Yosys `abc -liberty` 重综合，5 case 全部成功、reduction 1~9），外环 3/5 case（c432/c499/c880）第 1 轮即成功——成功路径从"构造上不可达"变为"可达且真实"。c17×2 因 `max_patch_ratio=0.15` 对 ≤6-gate 小网表过严（默认 1-gate cut 即 1/6>0.15）恒 F3 失败，是阈值边界而非反馈失效。反馈的精确化结论：F1-F5 权重已真实进入加权 min-cut 且能改变解（c17 `size_penalty=5` 时 cut 从 root 翻到 2-gate 浅层），但 evaluator 成功条件用**全局** logic-level reduction、与选中 cut 位置解耦——全局 reduction>=1 且默认 cut 过阈值时首轮即成功，否则每轮都失败，故 ON/OFF 无差异（tests/test_evaluator_cut_decoupling.py 2 项锁定）。
 
 ## 4. limitation 与边界
 
@@ -130,7 +130,7 @@ python scripts/run_stage_b_pre_layout_sta.py \
 |---|---|---|---|
 | L31-01 | SKY130 Liberty cell model 解析 | **已解决（2026-08-03）**：ABC `cec` 无法建 subcircuit model，改用 Yosys miter+SAT（从 Liberty function 提取 assign cells.v），8/8 等价证明 SUCCESS | `scripts/verify_epfl_mapping_sat.py`；R31-01 mitigated |
 | L31-02 | 8 case 全 combinational | STA slack=null / slack_status=MET (INF) | N31-05 SKY130 sequential ECO 拓展（待 DFF 进 SDC） |
-| L31-04 | failure_recovery 曾是 single-iteration proxy | `avg_iterations=1.0` | **部分解决（2026-08-04）**：X19 多轮闭环已实现并接入 Stage A；F1/F4 判据互斥致成功不可达已通过注入功能等价 checker 打通（合成验证）；F1-F5 权重已全部进入加权 min-cut 节点成本并真实参与求解（weighted_cut_candidates 调用 solve_weighted_cut，6 项回归测试）；剩余：真实重综合网表 + OpenSTA WNS 接入 |
+| L31-04 | failure_recovery 曾是 single-iteration proxy | `avg_iterations=1.0` | **部分解决（2026-08-04）**：真实重综合网表落地（Yosys `abc -liberty` SKY130，5 case 全成功、reduction 1~9）；外环成功路径打通（c432/c499/c880 首轮成功）；F1-F5 权重已全部进入加权 min-cut（weighted_cut_candidates 调 solve_weighted_cut），且证明能改变解（c17 size_penalty 翻转到 2-gate cut）；精确化剩余项：evaluator 成功条件与 cut 位置解耦（全局 reduction 判定）、小网表 F3 阈值过严、OpenSTA WNS 接入 |
 | 补充 | METH-12 candidate-specific timing gain 当前是 Stage A proxy | ranking 无法区分 candidate 时序收益 | P1-4（round1 自审稿）：Stage B STA 已接，per-candidate timing gain 待实现 |
 | 补充 | N31-06 Z3 wrapper 8-case 端到端 error（2026-08-03） | mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式；Yosys aigmap 对 mapped.v 报 SKY130 模块 undefined | wrapper 单元测试层面（12 项，multi-output/escaped/xor/constant）已验证；8-case 端到端需 N31-03 cells.v（解锁 CEC + AIG→SMT 双路径） |
 

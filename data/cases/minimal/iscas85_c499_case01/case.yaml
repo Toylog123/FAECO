@@ -1,0 +1,86 @@
+case_id: iscas85_c499_case01
+benchmark:
+  suite: ISCAS85
+  circuit: c499
+  type: combinational
+source:
+  original_source: https://github.com/jpsety/verilog_benchmark_circuits/blob/b4c6b6203b95b5314d47365f4a8196c08145519b/c499.v
+  license_note: Third-party GitHub benchmark collection; repository license not declared; original suite ISCAS85
+toolchain:
+  yosys_version: TBD
+  abc_version: TBD
+  opensta_version: optional
+generation:
+  original_script: local_raw_copy
+  resynthesized_script: local_raw_copy
+  target_constraint:
+    type: logic_level
+    value: 11
+target:
+  output: N755
+  critical_path_id: c499_path_to_N755
+  cone_roots:
+    - N755
+  cone_boundary_inputs:
+    - N1
+    - N5
+    - N9
+    - N13
+    - N17
+    - N21
+    - N25
+    - N29
+    - N33
+    - N37
+    - N41
+    - N45
+    - N49
+    - N53
+    - N57
+    - N61
+    - N65
+    - N69
+    - N73
+    - N77
+    - N81
+    - N85
+    - N89
+    - N93
+    - N97
+    - N101
+    - N105
+    - N109
+    - N113
+    - N117
+    - N121
+    - N125
+    - N129
+    - N130
+    - N131
+    - N132
+    - N133
+    - N134
+    - N135
+    - N136
+    - N137
+  cone_boundary_outputs:
+    - N755
+patch:
+  initial_cut_method: fixed_min_cut
+  refinement_method: failure_aware
+  ranking_method: deterministic_score
+metrics:
+  required:
+    - gate_count
+    - logic_level
+    - patch_size
+    - change_ratio
+    - equivalence_result
+    - runtime_total
+  optional:
+    - WNS
+    - TNS
+    - violating_paths
+status:
+  stage: generated_from_raw
+  verified: false

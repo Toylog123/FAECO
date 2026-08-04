@@ -1,0 +1,81 @@
+case_id: iscas85_c432_case01
+benchmark:
+  suite: ISCAS85
+  circuit: c432
+  type: combinational
+source:
+  original_source: https://github.com/jpsety/verilog_benchmark_circuits/blob/b4c6b6203b95b5314d47365f4a8196c08145519b/c432.v
+  license_note: Third-party GitHub benchmark collection; repository license not declared; original suite ISCAS85
+toolchain:
+  yosys_version: TBD
+  abc_version: TBD
+  opensta_version: optional
+generation:
+  original_script: local_raw_copy
+  resynthesized_script: local_raw_copy
+  target_constraint:
+    type: logic_level
+    value: 20
+target:
+  output: N432
+  critical_path_id: c432_path_to_N432
+  cone_roots:
+    - N432
+  cone_boundary_inputs:
+    - N1
+    - N4
+    - N8
+    - N11
+    - N14
+    - N17
+    - N21
+    - N24
+    - N27
+    - N30
+    - N34
+    - N37
+    - N40
+    - N43
+    - N47
+    - N50
+    - N53
+    - N56
+    - N60
+    - N63
+    - N66
+    - N69
+    - N73
+    - N76
+    - N79
+    - N82
+    - N86
+    - N89
+    - N92
+    - N95
+    - N99
+    - N102
+    - N105
+    - N108
+    - N112
+    - N115
+  cone_boundary_outputs:
+    - N432
+patch:
+  initial_cut_method: fixed_min_cut
+  refinement_method: failure_aware
+  ranking_method: deterministic_score
+metrics:
+  required:
+    - gate_count
+    - logic_level
+    - patch_size
+    - change_ratio
+    - equivalence_result
+    - runtime_total
+  optional:
+    - WNS
+    - TNS
+    - violating_paths
+status:
+  stage: generated_from_raw
+  verified: false

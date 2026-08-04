@@ -109,6 +109,7 @@ def check_yosys_abc_equivalence(
     yosys_command: str = "yosys",
     abc_command: str = "yosys-abc",
     timeout_s: float = 60.0,
+    liberty_cells_v: str | Path | None = None,
 ) -> YosysAbcEquivalenceResult:
     """Normalize Verilog to BLIF with Yosys, then run full-netlist ABC CEC."""
     started_at = time.perf_counter()
@@ -135,6 +136,7 @@ def check_yosys_abc_equivalence(
         original_blif,
         yosys_argv=tools.yosys_argv,
         timeout_s=timeout_s,
+        liberty_cells_v=None,
     )
     if normalize_original.returncode != 0 or not original_blif.exists():
         return _formal_error(
@@ -150,6 +152,7 @@ def check_yosys_abc_equivalence(
         revised_blif,
         yosys_argv=tools.yosys_argv,
         timeout_s=timeout_s,
+        liberty_cells_v=Path(liberty_cells_v) if liberty_cells_v else None,
     )
     if normalize_revised.returncode != 0 or not revised_blif.exists():
         return _formal_error(
@@ -390,10 +393,19 @@ def _normalize_to_blif(
     *,
     yosys_argv: list[str],
     timeout_s: float,
+    liberty_cells_v: Path | None = None,
 ) -> _CommandOutput:
     output_blif.parent.mkdir(parents=True, exist_ok=True)
     yosys_input_path = _prepare_yosys_input(netlist_path, output_blif)
-    script = "; ".join(
+    commands: list[str] = []
+    if liberty_cells_v is not None:
+        cells_file = _extract_cells_for_netlist(
+            yosys_input_path,
+            liberty_cells_v,
+            output_blif.with_name(output_blif.stem + "_cells.v"),
+        )
+        commands.append(f"read_verilog {_yosys_path(cells_file)}")
+    commands.extend(
         [
             f"read_verilog {_yosys_path(yosys_input_path)}",
             "proc",
@@ -404,6 +416,7 @@ def _normalize_to_blif(
             f"write_blif {_yosys_path(output_blif)}",
         ]
     )
+    script = "; ".join(commands)
     command = [*yosys_argv, "-q", "-p", script]
     try:
         completed = subprocess.run(
@@ -418,6 +431,47 @@ def _normalize_to_blif(
         return _CommandOutput(command=command, returncode=completed.returncode, stdout=completed.stdout, stderr=completed.stderr)
     except subprocess.TimeoutExpired as exc:
         return _CommandOutput(command=command, returncode=124, stdout=exc.stdout or "", stderr=exc.stderr or "")
+
+
+def _extract_cells_for_netlist(
+    netlist_path: Path,
+    cells_library: Path,
+    output_cells: Path,
+) -> Path:
+    """Return a cells.v containing only modules instantiated by the netlist.
+
+    The full extracted SKY130 cells library includes sequential / special
+    cells whose models use Yosys-internal primitives (e.g. `$mul`) that ABC
+    cannot read.  Restricting the cells to the combinational cells actually
+    instantiated keeps the flattened BLIF pure-Boolean and makes ABC CEC
+    readable.
+    """
+    netlist_text = netlist_path.read_text(encoding="utf-8", errors="replace")
+    # gate_type in named-port or positional instantiation, e.g.
+    # sky130_fd_sc_hd__nand2_1 u1 ( ... );
+    used: set[str] = set()
+    for match in re.finditer(r"^\s*(\w[\w.]*)\s+\w+\s*\(", netlist_text, re.M):
+        cell = match.group(1)
+        if not cell.startswith("sky130_fd_sc_hd__"):
+            continue
+        used.add(cell)
+    if not used:
+        return cells_library
+
+    lib_text = cells_library.read_text(encoding="utf-8", errors="replace")
+    blocks: list[str] = []
+    for cell in sorted(used):
+        start = lib_text.find(f"module {cell} ")
+        if start < 0:
+            continue
+        end = lib_text.find("\nmodule ", start + 1)
+        block = lib_text[start : end if end > 0 else len(lib_text)]
+        blocks.append(block)
+    if not blocks:
+        return cells_library
+    output_cells.parent.mkdir(parents=True, exist_ok=True)
+    output_cells.write_text("\n".join(blocks) + "\n", encoding="utf-8")
+    return output_cells
 
 
 def _prepare_yosys_input(netlist_path: Path, output_blif: Path) -> Path:

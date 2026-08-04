@@ -58,14 +58,19 @@ class FaninConeTest(unittest.TestCase):
 
 
 class StructuralEquivalenceTest(unittest.TestCase):
-    def test_identical_original_and_resynthesized_c17_cones_pass(self):
+    def test_resynthesized_c17_is_functionally_restructured_not_identical(self):
+        # Since 2026-08-04 the resynthesized netlists are real SKY130-liberty
+        # mappings (3 cells vs 6 nands), so structural signatures differ even
+        # though the function is preserved.  This is the whole point: the old
+        # data were byte-identical copies, which made F4 unreachable.
         original = parse_verilog_netlist(CASE_DIR / "original" / "original.v")
         resynthesized = parse_verilog_netlist(CASE_DIR / "resynthesized" / "resynthesized.v")
 
         result = check_structural_equivalence(original, resynthesized, outputs=["N22"])
 
-        self.assertEqual(result.status, "pass")
+        self.assertEqual(result.status, "fail")
         self.assertEqual(result.method, "structural_signature")
+        self.assertNotEqual(original.gate_count, resynthesized.gate_count)
 
     def test_different_c17_outputs_fail_structural_equivalence(self):
         original = parse_verilog_netlist(CASE_DIR / "original" / "original.v")

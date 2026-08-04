@@ -1,0 +1,157 @@
+{
+  "case_id": "iscas85_c17_case02",
+  "patch_candidates": [
+    {
+      "case_id": "iscas85_c17_case02",
+      "patch_id": "patch_N23_size_refined_cut",
+      "source_cone": "cone_N23",
+      "cut_method": "size_refined_cut",
+      "boundary_inputs": [
+        "N16",
+        "N19"
+      ],
+      "boundary_outputs": [
+        "N23"
+      ],
+      "gates": [
+        "NAND2_6"
+      ],
+      "patch_size": 1,
+      "equivalence_result": "pass",
+      "equivalence_method": "structural_signature",
+      "status": "structural_checked",
+      "rank": 1,
+      "score": -3.0,
+      "ranking_features": {
+        "timing_gain": 0.0,
+        "patch_size": 1.0,
+        "boundary_complexity": 3.0,
+        "verification_cost": 0.0,
+        "equivalence_confidence": 1.0
+      }
+    },
+    {
+      "case_id": "iscas85_c17_case02",
+      "patch_id": "patch_N23_size_only_cut",
+      "source_cone": "cone_N23",
+      "cut_method": "size_only_cut",
+      "boundary_inputs": [
+        "N16",
+        "N19"
+      ],
+      "boundary_outputs": [
+        "N23"
+      ],
+      "gates": [
+        "NAND2_6"
+      ],
+      "patch_size": 1,
+      "equivalence_result": "pass",
+      "equivalence_method": "structural_signature",
+      "status": "structural_checked",
+      "rank": 2,
+      "score": -3.0,
+      "ranking_features": {
+        "timing_gain": 0.0,
+        "patch_size": 1.0,
+        "boundary_complexity": 3.0,
+        "verification_cost": 0.0,
+        "equivalence_confidence": 1.0
+      }
+    },
+    {
+      "case_id": "iscas85_c17_case02",
+      "patch_id": "patch_N23_critical_path_only_cut",
+      "source_cone": "cone_N23",
+      "cut_method": "critical_path_only_cut",
+      "boundary_inputs": [
+        "N16",
+        "N19"
+      ],
+      "boundary_outputs": [
+        "N23"
+      ],
+      "gates": [
+        "NAND2_6"
+      ],
+      "patch_size": 1,
+      "equivalence_result": "pass",
+      "equivalence_method": "structural_signature",
+      "status": "structural_checked",
+      "rank": 3,
+      "score": -3.0,
+      "ranking_features": {
+        "timing_gain": 0.0,
+        "patch_size": 1.0,
+        "boundary_complexity": 3.0,
+        "verification_cost": 0.0,
+        "equivalence_confidence": 1.0
+      }
+    },
+    {
+      "case_id": "iscas85_c17_case02",
+      "patch_id": "patch_N23_random_cut",
+      "source_cone": "cone_N23",
+      "cut_method": "random_cut",
+      "boundary_inputs": [
+        "N2",
+        "N11",
+        "N19"
+      ],
+      "boundary_outputs": [
+        "N23"
+      ],
+      "gates": [
+        "NAND2_3",
+        "NAND2_6"
+      ],
+      "patch_size": 2,
+      "equivalence_result": "pass",
+      "equivalence_method": "structural_signature",
+      "status": "structural_checked",
+      "rank": 4,
+      "score": -5.0,
+      "ranking_features": {
+        "timing_gain": 0.0,
+        "patch_size": 2.0,
+        "boundary_complexity": 4.0,
+        "verification_cost": 0.0,
+        "equivalence_confidence": 1.0
+      }
+    },
+    {
+      "case_id": "iscas85_c17_case02",
+      "patch_id": "patch_N23_fixed_min_cut",
+      "source_cone": "cone_N23",
+      "cut_method": "fixed_min_cut",
+      "boundary_inputs": [
+        "N2",
+        "N3",
+        "N6",
+        "N7"
+      ],
+      "boundary_outputs": [
+        "N23"
+      ],
+      "gates": [
+        "NAND2_2",
+        "NAND2_3",
+        "NAND2_4",
+        "NAND2_6"
+      ],
+      "patch_size": 4,
+      "equivalence_result": "pass",
+      "equivalence_method": "structural_signature",
+      "status": "structural_checked",
+      "rank": 5,
+      "score": -8.0,
+      "ranking_features": {
+        "timing_gain": 0.0,
+        "patch_size": 4.0,
+        "boundary_complexity": 5.0,
+        "verification_cost": 0.0,
+        "equivalence_confidence": 1.0
+      }
+    }
+  ]
+}
