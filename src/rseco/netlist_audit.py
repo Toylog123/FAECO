@@ -50,7 +50,7 @@ def audit_netlist(mapped_text: str, *, report: bool = True) -> dict:
     buf_no_output = [
         (c.instance, c.cell_type)
         for c in cells
-        if "buf" in c.cell_type and "X" not in c.pins
+        if "buf" in c.cell_type and not any(p in (OUTPUT_PINS | {"Z"}) for p in c.pins)
     ]
     result = {
         "multi_driver_nets": multi,

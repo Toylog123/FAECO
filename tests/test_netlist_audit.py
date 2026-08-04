@@ -67,3 +67,10 @@ def test_audit_reports_cell_without_output():
     assert not a["ok"]
     assert any(inst == "_0_" for inst, _ in a["cells_no_output_pin"])
 
+
+BUFINV = "'''\nmodule s820(CK, Q);\n  input CK;\n  output Q;\n  wire _00_;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(_00_),\n    .Q(Q)\n  );\n  sky130_fd_sc_hd__bufinv_16 _116_ (\n    .A(CK),\n    .Y(_00_)\n  );\nendmodule\n'''"
+
+def test_audit_accepts_bufinv_with_y_output():
+    a = audit_netlist(BUFINV, report=False)
+    assert a[chr(111)+chr(107)] is True
+    assert a[chr(98)+chr(117)+chr(102)+chr(102)+chr(101)+chr(114)+chr(115)+chr(95)+chr(119)+chr(105)+chr(116)+chr(104)+chr(111)+chr(117)+chr(116)+chr(95)+chr(88)] == []
