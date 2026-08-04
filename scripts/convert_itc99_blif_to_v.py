@@ -3,27 +3,31 @@
 
 ITC-99 .blif files store state elements as clock-free 4-field latches
 (``.latch d q 0``).  Yosys 0.9's ``read_blif`` turns them into clock-free
-``$ff`` cells, which are not part of the Yosys 0.9 synthesis cell library;
-``synth`` fails with "Module `$ff' referenced ... is not part of the design".
-Even after rewriting ``$ff`` to ``$dff``, reading ``\\$dff`` back from text
-and running ``synth`` fails in the hierarchy pass the same way.
+``$ff`` cells and ``$lut`` cells.  None of these round-trip through
+``write_verilog`` -> ``read_verilog`` + ``synth`` in Yosys 0.9: the
+hierarchy pass reports "Module `$ff' referenced ... is not part of the
+design" for ``$ff``/``$dff``/``$lut``, and the ``$lut`` shift-expression
+form expands into huge ``$shr`` barrel shifters that exhaust the 32-bit
+Yosys binary on large circuits.
 
-This converter therefore performs the following deterministic transforms
-after ``read_blif`` + ``write_verilog``:
+The fix is to decompose the LUTs *inside* the Yosys session before writing
+Verilog:
 
-  1. normalize the escaped model name (``module \\b01.blif``) to ``b01``,
-     matching the ISCAS89 module-name convention;
-  2. add a global clock port ``CK`` (consistent with
+  1. ``read_blif`` then ``techmap``: ``$lut`` -> ``$_MUX_`` (written back as
+     readable ternary ``assign Y = S ? B : A;``), ``$ff`` -> ``$_FF_``;
+  2. normalize the escaped model name (``module \\b01.blif``) to ``b01``;
+  3. add a global clock port ``CK`` (consistent with
      ``run_sequential_timing_check.py``'s ``create_clock [get_ports CK]``)
      and declare ``input CK;``;
-  3. rewrite every ``$ff`` instance into a behavioral ``dff`` cell with
+  4. rewrite every ``$_FF_`` instance into a behavioral ``dff`` cell with
      positional ports ``(CK, D, Q)`` and append a ``module dff``
      definition - the exact convention ``run_yosys_mapping`` already
-     preprocesses for ISCAS89 s820/s832/s953, so ``dfflibmap`` maps the
-     state elements onto SKY130 DFFs.
+     preprocesses for ISCAS89 s820/s832/s953.
 
-The output is a single-module Verilog netlist (plus the helper dff module)
-consumable by ``run_yosys_mapping`` and ``run_outerloop_real_wns.py``.
+The output is a synthesizable single-module Verilog netlist (plus the
+helper dff module) consumable by ``run_yosys_mapping`` and
+``run_outerloop_real_wns.py``, including the large b14-b22 circuits that
+previously OOM'd in the ``$shr`` expansion.
 """
 
 from __future__ import annotations
@@ -42,9 +46,10 @@ DEFAULT_OUTPUT_DIR = ROOT / "benchmarks" / "raw" / "itc99" / "v"
 # write_verilog prints the blif model name as an escaped identifier:
 # module \b01.blif (...)
 ESCAPED_MODEL_RE = re.compile(r"\bmodule\s+\\([A-Za-z0-9_]+)\.blif(?=\s*\()")
-# $ff instance: $ff  #( .WIDTH(32'd1) ) <inst> ( .D(...), .Q(...) );
+# techmap output for the clock-free blif latches:
+# \$_FF_  _228_ ( .D(U34), .Q(OVERFLW_REG) );
 FF_INST_RE = re.compile(
-    r"\$ff\s*#\s*\([^)]*\)\s*\)\s*([A-Za-z_$][\w$]*)\s*\(\s*(.*?)\s*\);",
+    r"\\\$_FF_\s+([A-Za-z_$][\w$]*)\s*\(\s*(.*?)\s*\);",
     re.DOTALL,
 )
 MODULE_HEAD_RE = re.compile(r"(\bmodule\s+\S+\s*\()")
@@ -88,20 +93,20 @@ def add_clock_port(text: str, clock_port: str = "CK") -> str:
 
 
 def clock_ffs(text: str, clock_port: str = "CK") -> str:
-    """Rewrite clock-free $ff instances into behavioral dff cells.
+    """Rewrite clock-free $_FF_ instances into behavioral dff cells.
 
     ITC-99 latches are synchronous state elements; the runner maps the
     behavioral ``dff`` module through dfflibmap onto SKY130 DFFs (the
     same convention as the ISCAS89 s820/s832/s953 preprocessing).
     """
-    if "$ff" in text and FF_INST_RE.search(text) is None:
-        raise ValueError("found $ff but could not locate instance ports")
+    if "$_FF_" in text and FF_INST_RE.search(text) is None:
+        raise ValueError("found $_FF_ but could not locate instance ports")
     def _repl(m):
         inst = m.group(1)
         dm = re.search(r"\.D\s*\(\s*([^)]*?)\s*\)", m.group(2))
         qm = re.search(r"\.Q\s*\(\s*([^)]*?)\s*\)", m.group(2))
         if dm is None or qm is None:
-            raise ValueError(f"$ff instance {inst}: missing .D/.Q port")
+            raise ValueError(f"$_FF_ instance {inst}: missing .D/.Q port")
         return f"dff {inst} ({clock_port}, {dm.group(1)}, {qm.group(1)});"
     text = FF_INST_RE.sub(_repl, text)
     if "module dff" not in text:
@@ -111,7 +116,7 @@ def clock_ffs(text: str, clock_port: str = "CK") -> str:
 
 def convert_blif(blif: Path, out: Path, yosys: str = "yosys",
                  clock_port: str = "CK") -> str:
-    """Convert one blif: yosys read_blif + write_verilog, then normalize."""
+    """Convert one blif: yosys read_blif + techmap + write_verilog."""
     out.parent.mkdir(parents=True, exist_ok=True)
     tmp = out.with_name(out.stem + ".raw.v")
     src_text = blif.read_text(encoding="utf-8", errors="replace")
@@ -124,11 +129,12 @@ def convert_blif(blif: Path, out: Path, yosys: str = "yosys",
         blif = fixed
     cmd = [
         yosys, "-q", "-p",
-        f"read_blif {blif.as_posix()}; write_verilog -noattr {tmp.as_posix()}",
+        f"read_blif {blif.as_posix()}; techmap; "
+        f"write_verilog -noattr {tmp.as_posix()}",
     ]
     proc = subprocess.run(
         cmd, capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=600,
+        encoding="utf-8", errors="replace", timeout=900,
     )
     if proc.returncode != 0 or not tmp.exists():
         raise RuntimeError(
