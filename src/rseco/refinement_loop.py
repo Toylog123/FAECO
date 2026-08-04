@@ -45,13 +45,19 @@ def simulate_refinement_loop(
 
     for iteration in range(1, config.max_iterations + 1):
         failures: set[FailureType] = set()
-        success, patch_id = evaluator(failures, weights)
+        evaluated = evaluator(failures, weights)
+        if isinstance(evaluated, tuple) and len(evaluated) == 3:
+            success, patch_id, extra = evaluated
+        else:
+            success, patch_id = evaluated
+            extra = None
         if success:
             history.append(
                 {
                     "iteration": iteration,
                     "status": "success",
                     "patch_id": patch_id,
+                    "wns": extra.get("wns") if extra else None,
                     "actions": [],
                 }
             )
@@ -77,6 +83,7 @@ def simulate_refinement_loop(
                 "status": "refined",
                 "actions": actions,
                 "failures": sorted(f.value for f in failures),
+                "wns": extra.get("wns") if extra else None,
             }
         )
 

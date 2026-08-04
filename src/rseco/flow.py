@@ -312,6 +312,7 @@ def run_multi_iteration_case(
     enable_feedback: bool = True,
     artifact_dir: str | Path | None = None,
     equivalence_checker: object | None = None,
+    wns_evaluator: object | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -327,6 +328,13 @@ def run_multi_iteration_case(
         restructured (reduction >= 1), because F1 (structural equivalence)
         and F4 (logic-level reduction) are mutually exclusive by
         construction -- a structural match implies identical logic levels.
+
+    wns_evaluator: optional callable(patch_id, weights) -> dict with keys
+        "wns" (float) and "improved" (bool).  When given, the loop uses
+        WNS strict improvement as the success criterion instead of the
+        default logic-level reduction >= 1, and records every measured WNS
+        in "wns_history".  This is the real-STA hook: a runner can apply the
+        candidate patch and call OpenSTA, then report whether WNS improved.
     """
     from .refinement_loop import RefinementConfig, simulate_refinement_loop
     case_dir = Path(case_dir)
@@ -347,6 +355,7 @@ def run_multi_iteration_case(
     logic_level_after = resynthesized.logic_level(case.target_output)
     reduction = logic_level_reduction(before=logic_level_before, after=logic_level_after)
 
+    wns_history: list[float] = []
     def evaluator(failures, weights):
         # one iteration: weighted cut with current weights (so refinement
         # actually changes the boundary), build candidate, classify.
@@ -369,6 +378,17 @@ def run_multi_iteration_case(
                 verification_runtime_s=0.0,
             )
         )
+        if wns_evaluator is not None:
+            # real-STA hook: the injected runner measures the applied
+            # candidate WNS and reports whether it strictly improved.
+            wns_info = wns_evaluator(patch.patch_id, weights)
+            wns = wns_info["wns"]
+            wns_history.append(wns)
+            if wns_info["improved"]:
+                return True, patch.patch_id, {"wns": wns}
+            failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
+            return False, None, {"wns": wns}
+
         if not failures and reduction >= 1:
             return True, patch.patch_id
         return False, None
@@ -382,5 +402,6 @@ def run_multi_iteration_case(
     result["logic_level_before"] = logic_level_before
     result["logic_level_after"] = logic_level_after
     result["logic_level_reduction"] = reduction
+    if wns_evaluator is not None:
+        result["wns_history"] = wns_history
     return result
-
