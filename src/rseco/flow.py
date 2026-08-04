@@ -9,7 +9,7 @@ from typing import Any
 from .case_loader import load_case
 from .cut import build_weighted_cut_graph, fixed_min_cut, solve_weighted_cut, weighted_cut_candidates
 from .equivalence import check_structural_equivalence
-from .failures import FailureThresholds, classify_failures
+from .failures import FailureThresholds, FailureType, classify_failures
 from .graph import extract_fanin_cone
 from .metrics import change_ratio, logic_level_reduction
 from .netlist_io import load_analysis_netlist
@@ -315,8 +315,13 @@ def run_multi_iteration_case(
     reduction = logic_level_reduction(before=logic_level_before, after=logic_level_after)
 
     def evaluator(failures, weights):
-        # one iteration: cut with current weights, build candidate, classify
-        boundary = fixed_min_cut(cone)
+        # one iteration: weighted cut with current weights (so refinement
+        # actually changes the boundary), build candidate, classify.
+        candidates = weighted_cut_candidates(cone, weights)
+        if not candidates:
+            failures.add(FailureType.PATCH_TOO_LARGE)
+            return False, None
+        boundary = candidates[0]
         patch = make_patch_candidate(
             case_id=case.case_id, boundary=boundary, equivalence=equivalence
         )
