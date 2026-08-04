@@ -3,6 +3,19 @@
 本文档记录实际推进动作，和 `decision_log.md` 的区别是：这里记录每天做了什么，`decision_log.md` 只记录会影响路线的关键决策。
 
 ## 2026-08-03
+## 2026-08-04
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260804-01 | 并行确定性修复验证通过 | experiments/20260803_sequential_hybrid_parfix/s832 | --workers 4 + 确定性选优后 s832 收敛到 -0.47，与串行完全一致（72 应用，2274 trials，audit ok） |
+| LOG-20260804-02 | buf_8/16 扩展实验（负面结论） | experiments/20260803_sequential_hybrid_buf8/s832（A-only） | buf_1/2/4/8/16 全试，s832 收敛 -1.15→-0.61，反而比 buf_1/2/4 的 -0.47 更差；buf_8/16 共 1080 trials 零被接受，最终网表 buf_8/16 为 0 |
+| LOG-20260804-03 | 整体架构设计文档建立 | docs/experiment_design/faeco_overall_architecture.md | 两环闭环 + 决策层 + 三层学习机制 |
+| LOG-20260804-04 | cut 权重升级方案写入 | docs/experiment_design/failure_aware_cut.md §7 | 特征实算 + 参数化反馈 + 消融扩展 |
+| LOG-20260804-05 | 相关领域检索与创新性评估 | docs/literature/eco_innovation_niche_analysis.md | 生态位空缺，创新性中上 |
+| LOG-20260804-06 | 决策层实现（strategy selector） | src/rseco/strategy_selector.py + strategy_priority_table.json + tests/test_strategy_selector.py（4 项测试）+ scripts/run_hybrid_repair.py --strategy-priorities auto | 从 8 电路 12205 条 trial 归纳 cell-type→策略优先级决策表（75 个 cell type）；绝大多数 cell type 下 B 是唯一正接受率策略（clkinv_1: B 0.15/R 0.00/G 0.00） |
+| LOG-20260804-07 | 决策层效率对比实验（s832） | experiments/20260804_strategy_selector/s832（A-only） | 决策层 auto vs 全搜索：**-0.45 vs -0.47（更好）**，trials 2275→1932（-15%），R trials 224→79，audit ok。证明"预测驱动"不仅省 STA 调用还找到略优解，是 failure-aware 名副其实的实证 |
+
+## 2026-08-03
 
 | ID | 动作 | 产物 | 备注 |
 |---|---|---|---|

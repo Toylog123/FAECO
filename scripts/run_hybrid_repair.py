@@ -65,6 +65,8 @@ def parse_args() -> argparse.Namespace:
                    help="Number of parallel candidate STA evaluations per round (1 = serial; independent candidates may be evaluated concurrently)")
     p.add_argument("--joint-pairs", type=int, default=0,
                    help="After single-instance candidates, also try joint 2-instance pairs (limit per round; 0 disables)")
+    p.add_argument("--strategy-priorities", type=str, default="",
+                   help="Optional per-cell-type strategy priority, e.g. 'cell_type_a:R,G,B;cell_type_b:B,R,G'. Strategies are tried in this order; others still evaluated but later. Empty keeps default R,G,B order.")
     p.add_argument("--output-dir", type=Path, required=True)
     return p.parse_args()
 
@@ -109,6 +111,32 @@ def _mark_accepted(
     for tr in candidate_trials:
         if tr["trial_id"] == best_trial_id:
             tr["accepted"] = True
+
+
+def _parse_strategy_priorities(spec: str) -> dict[str, tuple[str, ...]]:
+    """Parse 'cell_type_a:R,G,B;cell_type_b:B,R,G' into a dict."""
+    result: dict[str, tuple[str, ...]] = {}
+    for part in spec.split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        if ":" not in part:
+            continue
+        ctype, order = part.split(":", 1)
+        result[ctype.strip()] = tuple(s.strip() for s in order.split(",") if s.strip())
+    return result
+
+
+def _load_strategy_priorities(spec: str) -> dict[str, tuple[str, ...]]:
+    """Load strategy priorities: 'auto' reads the induced decision table,
+    otherwise parse an explicit 'cell_type:order;...' string."""
+    if spec.strip() == "auto":
+        table = ROOT / "src" / "rseco" / "strategy_priority_table.json"
+        if table.exists():
+            data = json.loads(table.read_text(encoding="utf-8"))
+            return {k: tuple(v) for k, v in data.items()}
+        return {}
+    return _parse_strategy_priorities(spec)
 
 
 def _accepts(prev_wns, prev_tns, wns, tns, tns_aware):
@@ -300,6 +328,14 @@ def main() -> int:
                 ):
                     # encode B candidate: kind B carries buf_type/pin/new_net
                     cands.append((f"buf:{buf_type}:{pin}:{new_net}", {}, "B"))
+            # decision layer: reorder candidates by the strategy priorities
+            # (--strategy-priorities).  Failure-aware pruning: strategies with
+            # high historical accept rate for this cell type are tried first.
+            if args.strategy_priorities:
+                prio = _load_strategy_priorities(args.strategy_priorities)
+                order = prio.get(cell.cell_type, ("R", "G", "B"))
+                rank = {k: i for i, k in enumerate(order)}
+                cands.sort(key=lambda c: rank.get(c[2], len(order)))
             if not cands:
                 print(f"  {inst}: {cell.cell_type} no R/G/B candidates")
                 continue

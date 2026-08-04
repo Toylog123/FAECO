@@ -249,3 +249,25 @@ s382 显示**单手段（gate sizing）天花板**：关键路径瓶颈 cell（`
 - **方法边界（诚实记录）**：当前为 ideal-net pre-layout 验证；post-layout 长线负载下 G/B 的相对贡献可能变化，需 Stage C 后续验证；buffer 插入在真实时钟路径上需 CTS/clock-aware 约束保护
 
 - **原"策略空间饱和"结论已被推翻（重要）**：旧版 s820/s832 卡在 -1.11 的真实原因是 runner 仅从默认 `report_checks` 解析单条关键路径（6 实例），策略空间看似饱和；改为显式收集全部违例路径实例（multi_path=True，107+ 实例）后，s820 从 -1.42 到 **-0.63**、s832 从 -1.15 到 **-0.47**，证明瓶颈不是库单元上限而是关键路径覆盖不足。教训：时序修复必须先覆盖全部违例路径，否则会误判策略失效。
+
+### 12.4 buf_8/16 扩展实验（2026-08-04，负面结论）
+
+SKY130 库含 buf_1/2/4/8/16，原实验只用 1/2/4。用 buf_1/2/4/8/16 全试重跑 s832（rounds=10, multi_path, tns-aware, workers=4）：
+
+| 配置 | final WNS | 应用改动 | buf_8/16 接受数 |
+|---|---|---|---|
+| buf_1/2/4 | -0.47 | 72（67B+4G+1R） | 不适用 |
+| buf_1/2/4/8/16 | **-0.61（更差）** | 72（67B+4G+1R） | **0**（1080 trials 全拒） |
+
+结论：pre-layout ideal-net 下大 buffer（buf_8/16）输入电容大、无 wire load 可摊薄，插入只会拖累前级；buf_8/16 应排除在候选集外。与 12.3 的 B 策略有效结论不矛盾——有效的是 buf_1（高扇出负载分担），不是大尺寸 buffer。
+
+### 12.5 决策层（strategy selector，2026-08-04 实现）
+
+从 8 电路 12205 条 trial 数据归纳 cell-type 到策略优先级决策表（src/rseco/strategy_priority_table.json，75 个 cell type）：
+
+- **绝大多数 cell type 下 B 是唯一有正接受率的策略**（如 clkinv_1: B 0.15 / R 0.00 / G 0.00），R/G 接受率几乎全为 0
+- 与 buf_8/16 负面结论一致：有效的是 buf_1 的负载分担，不是大 buffer
+- runner 新增 --strategy-priorities auto：候选按决策表优先级排序，把"全搜索"变成"预测驱动"（src/rseco/strategy_selector.py + tests/test_strategy_selector.py 4 项测试）
+
+下一步：效率对比实验（同 WNS 下决策驱动 vs 全搜索的 STA 调用数）验证决策层价值。
+
