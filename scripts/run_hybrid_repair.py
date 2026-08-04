@@ -57,6 +57,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--rounds", type=int, default=3, help="Multi-round greedy passes over the refreshed critical path")
     p.add_argument("--enable-buffer", action="store_true", help="Also try strategy B (buffer insertion); off by default because ideal-net pre-layout usually only adds delay")
     p.add_argument("--buf-types", default="buf_1,buf_2", help="Comma-separated buffer sizes for strategy B (e.g. buf_1,buf_2,buf_4)")
+    p.add_argument("--tns-aware", action="store_true",
+                   help="Accept candidates that keep WNS equal but improve TNS (total negative slack); default keeps strict-WNS-only acceptance")
     p.add_argument("--output-dir", type=Path, required=True)
     return p.parse_args()
 
@@ -103,6 +105,25 @@ def _mark_accepted(
             tr["accepted"] = True
 
 
+def _accepts(prev_wns, prev_tns, wns, tns, tns_aware):
+    """Decide whether a candidate is accepted.
+
+    Default policy: strictly better WNS.  With tns_aware=True, a
+    candidate that keeps WNS equal but reduces TNS (less negative) is
+    also accepted, so circuits stuck at a WNS plateau (e.g. s820/s832)
+    can still improve total negative slack.
+    """
+    if wns is None:
+        return False
+    if prev_wns is None:
+        return True
+    if wns > prev_wns:
+        return True
+    if tns_aware and wns == prev_wns and tns is not None and prev_tns is not None:
+        return tns > prev_tns
+    return False
+
+
 def _build_r_candidates(cell_type: str, lib: dict) -> list[tuple[str, dict]]:
     """Return [(new_type, pin_map)] for functionally-equivalent cells.
 
@@ -141,7 +162,7 @@ def main() -> int:
     # 2. parse + baseline OpenSTA
     mapped_text = mapped.read_text(encoding="utf-8")
     cells = parse_mapped_netlist(mapped_text)
-    base = run_opensta(mapped, args.period, out, top_module=args.circuit)
+    base = run_opensta(mapped, args.period, out, top_module=args.circuit, multi_path=True)
     print(f"baseline: slack={base['slack']} ({base['slack_status']}) wns={base['wns']}")
 
     sta_text = (out / "sta.log").read_text(encoding="utf-8", errors="replace")
@@ -162,7 +183,9 @@ def main() -> int:
     text = mapped_text
     applied: dict[str, dict[str, str]] = {}  # inst -> {kind, new_type}
     baseline_wns = base["wns"]
+    baseline_tns = base.get("tns")
     current_wns = baseline_wns
+    current_tns = baseline_tns
     cand_dir = out / "cand_hybrid"
     cand_dir.mkdir(parents=True, exist_ok=True)
     candidate_trials: list[dict] = []  # auditable per-candidate results
@@ -170,7 +193,7 @@ def main() -> int:
     round_v = out / "round_current.v"
     for rnd in range(args.rounds):
         round_v.write_text(text, encoding="utf-8")
-        sta = run_opensta(round_v, args.period, out, top_module=args.circuit)
+        sta = run_opensta(round_v, args.period, out, top_module=args.circuit, multi_path=True)
         sta_text = (out / "sta.log").read_text(encoding="utf-8", errors="replace")
         critical = _critical_instances_from_sta(sta_text)
         if not critical:
@@ -202,6 +225,7 @@ def main() -> int:
                 continue
 
             best_wns = current_wns
+            best_tns = current_tns
             best: tuple[str, dict, str] | None = None
             best_trial_id: int | None = None
             for new_type, pin_map, kind in cands:
@@ -221,6 +245,7 @@ def main() -> int:
                 (cand_sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
                 res = run_opensta(cand_sub / "mapped.v", args.period, cand_sub, top_module=args.circuit)
                 wns = res["wns"]
+                tns = res.get("tns")
                 trial_id = len(candidate_trials)
                 candidate_trials.append({
                     "instance": inst,
@@ -228,15 +253,17 @@ def main() -> int:
                     "from_type": cell.cell_type,
                     "to_type": new_type,
                     "wns": wns,
+                    "tns": tns,
                     "accepted": False,
                     "round": rnd + 1,
                     "trial_id": trial_id,
                 })
-                if wns is not None and wns > best_wns:
+                if _accepts(best_wns, best_tns, wns, tns, args.tns_aware):
                     best_wns = wns
+                    best_tns = tns
                     best = (new_type, pin_map, kind)
                     best_trial_id = trial_id
-            if best is not None and best_wns > current_wns:
+            if best is not None and _accepts(current_wns, current_tns, best_wns, best_tns, args.tns_aware):
                 new_type, pin_map, kind = best
                 if kind == "R":
                     text = apply_rewrite(text, inst, new_type, pin_map)
@@ -247,6 +274,7 @@ def main() -> int:
                     text = apply_sizing(text, {inst: new_type})
                 _mark_accepted(candidate_trials, applied, inst, kind, new_type, best_trial_id)
                 current_wns = best_wns
+                current_tns = best_tns
                 improved = True
                 print(f"  {kind} {inst}: {cell.cell_type}->{new_type} wns {best_wns}")
         if not improved:
@@ -264,7 +292,9 @@ def main() -> int:
         "applied_changes": applied,
         "candidate_trials": candidate_trials,
         "baseline_wns": baseline_wns,
+        "baseline_tns": baseline_tns,
         "final_wns": final["wns"],
+        "final_tns": final.get("tns"),
         "improvement": (
             None
             if baseline_wns is None or final["wns"] is None

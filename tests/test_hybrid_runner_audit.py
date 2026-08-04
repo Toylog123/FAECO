@@ -71,6 +71,31 @@ class HybridRunnerAuditTest(unittest.TestCase):
         accepted = [t for t in trials if t["accepted"]]
         self.assertEqual(len(accepted), len(applied))
 
+    def test_accepts_strict_wns_default(self):
+        a = self.runner._accepts
+        # strictly better WNS accepted regardless of tns flag
+        self.assertTrue(a(-0.5, -5.0, -0.4, -4.0, False))
+        # same WNS but better TNS rejected when not tns-aware
+        self.assertFalse(a(-0.5, -5.0, -0.5, -4.0, False))
+        # worse WNS rejected even if TNS better
+        self.assertFalse(a(-0.5, -5.0, -0.6, -4.0, False))
+        # None wns never accepted
+        self.assertFalse(a(-0.5, -5.0, None, None, True))
+        # None previous treated as always accept (first candidate)
+        self.assertTrue(a(None, None, -0.5, -5.0, True))
+
+    def test_accepts_tns_aware_breaks_wns_plateau(self):
+        a = self.runner._accepts
+        # same WNS but TNS improved -> accepted with --tns-aware
+        self.assertTrue(a(-0.5, -5.0, -0.5, -4.0, True))
+        # same WNS and same TNS -> rejected
+        self.assertFalse(a(-0.5, -5.0, -0.5, -5.0, True))
+        # same WNS but TNS worse -> rejected
+        self.assertFalse(a(-0.5, -5.0, -0.5, -6.0, True))
+        # WNS strictly better still accepted (TNS irrelevant)
+        self.assertTrue(a(-0.5, -5.0, -0.4, -6.0, True))
+
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -98,8 +98,33 @@ def run_yosys_mapping(circuit: Path, output: Path) -> list[str]:
     return [l for l in (proc.stdout + proc.stderr).splitlines() if "ERROR" in l]
 
 
+def _parse_tns(sta_text: str) -> float | None:
+    """Extract TNS (sum of negative endpoint slacks) from the TNS_BEGIN/END section.
+
+    OpenSTA report_tns prints a single line (e.g. "tns max -5.74");
+    TNS is the total negative slack over all violating endpoints.  Returns
+    None when the section is absent or contains no recognized tns line.
+    """
+    begin = sta_text.find("TNS_BEGIN")
+    end = sta_text.find("TNS_END")
+    if begin == -1 or end == -1 or end <= begin:
+        return None
+    section = sta_text[begin:end]
+    m = re.search(r"tns\s+max\s+(-?\d+\.\d+)", section)
+    if m:
+        return round(float(m.group(1)), 3)
+    vals = [
+        float(mt[0])
+        for mt in re.findall(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)", section)
+        if mt[1] == "VIOLATED"
+    ]
+    if not vals:
+        return None
+    return round(sum(vals), 3)
+
+
 def run_opensta(mapped: Path, period: float, output: Path,
-                top_module: str | None = None) -> dict[str, Any]:
+                top_module: str | None = None, multi_path: bool = False) -> dict[str, Any]:
     """OpenSTA via WSL2: read Liberty + mapped + create_clock -> report.
 
     ``top_module`` is the design module name to link.  If omitted, it is
@@ -112,16 +137,24 @@ def run_opensta(mapped: Path, period: float, output: Path,
         m = re.search(r"\bmodule\s+(\w+)", text)
         top_module = m.group(1) if m else mapped.parent.name
     tcl = output / "sta.tcl"
-    tcl.write_text(
+    tcl_body = (
         f"read_liberty {_to_wsl(LIB)}\n"
         f"read_verilog {_to_wsl(mapped)}\n"
         f"link_design {top_module}\n"
         f"create_clock -name clk -period {period} [get_ports CK]\n"
         "report_checks -path_delay max\n"
-        "report_worst_slack -max\n"
-        "report_worst_slack -min\n",
-        encoding="utf-8",
+        'puts "TNS_BEGIN"\n'
     )
+    if multi_path:
+        tcl_body += "report_checks -path_delay max -slack_max 0 -endpoint_count 100000\n"
+    else:
+        tcl_body += "report_tns\n"
+    tcl_body += (
+        'puts "TNS_END"\n'
+        "report_worst_slack -max\n"
+        "report_worst_slack -min\n"
+    )
+    tcl.write_text(tcl_body, encoding="utf-8")
     proc = subprocess.run(
         ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta",
          "-no_splash", "-exit", _to_wsl(tcl)],
@@ -133,10 +166,12 @@ def run_opensta(mapped: Path, period: float, output: Path,
     # OpenSTA format: "-0.28   slack (VIOLATED)" (value left of 'slack')
     slack = re.search(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)", text)
     wns = re.search(r"worst slack max\s+(-?\d+\.\d+)", text)
+    tns = _parse_tns(text)
     return {
         "slack": float(slack.group(1)) if slack else None,
         "slack_status": slack.group(2) if slack else None,
         "wns": float(wns.group(1)) if wns else None,
+        "tns": tns,
     }
 
 

@@ -67,6 +67,35 @@ class DffPreprocessTest(unittest.TestCase):
         out = re.sub(r"\bdff\s+(\w+)\s*\(\s*([^;]+?)\s*\)", _fix, src)
         self.assertEqual(out, "dff D(CK,a);")
 
+    def test_parse_tns_reads_native_report_tns(self):
+        report = "TNS_BEGIN\ntns max -5.74\nTNS_END\n"
+        self.assertEqual(self.mod._parse_tns(report), -5.74)
+
+    def test_parse_tns_falls_back_to_slack_sum(self):
+        report = "".join([
+            "TNS_BEGIN\n",
+            "-0.10   slack (VIOLATED)\n",
+            "-0.20   slack (VIOLATED)\n",
+            "0.05   slack (MET)\n",
+            "TNS_END\n",
+        ])
+        self.assertEqual(self.mod._parse_tns(report), -0.3)
+
+    def test_parse_tns_missing_markers_returns_none(self):
+        self.assertIsNone(self.mod._parse_tns("no markers here"))
+        self.assertIsNone(self.mod._parse_tns("TNS_BEGIN\nno slack\n"))
+        self.assertIsNone(self.mod._parse_tns(""))
+
+    def test_run_opensta_multi_path_emits_all_paths_section(self):
+        # multi_path=True should write the all-path report_checks line into
+        # the generated Tcl; multi_path=False uses the compact report_tns.
+        import inspect
+        src = inspect.getsource(self.mod.run_opensta)
+        self.assertIn("multi_path: bool = False", src)
+        self.assertIn("report_tns", src)
+        self.assertIn("slack_max 0 -endpoint_count 100000", src)
+
+
 
 if __name__ == "__main__":
     unittest.main()
