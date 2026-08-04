@@ -355,6 +355,30 @@ s953 & -1.48 & \textbf{-0.09} & 149B+6G+1R \\
 
 \textbf{消融现状（2026-08-04 精确化）}：真实 resynthesized 网表落地后（Yosys \texttt{abc -liberty} 重综合，5 case 全部成功、reduction 1--9），外环 3/5 case（c432/c499/c880）第 1 轮即成功——成功路径从“构造上不可达”变为“可达且真实”。c17$\times$2 因 \texttt{max\_patch\_ratio=0.15} 对 $\leq 6$-gate 小网表过严恒 F3 失败，是阈值边界而非反馈失效。F1--F5 权重已真实进入加权 min-cut 且能改变解（c17 size\_penalty=5 时 cut 从 root 翻到 2-gate 浅层），但 evaluator 成功条件用\textbf{全局} logic-level reduction、与选中 cut 位置解耦，故 ON/OFF 消融无差异（测试锁定）。
 
+\textbf{真实 WNS 闭环（2026-08-04 晚）}：将外环 evaluator 从逻辑代理接为真实 OpenSTA——\texttt{RealWnsEvaluator} 把 cut 门映射到真实 SKY130 网表，对关键路径实例生成 R/G/B 候选、每候选独立 OpenSTA 实测（WSL2，\texttt{create\_clock} on CK），只接受严格 WNS 改善。4/4 ISCAS89 电路（period 0.5ns）真实改善：s27 $-0.28\!\rightarrow\!-0.21$、s382 $-0.94\!\rightarrow\!-0.92$、s420 $-1.78\!\rightarrow\!-1.51$、s641 $-1.86\!\rightarrow\!-1.85$（独立复测一致）。
+
+\textbf{反馈惰性修复与 beam 消融（2026-08-04 晚）}：beam=1 消融暴露反馈惰性——加权 min-cut 恒选单门 root，critical\_coverage\_reward 升到 9 也翻不到时序瓶颈门，此前 beam=8 的成功全靠宽度探索。修复：F4 失败后生成 \texttt{critical\_path\_cover} cut（锥 $\cap$ 真实关键路径门）并排首，让“失败 $\rightarrow$ 重切”真正改变候选。真实 OpenSTA 下 4 电路 beam$\times$反馈网格：
+
+\begin{table}[!t]
+\centering
+\caption{外环真实 WNS：beam$\times$反馈消融（4 电路，period 0.5ns）}
+\label{tab:beam_feedback}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llcccc}
+\toprule
+\textbf{电路} & \textbf{基线 WNS} & \textbf{反馈 ON} & \textbf{反馈 OFF} & \textbf{接受策略} \\
+\midrule
+s27  & $-0.28$ & 第 2 轮 $-0.21$（8--11 STA） & 8 轮失败（24--48 STA） & G（nor3b\_2） \\
+s382 & $-0.94$ & 第 2 轮 $-0.92$（12--14 STA） & 8 轮失败（16--32 STA） & R（or2\_4） \\
+s420 & $-1.78$ & 第 2 轮 $-1.51$（12--13 STA） & 8 轮失败（8--16 STA） & G（nor4\_4） \\
+s641 & $-1.86$ & 第 1 轮 $-1.85$（3 STA） & 第 1 轮 $-1.85$（3 STA） & G（o21ai\_1） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+需“学习”的 3/4 电路：反馈 ON 把找到修复所需 beam 从 $\geq 4$--$8$ 压到 $\leq 2$，STA 调用省 $44\%$--$89\%$（s27 11 vs 46、s382 14 vs 25、s420 13 vs 122）；s641 首候选即成功（加权 min-cut 首候选已覆盖瓶颈门），反馈与宽度均无关。这是 FAECO“失败反馈学习替代蛮力宽度搜索”的首次真实时序量化证据。
+
 \subsection{局限性与边界}
 
 \begin{table}[!t]
@@ -369,8 +393,8 @@ s953 & -1.48 & \textbf{-0.09} & 149B+6G+1R \\
 \midrule
 L31-01 & SKY130 Liberty cell model 解析 & \textbf{已解决}：Yosys miter+SAT（assign cells.v），8/8 等价证明 SUCCESS \\
 L31-02 & 8-case 全组合、无时序路径 & ISCAS89 顺序电路已拓展（period 0.5ns 制造违例） \\
-L31-04 & failure\_recovery 曾为 single-iteration proxy & 真实重综合网表 + 外环成功路径打通 + 权重进 min-cut；剩余：evaluator 全局判定解耦、OpenSTA WNS 接入 \\
-补充 & METH-12 candidate-specific timing gain 为 Stage A proxy & 内环已接 OpenSTA per-candidate 实测；外环 WNS 驱动接入为后续项 \\
+L31-04 & failure\_recovery 曾为 single-iteration proxy & \textbf{已解决}：真实重综合网表 + 外环成功路径打通 + 权重进 min-cut + \textbf{真实 OpenSTA WNS 接入}；4/4 电路真实改善、beam$\times$反馈消融证明 F4 反馈价值（见\ref{sec:exp}） \\
+补充 & METH-12 candidate-specific timing gain 为 Stage A proxy & \textbf{已解决}：内环 OpenSTA per-candidate 实测 + 外环真实 WNS evaluator（\texttt{RealWnsEvaluator}）闭环 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -382,9 +406,9 @@ L31-04 & failure\_recovery 曾为 single-iteration proxy & 真实重综合网表
 
 FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET）。全部实验基于 EPFL v2025.1 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
 
-\textbf{当前 limitation（透明声明）}：(1) 外环 evaluator 成功条件仍与 cut 位置解耦（全局 reduction 判定），WNS 驱动的成功标准真实接入 OpenSTA 为后续工程项；(2) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
+\textbf{当前 limitation（透明声明）}：(1) 外环真实 WNS 闭环已在 4 个 ISCAS89 电路上验证（beam$\times$反馈消融证明 F4 反馈价值），但电路规模仍小、权重细化在更大电路上的收益待验证；(2) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
 
-\textbf{未来工作}：(1) 外环 WNS 成功标准真实接入 OpenSTA，形成 patch 级 recovery 的完整闭环；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 将决策层策略表扩展到更多工艺库与 corner，验证跨工艺迁移；(5) 更大规模顺序基准（ITC-99）上验证混合修复扩展性。
+\textbf{未来工作}：(1) 将外环真实 WNS 闭环扩展到更大规模顺序基准（ITC-99）与多 corner，验证权重细化在大电路上的收敛收益；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 将决策层策略表扩展到更多工艺库与 corner，验证跨工艺迁移；(5) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
 
 % =============================================================================
 % 参考文献
