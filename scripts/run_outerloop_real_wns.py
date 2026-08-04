@@ -74,6 +74,10 @@ def parse_args() -> argparse.Namespace:
                    help="Max patch gates evaluated per candidate (critical first)")
     p.add_argument("--priority-table", type=Path, default=None,
                    help="Path to strategy_priority_table.json; orders R/G/B by decision layer")
+    p.add_argument("--skip-mapping", action="store_true",
+                   help="Reuse existing mapped.v instead of re-running Yosys")
+    p.add_argument("--yosys-wsl", action="store_true",
+                   help="Use WSL2 64-bit Yosys for mapping (large ITC-99 circuits)")
     p.add_argument("--early-stop", action="store_true",
                    help="Stop evaluating candidates at first WNS improvement (serial only)")
     return p.parse_args()
@@ -88,9 +92,14 @@ def main() -> int:
     out = args.output_dir / args.circuit
     out.mkdir(parents=True, exist_ok=True)
 
-    # 1. Yosys -> pure SKY130 netlist
-    errors = run_yosys_mapping(circuit_path, out)
+    # 1. Yosys -> pure SKY130 netlist (skip if reusing existing mapped.v)
     mapped = out / "mapped.v"
+    errors = []
+    if args.skip_mapping and mapped.exists():
+        print(f"{args.circuit}: reusing existing mapped.v (skip mapping)")
+    else:
+        yosys_cmd = ["wsl.exe", "-d", "Ubuntu", "--", "yosys"] if args.yosys_wsl else None
+        errors = run_yosys_mapping(circuit_path, out, yosys_cmd=yosys_cmd)
     if errors or not mapped.exists():
         print(f"{args.circuit}: mapping failed", file=sys.stderr)
         return 1

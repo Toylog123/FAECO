@@ -51,6 +51,11 @@
 
 | LOG-20260804-41 | **ITC-99 泛化结果独立核验：通过（逐电路对照 json vs 文档）** | experiments/20260804_itc99_outerloop{,_large,_large2}/ + 20260804_itc99_batch_smoke/（A-only 只读核验）+ docs/engineering/n31_05_sequential_eco.md §12.7 | 逐电路核对 19 个可跑电路的 baseline/final WNS 与修复类型：17/19 改善（b03-b17/b20-b22），数值与文档表格完全一致（b10 -1.42→-1.18、b15 -12.35→-12.30 为 R 修复，b17 -16.10→-15.62 最大改善）；b01/b02 无候选/无改善、b18 映射失败均与记录一致；R 修复 patch id 与关键路径 cover 一致。结论：§12.7 表格与论文 Table 数据可信 |
 
+| LOG-20260804-42 | **b18/b19 大电路 64 位工具链突破：WSL2 Yosys 0.33 完成映射与基线** | WSL2 Ubuntu + Yosys 0.33 (x86_64) + experiments/20260804_itc99_b18b19_wsl/（A-only）| 此前 b18/b19 因 Windows Yosys 0.9 32 位 read_verilog bad_alloc 无法映射，诚实排除；发现 WSL2 已有 64 位 Yosys 0.33 后直接打通：b18（37.6 万门，4.7GB 峰值）映射 6 分钟、b19（75.5 万门）映射约 15 分钟；0.5ns 周期基线 b18 WNS=-13.34 / b19 WNS=-17.44。工具链限制从「无法验证」变为「已可验证」
+| LOG-20260804-43 | **b18/b19 外环修复 0.5ns 协议：b19 R 策略贡献 1.44ns 实质改善** | experiments/20260804_itc99_b18b19_repair/（A-only）| 直接复用现有外环 runner + WSL Yosys（run_yosys_mapping 增加 yosys_cmd/_to_wsl 绝对路径修复 + timeout 1500；runner 加 --yosys-wsl）。b18 -13.34→-13.27（唯一接受 G maj3_1→maj3_2，24 STA），b19 -17.44→-16.0（接受 R clkinv_1→bufinv_8，59 STA）。关键发现：0.5ns 是 27-36 倍过约束，非现实 ECO 场景；b19 的 R 修复证明 pre-layout 大电路上等价替换才是主力
+| LOG-20260804-44 | **现实 period 协议（95% CP）重跑 b18/b19：b19 达成 MET（-0.90→+0.54）** | experiments/20260804_itc99_realistic/（A-only）+ runner 新增 --skip-mapping（复用 mapped.v）| 按 95% 原始关键路径设 period（b18=13.15ns、b19=17.04ns），WNS 落在现实 ECO 区间（b18 -0.69 / b19 -0.90）。b18 -0.69→-0.62（G maj3_1→maj3_2，TNS -28.18→-24.7，24 STA）；b19 **-0.90→+0.54（MET，TNS 0.0）**（R clkinv_1→bufinv_8，59 STA）。结论：大电路上 failure-aware 修复在现实约束下可收敛时序；b18 改善小是结构边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，SKY130 无 R 候选，G 仅微调），诚实记录
+
+
 
 
 ## 2026-08-03

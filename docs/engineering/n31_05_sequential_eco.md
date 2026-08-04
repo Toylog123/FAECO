@@ -331,3 +331,20 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 
 实验产物：experiments/20260804_itc99_batch_smoke/、experiments/20260804_itc99_outerloop/、experiments/20260804_itc99_outerloop_large{,_2}/（A-only 不入库）；转换器与 batch driver 增强已 commit（ddb2d39）。
 
+
+### 12.8 b18/b19 大电路补全 + 现实 period 协议（2026-08-04 深夜）
+
+12.7 中 b18/b19 因 Windows Yosys 0.9 32 位内存限制被诚实排除；当晚发现 WSL2 Ubuntu 已有 64 位 Yosys 0.33（x86_64），直接打通大电路验证：
+
+- **工具链突破**：`run_yosys_mapping` 增加 `yosys_cmd` 参数（WSL2 模式）+ `_to_wsl` 修复（相对路径先 resolve 再转 /mnt/d）+ timeout 300→1500；runner 增加 `--yosys-wsl` 与 `--skip-mapping`（复用已映射网表）。b18（37.6 万门）映射 6 分钟、b19（75.5 万门）映射约 15 分钟，峰值内存 4.7GB。
+
+- **0.5ns 协议（27-36 倍过约束）**：b18 基线 -13.34→修复 -13.27（接受 G maj3_1→maj3_2，24 STA）；b19 基线 -17.44→修复 -16.0（接受 R clkinv_1→bufinv_8，59 STA）。关键发现：b19 的 1.44ns 改善来自 R 策略，证明 pre-layout 大电路上等价替换才是改善主力；0.5ns 下 WNS 绝对值巨大但非现实 ECO 场景。
+
+- **现实 period 协议（95% CP）**：按原始关键路径的 95% 设周期（b18=13.15ns→WNS -0.69，b19=17.04ns→WNS -0.90），落在现实 ECO 区间。修复结果：
+
+| 电路 | period | 基线 WNS | final WNS | 接受修复 | TNS 变化 | STA |
+|---|---|---|---|---|---|---|
+| b18 | 13.15ns | -0.69 | -0.62 | G maj3_1→maj3_2 | -28.18→-24.7 | 24 |
+| b19 | 17.04ns | -0.90 | **+0.54 (MET)** | R clkinv_1→bufinv_8 | -22.71→0.0 | 59 |
+
+结论：**大电路上 failure-aware 修复在现实约束下可收敛时序**（b19 达成 MET、TNS 清零）；b18 改善小是结构边界——关键路径 38 个实例中 36 个为 XOR/MAJ/XNOR 复杂门（乘法器结构），SKY130 中这些门无等价替换候选、G 在 pre-layout 仅微调，诚实记录该边界。

@@ -498,13 +498,15 @@ b22  & $-12.08$ & $-12.06$ & G mux2$_1$$\rightarrow_2$ & 1 \\
 \end{tabular}
 \end{table}
 
+随后接入 WSL2 的 64 位 Yosys 0.33，将此前因 32 位内存限制无法映射的 b18/b19 大电路补全：b18（37.6 万门）0.5ns 协议下基线 $-13.34\,$ns、修复 $-13.27$；b19（75.5 万门）基线 $-17.44$、修复 $-16.0$（接受 R clkinv$_1$$\rightarrow$bufinv$_8$，单候选改善 1.44 ns）。按 95\% 原始关键路径设置现实周期（b18 13.15 ns、b19 17.04 ns）后，WNS 落在实际 ECO 区间：b18 $-0.69\rightarrow-0.62$（G maj3$_1$$\rightarrow_2$），b19 $-0.90\rightarrow+0.54$ 达成时序收敛（MET、TNS 清零，R 候选）。b18 改善较小的边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，库中无等价替换候选，G 仅微调）如实记录。
+
 \section{结论}
 
 FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET），并进一步在 ITC-99 基准族上实现 19 个可映射电路 17/19 真实 WNS 改善（含 6 个大电路）。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
 
-\textbf{当前 limitation（透明声明）}：(1) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(2) 外环真实 WNS 闭环已扩展到 19 个 ITC-99 电路（17/19 改善）并含 6 个大电路，但 b18/b19（23--46 万门）超出 Yosys 0.9 32 位映射能力、多 corner 仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
+\textbf{当前 limitation（透明声明）}：(1) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(2) 外环真实 WNS 闭环已扩展到 19 个 ITC-99 电路（17/19 改善）并含 6 个大电路，b18/b19 已通过 WSL2 64 位 Yosys 0.33 补全（b19 在 95% 现实周期下由 R 修复达成 MET），但多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
 
-\textbf{未来工作}：(1) 接入 64 位 Yosys/OpenROAD 补齐 b18/b19 大电路，并扩展到多 corner/多工艺库验证权重细化与决策层表的跨工艺迁移；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
+\textbf{未来工作}：(1) 将 64 位 Yosys 验证扩展到 b18/b19 的多 corner 与多工艺库，验证权重细化与决策层表的跨工艺迁移；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
 
 \begin{thebibliography}{99}
 \bibitem{ho2010eco} Y.-C.~Ho, C.-C.~Chang, and S.-J.~Chen, ``ECO timing optimization using spare cells and technology remapping,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~29, no.~10, pp. 1603--1614, 2010.

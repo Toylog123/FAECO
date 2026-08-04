@@ -50,15 +50,36 @@ def parse_args() -> argparse.Namespace:
 
 
 def _to_wsl(path: Path) -> str:
-    return str(path).replace("\\", "/").replace("D:/", "/mnt/d/", 1)
+    """Windows path -> WSL /mnt/d path (absolute).
+
+    Resolve first so relative paths become absolute before the
+    drive-letter rewrite; otherwise WSL cannot find them.
+    """
+    p = path.resolve()
+    return str(p).replace("\\", "/").replace("D:/", "/mnt/d/", 1)
 
 
-def run_yosys_mapping(circuit: Path, output: Path) -> list[str]:
-    """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist."""
+def run_yosys_mapping(circuit: Path, output: Path,
+                      yosys_cmd: list[str] | None = None) -> list[str]:
+    """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist.
+
+    ``yosys_cmd`` selects the Yosys executable. Default is Windows yosys;
+    pass ["wsl.exe","-d","Ubuntu","--","yosys"] for WSL2 64-bit Yosys,
+    needed for large ITC-99 circuits (b18/b19). WSL mode translates
+    map.ys paths via _to_wsl.
+    """
     script = output / "map.ys"
     lib_posix = LIB.as_posix()
+    script_posix = script.as_posix()
+    mapped_posix = (output / "mapped.v").as_posix()
+    use_wsl = bool(yosys_cmd and yosys_cmd[0].endswith("wsl.exe"))
+    if use_wsl:
+        lib_posix = _to_wsl(LIB)
+        script_posix = _to_wsl(script)
+        mapped_posix = _to_wsl(output / "mapped.v")
     top_name = circuit.stem
     src = circuit.read_text(encoding="utf-8", errors="replace")
+    circuit_for_script = _to_wsl(circuit) if use_wsl else circuit.as_posix()
     # Some ISCAS89 netlists (s820/s832/s953) instantiate a plain ``dff``
     # black box (``dff NAME(CK,D,Q)``) with no module definition.  Yosys
     # cannot resolve it, so emit a preprocessed copy that (1) rewrites the
@@ -80,20 +101,21 @@ def run_yosys_mapping(circuit: Path, output: Path) -> list[str]:
     script.write_text(
         "\n".join(
             [
-                f"read_verilog {circuit.as_posix()}",
+                f"read_verilog {circuit_for_script}",
                 "synth -top " + top_name,
                 f"dfflibmap -liberty {lib_posix}",
                 f"abc -liberty {lib_posix}",
                 "clean",
-                f"write_verilog -noattr {(output / 'mapped.v').as_posix()}",
+                f"write_verilog -noattr {mapped_posix}",
                 "",
             ]
         ),
         encoding="utf-8",
     )
+    yosys_cmd = yosys_cmd or ["yosys"]
     proc = subprocess.run(
-        ["yosys", str(script)], capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=300,
+        yosys_cmd + [script_posix], capture_output=True, text=True,
+        encoding="utf-8", errors="replace", timeout=1500,
     )
     (output / "map.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
     return [l for l in (proc.stdout + proc.stderr).splitlines() if "ERROR" in l]
