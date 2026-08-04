@@ -97,6 +97,23 @@ class HybridRunnerAuditTest(unittest.TestCase):
                 self.assertEqual(res[4]["wns"], -0.4)
 
 
+
+    def test_apply_single_r_and_g(self):
+        r = self.runner._apply_single("module m; sky130_fd_sc_hd__inv_1 _a_ (.A(x), .Y(y)); endmodule", "_a_", "G", "sky130_fd_sc_hd__inv_2", {})
+        self.assertIn("sky130_fd_sc_hd__inv_2 _a_", r)
+
+    def test_eval_joint_returns_both_and_sta(self):
+        import tempfile, pathlib
+        with tempfile.TemporaryDirectory() as td:
+            out = pathlib.Path(td)
+            with mock.patch.object(self.runner, "run_opensta", return_value={"wns": -0.3, "tns": -2.0}):
+                a = ("_a_", "G", "sky130_fd_sc_hd__inv_2", {})
+                b = ("_b_", "G", "sky130_fd_sc_hd__nand2_2", {})
+                key, kind, res = self.runner._eval_joint("module m; sky130_fd_sc_hd__inv_1 _a_ (.A(x), .Y(y)); sky130_fd_sc_hd__nand2_1 _b_ (.A(a), .B(b), .Y(z)); endmodule", out, 0.5, "m", a, b)
+                self.assertEqual(kind, "JOINT")
+                self.assertIn("_a_+_b_", key)
+                self.assertEqual(res["wns"], -0.3)
+
 if __name__ == "__main__":
     unittest.main()
 

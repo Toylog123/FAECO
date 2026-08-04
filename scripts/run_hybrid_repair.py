@@ -63,6 +63,8 @@ def parse_args() -> argparse.Namespace:
                    help="Accept candidates that keep WNS equal but improve TNS (total negative slack); default keeps strict-WNS-only acceptance")
     p.add_argument("--workers", type=int, default=1,
                    help="Number of parallel candidate STA evaluations per round (1 = serial; independent candidates may be evaluated concurrently)")
+    p.add_argument("--joint-pairs", type=int, default=0,
+                   help="After single-instance candidates, also try joint 2-instance pairs (limit per round; 0 disables)")
     p.add_argument("--output-dir", type=Path, required=True)
     return p.parse_args()
 
@@ -182,6 +184,36 @@ def _eval_candidate(
     return inst, kind, new_type, pin_map, res
 
 
+
+def _apply_single(text: str, inst: str, kind: str, new_type: str, pin_map: dict) -> str:
+    # Apply one candidate (R/B/G) to the current netlist text.
+    if kind == "R":
+        return apply_rewrite(text, inst, new_type, pin_map)
+    if kind == "B":
+        _, buf_type, bpin, new_net = new_type.split(":")
+        return insert_buffer(text, inst, bpin, buf_type, new_net)
+    return apply_sizing(text, {inst: new_type})
+
+def _eval_joint(
+    text: str,
+    cand_dir: Path,
+    period: float,
+    top_module: str,
+    a: tuple,
+    b: tuple,
+) -> tuple[str, str, dict]:
+    # Apply two single-instance candidates jointly and evaluate.
+    inst_a, kind_a, type_a, pin_a = a
+    inst_b, kind_b, type_b, pin_b = b
+    t1 = _apply_single(text, inst_a, kind_a, type_a, pin_a)
+    t2 = _apply_single(t1, inst_b, kind_b, type_b, pin_b)
+    key = (inst_a + ":" + kind_a + ":" + type_a + "|" + inst_b + ":" + kind_b + ":" + type_b).replace("/", "_").replace(":", "_").replace("|", "_")
+    cand_sub = cand_dir / ("joint_" + key[:160])
+    cand_sub.mkdir(parents=True, exist_ok=True)
+    (cand_sub / "mapped.v").write_text(t2, encoding="utf-8")
+    res = run_opensta(cand_sub / "mapped.v", period, cand_sub, top_module=top_module)
+    return inst_a + "+" + inst_b, "JOINT", res
+
 def main() -> int:
     args = parse_args()
     circuit = args.iscas89_dir / f"{args.circuit}.v"
@@ -243,6 +275,7 @@ def main() -> int:
             break
         print(f"round {rnd + 1}: wns={sta['wns']} critical={critical}")
         improved = False
+        best_by_inst: dict[str, tuple] = {}
         for inst in critical:
             cell = next((c for c in cells if c.instance == inst), None)
             if cell is None:
@@ -340,6 +373,43 @@ def main() -> int:
                 current_tns = best_tns
                 improved = True
                 print(f"  {kind} {inst}: {cell.cell_type}->{new_type} wns {best_wns}")
+                best_by_inst[inst] = (kind, new_type, pin_map)
+            elif best is not None:
+                # record the best tried candidate even if not accepted (joint may combine it)
+                best_by_inst[inst] = (best[2], best[0], best[1])
+
+        # joint 2-instance candidates: combine the best single-instance candidates
+        if args.joint_pairs > 0 and len(best_by_inst) >= 2:
+            insts_j = sorted(best_by_inst)
+            pairs = [(a, b) for i, a in enumerate(insts_j) for b in insts_j[i+1:]][: args.joint_pairs]
+            for a, b in pairs:
+                cand_a = (a,) + best_by_inst[a]
+                cand_b = (b,) + best_by_inst[b]
+                _, _, res = _eval_joint(text, cand_dir, args.period, args.circuit, cand_a, cand_b)
+                wns = res["wns"]
+                tns = res.get("tns")
+                trial_id = len(candidate_trials)
+                candidate_trials.append({
+                    "instance": f"{a}+{b}",
+                    "kind": "JOINT",
+                    "from_type": best_by_inst[a][1] + "+" + best_by_inst[b][1],
+                    "to_type": best_by_inst[a][1] + "+" + best_by_inst[b][1],
+                    "wns": wns,
+                    "tns": tns,
+                    "accepted": False,
+                    "round": rnd + 1,
+                    "trial_id": trial_id,
+                })
+                if _accepts(current_wns, current_tns, wns, tns, args.tns_aware):
+                    ta = best_by_inst[a]
+                    tb = best_by_inst[b]
+                    text = _apply_single(text, a, ta[0], ta[1], ta[2])
+                    text = _apply_single(text, b, tb[0], tb[1], tb[2])
+                    candidate_trials[-1]["accepted"] = True
+                    current_wns = wns
+                    current_tns = tns
+                    improved = True
+                    print(f"  JOINT {a}+{b}: wns {wns}")
         if not improved:
             break
 
