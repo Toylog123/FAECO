@@ -72,6 +72,10 @@ def parse_args() -> argparse.Namespace:
                    help="Accept WNS-equal candidates that improve TNS")
     p.add_argument("--max-instances", type=int, default=8,
                    help="Max patch gates evaluated per candidate (critical first)")
+    p.add_argument("--priority-table", type=Path, default=None,
+                   help="Path to strategy_priority_table.json; orders R/G/B by decision layer")
+    p.add_argument("--early-stop", action="store_true",
+                   help="Stop evaluating candidates at first WNS improvement (serial only)")
     return p.parse_args()
 
 
@@ -125,7 +129,10 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    # 4. real-STA evaluator
+    # 4. real-STA evaluator (decision layer: optional strategy priority table)
+    priority_table = None
+    if args.priority_table is not None:
+        priority_table = json.loads(args.priority_table.read_text(encoding="utf-8"))
     evaluator = RealWnsEvaluator(
         mapped_text=mapped_text,
         top_module=args.circuit,
@@ -138,6 +145,8 @@ def main() -> int:
         enable_buffer=args.enable_buffer,
         tns_aware=args.tns_aware,
         max_instances=args.max_instances,
+        priority_table=priority_table,
+        early_stop=args.early_stop,
     )
 
     # 5. outer loop.  The sequential mapped netlist has DFF feedback loops,

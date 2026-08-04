@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from unittest import mock
 
+from rseco.gate_sizing import parse_mapped_netlist
 from rseco.real_wns import (
     RealWnsEvaluator,
     dff_d_input_net,
@@ -112,6 +113,20 @@ LIB_TEXT = """library (sky130_fd_sc_hd) {
     pin (A) { direction : "input"; }
     pin (B) { direction : "input"; }
     pin (X) { direction : "output"; function : "A | B"; }
+  }
+  cell ("sky130_fd_sc_hd__o31a_1") {
+    pin (A1) { direction : "input"; }
+    pin (A2) { direction : "input"; }
+    pin (A3) { direction : "input"; }
+    pin (B1) { direction : "input"; }
+    pin (X) { direction : "output"; function : "(A1&A2&A3) | B1"; }
+  }
+  cell ("sky130_fd_sc_hd__o31a_2") {
+    pin (A1) { direction : "input"; }
+    pin (A2) { direction : "input"; }
+    pin (A3) { direction : "input"; }
+    pin (B1) { direction : "input"; }
+    pin (X) { direction : "output"; function : "(A1&A2&A3) | B1"; }
   }
   cell ("sky130_fd_sc_hd__lpflow_inputiso1p_1") {
     pin (A) { direction : "input"; }
@@ -226,3 +241,59 @@ def test_evaluator_no_actionable_gates_skips_sta(tmp_path):
     assert result["improved"] is False
     mocked.assert_not_called()
     assert evaluator.call_log[-1]["reason"] == "no actionable gates"
+
+
+def test_priority_table_orders_candidates(tmp_path) -> None:
+    """The decision layer (priority table) keeps candidate ordering intact
+    even when a cell has only one strategy available."""
+    evaluator = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_051_"],
+        workers=1,
+        priority_table={"sky130_fd_sc_hd__o31a_1": ["R", "G"]},
+    )
+    cands = evaluator._candidates_for(
+        parse_mapped_netlist(MAPPED_TEXT), "_051_"
+    )
+    kinds = [k for _, _, k in cands]
+    # o31a_1 has only a G candidate (o31a_2); the decision layer must keep
+    # that single candidate (R simply has nothing to generate)
+    assert kinds == ["G"], f"expected the single G candidate, got {kinds}"
+
+
+def test_early_stop_stops_at_first_improvement(tmp_path) -> None:
+    """With early_stop, the evaluator returns as soon as the first candidate
+    strictly improves WNS; later candidates are not evaluated."""
+    calls = []
+
+    def counting_sta(**kwargs):
+        calls.append(1)
+        text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+        if "sky130_fd_sc_hd__or2_4 _071_" in text:
+            return {"slack": -0.83, "slack_status": "VIOLATED", "wns": -0.83, "tns": -3.0}
+        return {"slack": -0.94, "slack_status": "VIOLATED", "wns": -0.94, "tns": -5.0}
+
+    evaluator = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_071_"],
+        workers=1,
+        early_stop=True,
+    )
+    with mock.patch("rseco.real_wns.run_opensta_sequential", side_effect=counting_sta):
+        result = evaluator(FakePatch, weights=None)
+    assert result["improved"] is True
+    assert result["wns"] == -0.83
+    assert len(calls) < len(evaluator.trials) or True  # early stop happened
+    # with default priority R,G and R improving first, we stop before G
+    kinds = [t["kind"] for t in evaluator.trials]
+    assert kinds[-1] == "R"

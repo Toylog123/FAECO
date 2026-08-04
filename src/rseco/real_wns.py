@@ -36,6 +36,7 @@ from .gate_sizing import (
 )
 from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
 from .opensta import run_opensta_sequential
+from .strategy_selector import exploration_order
 
 
 #: report_checks line: ``   0.36    0.69 v _079_/X (sky130_fd_sc_hd__or3_1)``
@@ -134,6 +135,8 @@ class RealWnsEvaluator:
         ),
         tns_aware: bool = False,
         max_instances: int = 8,
+        priority_table: dict | None = None,
+        early_stop: bool = False,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
@@ -150,6 +153,8 @@ class RealWnsEvaluator:
         self.buf_types = buf_types
         self.tns_aware = tns_aware
         self.max_instances = max_instances
+        self.priority_table = priority_table or {}
+        self.early_stop = early_stop
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
@@ -183,7 +188,12 @@ class RealWnsEvaluator:
                 cells, inst, fanout, buf_types=self.buf_types, output_pins=output_pins
             ):
                 cands.append(("buf:" + buf_type + ":" + pin + ":" + new_net, {}, "B"))
-        return cands
+        # decision layer: reorder candidates by the per-cell-type strategy
+        # priority table (fallback R,G,B), keeping the G/R exploration guard.
+        order = self.priority_table.get(cell.cell_type, ("R", "G", "B"))
+        rank = {k: i for i, k in enumerate(order)}
+        cands.sort(key=lambda c: (rank.get(c[2], len(order)), c[0]))
+        return exploration_order(cands)
 
     def _apply(self, text: str, inst: str, kind: str, new_type: str, pin_map: dict) -> str:
         if kind == "R":
@@ -253,27 +263,16 @@ class RealWnsEvaluator:
                 job_index += 1
 
         results: list[dict] = []
-        if self.workers > 1 and len(jobs) > 1:
-            with ThreadPoolExecutor(max_workers=self.workers) as ex:
-                futures = [ex.submit(self._eval_one, j) for j in jobs]
-                results = [f.result() for f in futures]
-        else:
-            for j in jobs:
-                results.append(self._eval_one(j))
-
         best_wns = self.baseline_wns
         best_tns = self.baseline_tns
         best: dict | None = None
-        for r in results:
-            trial = dict(r)
-            trial["patch_id"] = patch_id
-            trial["iteration"] = iteration
-            trial["accepted"] = False
-            self.trials.append(trial)
+
+        def _accept_result(r: dict) -> bool:
+            nonlocal best_wns, best_tns, best
             wns = r["wns"]
             tns = r.get("tns")
             if wns is None:
-                continue
+                return False
             if wns > best_wns or (
                 self.tns_aware
                 and wns == best_wns
@@ -284,6 +283,33 @@ class RealWnsEvaluator:
                 best_wns = wns
                 best_tns = tns
                 best = r
+                return True
+            return False
+
+        if self.workers > 1 and len(jobs) > 1:
+            # parallel: evaluate all, keep deterministic full-search result
+            with ThreadPoolExecutor(max_workers=self.workers) as ex:
+                futures = [ex.submit(self._eval_one, j) for j in jobs]
+                results = [f.result() for f in futures]
+            for r in results:
+                _accept_result(r)
+        else:
+            # serial: evaluate in priority order; with early_stop, stop at
+            # the first candidate that strictly improves WNS (decision-layer
+            # value: fewer STA calls for the same result).
+            for j in jobs:
+                r = self._eval_one(j)
+                results.append(r)
+                improved_now = _accept_result(r)
+                if self.early_stop and improved_now:
+                    break
+
+        for r in results:
+            trial = dict(r)
+            trial["patch_id"] = patch_id
+            trial["iteration"] = iteration
+            trial["accepted"] = False
+            self.trials.append(trial)
         if best is not None:
             self.trials[-len(results) + results.index(best)]["accepted"] = True
 
