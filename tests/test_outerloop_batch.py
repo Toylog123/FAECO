@@ -43,6 +43,7 @@ def _args(tmp, circuits, parallel=2, early=False, priority_table_dir=None):
         candidates_per_iteration=8, no_feedback=False, enable_buffer=False,
         priority_table_dir=priority_table_dir,
         tns_aware=False, max_instances=8, priority_table=None, early_stop=early,
+        iscas89_dir=Path("benchmarks/raw/iscas89"),
     )
 
 
@@ -125,6 +126,18 @@ class OuterLoopBatchTest(unittest.TestCase):
         s382_cmd = next(cmd for cmd in FakePopen.created if "--circuit" in cmd and cmd[cmd.index("--circuit") + 1] == "s382")
         self.assertIn(str(tbl_dir / "s27_loocv.json"), s27_cmd)
         self.assertIn(str(tbl_dir / "s382_loocv.json"), s382_cmd)
+
+
+    def test_forwards_iscas89_dir(self):
+        tmp = Path(tempfile.mkdtemp())
+        args = _args(tmp, "b01,b02", early=False)
+        args.iscas89_dir = Path("benchmarks/raw/itc99/v")
+        with mock.patch.object(self.batch, "parse_args", return_value=args), \
+             mock.patch.object(self.batch.subprocess, "Popen", FakePopen):
+            self.batch.main()
+        cmd0 = FakePopen.created[0]
+        i = cmd0.index("--iscas89-dir")
+        self.assertEqual(cmd0[i + 1], str(Path("benchmarks/raw/itc99/v")))
 
 
 if __name__ == "__main__":

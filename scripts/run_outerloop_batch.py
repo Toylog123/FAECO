@@ -55,6 +55,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--priority-table-dir", type=Path, default=None,
                    help="Dir of per-circuit {circuit}_loocv.json tables; overrides --priority-table")
     p.add_argument("--early-stop", action="store_true")
+    p.add_argument("--iscas89-dir", type=Path, default=ROOT / "benchmarks" / "raw" / "iscas89",
+                   help="Dir containing <circuit>.v netlists (default ISCAS89 dir)")
     return p.parse_args()
 
 
@@ -70,6 +72,7 @@ def main() -> int:
     runner_cmd = [
         sys.executable,
         str(RUNNER),
+        "--iscas89-dir", str(args.iscas89_dir),
         "--period", str(args.period),
         "--max-iterations", str(args.max_iterations),
         "--candidates-per-iteration", str(args.candidates_per_iteration),
