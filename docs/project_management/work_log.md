@@ -49,6 +49,9 @@
 | LOG-20260804-39 | **ITC-99 大电路 b14-b22：6/6 真实改善（techmap 修复 Yosys OOM）** | experiments/20260804_itc99_outerloop_large{,_2}/（A-only）| b14 G:or4 -12.23→-12.19、b15 R:nor4bb→and4bb -12.35→-12.30、b17 G:nor4b -16.10→-15.62、b20/b21 G:and3b -11.2→-11.17/-11.29→-11.27、b22 G:mux2 -12.08→-12.06；此前 $lut→$shr 膨胀 OOM，转换器加 techmap 后 $lut→$_MUX_ 可回读
 | LOG-20260804-40 | **b18/b19 数据源修复：bench→blif 转换 + 诚实边界记录** | scripts/convert_itc99_bench_to_blif.py + benchmarks/raw/itc99/bench/（A-only）| 发行版 b18/b19.blif 截断（仅剩 latch、逻辑表丢失），从上游恢复完整 .bench（b18 3320 DFF/113K 门、b19 6642 DFF/231K 门）并转 blif；完整 b18/b19 已生成 v（33.6MB/73MB），但 Yosys 0.9 32 位 read_verilog 内存爆（bad_alloc），b18/b19 本次不参与泛化表，诚实记录
 
+| LOG-20260804-41 | **ITC-99 泛化结果独立核验：通过（逐电路对照 json vs 文档）** | experiments/20260804_itc99_outerloop{,_large,_large2}/ + 20260804_itc99_batch_smoke/（A-only 只读核验）+ docs/engineering/n31_05_sequential_eco.md §12.7 | 逐电路核对 19 个可跑电路的 baseline/final WNS 与修复类型：17/19 改善（b03-b17/b20-b22），数值与文档表格完全一致（b10 -1.42→-1.18、b15 -12.35→-12.30 为 R 修复，b17 -16.10→-15.62 最大改善）；b01/b02 无候选/无改善、b18 映射失败均与记录一致；R 修复 patch id 与关键路径 cover 一致。结论：§12.7 表格与论文 Table 数据可信 |
+
+
 
 ## 2026-08-03
 
