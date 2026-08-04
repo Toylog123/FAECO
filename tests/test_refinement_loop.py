@@ -61,3 +61,28 @@ def test_loop_tracks_weights_changes() -> None:
     assert len(seen_actions) >= 1
     assert "increase_boundary_penalty" in seen_actions[0]
 
+
+def test_loop_without_feedback_keeps_weights_fixed() -> None:
+    """Ablation control: with enable_feedback=False the loop still runs
+    iterations but never updates weights (no refine_weights calls)."""
+    from rseco.refinement import RefinementWeights
+
+    refine_calls = {"n": 0}
+
+    def fake_eval(failures, weights):
+        return False, None
+
+    def on_refine(actions):
+        refine_calls["n"] += 1
+
+    result = simulate_refinement_loop(
+        fake_eval,
+        RefinementConfig(max_iterations=3),
+        enable_feedback=False,
+        on_refine=on_refine,
+    )
+    assert result["success"] is False
+    assert result["iterations"] == 3
+    assert refine_calls["n"] == 0
+    # weights should be unchanged defaults
+    assert result["weights"] == RefinementWeights()

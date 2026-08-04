@@ -292,6 +292,7 @@ def run_multi_iteration_case(
     case_dir: str | Path,
     *,
     max_iterations: int = 10,
+    enable_feedback: bool = True,
     artifact_dir: str | Path | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
@@ -341,7 +342,9 @@ def run_multi_iteration_case(
         return False, None
 
     result = simulate_refinement_loop(
-        evaluator, RefinementConfig(max_iterations=max_iterations)
+        evaluator,
+        RefinementConfig(max_iterations=max_iterations),
+        enable_feedback=enable_feedback,
     )
     result["case_id"] = case.case_id
     result["logic_level_before"] = logic_level_before

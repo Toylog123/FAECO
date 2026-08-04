@@ -211,3 +211,15 @@ s820 迁移失败的根因：决策表把 B 排最前，改变了每轮贪心选
 
 这解决了 10.1 的 case 限制：logic_level_reduction=0 时，改用 WNS 改善作为成功标准即可让外环真正"恢复"。真实接入需把 Stage A 的 patch 替换后跑 OpenSTA（复用 run_opensta，需 mapped netlist + clock），作为后续工程项。
 
+
+### 10.3 消融实验（关反馈 vs 开反馈，2026-08-04）
+
+simulate_refinement_loop 新增 enable_feedback 参数（默认 True；False 为消融对照，权重固定）。5 个 case（c17x2/c432/c499/c880）分别跑开/关反馈 5 轮：
+
+| case | 开反馈失败集 | 关反馈失败集 | 差异 |
+|---|---|---|---|
+| c17x2 | [F3,F4] | [F3,F4] | 无 |
+| c432/c499/c880 | [F4] | [F4] | 无 |
+
+诚实结论：**当前 case 上消融无法区分反馈效果**——weighted_cut_candidates 对这些小 case 的权重变化不敏感（F3 消除是首轮权重就生效，不是多轮积累；F4 因 reduction=0 永不满足）。需更大的 case（权重变化真正改变 cut 边界）或 WNS 成功标准才能体现反馈价值。这是数据/实现局限，不是机制本身无效（测试已验证 refine_weights 正确触发）。
+

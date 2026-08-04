@@ -29,12 +29,14 @@ def simulate_refinement_loop(
     config: RefinementConfig | None = None,
     *,
     on_refine: Callable[[list[str]], None] | None = None,
+    enable_feedback: bool = True,
 ) -> dict:
     """Run the failure-aware refinement loop.
 
     evaluator(failures, weights) returns (success, patch_id).  On failure the
-    loop classifies the failure set, calls refine_weights, and re-invokes the
-    evaluator with updated weights.  History records each iteration.
+    loop classifies the failure set and (if enable_feedback) calls
+    refine_weights, then re-invokes the evaluator with updated weights.
+    enable_feedback=False is the ablation control: weights stay fixed.
     """
     config = config or RefinementConfig()
     weights = RefinementWeights()
@@ -60,16 +62,20 @@ def simulate_refinement_loop(
                 "history": history,
                 "weights": weights,
             }
-        decision = refine_weights(weights, failures)
-        weights = decision.weights
-        if on_refine is not None:
-            on_refine(decision.actions)
-        actions_history.append(decision.actions)
+        decision = refine_weights(weights, failures) if enable_feedback else None
+        if decision is not None:
+            weights = decision.weights
+            actions = decision.actions
+        else:
+            actions = []
+        if on_refine is not None and enable_feedback:
+            on_refine(actions)
+        actions_history.append(actions)
         history.append(
             {
                 "iteration": iteration,
                 "status": "refined",
-                "actions": decision.actions,
+                "actions": actions,
                 "failures": sorted(f.value for f in failures),
             }
         )

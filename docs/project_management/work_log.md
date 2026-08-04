@@ -22,6 +22,7 @@
 | LOG-20260804-13 | 外环多轮闭环实现（X19） | src/rseco/refinement_loop.py + flow.py run_multi_iteration_case + tests（3 loop + 2 flow） | 真正 multi-iteration loop：cut->classify->refine_weights->re-cut；155 测试全绿。外环闭环从"未实现"变"已实现（模块+测试+flow 接入）" |
 | LOG-20260804-14 | 外环端到端验证 + evaluator 修复 | flow.py evaluator 改用 weighted_cut_candidates(cone, weights)（原用 fixed_min_cut 导致权重不参与 cut） | 5 case 验证：机制工作（c432/c499/c880 的 F3 被权重反馈消除）；但全部 reduction=0 导致 F4 永不满足——case 数据限制，需有下降空间的 case 或改用 WNS 成功标准 |
 | LOG-20260804-15 | WNS 驱动成功标准验证 | tests/test_refinement_wns.py（2 项） | 循环 evaluator 回调天然支持 WNS 改善即成功：WNS [-1.5,-1.2,-0.9] 第 3 次成功停止；首次 success 立即停止。解决 10.1 的 reduction=0 限制，真实接入需 patch 后跑 OpenSTA（后续工程项） |
+| LOG-20260804-16 | 消融实验（反馈开关） | src/rseco/refinement_loop.py enable_feedback + tests（+3）+ 5 case 消融 | 关反馈时权重固定、不触发 refine（测试验证）；5 case 上 ON/OFF 失败集相同——weighted cut 对小 case 权重不敏感（F3 首轮消除、F4 reduction=0 永不满足），诚实记录为数据局限，需更大 case 或 WNS 标准体现反馈价值 |
 
 ## 2026-08-03
 
