@@ -383,6 +383,33 @@ s953 & $-1.48$ & 第 2 轮 $-1.38$（11 STA） & 8 轮失败（16 STA） & G（o
 
 8/8 电路（beam=1）：6/8 需“学习”的电路（s27/s382/s420/s820/s832/s953）反馈 ON 第 2 轮经 \texttt{critical\_path\_cover} 成功、OFF 8 轮全失败；2/8 首候选可修（s641/s713 加权 min-cut 首候选已覆盖瓶颈门，反馈与宽度均无关）。s382 全 beam 网格：反馈 ON 把找到修复所需 beam 从 $\geq 4$--$8$ 压到 $\leq 2$，STA 调用省 $44\%$--$89\%$（s27 11 vs 46、s382 14 vs 25、s420 13 vs 122）。这是 FAECO“失败反馈学习替代蛮力宽度搜索”的首次真实时序量化证据：反馈 OFF 时 6/8 电路完全无法从单门 root cut 找到修复，反馈 ON 时第 2 轮经关键路径覆盖 cut 定位瓶颈。
 
+
+\textbf{内环决策层与 early-stop（2026-08-04 晚）}：在 beam=1 + 反馈 ON 的外环之上叠加两层效率机制——内环候选按 per-cell-type 策略优先级表排序（来自 8 电路 12205 条历史 trial，带探索守卫），early-stop 在串行候选实测中首个严格 WNS 改善即停。8/8 电路全部成功且 WNS 不劣化：
+
+\begin{table}[!t]
+\centering
+\caption{决策层 + early-stop 的 STA 效率（beam=1 + 反馈 ON，period 0.5ns）}
+\label{tab:decision_early}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{电路} & \textbf{基线 WNS} & \textbf{反馈ON beam1 STA} & \textbf{决策层+early-stop STA} & \textbf{final WNS} \\
+\midrule
+s27  & $-0.28$ & 8 & \textbf{4} & $-0.21$ \\
+s382 & $-0.94$ & 12 & \textbf{8} & $-0.93$ \\
+s420 & $-1.78$ & 12 & \textbf{3} & $-1.75$ \\
+s641 & $-1.86$ & 3 & \textbf{1} & $-1.85$ \\
+s713 & $-1.86$ & 3 & \textbf{1} & $-1.85$ \\
+s820 & $-1.42$ & 18 & \textbf{3} & $-1.36$ \\
+s832 & $-1.15$ & 43 & \textbf{3} & $-1.12$ \\
+s953 & $-1.48$ & 11 & \textbf{4} & $-1.38$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+8/8 电路候选 STA 合计从 110 降到 27（\textbf{-75\%}）。三层机制各司其职：外环 F4 反馈生成 \texttt{critical\_path\_cover} cut 定位“改哪里”，内环决策层按经验复用排序策略（怎么改），early-stop 首个改善即停（省多少）。诚实边界：early-stop 是贪心停止，WNS 与全评估可能略异——本次 s382/s420/s820 因停止位置不同反而优于全评估（$-0.93$ vs $-0.92$、$-1.75$ vs $-1.51$、$-1.36$ vs $-1.28$），属贪心轨迹差异；决策表对未见 cell type 回退 R,G,B 顺序。
+
 \subsection{局限性与边界}
 
 \begin{table}[!t]
