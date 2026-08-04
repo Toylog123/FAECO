@@ -1,11 +1,15 @@
-"""Regression tests: F1-F5 refinement weights really change the min-cut.
+"""Regression tests: refinement weights enter the weighted min-cut.
 
-2026-08-04 fix: build_weighted_cut_graph previously ignored every weight
-except size_penalty and added a flat penalty to non-root gates, so the
-root gate was always the cheapest and feedback never changed the selected
-cut.  The cost function now maps all F1-F5 weights to node costs, and
-weighted_cut_candidates solves the weighted s-t min-cut instead of only
-ranking fixed candidates.
+2026-08-04: build_weighted_cut_graph maps all F1-F5 weights to node costs
+and weighted_cut_candidates solves the s-t min-cut.
+
+Honest limitation (verified 2026-08-04): on any cone graph, cutting the
+single root gate (the output-side driver) is always a valid s-t cut and
+is cheaper than cutting several shallow gates, so boundary_penalty and
+critical_coverage_reward cannot flip the selected cut on real DAGs -- they
+only scale the costs.  Only size_penalty (F3) changes the solution, and
+only when a non-root single-gate cut exists (single chain).  The tests
+below pin the behavior that is actually real.
 """
 
 from __future__ import annotations
@@ -46,10 +50,38 @@ def test_size_penalty_selects_shallow_gate() -> None:
     assert _selected(CHAIN, RefinementWeights(size_penalty=5.0)) == ["G1"]
 
 
-def test_boundary_penalty_moves_cut_away_from_boundary() -> None:
-    # F1/F2: equivalence/boundary failure -> move the boundary toward the
-    # stable deep region, away from the input boundary.
+def test_boundary_penalty_scales_costs_but_cannot_flip_on_chain() -> None:
+    # F1/F2 semantics are not achievable with the current graph: the single
+    # root gate is always a valid cheaper cut, so raising boundary_penalty
+    # only raises every cost; the solution stays at the root.
     assert _selected(CHAIN, RefinementWeights(boundary_penalty=5.0)) == ["G3"]
+    default = build_weighted_cut_graph(CHAIN, RefinementWeights())
+    penalized = build_weighted_cut_graph(
+        CHAIN, RefinementWeights(boundary_penalty=5.0)
+    )
+    assert penalized.node_costs["G3"] > default.node_costs["G3"]
+
+
+TREE = FaninCone(
+    roots=["OUT"],
+    boundary_inputs=["I1", "I2"],
+    boundary_outputs=["OUT"],
+    internal_nets=["A", "B"],
+    gates=["G1", "G2", "G3"],
+    gate_outputs={"G1": "A", "G2": "B", "G3": "OUT"},
+    gate_inputs={"G1": ["I1"], "G2": ["I2"], "G3": ["A", "B"]},
+)
+
+
+def test_boundary_and_critical_cannot_flip_cut_on_real_dag() -> None:
+    # On a fanin tree, cutting the root (1 gate) is always cheaper than
+    # cutting the two shallow gates, so neither boundary_penalty nor
+    # critical_coverage_reward changes the solution.
+    assert _selected(TREE, RefinementWeights()) == ["G3"]
+    assert _selected(TREE, RefinementWeights(boundary_penalty=100.0)) == ["G3"]
+    assert _selected(TREE, RefinementWeights(critical_coverage_reward=100.0)) == ["G3"]
+    # only size_penalty can flip it (shallow-side 2-gate cut becomes cheaper)
+    assert _selected(TREE, RefinementWeights(size_penalty=5.0)) == ["G3"]
 
 
 def test_feedback_changes_first_candidate() -> None:

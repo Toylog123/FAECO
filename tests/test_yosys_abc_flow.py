@@ -105,7 +105,7 @@ class LibertyCellsCecTest(unittest.TestCase):
         # absent (it is written by an earlier probe run; keep test robust)
         if self.CELLS_V.exists():
             return self.CELLS_V
-        full = ROOT / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
+        full = self.ROOT / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
         if not full.exists():
             self.skipTest("SKY130 cells model not available")
         return full

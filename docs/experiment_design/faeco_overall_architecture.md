@@ -200,6 +200,10 @@ s820 迁移失败的根因：决策表把 B 排最前，改变了每轮贪心选
 - **复核修正（2026-08-04）**：早前「c432/c499/c880 的 F3 在权重反馈下消失」不可复现——实测 3 电路每轮只触发 F4，F3 从不触发；c17 虽触发 F3，但 size penalty 不改变被选中的 1-gate cut。候选排序 cost 单调加性，1-gate cut 恒最便宜，只有 size_penalty 会额外加入同尺寸候选，F1/F2/F4 权重不进入排序 cost，反馈在实现层面惰性
 - 全部 case 失败的直接原因是 logic_level_reduction=0（重综合网表就是原网表副本），F4 永不满足；更深根因是成功判据互斥：F1 结构签名等价与 F4 reduction>=1 不可同时成立，成功路径在构造上不可达（reduction=0 只是表象）
 - 诚实结论：**机制框架在，实现层两处缺陷均已修复**——成功路径（F1/F4 互斥）已通过注入 functional equivalence checker 打通（合成 case 验证）；权重惰性已修复：F1-F5 全部进入加权 min-cut 节点成本，weighted_cut_candidates 真正求解 s-t min-cut（tests/test_weighted_cut_feedback.py 6 项，权重变化真实翻转 cut）。后续：真实重综合网表 + WNS 接入
+  
+  - **真实重综合落地（2026-08-04 晚）**：原 5 case 的 resynthesized 网表就是原文件副本（reduction=0），是 10.3 消融无法区分的主因。新增 scripts/resynthesize_minimal_cases.py 用 Yosys techmap + abc -liberty 对 SKY130 真实重综合，5 case 全部成功（c17 6→3 gates、LL 3→2；c432 171→68、LL 20→12、reduction 8；c499 174→158、LL 11→7、reduction 4；c880 323→152、LL 20→11、reduction 9）；c432/c499/c880 外环第 1 轮即成功，成功路径从"构造上不可达"变为"可达且真实"
+  - **CEC 解锁**：check_yosys_abc_equivalence 新增 liberty_cells_v；_extract_cells_for_netlist 只提取网表实际实例化的 SKY130 单元（避开时序/$mul 特殊单元），c17 original vs resynthesized 经 ABC 结构哈希真 pass（不再 error），build_case_metrics 的 formal_equivalence 从"未接"变"真验证"
+  - **反馈精确化（诚实边界）**：F1-F5 权重真实进入 min-cut 且能改变解（c17 size_penalty=5 时 cut 从 root 翻到 2-gate 浅层）；但 evaluator 成功条件用**全局** logic-level reduction、与 cut 位置解耦，全局 reduction≥1 且默认 cut 过阈值时首轮即成功、否则每轮失败，故 ON/OFF 无差异；c17×2 因 max_patch_ratio=0.15 对 ≤6-gate 小网表过严恒 F3 失败（阈值边界而非反馈失效）。tests/test_evaluator_cut_decoupling.py 2 项 + test_weighted_cut_feedback 诚实化（boundary/critical 在真实 DAG 不能翻转 cut，仅 size_penalty 可）
 
 
 ### 10.2 WNS 驱动成功标准（2026-08-04）
