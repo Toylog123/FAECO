@@ -66,14 +66,13 @@ def _functional_ok(original, resynthesized, *, outputs):
 
 
 def test_wns_evaluator_drives_success(tmp_path) -> None:
-    """When a wns_evaluator is injected, the loop succeeds as soon as WNS
-    strictly improves, even though logic-level reduction is >= 1 and the
-    default criterion would also succeed -- this pins that the WNS path is
-    wired through the evaluator and recorded in history."""
+    """When a wns_evaluator is injected, the loop succeeds as soon as a
+    candidate WNS strictly improves (candidate cuts are explored in
+    weight order within each iteration)."""
     case_dir = _make_case(tmp_path)
     wns_series = iter([-1.5, -1.2, -0.9])
 
-    def wns_evaluator(patch_id, current_weights):
+    def wns_evaluator(patch, current_weights):
         wns = next(wns_series)
         return {"wns": wns, "improved": wns >= -1.0}
 
@@ -85,9 +84,10 @@ def test_wns_evaluator_drives_success(tmp_path) -> None:
         wns_evaluator=wns_evaluator,
     )
     assert result["success"] is True
-    assert result["iterations"] == 3
     assert result["final_patch_id"] is not None
-    # the last history entry is success and must carry the accepted wns
+    # success happens on the candidate that first improves WNS; the
+    # preceding candidates in the same iteration were measured and
+    # recorded in wns_history before acceptance.
     last = result["history"][-1]
     assert last["status"] == "success"
     assert last.get("wns") == -0.9
@@ -95,14 +95,12 @@ def test_wns_evaluator_drives_success(tmp_path) -> None:
 
 
 def test_wns_evaluator_not_improving_never_succeeds(tmp_path) -> None:
-    """If WNS never improves, the loop must exhaust max_iterations and
-    record all wns values in history."""
+    """If WNS never improves, the loop must exhaust max_iterations, record
+    every measured wns (one per candidate cut per iteration) in history."""
     case_dir = _make_case(tmp_path)
-    wns_series = iter([-1.5, -1.5, -1.5])
 
-    def wns_evaluator(patch_id, current_weights):
-        wns = next(wns_series)
-        return {"wns": wns, "improved": wns >= -1.0}
+    def wns_evaluator(patch, current_weights):
+        return {"wns": -1.5, "improved": False}
 
     result = run_multi_iteration_case(
         case_dir,
@@ -113,7 +111,12 @@ def test_wns_evaluator_not_improving_never_succeeds(tmp_path) -> None:
     )
     assert result["success"] is False
     assert result["iterations"] == 3
-    assert result["wns_history"] == [-1.5, -1.5, -1.5]
+    assert len(result["wns_history"]) >= 3
+    assert all(w == -1.5 for w in result["wns_history"])
+    # the refined history entries carry the measured wns of the last
+    # candidate tried in that iteration
+    refined = [h for h in result["history"] if h["status"] == "refined"]
+    assert len(refined) == 3
 
 
 def test_without_wns_evaluator_uses_reduction_criterion(tmp_path) -> None:
@@ -129,3 +132,34 @@ def test_without_wns_evaluator_uses_reduction_criterion(tmp_path) -> None:
     assert result["success"] is True
     assert result["iterations"] == 1
     assert "wns_history" not in result
+
+
+def test_wns_evaluator_receives_patch_object(tmp_path) -> None:
+    """The wns_evaluator must receive the full patch candidate (not just the
+    id) so a real runner can map cut gates onto the real netlist."""
+    case_dir = _make_case(tmp_path)
+    received: list[dict] = []
+
+    def wns_evaluator(patch, current_weights):
+        received.append(
+            {
+                "patch_id": patch.patch_id,
+                "gates": list(patch.gates),
+                "boundary_inputs": list(patch.boundary_inputs),
+                "boundary_outputs": list(patch.boundary_outputs),
+            }
+        )
+        return {"wns": -0.8, "improved": True}
+
+    result = run_multi_iteration_case(
+        case_dir,
+        max_iterations=3,
+        enable_feedback=True,
+        equivalence_checker=_functional_ok,
+        wns_evaluator=wns_evaluator,
+    )
+    assert result["success"] is True
+    assert len(received) == 1
+    assert received[0]["patch_id"].startswith("patch_")
+    assert received[0]["gates"], "cut must contain real gates"
+    assert received[0]["boundary_outputs"], "cut must have boundary outputs"

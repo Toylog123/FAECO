@@ -27,6 +27,16 @@ class FaninCone:
         }
 
 
+def _is_sequential_gate(gate_type: str) -> bool:
+    """True for flip-flop gate types (``dff``, ``sky130_fd_sc_hd__dfxtp_1``, ...).
+
+    Sequential outputs are timing boundaries: the combinational fanin cone
+    stops there (reg-to-reg logic), which keeps the cone acyclic even when
+    the sequential netlist contains feedback loops through flops.
+    """
+    return gate_type.lower().find("dff") != -1 or "latch" in gate_type.lower()
+
+
 def extract_fanin_cone(netlist: Netlist, roots: list[str]) -> FaninCone:
     output_to_gate = {gate.output: gate for gate in netlist.gates}
     visited_gates: set[str] = set()
@@ -38,6 +48,11 @@ def extract_fanin_cone(netlist: Netlist, roots: list[str]) -> FaninCone:
             return
         gate = output_to_gate.get(signal)
         if gate is None:
+            return
+        if _is_sequential_gate(gate.gate_type):
+            # a flip-flop output behaves like a primary input for the
+            # combinational cone that feeds the timing endpoint
+            reached_inputs.add(signal)
             return
         if gate.name in visited_gates:
             return

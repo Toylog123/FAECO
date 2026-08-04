@@ -93,9 +93,19 @@ def build_case_metrics(
     )
 
     initial_patch_size = initial_patch.patch_size
-    logic_level_before = original.logic_level(case.target_output)
-    logic_level_after = resynthesized.logic_level(case.target_output)
-    reduction = logic_level_reduction(before=logic_level_before, after=logic_level_after)
+    try:
+        logic_level_before = original.logic_level(case.target_output)
+        logic_level_after = resynthesized.logic_level(case.target_output)
+        reduction = logic_level_reduction(
+            before=logic_level_before, after=logic_level_after
+        )
+    except ValueError:
+        # Sequential netlists (DFF feedback loops) have no acyclic logic
+        # level; the real success criterion is the injected WNS evaluator,
+        # so the logic-level metrics degrade to a neutral 0.
+        logic_level_before = None
+        logic_level_after = None
+        reduction = 0
 
     failures = classify_failures(
         equivalence_passed=equivalence.status == "pass",
@@ -329,7 +339,7 @@ def run_multi_iteration_case(
         and F4 (logic-level reduction) are mutually exclusive by
         construction -- a structural match implies identical logic levels.
 
-    wns_evaluator: optional callable(patch_id, weights) -> dict with keys
+    wns_evaluator: optional callable(patch, weights) -> dict with keys
         "wns" (float) and "improved" (bool).  When given, the loop uses
         WNS strict improvement as the success criterion instead of the
         default logic-level reduction >= 1, and records every measured WNS
@@ -351,46 +361,70 @@ def run_multi_iteration_case(
         equivalence = check_structural_equivalence(
             original, resynthesized, outputs=[case.target_output]
         )
-    logic_level_before = original.logic_level(case.target_output)
-    logic_level_after = resynthesized.logic_level(case.target_output)
-    reduction = logic_level_reduction(before=logic_level_before, after=logic_level_after)
+    try:
+        logic_level_before = original.logic_level(case.target_output)
+        logic_level_after = resynthesized.logic_level(case.target_output)
+        reduction = logic_level_reduction(
+            before=logic_level_before, after=logic_level_after
+        )
+    except ValueError:
+        # Sequential netlists (DFF feedback loops) have no acyclic logic
+        # level; the real success criterion is the injected WNS evaluator,
+        # so the logic-level metrics degrade to a neutral 0.
+        logic_level_before = None
+        logic_level_after = None
+        reduction = 0
 
     wns_history: list[float] = []
+    #: candidate cuts explored per iteration (weighted-ordered list); a cap
+    #: keeps the real-STA cost of one iteration bounded.
+    max_candidates_per_iteration = 8
     def evaluator(failures, weights):
-        # one iteration: weighted cut with current weights (so refinement
-        # actually changes the boundary), build candidate, classify.
+        # one iteration: explore the weighted-ordered candidate cuts with the
+        # current weights (so refinement actually changes the boundary /
+        # candidate ordering), build a patch for each, and accept the first
+        # candidate whose real-STA WNS strictly improves.  Without an
+        # injected wns_evaluator the classic reduction >= 1 criterion is used
+        # on the first candidate (legacy behaviour).
         candidates = weighted_cut_candidates(cone, weights)
         if not candidates:
             failures.add(FailureType.PATCH_TOO_LARGE)
             return False, None
-        boundary = candidates[0]
-        patch = make_patch_candidate(
-            case_id=case.case_id, boundary=boundary, equivalence=equivalence
-        )
-        failures.update(
-            classify_failures(
-                equivalence_passed=equivalence.status == "pass",
-                boundary_closed=True,
-                patch_size=patch.patch_size,
-                original_gate_count=original.gate_count,
-                logic_level_before=logic_level_before,
-                logic_level_after=logic_level_after,
-                verification_runtime_s=0.0,
+        tried_candidates = 0
+        for boundary in candidates[:max_candidates_per_iteration]:
+            tried_candidates += 1
+            patch = make_patch_candidate(
+                case_id=case.case_id, boundary=boundary, equivalence=equivalence
             )
-        )
+            failures.update(
+                classify_failures(
+                    equivalence_passed=equivalence.status == "pass",
+                    boundary_closed=True,
+                    patch_size=patch.patch_size,
+                    original_gate_count=original.gate_count,
+                    logic_level_before=logic_level_before or 0,
+                    logic_level_after=logic_level_after or 0,
+                    verification_runtime_s=0.0,
+                )
+            )
+            if wns_evaluator is not None:
+                # real-STA hook: the injected runner measures the applied
+                # candidate WNS and reports whether it strictly improved.
+                wns_info = wns_evaluator(patch, weights)
+                wns = wns_info["wns"]
+                wns_history.append(wns)
+                if wns_info["improved"]:
+                    return True, patch.patch_id, {"wns": wns}
+                # no timing gain on this candidate: keep exploring the
+                # remaining cuts in this iteration before refining weights.
+                continue
+            if not failures and reduction >= 1:
+                return True, patch.patch_id
+            # legacy single-candidate behaviour: stop after the first cut.
+            break
         if wns_evaluator is not None:
-            # real-STA hook: the injected runner measures the applied
-            # candidate WNS and reports whether it strictly improved.
-            wns_info = wns_evaluator(patch.patch_id, weights)
-            wns = wns_info["wns"]
-            wns_history.append(wns)
-            if wns_info["improved"]:
-                return True, patch.patch_id, {"wns": wns}
             failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
-            return False, None, {"wns": wns}
-
-        if not failures and reduction >= 1:
-            return True, patch.patch_id
+            return False, None
         return False, None
 
     result = simulate_refinement_loop(

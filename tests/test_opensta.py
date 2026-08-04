@@ -178,3 +178,67 @@ class RunOpenStaTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class RunOpenStaSequentialTest(unittest.TestCase):
+    def test_run_opensta_sequential_with_fake_sta(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            verilog = temp_path / "mapped.v"
+            verilog.write_text(
+                "module s382(CK, Y);\n"
+                "  input CK;\n"
+                "  output Y;\n"
+                "  dff DFF_0 (.CK(CK), .D(Y), .Q(Y));\n"
+                "endmodule\n",
+                encoding="utf-8",
+            )
+            fake_sta = temp_path / "fake_sta_seq.py"
+            report = (
+                "Startpoint: DFF_0/_0_\n"
+                "Endpoint: DFF_0/_0_\n"
+                "  -0.94   slack (VIOLATED)\n"
+                "TNS_BEGIN\n"
+                "tns max -5.00\n"
+                "TNS_END\n"
+                "worst slack max -0.94\n"
+                "worst slack min 0.10\n"
+            )
+            fake_sta.write_text(
+                "import sys\n"
+                "print(" + repr(report) + ")\n"
+                "sys.exit(0)\n",
+                encoding="utf-8",
+            )
+            from rseco.opensta import run_opensta_sequential
+            result = run_opensta_sequential(
+                netlist_path=verilog,
+                period=0.5,
+                output_dir=temp_path / "sta",
+                top_module="s382",
+                sta_command=f"{sys.executable} {fake_sta}",
+                timeout_s=30.0,
+            )
+            self.assertEqual(result["wns"], -0.94)
+            self.assertEqual(result["tns"], -5.00)
+            self.assertEqual(result["slack"], -0.94)
+            self.assertEqual(result["slack_status"], "VIOLATED")
+            self.assertTrue((temp_path / "sta" / "sta.tcl").exists())
+            tcl = (temp_path / "sta" / "sta.tcl").read_text(encoding="utf-8")
+            self.assertIn("create_clock -name clk -period 0.5 [get_ports CK]", tcl)
+
+    def test_run_opensta_sequential_missing_tool_returns_none_metrics(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            verilog = temp_path / "mapped.v"
+            verilog.write_text("module s382(CK, Y); endmodule\n", encoding="utf-8")
+            from rseco.opensta import run_opensta_sequential
+            result = run_opensta_sequential(
+                netlist_path=verilog,
+                period=0.5,
+                output_dir=temp_path / "sta",
+                top_module="s382",
+                sta_command="sta-nonexistent-binary",
+                timeout_s=10.0,
+            )
+            self.assertIsNone(result["wns"])
+            self.assertIn("error", result)

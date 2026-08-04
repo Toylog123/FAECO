@@ -17,6 +17,16 @@ from pathlib import Path
 
 from .toolchain import resolve_tool_command
 
+LIB_SEQ = (
+    Path(__file__).resolve().parents[2]
+    / "benchmarks"
+    / "raw"
+    / "openroad_flow_scripts_sky130hd"
+    / "da8f092a02a8e75658cc3100691aabff05f35629"
+    / "lib"
+    / "sky130_fd_sc_hd__tt_025C_1v80.lib"
+)
+
 
 @dataclass(frozen=True)
 class StaResult:
@@ -178,6 +188,94 @@ def build_pre_layout_sta_script(
         "report_worst_slack -min\n"
         "exit\n"
     )
+
+
+
+_SEQ_SLACK_RE = re.compile(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)")
+_SEQ_WNS_RE = re.compile(r"worst slack max\s+(-?\d+\.\d+)")
+_SEQ_TNS_RE = re.compile(r"tns\s+max\s+(-?\d+\.\d+)")
+
+
+def run_opensta_sequential(
+    *,
+    netlist_path,
+    period,
+    output_dir,
+    top_module=None,
+    multi_path=False,
+    sta_command="wsl-sta",
+    timeout_s=180.0,
+):
+    """Run sequential pre-layout STA (create_clock on CK) via OpenSTA.
+
+    Mirrors the verified ``scripts/run_sequential_timing_check.py`` flow so
+    library callers (real-WNS outer-loop evaluator) can measure candidate
+    netlists without depending on the script's import context.  Returns a
+    dict with keys ``slack``, ``slack_status``, ``wns``, ``tns``.
+
+    ``sta_command`` defaults to ``wsl-sta`` (``wsl.exe -d Ubuntu --
+    /usr/local/bin/sta``), matching the documented FAECO environment;
+    pass an explicit command (e.g. ``python fake_sta.py``) in tests or on
+    native-Linux setups.
+
+    ``multi_path`` appends ``report_checks -slack_max 0 -endpoint_count
+    100000`` so critical-path instances can be parsed from the report.
+    """
+    if top_module is None:
+        raw = Path(netlist_path).read_text(encoding="utf-8", errors="replace")
+        m = re.search(r"\bmodule\s+(\w+)", raw)
+        top_module = m.group(1) if m else Path(netlist_path).parent.name
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    tcl = output_dir / "sta.tcl"
+    tcl_body = (
+        "read_liberty " + _to_sta_path(LIB_SEQ) + "\n"
+        "read_verilog " + _to_sta_path(Path(netlist_path)) + "\n"
+        "link_design " + str(top_module) + "\n"
+        "create_clock -name clk -period " + str(period) + " [get_ports CK]\n"
+        "report_checks -path_delay max\n"
+    )
+    if multi_path:
+        tcl_body += "report_checks -path_delay max -slack_max 0 -endpoint_count 100000\n"
+    tcl_body += (
+        'puts "TNS_BEGIN"\n'
+        "report_tns\n"
+        'puts "TNS_END"\n'
+        "report_worst_slack -max\n"
+        "report_worst_slack -min\n"
+    )
+    tcl.write_text(tcl_body, encoding="utf-8")
+    if sta_command == "wsl-sta":
+        sta_argv = ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta"]
+    else:
+        sta_argv = _resolve_sta(sta_command=sta_command)
+    if sta_argv is None:
+        return {
+            "slack": None,
+            "slack_status": None,
+            "wns": None,
+            "tns": None,
+            "error": "OpenSTA command not found: " + str(sta_command),
+        }
+    proc = subprocess.run(
+        [*sta_argv, "-no_splash", "-exit", _to_sta_path(tcl)],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        timeout=timeout_s,
+    )
+    (output_dir / "sta.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
+    raw = proc.stdout + proc.stderr
+    slack = _SEQ_SLACK_RE.search(raw)
+    wns = _SEQ_WNS_RE.search(raw)
+    tns = _SEQ_TNS_RE.search(raw)
+    return {
+        "slack": float(slack.group(1)) if slack else None,
+        "slack_status": slack.group(2) if slack else None,
+        "wns": float(wns.group(1)) if wns else None,
+        "tns": float(tns.group(1)) if tns else None,
+    }
 
 
 def run_opensta_pre_layout(
