@@ -26,6 +26,7 @@
 | LOG-20260804-17 | 论文 method §6.1 两环闭环 + 内环决策层 | paper/draft/method.md | 更新过时的 §6（多轮 refinement 已实现非待启动）；新增 §6.1：外环 patch 级 cut refinement + 内环 cell 级 R/G/B + 决策层衔接，含 8 电路实证、s832 效率、leave-one-out 迁移、buf_8/16 负面结论 |
 | LOG-20260804-18 | 论文 experiments 补 §3.1 ISCAS89 sequential 混合修复实验 | paper/draft/experiments.md | 在 §3 之后插入 §3.1：8 电路全搜索结果表（s27 -0.28→-0.01、s382 MET +0.02 等）、决策层 s832 效率（-0.45，STA 调用 -15%）、leave-one-out 跨电路迁移 top-2 命中 94.3%-98.2%、buf_8/16 pre-layout 负面结论（诚实记录）；数据源 experiments/20260803_sequential_hybrid_tns_fixed/（A-only 不入库） |
 | LOG-20260804-19 | 论文 experiments 补 §3.2 外环 X19 实验 + limitation/后续修订同步 | paper/draft/experiments.md | §3.2：5-case 外环闭环机制验证（c432/c499/c880 的 F3 被权重反馈消除）、数据局限（reduction=0 致 F4 永不满足）、WNS 驱动成功标准（test 验证：[-1.5,-1.2,-0.9] 第 3 次成功、首次 success 立即停止）、消融 enable_feedback ON/OFF 5 case 失败集相同（诚实记录数据局限）；L31-04 更新为已解决+新边界；§7 修订第一条同步 |
+| LOG-20260804-20 | 外环 X19 根因复核 + 成功路径修复 | src/rseco/flow.py + tests/test_refinement_flow_success.py + 4 文档同步 | 复核发现：(1) F1 结构签名等价与 F4 reduction>=1 判据互斥，run_multi_iteration_case 成功路径构造上不可达；(2) 排序 cost 单调加性、1-gate cut 恒最便宜，F1/F2/F4 反馈不进 cost（惰性），「c432/c499/c880 F3 被反馈消除」不可复现（实测每轮只有 F4）。修复：注入 functional equivalence checker，成功路径可达（合成 case LL5→LL3，第 1 轮成功）；3 项新回归测试；全量 161 passed；同步修正 method §6、experiments §3.2、架构文档 §9/§10.1、task_board X19 |
 
 ## 2026-08-03
 

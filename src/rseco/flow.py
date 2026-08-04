@@ -294,12 +294,22 @@ def run_multi_iteration_case(
     max_iterations: int = 10,
     enable_feedback: bool = True,
     artifact_dir: str | Path | None = None,
+    equivalence_checker: object | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
     Unlike build_case_metrics (single refinement proxy), this drives
     cut -> classify -> refine -> re-cut until success or max_iterations.
     It reuses refine_weights via simulate_refinement_loop.
+
+    equivalence_checker: optional callable(original, resynthesized,
+        outputs=[target]) -> object with .status and .method.  When given,
+        it replaces the default structural-signature equivalence check.
+        This is required for end-to-end success: the default structural
+        check cannot pass when the resynthesized netlist is genuinely
+        restructured (reduction >= 1), because F1 (structural equivalence)
+        and F4 (logic-level reduction) are mutually exclusive by
+        construction -- a structural match implies identical logic levels.
     """
     from .refinement_loop import RefinementConfig, simulate_refinement_loop
     case_dir = Path(case_dir)
@@ -308,9 +318,14 @@ def run_multi_iteration_case(
     original = load_analysis_netlist(case.original_analysis_netlist_path)
     resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path)
     cone = extract_fanin_cone(original, roots=[case.target_output])
-    equivalence = check_structural_equivalence(
-        original, resynthesized, outputs=[case.target_output]
-    )
+    if equivalence_checker is not None:
+        equivalence = equivalence_checker(
+            original, resynthesized, outputs=[case.target_output]
+        )
+    else:
+        equivalence = check_structural_equivalence(
+            original, resynthesized, outputs=[case.target_output]
+        )
     logic_level_before = original.logic_level(case.target_output)
     logic_level_after = resynthesized.logic_level(case.target_output)
     reduction = logic_level_reduction(before=logic_level_before, after=logic_level_after)

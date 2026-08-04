@@ -116,20 +116,20 @@ python scripts/run_stage_b_pre_layout_sta.py \
 
 外环（patch 粒度）failure-aware refinement 在 Stage A 5-case（c17×2 / c432 / c499 / c880）上端到端验证：cut -> classify(F1-F5) -> refine_weights -> re-cut 循环（flow.run_multi_iteration_case + refinement_loop.simulate_refinement_loop，多轮 residual failure 与 actions 全记录）。
 
-**机制验证**：c432 / c499 / c880 初始 cut 产生 size 过大的 patch（F3），权重反馈提高 size penalty 后重切得到更小 cut，F3 在后续轮次消除——反馈确实改变 cut 边界，闭环机制工作（evaluator 已修复为 weighted cut，权重真实参与重切）。
+**根因修正（2026-08-04 复核，诚实记录）**：早前记录的「c432/c499/c880 的 F3 被权重反馈消除」在现实现中**不可复现**——实测 3 电路每轮只触发 F4（TIMING_GAIN_INSUFFICIENT），F3 从未触发；c17 虽触发 F3，但 size penalty 不改变被选中的 1-gate cut。更深的根因有二：(1) 成功判据自相矛盾——F1 用结构签名等价（结构相同才 pass），F4 要求逻辑级 reduction >= 1（结构必须不同），两者互斥，成功路径在构造上不可达，reduction=0 只是表象；(2) 候选排序 cost 为单调加性、1-gate critical-path-only cut 恒为最便宜子集，F1/F2/F4 的权重根本不进入排序 cost，反馈在实现层面是惰性的。
 
-**数据局限（诚实记录）**：5 个最小 case 的 resynthesis 逻辑级 reduction 均为 0，F4（timing 收益不足）每轮必触发，全部 case 在 max_iterations 内不满足成功条件——不是方法失效，而是数据无下降空间。
+**修复（2026-08-04）**：run_multi_iteration_case 增加可注入 equivalence_checker（功能等价/公式等价），绕开 F1/F4 互斥：注入功能等价后，reduction >= 1 的 case 成功路径可达（合成 case：original LL=5 深结构 vs 功能等价浅结构 LL=3，reduction=2，循环第 1 轮即成功）。真实数据端到端仍待：(a) 生成真正重综合的 resynthesized 网表；(b) 让 boundary/critical-coverage 权重真实进入 cut 排序（当前仅 size_penalty 生效）；(c) 接入 OpenSTA WNS 作为成功信号。
 
 **WNS 驱动成功标准**（tests/test_refinement_wns.py 验证）：循环 evaluator 支持「WNS 改善即成功」——模拟 WNS 序列 [-1.5, -1.2, -0.9] 第 3 次迭代成功停止；首次 success 立即停止（iterations=1）。真实接入需 patch 后 OpenSTA 实测（后续工程项，与内环衔接见 method §6.1）。
 
-**消融（enable_feedback ON/OFF）**：关闭反馈时权重固定、不触发 refine（测试验证）；5 case 上 ON/OFF 失败集相同——weighted cut 对最小 case 的权重不敏感（F3 首轮即消除、F4 永不满足）。诚实记录为数据局限：需更大 case 或 WNS 标准才能体现反馈价值。
+**消融现状（诚实记录）**：关闭反馈时权重固定、不触发 refine（测试验证）。但由于 F4 恒触发且反馈不改选中 cut，5 case 上 ON/OFF 结果无差异——这不是数据局限，而是实现层面的反馈惰性。3 项新回归测试锁定上述事实（tests/test_refinement_flow_success.py）：结构等价下 reduction>=1 必失败、功能等价下成功可达、F1/F2/F4 反馈不改变被选中 cut。
 ## 4. limitation 与边界
 
 | ID | limitation | 实验影响 | 处理 |
 |---|---|---|---|
 | L31-01 | SKY130 Liberty cell model 解析 | **已解决（2026-08-03）**：ABC `cec` 无法建 subcircuit model，改用 Yosys miter+SAT（从 Liberty function 提取 assign cells.v），8/8 等价证明 SUCCESS | `scripts/verify_epfl_mapping_sat.py`；R31-01 mitigated |
 | L31-02 | 8 case 全 combinational | STA slack=null / slack_status=MET (INF) | N31-05 SKY130 sequential ECO 拓展（待 DFF 进 SDC） |
-| L31-04 | failure_recovery 曾是 single-iteration proxy | `avg_iterations=1.0` | **已解决（2026-08-04）**：X19 多轮闭环已实现并接入 Stage A（cut->classify->refine->re-cut），机制验证 F3 被反馈消除；新边界：5 最小 case reduction=0 致 F4 永不满足，消融 ON/OFF 无差异（数据局限），WNS 成功标准已测试验证待真实接入 |
+| L31-04 | failure_recovery 曾是 single-iteration proxy | `avg_iterations=1.0` | **部分解决（2026-08-04）**：X19 多轮闭环已实现并接入 Stage A；复核发现 F1（结构等价）与 F4（逻辑级下降）判据互斥致成功不可达、F1/F2/F4 反馈在排序 cost 中惰性（仅 size_penalty 生效）、「F3 被反馈消除」不可复现——已注入功能等价 checker 打通成功路径（合成验证），真实重综合网表 + 权重进排序 + WNS 接入为后续项 |
 | 补充 | METH-12 candidate-specific timing gain 当前是 Stage A proxy | ranking 无法区分 candidate 时序收益 | P1-4（round1 自审稿）：Stage B STA 已接，per-candidate timing gain 待实现 |
 | 补充 | N31-06 Z3 wrapper 8-case 端到端 error（2026-08-03） | mapped.v 是 SKY130 门级实例化（0 assign），assign-only parser 无法构建 replaced 侧表达式；Yosys aigmap 对 mapped.v 报 SKY130 模块 undefined | wrapper 单元测试层面（12 项，multi-output/escaped/xor/constant）已验证；8-case 端到端需 N31-03 cells.v（解锁 CEC + AIG→SMT 双路径） |
 
