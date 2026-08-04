@@ -18,15 +18,21 @@ Root causes these tests pin down (2026-08-04, verified on real cases):
    the smallest cost.  Only size_penalty (F3) can add a candidate, and it
    never flips the selection either.  "F3 eliminated by feedback" is not
    reproducible on c432/c499/c880 (verified: only F4 fires there).
+   -> Fix (2026-08-04): all F1-F5 weights now enter the weighted min-cut
+      node costs and weighted_cut_candidates solves the s-t min-cut.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
+from rseco.cut import (
+    build_weighted_cut_graph,
+    solve_weighted_cut,
+    weighted_cut_candidates,
+)
 from rseco.equivalence import EquivalenceResult
 from rseco.flow import run_multi_iteration_case
-from rseco.cut import weighted_cut_candidates
 from rseco.graph import extract_fanin_cone
 from rseco.netlist_io import load_analysis_netlist
 from rseco.refinement import RefinementWeights
@@ -132,27 +138,30 @@ def test_functional_equivalence_makes_success_reachable(tmp_path) -> None:
     assert result["history"][-1]["status"] == "success"
 
 
-def test_f1_f2_f4_feedback_does_not_change_selected_cut(tmp_path) -> None:
-    """Inertness of non-F3 feedback in the current cost function.
+def test_feedback_changes_selected_cut(tmp_path) -> None:
+    """F1-F5 weights now really steer the weighted min-cut solution.
 
-    boundary_penalty / critical_coverage_reward do not enter the node
-    costs used for ranking, and even size_penalty only adds a same-size
-    candidate.  The selected cut therefore never changes under F1/F2/F4
-    refinement -- the loop records actions but the boundary is fixed.
+    The old inertness bug (only size_penalty entered the graph, and the
+    root gate was always the cheapest) is fixed: the min-cut cost and the
+    solved cut respond to the feedback weights.
     """
     case_dir = _make_case(tmp_path)
     original = load_analysis_netlist(case_dir / "original" / "original.v")
     cone = extract_fanin_cone(original, roots=["Y"])
 
     default_weights = RefinementWeights()
-    # simulate an F4 refinement (critical-coverage reward) plus F3 (size)
-    refined_weights = RefinementWeights(
-        size_penalty=default_weights.size_penalty + 1.0,
-        critical_coverage_reward=default_weights.critical_coverage_reward + 1.0,
-        boundary_penalty=default_weights.boundary_penalty + 1.0,
-    )
+    refined_weights = RefinementWeights(size_penalty=5.0)
 
-    first_default = weighted_cut_candidates(cone, default_weights)[0]
-    first_refined = weighted_cut_candidates(cone, refined_weights)[0]
-    assert first_default.method == first_refined.method
-    assert first_default.patch_size == first_refined.patch_size == 1
+    default_candidates = weighted_cut_candidates(cone, default_weights)
+    refined_candidates = weighted_cut_candidates(cone, refined_weights)
+    assert default_candidates[0].method.startswith("weighted_st_min_cut")
+    assert refined_candidates[0].method.startswith("weighted_st_min_cut")
+
+    default_solved = solve_weighted_cut(
+        cone, build_weighted_cut_graph(cone, default_weights)
+    )
+    refined_solved = solve_weighted_cut(
+        cone, build_weighted_cut_graph(cone, refined_weights)
+    )
+    # the min-cut cost must respond to the feedback weights
+    assert refined_solved.cut_cost != default_solved.cut_cost

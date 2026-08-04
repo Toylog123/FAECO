@@ -132,17 +132,52 @@ def random_cut_candidates(cone: FaninCone, *, seed: int = 20260714, trials: int 
 
 
 def build_weighted_cut_graph(cone: FaninCone, weights: object) -> WeightedCutGraph:
-    """Build the first auditable weighted cut graph over cone gates."""
-    size_penalty = float(getattr(weights, "size_penalty", 1.0))
-    infinite_capacity = 1_000_000_000.0
-    costs = {
-        gate: 1.0 + size_penalty
-        for gate in cone.gates
-    }
+    """Build the auditable weighted cut graph over cone gates.
 
-    non_root_gates = [gate for gate in cone.gates if cone.gate_outputs[gate] not in cone.boundary_outputs]
-    for gate in non_root_gates:
-        costs[gate] += float(len(non_root_gates))
+    All F1-F5 refinement weights enter the node costs (2026-08-04 fix):
+      * boundary_penalty (F1/F2): gates close to the boundary inputs are
+        more expensive, pushing the cut toward stable deep regions.
+      * equivalence_stability_reward (F1): high-fanout gates (unstable
+        equivalence points) get a small extra cost.
+      * size_penalty (F3): gates with a large fanin cone (expensive to
+        rewrite) get a quadratic cost term, steering the cut away from
+        large cones (patch compression).
+      * critical_coverage_reward (F4): deep gates (logic-depth proxy for
+        the critical path in pre-layout Stage A) become cheaper, so the
+        cut can cover deeper logic when timing gain is insufficient.
+      * verification_cost_penalty (F5): scales every gate with the cone
+        size, shrinking the search space when verification is expensive.
+    The costs are normalized by the max depth and the sum of squared
+    fanin-cone sizes so the relative ordering is stable.
+    """
+    infinite_capacity = 1_000_000_000.0
+    boundary_penalty = float(getattr(weights, "boundary_penalty", 1.0))
+    size_penalty = float(getattr(weights, "size_penalty", 1.0))
+    critical_coverage_reward = float(getattr(weights, "critical_coverage_reward", 1.0))
+    verification_cost_penalty = float(getattr(weights, "verification_cost_penalty", 1.0))
+    equivalence_stability_reward = float(getattr(weights, "equivalence_stability_reward", 1.0))
+
+    depths = _logic_depths(cone)
+    max_depth = max(depths.values(), default=1)
+    cone_sizes = {gate: _fanin_cone_size(cone, gate) for gate in cone.gates}
+    sum_squares = max(1.0, sum(size * size for size in cone_sizes.values()))
+    n_gates = max(1, len(cone.gates))
+    fanouts = _fanout_counts(cone)
+
+    costs: dict[str, float] = {}
+    for gate in cone.gates:
+        depth = max(1, depths[gate])
+        base = 1.0
+        boundary_term = boundary_penalty / (1.0 + depth)
+        stability_term = equivalence_stability_reward * 0.1 * fanouts[gate]
+        size_term = size_penalty * (cone_sizes[gate] ** 2) / sum_squares
+        verification_term = verification_cost_penalty * 0.01 * n_gates
+        critical_divisor = 1.0 + critical_coverage_reward * depth / max_depth
+        costs[gate] = max(
+            0.05,
+            (base + boundary_term + stability_term + size_term + verification_term)
+            / critical_divisor,
+        )
 
     split_edges = [
         (f"{gate}:in", f"{gate}:out", costs[gate])
@@ -195,15 +230,84 @@ def solve_weighted_cut(cone: FaninCone, cut_graph: WeightedCutGraph) -> Weighted
 
 
 def weighted_cut_candidates(cone: FaninCone, weights: object) -> list[CutBoundary]:
-    """Generate deterministic first-version cut candidates from weighted graph costs."""
+    """Generate deterministic cut candidates from weighted graph costs.
+
+    The weighted s-t min-cut solution (which uses every F1-F5 weight) is
+    solved and included as the first candidate; the legacy fixed candidates
+    remain as baselines.  Ordering is by total node cost.
+    """
     cut_graph = build_weighted_cut_graph(cone, weights)
-    candidates = [fixed_min_cut(cone), random_cut(cone), size_only_cut(cone), critical_path_only_cut(cone)]
+    solved = solve_weighted_cut(cone, cut_graph)
+    min_cut = _cut_for_selected_gates(
+        cone, solved.selected_gates, method=solved.method
+    )
+    candidates = [min_cut, fixed_min_cut(cone), random_cut(cone), size_only_cut(cone), critical_path_only_cut(cone)]
     size_penalty = float(getattr(weights, "size_penalty", 1.0))
     if size_penalty > 1.0:
         size_refined = _size_refined_cut(cone)
         if size_refined.patch_size < fixed_min_cut(cone).patch_size:
             candidates.append(size_refined)
-    return sorted(_deduplicate_candidates(candidates), key=lambda candidate: (_cut_cost(candidate, cut_graph), candidate.method))
+    return sorted(
+        _deduplicate_candidates(candidates),
+        key=lambda candidate: (
+            _cut_cost(candidate, cut_graph),
+            0 if candidate.method.startswith("weighted_st_min_cut") else 1,
+            candidate.method,
+        ),
+    )
+
+
+def _logic_depths(cone: FaninCone) -> dict[str, int]:
+    """Longest path length from the cone boundary inputs to each gate."""
+    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+
+    def depth_of(gate: str, memo: dict[str, int]) -> int:
+        if gate in memo:
+            return memo[gate]
+        internal_inputs = [
+            signal for signal in cone.gate_inputs[gate] if signal in output_to_gate
+        ]
+        if not internal_inputs:
+            memo[gate] = 1
+            return 1
+        value = 1 + max(depth_of(output_to_gate[signal], memo) for signal in internal_inputs)
+        memo[gate] = value
+        return value
+
+    memo: dict[str, int] = {}
+    return {gate: depth_of(gate, memo) for gate in cone.gates}
+
+
+def _fanin_cone_size(cone: FaninCone, root_gate: str) -> int:
+    """Number of cone gates in the fanin cone of root_gate (inclusive)."""
+    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    seen: set[str] = set()
+
+    def visit(gate: str) -> None:
+        if gate in seen:
+            return
+        seen.add(gate)
+        for signal in cone.gate_inputs[gate]:
+            driver = output_to_gate.get(signal)
+            if driver is not None:
+                visit(driver)
+
+    visit(root_gate)
+    return len(seen)
+
+
+def _fanout_counts(cone: FaninCone) -> dict[str, int]:
+    """Number of cone-internal consumers of each gate output."""
+    counts = {gate: 0 for gate in cone.gates}
+    for gate in cone.gates:
+        for signal in cone.gate_inputs[gate]:
+            driver = next(
+                (g for g, out in cone.gate_outputs.items() if out == signal),
+                None,
+            )
+            if driver is not None:
+                counts[driver] += 1
+    return counts
 
 
 def _size_refined_cut(cone: FaninCone) -> CutBoundary:

@@ -62,7 +62,7 @@ class MinimalCombinationalDemoRunnerTest(unittest.TestCase):
             self.assertEqual(metrics["patch_replacement"]["replaced_gates"], ["NAND2_5"])
             self.assertEqual(
                 [candidate["cut_method"] for candidate in metrics["patch_ranking"]],
-                ["size_refined_cut", "size_only_cut", "critical_path_only_cut", "random_cut", "fixed_min_cut"],
+                ["size_refined_cut", "weighted_st_min_cut_v1", "size_only_cut", "critical_path_only_cut", "random_cut", "fixed_min_cut"],
             )
             self.assertIn("ranking_features", metrics["selected_patch"])
 

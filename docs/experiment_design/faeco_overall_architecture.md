@@ -199,7 +199,7 @@ s820 迁移失败的根因：决策表把 B 排最前，改变了每轮贪心选
 
 - **复核修正（2026-08-04）**：早前「c432/c499/c880 的 F3 在权重反馈下消失」不可复现——实测 3 电路每轮只触发 F4，F3 从不触发；c17 虽触发 F3，但 size penalty 不改变被选中的 1-gate cut。候选排序 cost 单调加性，1-gate cut 恒最便宜，只有 size_penalty 会额外加入同尺寸候选，F1/F2/F4 权重不进入排序 cost，反馈在实现层面惰性
 - 全部 case 失败的直接原因是 logic_level_reduction=0（重综合网表就是原网表副本），F4 永不满足；更深根因是成功判据互斥：F1 结构签名等价与 F4 reduction>=1 不可同时成立，成功路径在构造上不可达（reduction=0 只是表象）
-- 诚实结论：**机制框架在，但实现层成功路径与反馈均需修复**——已注入 functional equivalence checker 打通成功路径（合成 case 验证，3 项回归测试）；后续需让全部权重进排序 cost + 生成真实重综合网表 + WNS 接入
+- 诚实结论：**机制框架在，实现层两处缺陷均已修复**——成功路径（F1/F4 互斥）已通过注入 functional equivalence checker 打通（合成 case 验证）；权重惰性已修复：F1-F5 全部进入加权 min-cut 节点成本，weighted_cut_candidates 真正求解 s-t min-cut（tests/test_weighted_cut_feedback.py 6 项，权重变化真实翻转 cut）。后续：真实重综合网表 + WNS 接入
 
 
 ### 10.2 WNS 驱动成功标准（2026-08-04）

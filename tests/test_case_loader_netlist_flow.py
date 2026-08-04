@@ -166,11 +166,11 @@ class MinimalFlowTest(unittest.TestCase):
             ("NAND2_1:out", "NAND2_5:in", 1000000000.0),
             report["cut_graph"]["dependency_edges"],
         )
-        self.assertEqual(report["cut_graph"]["node_costs"]["NAND2_5"], 3.0)
-        self.assertEqual(report["cut_graph"]["node_costs"]["NAND2_1"], 6.0)
+        self.assertAlmostEqual(report["cut_graph"]["node_costs"]["NAND2_5"], 0.9148484848484849)
+        self.assertAlmostEqual(report["cut_graph"]["node_costs"]["NAND2_1"], 1.0385454545454546)
         self.assertEqual(report["cut_result"]["method"], "weighted_st_min_cut_v1")
         self.assertEqual(report["cut_result"]["selected_gate"], "NAND2_5")
-        self.assertEqual(report["cut_result"]["cut_cost"], 3.0)
+        self.assertAlmostEqual(report["cut_result"]["cut_cost"], 0.9148484848484849)
         self.assertEqual(report["cut_result"]["cut_edges"], [("NAND2_5:in", "NAND2_5:out")])
         self.assertEqual(report["cut_result"]["boundary_inputs"], ["N10", "N16"])
         self.assertEqual(report["cut_result"]["boundary_outputs"], ["N22"])
@@ -188,7 +188,7 @@ class MinimalFlowTest(unittest.TestCase):
         self.assertEqual(report["patch_replacement"]["boundary_outputs"], ["N22"])
         self.assertEqual(
             [candidate["cut_method"] for candidate in report["patch_ranking"]],
-            ["size_refined_cut", "size_only_cut", "critical_path_only_cut", "random_cut", "fixed_min_cut"],
+            ["size_refined_cut", "weighted_st_min_cut_v1", "size_only_cut", "critical_path_only_cut", "random_cut", "fixed_min_cut"],
         )
         self.assertEqual(report["patch_ranking"][0]["patch_id"], "patch_N22_size_refined_cut")
         self.assertEqual(report["patch_ranking"][0]["rank"], 1)
@@ -221,7 +221,7 @@ class MinimalFlowTest(unittest.TestCase):
         )
         self.assertEqual(iteration["selected_patch_id"], "patch_N22_size_refined_cut")
         self.assertEqual(iteration["replacement_status"], "applied")
-        self.assertEqual(iteration["candidate_count"], 5)
+        self.assertEqual(iteration["candidate_count"], 6)
 
     def test_write_case_metrics_records_all_ranked_candidates(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -242,7 +242,7 @@ class MinimalFlowTest(unittest.TestCase):
 
             self.assertEqual(
                 [candidate["cut_method"] for candidate in candidates["patch_candidates"]],
-                ["size_refined_cut", "size_only_cut", "critical_path_only_cut", "random_cut", "fixed_min_cut"],
+                ["size_refined_cut", "weighted_st_min_cut_v1", "size_only_cut", "critical_path_only_cut", "random_cut", "fixed_min_cut"],
             )
             self.assertEqual(selected["selected_patch"]["cut_method"], "size_refined_cut")
             self.assertEqual(replacement["patch_replacement"]["patch_id"], "patch_N22_size_refined_cut")

@@ -48,16 +48,17 @@ class FixedMinCutTest(unittest.TestCase):
 
         self.assertEqual(
             [candidate.method for candidate in default_candidates],
-            ["critical_path_only_cut", "size_only_cut", "random_cut", "fixed_min_cut"],
+            ["weighted_st_min_cut_v1", "critical_path_only_cut", "size_only_cut", "random_cut", "fixed_min_cut"],
         )
         self.assertEqual(
             [candidate.method for candidate in refined_candidates],
-            ["critical_path_only_cut", "size_only_cut", "size_refined_cut", "random_cut", "fixed_min_cut"],
+            ["weighted_st_min_cut_v1", "critical_path_only_cut", "size_only_cut", "size_refined_cut", "random_cut", "fixed_min_cut"],
         )
         self.assertEqual(refined_candidates[0].boundary_inputs, ["N10", "N16"])
         self.assertEqual(refined_candidates[0].boundary_outputs, ["N22"])
         self.assertEqual(refined_candidates[0].gates, ["NAND2_5"])
         self.assertLess(refined_candidates[0].patch_size, refined_candidates[-1].patch_size)
+        self.assertTrue(refined_candidates[0].method.startswith("weighted_st_min_cut"))
 
     def test_size_only_cut_selects_smallest_output_driver_patch(self):
         netlist = parse_verilog_netlist(CASE_DIR / "original" / "original.v")
@@ -147,14 +148,14 @@ class FixedMinCutTest(unittest.TestCase):
         self.assertEqual(cut_graph.source, "source")
         self.assertEqual(cut_graph.sink, "N22")
         self.assertEqual(cut_graph.infinite_capacity, 1000000000.0)
-        self.assertEqual(cut_graph.node_costs["NAND2_5"], 3.0)
-        self.assertEqual(cut_graph.node_costs["NAND2_1"], 6.0)
-        self.assertEqual(cut_graph.node_costs["NAND2_2"], 6.0)
-        self.assertEqual(cut_graph.node_costs["NAND2_3"], 6.0)
-        self.assertIn(("NAND2_5:in", "NAND2_5:out", 3.0), cut_graph.split_edges)
+        self.assertAlmostEqual(cut_graph.node_costs["NAND2_5"], 1.3722727272727273)
+        self.assertAlmostEqual(cut_graph.node_costs["NAND2_1"], 1.2981818181818183)
+        self.assertAlmostEqual(cut_graph.node_costs["NAND2_2"], 1.2981818181818183)
+        self.assertAlmostEqual(cut_graph.node_costs["NAND2_3"], 1.1021818181818182)
+        self.assertIn(("NAND2_5:in", "NAND2_5:out", 1.3722727272727273), cut_graph.split_edges)
         self.assertIn(("NAND2_1:out", "NAND2_5:in", 1000000000.0), cut_graph.dependency_edges)
         self.assertIn(("NAND2_3:out", "NAND2_5:in", 1000000000.0), cut_graph.dependency_edges)
-        self.assertEqual(cut_graph.lowest_cost_gate(), "NAND2_5")
+        self.assertEqual(cut_graph.lowest_cost_gate(), "NAND2_3")
 
     def test_weighted_candidates_are_ordered_by_cut_graph_cost(self):
         netlist = parse_verilog_netlist(CASE_DIR / "original" / "original.v")
@@ -164,7 +165,7 @@ class FixedMinCutTest(unittest.TestCase):
 
         self.assertEqual(
             [candidate.method for candidate in candidates],
-            ["critical_path_only_cut", "size_only_cut", "size_refined_cut", "random_cut", "fixed_min_cut"],
+            ["weighted_st_min_cut_v1", "critical_path_only_cut", "size_only_cut", "size_refined_cut", "random_cut", "fixed_min_cut"],
         )
 
     def test_solve_weighted_cut_returns_auditable_cut_result(self):
@@ -179,26 +180,22 @@ class FixedMinCutTest(unittest.TestCase):
         self.assertEqual(result.sink, "N22")
         self.assertEqual(result.selected_gate, "NAND2_5")
         self.assertEqual(result.selected_gates, ["NAND2_5"])
-        self.assertEqual(result.cut_cost, 3.0)
+        self.assertAlmostEqual(result.cut_cost, 1.3722727272727273)
         self.assertEqual(result.cut_edges, [("NAND2_5:in", "NAND2_5:out")])
         self.assertEqual(result.boundary_inputs, ["N10", "N16"])
         self.assertEqual(result.boundary_outputs, ["N22"])
         self.assertEqual(result.gates, ["NAND2_5"])
-        self.assertEqual(
-            result.to_dict(),
-            {
-                "method": "weighted_st_min_cut_v1",
-                "source": "source",
-                "sink": "N22",
-                "selected_gate": "NAND2_5",
-                "selected_gates": ["NAND2_5"],
-                "cut_cost": 3.0,
-                "cut_edges": [("NAND2_5:in", "NAND2_5:out")],
-                "boundary_inputs": ["N10", "N16"],
-                "boundary_outputs": ["N22"],
-                "gates": ["NAND2_5"],
-            },
-        )
+        result_dict = result.to_dict()
+        self.assertEqual(result_dict["method"], "weighted_st_min_cut_v1")
+        self.assertEqual(result_dict["source"], "source")
+        self.assertEqual(result_dict["sink"], "N22")
+        self.assertEqual(result_dict["selected_gate"], "NAND2_5")
+        self.assertEqual(result_dict["selected_gates"], ["NAND2_5"])
+        self.assertAlmostEqual(result_dict["cut_cost"], 1.3722727272727273)
+        self.assertEqual(result_dict["cut_edges"], [("NAND2_5:in", "NAND2_5:out")])
+        self.assertEqual(result_dict["boundary_inputs"], ["N10", "N16"])
+        self.assertEqual(result_dict["boundary_outputs"], ["N22"])
+        self.assertEqual(result_dict["gates"], ["NAND2_5"])
 
     def test_solve_weighted_cut_finds_global_minimum_over_multiple_split_edges(self):
         cone = FaninCone(
