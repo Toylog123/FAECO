@@ -111,9 +111,21 @@ FAECO 的核心贡献是 F1-F5 失败分类驱动的 refinement：
 | F4 timing 收益不足 | $\Delta\text{WNS} < \text{threshold}$ | 重算 candidate timing gain；保持 candidate |
 | F5 验证超时 | $\text{timeout} > \text{threshold}$ | 加权 candidate 的 verification cost |
 
-**当前实现是 single-iteration proxy**（Stage A）：failure_recovery 表 F3/F4 `avg_iterations=1.0`。**多轮 refinement**、residual failure 分类、停止原因和 without F1/F3/F4 消融待 PM22 (X19) 设计获批后启动。
+**多轮 refinement 已实现（X19, 2026-08-04）**：`refinement_loop.simulate_refinement_loop` 驱动 cut -> classify(F1-F5) -> refine_weights -> re-cut 直到成功或 max_iterations；`flow.run_multi_iteration_case` 接入 Stage A。失败类型驱动权重更新（F1/F2 加 boundary penalty、F3 加 size penalty、F4 加 critical-coverage reward、F5 减 cone 上限），每轮 residual failure 与 actions 全记录。`enable_feedback=False` 提供消融对照（权重固定）。
 
 **candidate-specific timing gain 当前是 Stage A proxy**：所有 candidate 共用同一目标输出 logic-level reduction（来自整网表静态值）。Stage B 已接 OpenSTA，可把 per-candidate STA timing gain 作为 ranking feature；当前未实现 round1 self-audit 已记录 (METH-12 partial, P1-4)，待 N31-05 sequential 拓展时一并解决。
+
+### 6.1 两环闭环与内环决策层（2026-08-04 新增）
+
+FAECO 的 failure-aware 修复由两个闭环组成：
+
+**外环（patch 粒度，Stage A）**：weighted s-t min-cut -> patch -> 等价/规模/时序验证 -> F1-F5 分类 -> refine_weights -> 重切。权重公式见 §5，反馈规则见 §6 表。
+
+**内环（cell 粒度，Stage B / N31-05）**：关键路径实例 -> 策略决策 -> R/G/B 候选 -> OpenSTA 实测 -> 只接受严格改善 WNS 的改动 -> 多轮刷新关键路径。内环决策层（`strategy_selector`）从历史 trial 归纳 cell-type -> 策略优先级表，候选生成前按预测排序；`exploration_order` 保证每轮至少一个 G/R 候选参与竞争（防 s820 式提前收敛）。
+
+两环衔接：外环 F4（时序收益不足）触发内环诊断——先试 R/G/B 微调，仍不足才退回外环重切 patch。
+
+**内环实证**（ISCAS89 8 电路, period 0.5ns）：s27 -0.01 / s382 +0.02(MET) / s420 -0.01 / s641 -0.02 / s713 -0.01 / s820 -0.20 / s832 -0.47 / s953 -0.09，全部 netlist_audit ok。决策层在 s832 上 -0.45（优于全搜索 -0.47）且 STA 调用 -15%；leave-one-out 跨电路 top-2 预测命中 94.3%-98.2%（用其他 7 电路归纳的表预测第 8 电路）。buf_8/16 大 buffer 在 pre-layout 下负面（输入电容拖累前级，0/1080 被接受），已排除在候选集外。
 
 ## 7. 形式回验
 
