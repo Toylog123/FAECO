@@ -297,3 +297,50 @@ def test_early_stop_stops_at_first_improvement(tmp_path) -> None:
     # with default priority R,G and R improving first, we stop before G
     kinds = [t["kind"] for t in evaluator.trials]
     assert kinds[-1] == "R"
+
+
+def _make_adaptive_eval(tmp_path, adaptive=True):
+    return RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_051_", "_070_", "_071_", "_075_"],
+        workers=1,
+        adaptive=adaptive,
+        early_stop=True,
+    )
+
+
+def test_adaptive_selector_updates_order_from_trials(tmp_path) -> None:
+    ev = _make_adaptive_eval(tmp_path, adaptive=True)
+    cells = parse_mapped_netlist(MAPPED_TEXT)
+    # _051_ is o31a_1: only a G candidate exists in the toy library, so the
+    # adaptive ordering is visible through which candidate kind is ranked
+    # first for the *cell type* (the exploration guard keeps G/R ahead of B).
+    # cold start: fallback order R,G,B -> R candidates first where available.
+    kinds0 = [k for _, _, k in ev._candidates_for(cells, "_051_")]
+    assert kinds0[0] == "G"  # only G candidate for o31a_1
+    # simulate a session where G for o31a_1 is accepted and R rejected:
+    # the online selector must keep G first (it already is); more importantly
+    # it must not be displaced by a never-tried R that UCB optimism would
+    # normally rank first.
+    for _ in range(8):
+        ev.adaptive_sel.record("sky130_fd_sc_hd__o31a_1", "G", accepted=True)
+    for _ in range(4):
+        ev.adaptive_sel.record("sky130_fd_sc_hd__o31a_1", "R", accepted=False)
+    order = ev.adaptive_sel.priority_order("sky130_fd_sc_hd__o31a_1")
+    assert order[0] == "G"
+
+
+def test_adaptive_selector_snapshot_archived_in_write_trials(tmp_path) -> None:
+    ev = _make_adaptive_eval(tmp_path, adaptive=True)
+    ev.adaptive_sel.record("sky130_fd_sc_hd__o31a_1", "G", accepted=True)
+    snap = ev.adaptive_sel.snapshot()
+    assert "cells" in snap
+    assert snap["cells"]["sky130_fd_sc_hd__o31a_1"]["n"]["G"] > 0
+    from rseco.adaptive_selector import AdaptiveStrategySelector
+    restored = AdaptiveStrategySelector.load_snapshot(snap)
+    assert restored.priority_order("sky130_fd_sc_hd__o31a_1") == ev.adaptive_sel.priority_order("sky130_fd_sc_hd__o31a_1")

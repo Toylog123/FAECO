@@ -136,6 +136,7 @@ class RealWnsEvaluator:
         tns_aware: bool = False,
         max_instances: int = 8,
         priority_table: dict | None = None,
+        adaptive: bool = False,
         early_stop: bool = False,
         joint_k: int = 0,
     ) -> None:
@@ -155,6 +156,12 @@ class RealWnsEvaluator:
         self.tns_aware = tns_aware
         self.max_instances = max_instances
         self.priority_table = priority_table or {}
+        self.adaptive = bool(adaptive)
+        if self.adaptive:
+            from .adaptive_selector import AdaptiveStrategySelector
+            self.adaptive_sel = AdaptiveStrategySelector()
+        else:
+            self.adaptive_sel = None
         self.early_stop = early_stop
         self.joint_k = max(0, joint_k)
         self.trials: list[dict] = []
@@ -191,8 +198,12 @@ class RealWnsEvaluator:
             ):
                 cands.append(("buf:" + buf_type + ":" + pin + ":" + new_net, {}, "B"))
         # decision layer: reorder candidates by the per-cell-type strategy
-        # priority table (fallback R,G,B), keeping the G/R exploration guard.
-        order = self.priority_table.get(cell.cell_type, ("R", "G", "B"))
+        # priority table (fallback R,G,B); with --adaptive, use the online
+        # UCB-based selector that updates from measured trials instead.
+        if self.adaptive:
+            order = self.adaptive_sel.priority_order(cell.cell_type)
+        else:
+            order = self.priority_table.get(cell.cell_type, ("R", "G", "B"))
         rank = {k: i for i, k in enumerate(order)}
         cands.sort(key=lambda c: (rank.get(c[2], len(order)), c[0]))
         return exploration_order(cands)
@@ -339,6 +350,22 @@ class RealWnsEvaluator:
             self.trials.append(trial)
         if best is not None:
             self.trials[-len(results) + results.index(best)]["accepted"] = True
+        # online decision layer v2: feed every measured trial back so the
+        # per-cell-type strategy ordering adapts to this circuit in real time.
+        if self.adaptive:
+            from_type = ""
+            for r in results:
+                kind = r.get("kind", "")
+                if not kind or kind == "JOINT":
+                    continue
+                if from_type == "":
+                    inst = r.get("instance", "")
+                    cell = by_inst.get(inst) if inst else None
+                    from_type = cell.cell_type if cell else ""
+                self.adaptive_sel.record(
+                    from_type or r.get("from_type", ""), kind,
+                    accepted=bool(r.get("accepted")),
+                )
 
         improved = best_wns > self.baseline_wns
         self.call_log.append(

@@ -57,6 +57,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--priority-table", type=Path, default=None)
     p.add_argument("--priority-table-dir", type=Path, default=None,
                    help="Dir of per-circuit {circuit}_loocv.json tables; overrides --priority-table")
+    p.add_argument("--adaptive", action="store_true",
+                   help="Online adaptive decision layer (UCB + recency) instead of the "
+                        "static priority table")
     p.add_argument("--early-stop", action="store_true")
     p.add_argument("--iscas89-dir", type=Path, default=ROOT / "benchmarks" / "raw" / "iscas89",
                    help="Dir containing <circuit>.v netlists (default ISCAS89 dir)")
@@ -90,6 +93,8 @@ def main() -> int:
         runner_cmd.append("--enable-buffer")
     if args.tns_aware:
         runner_cmd.append("--tns-aware")
+    if getattr(args, "adaptive", False):
+        runner_cmd.append("--adaptive")
     if args.early_stop:
         runner_cmd.append("--early-stop")
 
