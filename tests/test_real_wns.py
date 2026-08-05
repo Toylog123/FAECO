@@ -344,3 +344,141 @@ def test_adaptive_selector_snapshot_archived_in_write_trials(tmp_path) -> None:
     from rseco.adaptive_selector import AdaptiveStrategySelector
     restored = AdaptiveStrategySelector.load_snapshot(snap)
     assert restored.priority_order("sky130_fd_sc_hd__o31a_1") == ev.adaptive_sel.priority_order("sky130_fd_sc_hd__o31a_1")
+
+
+# -- hold-repair mode (review shortboard 3: scenario expansion) ------------
+
+
+def _hold_fake_sta(**kwargs):
+    """Mimic OpenSTA under set_clock_uncertainty -hold: min_slack reported,
+    candidates may improve the worst min slack while setup WNS is guarded."""
+    assert kwargs.get("min_path") is True
+    assert kwargs.get("hold_uncertainty") == 0.8
+    text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+    if "sky130_fd_sc_hd__or2_4 _071_" in text:
+        return {
+            "slack": -0.94,
+            "slack_status": "VIOLATED",
+            "wns": -0.94,
+            "tns": -5.0,
+            "min_slack": 0.05,
+            "min_slack_status": "MET",
+        }
+    return {
+        "slack": -0.94,
+        "slack_status": "VIOLATED",
+        "wns": -0.94,
+        "tns": -5.0,
+        "min_slack": -0.36,
+        "min_slack_status": "VIOLATED",
+    }
+
+
+def test_hold_mode_accepts_strict_min_slack_improvement_with_wns_guard(tmp_path) -> None:
+    """Hold mode accepts only candidates that strictly improve worst min slack
+    and do not degrade setup WNS below the baseline (safety guard)."""
+    evaluator = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_051_", "_070_", "_071_", "_075_"],
+        workers=1,
+        hold_mode=True,
+        baseline_min_slack=-0.36,
+        hold_uncertainty=0.8,
+    )
+    with mock.patch(
+        "rseco.real_wns.run_opensta_sequential", side_effect=_hold_fake_sta
+    ) as mocked:
+        result = evaluator(FakePatch, weights=None)
+    assert result["improved"] is True
+    assert result["min_slack"] == 0.05
+    assert result["wns"] == -0.94
+    # every measured candidate went through the hold STA path (min report +
+    # injected hold uncertainty)
+    for call in mocked.call_args_list:
+        assert call.kwargs["min_path"] is True
+        assert call.kwargs["hold_uncertainty"] == 0.8
+    accepted = [t for t in evaluator.trials if t["accepted"]]
+    assert len(accepted) == 1
+    assert accepted[0]["min_slack"] == 0.05
+
+
+def test_hold_mode_rejects_min_slack_gain_that_degrades_setup_wns(tmp_path) -> None:
+    """Even a strong hold gain is rejected if setup WNS drops below baseline."""
+    def unsafe_sta(**kwargs):
+        text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+        if "sky130_fd_sc_hd__or2_4 _071_" in text:
+            return {
+                "slack": -0.97,
+                "slack_status": "VIOLATED",
+                "wns": -0.97,
+                "tns": -6.0,
+                "min_slack": 0.05,
+                "min_slack_status": "MET",
+            }
+        return {
+            "slack": -0.94,
+            "slack_status": "VIOLATED",
+            "wns": -0.94,
+            "tns": -5.0,
+            "min_slack": -0.36,
+            "min_slack_status": "VIOLATED",
+        }
+
+    evaluator = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_051_", "_070_", "_071_", "_075_"],
+        workers=1,
+        hold_mode=True,
+        baseline_min_slack=-0.36,
+        hold_uncertainty=0.8,
+    )
+    with mock.patch(
+        "rseco.real_wns.run_opensta_sequential", side_effect=unsafe_sta
+    ):
+        result = evaluator(FakePatch, weights=None)
+    assert result["improved"] is False
+    assert result["min_slack"] == -0.36
+    assert not any(t["accepted"] for t in evaluator.trials)
+
+
+def test_hold_mode_returns_baseline_when_no_min_slack_in_report(tmp_path) -> None:
+    """If OpenSTA never reports a min slack (legacy setup-only run), hold mode
+    must not crash and must report no improvement."""
+    def no_min_sta(**kwargs):
+        return {
+            "slack": -0.94,
+            "slack_status": "VIOLATED",
+            "wns": -0.94,
+            "tns": -5.0,
+            "min_slack": None,
+            "min_slack_status": None,
+        }
+
+    evaluator = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_051_"],
+        workers=1,
+        hold_mode=True,
+        baseline_min_slack=-0.36,
+    )
+    with mock.patch(
+        "rseco.real_wns.run_opensta_sequential", side_effect=no_min_sta
+    ):
+        result = evaluator(FakePatch, weights=None)
+    assert result["improved"] is False
+    assert result["min_slack"] == -0.36

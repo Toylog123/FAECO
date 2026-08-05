@@ -193,6 +193,7 @@ def build_pre_layout_sta_script(
 
 _SEQ_SLACK_RE = re.compile(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)")
 _SEQ_WNS_RE = re.compile(r"worst slack max\s+(-?\d+\.\d+)")
+_SEQ_MIN_SLACK_RE = re.compile(r"worst slack min\s+(-?\d+\.\d+)")
 _SEQ_TNS_RE = re.compile(r"tns\s+max\s+(-?\d+\.\d+)")
 
 
@@ -205,13 +206,17 @@ def run_opensta_sequential(
     multi_path=False,
     sta_command="wsl-sta",
     timeout_s=180.0,
+    hold_uncertainty: float = 0.0,
+    min_path: bool = False,
 ):
     """Run sequential pre-layout STA (create_clock on CK) via OpenSTA.
 
     Mirrors the verified ``scripts/run_sequential_timing_check.py`` flow so
     library callers (real-WNS outer-loop evaluator) can measure candidate
     netlists without depending on the script's import context.  Returns a
-    dict with keys ``slack``, ``slack_status``, ``wns``, ``tns``.
+    dict with keys ``slack``, ``slack_status``, ``wns``, ``tns``,
+    ``min_slack`` and ``min_slack_status`` (min slack comes from the
+    ``report_worst_slack -min`` line; only present when the run reports it).
 
     ``sta_command`` defaults to ``wsl-sta`` (``wsl.exe -d Ubuntu --
     /usr/local/bin/sta``), matching the documented FAECO environment;
@@ -220,6 +225,10 @@ def run_opensta_sequential(
 
     ``multi_path`` appends ``report_checks -slack_max 0 -endpoint_count
     100000`` so critical-path instances can be parsed from the report.
+
+    ``hold_uncertainty`` (ns) injects ``set_clock_uncertainty -hold X`` to
+    model a hold-violation scenario; ``min_path`` adds a min-path
+    ``report_checks -slack_max 0`` so hold-critical instances can be parsed.
     """
     if top_module is None:
         raw = Path(netlist_path).read_text(encoding="utf-8", errors="replace")
@@ -235,6 +244,10 @@ def run_opensta_sequential(
         "create_clock -name clk -period " + str(period) + " [get_ports CK]\n"
         "report_checks -path_delay max\n"
     )
+    if hold_uncertainty and hold_uncertainty > 0:
+        tcl_body += "set_clock_uncertainty -hold " + str(hold_uncertainty) + " [get_clocks clk]\n"
+    if min_path:
+        tcl_body += "report_checks -path_delay min -slack_max 0 -endpoint_count 100000\n"
     if multi_path:
         tcl_body += "report_checks -path_delay max -slack_max 0 -endpoint_count 100000\n"
     tcl_body += (
@@ -255,6 +268,8 @@ def run_opensta_sequential(
             "slack_status": None,
             "wns": None,
             "tns": None,
+            "min_slack": None,
+            "min_slack_status": None,
             "error": "OpenSTA command not found: " + str(sta_command),
         }
     proc = subprocess.run(
@@ -270,11 +285,16 @@ def run_opensta_sequential(
     slack = _SEQ_SLACK_RE.search(raw)
     wns = _SEQ_WNS_RE.search(raw)
     tns = _SEQ_TNS_RE.search(raw)
+    min_slack = _SEQ_MIN_SLACK_RE.search(raw)
     return {
         "slack": float(slack.group(1)) if slack else None,
         "slack_status": slack.group(2) if slack else None,
         "wns": float(wns.group(1)) if wns else None,
         "tns": float(tns.group(1)) if tns else None,
+        "min_slack": float(min_slack.group(1)) if min_slack else None,
+        "min_slack_status": (
+            "MET" if float(min_slack.group(1)) >= 0 else "VIOLATED"
+        ) if min_slack else None,
     }
 
 

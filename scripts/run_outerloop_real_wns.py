@@ -79,6 +79,13 @@ def parse_args() -> argparse.Namespace:
                    help="Online adaptive decision layer: update per-cell-type strategy "
                         "priority from measured trials (UCB + recency decay) instead of "
                         "the static priority table")
+    p.add_argument("--hold-mode", action="store_true",
+                   help="Hold-repair mode: evaluate candidates under set_clock_uncertainty "
+                        "-hold and accept only strict worst-min-slack improvements that "
+                        "do not degrade setup WNS below the baseline")
+    p.add_argument("--hold-uncertainty", type=float, default=0.8,
+                   help="Clock hold uncertainty (ns) injected via set_clock_uncertainty "
+                        "-hold in hold mode")
     p.add_argument("--priority-table", type=Path, default=None,
                    help="Path to strategy_priority_table.json; orders R/G/B by decision layer")
     p.add_argument("--skip-mapping", action="store_true",
@@ -113,10 +120,16 @@ def main() -> int:
     mapped_text = mapped.read_text(encoding="utf-8")
 
     # 2. baseline OpenSTA (single worst path -> parse critical instances)
-    base = run_opensta(mapped, args.period, out, top_module=args.circuit)
+    base = run_opensta(mapped, args.period, out, top_module=args.circuit,
+                       hold_uncertainty=args.hold_uncertainty if args.hold_mode else 0.0)
     baseline_wns = base["wns"]
     if baseline_wns is None:
         print(f"{args.circuit}: baseline OpenSTA returned no WNS", file=sys.stderr)
+        return 1
+    baseline_min_slack = base.get("min_slack")
+    if args.hold_mode and baseline_min_slack is None:
+        print(f"{args.circuit}: hold mode needs worst slack min from OpenSTA "
+              "(got None)", file=sys.stderr)
         return 1
     sta_text = (out / "sta.log").read_text(encoding="utf-8", errors="replace")
     critical = parse_critical_instances(sta_text)
@@ -126,7 +139,8 @@ def main() -> int:
         print(f"{args.circuit}: no critical instances / endpoint D net "
               f"(endpoint={endpoint})", file=sys.stderr)
         return 1
-    print(f"baseline: wns={baseline_wns} endpoint={endpoint} D={target_net}")
+    print(f"baseline: wns={baseline_wns} min_slack={baseline_min_slack} "
+          f"endpoint={endpoint} D={target_net}")
     print(f"critical path: {critical}")
 
     # 3. build the FAECO case from the mapped netlist (analysis domain:
@@ -163,6 +177,9 @@ def main() -> int:
         max_instances=args.max_instances,
         priority_table=priority_table,
         adaptive=args.adaptive,
+        hold_mode=args.hold_mode,
+        baseline_min_slack=baseline_min_slack,
+        hold_uncertainty=args.hold_uncertainty,
         early_stop=args.early_stop,
         joint_k=args.joint_k,
     )
@@ -190,6 +207,9 @@ def main() -> int:
     result["circuit"] = args.circuit
     result["period_ns"] = args.period
     result["baseline_wns"] = baseline_wns
+    result["baseline_min_slack"] = baseline_min_slack
+    result["hold_mode"] = args.hold_mode
+    result["hold_uncertainty_ns"] = args.hold_uncertainty if args.hold_mode else None
     result["critical_instances"] = critical
     result["endpoint"] = endpoint
     result["target_net"] = target_net

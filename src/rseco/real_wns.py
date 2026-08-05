@@ -137,6 +137,9 @@ class RealWnsEvaluator:
         max_instances: int = 8,
         priority_table: dict | None = None,
         adaptive: bool = False,
+        hold_mode: bool = False,
+        baseline_min_slack: float | None = None,
+        hold_uncertainty: float = 0.8,
         early_stop: bool = False,
         joint_k: int = 0,
     ) -> None:
@@ -147,6 +150,9 @@ class RealWnsEvaluator:
         self.available = build_available_sizes(liberty_text)
         self.baseline_wns = baseline_wns
         self.baseline_tns: float | None = None
+        self.hold_mode = bool(hold_mode)
+        self.baseline_min_slack = baseline_min_slack
+        self.hold_uncertainty = hold_uncertainty
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.critical_instances = list(critical_instances or [])
@@ -234,6 +240,8 @@ class RealWnsEvaluator:
             period=self.period,
             output_dir=sub,
             top_module=top_module,
+            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+            min_path=self.hold_mode,
         )
         return {
             "instance": inst,
@@ -242,6 +250,8 @@ class RealWnsEvaluator:
             "to_type": new_type,
             "wns": res.get("wns"),
             "tns": res.get("tns"),
+            "min_slack": res.get("min_slack"),
+            "min_slack_status": res.get("min_slack_status"),
             "slack": res.get("slack"),
             "slack_status": res.get("slack_status"),
         }
@@ -303,13 +313,28 @@ class RealWnsEvaluator:
         results: list[dict] = []
         best_wns = self.baseline_wns
         best_tns = self.baseline_tns
+        best_min = self.baseline_min_slack
         best: dict | None = None
 
         def _accept_result(r: dict) -> bool:
-            nonlocal best_wns, best_tns, best
+            nonlocal best_wns, best_tns, best_min, best
             wns = r["wns"]
             tns = r.get("tns")
+            min_slack = r.get("min_slack")
             if wns is None:
+                return False
+            if self.hold_mode:
+                # Hold-repair mode: accept a candidate that strictly improves
+                # worst min slack (hold) without degrading setup WNS below
+                # the baseline.  This lets buffer insertion act as the
+                # hold-fixing strategy while setup remains safe.
+                if min_slack is not None and best_min is not None and min_slack > best_min:
+                    if wns >= self.baseline_wns or wns > best_wns:
+                        best_wns = wns
+                        best_tns = tns
+                        best_min = min_slack
+                        best = r
+                        return True
                 return False
             if wns > best_wns or (
                 self.tns_aware
@@ -367,7 +392,14 @@ class RealWnsEvaluator:
                     accepted=bool(r.get("accepted")),
                 )
 
-        improved = best_wns > self.baseline_wns
+        # In hold-repair mode success is a strict worst-min-slack improvement
+        # (setup WNS is only guarded, see _accept_result); in setup mode it is
+        # the usual strict WNS improvement.
+        improved = (
+            best_min > self.baseline_min_slack
+            if self.hold_mode
+            else best_wns > self.baseline_wns
+        )
         self.call_log.append(
             {
                 "iteration": iteration,
@@ -377,6 +409,8 @@ class RealWnsEvaluator:
                 "n_trials": len(results),
                 "best_wns": best_wns,
                 "baseline_wns": self.baseline_wns,
+                "best_min_slack": best_min,
+                "baseline_min_slack": self.baseline_min_slack,
                 "improved": improved,
                 "accepted": best,
                 "weights": {
@@ -387,7 +421,7 @@ class RealWnsEvaluator:
                 },
             }
         )
-        return {"wns": best_wns, "improved": improved}
+        return {"wns": best_wns, "min_slack": best_min, "improved": improved}
 
     def write_trials(self, path: str | Path) -> None:
         payload: dict = {"call_log": self.call_log, "trials": self.trials}
