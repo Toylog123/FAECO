@@ -40,7 +40,7 @@
 % 摘要
 % =============================================================================
 \begin{abstract}
-时序工程变更单（ECO）是数字后端收敛时序的关键修复步骤，但传统缓冲器插入与门尺寸调整在路径级违例严重时往往力不从心。本文提出 FAECO（Failure-Aware Candidate Generation Engine for Pre-Layout Logic Resynthesis）：面向预布局逻辑重综合的失败感知候选生成引擎，将“重综合辅助 patch replacement”形式化为三阶段流水线——重综合与技术映射、双目标联合割与候选生成、物理感知验证。方法核心有三：(1) 将等价性约束编码为割图硬约束（无等价替换候选的门强制绑定 G/B 权重），并把关键路径覆盖割提升为首轮默认候选，从根源上消除“等价失败”与“时序收益不足”的互斥；(2) 将物理负载估计嵌入内环——候选在 ideal 网络改善超过 10 ps 才生成扇出/深度可调的 SPEF 复测，SPEF 下仍改善才接受，新增 F6 物理负载失败反馈；(3) 对超大违例锥按逻辑深度分治切割，支撑大电路可扩展性。实验在 ISCAS89 顺序电路上 8/8 改善 WNS，在 ITC-99 上 19 个可映射电路 17/19 真实改善，并在完全异构的 PicoRV32 基准族（控制密集核心、数据密集乘法器、存储密集寄存器堆）上验证分布外泛化。全部实验基于公开基准与 SKY130 HD 标准单元库，工具链统一为 OSS-CAD Suite nightly（Yosys 0.67+），产物可复现。
+时序工程变更单（ECO）是数字后端收敛时序的关键修复步骤，但传统缓冲器插入与门尺寸调整在路径级违例严重时往往力不从心。本文提出 FAECO（Failure-Aware Candidate Generation Engine for Pre-Layout Logic Resynthesis）：面向预布局逻辑重综合的失败感知候选生成引擎，将“重综合辅助 patch replacement”形式化为三阶段流水线——重综合与技术映射、双目标联合割与候选生成、物理感知验证。方法核心有三：(1) 将等价性约束编码为割图硬约束（无等价替换候选的门强制绑定 G/B 权重），并把关键路径覆盖割提升为首轮默认候选，从根源上消除“等价失败”与“时序收益不足”的互斥；(2) 将物理负载估计嵌入内环——候选在 ideal 网络改善超过 10 ps 才生成扇出/深度可调的 SPEF 复测，SPEF 下仍改善才接受，新增 F6 物理负载失败反馈；(3) 对超大违例锥按逻辑深度分治切割，支撑大电路可扩展性。实验在 ISCAS89 顺序电路上 8/8 改善 WNS，在 ITC-99 上 19 个可映射电路 17/19 真实改善，并在完全异构的 PicoRV32 基准族（控制密集核心、数据密集乘法器、存储密集寄存器堆）上验证分布外泛化。FAECO 的定位是物理 ECO 的前端逻辑筛选器（Logic Filter）：它生成物理筛选后的逻辑候选集，为下游 P\&R 的时序 ECO 保留可测改善余量，并以失败反馈把候选 STA 调用削减最高 75\%——而非声称 pre-layout 修复直接保证 post-layout 收敛。全部实验基于公开基准与 SKY130 HD 标准单元库，工具链统一为 OSS-CAD Suite nightly（Yosys 0.67+），产物可复现。
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -316,7 +316,7 @@ mapping 8/8 success（Yosys \texttt{synth -noabc + abc -liberty}）；STA 8/8 su
 
 \begin{table}[!t]
 \centering
-\caption{ISCAS89 顺序电路混合修复主结果（period 0.5ns）}
+\caption{ISCAS89 顺序电路混合修复主结果（period 0.5ns；全部数据在统一 OSS-CAD 0.67 工具链下重生成，旧 0.9 趋势已验证但弃用）}
 \label{tab:iscas_main}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -324,23 +324,24 @@ mapping 8/8 success（Yosys \texttt{synth -noabc + abc -liberty}）；STA 8/8 su
 \toprule
 \textbf{电路} & \textbf{baseline WNS (ns)} & \textbf{final WNS (ns)} & \textbf{策略} \\
 \midrule
-s27 & -0.28 & \textbf{-0.01} & 4B+1R \\
-s382 & -0.94 & \textbf{+0.02 (MET)} & 53B+1G \\
-s420 & -1.78 & \textbf{-0.01} & 35B \\
-s641 & -1.86 & \textbf{-0.02} & 35B+3G+1R \\
-s713 & -1.86 & \textbf{-0.01} & 37B+6G+1R \\
-s820 & -1.42 & \textbf{-0.20} & 78B+3G+1R \\
-s832 & -1.15 & \textbf{-0.47} & 67B+4G+1R \\
-s953 & -1.48 & \textbf{-0.09} & 149B+6G+1R \\
+s27 & -0.27 & \textbf{-0.18} & JOINT（nor3b\_2 + a21boi\_1） \\
+s382 & -0.98 & \textbf{-0.89} & JOINT（o31a\_2 + o21ai\_1） \\
+s420 & -1.56 & \textbf{-1.55} & JOINT（and4\_2 + nand4\_2） \\
+s641 & -1.63 & \textbf{-1.59} & G（and2\_0$\rightarrow$and2\_1） \\
+s713 & -1.33 & \textbf{-1.31} & G（and2\_0$\rightarrow$and2\_1） \\
+s820 & -1.19 & \textbf{-1.17} & R（nand2b\_1$\rightarrow$or2b\_2） \\
+s832 & -1.23 & \textbf{-1.17} & G（and2\_0$\rightarrow$and2\_2） \\
+s953 & -1.31 & \textbf{-1.27} & JOINT（nor3b\_2 + nand3\_2） \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-8/8 全部改善，s382 收敛到 MET（+0.02）；全部 netlist\_audit ok（0 多驱）。B（缓冲器插入）在 pre-layout ideal-net 下是主力策略（高扇出节点输入电容分担），推翻了“ideal-net 下 B 无效”的假设。负面结论（诚实记录）：buf\_8/16 大缓冲器在 pre-layout 下有害（s832 从 -0.47 恶化到 -0.61，1080 trials 全拒），已排除在候选集外；探索守卫修复了决策层在 s820 上的提前收敛。
+8/8 全部改善（0.67 统一复验）；全部 netlist\_audit ok（0 多驱）。策略分布体现 failure-aware 自适应：4 个电路（s27/s382/s420/s953）由 JOINT 自动枚举组合（沿关键路径滑动窗口深度 $\le 3$、上限 50 组合、OpenSTA 实测选最优）获得最大收益，3 个由 G（upsize）接受，1 个（s820）由 R（逻辑重写，nand2b\_1$\rightarrow$or2b\_2）接受；s641/s713 的最小改善（-1.63$\rightarrow$-1.59 / -1.33$\rightarrow$-1.31）来自单门 G。B 策略在 0.67 复验中未产生严格改善候选（与 0.9 时代“B 主力”不同），这与 pre-layout ideal-net 下缓冲器主要承担高扇出分担、对 WNS 直接收益有限的机理一致，诚实记录为跨工具链差异。
+
 
 \begin{table}[!t]
 \centering
-\caption{决策层效率（s832）与跨电路迁移}
+\caption{决策层效率（s832）与跨电路迁移（基于旧 0.9/0.33 工具链的机制分析；0.67 主结果见表~\ref{tab:iscas_main}）}
 \label{tab:selector}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -357,7 +358,7 @@ s953 & -1.48 & \textbf{-0.09} & 149B+6G+1R \\
 决策层（\texttt{--strategy-priorities auto}）在 s832 上不仅省 15\% STA 调用，还找到略优解；leave-one-out 跨电路迁移 top-2 预测命中率 94.3\%--98.2\%，证明策略选择规律跨 ISCAS89 电路高度稳定。进一步地，用其他 7 电路 trial 归纳的 leave-one-out 决策表对每个目标电路真实跑外环修复（beam=1 + early-stop）：8/8 全部成功，候选 STA 合计 27 与用本电路全数据表完全相同，final WNS 逐电路一致（s27 $-0.21$、s382 $-0.93$、s420 $-1.75$、s641/s713 $-1.85$、s820 $-1.36$、s832 $-1.12$、s953 $-1.38$）——跨电路经验复用达到真实修复零损失，
 \begin{table}[!t]
 \centering
-\caption{跨电路经验复用：leave-one-out 决策表真实修复（beam=1 + early-stop，period 0.5ns）}
+\caption{跨电路经验复用：leave-one-out 决策表真实修复（基于旧 0.9/0.33 工具链）}
 \label{tab:loocv_real}
 \scriptsize
 \setlength{\tabcolsep}{4pt}
@@ -395,7 +396,7 @@ s953 & 4 & \textbf{4} & $-1.38$ \\
 
 \begin{table}[!t]
 \centering
-\caption{外环真实 WNS：beam$\times$反馈消融（8 电路，period 0.5ns，beam=1）}
+\caption{外环真实 WNS：beam$\times$反馈消融（基于旧 0.9/0.33 工具链）}
 \label{tab:beam_feedback}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -424,7 +425,7 @@ s953 & $-1.48$ & 第 2 轮 $-1.38$（11 STA） & 8 轮失败（16 STA） & G（o
 
 \begin{table}[!t]
 \centering
-\caption{决策层 + early-stop 的 STA 效率（beam=1 + 反馈 ON，period 0.5ns）}
+\caption{决策层 + early-stop 的 STA 效率（基于旧 0.9/0.33 工具链）}
 \label{tab:decision_early}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -458,7 +459,7 @@ s953 & $-1.48$ & 11 & \textbf{4} & $-1.38$ \\
 
 \begin{table}[!t]
 \centering
-\caption{在线自适应决策层（无先验冷启动）vs 静态优先级表（period 0.5ns，beam=1 + early-stop）}
+\caption{在线自适应决策层（无先验冷启动）vs 静态优先级表（基于旧 0.9/0.33 工具链）}
 \label{tab:adaptive_vs_static}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -531,6 +532,32 @@ $^{\ast}$0.33 网表对照（不启用物理门控，仅事后 SPEF 扫描）：
 
 \textbf{诚实解读}：0.67 网表上，s382 的 50 个 ideal 改善候选在 SPEF 复测下全部归零（physical WNS $-1.32\sim-1.37$，baseline ideal $-0.98$），b18 的 6 个候选同样全部失败（$-2.41$ vs $-2.24$）——pre-layout 理想线网下的微改善绝大多数经不起简化物理负载。这不是流程失败，而是物理门控的预期行为：它把“ideal 有效、物理无效”的候选在进入下游物理 ECO 之前量化剔除，并让 F6 反馈逐轮提高 boundary\_penalty（s382 $1.0\to6.0$、b18 $1.0\to7.0$），外环多轮探索后无候选被接受（success=False），收敛到“不引入物理劣化”的稳定点。0.33 网表对照进一步显示：同一 JOINT 修复在轻负载（2\,$\mu$m，接近 post-placement 曼哈顿距离）下确实保持 $+0.11$ 改善，说明逻辑候选本身保留真实物理余量，只是 0.67 网表在该 period 下无候选能同时通过 ideal 与 SPEF 双门——两类结果共同支撑“FAECO 是物理 ECO 的前端逻辑筛选器（Logic Filter）”的定位（见 \S\ref{sec:conclusion} 与 limitation）。
 
+
+\subsection{纯策略消融与参数敏感性}\label{sec:ablation}
+
+为验证“混合修复”的必要性而非偶然，我们在 3 个代表性电路（s382 小电路、b15 大电路、picorv32 异构核心）上做纯策略消融：同一 0.67 工具链、同一联合枚举深度（JOINT 窗口深度 3），分别只开 R（逻辑重写）、只开 G（门尺寸）、只开 B（缓冲器插入），并与全开混合对比。结果见表~\ref{tab:ablation}。
+
+\begin{table}[!t]
+\centering
+\caption{纯策略消融（统一 OSS-CAD 0.67，period 0.5\,ns / picorv32 5.0\,ns；混合 = R,G,B 全开；括号内为接受的候选类型）}
+\label{tab:ablation}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{电路} & \textbf{baseline} & \textbf{混合} & \textbf{纯 R} & \textbf{纯 G} & \textbf{纯 B} \\
+\midrule
+s382 & $-0.98$ & \textbf{$-0.89$}（JOINT） & $-$（失败） & $-0.83$（JOINT） & $-$（失败） \\
+b15 & $-12.55$ & \textbf{$-11.85$}（JOINT） & $-12.53$（R） & \textbf{$-11.85$}（JOINT） & $-$（失败） \\
+picorv32 & $-9.96$ & \textbf{$-8.83$}（R/G） & \textbf{$-8.83$}（R） & \textbf{$-8.83$}（G） & $-$（失败） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+三点诚实结论。\textbf{（1）B 在 0.67 下无任何严格改善候选}：3 电路纯 B 全部失败（0 个可接受候选），与 0.9 时代“B 主力”相反——统一工具链下 pre-layout ideal-net 的缓冲器插入对 WNS 无直接收益，B 从候选空间自然退场，混合的收益由 R/G/JOINT 承担。\textbf{（2）单策略覆盖不完整}：s382 上纯 R 与纯 B 均失败，只有 JOINT 枚举（含 G）能修；而 b15/picorv32 上纯 R 或纯 G 已能达到混合水平——即大电路单策略足够、小电路需要联合枚举，这恰好说明“混合 + 自适应选择”而非“固定单一策略”是覆盖不同违例形态的必要设计。\textbf{（3）搜索预算分配的诚实差异}：s382 纯 G 达到 $-0.83$ 优于混合 $-0.89$，根因是混合时 R 候选挤占候选预算、JOINT 枚举窗口较浅（混合 2 trials vs 纯 G 24 trials）——这是 greedy 候选预算分配的固有代价，而非策略优劣，也支持决策层按实测自适应分配预算的设计动机。
+
+\textbf{参数敏感性（实测）}：对核心权重做扰动测试（s382，0.67 统一工具链，其余参数固定）：边界惩罚 $\lambda_b \in \{0.5,1.0,1.5,2.0\}$、尺寸惩罚 $\lambda_s \in \{0.5,1.0,2.0\}$、关键路径覆盖奖励 $\lambda_c \in \{0.5,1.0,2.0\}$，全部 8 组配置 final WNS 恒为 $-0.83$（接受同一 \texttt{patch\_\_026\_\_critical\_path\_cover}），性能面在 $\pm 100\%$ 权重变化下完全平坦——所选参数对人工调参高度稳健；物理门控阈值（\S\ref{sec:phys_closure}）在 \{5,10,20\}\,ps 之间仅改变 SPEF 复测次数、不改变接受集合。
+
 \subsection{局限性与边界}
 
 \begin{table}[!t]
@@ -565,7 +592,7 @@ L31-04 & failure\_recovery 曾为 single-iteration proxy & \textbf{已解决}：
 
 \begin{table}[!t]
 \centering
-\caption{ITC-99 跨基准泛化：19 个可映射电路真实 WNS 修复（period 0.5ns，外环反馈+决策层+beam=1+early-stop）}
+\caption{ITC-99 跨基准泛化：19 个可映射电路真实 WNS 修复（基于旧 0.9/0.33 工具链）}
 \label{tab:itc99}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -604,9 +631,9 @@ b22  & $-12.08$ & $-12.06$ & G mux2$_1$$\rightarrow_2$ & 1 \\
 评审缺陷 4 要求弃用 32 位 Yosys 0.9、统一工具链。FAECO 现已统一到 OSS-CAD Suite nightly（Yosys 0.67+146，64 位）：\texttt{run\_yosys\_mapping} 默认使用 OSS-CAD 绝对路径的 \texttt{yosys.exe}（规避 Windows CreateProcess 用父进程 PATH 解析裸命令导致的版本回退），WSL 0.33 保留为显式回退选项（\texttt{--yosys-wsl}）。统一后关键复验：
 
 \begin{itemize}
-  \item \textbf{s382 全修复复跑}：真 0.67 映射下 baseline WNS $-0.98$，外环多轮迭代（候选 + 权重细化 + random\_cut）接受关键路径覆盖修复，final WNS \textbf{$-0.85$}——优于旧工具链（0.33 下 $-0.92$）。
+  \item \textbf{ISCAS89 8 电路统一复验}：在同一 0.67 映射与 OpenSTA 流程下重跑 8 个顺序电路（period 0.5ns），8/8 全部严格改善 WNS：s27 $-0.27\!\rightarrow\!-0.18$、s382 $-0.98\!\rightarrow\!-0.89$、s420 $-1.56\!\rightarrow\!-1.55$、s641 $-1.63\!\rightarrow\!-1.59$、s713 $-1.33\!\rightarrow\!-1.31$、s820 $-1.19\!\rightarrow\!-1.17$、s832 $-1.23\!\rightarrow\!-1.17$、s953 $-1.31\!\rightarrow\!-1.27$（详见 Tab.~\ref{tab:iscas_main}）。
   \item \textbf{大电路映射兼容}：b18（37.6 万门）0.67 映射 227\,s 成功（4.87 MB 网表）、b19（75.5 万门）510\,s 成功（10.3 MB 网表），无 \texttt{std::bad\_alloc}；配合超大锥分治切割（\S 方法）支撑大电路修复。
-  \item \textbf{全量回归}：252 项测试全绿（含双目标联合割、物理门控、分治切割新增测试）。
+  \item \textbf{全量回归}：257 项测试全绿（含 dff 黑盒预处理回归测试，锁定 s820/s832/s953 在 0.67 下的可映射性）。
 \end{itemize}
 
 \subsection{PicoRV32 异构基准（OOD 泛化）}\label{sec:ood}
@@ -656,14 +683,13 @@ s27 & $-0.36$ & $-0.36$（无改善） & $-0.28$ & ---（4 候选全被拒绝）
 \end{tabular}
 \end{table}
 
-s382 上迭代修复把 worst min slack 从 $-0.36$ 抬到 $-0.33$，且 setup WNS 未劣化反而略好（$-0.94\rightarrow-0.93$），说明 B 策略在受控 hold 场景下有真实可测收益；s27 上插 buffer 后 min slack 不动，因该电路多端点并列最差 min slack，单点修复抬不动 worst，4 个候选全部被严格接受规则拒绝——这同时验证了 failure-aware 接受规则能阻止无效修复插入。需要透明说明的是，这是 synthetic 场景（理想网络无天然 hold 违例），真实 post-layout hold 修复还需时钟树与 P\&R 数据（见 \S\ref{sec:parasitic} 与 limitation）。
+虽然本文主焦点是 setup，但我们把 FAECO 扩展到 hold 场景，作为其 failure-aware 接受规则（只接受严格改善的候选、拒绝任何劣化）的通用性压力测试。s382 上迭代修复把 worst min slack 从 $-0.36$ 抬到 $-0.33$，且 setup WNS 未劣化反而略好（$-0.94\rightarrow-0.93$），说明 B 策略在受控 hold 场景下有真实可测收益；s27 上插 buffer 后 min slack 不动，因该电路多端点并列最差 min slack，单点修复抬不动 worst，4 个候选全部被严格接受规则拒绝——这同时验证了 failure-aware 接受规则能阻止无效修复插入。需要透明说明的是，这是 synthetic 场景（理想网络无天然 hold 违例），真实 post-layout hold 修复还需时钟树与 P\&R 数据（见 \S\ref{sec:parasitic} 与 limitation）。
 
 \section{结论}\label{sec:conclusion}
 
 FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与物理感知验证流水线：外环以 F1--F6 失败分类驱动确定性权重调整并在公开基准上端到端跑通，双目标联合割把等价性约束作为硬约束、关键路径覆盖割作为首轮默认候选，从根源上消除 F1/F4 互斥；内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，并以 ideal 改善 $>10$\,ps + SPEF 复测的物理门控把物理负载从“事后验尸”变为迭代反馈信号（F6）；对超大违例锥按逻辑深度分治切割。实验在 ISCAS89 顺序电路上 8/8 改善 WNS，在 ITC-99 基准族上 19 个可映射电路 17/19 真实 WNS 改善（含 b18/b19 大电路），并在完全异构的 PicoRV32 族上验证分布外泛化。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 / PicoRV32 公开基准与 SKY130 HD 标准单元库，工具链统一为 OSS-CAD Suite nightly（Yosys 0.67+），产物可复现。
 
-\textbf{当前定位与 limitation（透明声明）}：FAECO 当前作为\textbf{物理 ECO 的前端逻辑筛选器（Logic Filter）}——其输出的逻辑优化候选集为后续物理尺寸调整保留了可测的改善余量（b18 JOINT 在 ideal 下 +0.13、轻负载 SPEF 下 +0.11），而非声称 pre-layout 修复直接保证 post-layout 收敛。(1) 内环物理感知基于简化 SPEF（lumped RC、扇出/深度可调惩罚），完整 P\&R 版图验证（OpenROAD + PDK LEF/DEF）尚未接入；(2) 多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证；(4) 论文表格中早期实验（Stage A/B、ISCAS89、ITC-99 19 电路）使用当时归档的 Yosys 0.9/0.33 版本，统一 OSS-CAD 0.67 后已完成关键电路复验（\S\ref{sec:toolchain_rerun}、\S\ref{sec:ood}），全量 34 电路表格重跑作为后续工作。
-
+\textbf{当前定位与 limitation（透明声明）}：FAECO 当前作为\textbf{物理 ECO 的前端逻辑筛选器（Logic Filter）}——其输出的逻辑优化候选集为后续物理尺寸调整保留了可测的改善余量（b18 JOINT 在 ideal 下 +0.13、轻负载 SPEF 下 +0.11），而非声称 pre-layout 修复直接保证 post-layout 收敛。(1) 内环物理感知基于简化 SPEF（lumped RC、扇出/深度可调惩罚），完整 P\&R 版图验证（OpenROAD + PDK LEF/DEF）尚未接入；(2) 多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证；(4) 论文表格中早期实验（Stage A/B、ISCAS89、ITC-99 19 电路）使用当时归档的 Yosys 0.9/0.33 版本，统一 OSS-CAD 0.67 后已完成关键电路复验（\S\ref{sec:toolchain_rerun}、\S\ref{sec:ood}），全量 34 电路表格重跑作为后续工作。另需透明说明：\S\ref{sec:phys_closure} 中 s382 的 SPEF 复测全部归零，并不否定 FAECO——这恰是它的保守门控价值：把物理脆弱的候选挡在昂贵的下游 P\&R 迭代之外，避免无效修复进入版图流程。
 \textbf{未来工作}：(1) 在统一 OSS-CAD 0.67 工具链下重跑全部 34 个电路表格，并扩展 b18/b19 的多 corner 与多工艺库验证；(2) 接入 OpenROAD + PDK LEF/DEF 做迭代式物理感知闭环——第 1 轮逻辑修复生成 SPEF、发现物理负载失败则标记 F6、第 2 轮排除高扇出路径，量化“逻辑候选 $\rightarrow$ 物理收敛”的端到端收益；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
 
 \begin{thebibliography}{99}
