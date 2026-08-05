@@ -63,7 +63,7 @@
 近十年来的 ECO 工作可按“方法定位”分为三股：
 
 \begin{enumerate}
-  \item \textbf{时序 ECO 主线} \cite{ho2010eco,ho2012treco,kravets2019symbolic,chen2012metal,chen2012fixability,wang2012nego,wang2016restruc}：post-mask spare cells / metal-only resources / template-driven remapping。共同问题是数据来自工业设计、许可不明、不可复现。
+  \item \textbf{时序 ECO 主线} \cite{ho2010eco,ho2012treco,kravets2019symbolic,chen2012metal,chen2012fixability,wang2012nego}：post-mask spare cells / metal-only resources / template-driven remapping。共同问题是数据来自工业设计、许可不明、不可复现。
   \item \textbf{功能 ECO 与逻辑修复} \cite{ho2008ecomap,jiang2010fraig,lin2011simult,lin2012multipatch,li2013intuitive,jiang2016resource,luo2016unified,zhuo2018patch}：SAT/interpolation/cube enumeration 等构造 Boolean patch，多面向功能修复，与时序收益分开。
   \item \textbf{缓冲/门尺寸} \cite{liang2012buffer,liu2021rlsizer,huang2025phys,chen2024aito,li2025mlbuf,zhang2025buffalo}：固定树最优缓冲器插入 / RL+DL 联合尺寸调整，仍在用 SPICE/工业流或仅当 placement-aware baseline。
 \end{enumerate}
@@ -99,13 +99,13 @@ FAECO 与上述工作的差异：不依赖 SAT proof minimization / interpolatio
 
 \subsection{等价检查与逻辑验证}
 
-Mishchenko 等（2006, DAC）在 AIG 上提出 SAT sweeping with local observability don't-cares \cite{mishchenko2006sat}；仲等（2024, TCAD）把 k-LUT 仿真 + STP 表示用于 SAT-sweeping 的 candidate refinement \cite{zhong2024stp}；王等（2024, TCAD）用 BMC/induction + 反例仿真把 sequential redundancy 推向大规模 \cite{wang2024seq}。
+Mishchenko 等（2006, DAC）在 AIG 上提出 SAT sweeping with local observability don't-cares \cite{mishchenko2006sat}；仲等（2024, DATE）把 k-LUT 仿真 + STP 表示用于 SAT-sweeping 的 candidate refinement \cite{zhong2024stp}。
 
 FAECO Stage B 当前 CEC 实现把“原始 Yosys-normalized BLIF vs mapped BLIF”作为形式回验基础，并通过从 Liberty 布尔函数生成 assign-style cells 模型解决 SKY130 subcircuit 建模问题，8/8 case 等价证明 SUCCESS。
 
 \subsection{缓冲器插入与门尺寸调整（B\&G baseline）}
 
-梁等（2012, TCAD）在固定 Steiner tree + Elmore delay + 离散 buffer library 下证明 $O(mn)$ 时间最优 max-slack/cost 算法 \cite{liang2012buffer}；刘等（2021, ICCAD）用 three-hop GNN + DDPG 学习门尺寸 \cite{liu2021rlsizer}；黄等（2025）做 physically-aware discrete gradient sizing \cite{huang2025phys}；陈等（2024, DAC）用 GCN + DDPG 联合 sizing 与 buffer insertion \cite{chen2024aito}；李等（2025, MLCAD）用 recursive virtual buffering 接入 OpenROAD \cite{li2025mlbuf}；张等（2025, ICCAD）用 LLM+RL 做缓冲树生成 \cite{zhang2025buffalo}。
+梁等（2012, TCAD）在固定 Steiner tree + Elmore delay + 离散 buffer library 下证明 $O(mn)$ 时间最优 max-slack/cost 算法 \cite{liang2012buffer}；刘等（2021, DAC）用 three-hop GNN + DDPG 学习门尺寸 \cite{liu2021rlsizer}；黄等（2025, IEEE TCAD）用 learning-driven 方法做 physically aware 大规模电路 gate sizing \cite{huang2025phys}；陈等（2024, Integration）用 GCN + DDPG 联合 sizing 与 buffer insertion \cite{chen2024aito}；李等（2025, MLCAD）用 recursive virtual buffering 接入 OpenROAD \cite{li2025mlbuf}；张等（2025, ICCAD）用 LLM+RL 做缓冲树生成 \cite{zhang2025buffalo}。
 
 FAECO 的 patch replacement 与 B\&G 的关系：failure-aware refinement 在 F3（patch 尺寸过大）和 F4（时序收益不足）失败时，由内环 R/G/B 在 patch 边界内再修复；这与物理感知 + RL/DL 路径不同，FAECO 当前只用确定性方法，且每个候选都经 OpenSTA 实测验证。
 
@@ -698,8 +698,7 @@ FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的�
 \bibitem{kravets2019symbolic} V.~N.~Kravets, ``Comprehensive search for ECO rectification using symbolic sampling,'' in \emph{Proc. DAC}, 2019.
 \bibitem{chen2012fixability} Y.-T.~Chen and others, ``Timing ECO optimization via Bezier curve smoothing and fixability identification,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, 2012.
 \bibitem{chen2012metal} Y.-T.~Chen and others, ``Timing ECO optimization using metal-configurable gate-array spare cells,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, 2012.
-\bibitem{wang2012nego} Wang et al., ``ECO timing optimization with negotiation-based re-routing and logic re-structuring using spare cells,'' \emph{IEEE Trans. CAD}, 2012.
-\bibitem{wang2016restruc} Wang et al., ``Timing ECO optimization with logic restructuring,'' 2016.
+\bibitem{wang2012nego} Wang et al., ``ECO timing optimization with negotiation-based re-routing and logic re-structuring using spare cells,'' in \emph{Proc. ASP-DAC}, 2012.
 \bibitem{ho2008ecomap} Y.-C.~Ho et al., ``ECO-map technology remapping for post-mask ECO using simulated annealing,'' in \emph{Proc. ISPD}, 2008.
 \bibitem{jiang2010fraig} J.-H.~Jiang et al., ``A robust functional ECO engine by SAT proof minimization and interpolation techniques,'' in \emph{Proc. ICCAD}, 2010.
 \bibitem{lin2011simult} C.-W.~Lin et al., ``Simultaneous functional and timing ECO,'' in \emph{Proc. ICCAD}, 2011.
@@ -709,12 +708,11 @@ FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的�
 \bibitem{luo2016unified} Luo et al., ``Unified approach for simultaneous functional and timing ECO,'' in \emph{Proc. ICCAD}, 2016.
 \bibitem{zhuo2018patch} Zhuo et al., ``Efficient computation of ECO patch functions,'' in \emph{Proc. DAC}, 2018.
 \bibitem{mishchenko2006sat} A.~Mishchenko et al., ``SAT sweeping with local observability don't-cares,'' in \emph{Proc. DAC}, 2006.
-\bibitem{zhong2024stp} Zhong et al., ``A semi-tensor product based circuit simulation for SAT-sweeping,'' \emph{IEEE Trans. CAD}, 2024.
-\bibitem{wang2024seq} Wang et al., ``Toward exhaustive sequential redundancy removal,'' \emph{IEEE Trans. CAD}, 2024.
+\bibitem{zhong2024stp} Zhong et al., ``A semi-tensor product based circuit simulation for SAT-sweeping,'' in \emph{Proc. DATE}, 2024.
 \bibitem{liang2012buffer} H.~Liang et al., ``O(mn) time algorithm for optimal buffer insertion of nets with m sinks,'' \emph{IEEE Trans. CAD}, 2012.
-\bibitem{liu2021rlsizer} Liu et al., ``RL-sizer: VLSI gate sizing for timing optimization using deep reinforcement learning,'' in \emph{Proc. ICCAD}, 2021.
-\bibitem{huang2025phys} Huang et al., ``Learning-driven physically aware large-scale circuit gate sizing,'' 2025.
-\bibitem{chen2024aito} Chen et al., ``AiTO: Simultaneous gate sizing and buffer insertion for timing optimization with GNNs and RL,'' in \emph{Proc. DAC}, 2024.
+\bibitem{liu2021rlsizer} Liu et al., ``RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning,'' in \emph{Proc. DAC}, 2021.
+\bibitem{huang2025phys} Huang et al., ``Learning-driven physically aware large-scale circuit gate sizing,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, 2025.
+\bibitem{chen2024aito} Chen et al., ``AiTO: Simultaneous gate sizing and buffer insertion for timing optimization with GNNs and RL,'' \emph{Integration}, 2024.
 \bibitem{li2025mlbuf} Li et al., ``Recursive learning-based virtual buffering for analytical global placement,'' in \emph{Proc. MLCAD}, 2025.
 \bibitem{zhang2025buffalo} Zhang et al., ``BUFFALO: PPA-configurable LLM-based buffer tree generation,'' in \emph{Proc. ICCAD}, 2025.
 \bibitem{zhang2023restructure} Zhang et al., ``Restructure-tolerant timing prediction via multimodal fusion,'' in \emph{Proc. DAC}, 2023.
