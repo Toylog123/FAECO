@@ -56,6 +56,7 @@
 | LOG-20260804-44 | **现实 period 协议（95% CP）重跑 b18/b19：b19 达成 MET（-0.90→+0.54）** | experiments/20260804_itc99_realistic/（A-only）+ runner 新增 --skip-mapping（复用 mapped.v）| 按 95% 原始关键路径设 period（b18=13.15ns、b19=17.04ns），WNS 落在现实 ECO 区间（b18 -0.69 / b19 -0.90）。b18 -0.69→-0.62（G maj3_1→maj3_2，TNS -28.18→-24.7，24 STA）；b19 **-0.90→+0.54（MET，TNS 0.0）**（R clkinv_1→bufinv_8，59 STA）。结论：大电路上 failure-aware 修复在现实约束下可收敛时序；b18 改善小是结构边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，SKY130 无 R 候选，G 仅微调），诚实记录
 
 | LOG-20260804-45 | **b18/b19 大电路实验审查：数据核验 + 代码审查通过** | experiments/20260804_itc99_realistic/ + 20260804_itc99_b18b19_repair/（A-only 只读核验）+ scripts/run_sequential_timing_check.py + scripts/run_outerloop_real_wns.py | 逐电路核对 outerloop_result.json/eval_trials.json：b18 现实协议 -0.69→-0.62（G maj3_1→maj3_2，TNS -28.18→-24.7，24 STA）、b19 -0.90→+0.54（MET，TNS 0.0，R clkinv_1→bufinv_8，59 STA），与日志完全一致；代码审查：--skip-mapping/--yosys-wsl 参数向后兼容、_to_wsl resolve 修复正确、timeout 300→1500 合理；全量回归 214 passed + 1 subtest。审查结论：通过（小改进点：yosys_cmd[0].endswith("wsl.exe") 对不带 .exe 的 wsl 变体不识别，当前用途无影响） |
+| LOG-20260804-46 | **b18 联合修复（JOINT）实验完成并独立核验：-0.69→-0.56（超越单门 G 的 -0.62）** | src/rseco/real_wns.py（joint_k 参数）+ scripts/run_outerloop_{real_wns,batch}.py（--joint-k）+ tests/test_joint_candidates.py（3 项）+ experiments/20260804_itc99_joint/b18/（A-only）| JOINT 候选=一次 STA 同时升级 actionables 中 top-k 个可 G 门的联合变更（本次 4 门：nand3b_1→nand3b_2 ×1 + maj3_1→maj3_2 ×3），避免逐门贪心被"单门局部改善不足"卡住。b18 现实协议（period 13.15ns）：baseline -0.69 → JOINT **-0.56**（TNS -28.18→-22.23），独立复跑 run_opensta 核验一致（BASE -0.69/JOINT -0.56），且优于 12.8 单门 G 的 -0.62。JOINT 共 25 次候选 STA（含 4 轮迭代：iter1-3 各 2 个 G 单候选均无改善，iter4 18 个单门候选 + 1 个 JOINT）。结论：多门联合尺寸调整在 pre-layout 也有效——单门 G 因输入电容拖累前级常被拒，联合升级把多个关键门一起增强，净收益为正；这是 R/G 混合之外新增的 G^J 联合修复维度。commit `1dab727`（4 文件，含 3 项测试）|
 
 
 
@@ -403,4 +404,3 @@
 | LOG-20260707-03 | 归纳原始材料 | `docs/materials/` | 论文、课题构想、文献均有索引 |
 | LOG-20260707-04 | 建立项目管理文档 | `docs/project_management/` | 包含 roadmap、milestones、风险、决策和长期任务 |
 | LOG-20260707-05 | 建立实验设计草案 | `docs/experiment_design/benchmark_flow.md`、`failure_aware_cut.md`、`patch_ranking.md` | 后续需细化为可执行 protocol |
-

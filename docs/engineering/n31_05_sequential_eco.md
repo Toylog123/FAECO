@@ -348,3 +348,12 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 | b19 | 17.04ns | -0.90 | **+0.54 (MET)** | R clkinv_1→bufinv_8 | -22.71→0.0 | 59 |
 
 结论：**大电路上 failure-aware 修复在现实约束下可收敛时序**（b19 达成 MET、TNS 清零）；b18 改善小是结构边界——关键路径 38 个实例中 36 个为 XOR/MAJ/XNOR 复杂门（乘法器结构），SKY130 中这些门无等价替换候选、G 在 pre-layout 仅微调，诚实记录该边界。
+
+### 12.9 联合修复（JOINT multi-gate sizing，2026-08-05）
+
+12.8 中 b18 单门 G 仅把 -0.69 修到 -0.62。根因：pre-layout 理想网络下大尺寸 cell 输入电容增大拖累前级，单门 upsizing 收益常被抵消（实测 *070*→o21a_4 反使 WNS 变差）。为此新增**联合修复（JOINT）**：把 actionables 中 top-k 个可 G 门同时升级成一个 JOINT 候选，一次 OpenSTA 实测；只接受 WNS 严格改善者。
+
+- **实现**：`src/rseco/real_wns.py` 增加 `joint_k` 参数（`_apply_joint` 批量替换 + `_eval_one` JOINT 分支 + `__call__` 生成联合候选）；`scripts/run_outerloop_real_wns.py` / `run_outerloop_batch.py` 增加 `--joint-k` 透传；`tests/test_joint_candidates.py` 3 项测试（禁用默认单 job、启用生成 JOINT、`_apply_joint` 批量替换验证）。commit `1dab727`。
+- **b18 实验结果（period 13.15ns，joint_k=4）**：baseline -0.69 → JOINT **-0.56**（TNS -28.18→-22.23），25 次候选 STA（iter1-3 同门 _649907_ G 单候选 o221ai_1→2/4 均无改善，触发权重细化换 cut；iter4 random_cut 覆盖 18 个单门候选 + 1 个 JOINT）。JOINT 候选同时升级 4 门：nand3b_1→nand3b_2（_646058_）+ maj3_1→maj3_2（_646060_/_646062_/_646065_）。18 个单门候选最好仅 -0.62，JOINT 唯一达到 -0.56 并被接受；独立复跑 `run_opensta` 核验一致（BASE -0.69 / JOINT -0.56），且优于单门 G 的 -0.62。
+- **b19 对照实验（period 17.04ns，joint_k=4）**：baseline -0.90 → +0.54（MET，TNS 0.0），60 次候选 STA（iter1-3 各 2 个 G 单候选无改善，iter4 54 个候选含 R + JOINT）。第 4 轮 **R 候选 clkinv_1→bufinv_8 达到 +0.54 被接受，JOINT 也达 +0.18（MET）但被正确拒绝**——决策层实测择优而非先验选 R/G。结论：b19 上单候选 R 已足够，JOINT 不劣化（+0.18 仍 MET）但非最优；与 b18 形成对照：**联合修复在单门 G 到顶的电路上提供额外增益（-0.62→-0.56），在 R 可达 MET 的电路上不干扰择优**。
+- **结论**：多门联合尺寸调整在 pre-layout 也有效——单门 G 因输入电容拖累前级常被拒，联合升级把多个关键门一起增强，净收益为正；JOINT 是 R/G 混合之外新增的 G^J 修复维度，代价是每轮多一次 STA（本次仅 1 个联合候选、25 总 STA 仍远小于全搜索）。
