@@ -3,6 +3,13 @@
 本文档记录实际推进动作，和 `decision_log.md` 的区别是：这里记录每天做了什么，`decision_log.md` 只记录会影响路线的关键决策。
 
 ## 2026-08-03
+## 2026-08-05
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260805-01 | **在线自适应决策层 v2 实现（UCB1 + 指数衰减）** | src/rseco/adaptive_selector.py + tests/test_adaptive_selector.py（9 项）+ src/rseco/real_wns.py（--adaptive 接入）+ scripts/run_outerloop_{real_wns,batch}.py（--adaptive 透传）+ tests/test_real_wns.py（2 项集成测试）| v1 是离线静态 per-cell-type 优先级表（人工从 12205 trial 归纳）；v2 保持同一接口，改为在线更新：每次实测 trial 后按 UCB1 + gamma=0.98 指数衰减更新策略分数，实时适应被修电路。冷启动回退 R/G/B；未试臂固定 0.5 探索分（避免 UCB 乐观先验把 B 顶到首位，与 pre-layout 领域先验冲突）。snapshot 可 JSON 序列化（写入 eval_trials.json 的 adaptive_snapshot 字段，commit 5e623e8）。commit 5529c8b。全量回归 228 passed + 1 subtest。 |
+| LOG-20260805-02 | **8 电路 --adaptive 无先验对照实验：8/8 修复成功，与静态表同等或更优 WNS** | experiments/20260805_adaptive_iscas89/（A-only）| 完全不用静态优先级表（冷启动），batch 4 并行 + 3 电路 skip-mapping 补跑。8/8 全部成功：s27 -0.28→-0.21（4 STA）、s382 -0.94→-0.93（8）、s420 -1.78→-1.75（3）、s641/s713 -1.86→-1.85（1）、s820 **-1.42→-1.28（18）**、s832 -1.15→-1.12（43）、s953 -1.48→-1.38（11）。对照静态表（27 STA）：final WNS 逐电路一致或更好，其中 **s820 -1.28 超越静态表 -1.36**（在线层探索到静态表遗漏的 G and2_0→and2_4 修复）。诚实边界：无先验冷启动导致 s820/s832/s953 探索更多（STA 18/43/11 vs 静态 3/3/4），8 电路合计 88 vs 27（+226%）。结论：在线层无需人工先验即可收敛到同等/更好质量，代价是探索开销；静态表的价值是压缩探索（少 STA），两者互补——可先 warm-start 再在线微调。 |
+
 ## 2026-08-04
 
 | ID | 动作 | 产物 | 备注 |
