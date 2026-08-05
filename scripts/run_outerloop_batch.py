@@ -54,6 +54,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--joint-k", type=int, default=0,
                    help="Enable joint repair: also test a candidate that resizes the top-k "
                         "actionable gates simultaneously (0 disables)")
+    p.add_argument("--joint-enumerate-depth", type=int, default=0,
+                   help="TCAD sprint: enumerate multi-gate joint candidates")
+    p.add_argument("--strategies", default="R,G,B",
+                   help="Comma-separated strategy kinds to enable (ablation)")
+    p.add_argument("--init-boundary-penalty", type=float, default=1.0)
+    p.add_argument("--init-size-penalty", type=float, default=1.0)
+    p.add_argument("--init-critical-coverage-reward", type=float, default=1.0)
     p.add_argument("--priority-table", type=Path, default=None)
     p.add_argument("--priority-table-dir", type=Path, default=None,
                    help="Dir of per-circuit {circuit}_loocv.json tables; overrides --priority-table")
@@ -87,6 +94,16 @@ def main() -> int:
     ]
     if getattr(args, "joint_k", 0) > 0:
         runner_cmd += ["--joint-k", str(args.joint_k)]
+    if getattr(args, "joint_enumerate_depth", 0) > 0:
+        runner_cmd += ["--joint-enumerate-depth", str(args.joint_enumerate_depth)]
+    if getattr(args, "strategies", "R,G,B") != "R,G,B":
+        runner_cmd += ["--strategies", str(args.strategies)]
+    if getattr(args, "init_boundary_penalty", 1.0) != 1.0:
+        runner_cmd += ["--init-boundary-penalty", str(args.init_boundary_penalty)]
+    if getattr(args, "init_size_penalty", 1.0) != 1.0:
+        runner_cmd += ["--init-size-penalty", str(args.init_size_penalty)]
+    if getattr(args, "init_critical_coverage_reward", 1.0) != 1.0:
+        runner_cmd += ["--init-critical-coverage-reward", str(args.init_critical_coverage_reward)]
     if args.no_feedback:
         runner_cmd.append("--no-feedback")
     if args.enable_buffer:

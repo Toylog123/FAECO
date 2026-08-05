@@ -6,6 +6,43 @@ from pathlib import Path
 from unittest import mock
 
 from rseco.gate_sizing import parse_mapped_netlist
+from rseco.flow import run_multi_iteration_case
+ORIGINAL_V = """module top(A, B, C, D, E, F, G, H, Y);
+  input A, B, C, D, E, F, G, H;
+  output Y;
+  wire N1, N2, N3, N4, N5, N6, N7, N8, N9, N10, N11, N12, N13, N14;
+  and g1 (N1, A, B);
+  and g2 (N2, C, D);
+  and g3 (N3, E, F);
+  and g4 (N4, G, H);
+  not g5 (N5, N1);
+  not g6 (N6, N5);
+  not g7 (N7, N2);
+  not g8 (N8, N7);
+  not g9 (N9, N3);
+  not g10 (N10, N9);
+  not g11 (N11, N4);
+  not g12 (N12, N11);
+  or g13 (N13, N6, N8);
+  or g14 (N14, N10, N12);
+  or g15 (Y, N13, N14);
+endmodule
+"""
+
+RESYNTHESIZED_V = """module top(A, B, C, D, E, F, G, H, Y);
+  input A, B, C, D, E, F, G, H;
+  output Y;
+  wire N1, N2, N3, N4, N5, N6;
+  and g1 (N1, A, B);
+  and g2 (N2, C, D);
+  and g3 (N3, E, F);
+  and g4 (N4, G, H);
+  or g5 (N5, N1, N2);
+  or g6 (N6, N3, N4);
+  or g7 (Y, N5, N6);
+endmodule
+"""
+
 from rseco.real_wns import (
     RealWnsEvaluator,
     dff_d_input_net,
@@ -548,3 +585,87 @@ def _last_trials(tmp_path):
     for f in files:
         return _json.loads(f.read_text(encoding="utf-8")).get("trials", [])
     return []
+
+
+def test_strategy_filter_ablation_only_requested_kinds(tmp_path):
+    """TCAD sprint 2: with strategy_filter=("R",), only R candidates are
+    evaluated; G sizing candidates must not appear in the trials."""
+    ev = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path / "eval",
+        critical_instances=["_051_", "_070_", "_071_", "_075_"],
+        workers=1,
+        strategy_filter=("R",),
+    )
+    with mock.patch("rseco.real_wns.run_opensta_sequential", side_effect=_fake_sta):
+        result = ev(FakePatch, weights=None)
+    kinds = {t["kind"] for t in ev.trials}
+    assert kinds <= {"R"}, f"unexpected kinds {kinds}"
+    assert len(ev.trials) > 0
+
+
+def test_joint_enumerate_generates_multi_gate_combos(tmp_path):
+    """TCAD sprint 1: with joint_enumerate_depth>=2, the evaluator creates
+    JOINT candidates combining multiple critical-path gates, fully automated."""
+    ev = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path / "eval",
+        critical_instances=["_051_", "_070_", "_071_", "_075_"],
+        workers=1,
+        joint_enumerate_depth=3,
+    )
+    combos = ev._joint_enumerate_combos(parse_mapped_netlist(MAPPED_TEXT))
+    assert len(combos) > 0
+    assert all(len(c[0]) >= 2 for c in combos), "each combo must touch >=2 gates"
+    with mock.patch("rseco.real_wns.run_opensta_sequential", side_effect=_fake_sta):
+        result = ev(FakePatch, weights=None)
+    joint_kinds = [t for t in ev.trials if t["kind"] == "JOINT"]
+    assert len(joint_kinds) > 0
+
+
+def _functional_ok(original, resynthesized, *, outputs):
+    from rseco.equivalence import EquivalenceResult
+    return EquivalenceResult(status="pass", method="injected_functional", reason="test")
+
+def test_init_weights_flow_into_refinement_loop(tmp_path):
+    """TCAD sprint 2 sensitivity: init_weights override the starting
+    RefinementWeights (boundary/size/critical-coverage) so lambda sweeps
+    actually change the first-round cut."""
+    case_dir = tmp_path / "initw_case"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "case.yaml").write_text("case_id: initw_case\ntarget:\n  output: Y\n", encoding="utf-8")
+    (case_dir / "original" / "original.v").write_text(ORIGINAL_V, encoding="utf-8")
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(RESYNTHESIZED_V, encoding="utf-8")
+
+    seen: list[dict] = []
+    class ProbeEval:
+        trials: list[dict] = []
+        def __call__(self, patch, current_weights):
+            seen.append({
+                "boundary": current_weights.boundary_penalty,
+                "size": current_weights.size_penalty,
+                "critical": current_weights.critical_coverage_reward,
+            })
+            return {"wns": -0.9, "improved": True}
+
+    result = run_multi_iteration_case(
+        case_dir,
+        max_iterations=3,
+        enable_feedback=True,
+        equivalence_checker=_functional_ok,
+        wns_evaluator=ProbeEval(),
+        init_weights={"boundary_penalty": 2.0, "size_penalty": 1.5,
+                      "critical_coverage_reward": 0.5},
+    )
+    assert result["success"] is True
+    assert seen[0] == {"boundary": 2.0, "size": 1.5, "critical": 0.5}
+

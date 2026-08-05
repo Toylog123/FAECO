@@ -109,6 +109,20 @@ def parse_args() -> argparse.Namespace:
                    help="SPEF fanout penalty multiplier (>1 lengthens high-fanout nets)")
     p.add_argument("--physical-depth-penalty", type=float, default=1.0,
                    help="SPEF logic-depth penalty multiplier (>1 lengthens deep paths)")
+    p.add_argument("--joint-enumerate-depth", type=int, default=0,
+                   help="TCAD sprint: enumerate multi-gate joint candidates along the "
+                        "critical path within a sliding window of this depth "
+                        "(2..window subsets, bounded to 50); OpenSTA picks the best")
+    p.add_argument("--strategies", default="R,G,B",
+                   help="Comma-separated strategy kinds to enable (ablation: R, G, B, "
+                        "R,G, R,B, G,B, R,G,B)")
+    p.add_argument("--init-boundary-penalty", type=float, default=1.0,
+                   help="Initial cut boundary penalty (sensitivity analysis lambda_1)")
+    p.add_argument("--init-size-penalty", type=float, default=1.0,
+                   help="Initial cut size penalty (sensitivity analysis lambda_2)")
+    p.add_argument("--init-critical-coverage-reward", type=float, default=1.0,
+                   help="Initial critical-coverage reward (sensitivity analysis lambda_3)")
+
     p.add_argument("--physical-unit-len", type=float, default=40.0,
                    help="SPEF unit wire length (um); lower = lighter physical load "
                         "(2um approximates post-placement Manhattan distance)")
@@ -202,6 +216,11 @@ def main() -> int:
         hold_uncertainty=args.hold_uncertainty,
         early_stop=args.early_stop,
         joint_k=args.joint_k,
+        joint_enumerate_depth=args.joint_enumerate_depth,
+        strategy_filter=tuple(s.strip() for s in args.strategies.split(',') if s.strip()),
+        init_boundary_penalty=args.init_boundary_penalty,
+        init_size_penalty=args.init_size_penalty,
+        init_critical_coverage_reward=args.init_critical_coverage_reward,
         clock_port=args.clock_port,
         physical_gate=args.physical_gate,
         min_physical_gain_ns=args.min_physical_gain,
@@ -242,6 +261,13 @@ def main() -> int:
     result["baseline_wns"] = baseline_wns
     result["baseline_min_slack"] = baseline_min_slack
     result["hold_mode"] = args.hold_mode
+    result["strategies"] = [s.strip() for s in args.strategies.split(',') if s.strip()]
+    result["joint_enumerate_depth"] = args.joint_enumerate_depth
+    result["init_weights"] = {
+        "boundary_penalty": args.init_boundary_penalty,
+        "size_penalty": args.init_size_penalty,
+        "critical_coverage_reward": args.init_critical_coverage_reward,
+    }
     result["hold_uncertainty_ns"] = args.hold_uncertainty if args.hold_mode else None
     result["critical_instances"] = critical
     result["endpoint"] = endpoint

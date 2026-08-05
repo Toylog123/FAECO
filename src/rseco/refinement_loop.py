@@ -30,6 +30,7 @@ def simulate_refinement_loop(
     *,
     on_refine: Callable[[list[str]], None] | None = None,
     enable_feedback: bool = True,
+    init_weights: dict | None = None,
 ) -> dict:
     """Run the failure-aware refinement loop.
 
@@ -40,6 +41,15 @@ def simulate_refinement_loop(
     """
     config = config or RefinementConfig()
     weights = RefinementWeights()
+    if init_weights:
+        weights = RefinementWeights(
+            boundary_penalty=float(init_weights.get("boundary_penalty", weights.boundary_penalty)),
+            size_penalty=float(init_weights.get("size_penalty", weights.size_penalty)),
+            critical_coverage_reward=float(init_weights.get("critical_coverage_reward", weights.critical_coverage_reward)),
+            verification_cost_penalty=float(init_weights.get("verification_cost_penalty", weights.verification_cost_penalty)),
+            equivalence_stability_reward=float(init_weights.get("equivalence_stability_reward", weights.equivalence_stability_reward)),
+            max_cone_gates=int(init_weights.get("max_cone_gates", weights.max_cone_gates)),
+        )
     history: list[dict] = []
     actions_history: list[list[str]] = []
 

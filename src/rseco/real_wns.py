@@ -37,6 +37,7 @@ from .gate_sizing import (
 from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
 from .opensta import run_opensta_sequential
 from .strategy_selector import exploration_order
+import itertools
 
 
 #: report_checks line: ``   0.36    0.69 v _079_/X (sky130_fd_sc_hd__or3_1)``
@@ -178,6 +179,11 @@ class RealWnsEvaluator:
         early_stop: bool = False,
         joint_k: int = 0,
         joint_mix: bool = False,
+        joint_enumerate_depth: int = 0,
+        strategy_filter: tuple[str, ...] = ("R", "G", "B"),
+        init_boundary_penalty: float = 1.0,
+        init_size_penalty: float = 1.0,
+        init_critical_coverage_reward: float = 1.0,
         clock_port: str = "CK",
         physical_gate: bool = False,
         min_physical_gain_ns: float = 0.010,
@@ -213,6 +219,13 @@ class RealWnsEvaluator:
         self.early_stop = early_stop
         self.joint_k = max(0, joint_k)
         self.joint_mix = bool(joint_mix)
+        self.joint_enumerate_depth = max(0, joint_enumerate_depth)
+        self.strategy_filter = tuple(strategy_filter or ("R", "G", "B"))
+        self.init_weights = {
+            "boundary_penalty": float(init_boundary_penalty),
+            "size_penalty": float(init_size_penalty),
+            "critical_coverage_reward": float(init_critical_coverage_reward),
+        }
         self.clock_port = clock_port
         self.physical_gate = bool(physical_gate)
         self.min_physical_gain_ns = min_physical_gain_ns
@@ -252,6 +265,11 @@ class RealWnsEvaluator:
                 cells, inst, fanout, buf_types=self.buf_types, output_pins=output_pins
             ):
                 cands.append(("buf:" + buf_type + ":" + pin + ":" + new_net, {}, "B"))
+        # strategy ablation filter (pure-R / pure-G / pure-B): keep only
+        # the requested strategy kinds so the outer loop can measure the
+        # standalone contribution of each repair strategy.
+        if self.strategy_filter:
+            cands = [c for c in cands if c[2] in self.strategy_filter]
         # decision layer: reorder candidates by the per-cell-type strategy
         # priority table (fallback R,G,B); with --adaptive, use the online
         # UCB-based selector that updates from measured trials instead.
@@ -286,6 +304,51 @@ class RealWnsEvaluator:
             else:
                 out = apply_sizing(out, {inst: new_type})
         return out
+
+    def _joint_enumerate_combos(self, cells) -> list[tuple[dict, str]]:
+        """Joint repair de-humanization (TCAD sprint): enumerate multi-gate
+        upsize/rewrite combinations along the critical path.
+
+        For ``joint_enumerate_depth > 0``, take a sliding window of
+        ``joint_enumerate_depth`` consecutive critical-path instances and
+        enumerate every subset of size >= 2 within the window (bounded to
+        avoid an exponential blowup).  Each combination is applied as a
+        single STA-evaluated JOINT candidate -- fully automated, no manual
+        selection of which gates to upsize together.
+        """
+        if self.joint_enumerate_depth <= 0:
+            return []
+        # critical_instances are already in path order; keep only those with
+        # a real cell and a candidate.
+        by_inst = {c.instance: c for c in cells}
+        ordered = [i for i in self.critical_instances if i in by_inst][: self.max_instances]
+        if len(ordered) < 2:
+            return []
+        window = min(self.joint_enumerate_depth, len(ordered))
+        combos: list[tuple[dict, str]] = []
+        max_combos = 50  # TCAD sprint: bounded enumeration
+        # sliding window: for each start index, enumerate subsets of size
+        # 2..window over the window slice
+        for start in range(len(ordered) - window + 1):
+            win = ordered[start:start + window]
+            for r in range(2, window + 1):
+                for subset in itertools.combinations(win, r):
+                    change: dict[str, tuple[str, dict, str]] = {}
+                    for inst in subset:
+                        cands = self._candidates_for(cells, inst)
+                        # prefer R (logic rewrite) then G (sizing) -- do not
+                        # put buffer insertion inside a joint candidate
+                        chosen = next((c for c in cands if c[2] == "R"),
+                                      next((c for c in cands if c[2] == "G"), None))
+                        if chosen is None:
+                            break
+                        change[inst] = (chosen[0], chosen[1], chosen[2])
+                    if len(change) >= 2:
+                        label = ",".join(f"{i}:{c[0]}" for i, c in sorted(change.items()))
+                        combos.append((change, label))
+                        if len(combos) >= max_combos:
+                            return combos
+        return combos
 
     def _eval_one(self, job: tuple) -> dict:
         inst, cell_type, new_type, pin_map, kind, text, cand_dir, top_module, index = job
@@ -415,6 +478,15 @@ class RealWnsEvaluator:
                     break
             if len(joint_change) >= 2:
                 jobs.append(("JOINT", "joint", "joint", joint_change, "JOINT",
+                             self.mapped_text, cand_dir, self.top_module, job_index))
+                job_index += 1
+
+        # Joint auto-enumeration (TCAD sprint 1, hard-4 fix): enumerate
+        # multi-gate combinations along the critical path and let OpenSTA
+        # pick the best -- no manual selection of the joint set.
+        if self.joint_enumerate_depth > 0:
+            for change, label in self._joint_enumerate_combos(cells):
+                jobs.append(("JOINT", "joint", label, change, "JOINT",
                              self.mapped_text, cand_dir, self.top_module, job_index))
                 job_index += 1
 

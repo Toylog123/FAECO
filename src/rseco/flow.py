@@ -348,6 +348,7 @@ def run_multi_iteration_case(
     candidates_per_iteration: int = 8,
     critical_instances: list[str] | None = None,
     r_available: set[str] | None = None,
+    init_weights: dict | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -484,6 +485,7 @@ def run_multi_iteration_case(
         evaluator,
         RefinementConfig(max_iterations=max_iterations),
         enable_feedback=enable_feedback,
+        init_weights=init_weights,
     )
     result["case_id"] = case.case_id
     result["logic_level_before"] = logic_level_before
