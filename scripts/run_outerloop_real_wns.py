@@ -72,6 +72,9 @@ def parse_args() -> argparse.Namespace:
                    help="Accept WNS-equal candidates that improve TNS")
     p.add_argument("--max-instances", type=int, default=8,
                    help="Max patch gates evaluated per candidate (critical first)")
+    p.add_argument("--joint-k", type=int, default=0,
+                   help="Enable joint repair: also test a candidate that resizes the top-k "
+                        "actionable gates simultaneously (0 disables)")
     p.add_argument("--priority-table", type=Path, default=None,
                    help="Path to strategy_priority_table.json; orders R/G/B by decision layer")
     p.add_argument("--skip-mapping", action="store_true",
@@ -156,6 +159,7 @@ def main() -> int:
         max_instances=args.max_instances,
         priority_table=priority_table,
         early_stop=args.early_stop,
+        joint_k=args.joint_k,
     )
 
     # 5. outer loop.  The sequential mapped netlist has DFF feedback loops,

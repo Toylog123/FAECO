@@ -51,6 +51,9 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--enable-buffer", action="store_true")
     p.add_argument("--tns-aware", action="store_true")
     p.add_argument("--max-instances", type=int, default=8)
+    p.add_argument("--joint-k", type=int, default=0,
+                   help="Enable joint repair: also test a candidate that resizes the top-k "
+                        "actionable gates simultaneously (0 disables)")
     p.add_argument("--priority-table", type=Path, default=None)
     p.add_argument("--priority-table-dir", type=Path, default=None,
                    help="Dir of per-circuit {circuit}_loocv.json tables; overrides --priority-table")
@@ -79,6 +82,8 @@ def main() -> int:
         "--workers", str(args.workers_per_circuit),
         "--max-instances", str(args.max_instances),
     ]
+    if getattr(args, "joint_k", 0) > 0:
+        runner_cmd += ["--joint-k", str(args.joint_k)]
     if args.no_feedback:
         runner_cmd.append("--no-feedback")
     if args.enable_buffer:

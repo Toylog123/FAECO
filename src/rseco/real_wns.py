@@ -137,6 +137,7 @@ class RealWnsEvaluator:
         max_instances: int = 8,
         priority_table: dict | None = None,
         early_stop: bool = False,
+        joint_k: int = 0,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
@@ -155,6 +156,7 @@ class RealWnsEvaluator:
         self.max_instances = max_instances
         self.priority_table = priority_table or {}
         self.early_stop = early_stop
+        self.joint_k = max(0, joint_k)
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
@@ -203,9 +205,16 @@ class RealWnsEvaluator:
             return insert_buffer(text, inst, bpin, buf_type, new_net)
         return apply_sizing(text, {inst: new_type})
 
+    def _apply_joint(self, text: str, change: dict[str, str]) -> str:
+        """Apply several instance -> new-type replacements in one shot (joint repair)."""
+        return apply_sizing(text, change)
+
     def _eval_one(self, job: tuple) -> dict:
         inst, cell_type, new_type, pin_map, kind, text, cand_dir, top_module, index = job
-        candidate_text = self._apply(text, inst, kind, new_type, pin_map)
+        if kind == "JOINT":
+            candidate_text = self._apply_joint(text, pin_map)
+        else:
+            candidate_text = self._apply(text, inst, kind, new_type, pin_map)
         sub = cand_dir / ("%03d_" % index + inst + "_" + kind)
         sub.mkdir(parents=True, exist_ok=True)
         (sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
@@ -259,6 +268,24 @@ class RealWnsEvaluator:
         for inst in actionable:
             for new_type, pin_map, kind in self._candidates_for(cells, inst):
                 jobs.append((inst, by_inst[inst].cell_type, new_type, pin_map, kind,
+                             self.mapped_text, cand_dir, self.top_module, job_index))
+                job_index += 1
+
+        # joint repair: one candidate that resizes the top-joint_k actionable
+        # instances with a G candidate simultaneously (multi-gate combination).
+        if self.joint_k > 0:
+            joint_change: dict[str, str] = {}
+            for inst in actionable:
+                if inst in joint_change:
+                    continue
+                for new_type, _pm, kind in self._candidates_for(cells, inst):
+                    if kind == "G":
+                        joint_change[inst] = new_type
+                        break
+                if len(joint_change) >= self.joint_k:
+                    break
+            if len(joint_change) >= 2:
+                jobs.append(("JOINT", "joint", "joint", joint_change, "JOINT",
                              self.mapped_text, cand_dir, self.top_module, job_index))
                 job_index += 1
 
