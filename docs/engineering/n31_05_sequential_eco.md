@@ -476,3 +476,13 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 - **分治切割**：`src/rseco/cut.py` 新增 `split_cone_by_depth` + `_subcone_from_gates`；`src/rseco/flow.py` 新增 `_cone_candidates`，超大锥按逻辑深度拆子锥独立生成候选（论文"分治切割"卖点）。
 - **0.67 复验**：s382 baseline -0.98 → 修复 **-0.85**（5 轮迭代，优于 0.33 的 -0.92）；b18 映射 227s/4.87MB、b19 510s/10.3MB 成功（无 bad_alloc）；全量回归 **252 passed**。
 - **注意**：0.67 映射网表与 0.33/0.9 不同，基线和修复空间都会变；论文对早期表格（0.9/0.33）与统一后 0.67 复验分别标注。
+### 12.17 迭代式物理感知闭环初探（F6 反馈实证，2026-08-05）
+
+评审战略建议把 SPEF 从"事后验尸报告"提升为"驱动算法迭代的物理先验约束"。落地：
+
+- **接线**：`scripts/run_outerloop_real_wns.py` 新增 `--physical-gate/--min-physical-gain/--physical-fanout-penalty/--physical-depth-penalty/--physical-unit-len`，透传 `RealWnsEvaluator`；`src/rseco/real_wns.py` 的 SPEF 生成支持 `unit_len_um/depth_penalty` 可调；`src/rseco/flow.py` 在每轮 evaluator 返回后扫描本轮 `trials`，有 `physical_failure=True` 即 `failures.add(PHYSICAL_LOAD_FAILURE)`，`refine_weights` 触发 `increase_boundary_penalty_physical`——F6 从"标记"变成"驱动下一轮割图"。
+- **OpenSTA 超时**：b18 0.67 大网表单次 STA ~210s，`run_sequential_timing_check.py` 超时 180s → 900s。
+- **s382（0.67 网表，period 0.5ns，unit_len=2µm，fp=1.0）**：325 trials 中 50 个 ideal 改善候选（>10ps）全部在 SPEF 复测下归零（physical WNS -1.32~-1.37 vs ideal baseline -0.98）；30 轮探索无接受，boundary_penalty 1.0→6.0。**F6 负反馈实证：物理门控把"ideal 有效、物理无效"的候选在进入下游物理 ECO 前量化剔除。**
+- **b18（0.67 网表，period 13.15ns，unit_len=2µm）**：486 trials 中 6 个 ideal 改善候选全部 SPEF 失败（-2.41 vs -2.24，0.67 网表关键路径为乘法器长链）；6 轮全拒，boundary_penalty 1.0→7.0。诚实负结果。
+- **0.33 网表对照（不启用门控，仅事后扫描）**：b18 JOINT 修复 ideal +0.13，SPEF 扫描 2µm +0.11 / 5µm +0.07 / 10µm +0.03 / 20µm 归零——轻负载下同一逻辑候选保留真实物理余量；s382 u5 +0.03。
+- **结论表述（论文 \S IV-G / tab:phys_closure）**：两类结果共同支撑"FAECO 是物理 ECO 的前端逻辑筛选器（Logic Filter）"：0.67 下无候选通过 ideal+SPEF 双门（收敛到不引入物理劣化），0.33 轻负载下候选保留 +0.11 改善余量。

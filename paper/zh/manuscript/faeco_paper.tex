@@ -504,6 +504,33 @@ b18 & 13.15\,ns & $-0.69$ & $-0.56$ ($+0.13$) & $-6.63$ & $-6.63$ ($0.00$) \\
 
 结论：**在理想网络下有效的修复（s382 +0.01、b18 +0.13）在加入寄生 RC 后改善随线长连续衰减直至归零**——这量化了 pre-layout$\rightarrow$post-layout 的收益保持边界，也是物理感知内环（\S 方法）存在的原因：FAECO 的定位是\textbf{物理 ECO 的前端逻辑筛选器（Logic Filter）}，其输出为后续物理尺寸调整保留真实可测的改善余量（b18 JOINT 在 ideal 下 +0.13、轻负载 SPEF 下 +0.11），而不是声称 pre-layout 修复直接保证 post-layout 收敛。该 SPEF 为简化估计（lumped RC、扇出/深度可调、非真实 P\&R 版图），完整 OpenROAD + PDK LEF/DEF 流程未接入（见 limitation L31-01）。
 
+
+\subsection{迭代式物理感知闭环初探}\label{sec:phys_closure}
+
+评审战略建议将 SPEF 从“事后验尸报告”提升为“驱动算法迭代的物理先验约束”。我们在统一 OSS-CAD 0.67 网表上开启物理门控外环（\texttt{--physical-gate}：ideal 改善 $>10\,$ps 才生成 SPEF 复测，SPEF 下仍严格改善才接受），并把 F6 物理负载失败反馈接入权重更新：当一轮中出现 \texttt{physical\_failure=True} 的 trial，外环记入 F6 失败类，\texttt{refine\_weights} 执行 \texttt{increase\_boundary\_penalty\_physical}，下一轮割图提高边界惩罚、规避高扇出/高线载路径。表~\ref{tab:phys_closure} 汇总两电路的闭环结果。
+
+\begin{table}[!t]
+\centering
+\caption{迭代式物理感知闭环初探：ideal 改善候选在 SPEF 复测下的保持率与 F6 反馈}
+\label{tab:phys_closure}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lclcccl}
+\toprule
+电路 \& 网表 \& period \& ideal baseline \& ideal 改善候选 \& SPEF 通过 \& boundary\_penalty \\\\
+\midrule
+s382 \& 0.67 \& 0.5\,ns \& $-0.98$ \& 50 \& 0 \& $1.0\to6.0$ \\\\
+b18 \& 0.67 \& 13.15\,ns \& $-2.24$ \& 6 \& 0 \& $1.0\to7.0$ \\\\
+b18$^{\ast}$ \& 0.33 \& 13.15\,ns \& $-0.69$ \& JOINT $+0.13$ \& $+0.11$（2\,$\mu$m） \& --- \\\\
+\bottomrule
+\end{tabular}
+
+\scriptsize
+$^{\ast}$0.33 网表对照（不启用物理门控，仅事后 SPEF 扫描）：JOINT 修复 ideal $+0.13$；简化 SPEF 扫描下改善随线长衰减——2\,$\mu$m 保持 $+0.11$、5\,$\mu$m $+0.07$、10\,$\mu$m $+0.03$、20\,$\mu$m 归零。
+\end{table}
+
+\textbf{诚实解读}：0.67 网表上，s382 的 50 个 ideal 改善候选在 SPEF 复测下全部归零（physical WNS $-1.32\sim-1.37$，baseline ideal $-0.98$），b18 的 6 个候选同样全部失败（$-2.41$ vs $-2.24$）——pre-layout 理想线网下的微改善绝大多数经不起简化物理负载。这不是流程失败，而是物理门控的预期行为：它把“ideal 有效、物理无效”的候选在进入下游物理 ECO 之前量化剔除，并让 F6 反馈逐轮提高 boundary\_penalty（s382 $1.0\to6.0$、b18 $1.0\to7.0$），外环多轮探索后无候选被接受（success=False），收敛到“不引入物理劣化”的稳定点。0.33 网表对照进一步显示：同一 JOINT 修复在轻负载（2\,$\mu$m，接近 post-placement 曼哈顿距离）下确实保持 $+0.11$ 改善，说明逻辑候选本身保留真实物理余量，只是 0.67 网表在该 period 下无候选能同时通过 ideal 与 SPEF 双门——两类结果共同支撑“FAECO 是物理 ECO 的前端逻辑筛选器（Logic Filter）”的定位（见 \S\ref{sec:conclusion} 与 limitation）。
+
 \subsection{局限性与边界}
 
 \begin{table}[!t]
@@ -631,7 +658,7 @@ s27 & $-0.36$ & $-0.36$（无改善） & $-0.28$ & ---（4 候选全被拒绝）
 
 s382 上迭代修复把 worst min slack 从 $-0.36$ 抬到 $-0.33$，且 setup WNS 未劣化反而略好（$-0.94\rightarrow-0.93$），说明 B 策略在受控 hold 场景下有真实可测收益；s27 上插 buffer 后 min slack 不动，因该电路多端点并列最差 min slack，单点修复抬不动 worst，4 个候选全部被严格接受规则拒绝——这同时验证了 failure-aware 接受规则能阻止无效修复插入。需要透明说明的是，这是 synthetic 场景（理想网络无天然 hold 违例），真实 post-layout hold 修复还需时钟树与 P\&R 数据（见 \S\ref{sec:parasitic} 与 limitation）。
 
-\section{结论}
+\section{结论}\label{sec:conclusion}
 
 FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与物理感知验证流水线：外环以 F1--F6 失败分类驱动确定性权重调整并在公开基准上端到端跑通，双目标联合割把等价性约束作为硬约束、关键路径覆盖割作为首轮默认候选，从根源上消除 F1/F4 互斥；内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，并以 ideal 改善 $>10$\,ps + SPEF 复测的物理门控把物理负载从“事后验尸”变为迭代反馈信号（F6）；对超大违例锥按逻辑深度分治切割。实验在 ISCAS89 顺序电路上 8/8 改善 WNS，在 ITC-99 基准族上 19 个可映射电路 17/19 真实 WNS 改善（含 b18/b19 大电路），并在完全异构的 PicoRV32 族上验证分布外泛化。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 / PicoRV32 公开基准与 SKY130 HD 标准单元库，工具链统一为 OSS-CAD Suite nightly（Yosys 0.67+），产物可复现。
 
