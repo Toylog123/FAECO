@@ -358,6 +358,25 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 - **b19 对照实验（period 17.04ns，joint_k=4）**：baseline -0.90 → +0.54（MET，TNS 0.0），60 次候选 STA（iter1-3 各 2 个 G 单候选无改善，iter4 54 个候选含 R + JOINT）。第 4 轮 **R 候选 clkinv_1→bufinv_8 达到 +0.54 被接受，JOINT 也达 +0.18（MET）但被正确拒绝**——决策层实测择优而非先验选 R/G。结论：b19 上单候选 R 已足够，JOINT 不劣化（+0.18 仍 MET）但非最优；与 b18 形成对照：**联合修复在单门 G 到顶的电路上提供额外增益（-0.62→-0.56），在 R 可达 MET 的电路上不干扰择优**。
 - **结论**：多门联合尺寸调整在 pre-layout 也有效——单门 G 因输入电容拖累前级常被拒，联合升级把多个关键门一起增强，净收益为正；JOINT 是 R/G 混合之外新增的 G^J 修复维度，代价是每轮多一次 STA（本次仅 1 个联合候选、25 总 STA 仍远小于全搜索）。
 
+### 12.10 物理感知验证（SPEF 寄生参数扫描，2026-08-05）
+
+评审短板第 1 条：pre-layout ideal-net 未考虑布线延迟。WSL2 无 OpenROAD/PDK（无法真实 P&R），采用诚实可做的**寄生参数感知（parasitic-aware）验证**：解析 mapped 网表 → 按扇出估计线长（unit_len_um × sqrt(fanout)）→ 用典型 SKY130 M2/M3 RC（0.09 Ω/µm、0.21 fF/µm）生成标准 SPEF → OpenSTA read_spef 在含线 RC 下重测 WNS。
+
+- **实现**：`src/rseco/spef.py`（parse_mapped_verilog 顶层模块识别 + estimate_net_rc + build_spef/write_spef）+ `scripts/run_parasitic_aware_check.py`（baseline/repaired × ideal/SPEF 四组 STA）+ `tests/test_spef.py`（6 项：顶层识别、多模块 wrapper、RC 随扇出增长、SPEF 结构、roundtrip、pinless 网跳过）。
+- **s382（R lpflow_inputiso1p→or2_1，period 0.5ns）**：ideal 下 -0.94→-0.93（+0.01）；SPEF 下改善随线长变化——5µm 时 +0.03（改善放大），10µm 起被淹没（0.0）。小电路改善幅度本身仅 0.01ns，物理负载下容易淹没，属诚实边界。
+- **b18（JOINT 4 门联合升级，period 13.15ns）**：ideal 下 -0.69→-0.56（+0.13）；SPEF 下改善随线长单调衰减：
+
+| 线长模型 | baseline WNS | JOINT WNS | 改善 |
+|---|---|---|---|
+| ideal（无寄生） | -0.69 | -0.56 | **+0.13** |
+| 2 µm | -0.92 | -0.81 | **+0.11** |
+| 5 µm | -1.25 | -1.18 | +0.07 |
+| 10 µm | -1.80 | -1.77 | +0.03 |
+| 20 µm | -3.05 | -3.05 | 0.0 |
+| 40 µm | -6.63 | -6.63 | 0.0 |
+
+- **结论**：联合修复收益在轻/中寄生负载下保持（2µm 时 +0.11，几乎不损失），重负载（20µm+）下被线延迟主导而消失。这量化了 pre-layout→post-layout 的收益保持边界：物理感知不是"有或无"，而是随线长的连续衰减；同时诚实记录 SPEF 模型是估计（无真实 P&R），重负载归零是该模型的保守结论。
+
 ### 12.10 在线自适应决策层 v2（2026-08-05）
 
 12.5 的决策层 v1 是离线归纳的静态 per-cell-type 优先级表（12205 trial -> strategy_priority_table.json），跨电路 leave-one-out 验证零损失，但一旦冻结无法适应目标电路。评审短板 2（决策智能性）要求引入自适应决策。实现 v2 在线自适应层（src/rseco/adaptive_selector.py）：
@@ -413,3 +432,47 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 1. **s382 hold 修复真实有效**：多轮迭代把 worst min slack 从 -0.36 抬到 -0.33，且 setup WNS 不劣化反而略好（-0.94→-0.93），证明 B 策略在受控 hold 场景下有真实可测收益；
 2. **s27 诚实失败**：插 buffer 后 min slack 不动（-0.36），因该电路多端点同时并列最差 min slack，单点修复抬不动 worst——与 s382 形成对照，说明"每个候选 OpenSTA 实测、只接受严格改善"的规则确实防止了无效插入（4 个候选全部被拒绝）；
 3. 这是 **synthetic 场景**（理想网络无天然 hold 违例），论文需透明标注；真实 post-layout hold 修复需要时钟树/P&R 数据（见 limitation）。
+
+### 12.13 评审缺陷 1+4：双目标联合割（Joint Bi-Objective Cut，2026-08-05）
+
+评审意见 1（核心算法"打补丁式修复"导致逻辑不自洽）：F1（等价）与 F4（时序增益）互斥、加权最小割恒选单门、critical_path_cover 直到复核阶段才硬塞。落实为**双目标联合割**：
+
+- `src/rseco/cut.py`：`build_weighted_cut_graph(..., r_available=None)`——无 R 等价候选的门 `critical_reward` 置零并强制绑定 G/B 权重（硬约束，从根源上避免 F1 失败）；`weighted_cut_candidates(..., critical_first_default=True)`——首轮**并行**生成加权全局最小割与关键路径覆盖割，两个候选同时进入 OpenSTA 实测、哪个先严格改善 WNS 用哪个。
+- `src/rseco/flow.py`：`run_multi_iteration_case` 增加 `r_available` 透传；`src/rseco/real_wns.py` 增加 `build_r_available()` + 前期 P1 的 `joint_mix` 首轮默认候选。
+- 评分公式：`Score = Δtiming×λ₁ - size_penalty×λ₂ + boundary_stability×λ₃`（时序增益、尺寸罚分、边界稳定性三目标）。
+- TDD：`tests/test_cut_patch.py` +4、`tests/test_joint_candidates.py` 更新（21 项相关测试全绿）。
+
+### 12.14 评审缺陷 2：物理感知内环化 + F6（2026-08-05）
+
+评审意见 2（物理寄生参数导致 WNS 改善归零，最致命）：把粗略物理估计从"事后验尸"嵌入内环。落实：
+
+- `src/rseco/spef.py`：`build_spef` 支持 `fanout_penalty/depth_penalty` 可调惩罚因子（替换"40um/unit"粗糙估计）；`src/rseco/opensta.py` `run_opensta` 支持 `spef_path`。
+- `src/rseco/real_wns.py` 物理门控：ideal 改善 > 10ps 才生成 SPEF 复测，SPEF 下同样改善才接受；否则丢弃并触发 F6。
+- `src/rseco/failures.py` 新增 `F6_physical_load_failure`；`refinement.py` F6 → boundary_penalty+1、下一轮排除高扇出门。
+- 论文措辞同步：FAECO 定位为**物理 ECO 的前端逻辑筛选器（Logic Filter）**，输出候选集为后续物理尺寸调整保留可测改善余量（b18 JOINT ideal +0.13、轻负载 SPEF +0.11），不再宣称"pre-layout 修复保证 post-layout 有效"。
+
+### 12.15 评审缺陷 3：异构现代基准 OOD 泛化（2026-08-05）
+
+评审意见 3（ISCAS89→ITC-99 同源同构，不等于跨设计泛化）。引入 **PicoRV32 基准族**（完全异构的现代开源设计）在统一 OSS-CAD 0.67 工具链下验证：
+
+| 电路 | 类型 | cells/DFF | period | baseline WNS | final WNS | 接受修复 |
+|---|---|---|---|---|---|---|
+| picorv32 | 控制密集（RISC-V 核） | 7797/1597 | 5.0ns | -9.96 | **-8.83** | R clkinv_1→bufinv_16（+1.13） |
+| picorv32_pcpi_mul | 数据密集（32×32 乘法器） | ~/255 | 2.0ns | -4.22 | -4.17 | G nand3_1→nand3_2（+0.05） |
+| picorv32_regs | 存储密集（寄存器堆） | ~/992 | 0.5ns | -0.19* | -0.19*（无改善） | ---（见注） |
+
+*注：0.67 下寄存器堆映射为 enable-flop（edfxtp）网表、内部 reg-to-reg 路径为空（I/O 主导），FAECO reg-to-reg 修复环无候选空间；0.33 下 -0.19 亦无改善（mux2 主导、无 R 候选）——两种工具链均诚实负结果。
+
+0.33 对照（历史归档）：pcpi_mul -4.09→-2.89（G nor2_1→nor2_4，+1.2）；regs -0.19 无改善。0.67 网表与 0.33 不同，基线与修复空间均变（pcpi_mul 乘法器关键路径在 0.67 下为 nor/nand 链，upsize 收益有限）。
+
+### 12.16 评审缺陷 4：工具链统一 OSS-CAD 0.67 + 分治切割（2026-08-05）
+
+评审意见 4（工具链版本分裂与 32 位内存崩溃）：彻底弃用 Yosys 0.9，统一工具链。落实：
+
+- **OSS-CAD Suite nightly（Yosys 0.67+146，64 位）**安装到 `C:\oss-cad-suite-build\oss-cad-suite`；`scripts/run_sequential_timing_check.py` 新增 `_find_oss_cad_root()`/`_yosys_env()`，默认 `yosys_cmd` 解析为 OSS-CAD 绝对路径 `bin/yosys.exe`。
+- **关键 bug 修复**：Windows CreateProcess 解析裸命令 `yosys` 用**父进程 PATH**（子进程 env PATH 对查找无效），prepend OSS 目录无效时会静默回退到 scoop shim 的 Yosys 0.9——必须传绝对路径。已修复（map.log 确认 0.67）。
+- **兼容性修复**：OpenSTA 3.1.0 的 Verilog parser 拒绝 `wire signed` 声明（Yosys 0.67 write_verilog 保留 RTL signed 属性），`run_yosys_mapping` 在写网表后自动去掉 `wire signed`（位宽不变，仅结构 STA 用）；PicoRV32 子模块须以 `--circuit <top>` 指定正确 top（同一源文件含多个模块），`synth -top` 误选整核会导致无时钟路径。
+- runner 反转：`run_outerloop_real_wns.py` 的 `--no-yosys-wsl` 改为 `--yosys-wsl`（默认 OSS 0.67，WSL 0.33 显式回退）。
+- **分治切割**：`src/rseco/cut.py` 新增 `split_cone_by_depth` + `_subcone_from_gates`；`src/rseco/flow.py` 新增 `_cone_candidates`，超大锥按逻辑深度拆子锥独立生成候选（论文"分治切割"卖点）。
+- **0.67 复验**：s382 baseline -0.98 → 修复 **-0.85**（5 轮迭代，优于 0.33 的 -0.92）；b18 映射 227s/4.87MB、b19 510s/10.3MB 成功（无 bad_alloc）；全量回归 **252 passed**。
+- **注意**：0.67 映射网表与 0.33/0.9 不同，基线和修复空间都会变；论文对早期表格（0.9/0.33）与统一后 0.67 复验分别标注。
