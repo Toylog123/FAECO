@@ -392,3 +392,24 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 | b18 | 13.15ns | -0.69 | -0.56 (+0.13) | -6.63 | -6.63 (0.00) |
 
 结论（诚实负面导向）：**pre-layout 理想网络下有效的修复在加入寄生 RC 后改善归零**——证明物理负载对修复有效性影响巨大，量化了物理感知 ECO 的必要性，也是方法当前最重要的边界。SPEF 为简化估计（lumped RC、非真实 P&R 版图），完整 OpenROAD + PDK LEF/DEF 流程未接入（见 limitation L31-01）；作为方法边界而非成熟物理验证。commit 0b44eb0；论文 sec:parasitic + limitation 更新 commit a722c03；232 测试全绿。
+### 12.12 Hold 时间修复（2026-08-05，评审短板 3 场景扩展）
+
+评审短板 3 要求扩展场景（Hold 违例修复）。pre-layout 理想网络基准没有天然 hold 违例（min slack 均匀为正），因此注入 **受控 hold 场景**：OpenSTA set_clock_uncertainty -hold 0.8ns，让 B（buffer insertion）策略修复最差 min（hold）路径。
+
+实现（commit 4a7f226）：
+- src/rseco/opensta.py：run_opensta_sequential 增加 hold_uncertainty / min_path，解析 worst slack min 返回 min_slack/min_slack_status；
+- src/rseco/real_wns.py：RealWnsEvaluator 增加 hold_mode，接受"严格改善 worst min slack 且不劣化 setup WNS"的候选（与 setup 循环同一 failure-aware 接受规则）；
+- src/rseco/hold_repair.py + scripts/run_hold_repair.py：DFF D 端插 buffer 链候选，多轮迭代（每轮修当前最差端点，更新网表再测）；
+- TDD 9 个 hold 测试（241+1 全绿）。
+
+真实数据（experiments/20260805_hold_repair/，A-only）：
+
+| 电路 | period | hold baseline (min_slack) | 修复后 (min_slack) | WNS | 轮数/插入 |
+|---|---|---|---|---|---|
+| s382 | 0.5ns | -0.36 | **-0.33** | -0.94 → -0.93 | 2 轮，DFF_2/DFF_13 各 1×buf_1 |
+| s27 | 0.5ns | -0.36 | -0.36（无改善） | -0.28 | 1 轮，4 候选全无效 |
+
+诚实双面结论：
+1. **s382 hold 修复真实有效**：多轮迭代把 worst min slack 从 -0.36 抬到 -0.33，且 setup WNS 不劣化反而略好（-0.94→-0.93），证明 B 策略在受控 hold 场景下有真实可测收益；
+2. **s27 诚实失败**：插 buffer 后 min slack 不动（-0.36），因该电路多端点同时并列最差 min slack，单点修复抬不动 worst——与 s382 形成对照，说明"每个候选 OpenSTA 实测、只接受严格改善"的规则确实防止了无效插入（4 个候选全部被拒绝）；
+3. 这是 **synthetic 场景**（理想网络无天然 hold 违例），论文需透明标注；真实 post-layout hold 修复需要时钟树/P&R 数据（见 limitation）。

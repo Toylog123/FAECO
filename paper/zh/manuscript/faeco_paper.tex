@@ -558,6 +558,29 @@ b22  & $-12.08$ & $-12.06$ & G mux2$_1$$\rightarrow_2$ & 1 \\
 
 随后接入 WSL2 的 64 位 Yosys 0.33，将此前因 32 位内存限制无法映射的 b18/b19 大电路补全：b18（37.6 万门）0.5ns 协议下基线 $-13.34\,$ns、修复 $-13.27$；b19（75.5 万门）基线 $-17.44$、修复 $-16.0$（接受 R clkinv$_1$$\rightarrow$bufinv$_8$，单候选改善 1.44 ns）。按 95\% 原始关键路径设置现实周期（b18 13.15 ns、b19 17.04 ns）后，WNS 落在实际 ECO 区间：b18 基线 $-0.69$，经联合修复（JOINT，一次 STA 同时升级 4 个关键门 nand3b$_1$$\rightarrow_2$ 与 maj3$_1$$\rightarrow_2$）改善至 $-0.56$（TNS $-28.18\rightarrow-22.23$），优于单门 G 的 $-0.62$——在 pre-layout 理想网络下，单门 upsizing 常因输入电容拖累前级而被拒绝，多门联合增强的净收益为正；b19 $-0.90\rightarrow+0.54$ 达成时序收敛（MET、TNS 清零，R 候选）。b18 剩余边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，库中无等价替换候选）如实记录。
 
+
+\subsection{Hold 时间违例修复}\label{sec:hold}
+
+评审的第三个关注点是场景扩展：除 setup 违例外，时序 ECO 还需处理 hold 违例。pre-layout 理想网络基准没有天然 hold 违例（min slack 均匀为正），因此注入受控 hold 场景（\texttt{set\_clock\_uncertainty -hold 0.8\,ns}），并让 B（buffer insertion）策略修复最差 min（hold）路径：对最差 hold 端点 DFF 的 D 输入插入 buffer 链增加路径延迟，每个候选仍由 OpenSTA 实测，只接受\textbf{严格改善 worst min slack 且不劣化 setup WNS} 的修复——与 setup 循环使用同一 failure-aware 接受规则。修复逐端点迭代：每轮修完当前最差端点后更新网表并重新测量。
+
+\begin{table}[!t]
+\centering
+\caption{Hold 场景扩展（synthetic，\texttt{set\_clock\_uncertainty -hold 0.8\,ns}）：B 策略迭代修复，真实 OpenSTA 实测}
+\label{tab:hold}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrl}
+\toprule
+\textbf{电路} & \textbf{hold baseline} & \textbf{修复后 min\_slack} & \textbf{setup WNS} & \textbf{接受修复} \\
+\midrule
+s382 & $-0.36$ & $-0.33$ & $-0.94\rightarrow -0.93$ & 2 轮：DFF\_2/DFF\_13 各 1$\times$buf\_1 \\
+s27 & $-0.36$ & $-0.36$（无改善） & $-0.28$ & ---（4 候选全被拒绝） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+s382 上迭代修复把 worst min slack 从 $-0.36$ 抬到 $-0.33$，且 setup WNS 未劣化反而略好（$-0.94\rightarrow-0.93$），说明 B 策略在受控 hold 场景下有真实可测收益；s27 上插 buffer 后 min slack 不动，因该电路多端点并列最差 min slack，单点修复抬不动 worst，4 个候选全部被严格接受规则拒绝——这同时验证了 failure-aware 接受规则能阻止无效修复插入。需要透明说明的是，这是 synthetic 场景（理想网络无天然 hold 违例），真实 post-layout hold 修复还需时钟树与 P\&R 数据（见 \S\ref{sec:parasitic} 与 limitation）。
+
 \section{结论}
 
 FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET），并进一步在 ITC-99 基准族上实现 19 个可映射电路 17/19 真实 WNS 改善（含 6 个大电路）。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
