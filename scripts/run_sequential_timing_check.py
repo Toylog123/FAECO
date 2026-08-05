@@ -240,7 +240,7 @@ def run_opensta(mapped: Path, period: float, output: Path,
         ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta",
          "-no_splash", "-exit", _to_wsl(tcl)],
         capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=180,
+        encoding="utf-8", errors="replace", timeout=900,
     )
     (output / "sta.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
     text = proc.stdout + proc.stderr

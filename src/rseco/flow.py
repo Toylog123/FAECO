@@ -426,6 +426,8 @@ def run_multi_iteration_case(
         candidates = _cone_candidates(
             cone, weights, critical_instances, r_available,
         )
+        _eval_trials_ref = getattr(wns_evaluator, "trials", None)
+        _trial_start = len(_eval_trials_ref) if _eval_trials_ref is not None else 0
         if not candidates:
             failures.add(FailureType.PATCH_TOO_LARGE)
             return False, None
@@ -452,6 +454,18 @@ def run_multi_iteration_case(
                 wns_info = wns_evaluator(patch, weights)
                 wns = wns_info["wns"]
                 wns_history.append(wns)
+                # F6 physical-load feedback (review shortboard): the
+                # evaluator marks a trial as physical_failure when its
+                # ideal-net gain did not survive the SPEF re-measure;
+                # surface that into the outer-loop failure set so the
+                # weight refinement raises boundary_penalty and the next
+                # cut avoids high-load paths.
+                eval_trials = getattr(wns_evaluator, "trials", None)
+                if eval_trials is not None:
+                    for _t in eval_trials[_trial_start:]:
+                        if _t.get("physical_failure"):
+                            failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
+                            break
                 if wns_info["improved"]:
                     return True, patch.patch_id, {"wns": wns}
                 # no timing gain on this candidate: keep exploring the

@@ -182,6 +182,8 @@ class RealWnsEvaluator:
         physical_gate: bool = False,
         min_physical_gain_ns: float = 0.010,
         physical_fanout_penalty: float = 1.0,
+        physical_depth_penalty: float = 1.0,
+        physical_unit_len_um: float = 40.0,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
@@ -215,6 +217,8 @@ class RealWnsEvaluator:
         self.physical_gate = bool(physical_gate)
         self.min_physical_gain_ns = min_physical_gain_ns
         self.physical_fanout_penalty = physical_fanout_penalty
+        self.physical_depth_penalty = physical_depth_penalty
+        self.physical_unit_len_um = physical_unit_len_um
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
@@ -315,7 +319,9 @@ class RealWnsEvaluator:
                     spef = write_spef(
                         sub / "physical.spef",
                         nl,
+                        unit_len_um=self.physical_unit_len_um,
                         fanout_penalty=self.physical_fanout_penalty,
+                        depth_penalty=self.physical_depth_penalty,
                     )
                     phys = run_opensta_sequential(
                         netlist_path=sub / "mapped.v",

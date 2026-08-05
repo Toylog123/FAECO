@@ -163,3 +163,46 @@ def test_wns_evaluator_receives_patch_object(tmp_path) -> None:
     assert received[0]["patch_id"].startswith("patch_")
     assert received[0]["gates"], "cut must contain real gates"
     assert received[0]["boundary_outputs"], "cut must have boundary outputs"
+
+
+def test_physical_failure_feedback_raises_boundary_penalty(tmp_path) -> None:
+    """F6 physical-load feedback: when the injected real-STA evaluator
+    records a trial with physical_failure=True (ideal gain does not survive
+    the SPEF re-measure), the outer loop must classify PHYSICAL_LOAD_FAILURE
+    and refine_weights must raise boundary_penalty (action
+    increase_boundary_penalty_physical) so the next cut avoids high-load
+    paths."""
+    case_dir = _make_case(tmp_path)
+
+    class FakeEval:
+        """Mimics RealWnsEvaluator.trials: records physical_failure trials."""
+
+        def __init__(self) -> None:
+            self.trials: list[dict] = []
+
+        def __call__(self, patch, current_weights):
+            # Fail with F6 until refine_weights has raised boundary_penalty
+            # at least twice (i.e. two physical refinements happened), then
+            # succeed with a physical-surviving candidate.
+            if current_weights.boundary_penalty < 3.0:
+                self.trials.append({"instance": "g1", "kind": "G",
+                                    "physical_failure": True, "wns": -1.5})
+                return {"wns": -1.5, "improved": False}
+            self.trials.append({"instance": "g2", "kind": "G",
+                                "physical_failure": False, "wns": -0.9})
+            return {"wns": -0.9, "improved": True}
+
+    fake = FakeEval()
+    result = run_multi_iteration_case(
+        case_dir,
+        max_iterations=6,
+        enable_feedback=True,
+        equivalence_checker=_functional_ok,
+        wns_evaluator=fake,
+    )
+    assert result["success"] is True
+    assert result["iterations"] >= 3
+    # the physical refinements must include the boundary action
+    phys_actions = [a for h in result["history"] for a in h.get("actions", [])
+                    if "physical" in a]
+    assert "increase_boundary_penalty_physical" in phys_actions

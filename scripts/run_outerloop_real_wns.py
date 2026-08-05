@@ -99,6 +99,19 @@ def parse_args() -> argparse.Namespace:
                    help="Fall back to WSL2 Ubuntu Yosys 0.33 (default is the native\n                   OSS-CAD Suite nightly Yosys 0.67, unified FAECO toolchain)")
     p.add_argument("--early-stop", action="store_true",
                    help="Stop evaluating candidates at first WNS improvement (serial only)")
+    p.add_argument("--physical-gate", action="store_true",
+                   help="Enable inner-loop physical gating: candidates must clear an ideal-net "
+                        "gain > min-physical-gain before a fanout/depth-aware SPEF re-measure, "
+                        "and are accepted only when the SPEF run also improves WNS (F6 feedback)")
+    p.add_argument("--min-physical-gain", type=float, default=0.010,
+                   help="Minimum ideal-net WNS gain (ns) before a candidate is SPEF re-measured")
+    p.add_argument("--physical-fanout-penalty", type=float, default=1.0,
+                   help="SPEF fanout penalty multiplier (>1 lengthens high-fanout nets)")
+    p.add_argument("--physical-depth-penalty", type=float, default=1.0,
+                   help="SPEF logic-depth penalty multiplier (>1 lengthens deep paths)")
+    p.add_argument("--physical-unit-len", type=float, default=40.0,
+                   help="SPEF unit wire length (um); lower = lighter physical load "
+                        "(2um approximates post-placement Manhattan distance)")
     return p.parse_args()
 
 
@@ -190,6 +203,11 @@ def main() -> int:
         early_stop=args.early_stop,
         joint_k=args.joint_k,
         clock_port=args.clock_port,
+        physical_gate=args.physical_gate,
+        min_physical_gain_ns=args.min_physical_gain,
+        physical_fanout_penalty=args.physical_fanout_penalty,
+        physical_depth_penalty=args.physical_depth_penalty,
+        physical_unit_len_um=args.physical_unit_len,
     )
 
     # 5. outer loop.  The sequential mapped netlist has DFF feedback loops,
