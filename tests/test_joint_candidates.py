@@ -124,13 +124,13 @@ def test_joint_apply_replaces_all_instances():
     actionable = ["_051_", "_070_", "_071_", "_075_"]
     change = {}
     for inst in actionable:
-        for new_type, _, kind in ev._candidates_for(cells, inst):
+        for new_type, pin_map, kind in ev._candidates_for(cells, inst):
             if kind == "G" and inst not in change:
-                change[inst] = new_type
+                change[inst] = (new_type, pin_map, kind)
                 break
     assert len(change) >= 2, change
     out = ev._apply_joint(MAPPED_TEXT, change)
-    for inst, new_type in change.items():
+    for inst, (new_type, _pm, _kind) in change.items():
         m = re.search(re.escape("sky130_fd_sc_hd__") + "[A-Za-z0-9_]+" +
                       re.escape(" " + inst + " ("), out)
         assert m is not None, (inst, new_type)

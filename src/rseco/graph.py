@@ -28,13 +28,26 @@ class FaninCone:
 
 
 def _is_sequential_gate(gate_type: str) -> bool:
-    """True for flip-flop gate types (``dff``, ``sky130_fd_sc_hd__dfxtp_1``, ...).
+    """True for flip-flop / latch gate types.
 
     Sequential outputs are timing boundaries: the combinational fanin cone
     stops there (reg-to-reg logic), which keeps the cone acyclic even when
     the sequential netlist contains feedback loops through flops.
+
+    Recognizes the ISCAS89 ``dff`` wrapper plus direct SKY130 standard-cell
+    flops (``sky130_fd_sc_hd__dfxtp_1`` etc.).  Without this, Yosys-mapped
+    netlists with direct cells (e.g. PicoRV32) treat flops as combinational
+    gates, pull the whole datapath into the cone and create combinational
+    cycles through the register feedback (Q -> logic -> D), which hangs the
+    logic-depth DP.
     """
-    return gate_type.lower().find("dff") != -1 or "latch" in gate_type.lower()
+    t = gate_type.lower()
+    if "dff" in t or "latch" in t:
+        return True
+    # sky130 flop families: dfx* / dfr* / dfs* / dlx* / dlr* / dfb*
+    return t.startswith("sky130_fd_sc_hd__") and any(
+        tok in t for tok in ("dfx", "dfr", "dfs", "dlx", "dlr", "dfb")
+    )
 
 
 def extract_fanin_cone(netlist: Netlist, roots: list[str]) -> FaninCone:

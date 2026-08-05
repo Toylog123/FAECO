@@ -131,10 +131,23 @@ def random_cut_candidates(cone: FaninCone, *, seed: int = 20260714, trials: int 
     return candidates
 
 
-def build_weighted_cut_graph(cone: FaninCone, weights: object) -> WeightedCutGraph:
+def build_weighted_cut_graph(
+    cone: FaninCone,
+    weights: object,
+    r_available: set[str] | None = None,
+) -> WeightedCutGraph:
     """Build the auditable weighted cut graph over cone gates.
 
-    All F1-F5 refinement weights enter the node costs (2026-08-04 fix):
+    All F1-F5 refinement weights enter the node costs (2026-08-04 fix).
+
+    ``r_available``: set of gates that have at least one logic-rewrite (R)
+    equivalence candidate in the Liberty library.  Gates *without* an R
+    candidate get the critical-coverage discount zeroed (hard equivalence
+    constraint: a timing-critical gate that cannot be rewritten must not be
+    selected by the F4 critical reward, which would only lead to an F1
+    equivalence failure later) and their stability term is minimized.  This
+    is the joint bi-objective cut: equivalence is a hard constraint encoded
+    directly in the graph, not a post-hoc functional check.
       * boundary_penalty (F1/F2): gates close to the boundary inputs are
         more expensive, pushing the cut toward stable deep regions.
       * equivalence_stability_reward (F1): high-fanout gates (unstable
@@ -172,10 +185,16 @@ def build_weighted_cut_graph(cone: FaninCone, weights: object) -> WeightedCutGra
         stability_term = equivalence_stability_reward * 0.1 * fanouts[gate]
         size_term = size_penalty * (cone_sizes[gate] ** 2) / sum_squares
         verification_term = verification_cost_penalty * 0.01 * n_gates
-        critical_divisor = 1.0 + critical_coverage_reward * depth / max_depth
+        r_ok = r_available is None or gate in r_available
+        # Hard equivalence constraint: without an R candidate, the F4
+        # critical reward must not discount this gate (it cannot be
+        # rewritten, so covering it with the critical reward only invites an
+        # F1 failure).  Stability reward likewise cannot help it.
+        critical_divisor = 1.0 + (critical_coverage_reward * depth / max_depth if r_ok else 0.0)
+        effective_stability = stability_term if r_ok else 0.0
         costs[gate] = max(
             0.05,
-            (base + boundary_term + stability_term + size_term + verification_term)
+            (base + boundary_term + effective_stability + size_term + verification_term)
             / critical_divisor,
         )
 
@@ -233,6 +252,8 @@ def weighted_cut_candidates(
     cone: FaninCone,
     weights: object,
     critical_instances: list[str] | None = None,
+    r_available: set[str] | None = None,
+    critical_first_default: bool = False,
 ) -> list[CutBoundary]:
     """Generate deterministic cut candidates from weighted graph costs.
 
@@ -248,12 +269,20 @@ def weighted_cut_candidates(
     candidate that actually covers the timing-critical gates.  As
     critical_coverage_reward grows, that candidate is ranked first.
     """
-    cut_graph = build_weighted_cut_graph(cone, weights)
+    cut_graph = build_weighted_cut_graph(cone, weights, r_available=r_available)
     solved = solve_weighted_cut(cone, cut_graph)
     min_cut = _cut_for_selected_gates(
         cone, solved.selected_gates, method=solved.method
     )
     candidates = [min_cut, fixed_min_cut(cone), random_cut(cone), size_only_cut(cone), critical_path_only_cut(cone)]
+    # Joint bi-objective cut: the critical-path cover is a *first-round*
+    # default candidate (not only an F4 failure remedy).  Both the weighted
+    # min-cut and the critical-path cover enter the same STA-measured
+    # candidate list; whichever improves WNS first is accepted.
+    if critical_instances and critical_first_default:
+        cover = _critical_path_cover_cut(cone, critical_instances, r_available=r_available)
+        if cover is not None and cover.patch_size > 0:
+            candidates.append(cover)
     size_penalty = float(getattr(weights, "size_penalty", 1.0))
     if size_penalty > 1.0:
         size_refined = _size_refined_cut(cone)
@@ -261,13 +290,13 @@ def weighted_cut_candidates(
             candidates.append(size_refined)
     critical_reward = float(getattr(weights, "critical_coverage_reward", 1.0))
     if critical_instances and critical_reward > 1.0:
-        cover = _critical_path_cover_cut(cone, critical_instances)
+        cover = _critical_path_cover_cut(cone, critical_instances, r_available=r_available)
         if cover is not None and cover.patch_size > 0:
             candidates.append(cover)
     # F4 feedback ranks the critical-path-cover cut first so beam-1 loops
     # actually try the timing-targeted candidate after a timing failure
     # (previously the 4-gate cover lost to every 1-gate cut by cost).
-    critical_first = critical_reward > 1.0 and bool(critical_instances)
+    critical_first = (critical_reward > 1.0 or critical_first_default) and bool(critical_instances)
     return sorted(
         _deduplicate_candidates(candidates),
         key=lambda candidate: (
@@ -280,41 +309,63 @@ def weighted_cut_candidates(
 
 
 def _logic_depths(cone: FaninCone) -> dict[str, int]:
-    """Longest path length from the cone boundary inputs to each gate."""
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    """Longest path length from the cone boundary inputs to each gate.
 
-    def depth_of(gate: str, memo: dict[str, int]) -> int:
+    Iterative post-order DP: deep combinational cones (e.g. PicoRV32) can
+    exceed the Python recursion limit, so depth is computed with an
+    explicit stack instead of recursive DFS.
+    """
+    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    memo: dict[str, int] = {}
+    stack: list[tuple[str, bool]] = []
+    for gate in cone.gates:
+        stack.append((gate, False))
+    while stack:
+        gate, expanded = stack.pop()
         if gate in memo:
-            return memo[gate]
+            continue
         internal_inputs = [
             signal for signal in cone.gate_inputs[gate] if signal in output_to_gate
         ]
         if not internal_inputs:
             memo[gate] = 1
-            return 1
-        value = 1 + max(depth_of(output_to_gate[signal], memo) for signal in internal_inputs)
-        memo[gate] = value
-        return value
-
-    memo: dict[str, int] = {}
-    return {gate: depth_of(gate, memo) for gate in cone.gates}
+            continue
+        if not expanded:
+            stack.append((gate, True))
+            for signal in internal_inputs:
+                driver = output_to_gate[signal]
+                if driver not in memo:
+                    stack.append((driver, False))
+        else:
+            # cycle guard: if any input driver is not memoized yet (a
+            # combinational loop slipped through cone extraction), fall back
+            # to the available depths so the DP always terminates.
+            vals = [
+                memo[output_to_gate[s]]
+                for s in internal_inputs
+                if output_to_gate[s] in memo
+            ]
+            if not vals:
+                memo[gate] = 2
+            else:
+                memo[gate] = 1 + max(vals)
+    return memo
 
 
 def _fanin_cone_size(cone: FaninCone, root_gate: str) -> int:
     """Number of cone gates in the fanin cone of root_gate (inclusive)."""
     output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
     seen: set[str] = set()
-
-    def visit(gate: str) -> None:
+    stack = [root_gate]
+    while stack:
+        gate = stack.pop()
         if gate in seen:
-            return
+            continue
         seen.add(gate)
         for signal in cone.gate_inputs[gate]:
             driver = output_to_gate.get(signal)
             if driver is not None:
-                visit(driver)
-
-    visit(root_gate)
+                stack.append(driver)
     return len(seen)
 
 
@@ -334,17 +385,103 @@ def _fanout_counts(cone: FaninCone) -> dict[str, int]:
 
 
 
+def split_cone_by_depth(cone: FaninCone, max_subcone_gates: int) -> list[FaninCone]:
+    """Divide a large fanin cone into depth-bounded subcones.
+
+    Divide-and-conquer cut (review shortboard defect 4): for designs whose
+    full cone exceeds ``max_subcone_gates`` (b18/b19, PicoRV32-scale
+    datapaths), solving one global s-t cut graph can be intractable.  The
+    cone is split along logic-depth bands so every subcone is small enough
+    to cut independently; each subcone keeps only its own gates, treats
+    signals driven outside the band as boundary inputs, and marks gates
+    whose outputs are consumed by later (shallower) bands as boundary
+    outputs so the subcone cut targets the timing-critical portion.
+    Returns a list of subcones, or [cone] unchanged when it already fits.
+    """
+    if len(cone.gates) <= max_subcone_gates:
+        return [cone]
+    depths = _logic_depths(cone)
+    # band gates by depth, deepest first (closest to the timing endpoint)
+    by_depth: dict[int, list[str]] = {}
+    for gate in cone.gates:
+        by_depth.setdefault(depths[gate], []).append(gate)
+    levels = sorted(by_depth, reverse=True)
+    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    # downstream (shallower-band / final) consumers for boundary-output detection
+    consumer_of: dict[str, set[str]] = {g: set() for g in cone.gates}
+    for gate in cone.gates:
+        for signal in cone.gate_inputs[gate]:
+            driver = output_to_gate.get(signal)
+            if driver is not None and driver != gate:
+                consumer_of[driver].add(gate)
+    subcones: list[FaninCone] = []
+    band: list[str] = []
+    for level in levels:
+        band.extend(by_depth[level])
+        if len(band) >= max_subcone_gates or level == levels[-1]:
+            subcones.append(_subcone_from_gates(cone, band, consumer_of, output_to_gate, depths))
+            band = []
+    return subcones
+
+
+def _subcone_from_gates(cone, band, consumer_of, output_to_gate, depths) -> FaninCone:
+    gate_set = set(band)
+    gate_outputs = {g: cone.gate_outputs[g] for g in band}
+    gate_inputs = {g: list(cone.gate_inputs[g]) for g in band}
+    # boundary inputs: signals not driven inside the band
+    boundary_inputs: list[str] = []
+    seen_bi: set[str] = set()
+    for g in band:
+        for signal in cone.gate_inputs[g]:
+            if signal in gate_outputs.values() or signal in seen_bi:
+                continue
+            seen_bi.add(signal)
+            boundary_inputs.append(signal)
+    # boundary outputs: band gates consumed outside the band, or the
+    # original cone root when it belongs to this (deepest) band
+    boundary_outputs: list[str] = []
+    seen_bo: set[str] = set()
+    for g in band:
+        outside = [c for c in consumer_of[g] if c not in gate_set]
+        if outside or (g in output_to_gate.values() and cone.gate_outputs[g] in cone.boundary_outputs):
+            out = cone.gate_outputs[g]
+            if out not in seen_bo:
+                seen_bo.add(out)
+                boundary_outputs.append(out)
+    # internal nets: band outputs that are not a boundary output
+    internal_nets = [
+        gate_outputs[g] for g in band
+        if gate_outputs[g] not in boundary_outputs and gate_outputs[g] not in cone.boundary_outputs
+    ]
+    return FaninCone(
+        roots=boundary_outputs or [cone.gate_outputs[band[0]]],
+        boundary_inputs=boundary_inputs,
+        boundary_outputs=boundary_outputs or [cone.gate_outputs[band[0]]],
+        internal_nets=internal_nets,
+        gates=band,
+        gate_outputs=gate_outputs,
+        gate_inputs=gate_inputs,
+    )
+
+
 def _critical_path_cover_cut(
-    cone: FaninCone, critical_instances: list[str]
+    cone: FaninCone,
+    critical_instances: list[str],
+    r_available: set[str] | None = None,
 ) -> CutBoundary | None:
     """Cut over the cone gates that lie on the real critical path.
 
     Only gates present in both the cone and the critical instances are
     included, in critical-path order (deepest first) so the candidate
-    targets the timing bottleneck.  Returns None when no overlap exists.
+    targets the timing bottleneck.  When ``r_available`` is given, gates
+    without an R equivalence candidate are excluded (hard equivalence
+    constraint: the cover only includes gates the repair strategies can
+    actually change without an F1 failure).  Returns None when no overlap.
     """
     cone_gate_set = set(cone.gates)
     covered = [g for g in critical_instances if g in cone_gate_set]
+    if r_available is not None:
+        covered = [g for g in covered if g in r_available]
     if not covered:
         return None
     return _cut_for_selected_gates(cone, covered, method="critical_path_cover")

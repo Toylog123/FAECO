@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -49,6 +50,39 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
+def _find_oss_cad_root() -> Path | None:
+    """Locate the OSS-CAD Suite root (native Windows Yosys 0.67).
+
+    Review shortboard defect 4: the FAECO toolchain is unified on the
+    OSS-CAD Suite nightly (Yosys 0.67+), replacing both the 32-bit Windows
+    Yosys 0.9 and the WSL Ubuntu 0.33 package.  The suite ships its runtime
+    DLLs under lib/, so PATH must include both bin/ and lib/.
+    """
+    explicit = os.environ.get("YOSYSHQ_ROOT")
+    if explicit and Path(explicit).exists():
+        return Path(explicit)
+    candidates = [
+        Path(r"C:\oss-cad-suite-build\oss-cad-suite"),
+        Path.home() / "oss-cad-suite",
+    ]
+    for cand in candidates:
+        if (cand / "bin" / "yosys.exe").exists():
+            return cand
+    return None
+
+
+def _yosys_env() -> dict | None:
+    """Environment for the native OSS-CAD Yosys; None falls back to os.environ."""
+    root = _find_oss_cad_root()
+    if root is None:
+        return None
+    env = dict(os.environ)
+    env["YOSYSHQ_ROOT"] = str(root)
+    env["SSL_CERT_FILE"] = str(root / "etc" / "cacert.pem")
+    env["PATH"] = str(root / "bin") + os.pathsep + str(root / "lib") + os.pathsep + env.get("PATH", "")
+    return env
+
+
 def _to_wsl(path: Path) -> str:
     """Windows path -> WSL /mnt/d path (absolute).
 
@@ -63,11 +97,22 @@ def run_yosys_mapping(circuit: Path, output: Path,
                       yosys_cmd: list[str] | None = None) -> list[str]:
     """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist.
 
-    ``yosys_cmd`` selects the Yosys executable. Default is Windows yosys;
-    pass ["wsl.exe","-d","Ubuntu","--","yosys"] for WSL2 64-bit Yosys,
-    needed for large ITC-99 circuits (b18/b19). WSL mode translates
-    map.ys paths via _to_wsl.
+    ``yosys_cmd`` selects the Yosys executable. Default is the native
+    OSS-CAD Suite nightly Yosys 0.67 (the unified FAECO toolchain,
+    review shortboard defect 4); pass
+    ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"] to fall back to
+    the WSL2 Ubuntu 0.33 package. WSL mode translates map.ys paths via
+    _to_wsl.
     """
+    # unified FAECO toolchain: default to native OSS-CAD Yosys 0.67;
+    # resolve the command *before* the WSL path translation check.
+    # NOTE: Windows CreateProcess resolves a bare ``yosys`` name via the
+    # *parent* PATH (the child env PATH is ignored for lookup), so when
+    # OSS-CAD is installed we must pass the absolute exe path to make
+    # sure the correct binary runs instead of a legacy PATH shim.
+    if yosys_cmd is None:
+        root = _find_oss_cad_root()
+        yosys_cmd = [str(root / "bin" / "yosys.exe")] if root else ["yosys"]
     script = output / "map.ys"
     lib_posix = LIB.as_posix()
     script_posix = script.as_posix()
@@ -112,12 +157,21 @@ def run_yosys_mapping(circuit: Path, output: Path,
         ),
         encoding="utf-8",
     )
-    yosys_cmd = yosys_cmd or ["yosys"]
     proc = subprocess.run(
         yosys_cmd + [script_posix], capture_output=True, text=True,
+        env=None if use_wsl else _yosys_env(),
         encoding="utf-8", errors="replace", timeout=1500,
     )
     (output / "map.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
+    mapped_file = output / "mapped.v"
+    if mapped_file.exists():
+        # OpenSTA 3.1.0's Verilog parser rejects `wire signed` declarations
+        # (Yosys 0.67 write_verilog keeps the RTL signed attribute on leftover
+        # internal nets).  For structural STA the signedness is irrelevant, so
+        # normalize the declaration (bit widths unchanged).
+        text = mapped_file.read_text(encoding="utf-8", errors="replace")
+        if "wire signed" in text:
+            mapped_file.write_text(text.replace("wire signed", "wire"), encoding="utf-8")
     return [l for l in (proc.stdout + proc.stderr).splitlines() if "ERROR" in l]
 
 
@@ -148,7 +202,8 @@ def _parse_tns(sta_text: str) -> float | None:
 
 def run_opensta(mapped: Path, period: float, output: Path,
                 top_module: str | None = None, multi_path: bool = False,
-                hold_uncertainty: float = 0.0) -> dict[str, Any]:
+                hold_uncertainty: float = 0.0,
+                clock_port: str = "CK") -> dict[str, Any]:
     """OpenSTA via WSL2: read Liberty + mapped + create_clock -> report.
 
     ``top_module`` is the design module name to link.  If omitted, it is
@@ -165,7 +220,7 @@ def run_opensta(mapped: Path, period: float, output: Path,
         f"read_liberty {_to_wsl(LIB)}\n"
         f"read_verilog {_to_wsl(mapped)}\n"
         f"link_design {top_module}\n"
-        f"create_clock -name clk -period {period} [get_ports CK]\n"
+        f"create_clock -name clk -period {period} [get_ports {clock_port}]\n"
     )
     if hold_uncertainty and hold_uncertainty > 0:
         tcl_body += f"set_clock_uncertainty -hold {hold_uncertainty} [get_clocks clk]\n"

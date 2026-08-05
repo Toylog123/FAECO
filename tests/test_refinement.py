@@ -46,3 +46,13 @@ class FailureAwareRefinementTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_physical_load_failure_increases_boundary_penalty():
+    from rseco.failures import FailureType
+    from rseco.refinement import RefinementWeights, refine_weights
+    decision = refine_weights(
+        RefinementWeights(), {FailureType.PHYSICAL_LOAD_FAILURE}
+    )
+    assert decision.weights.boundary_penalty == 2.0
+    assert "increase_boundary_penalty_physical" in decision.actions

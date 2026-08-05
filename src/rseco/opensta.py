@@ -208,6 +208,8 @@ def run_opensta_sequential(
     timeout_s=180.0,
     hold_uncertainty: float = 0.0,
     min_path: bool = False,
+    clock_port: str = "CK",
+    spef_path=None,
 ):
     """Run sequential pre-layout STA (create_clock on CK) via OpenSTA.
 
@@ -229,6 +231,12 @@ def run_opensta_sequential(
     ``hold_uncertainty`` (ns) injects ``set_clock_uncertainty -hold X`` to
     model a hold-violation scenario; ``min_path`` adds a min-path
     ``report_checks -slack_max 0`` so hold-critical instances can be parsed.
+
+    ``clock_port`` is the clock port name in the mapped netlist (CK for
+    ISCAS89/ITC-99, clk for PicoRV32).
+
+    ``spef_path`` (optional) adds ``read_spef`` after link_design so the
+    run measures a parasitic-aware netlist (inner-loop physical gate).
     """
     if top_module is None:
         raw = Path(netlist_path).read_text(encoding="utf-8", errors="replace")
@@ -241,9 +249,11 @@ def run_opensta_sequential(
         "read_liberty " + _to_sta_path(LIB_SEQ) + "\n"
         "read_verilog " + _to_sta_path(Path(netlist_path)) + "\n"
         "link_design " + str(top_module) + "\n"
-        "create_clock -name clk -period " + str(period) + " [get_ports CK]\n"
+        "create_clock -name clk -period " + str(period) + " [get_ports " + clock_port + "]\n"
         "report_checks -path_delay max\n"
     )
+    if spef_path is not None:
+        tcl_body += "read_spef " + _to_sta_path(Path(spef_path)) + "\n"
     if hold_uncertainty and hold_uncertainty > 0:
         tcl_body += "set_clock_uncertainty -hold " + str(hold_uncertainty) + " [get_clocks clk]\n"
     if min_path:

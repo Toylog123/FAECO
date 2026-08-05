@@ -57,6 +57,13 @@ def refine_weights(
         verification_cost_penalty += 1.0
         max_cone_gates = max(1, max_cone_gates // 2)
         actions.extend(["increase_verification_cost_penalty", "reduce_max_cone_gates"])
+    if FailureType.PHYSICAL_LOAD_FAILURE in failures:
+        # Physical-load feedback (review shortboard): an ideal-net gain that
+        # vanishes under parasitic RC means the repair touched a high-load
+        # path; push the cut boundary inward so the next iteration targets
+        # gates closer to the endpoint (lower effective wire load).
+        boundary_penalty += 1.0
+        actions.append("increase_boundary_penalty_physical")
 
     return RefinementDecision(
         weights=RefinementWeights(

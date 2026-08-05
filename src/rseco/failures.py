@@ -12,6 +12,7 @@ class FailureType(str, Enum):
     PATCH_TOO_LARGE = "F3_patch_too_large"
     TIMING_GAIN_INSUFFICIENT = "F4_timing_gain_insufficient"
     VERIFICATION_TOO_EXPENSIVE = "F5_verification_too_expensive"
+    PHYSICAL_LOAD_FAILURE = "F6_physical_load_failure"
 
 
 @dataclass(frozen=True)

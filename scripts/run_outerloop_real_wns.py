@@ -34,6 +34,7 @@ from rseco.equivalence import EquivalenceResult
 from rseco.flow import run_multi_iteration_case
 from rseco.real_wns import (
     RealWnsEvaluator,
+    build_r_available,
     dff_d_input_net,
     parse_critical_instances,
     parse_worst_endpoint,
@@ -57,6 +58,8 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--circuit", default="s382", help="ISCAS89 circuit id")
     p.add_argument("--iscas89-dir", type=Path, default=ROOT / "benchmarks" / "raw" / "iscas89")
+    p.add_argument("--source-file", type=Path, default=None,
+                   help="Explicit RTL/netlist path (overrides --circuit in iscas89-dir)")
     p.add_argument("--period", type=float, default=0.5, help="Clock period (ns)")
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--max-iterations", type=int, default=6)
@@ -90,8 +93,10 @@ def parse_args() -> argparse.Namespace:
                    help="Path to strategy_priority_table.json; orders R/G/B by decision layer")
     p.add_argument("--skip-mapping", action="store_true",
                    help="Reuse existing mapped.v instead of re-running Yosys")
+    p.add_argument("--clock-port", default="CK",
+                   help="Clock port name in the mapped netlist (CK for ISCAS89/ITC-99, clk for PicoRV32)")
     p.add_argument("--yosys-wsl", action="store_true",
-                   help="Use WSL2 64-bit Yosys for mapping (large ITC-99 circuits)")
+                   help="Fall back to WSL2 Ubuntu Yosys 0.33 (default is the native\n                   OSS-CAD Suite nightly Yosys 0.67, unified FAECO toolchain)")
     p.add_argument("--early-stop", action="store_true",
                    help="Stop evaluating candidates at first WNS improvement (serial only)")
     return p.parse_args()
@@ -99,7 +104,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    circuit_path = args.iscas89_dir / f"{args.circuit}.v"
+    circuit_path = args.source_file or (args.iscas89_dir / f"{args.circuit}.v")
     if not circuit_path.exists():
         print(f"{args.circuit}: circuit not found: {circuit_path}", file=sys.stderr)
         return 1
@@ -112,7 +117,8 @@ def main() -> int:
     if args.skip_mapping and mapped.exists():
         print(f"{args.circuit}: reusing existing mapped.v (skip mapping)")
     else:
-        yosys_cmd = ["wsl.exe", "-d", "Ubuntu", "--", "yosys"] if args.yosys_wsl else None
+        yosys_cmd = (["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"]
+                     if args.yosys_wsl else None)
         errors = run_yosys_mapping(circuit_path, out, yosys_cmd=yosys_cmd)
     if errors or not mapped.exists():
         print(f"{args.circuit}: mapping failed", file=sys.stderr)
@@ -121,7 +127,8 @@ def main() -> int:
 
     # 2. baseline OpenSTA (single worst path -> parse critical instances)
     base = run_opensta(mapped, args.period, out, top_module=args.circuit,
-                       hold_uncertainty=args.hold_uncertainty if args.hold_mode else 0.0)
+                       hold_uncertainty=args.hold_uncertainty if args.hold_mode else 0.0,
+                       clock_port=args.clock_port, multi_path=True)
     baseline_wns = base["wns"]
     if baseline_wns is None:
         print(f"{args.circuit}: baseline OpenSTA returned no WNS", file=sys.stderr)
@@ -182,6 +189,7 @@ def main() -> int:
         hold_uncertainty=args.hold_uncertainty,
         early_stop=args.early_stop,
         joint_k=args.joint_k,
+        clock_port=args.clock_port,
     )
 
     # 5. outer loop.  The sequential mapped netlist has DFF feedback loops,
@@ -195,6 +203,12 @@ def main() -> int:
             reason="sequential real-STA loop; success judged by WNS",
         )
 
+    # Joint bi-objective cut: pass which critical-path gates have an R
+    # equivalence candidate so the cut graph applies the hard equivalence
+    # constraint and the critical-path cover is a first-round default.
+    r_available = build_r_available(
+        LIB.read_text(encoding="utf-8"), critical, mapped_text
+    )
     result = run_multi_iteration_case(
         case_dir,
         max_iterations=args.max_iterations,
@@ -203,6 +217,7 @@ def main() -> int:
         wns_evaluator=evaluator,
         candidates_per_iteration=args.candidates_per_iteration,
         critical_instances=critical,
+        r_available=r_available,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period

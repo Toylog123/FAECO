@@ -482,3 +482,69 @@ def test_hold_mode_returns_baseline_when_no_min_slack_in_report(tmp_path) -> Non
         result = evaluator(FakePatch, weights=None)
     assert result["improved"] is False
     assert result["min_slack"] == -0.36
+
+
+class TestPhysicalGate:
+    """Review shortboard: parasitic RC must gate the inner-loop acceptance,
+    not just be a post-hoc check.  An ideal-only gain that vanishes under
+    SPEF is reported as F6 (physical load failure) and rejected."""
+
+    def _eval(self, tmp_path, sta_fn, **kw):
+        ev = RealWnsEvaluator(
+            mapped_text=MAPPED_TEXT,
+            top_module="s382",
+            period=0.5,
+            liberty_text=LIB_TEXT,
+            baseline_wns=-0.94,
+            output_dir=tmp_path,
+            critical_instances=["_051_", "_070_", "_071_", "_075_"],
+            workers=1,
+            physical_gate=True,
+            min_physical_gain_ns=0.010,
+            **kw,
+        )
+        with mock.patch("rseco.real_wns.run_opensta_sequential", side_effect=sta_fn):
+            result = ev(FakePatch, weights=None)
+        result["_ev"] = ev
+        return result
+
+    def test_physical_gate_rejects_ideal_only_gain(self, tmp_path):
+        calls = {"n": 0}
+        def sta_fn(**kwargs):
+            calls["n"] += 1
+            text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+            if "sky130_fd_sc_hd__or2_4 _071_" in text:
+                if kwargs.get("spef_path") is not None:
+                    # ideal +0.11 but parasitic wns unchanged -> F6
+                    return {"slack": -0.94, "wns": -0.94, "tns": -5.0}
+                return {"slack": -0.83, "wns": -0.83, "tns": -3.0}
+            return {"slack": -0.94, "wns": -0.94, "tns": -5.0}
+        result = self._eval(tmp_path, sta_fn)
+        assert result["improved"] is False
+        assert result["wns"] == -0.94
+        # the improving ideal candidate still triggered a physical re-run
+        assert any(t.get("physical_failure") for t in result["_ev"].trials)
+
+    def test_physical_gate_accepts_when_spef_also_improves(self, tmp_path):
+        def sta_fn(**kwargs):
+            text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+            if "sky130_fd_sc_hd__or2_4 _071_" in text:
+                if kwargs.get("spef_path") is not None:
+                    return {"slack": -0.85, "wns": -0.85, "tns": -3.5}
+                return {"slack": -0.83, "wns": -0.83, "tns": -3.0}
+            return {"slack": -0.94, "wns": -0.94, "tns": -5.0}
+        result = self._eval(tmp_path, sta_fn)
+        assert result["improved"] is True
+        assert result["wns"] == -0.85
+
+
+def _last_trials(tmp_path):
+    import json as _json
+    ev_dir = tmp_path
+    files = sorted(ev_dir.rglob("eval_trials.json")) if ev_dir.exists() else []
+    # evaluator.trials is not persisted here; parse from call_log side effect
+    # instead: the trials live on the evaluator; this helper is only used by
+    # tests that did not persist.  Fall back to reading the tmp files.
+    for f in files:
+        return _json.loads(f.read_text(encoding="utf-8")).get("trials", [])
+    return []

@@ -44,7 +44,7 @@ _INSTANCE_LINE_RE = re.compile(
     r"^\s+\d+\.\d+\s+\d+\.\d+\s+[v^]\s+(\w+)/\w+\s+\((sky130_fd_sc_hd__\w+)\)",
     re.M,
 )
-_ENDPOINT_RE = re.compile(r"^Endpoint:\s+(\w+)/", re.M)
+_ENDPOINT_RE = re.compile(r"^Endpoint:\s+([\w\\]+)", re.M)
 
 
 def parse_critical_instances(sta_text: str) -> list[str]:
@@ -62,13 +62,13 @@ def parse_critical_instances(sta_text: str) -> list[str]:
 def parse_worst_endpoint(sta_text: str) -> str | None:
     """Endpoint DFF instance name (e.g. ``DFF_11`` from ``DFF_11/_0_``)."""
     m = _ENDPOINT_RE.search(sta_text)
-    return m.group(1) if m else None
+    return (m.group(1).split("/")[0].strip("\\")) if m else None
 
 
 def dff_d_input_net(mapped_text: str, dff_instance: str) -> str | None:
     """Net connected to ``.D`` of a named-port ``dff`` instance."""
     pat = re.compile(
-        r"\bdff\s+" + re.escape(dff_instance) + r"\s*\((.*?)\)\s*;", re.S
+        r"\b(?:dff|sky130_fd_sc_hd__\w+)\s+" + re.escape(dff_instance) + r"\s*\((.*?)\)\s*;", re.S
     )
     m = pat.search(mapped_text)
     if not m:
@@ -77,6 +77,41 @@ def dff_d_input_net(mapped_text: str, dff_instance: str) -> str | None:
         if pin == "D":
             return net.strip().strip("\\")
     return None
+
+
+def build_r_available(
+    liberty_text: str,
+    instances: list[str],
+    mapped_text: str,
+) -> set[str]:
+    """Return the subset of ``instances`` whose cell type has at least one
+    logic-rewrite (R) equivalence candidate in the Liberty library.
+
+    This is the hard-equivalence input to the joint bi-objective cut: gates
+    without an R candidate get no critical discount and are skipped by the
+    critical-path cover (review shortboard: merge F1/F4).  Uses the same
+    candidate rule as ``RealWnsEvaluator._r_candidates`` (R requires a
+    different-family equivalent cell in the library).
+    """
+    lib = parse_liberty_cells(liberty_text)
+    cells = parse_mapped_netlist(mapped_text)
+    by_inst = {c.instance: c for c in cells}
+    r_ok: set[str] = set()
+    for inst in instances:
+        cell = by_inst.get(inst)
+        if cell is None:
+            continue
+        ctype = cell.cell_type
+        c = lib.get(ctype)
+        if not c:
+            continue
+        has_r = any(
+            lib.get(t) is not None and lib[t].family != c.family
+            for t, _pm in equivalence_candidates(c, lib)
+        )
+        if has_r:
+            r_ok.add(inst)
+    return r_ok
 
 
 def strip_to_single_module(verilog_text: str, top_module: str) -> str:
@@ -142,6 +177,11 @@ class RealWnsEvaluator:
         hold_uncertainty: float = 0.8,
         early_stop: bool = False,
         joint_k: int = 0,
+        joint_mix: bool = False,
+        clock_port: str = "CK",
+        physical_gate: bool = False,
+        min_physical_gain_ns: float = 0.010,
+        physical_fanout_penalty: float = 1.0,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
@@ -170,6 +210,11 @@ class RealWnsEvaluator:
             self.adaptive_sel = None
         self.early_stop = early_stop
         self.joint_k = max(0, joint_k)
+        self.joint_mix = bool(joint_mix)
+        self.clock_port = clock_port
+        self.physical_gate = bool(physical_gate)
+        self.min_physical_gain_ns = min_physical_gain_ns
+        self.physical_fanout_penalty = physical_fanout_penalty
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
@@ -222,9 +267,21 @@ class RealWnsEvaluator:
             return insert_buffer(text, inst, bpin, buf_type, new_net)
         return apply_sizing(text, {inst: new_type})
 
-    def _apply_joint(self, text: str, change: dict[str, str]) -> str:
-        """Apply several instance -> new-type replacements in one shot (joint repair)."""
-        return apply_sizing(text, change)
+    def _apply_joint(self, text: str, change) -> str:
+        """Apply several instance -> new-type replacements in one shot.
+
+        ``change`` maps instance -> (new_type, pin_map, kind).  R uses the
+        logic rewrite (renames pins), G uses gate sizing; applying them one
+        instance at a time keeps the joint candidate a single STA-evaluated
+        repair combination (joint action space).
+        """
+        out = text
+        for inst, (new_type, pin_map, kind) in change.items():
+            if kind == "R":
+                out = apply_rewrite(out, inst, new_type, pin_map)
+            else:
+                out = apply_sizing(out, {inst: new_type})
+        return out
 
     def _eval_one(self, job: tuple) -> dict:
         inst, cell_type, new_type, pin_map, kind, text, cand_dir, top_module, index = job
@@ -242,7 +299,45 @@ class RealWnsEvaluator:
             top_module=top_module,
             hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
             min_path=self.hold_mode,
+            clock_port=self.clock_port,
         )
+        # Inner-loop physical gate (review shortboard): an ideal-net gain
+        # must clear a minimum threshold before a parasitic-aware SPEF run is
+        # even attempted; the candidate is only returned when the SPEF run
+        # also improves WNS.  This turns the SPEF check from a post-hoc
+        # autopsy into a per-candidate acceptance signal.
+        if self.physical_gate and not self.hold_mode:
+            ideal_wns = res.get("wns")
+            if ideal_wns is not None and ideal_wns > self.baseline_wns + self.min_physical_gain_ns:
+                try:
+                    from .spef import build_spef, parse_mapped_verilog, write_spef
+                    nl = parse_mapped_verilog(sub / "mapped.v")
+                    spef = write_spef(
+                        sub / "physical.spef",
+                        nl,
+                        fanout_penalty=self.physical_fanout_penalty,
+                    )
+                    phys = run_opensta_sequential(
+                        netlist_path=sub / "mapped.v",
+                        period=self.period,
+                        output_dir=sub / "physical",
+                        top_module=top_module,
+                        clock_port=self.clock_port,
+                        spef_path=spef,
+                    )
+                    phys_wns = phys.get("wns")
+                    if phys_wns is None or phys_wns <= self.baseline_wns:
+                        # physical load failure: the ideal gain does not
+                        # survive parasitic RC (F6 signal for the outer loop)
+                        res = {**res, "wns": self.baseline_wns,
+                               "physical_failure": True,
+                               "physical_wns": phys_wns}
+                    else:
+                        # parasitic-aware gain survives: report the SPEF WNS
+                        res = {**res, "wns": phys_wns,
+                               "physical_wns": phys_wns}
+                except Exception as exc:
+                    res = {**res, "physical_gate_error": str(exc)}
         return {
             "instance": inst,
             "kind": kind,
@@ -254,6 +349,9 @@ class RealWnsEvaluator:
             "min_slack_status": res.get("min_slack_status"),
             "slack": res.get("slack"),
             "slack_status": res.get("slack_status"),
+            "physical_failure": res.get("physical_failure", False),
+            "physical_wns": res.get("physical_wns"),
+            "physical_gate_error": res.get("physical_gate_error"),
         }
 
     # -- main entry ---------------------------------------------------------
@@ -292,16 +390,20 @@ class RealWnsEvaluator:
                              self.mapped_text, cand_dir, self.top_module, job_index))
                 job_index += 1
 
-        # joint repair: one candidate that resizes the top-joint_k actionable
-        # instances with a G candidate simultaneously (multi-gate combination).
+        # joint repair: one candidate that changes the top-joint_k actionable
+        # instances simultaneously.  Default (joint_mix=False) resizes with G;
+        # joint_mix=True prefers R (rewrite) per instance and falls back to G,
+        # building an R+G mixed action as a single STA-evaluated candidate.
         if self.joint_k > 0:
-            joint_change: dict[str, str] = {}
+            joint_change: dict[str, tuple[str, dict, str]] = {}
             for inst in actionable:
                 if inst in joint_change:
                     continue
                 for new_type, _pm, kind in self._candidates_for(cells, inst):
-                    if kind == "G":
-                        joint_change[inst] = new_type
+                    if (self.joint_mix and kind == "R") or (
+                        not self.joint_mix and kind == "G"
+                    ):
+                        joint_change[inst] = (new_type, _pm, kind)
                         break
                 if len(joint_change) >= self.joint_k:
                     break

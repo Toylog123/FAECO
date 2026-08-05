@@ -7,7 +7,13 @@ from pathlib import Path
 from typing import Any
 
 from .case_loader import load_case
-from .cut import build_weighted_cut_graph, fixed_min_cut, solve_weighted_cut, weighted_cut_candidates
+from .cut import (
+    build_weighted_cut_graph,
+    fixed_min_cut,
+    solve_weighted_cut,
+    split_cone_by_depth,
+    weighted_cut_candidates,
+)
 from .equivalence import check_structural_equivalence
 from .failures import FailureThresholds, FailureType, classify_failures
 from .graph import extract_fanin_cone
@@ -315,6 +321,22 @@ def write_case_metrics(case_dir: str | Path) -> Path:
     return output_path
 
 
+def _cone_candidates(cone, weights, critical_instances, r_available):
+    # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
+    # weights.max_cone_gates is split into depth-bounded subcones; each
+    # subcone is cut independently so the global s-t graph stays bounded.
+    max_gates = max(1, int(getattr(weights, 'max_cone_gates', 1000)))
+    cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]
+    out: list = []
+    for sub in cones:
+        out.extend(weighted_cut_candidates(
+            sub, weights, critical_instances,
+            r_available=r_available,
+            critical_first_default=True,
+        ))
+    return out
+
+
 def run_multi_iteration_case(
     case_dir: str | Path,
     *,
@@ -325,6 +347,7 @@ def run_multi_iteration_case(
     wns_evaluator: object | None = None,
     candidates_per_iteration: int = 8,
     critical_instances: list[str] | None = None,
+    r_available: set[str] | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -397,7 +420,12 @@ def run_multi_iteration_case(
         # candidate whose real-STA WNS strictly improves.  Without an
         # injected wns_evaluator the classic reduction >= 1 criterion is used
         # on the first candidate (legacy behaviour).
-        candidates = weighted_cut_candidates(cone, weights, critical_instances)
+        # Joint bi-objective cut: critical-path cover is a first-round
+        # default candidate; gates without an R equivalence candidate are a
+        # hard constraint (no critical discount, cover skips them).
+        candidates = _cone_candidates(
+            cone, weights, critical_instances, r_available,
+        )
         if not candidates:
             failures.add(FailureType.PATCH_TOO_LARGE)
             return False, None
