@@ -433,6 +433,62 @@ s953 & $-1.48$ & 11 & \textbf{4} & $-1.38$ \\
 
 \textbf{beam 宽度对照（2026-08-04 晚）}：将 beam 从 1 放宽到 2（同样叠加决策层与 early-stop，8 电路）后，8/8 电路仍全部成功且 final WNS 与 beam=1 完全一致（s27 $-0.21$、s382 $-0.93$、s420 $-1.75$、s641/s713 $-1.85$、s820 $-1.36$、s832 $-1.12$、s953 $-1.38$），但候选 STA 合计从 27 增至 39（+44\%）——early-stop 在两种 beam 下都在首个严格改善候选处停止，更宽的 beam 只产生被丢弃的额外实测。该结果把“反馈学习压缩搜索宽度”的结论收紧为：\textbf{beam=1 + 反馈 + 决策层 + early-stop 即达到该基准集上的效率最优配置}。
 
+
+
+
+
+
+
+\textbf{在线自适应决策层 v2（2026-08-05）}：v1 决策表是离线归纳的静态 per-cell-type 优先级表，一旦冻结无法适应目标电路。为验证决策层的自适应能力，我们把内环排序升级为在线 UCB1 + 指数衰减（$\gamma=0.98$）：每次实测 trial 后按 $\text{accept\_rate}+\alpha\sqrt{\log(n)/n_k}$ 更新策略分数，未试臂给固定 0.5 探索分（避免乐观先验把 Buffer 顶到首位）。在完全不使用静态表、仅靠 R/G/B 冷启动回退的对照实验中，8/8 电路全部修复成功，且 final WNS 与静态表同等或更好：
+
+\begin{table}[!t]
+\centering
+\caption{在线自适应决策层（无先验冷启动）vs 静态优先级表（period 0.5ns，beam=1 + early-stop）}
+\label{tab:adaptive_vs_static}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
+\toprule
+电路 & 基线 WNS & static final (STA) & adaptive final (STA) \\
+\midrule
+s27 & $-0.28$ & $-0.21$ (4) & $-0.21$ (4) \\
+s382 & $-0.94$ & $-0.93$ (8) & $-0.93$ (8) \\
+s420 & $-1.78$ & $-1.75$ (3) & $-1.75$ (3) \\
+s641 & $-1.86$ & $-1.85$ (1) & $-1.85$ (1) \\
+s713 & $-1.86$ & $-1.85$ (1) & $-1.85$ (1) \\
+s820 & $-1.42$ & $-1.36$ (3) & $\mathbf{-1.28}$ (18) \\
+s832 & $-1.15$ & $-1.12$ (3) & $-1.12$ (43) \\
+s953 & $-1.48$ & $-1.38$ (4) & $-1.38$ (11) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+关键证据：在线层从零开始即收敛到静态表同等质量（7/8），且在 s820 上探索到静态表遗漏的修复（$G$ and2\_0$\rightarrow$and2\_4，$-1.28$ vs $-1.36$），证明修复质量不依赖人工归纳先验。代价是无先验冷启动的探索开销（8 电路合计 STA 88 vs 27），这恰好量化了静态表的价值（压缩探索）；两者互补：先以历史 trial 或静态表 warm-start，再在线微调，兼顾质量与效率。
+
+\subsection{寄生参数感知验证（SPEF）}\label{sec:parasitic}
+
+为量化 pre-layout 理想线网与真实物理负载的差距（评审短板 1），我们在不改变修复算法的前提下，用 OpenSTA 的 SPEF 读取能力补充寄生参数感知验证：将映射网表中每条 net 按估计长度（默认 40\,um/unit）生成简化 SPEF（含 lumped RC），再对同一份 baseline / repaired 网表分别跑 ideal 与 SPEF 两种 STA。
+
+真实数据（experiments/20260805\_parasitic\_\{s382,b18\}/，A-only）：
+
+\begin{table}[!t]
+\centering
+\caption{ideal vs SPEF 寄生参数感知 STA（同一修复候选）}
+\label{tab:parasitic}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+电路 & period & ideal baseline & ideal repaired & SPEF baseline & SPEF repaired \\
+\midrule
+s382 & 0.5\,ns & $-0.94$ & $-0.93$ ($+0.01$) & $-2.37$ & $-2.37$ ($0.00$) \\
+b18 & 13.15\,ns & $-0.69$ & $-0.56$ ($+0.13$) & $-6.63$ & $-6.63$ ($0.00$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+结论（诚实、负面导向）：**在理想网络下有效的修复（s382 +0.01、b18 +0.13）在加入寄生 RC 后改善归零**——pre-layout 修复不保证 post-layout 有效，这正是本方法当前最重要的边界，也量化了物理感知 ECO 的必要性。该 SPEF 为简化估计（lumped RC、非真实 P\&R 版图），完整 OpenROAD + PDK LEF/DEF 流程未接入（见 limitation L31-01），作为方法边界而非成熟物理验证。
+
 \subsection{局限性与边界}
 
 \begin{table}[!t]
@@ -498,13 +554,13 @@ b22  & $-12.08$ & $-12.06$ & G mux2$_1$$\rightarrow_2$ & 1 \\
 \end{tabular}
 \end{table}
 
-随后接入 WSL2 的 64 位 Yosys 0.33，将此前因 32 位内存限制无法映射的 b18/b19 大电路补全：b18（37.6 万门）0.5ns 协议下基线 $-13.34\,$ns、修复 $-13.27$；b19（75.5 万门）基线 $-17.44$、修复 $-16.0$（接受 R clkinv$_1$$\rightarrow$bufinv$_8$，单候选改善 1.44 ns）。按 95\% 原始关键路径设置现实周期（b18 13.15 ns、b19 17.04 ns）后，WNS 落在实际 ECO 区间：b18 $-0.69\rightarrow-0.62$（G maj3$_1$$\rightarrow_2$），b19 $-0.90\rightarrow+0.54$ 达成时序收敛（MET、TNS 清零，R 候选）。b18 改善较小的边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，库中无等价替换候选，G 仅微调）如实记录。
+随后接入 WSL2 的 64 位 Yosys 0.33，将此前因 32 位内存限制无法映射的 b18/b19 大电路补全：b18（37.6 万门）0.5ns 协议下基线 $-13.34\,$ns、修复 $-13.27$；b19（75.5 万门）基线 $-17.44$、修复 $-16.0$（接受 R clkinv$_1$$\rightarrow$bufinv$_8$，单候选改善 1.44 ns）。按 95\% 原始关键路径设置现实周期（b18 13.15 ns、b19 17.04 ns）后，WNS 落在实际 ECO 区间：b18 基线 $-0.69$，经联合修复（JOINT，一次 STA 同时升级 4 个关键门 nand3b$_1$$\rightarrow_2$ 与 maj3$_1$$\rightarrow_2$）改善至 $-0.56$（TNS $-28.18\rightarrow-22.23$），优于单门 G 的 $-0.62$——在 pre-layout 理想网络下，单门 upsizing 常因输入电容拖累前级而被拒绝，多门联合增强的净收益为正；b19 $-0.90\rightarrow+0.54$ 达成时序收敛（MET、TNS 清零，R 候选）。b18 剩余边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，库中无等价替换候选）如实记录。
 
 \section{结论}
 
 FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET），并进一步在 ITC-99 基准族上实现 19 个可映射电路 17/19 真实 WNS 改善（含 6 个大电路）。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
 
-\textbf{当前 limitation（透明声明）}：(1) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；(2) 外环真实 WNS 闭环已扩展到 19 个 ITC-99 电路（17/19 改善）并含 6 个大电路，b18/b19 已通过 WSL2 64 位 Yosys 0.33 补全（b19 在 95% 现实周期下由 R 修复达成 MET），但多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
+\textbf{当前 limitation（透明声明）}：(1) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；我们已用 OpenSTA 的 SPEF 读取能力补充寄生参数感知验证（见 \S\ref{sec:parasitic}），但完整 P\&R 版图验证（OpenROAD + PDK LEF/DEF）尚未接入；(2) 外环真实 WNS 闭环已扩展到 19 个 ITC-99 电路（17/19 改善）并含 6 个大电路，b18/b19 已通过 WSL2 64 位 Yosys 0.33 补全（b18 经 JOINT 联合修复 -0.69$\rightarrow$-0.56，b19 在 95% 现实周期下由 R 修复达成 MET），但多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
 
 \textbf{未来工作}：(1) 将 64 位 Yosys 验证扩展到 b18/b19 的多 corner 与多工艺库，验证权重细化与决策层表的跨工艺迁移；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
 
