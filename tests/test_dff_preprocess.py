@@ -95,6 +95,47 @@ class DffPreprocessTest(unittest.TestCase):
         self.assertIn("report_tns", src)
         self.assertIn("slack_max 0 -endpoint_count 100000", src)
 
+    def test_ys_script_reads_preprocessed_circuit_when_dff_present(self):
+        """Regression: circuit_for_script must be recomputed after circuit is
+        swapped to the preprocessed copy, otherwise Yosys still reads the raw
+        file and fails on s820/s832/s953 with Module dff not part of design."""
+        import subprocess
+        import tempfile
+
+        captured = {}
+
+        def fake_run(cmd, **kwargs):
+            ys = Path(cmd[1])
+            captured["ys_text"] = ys.read_text(encoding="utf-8")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            circuit = out / "s820.v"
+            nl = "\n"
+            circuit.write_text(
+                "module s820(CK);" + nl + "input CK;" + nl + "dff DFF_0(CK,G38,G90);" + nl + "endmodule" + nl,
+                encoding="utf-8",
+            )
+            orig_run = self.mod.subprocess.run
+            orig_env = self.mod._yosys_env
+            try:
+                self.mod.subprocess.run = fake_run
+                self.mod._yosys_env = lambda: {}
+                self.mod.run_yosys_mapping(circuit, out, yosys_cmd=["yosys"])
+            finally:
+                self.mod.subprocess.run = orig_run
+                self.mod._yosys_env = orig_env
+
+            self.assertIn("ys_text", captured)
+            ys_text = captured["ys_text"]
+            self.assertIn("circuit_pre.v", ys_text)
+            self.assertNotIn("read_verilog " + circuit.as_posix(), ys_text)
+            self.assertTrue((out / "circuit_pre.v").exists())
+            pre_text = (out / "circuit_pre.v").read_text(encoding="utf-8")
+            self.assertIn("module dff(input CK, D, output Q)", pre_text)
+            self.assertIn("dff DFF_0(.CK(CK), .D(G90), .Q(G38))", pre_text)
+
 
 
 if __name__ == "__main__":

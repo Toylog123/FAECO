@@ -143,6 +143,7 @@ def run_yosys_mapping(circuit: Path, output: Path,
         src += "\nmodule dff(input CK, D, output Q);\n  reg Q;\n  always @(posedge CK) Q <= D;\nendmodule\n"
         pre.write_text(src, encoding="utf-8")
         circuit = pre
+        circuit_for_script = _to_wsl(circuit) if use_wsl else circuit.as_posix()
     script.write_text(
         "\n".join(
             [
