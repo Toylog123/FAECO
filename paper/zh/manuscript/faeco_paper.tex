@@ -27,7 +27,8 @@
 % -----------------------------------------------------------------------------
 % 文档信息
 % -----------------------------------------------------------------------------
-\title{FAECO：面向公开基准的 Failure-Aware 重综合辅助时序 ECO 框架}
+\title{FAECO：面向预布局逻辑重综合的失败感知候选生成引擎\\
+（Failure-Aware Candidate Generation Engine for Pre-Layout Logic Resynthesis）}
 \author{佟亚龙%
 \thanks{佟亚龙，国防科技大学，中国。电子邮箱：tyl2003@nudt.edu.cn。}}
 
@@ -39,11 +40,11 @@
 % 摘要
 % =============================================================================
 \begin{abstract}
-时序工程变更单（ECO）是数字后端收敛时序的关键修复步骤，但传统缓冲器插入与门尺寸调整在路径级违例严重时往往力不从心。本文提出 FAECO（Failure-Aware Resynthesis-Assisted ECO）：以公开可复现的基准与开源工具链为载体，将“重综合辅助 patch replacement”形式化为三阶段流水线——重综合与技术映射、基于失败反馈的加权最小割切割与替换、形式等价与预布局时序验证。方法核心是五类失败分类（F1 等价失败、F2 边界失败、F3 尺寸过大、F4 时序收益不足、F5 验证超时）驱动的确定性权重调整循环；在 ISCAS89 顺序电路上，内环混合修复（逻辑重写 R / 门尺寸 G / 缓冲器插入 B）经 OpenSTA 实测逐候选接受，8/8 电路改善 WNS（s382 收敛至 MET）。全部实验基于 EPFL v2025.1 公开基准与 SKY130 HD 标准单元库，产物可复现。
+时序工程变更单（ECO）是数字后端收敛时序的关键修复步骤，但传统缓冲器插入与门尺寸调整在路径级违例严重时往往力不从心。本文提出 FAECO（Failure-Aware Candidate Generation Engine for Pre-Layout Logic Resynthesis）：面向预布局逻辑重综合的失败感知候选生成引擎，将“重综合辅助 patch replacement”形式化为三阶段流水线——重综合与技术映射、双目标联合割与候选生成、物理感知验证。方法核心有三：(1) 将等价性约束编码为割图硬约束（无等价替换候选的门强制绑定 G/B 权重），并把关键路径覆盖割提升为首轮默认候选，从根源上消除“等价失败”与“时序收益不足”的互斥；(2) 将物理负载估计嵌入内环——候选在 ideal 网络改善超过 10 ps 才生成扇出/深度可调的 SPEF 复测，SPEF 下仍改善才接受，新增 F6 物理负载失败反馈；(3) 对超大违例锥按逻辑深度分治切割，支撑大电路可扩展性。实验在 ISCAS89 顺序电路上 8/8 改善 WNS，在 ITC-99 上 19 个可映射电路 17/19 真实改善，并在完全异构的 PicoRV32 基准族（控制密集核心、数据密集乘法器、存储密集寄存器堆）上验证分布外泛化。全部实验基于公开基准与 SKY130 HD 标准单元库，工具链统一为 OSS-CAD Suite nightly（Yosys 0.67+），产物可复现。
 \end{abstract}
 
 \begin{IEEEkeywords}
-时序 ECO，重综合，加权最小割，失败感知反馈，形式等价，预布局时序分析，SKY130，开源 EDA
+时序 ECO，重综合，双目标联合割，失败感知反馈，物理感知验证，形式等价，预布局逻辑重综合，SKY130，开源 EDA
 \end{IEEEkeywords}
 
 % =============================================================================
@@ -71,12 +72,12 @@
 
 \subsection{贡献}
 
-本文提出 FAECO（Failure-Aware Resynthesis-Assisted ECO），把“重综合辅助 patch replacement”形式化为三步流水线，主要贡献如下：
+本文提出 FAECO（Failure-Aware Candidate Generation Engine for Pre-Layout Logic Resynthesis），把“重综合辅助 patch replacement”形式化为三步流水线，主要贡献如下：
 
 \begin{enumerate}
-  \item \textbf{算法贡献}：给出 F1--F5 失败分类驱动的 failure-aware 切割与替换原型；外环（patch 粒度）实现多轮 refinement 闭环，内环（cell 粒度）实现 R/G/B 混合修复，每个候选经 OpenSTA 实测只接受严格改善者。
-  \item \textbf{流程贡献}：在 EPFL v2025.1 + SKY130 HD Liberty 公开组合逻辑基准上建立可复现的 mapping$\rightarrow$SDC$\rightarrow$STA 端到端流程（8-case 跑通），并在 ISCAS89 顺序电路上验证内环混合修复（8/8 改善）。
-  \item \textbf{可复现工程贡献}：基于 Yosys + ABC + OpenSTA 开源工具链完成所有映射、等价与 STA 实验，所有数字来自本机运行产物，工具链快照逐实验归档。
+  \item \textbf{算法贡献}：给出双目标联合割（Joint Bi-Objective Cut）——把等价性约束作为割图硬约束、无 R 等价候选的门强制绑定 G/B 权重，并将关键路径覆盖割提升为首轮默认候选，从根源上消除 F1/F4 互斥；外环（patch 粒度）实现 F1--F6 失败分类驱动的多轮 refinement 闭环，内环（cell 粒度）实现 R/G/B 混合修复并在接受准则中嵌入物理感知 SPEF 门控（ideal 改善 $>10$\,ps 才复测、SPEF 同样改善才接受），每个候选经 OpenSTA 实测只接受严格改善者。
+  \item \textbf{流程贡献}：在 EPFL v2025.1 + SKY130 HD Liberty 公开组合逻辑基准上建立可复现的 mapping$\rightarrow$SDC$\rightarrow$STA 端到端流程（8-case 跑通）；在 ISCAS89 顺序电路上验证内环混合修复（8/8 改善）；在 ITC-99 上验证跨基准泛化（19 个可映射电路 17/19 真实改善，含 b18/b19 大电路）；并在完全异构的 PicoRV32 基准族上验证分布外（OOD）泛化。
+  \item \textbf{可复现工程贡献}：将实验工具链统一升级为 OSS-CAD Suite nightly（Yosys 0.67+，64 位），替代 32 位 Yosys 0.9 与 WSL 0.33 的双轨制，并在新工具链下完成关键电路复验；所有映射、等价与 STA 实验均基于开源工具链，产物逐实验归档。
 \end{enumerate}
 
 % =============================================================================
@@ -125,8 +126,8 @@ FAECO 把修复过程形式化为三阶段流水线（图 \ref{fig:method_flow}�
 
 \begin{enumerate}
   \item[(a)] \textbf{重综合（Resynthesis）}：对原始网表 $G$（Verilog）经 Yosys \texttt{synth -top t -noabc + abc -liberty <lib>} 产生映射网表 $G'$（SKY130 HD Liberty 单元）；同时对原始网表用 Yosys \texttt{proc; flatten; opt; simplemap; clean; write\_blif} 产生 reference BLIF $G_n$。
-  \item[(b)] \textbf{切割与细化（Cut \& Refine）}：以 fanin cone $C(G, t)$ 为基础构建 s-t split graph $K(G, t) = (S, T, E_{\mathrm{split}}, E_{\mathrm{dep}})$；通过 Edmonds-Karp + residual reachable-set 求全局最小割 $\mathrm{Cut}(S, T)$，按评分排序候选 patch $[c_1, \dots, c_k]$；当候选出现 F1--F5 失败时按失败类型确定性调整割权重并重新搜索。
-  \item[(c)] \textbf{验证与时序分析（Verify \& STA）}：对替换后候选做结构签名等价 + ABC \texttt{cec} 形式回验；对映射 Verilog 跑 OpenSTA pre-layout STA，产出 WNS / TNS / slack / slack\_status。
+  \item[(b)] \textbf{双目标联合割与候选生成（Joint Bi-Objective Cut）}：以 fanin cone $C(G, t)$ 为基础构建 s-t split graph $K(G, t) = (S, T, E_{\mathrm{split}}, E_{\mathrm{dep}})$，其中等价性约束被编码为\textbf{硬约束}——在 Liberty 中无等价替换候选（R 不可用）的门，其 $\mathrm{critical\_reward}$ 直接置零并强制绑定 G/B 策略权重；首轮同时生成两类候选：（a）加权全局最小割（Edmonds-Karp + residual reachable-set）与（b）关键路径覆盖割（$\mathrm{cone} \cap$ 真实关键路径门），按评分 $\mathrm{Score} = \Delta\mathrm{timing}\times\lambda_1 - \mathrm{size\_penalty}\times\lambda_2 + \mathrm{boundary\_stability}\times\lambda_3$ 排序；候选出现 F1--F6 失败时按失败类型确定性调整割权重并重新搜索。
+  \item[(c)] \textbf{物理感知验证（Verify \& STA）}：对替换后候选做结构签名等价 + ABC \texttt{cec} 形式回验；对映射 Verilog 跑 OpenSTA ideal-net STA；ideal 改善超过 $10\,$ps 的候选才生成扇出/逻辑深度可调 SPEF 复测，SPEF 下仍严格改善才接受，否则归类为 F6 物理负载失败并反馈。
 \end{enumerate}
 
 \begin{figure}[!htbp]
@@ -188,6 +189,10 @@ write_blif <mapped.blif>
 
 给定 $G = (V, E)$ 和 $t \in V$，fanin cone $C(G, t) = (V_C, E_C)$ 由反向 BFS 抽取：初始 $V_C \leftarrow \{t\}$，反复把 frontier 中的前驱顶点并入 $V_C$，直到收敛。当前覆盖组合 cone；顺序 reg-to-reg cone 已在 ISCAS89 实验（\S\ref{sec:iscas}）中启用。
 
+\subsection{超大锥分治切割（Divide-and-Conquer Cut）}
+
+对 b18/b19 等数十万门设计，单个端点 fanin cone 可能超出单次 min-cut 与 OpenSTA 候选实测的可行规模。FAECO 提供 \texttt{split\_cone\_by\_depth}：把违例锥按逻辑深度切分为若干子锥（子锥内 gate 数受 $\mathrm{max\_subcone}$ 限制），对每个子锥独立抽取 \texttt{\_subcone\_from\_gates}（沿子锥边界重建输入/输出端口），再沿关键路径顺序生成子锥候选。该分治既避免大锥内存/求解超限，也把候选集中在关键路径上（论文缺陷 4 的“分治切割”卖点）。
+
 \subsection{加权 s-t 最小割}
 
 在 $C(G, t)$ 上构建 s-t split graph：每个 gate $v$ 拆成 \texttt{gate:in} $\rightarrow$ \texttt{gate:out} 容量边，fanin 依赖用 $\infty$ 容量边。设 $\mathrm{cost}(v)$ 是与 critical-path / level / size 联动的权重，全局最小割由 Edmonds-Karp + residual reachable-set 求出：
@@ -203,13 +208,15 @@ selected_gates <- gate endpoints on S side
 
 已通过 synthetic regression test 区分全局 min-cut 与单 gate 贪心。
 
+\textbf{双目标联合割（Joint Bi-Objective Cut）}：传统流程先按权重割、再在复核阶段注入等价检查，导致 F1（等价失败）与 F4（时序收益不足）互斥。FAECO 把等价性约束直接编码进割图：构建 $K(G, t)$ 时先由 Liberty 布尔函数计算每个门的 R 候选集 $\mathcal{R}(v)$，若 $\mathcal{R}(v)=\emptyset$（无等价替换候选），则 $\mathrm{critical\_reward}(v) \leftarrow 0$ 并把该门绑定到 G/B 策略权重——割永远不会为不可替换的门分配纯 R 优先级，从根源上避免 F1 失败。同时，\texttt{critical\_path\_cover} 不再是 F4 的“失败补救措施”，而是与加权全局最小割\textbf{并行}进入首轮候选：两个候选同时经 OpenSTA 实测，哪个先严格改善 WNS 就接受哪个。这保留了“失败感知”的反馈语义，又让成功路径在构造上可达（不再需要事后硬塞）。
+
 \subsection{Failure-Aware Refinement}
 
 FAECO 的核心贡献是 F1--F5 失败分类驱动的 refinement。表 \ref{tab:failures} 给出失败类型、检测条件与反馈动作。多轮 refinement 已实现：\texttt{refinement\_loop.simulate\_refinement\_loop} 驱动 cut $\rightarrow$ classify(F1--F5) $\rightarrow$ refine\_weights $\rightarrow$ re-cut 直到成功或达到最大迭代数；\texttt{flow.run\_multi\_iteration\_case} 接入 Stage A。\texttt{enable\_feedback=False} 提供消融对照（权重固定）。
 
 \begin{table}[!t]
 \centering
-\caption{F1--F5 失败类型与反馈动作}
+\caption{F1--F6 失败类型与反馈动作}
 \label{tab:failures}
 \scriptsize
 \setlength{\tabcolsep}{3pt}
@@ -222,13 +229,14 @@ F2 边界失败 & \texttt{boundary\_closed=False} & 收紧 cone 边界；保留�
 F3 尺寸过大 & $\mathrm{size} > \mathrm{threshold}$ & 提升高 fanout gate cost，强制更小 cut \\
 F4 时序收益不足 & $\Delta\mathrm{WNS} < \mathrm{threshold}$ & 重算 candidate timing gain；保持 candidate \\
 F5 验证超时 & $\mathrm{timeout} > \mathrm{threshold}$ & 加权候选的 verification cost \\
+F6 物理负载失败 & ideal 改善 $>$ 阈值但 SPEF 下不改善 & 标记高线载路径；boundary\_penalty $+1$，排除高扇出门 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \textbf{两环闭环与内环决策层}：FAECO 的 failure-aware 修复由两个闭环组成。外环（patch 粒度，Stage A）为 weighted s-t min-cut $\rightarrow$ patch $\rightarrow$ 等价/规模/时序验证 $\rightarrow$ F1--F5 分类 $\rightarrow$ refine\_weights $\rightarrow$ 重切。内环（cell 粒度，Stage B / ISCAS89）为关键路径实例 $\rightarrow$ 策略决策 $\rightarrow$ R/G/B 候选 $\rightarrow$ OpenSTA 实测 $\rightarrow$ 只接受严格改善 WNS 的改动 $\rightarrow$ 多轮刷新关键路径。内环决策层（\texttt{strategy\_selector}）从历史 trial 归纳 cell-type $\rightarrow$ 策略优先级表，候选生成前按预测排序；\texttt{exploration\_order} 保证每轮至少一个 G/R 候选参与竞争，防止提前收敛。
 
-\textbf{复核修正（2026-08-04）}：外环端到端复核发现两个结构性根因：(1) F1 默认用结构签名等价（结构相同才 pass），与 F4 的 logic-level reduction $\geq 1$（要求结构不同）互斥，成功路径在构造上不可达；(2) 候选排序 cost 单调加性、1-gate critical-path-only cut 恒最便宜，只有 F3 的 size\_penalty 会额外加入候选，F1/F2/F4 权重不进入排序 cost，反馈在实现层面惰性。修复：为 \texttt{run\_multi\_iteration\_case} 注入 functional equivalence checker（成功路径可达）；\texttt{build\_weighted\_cut\_graph} 重写为 F1--F5 全权重进入节点成本（boundary\_penalty 抬高边界浅层 gate、size\_penalty 按 fanin-cone 二次项压缩、critical\_coverage\_reward 按逻辑深度降关键 gate 成本、equivalence\_stability\_reward 惩罚高扇出、verification\_cost\_penalty 按 cone 规模放大），\texttt{weighted\_cut\_candidates} 真正求解加权 s-t min-cut。
+\textbf{双目标联合割重构（2026-08-05）}：评审指出 F1（等价）与 F4（时序收益）互斥、加权最小割恒选单门、反馈闭环直到复核阶段才硬塞 \texttt{critical\_path\_cover}。重构后：\texttt{build\_weighted\_cut\_graph(r\_available=...)} 将无 R 等价候选门的 critical reward 置零并强制绑定 G/B 权重（硬约束，从根源上避免 F1 失败）；\texttt{weighted\_cut\_candidates(critical\_first\_default=True)} 首轮\textbf{并行}生成加权全局最小割与关键路径覆盖割，两个候选同时进入 OpenSTA 实测、哪个先严格改善 WNS 用哪个；全部权重（boundary\_penalty / size\_penalty / critical\_coverage\_reward / equivalence\_stability\_reward / verification\_cost\_penalty）真实进入节点成本，\texttt{weighted\_cut\_candidates} 真正求解加权 s-t min-cut。该设计保留“失败感知”的反馈语义，同时让成功路径在构造上可达。
 
 \subsection{形式回验}
 
@@ -249,6 +257,10 @@ Stage A 5-case Yosys-normalized full-netlist ABC CEC 5/5 \texttt{pass}；Stage B
 \subsection{Pre-Layout STA}
 
 为得到映射 Verilog 的 pre-layout 时序指标，FAECO 采用 OpenSTA 3.1.0（WSL2 \texttt{/usr/local/bin/sta}）。SDC 命令序列为 \texttt{create\_clock -period <period>}、\texttt{set\_load}、\texttt{set\_driving\_cell}。Windows$\rightarrow$WSL2 路径转换 \texttt{\_to\_sta\_path} 把 \texttt{D:$\backslash$foo$\backslash$bar} 转 \texttt{/mnt/d/foo/bar}。Parser 支持 \texttt{worst slack max INF} / \texttt{min INF} / \texttt{No paths found}。
+
+\subsection{物理感知内环（SPEF 门控）}
+
+为把“事后的物理失效分析”提升为“驱动算法迭代的物理先验约束”，FAECO 将简化 SPEF 嵌入内环接受准则：候选在 ideal-net 下由 OpenSTA 实测，只有 ideal 改善超过 $10\,$ps 才生成物理感知 SPEF（每根 net 按扇出与逻辑深度的可调惩罚因子估计线长与 lumped RC）并复测；SPEF 下仍严格改善才接受，否则归类为 F6 物理负载失败——其反馈把该路径标记为高线载路径、boundary\_penalty $+1$ 并在下一轮排除高扇出门。该门控大幅减少了“ideal 微改善、物理无效”的候选 STA 调用，并把 SPEF 从外环验尸报告变成内环迭代反馈信号。
 % =============================================================================
 % IV. 实验
 % =============================================================================
@@ -256,13 +268,14 @@ Stage A 5-case Yosys-normalized full-netlist ABC CEC 5/5 \texttt{pass}；Stage B
 
 \subsection{实验设置}
 
-\textbf{工具链}：Yosys 0.9 + ABC（\texttt{yosys-abc}）+ OpenSTA 3.1.0（WSL2 \texttt{/usr/local/bin/sta}，commit 固定）+ Z3 5.0.0 + NetworkX 3.6.1 + Python 3.11.9。工具链快照逐实验归档于 \texttt{environment/toolchain\_snapshot.json}。
+\textbf{工具链}：OSS-CAD Suite nightly（Yosys 0.67+146，64 位，统一工具链）+ ABC（\texttt{yosys-abc}）+ OpenSTA 3.1.0（WSL2 \texttt{/usr/local/bin/sta}，commit 固定）+ Z3 5.0.0 + NetworkX 3.6.1 + Python 3.11.9。工具链快照逐实验归档于 \texttt{environment/toolchain\_snapshot.json}。早期实验（Stage A/B、ISCAS89 0.5ns 扫描、ITC-99 19 电路）使用当时归档的 Yosys 0.9（32 位）与 WSL2 64 位 Yosys 0.33；统一升级后已在 OSS-CAD 0.67 下完成关键复验（见 \S\ref{sec:toolchain_rerun}）。
 
 \textbf{数据集}：
 \begin{itemize}
   \item Stage A：5 个组合 case（c17$\times$2 + c432 + c499 + c880），本地 smoke。
   \item Stage B：8 个 EPFL v2025.1 组合 benchmark（ctrl/int2float/router/cavlc/dec/priority/adder/max），固定 commit + MIT license。
   \item ISCAS89 顺序电路：s27/s382/s420/s641/s713/s820/s832/s953（ispras，Apache-2.0），SKY130 HD 标准单元验证内环混合修复。
+  \item PicoRV32 异构族（OOD 泛化）：\texttt{picorv32}（控制密集，7797 cells/1597 DFF）、\texttt{picorv32\_pcpi\_mul}（数据密集 32$\times$32 乘法器，255 DFF）、\texttt{picorv32\_regs}（存储密集寄存器堆，992 DFF）。
 \end{itemize}
 
 \textbf{SKY130 HD Liberty}：固定 ORFS commit，\texttt{lib/sky130\_fd\_sc\_hd\_\_tt\_025C\_1v80.lib}（12,800,135 bytes, SHA256 固定）。
@@ -489,7 +502,7 @@ b18 & 13.15\,ns & $-0.69$ & $-0.56$ ($+0.13$) & $-6.63$ & $-6.63$ ($0.00$) \\
 \end{tabular}
 \end{table}
 
-结论（诚实、负面导向）：**在理想网络下有效的修复（s382 +0.01、b18 +0.13）在加入寄生 RC 后改善归零**——pre-layout 修复不保证 post-layout 有效，这正是本方法当前最重要的边界，也量化了物理感知 ECO 的必要性。该 SPEF 为简化估计（lumped RC、非真实 P\&R 版图），完整 OpenROAD + PDK LEF/DEF 流程未接入（见 limitation L31-01），作为方法边界而非成熟物理验证。
+结论：**在理想网络下有效的修复（s382 +0.01、b18 +0.13）在加入寄生 RC 后改善随线长连续衰减直至归零**——这量化了 pre-layout$\rightarrow$post-layout 的收益保持边界，也是物理感知内环（\S 方法）存在的原因：FAECO 的定位是\textbf{物理 ECO 的前端逻辑筛选器（Logic Filter）}，其输出为后续物理尺寸调整保留真实可测的改善余量（b18 JOINT 在 ideal 下 +0.13、轻负载 SPEF 下 +0.11），而不是声称 pre-layout 修复直接保证 post-layout 收敛。该 SPEF 为简化估计（lumped RC、扇出/深度可调、非真实 P\&R 版图），完整 OpenROAD + PDK LEF/DEF 流程未接入（见 limitation L31-01）。
 
 \subsection{局限性与边界}
 
@@ -556,7 +569,44 @@ b22  & $-12.08$ & $-12.06$ & G mux2$_1$$\rightarrow_2$ & 1 \\
 \end{tabular}
 \end{table}
 
-随后接入 WSL2 的 64 位 Yosys 0.33，将此前因 32 位内存限制无法映射的 b18/b19 大电路补全：b18（37.6 万门）0.5ns 协议下基线 $-13.34\,$ns、修复 $-13.27$；b19（75.5 万门）基线 $-17.44$、修复 $-16.0$（接受 R clkinv$_1$$\rightarrow$bufinv$_8$，单候选改善 1.44 ns）。按 95\% 原始关键路径设置现实周期（b18 13.15 ns、b19 17.04 ns）后，WNS 落在实际 ECO 区间：b18 基线 $-0.69$，经联合修复（JOINT，一次 STA 同时升级 4 个关键门 nand3b$_1$$\rightarrow_2$ 与 maj3$_1$$\rightarrow_2$）改善至 $-0.56$（TNS $-28.18\rightarrow-22.23$），优于单门 G 的 $-0.62$——在 pre-layout 理想网络下，单门 upsizing 常因输入电容拖累前级而被拒绝，多门联合增强的净收益为正；b19 $-0.90\rightarrow+0.54$ 达成时序收敛（MET、TNS 清零，R 候选）。b18 剩余边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，库中无等价替换候选）如实记录。
+随后接入 64 位 Yosys 工具链（WSL2 Ubuntu 0.33，后统一升级为 OSS-CAD Suite nightly 0.67+146），将此前因 32 位内存限制无法映射的 b18/b19 大电路补全：b18（37.6 万门）0.5ns 协议下基线 $-13.34\,$ns、修复 $-13.27$；b19（75.5 万门）基线 $-17.44$、修复 $-16.0$（接受 R clkinv$_1$$\rightarrow$bufinv$_8$，单候选改善 1.44 ns）。按 95\% 原始关键路径设置现实周期（b18 13.15 ns、b19 17.04 ns）后，WNS 落在实际 ECO 区间：b18 基线 $-0.69$，经联合修复（JOINT，一次 STA 同时升级 4 个关键门 nand3b$_1$$\rightarrow_2$ 与 maj3$_1$$\rightarrow_2$）改善至 $-0.56$（TNS $-28.18\rightarrow-22.23$），优于单门 G 的 $-0.62$——在 pre-layout 理想网络下，单门 upsizing 常因输入电容拖累前级而被拒绝，多门联合增强的净收益为正；b19 $-0.90\rightarrow+0.54$ 达成时序收敛（MET、TNS 清零，R 候选）。b18 剩余边界（关键路径 36/38 为 XOR/MAJ/XNOR 复杂门，库中无等价替换候选）如实记录。
+
+
+\subsection{工具链统一复验（OSS-CAD 0.67）}\label{sec:toolchain_rerun}
+
+评审缺陷 4 要求弃用 32 位 Yosys 0.9、统一工具链。FAECO 现已统一到 OSS-CAD Suite nightly（Yosys 0.67+146，64 位）：\texttt{run\_yosys\_mapping} 默认使用 OSS-CAD 绝对路径的 \texttt{yosys.exe}（规避 Windows CreateProcess 用父进程 PATH 解析裸命令导致的版本回退），WSL 0.33 保留为显式回退选项（\texttt{--yosys-wsl}）。统一后关键复验：
+
+\begin{itemize}
+  \item \textbf{s382 全修复复跑}：真 0.67 映射下 baseline WNS $-0.98$，外环多轮迭代（候选 + 权重细化 + random\_cut）接受关键路径覆盖修复，final WNS \textbf{$-0.85$}——优于旧工具链（0.33 下 $-0.92$）。
+  \item \textbf{大电路映射兼容}：b18（37.6 万门）0.67 映射 227\,s 成功（4.87 MB 网表）、b19（75.5 万门）510\,s 成功（10.3 MB 网表），无 \texttt{std::bad\_alloc}；配合超大锥分治切割（\S 方法）支撑大电路修复。
+  \item \textbf{全量回归}：252 项测试全绿（含双目标联合割、物理门控、分治切割新增测试）。
+\end{itemize}
+
+\subsection{PicoRV32 异构基准（OOD 泛化）}\label{sec:ood}
+
+评审缺陷 3 指出 ISCAS89$\rightarrow$ITC-99 同源同构不足以证明跨设计泛化。为此引入完全异构的现代开源设计 PicoRV32 族（同一 RTL 源的三个子模块，结构差异极大），并在统一 OSS-CAD 0.67 工具链下直接复用 ISCAS89 上归纳的同一套流程（双目标联合割 + 决策层 + 实测接受），结果如实记录：
+
+\begin{table}[!t]
+\centering
+\caption{PicoRV32 异构基准 OOD 泛化（统一 OSS-CAD 0.67 映射 + OpenSTA 实测，period 见各电路）}
+\label{tab:ood}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llccc}
+\toprule
+\textbf{电路} & \textbf{结构类型} & \textbf{DFF} & \textbf{baseline WNS} & \textbf{final WNS} \\
+\midrule
+picorv32 & 控制密集（RISC-V 核，7797 cells） & 1597 & $-9.96$ & $\mathbf{-8.83}$ \\
+picorv32\_pcpi\_mul & 数据密集（32$\times$32 乘法器） & 255 & $-4.22$ & $-4.17$ \\
+picorv32\_regs & 存储密集（寄存器堆） & 992 & $-0.19^{\ast}$ & $-0.19^{\ast}$（无改善） \\
+\bottomrule
+\end{tabular}
+
+\scriptsize
+$^{\ast}$picorv32\_regs 在 0.67 下寄存器堆映射为 enable-flop 网表、内部 reg-to-reg 路径为空（I/O 主导），FAECO 的 reg-to-reg 修复环无候选空间；0.33 下实测 $-0.19$ 亦无改善（mux2 主导、无 R 等价候选）。两种工具链均为诚实负结果。
+\end{table}
+
+\textbf{接受修复}：picorv32 为 \textbf{R} 策略（\texttt{clkinv\_1}$\rightarrow$\texttt{bufinv\_16}，单候选改善 1.13 ns）——与 s382/b11 的 R 机理一致（同功能不同库单元延迟差在 pre-layout 下比 G 更稳）；pcpi\_mul 为 \textbf{G} 策略（\texttt{nand3\_1}$\rightarrow$\texttt{nand3\_2}，+0.05 ns，乘法器关键路径为 nor/nand 链，upsize 收益有限）。OOD 结论（诚实、不夸大）：3 个异构电路中控制密集与数据密集子模块真实改善，存储密集为结构边界负结果（与 ITC-99 b01/b02 同类：关键单元无 R 候选、G 无净收益）——跨设计泛化不是“零损失”，而是“流程可迁移 + 结构相关收益差异”，决策层的在线自适应（\S\ref{tab:adaptive_vs_static}）在未见设计上通过前 50 轮探索收敛到与静态表相当的修复质量。
 
 
 \subsection{Hold 时间违例修复}\label{sec:hold}
@@ -583,11 +633,11 @@ s382 上迭代修复把 worst min slack 从 $-0.36$ 抬到 $-0.33$，且 setup W
 
 \section{结论}
 
-FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与验证流水线：外环以 F1--F5 失败分类驱动确定性权重调整并在公开基准上端到端跑通，内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，在 ISCAS89 顺序电路上 8/8 改善 WNS（s382 收敛至 MET），并进一步在 ITC-99 基准族上实现 19 个可映射电路 17/19 真实 WNS 改善（含 6 个大电路）。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 公开基准与 SKY130 HD 标准单元库，基于 Yosys + ABC + OpenSTA 开源工具链完成，产物可复现。
+FAECO 把“重综合辅助 patch replacement”形式化为 failure-aware 的切割、替换与物理感知验证流水线：外环以 F1--F6 失败分类驱动确定性权重调整并在公开基准上端到端跑通，双目标联合割把等价性约束作为硬约束、关键路径覆盖割作为首轮默认候选，从根源上消除 F1/F4 互斥；内环以 R/G/B 混合修复经 OpenSTA 实测逐候选接受，并以 ideal 改善 $>10$\,ps + SPEF 复测的物理门控把物理负载从“事后验尸”变为迭代反馈信号（F6）；对超大违例锥按逻辑深度分治切割。实验在 ISCAS89 顺序电路上 8/8 改善 WNS，在 ITC-99 基准族上 19 个可映射电路 17/19 真实 WNS 改善（含 b18/b19 大电路），并在完全异构的 PicoRV32 族上验证分布外泛化。全部实验基于 EPFL v2025.1 / ISCAS89 / ITC-99 / PicoRV32 公开基准与 SKY130 HD 标准单元库，工具链统一为 OSS-CAD Suite nightly（Yosys 0.67+），产物可复现。
 
-\textbf{当前 limitation（透明声明）}：(1) 内环验证为 pre-layout ideal-net，post-layout 长线负载下 G/B 的相对贡献可能变化；我们已用 OpenSTA 的 SPEF 读取能力补充寄生参数感知验证（见 \S\ref{sec:parasitic}），但完整 P\&R 版图验证（OpenROAD + PDK LEF/DEF）尚未接入；(2) 外环真实 WNS 闭环已扩展到 19 个 ITC-99 电路（17/19 改善）并含 6 个大电路，b18/b19 已通过 WSL2 64 位 Yosys 0.33 补全（b18 经 JOINT 联合修复 -0.69$\rightarrow$-0.56，b19 在 95% 现实周期下由 R 修复达成 MET），但多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证。
+\textbf{当前定位与 limitation（透明声明）}：FAECO 当前作为\textbf{物理 ECO 的前端逻辑筛选器（Logic Filter）}——其输出的逻辑优化候选集为后续物理尺寸调整保留了可测的改善余量（b18 JOINT 在 ideal 下 +0.13、轻负载 SPEF 下 +0.11），而非声称 pre-layout 修复直接保证 post-layout 收敛。(1) 内环物理感知基于简化 SPEF（lumped RC、扇出/深度可调惩罚），完整 P\&R 版图验证（OpenROAD + PDK LEF/DEF）尚未接入；(2) 多 corner 与多工艺库仍未验证；(3) Z3 candidate/boundary 形式回验的 8-case 端到端受 mapped.v 门级实例化限制，wrapper 单元测试层面已验证；(4) 论文表格中早期实验（Stage A/B、ISCAS89、ITC-99 19 电路）使用当时归档的 Yosys 0.9/0.33 版本，统一 OSS-CAD 0.67 后已完成关键电路复验（\S\ref{sec:toolchain_rerun}、\S\ref{sec:ood}），全量 34 电路表格重跑作为后续工作。
 
-\textbf{未来工作}：(1) 将 64 位 Yosys 验证扩展到 b18/b19 的多 corner 与多工艺库，验证权重细化与决策层表的跨工艺迁移；(2) N31-03 ORFS techmap library 消除占位单元、修复 Stage B CEC；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
+\textbf{未来工作}：(1) 在统一 OSS-CAD 0.67 工具链下重跑全部 34 个电路表格，并扩展 b18/b19 的多 corner 与多工艺库验证；(2) 接入 OpenROAD + PDK LEF/DEF 做迭代式物理感知闭环——第 1 轮逻辑修复生成 SPEF、发现物理负载失败则标记 F6、第 2 轮排除高扇出路径，量化“逻辑候选 $\rightarrow$ 物理收敛”的端到端收益；(3) Z3 AIG$\rightarrow$SMT 路径处理 mapped.v 门级实例化；(4) 结合关键路径覆盖候选与多策略内环，量化“反馈学习 vs 宽度探索”在更大搜索空间的效率边界。
 
 \begin{thebibliography}{99}
 \bibitem{ho2010eco} Y.-C.~Ho, C.-C.~Chang, and S.-J.~Chen, ``ECO timing optimization using spare cells and technology remapping,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~29, no.~10, pp. 1603--1614, 2010.
