@@ -381,3 +381,14 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
   1. 无需人工先验：在线层从零开始 8/8 收敛到与静态表同等（7/8）或更优（s820 -1.28 vs -1.36）的 WNS，证明修复质量不依赖人工归纳表。
   2. s820 案例：在线探索发现静态表遗漏的 G and2_0->and2_4 修复（-1.28），静态表 3 次 STA 只能到 -1.36。
   3. 代价是探索开销：无先验冷启动导致 s820/s832/s953 探索更多（STA 18/43/11 vs 3/3/4），8 电路合计 88 vs 27（+226%）。静态表的价值 = 压缩探索；两者互补，最佳实践是先 warm-start（静态表或历史 trial 预训练）再在线微调。
+
+### 12.11 寄生参数感知（SPEF）验证（2026-08-05）
+
+评审短板 1（物理感知）的量化落地：用 OpenSTA read_spef 对同一 baseline/repaired 网表分别跑 ideal 与 SPEF 两种 STA（src/rseco/spef.py 生成估计 net RC，默认 40um/unit；scripts/run_parasitic_aware_check.py 跑 4 组）。真实数据（experiments/20260805_parasitic_{s382,b18}/，A-only）：
+
+| 电路 | period | ideal baseline | ideal repaired | SPEF baseline | SPEF repaired |
+|---|---|---|---|---|---|
+| s382 | 0.5ns | -0.94 | -0.93 (+0.01) | -2.37 | -2.37 (0.00) |
+| b18 | 13.15ns | -0.69 | -0.56 (+0.13) | -6.63 | -6.63 (0.00) |
+
+结论（诚实负面导向）：**pre-layout 理想网络下有效的修复在加入寄生 RC 后改善归零**——证明物理负载对修复有效性影响巨大，量化了物理感知 ECO 的必要性，也是方法当前最重要的边界。SPEF 为简化估计（lumped RC、非真实 P&R 版图），完整 OpenROAD + PDK LEF/DEF 流程未接入（见 limitation L31-01）；作为方法边界而非成熟物理验证。commit 0b44eb0；论文 sec:parasitic + limitation 更新 commit a722c03；232 测试全绿。
