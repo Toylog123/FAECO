@@ -390,8 +390,10 @@ class RealWnsEvaluator:
         return {"wns": best_wns, "improved": improved}
 
     def write_trials(self, path: str | Path) -> None:
+        payload: dict = {"call_log": self.call_log, "trials": self.trials}
+        if self.adaptive:
+            payload["adaptive_snapshot"] = self.adaptive_sel.snapshot()
         Path(path).write_text(
-            json.dumps({"call_log": self.call_log, "trials": self.trials},
-                       indent=2, ensure_ascii=False) + "\n",
+            json.dumps(payload, indent=2, ensure_ascii=False) + "\\n",
             encoding="utf-8",
         )
