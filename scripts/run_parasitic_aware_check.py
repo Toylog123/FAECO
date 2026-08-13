@@ -9,6 +9,7 @@ improves ideal-net WNS still improve WNS once wire load is present?
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -44,9 +45,15 @@ def run_sta(mapped: Path, period: float, out: Path, spef: Path | None, top: str)
     ]
     tcl = out / "sta.tcl"
     tcl.write_text("\n".join(lines), encoding="utf-8")
+    # WSL auto-translates the inherited Windows PATH into /mnt/... entries;
+    # non-existent entries (e.g. E:\APP\...) make wsl.exe print
+    # "Failed to translate" and can break the VM exec. Pass a minimal PATH
+    # that only contains System32 (enough to resolve wsl.exe itself).
+    clean_env = os.environ.copy()
+    clean_env["PATH"] = r"C:\Windows\System32;C:\Windows"
     proc = subprocess.run(
         ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta", "-no_splash", "-exit", to_wsl(tcl)],
-        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
+        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=600, env=clean_env,
     )
     log = proc.stdout + proc.stderr
     (out / "sta.log").write_text(log, encoding="utf-8")

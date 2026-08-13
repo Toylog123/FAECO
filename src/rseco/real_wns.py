@@ -36,6 +36,7 @@ from .gate_sizing import (
 )
 from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
 from .opensta import run_opensta_sequential
+from .proxy_ranking import ProxyWeights, rank_real_candidates
 from .strategy_selector import exploration_order
 import itertools
 
@@ -172,6 +173,8 @@ class RealWnsEvaluator:
         tns_aware: bool = False,
         max_instances: int = 8,
         priority_table: dict | None = None,
+        proxy_ranking: bool = False,
+        proxy_weights: ProxyWeights | None = None,
         adaptive: bool = False,
         hold_mode: bool = False,
         baseline_min_slack: float | None = None,
@@ -210,6 +213,8 @@ class RealWnsEvaluator:
         self.tns_aware = tns_aware
         self.max_instances = max_instances
         self.priority_table = priority_table or {}
+        self.proxy_ranking = bool(proxy_ranking)
+        self.proxy_weights = proxy_weights or ProxyWeights()
         self.adaptive = bool(adaptive)
         if self.adaptive:
             from .adaptive_selector import AdaptiveStrategySelector
@@ -235,6 +240,11 @@ class RealWnsEvaluator:
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
+
+    def _strategy_order(self, cell_type: str) -> tuple[str, ...]:
+        if self.adaptive:
+            return tuple(self.adaptive_sel.priority_order(cell_type))
+        return tuple(self.priority_table.get(cell_type, ("R", "G", "B")))
 
     # -- candidate construction -------------------------------------------
 
@@ -273,10 +283,7 @@ class RealWnsEvaluator:
         # decision layer: reorder candidates by the per-cell-type strategy
         # priority table (fallback R,G,B); with --adaptive, use the online
         # UCB-based selector that updates from measured trials instead.
-        if self.adaptive:
-            order = self.adaptive_sel.priority_order(cell.cell_type)
-        else:
-            order = self.priority_table.get(cell.cell_type, ("R", "G", "B"))
+        order = self._strategy_order(cell.cell_type)
         rank = {k: i for i, k in enumerate(order)}
         cands.sort(key=lambda c: (rank.get(c[2], len(order)), c[0]))
         return exploration_order(cands)
@@ -350,8 +357,55 @@ class RealWnsEvaluator:
                             return combos
         return combos
 
+    def _proxy_row(
+        self,
+        *,
+        instance: str,
+        kind: str,
+        from_type: str,
+        to_type: str,
+        critical_rank: int,
+        critical_count: int,
+        strategy_rank: int,
+        patch_size: int,
+        boundary_complexity: int,
+        job: tuple,
+    ) -> dict:
+        return {
+            "instance": instance,
+            "kind": kind,
+            "from_type": from_type,
+            "to_type": to_type,
+            "critical_rank": critical_rank,
+            "critical_count": critical_count,
+            "strategy_rank": strategy_rank,
+            "patch_size": patch_size,
+            "boundary_complexity": boundary_complexity,
+            "job_index": int(job[-1]),
+            "_job": job,
+        }
+
+    @staticmethod
+    def _proxy_metadata(row: dict) -> dict:
+        return {
+            "proxy_rank": int(row["proxy_rank"]),
+            "proxy_score": float(row["proxy_score"]),
+            "proxy_features": dict(row["proxy_features"]),
+        }
+
     def _eval_one(self, job: tuple) -> dict:
-        inst, cell_type, new_type, pin_map, kind, text, cand_dir, top_module, index = job
+        (
+            inst,
+            cell_type,
+            new_type,
+            pin_map,
+            kind,
+            text,
+            cand_dir,
+            top_module,
+            index,
+            proxy_meta,
+        ) = job
         if kind == "JOINT":
             candidate_text = self._apply_joint(text, pin_map)
         else:
@@ -421,6 +475,7 @@ class RealWnsEvaluator:
             "physical_failure": res.get("physical_failure", False),
             "physical_wns": res.get("physical_wns"),
             "physical_gate_error": res.get("physical_gate_error"),
+            **proxy_meta,
         }
 
     # -- main entry ---------------------------------------------------------
@@ -451,12 +506,47 @@ class RealWnsEvaluator:
             )
             return {"wns": self.baseline_wns, "improved": False}
 
-        jobs: list[tuple] = []
+        candidate_rows: list[dict] = []
         job_index = 0
+        boundary_complexity = (
+            len(getattr(patch, "boundary_inputs", []) or [])
+            + len(getattr(patch, "boundary_outputs", []) or [])
+        )
+        critical_count = max(1, len(self.critical_instances))
         for inst in actionable:
+            critical_rank = (
+                self.critical_instances.index(inst)
+                if inst in self.critical_instances
+                else critical_count - 1
+            )
+            order = self._strategy_order(by_inst[inst].cell_type)
+            strategy_ranks = {kind: rank for rank, kind in enumerate(order)}
             for new_type, pin_map, kind in self._candidates_for(cells, inst):
-                jobs.append((inst, by_inst[inst].cell_type, new_type, pin_map, kind,
-                             self.mapped_text, cand_dir, self.top_module, job_index))
+                job = (
+                    inst,
+                    by_inst[inst].cell_type,
+                    new_type,
+                    pin_map,
+                    kind,
+                    self.mapped_text,
+                    cand_dir,
+                    self.top_module,
+                    job_index,
+                )
+                candidate_rows.append(
+                    self._proxy_row(
+                        instance=inst,
+                        kind=kind,
+                        from_type=by_inst[inst].cell_type,
+                        to_type=new_type,
+                        critical_rank=critical_rank,
+                        critical_count=critical_count,
+                        strategy_rank=strategy_ranks.get(kind, len(order)),
+                        patch_size=1,
+                        boundary_complexity=boundary_complexity,
+                        job=job,
+                    )
+                )
                 job_index += 1
 
         # joint repair: one candidate that changes the top-joint_k actionable
@@ -477,8 +567,41 @@ class RealWnsEvaluator:
                 if len(joint_change) >= self.joint_k:
                     break
             if len(joint_change) >= 2:
-                jobs.append(("JOINT", "joint", "joint", joint_change, "JOINT",
-                             self.mapped_text, cand_dir, self.top_module, job_index))
+                critical_rank = min(
+                    (
+                        self.critical_instances.index(inst)
+                        for inst in joint_change
+                        if inst in self.critical_instances
+                    ),
+                    default=critical_count - 1,
+                )
+                job = (
+                    "JOINT",
+                    "joint",
+                    "joint",
+                    joint_change,
+                    "JOINT",
+                    self.mapped_text,
+                    cand_dir,
+                    self.top_module,
+                    job_index,
+                )
+                candidate_rows.append(
+                    self._proxy_row(
+                        instance="JOINT",
+                        kind="JOINT",
+                        from_type="joint",
+                        to_type="joint",
+                        critical_rank=critical_rank,
+                        critical_count=critical_count,
+                        strategy_rank=len(self._strategy_order(
+                            by_inst[next(iter(joint_change))].cell_type
+                        )) + 1,
+                        patch_size=len(joint_change),
+                        boundary_complexity=boundary_complexity,
+                        job=job,
+                    )
+                )
                 job_index += 1
 
         # Joint auto-enumeration (TCAD sprint 1, hard-4 fix): enumerate
@@ -486,9 +609,55 @@ class RealWnsEvaluator:
         # pick the best -- no manual selection of the joint set.
         if self.joint_enumerate_depth > 0:
             for change, label in self._joint_enumerate_combos(cells):
-                jobs.append(("JOINT", "joint", label, change, "JOINT",
-                             self.mapped_text, cand_dir, self.top_module, job_index))
+                critical_rank = min(
+                    (
+                        self.critical_instances.index(inst)
+                        for inst in change
+                        if inst in self.critical_instances
+                    ),
+                    default=critical_count - 1,
+                )
+                job = (
+                    "JOINT",
+                    "joint",
+                    label,
+                    change,
+                    "JOINT",
+                    self.mapped_text,
+                    cand_dir,
+                    self.top_module,
+                    job_index,
+                )
+                candidate_rows.append(
+                    self._proxy_row(
+                        instance="JOINT",
+                        kind="JOINT",
+                        from_type="joint",
+                        to_type=label,
+                        critical_rank=critical_rank,
+                        critical_count=critical_count,
+                        strategy_rank=len(self._strategy_order(
+                            by_inst[next(iter(change))].cell_type
+                        )) + 1,
+                        patch_size=len(change),
+                        boundary_complexity=boundary_complexity,
+                        job=job,
+                    )
+                )
                 job_index += 1
+
+        ranked_rows = rank_real_candidates(
+            candidate_rows,
+            weights=self.proxy_weights,
+        )
+        if self.proxy_ranking:
+            ordered_rows = ranked_rows
+        else:
+            ordered_rows = sorted(ranked_rows, key=lambda row: int(row["job_index"]))
+        jobs = [
+            tuple(row["_job"]) + (self._proxy_metadata(row),)
+            for row in ordered_rows
+        ]
 
         results: list[dict] = []
         best_wns = self.baseline_wns
@@ -533,7 +702,11 @@ class RealWnsEvaluator:
             # parallel: evaluate all, keep deterministic full-search result
             with ThreadPoolExecutor(max_workers=self.workers) as ex:
                 futures = [ex.submit(self._eval_one, j) for j in jobs]
-                results = [f.result() for f in futures]
+                results = []
+                for job, future in zip(jobs, futures):
+                    result = dict(future.result())
+                    result.update(job[-1])
+                    results.append(result)
             for r in results:
                 _accept_result(r)
         else:
@@ -541,7 +714,8 @@ class RealWnsEvaluator:
             # the first candidate that strictly improves WNS (decision-layer
             # value: fewer STA calls for the same result).
             for j in jobs:
-                r = self._eval_one(j)
+                r = dict(self._eval_one(j))
+                r.update(j[-1])
                 results.append(r)
                 improved_now = _accept_result(r)
                 if self.early_stop and improved_now:
@@ -593,6 +767,11 @@ class RealWnsEvaluator:
                 "baseline_min_slack": self.baseline_min_slack,
                 "improved": improved,
                 "accepted": best,
+                "proxy_ranking": self.proxy_ranking,
+                "proxy_weights": {
+                    key: float(value)
+                    for key, value in self.proxy_weights.__dict__.items()
+                },
                 "weights": {
                     k: getattr(weights, k)
                     for k in ("boundary_penalty", "size_penalty",
@@ -608,6 +787,6 @@ class RealWnsEvaluator:
         if self.adaptive:
             payload["adaptive_snapshot"] = self.adaptive_sel.snapshot()
         Path(path).write_text(
-            json.dumps(payload, indent=2, ensure_ascii=False) + "\\n",
+            json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
             encoding="utf-8",
         )

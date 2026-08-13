@@ -91,6 +91,16 @@ def parse_args() -> argparse.Namespace:
                         "-hold in hold mode")
     p.add_argument("--priority-table", type=Path, default=None,
                    help="Path to strategy_priority_table.json; orders R/G/B by decision layer")
+    proxy_group = p.add_mutually_exclusive_group()
+    proxy_group.add_argument(
+        "--proxy-ranking", action="store_true", dest="proxy_ranking",
+        help="Enable auditable pre-STA proxy ranking (opt-in; not used by historical batches)",
+    )
+    proxy_group.add_argument(
+        "--no-proxy-ranking", action="store_false", dest="proxy_ranking",
+        help="Preserve the legacy strategy-priority order",
+    )
+    p.set_defaults(proxy_ranking=False)
     p.add_argument("--skip-mapping", action="store_true",
                    help="Reuse existing mapped.v instead of re-running Yosys")
     p.add_argument("--clock-port", default="CK",
@@ -210,6 +220,7 @@ def main() -> int:
         tns_aware=args.tns_aware,
         max_instances=args.max_instances,
         priority_table=priority_table,
+        proxy_ranking=args.proxy_ranking,
         adaptive=args.adaptive,
         hold_mode=args.hold_mode,
         baseline_min_slack=baseline_min_slack,
@@ -270,6 +281,7 @@ def main() -> int:
     }
     result["hold_uncertainty_ns"] = args.hold_uncertainty if args.hold_mode else None
     result["critical_instances"] = critical
+    result["proxy_ranking"] = args.proxy_ranking
     result["endpoint"] = endpoint
     result["target_net"] = target_net
     result["n_candidate_sta_runs"] = len(evaluator.trials)

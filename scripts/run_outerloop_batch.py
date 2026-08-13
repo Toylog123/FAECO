@@ -48,6 +48,15 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-iterations", type=int, default=6)
     p.add_argument("--candidates-per-iteration", type=int, default=8)
     p.add_argument("--no-feedback", action="store_true")
+    proxy_group = p.add_mutually_exclusive_group()
+    proxy_group.add_argument(
+        "--proxy-ranking", action="store_true",
+        help="Enable auditable pre-STA proxy candidate ordering (opt-in)",
+    )
+    proxy_group.add_argument(
+        "--no-proxy-ranking", action="store_true",
+        help="Explicitly preserve the legacy strategy-priority order",
+    )
     p.add_argument("--enable-buffer", action="store_true")
     p.add_argument("--tns-aware", action="store_true")
     p.add_argument("--max-instances", type=int, default=8)
@@ -106,6 +115,10 @@ def main() -> int:
         runner_cmd += ["--init-critical-coverage-reward", str(args.init_critical_coverage_reward)]
     if args.no_feedback:
         runner_cmd.append("--no-feedback")
+    if getattr(args, "proxy_ranking", False):
+        runner_cmd.append("--proxy-ranking")
+    if getattr(args, "no_proxy_ranking", False):
+        runner_cmd.append("--no-proxy-ranking")
     if args.enable_buffer:
         runner_cmd.append("--enable-buffer")
     if args.tns_aware:

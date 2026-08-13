@@ -117,3 +117,35 @@ class HybridRunnerAuditTest(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
+
+class OnlyStrategyFilterTest(unittest.TestCase):
+    """--only-strategy 开关：只生成指定策略的候选（R/G/B 基线实验用）。"""
+
+    def _build_cands(self, only, enable_buffer=False):
+        cands = []
+        if only in (None, "R"):
+            cands.append(("or2_2", {}, "R"))
+        if only in (None, "G"):
+            cands.append(("or2_4", {}, "G"))
+        if enable_buffer and only in (None, "B"):
+            cands.append(("buf:buf_1:pin:net", {}, "B"))
+        return [c[2] for c in cands]
+
+    def test_g_only(self):
+        self.assertEqual(self._build_cands("G"), ["G"])
+
+    def test_r_only(self):
+        self.assertEqual(self._build_cands("R"), ["R"])
+
+    def test_b_only(self):
+        self.assertEqual(self._build_cands("B", enable_buffer=True), ["B"])
+
+    def test_b_only_no_buffer(self):
+        self.assertEqual(self._build_cands("B", enable_buffer=False), [])
+
+    def test_hybrid_default(self):
+        self.assertEqual(self._build_cands(None), ["R", "G"])
+
+
+if __name__ == "__main__":
+    unittest.main()

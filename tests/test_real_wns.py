@@ -303,6 +303,41 @@ def test_priority_table_orders_candidates(tmp_path) -> None:
     assert kinds == ["G"], f"expected the single G candidate, got {kinds}"
 
 
+def test_proxy_ranking_orders_sta_jobs_and_archives_features(tmp_path) -> None:
+    evaluator = RealWnsEvaluator(
+        mapped_text=MAPPED_TEXT,
+        top_module="s382",
+        period=0.5,
+        liberty_text=LIB_TEXT,
+        baseline_wns=-0.94,
+        output_dir=tmp_path,
+        critical_instances=["_051_", "_070_", "_071_", "_075_"],
+        workers=1,
+        proxy_ranking=True,
+        early_stop=False,
+    )
+
+    class ProxyPatch:
+        patch_id = "proxy_patch"
+        gates = ["_051_", "_070_", "_071_", "_075_"]
+        boundary_inputs = ["a", "b"]
+        boundary_outputs = ["x"]
+
+    with mock.patch.object(
+        evaluator,
+        "_eval_one",
+        return_value={"wns": -0.94, "tns": -5.0, "improved": False},
+    ) as mocked:
+        evaluator(ProxyPatch(), {})
+
+    jobs = [call.args[0] for call in mocked.call_args_list]
+    proxy_ranks = [job[-1]["proxy_rank"] for job in jobs]
+    assert proxy_ranks == sorted(proxy_ranks)
+    assert evaluator.trials
+    assert all("proxy_score" in trial for trial in evaluator.trials)
+    assert all("proxy_features" in trial for trial in evaluator.trials)
+
+
 def test_early_stop_stops_at_first_improvement(tmp_path) -> None:
     """With early_stop, the evaluator returns as soon as the first candidate
     strictly improves WNS; later candidates are not evaluated."""
@@ -668,4 +703,3 @@ def test_init_weights_flow_into_refinement_loop(tmp_path):
     )
     assert result["success"] is True
     assert seen[0] == {"boundary": 2.0, "size": 1.5, "critical": 0.5}
-

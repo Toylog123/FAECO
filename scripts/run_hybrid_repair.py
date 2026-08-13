@@ -66,6 +66,15 @@ def parse_args() -> argparse.Namespace:
                    help="Number of parallel candidate STA evaluations per round (1 = serial; independent candidates may be evaluated concurrently)")
     p.add_argument("--joint-pairs", type=int, default=0,
                    help="After single-instance candidates, also try joint 2-instance pairs (limit per round; 0 disables)")
+    p.add_argument("--random-order", action="store_true",
+                   help="Shuffle candidate order per instance (random-search baseline); deterministic seed for reproducibility")
+    p.add_argument("--seed", type=int, default=20260806,
+                   help="Random seed for --random-order shuffling")
+    p.add_argument("--max-candidate-sta", type=int, default=0,
+                   help="Stop the repair loop once this many candidate STA calls have been "
+                        "made (0 = unlimited). Used for same-budget random vs feedback comparisons.")
+    p.add_argument("--only-strategy", choices=["R", "G", "B"], default=None,
+                   help="Run only one strategy (R/G/B) for a clean baseline; None = hybrid R+G(+B)")
     p.add_argument("--strategy-priorities", type=str, default="",
                    help="Optional per-cell-type strategy priority, e.g. 'cell_type_a:R,G,B;cell_type_b:B,R,G'. Strategies are tried in this order; others still evaluated but later. Empty keeps default R,G,B order.")
     p.add_argument("--output-dir", type=Path, required=True)
@@ -289,6 +298,13 @@ def main() -> int:
     cand_dir = out / "cand_hybrid"
     cand_dir.mkdir(parents=True, exist_ok=True)
     candidate_trials: list[dict] = []  # auditable per-candidate results
+    rounds_history: list[dict] = []
+
+    def _budget_exhausted() -> bool:
+        return bool(args.max_candidate_sta and len(candidate_trials) >= args.max_candidate_sta)
+
+    import random as _random
+    rng = _random.Random(args.seed) if args.random_order else None  # 随机顺序基线共享同一 RNG
 
     round_v = out / "round_current.v"
     for rnd in range(args.rounds):
@@ -306,16 +322,20 @@ def main() -> int:
         improved = False
         best_by_inst: dict[str, tuple] = {}
         for inst in critical:
+            if _budget_exhausted():
+                break
             cell = next((c for c in cells if c.instance == inst), None)
             if cell is None:
                 print(f"  {inst}: not in parsed netlist, skip")
                 continue
             cands: list[tuple[str, dict, str]] = []
-            for new_type, pin_map in _build_r_candidates(cell.cell_type, lib):
-                cands.append((new_type, pin_map, "R"))
-            for new_type in larger_size_candidates(cell.cell_type, available):
-                cands.append((new_type, {}, "G"))
-            if args.enable_buffer:
+            if args.only_strategy in (None, "R"):
+                for new_type, pin_map in _build_r_candidates(cell.cell_type, lib):
+                    cands.append((new_type, pin_map, "R"))
+            if args.only_strategy in (None, "G"):
+                for new_type in larger_size_candidates(cell.cell_type, available):
+                    cands.append((new_type, {}, "G"))
+            if args.enable_buffer and args.only_strategy in (None, "B"):
                 fanout = build_net_fanout(cells)
                 lc = lib.get(cell.cell_type)
                 output_pins = {lc.output_pin} if lc else None
@@ -338,9 +358,18 @@ def main() -> int:
                 rank = {k: i for i, k in enumerate(order)}
                 cands.sort(key=lambda c: rank.get(c[2], len(order)))
                 cands = exploration_order(cands)
+            if args.random_order:
+                # random-order baseline: shuffle by fixed seed regardless of priority table
+                rng.shuffle(cands)
             if not cands:
                 print(f"  {inst}: {cell.cell_type} no R/G/B candidates")
                 continue
+            if _budget_exhausted():
+                break
+            if args.max_candidate_sta:
+                cands = cands[:max(0, args.max_candidate_sta - len(candidate_trials))]
+            if not cands:
+                break
 
             best_wns = current_wns
             best_tns = current_tns
@@ -403,6 +432,8 @@ def main() -> int:
                         best_tns = tns
                         best = (new_type, pin_map, kind)
                         best_trial_id = trial_id
+                    if _budget_exhausted():
+                        break
             if best is not None and _accepts(current_wns, current_tns, best_wns, best_tns, args.tns_aware):
                 new_type, pin_map, kind = best
                 if kind == "R":
@@ -451,7 +482,17 @@ def main() -> int:
                     current_tns = tns
                     improved = True
                     print(f"  JOINT {a}+{b}: wns {wns}")
+        rounds_history.append({
+            "round": rnd + 1,
+            "wns": sta["wns"],
+            "tns": sta.get("tns"),
+            "candidate_sta_before_round": len(candidate_trials) - len([t for t in candidate_trials if t.get("round") == rnd + 1]),
+            "candidate_sta_after_round": len(candidate_trials),
+            "improved": improved,
+        })
         if not improved:
+            break
+        if _budget_exhausted():
             break
 
     # 4. final report
@@ -466,6 +507,9 @@ def main() -> int:
         "critical_gates": critical,
         "applied_changes": applied,
         "candidate_trials": candidate_trials,
+        "rounds_history": rounds_history,
+        "random_order": bool(args.random_order),
+        "seed": args.seed,
         "baseline_wns": baseline_wns,
         "baseline_tns": baseline_tns,
         "final_wns": final["wns"],
