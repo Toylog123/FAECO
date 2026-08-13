@@ -1,0 +1,39 @@
+{
+    "timestamp": "2026-08-13 09:45 (Asia/Shanghai)",
+    "status": "paper-review handoff ready (314 uncommitted paths)",
+    "last_commit": "2fad9cd fix(paper): reviewer revision R1/R2 - precise candidate-enumeration mechanism for s382 mixed-vs-pureG gap + F6 feedback learning value under SPEF gate",
+    "reviewed_thread": "019fefa2-b03f-75c2-8990-72f33645e47c (严格审稿并迭代论文, 2026-08-11 ~ 08-13, 61 turns)",
+    "paper_state": {
+        "pdf": "paper/zh/faeco_paper.pdf == paper/zh/manuscript/faeco_paper_jcad.pdf (12 pages A4, ~4.8MB, 2026-08-13 08:40, SHA256 一致)",
+        "tex": "paper/zh/manuscript/faeco_paper_jcad.tex (52.9KB) — 旧 faeco_paper.tex 已删除",
+        "compile": "latexmk: 0 Error / 0 Overfull hbox / 0 undefined reference",
+        "nature_precheck": "18/18 pass",
+        "figures": [
+            "fig3_method_flow_new.png",
+            "fig_cut_generation_new.png",
+            "fig_feedback_loop_new.png",
+            "fig_spef_gate_new.png"
+        ]
+    },
+    "completed_this_round": [
+        "多技能严格复审（academic + nature + 用户写作风格）+ 实验证据盘点",
+        "核实主结果均来自既有实验产物（无造假 / 无随意降级）",
+        "图表重画 + 全文排版重排（11 -> 12 页）",
+        "摘要压缩 + ITC-99 19/19 口径 + 算法1 简化 + 表1 四类方法并列对比",
+        "补齐术语首次定义（SKY130 HD / ISCAS89 / ITC-99 / PicoRV32 / SPEF / Liberty）",
+        "机制图重绘（最终替换反馈闭环图，图3 跨双栏）",
+        "结论三问重写 + 保护性/防御性描述清理",
+        "数据图比例重画（图6/图8）+ Nature 预检 18/18",
+        "摘要写出 FAECO 全称（Failure-Aware ECO）"
+    ],
+    "pending_decision": [
+        "机制图拆分方案（会话第 57-58 轮）：将 4 张大机制图拆为 1 总览图 + 3 局部机制小图；详细重绘提示词已备但尚未应用，当前仍用 4 张现有图"
+    ],
+    "next_steps": [
+        "1. 决定是否执行机制图拆分（应用已备提示词或维持现有 4 图）",
+        "2. git commit + push（314 个未提交路径；remote origin https://github.com/Toylog123/FAECO.git）",
+        "3. 追回/补齐 P&R 外部日志（pr_run.log / DEF / ODB / SPEF / DRC）以完善物理证据",
+        "4. 投稿前上传复现实验包到公开仓库 + 补真实 DOI/accession"
+    ],
+    "blocker": null
+}

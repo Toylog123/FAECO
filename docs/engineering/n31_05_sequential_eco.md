@@ -492,3 +492,23 @@ ISCAS89 8 电路决策层/外环闭环之外，进一步把同一套流程（外
 - **Sprint 1：0.67 统一复验完成（解决硬伤 1）**：修复了 `run_yosys_mapping` 中 dff 黑盒预处理的实际生效问题——`circuit_for_script` 在 `circuit = pre` 切换后未重算，Yosys 始终读原始文件，导致 s820/s832/s953 报 Module dff not part of design。修复后添加回归测试锁定（commit f8bf00b，257 测试全绿），3 电路 0.67 映射成功。8 电路 0.67 统一复验：s27 -0.27→-0.18、s382 -0.98→-0.89、s420 -1.56→-1.55、s641 -1.63→-1.59、s713 -1.33→-1.31、s820 -1.19→-1.17、s832 -1.23→-1.17、s953 -1.31→-1.27（全部 joint-enumerate-depth 3）。论文 tab:iscas_main 更新为 0.67 数据 + 表头注记，旧表格标注“基于旧 0.9/0.33 工具链”。
 - **Sprint 2：消融 + 参数敏感性（解决硬伤 1-2）**：3 电路（s382/b15/picorv32）纯 R/G/B 消融：B 在 0.67 下全部零改善（与 0.9 时代“B 主力”相反，诚实记录）；s382 纯 R/B 失败、纯 G -0.83、混合 -0.89（混合优于单策略）；b15/picorv32 单策略可达混合水平。λ 敏感性（s382）：全部 8 组权重（λ_b {0.5,1,1.5,2}、λ_s/λ_c {0.5,1,2}）final WNS 恒为 -0.83，性能面完全平坦。论文新增 \S IV-H （sec:ablation，tab:ablation）+ 敏感性段落。
 - **Sprint 3：定位升级 + 文本精修**：摘要最后一句加入 Logic Filter 定位 + 候选 STA 剪减高达 75%；limitation 补 SPEF 归零不否定 FAECO，而是保守门控；hold 小节开头加失败感知接受规则通用性一句。论文 13 页 PDF 编译通过，无 undefined ref/citation。
+
+### 12.19 skill 流程：完整性审计 + 多视角评审 + 修订（2026-08-05）
+
+- **背景**：应用 academic-research-skills（升级至 v3.19.0/3.2.0/1.10.0/2.11.0，通过 ghfast.top 镜像）优化论文与流程，按 pipeline mid-entry 协议从 Stage 2.5（INTEGRITY）进入。
+- **Stage 2.5 完整性审计（通过）**：ghost citation 检查：27/27 bibitem 全部被引用，零孤儿零悬挂；内部数据一致性：15 项全通过（主表/消融表/敏感性/摘要/limitation/hold 与实验数据一致）；Crossref/Semantic Scholar 引用真实性抽查：发现并删除 2 条虚构引用（wang2016restruc / wang2024seq），修正 5 处 venue 错误（wang2012nego→ASP-DAC、zhong2024stp→DATE、liu2021rlsizer→DAC、chen2024aito→Integration、huang2025phys补 TCAD）。commit 4aa3591。
+- **Stage 3 多视角评审（Major Revision）**：5 视角评审：创新性 68、方法严谨 74、证据充分性 71、论证连贯 78、写作 72。两个 CRITICAL：（0） 0.67 下 SPEF 门控全归零是否意味修复无效；（2）混合必要性证据仅 s382 单点。
+- **Stage 4 修订（R1+R2 已落地）**：R1——s382 混合 vs 纯 G 差异机制精确化（候选生成层原因：混合时从 actionable 门 _070_ 出发，JOINT 窗口只命中 _057_+_059_；纯 G 抽働全部预算命中 _059_+_063_）；R2——F6 反馈把 boundary_penalty 提升至 6-7，将搜索推向保守候选领域，是学习行为而非空转。commit 2fad9cd，13 页 PDF 编译通过。
+
+### 12.20 ITC-99 19 电路 0.67 统一复验（2026-08-05，本地未提交）
+
+Sprint 1 的“ITC-99 19 电路 0.67 统一复验”补全（此前仅 ISCAS89 8 电路完成）。运行配置与 ISCAS89 复验一致：统一 OSS-CAD 0.67 映射 + joint-enumerate-depth 3（JOINT 滑动窗口深度 ≤3、上限 50 组合）+ 决策层优先级表 + beam=1 + early-stop，3 并发约 12.5 分钟跑完 19 电路（实验产物 experiments/20260805_tcad_sprint1_itc99/，A-only）。
+
+- **结果 18/19 改善（94.7%，旧 0.9/0.33 为 17/19）**：b01 -0.63→-0.62（R）、b02 -0.24→-0.22（JOINT）、b03 -1.86→-1.43（JOINT×3）、b04 -2.43→-2.28（JOINT maj3×3）、b05 -3.75→-3.63（JOINT）、b06 诚实失败（6 轮 156 次候选全拒）、b07 -2.13→-2.02（R）、b08 -1.23→-1.18（G）、b09 -1.14→-1.13（R）、b10 -1.40→-1.28（JOINT）、b11 -1.95→-1.82（JOINT）、b12 -2.28→-1.99（JOINT）、b13 -1.45→-1.36（R）、b14 -12.53→-12.38（R xor2_1→ha_1）、b15 -12.55→-11.85（JOINT）、b17 -16.53→-16.10（JOINT）、b20 -13.21→-11.23（JOINT，+1.98）、b21 -13.70→-11.54（JOINT，+2.16）、b22 -11.68→-11.21（JOINT）。策略分布 5 R / 1 G / 12 JOINT。
+- **版本漂移（如实记录）**：b01/b02 从旧版“诚实失败”转为 R/JOINT 改善，b06 从旧版改善转为失败——映射版本改变具体候选集合，整体收敛率 94.7% 与旧版 89.5% 同量级，跨基准泛化结论不变。
+- **论文同步**：tab:itc99 全部换 0.67 数据 + caption 注记（同 tab:iscas_main 措辞）；小节文字/摘要/贡献/结论 17/19→18/19；limitation(4) 改为“ISCAS89 8 电路 + ITC-99 19 电路主表已在 0.67 下复验，仅 b18/b19 JOINT+SPEF 对照实验仍基于 0.33 归档网表（phys_closure 已标注并给出 0.67 baseline/候选数据）”；未来工作去掉“全量 34 电路表格重跑”，改为“补齐 b18/b19 0.67 修复闭环 + 多 corner/多工艺库”。13 页 PDF 编译通过（无 undefined ref/citation，ITC-99 表区域无 overfull）。
+### 12.21 b18 0.67 敏感性 + 修复闭环（2026-08-05，本地未提交）
+
+对 0.67 映射的 b18（period 13.15ns，复用 20260805_toolchain_b18b19/b18_v067/mapped.v）跑常规混合修复（不启用物理门控）：JOINT 自动枚举深度 3 收敛到 _649420_→nor4_2 + _649432_→a211oi_2，WNS -2.24→-2.09（93 次候选 STA，单轮收敛）。边界惩罚 λ_b 三点扰动（0.5/1.0/2.0，其余权重固定）全部收敛到同一 JOINT 修复，性能面在 ±100% 权重变化下完全平坦——敏感性结论从 s382（-0.83 平坦）扩展到 37.6 万门大电路。
+
+- **论文同步**：phys_closure 表补 dagger 行（0.67 b18 JOINT -2.24→-2.09）+ 敏感性段落补 b18 三点扰动 + 工具链复验节补 b18 修复闭环 item + ITC-99 后续段补 0.67 收敛句 + limitation(4) 改为“b18 已有 0.67 修复闭环，b18/b19 SPEF 门控对照仍基于 0.33，b19 0.67 修复闭环为后续”+ 未来工作改为“补齐 b19”。13 页 PDF 编译通过（无 undefined ref/citation）。

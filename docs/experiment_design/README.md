@@ -14,6 +14,7 @@
 - `baseline_protocol.md`：baseline 定义和公平性协议。
 - `metrics_and_tables.md`：指标公式与结果表模板。
 - `faeco_algorithm.md`：FAECO 算法伪代码与模块切分。
+- `self_audit_protocol.md`：实验立项自审协议（自杀式测试 / 竞争基线先行 / 主张-证据匹配 / 措辞一致性门禁）。
 
 当前状态：
 
@@ -29,3 +30,4 @@
 | `baseline_protocol.md` | 已有初版 | 需在原型实现后校订运行参数 |
 | `metrics_and_tables.md` | 已有初版 + Stage B 真实结果 | Stage A 5-case + Stage B 8-case 真实结果已分别落盘 `experiments/20260718_minimal_combinational_batch_demo/tables/*.json` 和 `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}` |
 | `faeco_algorithm.md` | 已有初版 | 后续按模块实现 |
+| `self_audit_protocol.md` | 新增（2026-08-06） | 由 TCAD 第二轮审稿教训固化的强制检查项，每个新实验立项时必须逐项回答 |
