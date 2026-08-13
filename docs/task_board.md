@@ -87,3 +87,4 @@
 | N31-05-extra6 | **第二轮中文审稿（小修）7 项意见落地（2026-08-08）**：贡献列表 2→3 项；ITC-99 独立 label 与精确引用；割解定义引导至 3.3；F4 统计对比注；µm 单位统一；447 次配置说明；参考文献格式与 2012 引用区分 | done | P1 | paper/zh/manuscript/faeco_paper.tex（11 页编译 0 Error）+ paper/zh/faeco_paper.pdf + docs/paper_audit/response_reviewers_round2_zh_20260808.md | 待用户终审后提交 git |
 
 | N31-05-extra7 | **多技能严格复审 + 迭代（academic/nature/用户写作风格，2026-08-11~13）**：实验证据盘点与口径核实、图表重画与排版重排、摘要压缩、ITC-99 19/19 口径、算法1/表1 简化、术语定义补齐、机制图重绘、结论三问、保护性描述清理、Nature 预检 18/18 | done | P0 | paper/zh/manuscript/faeco_paper_jcad.tex（12 页编译 0 Error）+ paper/zh/faeco_paper.pdf | 待用户决定机制图拆分方案 + 提交 git |
+| N31-05-extra8 | **交接收尾 + git 推送（2026-08-13）**：核实 P&R/SPEF 日志已就位、整理 .gitignore、论文/文档/代码分语义提交并 push origin/main（c545612） | done | P0 | .codex-handoff.json + handoff_20260813.md + 6 commits pushed | 待机制图拆分 + 投稿前替换真实 DOI |
