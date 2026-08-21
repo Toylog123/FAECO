@@ -557,12 +557,35 @@ def run_multi_iteration_case(
                 # candidate WNS and reports whether it strictly improved.
                 try:
                     params = inspect.signature(wns_evaluator).parameters
-                    if "state" in params:
-                        wns_info = wns_evaluator(patch, weights, state=state)
-                    else:
-                        wns_info = wns_evaluator(patch, weights)
+                    supports_state = "state" in params
                 except (TypeError, ValueError):
-                    wns_info = wns_evaluator(patch, weights)
+                    supports_state = False
+                try:
+                    wns_info = (wns_evaluator(patch, weights, state=state)
+                                if supports_state else wns_evaluator(patch, weights))
+                except (TypeError, ValueError) as exc:
+                    event = {
+                        "type": "evaluator_exception",
+                        "candidate_hash": candidate_identity,
+                        "cut_hash": candidate_identity,
+                        "severity": "hard",
+                        "hard_gate": True,
+                        "runtime_s": 0.0,
+                        "evidence": {
+                            "reason": "wns_evaluator_call_failed",
+                            "exception_type": type(exc).__name__,
+                            "message": str(exc),
+                            "supports_state": supports_state,
+                        },
+                    }
+                    state.record_failure(event)
+                    wns_info = {
+                        "wns": state.current_wns,
+                        "tns": state.current_tns,
+                        "min_slack": state.current_min_slack,
+                        "improved": False,
+                        "failure_events": [event],
+                    }
                 for terminal_event in wns_info.get("failure_events", []):
                     terminal_type = terminal_event.get("type")
                     if terminal_type in {"deadline_exhausted", "sta_budget_exhausted",

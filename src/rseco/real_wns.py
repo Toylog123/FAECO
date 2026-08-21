@@ -49,6 +49,7 @@ from .replacement import (
 import itertools
 import hashlib
 import time
+import threading
 from collections import Counter
 
 
@@ -162,13 +163,42 @@ def build_real_equivalence_checker(liberty_text: str):
             new = {c.instance: c for c in after}
             if not set(old).issubset(new):
                 return EquivalenceResult("fail", "liberty_local_function", "an existing instance disappeared")
+            added = set(new) - set(old)
+            buffer_edges: dict[str, set[str]] = {}
+            for inst in added:
+                cell = lib.get(new[inst].cell_type)
+                if cell is None or cell.family not in {"buf", "bufbuf", "clkbuf"}:
+                    return EquivalenceResult("fail", "liberty_local_function", f"added non-buffer cell at {inst}")
+                pins = new[inst].pins
+                input_net = pins.get("A") or pins.get("I")
+                output_net = pins.get(cell.output_pin) or pins.get("X") or pins.get("Y")
+                if input_net and output_net:
+                    buffer_edges.setdefault(input_net, set()).add(output_net)
+
+            def connected_through_buffers(source_net: str, target_net: str) -> bool:
+                if source_net == target_net:
+                    return True
+                pending = [source_net]
+                seen = {source_net}
+                while pending:
+                    current = pending.pop()
+                    for successor in buffer_edges.get(current, ()):
+                        if successor == target_net:
+                            return True
+                        if successor not in seen:
+                            seen.add(successor)
+                            pending.append(successor)
+                return False
+
             for inst, source in old.items():
                 target = new[inst]
                 if source.cell_type == target.cell_type and source.pins != target.pins:
-                    return EquivalenceResult(
-                        "fail", "liberty_local_function",
-                        f"pin-to-net connection changed at {inst}: {source.pins} -> {target.pins}",
-                    )
+                    if any(not connected_through_buffers(source.pins.get(pin, ""), target.pins.get(pin, ""))
+                           for pin in set(source.pins) | set(target.pins)):
+                        return EquivalenceResult(
+                            "fail", "liberty_local_function",
+                            f"pin-to-net connection changed at {inst}: {source.pins} -> {target.pins}",
+                        )
                 if source.cell_type == target.cell_type:
                     continue
                 src_lib, dst_lib = lib.get(source.cell_type), lib.get(target.cell_type)
@@ -182,7 +212,6 @@ def build_real_equivalence_checker(liberty_text: str):
                     return EquivalenceResult("fail", "liberty_local_function", f"output net changed at {inst}")
                 if Counter(source.pins.values()) != Counter(target.pins.values()):
                     return EquivalenceResult("fail", "liberty_local_function", f"pin-to-net multiset changed at {inst}")
-            added = set(new) - set(old)
             for inst in added:
                 cell = lib.get(new[inst].cell_type)
                 if cell is None or cell.family not in {"buf", "bufbuf", "clkbuf"}:
@@ -275,29 +304,51 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
     blocks: list[str] = ["// Generated from Liberty for symmetric Yosys/ABC SEC.\n"]
     for name in selected:
         cell = cells[name]
-        ports = list(dict.fromkeys([*cell.input_pins, cell.output_pin] if cell.output_pin else cell.input_pins))
+        output_pins = list(cell.output_functions) or ([cell.output_pin] if cell.output_pin else [])
+        ports = list(dict.fromkeys([*cell.input_pins, *output_pins]))
         if not ports:
             continue
         lines = [f"module {name} ({', '.join(ports)});"]
         if cell.input_pins:
             lines.append("  input " + ", ".join(cell.input_pins) + ";")
-        if cell.output_pin:
-            lines.append(f"  output {cell.output_pin};")
-        if cell.function and cell.output_pin:
-            expr = (cell.function.replace("*", "&").replace("+", "|"))
-            lines.append(f"  assign {cell.output_pin} = {expr};")
-        elif cell.next_state and cell.output_pin and cell.clocked_on:
+        if output_pins:
+            lines.append("  output " + ", ".join(output_pins) + ";")
+        if cell.sequential_kind == "ff":
+            if not (cell.next_state and cell.output_pin and cell.clocked_on):
+                raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
+            state = cell.state_var or cell.output_pin
+            sequential_outputs = cell.output_functions or {cell.output_pin: state}
             edge = "negedge" if cell.clocked_on.startswith("!") else "posedge"
             clock = cell.clocked_on.lstrip("!").strip()
             lines.extend([
-                "  reg " + cell.output_pin + ";",
-                f"  always @({edge} {clock}) {cell.output_pin} <= {cell.next_state};",
+                "  reg " + state + ";",
+                f"  always @({edge} {clock}) {state} <= {cell.next_state};",
             ])
-        elif cell.next_state and cell.output_pin and cell.latch_enable:
+            for pin, function in sequential_outputs.items():
+                if function == state:
+                    lines.append(f"  assign {pin} = {state};")
+                elif cell.state_inv_var and function == cell.state_inv_var:
+                    lines.append(f"  assign {pin} = ~{state};")
+                else:
+                    raise ValueError(f"unsupported sequential output mapping for {name}.{pin}: {function}")
+        elif cell.sequential_kind == "latch":
+            if not (cell.next_state and cell.output_pin and cell.latch_enable):
+                raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
+            state = cell.state_var or cell.output_pin
             lines.extend([
-                "  reg " + cell.output_pin + ";",
-                f"  always @* if ({cell.latch_enable}) {cell.output_pin} <= {cell.next_state};",
+                "  reg " + state + ";",
+                f"  always @* if ({cell.latch_enable}) {state} <= {cell.next_state};",
             ])
+            for pin, function in cell.output_functions.items():
+                if function == state:
+                    lines.append(f"  assign {pin} = {state};")
+                elif cell.state_inv_var and function == cell.state_inv_var:
+                    lines.append(f"  assign {pin} = ~{state};")
+                else:
+                    raise ValueError(f"unsupported latch output mapping for {name}.{pin}: {function}")
+        elif cell.function and cell.output_pin:
+            expr = (cell.function.replace("*", "&").replace("+", "|"))
+            lines.append(f"  assign {cell.output_pin} = {expr};")
         elif not cell.function:
             raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
         lines.append("endmodule\n")
@@ -335,11 +386,12 @@ def build_boundary_closure_checker():
             if drivers.get(resolved, 0) != 1:
                 return {"kind": "multiple-driver", "net": resolved,
                         "drivers": drivers.get(resolved, 0)}
+        consumers = {netlist.resolve_alias(net)
+                     for gate in netlist.gates for net in gate.inputs}
         for gate in netlist.gates:
             output = netlist.resolve_alias(gate.output)
             if output in netlist.outputs or output in constants:
                 continue
-            consumers = [netlist.resolve_alias(net) for g in netlist.gates for net in g.inputs]
             if output not in consumers:
                 return {"kind": "dangling-output", "net": output}
         return None
@@ -621,6 +673,7 @@ class RealWnsEvaluator:
         self.call_log: list[dict] = []
         self._call_counter = 0
         self._physical_baseline_cache: dict[str, dict] = {}
+        self._physical_baseline_lock = threading.Lock()
         self.tested_candidate_hashes: set[str] = set()
         self._sta_cache: dict[str, dict] = {}
         self._active_state = None
@@ -651,6 +704,13 @@ class RealWnsEvaluator:
                 "evidence": {"stage": kind, "budget": kind, "reason": "reserved before tool"},
             }
         return None
+
+    @staticmethod
+    def _remaining_tool_timeout(state, default: float = 180.0) -> float:
+        deadline = state.budget.get("_deadline_monotonic") if state is not None else None
+        if deadline is None:
+            return default
+        return max(0.001, min(default, float(deadline) - time.perf_counter()))
 
     def _strategy_order(self, cell_type: str) -> tuple[str, ...]:
         if self.adaptive:
@@ -1139,6 +1199,7 @@ class RealWnsEvaluator:
                 min_path=self.hold_mode,
                 clock_port=self.clock_port,
                 multi_path=True,
+                timeout_s=self._remaining_tool_timeout(state),
             )
         except TimeoutError as exc:
             res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
@@ -1148,6 +1209,19 @@ class RealWnsEvaluator:
         critical_endpoint_refresh = None
         report = sub / "sta.log"
         critical_report = report
+        if state is not None and state.deadline_expired():
+            event = {
+                "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "runtime_s": time.perf_counter() - started_at,
+                "evidence": {"stage": "sta", "reason": "deadline expired after ideal STA"},
+            }
+            return {"instance": inst, "kind": kind, "from_type": cell_type,
+                    "to_type": new_type, "wns": self.baseline_wns,
+                    "tns": self.baseline_tns, "min_slack": None,
+                    "candidate_netlist_text": candidate_text,
+                    "candidate_hash": candidate_hash, "failure_events": [event],
+                    "runtime_s": time.perf_counter() - started_at, **proxy_meta}
         if report.exists():
             report_text = report.read_text(encoding="utf-8", errors="replace")
             critical_refresh = parse_critical_instances(report_text)
@@ -1174,6 +1248,8 @@ class RealWnsEvaluator:
                     ).hexdigest()
                     baseline_hash = _hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
                     cache_key = baseline_hash + ":" + rc_config_hash
+                    self._physical_baseline_lock.acquire()
+                    physical_lock_held = True
                     baseline = self._physical_baseline_cache.get(cache_key)
                     if baseline is None:
                         base_dir = cand_dir / "physical_baseline"
@@ -1191,6 +1267,7 @@ class RealWnsEvaluator:
                             spef_path=base_spef,
                             hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
                             min_path=self.hold_mode,
+                            timeout_s=self._remaining_tool_timeout(state),
                         )
                         # Keep a physical baseline artifact alongside the
                         # candidate, and fail closed if it is incomplete.
@@ -1202,6 +1279,8 @@ class RealWnsEvaluator:
                                     "provenance": _physical_sta_provenance(
                                         base_dir, base_sta, rc_config, rc_config_hash)}
                         self._physical_baseline_cache[cache_key] = baseline
+                    self._physical_baseline_lock.release()
+                    physical_lock_held = False
                     if baseline.get("budget_event"):
                         phys = {"wns": None, "tns": None, "min_slack": None,
                                 "budget_event": baseline["budget_event"]}
@@ -1221,6 +1300,7 @@ class RealWnsEvaluator:
                             spef_path=spef,
                             hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
                             min_path=self.hold_mode,
+                            timeout_s=self._remaining_tool_timeout(state),
                         )
                     phys_wns = phys.get("wns")
                     phys_tns = phys.get("tns")
@@ -1315,6 +1395,8 @@ class RealWnsEvaluator:
                                "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
             except Exception as exc:
+                    if locals().get("physical_lock_held"):
+                        self._physical_baseline_lock.release()
                     res = {**res, "wns": self.baseline_wns,
                            "physical_failure": True,
                            "physical_status": "error",
@@ -1327,6 +1409,18 @@ class RealWnsEvaluator:
                            "physical_candidate_provenance": (_physical_sta_provenance(sub / "physical", phys, rc_config, rc_config_hash) if "phys" in locals() and phys else None),
                            "rc_config_hash": (rc_config_hash if "rc_config_hash" in locals() else None),
                            "physical_gate_error": str(exc)}
+            if state is not None and state.deadline_expired():
+                deadline_event = {
+                    "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": time.perf_counter() - started_at,
+                    "evidence": {"stage": "physical_sta", "reason": "deadline expired after physical STA"},
+                }
+                res = {**res, "wns": self.baseline_wns, "tns": self.baseline_tns,
+                       "min_slack": None, "physical_failure": False,
+                       "physical_status": "budget_exhausted",
+                       "physical_budget_event": deadline_event,
+                       "physical_delta": None}
             if self.physical_gate:
                 res["physical_config"] = {
                     "unit_len_um": self.physical_unit_len_um,

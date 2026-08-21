@@ -379,7 +379,14 @@ def constrained_weighted_cut_candidates(
                 neighbors[driver].add(gate)
     beam_limit = max(8, int(beam_width or max(k * 8, 32)))
     evaluation_limit = int(max_region_evaluations or max(256, k * 64))
-    beam: list[frozenset[str]] = [frozenset([gate]) for gate in gates]
+    seed_order = list(dict.fromkeys(
+        [gate for gate in gates if gate in anchors or gate in critical]
+        + gates
+    ))
+    # Start from critical/anchor seeds and cap the initial frontier.  Seeding
+    # every gate makes a late hard anchor unreachable under the bounded
+    # evaluation budget before expansion even begins.
+    beam: list[frozenset[str]] = [frozenset([gate]) for gate in seed_order[:beam_limit]]
     evaluated = 0
 
     def region_score(selected: list[str], cut: CutBoundary, covered: int) -> float:

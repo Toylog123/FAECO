@@ -146,3 +146,26 @@ endmodule
         assert "outside" in str(exc)
     else:
         raise AssertionError("joint action outside cut region must be rejected")
+
+
+def test_constrained_beam_seed_reaches_late_anchor_in_bounded_chain():
+    n = 600
+    gates = [f"g{i}" for i in range(n)]
+    outputs = {f"g{i}": (f"N{i}" if i < n - 1 else "OUT") for i in range(n)}
+    inputs = {"g0": ["A"]}
+    inputs.update({f"g{i}": [f"N{i-1}"] for i in range(1, n)})
+    cone = FaninCone(
+        roots=["OUT"], boundary_inputs=["A"], boundary_outputs=["OUT"],
+        internal_nets=[f"N{i}" for i in range(n - 1)], gates=gates,
+        gate_outputs=outputs, gate_inputs=inputs,
+    )
+    weights = SimpleNamespace(boundary_penalty=1, size_penalty=1,
+                              critical_coverage_reward=1,
+                              verification_cost_penalty=1, physical_penalty=1,
+                              max_cone_gates=n)
+    rows = constrained_weighted_cut_candidates(
+        cone, weights, k=1, critical_instances=[f"g{n-1}"],
+        min_critical_coverage=1, hard_anchors=[f"g{n-1}"],
+        window_size=n, wall_timeout_s=1.0,
+    )
+    assert rows and f"g{n-1}" in rows[0].gates

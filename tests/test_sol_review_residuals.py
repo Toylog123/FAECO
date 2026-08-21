@@ -39,6 +39,27 @@ output Q;
 sky130_fd_sc_hd__dfxtp_1 ff1 (.D(D), .CLK(CLK), .Q(Q));
 endmodule
 """
+SEQ_REALISTIC_LIB = """cell ("sky130_fd_sc_hd__dfxtp_1") {
+  pin ("D") { direction : "input"; }
+  pin ("CLK") { direction : "input"; }
+  pin ("Q") { direction : "output"; function : "IQ"; }
+  pin ("Q_N") { direction : "output"; function : "IQ_N"; }
+  ff ("IQ", "IQ_N") { next_state : "D"; clocked_on : "CLK"; }
+}
+"""
+SEQ_REALISTIC_BASE = """module top(D, CLK, Q);
+input D, CLK;
+output Q;
+sky130_fd_sc_hd__dfxtp_1 ff1 (.D(D), .CLK(CLK), .Q(Q));
+endmodule
+"""
+LATCH_REALISTIC_LIB = """cell (\"sky130_fd_sc_hd__dlxtp_1\") {
+  pin (\"D\") { direction : \"input\"; }
+  pin (\"GATE\") { direction : \"input\"; }
+  pin (\"Q\") { direction : \"output\"; function : \"IQ\"; }
+  latch (\"IQ\") { next_state : \"D\"; enable : \"GATE\"; }
+}
+"""
 BASE = """module top(A, B, Y);
 input A, B;
 output Y;
@@ -94,6 +115,27 @@ def test_real_f1_rejects_pin_to_net_swap():
     checker = build_real_equivalence_checker(LIB)
     swapped = BASE.replace(".B(B)", ".B(A)").replace(".A(A)", ".A(B)")
     assert checker(BASE, swapped).status == "fail"
+
+
+def test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer():
+    lib = LIB + '''cell ("sky130_fd_sc_hd__buf_1") {
+      pin ("A") { direction : "input"; }
+      pin ("X") { direction : "output"; function : "A"; }
+    }'''
+    original = """module top(A, B, Y);
+input A, B;
+output Y;
+wire N;
+sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(N));
+sky130_fd_sc_hd__and2_1 g2 (.A(N), .B(B), .Y(Y));
+endmodule
+"""
+    candidate = original.replace(".A(N), .B(B), .Y(Y)", ".A(N_BUF), .B(B), .Y(Y)").replace(
+        "wire N;", "wire N, N_BUF;\nsky130_fd_sc_hd__buf_1 b1 (.A(N), .X(N_BUF));")
+    checker = build_real_equivalence_checker(lib)
+    assert checker(original, candidate).status == "pass"
+    wrong = candidate.replace("sky130_fd_sc_hd__buf_1 b1", "sky130_fd_sc_hd__and2_1 b1")
+    assert checker(original, wrong).status == "fail"
 
 
 def test_real_f2_rejects_broken_output_driver():
@@ -209,6 +251,78 @@ def test_flow_roundtrips_optional_physical_hold_none(tmp_path):
     assert record["min_slack"] is None
     assert record["metadata"]["physical_metrics"]["candidate_hold"] is None
     assert json.loads(json.dumps(result["state"]))["accepted_patches"][0]["min_slack"] is None
+
+
+def test_flow_evaluator_typeerror_is_single_call_structured_failure(tmp_path):
+    case_dir = tmp_path / "evaluator-error"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    net = "module top(A, Y);\ninput A;\noutput Y;\nbuf g1 (Y, A);\nendmodule\n"
+    (case_dir / "original" / "original.v").write_text(net)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net)
+    (case_dir / "case.yaml").write_text("case_id: evaluator-error\ntarget:\n  output: Y\n")
+    calls = []
+    class Evaluator:
+        use_constrained_cuts = False
+        refresh_cone = False
+        strict_gates = False
+        boundary_checker = object()
+        critical_instances = ["g1"]
+        def __call__(self, patch, weights, *, state):
+            calls.append(state)
+            raise TypeError("intentional evaluator failure")
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=1, max_patches=1,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "test", "ok"),
+        wns_evaluator=Evaluator(), critical_instances=["g1"],
+    )
+    errors = [e for e in result["state"]["failure_history"] if e["type"] == "evaluator_exception"]
+    assert len(calls) == len(errors) and len(calls) > 0
+
+
+def test_slow_sta_crossing_wall_deadline_cannot_improve_or_commit(tmp_path, monkeypatch):
+    from rseco.refinement_loop import SearchState
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1,
+                          output_dir=tmp_path, workers=1)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    def slow_sta(**kwargs):
+        time.sleep(0.02)
+        return {"wns": 0.0, "tns": 0.0}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", slow_sta)
+    state = SearchState(current_netlist_text=BASE,
+                        budget={"_deadline_monotonic": time.perf_counter() + 0.005})
+    result = ev(SimpleNamespace(patch_id="slow", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None, state=state)
+    events = [e for e in result["failure_events"] if e["type"] == "deadline_exhausted"]
+    assert result["improved"] is False and len(events) == 1
+
+
+def test_parallel_physical_candidates_share_single_baseline_cache(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1,
+                          output_dir=tmp_path, workers=2, physical_gate=True)
+    ev._candidates_for = lambda _cells, _inst: [
+        ("sky130_fd_sc_hd__and2_2", {}, "G"),
+        ("sky130_fd_sc_hd__or2_1", {}, "R"),
+    ]
+    ev._apply = lambda text, _inst, _kind, new, _pin: text.replace("and2_1", new)
+    calls = []
+    def sta(**kwargs):
+        calls.append({"path": Path(kwargs["output_dir"]),
+                      "spef": kwargs.get("spef_path")})
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.5, "tns": -1, "min_slack": -.5}
+        if Path(kwargs["output_dir"]).name == "physical_baseline":
+            return {"wns": -1.0, "tns": -2, "min_slack": -.8}
+        return {"wns": -.5, "tns": -1, "min_slack": -.7}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+    result = ev(SimpleNamespace(patch_id="parallel", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is True
+    assert len(ev._physical_baseline_cache) == 1
+    assert sum(call["path"].name == "physical_baseline" for call in calls) == 1
+    assert sum(call["path"].name == "physical" and call["spef"] is not None
+               for call in calls) == 2
 
 
 def test_physical_acceptance_uses_paired_baseline_not_ideal_baseline(tmp_path, monkeypatch):
@@ -778,6 +892,31 @@ def test_real_wsl_sec_observes_sequential_d_path_change(tmp_path):
     assert checker(SEQ_BASE, changed).status == "fail"
 
 
+def test_real_wsl_sec_handles_realistic_sequential_liberty_functions(tmp_path):
+    if shutil.which("wsl.exe") is None:
+        import pytest
+        pytest.skip("WSL executable unavailable")
+    checker = build_full_netlist_sec_checker(
+        top_module="top", liberty_text=SEQ_REALISTIC_LIB, artifact_dir=tmp_path / "wsl-real-seq",
+    )
+    assert checker(SEQ_REALISTIC_BASE, SEQ_REALISTIC_BASE).status == "pass"
+    changed = SEQ_REALISTIC_BASE.replace(".D(D)", ".D(Q)")
+    assert checker(SEQ_REALISTIC_BASE, changed).status == "fail"
+    generated = next((tmp_path / "wsl-real-seq").rglob("cells.v")).read_text()
+    assert "assign Q = IQ;" in generated
+    assert "assign Q = 1'b0" not in generated
+
+
+def test_liberty_latch_function_maps_to_state_variable(tmp_path):
+    from rseco.real_wns import write_liberty_cell_models
+    generated = write_liberty_cell_models(
+        LATCH_REALISTIC_LIB, tmp_path / "latch_cells.v",
+    ).read_text()
+    assert "reg IQ;" in generated
+    assert "always @* if (GATE) IQ <= D;" in generated
+    assert "assign Q = IQ;" in generated
+
+
 def test_topology_reserves_boundary_after_sec_and_deadline_before_boundary(tmp_path, monkeypatch):
     import rseco.real_wns as rw
     boundary_calls = []
@@ -953,6 +1092,21 @@ def test_unsupported_sequential_cell_returns_structured_sec_failure(tmp_path):
       pin ("D") { direction : "input"; }
       pin ("CLK") { direction : "input"; }
       pin ("Q") { direction : "output"; }
+    }'''
+    text = "module top(D, CLK, Q); input D, CLK; output Q; sky130_fd_sc_hd__dff_1 ff1 (.D(D), .CLK(CLK), .Q(Q)); endmodule\n"
+    checker = build_full_netlist_sec_checker(top_module="top", liberty_text=unsupported,
+                                             artifact_dir=tmp_path)
+    result = checker(text, text)
+    assert result.status in {"fail", "unavailable"}
+    assert "unsupported sequential" in result.reason
+
+
+def test_incomplete_sequential_semantics_do_not_fall_back_to_combinational(tmp_path):
+    unsupported = '''cell ("sky130_fd_sc_hd__dff_1") {
+      pin ("D") { direction : "input"; }
+      pin ("CLK") { direction : "input"; }
+      pin ("Q") { direction : "output"; function : "IQ"; }
+      ff ("IQ") { }
     }'''
     text = "module top(D, CLK, Q); input D, CLK; output Q; sky130_fd_sc_hd__dff_1 ff1 (.D(D), .CLK(CLK), .Q(Q)); endmodule\n"
     checker = build_full_netlist_sec_checker(top_module="top", liberty_text=unsupported,
