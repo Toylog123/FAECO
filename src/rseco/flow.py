@@ -2,6 +2,7 @@
 
 import json
 import time
+import inspect
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -346,9 +347,11 @@ def run_multi_iteration_case(
     equivalence_checker: object | None = None,
     wns_evaluator: object | None = None,
     candidates_per_iteration: int = 8,
+    max_patches: int | None = None,
     critical_instances: list[str] | None = None,
     r_available: set[str] | None = None,
     init_weights: dict | None = None,
+    epsilon: float = 0.0,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -383,7 +386,7 @@ def run_multi_iteration_case(
         the weighted cut search can generate a critical-path-cover candidate
         that actually targets the timing-critical gates after an F4 failure.
     """
-    from .refinement_loop import RefinementConfig, simulate_refinement_loop
+    from .refinement_loop import RefinementConfig, SearchState, simulate_refinement_loop
     case_dir = Path(case_dir)
     artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
     case = load_case(case_dir)
@@ -413,6 +416,22 @@ def run_multi_iteration_case(
         reduction = 0
 
     wns_history: list[float] = []
+    initial_netlist_text = (
+        getattr(wns_evaluator, "mapped_text", None)
+        if wns_evaluator is not None else None
+    ) or (case.original_analysis_netlist_path.read_text(encoding="utf-8"))
+    initial_wns = getattr(wns_evaluator, "baseline_wns", None)
+    state = SearchState(
+        current_netlist_text=initial_netlist_text,
+        current_wns=initial_wns,
+        critical_instances=list(critical_instances or getattr(wns_evaluator, "critical_instances", []) or []),
+        budget={"max_iterations": max_iterations, "epsilon": float(epsilon)},
+    )
+    try:
+        stateful_evaluator = "state" in inspect.signature(wns_evaluator).parameters
+    except (TypeError, ValueError):
+        stateful_evaluator = False
+    max_patches = int(max_patches or max_iterations)
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     def evaluator(failures, weights):
         # one iteration: explore the weighted-ordered candidate cuts with the
@@ -438,6 +457,16 @@ def run_multi_iteration_case(
             patch = make_patch_candidate(
                 case_id=case.case_id, boundary=boundary, equivalence=equivalence
             )
+            candidate_identity = state.hash_text(state.current_netlist_hash + state.candidate_hash(
+                gates=patch.gates,
+                boundary_inputs=patch.boundary_inputs,
+                boundary_outputs=patch.boundary_outputs,
+                action_hash=patch.patch_id,
+            ))
+            if stateful_evaluator and not state.mark_candidate_tested(candidate_identity):
+                failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
+                state.record_failure({"type": "no_new_candidate", "candidate_hash": candidate_identity})
+                continue
             failures.update(
                 classify_failures(
                     equivalence_passed=equivalence.status == "pass",
@@ -452,9 +481,29 @@ def run_multi_iteration_case(
             if wns_evaluator is not None:
                 # real-STA hook: the injected runner measures the applied
                 # candidate WNS and reports whether it strictly improved.
-                wns_info = wns_evaluator(patch, weights)
+                try:
+                    params = inspect.signature(wns_evaluator).parameters
+                    if "state" in params:
+                        wns_info = wns_evaluator(patch, weights, state=state)
+                    else:
+                        wns_info = wns_evaluator(patch, weights)
+                except (TypeError, ValueError):
+                    wns_info = wns_evaluator(patch, weights)
                 wns = wns_info["wns"]
                 wns_history.append(wns)
+                for event in wns_info.get("failure_events", []):
+                    state.record_failure(event)
+                    event_type = event.get("type", FailureType.BOUNDARY_INVALID)
+                    try:
+                        failure_type = FailureType(event_type)
+                    except ValueError:
+                        failure_type = FailureType.BOUNDARY_INVALID
+                    if event.get("hard_gate") or failure_type in {
+                        FailureType.EQUIVALENCE, FailureType.BOUNDARY_INVALID,
+                        FailureType.PATCH_TOO_LARGE,
+                        FailureType.VERIFICATION_TOO_EXPENSIVE,
+                    }:
+                        failures.add(failure_type)
                 # F6 physical-load feedback (review shortboard): the
                 # evaluator marks a trial as physical_failure when its
                 # ideal-net gain did not survive the SPEF re-measure;
@@ -467,7 +516,35 @@ def run_multi_iteration_case(
                         if _t.get("physical_failure"):
                             failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
                             break
-                if wns_info["improved"]:
+                hard_failure = any(
+                    e.get("hard_gate") or e.get("type") in {
+                        FailureType.EQUIVALENCE.value,
+                        FailureType.BOUNDARY_INVALID.value,
+                        FailureType.PATCH_TOO_LARGE.value,
+                        FailureType.VERIFICATION_TOO_EXPENSIVE.value,
+                    }
+                    for e in wns_info.get("failure_events", [])
+                )
+                if wns_info["improved"] and not hard_failure:
+                    candidate_text = wns_info.get("candidate_netlist_text")
+                    if candidate_text is not None:
+                        state.accept_patch(
+                            patch.patch_id, candidate_text, wns=wns,
+                            tns=wns_info.get("tns"),
+                            candidate_hash=wns_info.get("candidate_hash", candidate_identity),
+                            critical_endpoints=wns_info.get("critical_endpoints"),
+                            critical_instances=wns_info.get("critical_instances"),
+                            metadata={"cut_hash": candidate_identity},
+                        )
+                        accept = getattr(wns_evaluator, "accept_candidate", None)
+                        if callable(accept):
+                            accept(wns_info, state=state)
+                        if len(state.accepted_patches) >= max_patches:
+                            state.set_stop_reason("max_patches")
+                            return True, patch.patch_id, {"wns": wns}, False
+                        # A committed candidate is a new G_r; continue the
+                        # closure search instead of terminating at first gain.
+                        return True, patch.patch_id, {"wns": wns}, True
                     return True, patch.patch_id, {"wns": wns}
                 # no timing gain on this candidate: keep exploring the
                 # remaining cuts in this iteration before refining weights.
@@ -488,6 +565,27 @@ def run_multi_iteration_case(
         init_weights=init_weights,
     )
     result["case_id"] = case.case_id
+    for entry in result.get("history", []):
+        if entry.get("failures"):
+            state.record_failure({
+                "type": "iteration_failure",
+                "iteration": entry.get("iteration"),
+                "failures": list(entry["failures"]),
+                "evidence": {"wns": entry.get("wns")},
+            })
+    if state.stop_reason is None:
+        if stateful_evaluator and len(state.accepted_patches) >= max_patches:
+            state.set_stop_reason("max_patches")
+        elif stateful_evaluator and result.get("success") and state.current_wns is not None and state.current_wns >= 0:
+            state.set_stop_reason("timing_met")
+        elif not stateful_evaluator and result.get("success") and state.accepted_patches:
+            state.set_stop_reason("timing_met")
+        elif state.tested_candidate_hashes:
+            state.set_stop_reason("stagnation")
+        else:
+            state.set_stop_reason("no_new_candidate")
+    result["stop_reason"] = state.stop_reason
+    result["state"] = state.to_dict()
     result["logic_level_before"] = logic_level_before
     result["logic_level_after"] = logic_level_after
     result["logic_level_reduction"] = reduction

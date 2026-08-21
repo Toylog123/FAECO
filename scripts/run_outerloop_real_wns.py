@@ -28,9 +28,12 @@ import json
 import sys
 from pathlib import Path
 
-from run_sequential_timing_check import run_opensta, run_yosys_mapping  # reuse verified runners
+try:
+    from run_sequential_timing_check import run_opensta, run_yosys_mapping  # reuse verified runners
+except ModuleNotFoundError:  # imported by a test runner rather than executed as a script
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from run_sequential_timing_check import run_opensta, run_yosys_mapping
 
-from rseco.equivalence import EquivalenceResult
 from rseco.flow import run_multi_iteration_case
 from rseco.real_wns import (
     RealWnsEvaluator,
@@ -132,6 +135,8 @@ def parse_args() -> argparse.Namespace:
                    help="Initial cut size penalty (sensitivity analysis lambda_2)")
     p.add_argument("--init-critical-coverage-reward", type=float, default=1.0,
                    help="Initial critical-coverage reward (sensitivity analysis lambda_3)")
+    p.add_argument("--epsilon", type=float, default=0.0,
+                   help="Configured timing-comparison epsilon (ns), recorded in logs")
 
     p.add_argument("--physical-unit-len", type=float, default=40.0,
                    help="SPEF unit wire length (um); lower = lighter physical load "
@@ -213,6 +218,7 @@ def main() -> int:
         period=args.period,
         liberty_text=LIB.read_text(encoding="utf-8"),
         baseline_wns=baseline_wns,
+        baseline_tns=base.get("tns"),
         output_dir=out / "eval",
         critical_instances=critical,
         workers=args.workers,
@@ -238,19 +244,13 @@ def main() -> int:
         physical_fanout_penalty=args.physical_fanout_penalty,
         physical_depth_penalty=args.physical_depth_penalty,
         physical_unit_len_um=args.physical_unit_len,
+        strict_gates=True,
+        epsilon=args.epsilon,
     )
 
-    # 5. outer loop.  The sequential mapped netlist has DFF feedback loops,
-    #    so the default structural-equivalence visitor recurses infinitely;
-    #    equivalence is trivially passed here because the real success
-    #    criterion is the OpenSTA-measured WNS, not structure matching.
-    def _trivial_equivalence(original, resynthesized, *, outputs):
-        return EquivalenceResult(
-            status="pass",
-            method="real_wns_placeholder",
-            reason="sequential real-STA loop; success judged by WNS",
-        )
-
+    # 5. outer loop.  Candidate-level equivalence is intentionally fail
+    # closed when no functional checker is configured; timing gain alone is
+    # never presented as proof of correctness.
     # Joint bi-objective cut: pass which critical-path gates have an R
     # equivalence candidate so the cut graph applies the hard equivalence
     # constraint and the critical-path cover is a first-round default.
@@ -261,11 +261,16 @@ def main() -> int:
         case_dir,
         max_iterations=args.max_iterations,
         enable_feedback=not args.no_feedback,
-        equivalence_checker=_trivial_equivalence,
         wns_evaluator=evaluator,
         candidates_per_iteration=args.candidates_per_iteration,
         critical_instances=critical,
         r_available=r_available,
+        init_weights={
+            "boundary_penalty": args.init_boundary_penalty,
+            "size_penalty": args.init_size_penalty,
+            "critical_coverage_reward": args.init_critical_coverage_reward,
+        },
+        epsilon=args.epsilon,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period
