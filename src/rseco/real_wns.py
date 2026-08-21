@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import json
 import re
-import tempfile
+import hashlib
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -86,6 +86,28 @@ def _checker_details(value) -> dict:
         if isinstance(parsed, dict):
             details.update(parsed)
     return {key: value for key, value in details.items() if value is not None}
+
+
+def _physical_sta_provenance(output_dir: str | Path, metrics: dict | None,
+                             rc_config: dict, rc_config_hash: str) -> dict:
+    directory = Path(output_dir)
+    report = directory / "sta.log"
+    text = report.read_text(encoding="utf-8", errors="replace") if report.exists() else ""
+    path = parse_critical_instances(text) if text else []
+    endpoint = parse_worst_endpoint(text) if text else None
+    return {
+        "tool": "OpenSTA",
+        "status": (metrics or {}).get("status", "unknown"),
+        "report_path": str(report),
+        "output_dir": str(directory),
+        "config": dict(rc_config),
+        "rc_config_hash": rc_config_hash,
+        "wns": (metrics or {}).get("wns"),
+        "tns": (metrics or {}).get("tns"),
+        "hold_min_slack": (metrics or {}).get("min_slack"),
+        "endpoint": endpoint,
+        "path": path,
+    }
 
 
 def _normalise_failure_events(events, *, candidate_hash: str, cut_hash: str | None = None):
@@ -201,27 +223,56 @@ def build_full_netlist_sec_checker(
             return EquivalenceResult(
                 "fail", "full_netlist_sec", f"SEC input parse failed closed: {exc}"
             )
-        with tempfile.TemporaryDirectory(prefix="text-sec-", dir=artifact_root) as temp:
-            temp_dir = Path(temp)
-            original = temp_dir / f"{top_module}.gold.v"
-            revised = temp_dir / f"{top_module}.gate.v"
-            original.write_text(original_text, encoding="utf-8")
-            revised.write_text(candidate_text, encoding="utf-8")
-            liberty_path = None
-            if liberty_text is not None:
-                liberty_path = temp_dir / "cells.lib"
-                liberty_path.write_text(liberty_text, encoding="utf-8")
-            result = check_yosys_abc_equivalence(
-                original, revised, outputs=outputs,
-                artifact_dir=temp_dir / "yosys-abc",
-                yosys_command=yosys_command,
-                abc_command=abc_command,
-                timeout_s=timeout_s,
-                liberty_cells_v=liberty_cells_v or liberty_path,
-            )
-            return result
+        digest = hashlib.sha256((top_module + "\0" + original_text + "\0" + candidate_text).encode()).hexdigest()[:16]
+        trial_dir = artifact_root / f"trial-{digest}"
+        trial_dir.mkdir(parents=True, exist_ok=True)
+        original = trial_dir / f"{top_module}.gold.v"
+        revised = trial_dir / f"{top_module}.gate.v"
+        original.write_text(original_text, encoding="utf-8")
+        revised.write_text(candidate_text, encoding="utf-8")
+        cells_path = trial_dir / "cells.v"
+        if liberty_text is not None:
+            write_liberty_cell_models(liberty_text, cells_path)
+        elif liberty_cells_v is not None:
+            cells_path = Path(liberty_cells_v)
+        else:
+            cells_path = None
+        result = check_yosys_abc_equivalence(
+            original, revised, outputs=outputs,
+            artifact_dir=trial_dir / "yosys-abc",
+            yosys_command=yosys_command,
+            abc_command=abc_command,
+            timeout_s=timeout_s,
+            liberty_cells_v=cells_path,
+        )
+        return result
 
     return check
+
+
+def write_liberty_cell_models(liberty_text: str, output_path: str | Path) -> Path:
+    """Materialize a deterministic, synthesizable Verilog model from Liberty."""
+    cells = parse_liberty_cells(liberty_text)
+    blocks: list[str] = ["// Generated from Liberty for symmetric Yosys/ABC SEC.\n"]
+    for name in sorted(cells):
+        cell = cells[name]
+        ports = list(dict.fromkeys([*cell.input_pins, cell.output_pin] if cell.output_pin else cell.input_pins))
+        if not ports:
+            continue
+        lines = [f"module {name} ({', '.join(ports)});"]
+        if cell.input_pins:
+            lines.append("  input " + ", ".join(cell.input_pins) + ";")
+        if cell.output_pin:
+            lines.append(f"  output {cell.output_pin};")
+        if cell.function and cell.output_pin:
+            expr = (cell.function.replace("*", "&").replace("+", "|"))
+            lines.append(f"  assign {cell.output_pin} = {expr};")
+        lines.append("endmodule\n")
+        blocks.append("\n".join(lines))
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(blocks), encoding="utf-8")
+    return path
 
 
 def build_boundary_closure_checker():
@@ -875,6 +926,8 @@ class RealWnsEvaluator:
         # the latter is never substituted by the local checker.
         if kind == "TOPOLOGY":
             sec_unavailable = False
+            sec_status = None
+            sec_details = {}
             try:
                 local_check = check_local_functional_equivalence(topology_window, candidate_text)
                 if local_check.status != "pass":
@@ -895,8 +948,9 @@ class RealWnsEvaluator:
                         self._sta_cache[cache_key] = dict(failed)
                         return failed
                     sec = self.topology_sec_checker(self.mapped_text, candidate_text)
-                    sec_unavailable = getattr(sec, "status", None) == "unavailable" or (
-                        isinstance(sec, dict) and sec.get("status") == "unavailable")
+                    sec_details = _checker_details(sec)
+                    sec_status = sec_details.get("status")
+                    sec_unavailable = sec_status == "unavailable"
                     if not _checker_passed(sec):
                         raise ValueError(f"full-netlist SEC: {sec}")
             except TimeoutError as exc:
@@ -917,7 +971,8 @@ class RealWnsEvaluator:
                 event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
                          "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
                          "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
-                         "status": "unavailable" if sec_unavailable else "fail", "reason": str(exc)}}
+                         "status": sec_status or ("unavailable" if sec_unavailable else "fail"),
+                         "reason": sec_details.get("reason", str(exc)), **sec_details}}
                 failed = {"instance": inst, "kind": kind, "from_type": cell_type,
                           "to_type": new_type, "wns": self.baseline_wns,
                           "tns": self.baseline_tns, "min_slack": None,
@@ -925,6 +980,20 @@ class RealWnsEvaluator:
                           "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
                           "cache_key": cache_key, "config_hash": config_hash,
                           "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            if boundary_budget_event is not None:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [boundary_budget_event], "runtime_s": 0.0, **proxy_meta}
                 self._sta_cache[cache_key] = dict(failed)
                 return failed
             if self.boundary_checker is not None:
@@ -1046,13 +1115,10 @@ class RealWnsEvaluator:
             report_text = report.read_text(encoding="utf-8", errors="replace")
             critical_refresh = parse_critical_instances(report_text)
             critical_endpoint_refresh = parse_worst_endpoint(report_text)
-        # Inner-loop physical gate (review shortboard): an ideal-net gain
-        # must clear a minimum threshold before a parasitic-aware SPEF run is
-        # even attempted; the candidate is only returned when the SPEF run
-        # also improves WNS.  This turns the SPEF check from a post-hoc
-        # autopsy into a per-candidate acceptance signal.
+        # Physical mode is evaluated exclusively against a paired physical
+        # baseline/candidate under one RC model.  Ideal STA is retained only
+        # as an independent diagnostic, never as an acceptance prefilter.
         if self.physical_gate and not self.hold_mode:
-            ideal_wns = res.get("wns")
             rc_config = {
                 "unit_len_um": self.physical_unit_len_um,
                 "fanout_penalty": self.physical_fanout_penalty,
@@ -1061,23 +1127,7 @@ class RealWnsEvaluator:
             rc_config_hash = hashlib.sha256(
                 json.dumps(rc_config, sort_keys=True).encode()
             ).hexdigest()
-            if ideal_wns is None or ideal_wns <= self.baseline_wns + self.min_physical_gain_ns + self.epsilon:
-                # Ideal STA is only a prefilter.  A physical-mode candidate
-                # without a complete paired baseline/candidate measurement
-                # is rejected and logged as F6, never accepted on ideal WNS.
-                res = {**res, "wns": self.baseline_wns,
-                       "physical_failure": True,
-                       "physical_status": "paired_not_attempted",
-                       "physical_baseline": None,
-                       "physical_candidate": None,
-                       "physical_baseline_tns": None,
-                       "physical_candidate_tns": None,
-                       "physical_baseline_min_slack": None,
-                       "physical_candidate_min_slack": None,
-                       "physical_delta": None,
-                       "rc_config_hash": rc_config_hash}
-            else:
-                try:
+            try:
                     from .spef import build_spef, parse_mapped_verilog, write_spef
                     import hashlib as _hashlib
                     rc_config_hash = _hashlib.sha256(
@@ -1107,7 +1157,9 @@ class RealWnsEvaluator:
                                     "tns": base_sta.get("tns") if base_sta else None,
                                     "min_slack": base_sta.get("min_slack") if base_sta else None,
                                     "budget_event": budget_event,
-                                    "rc_config_hash": rc_config_hash}
+                                    "rc_config_hash": rc_config_hash,
+                                    "provenance": _physical_sta_provenance(
+                                        base_dir, base_sta, rc_config, rc_config_hash)}
                         self._physical_baseline_cache[cache_key] = baseline
                     if baseline.get("budget_event"):
                         phys = {"wns": None, "tns": None, "min_slack": None,
@@ -1130,6 +1182,9 @@ class RealWnsEvaluator:
                     phys_wns = phys.get("wns")
                     phys_tns = phys.get("tns")
                     phys_min_slack = phys.get("min_slack")
+                    baseline_provenance = baseline.get("provenance")
+                    candidate_provenance = _physical_sta_provenance(
+                        sub / "physical", phys, rc_config, rc_config_hash)
                     base_phys_wns = baseline.get("wns")
                     base_phys_tns = baseline.get("tns")
                     base_phys_min_slack = baseline.get("min_slack")
@@ -1147,10 +1202,14 @@ class RealWnsEvaluator:
                                "physical_candidate_min_slack": phys_min_slack,
                                "physical_delta": None,
                                "physical_budget_event": baseline.get("budget_event") or phys.get("budget_event"),
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
                     elif (base_phys_wns is None or phys_wns is None
                           or base_phys_tns is None or phys_tns is None
-                          or (base_phys_min_slack is not None and phys_min_slack is None)):
+                          or (base_phys_min_slack is not None and phys_min_slack is None)
+                          or (self.hold_mode and (base_phys_min_slack is None
+                                                  or phys_min_slack is None))):
                         # physical load failure: the ideal gain does not
                         # have a complete paired physical measurement.
                         res = {**res, "wns": self.baseline_wns,
@@ -1166,6 +1225,8 @@ class RealWnsEvaluator:
                                "physical_baseline_min_slack": base_phys_min_slack,
                                "physical_candidate_min_slack": phys_min_slack,
                                "physical_delta": None,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
                     elif (phys_wns <= base_phys_wns + self.epsilon
                           or phys_tns < base_phys_tns - self.epsilon
@@ -1186,6 +1247,8 @@ class RealWnsEvaluator:
                                "physical_baseline_min_slack": base_phys_min_slack,
                                "physical_candidate_min_slack": phys_min_slack,
                                "physical_delta": phys_wns - base_phys_wns,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
                     else:
                         # parasitic-aware gain survives: report the SPEF WNS
@@ -1202,8 +1265,10 @@ class RealWnsEvaluator:
                                "physical_baseline_min_slack": base_phys_min_slack,
                                "physical_candidate_min_slack": phys_min_slack,
                                "physical_delta": phys_wns - base_phys_wns,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
-                except Exception as exc:
+            except Exception as exc:
                     res = {**res, "wns": self.baseline_wns,
                            "physical_failure": True,
                            "physical_status": "error",
@@ -1212,6 +1277,8 @@ class RealWnsEvaluator:
                            "physical_baseline_tns": (baseline.get("tns") if "baseline" in locals() else None),
                            "physical_candidate_tns": None,
                            "physical_delta": None,
+                           "physical_baseline_provenance": (baseline.get("provenance") if "baseline" in locals() and baseline else None),
+                           "physical_candidate_provenance": (_physical_sta_provenance(sub / "physical", phys, rc_config, rc_config_hash) if "phys" in locals() and phys else None),
                            "rc_config_hash": (rc_config_hash if "rc_config_hash" in locals() else None),
                            "physical_gate_error": str(exc)}
             physical_report = sub / "physical" / "sta.log"
@@ -1241,6 +1308,8 @@ class RealWnsEvaluator:
                 "evidence": {
                     "physical_baseline": res.get("physical_baseline"),
                     "physical_candidate": res.get("physical_candidate"),
+                    "paired_baseline": res.get("physical_baseline_provenance"),
+                    "paired_candidate": res.get("physical_candidate_provenance"),
                     "rc_config_hash": res.get("rc_config_hash"),
                     "status": res.get("physical_status"),
                     "error": res.get("physical_gate_error"),
@@ -1330,6 +1399,21 @@ class RealWnsEvaluator:
                 "max_capacitance": self.max_capacitance_budget,
                 "max_fanout": self.max_fanout_budget,
             }
+            metric_units = {
+                "setup_wns": "ns", "setup_tns": "ns", "hold_min_slack": "ns",
+                "area": "um^2", "max_transition": "ns",
+                "max_capacitance": "pF", "max_fanout": "count",
+            }
+            metric_values_for_evidence = {
+                "setup_wns": res.get("wns"), "setup_tns": res.get("tns"),
+                "hold_min_slack": res.get("min_slack"),
+                **metric_values,
+            }
+            metric_references = {
+                "setup_wns": self.baseline_wns,
+                "setup_tns": self.baseline_tns,
+                "hold_min_slack": self.baseline_min_slack,
+            }
             for metric, budget in budget_specs.items():
                 value = metric_values.get(metric)
                 if budget is not None and value is not None and metric in violations:
@@ -1337,7 +1421,17 @@ class RealWnsEvaluator:
                         "value": value,
                         "budget": budget,
                         "epsilon": self._metric_epsilon(metric),
-                        "unit": metric,
+                        "unit": metric_units[metric],
+                        "backend": "OpenSTA",
+                    }
+            for metric, reference in metric_references.items():
+                value = metric_values_for_evidence.get(metric)
+                if metric in violations and reference is not None and value is not None:
+                    metric_budgets[metric] = {
+                        "value": value,
+                        "reference": reference,
+                        "epsilon": self.epsilon,
+                        "unit": metric_units[metric],
                         "backend": "OpenSTA",
                     }
             evidence_payload = evidence.to_dict()
@@ -1379,6 +1473,8 @@ class RealWnsEvaluator:
             "physical_candidate_tns": res.get("physical_candidate_tns"),
             "physical_baseline_min_slack": res.get("physical_baseline_min_slack"),
             "physical_candidate_min_slack": res.get("physical_candidate_min_slack"),
+            "physical_baseline_provenance": res.get("physical_baseline_provenance"),
+            "physical_candidate_provenance": res.get("physical_candidate_provenance"),
             "physical_delta": res.get("physical_delta"),
             "physical_status": res.get("physical_status"),
             "rc_config_hash": res.get("rc_config_hash"),
@@ -1855,14 +1951,17 @@ class RealWnsEvaluator:
                   "physical_candidate_tns": (best or (results[-1] if results else {})).get("physical_candidate_tns"),
                   "physical_baseline_tns": (best or (results[-1] if results else {})).get("physical_baseline_tns"),
                   "physical_candidate_min_slack": (best or (results[-1] if results else {})).get("physical_candidate_min_slack"),
-                  "physical_baseline_min_slack": (best or (results[-1] if results else {})).get("physical_baseline_min_slack")}
+                  "physical_baseline_min_slack": (best or (results[-1] if results else {})).get("physical_baseline_min_slack"),
+                  "physical_baseline_provenance": (best or (results[-1] if results else {})).get("physical_baseline_provenance"),
+                  "physical_candidate_provenance": (best or (results[-1] if results else {})).get("physical_candidate_provenance")}
         if best is not None:
             result.update({k: best[k] for k in
                             ("candidate_netlist_text", "candidate_hash",
                              "runtime_s", "physical_baseline", "physical_candidate",
                              "physical_tns", "physical_min_slack", "physical_baseline_tns",
                              "physical_candidate_tns", "physical_baseline_min_slack",
-                             "physical_candidate_min_slack", "physical_delta", "physical_status", "rc_config_hash", "critical_instances",
+                             "physical_candidate_min_slack", "physical_baseline_provenance",
+                             "physical_candidate_provenance", "physical_delta", "physical_status", "rc_config_hash", "critical_instances",
                             "critical_endpoints", "sta_provenance", "acceptance_evidence",
                             "base_netlist_hash", "cache_key", "config_hash", "kind",
                             "topology_metrics") if k in best})

@@ -136,7 +136,7 @@ def check_yosys_abc_equivalence(
         original_blif,
         yosys_argv=tools.yosys_argv,
         timeout_s=timeout_s,
-        liberty_cells_v=None,
+        liberty_cells_v=Path(liberty_cells_v) if liberty_cells_v else None,
     )
     if normalize_original.returncode != 0 or not original_blif.exists():
         return _formal_error(
@@ -177,6 +177,7 @@ def check_yosys_abc_equivalence(
             timeout=timeout_s,
         )
     except subprocess.TimeoutExpired as exc:
+        _write_text_log(log_path, command, exc.stdout or "", exc.stderr or "")
         return YosysAbcEquivalenceResult(
             status="timeout",
             method="yosys_blif_abc_cec",
@@ -639,8 +640,15 @@ def _formal_error(
     normalized_original: str | None,
     normalized_revised: str | None,
 ) -> YosysAbcEquivalenceResult:
+    log_path = None
+    if normalized_original or normalized_revised:
+        anchor = Path(normalized_original or normalized_revised)
+        log_path = anchor.parent / "abc_cec.log"
+        _write_text_log(log_path, command_output.command,
+                        command_output.stdout, command_output.stderr)
+    status = "timeout" if command_output.returncode == 124 else "error"
     return YosysAbcEquivalenceResult(
-        status="error",
+        status=status,
         method="yosys_blif_abc_cec",
         tool="yosys+abc",
         command=" ".join(command_output.command),
@@ -649,6 +657,7 @@ def _formal_error(
         reason=reason,
         normalized_original=normalized_original,
         normalized_revised=normalized_revised,
+        log_path=str(log_path) if log_path else None,
         returncode=command_output.returncode,
         stdout_tail=_tail(command_output.stdout),
         stderr_tail=_tail(command_output.stderr),

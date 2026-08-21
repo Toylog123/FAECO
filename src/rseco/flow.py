@@ -659,6 +659,16 @@ def run_multi_iteration_case(
                                        else state.current_cone_gates),
                             metadata={"cut_hash": candidate_identity,
                                       "sta_provenance": wns_info.get("sta_provenance"),
+                                      "physical_baseline_provenance": wns_info.get("physical_baseline_provenance"),
+                                      "physical_candidate_provenance": wns_info.get("physical_candidate_provenance"),
+                                      "physical_metrics": {
+                                          "baseline_wns": wns_info.get("physical_baseline"),
+                                          "candidate_wns": wns_info.get("physical_candidate"),
+                                          "baseline_tns": wns_info.get("physical_baseline_tns"),
+                                          "candidate_tns": wns_info.get("physical_candidate_tns"),
+                                          "baseline_hold": wns_info.get("physical_baseline_min_slack"),
+                                          "candidate_hold": wns_info.get("physical_candidate_min_slack"),
+                                      },
                                       "action_scope": list(patch.gates)},
                         )
                         accept = getattr(wns_evaluator, "accept_candidate", None)
