@@ -311,6 +311,7 @@ def main() -> int:
         "critical_coverage_reward": args.init_critical_coverage_reward,
     }
     result["hold_uncertainty_ns"] = args.hold_uncertainty if args.hold_mode else None
+    result["min_physical_gain_ns"] = args.min_physical_gain
     result["critical_instances"] = critical
     result["proxy_ranking"] = args.proxy_ranking
     result["endpoint"] = endpoint

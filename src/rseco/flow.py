@@ -668,6 +668,8 @@ def run_multi_iteration_case(
                                           "candidate_tns": wns_info.get("physical_candidate_tns"),
                                           "baseline_hold": wns_info.get("physical_baseline_min_slack"),
                                           "candidate_hold": wns_info.get("physical_candidate_min_slack"),
+                                          "min_physical_gain_ns": (wns_info.get("physical_config") or {}).get("min_physical_gain_ns"),
+                                          "rc_config_hash": wns_info.get("rc_config_hash"),
                                       },
                                       "action_scope": list(patch.gates)},
                         )

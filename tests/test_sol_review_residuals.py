@@ -172,6 +172,45 @@ endmodule
     assert seen[1] == ["g1"]
 
 
+def test_flow_roundtrips_optional_physical_hold_none(tmp_path):
+    import json
+    case_dir = tmp_path / "optional-none"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    net = "module top(A, Y);\ninput A;\noutput Y;\nbuf g1 (Y, A);\nendmodule\n"
+    (case_dir / "original" / "original.v").write_text(net)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net)
+    (case_dir / "case.yaml").write_text("case_id: optional-none\ntarget:\n  output: Y\n")
+
+    class Evaluator:
+        use_constrained_cuts = False
+        refresh_cone = False
+        strict_gates = False
+        boundary_checker = object()
+        critical_instances = ["g1"]
+        def __call__(self, patch, weights, *, state):
+            return {"wns": -.8, "tns": None, "min_slack": None,
+                    "improved": True, "candidate_netlist_text": net,
+                    "candidate_hash": "optional-none-hash",
+                    "physical_baseline": -1.2, "physical_candidate": -1.1,
+                    "physical_baseline_tns": None, "physical_candidate_tns": None,
+                    "physical_baseline_min_slack": None,
+                    "physical_candidate_min_slack": None,
+                    "physical_status": "paired_improved",
+                    "failure_events": []}
+
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=1, max_patches=1,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "test", "ok"),
+        wns_evaluator=Evaluator(), critical_instances=["g1"],
+    )
+    assert result["min_slack"] is None
+    record = result["state"]["accepted_patches"][0]
+    assert record["min_slack"] is None
+    assert record["metadata"]["physical_metrics"]["candidate_hold"] is None
+    assert json.loads(json.dumps(result["state"]))["accepted_patches"][0]["min_slack"] is None
+
+
 def test_physical_acceptance_uses_paired_baseline_not_ideal_baseline(tmp_path, monkeypatch):
     ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
                           liberty_text=LIB, baseline_wns=-.9,
@@ -825,6 +864,10 @@ def test_physical_pair_uses_real_min_gain_threshold(tmp_path, monkeypatch):
     result = ev(SimpleNamespace(patch_id="gain", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
     assert result["improved"] is False
     assert result["physical_status"] == "paired_rejected"
+    f6 = next(e for e in result["failure_events"] if e["type"] == "F6_physical_load_failure")
+    assert f6["evidence"]["threshold"] == {"value": 0.6, "unit": "ns", "epsilon": 0.0}
+    assert f6["evidence"]["actual_delta"] == 0.5
+    assert result["physical_config"]["min_physical_gain_ns"] == 0.6
 
 
 def test_physical_pair_requires_hold_when_hold_mode_requires_it(tmp_path, monkeypatch):
@@ -855,6 +898,26 @@ def test_setup_physical_pair_allows_optional_missing_hold(tmp_path, monkeypatch)
     monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
     result = ev(SimpleNamespace(patch_id="optional-hold", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
     assert result["improved"] is True
+
+
+def test_setup_optional_hold_regression_is_evidence_not_hard_gate(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1.0,
+                          baseline_tns=-3.0, baseline_min_slack=-.8,
+                          output_dir=tmp_path, workers=1, physical_gate=True,
+                          strict_budgets=True)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    def sta(**kwargs):
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.5, "tns": -1, "min_slack": -.5}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.2, "tns": -3, "min_slack": -.8}
+        return {"wns": -.7, "tns": -2.5, "min_slack": -1.0}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+    result = ev(SimpleNamespace(patch_id="optional-degrade", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is True
+    assert not any(e.get("type") == "acceptance_budget_violation" for e in result["failure_events"])
 
 
 def test_physical_hold_candidate_min_slack_propagates_to_state_record(tmp_path, monkeypatch):

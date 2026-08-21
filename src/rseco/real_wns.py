@@ -670,10 +670,12 @@ class RealWnsEvaluator:
         self.mapped_text = str(text)
         if result.get("wns") is not None:
             self.baseline_wns = float(result["wns"])
-        if result.get("tns") is not None:
-            self.baseline_tns = float(result["tns"])
-        if result.get("min_slack") is not None:
-            self.baseline_min_slack = float(result["min_slack"])
+        if "tns" in result:
+            self.baseline_tns = (float(result["tns"])
+                                 if result["tns"] is not None else None)
+        if "min_slack" in result:
+            self.baseline_min_slack = (float(result["min_slack"])
+                                       if result["min_slack"] is not None else None)
         if result.get("critical_instances") is not None:
             self.critical_instances = list(result["critical_instances"])
         if state is not None:
@@ -877,7 +879,8 @@ class RealWnsEvaluator:
             "rc_config": {"physical_gate": self.physical_gate,
                           "unit_len_um": self.physical_unit_len_um,
                           "fanout_penalty": self.physical_fanout_penalty,
-                          "depth_penalty": self.physical_depth_penalty},
+                          "depth_penalty": self.physical_depth_penalty,
+                          "min_physical_gain_ns": self.min_physical_gain_ns},
             "formal_config": {"strict_gates": self.strict_gates,
                               "checker": type(self.equivalence_checker).__name__ if self.equivalence_checker else None},
             "epsilon": self.epsilon,
@@ -1158,14 +1161,16 @@ class RealWnsEvaluator:
                 "fanout_penalty": self.physical_fanout_penalty,
                 "depth_penalty": self.physical_depth_penalty,
             }
+            physical_config = {**rc_config,
+                               "min_physical_gain_ns": self.min_physical_gain_ns}
             rc_config_hash = hashlib.sha256(
-                json.dumps(rc_config, sort_keys=True).encode()
+                json.dumps(physical_config, sort_keys=True).encode()
             ).hexdigest()
             try:
                     from .spef import build_spef, parse_mapped_verilog, write_spef
                     import hashlib as _hashlib
                     rc_config_hash = _hashlib.sha256(
-                        json.dumps(rc_config, sort_keys=True).encode()
+                        json.dumps(physical_config, sort_keys=True).encode()
                     ).hexdigest()
                     baseline_hash = _hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
                     cache_key = baseline_hash + ":" + rc_config_hash
@@ -1322,6 +1327,13 @@ class RealWnsEvaluator:
                            "physical_candidate_provenance": (_physical_sta_provenance(sub / "physical", phys, rc_config, rc_config_hash) if "phys" in locals() and phys else None),
                            "rc_config_hash": (rc_config_hash if "rc_config_hash" in locals() else None),
                            "physical_gate_error": str(exc)}
+            if self.physical_gate:
+                res["physical_config"] = {
+                    "unit_len_um": self.physical_unit_len_um,
+                    "fanout_penalty": self.physical_fanout_penalty,
+                    "depth_penalty": self.physical_depth_penalty,
+                    "min_physical_gain_ns": self.min_physical_gain_ns,
+                }
             physical_report = sub / "physical" / "sta.log"
             if physical_report.exists():
                 critical_report = physical_report
@@ -1342,11 +1354,22 @@ class RealWnsEvaluator:
                 "path": [],
                 "net": None,
                 "action_scope": [inst],
-                "threshold": 0.0,
+                "threshold": {
+                    "value": self.min_physical_gain_ns,
+                    "unit": "ns",
+                    "epsilon": self.epsilon,
+                },
                 "observed_value": res.get("physical_delta"),
                 "severity": "soft",
                 "runtime_s": time.perf_counter() - started_at,
                 "evidence": {
+                    "threshold": {
+                        "value": self.min_physical_gain_ns,
+                        "unit": "ns",
+                        "epsilon": self.epsilon,
+                    },
+                    "actual_delta": res.get("physical_delta"),
+                    "backend": "OpenSTA SPEF",
                     "physical_baseline": res.get("physical_baseline"),
                     "physical_candidate": res.get("physical_candidate"),
                     "paired_baseline": res.get("physical_baseline_provenance"),
@@ -1420,7 +1443,8 @@ class RealWnsEvaluator:
                 and metric_values["setup_tns"] is not None
                 and metric_values["setup_tns"] < metric_references["setup_tns"] - self.epsilon):
             violations.append("setup_tns")
-        if (self.strict_budgets and metric_references["hold_min_slack"] is not None
+        if (self.strict_budgets and self.hold_required
+                and metric_references["hold_min_slack"] is not None
                 and metric_values["hold_min_slack"] is not None
                 and metric_values["hold_min_slack"] < metric_references["hold_min_slack"] - self.epsilon):
             violations.append("hold_min_slack")
@@ -1526,6 +1550,7 @@ class RealWnsEvaluator:
             "physical_candidate_min_slack": res.get("physical_candidate_min_slack"),
             "physical_baseline_provenance": res.get("physical_baseline_provenance"),
             "physical_candidate_provenance": res.get("physical_candidate_provenance"),
+            "physical_config": res.get("physical_config"),
             "physical_delta": res.get("physical_delta"),
             "physical_status": res.get("physical_status"),
             "rc_config_hash": res.get("rc_config_hash"),
@@ -1848,8 +1873,7 @@ class RealWnsEvaluator:
                     best_physical_wns = physical_candidate
                     best_wns = wns
                     best_tns = tns
-                    if physical_candidate_min_slack is not None:
-                        best_min = physical_candidate_min_slack
+                    best_min = physical_candidate_min_slack
                     best = r
                     return True
                 return False
@@ -2025,7 +2049,8 @@ class RealWnsEvaluator:
                   "physical_candidate_min_slack": (best or (results[-1] if results else {})).get("physical_candidate_min_slack"),
                   "physical_baseline_min_slack": (best or (results[-1] if results else {})).get("physical_baseline_min_slack"),
                   "physical_baseline_provenance": (best or (results[-1] if results else {})).get("physical_baseline_provenance"),
-                  "physical_candidate_provenance": (best or (results[-1] if results else {})).get("physical_candidate_provenance")}
+                  "physical_candidate_provenance": (best or (results[-1] if results else {})).get("physical_candidate_provenance"),
+                  "physical_config": (best or (results[-1] if results else {})).get("physical_config")}
         if best is not None:
             result.update({k: best[k] for k in
                             ("candidate_netlist_text", "candidate_hash",
@@ -2033,7 +2058,7 @@ class RealWnsEvaluator:
                              "physical_tns", "physical_min_slack", "physical_baseline_tns",
                              "physical_candidate_tns", "physical_baseline_min_slack",
                              "physical_candidate_min_slack", "physical_baseline_provenance",
-                             "physical_candidate_provenance", "physical_delta", "physical_status", "rc_config_hash", "critical_instances",
+                             "physical_candidate_provenance", "physical_delta", "physical_status", "rc_config_hash", "physical_config", "critical_instances",
                             "critical_endpoints", "sta_provenance", "acceptance_evidence",
                             "base_netlist_hash", "cache_key", "config_hash", "kind",
                             "topology_metrics") if k in best})
