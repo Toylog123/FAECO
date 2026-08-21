@@ -897,6 +897,10 @@ class RealWnsEvaluator:
             "kind": kind,
             "from_type": cell_type,
             "to_type": new_type,
+            "topology_metrics": ({
+                "before": topology_replacement.before.to_dict(),
+                "after": topology_replacement.after.to_dict(),
+            } if kind == "TOPOLOGY" else None),
             "wns": res.get("wns"),
             "tns": res.get("tns"),
             "min_slack": res.get("min_slack"),
@@ -1297,7 +1301,8 @@ class RealWnsEvaluator:
                             "runtime_s", "physical_baseline", "physical_candidate",
                             "physical_delta", "rc_config_hash", "critical_instances",
                             "critical_endpoints", "sta_provenance", "acceptance_evidence",
-                            "base_netlist_hash", "cache_key", "config_hash") if k in best})
+                            "base_netlist_hash", "cache_key", "config_hash", "kind",
+                            "topology_metrics") if k in best})
         return result
 
     def write_trials(self, path: str | Path) -> None:

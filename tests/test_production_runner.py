@@ -158,6 +158,47 @@ def test_strict_acceptance_rejects_wns_gain_with_tns_budget_regression(tmp_path,
                for trial in ev.trials for e in trial["failure_events"])
 
 
+def test_runner_accepts_topology_trial_and_records_structural_delta(tmp_path, monkeypatch):
+    from rseco.real_wns import RealWnsEvaluator
+    from rseco.replacement import parse_verilog_netlist_from_text
+    from types import SimpleNamespace
+    text = """module top(A, B, Y);
+input A, B;
+output Y;
+wire N1, N2;
+sky130_fd_sc_hd__and2_1 g1 (N1, A, B);
+sky130_fd_sc_hd__and2_1 g2 (N2, A, B);
+sky130_fd_sc_hd__or2_1 g3 (Y, N1, N2);
+endmodule
+"""
+    topo_lib = LIB + """
+cell (\"sky130_fd_sc_hd__or2_1\") { pin (\"A\") { direction : \"input\"; } pin (\"B\") { direction : \"input\"; } pin (\"Y\") { direction : \"output\"; function : \"A | B\"; } }
+"""
+    ev = RealWnsEvaluator(mapped_text=text, top_module="top", period=1,
+                          liberty_text=topo_lib, baseline_wns=-1,
+                          output_dir=tmp_path, workers=1, max_patch_ratio=1.0,
+                          strict_gates=True, equivalence_checker=lambda a, b: True,
+                          boundary_checker=lambda a, b: True)
+    ev._candidates_for = lambda cells, inst: []
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: {"wns": -.5, "tns": -1})
+    patch = SimpleNamespace(patch_id="topology-p", gates=["g1", "g2", "g3"],
+                             boundary_inputs=["A", "B"], boundary_outputs=["Y"])
+    result = ev(patch, None)
+    assert result["improved"] is True
+    assert result["kind"] == "TOPOLOGY"
+    before = parse_verilog_netlist_from_text(text)
+    after = parse_verilog_netlist_from_text(result["candidate_netlist_text"])
+    assert len(after.gates) < len(before.gates)
+    assert sum(len(g.inputs) for g in after.gates) < sum(len(g.inputs) for g in before.gates)
+    metrics = result["topology_metrics"]
+    assert metrics["before"]["levels"] > metrics["after"]["levels"]
+    assert metrics["before"]["gates"] > metrics["after"]["gates"]
+    assert metrics["before"]["edges"] > metrics["after"]["edges"]
+    topology_trials = [t for t in ev.trials if t["kind"] == "TOPOLOGY"]
+    assert topology_trials and topology_trials[0]["accepted"] is True
+
+
 def test_strict_mode_without_checker_records_unavailable_f1_f2(tmp_path, monkeypatch):
     from rseco.real_wns import RealWnsEvaluator
     from types import SimpleNamespace
