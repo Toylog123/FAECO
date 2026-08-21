@@ -141,7 +141,7 @@ endmodule
     window = extract_combinational_window(netlist, ["g1", "g2", "g3"])
     replacement = generate_topology_replacement(window)
     try:
-        apply_joint_region_rewrite(text, replacement, sizing={"outside": "and2"})
+        apply_joint_region_rewrite(text, replacement, window=window, sizing={"outside": "and2"})
     except ValueError as exc:
         assert "outside" in str(exc)
     else:

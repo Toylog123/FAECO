@@ -77,6 +77,11 @@ def _window_metrics(gates: list[Gate], inputs: list[str], outputs: list[str]) ->
     )
 
 
+def _logic_family(gate_type: str) -> str:
+    family = gate_type.lower().split("__")[-1]
+    return re.sub(r"_\d+$", "", family)
+
+
 def extract_combinational_window(netlist: Netlist, gate_names: Iterable[str], *, max_gates: int = 16) -> CombinationalWindow:
     """Extract a cut-boundary combinational window from a parsed netlist."""
     if isinstance(netlist, str):
@@ -121,13 +126,13 @@ def generate_topology_replacement(window: CombinationalWindow) -> TopologyReplac
     """
     by_output = {g.output: g for g in window.gates}
     output_gate = next((g for g in window.gates if g.output in window.boundary_outputs), None)
-    if output_gate is None or output_gate.gate_type.lower() not in {"or", "or2", "orr"}:
+    if output_gate is None or _logic_family(output_gate.gate_type) not in {"or", "or2", "orr"}:
         raise ValueError("window does not match duplicate parallel OR pattern")
     children = [by_output.get(signal) for signal in output_gate.inputs]
     if len(children) != 2 or any(child is None for child in children):
         raise ValueError("parallel OR must have two internal inputs")
     left, right = children
-    if left.gate_type.lower() != right.gate_type.lower() or left.gate_type.lower() not in {"and", "and2"}:
+    if _logic_family(left.gate_type) != _logic_family(right.gate_type) or _logic_family(left.gate_type) not in {"and", "and2"}:
         raise ValueError("parallel children are not equivalent AND gates")
     if tuple(sorted(left.inputs)) != tuple(sorted(right.inputs)):
         raise ValueError("parallel children do not have identical inputs")
@@ -169,6 +174,8 @@ def apply_joint_region_rewrite(
     local_checker=None,
 ) -> str:
     """Compose topology and G/B actions while enforcing one cut region."""
+    if window is None:
+        raise ValueError("topology replacement requires an explicit window/checker")
     allowed = {g.name for g in replacement.original_gates} | {g.name for g in replacement.new_gates}
     for action_set, label in ((sizing or {}, "sizing"), (buffer_actions or {}, "buffer")):
         outside = sorted(set(action_set) - allowed)
@@ -205,7 +212,7 @@ def _truth_table(gates: list[Gate], inputs: list[str], output: str) -> tuple[boo
         if gate is None:
             raise ValueError(f"unresolved local signal: {signal}")
         vals = [evaluate(i, values, memo) for i in gate.inputs]
-        kind = gate.gate_type.lower().replace("_", "")
+        kind = _logic_family(gate.gate_type).replace("_", "")
         if kind in {"buf", "buffer"}:
             result = vals[0]
         elif kind in {"not", "inv", "inverter"}:
@@ -239,21 +246,21 @@ def check_local_functional_equivalence(window: CombinationalWindow, revised_netl
     """Truth-table check for a combinational window; unavailable is fail-closed."""
     try:
         revised = parse_verilog_netlist_from_text(revised_netlist_text)
-        original_table = _truth_table(window.gates, window.boundary_inputs, window.boundary_outputs[0])
         revised_names = {g.name for g in window.gates}
         replacement_gates = [g for g in revised.gates if g.name in revised_names]
         if not replacement_gates:
             replacement_gates = [g for g in revised.gates if g.output in window.boundary_outputs]
-        revised_table = _truth_table(replacement_gates, window.boundary_inputs,
-                                     window.boundary_outputs[0])
+        for output in window.boundary_outputs:
+            original_table = _truth_table(window.gates, window.boundary_inputs, output)
+            revised_table = _truth_table(replacement_gates, window.boundary_inputs, output)
+            if original_table != revised_table:
+                return EquivalenceResult(status="fail", method="truth_table_local",
+                                         reason=f"truth tables differ at {output}")
     except Exception as exc:
         return EquivalenceResult(status="fail", method="truth_table_local",
                                  reason=f"local checker failed closed: {exc}")
-    return EquivalenceResult(
-        status="pass" if original_table == revised_table else "fail",
-        method="truth_table_local",
-        reason="truth tables match" if original_table == revised_table else "truth tables differ",
-    )
+    return EquivalenceResult(status="pass", method="truth_table_local",
+                             reason="all boundary output truth tables match")
 
 
 def parse_verilog_netlist_from_text(text: str) -> Netlist:

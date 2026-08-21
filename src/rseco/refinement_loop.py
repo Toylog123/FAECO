@@ -39,8 +39,10 @@ class SearchState:
     current_netlist_text: str
     current_wns: float | None = None
     current_tns: float | None = None
+    current_min_slack: float | None = None
     critical_endpoints: list[str] = field(default_factory=list)
     critical_instances: list[str] = field(default_factory=list)
+    current_cone_gates: list[str] = field(default_factory=list)
     accepted_patches: list[dict] = field(default_factory=list)
     failure_history: list[dict] = field(default_factory=list)
     tested_candidate_hashes: set[str] = field(default_factory=set)
@@ -76,19 +78,30 @@ class SearchState:
         return True
 
     def record_failure(self, event: dict) -> None:
-        self.failure_history.append(dict(event))
+        normalized = dict(event)
+        candidate_hash = str(normalized.get("candidate_hash") or self.current_netlist_hash)
+        normalized["candidate_hash"] = candidate_hash
+        normalized["cut_hash"] = str(normalized.get("cut_hash") or candidate_hash)
+        normalized.setdefault("severity", "hard")
+        normalized.setdefault("runtime_s", 0.0)
+        normalized.setdefault("evidence", {})
+        self.failure_history.append(normalized)
 
     def accept_patch(self, patch_id: str, candidate_netlist_text: str, *,
                      wns=None, tns=None, candidate_hash=None,
+                     min_slack=None,
                      critical_endpoints=None, critical_instances=None,
+                     cone_gates=None,
                      metadata=None) -> dict:
         """Atomically append an accepted patch and advance ``G_r``."""
         previous = {
             "current_netlist_text": self.current_netlist_text,
             "current_wns": self.current_wns,
             "current_tns": self.current_tns,
+            "current_min_slack": self.current_min_slack,
             "critical_endpoints": list(self.critical_endpoints),
             "critical_instances": list(self.critical_instances),
+            "current_cone_gates": list(self.current_cone_gates),
         }
         record = {
             "patch_id": str(patch_id),
@@ -105,10 +118,13 @@ class SearchState:
         self.current_netlist_text = candidate_netlist_text
         self.current_wns = wns
         self.current_tns = tns
+        self.current_min_slack = min_slack
         if critical_endpoints is not None:
             self.critical_endpoints = list(critical_endpoints)
         if critical_instances is not None:
             self.critical_instances = list(critical_instances)
+        if cone_gates is not None:
+            self.current_cone_gates = list(cone_gates)
         return record
 
     def rollback(self) -> bool:
@@ -120,8 +136,10 @@ class SearchState:
         self.current_netlist_text = previous["current_netlist_text"]
         self.current_wns = previous["current_wns"]
         self.current_tns = previous["current_tns"]
+        self.current_min_slack = previous.get("current_min_slack")
         self.critical_endpoints = previous["critical_endpoints"]
         self.critical_instances = previous["critical_instances"]
+        self.current_cone_gates = previous.get("current_cone_gates", [])
         return True
 
     @staticmethod
@@ -148,8 +166,10 @@ class SearchState:
             "current_netlist_hash": self.current_netlist_hash,
             "current_wns": self.current_wns,
             "current_tns": self.current_tns,
+            "current_min_slack": self.current_min_slack,
             "critical_endpoints": list(self.critical_endpoints),
             "critical_instances": list(self.critical_instances),
+            "current_cone_gates": list(self.current_cone_gates),
             "accepted_patches": list(self.accepted_patches),
             "failure_history": list(self.failure_history),
             "tested_candidate_hashes": sorted(self.tested_candidate_hashes),

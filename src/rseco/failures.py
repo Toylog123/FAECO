@@ -56,6 +56,38 @@ class FailureEvent:
 
 
 @dataclass(frozen=True)
+class AcceptanceEvidence:
+    """Metrics and backend provenance consumed by the acceptance predicate."""
+
+    setup_wns: float | None = None
+    setup_tns: float | None = None
+    hold_min_slack: float | None = None
+    area: float | None = None
+    max_transition: float | None = None
+    max_capacitance: float | None = None
+    max_fanout: float | None = None
+    backend_provenance: dict[str, Any] = field(default_factory=dict)
+    unavailable: tuple[str, ...] = ()
+    violations: tuple[str, ...] = ()
+    epsilon: float = 0.0
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "setup_wns": self.setup_wns, "setup_tns": self.setup_tns,
+            "hold_min_slack": self.hold_min_slack, "area": self.area,
+            "max_transition": self.max_transition,
+            "max_capacitance": self.max_capacitance, "max_fanout": self.max_fanout,
+            "backend_provenance": dict(self.backend_provenance),
+            "unavailable": list(self.unavailable), "violations": list(self.violations),
+            "epsilon": self.epsilon,
+        }
+
+    @property
+    def admissible(self) -> bool:
+        return not self.unavailable and not self.violations
+
+
+@dataclass(frozen=True)
 class FailureThresholds:
     max_patch_ratio: float = 0.15
     min_logic_level_reduction: int = 1

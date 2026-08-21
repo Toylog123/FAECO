@@ -37,6 +37,8 @@ except ModuleNotFoundError:  # imported by a test runner rather than executed as
 from rseco.flow import run_multi_iteration_case
 from rseco.real_wns import (
     RealWnsEvaluator,
+    build_real_equivalence_checker,
+    build_boundary_closure_checker,
     build_r_available,
     dff_d_input_net,
     parse_critical_instances,
@@ -245,7 +247,10 @@ def main() -> int:
         physical_depth_penalty=args.physical_depth_penalty,
         physical_unit_len_um=args.physical_unit_len,
         strict_gates=True,
+        strict_budgets=True,
         epsilon=args.epsilon,
+        equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8")),
+        boundary_checker=build_boundary_closure_checker(),
     )
 
     # 5. outer loop.  Candidate-level equivalence is intentionally fail

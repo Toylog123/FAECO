@@ -14,6 +14,7 @@ from .cut import (
     solve_weighted_cut,
     split_cone_by_depth,
     weighted_cut_candidates,
+    constrained_weighted_cut_candidates,
 )
 from .equivalence import check_structural_equivalence
 from .failures import FailureThresholds, FailureType, classify_failures
@@ -24,6 +25,7 @@ from .patch import make_patch_candidate
 from .ranking import rank_patch_candidates
 from .refinement import RefinementWeights, refine_weights
 from .replacement import apply_patch_replacement
+from .replacement import parse_verilog_netlist_from_text
 from .yosys_abc import check_yosys_abc_equivalence, run_yosys_abc_resynthesis_baseline
 
 
@@ -114,9 +116,14 @@ def build_case_metrics(
         logic_level_after = None
         reduction = 0
 
+    # Legacy metrics mode has no boundary-checker invocation.  Treat the
+    # boundary result as "not evaluated" here to preserve its historical
+    # F1/F3-only taxonomy; the strict multi-iteration runner below computes
+    # boundary_closed from the real checker and fails closed when unavailable.
+    boundary_closed = equivalence.status in {"pass", "fail"}
     failures = classify_failures(
         equivalence_passed=equivalence.status == "pass",
-        boundary_closed=True,
+        boundary_closed=boundary_closed,
         patch_size=initial_patch_size,
         original_gate_count=original.gate_count,
         logic_level_before=logic_level_before,
@@ -322,7 +329,7 @@ def write_case_metrics(case_dir: str | Path) -> Path:
     return output_path
 
 
-def _cone_candidates(cone, weights, critical_instances, r_available):
+def _cone_candidates(cone, weights, critical_instances, r_available, *, constrained=False, k=8):
     # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
     # weights.max_cone_gates is split into depth-bounded subcones; each
     # subcone is cut independently so the global s-t graph stays bounded.
@@ -330,11 +337,19 @@ def _cone_candidates(cone, weights, critical_instances, r_available):
     cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]
     out: list = []
     for sub in cones:
-        out.extend(weighted_cut_candidates(
-            sub, weights, critical_instances,
-            r_available=r_available,
-            critical_first_default=True,
-        ))
+        if constrained:
+            out.extend(constrained_weighted_cut_candidates(
+                sub, weights, k=k, critical_instances=critical_instances,
+                min_critical_coverage=1 if critical_instances else 0,
+                hard_anchors=(critical_instances[-1:] if critical_instances else []),
+                window_size=max(1, getattr(weights, "max_cone_gates", len(sub.gates))),
+            ))
+        else:
+            out.extend(weighted_cut_candidates(
+                sub, weights, critical_instances,
+                r_available=r_available,
+                critical_first_default=True,
+            ))
     return out
 
 
@@ -352,6 +367,9 @@ def run_multi_iteration_case(
     r_available: set[str] | None = None,
     init_weights: dict | None = None,
     epsilon: float = 0.0,
+    sta_budget: int | None = None,
+    formal_budget: int | None = None,
+    wall_timeout_s: float | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -424,9 +442,14 @@ def run_multi_iteration_case(
     state = SearchState(
         current_netlist_text=initial_netlist_text,
         current_wns=initial_wns,
+        current_min_slack=getattr(wns_evaluator, "baseline_min_slack", None),
         critical_instances=list(critical_instances or getattr(wns_evaluator, "critical_instances", []) or []),
-        budget={"max_iterations": max_iterations, "epsilon": float(epsilon)},
+        current_cone_gates=list(cone.gates),
+        budget={"max_iterations": max_iterations, "epsilon": float(epsilon),
+                "sta_budget": sta_budget, "formal_budget": formal_budget,
+                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches or max_iterations},
     )
+    started_at = time.perf_counter()
     try:
         stateful_evaluator = "state" in inspect.signature(wns_evaluator).parameters
     except (TypeError, ValueError):
@@ -434,6 +457,21 @@ def run_multi_iteration_case(
     max_patches = int(max_patches or max_iterations)
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     def evaluator(failures, weights):
+        nonlocal cone
+        if wall_timeout_s is not None and time.perf_counter() - started_at >= wall_timeout_s:
+            state.set_stop_reason("wall_timeout")
+            return False, None
+        trial_count = len(getattr(wns_evaluator, "trials", []) or [])
+        if sta_budget is not None and trial_count >= sta_budget:
+            state.set_stop_reason("sta_budget")
+            return False, None
+        formal_count = sum(
+            1 for event in state.failure_history
+            if event.get("type") in {FailureType.EQUIVALENCE.value, "F1_equivalence_failure"}
+        )
+        if formal_budget is not None and formal_count >= formal_budget:
+            state.set_stop_reason("formal_budget")
+            return False, None
         # one iteration: explore the weighted-ordered candidate cuts with the
         # current weights (so refinement actually changes the boundary /
         # candidate ordering), build a patch for each, and accept the first
@@ -445,6 +483,8 @@ def run_multi_iteration_case(
         # hard constraint (no critical discount, cover skips them).
         candidates = _cone_candidates(
             cone, weights, critical_instances, r_available,
+            constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
+            k=max_candidates_per_iteration,
         )
         _eval_trials_ref = getattr(wns_evaluator, "trials", None)
         _trial_start = len(_eval_trials_ref) if _eval_trials_ref is not None else 0
@@ -467,10 +507,15 @@ def run_multi_iteration_case(
                 failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
                 state.record_failure({"type": "no_new_candidate", "candidate_hash": candidate_identity})
                 continue
+            strict_boundary_missing = bool(
+                getattr(wns_evaluator, "strict_gates", False)
+                and getattr(wns_evaluator, "boundary_checker", None) is None
+            )
+            boundary_closed = (not strict_boundary_missing) and equivalence.status == "pass"
             failures.update(
                 classify_failures(
                     equivalence_passed=equivalence.status == "pass",
-                    boundary_closed=True,
+                    boundary_closed=boundary_closed,
                     patch_size=patch.patch_size,
                     original_gate_count=original.gate_count,
                     logic_level_before=logic_level_before or 0,
@@ -513,6 +558,11 @@ def run_multi_iteration_case(
                 eval_trials = getattr(wns_evaluator, "trials", None)
                 if eval_trials is not None:
                     for _t in eval_trials[_trial_start:]:
+                        for trial_event in _t.get("failure_events", []):
+                            state.record_failure(trial_event)
+                            if (trial_event.get("hard_gate") or
+                                trial_event.get("severity") == "hard"):
+                                failures.add(FailureType.BOUNDARY_INVALID)
                         if _t.get("physical_failure"):
                             failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
                             break
@@ -528,17 +578,47 @@ def run_multi_iteration_case(
                 if wns_info["improved"] and not hard_failure:
                     candidate_text = wns_info.get("candidate_netlist_text")
                     if candidate_text is not None:
+                        refreshed_cone = None
+                        if getattr(wns_evaluator, "refresh_cone", False):
+                            try:
+                                refreshed_netlist = parse_verilog_netlist_from_text(candidate_text)
+                                refreshed_cone = extract_fanin_cone(
+                                    refreshed_netlist, roots=[case.target_output]
+                                )
+                            except Exception as exc:
+                                failure = {
+                                    "type": "F2_boundary_invalid",
+                                    "candidate_hash": wns_info.get("candidate_hash", candidate_identity),
+                                    "cut_hash": candidate_identity,
+                                    "severity": "hard",
+                                    "threshold": "cone_refresh",
+                                    "observed_value": "unavailable",
+                                    "evidence": {"reason": "cone_refresh_failed", "error": str(exc)},
+                                }
+                                state.record_failure(failure)
+                                failures.add(FailureType.BOUNDARY_INVALID)
+                                continue
                         state.accept_patch(
                             patch.patch_id, candidate_text, wns=wns,
                             tns=wns_info.get("tns"),
+                            min_slack=wns_info.get("min_slack"),
                             candidate_hash=wns_info.get("candidate_hash", candidate_identity),
                             critical_endpoints=wns_info.get("critical_endpoints"),
                             critical_instances=wns_info.get("critical_instances"),
-                            metadata={"cut_hash": candidate_identity},
+                            cone_gates=(list(refreshed_cone.gates)
+                                       if refreshed_cone is not None
+                                       else state.current_cone_gates),
+                            metadata={"cut_hash": candidate_identity,
+                                      "sta_provenance": wns_info.get("sta_provenance"),
+                                      "action_scope": list(patch.gates)},
                         )
                         accept = getattr(wns_evaluator, "accept_candidate", None)
                         if callable(accept):
                             accept(wns_info, state=state)
+                        if refreshed_cone is not None:
+                            cone = refreshed_cone
+                            state.current_cone_gates = list(cone.gates)
+                            state.accepted_patches[-1]["metadata"]["refreshed_cone_gates"] = list(cone.gates)
                         if len(state.accepted_patches) >= max_patches:
                             state.set_stop_reason("max_patches")
                             return True, patch.patch_id, {"wns": wns}, False
@@ -565,6 +645,16 @@ def run_multi_iteration_case(
         init_weights=init_weights,
     )
     result["case_id"] = case.case_id
+    state.budget["iterations_used"] = result.get("iterations", 0)
+    state.budget["sta_runs"] = len(getattr(wns_evaluator, "trials", []) or [])
+    state.budget["formal_runs"] = sum(
+        1 for event in state.failure_history
+        if event.get("type") in {FailureType.EQUIVALENCE.value, "F1_equivalence_failure"}
+    )
+    state.budget["stagnation_count"] = sum(
+        1 for entry in result.get("history", []) if entry.get("status") == "refined"
+    )
+    state.budget["wall_time_s"] = time.perf_counter() - started_at
     for entry in result.get("history", []):
         if entry.get("failures"):
             state.record_failure({
@@ -576,7 +666,12 @@ def run_multi_iteration_case(
     if state.stop_reason is None:
         if stateful_evaluator and len(state.accepted_patches) >= max_patches:
             state.set_stop_reason("max_patches")
-        elif stateful_evaluator and result.get("success") and state.current_wns is not None and state.current_wns >= 0:
+        elif (stateful_evaluator and result.get("success")
+              and state.current_wns is not None
+              and state.current_wns >= -float(epsilon)
+              and (not getattr(wns_evaluator, "hold_mode", False)
+                   or (state.current_min_slack is not None
+                       and state.current_min_slack >= -float(epsilon)))):
             state.set_stop_reason("timing_met")
         elif not stateful_evaluator and result.get("success") and state.accepted_patches:
             state.set_stop_reason("timing_met")

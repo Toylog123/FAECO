@@ -34,10 +34,16 @@ from .gate_sizing import (
     larger_size_candidates,
     parse_mapped_netlist,
 )
-from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
+from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells, canonical_function
 from .opensta import run_opensta_sequential
 from .proxy_ranking import ProxyWeights, rank_real_candidates
 from .strategy_selector import exploration_order
+from .failures import AcceptanceEvidence
+from .replacement import (
+    extract_combinational_window, generate_topology_replacement,
+    stitch_topology_replacement, check_local_functional_equivalence,
+    parse_verilog_netlist_from_text,
+)
 import itertools
 import hashlib
 import time
@@ -49,6 +55,69 @@ _INSTANCE_LINE_RE = re.compile(
     re.M,
 )
 _ENDPOINT_RE = re.compile(r"^Endpoint:\s+([\w\\]+)", re.M)
+
+
+def _checker_passed(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, dict):
+        return value.get("status") == "pass"
+    return getattr(value, "status", None) == "pass"
+
+
+def build_real_equivalence_checker(liberty_text: str):
+    """Build a per-candidate Liberty-function checker for R/G/B actions.
+
+    R candidates are checked by canonical Liberty Boolean functions, G keeps
+    the same function family, and B permits only added buffer/identity cells.
+    Unknown cells or malformed netlists fail closed with a structured result.
+    """
+    lib = parse_liberty_cells(liberty_text)
+
+    def check(original_text: str, candidate_text: str):
+        from .equivalence import EquivalenceResult
+        try:
+            before = parse_mapped_netlist(original_text)
+            after = parse_mapped_netlist(candidate_text)
+            old = {c.instance: c for c in before}
+            new = {c.instance: c for c in after}
+            if not set(old).issubset(new):
+                return EquivalenceResult("fail", "liberty_local_function", "an existing instance disappeared")
+            for inst, source in old.items():
+                target = new[inst]
+                if source.cell_type == target.cell_type:
+                    continue
+                src_lib, dst_lib = lib.get(source.cell_type), lib.get(target.cell_type)
+                if src_lib is None or dst_lib is None or not src_lib.function or not dst_lib.function:
+                    return EquivalenceResult("fail", "liberty_local_function", f"unknown/non-combinational cell at {inst}")
+                if canonical_function(src_lib.function) != canonical_function(dst_lib.function):
+                    return EquivalenceResult("fail", "liberty_local_function", f"Boolean function changed at {inst}")
+            added = set(new) - set(old)
+            for inst in added:
+                cell = lib.get(new[inst].cell_type)
+                if cell is None or cell.family not in {"buf", "bufbuf", "clkbuf"}:
+                    return EquivalenceResult("fail", "liberty_local_function", f"added non-buffer cell at {inst}")
+        except Exception as exc:
+            return EquivalenceResult("fail", "liberty_local_function", f"checker failed closed: {exc}")
+        return EquivalenceResult("pass", "liberty_local_function", "Liberty functions preserved")
+
+    return check
+
+
+def build_boundary_closure_checker():
+    """Build a real module-boundary checker used as the strict F2 gate."""
+    def check(original_text: str, candidate_text: str):
+        from .equivalence import EquivalenceResult
+        pattern = re.compile(r"\bmodule\s+(\w+)\s*\((.*?)\)\s*;", re.S)
+        left, right = pattern.search(original_text), pattern.search(candidate_text)
+        if left is None or right is None:
+            return EquivalenceResult("fail", "boundary_closure", "module header unavailable")
+        left_ports = tuple(p.strip() for p in left.group(2).replace("\n", " ").split(",") if p.strip())
+        right_ports = tuple(p.strip() for p in right.group(2).replace("\n", " ").split(",") if p.strip())
+        if left.group(1) != right.group(1) or left_ports != right_ports:
+            return EquivalenceResult("fail", "boundary_closure", "module boundary changed")
+        return EquivalenceResult("pass", "boundary_closure", "module boundary preserved")
+    return check
 
 
 def parse_critical_instances(sta_text: str) -> list[str]:
@@ -202,11 +271,18 @@ class RealWnsEvaluator:
         max_patch_ratio: float = 0.15,
         max_verification_time_s: float = 60.0,
         epsilon: float = 0.0,
+        strict_budgets: bool = False,
+        area_budget: float | None = None,
+        max_transition_budget: float | None = None,
+        max_capacitance_budget: float | None = None,
+        max_fanout_budget: float | None = None,
+        enable_topology: bool = True,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
         self.period = period
         self.lib = parse_liberty_cells(liberty_text)
+        self.liberty_text = liberty_text
         self.available = build_available_sizes(liberty_text)
         self.baseline_wns = baseline_wns
         self.baseline_tns: float | None = baseline_tns
@@ -249,14 +325,23 @@ class RealWnsEvaluator:
         self.equivalence_checker = equivalence_checker
         self.boundary_checker = boundary_checker
         self.strict_gates = bool(strict_gates)
+        self.use_constrained_cuts = True
+        self.refresh_cone = True
         self.max_patch_ratio = float(max_patch_ratio)
         self.max_verification_time_s = float(max_verification_time_s)
         self.epsilon = float(epsilon)
+        self.strict_budgets = bool(strict_budgets)
+        self.area_budget = area_budget
+        self.max_transition_budget = max_transition_budget
+        self.max_capacitance_budget = max_capacitance_budget
+        self.max_fanout_budget = max_fanout_budget
+        self.enable_topology = bool(enable_topology)
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
         self._physical_baseline_cache: dict[str, dict] = {}
         self.tested_candidate_hashes: set[str] = set()
+        self._sta_cache: dict[str, dict] = {}
 
     def _strategy_order(self, cell_type: str) -> tuple[str, ...]:
         if self.adaptive:
@@ -278,6 +363,8 @@ class RealWnsEvaluator:
             self.baseline_wns = float(result["wns"])
         if result.get("tns") is not None:
             self.baseline_tns = float(result["tns"])
+        if result.get("min_slack") is not None:
+            self.baseline_min_slack = float(result["min_slack"])
         if result.get("critical_instances") is not None:
             self.critical_instances = list(result["critical_instances"])
         if state is not None:
@@ -446,7 +533,11 @@ class RealWnsEvaluator:
             proxy_meta,
         ) = job
         started_at = time.perf_counter()
-        if kind == "JOINT":
+        topology_window = None
+        if kind == "TOPOLOGY":
+            topology_replacement, topology_window = pin_map
+            candidate_text = stitch_topology_replacement(text, topology_replacement)
+        elif kind == "JOINT":
             candidate_text = self._apply_joint(text, pin_map)
         else:
             candidate_text = self._apply(text, inst, kind, new_type, pin_map)
@@ -454,16 +545,67 @@ class RealWnsEvaluator:
         sub.mkdir(parents=True, exist_ok=True)
         (sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
         candidate_hash = hashlib.sha256(candidate_text.encode("utf-8")).hexdigest()
-        if candidate_hash in self.tested_candidate_hashes:
+        base_hash = hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+        analysis_config = {
+            "period": self.period, "clock_port": self.clock_port,
+            "sdc_config": {"period": self.period, "clock_port": self.clock_port,
+                           "hold_mode": self.hold_mode,
+                           "hold_uncertainty": self.hold_uncertainty},
+            "hold_mode": self.hold_mode,
+            "hold_uncertainty": self.hold_uncertainty,
+            "physical_gate": self.physical_gate,
+            "physical_unit_len_um": self.physical_unit_len_um,
+            "physical_fanout_penalty": self.physical_fanout_penalty,
+            "physical_depth_penalty": self.physical_depth_penalty,
+            "liberty_hash": hashlib.sha256(self.liberty_text.encode("utf-8")).hexdigest(),
+            "analysis_config": {"hold_mode": self.hold_mode,
+                                "tns_aware": self.tns_aware,
+                                "epsilon": self.epsilon},
+            "rc_config": {"physical_gate": self.physical_gate,
+                          "unit_len_um": self.physical_unit_len_um,
+                          "fanout_penalty": self.physical_fanout_penalty,
+                          "depth_penalty": self.physical_depth_penalty},
+            "formal_config": {"strict_gates": self.strict_gates,
+                              "checker": type(self.equivalence_checker).__name__ if self.equivalence_checker else None},
+            "epsilon": self.epsilon,
+        }
+        config_hash = hashlib.sha256(json.dumps(analysis_config, sort_keys=True).encode()).hexdigest()
+        cache_key = hashlib.sha256((base_hash + candidate_hash + config_hash).encode()).hexdigest()
+        if kind == "TOPOLOGY":
+            local_check = check_local_functional_equivalence(topology_window, candidate_text)
+            if local_check.status != "pass":
+                failed = {
+                    "instance": inst, "kind": kind, "from_type": cell_type,
+                    "to_type": new_type, "wns": self.baseline_wns,
+                    "tns": self.baseline_tns, "min_slack": None,
+                    "physical_failure": False, "candidate_netlist_text": candidate_text,
+                    "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                    "cache_key": cache_key, "config_hash": config_hash,
+                    "failure_events": [{
+                        "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                        "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                        "runtime_s": 0.0, "evidence": {"checker": local_check.reason},
+                    }], "runtime_s": 0.0,
+                    **proxy_meta,
+                }
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+        if cache_key in self._sta_cache:
+            cached = dict(self._sta_cache[cache_key])
+            cached["skipped_duplicate"] = True
+            return {**cached, **proxy_meta}
+        if candidate_hash in self.tested_candidate_hashes and base_hash == getattr(self, "_last_base_hash", None):
             return {
                 "instance": inst, "kind": kind, "from_type": cell_type,
                 "to_type": new_type, "wns": self.baseline_wns,
                 "tns": self.baseline_tns, "min_slack": None,
                 "physical_failure": False, "candidate_netlist_text": candidate_text,
                 "candidate_hash": candidate_hash, "runtime_s": 0.0,
-                "skipped_duplicate": True, **proxy_meta,
+                "skipped_duplicate": True, "cache_key": cache_key,
+                "config_hash": config_hash, **proxy_meta,
             }
         self.tested_candidate_hashes.add(candidate_hash)
+        self._last_base_hash = base_hash
         try:
             res = run_opensta_sequential(
                 netlist_path=sub / "mapped.v",
@@ -491,15 +633,29 @@ class RealWnsEvaluator:
         # autopsy into a per-candidate acceptance signal.
         if self.physical_gate and not self.hold_mode:
             ideal_wns = res.get("wns")
-            if ideal_wns is not None and ideal_wns > self.baseline_wns + self.min_physical_gain_ns + self.epsilon:
+            rc_config = {
+                "unit_len_um": self.physical_unit_len_um,
+                "fanout_penalty": self.physical_fanout_penalty,
+                "depth_penalty": self.physical_depth_penalty,
+            }
+            rc_config_hash = hashlib.sha256(
+                json.dumps(rc_config, sort_keys=True).encode()
+            ).hexdigest()
+            if ideal_wns is None or ideal_wns <= self.baseline_wns + self.min_physical_gain_ns + self.epsilon:
+                # Ideal STA is only a prefilter.  A physical-mode candidate
+                # without a complete paired baseline/candidate measurement
+                # is rejected and logged as F6, never accepted on ideal WNS.
+                res = {**res, "wns": self.baseline_wns,
+                       "physical_failure": True,
+                       "physical_status": "paired_not_attempted",
+                       "physical_baseline": None,
+                       "physical_candidate": None,
+                       "physical_delta": None,
+                       "rc_config_hash": rc_config_hash}
+            else:
                 try:
                     from .spef import build_spef, parse_mapped_verilog, write_spef
                     import hashlib as _hashlib
-                    rc_config = {
-                        "unit_len_um": self.physical_unit_len_um,
-                        "fanout_penalty": self.physical_fanout_penalty,
-                        "depth_penalty": self.physical_depth_penalty,
-                    }
                     rc_config_hash = _hashlib.sha256(
                         json.dumps(rc_config, sort_keys=True).encode()
                     ).hexdigest()
@@ -540,6 +696,7 @@ class RealWnsEvaluator:
                         # have a complete paired physical measurement.
                         res = {**res, "wns": self.baseline_wns,
                                "physical_failure": True,
+                               "physical_status": "paired_incomplete",
                                "physical_wns": phys_wns,
                                "physical_baseline": base_phys_wns,
                                "physical_candidate": phys_wns,
@@ -550,6 +707,7 @@ class RealWnsEvaluator:
                         # paired current baseline under exactly one RC model.
                         res = {**res, "wns": self.baseline_wns,
                                "physical_failure": True,
+                               "physical_status": "paired_rejected",
                                "physical_wns": phys_wns,
                                "physical_baseline": base_phys_wns,
                                "physical_candidate": phys_wns,
@@ -558,6 +716,7 @@ class RealWnsEvaluator:
                     else:
                         # parasitic-aware gain survives: report the SPEF WNS
                         res = {**res, "wns": phys_wns,
+                               "physical_status": "paired_improved",
                                "physical_wns": phys_wns,
                                "physical_baseline": base_phys_wns,
                                "physical_candidate": phys_wns,
@@ -566,13 +725,18 @@ class RealWnsEvaluator:
                 except Exception as exc:
                     res = {**res, "wns": self.baseline_wns,
                            "physical_failure": True,
+                           "physical_status": "error",
+                           "physical_baseline": (baseline.get("wns") if "baseline" in locals() else None),
+                           "physical_candidate": None,
+                           "physical_delta": None,
+                           "rc_config_hash": (rc_config_hash if "rc_config_hash" in locals() else None),
                            "physical_gate_error": str(exc)}
         failure_events = []
         if res.get("physical_failure"):
             failure_events.append({
                 "type": "F6_physical_load_failure",
                 "candidate_hash": candidate_hash,
-                "cut_hash": "",
+                "cut_hash": candidate_hash,
                 "endpoint": None,
                 "path": [],
                 "net": None,
@@ -585,54 +749,91 @@ class RealWnsEvaluator:
                     "physical_baseline": res.get("physical_baseline"),
                     "physical_candidate": res.get("physical_candidate"),
                     "rc_config_hash": res.get("rc_config_hash"),
+                    "status": res.get("physical_status"),
                     "error": res.get("physical_gate_error"),
                 },
             })
         if self.strict_gates:
-            if self.equivalence_checker is None:
+            if kind == "TOPOLOGY":
+                pass
+            elif self.equivalence_checker is None:
                 failure_events.append({
                     "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
-                    "cut_hash": "", "severity": "hard", "runtime_s": 0.0,
+                    "cut_hash": candidate_hash, "severity": "hard", "runtime_s": 0.0,
                     "evidence": {"reason": "no per-candidate equivalence checker configured"},
                 })
             else:
                 try:
                     eq = self.equivalence_checker(self.mapped_text, candidate_text)
-                    passed = bool(getattr(eq, "status", eq) == "pass" if not isinstance(eq, bool) else eq)
+                    passed = _checker_passed(eq)
                 except Exception as exc:
                     passed, eq = False, str(exc)
                 if not passed:
                     failure_events.append({
                         "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
-                        "cut_hash": "", "severity": "hard", "runtime_s": 0.0,
+                        "cut_hash": candidate_hash, "severity": "hard", "runtime_s": 0.0,
                         "evidence": {"result": str(eq)},
                     })
-            if self.boundary_checker is not None:
+            if kind == "TOPOLOGY":
+                local = check_local_functional_equivalence(topology_window, candidate_text)
+                if local.status != "pass":
+                    failure_events.append({
+                        "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                        "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                        "runtime_s": 0.0, "evidence": {"checker": local.to_dict() if hasattr(local, "to_dict") else local.reason},
+                    })
+            if self.boundary_checker is None:
+                failure_events.append({
+                    "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "runtime_s": 0.0,
+                    "threshold": "checker_available", "observed_value": "unavailable",
+                    "evidence": {"reason": "no boundary closure checker configured"},
+                })
+            else:
                 try:
-                    closed = bool(self.boundary_checker(self.mapped_text, candidate_text))
+                    boundary_result = self.boundary_checker(self.mapped_text, candidate_text)
+                    closed = _checker_passed(boundary_result)
                 except Exception as exc:
                     closed = False
                     boundary_error = str(exc)
                 if not closed:
                     failure_events.append({
                         "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
-                        "cut_hash": "", "severity": "hard", "runtime_s": 0.0,
+                        "cut_hash": candidate_hash, "severity": "hard", "runtime_s": 0.0,
                         "evidence": {"reason": locals().get("boundary_error", "checker returned false")},
                     })
-            changed = len(pin_map) if kind == "JOINT" else 1
-            gate_count = max(1, len(parse_mapped_netlist(self.mapped_text)))
-            ratio = changed / gate_count
-            if ratio > self.max_patch_ratio:
+        if kind == "TOPOLOGY" and not self.strict_gates:
+            local = check_local_functional_equivalence(topology_window, candidate_text)
+            if local.status != "pass":
                 failure_events.append({
-                    "type": "F3_patch_too_large", "candidate_hash": candidate_hash,
-                    "cut_hash": "", "severity": "hard", "runtime_s": 0.0,
-                    "threshold": self.max_patch_ratio, "observed_value": ratio,
-                    "evidence": {"modified_gate_count": changed, "gate_count": gate_count},
+                    "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0, "evidence": {"checker": local.reason},
                 })
+        # F3 is measured from the actual changed region and is a hard gate in
+        # both compatibility and strict production modes.  It must never be
+        # disabled merely because formal/boundary checkers are configured.
+        if kind == "TOPOLOGY" and topology_window is not None:
+            changed = len(topology_window.gates)
+        elif kind == "JOINT":
+            changed = len(pin_map)
+        else:
+            changed = 1
+        gate_count = max(1, len(parse_mapped_netlist(self.mapped_text)))
+        ratio = changed / gate_count
+        if self.strict_gates and ratio > self.max_patch_ratio + self.epsilon:
+            failure_events.append({
+                "type": "F3_patch_too_large", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "runtime_s": 0.0,
+                "threshold": self.max_patch_ratio, "observed_value": ratio,
+                "evidence": {"modified_gate_count": changed, "gate_count": gate_count,
+                             "action_scope": [inst]},
+            })
         if time.perf_counter() - started_at > self.max_verification_time_s:
             failure_events.append({
                 "type": "F5_verification_too_expensive", "candidate_hash": candidate_hash,
-                "cut_hash": "", "severity": "hard", "runtime_s": time.perf_counter() - started_at,
+                "cut_hash": candidate_hash, "severity": "hard", "runtime_s": time.perf_counter() - started_at,
                 "threshold": self.max_verification_time_s,
                 "observed_value": time.perf_counter() - started_at,
                 "evidence": {"tool": "OpenSTA"},
@@ -640,13 +841,58 @@ class RealWnsEvaluator:
         if res.get("error") or res.get("timeout"):
             failure_events.append({
                 "type": "F5_verification_too_expensive", "candidate_hash": candidate_hash,
-                "cut_hash": "", "severity": "hard", "runtime_s": time.perf_counter() - started_at,
+                "cut_hash": candidate_hash, "severity": "hard", "runtime_s": time.perf_counter() - started_at,
                 "threshold": self.max_verification_time_s,
                 "observed_value": time.perf_counter() - started_at,
                 "evidence": {"tool": "OpenSTA", "error": res.get("error"),
                              "timeout": bool(res.get("timeout"))},
             })
-        return {
+        unavailable_metrics = [metric for metric in
+                               ("area", "max_transition", "max_capacitance", "max_fanout")
+                               if res.get(metric) is None]
+        if self.strict_budgets:
+            if res.get("wns") is None:
+                unavailable_metrics.append("setup_wns")
+            if res.get("tns") is None:
+                unavailable_metrics.append("setup_tns")
+            if self.hold_mode and res.get("min_slack") is None:
+                unavailable_metrics.append("hold_min_slack")
+        unavailable = tuple(unavailable_metrics)
+        violations: list[str] = []
+        if (self.strict_budgets and self.baseline_tns is not None
+                and res.get("tns") is not None
+                and res["tns"] < self.baseline_tns - self.epsilon):
+            violations.append("setup_tns")
+        if (self.strict_budgets and self.baseline_min_slack is not None
+                and res.get("min_slack") is not None
+                and res["min_slack"] < self.baseline_min_slack - self.epsilon):
+            violations.append("hold_min_slack")
+        if self.area_budget is not None and res.get("area") is not None and res["area"] > self.area_budget + self.epsilon:
+            violations.append("area")
+        if self.max_transition_budget is not None and res.get("max_transition") is not None and res["max_transition"] > self.max_transition_budget + self.epsilon:
+            violations.append("max_transition")
+        if self.max_capacitance_budget is not None and res.get("max_capacitance") is not None and res["max_capacitance"] > self.max_capacitance_budget + self.epsilon:
+            violations.append("max_capacitance")
+        if self.max_fanout_budget is not None and res.get("max_fanout") is not None and res["max_fanout"] > self.max_fanout_budget + self.epsilon:
+            violations.append("max_fanout")
+        evidence = AcceptanceEvidence(
+            setup_wns=res.get("wns"), setup_tns=res.get("tns"),
+            hold_min_slack=res.get("min_slack"), area=res.get("area"),
+            max_transition=res.get("max_transition"),
+            max_capacitance=res.get("max_capacitance"), max_fanout=res.get("max_fanout"),
+            backend_provenance={"tool": "OpenSTA", "status": res.get("status", "unknown")},
+            unavailable=unavailable if self.strict_budgets else (),
+            violations=tuple(violations), epsilon=self.epsilon,
+        )
+        if self.strict_budgets and (evidence.unavailable or evidence.violations):
+            failure_events.append({
+                "type": "acceptance_budget_unavailable" if evidence.unavailable else "acceptance_budget_violation",
+                "candidate_hash": candidate_hash, "cut_hash": candidate_hash,
+                "severity": "hard", "hard_gate": True, "runtime_s": time.perf_counter() - started_at,
+                "threshold": {"unavailable": list(evidence.unavailable), "violations": list(evidence.violations)},
+                "observed_value": evidence.to_dict(), "evidence": evidence.to_dict(),
+            })
+        result = {
             "instance": inst,
             "kind": kind,
             "from_type": cell_type,
@@ -654,6 +900,10 @@ class RealWnsEvaluator:
             "wns": res.get("wns"),
             "tns": res.get("tns"),
             "min_slack": res.get("min_slack"),
+            "area": res.get("area"),
+            "max_transition": res.get("max_transition"),
+            "max_capacitance": res.get("max_capacitance"),
+            "max_fanout": res.get("max_fanout"),
             "min_slack_status": res.get("min_slack_status"),
             "slack": res.get("slack"),
             "slack_status": res.get("slack_status"),
@@ -663,17 +913,28 @@ class RealWnsEvaluator:
             "physical_baseline": res.get("physical_baseline"),
             "physical_candidate": res.get("physical_candidate"),
             "physical_delta": res.get("physical_delta"),
+            "physical_status": res.get("physical_status"),
             "rc_config_hash": res.get("rc_config_hash"),
             "failure_events": failure_events,
+            "acceptance_evidence": evidence.to_dict(),
             "critical_instances": critical_refresh,
             "critical_endpoints": ([parse_worst_endpoint(report_text)]
                                     if report.exists() and parse_worst_endpoint(report_text)
                                     else None),
+            "sta_provenance": {
+                "tool": "OpenSTA", "output_dir": str(sub),
+                "report_path": str(report) if report.exists() else None,
+            },
             "candidate_netlist_text": candidate_text,
             "candidate_hash": candidate_hash,
+            "base_netlist_hash": base_hash,
+            "cache_key": cache_key,
+            "config_hash": config_hash,
             "runtime_s": time.perf_counter() - started_at,
             **proxy_meta,
         }
+        self._sta_cache[cache_key] = dict(result)
+        return result
 
     # -- main entry ---------------------------------------------------------
 
@@ -694,13 +955,16 @@ class RealWnsEvaluator:
         ordered += [g for g in in_patch if g not in ordered]
         actionable = ordered[: self.max_instances]
         if not actionable:
+            no_action_hash = hashlib.sha256(
+                json.dumps({"gates": sorted(gates), "patch_id": patch_id}, sort_keys=True).encode()
+            ).hexdigest()
             self.call_log.append(
                 {"iteration": iteration, "patch_id": patch_id, "gates": gates,
                  "wns": self.baseline_wns, "improved": False,
                  "reason": "no actionable gates",
                  "failure_events": [{
-                     "type": "F2_boundary_invalid", "candidate_hash": "",
-                     "cut_hash": str(patch_id), "endpoint": None, "path": [],
+                     "type": "F2_boundary_invalid", "candidate_hash": no_action_hash,
+                     "cut_hash": no_action_hash, "endpoint": None, "path": [],
                      "net": None, "action_scope": list(gates),
                      "threshold": 1, "observed_value": 0, "severity": "hard",
                      "runtime_s": 0.0,
@@ -752,6 +1016,34 @@ class RealWnsEvaluator:
                     )
                 )
                 job_index += 1
+
+        # Topology candidate: extract exactly the cut region, generate a
+        # multi-gate rewrite, and defer local truth-table equivalence to the
+        # candidate evaluation before OpenSTA/acceptance.
+        if self.enable_topology and len(actionable) >= 2:
+            try:
+                analysis_netlist = parse_verilog_netlist_from_text(self.mapped_text)
+                window = extract_combinational_window(analysis_netlist, actionable)
+                topology = generate_topology_replacement(window)
+                job = (
+                    "TOPOLOGY", "topology", topology.method,
+                    (topology, window), "TOPOLOGY", self.mapped_text,
+                    cand_dir, self.top_module, job_index,
+                )
+                candidate_rows.append(
+                    self._proxy_row(
+                        instance="TOPOLOGY", kind="TOPOLOGY", from_type="topology",
+                        to_type=topology.method,
+                        critical_rank=0, critical_count=critical_count,
+                        strategy_rank=0, patch_size=len(topology.original_gates),
+                        boundary_complexity=boundary_complexity, job=job,
+                    )
+                )
+                job_index += 1
+            except (ValueError, OSError):
+                # No supported topology pattern in this region is an honest
+                # no-candidate outcome, not a fallback to global critical gates.
+                pass
 
         # joint repair: one candidate that changes the top-joint_k actionable
         # instances simultaneously.  Default (joint_mix=False) resizes with G;
@@ -990,13 +1282,22 @@ class RealWnsEvaluator:
                 "epsilon": self.epsilon,
             }
         )
+        selected_events = list(best.get("failure_events", [])) if best else [
+            event for trial in results for event in trial.get("failure_events", [])
+        ]
+        trial_events = [
+            event for trial in results for event in trial.get("failure_events", [])
+        ]
         result = {"wns": best_wns, "tns": best_tns, "min_slack": best_min,
-                  "improved": improved}
+                  "improved": improved, "failure_events": selected_events,
+                  "trial_failure_events": trial_events}
         if best is not None:
             result.update({k: best[k] for k in
                            ("candidate_netlist_text", "candidate_hash",
                             "runtime_s", "physical_baseline", "physical_candidate",
-                            "physical_delta", "rc_config_hash") if k in best})
+                            "physical_delta", "rc_config_hash", "critical_instances",
+                            "critical_endpoints", "sta_provenance", "acceptance_evidence",
+                            "base_netlist_hash", "cache_key", "config_hash") if k in best})
         return result
 
     def write_trials(self, path: str | Path) -> None:
