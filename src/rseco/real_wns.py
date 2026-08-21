@@ -199,8 +199,8 @@ def build_full_netlist_sec_checker(
     liberty_text: str | None = None,
     liberty_cells_v: str | Path | None = None,
     artifact_dir: str | Path,
-    yosys_command: str = "yosys",
-    abc_command: str = "yosys-abc",
+    yosys_command: str = "wsl.exe -e yosys",
+    abc_command: str = "wsl.exe -e yosys-abc",
     timeout_s: float = 60.0,
 ):
     """Build the production text-in/text-out full-netlist SEC backend.
@@ -232,7 +232,11 @@ def build_full_netlist_sec_checker(
         revised.write_text(candidate_text, encoding="utf-8")
         cells_path = trial_dir / "cells.v"
         if liberty_text is not None:
-            write_liberty_cell_models(liberty_text, cells_path)
+            used_cells = set(re.findall(
+                r"^\s*(sky130_fd_sc_hd__\w+)\s+\w+\s*\(",
+                original_text + "\n" + candidate_text, re.M,
+            ))
+            write_liberty_cell_models(liberty_text, cells_path, used_cells=used_cells)
         elif liberty_cells_v is not None:
             cells_path = Path(liberty_cells_v)
         else:
@@ -244,17 +248,23 @@ def build_full_netlist_sec_checker(
             abc_command=abc_command,
             timeout_s=timeout_s,
             liberty_cells_v=cells_path,
+            top_module=top_module,
         )
         return result
 
     return check
 
 
-def write_liberty_cell_models(liberty_text: str, output_path: str | Path) -> Path:
+def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
+                              *, used_cells: set[str] | None = None) -> Path:
     """Materialize a deterministic, synthesizable Verilog model from Liberty."""
     cells = parse_liberty_cells(liberty_text)
+    selected = sorted(used_cells if used_cells is not None else cells)
+    missing = sorted(set(selected) - set(cells))
+    if missing:
+        raise ValueError("Liberty missing instantiated cells: " + ", ".join(missing))
     blocks: list[str] = ["// Generated from Liberty for symmetric Yosys/ABC SEC.\n"]
-    for name in sorted(cells):
+    for name in selected:
         cell = cells[name]
         ports = list(dict.fromkeys([*cell.input_pins, cell.output_pin] if cell.output_pin else cell.input_pins))
         if not ports:
@@ -267,6 +277,20 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path) -> Pat
         if cell.function and cell.output_pin:
             expr = (cell.function.replace("*", "&").replace("+", "|"))
             lines.append(f"  assign {cell.output_pin} = {expr};")
+        elif cell.next_state and cell.output_pin and cell.clocked_on:
+            edge = "negedge" if cell.clocked_on.startswith("!") else "posedge"
+            clock = cell.clocked_on.lstrip("!").strip()
+            lines.extend([
+                "  reg " + cell.output_pin + ";",
+                f"  always @({edge} {clock}) {cell.output_pin} <= {cell.next_state};",
+            ])
+        elif cell.next_state and cell.output_pin and cell.latch_enable:
+            lines.extend([
+                "  reg " + cell.output_pin + ";",
+                f"  always @* if ({cell.latch_enable}) {cell.output_pin} <= {cell.next_state};",
+            ])
+        elif not cell.function:
+            raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
         lines.append("endmodule\n")
         blocks.append("\n".join(lines))
     path = Path(output_path)
@@ -1118,7 +1142,7 @@ class RealWnsEvaluator:
         # Physical mode is evaluated exclusively against a paired physical
         # baseline/candidate under one RC model.  Ideal STA is retained only
         # as an independent diagnostic, never as an acceptance prefilter.
-        if self.physical_gate and not self.hold_mode:
+        if self.physical_gate:
             rc_config = {
                 "unit_len_um": self.physical_unit_len_um,
                 "fanout_penalty": self.physical_fanout_penalty,
@@ -1150,6 +1174,8 @@ class RealWnsEvaluator:
                             period=self.period, output_dir=base_dir,
                             top_module=top_module, clock_port=self.clock_port,
                             spef_path=base_spef,
+                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                            min_path=self.hold_mode,
                         )
                         # Keep a physical baseline artifact alongside the
                         # candidate, and fail closed if it is incomplete.
@@ -1178,6 +1204,8 @@ class RealWnsEvaluator:
                             top_module=top_module,
                             clock_port=self.clock_port,
                             spef_path=spef,
+                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                            min_path=self.hold_mode,
                         )
                     phys_wns = phys.get("wns")
                     phys_tns = phys.get("tns")
@@ -1207,9 +1235,8 @@ class RealWnsEvaluator:
                                "rc_config_hash": rc_config_hash}
                     elif (base_phys_wns is None or phys_wns is None
                           or base_phys_tns is None or phys_tns is None
-                          or (base_phys_min_slack is not None and phys_min_slack is None)
-                          or (self.hold_mode and (base_phys_min_slack is None
-                                                  or phys_min_slack is None))):
+                          or base_phys_min_slack is None
+                          or phys_min_slack is None):
                         # physical load failure: the ideal gain does not
                         # have a complete paired physical measurement.
                         res = {**res, "wns": self.baseline_wns,
@@ -1228,10 +1255,12 @@ class RealWnsEvaluator:
                                "physical_baseline_provenance": baseline_provenance,
                                "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
-                    elif (phys_wns <= base_phys_wns + self.epsilon
+                    elif ((phys_wns < base_phys_wns - self.epsilon
+                           if self.hold_mode else phys_wns <= base_phys_wns + self.epsilon)
                           or phys_tns < base_phys_tns - self.epsilon
                           or (base_phys_min_slack is not None and phys_min_slack is not None
-                              and phys_min_slack < base_phys_min_slack - self.epsilon)):
+                              and phys_min_slack < base_phys_min_slack - self.epsilon)
+                          or (self.hold_mode and phys_min_slack <= base_phys_min_slack + self.epsilon)):
                         # physical load failure: candidate is compared to the
                         # paired current baseline under exactly one RC model.
                         res = {**res, "wns": self.baseline_wns,
@@ -1768,7 +1797,7 @@ class RealWnsEvaluator:
             min_slack = r.get("min_slack")
             if wns is None:
                 return False
-            if self.physical_gate and not self.hold_mode:
+            if self.physical_gate:
                 physical_candidate = r.get("physical_candidate")
                 physical_baseline = r.get("physical_baseline")
                 physical_delta = r.get("physical_delta")
@@ -1778,12 +1807,17 @@ class RealWnsEvaluator:
                 physical_baseline_min_slack = r.get("physical_baseline_min_slack")
                 if (r.get("physical_status") != "paired_improved"
                         or physical_candidate is None or physical_baseline is None
-                        or physical_delta is None or physical_delta <= self.epsilon
                         or physical_candidate_tns is None or physical_baseline_tns is None
                         or physical_candidate_tns < physical_baseline_tns - self.epsilon
-                        or (physical_baseline_min_slack is not None
-                            and (physical_candidate_min_slack is None
-                                 or physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon))):
+                        or physical_baseline_min_slack is not None
+                        and (physical_candidate_min_slack is None
+                             or physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon)
+                        or (not self.hold_mode
+                            and (physical_delta is None or physical_delta <= self.epsilon))
+                        or (self.hold_mode
+                            and (physical_baseline_min_slack is None
+                                 or physical_candidate_min_slack is None
+                                 or physical_candidate_min_slack <= physical_baseline_min_slack + self.epsilon))):
                     return False
                 if best_physical_wns is None or physical_candidate > best_physical_wns + self.epsilon:
                     best_physical_wns = physical_candidate
@@ -1894,20 +1928,31 @@ class RealWnsEvaluator:
         # In hold-repair mode success is a strict worst-min-slack improvement
         # (setup WNS is only guarded, see _accept_result); in setup mode it is
         # the usual strict WNS improvement.
-        improved = (
-            best_min > self.baseline_min_slack + self.epsilon
-            if self.hold_mode
-            else ((best is not None and best.get("physical_status") == "paired_improved"
-                   and best.get("physical_delta") is not None
-                   and best["physical_delta"] > self.epsilon)
-                  if self.physical_gate else (
-                      best_wns > self.baseline_wns + self.epsilon
-                      or (self.tns_aware and self.baseline_tns is not None
-                          and abs(best_wns - self.baseline_wns) <= self.epsilon
-                          and best_tns is not None
-                          and best_tns > self.baseline_tns + self.epsilon)
-                  ))
-        )
+        if self.physical_gate:
+            improved = bool(
+                best is not None
+                and best.get("physical_status") == "paired_improved"
+                and (
+                    (self.hold_mode
+                     and best.get("physical_baseline_min_slack") is not None
+                     and best.get("physical_candidate_min_slack") is not None
+                     and best["physical_candidate_min_slack"]
+                     > best["physical_baseline_min_slack"] + self.epsilon)
+                    or (not self.hold_mode
+                        and best.get("physical_delta") is not None
+                        and best["physical_delta"] > self.epsilon)
+                )
+            )
+        elif self.hold_mode:
+            improved = best_min > self.baseline_min_slack + self.epsilon
+        else:
+            improved = (
+                best_wns > self.baseline_wns + self.epsilon
+                or (self.tns_aware and self.baseline_tns is not None
+                    and abs(best_wns - self.baseline_wns) <= self.epsilon
+                    and best_tns is not None
+                    and best_tns > self.baseline_tns + self.epsilon)
+            )
         self.call_log.append(
             {
                 "iteration": iteration,

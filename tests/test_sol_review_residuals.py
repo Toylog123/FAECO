@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 from pathlib import Path
 import sys
+import shutil
 
 from rseco.real_wns import (
     RealWnsEvaluator, build_boundary_closure_checker,
@@ -18,11 +19,25 @@ import rseco.flow as flow_module
 from rseco.cut import FaninCone, constrained_weighted_cut_candidates
 import time
 from rseco.refinement_loop import SearchState
+from rseco.yosys_abc import check_yosys_abc_equivalence
 
 
 LIB = """cell (\"sky130_fd_sc_hd__and2_1\") { pin (\"A\") { direction : \"input\"; } pin (\"B\") { direction : \"input\"; } pin (\"Y\") { direction : \"output\"; function : \"A & B\"; } }
 cell (\"sky130_fd_sc_hd__and2_2\") { pin (\"A\") { direction : \"input\"; } pin (\"B\") { direction : \"input\"; } pin (\"Y\") { direction : \"output\"; function : \"A & B\"; } }
 cell (\"sky130_fd_sc_hd__or2_1\") { pin (\"A\") { direction : \"input\"; } pin (\"B\") { direction : \"input\"; } pin (\"Y\") { direction : \"output\"; function : \"A | B\"; } }
+"""
+SEQ_LIB = LIB + """cell (\"sky130_fd_sc_hd__dfxtp_1\") {
+  pin (\"D\") { direction : \"input\"; }
+  pin (\"CLK\") { direction : \"input\"; }
+  pin (\"Q\") { direction : \"output\"; }
+  ff (IQ, IQ_N) { next_state : \"D\"; clocked_on : \"CLK\"; }
+}
+"""
+SEQ_BASE = """module top(D, CLK, Q);
+input D, CLK;
+output Q;
+sky130_fd_sc_hd__dfxtp_1 ff1 (.D(D), .CLK(CLK), .Q(Q));
+endmodule
 """
 BASE = """module top(A, B, Y);
 input A, B;
@@ -169,8 +184,8 @@ def test_physical_acceptance_uses_paired_baseline_not_ideal_baseline(tmp_path, m
         if kwargs.get("spef_path") is None:
             return {"wns": -.8, "tns": -1}
         if "physical_baseline" in str(kwargs["output_dir"]):
-            return {"wns": -1.2, "tns": -2}
-        return {"wns": -1.1, "tns": -1.5}
+            return {"wns": -1.2, "tns": -2, "min_slack": -0.9}
+        return {"wns": -1.1, "tns": -1.5, "min_slack": -0.8}
 
     monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", paired_sta)
     patch = SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"])
@@ -505,8 +520,8 @@ def test_physical_pair_has_three_distinct_sta_measurements_when_budget_allows(tm
         if kwargs.get("spef_path") is None:
             return {"wns": -.8, "tns": -1}
         if "physical_baseline" in str(kwargs["output_dir"]):
-            return {"wns": -1.0, "tns": -2.0}
-        return {"wns": -.8, "tns": -1}
+            return {"wns": -1.0, "tns": -2.0, "min_slack": -0.9}
+        return {"wns": -.8, "tns": -1, "min_slack": -0.8}
     monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
     state = SearchState(current_netlist_text=BASE, budget={"sta_budget": 3})
     result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None, state=state)
@@ -639,8 +654,8 @@ def test_full_netlist_sec_text_backend_runs_yosys_abc_production_wiring(tmp_path
     result = checker(BASE, BASE)
     assert result.status == "pass"
     assert calls and calls[0]["outputs"] == ["Y"]
-    assert calls[0]["yosys_command"] == "yosys"
-    assert calls[0]["abc_command"] == "yosys-abc"
+    assert calls[0]["yosys_command"] == "wsl.exe -e yosys"
+    assert calls[0]["abc_command"] == "wsl.exe -e yosys-abc"
 
 
 def test_full_netlist_sec_builder_materializes_verilog_cells_and_keeps_report(tmp_path):
@@ -652,7 +667,7 @@ def test_full_netlist_sec_builder_materializes_verilog_cells_and_keeps_report(tm
         f"pathlib.Path(r'{str(log)}').open('a', encoding='utf-8').write(script + '\\n')\n"
         "m=re.search(r'write_blif\\s+([^;]+)', script)\n"
         "p=pathlib.Path(m.group(1).strip().strip(chr(34))); p.parent.mkdir(parents=True, exist_ok=True)\n"
-        "p.write_text('.model fake\\n.inputs A B\\n.outputs Y\\n.names A B Y\\n11 1\\n.end\\n', encoding='utf-8')\n",
+        "p.write_text('.model top\\n.inputs A B\\n.outputs Y\\n.names A B Y\\n11 1\\n.end\\n', encoding='utf-8')\n",
         encoding="utf-8",
     )
     fake_abc = tmp_path / "fake_abc.py"
@@ -673,6 +688,55 @@ def test_full_netlist_sec_builder_materializes_verilog_cells_and_keeps_report(tm
     assert result.log_path and Path(result.log_path).exists()
     script = log.read_text(encoding="utf-8")
     assert script.count("read_verilog") >= 3
+
+
+def test_liberty_sequential_model_has_clocked_next_state(tmp_path):
+    from rseco.real_wns import write_liberty_cell_models
+    path = write_liberty_cell_models(SEQ_LIB, tmp_path / "cells.v",
+                                     used_cells={"sky130_fd_sc_hd__dfxtp_1"})
+    text = path.read_text(encoding="utf-8")
+    assert "always @(posedge CLK)" in text
+    assert "Q <= D" in text
+
+
+def test_real_wsl_sec_rejects_logic_pin_and_topology_changes(tmp_path):
+    if shutil.which("wsl.exe") is None:
+        import pytest
+        pytest.skip("WSL executable unavailable")
+    checker = build_full_netlist_sec_checker(
+        top_module="top", liberty_text=LIB, artifact_dir=tmp_path / "wsl-sec",
+    )
+    assert checker(BASE, BASE).status == "pass"
+    assert checker(BASE, BASE.replace("and2_1", "or2_1")).status == "fail"
+    assert checker(BASE, BASE.replace(".B(B)", ".B(A)")).status == "fail"
+    assert checker(TOPOLOGY_TEXT, TOPOLOGY_TEXT).status == "pass"
+
+
+def test_unavailable_sec_persists_reason_log(tmp_path):
+    original = tmp_path / "original.v"
+    revised = tmp_path / "revised.v"
+    original.write_text(BASE, encoding="utf-8")
+    revised.write_text(BASE, encoding="utf-8")
+    result = check_yosys_abc_equivalence(
+        original, revised, outputs=["Y"], artifact_dir=tmp_path / "missing",
+        yosys_command="definitely-missing-yosys", abc_command="definitely-missing-abc",
+    )
+    assert result.status == "unavailable"
+    assert result.log_path and Path(result.log_path).exists()
+    log = Path(result.log_path).read_text(encoding="utf-8")
+    assert "definitely-missing-yosys" in log and "command not found" in log
+
+
+def test_real_wsl_sec_observes_sequential_d_path_change(tmp_path):
+    if shutil.which("wsl.exe") is None:
+        import pytest
+        pytest.skip("WSL executable unavailable")
+    checker = build_full_netlist_sec_checker(
+        top_module="top", liberty_text=SEQ_LIB, artifact_dir=tmp_path / "wsl-seq",
+    )
+    assert checker(SEQ_BASE, SEQ_BASE).status == "pass"
+    changed = SEQ_BASE.replace(".D(D)", ".D(Q)")
+    assert checker(SEQ_BASE, changed).status == "fail"
 
 
 def test_topology_reserves_boundary_after_sec_and_deadline_before_boundary(tmp_path, monkeypatch):
