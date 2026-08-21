@@ -329,7 +329,10 @@ def write_case_metrics(case_dir: str | Path) -> Path:
     return output_path
 
 
-def _cone_candidates(cone, weights, critical_instances, r_available, *, constrained=False, k=8):
+def _cone_candidates(cone, weights, critical_instances, r_available, *, constrained=False, k=8,
+                     allow_singleton=False, wall_timeout_s=None):
+    if not getattr(cone, "gates", None):
+        return []
     # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
     # weights.max_cone_gates is split into depth-bounded subcones; each
     # subcone is cut independently so the global s-t graph stays bounded.
@@ -343,6 +346,8 @@ def _cone_candidates(cone, weights, critical_instances, r_available, *, constrai
                 min_critical_coverage=1 if critical_instances else 0,
                 hard_anchors=(critical_instances[-1:] if critical_instances else []),
                 window_size=max(1, getattr(weights, "max_cone_gates", len(sub.gates))),
+                allow_singleton=allow_singleton,
+                wall_timeout_s=wall_timeout_s,
             ))
         else:
             out.extend(weighted_cut_candidates(
@@ -461,14 +466,11 @@ def run_multi_iteration_case(
         if wall_timeout_s is not None and time.perf_counter() - started_at >= wall_timeout_s:
             state.set_stop_reason("wall_timeout")
             return False, None
-        trial_count = len(getattr(wns_evaluator, "trials", []) or [])
+        trial_count = state.budget_used("sta")
         if sta_budget is not None and trial_count >= sta_budget:
             state.set_stop_reason("sta_budget")
             return False, None
-        formal_count = sum(
-            1 for event in state.failure_history
-            if event.get("type") in {FailureType.EQUIVALENCE.value, "F1_equivalence_failure"}
-        )
+        formal_count = state.budget_used("formal")
         if formal_budget is not None and formal_count >= formal_budget:
             state.set_stop_reason("formal_budget")
             return False, None
@@ -481,10 +483,22 @@ def run_multi_iteration_case(
         # Joint bi-objective cut: critical-path cover is a first-round
         # default candidate; gates without an R equivalence candidate are a
         # hard constraint (no critical discount, cover skips them).
+        active_critical = list(state.critical_instances or
+                               getattr(wns_evaluator, "critical_instances", []) or
+                               critical_instances or [])
+        active_r_available = r_available
+        recompute_r = getattr(wns_evaluator, "r_available_for", None)
+        if callable(recompute_r):
+            active_r_available = recompute_r(active_critical)
         candidates = _cone_candidates(
-            cone, weights, critical_instances, r_available,
+            cone, weights, active_critical, active_r_available,
             constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
             k=max_candidates_per_iteration,
+            allow_singleton=bool(getattr(wns_evaluator, "allow_singleton", False)),
+            wall_timeout_s=(
+                max(0.0, wall_timeout_s - (time.perf_counter() - started_at))
+                if wall_timeout_s is not None else None
+            ),
         )
         _eval_trials_ref = getattr(wns_evaluator, "trials", None)
         _trial_start = len(_eval_trials_ref) if _eval_trials_ref is not None else 0
@@ -493,6 +507,9 @@ def run_multi_iteration_case(
             return False, None
         tried_candidates = 0
         for boundary in candidates[:max_candidates_per_iteration]:
+            if wall_timeout_s is not None and time.perf_counter() - started_at >= wall_timeout_s:
+                state.set_stop_reason("wall_timeout")
+                break
             tried_candidates += 1
             patch = make_patch_candidate(
                 case_id=case.case_id, boundary=boundary, equivalence=equivalence
@@ -542,13 +559,15 @@ def run_multi_iteration_case(
                     try:
                         failure_type = FailureType(event_type)
                     except ValueError:
-                        failure_type = FailureType.BOUNDARY_INVALID
-                    if event.get("hard_gate") or failure_type in {
+                        failure_type = None
+                    if event.get("hard_gate") or event.get("severity") == "hard" or (
+                        failure_type is not None and failure_type in {
                         FailureType.EQUIVALENCE, FailureType.BOUNDARY_INVALID,
                         FailureType.PATCH_TOO_LARGE,
                         FailureType.VERIFICATION_TOO_EXPENSIVE,
-                    }:
-                        failures.add(failure_type)
+                    }):
+                        if failure_type is not None:
+                            failures.add(failure_type)
                 # F6 physical-load feedback (review shortboard): the
                 # evaluator marks a trial as physical_failure when its
                 # ideal-net gain did not survive the SPEF re-measure;
@@ -562,12 +581,17 @@ def run_multi_iteration_case(
                             state.record_failure(trial_event)
                             if (trial_event.get("hard_gate") or
                                 trial_event.get("severity") == "hard"):
-                                failures.add(FailureType.BOUNDARY_INVALID)
+                                try:
+                                    trial_failure_type = FailureType(trial_event.get("type"))
+                                except (ValueError, TypeError):
+                                    trial_failure_type = None
+                                if trial_failure_type is not None:
+                                    failures.add(trial_failure_type)
                         if _t.get("physical_failure"):
                             failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
                             break
                 hard_failure = any(
-                    e.get("hard_gate") or e.get("type") in {
+                    e.get("hard_gate") or e.get("severity") == "hard" or e.get("type") in {
                         FailureType.EQUIVALENCE.value,
                         FailureType.BOUNDARY_INVALID.value,
                         FailureType.PATCH_TOO_LARGE.value,
@@ -646,11 +670,8 @@ def run_multi_iteration_case(
     )
     result["case_id"] = case.case_id
     state.budget["iterations_used"] = result.get("iterations", 0)
-    state.budget["sta_runs"] = len(getattr(wns_evaluator, "trials", []) or [])
-    state.budget["formal_runs"] = sum(
-        1 for event in state.failure_history
-        if event.get("type") in {FailureType.EQUIVALENCE.value, "F1_equivalence_failure"}
-    )
+    state.budget["sta_runs"] = state.budget_used("sta")
+    state.budget["formal_runs"] = state.budget_used("formal")
     state.budget["stagnation_count"] = sum(
         1 for entry in result.get("history", []) if entry.get("status") == "refined"
     )

@@ -137,7 +137,8 @@ def generate_topology_replacement(window: CombinationalWindow) -> TopologyReplac
     if tuple(sorted(left.inputs)) != tuple(sorted(right.inputs)):
         raise ValueError("parallel children do not have identical inputs")
     new_gate = Gate(gate_type=left.gate_type, name=left.name,
-                    output=output_gate.output, inputs=left.inputs)
+                    output=output_gate.output, inputs=left.inputs,
+                    pin_names=left.pin_names, output_pin=left.output_pin)
     before = window.before
     after = _window_metrics([new_gate], window.boundary_inputs, window.boundary_outputs)
     return TopologyReplacement(
@@ -154,10 +155,22 @@ def stitch_topology_replacement(netlist_text: str, replacement: TopologyReplacem
         pattern = re.compile(r"(?ms)^\s*\w+\s+" + re.escape(original.name) + r"\s*\([^;]*\);\s*")
         replacement_text = ""
         if index == 0:
-            replacement_text = "\n".join(
-                f"{gate.gate_type} {gate.name} ({gate.output}, {', '.join(gate.inputs)});"
-                for gate in replacement.new_gates
-            ) + "\n"
+            rendered = []
+            for gate in replacement.new_gates:
+                if gate.pin_names and gate.output_pin:
+                    input_pins = [pin for pin in gate.pin_names if pin != gate.output_pin]
+                    if len(input_pins) != len(gate.inputs):
+                        raise ValueError(f"pin/input count mismatch for {gate.name}")
+                    connections = [f".{gate.output_pin}({gate.output})"]
+                    connections.extend(f".{pin}({net})" for pin, net in zip(input_pins, gate.inputs))
+                    rendered.append(
+                        f"{gate.gate_type} {gate.name} (" + ", ".join(connections) + ");"
+                    )
+                else:
+                    rendered.append(
+                        f"{gate.gate_type} {gate.name} ({gate.output}, {', '.join(gate.inputs)});"
+                    )
+            replacement_text = "\n".join(rendered) + "\n"
         output, count = pattern.subn(replacement_text, output, count=1)
         if count != 1:
             raise ValueError(f"could not stitch gate {original.name}")
@@ -274,6 +287,26 @@ def parse_verilog_netlist_from_text(text: str) -> Netlist:
         return parse_verilog_netlist(path)
     finally:
         path.unlink(missing_ok=True)
+
+
+def run_full_netlist_sec_checkpoint(original_text: str, candidate_text: str, checker=None) -> EquivalenceResult:
+    """Run the final full-netlist SEC checkpoint, fail-closed if unavailable.
+
+    Local topology truth-table checking is necessary but not sufficient for a
+    sequential design.  Production callers can inject Yosys/ABC (or another
+    formal backend) here; the explicit unavailable result prevents a local
+    pass from being reported as whole-netlist proof.
+    """
+    if checker is None:
+        return EquivalenceResult("unavailable", "full_netlist_sec", "formal SEC backend unavailable")
+    try:
+        result = checker(original_text, candidate_text)
+    except Exception as exc:
+        return EquivalenceResult("fail", "full_netlist_sec", f"formal SEC failed closed: {exc}")
+    status = getattr(result, "status", None) if not isinstance(result, dict) else result.get("status")
+    if status == "pass":
+        return EquivalenceResult("pass", "full_netlist_sec", "formal SEC checkpoint passed")
+    return EquivalenceResult("fail", "full_netlist_sec", f"formal SEC returned {result}")
 
 
 @dataclass(frozen=True)

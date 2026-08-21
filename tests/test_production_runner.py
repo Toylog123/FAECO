@@ -207,16 +207,112 @@ def test_strict_mode_without_checker_records_unavailable_f1_f2(tmp_path, monkeyp
                           output_dir=tmp_path, workers=1, strict_gates=True)
     ev._candidates_for = lambda cells, inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
     ev._apply = lambda text, inst, kind, new, pin: text.replace("and2_1", "and2_2")
+    calls = []
     monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
-                        lambda **kwargs: {"wns": -.5, "tns": -1})
+                        lambda **kwargs: (calls.append(kwargs) or {"wns": -.5, "tns": -1}))
     patch = SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"])
     result = ev(patch, None)
     types = {e["type"] for trial in ev.trials for e in trial["failure_events"]}
     assert result["improved"] is False
     assert {"F1_equivalence_failure", "F2_boundary_invalid"} <= types
+    assert calls == []
 
 
 def test_legacy_flow_does_not_bypass_boundary_checker():
     source = inspect.getsource(flow_module)
     assert "boundary_closed=True" not in source
     assert 'boundary_closed = equivalence.status in {"pass", "fail"}' in source
+
+
+def test_real_runner_wires_config_to_constrained_cut_commit_and_stop(tmp_path, monkeypatch):
+    from rseco.equivalence import EquivalenceResult
+    from rseco.flow import run_multi_iteration_case
+    from rseco.real_wns import RealWnsEvaluator
+    case_dir = tmp_path / "case"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "original" / "original.v").write_text(BASE)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(BASE)
+    (case_dir / "case.yaml").write_text("case_id: runner\ntarget:\n  output: Y\n")
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1, baseline_tns=-2,
+                          output_dir=tmp_path / "eval", workers=1,
+                          strict_gates=True, max_patch_ratio=1.0,
+                          allow_singleton=True,
+                          equivalence_checker=build_real_equivalence_checker(LIB),
+                          boundary_checker=build_boundary_closure_checker())
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: {"wns": -.5, "tns": -1})
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=1, max_patches=1,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "runner", "ok"),
+        wns_evaluator=ev, critical_instances=["g1"], candidates_per_iteration=2)
+    assert len(result["state"]["accepted_patches"]) == 1
+    assert result["stop_reason"] == "max_patches"
+    assert result["state"]["accepted_patches"][0]["base_netlist_hash"]
+
+
+def test_real_runner_topology_commit_refreshes_cone_then_second_patch(tmp_path, monkeypatch):
+    """Exercise config -> constrained cut -> topology -> G -> refreshed G_r."""
+    from pathlib import Path
+    from rseco.equivalence import EquivalenceResult
+    from rseco.flow import run_multi_iteration_case
+    from rseco.real_wns import (
+        RealWnsEvaluator, build_boundary_closure_checker,
+        build_real_equivalence_checker,
+    )
+    from rseco.replacement import parse_verilog_netlist_from_text
+
+    text = """module top(A, B, Y);
+input A, B;
+output Y;
+wire N1, N2;
+sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(N1));
+sky130_fd_sc_hd__and2_1 g2 (.A(A), .B(B), .Y(N2));
+sky130_fd_sc_hd__or2_1 g3 (.A(N1), .B(N2), .Y(Y));
+endmodule
+"""
+    lib = LIB + """
+cell ("sky130_fd_sc_hd__or2_1") { pin ("A") { direction : "input"; } pin ("B") { direction : "input"; } pin ("Y") { direction : "output"; function : "A | B"; } }
+"""
+    case_dir = tmp_path / "topology-case"
+    for folder, name in (("original", "original.v"), ("resynthesized", "resynthesized.v")):
+        (case_dir / folder).mkdir(parents=True)
+        (case_dir / folder / name).write_text(text)
+    (case_dir / "case.yaml").write_text("case_id: topology_runner\ntarget:\n  output: Y\n")
+    ev = RealWnsEvaluator(
+        mapped_text=text, top_module="top", period=1, liberty_text=lib,
+        baseline_wns=-1, baseline_tns=-2, output_dir=tmp_path / "eval",
+        workers=1, strict_gates=True, max_patch_ratio=1.0,
+        allow_singleton=True, enable_topology=True,
+        equivalence_checker=build_real_equivalence_checker(lib),
+        boundary_checker=build_boundary_closure_checker(),
+    )
+    ev._candidates_for = lambda cells, inst: (
+        [] if len(cells) > 1 else [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    )
+
+    def sta_with_report(**kwargs):
+        netlist_path = Path(kwargs["netlist_path"])
+        candidate = netlist_path.read_text()
+        output_dir = Path(kwargs["output_dir"])
+        output_dir.mkdir(parents=True, exist_ok=True)
+        (output_dir / "sta.log").write_text(
+            "Endpoint: g1\n   0.10    0.20 v g1/A (sky130_fd_sc_hd__and2_1)\n"
+        )
+        return {"wns": -0.5 if "and2_1" in candidate else -0.4, "tns": -1}
+
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta_with_report)
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=3, max_patches=2, candidates_per_iteration=8,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "test", "ok"),
+        wns_evaluator=ev, critical_instances=["g3"],
+    )
+    accepted = result["state"]["accepted_patches"]
+    assert len(accepted) == 2
+    assert accepted[0]["metadata"]["action_scope"] == ["g1", "g2", "g3"]
+    assert accepted[1]["metadata"]["action_scope"] == ["g1"]
+    assert len(parse_verilog_netlist_from_text(accepted[0]["netlist_text"]).gates) == 1
+    assert len(parse_verilog_netlist_from_text(accepted[1]["netlist_text"]).gates) == 1
+    assert accepted[0]["netlist_hash"] != accepted[1]["netlist_hash"]
+    assert result["state"]["critical_instances"] == ["g1"]

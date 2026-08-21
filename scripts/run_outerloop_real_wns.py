@@ -139,6 +139,9 @@ def parse_args() -> argparse.Namespace:
                    help="Initial critical-coverage reward (sensitivity analysis lambda_3)")
     p.add_argument("--epsilon", type=float, default=0.0,
                    help="Configured timing-comparison epsilon (ns), recorded in logs")
+    p.add_argument("--required-metrics", default="setup_wns,setup_tns",
+                   help="Comma-separated hard acceptance metrics; default uses only measurable setup WNS/TNS. "
+                        "Area/transition/cap/fanout are explicit and fail closed when unavailable.")
 
     p.add_argument("--physical-unit-len", type=float, default=40.0,
                    help="SPEF unit wire length (um); lower = lighter physical load "
@@ -248,6 +251,7 @@ def main() -> int:
         physical_unit_len_um=args.physical_unit_len,
         strict_gates=True,
         strict_budgets=True,
+        required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),
         epsilon=args.epsilon,
         equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8")),
         boundary_checker=build_boundary_closure_checker(),

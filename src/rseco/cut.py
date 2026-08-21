@@ -2,7 +2,7 @@
 
 import random
 import hashlib
-import itertools
+import time
 import json
 from collections import deque
 from dataclasses import dataclass
@@ -332,16 +332,18 @@ def constrained_weighted_cut_candidates(
     min_critical_coverage: int = 1,
     hard_anchors: list[str] | None = None,
     window_size: int | None = None,
+    allow_singleton: bool = False,
+    beam_width: int | None = None,
+    max_region_evaluations: int | None = None,
+    wall_timeout_s: float | None = None,
     return_diagnostics: bool = False,
 ):
-    """Return a non-degenerate constrained k-best region list.
+    """Return constrained k-best regions with bounded connected beam search.
 
-    Regions are enumerated over the cone DAG, then filtered by hard anchors,
-    critical coverage and an index window.  The singleton endpoint driver is
-    therefore illegal unless it satisfies the requested critical coverage.
-    Scoring combines boundary, size, verification and physical-load terms;
-    each region is canonical-hash deduplicated before ranking.  When fewer
-    than ``k`` regions survive, diagnostics explicitly state why.
+    Region expansion is connected in the cone DAG and therefore avoids the
+    exponential powerset.  ``allow_singleton`` is explicit because an
+    endpoint-driver singleton is not a useful topology window by default.
+    ``max_region_evaluations`` and ``wall_timeout_s`` are hard search bounds.
     """
     if k <= 0:
         raise ValueError("k must be positive")
@@ -362,50 +364,94 @@ def constrained_weighted_cut_candidates(
     verification_penalty = float(getattr(weights, "verification_cost_penalty", 1.0))
     physical_penalty = float(getattr(weights, "physical_penalty", 1.0))
     fanout = _fanout_counts(cone)
+    start_time = time.perf_counter()
     candidates: list[tuple[float, CutBoundary]] = []
     seen: set[str] = set()
-    rejected = {"coverage": 0, "window": 0, "anchors": 0}
+    rejected = {"coverage": 0, "window": 0, "anchors": 0, "singleton": 0,
+                "timeout": 0, "budget": 0}
+    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    neighbors: dict[str, set[str]] = {gate: set() for gate in gates}
+    for gate in gates:
+        for signal in cone.gate_inputs[gate]:
+            driver = output_to_gate.get(signal)
+            if driver is not None:
+                neighbors[gate].add(driver)
+                neighbors[driver].add(gate)
+    beam_limit = max(8, int(beam_width or max(k * 8, 32)))
+    evaluation_limit = int(max_region_evaluations or max(256, k * 64))
+    beam: list[frozenset[str]] = [frozenset([gate]) for gate in gates]
+    evaluated = 0
+
+    def region_score(selected: list[str], cut: CutBoundary, covered: int) -> float:
+        load = sum(fanout[g] for g in selected) / max(1, len(selected))
+        position_cost = sum(gates.index(g) + 1 for g in selected) / max(1, len(selected))
+        return (
+            sum(graph.node_costs[g] for g in selected)
+            + boundary_penalty * (len(cut.boundary_inputs) * 2.0
+                                  + len(cut.boundary_outputs) * 0.25)
+            + size_penalty * len(selected) * 1.0
+            + size_penalty * position_cost * 5.0
+            + verification_penalty * (len(selected) ** 2) * 0.5
+            + physical_penalty * load * 1.0
+            - float(getattr(weights, "critical_coverage_reward", 1.0)) * covered * 1.0
+        )
+
     for size in range(1, min(window, len(gates)) + 1):
-        for indices in itertools.combinations(range(len(gates)), size):
-            selected = [gates[i] for i in indices]
-            if not anchors.issubset(selected):
+        next_beam: set[frozenset[str]] = set()
+        for region in beam:
+            if evaluated >= evaluation_limit:
+                rejected["budget"] += 1
+                break
+            if wall_timeout_s is not None and time.perf_counter() - start_time >= wall_timeout_s:
+                rejected["timeout"] += 1
+                break
+            evaluated += 1
+            selected = [gate for gate in gates if gate in region]
+            if anchors.issubset(region):
+                covered = len(set(selected) & critical)
+                endpoint_singleton = len(region) == 1 and cone.gate_outputs[selected[0]] in cone.boundary_outputs
+                valid = covered >= coverage_target
+                if endpoint_singleton and not allow_singleton:
+                    rejected["singleton"] += 1
+                    valid = False
+                if valid:
+                    cut = _cut_for_selected_gates(cone, selected,
+                                                  method="constrained_weighted_region")
+                    key = canonical_cut_hash(cut)
+                    if key not in seen:
+                        seen.add(key)
+                        candidates.append((region_score(selected, cut, covered), cut))
+                else:
+                    rejected["coverage"] += 1
+            else:
                 rejected["anchors"] += 1
-                continue
-            if indices[-1] - indices[0] + 1 > window:
-                rejected["window"] += 1
-                continue
+            if size < window:
+                for neighbor in set().union(*(neighbors[g] for g in region)) - set(region):
+                    expanded = frozenset(set(region) | {neighbor})
+                    if len(expanded) <= window:
+                        next_beam.add(expanded)
+        if not next_beam or evaluated >= evaluation_limit:
+            break
+        # Keep the cheapest connected partial regions, but retain anchor and
+        # critical-bearing regions so hard constraints remain reachable.
+        def partial_key(region: frozenset[str]):
+            selected = [gate for gate in gates if gate in region]
             covered = len(set(selected) & critical)
-            if covered < coverage_target:
-                rejected["coverage"] += 1
-                continue
-            # Hard minimum coverage explicitly blocks endpoint-driver
-            # singleton regions when they do not cover the requested path.
-            if len(selected) == 1 and critical and covered < coverage_target:
-                rejected["coverage"] += 1
-                continue
-            cut = _cut_for_selected_gates(cone, selected,
-                                          method="constrained_weighted_region")
-            key = canonical_cut_hash(cut)
-            if key in seen:
-                continue
-            seen.add(key)
-            load = sum(fanout[g] for g in selected) / max(1, len(selected))
-            score = (
-                sum(graph.node_costs[g] for g in selected)
-                + boundary_penalty * len(cut.boundary_inputs) * 0.5
-                + size_penalty * len(selected) * 0.05
-                + verification_penalty * (len(selected) ** 2) * 0.05
-                + physical_penalty * load * 0.2
-                - float(getattr(weights, "critical_coverage_reward", 1.0)) * covered * 0.1
-            )
-            candidates.append((score, cut))
+            anchor_bonus = len(set(selected) & anchors)
+            partial_cut = _cut_for_selected_gates(cone, selected,
+                                                  method="constrained_partial")
+            return (region_score(selected, partial_cut, covered)
+                    - anchor_bonus * 100 - covered * 100, tuple(selected))
+        beam = sorted(next_beam, key=partial_key)[:beam_limit]
     candidates.sort(key=lambda item: (item[0], canonical_cut_hash(item[1])))
     rows = [cut for _, cut in candidates[:k]]
     diagnostics = {
         "requested_k": k, "returned_k": len(rows),
         "reason": None if len(rows) >= k else "insufficient_valid_regions",
         "rejected": rejected, "window_size": window,
-        "coverage_target": coverage_target,
+        "coverage_target": coverage_target, "algorithm": "bounded_beam",
+        "evaluated_regions": evaluated, "allow_singleton": allow_singleton,
+        "connected": True, "closed_region": True,
     }
     return (rows, diagnostics) if return_diagnostics else rows
 

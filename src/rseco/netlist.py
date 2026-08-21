@@ -11,6 +11,8 @@ class Gate:
     name: str
     output: str
     inputs: tuple[str, ...]
+    pin_names: tuple[str, ...] = ()
+    output_pin: str | None = None
 
 
 @dataclass(frozen=True)
@@ -133,6 +135,8 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
                         name=instance.group(2),
                         output=_follow_alias(raw_output, aliases),
                         inputs=tuple(_follow_alias(signal, aliases) for signal in raw_inputs),
+                        pin_names=tuple(pin for pin, _ in named),
+                        output_pin=output_pin,
                     )
                 )
             else:

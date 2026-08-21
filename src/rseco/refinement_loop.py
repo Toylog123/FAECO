@@ -14,6 +14,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 import hashlib
 import json
+import threading
 from typing import Callable
 
 from .failures import FailureType
@@ -49,6 +50,7 @@ class SearchState:
     budget: dict[str, float | int] = field(default_factory=dict)
     stop_reason: str | None = None
     _snapshots: list[dict] = field(default_factory=list, repr=False)
+    _budget_lock: object = field(default_factory=threading.Lock, repr=False, compare=False)
 
     @staticmethod
     def hash_text(text: str) -> str:
@@ -77,14 +79,49 @@ class SearchState:
         self.tested_candidate_hashes.add(candidate_hash)
         return True
 
+    def reserve_budget(self, kind: str, limit: int | None = None) -> bool:
+        """Atomically reserve one STA/formal slot before invoking a tool."""
+        used_key = f"{kind}_used"
+        limit_key = f"{kind}_budget"
+        if limit is None:
+            raw_limit = self.budget.get(limit_key)
+            limit = int(raw_limit) if raw_limit is not None else None
+        with self._budget_lock:
+            used = int(self.budget.get(used_key, 0))
+            if limit is not None and used >= limit:
+                return False
+            self.budget[used_key] = used + 1
+            return True
+
+    def budget_used(self, kind: str) -> int:
+        return int(self.budget.get(f"{kind}_used", 0))
+
     def record_failure(self, event: dict) -> None:
         normalized = dict(event)
         candidate_hash = str(normalized.get("candidate_hash") or self.current_netlist_hash)
         normalized["candidate_hash"] = candidate_hash
         normalized["cut_hash"] = str(normalized.get("cut_hash") or candidate_hash)
+        normalized.setdefault("endpoint", None)
+        normalized.setdefault("path", [])
+        normalized.setdefault("net", None)
+        normalized.setdefault("action_scope", [])
+        normalized.setdefault("threshold", None)
+        normalized.setdefault("observed_value", None)
         normalized.setdefault("severity", "hard")
         normalized.setdefault("runtime_s", 0.0)
         normalized.setdefault("evidence", {})
+        normalized.setdefault("event_id", hashlib.sha256(json.dumps({
+            "type": normalized.get("type"), "candidate_hash": candidate_hash,
+            "cut_hash": normalized["cut_hash"], "endpoint": normalized.get("endpoint"),
+            "path": normalized.get("path", []), "net": normalized.get("net"),
+            "action_scope": normalized.get("action_scope", []),
+            "threshold": normalized.get("threshold"),
+            "observed_value": normalized.get("observed_value"),
+            "evidence": normalized.get("evidence", {}),
+        }, sort_keys=True, default=str).encode()).hexdigest())
+        if any(existing.get("event_id") == normalized["event_id"]
+               for existing in self.failure_history):
+            return
         self.failure_history.append(normalized)
 
     def accept_patch(self, patch_id: str, candidate_netlist_text: str, *,

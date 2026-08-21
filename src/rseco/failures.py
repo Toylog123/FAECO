@@ -3,6 +3,8 @@
 from dataclasses import dataclass, field
 from typing import Any
 from enum import Enum
+import hashlib
+import json
 
 from .metrics import change_ratio, logic_level_reduction
 
@@ -37,9 +39,18 @@ class FailureEvent:
     severity: str = "hard"
     runtime_s: float = 0.0
     evidence: dict[str, Any] = field(default_factory=dict)
+    event_id: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
+        event_id = self.event_id or hashlib.sha256(json.dumps({
+            "type": self.type.value if isinstance(self.type, FailureType) else str(self.type),
+            "candidate_hash": self.candidate_hash, "cut_hash": self.cut_hash,
+            "endpoint": self.endpoint, "path": self.path, "net": self.net,
+            "action_scope": self.action_scope, "threshold": self.threshold,
+            "observed_value": self.observed_value, "evidence": self.evidence,
+        }, sort_keys=True, default=str).encode()).hexdigest()
         return {
+            "event_id": event_id,
             "type": self.type.value if isinstance(self.type, FailureType) else str(self.type),
             "candidate_hash": self.candidate_hash,
             "cut_hash": self.cut_hash,
