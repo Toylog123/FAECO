@@ -124,11 +124,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--early-stop", action="store_true",
                    help="Stop evaluating candidates at first WNS improvement (serial only)")
     p.add_argument("--physical-gate", action="store_true",
-                   help="Enable inner-loop physical gating: candidates must clear an ideal-net "
-                        "gain > min-physical-gain before a fanout/depth-aware SPEF re-measure, "
-                        "and are accepted only when the SPEF run also improves WNS (F6 feedback)")
+                   help="Enable paired physical gating: candidate SPEF WNS gain must meet "
+                        "--min-physical-gain and paired TNS/hold must not regress (F6 feedback)")
     p.add_argument("--min-physical-gain", type=float, default=0.010,
-                   help="Minimum ideal-net WNS gain (ns) before a candidate is SPEF re-measured")
+                   help="Minimum paired physical candidate-vs-baseline WNS gain in ns")
     p.add_argument("--physical-fanout-penalty", type=float, default=1.0,
                    help="SPEF fanout penalty multiplier (>1 lengthens high-fanout nets)")
     p.add_argument("--physical-depth-penalty", type=float, default=1.0,

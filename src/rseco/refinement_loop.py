@@ -153,6 +153,7 @@ class SearchState:
             "netlist_text": candidate_netlist_text,
             "wns": wns,
             "tns": tns,
+            "min_slack": min_slack,
             "metadata": dict(metadata or {}),
         }
         self._snapshots.append(previous)

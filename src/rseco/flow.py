@@ -680,11 +680,20 @@ def run_multi_iteration_case(
                             state.accepted_patches[-1]["metadata"]["refreshed_cone_gates"] = list(cone.gates)
                         if len(state.accepted_patches) >= max_patches:
                             state.set_stop_reason("max_patches")
-                            return True, patch.patch_id, {"wns": wns}, False
+                            return True, patch.patch_id, {
+                                "wns": wns, "tns": wns_info.get("tns"),
+                                "min_slack": wns_info.get("min_slack"),
+                            }, False
                         # A committed candidate is a new G_r; continue the
                         # closure search instead of terminating at first gain.
-                        return True, patch.patch_id, {"wns": wns}, True
-                    return True, patch.patch_id, {"wns": wns}
+                        return True, patch.patch_id, {
+                            "wns": wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, True
+                    return True, patch.patch_id, {
+                        "wns": wns, "tns": wns_info.get("tns"),
+                        "min_slack": wns_info.get("min_slack"),
+                    }
                 # no timing gain on this candidate: keep exploring the
                 # remaining cuts in this iteration before refining weights.
                 continue
@@ -738,6 +747,9 @@ def run_multi_iteration_case(
             state.set_stop_reason("no_new_candidate")
     result["stop_reason"] = state.stop_reason
     result["state"] = state.to_dict()
+    result["wns"] = state.current_wns
+    result["tns"] = state.current_tns
+    result["min_slack"] = state.current_min_slack
     result["logic_level_before"] = logic_level_before
     result["logic_level_after"] = logic_level_after
     result["logic_level_reduction"] = reduction

@@ -40,6 +40,7 @@ from .opensta import run_opensta_sequential
 from .proxy_ranking import ProxyWeights, rank_real_candidates
 from .strategy_selector import exploration_order
 from .failures import AcceptanceEvidence
+from .yosys_abc import YosysAbcEquivalenceResult
 from .replacement import (
     extract_combinational_window, generate_topology_replacement,
     stitch_topology_replacement, check_local_functional_equivalence,
@@ -233,10 +234,18 @@ def build_full_netlist_sec_checker(
         cells_path = trial_dir / "cells.v"
         if liberty_text is not None:
             used_cells = set(re.findall(
-                r"^\s*(sky130_fd_sc_hd__\w+)\s+\w+\s*\(",
-                original_text + "\n" + candidate_text, re.M,
+                r"\b(sky130_fd_sc_hd__\w+)\s+\w+\s*\(",
+                original_text + "\n" + candidate_text,
             ))
-            write_liberty_cell_models(liberty_text, cells_path, used_cells=used_cells)
+            try:
+                write_liberty_cell_models(liberty_text, cells_path, used_cells=used_cells)
+            except ValueError as exc:
+                return YosysAbcEquivalenceResult(
+                    status="fail", method="yosys_liberty_model_generation",
+                    tool="Liberty-to-Verilog", command="materialize_cells_v",
+                    outputs=list(outputs), runtime_s=0.0,
+                    reason=str(exc),
+                )
         elif liberty_cells_v is not None:
             cells_path = Path(liberty_cells_v)
         else:
@@ -603,6 +612,7 @@ class RealWnsEvaluator:
                 required.add(metric)
         if self.hold_mode:
             required.add("hold_min_slack")
+        self.hold_required = self.hold_mode or "hold_min_slack" in required
         self.required_metrics = tuple(sorted(required))
         self.available_metrics = frozenset(str(metric) for metric in available_metrics)
         self.allow_singleton = bool(allow_singleton)
@@ -1235,8 +1245,8 @@ class RealWnsEvaluator:
                                "rc_config_hash": rc_config_hash}
                     elif (base_phys_wns is None or phys_wns is None
                           or base_phys_tns is None or phys_tns is None
-                          or base_phys_min_slack is None
-                          or phys_min_slack is None):
+                          or (self.hold_required and (base_phys_min_slack is None
+                                                      or phys_min_slack is None))):
                         # physical load failure: the ideal gain does not
                         # have a complete paired physical measurement.
                         res = {**res, "wns": self.baseline_wns,
@@ -1256,11 +1266,13 @@ class RealWnsEvaluator:
                                "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
                     elif ((phys_wns < base_phys_wns - self.epsilon
-                           if self.hold_mode else phys_wns <= base_phys_wns + self.epsilon)
+                           if self.hold_mode else
+                           phys_wns - base_phys_wns + 1e-12
+                           < self.min_physical_gain_ns - self.epsilon)
                           or phys_tns < base_phys_tns - self.epsilon
-                          or (base_phys_min_slack is not None and phys_min_slack is not None
-                              and phys_min_slack < base_phys_min_slack - self.epsilon)
-                          or (self.hold_mode and phys_min_slack <= base_phys_min_slack + self.epsilon)):
+                          or (self.hold_required and (
+                              base_phys_min_slack is None or phys_min_slack is None
+                              or phys_min_slack < base_phys_min_slack - self.epsilon))):
                         # physical load failure: candidate is compared to the
                         # paired current baseline under exactly one RC model.
                         res = {**res, "wns": self.baseline_wns,
@@ -1383,24 +1395,34 @@ class RealWnsEvaluator:
                 "evidence": {"tool": "OpenSTA", "error": res.get("error"),
                              "timeout": bool(res.get("timeout"))},
             })
+        paired = self.physical_gate
         metric_values = {
-            "setup_wns": res.get("wns"), "setup_tns": res.get("tns"),
-            "hold_min_slack": res.get("min_slack"), "area": res.get("area"),
+            "setup_wns": res.get("physical_candidate") if paired else res.get("wns"),
+            "setup_tns": res.get("physical_candidate_tns") if paired else res.get("tns"),
+            "hold_min_slack": (res.get("physical_candidate_min_slack")
+                               if paired else res.get("min_slack")),
+            "area": res.get("area"),
             "max_transition": res.get("max_transition"),
             "max_capacitance": res.get("max_capacitance"),
             "max_fanout": res.get("max_fanout"),
+        }
+        metric_references = {
+            "setup_wns": res.get("physical_baseline") if paired else self.baseline_wns,
+            "setup_tns": res.get("physical_baseline_tns") if paired else self.baseline_tns,
+            "hold_min_slack": (res.get("physical_baseline_min_slack")
+                               if paired else self.baseline_min_slack),
         }
         unavailable_metrics = [metric for metric in self.required_metrics
                                if metric_values.get(metric) is None]
         unavailable = tuple(unavailable_metrics)
         violations: list[str] = []
-        if (self.strict_budgets and self.baseline_tns is not None
-                and res.get("tns") is not None
-                and res["tns"] < self.baseline_tns - self.epsilon):
+        if (self.strict_budgets and metric_references["setup_tns"] is not None
+                and metric_values["setup_tns"] is not None
+                and metric_values["setup_tns"] < metric_references["setup_tns"] - self.epsilon):
             violations.append("setup_tns")
-        if (self.strict_budgets and self.baseline_min_slack is not None
-                and res.get("min_slack") is not None
-                and res["min_slack"] < self.baseline_min_slack - self.epsilon):
+        if (self.strict_budgets and metric_references["hold_min_slack"] is not None
+                and metric_values["hold_min_slack"] is not None
+                and metric_values["hold_min_slack"] < metric_references["hold_min_slack"] - self.epsilon):
             violations.append("hold_min_slack")
         if self.area_budget is not None and res.get("area") is not None and res["area"] > self.area_budget + self._metric_epsilon("area"):
             violations.append("area")
@@ -1411,8 +1433,8 @@ class RealWnsEvaluator:
         if self.max_fanout_budget is not None and res.get("max_fanout") is not None and res["max_fanout"] > self.max_fanout_budget + self._metric_epsilon("max_fanout"):
             violations.append("max_fanout")
         evidence = AcceptanceEvidence(
-            setup_wns=res.get("wns"), setup_tns=res.get("tns"),
-            hold_min_slack=res.get("min_slack"), area=res.get("area"),
+            setup_wns=metric_values["setup_wns"], setup_tns=metric_values["setup_tns"],
+            hold_min_slack=metric_values["hold_min_slack"], area=res.get("area"),
             max_transition=res.get("max_transition"),
             max_capacitance=res.get("max_capacitance"), max_fanout=res.get("max_fanout"),
             backend_provenance={"tool": "OpenSTA", "status": res.get("status", "unknown")},
@@ -1434,14 +1456,10 @@ class RealWnsEvaluator:
                 "max_capacitance": "pF", "max_fanout": "count",
             }
             metric_values_for_evidence = {
-                "setup_wns": res.get("wns"), "setup_tns": res.get("tns"),
-                "hold_min_slack": res.get("min_slack"),
+                "setup_wns": metric_values["setup_wns"],
+                "setup_tns": metric_values["setup_tns"],
+                "hold_min_slack": metric_values["hold_min_slack"],
                 **metric_values,
-            }
-            metric_references = {
-                "setup_wns": self.baseline_wns,
-                "setup_tns": self.baseline_tns,
-                "hold_min_slack": self.baseline_min_slack,
             }
             for metric, budget in budget_specs.items():
                 value = metric_values.get(metric)
@@ -1472,6 +1490,10 @@ class RealWnsEvaluator:
                 "threshold": {"unavailable": list(evidence.unavailable), "violations": list(evidence.violations)},
                 "observed_value": evidence_payload, "evidence": evidence_payload,
             })
+        evidence_payload = evidence.to_dict()
+        evidence_payload["metric_references"] = metric_references
+        if self.physical_gate:
+            evidence_payload["paired_reference_source"] = "physical_baseline"
         result = {
             "instance": inst,
             "kind": kind,
@@ -1508,7 +1530,7 @@ class RealWnsEvaluator:
             "physical_status": res.get("physical_status"),
             "rc_config_hash": res.get("rc_config_hash"),
             "failure_events": failure_events,
-            "acceptance_evidence": evidence.to_dict(),
+            "acceptance_evidence": evidence_payload,
             "critical_instances": critical_refresh,
             "critical_endpoints": ([critical_endpoint_refresh]
                                     if critical_endpoint_refresh else None),
@@ -1809,11 +1831,14 @@ class RealWnsEvaluator:
                         or physical_candidate is None or physical_baseline is None
                         or physical_candidate_tns is None or physical_baseline_tns is None
                         or physical_candidate_tns < physical_baseline_tns - self.epsilon
-                        or physical_baseline_min_slack is not None
-                        and (physical_candidate_min_slack is None
-                             or physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon)
+                        or (self.hold_required
+                            and (physical_baseline_min_slack is None
+                                 or physical_candidate_min_slack is None
+                                 or physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon))
                         or (not self.hold_mode
-                            and (physical_delta is None or physical_delta <= self.epsilon))
+                            and (physical_delta is None
+                                 or physical_delta + 1e-12
+                                 < self.min_physical_gain_ns - self.epsilon))
                         or (self.hold_mode
                             and (physical_baseline_min_slack is None
                                  or physical_candidate_min_slack is None
@@ -1823,6 +1848,8 @@ class RealWnsEvaluator:
                     best_physical_wns = physical_candidate
                     best_wns = wns
                     best_tns = tns
+                    if physical_candidate_min_slack is not None:
+                        best_min = physical_candidate_min_slack
                     best = r
                     return True
                 return False

@@ -777,7 +777,8 @@ def test_physical_pair_accepts_without_ideal_baseline_comparison_and_records_pro
     ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
                           liberty_text=LIB, baseline_wns=0.0,
                           output_dir=tmp_path, workers=1, physical_gate=True,
-                          min_physical_gain_ns=100.0)
+                          min_physical_gain_ns=0.1, strict_budgets=True,
+                          baseline_tns=-0.5, baseline_min_slack=-0.5)
     ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
     ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
 
@@ -802,6 +803,28 @@ def test_physical_pair_accepts_without_ideal_baseline_comparison_and_records_pro
     assert result["sta_provenance"]["report_path"].endswith("physical\\sta.log") or result["sta_provenance"]["report_path"].endswith("physical/sta.log")
     assert result["physical_baseline_provenance"]["wns"] == -1.2
     assert result["physical_candidate_provenance"]["wns"] == -1.1
+    refs = result["acceptance_evidence"]["metric_references"]
+    assert refs["setup_tns"] == -3.0
+    assert refs["hold_min_slack"] == -0.8
+
+
+def test_physical_pair_uses_real_min_gain_threshold(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1.0,
+                          output_dir=tmp_path, workers=1, physical_gate=True,
+                          min_physical_gain_ns=0.6)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    def sta(**kwargs):
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.5, "tns": -1, "min_slack": -.5}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.2, "tns": -3, "min_slack": -.8}
+        return {"wns": -.7, "tns": -2.5, "min_slack": -.7}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+    result = ev(SimpleNamespace(patch_id="gain", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is False
+    assert result["physical_status"] == "paired_rejected"
 
 
 def test_physical_pair_requires_hold_when_hold_mode_requires_it(tmp_path, monkeypatch):
@@ -815,6 +838,65 @@ def test_physical_pair_requires_hold_when_hold_mode_requires_it(tmp_path, monkey
                         lambda **kwargs: {"wns": -.5, "tns": -1, "min_slack": None})
     result = ev(SimpleNamespace(patch_id="hold", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
     assert result["improved"] is False
+
+
+def test_setup_physical_pair_allows_optional_missing_hold(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1.0,
+                          output_dir=tmp_path, workers=1, physical_gate=True)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    def sta(**kwargs):
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.5, "tns": -1}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.2, "tns": -3}
+        return {"wns": -.7, "tns": -2.5}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+    result = ev(SimpleNamespace(patch_id="optional-hold", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is True
+
+
+def test_physical_hold_candidate_min_slack_propagates_to_state_record(tmp_path, monkeypatch):
+    from rseco.refinement_loop import SearchState
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1.0,
+                          baseline_tns=-3.0, baseline_min_slack=-.8,
+                          output_dir=tmp_path, workers=1, physical_gate=True,
+                          hold_mode=True)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    def sta(**kwargs):
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.9, "tns": -2.9, "min_slack": -.75}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.0, "tns": -3.0, "min_slack": -.8}
+        return {"wns": -.9, "tns": -2.9, "min_slack": -.7}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+    result = ev(SimpleNamespace(patch_id="hold-state", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is True and result["min_slack"] == -.7
+    state = SearchState(current_netlist_text=BASE)
+    state.accept_patch("hold-state", result["candidate_netlist_text"],
+                       wns=result["wns"], tns=result["tns"],
+                       min_slack=result["min_slack"],
+                       metadata={"physical_metrics": {
+                           "candidate_hold": result["physical_candidate_min_slack"]}})
+    assert state.current_min_slack == state.accepted_patches[-1]["min_slack"] == -.7
+    assert state.accepted_patches[-1]["metadata"]["physical_metrics"]["candidate_hold"] == -.7
+
+
+def test_unsupported_sequential_cell_returns_structured_sec_failure(tmp_path):
+    unsupported = '''cell ("sky130_fd_sc_hd__dff_1") {
+      pin ("D") { direction : "input"; }
+      pin ("CLK") { direction : "input"; }
+      pin ("Q") { direction : "output"; }
+    }'''
+    text = "module top(D, CLK, Q); input D, CLK; output Q; sky130_fd_sc_hd__dff_1 ff1 (.D(D), .CLK(CLK), .Q(Q)); endmodule\n"
+    checker = build_full_netlist_sec_checker(top_module="top", liberty_text=unsupported,
+                                             artifact_dir=tmp_path)
+    result = checker(text, text)
+    assert result.status in {"fail", "unavailable"}
+    assert "unsupported sequential" in result.reason
 
 
 def test_metric_budget_evidence_uses_physical_units(tmp_path, monkeypatch):
@@ -895,9 +977,10 @@ def test_terminal_budget_event_is_recorded_once_before_flow_stops(tmp_path):
 
 def test_physical_hold_missing_is_rejected_and_physical_report_is_provenance(tmp_path, monkeypatch):
     ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
-                          liberty_text=LIB, baseline_wns=-1, output_dir=tmp_path,
-                          workers=1, physical_gate=True, min_physical_gain_ns=.01,
-                          baseline_min_slack=-1.0)
+                              liberty_text=LIB, baseline_wns=-1, output_dir=tmp_path,
+                              workers=1, physical_gate=True, min_physical_gain_ns=.01,
+                              baseline_min_slack=-1.0,
+                              required_metrics=("setup_wns", "setup_tns", "hold_min_slack"))
     ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
     ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
 

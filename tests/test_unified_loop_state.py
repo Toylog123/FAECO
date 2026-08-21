@@ -10,11 +10,12 @@ from rseco.real_wns import RealWnsEvaluator
 def test_search_state_hashes_and_replays_accepted_netlists():
     state = SearchState(current_netlist_text="G0", current_wns=-1.0)
     h0 = state.current_netlist_hash
-    state.accept_patch("p1", "G1", wns=-0.8, tns=-2.0)
+    state.accept_patch("p1", "G1", wns=-0.8, tns=-2.0, min_slack=0.05)
     state.accept_patch("p2", "G2", wns=-0.6, tns=-1.0)
     assert h0 != state.current_netlist_hash
     assert [p["patch_id"] for p in state.accepted_patches] == ["p1", "p2"]
     assert state.current_netlist_text == "G2"
+    assert state.accepted_patches[0]["min_slack"] == 0.05
     assert SearchState.replay("G0", state.accepted_patches) == "G2"
     state.rollback()
     assert state.current_netlist_text == "G1"
