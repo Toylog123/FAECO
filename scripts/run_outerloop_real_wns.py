@@ -68,6 +68,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--period", type=float, default=0.5, help="Clock period (ns)")
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--max-iterations", type=int, default=6)
+    p.add_argument("--max-patches", type=int, default=None,
+                   help="Hard maximum accepted patches; 0 stops before any candidate")
+    p.add_argument("--sta-budget", type=int, default=None,
+                   help="Hard maximum candidate STA reservations")
+    p.add_argument("--formal-budget", type=int, default=None,
+                   help="Hard maximum candidate formal-check reservations")
+    p.add_argument("--wall-timeout-s", type=float, default=None,
+                   help="Hard wall-clock budget for the outer loop")
     p.add_argument("--candidates-per-iteration", type=int, default=8,
                    help="Cut candidates explored per iteration (beam width; 1 isolates feedback)")
     p.add_argument("--no-feedback", action="store_true",
@@ -280,6 +288,10 @@ def main() -> int:
             "critical_coverage_reward": args.init_critical_coverage_reward,
         },
         epsilon=args.epsilon,
+        max_patches=args.max_patches,
+        sta_budget=args.sta_budget,
+        formal_budget=args.formal_budget,
+        wall_timeout_s=args.wall_timeout_s,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period

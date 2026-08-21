@@ -439,6 +439,12 @@ def run_multi_iteration_case(
         reduction = 0
 
     wns_history: list[float] = []
+    # ``0`` is a meaningful hard budget: do not let truthiness turn it into
+    # the iteration default.  Normalise once before constructing auditable
+    # state so the configured limit and the runtime guard share one value.
+    max_patches = max_iterations if max_patches is None else int(max_patches)
+    if max_patches < 0:
+        raise ValueError("max_patches must be non-negative")
     initial_netlist_text = (
         getattr(wns_evaluator, "mapped_text", None)
         if wns_evaluator is not None else None
@@ -452,17 +458,19 @@ def run_multi_iteration_case(
         current_cone_gates=list(cone.gates),
         budget={"max_iterations": max_iterations, "epsilon": float(epsilon),
                 "sta_budget": sta_budget, "formal_budget": formal_budget,
-                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches or max_iterations},
+                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches},
     )
     started_at = time.perf_counter()
     try:
         stateful_evaluator = "state" in inspect.signature(wns_evaluator).parameters
     except (TypeError, ValueError):
         stateful_evaluator = False
-    max_patches = int(max_patches or max_iterations)
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     def evaluator(failures, weights):
         nonlocal cone
+        if stateful_evaluator and len(state.accepted_patches) >= max_patches:
+            state.set_stop_reason("max_patches")
+            return False, None
         if wall_timeout_s is not None and time.perf_counter() - started_at >= wall_timeout_s:
             state.set_stop_reason("wall_timeout")
             return False, None

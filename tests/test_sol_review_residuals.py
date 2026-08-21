@@ -307,3 +307,37 @@ def test_flow_stop_reasons_are_distinct_and_budget_counts_are_traceable(tmp_path
     assert set(cases) == {"timing_met", "no_new_candidate", "stagnation", "sta_budget",
                           "formal_budget", "wall_timeout", "max_patches"}
     assert len(set(cases.values())) == 7
+
+
+def test_zero_max_patches_is_an_atomic_stop_before_any_candidate(tmp_path):
+    case_dir = tmp_path / "zero-patches"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "original" / "original.v").write_text(net_for_stop)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net_for_stop)
+    (case_dir / "case.yaml").write_text("case_id: zero\ntarget:\n  output: Y\n")
+
+    class Eval:
+        use_constrained_cuts = False
+        refresh_cone = False
+        strict_gates = False
+        boundary_checker = object()
+        critical_instances = ["g1"]
+
+        def __init__(self):
+            self.calls = 0
+
+        def __call__(self, patch, weights, *, state):
+            self.calls += 1
+            return {"wns": 1.0, "improved": True,
+                    "candidate_netlist_text": state.current_netlist_text}
+
+    evaluator = Eval()
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=2, max_patches=0,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "test", "ok"),
+        wns_evaluator=evaluator,
+    )
+    assert result["stop_reason"] == "max_patches"
+    assert evaluator.calls == 0
+    assert result["state"]["accepted_patches"] == []
