@@ -81,6 +81,7 @@ class AcceptanceEvidence:
     unavailable: tuple[str, ...] = ()
     violations: tuple[str, ...] = ()
     epsilon: float = 0.0
+    epsilon_by_metric: dict[str, float] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -91,6 +92,7 @@ class AcceptanceEvidence:
             "backend_provenance": dict(self.backend_provenance),
             "unavailable": list(self.unavailable), "violations": list(self.violations),
             "epsilon": self.epsilon,
+            "epsilon_by_metric": dict(self.epsilon_by_metric),
         }
 
     @property

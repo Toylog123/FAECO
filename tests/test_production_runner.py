@@ -178,7 +178,8 @@ cell (\"sky130_fd_sc_hd__or2_1\") { pin (\"A\") { direction : \"input\"; } pin (
                           liberty_text=topo_lib, baseline_wns=-1,
                           output_dir=tmp_path, workers=1, max_patch_ratio=1.0,
                           strict_gates=True, equivalence_checker=lambda a, b: True,
-                          boundary_checker=lambda a, b: True)
+                          boundary_checker=lambda a, b: True,
+                          topology_sec_checker=lambda a, b: True)
     ev._candidates_for = lambda cells, inst: []
     monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
                         lambda **kwargs: {"wns": -.5, "tns": -1})
@@ -287,6 +288,7 @@ cell ("sky130_fd_sc_hd__or2_1") { pin ("A") { direction : "input"; } pin ("B") {
         allow_singleton=True, enable_topology=True,
         equivalence_checker=build_real_equivalence_checker(lib),
         boundary_checker=build_boundary_closure_checker(),
+        topology_sec_checker=lambda a, b: True,
     )
     ev._candidates_for = lambda cells, inst: (
         [] if len(cells) > 1 else [("sky130_fd_sc_hd__and2_2", {}, "G")]

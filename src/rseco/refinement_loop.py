@@ -80,7 +80,7 @@ class SearchState:
         return True
 
     def reserve_budget(self, kind: str, limit: int | None = None) -> bool:
-        """Atomically reserve one STA/formal slot before invoking a tool."""
+        """Atomically reserve one tool slot before invoking a tool."""
         used_key = f"{kind}_used"
         limit_key = f"{kind}_budget"
         if limit is None:
@@ -92,6 +92,11 @@ class SearchState:
                 return False
             self.budget[used_key] = used + 1
             return True
+
+    def deadline_expired(self) -> bool:
+        """Return whether this run's monotonic wall-clock deadline elapsed."""
+        deadline = self.budget.get("_deadline_monotonic")
+        return deadline is not None and __import__("time").perf_counter() >= float(deadline)
 
     def budget_used(self, kind: str) -> int:
         return int(self.budget.get(f"{kind}_used", 0))
@@ -210,7 +215,7 @@ class SearchState:
             "accepted_patches": list(self.accepted_patches),
             "failure_history": list(self.failure_history),
             "tested_candidate_hashes": sorted(self.tested_candidate_hashes),
-            "budget": dict(self.budget),
+            "budget": {k: v for k, v in self.budget.items() if not str(k).startswith("_")},
             "stop_reason": self.stop_reason,
         }
 
@@ -228,6 +233,7 @@ def simulate_refinement_loop(
     on_refine: Callable[[list[str]], None] | None = None,
     enable_feedback: bool = True,
     init_weights: dict | None = None,
+    should_stop: Callable[[], bool] | None = None,
 ) -> dict:
     """Run the failure-aware refinement loop.
 
@@ -263,6 +269,20 @@ def simulate_refinement_loop(
         else:
             success, patch_id = evaluated
             extra = None
+        if should_stop is not None and should_stop():
+            history.append({
+                "iteration": iteration, "status": "stopped",
+                "patch_id": patch_id, "wns": extra.get("wns") if extra else None,
+                "actions": [], "failures": sorted(f.value for f in failures),
+            })
+            return {
+                "success": accepted_any,
+                "iterations": iteration,
+                "final_patch_id": patch_id if accepted_any else None,
+                "history": history,
+                "actions_history": actions_history,
+                "weights": weights,
+            }
         if success:
             accepted_any = True
             history.append(

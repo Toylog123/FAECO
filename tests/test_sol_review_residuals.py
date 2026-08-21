@@ -341,3 +341,278 @@ def test_zero_max_patches_is_an_atomic_stop_before_any_candidate(tmp_path):
     assert result["stop_reason"] == "max_patches"
     assert evaluator.calls == 0
     assert result["state"]["accepted_patches"] == []
+
+
+TOPOLOGY_TEXT = """module top(A, B, Y);
+input A, B;
+output Y;
+wire N1, N2;
+sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(N1));
+sky130_fd_sc_hd__and2_1 g2 (.A(A), .B(B), .Y(N2));
+sky130_fd_sc_hd__or2_1 g3 (.A(N1), .B(N2), .Y(Y));
+endmodule
+"""
+TOPOLOGY_LIB = LIB + """cell ("sky130_fd_sc_hd__or2_1") {
+  pin ("A") { direction : "input"; }
+  pin ("B") { direction : "input"; }
+  pin ("Y") { direction : "output"; function : "A | B"; }
+}
+"""
+
+
+def _topology_patch():
+    return SimpleNamespace(patch_id="topology-p", gates=["g1", "g2", "g3"],
+                           boundary_inputs=["A", "B"], boundary_outputs=["Y"])
+
+
+def test_topology_requires_full_netlist_sec_before_sta_and_commit(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(
+        mapped_text=TOPOLOGY_TEXT, top_module="top", period=1,
+        liberty_text=TOPOLOGY_LIB, baseline_wns=-1, output_dir=tmp_path,
+        workers=1, strict_gates=True, max_patch_ratio=1.0,
+        equivalence_checker=lambda *_a, **_k: True,
+        boundary_checker=lambda *_a, **_k: True,
+        topology_sec_checker=None,
+    )
+    ev._candidates_for = lambda _cells, _inst: []
+    sta_calls = []
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: (sta_calls.append(kwargs) or {"wns": -.5, "tns": -1}))
+    result = ev(_topology_patch(), None)
+    events = result["failure_events"]
+    assert result["improved"] is False
+    assert len(events) == 1
+    assert events[0]["type"] == "F1_equivalence_failure"
+    assert events[0]["severity"] == "hard"
+    assert events[0]["evidence"]["stage"] == "full_netlist_sec"
+    assert sta_calls == []
+
+
+def test_topology_sec_failure_is_single_f1_and_named_pin_sec_pass_can_reach_sta(tmp_path, monkeypatch):
+    sec_calls = []
+    ev = RealWnsEvaluator(
+        mapped_text=TOPOLOGY_TEXT, top_module="top", period=1,
+        liberty_text=TOPOLOGY_LIB, baseline_wns=-1, output_dir=tmp_path,
+        workers=1, strict_gates=True, max_patch_ratio=1.0,
+        equivalence_checker=lambda *_a, **_k: True,
+        boundary_checker=lambda *_a, **_k: True,
+        topology_sec_checker=lambda before, after: sec_calls.append((before, after)) or False,
+    )
+    ev._candidates_for = lambda _cells, _inst: []
+    sta_calls = []
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: (sta_calls.append(kwargs) or {"wns": -.5, "tns": -1}))
+    failed = ev(_topology_patch(), None)
+    assert len(sec_calls) == 1
+    assert len(failed["failure_events"]) == 1
+    assert failed["failure_events"][0]["type"] == "F1_equivalence_failure"
+    assert sta_calls == []
+
+    ev = RealWnsEvaluator(
+        mapped_text=TOPOLOGY_TEXT, top_module="top", period=1,
+        liberty_text=TOPOLOGY_LIB, baseline_wns=-1, output_dir=tmp_path / "pass",
+        workers=1, strict_gates=True, max_patch_ratio=1.0,
+        equivalence_checker=lambda *_a, **_k: True,
+        boundary_checker=lambda *_a, **_k: True,
+        topology_sec_checker=lambda *_a: True,
+    )
+    ev._candidates_for = lambda _cells, _inst: []
+    passed = ev(_topology_patch(), None)
+    assert passed["improved"] is True
+    assert passed["kind"] == "TOPOLOGY"
+    assert len(sta_calls) == 1
+    assert ".A(A)" in passed["candidate_netlist_text"]
+    assert ".B(B)" in passed["candidate_netlist_text"]
+
+
+def test_topology_local_checker_waits_for_formal_budget_and_deadline(tmp_path, monkeypatch):
+    from rseco.refinement_loop import SearchState
+    import rseco.real_wns as rw
+    ev = RealWnsEvaluator(
+        mapped_text=TOPOLOGY_TEXT, top_module="top", period=1,
+        liberty_text=TOPOLOGY_LIB, baseline_wns=-1, output_dir=tmp_path,
+        workers=1, strict_gates=True, max_patch_ratio=1.0,
+        topology_sec_checker=lambda *_a: True,
+        boundary_checker=lambda *_a: True,
+    )
+    ev._candidates_for = lambda _cells, _inst: []
+    local_calls = []
+    monkeypatch.setattr(rw, "check_local_functional_equivalence",
+                        lambda *_a: (local_calls.append(True) or EquivalenceResult("pass", "local", "ok")))
+    sta_calls = []
+    monkeypatch.setattr(rw, "run_opensta_sequential",
+                        lambda **kwargs: (sta_calls.append(kwargs) or {"wns": -.5, "tns": -1}))
+    state = SearchState(current_netlist_text=TOPOLOGY_TEXT,
+                        budget={"formal_budget": 0, "sta_budget": 9})
+    result = ev(_topology_patch(), None, state=state)
+    assert local_calls == []
+    assert sta_calls == []
+    assert result["failure_events"][0]["type"] == "formal_budget_exhausted"
+
+
+def test_physical_acceptance_rejects_paired_tns_regression(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1, baseline_tns=-2,
+                          output_dir=tmp_path, workers=1, physical_gate=True,
+                          min_physical_gain_ns=0.01)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+
+    def paired_sta(**kwargs):
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.8, "tns": -1}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.0, "tns": -2.0}
+        return {"wns": -.8, "tns": -3.0}
+
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", paired_sta)
+    result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is False
+    assert result["physical_candidate_tns"] == -3.0
+    assert any(event["type"] == "F6_physical_load_failure" for event in result["failure_events"])
+
+
+def test_physical_budget_reserves_baseline_and_candidate_sta_individually(tmp_path, monkeypatch):
+    from rseco.refinement_loop import SearchState
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1,
+                          output_dir=tmp_path, workers=1, physical_gate=True,
+                          min_physical_gain_ns=0.01)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    sta_calls = []
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: (sta_calls.append(kwargs) or {"wns": -.5, "tns": -1}))
+    state = SearchState(current_netlist_text=BASE, budget={"sta_budget": 1})
+    result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None, state=state)
+    assert len(sta_calls) == 1
+    assert any(event["type"] == "sta_budget_exhausted" for event in result["failure_events"])
+
+
+def test_physical_pair_has_three_distinct_sta_measurements_when_budget_allows(tmp_path, monkeypatch):
+    from rseco.refinement_loop import SearchState
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1,
+                          output_dir=tmp_path, workers=1, physical_gate=True,
+                          min_physical_gain_ns=0.01)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    sta_calls = []
+    def sta(**kwargs):
+        sta_calls.append(kwargs)
+        if kwargs.get("spef_path") is None:
+            return {"wns": -.8, "tns": -1}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.0, "tns": -2.0}
+        return {"wns": -.8, "tns": -1}
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+    state = SearchState(current_netlist_text=BASE, budget={"sta_budget": 3})
+    result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None, state=state)
+    assert result["improved"] is True
+    assert len(sta_calls) == 3
+    assert state.budget_used("sta") == 3
+
+
+def test_boundary_checker_rejects_all_consumed_net_closure_failures():
+    checker = build_boundary_closure_checker()
+    valid = """module top(A, Y);
+input A;
+output Y;
+wire N;
+buf g1 (.A(A), .Y(N));
+buf g2 (.A(N), .Y(Y));
+endmodule
+"""
+    cases = {
+            "declared-undriven": valid.replace("wire N;", "wire N, M;").replace("buf g1 (.A(A), .Y(N));", "buf g1 (.A(M), .Y(N));"),
+        "undeclared-consumed": valid.replace(".A(A), .Y(N)", ".A(NOPE), .Y(N)"),
+        "multiple-driver": valid.replace("buf g2 (.A(N), .Y(Y));", "buf g2 (.A(N), .Y(Y)); buf g3 (.A(A), .Y(N));"),
+            "dangling-output": valid.replace("wire N;", "wire N, DANGLE;").replace("buf g2 (.A(N), .Y(Y));", "buf g2 (.A(N), .Y(Y)); buf g3 (.A(A), .Y(DANGLE));"),
+        "rewired-module-output": valid.replace(".Y(Y)", ".Y(N)"),
+    }
+    for label, candidate in cases.items():
+        result = checker(valid, candidate)
+        assert result.status == "fail", label
+        assert "stage" in result.reason or "boundary" in result.reason.lower(), (label, result.reason)
+
+
+def test_boundary_checker_handles_escaped_named_nets():
+    checker = build_boundary_closure_checker()
+    escaped = r"""module top(\A , Y);
+input \A ;
+output Y;
+wire N;
+buf g1 (.A(\A ), .Y(N));
+buf g2 (.A(N), .Y(Y));
+endmodule
+"""
+    assert checker(escaped, escaped).status == "pass"
+
+
+def test_zero_max_patches_preserves_full_baseline_state_and_tns(tmp_path):
+    case_dir = tmp_path / "zero-baseline"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "original" / "original.v").write_text(net_for_stop)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net_for_stop)
+    (case_dir / "case.yaml").write_text("case_id: zero-baseline\ntarget:\n  output: Y\n")
+    class Eval:
+        baseline_wns = -1.0
+        baseline_tns = -2.0
+        baseline_min_slack = -3.0
+        critical_instances = ["g1"]
+        use_constrained_cuts = False
+    result = run_multi_iteration_case(case_dir, max_iterations=2, max_patches=0, wns_evaluator=Eval())
+    assert result["state"]["current_wns"] == -1.0
+    assert result["state"]["current_tns"] == -2.0
+    assert result["state"]["current_min_slack"] == -3.0
+    assert result["state"]["current_netlist_text"] == net_for_stop
+
+
+def test_terminal_wall_timeout_breaks_refinement_at_triggering_iteration(tmp_path):
+    case_dir = tmp_path / "terminal-timeout"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "original" / "original.v").write_text(net_for_stop)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net_for_stop)
+    (case_dir / "case.yaml").write_text("case_id: terminal\ntarget:\n  output: Y\n")
+    calls = []
+
+    class Eval:
+        use_constrained_cuts = False
+        refresh_cone = False
+        strict_gates = False
+        boundary_checker = object()
+        critical_instances = ["g1"]
+
+        def __call__(self, patch, weights, *, state):
+            calls.append(True)
+            state.set_stop_reason("wall_timeout")
+            return {"wns": -1.0, "improved": False}
+
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=5,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "test", "ok"),
+        wns_evaluator=Eval(),
+    )
+    assert result["stop_reason"] == "wall_timeout"
+    assert result["iterations"] == 1
+    assert len(result["history"]) == 1
+    assert len(calls) == 1
+
+
+def test_patch_ratio_uses_non_timing_epsilon_not_timing_epsilon(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1, output_dir=tmp_path,
+                          workers=1, strict_gates=True, max_patch_ratio=.9,
+                          epsilon=.1, equivalence_checker=lambda *_a: True,
+                          boundary_checker=lambda *_a: True)
+    ev._candidates_for = lambda _cells, _inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, _inst, _kind, _new, _pin: text.replace("and2_1", "and2_2")
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: {"wns": -.5, "tns": -1})
+    result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is False
+    event = next(e for e in result["failure_events"] if e["type"] == "F3_patch_too_large")
+    assert event["threshold"]["unit"] == "ratio"
+    assert event["threshold"]["epsilon"] == 0.0

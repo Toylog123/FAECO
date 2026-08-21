@@ -262,6 +262,7 @@ def main() -> int:
         required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),
         epsilon=args.epsilon,
         equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8")),
+        topology_sec_checker=None,
         boundary_checker=build_boundary_closure_checker(),
     )
 

@@ -450,17 +450,21 @@ def run_multi_iteration_case(
         if wns_evaluator is not None else None
     ) or (case.original_analysis_netlist_path.read_text(encoding="utf-8"))
     initial_wns = getattr(wns_evaluator, "baseline_wns", None)
+    started_at = time.perf_counter()
+    deadline = (started_at + float(wall_timeout_s)
+                if wall_timeout_s is not None else None)
     state = SearchState(
         current_netlist_text=initial_netlist_text,
         current_wns=initial_wns,
+        current_tns=getattr(wns_evaluator, "baseline_tns", None),
         current_min_slack=getattr(wns_evaluator, "baseline_min_slack", None),
         critical_instances=list(critical_instances or getattr(wns_evaluator, "critical_instances", []) or []),
         current_cone_gates=list(cone.gates),
         budget={"max_iterations": max_iterations, "epsilon": float(epsilon),
                 "sta_budget": sta_budget, "formal_budget": formal_budget,
-                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches},
+                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches,
+                "_deadline_monotonic": deadline},
     )
-    started_at = time.perf_counter()
     try:
         stateful_evaluator = "state" in inspect.signature(wns_evaluator).parameters
     except (TypeError, ValueError):
@@ -468,10 +472,10 @@ def run_multi_iteration_case(
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     def evaluator(failures, weights):
         nonlocal cone
-        if stateful_evaluator and len(state.accepted_patches) >= max_patches:
+        if max_patches == 0 or (stateful_evaluator and len(state.accepted_patches) >= max_patches):
             state.set_stop_reason("max_patches")
             return False, None
-        if wall_timeout_s is not None and time.perf_counter() - started_at >= wall_timeout_s:
+        if state.deadline_expired():
             state.set_stop_reason("wall_timeout")
             return False, None
         trial_count = state.budget_used("sta")
@@ -515,7 +519,7 @@ def run_multi_iteration_case(
             return False, None
         tried_candidates = 0
         for boundary in candidates[:max_candidates_per_iteration]:
-            if wall_timeout_s is not None and time.perf_counter() - started_at >= wall_timeout_s:
+            if state.deadline_expired():
                 state.set_stop_reason("wall_timeout")
                 break
             tried_candidates += 1
@@ -559,6 +563,16 @@ def run_multi_iteration_case(
                         wns_info = wns_evaluator(patch, weights)
                 except (TypeError, ValueError):
                     wns_info = wns_evaluator(patch, weights)
+                for terminal_event in wns_info.get("failure_events", []):
+                    terminal_type = terminal_event.get("type")
+                    if terminal_type == "deadline_exhausted":
+                        state.set_stop_reason("wall_timeout")
+                    elif terminal_type == "sta_budget_exhausted":
+                        state.set_stop_reason("sta_budget")
+                    elif terminal_type == "formal_budget_exhausted":
+                        state.set_stop_reason("formal_budget")
+                if state.stop_reason is not None:
+                    return False, None
                 wns = wns_info["wns"]
                 wns_history.append(wns)
                 for event in wns_info.get("failure_events", []):
@@ -675,6 +689,7 @@ def run_multi_iteration_case(
         RefinementConfig(max_iterations=max_iterations),
         enable_feedback=enable_feedback,
         init_weights=init_weights,
+        should_stop=lambda: state.stop_reason is not None,
     )
     result["case_id"] = case.case_id
     state.budget["iterations_used"] = result.get("iterations", 0)
