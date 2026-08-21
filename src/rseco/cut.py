@@ -1,6 +1,9 @@
 """Cut boundary generation for early FAECO baselines."""
 
 import random
+import hashlib
+import itertools
+import json
 from collections import deque
 from dataclasses import dataclass
 
@@ -70,6 +73,18 @@ class WeightedCutResult:
             "boundary_outputs": self.boundary_outputs,
             "gates": self.gates,
         }
+
+
+def canonical_cut_hash(cut: CutBoundary, action_hash: str = "") -> str:
+    """Canonical identity used to deduplicate regions across cut methods."""
+    payload = {
+        "gates": sorted(set(cut.gates)),
+        "boundary_inputs": sorted(set(cut.boundary_inputs)),
+        "boundary_outputs": sorted(set(cut.boundary_outputs)),
+        "action": str(action_hash),
+    }
+    return hashlib.sha256(json.dumps(payload, sort_keys=True,
+                                     separators=(",", ":")).encode()).hexdigest()
 
 
 def fixed_min_cut(cone: FaninCone) -> CutBoundary:
@@ -306,6 +321,93 @@ def weighted_cut_candidates(
             candidate.method,
         ),
     )
+
+
+def constrained_weighted_cut_candidates(
+    cone: FaninCone,
+    weights: object,
+    *,
+    k: int = 5,
+    critical_instances: list[str] | None = None,
+    min_critical_coverage: int = 1,
+    hard_anchors: list[str] | None = None,
+    window_size: int | None = None,
+    return_diagnostics: bool = False,
+):
+    """Return a non-degenerate constrained k-best region list.
+
+    Regions are enumerated over the cone DAG, then filtered by hard anchors,
+    critical coverage and an index window.  The singleton endpoint driver is
+    therefore illegal unless it satisfies the requested critical coverage.
+    Scoring combines boundary, size, verification and physical-load terms;
+    each region is canonical-hash deduplicated before ranking.  When fewer
+    than ``k`` regions survive, diagnostics explicitly state why.
+    """
+    if k <= 0:
+        raise ValueError("k must be positive")
+    gates = list(cone.gates)
+    critical = set(critical_instances or [])
+    anchors = set(hard_anchors or [])
+    if not anchors.issubset(set(gates)):
+        missing = sorted(anchors - set(gates))
+        result = []
+        diagnostics = {"requested_k": k, "returned_k": 0,
+                       "reason": "hard_anchor_outside_cone", "missing_anchors": missing}
+        return (result, diagnostics) if return_diagnostics else result
+    coverage_target = max(0, int(min_critical_coverage)) if critical else 0
+    window = max(1, int(window_size or len(gates)))
+    graph = build_weighted_cut_graph(cone, weights)
+    boundary_penalty = float(getattr(weights, "boundary_penalty", 1.0))
+    size_penalty = float(getattr(weights, "size_penalty", 1.0))
+    verification_penalty = float(getattr(weights, "verification_cost_penalty", 1.0))
+    physical_penalty = float(getattr(weights, "physical_penalty", 1.0))
+    fanout = _fanout_counts(cone)
+    candidates: list[tuple[float, CutBoundary]] = []
+    seen: set[str] = set()
+    rejected = {"coverage": 0, "window": 0, "anchors": 0}
+    for size in range(1, min(window, len(gates)) + 1):
+        for indices in itertools.combinations(range(len(gates)), size):
+            selected = [gates[i] for i in indices]
+            if not anchors.issubset(selected):
+                rejected["anchors"] += 1
+                continue
+            if indices[-1] - indices[0] + 1 > window:
+                rejected["window"] += 1
+                continue
+            covered = len(set(selected) & critical)
+            if covered < coverage_target:
+                rejected["coverage"] += 1
+                continue
+            # Hard minimum coverage explicitly blocks endpoint-driver
+            # singleton regions when they do not cover the requested path.
+            if len(selected) == 1 and critical and covered < coverage_target:
+                rejected["coverage"] += 1
+                continue
+            cut = _cut_for_selected_gates(cone, selected,
+                                          method="constrained_weighted_region")
+            key = canonical_cut_hash(cut)
+            if key in seen:
+                continue
+            seen.add(key)
+            load = sum(fanout[g] for g in selected) / max(1, len(selected))
+            score = (
+                sum(graph.node_costs[g] for g in selected)
+                + boundary_penalty * len(cut.boundary_inputs) * 0.5
+                + size_penalty * len(selected) * 0.05
+                + verification_penalty * (len(selected) ** 2) * 0.05
+                + physical_penalty * load * 0.2
+                - float(getattr(weights, "critical_coverage_reward", 1.0)) * covered * 0.1
+            )
+            candidates.append((score, cut))
+    candidates.sort(key=lambda item: (item[0], canonical_cut_hash(item[1])))
+    rows = [cut for _, cut in candidates[:k]]
+    diagnostics = {
+        "requested_k": k, "returned_k": len(rows),
+        "reason": None if len(rows) >= k else "insufficient_valid_regions",
+        "rejected": rejected, "window_size": window,
+        "coverage_target": coverage_target,
+    }
+    return (rows, diagnostics) if return_diagnostics else rows
 
 
 def _logic_depths(cone: FaninCone) -> dict[str, int]:

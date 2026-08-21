@@ -189,6 +189,7 @@ def simulate_refinement_loop(
             verification_cost_penalty=float(init_weights.get("verification_cost_penalty", weights.verification_cost_penalty)),
             equivalence_stability_reward=float(init_weights.get("equivalence_stability_reward", weights.equivalence_stability_reward)),
             max_cone_gates=int(init_weights.get("max_cone_gates", weights.max_cone_gates)),
+            physical_penalty=float(init_weights.get("physical_penalty", weights.physical_penalty)),
         )
     history: list[dict] = []
     actions_history: list[list[str]] = []
