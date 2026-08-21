@@ -118,6 +118,11 @@ def test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked(monkeyp
 
     monkeypatch.setattr(runner, "run_yosys_mapping", fake_mapping)
     monkeypatch.setattr(runner, "run_opensta", fake_baseline)
+    sec_builder_calls = []
+    def fake_sec_builder(**kwargs):
+        sec_builder_calls.append(kwargs)
+        return lambda *_args: True
+    monkeypatch.setattr(runner, "build_full_netlist_sec_checker", fake_sec_builder)
     monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", fake_candidate_sta)
     monkeypatch.setattr(
         sys,
@@ -135,6 +140,8 @@ def test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked(monkeyp
     )
 
     assert runner.main() == 0
+    assert sec_builder_calls and sec_builder_calls[0]["top_module"] == "demo"
+    assert sec_builder_calls[0]["artifact_dir"].name == "topology-sec"
     result = __import__("json").loads(
         (tmp_path / "out" / "demo" / "outerloop_result.json").read_text(encoding="utf-8")
     )

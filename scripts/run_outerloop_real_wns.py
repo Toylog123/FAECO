@@ -37,6 +37,7 @@ except ModuleNotFoundError:  # imported by a test runner rather than executed as
 from rseco.flow import run_multi_iteration_case
 from rseco.real_wns import (
     RealWnsEvaluator,
+    build_full_netlist_sec_checker,
     build_real_equivalence_checker,
     build_boundary_closure_checker,
     build_r_available,
@@ -262,7 +263,11 @@ def main() -> int:
         required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),
         epsilon=args.epsilon,
         equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8")),
-        topology_sec_checker=None,
+        topology_sec_checker=build_full_netlist_sec_checker(
+            top_module=args.circuit,
+            liberty_text=LIB.read_text(encoding="utf-8"),
+            artifact_dir=out / "topology-sec",
+        ),
         boundary_checker=build_boundary_closure_checker(),
     )
 

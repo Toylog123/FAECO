@@ -565,6 +565,9 @@ def run_multi_iteration_case(
                     wns_info = wns_evaluator(patch, weights)
                 for terminal_event in wns_info.get("failure_events", []):
                     terminal_type = terminal_event.get("type")
+                    if terminal_type in {"deadline_exhausted", "sta_budget_exhausted",
+                                         "formal_budget_exhausted"}:
+                        state.record_failure(terminal_event)
                     if terminal_type == "deadline_exhausted":
                         state.set_stop_reason("wall_timeout")
                     elif terminal_type == "sta_budget_exhausted":

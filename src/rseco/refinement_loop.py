@@ -269,6 +269,41 @@ def simulate_refinement_loop(
         else:
             success, patch_id = evaluated
             extra = None
+        if success:
+            accepted_any = True
+            stop_after_success = should_stop is not None and should_stop()
+            history.append(
+                {
+                    "iteration": iteration,
+                    "status": "accepted" if (continue_after_success or stop_after_success) else "success",
+                    "patch_id": patch_id,
+                    "wns": extra.get("wns") if extra else None,
+                    "actions": [],
+                }
+            )
+            if stop_after_success:
+                history.append({
+                    "iteration": iteration, "status": "stopped",
+                    "patch_id": patch_id, "wns": extra.get("wns") if extra else None,
+                    "actions": [], "failures": sorted(f.value for f in failures),
+                })
+                return {
+                    "success": True,
+                    "iterations": iteration,
+                    "final_patch_id": patch_id,
+                    "history": history,
+                    "actions_history": actions_history,
+                    "weights": weights,
+                }
+            if not continue_after_success:
+                return {
+                    "success": True,
+                    "iterations": iteration,
+                    "final_patch_id": patch_id,
+                    "history": history,
+                    "weights": weights,
+                }
+            continue
         if should_stop is not None and should_stop():
             history.append({
                 "iteration": iteration, "status": "stopped",
@@ -283,26 +318,6 @@ def simulate_refinement_loop(
                 "actions_history": actions_history,
                 "weights": weights,
             }
-        if success:
-            accepted_any = True
-            history.append(
-                {
-                    "iteration": iteration,
-                    "status": "accepted" if continue_after_success else "success",
-                    "patch_id": patch_id,
-                    "wns": extra.get("wns") if extra else None,
-                    "actions": [],
-                }
-            )
-            if not continue_after_success:
-                return {
-                    "success": True,
-                    "iterations": iteration,
-                    "final_patch_id": patch_id,
-                    "history": history,
-                    "weights": weights,
-                }
-            continue
         decision = refine_weights(weights, failures) if enable_feedback else None
         if decision is not None:
             weights = decision.weights

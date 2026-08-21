@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import re
+import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -64,6 +65,27 @@ def _checker_passed(value) -> bool:
     if isinstance(value, dict):
         return value.get("status") == "pass"
     return getattr(value, "status", None) == "pass"
+
+
+def _checker_details(value) -> dict:
+    """Preserve structured checker status/method/reason in failure evidence."""
+    if isinstance(value, dict):
+        status = value.get("status")
+        method = value.get("method")
+        reason = value.get("reason")
+    else:
+        status = getattr(value, "status", None)
+        method = getattr(value, "method", None)
+        reason = getattr(value, "reason", None)
+    details = {"status": status, "method": method, "reason": reason}
+    if isinstance(reason, str):
+        try:
+            parsed = json.loads(reason)
+        except (TypeError, ValueError):
+            parsed = None
+        if isinstance(parsed, dict):
+            details.update(parsed)
+    return {key: value for key, value in details.items() if value is not None}
 
 
 def _normalise_failure_events(events, *, candidate_hash: str, cut_hash: str | None = None):
@@ -149,12 +171,72 @@ def build_real_equivalence_checker(liberty_text: str):
     return check
 
 
+def build_full_netlist_sec_checker(
+    *,
+    top_module: str,
+    liberty_text: str | None = None,
+    liberty_cells_v: str | Path | None = None,
+    artifact_dir: str | Path,
+    yosys_command: str = "yosys",
+    abc_command: str = "yosys-abc",
+    timeout_s: float = 60.0,
+):
+    """Build the production text-in/text-out full-netlist SEC backend.
+
+    The callback owns temporary Verilog checkpoints and delegates normalization
+    plus ABC CEC to the existing Yosys/ABC backend.  Tool unavailability,
+    malformed text, and timeout are returned as structured non-pass results so
+    strict topology callers fail closed without substituting the local checker.
+    """
+    from .equivalence import EquivalenceResult
+    from .yosys_abc import check_yosys_abc_equivalence
+
+    artifact_root = Path(artifact_dir)
+    artifact_root.mkdir(parents=True, exist_ok=True)
+
+    def check(original_text: str, candidate_text: str):
+        try:
+            outputs = list(parse_verilog_netlist_from_text(original_text).outputs)
+        except Exception as exc:
+            return EquivalenceResult(
+                "fail", "full_netlist_sec", f"SEC input parse failed closed: {exc}"
+            )
+        with tempfile.TemporaryDirectory(prefix="text-sec-", dir=artifact_root) as temp:
+            temp_dir = Path(temp)
+            original = temp_dir / f"{top_module}.gold.v"
+            revised = temp_dir / f"{top_module}.gate.v"
+            original.write_text(original_text, encoding="utf-8")
+            revised.write_text(candidate_text, encoding="utf-8")
+            liberty_path = None
+            if liberty_text is not None:
+                liberty_path = temp_dir / "cells.lib"
+                liberty_path.write_text(liberty_text, encoding="utf-8")
+            result = check_yosys_abc_equivalence(
+                original, revised, outputs=outputs,
+                artifact_dir=temp_dir / "yosys-abc",
+                yosys_command=yosys_command,
+                abc_command=abc_command,
+                timeout_s=timeout_s,
+                liberty_cells_v=liberty_cells_v or liberty_path,
+            )
+            return result
+
+    return check
+
+
 def build_boundary_closure_checker():
     """Build a real module-boundary checker used as the strict F2 gate."""
     def _net_closure(netlist):
         constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
-        drivers = Counter(g.output for g in netlist.gates)
+        drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
         declared = set(netlist.inputs) | set(netlist.outputs) | set(netlist.wires)
+        # Module-output loss/rewiring is the more specific boundary defect;
+        # classify it before generic consumed-net/dangling checks.
+        for output in netlist.outputs:
+            resolved_output = netlist.resolve_alias(output)
+            if drivers.get(resolved_output, 0) != 1:
+                return {"kind": "rewired-module-output", "net": resolved_output,
+                        "drivers": drivers.get(resolved_output, 0)}
         consumed = [net for gate in netlist.gates for net in gate.inputs]
         for net in consumed:
             resolved = netlist.resolve_alias(net)
@@ -176,10 +258,6 @@ def build_boundary_closure_checker():
             consumers = [netlist.resolve_alias(net) for g in netlist.gates for net in g.inputs]
             if output not in consumers:
                 return {"kind": "dangling-output", "net": output}
-        for output in netlist.outputs:
-            if drivers.get(output, 0) != 1:
-                return {"kind": "rewired-module-output", "net": output,
-                        "drivers": drivers.get(output, 0)}
         return None
 
     def check(original_text: str, candidate_text: str):
@@ -204,7 +282,7 @@ def build_boundary_closure_checker():
                         "fail", "boundary_closure",
                         json.dumps({"stage": "consumed_net_closure", "side": label, **issue}, sort_keys=True),
                     )
-                drivers = Counter(g.output for g in netlist.gates)
+                drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
                 if any(drivers[input_name] for input_name in netlist.inputs):
                     return EquivalenceResult("fail", "boundary_closure",
                                              f"{label} input is driven")
@@ -802,6 +880,20 @@ class RealWnsEvaluator:
                 if local_check.status != "pass":
                     raise ValueError(f"local checker: {local_check.reason}")
                 if self.strict_gates:
+                    formal_event = self._deadline_or_budget_event(
+                        state, "formal", candidate_hash=candidate_hash,
+                        cut_hash=candidate_hash, action_scope=[inst],
+                    )
+                    if formal_event is not None:
+                        failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                                  "to_type": new_type, "wns": self.baseline_wns,
+                                  "tns": self.baseline_tns, "min_slack": None,
+                                  "physical_failure": False, "candidate_netlist_text": candidate_text,
+                                  "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                                  "cache_key": cache_key, "config_hash": config_hash,
+                                  "failure_events": [formal_event], "runtime_s": 0.0, **proxy_meta}
+                        self._sta_cache[cache_key] = dict(failed)
+                        return failed
                     sec = self.topology_sec_checker(self.mapped_text, candidate_text)
                     sec_unavailable = getattr(sec, "status", None) == "unavailable" or (
                         isinstance(sec, dict) and sec.get("status") == "unavailable")
@@ -836,16 +928,21 @@ class RealWnsEvaluator:
                 self._sta_cache[cache_key] = dict(failed)
                 return failed
             if self.boundary_checker is not None:
+                boundary_result = None
                 try:
-                    boundary_ok = _checker_passed(self.boundary_checker(self.mapped_text, candidate_text))
-                except Exception:
+                    boundary_result = self.boundary_checker(self.mapped_text, candidate_text)
+                    boundary_ok = _checker_passed(boundary_result)
+                except Exception as exc:
                     boundary_ok = False
+                    boundary_result = {"status": "error", "reason": str(exc)}
             else:
                 boundary_ok = False
+                boundary_result = {"status": "unavailable", "reason": "boundary checker unavailable"}
             if not boundary_ok:
                     event = {"type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
                              "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
-                             "runtime_s": 0.0, "evidence": {"stage": "boundary_closure"}}
+                             "runtime_s": 0.0, "evidence": {"stage": "boundary_closure",
+                             **_checker_details(boundary_result)}}
                     failed = {"instance": inst, "kind": kind, "from_type": cell_type,
                               "to_type": new_type, "wns": self.baseline_wns,
                               "tns": self.baseline_tns, "min_slack": None,
@@ -871,19 +968,34 @@ class RealWnsEvaluator:
                     "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
                     "runtime_s": 0.0, "evidence": {"stage": "equivalence", "reason": str(exc)},
                 })
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            boundary_result = None
             try:
-                boundary_ok = (self.boundary_checker is not None and
-                               _checker_passed(self.boundary_checker(self.mapped_text, candidate_text)))
+                if boundary_budget_event is not None:
+                    boundary_ok = False
+                else:
+                    boundary_result = (self.boundary_checker(self.mapped_text, candidate_text)
+                                       if self.boundary_checker is not None else None)
+                    boundary_ok = boundary_result is not None and _checker_passed(boundary_result)
             except Exception as exc:
                 boundary_ok = False
                 boundary_error = str(exc)
-            if not boundary_ok:
+                boundary_result = {"status": "error", "reason": boundary_error}
+            if boundary_budget_event is not None:
+                structural_events.append(boundary_budget_event)
+            if not boundary_ok and boundary_budget_event is None:
                 structural_events.append({
                     "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
                     "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
                     "runtime_s": 0.0,
                     "evidence": {"stage": "boundary_closure",
-                                 "reason": locals().get("boundary_error", "checker unavailable or false")},
+                                 **_checker_details(boundary_result or {
+                                     "status": "unavailable",
+                                     "reason": "checker unavailable or false",
+                                 })},
                 })
             if structural_events:
                 failed = {"instance": inst, "kind": kind, "from_type": cell_type,
@@ -927,10 +1039,13 @@ class RealWnsEvaluator:
         except Exception as exc:
             res = {"wns": None, "tns": None, "error": str(exc)}
         critical_refresh = None
+        critical_endpoint_refresh = None
         report = sub / "sta.log"
+        critical_report = report
         if report.exists():
             report_text = report.read_text(encoding="utf-8", errors="replace")
             critical_refresh = parse_critical_instances(report_text)
+            critical_endpoint_refresh = parse_worst_endpoint(report_text)
         # Inner-loop physical gate (review shortboard): an ideal-net gain
         # must clear a minimum threshold before a parasitic-aware SPEF run is
         # even attempted; the candidate is only returned when the SPEF run
@@ -1034,7 +1149,8 @@ class RealWnsEvaluator:
                                "physical_budget_event": baseline.get("budget_event") or phys.get("budget_event"),
                                "rc_config_hash": rc_config_hash}
                     elif (base_phys_wns is None or phys_wns is None
-                          or base_phys_tns is None or phys_tns is None):
+                          or base_phys_tns is None or phys_tns is None
+                          or (base_phys_min_slack is not None and phys_min_slack is None)):
                         # physical load failure: the ideal gain does not
                         # have a complete paired physical measurement.
                         res = {**res, "wns": self.baseline_wns,
@@ -1100,9 +1216,12 @@ class RealWnsEvaluator:
                            "physical_gate_error": str(exc)}
             physical_report = sub / "physical" / "sta.log"
             if physical_report.exists():
-                critical_refresh = parse_critical_instances(
-                    physical_report.read_text(encoding="utf-8", errors="replace")
+                critical_report = physical_report
+                physical_report_text = physical_report.read_text(
+                    encoding="utf-8", errors="replace"
                 )
+                critical_refresh = parse_critical_instances(physical_report_text)
+                critical_endpoint_refresh = parse_worst_endpoint(physical_report_text)
         failure_events = []
         if res.get("physical_budget_event"):
             failure_events.append(res["physical_budget_event"])
@@ -1204,12 +1323,31 @@ class RealWnsEvaluator:
             epsilon_by_metric=dict(self.metric_epsilons),
         )
         if self.strict_budgets and (evidence.unavailable or evidence.violations):
+            metric_budgets = {}
+            budget_specs = {
+                "area": self.area_budget,
+                "max_transition": self.max_transition_budget,
+                "max_capacitance": self.max_capacitance_budget,
+                "max_fanout": self.max_fanout_budget,
+            }
+            for metric, budget in budget_specs.items():
+                value = metric_values.get(metric)
+                if budget is not None and value is not None and metric in violations:
+                    metric_budgets[metric] = {
+                        "value": value,
+                        "budget": budget,
+                        "epsilon": self._metric_epsilon(metric),
+                        "unit": metric,
+                        "backend": "OpenSTA",
+                    }
+            evidence_payload = evidence.to_dict()
+            evidence_payload["metric_budgets"] = metric_budgets
             failure_events.append({
                 "type": "acceptance_budget_unavailable" if evidence.unavailable else "acceptance_budget_violation",
                 "candidate_hash": candidate_hash, "cut_hash": candidate_hash,
                 "severity": "hard", "hard_gate": True, "runtime_s": time.perf_counter() - started_at,
                 "threshold": {"unavailable": list(evidence.unavailable), "violations": list(evidence.violations)},
-                "observed_value": evidence.to_dict(), "evidence": evidence.to_dict(),
+                "observed_value": evidence_payload, "evidence": evidence_payload,
             })
         result = {
             "instance": inst,
@@ -1247,12 +1385,11 @@ class RealWnsEvaluator:
             "failure_events": failure_events,
             "acceptance_evidence": evidence.to_dict(),
             "critical_instances": critical_refresh,
-            "critical_endpoints": ([parse_worst_endpoint(report_text)]
-                                    if report.exists() and parse_worst_endpoint(report_text)
-                                    else None),
+            "critical_endpoints": ([critical_endpoint_refresh]
+                                    if critical_endpoint_refresh else None),
             "sta_provenance": {
-                "tool": "OpenSTA", "output_dir": str(sub),
-                "report_path": str(report) if report.exists() else None,
+                "tool": "OpenSTA", "output_dir": str(critical_report.parent),
+                "report_path": str(critical_report) if critical_report.exists() else None,
             },
             "candidate_netlist_text": candidate_text,
             "candidate_hash": candidate_hash,
@@ -1549,8 +1686,8 @@ class RealWnsEvaluator:
                         or physical_candidate_tns is None or physical_baseline_tns is None
                         or physical_candidate_tns < physical_baseline_tns - self.epsilon
                         or (physical_baseline_min_slack is not None
-                            and physical_candidate_min_slack is not None
-                            and physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon)):
+                            and (physical_candidate_min_slack is None
+                                 or physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon))):
                     return False
                 if best_physical_wns is None or physical_candidate > best_physical_wns + self.epsilon:
                     best_physical_wns = physical_candidate
