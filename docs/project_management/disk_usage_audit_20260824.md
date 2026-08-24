@@ -6,9 +6,9 @@
 
 ## `experiments/` NTFS 原位压缩最终结果
 
-本轮仅对精确目录 `D:\BaiduSyncdisk\03_FAECO\experiments` 执行 NTFS 原位压缩；未移动、重命名、归档或删除任何文件。`compact` exit code 为 `0`。统计为 310,251 files、79,075 directories；逻辑大小 17,739,639,394 bytes，物理占用 5,752,165,068 bytes，压缩比约 3.1:1。D 盘可用空间由 42.931 GiB 增至 54.387 GiB，增加 11.456 GiB。
+本轮仅对精确目录 `D:\BaiduSyncdisk\03_FAECO\experiments` 执行 NTFS 原位压缩；未移动、重命名、归档或删除任何文件。独立只读复核的 full-current 结果为：`Of 310251 files within 79074 directories; 310251 compressed / 0 uncompressed; 18,073,112,096 logical bytes stored in 5,877,220,044 bytes`，压缩比 3.1:1。`compact` exit code 为 `0`。D 盘可用空间由 42.931 GiB 增至 54.387 GiB，增加 11.456 GiB。
 
-抽检 `sta.log`：逻辑长度 333,472,702 bytes，仍可读；物理占用 125,054,976 bytes，压缩比约 2.7:1。`tmp/`、`paper/`、`.venv/` 未处理。
+抽检 `sta.log`：逻辑长度 333,472,702 bytes，仍可读；物理占用 125,054,976 bytes，压缩比约 2.7:1；该抽检不计入 full-current 汇总。`tmp/`、`paper/`、`.venv/` 未处理。
 
 ## 分层证据
 
@@ -16,7 +16,7 @@
 
 | 层级 | 占用 | 文件数/说明 |
 |---|---:|---|
-| `experiments/` | 16.832 GiB | 231,178 files |
+| `experiments/` | full-current logical 18,073,112,096 bytes / physical 5,877,220,044 bytes | 310,251 files / 79,074 directories; 310,251 compressed / 0 uncompressed |
 | `tmp/` | 1.222 GiB | 临时产物 |
 | `paper/` | 0.676 GiB | 论文与渲染产物 |
 | `benchmarks/` | 0.445 GiB | benchmark 资产 |

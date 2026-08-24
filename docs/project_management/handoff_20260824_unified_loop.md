@@ -64,6 +64,7 @@
 ## 7. 文档缺口与建议补齐项
 
 - 主目录磁盘审计与 `experiments/` NTFS 原位压缩最终结果见 `docs/project_management/disk_usage_audit_20260824.md`；删除、移动、重命名、归档均为 0。
+- 独立只读复核的 full-current 压缩汇总：310251 files / 79074 directories，310251 compressed / 0 uncompressed，18,073,112,096 logical bytes → 5,877,220,044 physical bytes，3.1:1；D 可用空间 42.931→54.387 GiB（+11.456 GiB）。抽检 `sta.log` 333,472,702→125,054,976 bytes 且可读。
 - 大型真实 outer-loop/P&R 尚未重跑；旧论文 headline 数字保持原状，不能由本轮代码回归自动更新。
 
 ## Push 状态
