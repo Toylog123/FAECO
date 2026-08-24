@@ -93,6 +93,12 @@ def _to_wsl(path: Path) -> str:
     return str(p).replace("\\", "/").replace("D:/", "/mnt/d/", 1)
 
 
+def _quote_yosys_path(path: str | Path) -> str:
+    """Quote and escape a path used as one token in a Yosys script."""
+    value = str(path).replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{value}"'
+
+
 def run_yosys_mapping(circuit: Path, output: Path,
                       yosys_cmd: list[str] | None = None) -> list[str]:
     """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist.
@@ -147,12 +153,12 @@ def run_yosys_mapping(circuit: Path, output: Path,
     script.write_text(
         "\n".join(
             [
-                f"read_verilog {circuit_for_script}",
+                f"read_verilog {_quote_yosys_path(circuit_for_script)}",
                 "synth -top " + top_name,
-                f"dfflibmap -liberty {lib_posix}",
-                f"abc -liberty {lib_posix}",
+                f"dfflibmap -liberty {_quote_yosys_path(lib_posix)}",
+                f"abc -liberty {_quote_yosys_path(lib_posix)}",
                 "clean",
-                f"write_verilog -noattr {mapped_posix}",
+                f"write_verilog -noattr {_quote_yosys_path(mapped_posix)}",
                 "",
             ]
         ),
