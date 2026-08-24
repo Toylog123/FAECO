@@ -434,7 +434,11 @@ def _normalize_to_blif(
             *( [f"hierarchy -check -top {_yosys_identifier(top_module)}"] if top_module else [] ),
             "proc",
             "flatten",
-            "opt",
+            # Keep muxes feeding DFFs explicit.  Full ``opt`` folds a
+            # reset-select mux into ``$sdff``, which ABC cannot read; the
+            # explicit DFF+mux form remains CEC-equivalent and preserves the
+            # async-control wiring evidence in the generated Liberty model.
+            "opt_clean",
             "simplemap",
             "clean",
             f"write_blif {_yosys_path(output_blif, wsl=_is_wsl_argv(yosys_argv))}",

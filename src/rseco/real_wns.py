@@ -35,7 +35,7 @@ from .gate_sizing import (
     larger_size_candidates,
     parse_mapped_netlist,
 )
-from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells, canonical_function
+from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells, canonical_function, function_vars
 from .opensta import run_opensta_sequential
 from .proxy_ranking import ProxyWeights, rank_real_candidates
 from .strategy_selector import exploration_order
@@ -206,6 +206,16 @@ def build_real_equivalence_checker(liberty_text: str):
                     return EquivalenceResult("fail", "liberty_local_function", f"unknown/non-combinational cell at {inst}")
                 if canonical_function(src_lib.function) != canonical_function(dst_lib.function):
                     return EquivalenceResult("fail", "liberty_local_function", f"Boolean function changed at {inst}")
+                src_vars = function_vars(src_lib.function)
+                dst_vars = function_vars(dst_lib.function)
+                if len(src_vars) != len(dst_vars):
+                    return EquivalenceResult("fail", "liberty_local_function", f"Boolean input role count changed at {inst}")
+                for src_pin, dst_pin in zip(src_vars, dst_vars):
+                    if source.pins.get(src_pin) != target.pins.get(dst_pin):
+                        return EquivalenceResult(
+                            "fail", "liberty_local_function",
+                            f"Boolean input role mapping changed at {inst}: {src_pin}->{dst_pin}",
+                        )
                 src_output = src_lib.output_pin
                 dst_output = dst_lib.output_pin
                 if src_output and dst_output and source.pins.get(src_output) != target.pins.get(dst_output):
@@ -268,6 +278,11 @@ def build_full_netlist_sec_checker(
             ))
             try:
                 write_liberty_cell_models(liberty_text, cells_path, used_cells=used_cells)
+                abc_cells_path = trial_dir / "cells_abc.v"
+                write_liberty_cell_models(
+                    liberty_text, abc_cells_path, used_cells=used_cells,
+                    abc_compatible=True,
+                )
             except ValueError as exc:
                 return YosysAbcEquivalenceResult(
                     status="fail", method="yosys_liberty_model_generation",
@@ -285,7 +300,7 @@ def build_full_netlist_sec_checker(
             yosys_command=yosys_command,
             abc_command=abc_command,
             timeout_s=timeout_s,
-            liberty_cells_v=cells_path,
+            liberty_cells_v=(abc_cells_path if liberty_text is not None else cells_path),
             top_module=top_module,
         )
         return result
@@ -294,7 +309,8 @@ def build_full_netlist_sec_checker(
 
 
 def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
-                              *, used_cells: set[str] | None = None) -> Path:
+                              *, used_cells: set[str] | None = None,
+                              abc_compatible: bool = False) -> Path:
     """Materialize a deterministic, synthesizable Verilog model from Liberty."""
     cells = parse_liberty_cells(liberty_text)
     selected = sorted(used_cells if used_cells is not None else cells)
@@ -320,10 +336,37 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
             sequential_outputs = cell.output_functions or {cell.output_pin: state}
             edge = "negedge" if cell.clocked_on.startswith("!") else "posedge"
             clock = cell.clocked_on.lstrip("!").strip()
-            lines.extend([
-                "  reg " + state + ";",
-                f"  always @({edge} {clock}) {state} <= {cell.next_state};",
-            ])
+            async_controls = []
+            for expression in (cell.clear, cell.preset):
+                if expression:
+                    control_edge = "negedge" if expression.startswith("!") else "posedge"
+                    control = expression.lstrip("!").strip()
+                    async_controls.append((expression, f"{control_edge} {control}"))
+            lines.append("  reg " + state + ";")
+            if not async_controls:
+                lines.append(f"  always @({edge} {clock}) {state} <= {cell.next_state};")
+            elif abc_compatible:
+                next_signal = f"_faeco_{state}_next"
+                next_expr = cell.next_state
+                if cell.preset:
+                    next_expr = f"({cell.preset}) ? 1'b1 : ({next_expr})"
+                if cell.clear:
+                    next_expr = f"({cell.clear}) ? 1'b0 : ({next_expr})"
+                lines.extend([
+                    f"  wire {next_signal} = {next_expr};",
+                    f"  always @({edge} {clock}) {state} <= {next_signal};",
+                ])
+            else:
+                sensitivity = f"{edge} {clock}"
+                if not abc_compatible:
+                    sensitivity += " or " + " or ".join(edge_text for _, edge_text in async_controls)
+                lines.extend([
+                    f"  always @({sensitivity}) begin",
+                    *([f"    if ({cell.clear}) {state} <= 1'b0;"] if cell.clear else []),
+                    *([f"    {'else ' if cell.clear else ''}if ({cell.preset}) {state} <= 1'b1;"] if cell.preset else []),
+                    f"    else {state} <= {cell.next_state};",
+                    "  end",
+                ])
             for pin, function in sequential_outputs.items():
                 if function == state:
                     lines.append(f"  assign {pin} = {state};")
@@ -1247,10 +1290,10 @@ class RealWnsEvaluator:
                         json.dumps(physical_config, sort_keys=True).encode()
                     ).hexdigest()
                     baseline_hash = _hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
-                    cache_key = baseline_hash + ":" + rc_config_hash
+                    physical_baseline_cache_key = baseline_hash + ":" + rc_config_hash
                     self._physical_baseline_lock.acquire()
                     physical_lock_held = True
-                    baseline = self._physical_baseline_cache.get(cache_key)
+                    baseline = self._physical_baseline_cache.get(physical_baseline_cache_key)
                     if baseline is None:
                         base_dir = cand_dir / "physical_baseline"
                         base_dir.mkdir(parents=True, exist_ok=True)
@@ -1278,7 +1321,7 @@ class RealWnsEvaluator:
                                     "rc_config_hash": rc_config_hash,
                                     "provenance": _physical_sta_provenance(
                                         base_dir, base_sta, rc_config, rc_config_hash)}
-                        self._physical_baseline_cache[cache_key] = baseline
+                        self._physical_baseline_cache[physical_baseline_cache_key] = baseline
                     self._physical_baseline_lock.release()
                     physical_lock_held = False
                     if baseline.get("budget_event"):
@@ -1924,10 +1967,11 @@ class RealWnsEvaluator:
         best_tns = self.baseline_tns
         best_min = self.baseline_min_slack
         best_physical_wns: float | None = None
+        best_physical_hold: float | None = None
         best: dict | None = None
 
         def _accept_result(r: dict) -> bool:
-            nonlocal best_wns, best_tns, best_min, best_physical_wns, best
+            nonlocal best_wns, best_tns, best_min, best_physical_wns, best_physical_hold, best
             wns = r["wns"]
             if any(e.get("severity") == "hard" or e.get("type") in {
                 "F1_equivalence_failure", "F2_boundary_invalid",
@@ -1963,8 +2007,26 @@ class RealWnsEvaluator:
                                  or physical_candidate_min_slack is None
                                  or physical_candidate_min_slack <= physical_baseline_min_slack + self.epsilon))):
                     return False
-                if best_physical_wns is None or physical_candidate > best_physical_wns + self.epsilon:
+                hold_is_better = (
+                    self.hold_mode
+                    and (
+                        best_physical_hold is None
+                        or physical_candidate_min_slack > best_physical_hold + self.epsilon
+                        or (
+                            abs(physical_candidate_min_slack - best_physical_hold) <= self.epsilon
+                            and (best_physical_wns is None
+                                 or physical_candidate > best_physical_wns + self.epsilon)
+                        )
+                    )
+                )
+                setup_is_better = (
+                    not self.hold_mode
+                    and (best_physical_wns is None
+                         or physical_candidate > best_physical_wns + self.epsilon)
+                )
+                if hold_is_better or setup_is_better:
                     best_physical_wns = physical_candidate
+                    best_physical_hold = physical_candidate_min_slack
                     best_wns = wns
                     best_tns = tns
                     best_min = physical_candidate_min_slack

@@ -42,6 +42,8 @@ class LibCell:
     next_state: str = ""
     clocked_on: str = ""
     latch_enable: str = ""
+    clear: str = ""
+    preset: str = ""
     state_var: str = ""
     state_inv_var: str = ""
     output_functions: dict[str, str] = field(default_factory=dict)
@@ -82,6 +84,8 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
         next_state = ""
         clocked_on = ""
         latch_enable = ""
+        clear = ""
+        preset = ""
         state_var = ""
         state_inv_var = ""
         output_functions: dict[str, str] = {}
@@ -109,8 +113,12 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
             state_inv_var = ff_vars[1] if len(ff_vars) > 1 else ""
             next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", ff_body)
             clock_match = re.search(r"clocked_on\s*:\s*\"([^\"]+)\"", ff_body)
+            clear_match = re.search(r"clear\s*:\s*\"([^\"]+)\"", ff_body)
+            preset_match = re.search(r"preset\s*:\s*\"([^\"]+)\"", ff_body)
             next_state = next_match.group(1).strip() if next_match else ""
             clocked_on = clock_match.group(1).strip() if clock_match else ""
+            clear = clear_match.group(1).strip() if clear_match else ""
+            preset = preset_match.group(1).strip() if preset_match else ""
         latch = re.search(r"\blatch\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
         if latch:
             sequential_kind = "latch"
@@ -135,6 +143,8 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
             next_state=next_state,
             clocked_on=clocked_on,
             latch_enable=latch_enable,
+            clear=clear,
+            preset=preset,
             state_var=state_var,
             state_inv_var=state_inv_var,
             output_functions=output_functions,

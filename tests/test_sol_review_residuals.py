@@ -53,6 +53,20 @@ output Q;
 sky130_fd_sc_hd__dfxtp_1 ff1 (.D(D), .CLK(CLK), .Q(Q));
 endmodule
 """
+CLEAR_SEQ_LIB = """cell ("sky130_fd_sc_hd__dfrtp_1") {
+  pin ("D") { direction : "input"; }
+  pin ("CLK") { direction : "input"; }
+  pin ("RESET_B") { direction : "input"; }
+  pin ("Q") { direction : "output"; function : "IQ"; }
+  ff ("IQ") { next_state : "D"; clocked_on : "CLK"; clear : "!RESET_B"; }
+}
+"""
+CLEAR_SEQ_BASE = """module top(D, CLK, RESET_B, Q);
+input D, CLK, RESET_B;
+output Q;
+sky130_fd_sc_hd__dfrtp_1 ff1 (.D(D), .CLK(CLK), .RESET_B(RESET_B), .Q(Q));
+endmodule
+"""
 LATCH_REALISTIC_LIB = """cell (\"sky130_fd_sc_hd__dlxtp_1\") {
   pin (\"D\") { direction : \"input\"; }
   pin (\"GATE\") { direction : \"input\"; }
@@ -347,6 +361,71 @@ def test_physical_acceptance_uses_paired_baseline_not_ideal_baseline(tmp_path, m
     assert result["wns"] == -1.1
 
 
+def test_physical_hold_candidate_ranking_prioritizes_hold_gain(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(
+        mapped_text=BASE, top_module="top", period=1, liberty_text=LIB,
+        baseline_wns=-1.0, baseline_min_slack=-0.8,
+        output_dir=tmp_path, workers=1, physical_gate=True, hold_mode=True,
+    )
+    ev._candidates_for = lambda _cells, _inst: [
+        ("sky130_fd_sc_hd__and2_2", {}, "G"),
+        ("sky130_fd_sc_hd__and2_hold", {}, "G"),
+    ]
+    ev._apply = lambda text, inst, kind, new, pin: text.replace(
+        "sky130_fd_sc_hd__and2_1", new
+    )
+
+    def paired_sta(**kwargs):
+        text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+        if kwargs.get("spef_path") is None:
+            return {"wns": -0.9, "tns": -2.0, "min_slack": -0.7}
+        out = str(kwargs["output_dir"])
+        if "physical_baseline" in out:
+            return {"wns": -1.0, "tns": -3.0, "min_slack": -0.8}
+        if "and2_hold" in text:
+            return {"wns": -0.8, "tns": -1.0, "min_slack": -0.2}
+        return {"wns": -0.5, "tns": -2.0, "min_slack": -0.7}
+
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", paired_sta)
+    patch = SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"])
+    result = ev(patch, None)
+    assert result["improved"] is True
+    assert result["candidate_netlist_text"].find("and2_hold") >= 0
+    assert result["physical_candidate_min_slack"] == -0.2
+
+
+def test_physical_mode_keeps_distinct_candidate_sta_cache_keys(tmp_path, monkeypatch):
+    ev = RealWnsEvaluator(
+        mapped_text=BASE, top_module="top", period=1, liberty_text=LIB,
+        baseline_wns=-1.0, output_dir=tmp_path, workers=1,
+        physical_gate=True,
+    )
+    ev._candidates_for = lambda _cells, _inst: [
+        ("sky130_fd_sc_hd__and2_2", {}, "G"),
+        ("sky130_fd_sc_hd__and2_alt", {}, "G"),
+    ]
+    ev._apply = lambda text, inst, kind, new, pin: text.replace(
+        "sky130_fd_sc_hd__and2_1", new
+    )
+
+    def paired_sta(**kwargs):
+        if kwargs.get("spef_path") is None:
+            return {"wns": -0.9, "tns": -2.0}
+        if "physical_baseline" in str(kwargs["output_dir"]):
+            return {"wns": -1.0, "tns": -3.0}
+        return {"wns": -0.8, "tns": -2.0}
+
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", paired_sta)
+    patch = SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"])
+    ev(patch, None)
+    candidate_trials = [trial for trial in ev.trials if trial.get("candidate_hash")]
+    cache_keys = {trial["cache_key"] for trial in candidate_trials}
+    assert len(candidate_trials) == 2
+    assert len(cache_keys) == 2
+    assert all(ev._sta_cache[key]["candidate_hash"] == trial["candidate_hash"]
+               for key, trial in ((trial["cache_key"], trial) for trial in candidate_trials))
+
+
 def test_epsilon_applies_to_wns_tns_tie_break(tmp_path, monkeypatch):
     ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
                           liberty_text=LIB, baseline_wns=-1, baseline_tns=-2,
@@ -448,7 +527,8 @@ def test_flow_stop_reasons_are_distinct_and_budget_counts_are_traceable(tmp_path
             if self.mode == "stagnation":
                 return {"wns": -1, "improved": False, "failure_events": []}
             n = len(state.accepted_patches) + 1
-            return {"wns": .1, "tns": -1, "improved": True,
+            wns = -.1 if self.mode == "max_patches" else .1
+            return {"wns": wns, "tns": -1, "improved": True,
                     "candidate_netlist_text": state.current_netlist_text + f"//{n}\n",
                     "critical_instances": ["g1"]}
 
@@ -457,7 +537,7 @@ def test_flow_stop_reasons_are_distinct_and_budget_counts_are_traceable(tmp_path
                          ("formal_budget", {"formal_budget": 0}),
                          ("wall_timeout", {"wall_timeout_s": 0}),
                          ("max_patches", {"max_patches": 1})):
-        ev = Eval("accept")
+        ev = Eval("max_patches" if mode == "max_patches" else "accept")
         result = run_multi_iteration_case(
             make_case(mode), max_iterations=2, equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "t", "ok"),
             wns_evaluator=ev, **kwargs)
@@ -477,6 +557,78 @@ def test_flow_stop_reasons_are_distinct_and_budget_counts_are_traceable(tmp_path
     assert set(cases) == {"timing_met", "no_new_candidate", "stagnation", "sta_budget",
                           "formal_budget", "wall_timeout", "max_patches"}
     assert len(set(cases.values())) == 7
+
+
+def test_flow_stops_on_timing_met_immediately_after_acceptance(tmp_path):
+    case_dir = tmp_path / "timing-met-after-accept"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "original" / "original.v").write_text(net_for_stop)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net_for_stop)
+    (case_dir / "case.yaml").write_text("case_id: timing\ntarget:\n  output: Y\n")
+
+    class Eval:
+        use_constrained_cuts = False
+        refresh_cone = False
+        strict_gates = False
+        boundary_checker = object()
+        critical_instances = ["g1"]
+
+        def __init__(self):
+            self.calls = 0
+
+        def __call__(self, patch, weights, *, state):
+            self.calls += 1
+            return {
+                "wns": 0.1,
+                "tns": -1.0,
+                "improved": True,
+                "candidate_netlist_text": state.current_netlist_text + "// accepted\n",
+            }
+
+    evaluator = Eval()
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=3, max_patches=5,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "t", "ok"),
+        wns_evaluator=evaluator,
+    )
+    assert evaluator.calls == 1
+    assert result["stop_reason"] == "timing_met"
+    assert result["final_patch_id"] == result["state"]["accepted_patches"][-1]["patch_id"]
+
+
+def test_flow_reports_last_accepted_patch_when_max_iterations_end(tmp_path):
+    case_dir = tmp_path / "last-patch"
+    (case_dir / "original").mkdir(parents=True)
+    (case_dir / "resynthesized").mkdir(parents=True)
+    (case_dir / "original" / "original.v").write_text(net_for_stop)
+    (case_dir / "resynthesized" / "resynthesized.v").write_text(net_for_stop)
+    (case_dir / "case.yaml").write_text("case_id: last\ntarget:\n  output: Y\n")
+
+    class Eval:
+        use_constrained_cuts = False
+        refresh_cone = False
+        strict_gates = False
+        boundary_checker = object()
+        critical_instances = ["g1"]
+
+        def __call__(self, patch, weights, *, state):
+            n = len(state.accepted_patches) + 1
+            return {
+                "wns": -1.0 + n * 0.1,
+                "tns": -1.0,
+                "improved": True,
+                "candidate_netlist_text": state.current_netlist_text + f"// {n}\n",
+            }
+
+    result = run_multi_iteration_case(
+        case_dir, max_iterations=2, max_patches=5,
+        equivalence_checker=lambda *a, **k: EquivalenceResult("pass", "t", "ok"),
+        wns_evaluator=Eval(),
+    )
+    assert result["success"] is True
+    assert result["stop_reason"] == "max_iterations"
+    assert result["final_patch_id"] == result["state"]["accepted_patches"][-1]["patch_id"]
 
 
 def test_zero_max_patches_is_an_atomic_stop_before_any_candidate(tmp_path):
@@ -905,6 +1057,21 @@ def test_real_wsl_sec_handles_realistic_sequential_liberty_functions(tmp_path):
     generated = next((tmp_path / "wsl-real-seq").rglob("cells.v")).read_text()
     assert "assign Q = IQ;" in generated
     assert "assign Q = 1'b0" not in generated
+
+
+def test_real_wsl_sec_models_async_clear_polarity_and_connection(tmp_path):
+    if shutil.which("wsl.exe") is None:
+        import pytest
+        pytest.skip("WSL executable unavailable")
+    checker = build_full_netlist_sec_checker(
+        top_module="top", liberty_text=CLEAR_SEQ_LIB, artifact_dir=tmp_path / "wsl-clear",
+    )
+    assert checker(CLEAR_SEQ_BASE, CLEAR_SEQ_BASE).status == "pass"
+    changed = CLEAR_SEQ_BASE.replace(".RESET_B(RESET_B)", ".RESET_B(D)")
+    assert checker(CLEAR_SEQ_BASE, changed).status == "fail"
+    generated = next((tmp_path / "wsl-clear").rglob("cells.v")).read_text()
+    assert "negedge RESET_B" in generated
+    assert "if (!RESET_B) IQ <= 1'b0;" in generated
 
 
 def test_liberty_latch_function_maps_to_state_variable(tmp_path):

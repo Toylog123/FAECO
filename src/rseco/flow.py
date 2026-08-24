@@ -703,6 +703,23 @@ def run_multi_iteration_case(
                             cone = refreshed_cone
                             state.current_cone_gates = list(cone.gates)
                             state.accepted_patches[-1]["metadata"]["refreshed_cone_gates"] = list(cone.gates)
+                        timing_met = (
+                            state.current_wns is not None
+                            and state.current_wns >= -float(epsilon)
+                            and (
+                                not getattr(wns_evaluator, "hold_mode", False)
+                                or (
+                                    state.current_min_slack is not None
+                                    and state.current_min_slack >= -float(epsilon)
+                                )
+                            )
+                        )
+                        if timing_met:
+                            state.set_stop_reason("timing_met")
+                            return True, patch.patch_id, {
+                                "wns": wns, "tns": wns_info.get("tns"),
+                                "min_slack": wns_info.get("min_slack"),
+                            }, False
                         if len(state.accepted_patches) >= max_patches:
                             state.set_stop_reason("max_patches")
                             return True, patch.patch_id, {
@@ -764,6 +781,9 @@ def run_multi_iteration_case(
                    or (state.current_min_slack is not None
                        and state.current_min_slack >= -float(epsilon)))):
             state.set_stop_reason("timing_met")
+        elif (stateful_evaluator and state.accepted_patches
+              and result.get("iterations", 0) >= max_iterations):
+            state.set_stop_reason("max_iterations")
         elif not stateful_evaluator and result.get("success") and state.accepted_patches:
             state.set_stop_reason("timing_met")
         elif state.tested_candidate_hashes:
@@ -771,6 +791,8 @@ def run_multi_iteration_case(
         else:
             state.set_stop_reason("no_new_candidate")
     result["stop_reason"] = state.stop_reason
+    if result.get("final_patch_id") is None and state.accepted_patches:
+        result["final_patch_id"] = state.accepted_patches[-1]["patch_id"]
     result["state"] = state.to_dict()
     result["wns"] = state.current_wns
     result["tns"] = state.current_tns

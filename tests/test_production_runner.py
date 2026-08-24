@@ -28,6 +28,32 @@ def test_real_equivalence_checker_accepts_same_function_and_rejects_changed_func
     assert checker(BASE, bad).status == "fail"
 
 
+def test_real_equivalence_checker_checks_cross_cell_boolean_pin_roles():
+    lib = LIB + (
+        'cell ("sky130_fd_sc_hd__and_not_1") { '
+        'pin ("A") { direction : "input"; } '
+        'pin ("B") { direction : "input"; } '
+        'pin ("Y") { direction : "output"; function : "A & !B"; } }\n'
+        'cell ("sky130_fd_sc_hd__and_not_renamed_1") { '
+        'pin ("C") { direction : "input"; } '
+        'pin ("D") { direction : "input"; } '
+        'pin ("Y") { direction : "output"; function : "C & !D"; } }\n'
+    )
+    source = (
+        "module top(A, B, Y); input A, B; output Y;\n"
+        "sky130_fd_sc_hd__and_not_1 g1 (.A(A), .B(B), .Y(Y));\n"
+        "endmodule\n"
+    )
+    correct = source.replace(
+        "sky130_fd_sc_hd__and_not_1 g1 (.A(A), .B(B), .Y(Y))",
+        "sky130_fd_sc_hd__and_not_renamed_1 g1 (.C(A), .D(B), .Y(Y))",
+    )
+    swapped = correct.replace(".C(A), .D(B)", ".C(B), .D(A)")
+    checker = build_real_equivalence_checker(lib)
+    assert checker(source, correct).status == "pass"
+    assert checker(source, swapped).status == "fail"
+
+
 def test_boundary_checker_is_real_and_fail_closed():
     checker = build_boundary_closure_checker()
     assert checker(BASE, BASE).status == "pass"

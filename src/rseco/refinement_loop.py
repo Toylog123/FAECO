@@ -23,7 +23,7 @@ from .refinement import RefinementWeights, refine_weights
 
 _STOP_REASONS = {
     "timing_met", "no_new_candidate", "stagnation", "sta_budget",
-    "formal_budget", "wall_timeout", "max_patches",
+    "formal_budget", "wall_timeout", "max_patches", "max_iterations",
 }
 
 
