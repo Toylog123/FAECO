@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 from pathlib import Path
 
 from rseco.equivalence import check_abc_equivalence, check_structural_equivalence
@@ -58,6 +59,100 @@ class FaninConeTest(unittest.TestCase):
 
 
 class StructuralEquivalenceTest(unittest.TestCase):
+    def test_dff_feedback_signature_is_cycle_safe(self):
+        """A sequential feedback loop must not recurse forever."""
+        netlist_text = """module loop(D, Q);
+  input D;
+  output Q;
+  dfxtp DFF_0(.D(Q), .CLK(D), .Q(Q));
+endmodule
+"""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "loop.v"
+            path.write_text(netlist_text, encoding="utf-8")
+            left = parse_verilog_netlist(path)
+            right = parse_verilog_netlist(path)
+
+        result = check_structural_equivalence(left, right, outputs=["Q"])
+
+        self.assertEqual(result.status, "pass")
+
+    def test_feedback_signature_ignores_internal_net_names(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        left = parse(
+            """module loop(D, Q1);
+  input D;
+  output Q1;
+  dfxtp DFF_0(.D(Q1), .CLK(D), .Q(Q1));
+endmodule
+""",
+            "left.v",
+        )
+        right = parse(
+            """module loop(D, Q2);
+  input D;
+  output Q2;
+  dfxtp DFF_0(.D(Q2), .CLK(D), .Q(Q2));
+endmodule
+""",
+            "right.v",
+        )
+
+        result = check_structural_equivalence(
+            left, right, outputs=["Q1"], other_outputs=["Q2"]
+        )
+
+        self.assertEqual(result.status, "pass")
+
+    def test_feedback_signature_detects_gate_and_connection_changes(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        baseline = parse(
+            """module loop(D, Q);
+  input D;
+  output Q;
+  dfxtp DFF_0(.D(Q), .CLK(D), .Q(Q));
+endmodule
+""",
+            "baseline.v",
+        )
+        changed_gate = parse(
+            """module loop(D, Q);
+  input D;
+  output Q;
+  dfrtp DFF_0(.D(Q), .CLK(D), .Q(Q));
+endmodule
+""",
+            "changed_gate.v",
+        )
+        changed_connection = parse(
+            """module loop(D, Q);
+  input D;
+  output Q;
+  dfxtp DFF_0(.D(D), .CLK(D), .Q(Q));
+endmodule
+""",
+            "changed_connection.v",
+        )
+
+        self.assertEqual(
+            check_structural_equivalence(baseline, changed_gate, outputs=["Q"]).status,
+            "fail",
+        )
+        self.assertEqual(
+            check_structural_equivalence(baseline, changed_connection, outputs=["Q"]).status,
+            "fail",
+        )
+
     def test_resynthesized_c17_is_functionally_restructured_not_identical(self):
         # Since 2026-08-04 the resynthesized netlists are real SKY130-liberty
         # mappings (3 cells vs 6 nands), so structural signatures differ even
