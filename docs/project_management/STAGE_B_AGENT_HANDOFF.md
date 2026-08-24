@@ -1,5 +1,7 @@
 # FAECO 项目智能体交接
 
+> **SUPERSEDED / CURRENT STATE (2026-08-24)**：本文是历史 Stage B 交接正文，已被 `docs/project_management/handoff_20260824_unified_loop.md` supersede。统一闭环当前状态、Sol 复审、合并策略与磁盘审计以新交接及其链接文档为准；下方历史正文保留，不要据此推断当前分支状态。
+
 更新时间：2026-08-03
 
 > **接手智能体必须首先读本文件**，再按第 9 节文档地图顺序读其余文档。不要依赖聊天记录或对话摘要推断状态——一切以本文件和 `docs/task_board.md`、`docs/project_management/work_log.md`、`docs/project_management/decision_log.md` 为准。
