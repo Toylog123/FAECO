@@ -28,7 +28,7 @@
 
 ## 4. 当前阻塞与风险
 
-- 远端状态：交接开始时 `origin` 不存在 `codex/faeco-unified-loop`；因此在完成本交接提交并推送前，13 个实现提交仅存在本机 worktree。
+- 远端状态：交接开始时 `origin` 不存在 `codex/faeco-unified-loop`；现已创建并推送该远端分支，13 个实现提交和交接文档均已进入远端。
 - 主目录 `D:\BaiduSyncdisk\03_FAECO` 的 `main` 与 `origin/main` 同步，但工作区有 8 个 modified、3 个 deleted、103 个 untracked 项；这些是历史论文/实验资产，不属于本轮统一闭环分支，禁止清理、覆盖或混入合并。
 - 4 个 skip 均为当前 Windows shell 的外部工具缺失：3 个 `requires yosys`，1 个 `real yosys/abc not available`；代码单元与 mock 路径通过，但本次交接没有在可用 WSL/Yosys 环境重新跑真实 SEC。
 - 最后一轮两个 Sol 复审 agent 的最终文本未被保存；因此不能宣称存在新的书面“最终盖章”。可依赖的证据是第九轮规格 APPROVED 记录、质量问题修复提交和本次新鲜全量回归。
@@ -67,4 +67,5 @@
 - 目标远端：`origin`（`https://github.com/Toylog123/FAECO.git`）
 - 目标分支：`codex/faeco-unified-loop`
 - 实现 commit：`fe4539984900a7b1247b11b061a81b9d55b7192f`
-- 交接 commit：提交后补记；最终 push 结果以本文件后续记录和交接响应为准。
+- 交接内容 commit：`9ee3b47bf7f403a05544de2a8d4e3c968abf959e`
+- Push 状态：已推送到 `origin/codex/faeco-unified-loop`；本地分支已设置跟踪该远端分支。
