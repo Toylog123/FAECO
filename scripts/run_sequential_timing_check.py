@@ -114,7 +114,7 @@ def run_yosys_mapping(circuit: Path, output: Path,
         root = _find_oss_cad_root()
         yosys_cmd = [str(root / "bin" / "yosys.exe")] if root else ["yosys"]
     script = output / "map.ys"
-    lib_posix = LIB.as_posix()
+    lib_posix = LIB.resolve().as_posix()
     script_posix = script.as_posix()
     mapped_posix = (output / "mapped.v").as_posix()
     use_wsl = bool(yosys_cmd and yosys_cmd[0].endswith("wsl.exe"))
