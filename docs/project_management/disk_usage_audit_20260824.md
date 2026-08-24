@@ -8,7 +8,7 @@
 
 本轮仅对精确目录 `D:\BaiduSyncdisk\03_FAECO\experiments` 执行 NTFS 原位压缩；未移动、重命名、归档或删除任何文件。独立只读复核的 full-current 结果为：`Of 310251 files within 79074 directories; 310251 compressed / 0 uncompressed; 18,073,112,096 logical bytes stored in 5,877,220,044 bytes`，压缩比 3.1:1。`compact` exit code 为 `0`。D 盘可用空间由 42.931 GiB 增至 54.387 GiB，增加 11.456 GiB。
 
-抽检 `sta.log`：逻辑长度 333,472,702 bytes，仍可读；物理占用 125,054,976 bytes，压缩比约 2.7:1；该抽检不计入 full-current 汇总。`tmp/`、`paper/`、`.venv/` 未处理。
+抽检 `sta.log`：逻辑长度 333,472,702 bytes，仍可读；物理占用 125,054,976 bytes，压缩比约 2.7:1；该抽检文件已包含在 full-current 汇总中，以下子集数字仅用于可读性/压缩效果抽检，不重复加总。`tmp/`、`paper/`、`.venv/` 未处理。
 
 ## 分层证据
 
