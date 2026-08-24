@@ -10,7 +10,8 @@
 | T03 合并策略与主目录保护 | done | 见 `docs/project_management/unified_loop_merge_strategy_20260824.md`；主目录 8 modified/3 deleted/103 untracked，禁止直接 merge |
 | T04 长期文档同步 | done | 交接、旧交接 banner、task board、work log 已同步；主代理回归 `351 passed, 4 skipped, 1 subtests passed` |
 | T05 claim-evidence 审计 | done（证据审计） | 统一 loop、k-best/topology、F1–F6、SEC、setup/hold、paired physical、budget/cache/deadline 已映射；大型 outer-loop/P&R 未重跑，旧论文 headline 不自动更新 |
-| 磁盘清理 | pending user approval | 审计见 `docs/project_management/disk_usage_audit_20260824.md`；必须按明确路径逐项批准，本轮删除 0 bytes |
+| `experiments/` NTFS 原位压缩 | done（删除 0 bytes） | 精确目录压缩 `compact` exit 0；逻辑 17,739,639,394 bytes、物理 5,752,165,068 bytes、3.1:1；D 可用空间 +11.456 GiB；`tmp/`/`paper/`/`.venv/` 未动 |
+| 磁盘删除/进一步清理 | pending user approval | 审计见 `docs/project_management/disk_usage_audit_20260824.md`；必须按明确路径逐项批准 |
 
 | ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
 |---|---|---|---|---|---|

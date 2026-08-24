@@ -13,8 +13,8 @@
 
 - 实现分支：`codex/faeco-unified-loop`。
 - 实现基线：`79b8f05cf0274efca2895a588ada82f6e1234140`（`fix final unified-loop review findings`）。
-- 相对 `origin/main`：实现提交共 13 个；代码差异为 17 个文件、4714 行新增、121 行删除。
-- 工作树：`C:\Users\佟亚龙\.config\superpowers\worktrees\03_FAECO\faeco-unified-loop`，交接前代码工作区干净。
+- 相对 `origin/main`（本轮最终提交后的 git 实测口径）：18 个提交、26 个文件、5270 行新增、135 行删除；其中实现分支当前本地 HEAD 尚包含未 push 的文档提交链。
+- 工作树：`C:\Users\佟亚龙\.config\superpowers\worktrees\03_FAECO\faeco-unified-loop`；当前 feature worktree 在提交检查后保持干净，主目录状态单独记录为 8 modified/3 deleted/103 untracked。
 - 运行状态：实现修复已完成；只剩干净 integration worktree 中的合并演练、全量回归/WSL SEC 复核和用户批准后的 push。
 - 2026-08-24 主代理新鲜回归：`python -m pytest -q -p no:cacheprovider` → `351 passed, 4 skipped, 1 subtests passed`。
 - 真实 WSL 复核：async-clear SEC `1 passed`；WSL 工具版本为 Yosys `0.33`、ABC `1.01`。
@@ -30,11 +30,11 @@
 
 ## 4. 当前阻塞与风险
 
-- 远端状态：交接开始时 `origin` 不存在 `codex/faeco-unified-loop`；现已创建并推送该远端分支，13 个实现提交和交接文档均已进入远端。
-- 主目录 `D:\BaiduSyncdisk\03_FAECO` 的 `main` 与 `origin/main` 同步，但工作区有 8 个 modified、3 个 deleted、103 个 untracked 项；这些是历史论文/实验资产，不属于本轮统一闭环分支，禁止清理、覆盖或混入合并。
+- 远端状态：历史 13 个实现提交与旧交接文档已推至 `f909a31`；`origin/codex/faeco-unified-loop` 当前实测停在该 SHA。本地 feature worktree 的 `79b8f05`、`8353a55` 及本轮文档提交仍未 push。主目录 `main` 的历史脏改动不属于本轮分支，禁止清理、覆盖或混入合并。
+- 主目录 `D:\BaiduSyncdisk\03_FAECO` 当前有 8 个 modified、3 个 deleted、103 个 untracked 项；不得把主目录写成 clean，也不得在其上直接 merge。
 - 4 个 Windows skip 仍是外部工具可用性边界；WSL 已补跑 async-clear SEC 1 passed，但尚未声称所有大型真实 outer-loop/P&R 均重跑。
 - 尚未合并 `main`，也尚未完成远端 push 等最后收尾；主目录的历史脏改动不得混入合并。
-- 现有 `docs/project_management/STAGE_B_AGENT_HANDOFF.md` 与 `docs/task_board.md` 主要反映旧主线，不能单独作为统一闭环状态依据。
+- `docs/project_management/STAGE_B_AGENT_HANDOFF.md` 保留历史正文并带 superseded banner；统一闭环当前状态以本文、`.codex-handoff.json` 和新增复审/策略文档为准。
 
 ## 5. 下一步最值得做的 3 到 5 项
 
@@ -54,7 +54,7 @@
 - Claim 证据审计：`docs/paper_audit/unified_loop_claim_evidence_20260824.md`
 - 磁盘审计：`docs/project_management/disk_usage_audit_20260824.md`
 - 旧项目总交接：`docs/project_management/STAGE_B_AGENT_HANDOFF.md`（状态滞后，仅作历史背景）
-- 任务看板：`docs/task_board.md`（统一闭环条目尚待同步）
+- 任务看板：`docs/task_board.md`（统一闭环 T02–T05 已同步；磁盘删除/进一步清理仍需用户按路径批准）
 - 用户旧任务：`codex://threads/01a021eb-9273-7e13-8c07-9642e8d2f589`
 - 状态检查：`git -C C:\Users\佟亚龙\.config\superpowers\worktrees\03_FAECO\faeco-unified-loop status --short --branch`
 - 实现提交：`git -C C:\Users\佟亚龙\.config\superpowers\worktrees\03_FAECO\faeco-unified-loop log --oneline b8c3759..79b8f05`
@@ -63,7 +63,7 @@
 
 ## 7. 文档缺口与建议补齐项
 
-- 主目录磁盘清理仍需用户按路径批准；本轮仅审计，删除量为 0 bytes。
+- 主目录磁盘审计与 `experiments/` NTFS 原位压缩最终结果见 `docs/project_management/disk_usage_audit_20260824.md`；删除、移动、重命名、归档均为 0。
 - 大型真实 outer-loop/P&R 尚未重跑；旧论文 headline 数字保持原状，不能由本轮代码回归自动更新。
 
 ## Push 状态
@@ -71,4 +71,5 @@
 - 目标远端：`origin`（`https://github.com/Toylog123/FAECO.git`）
 - 目标分支：`codex/faeco-unified-loop`
 - 实现修复 commit：`79b8f05cf0274efca2895a588ada82f6e1234140`
-- 当前状态：本地文档提交完成；尚未合并 `main`，远端 push 等最后收尾待用户批准。
+- 当前本地文档链：`8353a559766fd162f508f1485aa3582e20876855` 为提交前一节点；本轮文档提交尚未写入自身 SHA，见 `.codex-handoff.json` 的非自指说明。
+- 当前远端：`origin/codex/faeco-unified-loop=f909a310a86c7338bfd1f733b515e688c2283ecd`；尚未合并 `main`，也未 push。

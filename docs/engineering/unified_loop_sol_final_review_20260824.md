@@ -11,10 +11,10 @@
 
 | ID | 初审级别与问题 | 修复/证据 | 复审结论 |
 |---|---|---|---|
-| C1 | Critical：stateful loop 在 timing 已满足或达到迭代上限时，停止原因与最终接受补丁可能不完整 | `src/rseco/flow.py` 在接受候选后显式检查 setup/hold timing；补充 `timing_met`、`max_iterations` 与最后一个 accepted patch 的 `final_patch_id`；`tests/test_sol_review_residuals.py` 覆盖 stop reason 与最后补丁回传 | closed |
-| C2 | Critical：full-netlist SEC 对顺序单元异步 clear/preset 的建模及 ABC 输入路径不可靠 | `src/rseco/logic_rewrite.py` 解析 `clear`/`preset`；`src/rseco/real_wns.py` 生成带极性与连接的模型，并为 ABC 生成兼容的 mux+DFF 形式；`tests/test_sol_review_residuals.py::test_real_wsl_sec_models_async_clear_polarity_and_connection` 真实 WSL 通过 | closed |
-| I1 | Important：跨 cell 重命名时只比较规范化函数，未验证输入 pin role 是否保持 | `function_vars` 与 `source.pins`/`target.pins` 逐角色比较；`tests/test_production_runner.py::test_real_equivalence_checker_checks_cross_cell_boolean_pin_roles` 覆盖正确映射通过、交换映射失败 | closed |
-| I2 | Important：Yosys `opt` 可能把 reset mux 折入 `$sdff`，导致 ABC 不可读并丢失 SEC 证据 | `src/rseco/yosys_abc.py` 改为 `opt_clean`，保留 DFF+mux 结构；生产 runner 与 full-netlist SEC 测试覆盖该 wiring | closed |
+| C1 | Critical：跨 cell 重命名时只比较规范化函数，未验证输入 pin role 是否保持 | `src/rseco/real_wns.py` 使用 `function_vars` 与 `source.pins`/`target.pins` 逐角色比较；`tests/test_production_runner.py::test_real_equivalence_checker_checks_cross_cell_boolean_pin_roles` 覆盖正确映射通过、交换映射失败 | closed |
+| C2 | Critical：full-netlist SEC 对顺序单元异步 clear/preset 的建模及 ABC 输入路径不可靠 | `src/rseco/logic_rewrite.py` 解析 `clear`/`preset`；`src/rseco/real_wns.py` 生成带极性与连接的模型。Yosys `opt_clean` 保留 reset mux/DFF 结构，是该 async SEC 修复的必要细节，不是独立 finding；`tests/test_sol_review_residuals.py::test_real_wsl_sec_models_async_clear_polarity_and_connection` 真实 WSL 通过 | closed |
+| I1 | Important：stateful loop 在 timing 已满足时未可靠 early-stop | `src/rseco/flow.py` 在接受候选后显式检查 setup/hold timing 并设置 `timing_met`；相关 stop-reason 测试通过 | closed |
+| I2 | Important：达到 `max_iterations` 后 stop reason 与最后接受补丁 `final_patch_id` 可能不完整 | `src/rseco/flow.py` 补充 `max_iterations` 与最后一个 accepted patch 的 `final_patch_id`；`tests/test_sol_review_residuals.py` 覆盖迭代上限、stop reason 与最后补丁回传 | closed |
 | I3 | Important：paired physical acceptance 在 hold 模式下只按 setup WNS 排序，可能接受 hold 较差候选 | `src/rseco/real_wns.py` 增加 `best_physical_hold`，hold 模式按 min-slack 优先、setup WNS 作 tie-break；`test_physical_hold_candidate_ranking_prioritizes_hold_gain` 等测试通过 | closed |
 | I4 | Important：并行 physical candidate 的 baseline/cache key 与 single-flight 语义需要明确 | `src/rseco/real_wns.py` 使用 baseline hash+RC config hash 的独立 key，并在锁内复用 baseline；`test_parallel_physical_candidates_share_single_baseline_cache`、`test_physical_mode_keeps_distinct_candidate_sta_cache_keys` 通过 | closed |
 
