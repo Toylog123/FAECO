@@ -27,6 +27,24 @@ def test_flow_cone_candidates_ignores_critical_instances_outside_cone():
     assert cands, "critical instances outside the cone must not yield zero candidates"
 
 
+def test_flow_cone_candidates_puts_critical_path_cover_first():
+    """The constrained cut path must keep the critical-path cover as the
+    first-round default candidate so beam-1 reaches multi-gate B/JOINT
+    repairs instead of getting stuck on a singleton region."""
+    from rseco.flow import _cone_candidates
+
+    cone = _diamond()
+    weights = SimpleNamespace(boundary_penalty=1, size_penalty=1,
+                              critical_coverage_reward=1,
+                              verification_cost_penalty=1,
+                              equivalence_stability_reward=1,
+                              max_cone_gates=1000, physical_penalty=1)
+    cands = _cone_candidates(cone, weights, ["g3", "g4", "g5"], None,
+                             constrained=True, k=3, allow_singleton=False)
+    assert cands[0].method == "critical_path_cover"
+    assert cands[0].gates == ["g3", "g4", "g5"]
+
+
 def _diamond():
     return FaninCone(
         roots=["OUT"], boundary_inputs=["A", "B", "C"],

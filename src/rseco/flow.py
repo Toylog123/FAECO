@@ -10,11 +10,13 @@ from typing import Any
 from .case_loader import load_case
 from .cut import (
     build_weighted_cut_graph,
+    canonical_cut_hash,
     fixed_min_cut,
     solve_weighted_cut,
     split_cone_by_depth,
     weighted_cut_candidates,
     constrained_weighted_cut_candidates,
+    _critical_path_cover_cut,
 )
 from .equivalence import check_structural_equivalence
 from .failures import FailureThresholds, FailureType, classify_failures
@@ -349,14 +351,28 @@ def _cone_candidates(cone, weights, critical_instances, r_available, *, constrai
             sub_critical = [
                 g for g in (critical_instances or []) if g in set(sub.gates)
             ]
-            out.extend(constrained_weighted_cut_candidates(
+            rows = constrained_weighted_cut_candidates(
                 sub, weights, k=k, critical_instances=sub_critical or None,
                 min_critical_coverage=1 if sub_critical else 0,
                 hard_anchors=(sub_critical[-1:] if sub_critical else []),
                 window_size=max(1, getattr(weights, "max_cone_gates", len(sub.gates))),
                 allow_singleton=allow_singleton,
                 wall_timeout_s=wall_timeout_s,
-            ))
+            )
+            # Joint bi-objective cut: the critical-path cover is the
+            # first-round default candidate even in the constrained path.
+            # Without it, beam-1 loops stay stuck on the cheapest singleton
+            # region and never reach the multi-gate B/JOINT candidates that
+            # actually repair the timing bottleneck.
+            if sub_critical:
+                cover = _critical_path_cover_cut(
+                    sub, sub_critical, r_available=r_available
+                )
+                if cover is not None and cover.patch_size > 0:
+                    seen = {canonical_cut_hash(c) for c in rows}
+                    if canonical_cut_hash(cover) not in seen:
+                        rows = [cover] + rows
+            out.extend(rows)
         else:
             out.extend(weighted_cut_candidates(
                 sub, weights, critical_instances,
