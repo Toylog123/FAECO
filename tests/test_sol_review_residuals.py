@@ -863,6 +863,24 @@ endmodule
 
 
 
+
+def test_boundary_checker_tolerates_undriven_vector_output_bits():
+    checker = build_boundary_closure_checker()
+    text = """module top(A, Y);
+input A;
+output [1:0] Y;
+wire [1:0] Y;
+buf g1 (.A(A), .Y(Y[0]));
+endmodule
+"""
+    assert checker(text, text).status == "pass"
+    broken = text.replace("buf g1 (.A(A), .Y(Y[0]));", "buf g1 (.A(A), .Y(N));\\nwire N;")
+    result = checker(text, broken)
+    assert result.status == "fail"
+    import json
+    reason = json.loads(result.reason)
+    assert reason["kind"] == "rewired-module-output"
+
 def test_boundary_checker_accepts_passthrough_output_from_input():
     checker = build_boundary_closure_checker()
     text = """module top(A, Y);

@@ -408,16 +408,10 @@ def build_boundary_closure_checker():
         constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
         drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
         declared = set(netlist.inputs) | set(netlist.outputs) | set(netlist.wires)
-        # Module-output loss/rewiring is the more specific boundary defect;
-        # classify it before generic consumed-net/dangling checks.
-        for output in netlist.outputs:
-            resolved_output = netlist.resolve_alias(output)
-            if resolved_output in netlist.inputs or resolved_output in constants:
-                continue
-            resolved_output = netlist.resolve_alias(output)
-            if drivers.get(resolved_output, 0) != 1:
-                return {"kind": "rewired-module-output", "net": resolved_output,
-                        "drivers": drivers.get(resolved_output, 0)}
+        # Module-output rewiring is checked *relative* to the baseline in
+        # check(): undriven/constant output bits (e.g. Yosys leaves
+        # word-aligned mem_addr[0:1] undriven) are legal as long as the
+        # candidate preserves the baseline driver counts.
         consumed = [net for gate in netlist.gates for net in gate.inputs]
         for net in consumed:
             resolved = netlist.resolve_alias(net)
@@ -458,6 +452,27 @@ def build_boundary_closure_checker():
             after = parse_verilog_netlist_from_text(candidate_text)
             if before.inputs != after.inputs or before.outputs != after.outputs:
                 return EquivalenceResult("fail", "boundary_closure", "boundary input/output set changed")
+            def _output_driver_counts(netlist):
+                drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
+                return {netlist.resolve_alias(o): drivers.get(netlist.resolve_alias(o), 0)
+                        for o in netlist.outputs}
+            before_out_drivers = _output_driver_counts(before)
+            after_out_drivers = _output_driver_counts(after)
+            changed = sorted(
+                net for net in set(before_out_drivers) | set(after_out_drivers)
+                if before_out_drivers.get(net) != after_out_drivers.get(net)
+            )
+            if changed:
+                return EquivalenceResult(
+                    "fail", "boundary_closure",
+                    json.dumps({
+                        "stage": "output_driver_closure",
+                        "kind": "rewired-module-output",
+                        "nets": changed,
+                        "before": before_out_drivers,
+                        "after": after_out_drivers,
+                    }, sort_keys=True),
+                )
             for label, netlist in (("baseline", before), ("candidate", after)):
                 issue = _net_closure(netlist)
                 if issue is not None:
