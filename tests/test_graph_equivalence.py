@@ -225,6 +225,43 @@ endmodule
 
         self.assertEqual(result.status, "fail")
 
+    def test_deep_combinational_chain_signature_is_iterative(self):
+        """A >1000-level cone must not hit Python recursion limits (ITC-99 b15)."""
+        def deep_chain(gate_type: str, depth: int = 2500) -> str:
+            wires = ", ".join(f"N{i}" for i in range(1, depth + 1))
+            lines = [
+                "module deep(D, ROOT);",
+                "  input D;",
+                "  output ROOT;",
+                f"  wire {wires};",
+            ]
+            prev = "D"
+            for i in range(1, depth + 1):
+                lines.append(f"  {gate_type} G{i}(N{i}, {prev});")
+                prev = f"N{i}"
+                lines.append(f"  buf GROOT(ROOT, N{depth});")
+            lines.append("endmodule")
+            return "\n".join(lines)
+
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        identical = parse(deep_chain("buf"), "deep_a.v")
+        same = parse(deep_chain("buf"), "deep_b.v")
+        different_tail = parse(deep_chain("not"), "deep_c.v")
+
+        self.assertEqual(
+            check_structural_equivalence(identical, same, outputs=["ROOT"]).status,
+            "pass",
+        )
+        self.assertEqual(
+            check_structural_equivalence(identical, different_tail, outputs=["ROOT"]).status,
+            "fail",
+        )
+
     def test_resynthesized_c17_is_functionally_restructured_not_identical(self):
         # Since 2026-08-04 the resynthesized netlists are real SKY130-liberty
         # mappings (3 cells vs 6 nands), so structural signatures differ even
@@ -270,3 +307,6 @@ endmodule
 
 if __name__ == "__main__":
     unittest.main()
+
+
+
