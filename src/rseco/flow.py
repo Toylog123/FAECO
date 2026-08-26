@@ -365,9 +365,12 @@ def _cone_candidates(cone, weights, critical_instances, r_available, *, constrai
             # region and never reach the multi-gate B/JOINT candidates that
             # actually repair the timing bottleneck.
             if sub_critical:
-                cover = _critical_path_cover_cut(
-                    sub, sub_critical, r_available=r_available
-                )
+                # The F1 hard constraint zeroes the critical reward of gates
+                # without an R candidate in the cut graph; it must not remove
+                # those gates from the cover itself, otherwise beam-1 loops
+                # never reach the B/G/JOINT candidates that repair them
+                # (s27 cover was reduced to the single R-rewritable gate).
+                cover = _critical_path_cover_cut(sub, sub_critical, r_available=None)
                 if cover is not None and cover.patch_size > 0:
                     seen = {canonical_cut_hash(c) for c in rows}
                     if canonical_cut_hash(cover) not in seen:

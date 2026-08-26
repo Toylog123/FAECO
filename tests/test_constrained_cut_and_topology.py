@@ -44,6 +44,14 @@ def test_flow_cone_candidates_puts_critical_path_cover_first():
     assert cands[0].method == "critical_path_cover"
     assert cands[0].gates == ["g3", "g4", "g5"]
 
+    # The F1 hard constraint lives in the cut graph rewards; the cover must
+    # still contain gates without R candidates so B/G/JOINT can repair them.
+    r_available = {"g3"}
+    cands_r = _cone_candidates(cone, weights, ["g3", "g4", "g5"], r_available,
+                               constrained=True, k=3, allow_singleton=False)
+    assert cands_r[0].method == "critical_path_cover"
+    assert cands_r[0].gates == ["g3", "g4", "g5"]
+
 
 def _diamond():
     return FaninCone(
