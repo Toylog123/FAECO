@@ -153,6 +153,78 @@ endmodule
             "fail",
         )
 
+    def test_feedback_signature_distinguishes_shared_and_split_sccs(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        shared = parse(
+            """module shared(ROOT);
+  output ROOT;
+  wire A, B, X;
+  and GROOT(ROOT, A, B);
+  buf GA(A, X);
+  buf GB(B, X);
+  buf GX(X, A);
+endmodule
+""",
+            "shared.v",
+        )
+        split = parse(
+            """module split(ROOT);
+  output ROOT;
+  wire A, B, X, Y;
+  and GROOT(ROOT, A, B);
+  buf GA(A, X);
+  buf GX(X, A);
+  buf GB(B, Y);
+  buf GY(Y, B);
+endmodule
+""",
+            "split.v",
+        )
+
+        result = check_structural_equivalence(shared, split, outputs=["ROOT"])
+
+        self.assertEqual(result.status, "fail")
+
+    def test_signature_distinguishes_combinational_sharing_from_copy(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        shared = parse(
+            """module shared(D, ROOT);
+  input D;
+  output ROOT;
+  wire X;
+  buf GX(X, D);
+  and GROOT(ROOT, X, X);
+endmodule
+""",
+            "shared_dag.v",
+        )
+        copied = parse(
+            """module copied(D, ROOT);
+  input D;
+  output ROOT;
+  wire A, B;
+  buf GA(A, D);
+  buf GB(B, D);
+  and GROOT(ROOT, A, B);
+endmodule
+""",
+            "copied_dag.v",
+        )
+
+        result = check_structural_equivalence(shared, copied, outputs=["ROOT"])
+
+        self.assertEqual(result.status, "fail")
+
     def test_resynthesized_c17_is_functionally_restructured_not_identical(self):
         # Since 2026-08-04 the resynthesized netlists are real SKY130-liberty
         # mappings (3 cells vs 6 nands), so structural signatures differ even

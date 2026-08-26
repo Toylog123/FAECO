@@ -137,29 +137,23 @@ def check_abc_equivalence(
 
 def _signal_signature(netlist: Netlist, signal: str) -> Any:
     output_to_gate = {gate.output: gate for gate in netlist.gates}
-    memo: dict[str, Any] = {}
-    active: list[str] = []
+    encounter_ids: dict[str, int] = {}
 
     def visit(current: str) -> Any:
-        if current in memo:
-            return memo[current]
-        if current in active:
-            # Encode a back-edge by its distance in the current DFS stack,
-            # rather than by the internal net name.  This is stable under
-            # renaming and terminates sequential feedback traversal.
-            return ("cycle", len(active) - 1 - active.index(current))
+        if current in encounter_ids:
+            return ("ref", encounter_ids[current])
         if current in netlist.inputs:
             return ("input", current)
         gate = output_to_gate.get(current)
         if gate is None:
             return ("net", current)
-        active.append(current)
+        encounter_ids[current] = len(encounter_ids)
         signature = (
+            "node",
+            encounter_ids[current],
             gate.gate_type,
             tuple(visit(input_signal) for input_signal in gate.inputs),
         )
-        active.pop()
-        memo[current] = signature
         return signature
 
     return visit(signal)
