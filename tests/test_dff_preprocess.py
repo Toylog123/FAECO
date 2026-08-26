@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import re
+import locale
 import sys
 import unittest
 from pathlib import Path
@@ -106,7 +107,7 @@ class DffPreprocessTest(unittest.TestCase):
 
         def fake_run(cmd, **kwargs):
             ys = Path(cmd[1])
-            captured["ys_text"] = ys.read_text(encoding="utf-8")
+            captured["ys_text"] = ys.read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -147,7 +148,7 @@ class DffPreprocessTest(unittest.TestCase):
 
         def fake_run(cmd, **kwargs):
             ys = Path(cmd[1])
-            captured["ys_text"] = ys.read_text(encoding="utf-8")
+            captured["ys_text"] = ys.read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -187,7 +188,7 @@ class DffPreprocessTest(unittest.TestCase):
         captured = {}
 
         def fake_run(cmd, **kwargs):
-            captured["ys_text"] = Path(cmd[-1]).read_text(encoding="utf-8")
+            captured["ys_text"] = Path(cmd[-1]).read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -225,7 +226,7 @@ class DffPreprocessTest(unittest.TestCase):
         captured = {}
 
         def fake_run(cmd, **kwargs):
-            captured["ys_text"] = Path(cmd[-1]).read_text(encoding="utf-8")
+            captured["ys_text"] = Path(cmd[-1]).read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
         with tempfile.TemporaryDirectory() as tmp:

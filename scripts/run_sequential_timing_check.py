@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import locale
 import os
 import re
 import subprocess
@@ -162,7 +163,12 @@ def run_yosys_mapping(circuit: Path, output: Path,
                 "",
             ]
         ),
-        encoding="utf-8",
+        # Native Windows Yosys reads script files with the ANSI code page
+        # (GBK on zh-CN); UTF-8 bytes in non-ASCII path components (e.g. the
+        # worktree under C:\Users\佟亚龙\) are misdecoded and Yosys reports the
+        # source file as missing. Write the script in the ANSI code page so
+        # the quoted paths round-trip byte-for-byte.
+        encoding=locale.getpreferredencoding(False) or "utf-8",
     )
     proc = subprocess.run(
         yosys_cmd + [script_posix], capture_output=True, text=True,
