@@ -861,6 +861,30 @@ endmodule
         assert reason["kind"] == label, (label, result.reason)
 
 
+
+
+def test_boundary_checker_accepts_passthrough_output_from_input():
+    checker = build_boundary_closure_checker()
+    text = """module top(A, Y);
+input A;
+output Y;
+assign Y = A;
+endmodule
+"""
+    assert checker(text, text).status == "pass"
+
+def test_boundary_checker_accepts_module_output_assign_aliases():
+    checker = build_boundary_closure_checker()
+    text = """module top(A, Y);
+input A;
+output Y;
+wire Q;
+buf g1 (.A(A), .Y(Q));
+assign Y = Q;
+endmodule
+"""
+    assert checker(text, text).status == "pass"
+
 def test_boundary_checker_handles_escaped_named_nets():
     checker = build_boundary_closure_checker()
     escaped = r"""module top(\A , Y);

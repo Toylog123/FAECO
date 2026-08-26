@@ -412,6 +412,9 @@ def build_boundary_closure_checker():
         # classify it before generic consumed-net/dangling checks.
         for output in netlist.outputs:
             resolved_output = netlist.resolve_alias(output)
+            if resolved_output in netlist.inputs or resolved_output in constants:
+                continue
+            resolved_output = netlist.resolve_alias(output)
             if drivers.get(resolved_output, 0) != 1:
                 return {"kind": "rewired-module-output", "net": resolved_output,
                         "drivers": drivers.get(resolved_output, 0)}
@@ -429,11 +432,12 @@ def build_boundary_closure_checker():
             if drivers.get(resolved, 0) != 1:
                 return {"kind": "multiple-driver", "net": resolved,
                         "drivers": drivers.get(resolved, 0)}
+        module_outputs = {netlist.resolve_alias(o) for o in netlist.outputs}
         consumers = {netlist.resolve_alias(net)
                      for gate in netlist.gates for net in gate.inputs}
         for gate in netlist.gates:
             output = netlist.resolve_alias(gate.output)
-            if output in netlist.outputs or output in constants:
+            if output in module_outputs or output in constants:
                 continue
             if output not in consumers:
                 return {"kind": "dangling-output", "net": output}
