@@ -341,10 +341,18 @@ def _cone_candidates(cone, weights, critical_instances, r_available, *, constrai
     out: list = []
     for sub in cones:
         if constrained:
+            # The joint bi-objective cut hard-anchors the deepest critical
+            # instance and requires >=1 covered critical gate.  Both must be
+            # filtered to gates actually present in this (sub)cone: an anchor
+            # outside the cone used to suppress every candidate (s27 target
+            # cone G10 does not contain the deepest critical instance).
+            sub_critical = [
+                g for g in (critical_instances or []) if g in set(sub.gates)
+            ]
             out.extend(constrained_weighted_cut_candidates(
-                sub, weights, k=k, critical_instances=critical_instances,
-                min_critical_coverage=1 if critical_instances else 0,
-                hard_anchors=(critical_instances[-1:] if critical_instances else []),
+                sub, weights, k=k, critical_instances=sub_critical or None,
+                min_critical_coverage=1 if sub_critical else 0,
+                hard_anchors=(sub_critical[-1:] if sub_critical else []),
                 window_size=max(1, getattr(weights, "max_cone_gates", len(sub.gates))),
                 allow_singleton=allow_singleton,
                 wall_timeout_s=wall_timeout_s,
