@@ -6,12 +6,12 @@
 
 | Field | Value |
 |---|---|
-| run_id | `s27-balanced-20260828T031515235079Z-0236dfc3` |
+| run_id | `s27-balanced-20260828T032210532289Z-38f4c3da` |
 | circuit / policy | `s27` / `balanced` |
 | period | 0.5 ns |
 | input_hash | `05d18654d9cbb7e4…` |
-| run_spec_hash | `e25717c91c9ef200…` |
-| implementation head | `836c6f6` |
+| run_spec_hash | `0878d54f5ddf1d42…` |
+| implementation head | `2aaa7db` |
 | Yosys | 0.67+146 (OSS-CAD native) |
 | OpenSTA | 3.1.0 (WSL Ubuntu) |
 | manifest | [docs/phase2/manifests/s27-balanced.json](manifests/s27-balanced.json) |
@@ -31,10 +31,10 @@
 | mapping | `mapped.v`, `map.ys`, `map.log` | pass |
 | STA | `sta.log`, `sta.tcl`; baseline `wns=-0.27` | pass |
 | candidates | `eval_trials.json` (99 trials), `eval/iter*_cand*` dirs | pass |
-| equivalence/SEC | all 99 trials have `acceptance_evidence` (OpenSTA provenance); zero `F1_equivalence_failure` / `F2_boundary_invalid` events across trials | pass |
+| equivalence/SEC | all 99 trials have `acceptance_evidence` (OpenSTA provenance); zero `F1_equivalence_failure` / `F2_boundary_invalid` events across trials; **full-netlist SEC of accepted patch: `pass` (yosys_blif_abc_cec, 2.6 s)** | pass |
 | manifest | `sentinel_manifest.json` with input_hash, run_spec_hash, resolved snapshot, argv, toolchain, outcome | pass |
 
-**SEC note (honest boundary):** the full-netlist Yosys-ABC SEC stage (`topology-sec`) is invoked only for TOPOLOGY candidates. The s27 cut region has no supported multi-gate topology pattern, so no TOPOLOGY candidate was generated and that stage produced no artifacts; it is recorded here as *no TOPOLOGY candidate available*, not as a silent pass. Per-candidate Liberty-function equivalence (R/G/B) and boundary-closure checks ran for every trial. The full-netlist SEC stage is exercised on the s382 sentinel (P2.4), whose logic cones are expected to contain topology patterns.
+**SEC note:** the run-time TOPOLOGY stage (`topology-sec`) produced no candidate on this tiny circuit, so the dedicated post-run full-netlist SEC verification ([scripts/verify_sentinel_sec.py](../../scripts/verify_sentinel_sec.py)) was used: baseline `mapped.v` vs final netlist both hash-stable, verdict `pass` via Yosys-ABC CEC, evidence in `experiments/20260828_phase2_sentinel/s27/sec_verification.json`.
 
 ## Gate
 
