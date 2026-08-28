@@ -242,4 +242,3 @@ def _abc_reason(status: str, returncode: int) -> str:
 
 def _tail(text: str, *, max_lines: int = 20) -> str:
     return "\n".join(text.splitlines()[-max_lines:])
-
