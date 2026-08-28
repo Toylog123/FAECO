@@ -25,6 +25,7 @@ from __future__ import annotations
 import json
 import re
 import hashlib
+import warnings
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -46,6 +47,7 @@ from .replacement import (
     stitch_topology_replacement, check_local_functional_equivalence,
     parse_verilog_netlist_from_text,
 )
+from .search_policy import SearchPolicy, resolve_search_policy, round_coverage
 import itertools
 import hashlib
 import time
@@ -622,6 +624,7 @@ class RealWnsEvaluator:
         baseline_min_slack: float | None = None,
         hold_uncertainty: float = 0.8,
         early_stop: bool = False,
+        search_policy: str = "balanced",
         joint_k: int = 0,
         joint_mix: bool = False,
         joint_enumerate_depth: int = 0,
@@ -681,7 +684,12 @@ class RealWnsEvaluator:
             self.adaptive_sel = AdaptiveStrategySelector()
         else:
             self.adaptive_sel = None
-        self.early_stop = early_stop
+        self.search_policy = resolve_search_policy(
+            early_stop,
+            search_policy,
+            warn=lambda m: warnings.warn(m, DeprecationWarning, stacklevel=3),
+        )
+        self.early_stop = self.search_policy == SearchPolicy.FAST
         self.joint_k = max(0, joint_k)
         self.joint_mix = bool(joint_mix)
         self.joint_enumerate_depth = max(0, joint_enumerate_depth)
@@ -2079,6 +2087,7 @@ class RealWnsEvaluator:
                 return True
             return False
 
+        stopped_early = False
         if self.workers > 1 and len(jobs) > 1:
             # parallel: evaluate all, keep deterministic full-search result
             with ThreadPoolExecutor(max_workers=self.workers) as ex:
@@ -2124,7 +2133,10 @@ class RealWnsEvaluator:
                 results.append(r)
                 improved_now = _accept_result(r)
                 if self.early_stop and improved_now:
+                    stopped_early = True
                     break
+
+        coverage = round_coverage(validated=len(results), generated=len(jobs), stopped_early=stopped_early)
 
         for r in results:
             trial = dict(r)
@@ -2183,6 +2195,8 @@ class RealWnsEvaluator:
             {
                 "iteration": iteration,
                 "patch_id": patch_id,
+                "search_policy": self.search_policy.value,
+                "coverage": coverage,
                 "gates": gates,
                 "actionable": actionable,
                 "n_trials": len(results),
@@ -2213,7 +2227,8 @@ class RealWnsEvaluator:
             event for trial in results for event in trial.get("failure_events", [])
         ]
         result = {"wns": best_wns, "tns": best_tns, "min_slack": best_min,
-                  "improved": improved, "failure_events": selected_events,
+                  "improved": improved, "search_policy": self.search_policy.value,
+                  "coverage": coverage, "failure_events": selected_events,
                   "trial_failure_events": trial_events,
                   "physical_status": (best or (results[-1] if results else {})).get("physical_status"),
                   "physical_candidate": (best or (results[-1] if results else {})).get("physical_candidate"),

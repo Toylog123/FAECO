@@ -336,7 +336,7 @@ def main() -> int:
         hold_mode=args.hold_mode,
         baseline_min_slack=baseline_min_slack,
         hold_uncertainty=args.hold_uncertainty,
-        early_stop=args.early_stop,
+        search_policy=policy,
         joint_k=args.joint_k,
         joint_enumerate_depth=args.joint_enumerate_depth,
         strategy_filter=tuple(s.strip() for s in args.strategies.split(',') if s.strip()),
