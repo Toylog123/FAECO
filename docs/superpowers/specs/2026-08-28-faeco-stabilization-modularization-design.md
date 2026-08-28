@@ -143,11 +143,15 @@ CLI 参数可以覆盖配置文件，但最终解析后的完整 RunSpec 必须�
 
 | 模式 | 语义 | 用途 |
 |---|---|---|
-| `fast` | 串行遇到第一个严格改善候选即停止 | 效率消融和资源受限运行 |
-| `balanced` | 每轮覆盖启用的策略族，并保证一组高优先级 JOINT 候选得到验证，再从已测候选选优 | 论文主结果和默认生产模式 |
-| `exhaustive` | 在明确预算内完整枚举并选优 | 哨兵电路、搜索上界和回归诊断 |
+| `fast` | 按确定队列串行执行；第一个通过完整 AcceptancePolicy、到达 `ACCEPTABLE` 的候选被选择并停止本轮 | 效率消融和资源受限运行 |
+| `balanced` | 每轮完成各启用策略族的最低验证覆盖以及 RunSpec 指定的 JOINT 配额，然后从已完成验证的候选中确定性选优 | 论文主结果和默认生产模式 |
+| `exhaustive` | 完成当轮全部已生成候选的验证后确定性选优；预算不足导致未完成时只产出诊断性部分结果 | 哨兵电路、搜索上界和回归诊断 |
 
-`balanced` 的最低组合覆盖数量应在 RunSpec 中显式配置。不得继续使用含义不明的布尔 `early_stop` 作为论文主配置描述。
+覆盖按“到达验证终态的候选数”计数，而不是按已生成候选数计数。验证终态包括 `ACCEPTABLE` 和带结构化原因的拒绝。如果 Planner 明确记录某个启用策略族没有 actionable candidate，该族可以记为 `unavailable`，但不能静默视为已覆盖。
+
+`balanced` 的每族最低验证数和 JOINT 配额必须在 RunSpec 中显式配置。预算在最低覆盖完成前耗尽时，stop reason 为 `coverage_incomplete_budget_exhausted`，该轮不能进入论文主结果；预算在最低覆盖完成后耗尽时，记录 `budget_exhausted_after_coverage`，可以从已完成候选中选优，但必须保留部分搜索边界。`exhaustive` 未完成全部候选时记录 `partial_budget_exhausted`，不得作为 exhaustive 上界结果。
+
+所有模式使用 CandidatePlanner 输出的稳定队列；相同 RunSpec、输入哈希和 seed 必须得到相同顺序。`fast` 的“改善”不等同于只看原始 WNS，而是候选通过完整 AcceptancePolicy。不得继续使用含义不明的布尔 `early_stop` 作为论文主配置描述；兼容层只能把它显式映射为 `fast` 并记录弃用告警。
 
 ### 4.5 VerificationPipeline
 
@@ -190,6 +194,15 @@ AcceptancePolicy 只接收已经完成验证的结构化指标，不运行工具
 
 如果运行目标是 hold 或 paired physical，主排序指标必须随模式改变，不能继续统一按 setup WNS 排序。
 
+多个 `ACCEPTABLE` 候选使用以下确定性比较顺序：
+
+1. setup 模式：setup WNS 增益、setup TNS 增益；
+2. hold 模式：hold min-slack 增益、setup WNS 增益；
+3. paired physical 模式：RunSpec 指定的 physical 主指标增益、physical 次指标、setup WNS 增益；
+4. 以上模式共同的后续 tie-break：较小 patch ratio、较小 candidate hash 字典序。
+
+缺失的非必需次指标不优于可用值；缺失必需指标直接 fail-closed。runtime 只进入调度和成本统计，不进入质量选优 tie-break。
+
 ### 4.7 EvidenceStore 与保留策略
 
 证据分三层：
@@ -231,7 +244,9 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 
 通过条件：
 
-- 从受信任 ref 创建干净 integration worktree；
+- 本轮初始集成基线固定为本地跟踪 ref `origin/main=b8c37590d7960715a0ec132f9b1c152973803675`；P0.4 的初始实现合并源固定为 `c58ad8ec5e8bc8d8a58e7a77cdce655b8c3e6879`，实现审计范围为 `79b8f05..c58ad8e`；本设计及后续计划提交属于治理输入，不纳入 P0.4 的实现合并演练，待 G8 再随最终受审分支集成；
+- 从上述 `origin/main` SHA 创建一次性分支 `codex/faeco-integration-audit` 和干净 integration worktree，合并源为上述 feature SHA；不得在本地主目录 `main` 上演练；
+- P0.1 开始时重新解析并记录这些 ref；任一 ref 与本节 SHA 不一致时立即停止，由总体负责人更新设计/计划后再继续，禁止自动改用新 HEAD；
 - 精确记录 `main`、feature、本地和远端 SHA；
 - 审计 `79b8f05..c58ad8e` 的新增提交；
 - 当前脏 `main` 的 modified/deleted/untracked 资产只读清点，不恢复、不删除、不混入；
@@ -249,7 +264,7 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 - 全量 Python 回归通过；
 - 零收集错误；
 - 所有 skip 都有原因、责任人和 release 处理方式；
-- 快速 smoke 测试有独立命令并在合理时间内完成；
+- 快速 smoke 测试有独立命令；在当前参考 Windows 主机、记录 Python/CPU 信息的干净 shell 中，连续三次执行均不得超过 60 秒；其他主机只能提供补充数据，不能用更宽时限替代本门禁；
 - 测试命令写入 README 或统一开发入口。
 
 当前基准：显式路径下 366 passed、4 skipped。G2 不能仅以这个历史数字通过，必须在修复后的 SHA 上新鲜复跑。
@@ -266,16 +281,19 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 
 失败处理：允许代码单测继续，但不得进入正式 benchmark 门禁。
 
-### G4：策略语义门禁
+### G4：配置、验收与策略语义门禁
 
 通过条件：
 
 - `fast`、`balanced`、`exhaustive` 具有独立契约测试；
+- RunSpec 具有 schema version、解析快照、稳定 config hash 和完整默认值展开测试；CLI 覆盖后的最终值必须进入快照，禁止保留未记录的隐式默认值；
 - search policy 与 AcceptancePolicy 完全分离；
+- AcceptancePolicy 是不运行外部工具的纯逻辑接口，required metrics 缺失时 fail-closed，setup/hold/paired physical 的主指标和 tie-break 符合 §4.6；
 - 完成后的正确候选不因软 runtime 阈值被事后作废；
 - hard candidate timeout、campaign wall budget、STA/formal 数量预算具有不同 stop reason；
 - 同一 RunSpec 和 seed 的候选顺序、hash 与结果可重放；
-- b15 fixture 能明确复现 fast 与 exhaustive/balanced 的差异。
+- b15 fixture 能明确复现 fast 与 exhaustive/balanced 的差异；
+- b17 fixture 能证明软成本超限只产生成本事件、不会否定已完成且通过 AcceptancePolicy 的候选，并能区分真实 hard timeout。
 
 失败处理：不得重跑 b17 或生成新的论文主表。
 
@@ -337,12 +355,12 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 
 ### Phase 0：冻结与保护
 
-目标：建立唯一可实施基线，不改变算法行为。
+目标：建立唯一可实施基线，不引入新算法特性或主动改变 search/acceptance 语义。P0.2 如发现必须改变行为才能关闭的 Critical/Important finding，原审查批次只记录并阻断；由总体负责人建立单独的 P0.x 正确性修复批次，先冻结期望契约、再最小修复并重新审查，不能把行为修复混入资产审计或测试入口整理。
 
 小步批次：
 
 1. P0.1：只读审计 main/feature/remote 状态，生成资产与 SHA 清单。
-2. P0.2：审查 `79b8f05..c58ad8e`，关闭 Critical/Important finding。
+2. P0.2：审查 `79b8f05..c58ad8e`，无行为变化的 finding 可在原批次关闭；需要行为变化的 finding 转为阻断性 P0.x 正确性修复批次。
 3. P0.3：修复默认测试入口和 diff-check；复跑全量测试与真实 SEC smoke。
 4. P0.4：创建干净 integration worktree，演练合并但不 push。
 
@@ -361,6 +379,20 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 5. P1.5：增加 b15/b17 契约 fixture。
 
 出口门禁：G4。
+
+### 6.1 Phase 0–1 追踪表
+
+| 批次 | 最小交付物 | 必须存在的契约/检查 | 出口门禁 |
+|---|---|---|---|
+| P0.1 | `baseline-audit.json`、只读资产清单、main/feature/remote SHA | ref 与本设计不一致时 fail；不得修改脏 main | G1 |
+| P0.2 | `delta-review.md`、finding closure matrix | Critical/Important 零开放；行为 finding 必须进入独立 P0.x | G1 |
+| P0.3 | 统一测试入口、`verification-summary.json` | 默认 pytest、smoke 3×≤60s、diff-check、skip 清单、真实 SEC smoke | G2、G3 |
+| P0.4 | integration 演练记录、精确 merge SHA、干净状态证明 | 只在 `codex/faeco-integration-audit` 演练，不 push | G1–G3 |
+| P1.1 | RunSpec schema、resolved snapshot、config hash | schema/version/default/CLI override/hash 稳定性测试 | G4 |
+| P1.2 | runtime/budget 语义和结构化 stop reason | soft cost、hard timeout、wall/STA/formal budget 分离测试 | G4 |
+| P1.3 | 纯 AcceptancePolicy 接口 | fail-closed、setup/hold/physical、确定性 tie-break 测试 | G4 |
+| P1.4 | fast/balanced/exhaustive 和旧 CLI 映射 | 覆盖计数、预算耗尽、稳定顺序、弃用告警测试 | G4 |
+| P1.5 | b15/b17 golden fixtures | 质量—成本差异和软 F5/硬 timeout 分离测试 | G4 |
 
 ### Phase 2：哨兵验证
 
