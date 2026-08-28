@@ -1,0 +1,63 @@
+{
+  "argv": [
+    "scripts/run_outerloop_real_wns.py",
+    "--circuit",
+    "b15",
+    "--source-file",
+    "benchmarks/raw/itc99/v/b15.v",
+    "--period",
+    "0.5",
+    "--output-dir",
+    "experiments/20260828_phase2_sentinel",
+    "--search-policy",
+    "balanced",
+    "--max-iterations",
+    "4",
+    "--candidates-per-iteration",
+    "1",
+    "--joint-enumerate-depth",
+    "3",
+    "--strategies",
+    "R,G,B",
+    "--priority-table",
+    "src/rseco/strategy_priority_table.json",
+    "--workers",
+    "1"
+  ],
+  "circuit_id": "b15",
+  "input_hash": "6f9c403df9b9081937954d77f866ef2fc016e93016b67fea8f8eade62df2b41a",
+  "outcome": {
+    "baseline_wns": -12.55,
+    "final_patch_id": "patch_U2956_critical_path_cover",
+    "hard_timeout_events": [],
+    "iterations": 4,
+    "n_candidate_sta_runs": 159,
+    "round_stop_reasons": [
+      "round_complete",
+      "round_complete",
+      "round_complete",
+      "round_complete"
+    ],
+    "soft_cost_events": [],
+    "success": true,
+    "wns_history": [
+      -11.7,
+      -11.57,
+      -11.49,
+      -11.48
+    ]
+  },
+  "period_ns": 0.5,
+  "resolved_snapshot": "{\"artifact_retention\":\"A\",\"balanced_joint_quota\":2,\"balanced_min_validated_per_family\":3,\"branch\":\"\",\"campaign_wall_timeout_s\":0.0,\"candidate_timeout_s\":300.0,\"case_id\":\"b15\",\"commit\":\"\",\"formal_budget\":200,\"input_hash\":\"6f9c403df9b9081937954d77f866ef2fc016e93016b67fea8f8eade62df2b41a\",\"max_iterations\":4,\"max_patch_ratio\":0.02,\"min_gain_ns\":0.0,\"output_dir\":\"experiments\\\\20260828_phase2_sentinel\\\\b15\",\"patch_budget\":32,\"required_metrics\":[\"setup_wns\",\"setup_tns\"],\"run_id\":\"b15-balanced-20260828T034330466096Z-a4a8e7fe\",\"schema_version\":1,\"search_policy\":\"balanced\",\"seed\":20260828,\"sta_budget\":2000,\"strategies\":[\"R\",\"G\",\"B\"],\"toolchain\":{}}",
+  "run_id": "b15-balanced-20260828T034330466096Z-a4a8e7fe",
+  "run_spec_hash": "ca98ea244ad03b957521967d698e71b808ee1ddda606fa1199e557eaa26a9ebe",
+  "schema_version": 1,
+  "search_policy": "balanced",
+  "started_at_utc": "2026-08-28T05:22:18.827529+00:00",
+  "toolchain": {
+    "git_head_sha": "c860b6a65ddab241c1e775f8c7d2fdc7c8489083",
+    "opensta_version": "3.1.0",
+    "oss_cad_root": "C:\\oss-cad-suite-build\\oss-cad-suite",
+    "yosys_version": "Yosys 0.67+146 (git sha1 468ba27d9-dirty, Release, GNU /usr/bin/x86_64-w64-mingw32-g++ 15.2.1)"
+  }
+}
