@@ -602,9 +602,9 @@ class TestPhysicalGate:
             text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
             if "sky130_fd_sc_hd__or2_4 _071_" in text:
                 if kwargs.get("spef_path") is not None:
-                    return {"slack": -0.85, "wns": -0.85, "tns": -3.5}
+                    return {"slack": -0.85, "wns": -0.85, "tns": -3.5, "min_slack": -0.80}
                 return {"slack": -0.83, "wns": -0.83, "tns": -3.0}
-            return {"slack": -0.94, "wns": -0.94, "tns": -5.0}
+            return {"slack": -0.94, "wns": -0.94, "tns": -5.0, "min_slack": -0.90}
         result = self._eval(tmp_path, sta_fn)
         assert result["improved"] is True
         assert result["wns"] == -0.85

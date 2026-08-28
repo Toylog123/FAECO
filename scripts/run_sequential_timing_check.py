@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import locale
 import os
 import re
 import subprocess
@@ -93,6 +94,12 @@ def _to_wsl(path: Path) -> str:
     return str(p).replace("\\", "/").replace("D:/", "/mnt/d/", 1)
 
 
+def _quote_yosys_path(path: str | Path) -> str:
+    """Quote and escape a path used as one token in a Yosys script."""
+    value = str(path).replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{value}"'
+
+
 def run_yosys_mapping(circuit: Path, output: Path,
                       yosys_cmd: list[str] | None = None) -> list[str]:
     """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist.
@@ -114,7 +121,7 @@ def run_yosys_mapping(circuit: Path, output: Path,
         root = _find_oss_cad_root()
         yosys_cmd = [str(root / "bin" / "yosys.exe")] if root else ["yosys"]
     script = output / "map.ys"
-    lib_posix = LIB.as_posix()
+    lib_posix = LIB.resolve().as_posix()
     script_posix = script.as_posix()
     mapped_posix = (output / "mapped.v").as_posix()
     use_wsl = bool(yosys_cmd and yosys_cmd[0].endswith("wsl.exe"))
@@ -147,16 +154,21 @@ def run_yosys_mapping(circuit: Path, output: Path,
     script.write_text(
         "\n".join(
             [
-                f"read_verilog {circuit_for_script}",
+                f"read_verilog {_quote_yosys_path(circuit_for_script)}",
                 "synth -top " + top_name,
-                f"dfflibmap -liberty {lib_posix}",
-                f"abc -liberty {lib_posix}",
+                f"dfflibmap -liberty {_quote_yosys_path(lib_posix)}",
+                f"abc -liberty {_quote_yosys_path(lib_posix)}",
                 "clean",
-                f"write_verilog -noattr {mapped_posix}",
+                f"write_verilog -noattr {_quote_yosys_path(mapped_posix)}",
                 "",
             ]
         ),
-        encoding="utf-8",
+        # Native Windows Yosys reads script files with the ANSI code page
+        # (GBK on zh-CN); UTF-8 bytes in non-ASCII path components (e.g. the
+        # worktree under C:\Users\佟亚龙\) are misdecoded and Yosys reports the
+        # source file as missing. Write the script in the ANSI code page so
+        # the quoted paths round-trip byte-for-byte.
+        encoding=locale.getpreferredencoding(False) or "utf-8",
     )
     proc = subprocess.run(
         yosys_cmd + [script_posix], capture_output=True, text=True,

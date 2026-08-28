@@ -1,4 +1,5 @@
 import unittest
+import tempfile
 from pathlib import Path
 
 from rseco.equivalence import check_abc_equivalence, check_structural_equivalence
@@ -58,6 +59,209 @@ class FaninConeTest(unittest.TestCase):
 
 
 class StructuralEquivalenceTest(unittest.TestCase):
+    def test_dff_feedback_signature_is_cycle_safe(self):
+        """A sequential feedback loop must not recurse forever."""
+        netlist_text = """module loop(D, Q);
+  input D;
+  output Q;
+  dfxtp DFF_0(.D(Q), .CLK(D), .Q(Q));
+endmodule
+"""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "loop.v"
+            path.write_text(netlist_text, encoding="utf-8")
+            left = parse_verilog_netlist(path)
+            right = parse_verilog_netlist(path)
+
+        result = check_structural_equivalence(left, right, outputs=["Q"])
+
+        self.assertEqual(result.status, "pass")
+
+    def test_feedback_signature_ignores_internal_net_names(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        left = parse(
+            """module loop(D, Q1);
+  input D;
+  output Q1;
+  dfxtp DFF_0(.D(Q1), .CLK(D), .Q(Q1));
+endmodule
+""",
+            "left.v",
+        )
+        right = parse(
+            """module loop(D, Q2);
+  input D;
+  output Q2;
+  dfxtp DFF_0(.D(Q2), .CLK(D), .Q(Q2));
+endmodule
+""",
+            "right.v",
+        )
+
+        result = check_structural_equivalence(
+            left, right, outputs=["Q1"], other_outputs=["Q2"]
+        )
+
+        self.assertEqual(result.status, "pass")
+
+    def test_feedback_signature_detects_gate_and_connection_changes(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        baseline = parse(
+            """module loop(D, Q);
+  input D;
+  output Q;
+  dfxtp DFF_0(.D(Q), .CLK(D), .Q(Q));
+endmodule
+""",
+            "baseline.v",
+        )
+        changed_gate = parse(
+            """module loop(D, Q);
+  input D;
+  output Q;
+  dfrtp DFF_0(.D(Q), .CLK(D), .Q(Q));
+endmodule
+""",
+            "changed_gate.v",
+        )
+        changed_connection = parse(
+            """module loop(D, Q);
+  input D;
+  output Q;
+  dfxtp DFF_0(.D(D), .CLK(D), .Q(Q));
+endmodule
+""",
+            "changed_connection.v",
+        )
+
+        self.assertEqual(
+            check_structural_equivalence(baseline, changed_gate, outputs=["Q"]).status,
+            "fail",
+        )
+        self.assertEqual(
+            check_structural_equivalence(baseline, changed_connection, outputs=["Q"]).status,
+            "fail",
+        )
+
+    def test_feedback_signature_distinguishes_shared_and_split_sccs(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        shared = parse(
+            """module shared(ROOT);
+  output ROOT;
+  wire A, B, X;
+  and GROOT(ROOT, A, B);
+  buf GA(A, X);
+  buf GB(B, X);
+  buf GX(X, A);
+endmodule
+""",
+            "shared.v",
+        )
+        split = parse(
+            """module split(ROOT);
+  output ROOT;
+  wire A, B, X, Y;
+  and GROOT(ROOT, A, B);
+  buf GA(A, X);
+  buf GX(X, A);
+  buf GB(B, Y);
+  buf GY(Y, B);
+endmodule
+""",
+            "split.v",
+        )
+
+        result = check_structural_equivalence(shared, split, outputs=["ROOT"])
+
+        self.assertEqual(result.status, "fail")
+
+    def test_signature_distinguishes_combinational_sharing_from_copy(self):
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        shared = parse(
+            """module shared(D, ROOT);
+  input D;
+  output ROOT;
+  wire X;
+  buf GX(X, D);
+  and GROOT(ROOT, X, X);
+endmodule
+""",
+            "shared_dag.v",
+        )
+        copied = parse(
+            """module copied(D, ROOT);
+  input D;
+  output ROOT;
+  wire A, B;
+  buf GA(A, D);
+  buf GB(B, D);
+  and GROOT(ROOT, A, B);
+endmodule
+""",
+            "copied_dag.v",
+        )
+
+        result = check_structural_equivalence(shared, copied, outputs=["ROOT"])
+
+        self.assertEqual(result.status, "fail")
+
+    def test_deep_combinational_chain_signature_is_iterative(self):
+        """A >1000-level cone must not hit Python recursion limits (ITC-99 b15)."""
+        def deep_chain(gate_type: str, depth: int = 2500) -> str:
+            wires = ", ".join(f"N{i}" for i in range(1, depth + 1))
+            lines = [
+                "module deep(D, ROOT);",
+                "  input D;",
+                "  output ROOT;",
+                f"  wire {wires};",
+            ]
+            prev = "D"
+            for i in range(1, depth + 1):
+                lines.append(f"  {gate_type} G{i}(N{i}, {prev});")
+                prev = f"N{i}"
+                lines.append(f"  buf GROOT(ROOT, N{depth});")
+            lines.append("endmodule")
+            return "\n".join(lines)
+
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+
+        identical = parse(deep_chain("buf"), "deep_a.v")
+        same = parse(deep_chain("buf"), "deep_b.v")
+        different_tail = parse(deep_chain("not"), "deep_c.v")
+
+        self.assertEqual(
+            check_structural_equivalence(identical, same, outputs=["ROOT"]).status,
+            "pass",
+        )
+        self.assertEqual(
+            check_structural_equivalence(identical, different_tail, outputs=["ROOT"]).status,
+            "fail",
+        )
+
     def test_resynthesized_c17_is_functionally_restructured_not_identical(self):
         # Since 2026-08-04 the resynthesized netlists are real SKY130-liberty
         # mappings (3 cells vs 6 nands), so structural signatures differ even

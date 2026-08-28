@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import json
 import re
+import hashlib
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -34,11 +35,22 @@ from .gate_sizing import (
     larger_size_candidates,
     parse_mapped_netlist,
 )
-from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells
+from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells, canonical_function, function_vars
 from .opensta import run_opensta_sequential
 from .proxy_ranking import ProxyWeights, rank_real_candidates
 from .strategy_selector import exploration_order
+from .failures import AcceptanceEvidence
+from .yosys_abc import YosysAbcEquivalenceResult
+from .replacement import (
+    extract_combinational_window, generate_topology_replacement,
+    stitch_topology_replacement, check_local_functional_equivalence,
+    parse_verilog_netlist_from_text,
+)
 import itertools
+import hashlib
+import time
+import threading
+from collections import Counter
 
 
 #: report_checks line: ``   0.36    0.69 v _079_/X (sky130_fd_sc_hd__or3_1)``
@@ -47,6 +59,435 @@ _INSTANCE_LINE_RE = re.compile(
     re.M,
 )
 _ENDPOINT_RE = re.compile(r"^Endpoint:\s+([\w\\]+)", re.M)
+
+
+def _checker_passed(value) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, dict):
+        return value.get("status") == "pass"
+    return getattr(value, "status", None) == "pass"
+
+
+def _checker_details(value) -> dict:
+    """Preserve structured checker status/method/reason in failure evidence."""
+    if isinstance(value, dict):
+        status = value.get("status")
+        method = value.get("method")
+        reason = value.get("reason")
+    else:
+        status = getattr(value, "status", None)
+        method = getattr(value, "method", None)
+        reason = getattr(value, "reason", None)
+    details = {"status": status, "method": method, "reason": reason}
+    if isinstance(reason, str):
+        try:
+            parsed = json.loads(reason)
+        except (TypeError, ValueError):
+            parsed = None
+        if isinstance(parsed, dict):
+            details.update(parsed)
+    return {key: value for key, value in details.items() if value is not None}
+
+
+def _physical_sta_provenance(output_dir: str | Path, metrics: dict | None,
+                             rc_config: dict, rc_config_hash: str) -> dict:
+    directory = Path(output_dir)
+    report = directory / "sta.log"
+    text = report.read_text(encoding="utf-8", errors="replace") if report.exists() else ""
+    path = parse_critical_instances(text) if text else []
+    endpoint = parse_worst_endpoint(text) if text else None
+    return {
+        "tool": "OpenSTA",
+        "status": (metrics or {}).get("status", "unknown"),
+        "report_path": str(report),
+        "output_dir": str(directory),
+        "config": dict(rc_config),
+        "rc_config_hash": rc_config_hash,
+        "wns": (metrics or {}).get("wns"),
+        "tns": (metrics or {}).get("tns"),
+        "hold_min_slack": (metrics or {}).get("min_slack"),
+        "endpoint": endpoint,
+        "path": path,
+    }
+
+
+def _normalise_failure_events(events, *, candidate_hash: str, cut_hash: str | None = None):
+    """Return the canonical, auditable representation used by trials/state.
+
+    Evaluator backends historically returned small ad-hoc dictionaries.  The
+    outer loop may still accept those adapters, but production records must
+    have a non-empty candidate/cut identity and a stable event id so a trial
+    cannot be counted twice or silently lose checker evidence.
+    """
+    normalized = []
+    for raw in events or []:
+        event = dict(raw)
+        event["candidate_hash"] = event.get("candidate_hash") or candidate_hash
+        event["cut_hash"] = event.get("cut_hash") or cut_hash or event["candidate_hash"]
+        event.setdefault("endpoint", None)
+        event.setdefault("path", [])
+        event.setdefault("net", None)
+        event.setdefault("action_scope", [])
+        event.setdefault("threshold", None)
+        event.setdefault("observed_value", None)
+        event.setdefault("severity", "hard")
+        event.setdefault("runtime_s", 0.0)
+        event.setdefault("evidence", {})
+        if not event.get("event_id"):
+            event["event_id"] = hashlib.sha256(json.dumps({
+                key: event.get(key) for key in (
+                    "type", "candidate_hash", "cut_hash", "endpoint", "path",
+                    "net", "action_scope", "threshold", "observed_value", "evidence",
+                )
+            }, sort_keys=True, default=str).encode("utf-8")).hexdigest()
+        normalized.append(event)
+    return normalized
+
+
+def build_real_equivalence_checker(liberty_text: str):
+    """Build a per-candidate Liberty-function checker for R/G/B actions.
+
+    R candidates are checked by canonical Liberty Boolean functions, G keeps
+    the same function family, and B permits only added buffer/identity cells.
+    Unknown cells or malformed netlists fail closed with a structured result.
+    """
+    lib = parse_liberty_cells(liberty_text)
+
+    def check(original_text: str, candidate_text: str):
+        from .equivalence import EquivalenceResult
+        try:
+            before = parse_mapped_netlist(original_text)
+            after = parse_mapped_netlist(candidate_text)
+            old = {c.instance: c for c in before}
+            new = {c.instance: c for c in after}
+            if not set(old).issubset(new):
+                return EquivalenceResult("fail", "liberty_local_function", "an existing instance disappeared")
+            added = set(new) - set(old)
+            buffer_edges: dict[str, set[str]] = {}
+            for inst in added:
+                cell = lib.get(new[inst].cell_type)
+                if cell is None or cell.family not in {"buf", "bufbuf", "clkbuf"}:
+                    return EquivalenceResult("fail", "liberty_local_function", f"added non-buffer cell at {inst}")
+                pins = new[inst].pins
+                input_net = pins.get("A") or pins.get("I")
+                output_net = pins.get(cell.output_pin) or pins.get("X") or pins.get("Y")
+                if input_net and output_net:
+                    buffer_edges.setdefault(input_net, set()).add(output_net)
+
+            def connected_through_buffers(source_net: str, target_net: str) -> bool:
+                if source_net == target_net:
+                    return True
+                pending = [source_net]
+                seen = {source_net}
+                while pending:
+                    current = pending.pop()
+                    for successor in buffer_edges.get(current, ()):
+                        if successor == target_net:
+                            return True
+                        if successor not in seen:
+                            seen.add(successor)
+                            pending.append(successor)
+                return False
+
+            for inst, source in old.items():
+                target = new[inst]
+                if source.cell_type == target.cell_type and source.pins != target.pins:
+                    if any(not connected_through_buffers(source.pins.get(pin, ""), target.pins.get(pin, ""))
+                           for pin in set(source.pins) | set(target.pins)):
+                        return EquivalenceResult(
+                            "fail", "liberty_local_function",
+                            f"pin-to-net connection changed at {inst}: {source.pins} -> {target.pins}",
+                        )
+                if source.cell_type == target.cell_type:
+                    continue
+                src_lib, dst_lib = lib.get(source.cell_type), lib.get(target.cell_type)
+                if src_lib is None or dst_lib is None or not src_lib.function or not dst_lib.function:
+                    return EquivalenceResult("fail", "liberty_local_function", f"unknown/non-combinational cell at {inst}")
+                if canonical_function(src_lib.function) != canonical_function(dst_lib.function):
+                    return EquivalenceResult("fail", "liberty_local_function", f"Boolean function changed at {inst}")
+                src_vars = function_vars(src_lib.function)
+                dst_vars = function_vars(dst_lib.function)
+                if len(src_vars) != len(dst_vars):
+                    return EquivalenceResult("fail", "liberty_local_function", f"Boolean input role count changed at {inst}")
+                for src_pin, dst_pin in zip(src_vars, dst_vars):
+                    if source.pins.get(src_pin) != target.pins.get(dst_pin):
+                        return EquivalenceResult(
+                            "fail", "liberty_local_function",
+                            f"Boolean input role mapping changed at {inst}: {src_pin}->{dst_pin}",
+                        )
+                src_output = src_lib.output_pin
+                dst_output = dst_lib.output_pin
+                if src_output and dst_output and source.pins.get(src_output) != target.pins.get(dst_output):
+                    return EquivalenceResult("fail", "liberty_local_function", f"output net changed at {inst}")
+                if Counter(source.pins.values()) != Counter(target.pins.values()):
+                    return EquivalenceResult("fail", "liberty_local_function", f"pin-to-net multiset changed at {inst}")
+            for inst in added:
+                cell = lib.get(new[inst].cell_type)
+                if cell is None or cell.family not in {"buf", "bufbuf", "clkbuf"}:
+                    return EquivalenceResult("fail", "liberty_local_function", f"added non-buffer cell at {inst}")
+        except Exception as exc:
+            return EquivalenceResult("fail", "liberty_local_function", f"checker failed closed: {exc}")
+        return EquivalenceResult("pass", "liberty_local_function", "Liberty functions preserved")
+
+    return check
+
+
+def build_full_netlist_sec_checker(
+    *,
+    top_module: str,
+    liberty_text: str | None = None,
+    liberty_cells_v: str | Path | None = None,
+    artifact_dir: str | Path,
+    yosys_command: str = "wsl.exe -e yosys",
+    abc_command: str = "wsl.exe -e yosys-abc",
+    timeout_s: float = 60.0,
+):
+    """Build the production text-in/text-out full-netlist SEC backend.
+
+    The callback owns temporary Verilog checkpoints and delegates normalization
+    plus ABC CEC to the existing Yosys/ABC backend.  Tool unavailability,
+    malformed text, and timeout are returned as structured non-pass results so
+    strict topology callers fail closed without substituting the local checker.
+    """
+    from .equivalence import EquivalenceResult
+    from .yosys_abc import check_yosys_abc_equivalence
+
+    artifact_root = Path(artifact_dir)
+    artifact_root.mkdir(parents=True, exist_ok=True)
+
+    def check(original_text: str, candidate_text: str):
+        try:
+            outputs = list(parse_verilog_netlist_from_text(original_text).outputs)
+        except Exception as exc:
+            return EquivalenceResult(
+                "fail", "full_netlist_sec", f"SEC input parse failed closed: {exc}"
+            )
+        digest = hashlib.sha256((top_module + "\0" + original_text + "\0" + candidate_text).encode()).hexdigest()[:16]
+        trial_dir = artifact_root / f"trial-{digest}"
+        trial_dir.mkdir(parents=True, exist_ok=True)
+        original = trial_dir / f"{top_module}.gold.v"
+        revised = trial_dir / f"{top_module}.gate.v"
+        original.write_text(original_text, encoding="utf-8")
+        revised.write_text(candidate_text, encoding="utf-8")
+        cells_path = trial_dir / "cells.v"
+        if liberty_text is not None:
+            used_cells = set(re.findall(
+                r"\b(sky130_fd_sc_hd__\w+)\s+\w+\s*\(",
+                original_text + "\n" + candidate_text,
+            ))
+            try:
+                write_liberty_cell_models(liberty_text, cells_path, used_cells=used_cells)
+                abc_cells_path = trial_dir / "cells_abc.v"
+                write_liberty_cell_models(
+                    liberty_text, abc_cells_path, used_cells=used_cells,
+                    abc_compatible=True,
+                )
+            except ValueError as exc:
+                return YosysAbcEquivalenceResult(
+                    status="fail", method="yosys_liberty_model_generation",
+                    tool="Liberty-to-Verilog", command="materialize_cells_v",
+                    outputs=list(outputs), runtime_s=0.0,
+                    reason=str(exc),
+                )
+        elif liberty_cells_v is not None:
+            cells_path = Path(liberty_cells_v)
+        else:
+            cells_path = None
+        result = check_yosys_abc_equivalence(
+            original, revised, outputs=outputs,
+            artifact_dir=trial_dir / "yosys-abc",
+            yosys_command=yosys_command,
+            abc_command=abc_command,
+            timeout_s=timeout_s,
+            liberty_cells_v=(abc_cells_path if liberty_text is not None else cells_path),
+            top_module=top_module,
+        )
+        return result
+
+    return check
+
+
+def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
+                              *, used_cells: set[str] | None = None,
+                              abc_compatible: bool = False) -> Path:
+    """Materialize a deterministic, synthesizable Verilog model from Liberty."""
+    cells = parse_liberty_cells(liberty_text)
+    selected = sorted(used_cells if used_cells is not None else cells)
+    missing = sorted(set(selected) - set(cells))
+    if missing:
+        raise ValueError("Liberty missing instantiated cells: " + ", ".join(missing))
+    blocks: list[str] = ["// Generated from Liberty for symmetric Yosys/ABC SEC.\n"]
+    for name in selected:
+        cell = cells[name]
+        output_pins = list(cell.output_functions) or ([cell.output_pin] if cell.output_pin else [])
+        ports = list(dict.fromkeys([*cell.input_pins, *output_pins]))
+        if not ports:
+            continue
+        lines = [f"module {name} ({', '.join(ports)});"]
+        if cell.input_pins:
+            lines.append("  input " + ", ".join(cell.input_pins) + ";")
+        if output_pins:
+            lines.append("  output " + ", ".join(output_pins) + ";")
+        if cell.sequential_kind == "ff":
+            if not (cell.next_state and cell.output_pin and cell.clocked_on):
+                raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
+            state = cell.state_var or cell.output_pin
+            sequential_outputs = cell.output_functions or {cell.output_pin: state}
+            edge = "negedge" if cell.clocked_on.startswith("!") else "posedge"
+            clock = cell.clocked_on.lstrip("!").strip()
+            async_controls = []
+            for expression in (cell.clear, cell.preset):
+                if expression:
+                    control_edge = "negedge" if expression.startswith("!") else "posedge"
+                    control = expression.lstrip("!").strip()
+                    async_controls.append((expression, f"{control_edge} {control}"))
+            lines.append("  reg " + state + ";")
+            if not async_controls:
+                lines.append(f"  always @({edge} {clock}) {state} <= {cell.next_state};")
+            elif abc_compatible:
+                next_signal = f"_faeco_{state}_next"
+                next_expr = cell.next_state
+                if cell.preset:
+                    next_expr = f"({cell.preset}) ? 1'b1 : ({next_expr})"
+                if cell.clear:
+                    next_expr = f"({cell.clear}) ? 1'b0 : ({next_expr})"
+                lines.extend([
+                    f"  wire {next_signal} = {next_expr};",
+                    f"  always @({edge} {clock}) {state} <= {next_signal};",
+                ])
+            else:
+                sensitivity = f"{edge} {clock}"
+                if not abc_compatible:
+                    sensitivity += " or " + " or ".join(edge_text for _, edge_text in async_controls)
+                lines.extend([
+                    f"  always @({sensitivity}) begin",
+                    *([f"    if ({cell.clear}) {state} <= 1'b0;"] if cell.clear else []),
+                    *([f"    {'else ' if cell.clear else ''}if ({cell.preset}) {state} <= 1'b1;"] if cell.preset else []),
+                    f"    else {state} <= {cell.next_state};",
+                    "  end",
+                ])
+            for pin, function in sequential_outputs.items():
+                if function == state:
+                    lines.append(f"  assign {pin} = {state};")
+                elif cell.state_inv_var and function == cell.state_inv_var:
+                    lines.append(f"  assign {pin} = ~{state};")
+                else:
+                    raise ValueError(f"unsupported sequential output mapping for {name}.{pin}: {function}")
+        elif cell.sequential_kind == "latch":
+            if not (cell.next_state and cell.output_pin and cell.latch_enable):
+                raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
+            state = cell.state_var or cell.output_pin
+            lines.extend([
+                "  reg " + state + ";",
+                f"  always @* if ({cell.latch_enable}) {state} <= {cell.next_state};",
+            ])
+            for pin, function in cell.output_functions.items():
+                if function == state:
+                    lines.append(f"  assign {pin} = {state};")
+                elif cell.state_inv_var and function == cell.state_inv_var:
+                    lines.append(f"  assign {pin} = ~{state};")
+                else:
+                    raise ValueError(f"unsupported latch output mapping for {name}.{pin}: {function}")
+        elif cell.function and cell.output_pin:
+            expr = (cell.function.replace("*", "&").replace("+", "|"))
+            lines.append(f"  assign {cell.output_pin} = {expr};")
+        elif not cell.function:
+            raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
+        lines.append("endmodule\n")
+        blocks.append("\n".join(lines))
+    path = Path(output_path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(blocks), encoding="utf-8")
+    return path
+
+
+def build_boundary_closure_checker():
+    """Build a real module-boundary checker used as the strict F2 gate."""
+    def _net_closure(netlist):
+        constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
+        drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
+        declared = set(netlist.inputs) | set(netlist.outputs) | set(netlist.wires)
+        # Module-output rewiring is checked *relative* to the baseline in
+        # check(): undriven/constant output bits (e.g. Yosys leaves
+        # word-aligned mem_addr[0:1] undriven) are legal as long as the
+        # candidate preserves the baseline driver counts.
+        consumed = [net for gate in netlist.gates for net in gate.inputs]
+        for net in consumed:
+            resolved = netlist.resolve_alias(net)
+            if resolved in constants:
+                continue
+            if resolved not in declared:
+                return {"kind": "undeclared-consumed", "net": resolved}
+            if resolved in netlist.inputs:
+                continue
+            if drivers.get(resolved, 0) == 0:
+                return {"kind": "declared-undriven", "net": resolved}
+            if drivers.get(resolved, 0) != 1:
+                return {"kind": "multiple-driver", "net": resolved,
+                        "drivers": drivers.get(resolved, 0)}
+        module_outputs = {netlist.resolve_alias(o) for o in netlist.outputs}
+        consumers = {netlist.resolve_alias(net)
+                     for gate in netlist.gates for net in gate.inputs}
+        for gate in netlist.gates:
+            output = netlist.resolve_alias(gate.output)
+            if output in module_outputs or output in constants:
+                continue
+            if output not in consumers:
+                return {"kind": "dangling-output", "net": output}
+        return None
+
+    def check(original_text: str, candidate_text: str):
+        from .equivalence import EquivalenceResult
+        pattern = re.compile(r"\bmodule\s+(\w+)\s*\((.*?)\)\s*;", re.S)
+        left, right = pattern.search(original_text), pattern.search(candidate_text)
+        if left is None or right is None:
+            return EquivalenceResult("fail", "boundary_closure", "module header unavailable")
+        left_ports = tuple(p.strip() for p in left.group(2).replace("\n", " ").split(",") if p.strip())
+        right_ports = tuple(p.strip() for p in right.group(2).replace("\n", " ").split(",") if p.strip())
+        if left.group(1) != right.group(1) or left_ports != right_ports:
+            return EquivalenceResult("fail", "boundary_closure", "module boundary changed")
+        try:
+            before = parse_verilog_netlist_from_text(original_text)
+            after = parse_verilog_netlist_from_text(candidate_text)
+            if before.inputs != after.inputs or before.outputs != after.outputs:
+                return EquivalenceResult("fail", "boundary_closure", "boundary input/output set changed")
+            def _output_driver_counts(netlist):
+                drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
+                return {netlist.resolve_alias(o): drivers.get(netlist.resolve_alias(o), 0)
+                        for o in netlist.outputs}
+            before_out_drivers = _output_driver_counts(before)
+            after_out_drivers = _output_driver_counts(after)
+            changed = sorted(
+                net for net in set(before_out_drivers) | set(after_out_drivers)
+                if before_out_drivers.get(net) != after_out_drivers.get(net)
+            )
+            if changed:
+                return EquivalenceResult(
+                    "fail", "boundary_closure",
+                    json.dumps({
+                        "stage": "output_driver_closure",
+                        "kind": "rewired-module-output",
+                        "nets": changed,
+                        "before": before_out_drivers,
+                        "after": after_out_drivers,
+                    }, sort_keys=True),
+                )
+            for label, netlist in (("baseline", before), ("candidate", after)):
+                issue = _net_closure(netlist)
+                if issue is not None:
+                    return EquivalenceResult(
+                        "fail", "boundary_closure",
+                        json.dumps({"stage": "consumed_net_closure", "side": label, **issue}, sort_keys=True),
+                    )
+                drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
+                if any(drivers[input_name] for input_name in netlist.inputs):
+                    return EquivalenceResult("fail", "boundary_closure",
+                                             f"{label} input is driven")
+        except Exception as exc:
+            return EquivalenceResult("fail", "boundary_closure", f"boundary parse failed closed: {exc}")
+        return EquivalenceResult("pass", "boundary_closure", "boundary inputs/outputs and driver closure preserved")
+    return check
 
 
 def parse_critical_instances(sta_text: str) -> list[str]:
@@ -162,6 +603,7 @@ class RealWnsEvaluator:
         period: float,
         liberty_text: str,
         baseline_wns: float,
+        baseline_tns: float | None = None,
         output_dir: str | Path,
         critical_instances: list[str] | None = None,
         workers: int = 4,
@@ -193,14 +635,32 @@ class RealWnsEvaluator:
         physical_fanout_penalty: float = 1.0,
         physical_depth_penalty: float = 1.0,
         physical_unit_len_um: float = 40.0,
+         equivalence_checker=None,
+         topology_sec_checker=None,
+         boundary_checker=None,
+        strict_gates: bool = False,
+        max_patch_ratio: float = 0.15,
+        max_verification_time_s: float = 60.0,
+        epsilon: float = 0.0,
+        strict_budgets: bool = False,
+        area_budget: float | None = None,
+        max_transition_budget: float | None = None,
+        max_capacitance_budget: float | None = None,
+        max_fanout_budget: float | None = None,
+         required_metrics: tuple[str, ...] | list[str] = ("setup_wns", "setup_tns"),
+         available_metrics: tuple[str, ...] | list[str] = ("setup_wns", "setup_tns", "hold_min_slack"),
+         metric_epsilons: dict[str, float] | None = None,
+        allow_singleton: bool = False,
+        enable_topology: bool = True,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
         self.period = period
         self.lib = parse_liberty_cells(liberty_text)
+        self.liberty_text = liberty_text
         self.available = build_available_sizes(liberty_text)
         self.baseline_wns = baseline_wns
-        self.baseline_tns: float | None = None
+        self.baseline_tns: float | None = baseline_tns
         self.hold_mode = bool(hold_mode)
         self.baseline_min_slack = baseline_min_slack
         self.hold_uncertainty = hold_uncertainty
@@ -237,14 +697,115 @@ class RealWnsEvaluator:
         self.physical_fanout_penalty = physical_fanout_penalty
         self.physical_depth_penalty = physical_depth_penalty
         self.physical_unit_len_um = physical_unit_len_um
+        self.equivalence_checker = equivalence_checker
+        self.topology_sec_checker = topology_sec_checker
+        self.boundary_checker = boundary_checker
+        self.strict_gates = bool(strict_gates)
+        self.use_constrained_cuts = True
+        self.refresh_cone = True
+        self.max_patch_ratio = float(max_patch_ratio)
+        self.max_verification_time_s = float(max_verification_time_s)
+        self.epsilon = float(epsilon)
+        self.metric_epsilons = {
+            "patch_ratio": 0.0, "area": 0.0, "max_transition": 0.0,
+            "max_capacitance": 0.0, "max_fanout": 0.0,
+            **{str(k): float(v) for k, v in (metric_epsilons or {}).items()},
+        }
+        self.strict_budgets = bool(strict_budgets)
+        self.area_budget = area_budget
+        self.max_transition_budget = max_transition_budget
+        self.max_capacitance_budget = max_capacitance_budget
+        self.max_fanout_budget = max_fanout_budget
+        required = set(str(metric) for metric in required_metrics)
+        budget_metric = {
+            "area_budget": "area", "max_transition_budget": "max_transition",
+            "max_capacitance_budget": "max_capacitance", "max_fanout_budget": "max_fanout",
+        }
+        for option, metric in budget_metric.items():
+            if getattr(self, option) is not None:
+                required.add(metric)
+        if self.hold_mode:
+            required.add("hold_min_slack")
+        self.hold_required = self.hold_mode or "hold_min_slack" in required
+        self.required_metrics = tuple(sorted(required))
+        self.available_metrics = frozenset(str(metric) for metric in available_metrics)
+        self.allow_singleton = bool(allow_singleton)
+        self.enable_topology = bool(enable_topology)
         self.trials: list[dict] = []
         self.call_log: list[dict] = []
         self._call_counter = 0
+        self._physical_baseline_cache: dict[str, dict] = {}
+        self._physical_baseline_lock = threading.Lock()
+        self.tested_candidate_hashes: set[str] = set()
+        self._sta_cache: dict[str, dict] = {}
+        self._active_state = None
+
+    def _metric_epsilon(self, metric: str) -> float:
+        """Return a unit-specific non-timing tolerance."""
+        return self.metric_epsilons.get(metric, 0.0)
+
+    def _deadline_or_budget_event(self, state, kind: str, *, candidate_hash: str,
+                                  cut_hash: str, action_scope: list[str]):
+        """Reserve one tool call, fail closed before invocation."""
+        if state is None:
+            return None
+        if state.deadline_expired():
+            return {
+                "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                "cut_hash": cut_hash, "severity": "hard", "hard_gate": True,
+                "action_scope": action_scope, "threshold": state.budget.get("wall_timeout_s"),
+                "observed_value": "deadline", "runtime_s": 0.0,
+                "evidence": {"stage": kind, "budget": "wall_timeout"},
+            }
+        if not state.reserve_budget(kind):
+            return {
+                "type": f"{kind}_budget_exhausted", "candidate_hash": candidate_hash,
+                "cut_hash": cut_hash, "severity": "hard", "hard_gate": True,
+                "action_scope": action_scope, "threshold": state.budget.get(f"{kind}_budget"),
+                "observed_value": state.budget_used(kind), "runtime_s": 0.0,
+                "evidence": {"stage": kind, "budget": kind, "reason": "reserved before tool"},
+            }
+        return None
+
+    @staticmethod
+    def _remaining_tool_timeout(state, default: float = 180.0) -> float:
+        deadline = state.budget.get("_deadline_monotonic") if state is not None else None
+        if deadline is None:
+            return default
+        return max(0.001, min(default, float(deadline) - time.perf_counter()))
 
     def _strategy_order(self, cell_type: str) -> tuple[str, ...]:
         if self.adaptive:
             return tuple(self.adaptive_sel.priority_order(cell_type))
         return tuple(self.priority_table.get(cell_type, ("R", "G", "B")))
+
+    def accept_candidate(self, result: dict, *, state=None) -> None:
+        """Commit an accepted candidate as the next STA baseline.
+
+        The outer loop calls this only after :class:`SearchState` has recorded
+        the candidate.  Consequently every subsequent candidate is generated
+        from the committed ``G_r`` rather than the original netlist.
+        """
+        text = result.get("candidate_netlist_text")
+        if not text:
+            raise ValueError("accepted candidate has no netlist text")
+        self.mapped_text = str(text)
+        if result.get("wns") is not None:
+            self.baseline_wns = float(result["wns"])
+        if "tns" in result:
+            self.baseline_tns = (float(result["tns"])
+                                 if result["tns"] is not None else None)
+        if "min_slack" in result:
+            self.baseline_min_slack = (float(result["min_slack"])
+                                       if result["min_slack"] is not None else None)
+        if result.get("critical_instances") is not None:
+            self.critical_instances = list(result["critical_instances"])
+        if state is not None:
+            self.critical_instances = list(getattr(state, "critical_instances", self.critical_instances))
+
+    def r_available_for(self, instances: list[str]) -> set[str]:
+        """Recompute R-action availability against the current committed G_r."""
+        return build_r_available(self.liberty_text, list(instances), self.mapped_text)
 
     # -- candidate construction -------------------------------------------
 
@@ -312,7 +873,7 @@ class RealWnsEvaluator:
                 out = apply_sizing(out, {inst: new_type})
         return out
 
-    def _joint_enumerate_combos(self, cells) -> list[tuple[dict, str]]:
+    def _joint_enumerate_combos(self, cells, allowed_instances=None) -> list[tuple[dict, str]]:
         """Joint repair de-humanization (TCAD sprint): enumerate multi-gate
         upsize/rewrite combinations along the critical path.
 
@@ -328,7 +889,9 @@ class RealWnsEvaluator:
         # critical_instances are already in path order; keep only those with
         # a real cell and a candidate.
         by_inst = {c.instance: c for c in cells}
-        ordered = [i for i in self.critical_instances if i in by_inst][: self.max_instances]
+        allowed = set(allowed_instances) if allowed_instances is not None else None
+        ordered = [i for i in self.critical_instances
+                   if i in by_inst and (allowed is None or i in allowed)][: self.max_instances]
         if len(ordered) < 2:
             return []
         window = min(self.joint_enumerate_depth, len(ordered))
@@ -406,82 +969,772 @@ class RealWnsEvaluator:
             index,
             proxy_meta,
         ) = job
-        if kind == "JOINT":
+        started_at = time.perf_counter()
+        topology_window = None
+        if kind == "TOPOLOGY":
+            topology_replacement, topology_window = pin_map
+            candidate_text = stitch_topology_replacement(text, topology_replacement)
+        elif kind == "JOINT":
             candidate_text = self._apply_joint(text, pin_map)
         else:
             candidate_text = self._apply(text, inst, kind, new_type, pin_map)
         sub = cand_dir / ("%03d_" % index + inst + "_" + kind)
         sub.mkdir(parents=True, exist_ok=True)
         (sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
-        res = run_opensta_sequential(
-            netlist_path=sub / "mapped.v",
-            period=self.period,
-            output_dir=sub,
-            top_module=top_module,
-            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
-            min_path=self.hold_mode,
-            clock_port=self.clock_port,
-        )
-        # Inner-loop physical gate (review shortboard): an ideal-net gain
-        # must clear a minimum threshold before a parasitic-aware SPEF run is
-        # even attempted; the candidate is only returned when the SPEF run
-        # also improves WNS.  This turns the SPEF check from a post-hoc
-        # autopsy into a per-candidate acceptance signal.
-        if self.physical_gate and not self.hold_mode:
-            ideal_wns = res.get("wns")
-            if ideal_wns is not None and ideal_wns > self.baseline_wns + self.min_physical_gain_ns:
+        candidate_hash = hashlib.sha256(candidate_text.encode("utf-8")).hexdigest()
+        base_hash = hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+        analysis_config = {
+            "period": self.period, "clock_port": self.clock_port,
+            "sdc_config": {"period": self.period, "clock_port": self.clock_port,
+                           "hold_mode": self.hold_mode,
+                           "hold_uncertainty": self.hold_uncertainty},
+            "hold_mode": self.hold_mode,
+            "hold_uncertainty": self.hold_uncertainty,
+            "physical_gate": self.physical_gate,
+            "physical_unit_len_um": self.physical_unit_len_um,
+            "physical_fanout_penalty": self.physical_fanout_penalty,
+            "physical_depth_penalty": self.physical_depth_penalty,
+            "liberty_hash": hashlib.sha256(self.liberty_text.encode("utf-8")).hexdigest(),
+            "analysis_config": {"hold_mode": self.hold_mode,
+                                "tns_aware": self.tns_aware,
+                                "epsilon": self.epsilon},
+            "rc_config": {"physical_gate": self.physical_gate,
+                          "unit_len_um": self.physical_unit_len_um,
+                          "fanout_penalty": self.physical_fanout_penalty,
+                          "depth_penalty": self.physical_depth_penalty,
+                          "min_physical_gain_ns": self.min_physical_gain_ns},
+            "formal_config": {"strict_gates": self.strict_gates,
+                              "checker": type(self.equivalence_checker).__name__ if self.equivalence_checker else None},
+            "epsilon": self.epsilon,
+        }
+        config_hash = hashlib.sha256(json.dumps(analysis_config, sort_keys=True).encode()).hexdigest()
+        cache_key = hashlib.sha256((base_hash + candidate_hash + config_hash).encode()).hexdigest()
+        unavailable_gate_events = []
+        if self.strict_gates and kind == "TOPOLOGY" and self.topology_sec_checker is None:
+            unavailable_gate_events.append({
+                "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"stage": "full_netlist_sec", "status": "unavailable",
+                             "reason": "topology SEC backend unavailable",
+                             "formal_backend": "unavailable"},
+            })
+        elif self.strict_gates and kind != "TOPOLOGY" and self.equivalence_checker is None:
+            unavailable_gate_events.append({
+                "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"reason": "per-candidate equivalence checker unavailable",
+                             "formal_backend": "unavailable"},
+            })
+        if self.strict_gates and self.boundary_checker is None:
+            unavailable_gate_events.append({
+                "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"reason": "boundary closure checker unavailable",
+                             "boundary_backend": "unavailable"},
+            })
+        if unavailable_gate_events:
+            failed = {
+                "instance": inst, "kind": kind, "from_type": cell_type,
+                "to_type": new_type, "wns": self.baseline_wns,
+                "tns": self.baseline_tns, "min_slack": None,
+                "physical_failure": False, "candidate_netlist_text": candidate_text,
+                "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                "cache_key": cache_key, "config_hash": config_hash,
+                "failure_events": _normalise_failure_events(
+                    unavailable_gate_events, candidate_hash=candidate_hash),
+                "runtime_s": time.perf_counter() - started_at, **proxy_meta,
+            }
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        if cache_key in self._sta_cache:
+            cached = dict(self._sta_cache[cache_key])
+            cached["skipped_duplicate"] = True
+            return {**cached, **proxy_meta}
+        if candidate_hash in self.tested_candidate_hashes and base_hash == getattr(self, "_last_base_hash", None):
+            return {
+                "instance": inst, "kind": kind, "from_type": cell_type,
+                "to_type": new_type, "wns": self.baseline_wns,
+                "tns": self.baseline_tns, "min_slack": None,
+                "physical_failure": False, "candidate_netlist_text": candidate_text,
+                "candidate_hash": candidate_hash, "runtime_s": 0.0,
+                "skipped_duplicate": True, "cache_key": cache_key,
+                "config_hash": config_hash, **proxy_meta,
+            }
+        state = self._active_state
+        needs_formal = bool(self.strict_gates and
+                            (self.equivalence_checker is not None or kind == "TOPOLOGY"))
+        event = self._deadline_or_budget_event(
+            state, "formal", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        ) if needs_formal else (self._deadline_or_budget_event(
+            state, "local", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        ) if state is not None and kind == "TOPOLOGY" else None)
+        if event is not None:
+            failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                      "to_type": new_type, "wns": self.baseline_wns,
+                      "tns": self.baseline_tns, "min_slack": None,
+                      "physical_failure": False, "candidate_netlist_text": candidate_text,
+                      "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                      "cache_key": cache_key, "config_hash": config_hash,
+                      "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        # All structural gates run before STA.  A topology candidate requires
+        # local truth-table evidence plus a separate full-netlist SEC result;
+        # the latter is never substituted by the local checker.
+        if kind == "TOPOLOGY":
+            sec_unavailable = False
+            sec_status = None
+            sec_details = {}
+            try:
+                local_check = check_local_functional_equivalence(topology_window, candidate_text)
+                if local_check.status != "pass":
+                    raise ValueError(f"local checker: {local_check.reason}")
+                if self.strict_gates:
+                    formal_event = self._deadline_or_budget_event(
+                        state, "formal", candidate_hash=candidate_hash,
+                        cut_hash=candidate_hash, action_scope=[inst],
+                    )
+                    if formal_event is not None:
+                        failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                                  "to_type": new_type, "wns": self.baseline_wns,
+                                  "tns": self.baseline_tns, "min_slack": None,
+                                  "physical_failure": False, "candidate_netlist_text": candidate_text,
+                                  "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                                  "cache_key": cache_key, "config_hash": config_hash,
+                                  "failure_events": [formal_event], "runtime_s": 0.0, **proxy_meta}
+                        self._sta_cache[cache_key] = dict(failed)
+                        return failed
+                    sec = self.topology_sec_checker(self.mapped_text, candidate_text)
+                    sec_details = _checker_details(sec)
+                    sec_status = sec_details.get("status")
+                    sec_unavailable = sec_status == "unavailable"
+                    if not _checker_passed(sec):
+                        raise ValueError(f"full-netlist SEC: {sec}")
+            except TimeoutError as exc:
+                event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                         "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                         "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
+                         "status": "timeout", "reason": str(exc)}}
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            except Exception as exc:
+                event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                         "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                         "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
+                         "status": sec_status or ("unavailable" if sec_unavailable else "fail"),
+                         "reason": sec_details.get("reason", str(exc)), **sec_details}}
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            if boundary_budget_event is not None:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [boundary_budget_event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            if self.boundary_checker is not None:
+                boundary_result = None
                 try:
+                    boundary_result = self.boundary_checker(self.mapped_text, candidate_text)
+                    boundary_ok = _checker_passed(boundary_result)
+                except Exception as exc:
+                    boundary_ok = False
+                    boundary_result = {"status": "error", "reason": str(exc)}
+            else:
+                boundary_ok = False
+                boundary_result = {"status": "unavailable", "reason": "boundary checker unavailable"}
+            if not boundary_ok:
+                    event = {"type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                             "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                             "runtime_s": 0.0, "evidence": {"stage": "boundary_closure",
+                             **_checker_details(boundary_result)}}
+                    failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                              "to_type": new_type, "wns": self.baseline_wns,
+                              "tns": self.baseline_tns, "min_slack": None,
+                              "physical_failure": False, "candidate_netlist_text": candidate_text,
+                              "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                              "cache_key": cache_key, "config_hash": config_hash,
+                              "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                    self._sta_cache[cache_key] = dict(failed)
+                    return failed
+        if self.strict_gates and kind != "TOPOLOGY":
+            structural_events = []
+            try:
+                eq = self.equivalence_checker(self.mapped_text, candidate_text)
+                if not _checker_passed(eq):
+                    structural_events.append({
+                        "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                        "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                        "runtime_s": 0.0, "evidence": {"stage": "equivalence", "result": str(eq)},
+                    })
+            except Exception as exc:
+                structural_events.append({
+                    "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0, "evidence": {"stage": "equivalence", "reason": str(exc)},
+                })
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            boundary_result = None
+            try:
+                if boundary_budget_event is not None:
+                    boundary_ok = False
+                else:
+                    boundary_result = (self.boundary_checker(self.mapped_text, candidate_text)
+                                       if self.boundary_checker is not None else None)
+                    boundary_ok = boundary_result is not None and _checker_passed(boundary_result)
+            except Exception as exc:
+                boundary_ok = False
+                boundary_error = str(exc)
+                boundary_result = {"status": "error", "reason": boundary_error}
+            if boundary_budget_event is not None:
+                structural_events.append(boundary_budget_event)
+            if not boundary_ok and boundary_budget_event is None:
+                structural_events.append({
+                    "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0,
+                    "evidence": {"stage": "boundary_closure",
+                                 **_checker_details(boundary_result or {
+                                     "status": "unavailable",
+                                     "reason": "checker unavailable or false",
+                                 })},
+                })
+            if structural_events:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": structural_events, "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+        event = self._deadline_or_budget_event(
+            state, "sta", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        )
+        if event is not None:
+            failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                      "to_type": new_type, "wns": self.baseline_wns,
+                      "tns": self.baseline_tns, "min_slack": None,
+                      "physical_failure": False, "candidate_netlist_text": candidate_text,
+                      "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                      "cache_key": cache_key, "config_hash": config_hash,
+                      "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        self.tested_candidate_hashes.add(candidate_hash)
+        self._last_base_hash = base_hash
+        try:
+            res = run_opensta_sequential(
+                netlist_path=sub / "mapped.v",
+                period=self.period,
+                output_dir=sub,
+                top_module=top_module,
+                hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                min_path=self.hold_mode,
+                clock_port=self.clock_port,
+                multi_path=True,
+                timeout_s=self._remaining_tool_timeout(state),
+            )
+        except TimeoutError as exc:
+            res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
+        except Exception as exc:
+            res = {"wns": None, "tns": None, "error": str(exc)}
+        critical_refresh = None
+        critical_endpoint_refresh = None
+        report = sub / "sta.log"
+        critical_report = report
+        if state is not None and state.deadline_expired():
+            event = {
+                "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "runtime_s": time.perf_counter() - started_at,
+                "evidence": {"stage": "sta", "reason": "deadline expired after ideal STA"},
+            }
+            return {"instance": inst, "kind": kind, "from_type": cell_type,
+                    "to_type": new_type, "wns": self.baseline_wns,
+                    "tns": self.baseline_tns, "min_slack": None,
+                    "candidate_netlist_text": candidate_text,
+                    "candidate_hash": candidate_hash, "failure_events": [event],
+                    "runtime_s": time.perf_counter() - started_at, **proxy_meta}
+        if report.exists():
+            report_text = report.read_text(encoding="utf-8", errors="replace")
+            critical_refresh = parse_critical_instances(report_text)
+            critical_endpoint_refresh = parse_worst_endpoint(report_text)
+        # Physical mode is evaluated exclusively against a paired physical
+        # baseline/candidate under one RC model.  Ideal STA is retained only
+        # as an independent diagnostic, never as an acceptance prefilter.
+        if self.physical_gate:
+            rc_config = {
+                "unit_len_um": self.physical_unit_len_um,
+                "fanout_penalty": self.physical_fanout_penalty,
+                "depth_penalty": self.physical_depth_penalty,
+            }
+            physical_config = {**rc_config,
+                               "min_physical_gain_ns": self.min_physical_gain_ns}
+            rc_config_hash = hashlib.sha256(
+                json.dumps(physical_config, sort_keys=True).encode()
+            ).hexdigest()
+            try:
                     from .spef import build_spef, parse_mapped_verilog, write_spef
-                    nl = parse_mapped_verilog(sub / "mapped.v")
-                    spef = write_spef(
-                        sub / "physical.spef",
-                        nl,
-                        unit_len_um=self.physical_unit_len_um,
-                        fanout_penalty=self.physical_fanout_penalty,
-                        depth_penalty=self.physical_depth_penalty,
-                    )
-                    phys = run_opensta_sequential(
-                        netlist_path=sub / "mapped.v",
-                        period=self.period,
-                        output_dir=sub / "physical",
-                        top_module=top_module,
-                        clock_port=self.clock_port,
-                        spef_path=spef,
-                    )
+                    import hashlib as _hashlib
+                    rc_config_hash = _hashlib.sha256(
+                        json.dumps(physical_config, sort_keys=True).encode()
+                    ).hexdigest()
+                    baseline_hash = _hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+                    physical_baseline_cache_key = baseline_hash + ":" + rc_config_hash
+                    self._physical_baseline_lock.acquire()
+                    physical_lock_held = True
+                    baseline = self._physical_baseline_cache.get(physical_baseline_cache_key)
+                    if baseline is None:
+                        base_dir = cand_dir / "physical_baseline"
+                        base_dir.mkdir(parents=True, exist_ok=True)
+                        (base_dir / "mapped.v").write_text(self.mapped_text, encoding="utf-8")
+                        base_nl = parse_mapped_verilog(base_dir / "mapped.v")
+                        base_spef = write_spef(base_dir / "physical.spef", base_nl, **rc_config)
+                        budget_event = self._deadline_or_budget_event(
+                            state, "sta", candidate_hash=candidate_hash,
+                            cut_hash=candidate_hash, action_scope=[inst])
+                        base_sta = None if budget_event else run_opensta_sequential(
+                            netlist_path=base_dir / "mapped.v",
+                            period=self.period, output_dir=base_dir,
+                            top_module=top_module, clock_port=self.clock_port,
+                            spef_path=base_spef,
+                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                            min_path=self.hold_mode,
+                            timeout_s=self._remaining_tool_timeout(state),
+                        )
+                        # Keep a physical baseline artifact alongside the
+                        # candidate, and fail closed if it is incomplete.
+                        baseline = {"wns": base_sta.get("wns") if base_sta else None,
+                                    "tns": base_sta.get("tns") if base_sta else None,
+                                    "min_slack": base_sta.get("min_slack") if base_sta else None,
+                                    "budget_event": budget_event,
+                                    "rc_config_hash": rc_config_hash,
+                                    "provenance": _physical_sta_provenance(
+                                        base_dir, base_sta, rc_config, rc_config_hash)}
+                        self._physical_baseline_cache[physical_baseline_cache_key] = baseline
+                    self._physical_baseline_lock.release()
+                    physical_lock_held = False
+                    if baseline.get("budget_event"):
+                        phys = {"wns": None, "tns": None, "min_slack": None,
+                                "budget_event": baseline["budget_event"]}
+                    else:
+                        nl = parse_mapped_verilog(sub / "mapped.v")
+                        spef = write_spef(sub / "physical.spef", nl, **rc_config)
+                        budget_event = self._deadline_or_budget_event(
+                            state, "sta", candidate_hash=candidate_hash,
+                            cut_hash=candidate_hash, action_scope=[inst])
+                        phys = {"wns": None, "tns": None, "min_slack": None,
+                                "budget_event": budget_event} if budget_event else run_opensta_sequential(
+                            netlist_path=sub / "mapped.v",
+                            period=self.period,
+                            output_dir=sub / "physical",
+                            top_module=top_module,
+                            clock_port=self.clock_port,
+                            spef_path=spef,
+                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                            min_path=self.hold_mode,
+                            timeout_s=self._remaining_tool_timeout(state),
+                        )
                     phys_wns = phys.get("wns")
-                    if phys_wns is None or phys_wns <= self.baseline_wns:
-                        # physical load failure: the ideal gain does not
-                        # survive parasitic RC (F6 signal for the outer loop)
+                    phys_tns = phys.get("tns")
+                    phys_min_slack = phys.get("min_slack")
+                    baseline_provenance = baseline.get("provenance")
+                    candidate_provenance = _physical_sta_provenance(
+                        sub / "physical", phys, rc_config, rc_config_hash)
+                    base_phys_wns = baseline.get("wns")
+                    base_phys_tns = baseline.get("tns")
+                    base_phys_min_slack = baseline.get("min_slack")
+                    if baseline.get("budget_event") or phys.get("budget_event"):
                         res = {**res, "wns": self.baseline_wns,
                                "physical_failure": True,
-                               "physical_wns": phys_wns}
+                               "physical_status": "budget_exhausted",
+                               "physical_wns": phys_wns, "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": None,
+                               "physical_budget_event": baseline.get("budget_event") or phys.get("budget_event"),
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+                    elif (base_phys_wns is None or phys_wns is None
+                          or base_phys_tns is None or phys_tns is None
+                          or (self.hold_required and (base_phys_min_slack is None
+                                                      or phys_min_slack is None))):
+                        # physical load failure: the ideal gain does not
+                        # have a complete paired physical measurement.
+                        res = {**res, "wns": self.baseline_wns,
+                               "physical_failure": True,
+                               "physical_status": "paired_incomplete",
+                               "physical_wns": phys_wns,
+                               "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": None,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+                    elif ((phys_wns < base_phys_wns - self.epsilon
+                           if self.hold_mode else
+                           phys_wns - base_phys_wns + 1e-12
+                           < self.min_physical_gain_ns - self.epsilon)
+                          or phys_tns < base_phys_tns - self.epsilon
+                          or (self.hold_required and (
+                              base_phys_min_slack is None or phys_min_slack is None
+                              or phys_min_slack < base_phys_min_slack - self.epsilon))):
+                        # physical load failure: candidate is compared to the
+                        # paired current baseline under exactly one RC model.
+                        res = {**res, "wns": self.baseline_wns,
+                               "physical_failure": True,
+                               "physical_status": "paired_rejected",
+                               "physical_wns": phys_wns,
+                               "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": phys_wns - base_phys_wns,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
                     else:
                         # parasitic-aware gain survives: report the SPEF WNS
-                        res = {**res, "wns": phys_wns,
-                               "physical_wns": phys_wns}
-                except Exception as exc:
-                    res = {**res, "physical_gate_error": str(exc)}
-        return {
+                        res = {**res, "wns": phys_wns, "tns": phys_tns,
+                               "min_slack": phys_min_slack,
+                               "physical_status": "paired_improved",
+                               "physical_wns": phys_wns,
+                               "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": phys_wns - base_phys_wns,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+            except Exception as exc:
+                    if locals().get("physical_lock_held"):
+                        self._physical_baseline_lock.release()
+                    res = {**res, "wns": self.baseline_wns,
+                           "physical_failure": True,
+                           "physical_status": "error",
+                           "physical_baseline": (baseline.get("wns") if "baseline" in locals() else None),
+                           "physical_candidate": None,
+                           "physical_baseline_tns": (baseline.get("tns") if "baseline" in locals() else None),
+                           "physical_candidate_tns": None,
+                           "physical_delta": None,
+                           "physical_baseline_provenance": (baseline.get("provenance") if "baseline" in locals() and baseline else None),
+                           "physical_candidate_provenance": (_physical_sta_provenance(sub / "physical", phys, rc_config, rc_config_hash) if "phys" in locals() and phys else None),
+                           "rc_config_hash": (rc_config_hash if "rc_config_hash" in locals() else None),
+                           "physical_gate_error": str(exc)}
+            if state is not None and state.deadline_expired():
+                deadline_event = {
+                    "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": time.perf_counter() - started_at,
+                    "evidence": {"stage": "physical_sta", "reason": "deadline expired after physical STA"},
+                }
+                res = {**res, "wns": self.baseline_wns, "tns": self.baseline_tns,
+                       "min_slack": None, "physical_failure": False,
+                       "physical_status": "budget_exhausted",
+                       "physical_budget_event": deadline_event,
+                       "physical_delta": None}
+            if self.physical_gate:
+                res["physical_config"] = {
+                    "unit_len_um": self.physical_unit_len_um,
+                    "fanout_penalty": self.physical_fanout_penalty,
+                    "depth_penalty": self.physical_depth_penalty,
+                    "min_physical_gain_ns": self.min_physical_gain_ns,
+                }
+            physical_report = sub / "physical" / "sta.log"
+            if physical_report.exists():
+                critical_report = physical_report
+                physical_report_text = physical_report.read_text(
+                    encoding="utf-8", errors="replace"
+                )
+                critical_refresh = parse_critical_instances(physical_report_text)
+                critical_endpoint_refresh = parse_worst_endpoint(physical_report_text)
+        failure_events = []
+        if res.get("physical_budget_event"):
+            failure_events.append(res["physical_budget_event"])
+        if res.get("physical_failure"):
+            failure_events.append({
+                "type": "F6_physical_load_failure",
+                "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash,
+                "endpoint": None,
+                "path": [],
+                "net": None,
+                "action_scope": [inst],
+                "threshold": {
+                    "value": self.min_physical_gain_ns,
+                    "unit": "ns",
+                    "epsilon": self.epsilon,
+                },
+                "observed_value": res.get("physical_delta"),
+                "severity": "soft",
+                "runtime_s": time.perf_counter() - started_at,
+                "evidence": {
+                    "threshold": {
+                        "value": self.min_physical_gain_ns,
+                        "unit": "ns",
+                        "epsilon": self.epsilon,
+                    },
+                    "actual_delta": res.get("physical_delta"),
+                    "backend": "OpenSTA SPEF",
+                    "physical_baseline": res.get("physical_baseline"),
+                    "physical_candidate": res.get("physical_candidate"),
+                    "paired_baseline": res.get("physical_baseline_provenance"),
+                    "paired_candidate": res.get("physical_candidate_provenance"),
+                    "rc_config_hash": res.get("rc_config_hash"),
+                    "status": res.get("physical_status"),
+                    "error": res.get("physical_gate_error"),
+                },
+            })
+        # F3 is measured from the actual changed region and is a hard gate in
+        # both compatibility and strict production modes.  It must never be
+        # disabled merely because formal/boundary checkers are configured.
+        if kind == "TOPOLOGY" and topology_window is not None:
+            changed = len(topology_window.gates)
+        elif kind == "JOINT":
+            changed = len(pin_map)
+        else:
+            changed = 1
+        gate_count = max(1, len(parse_mapped_netlist(self.mapped_text)))
+        ratio = changed / gate_count
+        if self.strict_gates and ratio > self.max_patch_ratio + self._metric_epsilon("patch_ratio"):
+            failure_events.append({
+                "type": "F3_patch_too_large", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "runtime_s": 0.0,
+                 "threshold": {"value": self.max_patch_ratio, "unit": "ratio",
+                                "epsilon": self._metric_epsilon("patch_ratio")},
+                 "observed_value": {"value": ratio, "unit": "ratio"},
+                "evidence": {"modified_gate_count": changed, "gate_count": gate_count,
+                             "action_scope": [inst]},
+            })
+        if time.perf_counter() - started_at > self.max_verification_time_s:
+            failure_events.append({
+                "type": "F5_verification_too_expensive", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "runtime_s": time.perf_counter() - started_at,
+                "threshold": self.max_verification_time_s,
+                "observed_value": time.perf_counter() - started_at,
+                "evidence": {"tool": "OpenSTA"},
+            })
+        if res.get("error") or res.get("timeout"):
+            failure_events.append({
+                "type": "F5_verification_too_expensive", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "runtime_s": time.perf_counter() - started_at,
+                "threshold": self.max_verification_time_s,
+                "observed_value": time.perf_counter() - started_at,
+                "evidence": {"tool": "OpenSTA", "error": res.get("error"),
+                             "timeout": bool(res.get("timeout"))},
+            })
+        paired = self.physical_gate
+        metric_values = {
+            "setup_wns": res.get("physical_candidate") if paired else res.get("wns"),
+            "setup_tns": res.get("physical_candidate_tns") if paired else res.get("tns"),
+            "hold_min_slack": (res.get("physical_candidate_min_slack")
+                               if paired else res.get("min_slack")),
+            "area": res.get("area"),
+            "max_transition": res.get("max_transition"),
+            "max_capacitance": res.get("max_capacitance"),
+            "max_fanout": res.get("max_fanout"),
+        }
+        metric_references = {
+            "setup_wns": res.get("physical_baseline") if paired else self.baseline_wns,
+            "setup_tns": res.get("physical_baseline_tns") if paired else self.baseline_tns,
+            "hold_min_slack": (res.get("physical_baseline_min_slack")
+                               if paired else self.baseline_min_slack),
+        }
+        unavailable_metrics = [metric for metric in self.required_metrics
+                               if metric_values.get(metric) is None]
+        unavailable = tuple(unavailable_metrics)
+        violations: list[str] = []
+        if (self.strict_budgets and metric_references["setup_tns"] is not None
+                and metric_values["setup_tns"] is not None
+                and metric_values["setup_tns"] < metric_references["setup_tns"] - self.epsilon):
+            violations.append("setup_tns")
+        if (self.strict_budgets and self.hold_required
+                and metric_references["hold_min_slack"] is not None
+                and metric_values["hold_min_slack"] is not None
+                and metric_values["hold_min_slack"] < metric_references["hold_min_slack"] - self.epsilon):
+            violations.append("hold_min_slack")
+        if self.area_budget is not None and res.get("area") is not None and res["area"] > self.area_budget + self._metric_epsilon("area"):
+            violations.append("area")
+        if self.max_transition_budget is not None and res.get("max_transition") is not None and res["max_transition"] > self.max_transition_budget + self._metric_epsilon("max_transition"):
+            violations.append("max_transition")
+        if self.max_capacitance_budget is not None and res.get("max_capacitance") is not None and res["max_capacitance"] > self.max_capacitance_budget + self._metric_epsilon("max_capacitance"):
+            violations.append("max_capacitance")
+        if self.max_fanout_budget is not None and res.get("max_fanout") is not None and res["max_fanout"] > self.max_fanout_budget + self._metric_epsilon("max_fanout"):
+            violations.append("max_fanout")
+        evidence = AcceptanceEvidence(
+            setup_wns=metric_values["setup_wns"], setup_tns=metric_values["setup_tns"],
+            hold_min_slack=metric_values["hold_min_slack"], area=res.get("area"),
+            max_transition=res.get("max_transition"),
+            max_capacitance=res.get("max_capacitance"), max_fanout=res.get("max_fanout"),
+            backend_provenance={"tool": "OpenSTA", "status": res.get("status", "unknown")},
+            unavailable=unavailable if self.strict_budgets else (),
+            violations=tuple(violations), epsilon=self.epsilon,
+            epsilon_by_metric=dict(self.metric_epsilons),
+        )
+        if self.strict_budgets and (evidence.unavailable or evidence.violations):
+            metric_budgets = {}
+            budget_specs = {
+                "area": self.area_budget,
+                "max_transition": self.max_transition_budget,
+                "max_capacitance": self.max_capacitance_budget,
+                "max_fanout": self.max_fanout_budget,
+            }
+            metric_units = {
+                "setup_wns": "ns", "setup_tns": "ns", "hold_min_slack": "ns",
+                "area": "um^2", "max_transition": "ns",
+                "max_capacitance": "pF", "max_fanout": "count",
+            }
+            metric_values_for_evidence = {
+                "setup_wns": metric_values["setup_wns"],
+                "setup_tns": metric_values["setup_tns"],
+                "hold_min_slack": metric_values["hold_min_slack"],
+                **metric_values,
+            }
+            for metric, budget in budget_specs.items():
+                value = metric_values.get(metric)
+                if budget is not None and value is not None and metric in violations:
+                    metric_budgets[metric] = {
+                        "value": value,
+                        "budget": budget,
+                        "epsilon": self._metric_epsilon(metric),
+                        "unit": metric_units[metric],
+                        "backend": "OpenSTA",
+                    }
+            for metric, reference in metric_references.items():
+                value = metric_values_for_evidence.get(metric)
+                if metric in violations and reference is not None and value is not None:
+                    metric_budgets[metric] = {
+                        "value": value,
+                        "reference": reference,
+                        "epsilon": self.epsilon,
+                        "unit": metric_units[metric],
+                        "backend": "OpenSTA",
+                    }
+            evidence_payload = evidence.to_dict()
+            evidence_payload["metric_budgets"] = metric_budgets
+            failure_events.append({
+                "type": "acceptance_budget_unavailable" if evidence.unavailable else "acceptance_budget_violation",
+                "candidate_hash": candidate_hash, "cut_hash": candidate_hash,
+                "severity": "hard", "hard_gate": True, "runtime_s": time.perf_counter() - started_at,
+                "threshold": {"unavailable": list(evidence.unavailable), "violations": list(evidence.violations)},
+                "observed_value": evidence_payload, "evidence": evidence_payload,
+            })
+        evidence_payload = evidence.to_dict()
+        evidence_payload["metric_references"] = metric_references
+        if self.physical_gate:
+            evidence_payload["paired_reference_source"] = "physical_baseline"
+        result = {
             "instance": inst,
             "kind": kind,
             "from_type": cell_type,
             "to_type": new_type,
+            "topology_metrics": ({
+                "before": topology_replacement.before.to_dict(),
+                "after": topology_replacement.after.to_dict(),
+            } if kind == "TOPOLOGY" else None),
             "wns": res.get("wns"),
             "tns": res.get("tns"),
             "min_slack": res.get("min_slack"),
+            "area": res.get("area"),
+            "max_transition": res.get("max_transition"),
+            "max_capacitance": res.get("max_capacitance"),
+            "max_fanout": res.get("max_fanout"),
             "min_slack_status": res.get("min_slack_status"),
             "slack": res.get("slack"),
             "slack_status": res.get("slack_status"),
             "physical_failure": res.get("physical_failure", False),
             "physical_wns": res.get("physical_wns"),
+            "physical_tns": res.get("physical_tns"),
+            "physical_min_slack": res.get("physical_min_slack"),
             "physical_gate_error": res.get("physical_gate_error"),
+            "physical_baseline": res.get("physical_baseline"),
+            "physical_candidate": res.get("physical_candidate"),
+            "physical_baseline_tns": res.get("physical_baseline_tns"),
+            "physical_candidate_tns": res.get("physical_candidate_tns"),
+            "physical_baseline_min_slack": res.get("physical_baseline_min_slack"),
+            "physical_candidate_min_slack": res.get("physical_candidate_min_slack"),
+            "physical_baseline_provenance": res.get("physical_baseline_provenance"),
+            "physical_candidate_provenance": res.get("physical_candidate_provenance"),
+            "physical_config": res.get("physical_config"),
+            "physical_delta": res.get("physical_delta"),
+            "physical_status": res.get("physical_status"),
+            "rc_config_hash": res.get("rc_config_hash"),
+            "failure_events": failure_events,
+            "acceptance_evidence": evidence_payload,
+            "critical_instances": critical_refresh,
+            "critical_endpoints": ([critical_endpoint_refresh]
+                                    if critical_endpoint_refresh else None),
+            "sta_provenance": {
+                "tool": "OpenSTA", "output_dir": str(critical_report.parent),
+                "report_path": str(critical_report) if critical_report.exists() else None,
+            },
+            "candidate_netlist_text": candidate_text,
+            "candidate_hash": candidate_hash,
+            "base_netlist_hash": base_hash,
+            "cache_key": cache_key,
+            "config_hash": config_hash,
+            "runtime_s": time.perf_counter() - started_at,
             **proxy_meta,
         }
+        self._sta_cache[cache_key] = dict(result)
+        return result
 
     # -- main entry ---------------------------------------------------------
 
-    def __call__(self, patch, weights) -> dict:
+    def __call__(self, patch, weights, *, state=None) -> dict:
         """Evaluate one outer-loop patch candidate with real STA."""
+        self._active_state = state
         gates = list(getattr(patch, "gates", []) or [])
         patch_id = getattr(patch, "patch_id", str(patch))
         iteration = len(self.call_log) + 1
@@ -489,22 +1742,63 @@ class RealWnsEvaluator:
         cand_dir = self.output_dir / ("iter%03d_cand%03d" % (iteration, self._call_counter))
         cand_dir.mkdir(parents=True, exist_ok=True)
 
+        unavailable_required = sorted(set(self.required_metrics) - set(self.available_metrics))
+        if self.strict_budgets and unavailable_required:
+            base_hash = hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+            candidate_hash = hashlib.sha256(
+                json.dumps({"base": base_hash, "patch": str(patch_id), "gates": sorted(gates)}, sort_keys=True).encode()
+            ).hexdigest()
+            event = {
+                "type": "acceptance_budget_unavailable",
+                "candidate_hash": candidate_hash, "cut_hash": candidate_hash,
+                "endpoint": None, "path": [], "net": None,
+                "action_scope": gates, "threshold": unavailable_required,
+                "observed_value": "backend_preflight_unavailable", "severity": "hard",
+                "runtime_s": 0.0,
+                "evidence": {"required_metrics": list(self.required_metrics),
+                             "available_metrics": sorted(self.available_metrics),
+                             "backend": "OpenSTA sequential parser"},
+            }
+            event = _normalise_failure_events([event], candidate_hash=candidate_hash)[0]
+            trial = {"patch_id": patch_id, "iteration": iteration,
+                     "candidate_hash": candidate_hash, "cut_hash": candidate_hash,
+                     "failure_events": [event], "accepted": False,
+                     "wns": self.baseline_wns, "improved": False,
+                     "reason": "required metric backend unavailable"}
+            self.trials.append(trial)
+            self.call_log.append({"iteration": iteration, "patch_id": patch_id,
+                                  "gates": gates, "improved": False,
+                                  "reason": trial["reason"], "failure_events": [event]})
+            return {"wns": self.baseline_wns, "tns": self.baseline_tns,
+                    "improved": False, "failure_events": [event],
+                    "trial_failure_events": [event], "candidate_hash": candidate_hash}
+
         cells = parse_mapped_netlist(self.mapped_text)
         by_inst = {c.instance: c for c in cells}
         in_patch = [g for g in gates if g in by_inst]
         # order: critical-path instances first, then remaining cut gates
         ordered = [i for i in self.critical_instances if i in in_patch]
         ordered += [g for g in in_patch if g not in ordered]
-        # fall back to critical instances when the cut has no real cells
-        if not ordered:
-            ordered = [i for i in self.critical_instances if i in by_inst]
         actionable = ordered[: self.max_instances]
         if not actionable:
+            no_action_hash = hashlib.sha256(
+                json.dumps({"gates": sorted(gates), "patch_id": patch_id}, sort_keys=True).encode()
+            ).hexdigest()
+            no_action_event = _normalise_failure_events([{
+                     "type": "F2_boundary_invalid", "candidate_hash": no_action_hash,
+                     "cut_hash": no_action_hash, "endpoint": None, "path": [],
+                     "net": None, "action_scope": list(gates),
+                     "threshold": 1, "observed_value": 0, "severity": "hard",
+                     "runtime_s": 0.0,
+                     "evidence": {"reason": "cut has no actionable mapped gate"},
+                 }], candidate_hash=no_action_hash)[0]
             self.call_log.append(
                 {"iteration": iteration, "patch_id": patch_id, "gates": gates,
-                 "wns": self.baseline_wns, "improved": False, "reason": "no actionable gates"}
+                 "wns": self.baseline_wns, "improved": False,
+                 "reason": "no actionable gates", "failure_events": [no_action_event]}
             )
-            return {"wns": self.baseline_wns, "improved": False}
+            return {"wns": self.baseline_wns, "improved": False,
+                    "failure_events": self.call_log[-1]["failure_events"]}
 
         candidate_rows: list[dict] = []
         job_index = 0
@@ -548,6 +1842,34 @@ class RealWnsEvaluator:
                     )
                 )
                 job_index += 1
+
+        # Topology candidate: extract exactly the cut region, generate a
+        # multi-gate rewrite, and defer local truth-table equivalence to the
+        # candidate evaluation before OpenSTA/acceptance.
+        if self.enable_topology and len(actionable) >= 2:
+            try:
+                analysis_netlist = parse_verilog_netlist_from_text(self.mapped_text)
+                window = extract_combinational_window(analysis_netlist, actionable)
+                topology = generate_topology_replacement(window)
+                job = (
+                    "TOPOLOGY", "topology", topology.method,
+                    (topology, window), "TOPOLOGY", self.mapped_text,
+                    cand_dir, self.top_module, job_index,
+                )
+                candidate_rows.append(
+                    self._proxy_row(
+                        instance="TOPOLOGY", kind="TOPOLOGY", from_type="topology",
+                        to_type=topology.method,
+                        critical_rank=0, critical_count=critical_count,
+                        strategy_rank=0, patch_size=len(topology.original_gates),
+                        boundary_complexity=boundary_complexity, job=job,
+                    )
+                )
+                job_index += 1
+            except (ValueError, OSError):
+                # No supported topology pattern in this region is an honest
+                # no-candidate outcome, not a fallback to global critical gates.
+                pass
 
         # joint repair: one candidate that changes the top-joint_k actionable
         # instances simultaneously.  Default (joint_mix=False) resizes with G;
@@ -608,7 +1930,7 @@ class RealWnsEvaluator:
         # multi-gate combinations along the critical path and let OpenSTA
         # pick the best -- no manual selection of the joint set.
         if self.joint_enumerate_depth > 0:
-            for change, label in self._joint_enumerate_combos(cells):
+            for change, label in self._joint_enumerate_combos(cells, actionable):
                 critical_rank = min(
                     (
                         self.critical_instances.index(inst)
@@ -663,34 +1985,93 @@ class RealWnsEvaluator:
         best_wns = self.baseline_wns
         best_tns = self.baseline_tns
         best_min = self.baseline_min_slack
+        best_physical_wns: float | None = None
+        best_physical_hold: float | None = None
         best: dict | None = None
 
         def _accept_result(r: dict) -> bool:
-            nonlocal best_wns, best_tns, best_min, best
+            nonlocal best_wns, best_tns, best_min, best_physical_wns, best_physical_hold, best
             wns = r["wns"]
+            if any(e.get("severity") == "hard" or e.get("type") in {
+                "F1_equivalence_failure", "F2_boundary_invalid",
+                "F3_patch_too_large", "F5_verification_too_expensive",
+            } for e in r.get("failure_events", [])):
+                return False
             tns = r.get("tns")
             min_slack = r.get("min_slack")
             if wns is None:
+                return False
+            if self.physical_gate:
+                physical_candidate = r.get("physical_candidate")
+                physical_baseline = r.get("physical_baseline")
+                physical_delta = r.get("physical_delta")
+                physical_candidate_tns = r.get("physical_candidate_tns")
+                physical_baseline_tns = r.get("physical_baseline_tns")
+                physical_candidate_min_slack = r.get("physical_candidate_min_slack")
+                physical_baseline_min_slack = r.get("physical_baseline_min_slack")
+                if (r.get("physical_status") != "paired_improved"
+                        or physical_candidate is None or physical_baseline is None
+                        or physical_candidate_tns is None or physical_baseline_tns is None
+                        or physical_candidate_tns < physical_baseline_tns - self.epsilon
+                        or (self.hold_required
+                            and (physical_baseline_min_slack is None
+                                 or physical_candidate_min_slack is None
+                                 or physical_candidate_min_slack < physical_baseline_min_slack - self.epsilon))
+                        or (not self.hold_mode
+                            and (physical_delta is None
+                                 or physical_delta + 1e-12
+                                 < self.min_physical_gain_ns - self.epsilon))
+                        or (self.hold_mode
+                            and (physical_baseline_min_slack is None
+                                 or physical_candidate_min_slack is None
+                                 or physical_candidate_min_slack <= physical_baseline_min_slack + self.epsilon))):
+                    return False
+                hold_is_better = (
+                    self.hold_mode
+                    and (
+                        best_physical_hold is None
+                        or physical_candidate_min_slack > best_physical_hold + self.epsilon
+                        or (
+                            abs(physical_candidate_min_slack - best_physical_hold) <= self.epsilon
+                            and (best_physical_wns is None
+                                 or physical_candidate > best_physical_wns + self.epsilon)
+                        )
+                    )
+                )
+                setup_is_better = (
+                    not self.hold_mode
+                    and (best_physical_wns is None
+                         or physical_candidate > best_physical_wns + self.epsilon)
+                )
+                if hold_is_better or setup_is_better:
+                    best_physical_wns = physical_candidate
+                    best_physical_hold = physical_candidate_min_slack
+                    best_wns = wns
+                    best_tns = tns
+                    best_min = physical_candidate_min_slack
+                    best = r
+                    return True
                 return False
             if self.hold_mode:
                 # Hold-repair mode: accept a candidate that strictly improves
                 # worst min slack (hold) without degrading setup WNS below
                 # the baseline.  This lets buffer insertion act as the
                 # hold-fixing strategy while setup remains safe.
-                if min_slack is not None and best_min is not None and min_slack > best_min:
-                    if wns >= self.baseline_wns or wns > best_wns:
+                if min_slack is not None and best_min is not None and min_slack > best_min + self.epsilon:
+                    if (wns >= self.baseline_wns - self.epsilon
+                            or wns > best_wns + self.epsilon):
                         best_wns = wns
                         best_tns = tns
                         best_min = min_slack
                         best = r
                         return True
                 return False
-            if wns > best_wns or (
+            if wns > best_wns + self.epsilon or (
                 self.tns_aware
-                and wns == best_wns
+                and abs(wns - best_wns) <= self.epsilon
                 and tns is not None
                 and best_tns is not None
-                and tns > best_tns
+                and tns > best_tns + self.epsilon
             ):
                 best_wns = wns
                 best_tns = tns
@@ -706,6 +2087,18 @@ class RealWnsEvaluator:
                 for job, future in zip(jobs, futures):
                     result = dict(future.result())
                     result.update(job[-1])
+                    result["failure_events"] = _normalise_failure_events(
+                        result.get("failure_events"),
+                        candidate_hash=result.get("candidate_hash") or hashlib.sha256(
+                            result.get("candidate_netlist_text", "").encode("utf-8")
+                        ).hexdigest(),
+                    )
+                    result["trial_failure_events"] = _normalise_failure_events(
+                        result.get("trial_failure_events"),
+                        candidate_hash=result.get("candidate_hash") or hashlib.sha256(
+                            result.get("candidate_netlist_text", "").encode("utf-8")
+                        ).hexdigest(),
+                    )
                     results.append(result)
             for r in results:
                 _accept_result(r)
@@ -716,6 +2109,18 @@ class RealWnsEvaluator:
             for j in jobs:
                 r = dict(self._eval_one(j))
                 r.update(j[-1])
+                r["failure_events"] = _normalise_failure_events(
+                    r.get("failure_events"),
+                    candidate_hash=r.get("candidate_hash") or hashlib.sha256(
+                        r.get("candidate_netlist_text", "").encode("utf-8")
+                    ).hexdigest(),
+                )
+                r["trial_failure_events"] = _normalise_failure_events(
+                    r.get("trial_failure_events"),
+                    candidate_hash=r.get("candidate_hash") or hashlib.sha256(
+                        r.get("candidate_netlist_text", "").encode("utf-8")
+                    ).hexdigest(),
+                )
                 results.append(r)
                 improved_now = _accept_result(r)
                 if self.early_stop and improved_now:
@@ -749,11 +2154,31 @@ class RealWnsEvaluator:
         # In hold-repair mode success is a strict worst-min-slack improvement
         # (setup WNS is only guarded, see _accept_result); in setup mode it is
         # the usual strict WNS improvement.
-        improved = (
-            best_min > self.baseline_min_slack
-            if self.hold_mode
-            else best_wns > self.baseline_wns
-        )
+        if self.physical_gate:
+            improved = bool(
+                best is not None
+                and best.get("physical_status") == "paired_improved"
+                and (
+                    (self.hold_mode
+                     and best.get("physical_baseline_min_slack") is not None
+                     and best.get("physical_candidate_min_slack") is not None
+                     and best["physical_candidate_min_slack"]
+                     > best["physical_baseline_min_slack"] + self.epsilon)
+                    or (not self.hold_mode
+                        and best.get("physical_delta") is not None
+                        and best["physical_delta"] > self.epsilon)
+                )
+            )
+        elif self.hold_mode:
+            improved = best_min > self.baseline_min_slack + self.epsilon
+        else:
+            improved = (
+                best_wns > self.baseline_wns + self.epsilon
+                or (self.tns_aware and self.baseline_tns is not None
+                    and abs(best_wns - self.baseline_wns) <= self.epsilon
+                    and best_tns is not None
+                    and best_tns > self.baseline_tns + self.epsilon)
+            )
         self.call_log.append(
             {
                 "iteration": iteration,
@@ -778,9 +2203,41 @@ class RealWnsEvaluator:
                               "critical_coverage_reward", "equivalence_stability_reward")
                     if hasattr(weights, k)
                 },
+                "epsilon": self.epsilon,
             }
         )
-        return {"wns": best_wns, "min_slack": best_min, "improved": improved}
+        selected_events = list(best.get("failure_events", [])) if best else [
+            event for trial in results for event in trial.get("failure_events", [])
+        ]
+        trial_events = [
+            event for trial in results for event in trial.get("failure_events", [])
+        ]
+        result = {"wns": best_wns, "tns": best_tns, "min_slack": best_min,
+                  "improved": improved, "failure_events": selected_events,
+                  "trial_failure_events": trial_events,
+                  "physical_status": (best or (results[-1] if results else {})).get("physical_status"),
+                  "physical_candidate": (best or (results[-1] if results else {})).get("physical_candidate"),
+                  "physical_baseline": (best or (results[-1] if results else {})).get("physical_baseline"),
+                  "physical_delta": (best or (results[-1] if results else {})).get("physical_delta"),
+                  "physical_candidate_tns": (best or (results[-1] if results else {})).get("physical_candidate_tns"),
+                  "physical_baseline_tns": (best or (results[-1] if results else {})).get("physical_baseline_tns"),
+                  "physical_candidate_min_slack": (best or (results[-1] if results else {})).get("physical_candidate_min_slack"),
+                  "physical_baseline_min_slack": (best or (results[-1] if results else {})).get("physical_baseline_min_slack"),
+                  "physical_baseline_provenance": (best or (results[-1] if results else {})).get("physical_baseline_provenance"),
+                  "physical_candidate_provenance": (best or (results[-1] if results else {})).get("physical_candidate_provenance"),
+                  "physical_config": (best or (results[-1] if results else {})).get("physical_config")}
+        if best is not None:
+            result.update({k: best[k] for k in
+                            ("candidate_netlist_text", "candidate_hash",
+                             "runtime_s", "physical_baseline", "physical_candidate",
+                             "physical_tns", "physical_min_slack", "physical_baseline_tns",
+                             "physical_candidate_tns", "physical_baseline_min_slack",
+                             "physical_candidate_min_slack", "physical_baseline_provenance",
+                             "physical_candidate_provenance", "physical_delta", "physical_status", "rc_config_hash", "physical_config", "critical_instances",
+                            "critical_endpoints", "sta_provenance", "acceptance_evidence",
+                            "base_netlist_hash", "cache_key", "config_hash", "kind",
+                            "topology_metrics") if k in best})
+        return result
 
     def write_trials(self, path: str | Path) -> None:
         payload: dict = {"call_log": self.call_log, "trials": self.trials}

@@ -2,6 +2,7 @@
 
 import json
 import time
+import inspect
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -9,10 +10,13 @@ from typing import Any
 from .case_loader import load_case
 from .cut import (
     build_weighted_cut_graph,
+    canonical_cut_hash,
     fixed_min_cut,
     solve_weighted_cut,
     split_cone_by_depth,
     weighted_cut_candidates,
+    constrained_weighted_cut_candidates,
+    _critical_path_cover_cut,
 )
 from .equivalence import check_structural_equivalence
 from .failures import FailureThresholds, FailureType, classify_failures
@@ -23,6 +27,7 @@ from .patch import make_patch_candidate
 from .ranking import rank_patch_candidates
 from .refinement import RefinementWeights, refine_weights
 from .replacement import apply_patch_replacement
+from .replacement import parse_verilog_netlist_from_text
 from .yosys_abc import check_yosys_abc_equivalence, run_yosys_abc_resynthesis_baseline
 
 
@@ -113,9 +118,14 @@ def build_case_metrics(
         logic_level_after = None
         reduction = 0
 
+    # Legacy metrics mode has no boundary-checker invocation.  Treat the
+    # boundary result as "not evaluated" here to preserve its historical
+    # F1/F3-only taxonomy; the strict multi-iteration runner below computes
+    # boundary_closed from the real checker and fails closed when unavailable.
+    boundary_closed = equivalence.status in {"pass", "fail"}
     failures = classify_failures(
         equivalence_passed=equivalence.status == "pass",
-        boundary_closed=True,
+        boundary_closed=boundary_closed,
         patch_size=initial_patch_size,
         original_gate_count=original.gate_count,
         logic_level_before=logic_level_before,
@@ -321,7 +331,10 @@ def write_case_metrics(case_dir: str | Path) -> Path:
     return output_path
 
 
-def _cone_candidates(cone, weights, critical_instances, r_available):
+def _cone_candidates(cone, weights, critical_instances, r_available, *, constrained=False, k=8,
+                     allow_singleton=False, wall_timeout_s=None):
+    if not getattr(cone, "gates", None):
+        return []
     # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
     # weights.max_cone_gates is split into depth-bounded subcones; each
     # subcone is cut independently so the global s-t graph stays bounded.
@@ -329,11 +342,46 @@ def _cone_candidates(cone, weights, critical_instances, r_available):
     cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]
     out: list = []
     for sub in cones:
-        out.extend(weighted_cut_candidates(
-            sub, weights, critical_instances,
-            r_available=r_available,
-            critical_first_default=True,
-        ))
+        if constrained:
+            # The joint bi-objective cut hard-anchors the deepest critical
+            # instance and requires >=1 covered critical gate.  Both must be
+            # filtered to gates actually present in this (sub)cone: an anchor
+            # outside the cone used to suppress every candidate (s27 target
+            # cone G10 does not contain the deepest critical instance).
+            sub_critical = [
+                g for g in (critical_instances or []) if g in set(sub.gates)
+            ]
+            rows = constrained_weighted_cut_candidates(
+                sub, weights, k=k, critical_instances=sub_critical or None,
+                min_critical_coverage=1 if sub_critical else 0,
+                hard_anchors=(sub_critical[-1:] if sub_critical else []),
+                window_size=max(1, getattr(weights, "max_cone_gates", len(sub.gates))),
+                allow_singleton=allow_singleton,
+                wall_timeout_s=wall_timeout_s,
+            )
+            # Joint bi-objective cut: the critical-path cover is the
+            # first-round default candidate even in the constrained path.
+            # Without it, beam-1 loops stay stuck on the cheapest singleton
+            # region and never reach the multi-gate B/JOINT candidates that
+            # actually repair the timing bottleneck.
+            if sub_critical:
+                # The F1 hard constraint zeroes the critical reward of gates
+                # without an R candidate in the cut graph; it must not remove
+                # those gates from the cover itself, otherwise beam-1 loops
+                # never reach the B/G/JOINT candidates that repair them
+                # (s27 cover was reduced to the single R-rewritable gate).
+                cover = _critical_path_cover_cut(sub, sub_critical, r_available=None)
+                if cover is not None and cover.patch_size > 0:
+                    seen = {canonical_cut_hash(c) for c in rows}
+                    if canonical_cut_hash(cover) not in seen:
+                        rows = [cover] + rows
+            out.extend(rows)
+        else:
+            out.extend(weighted_cut_candidates(
+                sub, weights, critical_instances,
+                r_available=r_available,
+                critical_first_default=True,
+            ))
     return out
 
 
@@ -346,9 +394,14 @@ def run_multi_iteration_case(
     equivalence_checker: object | None = None,
     wns_evaluator: object | None = None,
     candidates_per_iteration: int = 8,
+    max_patches: int | None = None,
     critical_instances: list[str] | None = None,
     r_available: set[str] | None = None,
     init_weights: dict | None = None,
+    epsilon: float = 0.0,
+    sta_budget: int | None = None,
+    formal_budget: int | None = None,
+    wall_timeout_s: float | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -383,7 +436,7 @@ def run_multi_iteration_case(
         the weighted cut search can generate a critical-path-cover candidate
         that actually targets the timing-critical gates after an F4 failure.
     """
-    from .refinement_loop import RefinementConfig, simulate_refinement_loop
+    from .refinement_loop import RefinementConfig, SearchState, simulate_refinement_loop
     case_dir = Path(case_dir)
     artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
     case = load_case(case_dir)
@@ -413,8 +466,53 @@ def run_multi_iteration_case(
         reduction = 0
 
     wns_history: list[float] = []
+    # ``0`` is a meaningful hard budget: do not let truthiness turn it into
+    # the iteration default.  Normalise once before constructing auditable
+    # state so the configured limit and the runtime guard share one value.
+    max_patches = max_iterations if max_patches is None else int(max_patches)
+    if max_patches < 0:
+        raise ValueError("max_patches must be non-negative")
+    initial_netlist_text = (
+        getattr(wns_evaluator, "mapped_text", None)
+        if wns_evaluator is not None else None
+    ) or (case.original_analysis_netlist_path.read_text(encoding="utf-8"))
+    initial_wns = getattr(wns_evaluator, "baseline_wns", None)
+    started_at = time.perf_counter()
+    deadline = (started_at + float(wall_timeout_s)
+                if wall_timeout_s is not None else None)
+    state = SearchState(
+        current_netlist_text=initial_netlist_text,
+        current_wns=initial_wns,
+        current_tns=getattr(wns_evaluator, "baseline_tns", None),
+        current_min_slack=getattr(wns_evaluator, "baseline_min_slack", None),
+        critical_instances=list(critical_instances or getattr(wns_evaluator, "critical_instances", []) or []),
+        current_cone_gates=list(cone.gates),
+        budget={"max_iterations": max_iterations, "epsilon": float(epsilon),
+                "sta_budget": sta_budget, "formal_budget": formal_budget,
+                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches,
+                "_deadline_monotonic": deadline},
+    )
+    try:
+        stateful_evaluator = "state" in inspect.signature(wns_evaluator).parameters
+    except (TypeError, ValueError):
+        stateful_evaluator = False
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     def evaluator(failures, weights):
+        nonlocal cone
+        if max_patches == 0 or (stateful_evaluator and len(state.accepted_patches) >= max_patches):
+            state.set_stop_reason("max_patches")
+            return False, None
+        if state.deadline_expired():
+            state.set_stop_reason("wall_timeout")
+            return False, None
+        trial_count = state.budget_used("sta")
+        if sta_budget is not None and trial_count >= sta_budget:
+            state.set_stop_reason("sta_budget")
+            return False, None
+        formal_count = state.budget_used("formal")
+        if formal_budget is not None and formal_count >= formal_budget:
+            state.set_stop_reason("formal_budget")
+            return False, None
         # one iteration: explore the weighted-ordered candidate cuts with the
         # current weights (so refinement actually changes the boundary /
         # candidate ordering), build a patch for each, and accept the first
@@ -424,8 +522,22 @@ def run_multi_iteration_case(
         # Joint bi-objective cut: critical-path cover is a first-round
         # default candidate; gates without an R equivalence candidate are a
         # hard constraint (no critical discount, cover skips them).
+        active_critical = list(state.critical_instances or
+                               getattr(wns_evaluator, "critical_instances", []) or
+                               critical_instances or [])
+        active_r_available = r_available
+        recompute_r = getattr(wns_evaluator, "r_available_for", None)
+        if callable(recompute_r):
+            active_r_available = recompute_r(active_critical)
         candidates = _cone_candidates(
-            cone, weights, critical_instances, r_available,
+            cone, weights, active_critical, active_r_available,
+            constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
+            k=max_candidates_per_iteration,
+            allow_singleton=bool(getattr(wns_evaluator, "allow_singleton", False)),
+            wall_timeout_s=(
+                max(0.0, wall_timeout_s - (time.perf_counter() - started_at))
+                if wall_timeout_s is not None else None
+            ),
         )
         _eval_trials_ref = getattr(wns_evaluator, "trials", None)
         _trial_start = len(_eval_trials_ref) if _eval_trials_ref is not None else 0
@@ -434,14 +546,32 @@ def run_multi_iteration_case(
             return False, None
         tried_candidates = 0
         for boundary in candidates[:max_candidates_per_iteration]:
+            if state.deadline_expired():
+                state.set_stop_reason("wall_timeout")
+                break
             tried_candidates += 1
             patch = make_patch_candidate(
                 case_id=case.case_id, boundary=boundary, equivalence=equivalence
             )
+            candidate_identity = state.hash_text(state.current_netlist_hash + state.candidate_hash(
+                gates=patch.gates,
+                boundary_inputs=patch.boundary_inputs,
+                boundary_outputs=patch.boundary_outputs,
+                action_hash=patch.patch_id,
+            ))
+            if stateful_evaluator and not state.mark_candidate_tested(candidate_identity):
+                failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
+                state.record_failure({"type": "no_new_candidate", "candidate_hash": candidate_identity})
+                continue
+            strict_boundary_missing = bool(
+                getattr(wns_evaluator, "strict_gates", False)
+                and getattr(wns_evaluator, "boundary_checker", None) is None
+            )
+            boundary_closed = (not strict_boundary_missing) and equivalence.status == "pass"
             failures.update(
                 classify_failures(
                     equivalence_passed=equivalence.status == "pass",
-                    boundary_closed=True,
+                    boundary_closed=boundary_closed,
                     patch_size=patch.patch_size,
                     original_gate_count=original.gate_count,
                     logic_level_before=logic_level_before or 0,
@@ -452,9 +582,67 @@ def run_multi_iteration_case(
             if wns_evaluator is not None:
                 # real-STA hook: the injected runner measures the applied
                 # candidate WNS and reports whether it strictly improved.
-                wns_info = wns_evaluator(patch, weights)
+                try:
+                    params = inspect.signature(wns_evaluator).parameters
+                    supports_state = "state" in params
+                except (TypeError, ValueError):
+                    supports_state = False
+                try:
+                    wns_info = (wns_evaluator(patch, weights, state=state)
+                                if supports_state else wns_evaluator(patch, weights))
+                except (TypeError, ValueError) as exc:
+                    event = {
+                        "type": "evaluator_exception",
+                        "candidate_hash": candidate_identity,
+                        "cut_hash": candidate_identity,
+                        "severity": "hard",
+                        "hard_gate": True,
+                        "runtime_s": 0.0,
+                        "evidence": {
+                            "reason": "wns_evaluator_call_failed",
+                            "exception_type": type(exc).__name__,
+                            "message": str(exc),
+                            "supports_state": supports_state,
+                        },
+                    }
+                    state.record_failure(event)
+                    wns_info = {
+                        "wns": state.current_wns,
+                        "tns": state.current_tns,
+                        "min_slack": state.current_min_slack,
+                        "improved": False,
+                        "failure_events": [event],
+                    }
+                for terminal_event in wns_info.get("failure_events", []):
+                    terminal_type = terminal_event.get("type")
+                    if terminal_type in {"deadline_exhausted", "sta_budget_exhausted",
+                                         "formal_budget_exhausted"}:
+                        state.record_failure(terminal_event)
+                    if terminal_type == "deadline_exhausted":
+                        state.set_stop_reason("wall_timeout")
+                    elif terminal_type == "sta_budget_exhausted":
+                        state.set_stop_reason("sta_budget")
+                    elif terminal_type == "formal_budget_exhausted":
+                        state.set_stop_reason("formal_budget")
+                if state.stop_reason is not None:
+                    return False, None
                 wns = wns_info["wns"]
                 wns_history.append(wns)
+                for event in wns_info.get("failure_events", []):
+                    state.record_failure(event)
+                    event_type = event.get("type", FailureType.BOUNDARY_INVALID)
+                    try:
+                        failure_type = FailureType(event_type)
+                    except ValueError:
+                        failure_type = None
+                    if event.get("hard_gate") or event.get("severity") == "hard" or (
+                        failure_type is not None and failure_type in {
+                        FailureType.EQUIVALENCE, FailureType.BOUNDARY_INVALID,
+                        FailureType.PATCH_TOO_LARGE,
+                        FailureType.VERIFICATION_TOO_EXPENSIVE,
+                    }):
+                        if failure_type is not None:
+                            failures.add(failure_type)
                 # F6 physical-load feedback (review shortboard): the
                 # evaluator marks a trial as physical_failure when its
                 # ideal-net gain did not survive the SPEF re-measure;
@@ -464,11 +652,117 @@ def run_multi_iteration_case(
                 eval_trials = getattr(wns_evaluator, "trials", None)
                 if eval_trials is not None:
                     for _t in eval_trials[_trial_start:]:
+                        for trial_event in _t.get("failure_events", []):
+                            state.record_failure(trial_event)
+                            if (trial_event.get("hard_gate") or
+                                trial_event.get("severity") == "hard"):
+                                try:
+                                    trial_failure_type = FailureType(trial_event.get("type"))
+                                except (ValueError, TypeError):
+                                    trial_failure_type = None
+                                if trial_failure_type is not None:
+                                    failures.add(trial_failure_type)
                         if _t.get("physical_failure"):
                             failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
                             break
-                if wns_info["improved"]:
-                    return True, patch.patch_id, {"wns": wns}
+                hard_failure = any(
+                    e.get("hard_gate") or e.get("severity") == "hard" or e.get("type") in {
+                        FailureType.EQUIVALENCE.value,
+                        FailureType.BOUNDARY_INVALID.value,
+                        FailureType.PATCH_TOO_LARGE.value,
+                        FailureType.VERIFICATION_TOO_EXPENSIVE.value,
+                    }
+                    for e in wns_info.get("failure_events", [])
+                )
+                if wns_info["improved"] and not hard_failure:
+                    candidate_text = wns_info.get("candidate_netlist_text")
+                    if candidate_text is not None:
+                        refreshed_cone = None
+                        if getattr(wns_evaluator, "refresh_cone", False):
+                            try:
+                                refreshed_netlist = parse_verilog_netlist_from_text(candidate_text)
+                                refreshed_cone = extract_fanin_cone(
+                                    refreshed_netlist, roots=[case.target_output]
+                                )
+                            except Exception as exc:
+                                failure = {
+                                    "type": "F2_boundary_invalid",
+                                    "candidate_hash": wns_info.get("candidate_hash", candidate_identity),
+                                    "cut_hash": candidate_identity,
+                                    "severity": "hard",
+                                    "threshold": "cone_refresh",
+                                    "observed_value": "unavailable",
+                                    "evidence": {"reason": "cone_refresh_failed", "error": str(exc)},
+                                }
+                                state.record_failure(failure)
+                                failures.add(FailureType.BOUNDARY_INVALID)
+                                continue
+                        state.accept_patch(
+                            patch.patch_id, candidate_text, wns=wns,
+                            tns=wns_info.get("tns"),
+                            min_slack=wns_info.get("min_slack"),
+                            candidate_hash=wns_info.get("candidate_hash", candidate_identity),
+                            critical_endpoints=wns_info.get("critical_endpoints"),
+                            critical_instances=wns_info.get("critical_instances"),
+                            cone_gates=(list(refreshed_cone.gates)
+                                       if refreshed_cone is not None
+                                       else state.current_cone_gates),
+                            metadata={"cut_hash": candidate_identity,
+                                      "sta_provenance": wns_info.get("sta_provenance"),
+                                      "physical_baseline_provenance": wns_info.get("physical_baseline_provenance"),
+                                      "physical_candidate_provenance": wns_info.get("physical_candidate_provenance"),
+                                      "physical_metrics": {
+                                          "baseline_wns": wns_info.get("physical_baseline"),
+                                          "candidate_wns": wns_info.get("physical_candidate"),
+                                          "baseline_tns": wns_info.get("physical_baseline_tns"),
+                                          "candidate_tns": wns_info.get("physical_candidate_tns"),
+                                          "baseline_hold": wns_info.get("physical_baseline_min_slack"),
+                                          "candidate_hold": wns_info.get("physical_candidate_min_slack"),
+                                          "min_physical_gain_ns": (wns_info.get("physical_config") or {}).get("min_physical_gain_ns"),
+                                          "rc_config_hash": wns_info.get("rc_config_hash"),
+                                      },
+                                      "action_scope": list(patch.gates)},
+                        )
+                        accept = getattr(wns_evaluator, "accept_candidate", None)
+                        if callable(accept):
+                            accept(wns_info, state=state)
+                        if refreshed_cone is not None:
+                            cone = refreshed_cone
+                            state.current_cone_gates = list(cone.gates)
+                            state.accepted_patches[-1]["metadata"]["refreshed_cone_gates"] = list(cone.gates)
+                        timing_met = (
+                            state.current_wns is not None
+                            and state.current_wns >= -float(epsilon)
+                            and (
+                                not getattr(wns_evaluator, "hold_mode", False)
+                                or (
+                                    state.current_min_slack is not None
+                                    and state.current_min_slack >= -float(epsilon)
+                                )
+                            )
+                        )
+                        if timing_met:
+                            state.set_stop_reason("timing_met")
+                            return True, patch.patch_id, {
+                                "wns": wns, "tns": wns_info.get("tns"),
+                                "min_slack": wns_info.get("min_slack"),
+                            }, False
+                        if len(state.accepted_patches) >= max_patches:
+                            state.set_stop_reason("max_patches")
+                            return True, patch.patch_id, {
+                                "wns": wns, "tns": wns_info.get("tns"),
+                                "min_slack": wns_info.get("min_slack"),
+                            }, False
+                        # A committed candidate is a new G_r; continue the
+                        # closure search instead of terminating at first gain.
+                        return True, patch.patch_id, {
+                            "wns": wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, True
+                    return True, patch.patch_id, {
+                        "wns": wns, "tns": wns_info.get("tns"),
+                        "min_slack": wns_info.get("min_slack"),
+                    }
                 # no timing gain on this candidate: keep exploring the
                 # remaining cuts in this iteration before refining weights.
                 continue
@@ -486,8 +780,50 @@ def run_multi_iteration_case(
         RefinementConfig(max_iterations=max_iterations),
         enable_feedback=enable_feedback,
         init_weights=init_weights,
+        should_stop=lambda: state.stop_reason is not None,
     )
     result["case_id"] = case.case_id
+    state.budget["iterations_used"] = result.get("iterations", 0)
+    state.budget["sta_runs"] = state.budget_used("sta")
+    state.budget["formal_runs"] = state.budget_used("formal")
+    state.budget["stagnation_count"] = sum(
+        1 for entry in result.get("history", []) if entry.get("status") == "refined"
+    )
+    state.budget["wall_time_s"] = time.perf_counter() - started_at
+    for entry in result.get("history", []):
+        if entry.get("failures"):
+            state.record_failure({
+                "type": "iteration_failure",
+                "iteration": entry.get("iteration"),
+                "failures": list(entry["failures"]),
+                "evidence": {"wns": entry.get("wns")},
+            })
+    if state.stop_reason is None:
+        if stateful_evaluator and len(state.accepted_patches) >= max_patches:
+            state.set_stop_reason("max_patches")
+        elif (stateful_evaluator and result.get("success")
+              and state.current_wns is not None
+              and state.current_wns >= -float(epsilon)
+              and (not getattr(wns_evaluator, "hold_mode", False)
+                   or (state.current_min_slack is not None
+                       and state.current_min_slack >= -float(epsilon)))):
+            state.set_stop_reason("timing_met")
+        elif (stateful_evaluator and state.accepted_patches
+              and result.get("iterations", 0) >= max_iterations):
+            state.set_stop_reason("max_iterations")
+        elif not stateful_evaluator and result.get("success") and state.accepted_patches:
+            state.set_stop_reason("timing_met")
+        elif state.tested_candidate_hashes:
+            state.set_stop_reason("stagnation")
+        else:
+            state.set_stop_reason("no_new_candidate")
+    result["stop_reason"] = state.stop_reason
+    if result.get("final_patch_id") is None and state.accepted_patches:
+        result["final_patch_id"] = state.accepted_patches[-1]["patch_id"]
+    result["state"] = state.to_dict()
+    result["wns"] = state.current_wns
+    result["tns"] = state.current_tns
+    result["min_slack"] = state.current_min_slack
     result["logic_level_before"] = logic_level_before
     result["logic_level_after"] = logic_level_after
     result["logic_level_reduction"] = reduction

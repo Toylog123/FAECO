@@ -8,11 +8,11 @@
 - 每个实验 flow 必须有最小回归测试。
 - 等价验证、patch 替换、cut refinement 必须有失败案例测试。
 
-当前测试命令：
+当前测试命令（无需手工设置 PYTHONPATH）：
 
 ```powershell
-$env:PYTHONPATH='src'
-python -m unittest discover -s tests
+python -m pytest -q -p no:cacheprovider          # 全量回归
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke_check.ps1   # 快速 smoke
 ```
 
 当前已有测试：

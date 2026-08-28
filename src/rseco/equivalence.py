@@ -45,6 +45,25 @@ class FormalEquivalenceResult:
         }
 
 
+def _signature_equal(left: Any, right: Any) -> bool:
+    """Iterative structural equality for signatures (deep cones like b15)."""
+    stack: list[tuple[Any, Any]] = [(left, right)]
+    while stack:
+        a, b = stack.pop()
+        if a is b:
+            continue
+        if type(a) is not type(b):
+            return False
+        if isinstance(a, tuple):
+            if len(a) != len(b):
+                return False
+            for x, y in zip(a, b):
+                stack.append((x, y))
+        elif a != b:
+            return False
+    return True
+
+
 def check_structural_equivalence(
     left: Netlist,
     right: Netlist,
@@ -56,7 +75,10 @@ def check_structural_equivalence(
     left_signatures = [_signal_signature(left, output) for output in outputs]
     right_signatures = [_signal_signature(right, output) for output in right_outputs]
 
-    if left_signatures == right_signatures:
+    if len(left_signatures) == len(right_signatures) and all(
+        _signature_equal(l, r)
+        for l, r in zip(left_signatures, right_signatures)
+    ):
         return EquivalenceResult(
             status="pass",
             method="structural_signature",
@@ -136,21 +158,68 @@ def check_abc_equivalence(
 
 
 def _signal_signature(netlist: Netlist, signal: str) -> Any:
+    """Structural fingerprint of the cone driving ``signal`` (iterative DFS).
+
+    Matches the historical recursive formulation exactly: node ids are
+    assigned in DFS pre-order and a re-encountered signal (shared DAG node
+    or cycle) contributes a ``("ref", id)`` leaf instead of its full
+    sub-signature.  The explicit stack avoids RecursionError on deep cones
+    (e.g. ITC-99 b15).
+    """
     output_to_gate = {gate.output: gate for gate in netlist.gates}
+    encounter_ids: dict[str, int] = {}
+    memo: dict[str, Any] = {}
 
-    def visit(current: str) -> Any:
-        if current in netlist.inputs:
-            return ("input", current)
-        gate = output_to_gate.get(current)
-        if gate is None:
-            return ("net", current)
-        return (
-            gate.gate_type,
-            tuple(visit(input_signal) for input_signal in gate.inputs),
-        )
+    # Continuation-style iterative DFS mirroring the recursive formulation:
+    # ids are assigned in DFS pre-order and a gate fanin tuple captures the
+    # value visit() returned for each input at call time (full node on first
+    # discovery, ("ref", id) on re-encounter).  A re-encounter never
+    # overwrites the first-visit signature in ``memo``.
+    collectors: list[tuple[str, list[Any]]] = []
+    consumers: list[int] = []
+    stack: list[tuple[str, Any]] = [("call", signal)]
+    final: Any = None
 
-    return visit(signal)
-
+    while stack:
+        kind, payload = stack.pop()
+        if kind == "call":
+            current = payload
+            if current in encounter_ids:
+                stack.append(("return", ("ref", encounter_ids[current])))
+            elif current in netlist.inputs:
+                stack.append(("return", ("input", current)))
+            else:
+                gate = output_to_gate.get(current)
+                if gate is None:
+                    stack.append(("return", ("net", current)))
+                else:
+                    encounter_ids[current] = len(encounter_ids)
+                    collector_id = len(collectors)
+                    collectors.append((current, []))
+                    stack.append(("collect", collector_id))
+                    for input_signal in reversed(gate.inputs):
+                        consumers.append(collector_id)
+                        stack.append(("call", input_signal))
+        elif kind == "collect":
+            collector_id = payload
+            current, children = collectors[collector_id]
+            gate = output_to_gate[current]
+            value = (
+                "node",
+                encounter_ids[current],
+                gate.gate_type,
+                tuple(children),
+            )
+            memo[current] = value
+            stack.append(("return", value))
+        else:
+            value = payload
+            if not consumers:
+                final = value
+            else:
+                collector_id = consumers.pop()
+                collectors[collector_id][1].append(value)
+    return final
 
 def _abc_status_from_output(output: str, returncode: int) -> str:
     if "networks are equivalent" in output or "circuits are equivalent" in output:

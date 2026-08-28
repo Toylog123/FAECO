@@ -28,12 +28,18 @@ import json
 import sys
 from pathlib import Path
 
-from run_sequential_timing_check import run_opensta, run_yosys_mapping  # reuse verified runners
+try:
+    from run_sequential_timing_check import run_opensta, run_yosys_mapping  # reuse verified runners
+except ModuleNotFoundError:  # imported by a test runner rather than executed as a script
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from run_sequential_timing_check import run_opensta, run_yosys_mapping
 
-from rseco.equivalence import EquivalenceResult
 from rseco.flow import run_multi_iteration_case
 from rseco.real_wns import (
     RealWnsEvaluator,
+    build_full_netlist_sec_checker,
+    build_real_equivalence_checker,
+    build_boundary_closure_checker,
     build_r_available,
     dff_d_input_net,
     parse_critical_instances,
@@ -63,6 +69,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--period", type=float, default=0.5, help="Clock period (ns)")
     p.add_argument("--output-dir", type=Path, required=True)
     p.add_argument("--max-iterations", type=int, default=6)
+    p.add_argument("--max-patches", type=int, default=None,
+                   help="Hard maximum accepted patches; 0 stops before any candidate")
+    p.add_argument("--sta-budget", type=int, default=None,
+                   help="Hard maximum candidate STA reservations")
+    p.add_argument("--formal-budget", type=int, default=None,
+                   help="Hard maximum candidate formal-check reservations")
+    p.add_argument("--wall-timeout-s", type=float, default=None,
+                   help="Hard wall-clock budget for the outer loop")
     p.add_argument("--candidates-per-iteration", type=int, default=8,
                    help="Cut candidates explored per iteration (beam width; 1 isolates feedback)")
     p.add_argument("--no-feedback", action="store_true",
@@ -110,11 +124,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--early-stop", action="store_true",
                    help="Stop evaluating candidates at first WNS improvement (serial only)")
     p.add_argument("--physical-gate", action="store_true",
-                   help="Enable inner-loop physical gating: candidates must clear an ideal-net "
-                        "gain > min-physical-gain before a fanout/depth-aware SPEF re-measure, "
-                        "and are accepted only when the SPEF run also improves WNS (F6 feedback)")
+                   help="Enable paired physical gating: candidate SPEF WNS gain must meet "
+                        "--min-physical-gain and paired TNS/hold must not regress (F6 feedback)")
     p.add_argument("--min-physical-gain", type=float, default=0.010,
-                   help="Minimum ideal-net WNS gain (ns) before a candidate is SPEF re-measured")
+                   help="Minimum paired physical candidate-vs-baseline WNS gain in ns")
     p.add_argument("--physical-fanout-penalty", type=float, default=1.0,
                    help="SPEF fanout penalty multiplier (>1 lengthens high-fanout nets)")
     p.add_argument("--physical-depth-penalty", type=float, default=1.0,
@@ -132,6 +145,11 @@ def parse_args() -> argparse.Namespace:
                    help="Initial cut size penalty (sensitivity analysis lambda_2)")
     p.add_argument("--init-critical-coverage-reward", type=float, default=1.0,
                    help="Initial critical-coverage reward (sensitivity analysis lambda_3)")
+    p.add_argument("--epsilon", type=float, default=0.0,
+                   help="Configured timing-comparison epsilon (ns), recorded in logs")
+    p.add_argument("--required-metrics", default="setup_wns,setup_tns",
+                   help="Comma-separated hard acceptance metrics; default uses only measurable setup WNS/TNS. "
+                        "Area/transition/cap/fanout are explicit and fail closed when unavailable.")
 
     p.add_argument("--physical-unit-len", type=float, default=40.0,
                    help="SPEF unit wire length (um); lower = lighter physical load "
@@ -213,6 +231,7 @@ def main() -> int:
         period=args.period,
         liberty_text=LIB.read_text(encoding="utf-8"),
         baseline_wns=baseline_wns,
+        baseline_tns=base.get("tns"),
         output_dir=out / "eval",
         critical_instances=critical,
         workers=args.workers,
@@ -238,19 +257,22 @@ def main() -> int:
         physical_fanout_penalty=args.physical_fanout_penalty,
         physical_depth_penalty=args.physical_depth_penalty,
         physical_unit_len_um=args.physical_unit_len,
+        strict_gates=True,
+        strict_budgets=True,
+        required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),
+        epsilon=args.epsilon,
+        equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8")),
+        topology_sec_checker=build_full_netlist_sec_checker(
+            top_module=args.circuit,
+            liberty_text=LIB.read_text(encoding="utf-8"),
+            artifact_dir=out / "topology-sec",
+        ),
+        boundary_checker=build_boundary_closure_checker(),
     )
 
-    # 5. outer loop.  The sequential mapped netlist has DFF feedback loops,
-    #    so the default structural-equivalence visitor recurses infinitely;
-    #    equivalence is trivially passed here because the real success
-    #    criterion is the OpenSTA-measured WNS, not structure matching.
-    def _trivial_equivalence(original, resynthesized, *, outputs):
-        return EquivalenceResult(
-            status="pass",
-            method="real_wns_placeholder",
-            reason="sequential real-STA loop; success judged by WNS",
-        )
-
+    # 5. outer loop.  Candidate-level equivalence is intentionally fail
+    # closed when no functional checker is configured; timing gain alone is
+    # never presented as proof of correctness.
     # Joint bi-objective cut: pass which critical-path gates have an R
     # equivalence candidate so the cut graph applies the hard equivalence
     # constraint and the critical-path cover is a first-round default.
@@ -261,11 +283,20 @@ def main() -> int:
         case_dir,
         max_iterations=args.max_iterations,
         enable_feedback=not args.no_feedback,
-        equivalence_checker=_trivial_equivalence,
         wns_evaluator=evaluator,
         candidates_per_iteration=args.candidates_per_iteration,
         critical_instances=critical,
         r_available=r_available,
+        init_weights={
+            "boundary_penalty": args.init_boundary_penalty,
+            "size_penalty": args.init_size_penalty,
+            "critical_coverage_reward": args.init_critical_coverage_reward,
+        },
+        epsilon=args.epsilon,
+        max_patches=args.max_patches,
+        sta_budget=args.sta_budget,
+        formal_budget=args.formal_budget,
+        wall_timeout_s=args.wall_timeout_s,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period
@@ -280,6 +311,7 @@ def main() -> int:
         "critical_coverage_reward": args.init_critical_coverage_reward,
     }
     result["hold_uncertainty_ns"] = args.hold_uncertainty if args.hold_mode else None
+    result["min_physical_gain_ns"] = args.min_physical_gain
     result["critical_instances"] = critical
     result["proxy_ranking"] = args.proxy_ranking
     result["endpoint"] = endpoint

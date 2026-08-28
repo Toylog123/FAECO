@@ -11,11 +11,214 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+import hashlib
+import json
+import threading
 from typing import Callable
 
 from .failures import FailureType
 from .refinement import RefinementWeights, refine_weights
+
+
+_STOP_REASONS = {
+    "timing_met", "no_new_candidate", "stagnation", "sta_budget",
+    "formal_budget", "wall_timeout", "max_patches", "max_iterations",
+}
+
+
+@dataclass
+class SearchState:
+    """Auditable mutable state for one timing-closure search.
+
+    ``current_netlist_text`` is the transaction value: callers either append
+    an accepted patch with :meth:`accept_patch`, or leave the state untouched.
+    This makes a multi-round run restartable and keeps the accepted log as the
+    source of truth for replay.
+    """
+
+    current_netlist_text: str
+    current_wns: float | None = None
+    current_tns: float | None = None
+    current_min_slack: float | None = None
+    critical_endpoints: list[str] = field(default_factory=list)
+    critical_instances: list[str] = field(default_factory=list)
+    current_cone_gates: list[str] = field(default_factory=list)
+    accepted_patches: list[dict] = field(default_factory=list)
+    failure_history: list[dict] = field(default_factory=list)
+    tested_candidate_hashes: set[str] = field(default_factory=set)
+    budget: dict[str, float | int] = field(default_factory=dict)
+    stop_reason: str | None = None
+    _snapshots: list[dict] = field(default_factory=list, repr=False)
+    _budget_lock: object = field(default_factory=threading.Lock, repr=False, compare=False)
+
+    @staticmethod
+    def hash_text(text: str) -> str:
+        return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+    @property
+    def current_netlist_hash(self) -> str:
+        return self.hash_text(self.current_netlist_text)
+
+    def candidate_hash(self, *, gates=(), boundary_inputs=(),
+                       boundary_outputs=(), action_hash="") -> str:
+        """Hash canonical gate/boundary/action identity for STA de-duplication."""
+        payload = {
+            "gates": sorted(set(map(str, gates))),
+            "boundary_inputs": sorted(set(map(str, boundary_inputs))),
+            "boundary_outputs": sorted(set(map(str, boundary_outputs))),
+            "action": str(action_hash),
+        }
+        raw = json.dumps(payload, sort_keys=True, separators=(",", ":"))
+        return self.hash_text(raw)
+
+    def mark_candidate_tested(self, candidate_hash: str) -> bool:
+        """Return false when this candidate was already tested (including failure)."""
+        if candidate_hash in self.tested_candidate_hashes:
+            return False
+        self.tested_candidate_hashes.add(candidate_hash)
+        return True
+
+    def reserve_budget(self, kind: str, limit: int | None = None) -> bool:
+        """Atomically reserve one tool slot before invoking a tool."""
+        used_key = f"{kind}_used"
+        limit_key = f"{kind}_budget"
+        if limit is None:
+            raw_limit = self.budget.get(limit_key)
+            limit = int(raw_limit) if raw_limit is not None else None
+        with self._budget_lock:
+            used = int(self.budget.get(used_key, 0))
+            if limit is not None and used >= limit:
+                return False
+            self.budget[used_key] = used + 1
+            return True
+
+    def deadline_expired(self) -> bool:
+        """Return whether this run's monotonic wall-clock deadline elapsed."""
+        deadline = self.budget.get("_deadline_monotonic")
+        return deadline is not None and __import__("time").perf_counter() >= float(deadline)
+
+    def budget_used(self, kind: str) -> int:
+        return int(self.budget.get(f"{kind}_used", 0))
+
+    def record_failure(self, event: dict) -> None:
+        normalized = dict(event)
+        candidate_hash = str(normalized.get("candidate_hash") or self.current_netlist_hash)
+        normalized["candidate_hash"] = candidate_hash
+        normalized["cut_hash"] = str(normalized.get("cut_hash") or candidate_hash)
+        normalized.setdefault("endpoint", None)
+        normalized.setdefault("path", [])
+        normalized.setdefault("net", None)
+        normalized.setdefault("action_scope", [])
+        normalized.setdefault("threshold", None)
+        normalized.setdefault("observed_value", None)
+        normalized.setdefault("severity", "hard")
+        normalized.setdefault("runtime_s", 0.0)
+        normalized.setdefault("evidence", {})
+        normalized.setdefault("event_id", hashlib.sha256(json.dumps({
+            "type": normalized.get("type"), "candidate_hash": candidate_hash,
+            "cut_hash": normalized["cut_hash"], "endpoint": normalized.get("endpoint"),
+            "path": normalized.get("path", []), "net": normalized.get("net"),
+            "action_scope": normalized.get("action_scope", []),
+            "threshold": normalized.get("threshold"),
+            "observed_value": normalized.get("observed_value"),
+            "evidence": normalized.get("evidence", {}),
+        }, sort_keys=True, default=str).encode()).hexdigest())
+        if any(existing.get("event_id") == normalized["event_id"]
+               for existing in self.failure_history):
+            return
+        self.failure_history.append(normalized)
+
+    def accept_patch(self, patch_id: str, candidate_netlist_text: str, *,
+                     wns=None, tns=None, candidate_hash=None,
+                     min_slack=None,
+                     critical_endpoints=None, critical_instances=None,
+                     cone_gates=None,
+                     metadata=None) -> dict:
+        """Atomically append an accepted patch and advance ``G_r``."""
+        previous = {
+            "current_netlist_text": self.current_netlist_text,
+            "current_wns": self.current_wns,
+            "current_tns": self.current_tns,
+            "current_min_slack": self.current_min_slack,
+            "critical_endpoints": list(self.critical_endpoints),
+            "critical_instances": list(self.critical_instances),
+            "current_cone_gates": list(self.current_cone_gates),
+        }
+        record = {
+            "patch_id": str(patch_id),
+            "candidate_hash": candidate_hash or self.hash_text(candidate_netlist_text),
+            "base_netlist_hash": self.current_netlist_hash,
+            "netlist_hash": self.hash_text(candidate_netlist_text),
+            "netlist_text": candidate_netlist_text,
+            "wns": wns,
+            "tns": tns,
+            "min_slack": min_slack,
+            "metadata": dict(metadata or {}),
+        }
+        self._snapshots.append(previous)
+        self.accepted_patches.append(record)
+        self.current_netlist_text = candidate_netlist_text
+        self.current_wns = wns
+        self.current_tns = tns
+        self.current_min_slack = min_slack
+        if critical_endpoints is not None:
+            self.critical_endpoints = list(critical_endpoints)
+        if critical_instances is not None:
+            self.critical_instances = list(critical_instances)
+        if cone_gates is not None:
+            self.current_cone_gates = list(cone_gates)
+        return record
+
+    def rollback(self) -> bool:
+        """Undo the last accepted patch, preserving its log for audit."""
+        if not self._snapshots or not self.accepted_patches:
+            return False
+        previous = self._snapshots.pop()
+        self.accepted_patches.pop()
+        self.current_netlist_text = previous["current_netlist_text"]
+        self.current_wns = previous["current_wns"]
+        self.current_tns = previous["current_tns"]
+        self.current_min_slack = previous.get("current_min_slack")
+        self.critical_endpoints = previous["critical_endpoints"]
+        self.critical_instances = previous["critical_instances"]
+        self.current_cone_gates = previous.get("current_cone_gates", [])
+        return True
+
+    @staticmethod
+    def replay(initial_netlist_text: str, accepted_patches: list[dict]) -> str:
+        """Replay the recorded candidate texts and return the final netlist."""
+        current = initial_netlist_text
+        for patch in accepted_patches:
+            base = patch.get("base_netlist_hash")
+            if base and base != SearchState.hash_text(current):
+                raise ValueError("accepted patch log is not a contiguous replay")
+            current = str(patch["netlist_text"])
+        return current
+
+    def set_stop_reason(self, reason: str) -> None:
+        if reason not in _STOP_REASONS:
+            raise ValueError(f"unsupported stop_reason: {reason}")
+        if self.stop_reason is not None and self.stop_reason != reason:
+            raise ValueError(f"stop_reason already set to {self.stop_reason}")
+        self.stop_reason = reason
+
+    def to_dict(self) -> dict:
+        return {
+            "current_netlist_text": self.current_netlist_text,
+            "current_netlist_hash": self.current_netlist_hash,
+            "current_wns": self.current_wns,
+            "current_tns": self.current_tns,
+            "current_min_slack": self.current_min_slack,
+            "critical_endpoints": list(self.critical_endpoints),
+            "critical_instances": list(self.critical_instances),
+            "current_cone_gates": list(self.current_cone_gates),
+            "accepted_patches": list(self.accepted_patches),
+            "failure_history": list(self.failure_history),
+            "tested_candidate_hashes": sorted(self.tested_candidate_hashes),
+            "budget": {k: v for k, v in self.budget.items() if not str(k).startswith("_")},
+            "stop_reason": self.stop_reason,
+        }
 
 
 @dataclass(frozen=True)
@@ -31,6 +234,7 @@ def simulate_refinement_loop(
     on_refine: Callable[[list[str]], None] | None = None,
     enable_feedback: bool = True,
     init_weights: dict | None = None,
+    should_stop: Callable[[], bool] | None = None,
 ) -> dict:
     """Run the failure-aware refinement loop.
 
@@ -49,33 +253,70 @@ def simulate_refinement_loop(
             verification_cost_penalty=float(init_weights.get("verification_cost_penalty", weights.verification_cost_penalty)),
             equivalence_stability_reward=float(init_weights.get("equivalence_stability_reward", weights.equivalence_stability_reward)),
             max_cone_gates=int(init_weights.get("max_cone_gates", weights.max_cone_gates)),
+            physical_penalty=float(init_weights.get("physical_penalty", weights.physical_penalty)),
         )
     history: list[dict] = []
     actions_history: list[list[str]] = []
+    accepted_any = False
 
     for iteration in range(1, config.max_iterations + 1):
         failures: set[FailureType] = set()
         evaluated = evaluator(failures, weights)
-        if isinstance(evaluated, tuple) and len(evaluated) == 3:
+        continue_after_success = False
+        if isinstance(evaluated, tuple) and len(evaluated) == 4:
+            success, patch_id, extra, continue_after_success = evaluated
+        elif isinstance(evaluated, tuple) and len(evaluated) == 3:
             success, patch_id, extra = evaluated
         else:
             success, patch_id = evaluated
             extra = None
         if success:
+            accepted_any = True
+            stop_after_success = should_stop is not None and should_stop()
             history.append(
                 {
                     "iteration": iteration,
-                    "status": "success",
+                    "status": "accepted" if (continue_after_success or stop_after_success) else "success",
                     "patch_id": patch_id,
                     "wns": extra.get("wns") if extra else None,
                     "actions": [],
                 }
             )
+            if stop_after_success:
+                history.append({
+                    "iteration": iteration, "status": "stopped",
+                    "patch_id": patch_id, "wns": extra.get("wns") if extra else None,
+                    "actions": [], "failures": sorted(f.value for f in failures),
+                })
+                return {
+                    "success": True,
+                    "iterations": iteration,
+                    "final_patch_id": patch_id,
+                    "history": history,
+                    "actions_history": actions_history,
+                    "weights": weights,
+                }
+            if not continue_after_success:
+                return {
+                    "success": True,
+                    "iterations": iteration,
+                    "final_patch_id": patch_id,
+                    "history": history,
+                    "weights": weights,
+                }
+            continue
+        if should_stop is not None and should_stop():
+            history.append({
+                "iteration": iteration, "status": "stopped",
+                "patch_id": patch_id, "wns": extra.get("wns") if extra else None,
+                "actions": [], "failures": sorted(f.value for f in failures),
+            })
             return {
-                "success": True,
+                "success": accepted_any,
                 "iterations": iteration,
-                "final_patch_id": patch_id,
+                "final_patch_id": patch_id if accepted_any else None,
                 "history": history,
+                "actions_history": actions_history,
                 "weights": weights,
             }
         decision = refine_weights(weights, failures) if enable_feedback else None
@@ -98,7 +339,7 @@ def simulate_refinement_loop(
         )
 
     return {
-        "success": False,
+        "success": accepted_any,
         "iterations": config.max_iterations,
         "final_patch_id": None,
         "history": history,

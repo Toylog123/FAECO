@@ -158,8 +158,9 @@ Yosys miter + SAT：8/8 EPFL case 等价证明 SUCCESS
 cd D:\BaiduSyncdisk\03_FAECO
 & .\.venv\Scripts\Activate.ps1
 
-# 2. 设置 Python path
-$env:PYTHONPATH='src'
+# 2. 完整回归（pytest 自动包含 src 与 scripts）
+python -m pytest -q -p no:cacheprovider
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/smoke_check.ps1
 
 # 3. 工具链版本
 python --version                # 3.11.9
@@ -167,8 +168,8 @@ yosys -V                        # 0.9
 yosys-abc -h                    # ABC 1.01
 wsl.exe -d Ubuntu -- /usr/local/bin/sta -version   # 3.1.0
 
-# 4. 完整回归
-python -m unittest discover -s tests   # 102 项通过
+# 4. 验证门禁（可选，包含工具链快照与真实 SEC smoke）
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/run_verification_gates.ps1
 ```
 
 ### 核心依赖

@@ -1,6 +1,37 @@
 {
-    "timestamp": "2026-08-13 10:05 (Asia/Shanghai)",
-    "status": "handoff complete - 6 commits pushed to origin/main (c545612)",
+    "timestamp": "2026-08-24 (Asia/Shanghai)",
+    "status": "T03-T05 complete; unified-loop implementation reviewed and ready for merge preparation; main merge and final remote push still pending",
+    "handoff_files": [
+        "docs/project_management/handoff_20260824_unified_loop.md",
+        "docs/project_management/handoff_20260813.md",
+        "docs/project_management/STAGE_B_AGENT_HANDOFF.md",
+        "docs/engineering/unified_loop_sol_final_review_20260824.md",
+        "docs/project_management/unified_loop_merge_strategy_20260824.md",
+        "docs/paper_audit/unified_loop_claim_evidence_20260824.md",
+        "docs/project_management/disk_usage_audit_20260824.md"
+    ],
+    "read_order": [
+        "docs/project_management/handoff_20260824_unified_loop.md",
+        "README.md",
+        "docs/task_board.md",
+        "docs/project_management/work_log.md",
+        "docs/engineering/unified_loop_sol_final_review_20260824.md",
+        "docs/project_management/unified_loop_merge_strategy_20260824.md",
+        "docs/paper_audit/unified_loop_claim_evidence_20260824.md",
+        "docs/project_management/disk_usage_audit_20260824.md"
+    ],
+    "active_development_state": {
+        "branch": "codex/faeco-unified-loop",
+        "implementation_commit": "79b8f05cf0274efca2895a588ada82f6e1234140",
+        "handoff_content_commit": null,
+        "handoff_content_commit_note": "Intentionally null to avoid a self-referential commit hash; the final document commit is the post-commit git HEAD.",
+        "push_status": "not pushed; main merge and final remote push pending",
+        "worktree": "C:\\Users\\佟亚龙\\.config\\superpowers\\worktrees\\03_FAECO\\faeco-unified-loop",
+        "verification_2026_08_24": "351 passed, 4 skipped, 1 subtests passed; real WSL async-clear SEC 1 passed; WSL Yosys 0.33 / ABC 1.01",
+        "pause_reason": null,
+        "review_status": "Sol initial CHANGES_REQUIRED (2 Critical + 4 Important); final review APPROVED",
+        "primary_handoff": "docs/project_management/handoff_20260824_unified_loop.md"
+    },
     "reviewed_thread": "019fefa2-b03f-75c2-8990-72f33645e47c (严格审稿并迭代论文, 2026-08-11 ~ 08-13, 61 turns)",
     "paper_state": {
         "pdf": "paper/zh/faeco_paper.pdf == paper/zh/manuscript/faeco_paper_jcad.pdf (12 pages A4, ~4.8MB, SHA256 一致)",
@@ -15,20 +46,33 @@
         ]
     },
     "git_state": {
-        "branch": "main",
-        "remote": "https://github.com/Toylog123/FAECO.git",
-        "last_commit": "c545612 chore: fix gitignore line merge",
-        "pushed_this_round": [
+        "feature_worktree": {
+            "branch": "codex/faeco-unified-loop",
+            "remote_branch": "origin/codex/faeco-unified-loop",
+            "origin_head": "f909a310a86c7338bfd1f733b515e688c2283ecd",
+            "last_commit_before_current_docs_commit": "8353a559766fd162f508f1485aa3582e20876855 docs: finalize unified-loop review and disk audit",
+            "head_note": "Current git HEAD is the document commit created after this file was authored; its SHA is intentionally not duplicated here to avoid self-reference.",
+            "working_tree": "clean after final document commit",
+            "worktree": "C:\\Users\\佟亚龙\\.config\\superpowers\\worktrees\\03_FAECO\\faeco-unified-loop"
+        },
+        "main_worktree": {
+            "branch": "main",
+            "remote": "https://github.com/Toylog123/FAECO.git",
+            "last_commit": "b8c37590d7960715a0ec132f9b1c152973803675 docs(N31-05): finalize handoff + work log + task board after push",
+            "remote_head": "b8c37590d7960715a0ec132f9b1c152973803675",
+            "working_tree": "dirty: 8 modified, 3 deleted, 103 untracked"
+        },
+        "historical_pushed_commits_2026_08_13": [
             "4170b47 docs(N31-05): paper review handoff - audit records + data availability + handoff 20260813",
             "9cce7e8 docs(paper): JCAD manuscript + figures (12-page dual-column, nature precheck 18/18)",
             "cb0bc74 feat(N31-05): proxy ranking + b19 eval + random baseline batch + audit scripts",
             "c545612 chore: fix gitignore line merge"
         ],
-        "working_tree": "clean"
+        "working_tree_note": "Main worktree is intentionally dirty; feature worktree is the isolated worktree used for this task."
     },
     "data_reproducibility": {
-        "P&R logs": "已就位 - experiments/20260807_real_pr_s382 (baseline/fixed pr_run.log, WNS -1.16->-1.02, TNS -15.77->-14.58)；experiments/20260807_real_pr_iscas8 16 份 pr_run.log + 16 份 final.odb + manifest.json",
-        "SPEF": "experiments/20260805_parasitic_s382/estimated.spef + experiments/20260805_phys_closure/*/physical.spef",
+        "P&R logs": "已就位 - D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260807_real_pr_s382 (baseline/fixed pr_run.log, WNS -1.16->-1.02, TNS -15.77->-14.58)；D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260807_real_pr_iscas8 16 份 pr_run.log + 16 份 final.odb + manifest.json",
+        "SPEF": "D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260805_parasitic_s382\\estimated.spef + 86 physical.spef files under D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260805_phys_closure; example: D:\\BaiduSyncdisk\\03_FAECO\\experiments\\20260805_phys_closure\\b18_light\\b18\\eval\\iter001_cand001\\029__649725__R\\physical.spef",
         "DRC": "无 DRC 报告（已按 nature 审计口径如实声明：不能写 DRC signoff）",
         "DOI": "正文为占位符 10.3724/SP.J.1089.2026-00001，投稿后需替换为真实 DOI/accession"
     },

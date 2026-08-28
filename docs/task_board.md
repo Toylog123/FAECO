@@ -1,6 +1,17 @@
 # 任务看板
 
-更新时间：2026-08-13
+更新时间：2026-08-24
+
+## 2026-08-24 统一闭环任务完成记录
+
+| 任务 | 状态 | 证据/说明 |
+|---|---|---|
+| T02 Sol 最终复审 | done | 初审 `CHANGES_REQUIRED`（2 Critical + 4 Important）；`79b8f05` 修复后复审 `APPROVED`，见 `docs/engineering/unified_loop_sol_final_review_20260824.md` |
+| T03 合并策略与主目录保护 | done | 见 `docs/project_management/unified_loop_merge_strategy_20260824.md`；主目录 8 modified/3 deleted/103 untracked，禁止直接 merge |
+| T04 长期文档同步 | done | 交接、旧交接 banner、task board、work log 已同步；主代理回归 `351 passed, 4 skipped, 1 subtests passed` |
+| T05 claim-evidence 审计 | done（证据审计） | 统一 loop、k-best/topology、F1–F6、SEC、setup/hold、paired physical、budget/cache/deadline 已映射；大型 outer-loop/P&R 未重跑，旧论文 headline 不自动更新 |
+| `experiments/` NTFS 原位压缩 | done（删除 0 bytes） | full-current：310251 files / 79074 directories，310251 compressed / 0 uncompressed；逻辑 18,073,112,096 bytes、物理 5,877,220,044 bytes、3.1:1；D 可用空间 +11.456 GiB；抽检 `sta.log` 333,472,702→125,054,976 bytes；`tmp/`/`paper/`/`.venv/` 未动 |
+| 磁盘删除/进一步清理 | pending user approval | 审计见 `docs/project_management/disk_usage_audit_20260824.md`；必须按明确路径逐项批准 |
 
 | ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
 |---|---|---|---|---|---|

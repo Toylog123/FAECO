@@ -39,6 +39,15 @@ class LibCell:
     output_pin: str           # e.g. "X"
     function: str             # raw Liberty function, "" if sequential cell
     input_pins: list[str] = field(default_factory=list)
+    next_state: str = ""
+    clocked_on: str = ""
+    latch_enable: str = ""
+    clear: str = ""
+    preset: str = ""
+    state_var: str = ""
+    state_inv_var: str = ""
+    output_functions: dict[str, str] = field(default_factory=dict)
+    sequential_kind: str = ""
 
 
 _CELL_RE = re.compile(r'cell \("sky130_fd_sc_hd__([^"]+)"\) \{')
@@ -72,6 +81,15 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
         input_pins: list[str] = []
         output_pin = ""
         function = ""
+        next_state = ""
+        clocked_on = ""
+        latch_enable = ""
+        clear = ""
+        preset = ""
+        state_var = ""
+        state_inv_var = ""
+        output_functions: dict[str, str] = {}
+        sequential_kind = ""
         for pm in _PIN_DEF_RE.finditer(block):
             pin, pblock = pm.group(1), pm.group(2)
             if "direction" not in pblock:
@@ -84,6 +102,37 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
                 f = re.search(r'function\s*:\s*"([^"]+)"', pblock)
                 if f and "VPWR" not in f.group(1) and "VGND" not in f.group(1):
                     function = f.group(1)
+                    output_functions[pin] = f.group(1).strip()
+        ff = re.search(r"\bff\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
+        if ff:
+            sequential_kind = "ff"
+            ff_body = ff.group(1)
+            ff_header = re.search(r"\bff\s*\(([^)]*)\)", block, re.S)
+            ff_vars = [v.strip().strip('"') for v in (ff_header.group(1) if ff_header else "").split(",") if v.strip()]
+            state_var = ff_vars[0] if ff_vars else ""
+            state_inv_var = ff_vars[1] if len(ff_vars) > 1 else ""
+            next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", ff_body)
+            clock_match = re.search(r"clocked_on\s*:\s*\"([^\"]+)\"", ff_body)
+            clear_match = re.search(r"clear\s*:\s*\"([^\"]+)\"", ff_body)
+            preset_match = re.search(r"preset\s*:\s*\"([^\"]+)\"", ff_body)
+            next_state = next_match.group(1).strip() if next_match else ""
+            clocked_on = clock_match.group(1).strip() if clock_match else ""
+            clear = clear_match.group(1).strip() if clear_match else ""
+            preset = preset_match.group(1).strip() if preset_match else ""
+        latch = re.search(r"\blatch\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
+        if latch:
+            sequential_kind = "latch"
+            latch_body = latch.group(1)
+            latch_header = re.search(r"\blatch\s*\(([^)]*)\)", block, re.S)
+            latch_vars = [v.strip().strip('"') for v in (
+                latch_header.group(1) if latch_header else ""
+            ).split(",") if v.strip()]
+            state_var = latch_vars[0] if latch_vars else ""
+            state_inv_var = latch_vars[1] if len(latch_vars) > 1 else ""
+            next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", latch_body)
+            enable_match = re.search(r"enable\s*:\s*\"([^\"]+)\"", latch_body)
+            next_state = next_match.group(1).strip() if next_match else ""
+            latch_enable = enable_match.group(1).strip() if enable_match else ""
         cells[f"sky130_fd_sc_hd__{cell_name}"] = LibCell(
             name=f"sky130_fd_sc_hd__{cell_name}",
             family=family,
@@ -91,6 +140,15 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
             output_pin=output_pin,
             function=function,
             input_pins=input_pins,
+            next_state=next_state,
+            clocked_on=clocked_on,
+            latch_enable=latch_enable,
+            clear=clear,
+            preset=preset,
+            state_var=state_var,
+            state_inv_var=state_inv_var,
+            output_functions=output_functions,
+            sequential_kind=sequential_kind,
         )
     return cells
 
