@@ -240,7 +240,7 @@ python -m pytest -q -p no:cacheprovider tests/test_scripts_importable.py
 python -m pytest -q -p no:cacheprovider
 ```
 
-Expected: import test passes; full suite passes with no collection errors. Baseline expectation: `366 passed, 4 skipped, 1 subtests passed`.
+Expected: import test passes; full suite passes with no collection errors. Baseline expectation: `367 passed, 4 skipped, 1 subtests passed` (366 pre-existing + 1 new import test); record exact counts instead of assuming them.
 
 - [ ] **Step 3.5: Fix EOF blank lines**
 
@@ -582,7 +582,9 @@ def test_hard_candidate_timeout_has_own_stop_reason() -> None:
 
 
 def test_budgets_have_distinct_reasons() -> None:
-    assert stop_reason_for(BudgetState(campaign_wall_timeout_s=1.0)) == "campaign_wall_exhausted"
+    wall = BudgetState(campaign_wall_timeout_s=1.0)
+    wall.record(CostEvent(BudgetKind.CAMPAIGN_WALL, "wall", 1.0))
+    assert stop_reason_for(wall) == "campaign_wall_exhausted"
     assert stop_reason_for(BudgetState(sta_budget=0)) == "sta_budget_exhausted"
     assert stop_reason_for(BudgetState(formal_budget=0)) == "formal_budget_exhausted"
 ```
@@ -765,14 +767,15 @@ class AcceptanceVerdict:
 
 
 class DefaultAcceptancePolicy:
-    def __init__(self, spec: RunSpec) -> None:
+    def __init__(self, spec: RunSpec, baseline_wns: float = -1.0) -> None:
         self.spec = spec
+        self.baseline_wns = baseline_wns
 
     def evaluate(self, m: CandidateMetrics) -> AcceptanceVerdict:
         reasons: list[str] = []
         if not m.required_ok:
             reasons.append("required_metrics")
-        gain = m.setup_wns - (-1.0)
+        gain = m.setup_wns - self.baseline_wns
         if gain <= self.spec.min_gain_ns:
             reasons.append("insufficient_gain")
         if m.patch_ratio > self.spec.max_patch_ratio:
@@ -923,7 +926,7 @@ python -m pytest -q -p no:cacheprovider tests/test_search_policy.py
 
 - [ ] **Step 8.5: Add CLI compatibility mapping**
 
-In `scripts/run_outerloop_real_wns.py`, keep `--early-stop` accepted but emit a deprecation warning and translate to the policy module. Do not change the default behavior of the CLI beyond the warning.
+In `scripts/run_outerloop_real_wns.py`, add `--search-policy {fast,balanced,exhaustive}` with default `balanced`. Keep `--early-stop` as a deprecated flag: if set, emit `warnings.warn("--early-stop is deprecated; use --search-policy fast")` and resolve to `SearchPolicy.FAST`; otherwise resolve to the `--search-policy` value. Pass the resolved policy into `RunSpec` via `with_overrides({"search_policy": ...})`. Default CLI behavior stays `balanced`; nothing else about the CLI changes.
 
 - [ ] **Step 8.6: Full suite and commit**
 
@@ -968,7 +971,7 @@ def test_b15_quality_cost_tradeoff_is_structural() -> None:
 def test_b17_soft_cost_does_not_invalidate_accepted_candidate() -> None:
     state = BudgetState(candidate_timeout_s=180.0)
     state.record(CostEvent(BudgetKind.SOFT_COST_OVER_LIMIT, "STA 113s > 60s soft cap", 113.0))
-    policy = DefaultAcceptancePolicy(RunSpec.defaults())
+    policy = DefaultAcceptancePolicy(RunSpec.defaults(), baseline_wns=-16.53)
     verdict = policy.evaluate(
         CandidateMetrics(
             candidate_hash="b17_iter1_joint",
