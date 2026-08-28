@@ -244,8 +244,12 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 
 通过条件：
 
-- 本轮初始集成基线固定为本地跟踪 ref `origin/main=b8c37590d7960715a0ec132f9b1c152973803675`；P0.4 的初始实现合并源固定为 `c58ad8ec5e8bc8d8a58e7a77cdce655b8c3e6879`，实现审计范围为 `79b8f05..c58ad8e`；本设计及后续计划提交属于治理输入，不纳入 P0.4 的实现合并演练，待 G8 再随最终受审分支集成；
-- 从上述 `origin/main` SHA 创建一次性分支 `codex/faeco-integration-audit` 和干净 integration worktree，合并源为上述 feature SHA；不得在本地主目录 `main` 上演练；
+- `phase0_integration_base_sha` 固定为本地跟踪 ref `origin/main=b8c37590d7960715a0ec132f9b1c152973803675`；
+- `phase0_base_sha` 固定为 `c58ad8ec5e8bc8d8a58e7a77cdce655b8c3e6879`，实现初始审计范围为 `79b8f05..c58ad8e`；Phase 0 实现工作必须从该 SHA 新建 `codex/faeco-phase0-stabilization`，不得直接叠加在包含本设计提交的治理分支 HEAD 上；
+- `phase0_validated_head_sha` 在 P0.2、所有阻断性 P0.x 正确性修复及 P0.3 完成后生成；它必须是 `phase0_base_sha` 的后代，只包含已列入 Phase 0 closure matrix 的实现/测试/验证入口改动，并在新的 Sol review 和 `verification-summary.json` 中记录；
+- `governance_head_sha` 指包含本设计和后续计划的文档提交链，仅作为执行依据，不是 P0.4 的实现合并源，待 G8 再随最终受审分支集成；
+- 从 `phase0_integration_base_sha` 创建一次性分支 `codex/faeco-integration-audit` 和干净 integration worktree；P0.4 的唯一合并源是冻结后的 `phase0_validated_head_sha`，不得回退使用 `phase0_base_sha`，也不得在本地主目录 `main` 上演练；
+- `phase0_validated_head_sha` 冻结后如发生任何代码或测试变化，G2、G3 和 Sol review 自动失效，必须重新执行并产生新的 validated SHA；
 - P0.1 开始时重新解析并记录这些 ref；任一 ref 与本节 SHA 不一致时立即停止，由总体负责人更新设计/计划后再继续，禁止自动改用新 HEAD；
 - 精确记录 `main`、feature、本地和远端 SHA；
 - 审计 `79b8f05..c58ad8e` 的新增提交；
@@ -362,7 +366,7 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 1. P0.1：只读审计 main/feature/remote 状态，生成资产与 SHA 清单。
 2. P0.2：审查 `79b8f05..c58ad8e`，无行为变化的 finding 可在原批次关闭；需要行为变化的 finding 转为阻断性 P0.x 正确性修复批次。
 3. P0.3：修复默认测试入口和 diff-check；复跑全量测试与真实 SEC smoke。
-4. P0.4：创建干净 integration worktree，演练合并但不 push。
+4. P0.4：从 `phase0_integration_base_sha` 创建干净 integration worktree，将冻结的 `phase0_validated_head_sha` 作为唯一源演练合并但不 push。
 
 出口门禁：G1、G2、G3。
 
@@ -384,10 +388,10 @@ Aggregator 只接受合法 manifest，不从目录名猜测配置。每条论文
 
 | 批次 | 最小交付物 | 必须存在的契约/检查 | 出口门禁 |
 |---|---|---|---|
-| P0.1 | `baseline-audit.json`、只读资产清单、main/feature/remote SHA | ref 与本设计不一致时 fail；不得修改脏 main | G1 |
+| P0.1 | `baseline-audit.json`、只读资产清单、`phase0_integration_base_sha`、`phase0_base_sha`、`governance_head_sha` | ref 与本设计不一致时 fail；从 phase0 base 新建实现分支；不得修改脏 main | G1 |
 | P0.2 | `delta-review.md`、finding closure matrix | Critical/Important 零开放；行为 finding 必须进入独立 P0.x | G1 |
-| P0.3 | 统一测试入口、`verification-summary.json` | 默认 pytest、smoke 3×≤60s、diff-check、skip 清单、真实 SEC smoke | G2、G3 |
-| P0.4 | integration 演练记录、精确 merge SHA、干净状态证明 | 只在 `codex/faeco-integration-audit` 演练，不 push | G1–G3 |
+| P0.3 | 统一测试入口、`verification-summary.json`、冻结的 `phase0_validated_head_sha` | 默认 pytest、smoke 3×≤60s、diff-check、skip 清单、真实 SEC smoke；validated SHA 后续变化会使结果失效 | G2、G3 |
+| P0.4 | integration 演练记录、精确 merge SHA、干净状态证明 | 只在 `codex/faeco-integration-audit` 合并 `phase0_validated_head_sha`，不使用 base SHA，不 push | G1–G3 |
 | P1.1 | RunSpec schema、resolved snapshot、config hash | schema/version/default/CLI override/hash 稳定性测试 | G4 |
 | P1.2 | runtime/budget 语义和结构化 stop reason | soft cost、hard timeout、wall/STA/formal budget 分离测试 | G4 |
 | P1.3 | 纯 AcceptancePolicy 接口 | fail-closed、setup/hold/physical、确定性 tie-break 测试 | G4 |
