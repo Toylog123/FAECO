@@ -27,6 +27,7 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 import json
 import os
+import shutil
 import subprocess
 import sys
 import warnings
@@ -202,13 +203,27 @@ def _tool_versions() -> dict:
     root = _find_oss_cad_root()
     info = {"oss_cad_root": str(root) if root else None}
     env = _yosys_env() if root is not None else dict(os.environ)
-    for name, argv in (
+    probes = [
         ("yosys_version", ["yosys", "-V"]),
         ("opensta_version", ["opensta", "--version"]),
-    ):
+    ]
+    for name, argv in probes:
+        exe = shutil.which(argv[0], path=env.get("PATH", ""))
+        if exe is None and name == "opensta_version":
+            try:
+                wsl_proc = subprocess.run(
+                    ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta", "-version"],
+                    capture_output=True, text=True, timeout=10,
+                )
+                line = (wsl_proc.stdout or wsl_proc.stderr).strip().splitlines()
+                info[name] = line[-1] if line else None
+            except Exception:
+                info[name] = None
+            continue
         try:
             proc = subprocess.run(
-                argv, capture_output=True, text=True, timeout=10, env=env
+                [exe, *argv[1:]] if exe else argv,
+                capture_output=True, text=True, timeout=10, env=env,
             )
             line = (proc.stdout or proc.stderr).strip().splitlines()
             info[name] = line[0] if line and proc.returncode == 0 else None

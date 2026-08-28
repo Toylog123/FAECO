@@ -85,13 +85,17 @@ def _yosys_env() -> dict | None:
 
 
 def _to_wsl(path: Path) -> str:
-    """Windows path -> WSL /mnt/d path (absolute).
+    """Windows path -> WSL /mnt/<drive> path (absolute).
 
     Resolve first so relative paths become absolute before the
     drive-letter rewrite; otherwise WSL cannot find them.
     """
     p = path.resolve()
-    return str(p).replace("\\", "/").replace("D:/", "/mnt/d/", 1)
+    return re.sub(
+        r"^([A-Za-z]):/",
+        lambda m: "/mnt/{}/".format(m.group(1).lower()),
+        str(p).replace("\\", "/"),
+    )
 
 
 def _quote_yosys_path(path: str | Path) -> str:
