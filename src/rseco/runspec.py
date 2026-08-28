@@ -55,4 +55,15 @@ class RunSpec:
 
 
 def config_hash(spec: RunSpec) -> str:
-    return hashlib.sha256(spec.resolved_snapshot().encode("utf-8")).hexdigest()
+    """Stable hash over configuration, excluding the run-id identity field.
+
+    Two runs with identical configuration (same inputs, policy, budgets,
+    seed) must produce the same hash so manifests and replay checks can
+    compare them; ``run_id`` is identity, not configuration.
+    """
+    data = asdict(spec)
+    data.pop("run_id", None)
+    canonical = json.dumps(
+        data, sort_keys=True, separators=(",", ":"), ensure_ascii=False
+    )
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()

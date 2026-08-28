@@ -29,3 +29,10 @@ def test_snapshot_is_canonical_json() -> None:
     data = json.loads(spec.resolved_snapshot())
     assert data["schema_version"] == 1
     assert "run_id" in data
+
+
+def test_config_hash_is_stable_across_run_ids() -> None:
+    first = RunSpec.defaults().with_overrides({"run_id": "a"})
+    second = RunSpec.defaults().with_overrides({"run_id": "b"})
+    assert first.run_id != second.run_id
+    assert config_hash(first) == config_hash(second)
