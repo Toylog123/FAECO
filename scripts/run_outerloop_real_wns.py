@@ -26,6 +26,7 @@ import argparse
 from dataclasses import asdict
 import json
 import sys
+import warnings
 from pathlib import Path
 
 try:
@@ -35,6 +36,8 @@ except ModuleNotFoundError:  # imported by a test runner rather than executed as
     from run_sequential_timing_check import run_opensta, run_yosys_mapping
 
 from rseco.flow import run_multi_iteration_case
+from rseco.runspec import RunSpec, config_hash
+from rseco.search_policy import map_legacy_early_stop
 from rseco.real_wns import (
     RealWnsEvaluator,
     build_full_netlist_sec_checker,
@@ -123,6 +126,9 @@ def parse_args() -> argparse.Namespace:
                    help="Fall back to WSL2 Ubuntu Yosys 0.33 (default is the native\n                   OSS-CAD Suite nightly Yosys 0.67, unified FAECO toolchain)")
     p.add_argument("--early-stop", action="store_true",
                    help="Stop evaluating candidates at first WNS improvement (serial only)")
+    p.add_argument("--search-policy", choices=["fast", "balanced", "exhaustive"],
+                   default="balanced",
+                   help="Explicit search policy; --early-stop is a deprecated alias for fast")
     p.add_argument("--physical-gate", action="store_true",
                    help="Enable paired physical gating: candidate SPEF WNS gain must meet "
                         "--min-physical-gain and paired TNS/hold must not regress (F6 feedback)")
@@ -159,6 +165,12 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    policy = args.search_policy
+    if args.early_stop:
+        warnings.warn("--early-stop is deprecated; use --search-policy fast",
+                      DeprecationWarning, stacklevel=2)
+        policy = map_legacy_early_stop(True, warn=lambda m: None).value
+    args.early_stop = policy == "fast"
     circuit_path = args.source_file or (args.iscas89_dir / f"{args.circuit}.v")
     if not circuit_path.exists():
         print(f"{args.circuit}: circuit not found: {circuit_path}", file=sys.stderr)
@@ -299,6 +311,10 @@ def main() -> int:
         wall_timeout_s=args.wall_timeout_s,
     )
     result["circuit"] = args.circuit
+    result["search_policy"] = policy
+    result["run_spec_hash"] = config_hash(
+        RunSpec.defaults().with_overrides({"search_policy": policy})
+    )
     result["period_ns"] = args.period
     result["baseline_wns"] = baseline_wns
     result["baseline_min_slack"] = baseline_min_slack
