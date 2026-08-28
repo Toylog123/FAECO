@@ -24,20 +24,39 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
+from datetime import datetime, timezone
 import json
+import os
+import subprocess
 import sys
 import warnings
 from pathlib import Path
 
 try:
-    from run_sequential_timing_check import run_opensta, run_yosys_mapping  # reuse verified runners
+    from run_sequential_timing_check import (  # reuse verified runners
+        _find_oss_cad_root,
+        _yosys_env,
+        run_opensta,
+        run_yosys_mapping,
+    )
 except ModuleNotFoundError:  # imported by a test runner rather than executed as a script
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from run_sequential_timing_check import run_opensta, run_yosys_mapping
+    from run_sequential_timing_check import (
+        _find_oss_cad_root,
+        _yosys_env,
+        run_opensta,
+        run_yosys_mapping,
+    )
 
 from rseco.flow import run_multi_iteration_case
 from rseco.runspec import RunSpec, config_hash
 from rseco.search_policy import map_legacy_early_stop
+from rseco.sentinel import (
+    RunManifest,
+    collect_soft_cost_events,
+    compute_input_hash,
+    new_run_id,
+)
 from rseco.real_wns import (
     RealWnsEvaluator,
     build_full_netlist_sec_checker,
@@ -129,6 +148,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--search-policy", choices=["fast", "balanced", "exhaustive"],
                    default="balanced",
                    help="Explicit search policy; --early-stop is a deprecated alias for fast")
+    p.add_argument("--run-id", default=None,
+                   help="Explicit sentinel run id; default is {circuit}-{policy}-{timestamp}-{suffix}")
+    p.add_argument("--soft-cap-s", type=float, default=60.0,
+                   help="STA soft runtime cap (s) for cost-event aggregation in the sentinel manifest")
     p.add_argument("--physical-gate", action="store_true",
                    help="Enable paired physical gating: candidate SPEF WNS gain must meet "
                         "--min-physical-gain and paired TNS/hold must not regress (F6 feedback)")
@@ -163,6 +186,57 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
+def _git_head_sha() -> str | None:
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=10
+        )
+        if proc.returncode == 0:
+            return proc.stdout.strip() or None
+    except Exception:
+        pass
+    return None
+
+
+def _tool_versions() -> dict:
+    root = _find_oss_cad_root()
+    info = {"oss_cad_root": str(root) if root else None}
+    env = _yosys_env() if root is not None else dict(os.environ)
+    for name, argv in (
+        ("yosys_version", ["yosys", "-V"]),
+        ("opensta_version", ["opensta", "--version"]),
+    ):
+        try:
+            proc = subprocess.run(
+                argv, capture_output=True, text=True, timeout=10, env=env
+            )
+            line = (proc.stdout or proc.stderr).strip().splitlines()
+            info[name] = line[0] if line and proc.returncode == 0 else None
+        except Exception:
+            info[name] = None
+    return info
+
+
+def _build_spec(args, policy: str, run_id: str, input_hash: str, out: Path) -> RunSpec:
+    strategies = tuple(s.strip() for s in args.strategies.split(",") if s.strip())
+    required = tuple(m.strip() for m in args.required_metrics.split(",") if m.strip())
+    return RunSpec.defaults().with_overrides(
+        {
+            "run_id": run_id,
+            "case_id": args.circuit,
+            "input_hash": input_hash,
+            "search_policy": policy,
+            "strategies": strategies,
+            "max_iterations": args.max_iterations,
+            "sta_budget": args.sta_budget if args.sta_budget is not None else 2000,
+            "formal_budget": args.formal_budget if args.formal_budget is not None else 200,
+            "required_metrics": required,
+            "min_gain_ns": float(args.epsilon),
+            "output_dir": str(out),
+        }
+    )
+
+
 def main() -> int:
     args = parse_args()
     policy = args.search_policy
@@ -177,6 +251,12 @@ def main() -> int:
         return 1
     out = args.output_dir / args.circuit
     out.mkdir(parents=True, exist_ok=True)
+    run_id = args.run_id or new_run_id(args.circuit, policy)
+    sources = {"source": circuit_path, "liberty": LIB}
+    if args.priority_table is not None:
+        sources["priority_table"] = args.priority_table
+    input_hash = compute_input_hash(sources)
+    spec = _build_spec(args, policy, run_id, input_hash, out)
 
     # 1. Yosys -> pure SKY130 netlist (skip if reusing existing mapped.v)
     mapped = out / "mapped.v"
@@ -312,9 +392,9 @@ def main() -> int:
     )
     result["circuit"] = args.circuit
     result["search_policy"] = policy
-    result["run_spec_hash"] = config_hash(
-        RunSpec.defaults().with_overrides({"search_policy": policy})
-    )
+    result["run_id"] = run_id
+    result["input_hash"] = input_hash
+    result["run_spec_hash"] = config_hash(spec)
     result["period_ns"] = args.period
     result["baseline_wns"] = baseline_wns
     result["baseline_min_slack"] = baseline_min_slack
@@ -339,6 +419,48 @@ def main() -> int:
         json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     evaluator.write_trials(out / "eval_trials.json")
+    soft_cost_events = collect_soft_cost_events(evaluator.trials, soft_cap_s=args.soft_cap_s)
+    toolchain = _tool_versions()
+    toolchain["git_head_sha"] = _git_head_sha()
+    manifest = RunManifest(
+        run_id=run_id,
+        circuit_id=args.circuit,
+        search_policy=policy,
+        period_ns=args.period,
+        input_hash=input_hash,
+        run_spec_hash=result["run_spec_hash"],
+        resolved_snapshot=spec.resolved_snapshot(),
+        started_at_utc=datetime.now(timezone.utc).isoformat(),
+        argv=list(sys.argv),
+        toolchain=toolchain,
+        outcome={
+            "success": bool(result.get("success")),
+            "iterations": result.get("iterations"),
+            "wns_history": result.get("wns_history"),
+            "baseline_wns": baseline_wns,
+            "final_patch_id": result.get("final_patch_id"),
+            "n_candidate_sta_runs": len(evaluator.trials),
+            "round_stop_reasons": [
+                c.get("coverage", {}).get("round_stop_reason")
+                for c in evaluator.call_log
+                if c.get("coverage")
+            ],
+            "soft_cost_events": soft_cost_events,
+            "hard_timeout_events": [
+                e
+                for t in evaluator.trials
+                for e in t.get("failure_events", [])
+                if e.get("type")
+                in {
+                    "deadline_exhausted",
+                    "sta_budget_exhausted",
+                    "formal_budget_exhausted",
+                    "candidate_hard_timeout",
+                }
+            ],
+        },
+    )
+    (out / "sentinel_manifest.json").write_text(manifest.to_json(), encoding="utf-8")
 
     print(f"outer loop: success={result['success']} iterations={result['iterations']}")
     print(f"wns_history={result.get('wns_history')}")
