@@ -1500,3 +1500,41 @@ def test_non_timing_budget_event_records_metric_value_budget_epsilon_unit_and_ba
     metric = event["evidence"]["metric_budgets"]["area"]
     assert metric == {"value": 2.0, "budget": 1.0, "epsilon": .01,
                       "unit": "um^2", "backend": "OpenSTA"}
+
+def test_slow_but_completed_candidate_is_not_rejected_by_f5(tmp_path, monkeypatch):
+    """Spec 4.6: runtime enters cost accounting only; a completed candidate
+    that runs longer than max_verification_time_s must not be F5-rejected."""
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1, baseline_tns=-2,
+                          output_dir=tmp_path, workers=1, strict_gates=True,
+                          strict_budgets=True, max_patch_ratio=1.0,
+                          max_verification_time_s=0.05,
+                          equivalence_checker=lambda a, b: True,
+                          boundary_checker=lambda a, b: True)
+    ev._candidates_for = lambda cells, inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, inst, kind, new, pin: text.replace("and2_1", "and2_2")
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: (time.sleep(0.12) or {"wns": -.5, "tns": -1}))
+    result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is True
+    assert not any(e["type"] == "F5_verification_too_expensive"
+                   for e in result["failure_events"])
+    assert ev.trials[-1]["runtime_s"] >= 0.1
+
+
+def test_hard_timeout_still_rejects_with_f5(tmp_path, monkeypatch):
+    """F5 remains a hard gate when verification genuinely times out or errors."""
+    ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                          liberty_text=LIB, baseline_wns=-1, baseline_tns=-2,
+                          output_dir=tmp_path, workers=1, strict_gates=True,
+                          strict_budgets=True, max_patch_ratio=1.0,
+                          equivalence_checker=lambda a, b: True,
+                          boundary_checker=lambda a, b: True)
+    ev._candidates_for = lambda cells, inst: [("sky130_fd_sc_hd__and2_2", {}, "G")]
+    ev._apply = lambda text, inst, kind, new, pin: text.replace("and2_1", "and2_2")
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential",
+                        lambda **kwargs: {"wns": None, "tns": None, "error": "timeout", "timeout": True})
+    result = ev(SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+    assert result["improved"] is False
+    assert any(e["type"] == "F5_verification_too_expensive"
+               for e in result["failure_events"])

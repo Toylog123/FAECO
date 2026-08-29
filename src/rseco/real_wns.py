@@ -1565,14 +1565,11 @@ class RealWnsEvaluator:
                 "evidence": {"modified_gate_count": changed, "gate_count": gate_count,
                              "action_scope": [inst]},
             })
-        if time.perf_counter() - started_at > self.max_verification_time_s:
-            failure_events.append({
-                "type": "F5_verification_too_expensive", "candidate_hash": candidate_hash,
-                "cut_hash": candidate_hash, "severity": "hard", "runtime_s": time.perf_counter() - started_at,
-                "threshold": self.max_verification_time_s,
-                "observed_value": time.perf_counter() - started_at,
-                "evidence": {"tool": "OpenSTA"},
-            })
+        # A normally-completed verification is never rejected for wall-clock
+        # duration alone: runtime only enters scheduling/cost accounting (spec
+        # 4.6), and slow-but-complete STA on large netlists (e.g. b17) is
+        # aggregated as SOFT_COST_OVER_LIMIT by the sentinel manifest. F5 is
+        # reserved for genuinely failed or interrupted verification.
         if res.get("error") or res.get("timeout"):
             failure_events.append({
                 "type": "F5_verification_too_expensive", "candidate_hash": candidate_hash,
