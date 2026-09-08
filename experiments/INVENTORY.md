@@ -48,6 +48,8 @@ table, and SEC table.  **Do not delete.**
 | `20260908_joint_depth_ablation/` | mid | joint-depth ablation | sec.6 / §6.3 (trade-off) | b17 × depth {0, 2, 4}; depth=4 +0.05 ns vs depth=0 via JOINT pair |
 | `20260908_hold_mode_itc99/` | mid | hold-mode ITC-99 | sec.7 limitation | b01-b14; 2/14 accepted (only b01 min_slack +0.27 ns); others fail because hold 违规 is too severe for 1-iter recovery |
 | `20260908_multi_iter_ablation/` | mid | multi-iter ablation | sec.6 / §6.1 (limit) | b17/b18/b19 × `--max-iterations 6 --candidates-per-iteration 4 --no-early-stop`; only b18 accepts (iter 1 +0.01 ns); b17 finds no improvement; b19 hits WSL2 STA captured-output truncation (3-retry cannot recover) |
+| `20260908_multi_iter_fix_smoke/` | small | fix smoke | forensic only | 2 iters × 2 cand/iter × {early-stop, no-early-stop}; verified `--no-early-stop` actually runs full iters |
+| `20260908_multi_iter_fix_full/` | mid | multi-iter fix re-run | sec.6 / §6.1 (limit) | b17 × 6 iters × 4 cand × `--no-early-stop` (post-fix); 516 STA, all ties -16.53; confirms `_184320_` is not in any iter's actionable list even with full iter coverage |
 
 ## 2. Engineering / forensic-evidence directories
 
@@ -135,20 +137,27 @@ references them or they would strengthen the claims:
    "30/30 SEC pass covers all 30 baseline→accepted-pairs; the
    20260902 historical b17 partial run produced no accepted patch
    and therefore contributes no SEC pair."
-2. **Multi-iter real-WNS ablation** — **run on 2026-09-08
-   (b17/b18/b19)**: only `b18` accepts (iter 1, +0.01 ns; the
-   `--no-early-stop` flag is bypassed by the runner's hard-coded
-   early-stop behaviour so multi-iter never exercises beyond iter 1
-   on success).  `b17` finds no improvement across 6 iters × 86
-   trials per iter = 516 STA runs, because the F4 weight
-   refinement keeps moving the actionable gate list away from
-   `_184320_`.  `b19` (75 k cells) hits a WSL2 captured-output
-   truncation that the 3-attempt retry in
-   `scripts/run_sequential_timing_check.py` cannot recover; manual
-   `run_opensta()` calls return `WNS=-17.42` correctly.
-   Honest limitation written to §7.  Result:
-   `experiments/20260908_multi_iter_ablation/` +
-   `multi_iter_summary.json`.
+2. **Multi-iter real-WNS ablation** — **resolved by fix
+   + post-fix re-run on 2026-09-08**.  The earlier
+   `20260808_multi_iter_ablation/` result was misleading: the
+   runner's `--no-early-stop` flag was silently ignored because
+   `flow.py:471` short-circuits on `wns_info["improved"]` and
+   `simulate_refinement_loop` returns on first success.  After
+   `src/rseco/flow.py` was patched (T20 commit, with backup at
+   `.superpowers/backup/T19_20260908/flow.py.orig` and
+   `git stash@{0}`) and `--no-early-stop` was added to the
+   `run_outerloop_real_wns.py` CLI, b17 was re-run at
+   `--max-iterations 6 --candidates-per-iteration 4` and produced
+   **516 STA runs, all ties -16.53**.  Honest limitation written to
+   §7: the actionable gate list in every iter starts at
+   `_184747_` and never reaches `_184320_`, because the cut is built
+   from the critical-path cover and gates without an R equivalence
+   candidate are skipped.  Multi-iter does NOT compensate for that
+   constraint; `joint_enumerate_depth=4` (separate experiment in
+   `20260908_joint_depth_ablation/`) is what breaks through.
+   Results:
+   `experiments/20260908_multi_iter_ablation/multi_iter_summary.json`
+   + `experiments/20260908_multi_iter_fix_full/multi_iter_fix_summary.json`.
 3. **Hold-mode ITC-99** — **run on 2026-09-08 (b01-b14)**: only
    `b01` accepted with `min_slack_improvement = +0.27 ns`; 12 of 14
    circuits fail because hold 违规 is too severe for 1-iter

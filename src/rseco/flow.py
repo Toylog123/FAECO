@@ -468,7 +468,23 @@ def run_multi_iteration_case(
                             failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
                             break
                 if wns_info["improved"]:
-                    return True, patch.patch_id, {"wns": wns}
+                    early_stop = getattr(
+                        wns_evaluator, "early_stop", True
+                    )
+                    if early_stop:
+                        return True, patch.patch_id, {"wns": wns}
+                    # --no-early-stop path: remember the first accepted
+                    # patch of this iteration but DO NOT short-circuit
+                    # the outer loop.  The owner of the loop
+                    # (``run_multi_iteration_case`` below) reads this
+                    # back from ``wns_evaluator.accepted_patches``
+                    # after ``simulate_refinement_loop`` returns.
+                    if not getattr(wns_evaluator, "_accepted_patches", None):
+                        wns_evaluator._accepted_patches = []
+                    wns_evaluator._accepted_patches.append(
+                        (patch.patch_id, wns)
+                    )
+                    continue
                 # no timing gain on this candidate: keep exploring the
                 # remaining cuts in this iteration before refining weights.
                 continue
@@ -493,4 +509,30 @@ def run_multi_iteration_case(
     result["logic_level_reduction"] = reduction
     if wns_evaluator is not None:
         result["wns_history"] = wns_history
+        # --no-early-stop path: the evaluator recorded every iter's
+        # accepted patch into ``_accepted_patches`` instead of
+        # short-circuiting the outer loop.  Promote the best one
+        # (smallest WNS = highest) into the result so callers see a
+        # proper success=true entry.  When the CLI passes
+        # --early-stop (legacy), ``_accepted_patches`` is empty and
+        # simulate_refinement_loop's own success branch already ran,
+        # so the original result is untouched.
+        accepted = getattr(wns_evaluator, "_accepted_patches", None)
+        if accepted:
+            best_id, best_wns = max(accepted, key=lambda p: p[1])
+            result["success"] = True
+            result["final_patch_id"] = best_id
+            result["final_wns"] = best_wns
+            # simulate_refinement_loop returns after the LAST iter;
+            # its ``iterations`` count is therefore the total iter
+            # budget, which matches what a no-early-stop user wants
+            # to see.
+            if "history" in result and result["history"]:
+                result["history"][-1]["status"] = "success"
+                result["history"][-1]["patch_id"] = best_id
+                result["history"][-1]["wns"] = best_wns
+        # tidy up the side channel so a re-use of the same evaluator
+        # by another caller does not leak accepted patches across runs.
+        if hasattr(wns_evaluator, "_accepted_patches"):
+            wns_evaluator._accepted_patches = []
     return result

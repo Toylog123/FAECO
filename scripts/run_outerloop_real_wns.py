@@ -107,8 +107,16 @@ def parse_args() -> argparse.Namespace:
                    help="Clock port name in the mapped netlist (CK for ISCAS89/ITC-99, clk for PicoRV32)")
     p.add_argument("--yosys-wsl", action="store_true",
                    help="Fall back to WSL2 Ubuntu Yosys 0.33 (default is the native\n                   OSS-CAD Suite nightly Yosys 0.67, unified FAECO toolchain)")
-    p.add_argument("--early-stop", action="store_true",
-                   help="Stop evaluating candidates at first WNS improvement (serial only)")
+    p.add_argument("--early-stop", action="store_true", dest="early_stop",
+                   help="Legacy: stop evaluating candidates at first WNS improvement "
+                        "(serial only).  Default = early-stop is enabled for backward "
+                        "compatibility with the 20260826 unified-loop batch.")
+    p.add_argument("--no-early-stop", action="store_false", dest="early_stop",
+                   help="Disable early-stop at the outer-loop accept step: keep exploring "
+                        "remaining candidates and remaining max-iterations even after a "
+                        "WNS-improving candidate is found.  The best accepted patch across "
+                        "all iterations is reported in the result.")
+    p.set_defaults(early_stop=True)
     p.add_argument("--physical-gate", action="store_true",
                    help="Enable inner-loop physical gating: candidates must clear an ideal-net "
                         "gain > min-physical-gain before a fanout/depth-aware SPEF re-measure, "
