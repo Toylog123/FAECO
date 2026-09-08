@@ -4,17 +4,18 @@
 
 ## 结构
 
-- manuscript/faeco_paper.tex：单文件 IEEEtran + ctex 稿件（xelatex 编译）
-- faeco_paper.pdf：编译产物（发布版）
+- manuscript/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.tex：单文件 ctex 稿件（xelatex 编译）
+- FAECO_面向预布局门级时序ECO的失效驱动候选搜索.pdf：编译产物（发布版）
 - build/：latexmk 中间产物 + qa_faeco/ 逐页 PNG 渲染 QA
 
 ## 编译
 
 ```powershell
 Push-Location manuscript
-latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -outdir=../build faeco_paper.tex
+latexmk -g -xelatex -interaction=nonstopmode -halt-on-error -file-line-error FAECO_面向预布局门级时序ECO的失效驱动候选搜索.tex
 Pop-Location
-Copy-Item build/faeco_paper.pdf faeco_paper.pdf -Force
+Copy-Item manuscript/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.pdf FAECO_面向预布局门级时序ECO的失效驱动候选搜索.pdf -Force
+Copy-Item manuscript/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.pdf build/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.pdf -Force
 ```
 
 ## 内容维护
