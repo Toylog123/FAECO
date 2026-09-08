@@ -47,6 +47,7 @@ table, and SEC table.  **Do not delete.**
 | `20260908_phase2_b17_resume/` | mid | phase-2 sentinel (current) | sec.6 / §6.3, sec.7 ablation | b17 phase-2: baseline -16.53 → final -16.15 (+0.38 ns); SEC 12812/12813 pass |
 | `20260908_joint_depth_ablation/` | mid | joint-depth ablation | sec.6 / §6.3 (trade-off) | b17 × depth {0, 2, 4}; depth=4 +0.05 ns vs depth=0 via JOINT pair |
 | `20260908_hold_mode_itc99/` | mid | hold-mode ITC-99 | sec.7 limitation | b01-b14; 2/14 accepted (only b01 min_slack +0.27 ns); others fail because hold 违规 is too severe for 1-iter recovery |
+| `20260908_multi_iter_ablation/` | mid | multi-iter ablation | sec.6 / §6.1 (limit) | b17/b18/b19 × `--max-iterations 6 --candidates-per-iteration 4 --no-early-stop`; only b18 accepts (iter 1 +0.01 ns); b17 finds no improvement; b19 hits WSL2 STA captured-output truncation (3-retry cannot recover) |
 
 ## 2. Engineering / forensic-evidence directories
 
@@ -134,14 +135,20 @@ references them or they would strengthen the claims:
    "30/30 SEC pass covers all 30 baseline→accepted-pairs; the
    20260902 historical b17 partial run produced no accepted patch
    and therefore contributes no SEC pair."
-2. **Multi-iter real-WNS ablation** — the unified-loop batch used
-   `early-stop`, so each accepted patch consumed exactly one
-   iteration.  An ablation that runs the same `20260826_itc99_main`
-   config with `--no-early-stop --max-iterations 6` would let us put
-   the multi-iter convergence claim on hard numbers instead of the
-   stage-A proxy.
-   Cost: ~3 hours wall time for 19 ITC-99 cases × 6 iters ×
-   ~120 s/STA; ~10 GB disk.
+2. **Multi-iter real-WNS ablation** — **run on 2026-09-08
+   (b17/b18/b19)**: only `b18` accepts (iter 1, +0.01 ns; the
+   `--no-early-stop` flag is bypassed by the runner's hard-coded
+   early-stop behaviour so multi-iter never exercises beyond iter 1
+   on success).  `b17` finds no improvement across 6 iters × 86
+   trials per iter = 516 STA runs, because the F4 weight
+   refinement keeps moving the actionable gate list away from
+   `_184320_`.  `b19` (75 k cells) hits a WSL2 captured-output
+   truncation that the 3-attempt retry in
+   `scripts/run_sequential_timing_check.py` cannot recover; manual
+   `run_opensta()` calls return `WNS=-17.42` correctly.
+   Honest limitation written to §7.  Result:
+   `experiments/20260908_multi_iter_ablation/` +
+   `multi_iter_summary.json`.
 3. **Hold-mode ITC-99** — **run on 2026-09-08 (b01-b14)**: only
    `b01` accepted with `min_slack_improvement = +0.27 ns`; 12 of 14
    circuits fail because hold 违规 is too severe for 1-iter

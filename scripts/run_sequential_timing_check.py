@@ -51,12 +51,11 @@ def parse_args() -> argparse.Namespace:
 
 
 def _find_oss_cad_root() -> Path | None:
-    """Locate the OSS-CAD Suite root (native Windows Yosys 0.67).
+    """Locate the native OSS-CAD Suite root (Yosys 0.67+146).
 
-    Review shortboard defect 4: the FAECO toolchain is unified on the
-    OSS-CAD Suite nightly (Yosys 0.67+), replacing both the 32-bit Windows
-    Yosys 0.9 and the WSL Ubuntu 0.33 package.  The suite ships its runtime
-    DLLs under lib/, so PATH must include both bin/ and lib/.
+    The old Windows Scoop Yosys 0.9 package is intentionally not a fallback.
+    WSL2 Ubuntu Yosys 0.33 is selected explicitly by callers that need the
+    WSL toolchain, such as the sequential SEC supplement.
     """
     explicit = os.environ.get("YOSYSHQ_ROOT")
     if explicit and Path(explicit).exists():
@@ -72,7 +71,7 @@ def _find_oss_cad_root() -> Path | None:
 
 
 def _yosys_env() -> dict | None:
-    """Environment for the native OSS-CAD Yosys; None falls back to os.environ."""
+    """Environment for the native OSS-CAD Yosys."""
     root = _find_oss_cad_root()
     if root is None:
         return None
@@ -98,21 +97,19 @@ def run_yosys_mapping(circuit: Path, output: Path,
     """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist.
 
     ``yosys_cmd`` selects the Yosys executable. Default is the native
-    OSS-CAD Suite nightly Yosys 0.67 (the unified FAECO toolchain,
-    review shortboard defect 4); pass
-    ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"] to fall back to
-    the WSL2 Ubuntu 0.33 package. WSL mode translates map.ys paths via
+    OSS-CAD Suite Yosys 0.67+146 when its absolute path is available. Pass
+    ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"] to select the
+    WSL2 Ubuntu Yosys 0.33 package explicitly. The removed Windows Scoop
+    Yosys 0.9 package is never used. WSL mode translates map.ys paths via
     _to_wsl.
     """
-    # unified FAECO toolchain: default to native OSS-CAD Yosys 0.67;
-    # resolve the command *before* the WSL path translation check.
-    # NOTE: Windows CreateProcess resolves a bare ``yosys`` name via the
-    # *parent* PATH (the child env PATH is ignored for lookup), so when
-    # OSS-CAD is installed we must pass the absolute exe path to make
-    # sure the correct binary runs instead of a legacy PATH shim.
+    # Resolve the command *before* the WSL path translation check. Never
+    # fall back to a bare Windows ``yosys`` name: the Scoop 0.9 package was
+    # removed to prevent an older PATH shim from silently taking precedence.
     if yosys_cmd is None:
         root = _find_oss_cad_root()
-        yosys_cmd = [str(root / "bin" / "yosys.exe")] if root else ["yosys"]
+        yosys_cmd = ([str(root / "bin" / "yosys.exe")] if root else
+                     ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"])
     script = output / "map.ys"
     lib_posix = LIB.as_posix()
     script_posix = script.as_posix()
@@ -237,26 +234,48 @@ def run_opensta(mapped: Path, period: float, output: Path,
         "report_worst_slack -min\n"
     )
     tcl.write_text(tcl_body, encoding="utf-8")
-    proc = subprocess.run(
-        ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta",
-         "-no_splash", "-exit", _to_wsl(tcl)],
-        capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=900,
-    )
-    (output / "sta.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
-    text = proc.stdout + proc.stderr
-    # OpenSTA format: "-0.28   slack (VIOLATED)" (value left of 'slack')
-    slack = re.search(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)", text)
-    wns = re.search(r"worst slack max\s+(-?\d+\.\d+)", text)
-    min_slack = re.search(r"worst slack min\s+(-?\d+\.\d+)", text)
-    tns = _parse_tns(text)
-    return {
-        "slack": float(slack.group(1)) if slack else None,
-        "slack_status": slack.group(2) if slack else None,
-        "wns": float(wns.group(1)) if wns else None,
-        "min_slack": float(min_slack.group(1)) if min_slack else None,
-        "tns": tns,
+    # WSL2 sometimes truncates the captured output for very large mapped
+    # netlists (b19 has ~75k cell instances, which is the largest
+    # ITC-99 case in our set).  Retry up to 3 times to recover the
+    # missing ``worst slack max`` line; each retry is fast because the
+    # design is already compiled and cached on the WSL side.
+    last: dict[str, Any] = {
+        "slack": None, "slack_status": None,
+        "wns": None, "min_slack": None, "tns": None,
     }
+    for attempt in range(1, 4):
+        proc = subprocess.run(
+            ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta",
+             "-no_splash", "-exit", _to_wsl(tcl)],
+            capture_output=True, text=True,
+            encoding="utf-8", errors="replace", timeout=900,
+        )
+        (output / "sta.log").write_text(
+            proc.stdout + proc.stderr, encoding="utf-8"
+        )
+        text = proc.stdout + proc.stderr
+        # OpenSTA format: "-0.28   slack (VIOLATED)" (value left of 'slack')
+        slack = re.search(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)", text)
+        wns = re.search(r"worst slack max\s+(-?\d+\.\d+)", text)
+        min_slack = re.search(r"worst slack min\s+(-?\d+\.\d+)", text)
+        tns = _parse_tns(text)
+        last = {
+            "slack": float(slack.group(1)) if slack else None,
+            "slack_status": slack.group(2) if slack else None,
+            "wns": float(wns.group(1)) if wns else None,
+            "min_slack": float(min_slack.group(1)) if min_slack else None,
+            "tns": tns,
+        }
+        if last["wns"] is not None:
+            if attempt > 1:
+                print(f"  STA recovered on attempt {attempt}", flush=True)
+            break
+        # WSL2 output was truncated; sleep briefly and retry
+        print(f"  STA attempt {attempt} truncated wns=None, retrying...",
+              flush=True)
+        import time as _t
+        _t.sleep(2)
+    return last
 
 
 def main() -> int:
