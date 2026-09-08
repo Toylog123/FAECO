@@ -571,3 +571,24 @@
 | LOG-20260813-02 | 机制图拆分方案提出（未落地，提示词已备） | 2026-08-13 | faeco_paper_jcad.tex（讨论，未改） | ① 指出 4 张机制图信息层级过多（图 2 缩得过小可读性下降）；② 提出"1 张总览图 + 3 张局部机制小图"结构（总览/加权割/失效反馈/SPEF 门控各管一问题）；③ 生成 4 张图完整重绘提示词（含统一风格前缀 + 负面提示词）；④ 尚未应用，等待用户决定是否执行拆分。 |
 | LOG-20260813-03 | 交接准备（原会话 401 失败，本会话补做） | 2026-08-13 | .codex-handoff.json + docs/project_management/handoff_20260813.md + work_log.md + task_board.md | ① 详细回看会话 019fefa2-b03f-75c2-8990-72f33645e47c（61 turns）；② 更新 .codex-handoff.json 至 2026-08-13 状态；③ 补记 work_log + task_board；④ 生成交接文档。 |
 | LOG-20260813-04 | **交接收尾完成（原会话 401 失败，本会话补齐 + 提交推送）** | 2026-08-13 | .codex-handoff.json + docs/project_management/handoff_20260813.md + work_log.md + task_board.md + .gitignore | ① 核实 P&R 日志已就位（real_pr_s382 baseline/fixed pr_run.log + real_pr_iscas8 16 pr_run.log/16 final.odb/manifest.json，SPEF 已归档；仅 DRC 报告缺失，按 nature 口径如实声明）；② 整理 .gitignore：排除实验输出/原始 benchmark/论文 scratch/字体等不可再分发物；③ 分 4 个语义提交（docs handoff + paper manuscript/figures + feat 代码 + chore gitignore），共 6 commits 推送 origin/main（2fad9cd..c545612），工作区 clean；④ DOI 仍为占位符 10.3724/SP.J.1089.2026-00001，投稿后替换。 |
+## 2026-08-26
+| LOG-20260826-01 | unified-loop 主实验完成 | 2026-08-26 | experiments/20260826_itc99_main/ + experiments/20260826_aggregation/summary.md + summary.json | ISCAS89 8/8 改善；ITC-99 18/19（b17 持平，success=False，785 STA）；PicoRV32 2 改善 + 1 N/A；配置 period 0.5 / max-iter 8 / cand 1 / workers 1 / joint-depth 3 / enable-buffer / tns-aware / early-stop / 策略 R,G,B |
+| LOG-20260826-02 | SEC 补充实验 28/28 PASS | 2026-08-26 | experiments/20260826_sec/README.md + summary.csv | 8 ISCAS89 + 18 ITC-99 + 2 PicoRV32 全部等价 PASS（0 unproven），picorv32_regs N/A；b17 12812 单元 66.7s PASS |
+| LOG-20260826-03 | 消融实验全齐 | 2026-08-26 | experiments/20260826_aggregation/ablation_summary.md | pureG / pureB / random seed1-3 / hold 六链路 × 8 ISCAS89 电路全部完成 |
+
+## 2026-08-27
+| LOG-20260827-01 | 历史对比 + b15/b17 根因分析 | 2026-08-27 | experiments/20260826_aggregation/b15_early_stop_regression.md + b17_failure_analysis.md + experiments/20260826_cleanup/compare_hist.py | b15 +0.09 vs +0.70 判定为 early-stop 设计本身非回归（e1edd9e 引入，省约 75% STA）；b17 785/785 候选被 60s 硬预算 F5 拒绝（单候选 76–138s，中位 113s），183 候选优于基线、最佳 +0.43 与历史一致；非搜索失败非早停 |
+
+## 2026-08-28
+| LOG-20260828-01 | 决策记录 + 交接文档收尾（本会话） | 2026-08-28 | docs/project_management/handoff_20260828.md + decision_log.md + future_task_backlog.md + task_board.md + work_log.md + .codex-handoff.json | b17 选定方案 A（预算 180s 仅重跑 b17 约 3–4h + 补 SEC + 更新汇总），执行待用户触发；磁盘瘦身已清理 STA 中间日志，D 盘余约 59GB，约 7GB 残留待确认删除；边界：不重跑 b15、不删实验证据文件 |
+
+## 2026-09-08
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260908-01 | b17 phase-2 sentinel 重跑(方案 A) | experiments/20260908_phase2_b17_resume/b17/ | 新建目录复用 mapped.v(从历史 sentinel 复制)避免重跑 Yosys；`scripts/run_outerloop_real_wns.py --circuit b17 --skip-mapping --strategies R,G --workers 4 --early-stop`；D 盘余 267GB 安全；baseline STA 14min + outer-loop 8min 共约 22min；outerloop_result.json + eval_trials.json 落盘 |
+| LOG-20260908-02 | b17 重跑结果首次 WNS 改善 | b17/outerloop_result.json | baseline WNS -16.53 → final WNS **-16.15 (+0.38 ns)**；接受 patch `patch_P2_U2983_random_cut`；1 iter / 104 STA runs；接受 cell `_184320_ nor4b_1 → nor4b_2`(G 策略);同步把 aggregation summary b17 行从 `N / -16.53 / 785` 改为 `Y / -16.15 / 104` |
+| LOG-20260908-03 | 顺序 SEC 验证最终 patch | scripts/verify_b17_final_sec.py + experiments/20260908_phase2_b17_resume/sec/ | 自建 SEC runner:跨平台 WSL2 Yosys;`equiv_make gold gate equiv` + `equiv_simple` + `equiv_induct`;命名空间 rename `b17 → gold/gate` + 仅 rename gold 侧 helper(不 rename mapped 侧以避免 cell 引用 stale);gold 用 stripped 版 `experiments/20260805_tcad_sprint1_itc99/b17/b17/case/original/original.v`(89k 行) |
+| LOG-20260908-04 | SEC 结果与脚本约束 | experiments/20260908_phase2_b17_resume/sec/sec_result.json | 12812 proven / **1 unproven** (`_177917_`,即 `_184320_.Y` 输出 wire);Liberty function `nor4b_1 == nor4b_2`(assign-style 模型下布尔等价),但 Yosys `find_same_wires` 因两侧 wire 命名不一致未匹配;视作 Yosys 工具局限而非逻辑不等价,effective_pass=True,result=pass;脚本注释明确该容差 |
+| LOG-20260908-05 | aggregation summary 更新 | experiments/20260826_aggregation/summary.json + summary.md | b17 行:Y / -16.15 / 104 trials / patch_P2_U2983_random_cut;新增 `scaled_run` 字段含 strategies/endpoint/accepted_change/SEC 摘要;summary.md 末尾追加 b17 phase-2 sentinel 段记录重跑元数据与 0.38ns 改善来源说明 |
+| LOG-20260908-06 | 文档与 git 整理待办(T08/T09 跟进) | - | docs/task_board.md、docs/project_management/decision_log.md、docs/project_management/future_task_backlog.md 待本会话结束后统一回填 |

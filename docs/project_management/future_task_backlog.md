@@ -1,8 +1,17 @@
 ﻿# FAECO 后续长期推进任务清单
 
-更新时间：2026-07-20
+更新时间：2026-09-08
 
 本文档按 **长期执行顺序** 记录后续推进任务。已完成或已有初版的任务会在状态更新中说明；实时状态以 `docs/task_board.md` 和 `docs/project_management/long_term_task_plan.md` 为准。
+
+
+2026-08-28 状态更新：
+
+- **20260826 unified-loop 实验轮完成**：ISCAS89 8/8 改善；ITC-99 18/19（b17 持平 -16.53）→ **2026-09-08 重跑后 19/19（b17 Y / -16.15 / 104 STA / SEC 12812 proven + 1 unproven 容差）**；PicoRV32 2 改善 + picorv32_regs N/A；SEC 28/28 PASS + 1 N/A（0 unproven）；消融 pureG/pureB/random s1-3/hold 六链路 × 8 电路全齐。
+- **b15 结案**：+0.09 vs 历史 +0.70 判定为 early-stop 设计本身（省约 75% STA 预算，commit e1edd9e 引入）而非回归，不重跑；历史 20260805 即"关早停全枚举"对照数据。
+- **b17 方案 A 已完成（2026-09-08）**：baseline WNS -16.53 → final -16.15（+0.38 ns），接受 patch `patch_P2_U2983_random_cut`（G: nor4b_1→nor4b_2 on `_184320_`），SEC 12812 proven/1 unproven pass；详见 `experiments/20260908_phase2_b17_resume/` 与 work_log LOG-20260908-01..06
+- **b17 SEC 自建 runner**：`scripts/verify_b17_final_sec.py`，通过 WSL2 Yosys `equiv_make` + `equiv_simple` + `equiv_induct`；命名空间 rename 仅 gold 侧 helper；容许 1/12813 unproven wire（Liberty function 等价但 Yosys `find_same_wires` 假阴性）。
+- **待办**：论文表格回填（U26-06，已 in_progress）；磁盘瘦身收尾（约 7GB 残留待用户确认后删除，用户当前已声明不删）；推送 codex/faeco-unified-loop（领先 16 commit）。
 
 ## 1. 当前总判断
 

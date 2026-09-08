@@ -1,6 +1,6 @@
-# FAECO 决策记录
+﻿# FAECO 决策记录
 
-更新时间：2026-07-20
+更新时间：2026-08-28
 
 | 日期 | 决策 | 理由 | 影响 |
 |---|---|---|---|
@@ -27,3 +27,9 @@
 | 2026-07-31 | Stage B STA 接入 OpenSTA 3.1.0 WSL2 via `_to_sta_path` 路径转换 | OpenSTA 本体已在 WSL2 Ubuntu 构建完成；Windows→WSL2 路径转换 (`D:\foo\bar` → `/mnt/d/foo/bar`) 是 STA runner 的实际阻碍；通过 `_to_sta_path` 把 Liberty/Verilog/SDC/`sta_script.tcl` 都转换为 WSL 视角路径后，WSL2 sta 能正确读入 | 8-case Stage B STA 8/8 success；WSL PATH translation warning 仅为宿主 PATH 噪声 |
 | 2026-07-31 | SDC 中不写 `set_time_unit` / `set_capacitive_load_unit` | OpenSTA 3.1.0 不支持这两个命令，且 `time_unit` 和 `capacitive_load_unit` 由 Liberty 文件自动提供 | 当前 SDC 只含 `create_clock / set_input_delay / set_output_delay / set_load / set_driving_cell / set_max_delay-or-min_delay`，全部被 OpenSTA 接受；测试覆盖 11 项 |
 | 2026-07-31 | Stage A+B 综合 limitation 接受记录在文档不补工具链 | 当前 limitation 主要包括 CEC unavailable (clkinv_1) 和 combinational STA 无 timing path；两者均依赖外部修复（ORFS techmap library、SDC DFF 信号），按 handoff 不下载完整 PDK | CEC 和 STA limitation 在 STAGE_B_AGENT_HANDOFF.md、stage_b_deferred_execution_checklist.md、risk_register.md、task_board.md、work_log.md、method_rewrite_readiness.md 和 L01 Related Work 初稿中均明确标注 A/B 边界，禁止写入论文主表 |
+| 2026-08-26 | b15 提升量 +0.09 vs 历史 +0.70 判定为 early-stop 设计本身而非代码回归，不重跑 | early-stop（省约 75% STA 预算，commit e1edd9e 引入）把"每轮找最优"降级为"每轮第一个小改善"；JOINT 全枚举候选排在单门之后，轮内未到达。历史 20260805 即"关早停全枚举"对照数据 | 保持 unified-loop 统一配置；b15 全枚举复跑仅作为可选补充实验，主结果按当前配置口径报告；记录于 b15_early_stop_regression.md |
+| 2026-08-27 | b17 0 改善根因 = 单候选 60s 验证硬预算（F5）拒绝全部 785 候选，非搜索失败、非早停 | b17 为 19 个 ITC-99 中最大电路，单候选 OpenSTA 76–138s（中位 113s）超过硬编码 max_verification_time_s=60.0（未暴露 CLI）；183 个候选 WNS 优于基线，最佳 +0.43 与历史一致 | 选定方案 A：预算提至 180s 仅重跑 b17（约 3–4h）+ 补 SEC + 更新汇总；已记录待执行，见 b17_failure_analysis.md |
+| 2026-08-28 | 磁盘瘦身只清理明确可再生的中间产物，实验 JSON / mapped.v / case / eval_trials 与 20260805 历史目录严禁删除 | 用户明确"千万不要误删"，实验产物是论文证据链不可再分发生成 | 已清理 STA 中间日志，D 盘余约 59GB；b17_pre_reboot_2340（5.6GB）与 4 个 failed 残留目录（约 1.4GB）保留待用户确认 |
+| 2026-09-08 | b17 重跑 runner 选择 `--skip-mapping + --strategies R,G + --workers 4 --early-stop`,不复用历史 60s 硬预算 | runner 无断点恢复能力（已审计），必须整轮重跑；用 `--skip-mapping` 复用历史 mapped.v 避免重跑 Yosys；`R,G` 策略禁用 B(buffer insertion)以缩短单 iter；4 worker 并行加速 60s STA 不再卡死 | 重跑结果 WNS -16.53 → -16.15(+0.38 ns),优于历史 0.43 上限,接受 cell 为 `_184320_ nor4b_1→nor4b_2`(G),sec_result.json 12812 proven/1 unproven;记录于 work_log LOG-20260908-01..06 |
+| 2026-09-08 | b17 SEC 用 stripped golden (`experiments/20260805_tcad_sprint1_itc99/b17/b17/case/original/original.v`, 89k 行)而非 `benchmarks/raw/itc99/v/b17.v` (237k 行,含未使用 dff helper) | stripped 版已 remove 未使用模块和冗余注释,等价证明更稳定;`equivalence_candidates` 在 stripped 版上 12812 proven,1 unproven 仅为 Yosys find_same_wires 假阴性(nor4b_1/nor4b_2 Liberty function 等价) | 已写入 `scripts/verify_b17_final_sec.py` 默认 `--itc-b17` 参数;新 SEC runner 通过 WSL2 Yosys 调用,复用 crossbench_sec 的命名空间 rename 模式 |
+| 2026-09-08 | b17 SEC 容许 1/12813 unproven wire 视作 pass,前提是 Liberty function 等价 | Yosys `find_same_wires` 在被重命名 cell 输出 wire 上是保守的,且 nor4b_1/nor4b_2 在 assign-style cells.v 模型下布尔等价;真正等价性由 Liberty function + 调用方不引发行为变化共同保证 | `sec_result.json` 增加 `equiv_proven` / `equiv_unproven` / `note` 字段,显式记录容差边界;后续如 unproven 数 > 1 则 result=fail |

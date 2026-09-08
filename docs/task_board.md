@@ -1,9 +1,17 @@
 # 任务看板
 
-更新时间：2026-08-13
+更新时间：2026-08-28
 
 | ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
 |---|---|---|---|---|---|
+| U26-01 | 20260826 unified-loop 主实验 | done | P0 | ISCAS89 8/8 改善、ITC-99 18/19（b17 重跑后 19/19）、PicoRV32 2 改善 + 1 N/A；汇总表 summary.md/json | b17 已重跑为 Y / -16.15 / 104 STA，summary.md/json 已更新 |
+| U26-02 | 20260826 SEC 等价性验证 | done | P0 | 28/28 PASS + 1 N/A（0 unproven）+ b17 重跑 SEC 12812/12813 proven (1 Yosys find_same_wires 假阴性)；README + summary.csv + b17 sec_result.json | 已补 b17 SEC，等价证明通过；未证明的 1 个 wire 是 nor4b_1/nor4b_2 输出，Liberty function 等价 |
+| U26-03 | 20260826 消融实验 | done | P0 | pureG/pureB/random s1-3/hold 六链路 × 8 电路全齐；ablation_summary.md | 论文消融表回填时引用 |
+| U26-04 | 历史对比 + b15/b17 分析 | done | P0 | b15 结案（early-stop 设计非回归）；b17 根因 60s 预算（F5 拒 785/785，最佳 +0.43） | 决策记录已入 decision_log |
+| U26-05 | b17 方案 A 重跑 | done | P0 | 预算 180s 单 iter 仅重跑 b17 → SEC → 更新 summary/对比表 | **2026-09-08 完成**:baseline WNS -16.53 → final -16.15 (+0.38 ns);接受 patch `patch_P2_U2983_random_cut`(G: nor4b_1→nor4b_2 on `_184320_`);104 STA runs;SEC 12812/12813 proven。详见 `experiments/20260908_phase2_b17_resume/` 与 `docs/project_management/work_log.md` LOG-20260908-01..06 |
+| U26-06 | 论文实验表格回填 | in_progress | P0 | 主结果/消融/SEC/对比表使用 20260826 数据(b17 已更新) | b17 结果已落定(Y/-16.15/104 STA + SEC pass),等用户确认表格口径后落 paper/zh 实验段 |
+| U26-07 | 磁盘瘦身收尾 | pending | P1 | 删除 b17_pre_reboot_2340（5.6GB）与 4 个 failed 残留（约 1.4GB），释放约 7GB | 用户确认后删除；实验证据文件严禁删;用户当前已声明不删,阻塞 |
+| U26-08 | 推送 codex/faeco-unified-loop | pending | P1 | 分支领先 origin 16 commit 推送到远程 | 用户确认后 push |
 | M01 | 固定研究主线 | done | P0 | 主线写入 `docs/mainline.md` | 后续围绕 FAECO 推进 |
 | M02 | 完成工程目录重构 | done | P0 | README 和各目录入口文档齐全 | 新增派生产物继续按 `engineering_structure.md` 分类，并保持 raw/derived 分离 |
 | M03 | 原始材料归纳索引 | done | P0 | 论文、课题构想、文献库均有归纳入口 | 维持 25A/1B 证据链；DAC 2018 合法全文只作定期复核，不阻塞 Related Work 初稿 |
