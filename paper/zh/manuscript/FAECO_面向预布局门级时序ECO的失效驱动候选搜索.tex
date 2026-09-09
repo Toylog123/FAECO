@@ -107,7 +107,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a failure-aware candidate-search engine for pre-placement gate-level timing ECO, to address the limited ability of buffer insertion and gate sizing to compress deep logic. FAECO combines a multi-feature weighted cut with a critical-path cover cut to generate candidates, and updates the search through candidate failures; candidates are screened by library-function and structural rules, accepted by OpenSTA measurements on ideal nets, and subjected to simplified rechecking using SPEF. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively; the remaining one ITC-99 circuit matches the baseline without regression. Independent logical gate-level SEC fully proves 29/30 baseline--repair pairs; the unproven point in b17 is identified as a same-function size swap by Liberty. Under the ISCAS89 20-round convergence configuration, the mixed strategy achieves a mean WNS improvement of 1.07\,ns, and 5/8 ISCAS89 circuits retain an improvement after real placement and routing.}\par
+  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a failure-aware candidate-search engine for pre-placement gate-level timing ECO, to address the limited ability of buffer insertion and gate sizing to compress deep logic. FAECO combines a multi-feature weighted cut with a critical-path cover cut to generate candidates, and updates the search through candidate failures; candidates are screened by library-function and structural rules, accepted by OpenSTA measurements on ideal nets, and subjected to simplified rechecking using SPEF. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively; the remaining one ITC-99 circuit matches the baseline without regression. Independent logical gate-level SEC fully proves 29/30 baseline--repair pairs; the unproven point in b17 is identified as a same-function size swap by Liberty. Under the ISCAS89 20-round convergence configuration, the mixed strategy achieves a mean WNS improvement of 1.07\,ns; in a separate placement-and-routing validation using the efficiency-prioritized configuration, 5/8 ISCAS89 circuits retain an improvement.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; local restructuring; multi-feature weighted cut; failure-aware feedback; simplified SPEF gate; pre-placement timing optimization}\par
 \end{flushleft}
@@ -136,7 +136,7 @@
 \begin{enumerate}
   \item \textbf{失效驱动搜索}：结合局部功能保持信息、多特征加权割与关键路径覆盖割，并利用 F1--F6 失败反馈更新搜索权重与顺序，形成面向深层逻辑的闭环候选生成机制。
   \item \textbf{功能—时序—物理分层验证}：将局部函数/结构筛选、理想线网 WNS 判定和简化 SPEF 复测串联起来，并以独立全网表 SEC 验证最终修复结果；29/30 个基线—修复对由顺序 SEC 完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。
-  \item \textbf{跨测试集与真实流程验证}：在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善；ISCAS89 收敛配置下混合策略平均 WNS 改善为 1.07\,ns，真实布局布线后 8 个 ISCAS89 电路中有 5 个保持改善。
+  \item \textbf{跨测试集与真实流程验证}：在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善；ISCAS89 20 轮收敛配置下混合策略平均 WNS 改善为 1.07\,ns，另在效率优先配置对应的真实布局布线验证中 5/8 个 ISCAS89 电路保持改善。
 \end{enumerate}
 
 % =============================================================================
@@ -290,7 +290,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 
 每类失败使对应权重增加 $1.0$：F1/F2 增大边界惩罚 $\lambda_b$，F3 增大尺寸惩罚 $\lambda_s$，F4 增大关键覆盖奖励 $\lambda_c$，F5 增大验证代价惩罚 $\lambda_v$ 并将最大锥门数减半，F6 同时增大边界惩罚 $\lambda_b$ 与尺寸惩罚 $\lambda_s$，收紧候选边界并偏向较小局部以降低高线载候选再次出现的概率。
 
-\begin{table}[t]
+\begin{table}[!t]
 \centering
 \caption{F1--F6 失败类型与反馈动作}
 \label{tab:failures}
@@ -345,7 +345,7 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 
 \subsection{主结果：ISCAS89 修复质量与效率}\label{sec:iscas}
 
-图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本节报告时序搜索结果；主实验的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。策略分布方面：JOINT 候选对应 s27/s382/s420/s953，G 对应 s641/s713/s832，R 对应 s820；B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}，本节数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置分开统计。
+图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本节报告时序搜索结果；主实验的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。策略分布方面：JOINT 候选对应 s27/s382/s420/s953，G 对应 s641/s713/s832，R 对应 s820；B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，本节数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置分开统计。
 
 从机制上看，JOINT 沿关键路径压缩多级逻辑深度，单门 G 只调整驱动强度而不改变逻辑级数；R 依赖工艺库中的等价布尔候选，在 ISCAS89 中的覆盖有限，这与 \S\ref{sec:itc99} 中 b06 未达到严格改善的情况具有相同原因。
 
@@ -356,7 +356,7 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 \label{fig:iscas_main}
 \end{figure}
 
-\begin{table}[!t]
+\begin{table}[!htb]
 \centering
 \caption{ISCAS89 顺序门级 SEC 结果}
 \label{tab:sec_iscas8}
@@ -383,9 +383,9 @@ s953 & 228 & 通过 & 0.537 \\
 
 \subsubsection{ITC-99 基准族}\label{sec:itc99}
 
-在 19 个可映射到 SKY130 HD 的 ITC-99 电路中，18 个电路的 WNS 取得严格改善，b06 与基线持平（$\Delta = 0\,\text{ns}$），19 个电路均无 WNS 回退；大规模电路 b14/b15/b17/b20/b21/b22 均成功。b17 在默认 60\,s 单候选验证时限下，所有候选均触发 F5 超时而被拒；为区分验证预算限制与搜索能力的差异，将该电路的单候选验证时限补充放宽至 180\,s，随后在 104 次候选级 STA 测量内取得 $+0.38\,$ns 改善（接受 G 候选 nor4b$_1\!\to\!$nor4b$_2$），其余 18 个电路仍采用 60\,s 默认配置。b06 是 19 个电路中基线 setup 违例幅度最小者（WNS $= -0.06\,\text{ns}$），其关键路径包含多个相邻的 \texttt{or4b$_1$}，G 策略因增大输入电容拖累前级、B 策略无可缓解的低扇出 net、R 候选在 SKY130 HD 库中无等价族；在当前工艺库、候选空间和理想线网模型下，混合 R/G/B/JOINT 共 664 次候选级 STA 测量中 333 次与基线持平、0 次严格超过基线，表明 b06 在当前搜索空间中的进一步改善较为受限。实验在固定工艺库和时序约束下完成跨测试集评估。
+在 19 个可映射到 SKY130 HD 的 ITC-99 电路中，18 个电路的 WNS 取得严格改善，b06 与基线持平（$\Delta = 0\,\text{ns}$），19 个电路均无 WNS 回退；大规模电路 b14/b15/b17/b20/b21/b22 均成功。b17 在默认 60\,s 单候选验证时限下，所有候选均触发 F5 超时而被拒；为区分验证预算限制与搜索能力的差异，将该电路的单候选验证时限补充放宽至 180\,s，随后在 104 次候选级 STA 测量内取得 $+0.38\,$ns 改善（接受 G 候选 nor4b$_1\!\to\!$nor4b$_2$），其余 18 个电路仍采用 60\,s 默认配置。大规模电路 b14/b15/b17/b18/b19/b20/b21/b22 均成功。b06 是 19 个电路中基线 setup 违例幅度最小者（WNS $= -0.06\,\text{ns}$），其关键路径包含多个相邻的 \texttt{or4b$_1$}，G 策略因增大输入电容拖累前级、B 策略无可缓解的低扇出 net、R 候选在 SKY130 HD 库中无等价族；在当前工艺库、候选空间和理想线网模型下，混合 R/G/B/JOINT 共 664 次候选级 STA 测量中 333 次与基线持平、0 次严格超过基线，表明 b06 在当前搜索空间中的进一步改善较为受限。实验在固定工艺库和时序约束下完成跨测试集评估。
 
-策略分布以 JOINT 为主（12 个，b20/b21 的收益最大，分别为 $+1.98$ 和 $+2.16\,$ns）；19 个电路共进行 1012 次候选级 STA 测量，实际运行时间约 17 分钟。所有改善的中位数为 $+0.18\,\text{ns}$、均值为 $+0.43\,\text{ns}$，后者由 b20/b21 大电路（baseline WNS $\le -13\,\text{ns}$）拖高，掩盖了中小电路的典型收益；论文同时报告中位数与均值以避免读者对均值产生过度乐观的解读。b06 的 $\Delta = 0$ 不影响 18/19 的改善比例，因此仍满足零回退统计。
+策略分布以 JOINT 为主（12 个，b20/b21 的收益最大，分别为 $+1.98$ 和 $+2.16\,$ns）；19 个电路共进行 1012 次候选级 STA 测量，实际运行时间约 17 分钟。18 个严格改善电路的改善中位数为 $+0.18\,\text{ns}$、均值为 $+0.43\,\text{ns}$，后者由 b20/b21 大电路（baseline WNS $\le -13\,\text{ns}$）拖高，掩盖了中小电路的典型收益；论文同时报告中位数与均值以避免读者对均值产生过度乐观的解读。b06 的 $\Delta = 0$ 不影响 18/19 的改善比例，因此仍满足零回退统计。
 
 其中大规模电路 b18 和 b19 的进一步统计如下：在 0.5 ns 时钟周期下，b18 的 WNS 由 $-13.34$ ns 改善至 $-13.27$ ns（+$0.07$ ns），b19 由 $-17.44$ ns 改善至 $-16.00$ ns（+$1.44$ ns）；两者分别含 37.6 万和 75.5 万个门，经 93 次和 58 次候选级 STA 测量完成修复，测量次数保持在数十次量级。b18、b19 与前述 b14/b15/b17/b20/b21/b22 一样，均已包含在前述 19 个 ITC-99 电路统计中，此处仅作门数与测量成本补充说明。
 
@@ -397,7 +397,7 @@ s953 & 228 & 通过 & 0.537 \\
 
 \subsection{消融与基线对比}\label{sec:ablation}
 
-本小节以不启用 F1--F6 反馈的纯 G、纯 B 和随机搜索作为固定权重基线，与启用 failure-aware 早停的 20 轮混合策略比较（表~\ref{tab:ablation}）。固定权重条件下，纯 B 与随机基线在不同电路上互有胜负，未表现出稳定优势。failure-aware 早停的 20 轮混合策略平均 WNS 改善达到 1.07\,ns，并在所有电路上不劣于固定权重基线（8/8 不低于纯 G，7/8 严格高于纯 B，s27 上两者持平）。本表同时改变了候选空间（混合 R/G/B/JOINT）与反馈配置，因此不用于单独量化 F1--F6 反馈的独立贡献；其意义在于表明，混合候选空间与 failure-aware 早停的组合能够获得更高的搜索收益。SPEF 复测阈值（5/10/20 ps）和权重扰动（$\pm 100\%$）均不改变结论，说明方法对参数设置具有一定稳健性。
+本小节以不启用 failure-aware 接受控制（按式~\eqref{eq:accept}比较 WNS）的纯 G、纯 B 和随机搜索作为固定权重基线，与启用 failure-aware 接受控制的 20 轮混合策略比较（表~\ref{tab:ablation}）。固定权重条件下，纯 B 与随机基线在不同电路上互有胜负，未表现出稳定优势。启用 failure-aware 接受控制的 20 轮混合策略平均 WNS 改善达到 1.07\,ns，并在所有电路上不劣于固定权重基线（8/8 不低于纯 G，7/8 严格高于纯 B，s27 上两者持平）。本表同时改变了候选空间（混合 R/G/B/JOINT）与接受控制，因此不用于单独量化 failure-aware 控制相对其他策略的贡献；其意义在于表明，混合候选空间与 failure-aware 接受控制的组合能够获得更高的搜索收益。SPEF 复测阈值（5/10/20 ps）和权重扰动（$\pm 100\%$）均不改变结论，说明方法对参数设置具有一定稳健性。\footnote{本节 acceptance control 指式~\eqref{eq:accept} 的 failure-aware 比较，与 \S\ref{sec:failures} 中 F1--F6 失败类型驱动的外层权重更新为正交机制；后者由 \texttt{run\_outerloop\_real\_wns.py} 启用。}
 
 \begin{table}[!t]
 \centering
@@ -420,14 +420,14 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 \midrule
 \textbf{均值} & 0.16 & 0.54 & 0.40 & \textbf{1.07} \\
 \bottomrule
-\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高；纯 G / 纯 B / 随机三列为\textbf{固定权重基线}（不启用 F1--F6 反馈），混合 20 列为启用 failure-aware 早停的 20 轮配置（\texttt{--max-iterations 20}）。各对照采用相同的 20 轮上限与候选评估预算。}\\
+\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高；纯 G / 纯 B / 随机三列为\textbf{固定权重基线}（不启用 failure-aware 接受控制），混合 20 列为启用 failure-aware 接受控制的 20 轮配置（\texttt{--max-iterations 20}）。各对照采用相同的 20 轮上限与候选评估预算。随机列在相同候选池内随机候选评估顺序，3 种子（20260814 / 20260814+1 / 20260814+2）取均值。}\\
 \end{tabular}
 \end{table}
 
 \subsection{物理验证：版图保持性与 SPEF 门控}\label{sec:phys_closure}
 \FloatBarrier
 
-本节物理验证采用 \S\ref{sec:ood} 效率优先配置得到的接受候选，与 \S\ref{sec:ablation} 的 20 轮收敛配置分开统计。在真实布局布线（placement and routing，P\&R）后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个轻微恶化但不超过 0.02 ns（表~\ref{tab:pr8}）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束，并在全局布线估计寄生后进行时序对比；SPEF 负载扫描和迭代式门控用于量化线载影响，并将 F6 复测失败接入权重更新。
+本节物理验证采用 \S\ref{sec:eff_prio} 效率优先配置得到的接受候选，与 \S\ref{sec:ablation} 的 20 轮收敛配置分开统计。在真实布局布线（placement and routing，P\&R）后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个轻微恶化但不超过 0.02 ns（表~\ref{tab:pr8}）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束，并在全局布线估计寄生后进行时序对比；SPEF 负载扫描和迭代式门控用于量化线载影响，并将 F6 复测失败接入权重更新。
 
 \begin{table}[ht]
 \centering
