@@ -10,6 +10,16 @@ Update rule: when a new experiment directory is created, append a row in
 the **Active** table; when an experiment is superseded, mark its row as
 `SUPERSEDED-BY <new-dir>` instead of deleting it.
 
+## 0. Top-level files in this directory
+
+| File | Purpose | Re-generate with |
+|---|---|---|
+| `README.md` | human entry-point for the experiments/ tree (legacy, ends at 2026-07-31) | manual |
+| `INVENTORY.md` | per-directory map with paper-evidence / engineering-evidence / cleanup-candidates / evidence-gaps status | manual edit |
+| `RESULTS.md` | one-page human-readable results overview (2026-09-09 roll-up; supersedes the per-dataset README files) | manual edit |
+| `results.json` | machine-readable aggregate of every paper-evidence result; companion to `RESULTS.md` | `PYTHONPATH=src python .superpowers/backup/gen_results_overview.py` |
+| `*.json` under `configs/`, `environment/`, `crossbench_pr_manifest.json` | static configurations and snapshots (not experiments) | not regenerated |
+
 ## 1. Paper-evidence tables (commit / change protection)
 
 These directories back the manuscript's ISCAS89 main table, ITC-99
