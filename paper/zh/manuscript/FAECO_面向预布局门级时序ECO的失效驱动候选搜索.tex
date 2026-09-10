@@ -107,7 +107,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a failure-aware candidate-search engine for pre-placement gate-level timing ECO, to address the limited ability of buffer insertion and gate sizing to compress deep logic. FAECO combines a multi-feature weighted cut with a critical-path cover cut to generate candidates, and updates the search through candidate failures; candidates are screened by library-function and structural rules, accepted by OpenSTA measurements on ideal nets, and subjected to simplified rechecking using SPEF. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively; the remaining one ITC-99 circuit matches the baseline without regression. Independent logical gate-level SEC fully proves 29/30 baseline--repair pairs; the unproven point in b17 is identified as a same-function size swap by Liberty. Under the ISCAS89 20-round convergence configuration, the mixed strategy achieves a mean WNS improvement of 1.07\,ns; in a separate placement-and-routing validation using the efficiency-prioritized configuration, 5/8 ISCAS89 circuits retain an improvement.}\par
+  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a failure-aware candidate-search engine for pre-placement gate-level timing ECO, to address the limited ability of buffer insertion and gate sizing to compress deep logic. FAECO combines a multi-feature weighted cut with a critical-path coverage cut to generate candidates, and updates the search through candidate failures; candidates are screened by library-function and structural rules, accepted by OpenSTA measurements on ideal nets, and subjected to simplified rechecking using SPEF. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively; the remaining one ITC-99 circuit matches the baseline without regression. Independent logical gate-level SEC fully proves 29/30 baseline--repair pairs; the remaining unproven point corresponds to a same-function drive-strength substitution confirmed from the Liberty function. Under the ISCAS89 20-round convergence configuration, the mixed strategy achieves a mean WNS improvement of 1.07\,ns; in a separate placement-and-routing validation using the efficiency-prioritized configuration, 5/8 ISCAS89 circuits retain an improvement.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; local restructuring; multi-feature weighted cut; failure-aware feedback; simplified SPEF gate; pre-placement timing optimization}\par
 \end{flushleft}
@@ -227,7 +227,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
   \item[(c)] \textbf{验证与接受}：候选经库函数和结构规则筛选后，由 OpenSTA 在理想线网模式下测量 WNS/TNS；启用物理门控时，理想增益超过 10 ps 的候选进入简化 SPEF 复测。
 \end{enumerate}
 
-\begin{figure}[!t]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.96\columnwidth]{fig_method_flow_redraw_20260814.png}%
 \caption{FAECO 三阶段流水线：映射网表准备 $\rightarrow$ 切割与候选细化 $\rightarrow$ 验证与时序分析。}
@@ -246,7 +246,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
   \State 构建加权割与关键路径覆盖割，生成并排序 R/G/B/JOINT 候选
   \State 对候选执行局部功能/结构检查和 OpenSTA 测量
   \State 对满足物理门控条件的候选进行简化 SPEF 复测
-  \State 若候选满足接受谓词，则将其加入 $\mathcal{A}$；若其 $\Delta_{\mathrm{WNS}}$ 优于当前最佳值，则相对基线网表 $G_0$ 应用该候选并更新 $G^*$。未满足接受谓词的候选依据 F1--F6 失败类型更新对应权重。各轮候选均相对固定基线 $G_0$ 评估，不叠加多个 patch。
+  \State 若候选满足式~\eqref{eq:accept}，并在启用物理门控时通过简化 SPEF 复测，则将其加入 $\mathcal{A}$；若其 $\Delta_{\mathrm{WNS}}$ 优于当前最佳值，则相对基线网表 $G_0$ 应用该候选并更新 $G^*$。未通过接受判据的候选依据 F1--F6 失败类型更新对应权重。各轮候选均相对固定基线 $G_0$ 评估，不叠加多个 patch。
 \Until{无时序违例、候选耗尽或达到停止条件}
 \State \Return $G^*,\ \mathcal{A}$
 \end{algorithmic}
@@ -286,6 +286,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 
 \subsection{失效反馈与搜索更新}
 
+\FloatBarrier
 框架将 F1--F6 定义为统一失败类型，并据此驱动割图—权重更新—重割循环。真实 WNS 主循环主要由 F4（理想线网收益不足）驱动；启用物理门控时，进一步将 SPEF 复测失败记为 F6。F1、F2、F3 和 F5 分别用于功能/结构筛选、边界、规模和运行时间检查，具体条件见表~\ref{tab:failures}；固定权重作为消融对照。
 
 每类失败使对应权重增加 $1.0$：F1/F2 增大边界惩罚 $\lambda_b$，F3 增大尺寸惩罚 $\lambda_s$，F4 增大关键覆盖奖励 $\lambda_c$，F5 增大验证代价惩罚 $\lambda_v$ 并将最大锥门数减半，F6 同时增大边界惩罚 $\lambda_b$ 与尺寸惩罚 $\lambda_s$，收紧候选边界并偏向较小局部以降低高线载候选再次出现的概率。
@@ -323,7 +324,7 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 &\qquad\land\Delta_{\mathrm{TNS}}(p)>0].
 \end{aligned}
 \end{equation}
-启用物理门控时，理想线网增益超过 10 ps 的候选进入简化 SPEF 复测；复测下 WNS 未改善的候选记为 F6，并将结果反馈给下一轮搜索。未启用物理门控时，SPEF 结果作为独立物理复测，不改变理想线网候选的接受判定。
+启用物理门控时，满足式~\eqref{eq:accept} 且理想线网增益超过 10\,ps 的候选进一步接受简化 SPEF 复测；仅当复测下 WNS 仍改善时进入接受集合 $\mathcal{A}$，否则记为 F6 并反馈至下一轮搜索。未启用物理门控时，SPEF 结果作为独立物理复测，不改变理想线网候选的接受判定。
 
 \FloatBarrier
 \subsection{复杂度与实现边界}\label{sec:impl}
@@ -398,7 +399,7 @@ s953 & 228 & 通过 & 0.537 \\
 
 \subsection{消融与基线对比}\label{sec:ablation}
 
-本小节以禁用 F1--F6 失效反馈、保持搜索权重固定的纯 G、纯 B 和随机搜索作为基线，与启用失效反馈的 20 轮混合策略比较（表~\ref{tab:ablation}）。各方法均采用式~\eqref{eq:accept} 作为候选接受准则，并采用相同的 20 轮上限和候选评估预算。固定权重条件下，纯 B 与随机基线在不同电路上互有胜负，未表现出稳定优势。20 轮混合策略平均 WNS 改善达到 1.07\,ns，在 8/8 个电路上严格高于纯 G，并在 7/8 个电路上严格高于纯 B 和随机基线，s27 上与后二者持平。由于本表同时改变候选空间和反馈配置，因此不用于单独量化失效反馈的独立贡献；其结果表明，混合候选空间与失效反馈的结合能够获得更高的搜索收益。SPEF 复测阈值（5/10/20 ps）和权重扰动（$\pm 100\%$）均不改变结论，说明方法对参数设置具有一定稳健性。
+本小节以禁用 F1--F6 失效反馈、保持搜索权重固定的纯 G、纯 B 和随机搜索作为基线，与启用失效反馈的 20 轮混合策略比较（表~\ref{tab:ablation}）。各方法均采用式~\eqref{eq:accept} 作为候选接受准则，并采用相同的 20 轮上限和候选评估预算。固定权重条件下，纯 B 与随机基线在不同电路上互有胜负，未表现出稳定优势。20 轮混合策略平均 WNS 改善达到 1.07\,ns，在 8/8 个电路上严格高于纯 G，并在 7/8 个电路上严格高于纯 B 和随机基线，s27 上与后二者持平。由于本表同时改变候选空间和反馈配置，因此不用于单独量化失效反馈的独立贡献；其结果表明，混合候选空间与失效反馈的结合能够获得更高的搜索收益。
 
 \begin{table}[!t]
 \centering
@@ -421,7 +422,7 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 \midrule
 \textbf{均值} & 0.16 & 0.54 & 0.40 & \textbf{1.07} \\
 \bottomrule
-\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高；纯 G / 纯 B / 随机三列采用固定搜索权重，不启用 F1--F6 失效反馈，混合 20 轮列启用失效反馈。各方法均采用式~\eqref{eq:accept} 的候选接受准则，并使用相同的 20 轮上限与候选评估预算。随机列在相同候选池内随机候选评估顺序，3 种子（20260814、20260815 和 20260816）取均值。}\\
+\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高；纯 G / 纯 B / 随机三列采用固定搜索权重，不启用 F1--F6 失效反馈，混合 20 轮列启用失效反馈。各方法均采用式~\eqref{eq:accept} 的候选接受准则，并使用相同的 20 轮上限与候选评估预算。随机列在与混合策略相同的 R/G/B/JOINT 候选池内随机候选评估顺序，3 种子（20260814、20260815 和 20260816）取均值。}\\
 \end{tabular}
 \end{table}
 
