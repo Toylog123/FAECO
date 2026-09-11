@@ -147,7 +147,7 @@
 \subsection{结构重映射与逻辑补丁}
 ECO 修复主要分为三类技术路径：基于备用单元的结构重映射、基于逻辑补丁构造的功能修复，以及基于缓冲器插入与门尺寸调整的物理优化。
 
-结构重映射以缓冲插入、尺寸调整与技术重映射的流程修复时序，将布线代价纳入备用单元分配\cite{ho2010eco}，或以符号采样搜索修正点\cite{kravets2019symbolic}。代表性流程通常先构造候选，再由等价性或时序验证筛选；FAECO 将可计算的局部功能保持候选可用性前置到候选构造阶段，全局顺序等价性检查（sequential equivalence checking，SEC）作为独立验证环节。例如，\cite{ho2010eco}的备用单元分配以布线后负载为输入，FAECO 则在预布局阶段完成候选构造；\cite{kravets2019symbolic}的符号采样扩大搜索范围，并通过验证结果筛选修正点。
+结构重映射以缓冲插入、尺寸调整与技术重映射的流程修复时序，将布线代价纳入备用单元分配\cite{ho2010eco}，或以符号采样搜索修正点\cite{kravets2019symbolic}。代表性流程通常先构造候选，再由等价性或时序验证筛选；FAECO 将可计算的局部功能保持候选可用性前置到候选构造阶段，全局顺序等价性检查（sequential equivalence checking，SEC）作为独立验证环节。例如，\cite{ho2010eco}的备用单元分配以 OpenROAD 全局布线寄生估计后的负载为输入，FAECO 则在预布局阶段完成候选构造；\cite{kravets2019symbolic}的符号采样扩大搜索范围，并通过验证结果筛选修正点。
 
 逻辑补丁构造通常先沿违例路径切分扇入逻辑锥，提取局部窗口；随后利用功能约简与反相器图（functionally reduced and-inverter graph，FRAIG）表示候选逻辑，再通过 SAT 证明筛选与原逻辑功能等价的补丁，以修复功能错误\cite{jiang2010fraig,jiang2016resource}。
 
@@ -160,7 +160,7 @@ B/G 物理优化近年来主要沿门尺寸调整、联合 B/G 和物理感知�
 学习驱动方法\cite{chen2024aito,zhang2025buffalo}提升了门尺寸调整和缓冲器优化效率，同时保持布尔功能不变、不进行逻辑级功能重构。
 
 \subsection{B/G 物理优化与研究定位}
-上述相关工作中的若干方法依赖商用 EDA 引擎或内部工业流程；本文选择公开的 Yosys\cite{yosys}、OpenSTA\cite{opensta} 与 OpenROAD\cite{openroad}，在 SKY130 HD\cite{sky130} 上实现并评估门级候选搜索。FAECO 流程覆盖映射网表、候选生成、理想线网静态时序分析（STA）和布局布线后核验；顺序主实验采用构造级状态保持检查，独立的全网表 SEC 作为后续验证环节。
+上述相关工作中的若干方法依赖商用 EDA 引擎或内部工业流程；本文选择公开的 Yosys\cite{yosys}、OpenSTA\cite{opensta} 与 OpenROAD\cite{openroad}，在 SKY130 HD\cite{sky130} 上实现并评估门级候选搜索。FAECO 流程覆盖映射网表、候选生成、理想线网静态时序分析（STA）和布局及全局布线寄生估计核验；顺序主实验采用构造级状态保持检查，独立的全网表 SEC 作为后续验证环节。
 
 从应用阶段看，结构重映射与 B/G 物理优化面向后布局、后布线阶段的物理微调，逻辑补丁构造则多在综合后、布局前执行功能修复。FAECO 位于两者之间：在已映射网表上进行局部门级重构，同时用理想线网 STA 和简化线载模型进行预布局筛选。
 
@@ -225,7 +225,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \begin{enumerate}
   \item[(a)] \textbf{映射准备}：经 Yosys 两步流程\cite{yosys}生成 SKY130 HD 映射网表 $G'$；Liberty 文件提供单元逻辑和时序信息\cite{liberty}，BLIF 归一化与 ABC \texttt{cec}\cite{abc} 用于组合网表回验。
   \item[(b)] \textbf{加权割与候选生成}：在扇入锥 $C(G,t)$ 上构建 s-t 分裂图。Liberty 函数匹配生成 R 候选集；无 R 候选的门降低关键路径奖励并转向 G/B。候选由加权最小割和关键路径覆盖割产生，按割代价、路径覆盖和策略优先级排序；OpenSTA 结果用于接受判定，F1--F6 反馈用于更新权重。
-  \item[(c)] \textbf{验证与接受}：候选经库函数和结构规则筛选后，由 OpenSTA 在理想线网模式下测量 WNS/TNS；启用物理门控时，仅理想线网增益超过 10\,ps 的候选进入简化 SPEF 复测。$0<\Delta\mathrm{WNS}\le10\,$ps 的候选被阈值直接过滤，**不计入 F1--F6 失败反馈**；仅当候选满足式~\eqref{eq:accept} 但 SPEF 复测下 WNS 不改善时记为 F6。
+  \item[(c)] \textbf{验证与接受}：候选经库函数和结构规则筛选后，由 OpenSTA 在理想线网模式下测量 WNS/TNS；启用物理门控时，仅理想线网增益超过 10\,ps 的候选进入简化 SPEF 复测。$0<\Delta\mathrm{WNS}\le10\,$ps 的候选被阈值直接过滤，不计入 F1--F6 失败反馈；仅当候选满足式~\eqref{eq:accept} 但 SPEF 复测下 WNS 不改善时记为 F6。
 \end{enumerate}
 
 \begin{figure}[!htbp]
@@ -247,7 +247,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
   \State 构建加权割与关键路径覆盖割，生成并排序 R/G/B/JOINT 候选
   \State 对候选执行局部功能/结构检查和 OpenSTA 测量
   \State 对满足物理门控条件的候选进行简化 SPEF 复测
-  \State 若候选满足式~\eqref{eq:accept}，并在启用物理门控时通过简化 SPEF 复测，则将其加入 $\mathcal{A}$；若其 $\Delta_{\mathrm{WNS}}$ 优于当前最佳值，则相对基线网表 $G_0$ 应用该候选并更新 $G^*$。在任一筛选、验证或接受环节失败的候选，根据 F1--F6 失败类型更新对应权重。各轮候选均相对固定基线 $G_0$ 评估，不叠加多个局部补丁。
+  \State 若候选满足式~\eqref{eq:accept}，并在启用物理门控时通过简化 SPEF 复测，则将其加入 $\mathcal{A}$；若其 $\Delta_{\mathrm{WNS}}$ 优于当前最佳值，则相对基线网表 $G_0$ 应用该候选并更新 $G^*$。触发 F1--F6 的失败候选根据对应失败类型更新搜索权重；因 10\,ps 阈值直接过滤的候选不参与失效反馈。各轮候选均相对固定基线 $G_0$ 评估，不叠加多个局部补丁。
 \Until{无时序违例、候选耗尽或达到停止条件}
 \State \Return $G^*,\ \mathcal{A}$
 \end{algorithmic}
@@ -265,7 +265,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 
 图~\ref{fig:cut_generation} 展示 FAECO 的核心原理。首先，从违例端点反向提取局部组合扇入锥 $C(G,t)$，并为门节点标注功能保持可用性、关键路径覆盖和候选规模等特征。加权最小割的节点代价由边界、候选规模、验证代价和扇出特征构成，如式（2）所示；关键路径覆盖不直接进入节点代价，而是通过独立的关键路径覆盖割 $C_c$ 与权重 $\lambda_c$ 的反馈形成补充候选。R 候选的可用性用于候选实例化与策略切换——若某门缺少 R 等价候选，则其关键路径覆盖奖励降低并自动转向 G/B 策略。
 
-随后，FAECO 生成两类互补边界：加权最小割 $C_w$ 优先控制局部规模，关键路径覆盖割 $C_c$ 覆盖时序关键门。两类边界分别实例化为 R/G/B/JOINT 候选，统一按割代价、关键路径覆盖和策略优先级排序，交由 OpenSTA 测量 $\Delta_{\mathrm{WNS}}$ 和 $\Delta_{\mathrm{TNS}}$。接受谓词保留有效候选；失败候选根据失败类型反馈至割权重，驱动下一轮重割。
+随后，FAECO 生成两类互补边界：加权最小割 $C_w$ 优先控制局部规模，关键路径覆盖割 $C_c$ 覆盖时序关键门。两类边界分别实例化为 R/G/B/JOINT 候选，统一按割代价、关键路径覆盖和策略优先级排序，交由 OpenSTA 测量 $\Delta_{\mathrm{WNS}}$ 和 $\Delta_{\mathrm{TNS}}$。接受谓词保留有效候选；触发 F1--F6 的失败候选根据失败类型反馈至割权重，驱动下一轮重割。
 
 候选 $p$ 的 WNS 改善量在相同 SDC 和时钟约束下定义为：
 \begin{equation}\label{eq:dtiming}
@@ -315,7 +315,7 @@ F6 SPEF 复测失败 & 启用物理门控且理想线网增益 $>10\,$ps，但 S
 
 \FloatBarrier
 \subsection{验证流程与接受准则}\label{sec:validation}
-候选验证分为构造筛选、时序测量和最终等价验证三个层次。R 候选由 Liberty 函数匹配生成，G/B 候选由保持逻辑函数的局部结构变换生成；组合网表可在启用相应流程时由 ABC \texttt{cec} 回验。主实验和跨测试集实验对最终基线网表与修复网表执行独立顺序 SEC，SEC 结果与理想线网 WNS 候选接受判定分开统计。该 SEC 在 SKY130 行为单元模型下验证组合逻辑与状态转移关系；理想线网 WNS 和布局布线后 WNS 分别由 OpenSTA 与 OpenROAD 流程测量。
+候选验证分为构造筛选、时序测量和最终等价验证三个层次。R 候选由 Liberty 函数匹配生成，G/B 候选由保持逻辑函数的局部结构变换生成；组合网表可在启用相应流程时由 ABC \texttt{cec} 回验。主实验和跨测试集实验对最终基线网表与修复网表执行独立顺序 SEC，SEC 结果与理想线网 WNS 候选接受判定分开统计。该 SEC 在 SKY130 行为单元模型下验证组合逻辑与状态转移关系；理想线网 WNS 和 OpenROAD 全局布线寄生估计后的 WNS 分别由 OpenSTA 与 OpenROAD 流程测量。
 
 候选 $p$ 在相同 SDC、时钟约束和分析角下的接受谓词为
 \begin{equation}
@@ -344,7 +344,7 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 
 \subsection{实验设置}\label{sec:setup}
 
-\textbf{环境与数据集}：实验在 WSL2 Ubuntu 上完成，主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一使用 0.5 ns 时钟约束。主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。**本文报告的实验均采用 WNS 严格改善配置；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。**
+\textbf{环境与数据集}：实验在 WSL2 Ubuntu 上完成，主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一使用 0.5 ns 时钟约束。主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文报告的实验均采用 WNS 严格改善配置；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。
 
 \textbf{实验配置}：所有电路采用相同主流程和默认参数，比较效率优先和收敛两种配置；b17 的验证预算例外见 \S\ref{sec:itc99}。理想线网阶段以 WNS 严格改善为初筛条件；启用物理门控时，最终接受还需满足 §3.5 的 10\,ps 阈值和 SPEF 复测条件。完整脚本和参数随补充材料一同发布。
 
@@ -435,6 +435,8 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 
 本节物理验证采用 \S\ref{sec:eff_prio} 效率优先配置得到的接受候选，与 \S\ref{sec:ablation} 的 20 轮收敛配置分开统计。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个轻微恶化但不超过 0.02 ns（表~\ref{tab:pr8}）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束；SPEF 负载扫描和迭代式门控用于量化线载影响，并将 F6 复测失败接入权重更新。
 
+\FloatBarrier
+
 \begin{table}[ht]
 \centering
 \caption{OpenROAD 布局及全局布线寄生估计后的物理验证：8 个 ISCAS89 电路 WNS 对比（OpenROAD 2.0 + SKY130 HD）}
@@ -454,7 +456,7 @@ s820 & $-1.19$ & $-1.17$ & $-1.52$ & $-1.49$ & $+0.03$ \\
 s832 & $-1.23$ & $-1.17$ & $-1.51$ & $-1.51$ & $0.00$ \\
 s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 \bottomrule
-\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 统一映射网表与同一接受候选；s27 因面积过小采用 10\% 利用率布局规划；布线后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
+\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 统一映射网表与同一接受候选；s27 因面积过小采用 10\% 利用率布局规划；全局布线寄生估计后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
 \end{tabular}
 \end{table}
 
@@ -469,7 +471,7 @@ s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 
 实验结果表明，FAECO 在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（b06 与基线持平）；29/30 个基线—修复对由顺序 SEC 完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。ISCAS89 20 轮收敛配置下，混合策略平均 WNS 改善为 1.07\,ns，高于纯 G 的 0.16\,ns。ITC-99 中仅 b06 未达严格改善，其未改善现象与多个相邻 \texttt{or4b$_1$} 在预布局理想线网下使 G 反向恶化、B 无低扇出网络可利用、R 候选在 SKY130 HD 库中不存在等因素相关，详见 \S\ref{sec:itc99}。
 
-布线后 8 个 ISCAS89 电路中，5 个保持改善、1 个持平，2 个退化不超过 0.02\,ns，多数电路在 P\&R 后仍保持改善。
+OpenROAD 布局及全局布线寄生估计后，8 个 ISCAS89 电路中，5 个保持改善、1 个持平，2 个退化不超过 0.02\,ns，多数电路在物理寄生估计后仍保持改善。
 
 
 
