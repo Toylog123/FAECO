@@ -147,7 +147,7 @@
 \subsection{结构重映射与逻辑补丁}
 ECO 修复主要分为三类技术路径：基于备用单元的结构重映射、基于逻辑补丁构造的功能修复，以及基于缓冲器插入与门尺寸调整的物理优化。
 
-结构重映射以缓冲插入、尺寸调整与技术重映射的流程修复时序，将布线代价纳入备用单元分配\cite{ho2010eco}，或以符号采样搜索修正点\cite{kravets2019symbolic}。代表性流程通常先构造候选，再由等价性或时序验证筛选；FAECO 将可计算的局部功能保持候选可用性前置到候选构造阶段，全局顺序等价性检查（sequential equivalence checking，SEC）作为独立验证环节。例如，\cite{ho2010eco}的备用单元分配以 OpenROAD 全局布线寄生估计后的负载为输入，FAECO 则在预布局阶段完成候选构造；\cite{kravets2019symbolic}的符号采样扩大搜索范围，并通过验证结果筛选修正点。
+结构重映射以缓冲插入、尺寸调整与技术重映射的流程修复时序，将布线代价纳入备用单元分配\cite{ho2010eco}，或以符号采样搜索修正点\cite{kravets2019symbolic}。代表性流程通常先构造候选，再由等价性或时序验证筛选；FAECO 将可计算的局部功能保持候选可用性前置到候选构造阶段，全局顺序等价性检查（sequential equivalence checking，SEC）作为独立验证环节。例如，\cite{ho2010eco}的备用单元分配以布线后负载为输入，FAECO 则在预布局阶段完成候选构造；\cite{kravets2019symbolic}的符号采样扩大搜索范围，并通过验证结果筛选修正点。
 
 逻辑补丁构造通常先沿违例路径切分扇入逻辑锥，提取局部窗口；随后利用功能约简与反相器图（functionally reduced and-inverter graph，FRAIG）表示候选逻辑，再通过 SAT 证明筛选与原逻辑功能等价的补丁，以修复功能错误\cite{jiang2010fraig,jiang2016resource}。
 
@@ -256,7 +256,8 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 算法~\ref{alg:main} 给出从违例端点提取扇入锥、生成候选、时序测量到反馈重搜索的流程。候选接受谓词和验证层次在 \S\ref{sec:validation} 中统一定义。
 
 \subsection{多特征加权割与候选生成}\label{sec:mechanism}
-\begin{figure*}[t]
+\FloatBarrier
+\begin{figure*}[!htbp]
 \centering
 \includegraphics[width=0.98\textwidth]{fig_cut_generation_mechanism_imagegen.png}
 \caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径覆盖不进入节点代价而通过独立覆盖割与 $\lambda_c$ 反馈形成补充候选；R 候选可用性驱动策略切换。}
@@ -303,7 +304,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \toprule
 \textbf{失败类型} & \textbf{检测条件} & \textbf{反馈动作} \\
 \midrule
-F1 局部功能/结构失败 & Liberty 文件中的函数匹配或结构检查未通过 & 增加边界惩罚 $\lambda_b$，使此类候选在下一轮割代价中贬值 \\
+F1 局部功能/结构失败 & Liberty 文件中的函数匹配或结构检查未通过 & 增加边界惩罚 $\lambda_b$，降低此类节点被选作候选边界的概率 \\
 F2 边界失败 & 锥边界未闭合 & 增加边界惩罚 $\lambda_b$，收紧锥边界，保留已映射门 \\
 F3 尺寸过大 & 候选尺寸超过阈值 & 增加尺寸惩罚，强制更小割 \\
 F4 时序收益不足 & 候选未满足式~\eqref{eq:accept} & 上调关键覆盖奖励，使下一轮割集方案集中于真实关键路径门 \\
@@ -430,10 +431,16 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 \end{tabular}
 \end{table}
 
-\subsection{物理验证：版图保持性与 SPEF 门控}\label{sec:phys_closure}
+\subsection{布局及全局布线寄生估计验证与 SPEF 门控}\label{sec:phys_closure}
 \FloatBarrier
 
 本节物理验证采用 \S\ref{sec:eff_prio} 效率优先配置得到的接受候选，与 \S\ref{sec:ablation} 的 20 轮收敛配置分开统计。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个轻微恶化但不超过 0.02 ns（表~\ref{tab:pr8}）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束；SPEF 负载扫描和迭代式门控用于量化线载影响，并将 F6 复测失败接入权重更新。
+
+\FloatBarrier
+
+独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网收益逐步衰减。
+
+\textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度，配合简化 RC 换算用于预布局线载估计），s382 的 50 个与 b18 的 6 个候选均未通过 SPEF 复测，并按 F6 更新权重；门控依据 SPEF 结果筛除物理无效候选并更新搜索权重。简化 SPEF 的生成规则与单位换算随补充材料一同发布。
 
 \FloatBarrier
 
@@ -459,10 +466,6 @@ s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 \multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 统一映射网表与同一接受候选；s27 因面积过小采用 10\% 利用率布局规划；全局布线寄生估计后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
 \end{tabular}
 \end{table}
-
-独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网收益逐步衰减。
-
-\textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度，配合简化 RC 换算用于预布局线载估计），s382 的 50 个与 b18 的 6 个候选均未通过 SPEF 复测，并按 F6 更新权重；门控依据 SPEF 结果筛除物理无效候选并更新搜索权重。简化 SPEF 的生成规则与单位换算随补充材料一同发布。
 
 \FloatBarrier
 \section{结论}\label{sec:conclusion}
