@@ -88,7 +88,7 @@
 \vspace{6pt}
 \end{center}
 \begin{flushleft}
-  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入和门尺寸调整难以压缩深层逻辑的问题，本文提出失效驱动候选搜索引擎（Failure-Aware ECO，FAECO）。该方法结合多特征加权割与关键路径覆盖割生成候选，并根据候选失败类型更新后续搜索。候选先经库函数和结构规则筛选，再由 OpenSTA 在理想线网模式下测量时序收益；启用物理门控时，满足条件的候选进一步进入基于标准寄生交换格式（SPEF）的简化复测。在三组测试集上，FAECO 分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善；ITC-99 中其余 1 个电路与基线持平，全部 19 个电路均无 WNS 回退。独立逻辑门级顺序 SEC 对 29/30 个基线—修复对完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。ISCAS89 20 轮收敛配置下混合策略平均 WNS 改善为 1.07\,ns；另在效率优先配置对应的 OpenROAD 布局及全局布线寄生估计验证中，5/8 个电路仍保持改善。}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入和门尺寸调整难以压缩深层逻辑的问题，本文提出失效驱动候选搜索引擎（Failure-Aware ECO，FAECO）。该方法结合多特征加权割与关键路径覆盖割生成候选，并根据候选失败类型更新后续搜索。候选先经库函数和结构规则筛选，再由 OpenSTA 在理想线网模式下测量时序收益；启用物理门控时，满足条件的候选进一步进入基于标准寄生交换格式（SPEF）的简化复测。在三组测试集上，FAECO 分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（仅指 WNS 改善，不等同于 timing closure，见 \S\ref{sec:setup}）；ITC-99 中其余 1 个电路与基线持平，全部 19 个电路均无 WNS 回退。ITC-99 中 b17 在默认 60\,s 单候选验证预算下所有候选触发 F5 超时而被拒，单独放宽至 180\,s 后获得额外 1 个改善案例，因此 18/19 中包含 1 个采用放宽预算的电路、其余 18 个电路采用默认 60\,s 预算。独立逻辑门级顺序 SEC 覆盖 30 个测试实例：28 个实例产生实际网表修改，其中 27/28 个修改网表对完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换；2 个未改善实例未产生接受补丁，其输出网表与基线一致。ISCAS89 20 轮收敛配置下混合策略平均 WNS 改善为 1.07\,ns；另在效率优先配置对应的 OpenROAD 布局及全局布线寄生估计验证中，5/8 个电路仍保持改善。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；门级局部重构；多特征加权割；失效驱动反馈；简化 SPEF 门控；预布局时序优化}\par
@@ -107,7 +107,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a failure-aware candidate-search engine for pre-placement gate-level timing ECO, to address the limited ability of buffer insertion and gate sizing to compress deep logic. FAECO combines a multi-feature weighted cut with a critical-path coverage cut to generate candidates, and updates the search through candidate failures; candidates are screened by library-function and structural rules, evaluated by OpenSTA on ideal nets, and, when eligible, rechecked using simplified SPEF. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively; the remaining one ITC-99 circuit matches the baseline without regression. Independent logical gate-level SEC fully proves 29/30 baseline--repair pairs; the remaining unproven point corresponds to a same-function drive-strength substitution confirmed from the Liberty function. Under the ISCAS89 20-round convergence configuration, the mixed strategy achieves a mean WNS improvement of 1.07\,ns; in a separate OpenROAD placement and global-routing parasitic-estimation validation using the efficiency-prioritized configuration, 5/8 ISCAS89 circuits retain an improvement.}\par
+  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a failure-aware candidate-search engine for pre-placement gate-level timing ECO, to address the limited ability of buffer insertion and gate sizing to compress deep logic. FAECO combines a multi-feature weighted cut with a critical-path coverage cut to generate candidates, and updates the search through candidate failures; candidates are screened by library-function and structural rules, evaluated by OpenSTA on ideal nets, and, when eligible, rechecked using simplified SPEF. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively (WNS improvement only, not equivalent to timing closure; see \S\ref{sec:setup}); the remaining one ITC-99 circuit matches the baseline without regression. For ITC-99 b17, all candidates trigger the F5 verification timeout under the default 60\,s per-candidate budget; relaxing the budget to 180\,s for this circuit yields one additional improved case, so one of the 18 improved ITC-99 circuits uses the relaxed budget while the other 18 circuits use the default 60\,s budget. Among the 30 test instances, 28 produce actual netlist modifications, of which sequential SEC fully proves 27/28 modified baseline--repair pairs; the remaining unproven point of b17 corresponds to a same-function drive-strength substitution confirmed from the Liberty function, and the two unimproved instances receive no accepted patch, leaving their output netlists identical to the baselines. Under the ISCAS89 20-round convergence configuration, the mixed strategy achieves a mean WNS improvement of 1.07\,ns; in a separate OpenROAD placement and global-routing parasitic-estimation validation using the efficiency-prioritized configuration, 5/8 ISCAS89 circuits retain an improvement.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; local restructuring; multi-feature weighted cut; failure-aware feedback; simplified SPEF gating; pre-placement timing optimization}\par
 \end{flushleft}
@@ -124,7 +124,7 @@
 
 工业实践中，将违例锥（最差负松弛路径所在的扇入逻辑锥）整体替换为时序友好补丁的做法比 B/G 更稳定，但通常依赖工业数据。逻辑补丁构造与物理优化的协同关系直接影响功能等价验证和时序收益；两者失配时，补丁替换收敛缓慢甚至失败。
 
-上述方法留下三个需要在公开工具链上量化的问题：第一，候选构造阶段的功能保持偏好对无效候选数量的影响；第二，理想线网时序收益与线载变化之间的筛选关系；第三，候选失败信息对下一轮搜索空间的收缩作用。
+上述方法留下三个需要在公开工具链上量化的问题：第一，候选构造阶段的功能保持偏好对无效候选数量的影响；第二，理想线网时序收益与线载变化之间的筛选关系；第三，候选失效信息对下一轮搜索空间的收缩作用。
 \subsection{研究动机}
 本文的研究动机是扩大预布局门级时序 ECO 的局部结构搜索空间，同时让候选验证和物理复测保持在可控成本内。为此，FAECO 在已映射网表的违例扇入锥上构造多特征加权割，将局部功能保持能力、关键路径覆盖和候选规模纳入候选排序，并把候选失败类型转化为下一轮搜索的反馈信号。
 
@@ -135,7 +135,7 @@
 
 \begin{enumerate}
   \item \textbf{失效驱动搜索}：结合局部功能保持信息、多特征加权割与关键路径覆盖割，并利用 F1--F6 失败反馈更新搜索权重与顺序，形成面向深层逻辑的闭环候选生成机制。
-  \item \textbf{功能—时序—物理分层验证}：将局部函数/结构筛选、理想线网 WNS 判定和简化 SPEF 复测串联起来，并以独立全网表 SEC 验证最终修复结果；29/30 个基线—修复对由顺序 SEC 完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。
+  \item \textbf{功能—时序—物理分层验证}：将局部函数/结构筛选、理想线网 WNS 判定和简化 SPEF 复测串联起来，并以独立全网表 SEC 验证最终修复结果；30 个测试实例中 28 个产生实际网表修改，其中 27/28 个修改网表对由顺序 SEC 完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换；2 个未改善实例（ITC-99 b06、PicoRV32 \texttt{picorv32\_regs}）未产生接受补丁，其输出网表与基线一致。
   \item \textbf{跨测试集与真实流程验证}：在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善；ISCAS89 20 轮收敛配置下混合策略平均 WNS 改善为 1.07\,ns，另在效率优先配置对应的 OpenROAD 布局及全局布线寄生估计验证中 5/8 个 ISCAS89 电路保持改善。
 \end{enumerate}
 
@@ -345,9 +345,32 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 
 \subsection{实验设置}\label{sec:setup}
 
-\textbf{环境与数据集}：实验在 WSL2 Ubuntu 上完成，主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一使用 0.5 ns 时钟约束。主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文报告的实验均采用 WNS 严格改善配置；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。
+\textbf{环境与数据集}：实验在 WSL2 Ubuntu 上完成，主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一使用 0.5 ns 时钟约束。\textbf{0.5 ns 作为统一的 stress-test timing constraint 而非各设计的目标工作频率，用以保证不同 benchmark 均产生可供候选搜索比较的 setup violation；本文关注的是固定约束下的相对 WNS 改善，不等同于 timing closure。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文报告的实验均采用 WNS 严格改善配置；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。
 
-\textbf{实验配置}：所有电路采用相同主流程和默认参数，比较效率优先和收敛两种配置；b17 的验证预算例外见 \S\ref{sec:itc99}。理想线网阶段以 WNS 严格改善为初筛条件；启用物理门控时，最终接受还需满足 §3.5 的 10\,ps 阈值和 SPEF 复测条件。完整脚本和参数随补充材料一同发布。
+\textbf{benchmark 纳入规则}：ISCAS89 纳入能够经统一 Yosys→SKY130 HD 流程成功映射并形成有效 setup timing path 的 8 个顺序电路；ITC-99 按相同标准纳入 19 个电路（b01--b15、b17、b20--b22），其中 b18、b19 未纳入上述统一统计，在相同流程下作为大规模补充实例单独运行并报告（见 \S\ref{sec:itc99}）；PicoRV32 选择主核 \texttt{picorv32}、乘法协处理器 \texttt{picorv32\_pcpi\_mul} 与存储密集子模块 \texttt{picorv32\_regs}（存储簇）以覆盖控制、算术和存储三类结构差异。
+
+\textbf{实验配置}：\S\ref{sec:iscas} 采用效率优先配置，\S\ref{sec:ablation} 采用 20 轮收敛配置，两套配置的关键参数见表~\ref{tab:configs}；b17 的验证时限例外见 \S\ref{sec:itc99}。完整脚本和参数随补充材料一同发布。
+
+\begin{table}[!htb]
+\centering
+\caption{效率优先与 20 轮收敛配置的关键参数对比}
+\label{tab:configs}
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcc}
+\toprule
+\textbf{参数} & \textbf{效率优先} & \textbf{20 轮收敛} \\
+\midrule
+最大迭代轮数                    & 1（首改进即停止） & 20 \\
+F1--F6 失效反馈                  & 仅轮内 & 轮内 + 跨轮 \\
+10\,ps 物理门控 SPEF 复测        & 关 & 关 \\
+单候选验证时限（默认）           & 60\,s & 60\,s \\
+\bottomrule
+\multicolumn{3}{p{0.95\columnwidth}}{\footnotesize 注：跨测试集主实验（\S\ref{sec:ood}）最多迭代 8 轮、启用跨轮失效反馈，其余关键参数与效率优先配置相同；b17 的验证时限例外（180\,s）属跨测试集实验（\S\ref{sec:itc99}）。}\\
+\end{tabular}
+\end{table}
+
+\textbf{接受准则}：以式~\eqref{eq:accept} 的 WNS 严格改善为接受准则，TNS 仅作为辅助判据；本文不将“取得 WNS 改善”等同于 timing closure。
 
 \subsection{主结果：ISCAS89 修复质量与效率}\label{sec:iscas}
 
@@ -394,13 +417,13 @@ s953 & 228 & 通过 & 0.537 \\
 
 策略分布以 JOINT 为主（12 个，b20/b21 的收益最大，分别为 $+1.98$ 和 $+2.16\,$ns）；19 个电路共进行 1012 次候选级 STA 测量，实际运行时间约 17 分钟。18 个严格改善电路的改善中位数为 $+0.18\,\text{ns}$、均值为 $+0.43\,\text{ns}$，后者由 b20/b21 大电路（基线 WNS $\le -13\,\text{ns}$）拖高，掩盖了中小电路的典型收益；论文同时报告中位数与均值以避免读者对均值产生过度乐观的解读。b06 的 $\Delta = 0$ 不影响 18/19 的改善比例，因此仍满足零回退统计。
 
-其中大规模电路 b18 和 b19 的进一步统计如下：在 0.5 ns 时钟周期下，b18 的 WNS 由 $-13.34$ ns 改善至 $-13.27$ ns（+$0.07$ ns），b19 由 $-17.44$ ns 改善至 $-16.00$ ns（+$1.44$ ns）；两者分别含 37.6 万和 75.5 万个门，经 93 次和 58 次候选级 STA 测量完成修复，测量次数保持在数十次量级。b18、b19 亦包含在上述 19 个 ITC-99 电路统计中，此处仅作门数与测量成本补充说明。
+其中大规模电路 b18 和 b19 的进一步统计如下：在 0.5 ns 时钟周期下，b18 的 WNS 由 $-13.34$ ns 改善至 $-13.27$ ns（+$0.07$ ns），b19 由 $-17.44$ ns 改善至 $-16.00$ ns（+$1.44$ ns）；两者分别含 37.6 万和 75.5 万个门，经 93 次和 58 次候选级 STA 测量完成修复，测量次数保持在数十次量级。b18、b19 未纳入上述 19 个电路的统一统计，在相同流程下作为大规模补充实例单独运行，此处补充其门数与测量成本。
 
 \subsubsection{PicoRV32 异构族}
 
 基于同一寄存器传输级（RTL）源的三个结构差异明显的子模块直接复用 ISCAS89 流程：PicoRV32 与其 PCPI 乘法协处理器 \texttt{picorv32\_pcpi\_mul} 分别经 R、G 获得 $+1.13$ 和 $+0.05\,$ns 的改善，存储密集子模块未改善。
 
-三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/3；SEC 完全证明比例分别为 8/8、18/19 和 3/3。b17 的修复网表在 SKY130 行为单元模型下经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证，12812 个等价点已证明，剩余 1 个未证明点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换（Liberty function 一致）；鉴于该点未被顺序 SEC 完全消解，本文将其单独报告。
+三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/3。顺序 SEC 面向 30 个测试实例：28 个实例产生实际网表修改，其中 27/28 个修改网表对完全证明（三组分别为 8/8、17/18 和 2/2）；2 个未改善实例（b06、\texttt{picorv32\_regs}）未产生接受补丁，其输出网表与基线一致。b17 的修复网表在 SKY130 行为单元模型下经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证，12812 个等价点已证明，剩余 1 个未证明点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换（Liberty function 一致）；鉴于该点未被顺序 SEC 完全消解，本文将其单独报告。
 
 \subsection{消融与基线对比}\label{sec:ablation}
 
@@ -414,7 +437,7 @@ s953 & 228 & 通过 & 0.537 \\
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrr}
 \toprule
-\textbf{电路} & \textbf{纯 G (固定权重)} & \textbf{纯 B (固定权重)} & \textbf{随机 (3 种子均值)} & \textbf{混合 20 轮 (有反馈)} \\
+\textbf{电路} & \textbf{纯 G} & \textbf{纯 B} & \textbf{随机} & \textbf{混合 20 轮} \\
 \midrule
 s27  & +0.09 & +0.28 & +0.28 & \textbf{+0.28} \\
 s382 & +0.17 & +0.19 & +0.19 & \textbf{+1.00} \\
@@ -427,7 +450,7 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 \midrule
 \textbf{均值} & 0.16 & 0.54 & 0.40 & \textbf{1.07} \\
 \bottomrule
-\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高；纯 G / 纯 B / 随机三列采用固定搜索权重，不启用 F1--F6 失效反馈，混合 20 轮列启用失效反馈。各方法均采用式~\eqref{eq:accept} 的候选接受准则，并使用相同的 20 轮上限与候选评估预算。随机列在与混合策略相同的 R/G/B/JOINT 候选池内随机候选评估顺序，3 种子（20260814、20260815 和 20260816）取均值。}\\
+\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高；纯 G / 纯 B / 随机三列采用固定搜索权重，不启用 F1--F6 失效反馈，混合 20 轮列启用失效反馈。各方法均采用式~\eqref{eq:accept} 的候选接受准则，并使用相同的 20 轮上限与候选评估预算。随机列与混合列\textbf{共享 R/G/B/JOINT 候选类型与初始候选生成规则，每轮在同规则下生成候选池后随机化评估顺序}，3 种子（20260814、20260815 和 20260816）取均值。} \\
 \end{tabular}
 \end{table}
 
@@ -440,19 +463,21 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 
 独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网收益逐步衰减。
 
-\textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度，配合简化 RC 换算用于预布局线载估计），s382 的 50 个与 b18 的 6 个候选均未通过 SPEF 复测，并按 F6 更新权重；门控依据 SPEF 结果筛除物理无效候选并更新搜索权重。简化 SPEF 的生成规则与单位换算随补充材料一同发布。
+\textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度），对每条线 $e$ 用简化公式 $L_{\mathrm{est}}(e)=40\,\mu\mathrm{m} \cdot u(e)$、$R_e=r_{\mathrm{unit}}L_{\mathrm{est}}$、$C_e=c_{\mathrm{unit}}L_{\mathrm{est}}$ 估计寄生电阻电容（$r_{\mathrm{unit}}$、$c_{\mathrm{unit}}$ 取自 SKY130 HD \texttt{li1} 层的代表 RC，详见补充材料），并据此生成简化 SPEF。s382 的 50 个与 b18 的 6 个候选均未通过 SPEF 复测，并按 F6 更新权重；门控依据 SPEF 结果筛除物理无效候选并更新搜索权重。F6 反馈目前可证明的是识别并拒绝 ideal-net 下看起来有效、但线载后失效的候选；尚未直接证明迭代后最终物理 WNS 改善。
 
 \FloatBarrier
 
 \begin{table}[ht]
 \centering
-\caption{OpenROAD 布局及全局布线寄生估计后的物理验证：8 个 ISCAS89 电路 WNS 对比（OpenROAD 2.0 + SKY130 HD）}
+\caption{OpenROAD 布局及全局布线寄生估计后的 WNS 对比（8 个 ISCAS89 电路）}
 \label{tab:pr8}
 \footnotesize
 \setlength{\tabcolsep}{2pt}
 \begin{tabular}{lrrrrr}
 \toprule
-\textbf{电路} & \textbf{预布局基线} & \textbf{预布局修复} & \textbf{全局布线估计基线} & \textbf{全局布线估计修复} & $\Delta$ \\
+ & \multicolumn{2}{c}{\textbf{预布局}} & \multicolumn{2}{c}{\textbf{全局布线估计}} & \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{电路} & \textbf{基线} & \textbf{修复} & \textbf{基线} & \textbf{修复} & $\Delta$ \\
 \midrule
 s27  & $-0.27$ & $-0.18$ & $-0.36$ & $-0.22$ & $+0.14$ \\
 s382 & $-0.98$ & $-0.89$ & $-1.16$ & $-1.02$ & $+0.14$ \\
@@ -463,7 +488,7 @@ s820 & $-1.19$ & $-1.17$ & $-1.52$ & $-1.49$ & $+0.03$ \\
 s832 & $-1.23$ & $-1.17$ & $-1.51$ & $-1.51$ & $0.00$ \\
 s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 \bottomrule
-\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 各电路的物理估计均采用与其预布局评估一致的映射网表及对应接受候选；s27 因面积过小采用 10\% 利用率布局规划；全局布线寄生估计后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
+\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 各电路物理估计采用与预布局评估一致的映射网表及接受候选；s27 采用 10\% 利用率布局规划；$\Delta$ 为全局布线寄生估计后修复网表相对基线的 WNS 变化。}\\
 \end{tabular}
 \end{table}
 
@@ -472,15 +497,16 @@ s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 
 本文提出 FAECO，一种面向预布局门级 ECO 的失效驱动搜索方法。该方法以多特征加权割生成候选，并利用时序反馈重切候选空间，在保持功能约束的同时寻找时序改善，从而将候选生成、时序筛选和功能验证组织为统一流程。
 
-实验结果表明，FAECO 在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（b06 与基线持平）；29/30 个基线—修复对由顺序 SEC 完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。ISCAS89 20 轮收敛配置下，混合策略平均 WNS 改善为 1.07\,ns，高于纯 G 的 0.16\,ns。ITC-99 中仅 b06 未达严格改善，其未改善现象与多个相邻 \texttt{or4b$_1$} 在预布局理想线网下使 G 反向恶化、B 无低扇出网络可利用、R 候选在 SKY130 HD 库中不存在等因素相关，详见 \S\ref{sec:itc99}。
+实验结果表明，FAECO 在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（b06 与基线持平，仅指 WNS 改善，不等同于 timing closure）；30 个测试实例中 28 个产生实际网表修改，其中 27/28 个修改网表对由顺序 SEC 完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换；2 个未改善实例（ITC-99 b06、PicoRV32 \texttt{picorv32\_regs}）未产生接受补丁，其输出网表与基线一致。ISCAS89 20 轮收敛配置下，混合策略平均 WNS 改善为 1.07\,ns，高于纯 G 的 0.16\,ns。ITC-99 中仅 b06 未达严格改善，其未改善现象与多个相邻 \texttt{or4b$_1$} 在预布局理想线网下使 G 反向恶化、B 无低扇出网络可利用、R 候选在 SKY130 HD 库中不存在等因素相关，详见 \S\ref{sec:itc99}。
 
-OpenROAD 布局及全局布线寄生估计后，8 个 ISCAS89 电路中，5 个保持改善、1 个持平，2 个退化不超过 0.02\,ns，多数电路在物理寄生估计后仍保持改善。
+OpenROAD 布局及全局布线寄生估计后，8 个 ISCAS89 电路中 5 个保持改善、1 个持平，2 个退化不超过 0.02\,ns。
 
 
 
 \renewcommand{\refname}{参考文献}
 \ctexset{section = {format=\heiti\fontsize{10.5}{14}\selectfont}}
 \footnotesize
+\linespread{0.95}\selectfont
 \balance
 \begin{thebibliography}{99}
 \bibitem{ho2010eco} Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare cells and technology remapping[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2010, 29(5): 697-710.
