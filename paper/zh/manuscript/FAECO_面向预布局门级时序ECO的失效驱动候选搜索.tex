@@ -351,7 +351,7 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 
 \subsection{主结果：ISCAS89 修复质量与效率}\label{sec:iscas}
 
-图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本节报告时序搜索结果；主实验的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。策略分布方面：JOINT 候选对应 s27/s382/s420/s953，G 对应 s641/s713/s832，R 对应 s820；B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，本节数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置分开统计。
+图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本节报告时序搜索结果；主实验的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。策略分布方面：JOINT 候选对应 s27/s382/s420/s953，G 对应 s641/s713/s832，R 对应 s820；B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，该配置\textbf{不启用 §3.5 的 10\,ps 物理门控阈值}，直接以式~\eqref{eq:accept} 的 WNS$>0$ 为接受准则，因此 s420 的 +0.01\,ns（10\,ps）接受候选不与 §3.5 的过滤规则冲突；本节数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置分开统计。
 
 从机制上看，JOINT 沿关键路径压缩多级逻辑深度，单门 G 只调整驱动强度而不改变逻辑级数；R 依赖工艺库中的等价布尔候选，在 ISCAS89 中的覆盖有限；类似的库等价族限制也出现在 \S\ref{sec:itc99} 对 b06 的分析中。
 
