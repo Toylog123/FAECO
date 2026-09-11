@@ -162,7 +162,7 @@ B/G 物理优化近年来主要沿门尺寸调整、联合 B/G 和物理感知�
 \subsection{B/G 物理优化与研究定位}
 上述相关工作中的若干方法依赖商用 EDA 引擎或内部工业流程；本文选择公开的 Yosys\cite{yosys}、OpenSTA\cite{opensta} 与 OpenROAD\cite{openroad}，在 SKY130 HD\cite{sky130} 上实现并评估门级候选搜索。FAECO 流程覆盖映射网表、候选生成、理想线网静态时序分析（STA）和布局及全局布线寄生估计核验；顺序主实验采用构造级状态保持检查，独立的全网表 SEC 作为后续验证环节。
 
-从应用阶段看，结构重映射与 B/G 物理优化面向后布局、后布线阶段的物理微调，逻辑补丁构造则多在综合后、布局前执行功能修复。FAECO 位于两者之间：在已映射网表上进行局部门级重构，同时用理想线网 STA 和简化线载模型进行预布局筛选。
+从应用阶段看，结构重映射与 B/G 物理优化通常用于布局后或布线阶段的物理微调，逻辑补丁构造则多在综合后、布局前执行功能修复。FAECO 位于两者之间：在已映射网表上进行局部门级重构，同时用理想线网 STA 和简化线载模型进行预布局筛选。
 
 上述四类方法的主要侧重点汇总如表~\ref{tab:related_diff}。
 
@@ -259,7 +259,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \FloatBarrier
 \begin{figure*}[!htbp]
 \centering
-\includegraphics[width=0.98\textwidth]{fig_cut_generation_mechanism_imagegen.png}
+\includegraphics[width=0.85\textwidth]{fig_cut_generation_mechanism_imagegen.png}
 \caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径覆盖不进入节点代价而通过独立覆盖割与 $\lambda_c$ 反馈形成补充候选；R 候选可用性驱动策略切换。}
 \label{fig:cut_generation}
 \end{figure*}
@@ -353,7 +353,7 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 
 图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本节报告时序搜索结果；主实验的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。策略分布方面：JOINT 候选对应 s27/s382/s420/s953，G 对应 s641/s713/s832，R 对应 s820；B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，本节数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置分开统计。
 
-从机制上看，JOINT 沿关键路径压缩多级逻辑深度，单门 G 只调整驱动强度而不改变逻辑级数；R 依赖工艺库中的等价布尔候选，在 ISCAS89 中的覆盖有限，这与 \S\ref{sec:itc99} 中 b06 未达到严格改善的情况具有相同原因。
+从机制上看，JOINT 沿关键路径压缩多级逻辑深度，单门 G 只调整驱动强度而不改变逻辑级数；R 依赖工艺库中的等价布尔候选，在 ISCAS89 中的覆盖有限；类似的库等价族限制也出现在 \S\ref{sec:itc99} 对 b06 的分析中。
 
 \begin{figure}[!t]
 \centering
@@ -463,7 +463,7 @@ s820 & $-1.19$ & $-1.17$ & $-1.52$ & $-1.49$ & $+0.03$ \\
 s832 & $-1.23$ & $-1.17$ & $-1.51$ & $-1.51$ & $0.00$ \\
 s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 \bottomrule
-\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 统一映射网表与同一接受候选；s27 因面积过小采用 10\% 利用率布局规划；全局布线寄生估计后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
+\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 各电路的物理估计均采用与其预布局评估一致的映射网表及对应接受候选；s27 因面积过小采用 10\% 利用率布局规划；全局布线寄生估计后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
 \end{tabular}
 \end{table}
 
