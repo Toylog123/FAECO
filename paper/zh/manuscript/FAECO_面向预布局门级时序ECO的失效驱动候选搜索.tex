@@ -88,7 +88,7 @@
 \vspace{6pt}
 \end{center}
 \begin{flushleft}
-  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入和门尺寸调整难以压缩深层逻辑的问题，本文提出失效驱动候选搜索引擎（Failure-Aware ECO，FAECO）。该方法结合多特征加权割与关键路径覆盖割生成候选，并根据候选失败类型更新后续搜索。候选先经库函数和结构规则筛选，再由 OpenSTA 在理想线网模式下测量时序收益；满足条件的候选进入基于标准寄生交换格式（SPEF）的简化复测。在三组测试集上，FAECO 分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善；ITC-99 中其余 1 个电路与基线持平，全部 19 个电路均无 WNS 回退。独立逻辑门级顺序 SEC 对 29/30 个基线—修复对完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。ISCAS89 20 轮收敛配置下混合策略平均 WNS 改善为 1.07\,ns；另在效率优先配置对应的 OpenROAD 布局及全局布线寄生估计验证中，5/8 个电路仍保持改善。}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入和门尺寸调整难以压缩深层逻辑的问题，本文提出失效驱动候选搜索引擎（Failure-Aware ECO，FAECO）。该方法结合多特征加权割与关键路径覆盖割生成候选，并根据候选失败类型更新后续搜索。候选先经库函数和结构规则筛选，再由 OpenSTA 在理想线网模式下测量时序收益；启用物理门控时，满足条件的候选进一步进入基于标准寄生交换格式（SPEF）的简化复测。在三组测试集上，FAECO 分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善；ITC-99 中其余 1 个电路与基线持平，全部 19 个电路均无 WNS 回退。独立逻辑门级顺序 SEC 对 29/30 个基线—修复对完全证明，b17 剩余 1 个未证明点经 Liberty 检查确认为同函数尺寸替换。ISCAS89 20 轮收敛配置下混合策略平均 WNS 改善为 1.07\,ns；另在效率优先配置对应的 OpenROAD 布局及全局布线寄生估计验证中，5/8 个电路仍保持改善。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；门级局部重构；多特征加权割；失效驱动反馈；简化 SPEF 门控；预布局时序优化}\par
@@ -260,7 +260,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \begin{figure*}[!htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{fig_cut_generation_mechanism_imagegen.png}
-\caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径覆盖不进入节点代价而通过独立覆盖割与 $\lambda_c$ 反馈形成补充候选；R 候选可用性驱动策略切换。}
+\caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径由独立覆盖割 $C_c$ 与 $\lambda_c$ 反馈处理；R 候选可用性驱动策略切换。图中“候选集合 A/B”为示意图标签，实际符号 $C_w/C_c$ 与表~2 一致。}
 \label{fig:cut_generation}
 \end{figure*}
 
@@ -434,7 +434,7 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 \subsection{布局及全局布线寄生估计验证与 SPEF 门控}\label{sec:phys_closure}
 \FloatBarrier
 
-本节物理验证采用 \S\ref{sec:eff_prio} 效率优先配置得到的接受候选，与 \S\ref{sec:ablation} 的 20 轮收敛配置分开统计。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个轻微恶化但不超过 0.02 ns（表~\ref{tab:pr8}）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束；SPEF 负载扫描和迭代式门控用于量化线载影响，并将 F6 复测失败接入权重更新。
+本节物理验证采用 \S\ref{sec:eff_prio} 效率优先配置得到的接受候选，与 \S\ref{sec:ablation} 的 20 轮收敛配置分开统计。表~\ref{tab:pr8} 首先对 \S\ref{sec:eff_prio} 效率优先配置得到的接受候选进行后验 OpenROAD 物理估计验证。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个轻微恶化但不超过 0.02 ns。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束。另行开展 SPEF 负载扫描与迭代式门控实验，以评估线载敏感性及 F6 反馈机制；后者用于量化线载影响，并将 F6 复测失败接入权重更新。
 
 \FloatBarrier
 
