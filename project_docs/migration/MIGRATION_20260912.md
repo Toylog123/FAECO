@@ -2,7 +2,7 @@
 
 > 源：`D:\BaiduSyncdisk\03_FAECO` → 目标：`D:\BaiduSyncdisk\01_Papers\03_FAECO`
 > 依据：`99_项目模板/project_docs/migration/FRAMEWORK_MIGRATION_GUIDE.md`
-> 方式：robocopy 全量复制（316,765 文件 / 117.7 GB / 0 失败；目录 rename 因 BaiduSync 客户端句柄阻塞改用复制），git 历史与远程保留；源目录留作归档（OPEN_ISSUES OI-005）。
+> 方式：robocopy 全量复制（316,765 文件 / 117.7 GB / 0 失败；目录 rename 因 BaiduSync 客户端句柄阻塞改用复制），git 历史与远程保留；源目录内容已于同日删除（仅剩空壳，OPEN_ISSUES OI-005）。
 
 ## 1. 目录映射表
 

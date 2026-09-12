@@ -22,7 +22,7 @@
 
 ## 不要做什么
 
-- 不要删除旧目录 `D:\BaiduSyncdisk\03_FAECO`（迁移源归档，用户处置，OI-005）。
+- 旧目录已清空（OI-005）；`experiments/` 证据严禁删除。
 - 不要改写 `experiments/` 历史产物（含其中记录的旧绝对路径——证据记录）。
 - 不要把旧轮次的数据拼进新结论；论文数字只认 `experiments/20260826_aggregation/summary.json` 及对应产物。
 - 不要在未跑测试的情况下修改 `code/src/rseco/`。
