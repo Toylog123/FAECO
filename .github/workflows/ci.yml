@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  check:
+    name: 健康检查
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+      - name: 记录检查（提示，不阻塞）
+        run: bash code/scripts/check_record.sh || true
+      - name: 项目健康检查（提示，不阻塞）
+        run: bash code/scripts/check_project.sh || true
+      - name: 测试（技术栈相关，按需启用）
+        run: |
+          echo "在此定义实际测试命令（如 pytest / go test / cargo test）"

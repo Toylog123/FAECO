@@ -1,44 +1,74 @@
-# Python
+# ===== Python =====
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.Python
 
 # Virtual environments
 .venv/
 venv/
 env/
 
-# Build artifacts
+# ===== 构建产物 =====
+# project/ 生成工程目录（保留 project/scripts/ 与 project/README.md）
+project/*/
+!project/scripts/
+!project/scripts/**
+!project/README.md
 build/
 dist/
-tmp/
-experiments/tmp_*/
+out/
+bin/
+*.o
+*.a
+*.so
+*.exe
+*.dll
+*.lib
 
-# Local runtime logs
+# 本地运行日志
 *.log
 abc.history
 
-# OS/editor noise
+# ===== 临时 / 草稿 =====
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*~
+tmp/
+scratch/*
+!scratch/.gitkeep
+
+# ===== OS / 编辑器 / 同步噪音 =====
 .DS_Store
 Thumbs.db
+desktop.ini
 .idea/
 .vscode/
+**/*_冲突文件_*
+*.baiduyun.uploading.cfg
 
-# Experiment outputs (regenerated, not committed)
+# ===== 实验输出（可再生，不提交；清单与汇总文档除外）=====
 experiments/2026*/
+experiments/tmp_*/
 
-# Raw benchmark data (not committed)
-benchmarks/raw/
-benchmarks/normalized/
-benchmarks/generated_cases/
-benchmarks/source_manifests/epfl_v2025.1.json
-benchmarks/source_manifests/iscas85_jpsety_b4c6b620.json
-benchmarks/source_manifests/sky130hd_openroad.json
+# ===== 原始基准数据（不提交；README 与部分 source_manifests 例外）=====
+data/raw/*
+!data/raw/.gitkeep
+data/derived/*
+!data/derived/.gitkeep
+!data/raw/benchmarks/README.md
+!data/raw/benchmarks/source_manifests/
+data/raw/benchmarks/source_manifests/epfl_v2025.1.json
+data/raw/benchmarks/source_manifests/iscas85_jpsety_b4c6b620.json
+data/raw/benchmarks/source_manifests/sky130hd_openroad.json
 
-# Paper scratch / backups / review intermediates
+# ===== 论文 scratch / 备份 / 审稿中间产物 =====
 paper/zh/backups/
 paper/zh/archives/
 paper/zh/manuscript/backups/
@@ -49,24 +79,23 @@ paper/zh/figures/nature/
 paper/zh/figures/alt/
 paper/zh/figures/*.bak
 paper/zh/figures/*.bak_*
+
+# LaTeX 中间文件
 paper/zh/manuscript/*.aux
 paper/zh/manuscript/*.out
 paper/zh/manuscript/*.fls
 paper/zh/manuscript/*.fdb_latexmk
 paper/zh/manuscript/*.xdv
+paper/zh/manuscript/*.synctex.gz
 
-# Fonts required for XeLaTeX compile but not redistributed
+# XeLaTeX 编译所需但不再分发的字体
 paper/zh/manuscript/fonts/
 
-# Local scratch / tmp
-.tmp/
-.tmp_evt/
-_tmp_*/
-tmp_*/
-_faeco_review_tmp/
-.tmp_alg.txt
-tmp_paper_extract.txt
-docs/superpowers/
-docs/project_management/_verify_tmp.txt
-experiments/tmp_find_stagea.py
-
+# ===== 安全（密钥 / 环境变量）=====
+.env
+.env.*
+*.pem
+*.key
+*.p12
+id_rsa*
+*secret*

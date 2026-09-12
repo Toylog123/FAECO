@@ -1,0 +1,203 @@
+% =============================================================================
+% 中文论文主稿件模板 —— 《计算机辅助设计与图形学学报》投稿格式
+%
+% 编译：LuaLaTeX（paper/zh/scripts/compile.bat；脚本自动设 OSFONTDIR 指向项目字体）
+% 字体：项目内 paper/zh/fonts/（换电脑无需重装系统字体）
+%
+% 对照期刊格式要点：
+%   中文正文 方正书宋_GBK 10pt ｜ 英文/公式/符号 Times New Roman
+%   标题 黑体三号 ｜ 作者 方正仿宋四号 ｜ 单位 方正书宋8pt
+%   摘要/关键词 方正书宋8.5pt（"摘要/关键词"标签黑体）
+%   正文双栏（栏宽 21.59 字符、栏距 3 字符，A4 版心）
+%   1级标题 11.5pt 黑体 ｜ 2级 五号 黑体 ｜ 3级 书宋10pt
+%   参考文献：标题黑体 11.5pt，条目 8pt（GB/T 7714）
+%   注：占位内容用 {花括号} 或直接文字，勿用 [方括号]（会被当作可选参数）
+% =============================================================================
+\documentclass[twocolumn,10pt]{ctexart}
+
+% ---------------------------------------------------------------------------
+% 字体（项目内 paper/zh/fonts/；compile.ps1 设 OSFONTDIR；换电脑无需重装）
+% ---------------------------------------------------------------------------
+\setCJKmainfont{FZShuSong-Z01}       % 方正书宋_GBK（中文正文）
+\setCJKsansfont{SimHei}              % 黑体
+\newCJKfontfamily\songfamily{FZShuSong-Z01}
+\newCJKfontfamily\heifamily{SimHei}
+\newCJKfontfamily\fangfamily{FZFangSong-Z02}  % 方正仿宋_GBK
+\let\songti\songfamily
+\let\heiti\heifamily
+\let\fangsong\fangfamily
+\setmainfont{Times New Roman}        % 英文/数字
+
+% ---------------------------------------------------------------------------
+% 宏包
+% ---------------------------------------------------------------------------
+\usepackage{amsmath,amssymb}
+\usepackage{newtxmath}               % 公式 Times 风格
+\usepackage{booktabs}                % 三线表
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{cite}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{subfig}
+
+% 版面：A4 双栏，栏宽 21.59 字符、栏距 3 字符（columnsep 近似）
+\geometry{a4paper,left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm,columnsep=31.5pt}
+
+% 标题层级（1级11.5pt黑体 / 2级五号黑体 / 3级10pt书宋）
+\ctexset{
+  section = {format=\heiti\fontsize{11.5}{15}\selectfont, beforeskip=6pt, afterskip=4pt},
+  subsection = {format=\heiti\fontsize{10.5}{14}\selectfont, beforeskip=5pt, afterskip=3pt},
+  subsubsection = {format=\songti\fontsize{10}{13}\selectfont, beforeskip=4pt, afterskip=2pt}
+}
+
+% 图题（书宋9pt）、表题（黑体9pt）、表注/分图题（书宋8pt）
+\DeclareCaptionFont{songti}{\songti}
+\DeclareCaptionFont{heiti}{\heiti}
+\captionsetup[figure]{font={songti,small},labelfont={bf}}
+\captionsetup[table]{font={heiti,small},labelfont={bf}}
+\captionsetup[subfloat]{font={songti,scriptsize}}
+\captionsetup{labelsep=space}
+
+% 图路径：数据图在 data/final/，手工图在 manual/final/（figures 分两类）
+\graphicspath{{../figures/data/final/}{../figures/manual/figures/}}
+\setlength{\emergencystretch}{3em}
+\Urlmuskip=0mu plus 3mu\relax
+
+\begin{document}
+
+\pagestyle{plain}
+
+% ---------------------------------------------------------------------------
+% 中文题录（通栏）：标题/作者/单位/摘要/关键词/中图法分类号/DOI
+% ---------------------------------------------------------------------------
+\twocolumn[%
+\begin{center}
+  {\heiti\zihao{3} {中文标题}}\par
+  \vspace{6pt}
+  {\fangsong\zihao{4} {作者1}$^{1,2)}$，{作者2}$^{1)*}$}\par
+  \vspace{4pt}
+  {\songti\fontsize{8}{12}\selectfont（{中文单位全称}，{城市} {邮编}）}\par
+  \vspace{2pt}
+  {\songti\fontsize{8}{12}\selectfont E-mail：{邮箱}（通信作者）}\par
+  \vspace{8pt}
+\end{center}
+\begin{flushleft}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
+  {中文摘要（四要素精简）：① 目的 1~2 句；② 方法 1~2 句；③ 实验 + ④ 结果合计 2~3 句；整体 150~250 字；不用"本文/我们"，用"所提方法/算法/模型"。}}\par
+  \vspace{4pt}
+  {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont
+  {关键词1}；{关键词2}；{关键词3}；{关键词4}；{关键词5}}\par
+  \vspace{2pt}
+  {\songti\fontsize{8.5}{13}\selectfont 中图法分类号：{分类号}\qquad DOI：10.3724/SP.J.1089.{稿件编号}}\par
+  \vspace{6pt}
+\end{flushleft}
+
+% 英文题录（Times 13.5pt 加粗标题、作者、斜体单位、Abstract、Key words）
+\begin{center}
+  {\bfseries\fontsize{13.5}{18}\selectfont {English Title}}\par
+  \vspace{5pt}
+  {\normalsize {Author 1}$^{1,2)}$，{Author 2}$^{1)*}$}\par
+  \vspace{3pt}
+  {\small\itshape ({English Affiliation}，{City} {Postcode})}\par
+  \vspace{6pt}
+\end{center}
+\begin{flushleft}
+  {\bfseries Abstract:} {\small {English abstract.}}\par
+  \vspace{3pt}
+  {\bfseries Key words:} {\small {kw1}; {kw2}; {kw3}; {kw4}; {kw5}}\par
+\end{flushleft}
+]%
+
+% ---------------------------------------------------------------------------
+% 正文（双栏）
+% ---------------------------------------------------------------------------
+
+% 引言（不加章节号与标题；不插图、表、公式；与摘要、结论不重复）
+% 结构：大领域 → 子领域 → 具体问题 → 已有工作不足 → 本文方法（漏斗式聚焦，让大同行能看懂）
+{引言：大领域背景 → 收窄到子领域 → 具体问题 → 现有工作不足（配引用）→ 本文方法。}\cite{ref1}
+
+% ---------- 相关工作（讲已有工作 → 引出问题 → 再讲本文；不穿插"本文…"） ----------
+\section{\heiti\fontsize{11.5}{15}\selectfont 相关工作}
+{按主题介绍已有方法（客观描述 + 引用）→ 指出未解决问题；讲完后再统一引出本文设计，不穿插"本文…"。}
+
+% 1 级标题（11.5pt 黑体）
+\section{{1级标题}}
+
+{正文。}
+
+% 2 级标题（五号 黑体）
+\subsection{{2级标题}}
+
+{正文。}
+
+% 3 级标题（书宋 10pt）
+\subsubsection{{3级标题}}
+
+{正文。}
+
+% 图（示例）——图题书宋 9pt；把图文件放 paper/zh/figures/final/ 后取消注释
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\columnwidth]{fig1_architecture}
+% \caption{{图题（图题无标点）}}
+% \label{fig:architecture}
+% \end{figure}
+
+% 三线表（示例）——表题黑体9pt、表注8pt
+\begin{table}[t]
+\centering
+\caption{{表题}}
+\label{tab:params}
+\fontsize{8}{10}\selectfont
+\begin{tabular}{lcc}
+\toprule
+{栏头} & {横向栏目} & {横向栏目} \\
+\midrule
+{纵栏目} & 数值 & 数值 \\
+{纵栏目} & 数值 & 数值 \\
+\bottomrule
+\end{tabular}\\[2pt]
+\fontsize{8}{10}\selectfont 注：粗体表示最优值。
+\end{table}
+
+% 公式（被引用的加序号，先给出后引用）
+\begin{equation}
+  E = m c^2 \label{eq:energy}
+\end{equation}
+如式~(\ref{eq:energy}) 所示。
+
+% 算法（输入/输出书宋10pt；Step 书宋9pt；下级首行右移2格）
+\textbf{本文算法步骤如下：}\\
+输入：{输入描述}。\\
+输出：{输出描述}。\\
+Step1. {第一步操作}。\\
+Step2. {第二步操作}；\\
+\hspace{2em} Step2.1. {子步骤，右移2格}；\\
+\hspace{2em} Step2.2. {子步骤}。
+
+% 结语（两字标题加自然空；回答三问：机制→问题→结果→边界 + 一句未来工作；非模块/实验流水账）
+\section{结\quad 语}
+{结语：靠什么机制解决了什么问题 → 带来什么结果（多好）→ 边界在哪；结尾一句简短未来工作（期刊要求）。}
+
+% 致谢（非必需）
+\section*{致\quad 谢}
+{感谢{XX}。}
+
+% ---------------------------------------------------------------------------
+% 参考文献（标题黑体 11.5pt；条目 8pt，GB/T 7714）
+% ---------------------------------------------------------------------------
+\begin{thebibliography}{99}
+\fontsize{8}{10}\selectfont
+\bibitem{ref1} {作者}. {题名}[J]. {期刊名}, {年}, {卷}({期}): {页码}.
+\bibitem{ref2} {作者}. {题名}[C] //{会议论文集名称}. {出版地}: {出版者}, {年}: {页码}.
+\end{thebibliography}
+
+% 附录（可选；附录文字 9pt）
+% \appendix
+% \section*{{附录A　{标题}}}
+% \fontsize{9}{12}\selectfont {附录正文。}
+
+\end{document}

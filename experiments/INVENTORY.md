@@ -36,7 +36,7 @@ table, and SEC table.  **Do not delete.**
 | `20260731_epfl_ctrl_sky130_mapping/` | small | Stage B pilot | App.B | ctrl-only SKY130 mapping reproduction |
 | `20260731_epfl_ctrl_stage_b/` | small | Stage B pilot | App.B | ctrl-only STA pilot |
 | `20260805_tcad_sprint1_iscas89/` | small | Stage A main | sec.6 / §6.1 | 8 ISCAS89 unified-loop baseline |
-| `20260805_tcad_sprint1_itc99/` | small | Cross-bench (b17 sec gold source) | sec.6 / §6.3 | 19 ITC-99 unified-loop; `case/original/original.v` is the stripped golden reused by `scripts/verify_b17_final_sec.py` |
+| `20260805_tcad_sprint1_itc99/` | small | Cross-bench (b17 sec gold source) | sec.6 / §6.3 | 19 ITC-99 unified-loop; `case/original/original.v` is the stripped golden reused by `code/scripts/verify_b17_final_sec.py` |
 | `20260805_phys_closure/` | mid | physical closure | sec.6 / §6.4 | physical load feedback gate |
 | `20260807_real_pr_iscas8/` | mid | real P&R | sec.6 / §6.4 | 5/8 ISCAS89 retain improvement after OR place-and-route |
 | `20260807_real_pr_s382/` | mid | real P&R | sec.6 / §6.4 | s382 baseline/fixed P&R logs |

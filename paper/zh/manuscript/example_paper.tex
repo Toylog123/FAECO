@@ -1,0 +1,192 @@
+% =============================================================================
+% 示例论文 —— 演示《计算机辅助设计与图形学学报》格式 + 说明每部分怎么写
+%
+% 说明：本示例**不写具体内容**，每部分用【怎么写】标注写作要点；
+%       具体内容按实际情况填写（写作规范见 skills/chinese-paper-style）。
+% 编译：LuaLaTeX（compile.ps1 -Name example_paper）
+% =============================================================================
+\documentclass[twocolumn,10pt]{ctexart}
+
+% ---------- 字体（同 template.tex，compile.ps1 设 OSFONTDIR） ----------
+\setCJKmainfont{FZShuSong-Z01}       % 方正书宋_GBK（中文正文）
+\setCJKsansfont{SimHei}              % 黑体
+\newCJKfontfamily\songfamily{FZShuSong-Z01}
+\newCJKfontfamily\heifamily{SimHei}
+\newCJKfontfamily\fangfamily{FZFangSong-Z02}  % 方正仿宋_GBK
+\let\songti\songfamily
+\let\heiti\heifamily
+\let\fangsong\fangfamily
+\setmainfont{Times New Roman}        % 英文/数字
+
+% ---------- 宏包 ----------
+\usepackage{amsmath,amssymb}
+\usepackage{newtxmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{cite}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{subfig}
+
+% 版面：A4 双栏（栏宽 21.59 字符、栏距 3 字符）
+\geometry{a4paper,left=2.0cm,right=2.0cm,top=2.5cm,bottom=2.5cm,columnsep=31.5pt}
+
+% 标题层级
+\ctexset{
+  section = {format=\heiti\fontsize{11.5}{15}\selectfont, beforeskip=6pt, afterskip=4pt},
+  subsection = {format=\heiti\fontsize{10.5}{14}\selectfont, beforeskip=5pt, afterskip=3pt},
+  subsubsection = {format=\songti\fontsize{10}{13}\selectfont, beforeskip=4pt, afterskip=2pt}
+}
+
+% 图题（书宋9pt）、表题（黑体9pt）、表注/分图题（书宋8pt）
+\DeclareCaptionFont{songti}{\songti}
+\DeclareCaptionFont{heiti}{\heiti}
+\captionsetup[figure]{font={songti,small},labelfont={bf}}
+\captionsetup[table]{font={heiti,small},labelfont={bf}}
+\captionsetup[subfloat]{font={songti,scriptsize}}
+\captionsetup{labelsep=space}
+
+\graphicspath{{../figures/final/}}
+\setlength{\emergencystretch}{3em}
+\Urlmuskip=0mu plus 3mu\relax
+
+\begin{document}
+
+\pagestyle{plain}
+
+% ---------------------------------------------------------------------------
+% 中文题录（通栏）
+% ---------------------------------------------------------------------------
+\twocolumn[%
+\begin{center}
+  % 【标题：黑体三号，用设计亮点命名（如"XX 机制 / XX 架构"），非"XX 系统设计"】
+  {\heiti\zihao{3} 【标题（亮点命名）】}\par
+  \vspace{6pt}
+  % 【作者：仿宋四号，通信作者姓名右上角加 *；同单位不加单位序号】
+  {\fangsong\zihao{4} 【作者1】$^{1,2)}$，【作者2】$^{1)*}$}\par
+  \vspace{4pt}
+  % 【单位：书宋 8pt，单位全称到院系级】
+  {\songti\fontsize{8}{12}\selectfont（【单位全称】，【城市】 【邮编】）}\par
+  \vspace{2pt}
+  {\songti\fontsize{8}{12}\selectfont E-mail：【邮箱】（通信作者）}\par
+  \vspace{8pt}
+\end{center}
+\begin{flushleft}
+  % 【摘要四要素精简：① 目的 1~2 句；② 方法 1~2 句；③ 实验 + ④ 结果合计 2~3 句；
+  %  整体 150~250 字；不用第一人称，用"所提方法 / 算法 / 模型"】
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
+  【摘要：目的 → 方法 → 实验（平台/数据/对比）→ 结果（定量指标）】}\par
+  \vspace{4pt}
+  % 【关键词 4~6 个，按重要性排序，专指性规范术语】
+  {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont
+  【关键词1】；【关键词2】；【关键词3】；【关键词4】；【关键词5】}\par
+  \vspace{2pt}
+  {\songti\fontsize{8.5}{13}\selectfont 中图法分类号：【分类号】\qquad DOI：10.3724/SP.J.1089.【稿件编号】}\par
+  \vspace{6pt}
+\end{flushleft}
+
+% 英文题录【英文 Title（Times 13.5pt 加粗，实词首字母大写）/ 作者 / 斜体单位 /
+% Abstract / Key words 与中文一一对应，内容同中文】
+\begin{center}
+  {\bfseries\fontsize{13.5}{18}\selectfont 【English Title】}\par
+  \vspace{5pt}
+  {\normalsize 【Author 1】$^{1,2)}$，【Author 2】$^{1)*}$}\par
+  \vspace{3pt}
+  {\small\itshape (【English Affiliation】，【City】 【Postcode】)}\par
+  \vspace{6pt}
+\end{center}
+\begin{flushleft}
+  {\bfseries Abstract:} {\small 【English abstract（与中文对应）。】}\par
+  \vspace{3pt}
+  {\bfseries Key words:} {\small 【kw1】; 【kw2】; 【kw3】; 【kw4】; 【kw5】}\par
+\end{flushleft}
+]%
+
+% ---------------------------------------------------------------------------
+% 正文（双栏）
+% ---------------------------------------------------------------------------
+
+% 引言（不加章节号与标题；不插图表格公式；不用结论性表述；与摘要结论不重复）
+% 【漏斗聚焦：大领域背景 → 收窄到子领域 → 具体问题 → 现有工作不足（配引用）→ 本文方法；
+%  面向大同行，背景铺垫充分、由浅入深，必要术语首次解释】
+【引言：大领域 → 子领域 → 具体问题 → 本文方法。】\cite{ref1}
+
+% 相关工作【讲已有工作（客观描述 + 引用）→ 指出未解决问题 → 讲完再引出本文设计；
+%            不穿插"本文…"；只对关键相关明确对比，不必每个都对比】
+\section{\heiti\fontsize{11.5}{15}\selectfont 相关工作}
+【按主题介绍已有方法 → 指出未解决问题 → 引出本文设计。】
+
+% 1 级标题【用设计亮点命名（如"XX 机制 / XX 架构"），非"系统设计"；正文突出设计决策与为什么】
+\section{\heiti\fontsize{11.5}{15}\selectfont 【机制亮点标题】}
+【正文：核心机制、设计决策、为什么这么设计（创新点 / 权衡 / 边界）。】
+
+% 2 级标题
+\subsection{\heiti\fontsize{10.5}{14}\selectfont 【子机制 / 环节】}
+【正文。】
+
+% 3 级标题
+\subsubsection{\songti\fontsize{10}{13}\selectfont 【细节】}
+【正文。】
+
+% 图（示例）——图题书宋9pt；把图文件放 paper/zh/figures/final/ 后取消注释
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\columnwidth]{figN_名称}
+% \caption{【图题（无句末标点）】}
+% \label{fig:xxx}
+% \end{figure}
+
+% 三线表（示例）——表题黑体9pt、表注8pt；数据来自证据包（见 DATA_SOURCE_TEMPLATE）
+\begin{table}[t]
+\centering
+\caption{【表题（黑体 9pt）】}
+\label{tab:xxx}
+\fontsize{8}{10}\selectfont
+\begin{tabular}{lcc}
+\toprule
+【栏头】 & 【横向栏目】 & 【横向栏目】 \\
+\midrule
+【纵栏目】 & 数值 & 数值 \\
+【纵栏目】 & 数值 & 数值 \\
+\bottomrule
+\end{tabular}\\[2pt]
+\fontsize{8}{10}\selectfont 注：【表注】。
+\end{table}
+
+% 公式（被引用的加序号，先给出后引用；数据/符号有依据）
+\begin{equation}
+  【表达式】 \label{eq:xxx}
+\end{equation}
+如式~(\ref{eq:xxx}) 所示。
+
+% 算法（输入/输出书宋10pt；Step 书宋9pt；下级右移2格）
+\textbf{本文算法步骤如下：}\\
+输入：【输入】。\\
+输出：【输出】。\\
+Step1. 【步骤】。\\
+Step2. 【步骤】；\\
+\hspace{2em} Step2.1. 【子步骤】；\\
+\hspace{2em} Step2.2. 【子步骤】。
+
+% 结语【回答三问：靠什么机制解决了什么问题 → 带来什么结果（多好）→ 边界在哪；
+%        结尾一句简短未来工作；非"模块 + 实验流水账"】
+\section{\heiti\fontsize{11.5}{15}\selectfont 结\quad 语}
+【结论：以【XX 机制】解决【XX 问题】，在【场景】下【指标】提升至【数值】，边界为【条件】。未来工作将…。】
+
+% 致谢（非必需）
+\section*{\heiti\fontsize{11.5}{15}\selectfont 致\quad 谢}
+【感谢…。】
+
+% ---------------------------------------------------------------------------
+% 参考文献（标题黑体 11.5pt；条目 8pt，GB/T 7714）
+% ---------------------------------------------------------------------------
+\begin{thebibliography}{99}
+\fontsize{8}{10}\selectfont
+\bibitem{ref1} 【作者】. 【题名】[J]. 【期刊名】, 【年】, 【卷】(【期】): 【页码】.
+\bibitem{ref2} 【作者】. 【题名】[C] //【会议论文集名称】. 【出版地】: 【出版者】, 【年】: 【页码】.
+\end{thebibliography}
+
+\end{document}

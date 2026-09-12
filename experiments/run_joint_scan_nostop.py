@@ -3,9 +3,9 @@
 import subprocess, time, json, os
 from pathlib import Path
 
-ROOT = Path(r'D:\BaiduSyncdisk\03_FAECO')
+ROOT = Path(__file__).resolve().parents[1]
 VENV = ROOT / '.venv' / 'Scripts' / 'python.exe'
-SCRIPT = ROOT / 'scripts' / 'run_outerloop_real_wns.py'
+SCRIPT = ROOT / 'code/scripts' / 'run_outerloop_real_wns.py'
 MAPPED_SRC = ROOT / 'experiments' / '20260805_tcad_sprint1_iscas89' / 's382' / 's382' / 'mapped.v'
 OUT = ROOT / 'experiments' / '20260806_joint_depth_scan_s382_nostop'
 OUT.mkdir(parents=True, exist_ok=True)

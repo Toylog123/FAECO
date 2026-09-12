@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import io
-path = r"D:/BaiduSyncdisk/03_FAECO/paper/zh/manuscript/faeco_paper.tex"
+MIGRATION_ROOT = __import__("pathlib").Path(__file__).resolve().parents[3]
+path = str(MIGRATION_ROOT / "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.tex")
 with io.open(path, "r", encoding="utf-8") as f:
     c = f.read()
 # 定位 tab:parasitic 表的 end{table}，在其后插入图

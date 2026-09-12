@@ -4,9 +4,9 @@ s382: 120/160/200 (existing 0-80); b18: 80/120/160/200 (existing 0-40)."""
 import subprocess, json, time, os
 from pathlib import Path
 
-ROOT = Path(r'D:\BaiduSyncdisk\03_FAECO')
+ROOT = Path(__file__).resolve().parents[1]
 VENV = ROOT / '.venv' / 'Scripts' / 'python.exe'
-CHECK = ROOT / 'scripts' / 'run_parasitic_aware_check.py'
+CHECK = ROOT / 'code/scripts' / 'run_parasitic_aware_check.py'
 
 CASES = {
     's382': {

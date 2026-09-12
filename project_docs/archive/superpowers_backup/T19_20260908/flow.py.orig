@@ -1,0 +1,496 @@
+"""Minimal executable flow helpers for FAECO cases."""
+
+import json
+import time
+from dataclasses import asdict
+from pathlib import Path
+from typing import Any
+
+from .case_loader import load_case
+from .cut import (
+    build_weighted_cut_graph,
+    fixed_min_cut,
+    solve_weighted_cut,
+    split_cone_by_depth,
+    weighted_cut_candidates,
+)
+from .equivalence import check_structural_equivalence
+from .failures import FailureThresholds, FailureType, classify_failures
+from .graph import extract_fanin_cone
+from .metrics import change_ratio, logic_level_reduction
+from .netlist_io import load_analysis_netlist
+from .patch import make_patch_candidate
+from .ranking import rank_patch_candidates
+from .refinement import RefinementWeights, refine_weights
+from .replacement import apply_patch_replacement
+from .yosys_abc import check_yosys_abc_equivalence, run_yosys_abc_resynthesis_baseline
+
+
+def _default_liberty_cells_v() -> Path | None:
+    """Path to the extracted assign-style SKY130 cells model if present.
+
+    Used to expand Liberty-mapped (named-port) netlists so ABC CEC can
+    read them.  None disables the expansion (plain gate-level CEC path).
+    """
+    candidate = (
+        Path(__file__).resolve().parents[2]
+        / "benchmarks"
+        / "raw"
+        / "skywater_cells_models"
+        / "sky130_cells_v2.v"
+    )
+    return candidate if candidate.exists() else None
+
+
+def build_case_metrics(
+    case_dir: str | Path,
+    *,
+    artifact_dir: str | Path | None = None,
+) -> dict[str, Any]:
+    case_dir = Path(case_dir)
+    artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
+    started_at = time.perf_counter()
+    runtime_marks: dict[str, float] = {}
+
+    def mark(stage: str, stage_started_at: float) -> None:
+        runtime_marks[stage] = time.perf_counter() - stage_started_at
+
+    stage_started_at = time.perf_counter()
+    case = load_case(case_dir)
+    original = load_analysis_netlist(case.original_analysis_netlist_path)
+    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path)
+    mark("parse_netlists", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    cone = extract_fanin_cone(original, roots=[case.target_output])
+    mark("cone_extraction", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    equivalence = check_structural_equivalence(
+        original,
+        resynthesized,
+        outputs=[case.target_output],
+    )
+    mark("equivalence", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    formal_equivalence = check_yosys_abc_equivalence(
+        case.original_netlist_path,
+        case.resynthesized_netlist_path,
+        outputs=[case.target_output],
+        artifact_dir=artifact_dir / "formal_equivalence",
+        liberty_cells_v=_default_liberty_cells_v(),
+    )
+    mark("formal_equivalence", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    abc_baseline = run_yosys_abc_resynthesis_baseline(
+        case.original_netlist_path,
+        output_dir=artifact_dir / "abc_baseline",
+    )
+    mark("abc_baseline", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    boundary = fixed_min_cut(cone)
+    initial_patch = make_patch_candidate(
+        case_id=case.case_id,
+        boundary=boundary,
+        equivalence=equivalence,
+    )
+
+    initial_patch_size = initial_patch.patch_size
+    try:
+        logic_level_before = original.logic_level(case.target_output)
+        logic_level_after = resynthesized.logic_level(case.target_output)
+        reduction = logic_level_reduction(
+            before=logic_level_before, after=logic_level_after
+        )
+    except ValueError:
+        # Sequential netlists (DFF feedback loops) have no acyclic logic
+        # level; the real success criterion is the injected WNS evaluator,
+        # so the logic-level metrics degrade to a neutral 0.
+        logic_level_before = None
+        logic_level_after = None
+        reduction = 0
+
+    failures = classify_failures(
+        equivalence_passed=equivalence.status == "pass",
+        boundary_closed=True,
+        patch_size=initial_patch_size,
+        original_gate_count=original.gate_count,
+        logic_level_before=logic_level_before,
+        logic_level_after=logic_level_after,
+        verification_runtime_s=0.0,
+        thresholds=FailureThresholds(),
+    )
+    refinement = refine_weights(RefinementWeights(), failures)
+    cut_graph = build_weighted_cut_graph(cone, refinement.weights)
+    cut_result = solve_weighted_cut(cone, cut_graph)
+    candidate_patches = [
+        make_patch_candidate(
+            case_id=case.case_id,
+            boundary=candidate_boundary,
+            equivalence=equivalence,
+        )
+        for candidate_boundary in weighted_cut_candidates(cone, refinement.weights)
+    ]
+    mark("cut_search", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    ranked_patches = rank_patch_candidates(
+        candidate_patches,
+        timing_gains={patch.patch_id: float(reduction) for patch in candidate_patches},
+        verification_costs={patch.patch_id: 0.0 for patch in candidate_patches},
+    )
+    selected_patch = ranked_patches[0]
+    mark("ranking", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    patch_replacement = apply_patch_replacement(
+        case_id=case.case_id,
+        cone=cone,
+        patch=selected_patch.patch,
+    )
+    mark("replacement", stage_started_at)
+    refinement_iterations = [
+        {
+            "iteration": 1,
+            "stage": "single_refinement_proxy",
+            "input_failure_types": sorted(failure.value for failure in failures),
+            "actions": refinement.actions,
+            "selected_patch_id": selected_patch.patch.patch_id,
+            "selected_cut_method": selected_patch.patch.cut_method,
+            "replacement_status": patch_replacement.status,
+            "candidate_count": len(ranked_patches),
+        }
+    ]
+    selected_patch_size = selected_patch.patch.patch_size
+    ratio = change_ratio(
+        patch_size=selected_patch_size,
+        original_gate_count=original.gate_count,
+    )
+    runtime_total = time.perf_counter() - started_at
+    runtime = _build_runtime_report(
+        total_s=runtime_total,
+        breakdown=runtime_marks,
+        formal_equivalence_status=formal_equivalence.status,
+        abc_baseline_status=abc_baseline.status,
+    )
+
+    return {
+        "case_id": case.case_id,
+        "status": "draft_metrics_generated",
+        "metrics": {
+            "original_gate_count": original.gate_count,
+            "resynthesized_gate_count": resynthesized.gate_count,
+            "logic_level_before": logic_level_before,
+            "logic_level_after": logic_level_after,
+            "logic_level_reduction": reduction,
+            "patch_size": selected_patch_size,
+            "change_ratio": ratio,
+            "equivalence_result": equivalence.status,
+            "formal_equivalence_result": formal_equivalence.status,
+            "abc_baseline_status": abc_baseline.status,
+            "runtime_total": runtime_total,
+            "runtime_breakdown": runtime_marks,
+            "runtime": runtime,
+        },
+        "cone": cone.to_dict(),
+        "equivalence": {
+            "status": equivalence.status,
+            "method": equivalence.method,
+            "reason": equivalence.reason,
+        },
+        "formal_equivalence": formal_equivalence.to_dict(),
+        "abc_baseline": abc_baseline.to_dict(),
+        "cut_graph": {
+            "nodes": cut_graph.nodes,
+            "node_costs": cut_graph.node_costs,
+            "source": cut_graph.source,
+            "sink": cut_graph.sink,
+            "infinite_capacity": cut_graph.infinite_capacity,
+            "split_edges": cut_graph.split_edges,
+            "dependency_edges": cut_graph.dependency_edges,
+        },
+        "cut_result": cut_result.to_dict(),
+        "patch_ranking": [ranked_patch.to_dict() for ranked_patch in ranked_patches],
+        "selected_patch": selected_patch.to_dict(),
+        "patch_replacement": patch_replacement.to_dict(),
+        "failure_types": sorted(failure.value for failure in failures),
+        "refinement": {
+            "actions": refinement.actions,
+            "weights": asdict(refinement.weights),
+            "iteration_count": len(refinement_iterations),
+            "stage": "single_refinement_proxy",
+        },
+        "refinement_iterations": refinement_iterations,
+    }
+
+
+def _build_runtime_report(
+    *,
+    total_s: float,
+    breakdown: dict[str, float],
+    formal_equivalence_status: str,
+    abc_baseline_status: str,
+) -> dict[str, Any]:
+    status_by_stage = {
+        "formal_equivalence": formal_equivalence_status,
+        "abc_baseline": abc_baseline_status,
+    }
+    return {
+        "schema_version": 1,
+        "total_s": total_s,
+        "stages": [
+            {
+                "id": stage_id,
+                "category": _runtime_stage_category(stage_id),
+                "tool": _runtime_stage_tool(stage_id),
+                "status": status_by_stage.get(stage_id, "success"),
+                "duration_s": breakdown.get(stage_id, 0.0),
+            }
+            for stage_id in [
+                "parse_netlists",
+                "cone_extraction",
+                "equivalence",
+                "formal_equivalence",
+                "abc_baseline",
+                "cut_search",
+                "ranking",
+                "replacement",
+            ]
+        ],
+    }
+
+
+def _runtime_stage_category(stage_id: str) -> str:
+    if stage_id in {"formal_equivalence", "abc_baseline"}:
+        return "external_tool_wrapper"
+    return "python_flow"
+
+
+def _runtime_stage_tool(stage_id: str) -> str:
+    if stage_id in {"formal_equivalence", "abc_baseline"}:
+        return "abc"
+    return "python"
+
+
+def write_case_metrics(case_dir: str | Path) -> Path:
+    case_dir = Path(case_dir)
+    report = build_case_metrics(case_dir, artifact_dir=case_dir / "results")
+    cone_path = case_dir / "cones" / "target_cone.json"
+    cone_payload = {
+        "case_id": report["case_id"],
+        "cone_id": f"cone_{report['cone']['roots'][0]}",
+        **report["cone"],
+        "status": "generated",
+    }
+    cone_path.write_text(json.dumps(cone_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    patch_payload = {
+        "case_id": report["case_id"],
+        "patch_candidates": report["patch_ranking"],
+    }
+    (case_dir / "patches" / "candidates.json").write_text(
+        json.dumps(patch_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    selected_patch_payload = {
+        "case_id": report["case_id"],
+        "selected_patch": report["selected_patch"],
+        "status": "selected",
+    }
+    (case_dir / "patches" / "selected_patch.json").write_text(
+        json.dumps(selected_patch_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    replacement_payload = {
+        "case_id": report["case_id"],
+        "patch_replacement": report["patch_replacement"],
+        "status": report["patch_replacement"]["status"],
+    }
+    (case_dir / "patches" / "replacement.json").write_text(
+        json.dumps(replacement_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    output_path = case_dir / "results" / "metrics.json"
+    output_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return output_path
+
+
+def _cone_candidates(cone, weights, critical_instances, r_available):
+    # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
+    # weights.max_cone_gates is split into depth-bounded subcones; each
+    # subcone is cut independently so the global s-t graph stays bounded.
+    max_gates = max(1, int(getattr(weights, 'max_cone_gates', 1000)))
+    cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]
+    out: list = []
+    for sub in cones:
+        out.extend(weighted_cut_candidates(
+            sub, weights, critical_instances,
+            r_available=r_available,
+            critical_first_default=True,
+        ))
+    return out
+
+
+def run_multi_iteration_case(
+    case_dir: str | Path,
+    *,
+    max_iterations: int = 10,
+    enable_feedback: bool = True,
+    artifact_dir: str | Path | None = None,
+    equivalence_checker: object | None = None,
+    wns_evaluator: object | None = None,
+    candidates_per_iteration: int = 8,
+    critical_instances: list[str] | None = None,
+    r_available: set[str] | None = None,
+    init_weights: dict | None = None,
+) -> dict:
+    """Run the X19 multi-iteration failure-aware refinement loop.
+
+    Unlike build_case_metrics (single refinement proxy), this drives
+    cut -> classify -> refine -> re-cut until success or max_iterations.
+    It reuses refine_weights via simulate_refinement_loop.
+
+    equivalence_checker: optional callable(original, resynthesized,
+        outputs=[target]) -> object with .status and .method.  When given,
+        it replaces the default structural-signature equivalence check.
+        This is required for end-to-end success: the default structural
+        check cannot pass when the resynthesized netlist is genuinely
+        restructured (reduction >= 1), because F1 (structural equivalence)
+        and F4 (logic-level reduction) are mutually exclusive by
+        construction -- a structural match implies identical logic levels.
+
+    wns_evaluator: optional callable(patch, weights) -> dict with keys
+        "wns" (float) and "improved" (bool).  When given, the loop uses
+        WNS strict improvement as the success criterion instead of the
+        default logic-level reduction >= 1, and records every measured WNS
+        in "wns_history".  This is the real-STA hook: a runner can apply the
+        candidate patch and call OpenSTA, then report whether WNS improved.
+
+    candidates_per_iteration: how many weighted-ordered cut candidates are
+        explored (and OpenSTA-measured) per iteration before refining the
+        F1-F5 weights.  A beam > 1 finds good cuts within one iteration;
+        beam == 1 isolates the pure failure-feedback loop (each iteration
+        retries only the top cut under the refined weights).
+
+    critical_instances: real critical-path instance names (from OpenSTA
+        report_checks).  When provided with an F4-capable wns_evaluator,
+        the weighted cut search can generate a critical-path-cover candidate
+        that actually targets the timing-critical gates after an F4 failure.
+    """
+    from .refinement_loop import RefinementConfig, simulate_refinement_loop
+    case_dir = Path(case_dir)
+    artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
+    case = load_case(case_dir)
+    original = load_analysis_netlist(case.original_analysis_netlist_path)
+    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path)
+    cone = extract_fanin_cone(original, roots=[case.target_output])
+    if equivalence_checker is not None:
+        equivalence = equivalence_checker(
+            original, resynthesized, outputs=[case.target_output]
+        )
+    else:
+        equivalence = check_structural_equivalence(
+            original, resynthesized, outputs=[case.target_output]
+        )
+    try:
+        logic_level_before = original.logic_level(case.target_output)
+        logic_level_after = resynthesized.logic_level(case.target_output)
+        reduction = logic_level_reduction(
+            before=logic_level_before, after=logic_level_after
+        )
+    except ValueError:
+        # Sequential netlists (DFF feedback loops) have no acyclic logic
+        # level; the real success criterion is the injected WNS evaluator,
+        # so the logic-level metrics degrade to a neutral 0.
+        logic_level_before = None
+        logic_level_after = None
+        reduction = 0
+
+    wns_history: list[float] = []
+    max_candidates_per_iteration = max(1, candidates_per_iteration)
+    def evaluator(failures, weights):
+        # one iteration: explore the weighted-ordered candidate cuts with the
+        # current weights (so refinement actually changes the boundary /
+        # candidate ordering), build a patch for each, and accept the first
+        # candidate whose real-STA WNS strictly improves.  Without an
+        # injected wns_evaluator the classic reduction >= 1 criterion is used
+        # on the first candidate (legacy behaviour).
+        # Joint bi-objective cut: critical-path cover is a first-round
+        # default candidate; gates without an R equivalence candidate are a
+        # hard constraint (no critical discount, cover skips them).
+        candidates = _cone_candidates(
+            cone, weights, critical_instances, r_available,
+        )
+        _eval_trials_ref = getattr(wns_evaluator, "trials", None)
+        _trial_start = len(_eval_trials_ref) if _eval_trials_ref is not None else 0
+        if not candidates:
+            failures.add(FailureType.PATCH_TOO_LARGE)
+            return False, None
+        tried_candidates = 0
+        for boundary in candidates[:max_candidates_per_iteration]:
+            tried_candidates += 1
+            patch = make_patch_candidate(
+                case_id=case.case_id, boundary=boundary, equivalence=equivalence
+            )
+            failures.update(
+                classify_failures(
+                    equivalence_passed=equivalence.status == "pass",
+                    boundary_closed=True,
+                    patch_size=patch.patch_size,
+                    original_gate_count=original.gate_count,
+                    logic_level_before=logic_level_before or 0,
+                    logic_level_after=logic_level_after or 0,
+                    verification_runtime_s=0.0,
+                )
+            )
+            if wns_evaluator is not None:
+                # real-STA hook: the injected runner measures the applied
+                # candidate WNS and reports whether it strictly improved.
+                wns_info = wns_evaluator(patch, weights)
+                wns = wns_info["wns"]
+                wns_history.append(wns)
+                # F6 physical-load feedback (review shortboard): the
+                # evaluator marks a trial as physical_failure when its
+                # ideal-net gain did not survive the SPEF re-measure;
+                # surface that into the outer-loop failure set so the
+                # weight refinement raises boundary_penalty and the next
+                # cut avoids high-load paths.
+                eval_trials = getattr(wns_evaluator, "trials", None)
+                if eval_trials is not None:
+                    for _t in eval_trials[_trial_start:]:
+                        if _t.get("physical_failure"):
+                            failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
+                            break
+                if wns_info["improved"]:
+                    return True, patch.patch_id, {"wns": wns}
+                # no timing gain on this candidate: keep exploring the
+                # remaining cuts in this iteration before refining weights.
+                continue
+            if not failures and reduction >= 1:
+                return True, patch.patch_id
+            # legacy single-candidate behaviour: stop after the first cut.
+            break
+        if wns_evaluator is not None:
+            failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
+            return False, None
+        return False, None
+
+    result = simulate_refinement_loop(
+        evaluator,
+        RefinementConfig(max_iterations=max_iterations),
+        enable_feedback=enable_feedback,
+        init_weights=init_weights,
+    )
+    result["case_id"] = case.case_id
+    result["logic_level_before"] = logic_level_before
+    result["logic_level_after"] = logic_level_after
+    result["logic_level_reduction"] = reduction
+    if wns_evaluator is not None:
+        result["wns_history"] = wns_history
+    return result

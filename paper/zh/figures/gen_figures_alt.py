@@ -20,7 +20,7 @@ plt.rcParams.update({
     "legend.frameon": False,
 })
 
-ROOT = Path(r"D:/BaiduSyncdisk/03_FAECO/paper/zh/figures")
+ROOT = Path(__file__).resolve().parent
 
 PALETTES = {
     "okabe": dict(
@@ -246,6 +246,7 @@ col_w = max(sum(im.width for im in imgs) for _, imgs in rows)
 total_h = label_h + sum(label_h + imgs[0].height for _, imgs in rows)
 sheet = Image.new("RGB", (col_w + 40, total_h + 20), (255, 255, 255))
 from PIL import ImageDraw, ImageFont
+MIGRATION_ROOT = __import__("pathlib").Path(__file__).resolve().parents[3]
 try:
     font = ImageFont.truetype("arial.ttf", 16)
 except Exception:

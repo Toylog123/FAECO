@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 from pathlib import Path
+MIGRATION_ROOT = __import__("pathlib").Path(__file__).resolve().parents[3]
 
 plt.rcParams.update({
     "font.family": "sans-serif",
@@ -20,7 +21,7 @@ plt.rcParams.update({
     "axes.unicode_minus": False,
 })
 
-OUT = Path(r"D:/BaiduSyncdisk/03_FAECO/paper/zh/figures/nature")
+OUT = Path(__file__).resolve().parent / "nature"
 OUT.mkdir(exist_ok=True, parents=True)
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 

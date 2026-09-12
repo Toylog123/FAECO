@@ -24,7 +24,7 @@ mpl.rcParams.update({
     "pdf.fonttype": 42,
 })
 
-OUT = r"D:/BaiduSyncdisk/03_FAECO/paper/zh/figures"
+OUT = str(Path(__file__).resolve().parent)
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 C1 = "#4472C4"
 C2 = "#ED7D31"
@@ -398,10 +398,11 @@ save(fig, "fig_stageb.png")
 # 随机基线从 3 个种子的 hybrid_result.json 读取均值±标准差
 import json as _json
 from statistics import mean, stdev as _stdev
+MIGRATION_ROOT = __import__("pathlib").Path(__file__).resolve().parents[3]
 _seed_dirs = [
-    r"D:/BaiduSyncdisk/03_FAECO/experiments/20260806_baseline_random_v2_seed20260806",
-    r"D:/BaiduSyncdisk/03_FAECO/experiments/20260806_baseline_random_v2_seed20260807",
-    r"D:/BaiduSyncdisk/03_FAECO/experiments/20260806_baseline_random_v2_seed20260808",
+    str(PROJECT_ROOT / "experiments/20260806_baseline_random_v2_seed20260806"),
+    str(PROJECT_ROOT / "experiments/20260806_baseline_random_v2_seed20260807"),
+    str(PROJECT_ROOT / "experiments/20260806_baseline_random_v2_seed20260808"),
 ]
 cats = ["s27","s382","s420","s641","s713","s820","s832","s953"]
 hyb = [0.01,0.02,-0.02,0.0,0.0,-0.20,-0.66,-0.06]     # 混合收敛配置（20 轮）
