@@ -96,3 +96,17 @@
 
 | N31-05-extra7 | **多技能严格复审 + 迭代（academic/nature/用户写作风格，2026-08-11~13）**：实验证据盘点与口径核实、图表重画与排版重排、摘要压缩、ITC-99 19/19 口径、算法1/表1 简化、术语定义补齐、机制图重绘、结论三问、保护性描述清理、Nature 预检 18/18 | done | P0 | paper/zh/manuscript/faeco_paper_jcad.tex（12 页编译 0 Error）+ paper/zh/faeco_paper.pdf | 待用户决定机制图拆分方案 + 提交 git |
 | N31-05-extra8 | **交接收尾 + git 推送（2026-08-13）**：核实 P&R/SPEF 日志已就位、整理 .gitignore、论文/文档/代码分语义提交并 push origin/main（c545612） | done | P0 | .codex-handoff.json + handoff_20260813.md + 6 commits pushed | 待机制图拆分 + 投稿前替换真实 DOI |
+
+## 状态刷新（2026-09-12，框架迁移 + 审计后）
+
+> 本节覆盖上表中的过期状态；上表保留为历史记录。
+
+| ID | 任务 | 状态 | 说明 |
+|---|---|---|---|
+| U26-06 | 论文实验表格回填 | **done** | 18 轮审稿修订 + 全文一致性审计闭环（d329f19），论文数字全部与聚合产物对账 |
+| U26-07 | 磁盘瘦身收尾 | 部分完成 | 旧仓库目录全删（释放约 117 GB 中旧副本部分）；experiments/ 内 cleanup-candidates 档位仍待用户逐项确认（OI-004） |
+| U26-08 | 推送 codex/faeco-unified-loop | **done** | 2026-09-12 推送（f909a31..9435846）；另两条 codex 分支一并推送固化后删除本地 worktree |
+| D-01 | versions/v1 冻结方案 | **待用户决策** | 选项与建议见 DECISION_BRIEF_20260912.md（推荐轻量 tag+manifest） |
+| D-02 | 机制图处置 | **待用户确认** | 当前 9 页稿仅 3 图，原拆分问题已消失；推荐维持现状 |
+| D-03 | DOI / DRC 投稿处置 | **待投稿流程** | 主稿无 DOI 占位符；DRC 建议维持如实声明、被要求再补 |
+| T20 | 投稿件打包 | pending | 用户决策 D-01~D-03 后：按目标期刊模板整理投稿包（含 cover letter 与补充材料清单） |
