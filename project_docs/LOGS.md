@@ -622,3 +622,9 @@
 | ID | 动作 | 产物 | 备注 |
 |---|---|---|---|
 | LOG-20260914-01 | 交接整理收尾（用户指令：整理工作状态/写好文档/准备项目交接） | NEXT_AGENT_PROMPT.md（补全）+ .codex-handoff.json（刷新）+ 本文件 + WORK_PROGRESS/CURRENT_STATUS/CURRENT_RUN_HANDOFF | ① 核查交接文档体系：上轮（09-12）6 个交接文档修改 + 决策简报 DECISION_BRIEF_20260912.md（新文件）均未提交，本轮一并提交推送；② NEXT_AGENT_PROMPT.md 由空模板补全为真实内容（阅读顺序含决策简报、本轮目标=D-01~D-03 落地 + T20 投稿打包、约束与证据门）；③ 核查 versions/v1/ 确认为模板占位（仅 .gitkeep + 示例 README），与"活跃基线待 D-01 决策后建立"状态一致，无动作；④ .codex-handoff.json 刷新 timestamp/read_order（补入决策简报）；⑤ 环境验证：pytest 264 passed + 4 skipped（2m56s，与迁移后基线一致），作为交接证据门；⑥ LOGS/WORK_PROGRESS/CURRENT_STATUS/CURRENT_RUN_HANDOFF 同步本轮记录后统一 commit + push。 |
+
+## 2026-09-17
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260917-01 | 项目状态核查 + 测试卫生修复（用户问询"项目是否已完善"触发） | code/tests/test_joint_candidates.py | ① 状态核查：论文/工程/交接均处可投稿前完善状态；git main 与 origin 同步（7fd75b3 已推送确认）；② 发现根目录残留空目录 `_tmp_joint_test/`（09-14 pytest 运行时由 test_joint_candidates.py 的相对路径 output_dir=Path("_tmp_joint_test") 产生）→ 测试改为 pytest tmp_path fixture，残留空目录已删；复跑 3 passed 且根目录无残留；③ 后续 D-01~D-03 决策、T20 投稿打包仍待用户推进。 |

@@ -73,14 +73,14 @@ LIB_TEXT = """library (sky130_fd_sc_hd) {
 """
 
 
-def _make_evaluator(joint_k: int = 0):
+def _make_evaluator(joint_k: int = 0, tmp_path=None):
     return RealWnsEvaluator(
         mapped_text=MAPPED_TEXT,
         top_module="s382",
         period=0.5,
         liberty_text=LIB_TEXT,
         baseline_wns=-0.94,
-        output_dir=Path("_tmp_joint_test"),
+        output_dir=tmp_path if tmp_path is not None else Path("_tmp_joint_test"),
         critical_instances=["_051_", "_070_", "_071_", "_075_"],
         workers=1,
         max_instances=4,
@@ -95,8 +95,8 @@ class FakePatch:
         self.patch_id = "fake_patch"
 
 
-def test_joint_disabled_by_default_single_jobs_only():
-    ev = _make_evaluator(joint_k=0)
+def test_joint_disabled_by_default_single_jobs_only(tmp_path):
+    ev = _make_evaluator(joint_k=0, tmp_path=tmp_path)
     with mock.patch.object(ev, "_eval_one") as m_eval:
         m_eval.return_value = {"wns": -0.94, "improved": False}
         ev(FakePatch(["_051_", "_070_", "_071_", "_075_"]), {})
@@ -105,8 +105,8 @@ def test_joint_disabled_by_default_single_jobs_only():
     assert "JOINT" not in kinds, kinds
 
 
-def test_joint_enabled_generates_joint_job_with_multiple_instances():
-    ev = _make_evaluator(joint_k=2)
+def test_joint_enabled_generates_joint_job_with_multiple_instances(tmp_path):
+    ev = _make_evaluator(joint_k=2, tmp_path=tmp_path)
     with mock.patch.object(ev, "_eval_one") as m_eval:
         m_eval.return_value = {"wns": -0.94, "improved": False}
         ev(FakePatch(["_051_", "_070_", "_071_", "_075_"]), {})
@@ -118,8 +118,8 @@ def test_joint_enabled_generates_joint_job_with_multiple_instances():
     assert isinstance(change, dict) and len(change) >= 2, change
 
 
-def test_joint_apply_replaces_all_instances():
-    ev = _make_evaluator(joint_k=2)
+def test_joint_apply_replaces_all_instances(tmp_path):
+    ev = _make_evaluator(joint_k=2, tmp_path=tmp_path)
     cells = parse_mapped_netlist(MAPPED_TEXT)
     actionable = ["_051_", "_070_", "_071_", "_075_"]
     change = {}
