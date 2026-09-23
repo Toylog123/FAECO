@@ -4,6 +4,7 @@
 > 输入：外部评审意见（7 项建议 / 9 节）+ 第二轮收敛意见（三层结构、顺序调整、S 严格定义、JOINT 规则、stale invalidation）
 > 方法：**先核实事实前提**（以权威产物与代码为准）→ 评估工程可行性 → 收敛为三层主线 + 单项实施顺序
 > 关联：`project_docs/OPEN_ISSUES.md`（OI-008 / OI-009 / OI-010 / **OI-011 / OI-012**）、`review_history/paper_audit/code_paper_feedback_audit_20260923.md`
+> **本文档回答"做哪几件事、什么顺序"；"怎么实现"见 `FAECO_V2_TECH_DESIGN_20260923.md`**（L2 失败率反馈的状态/参数/clip、L3 的窗口抽取→重综合→回填→局部 CEC 全链、ΔDepth 采集点、三臂对照的精确命令行与判读标准）。
 
 ---
 
