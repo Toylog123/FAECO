@@ -18,7 +18,9 @@ from pathlib import Path
 from .toolchain import resolve_tool_command
 
 LIB_SEQ = (
-    Path(__file__).resolve().parents[2]
+    Path(__file__).resolve().parents[3]
+    / "data"
+    / "raw"
     / "benchmarks"
     / "raw"
     / "openroad_flow_scripts_sky130hd"

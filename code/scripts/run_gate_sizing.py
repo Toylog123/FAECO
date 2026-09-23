@@ -23,7 +23,9 @@ from run_sequential_timing_check import run_yosys_mapping, run_opensta  # reuse
 
 ROOT = Path(__file__).resolve().parents[1]
 LIB = (
-    ROOT
+    Path(__file__).resolve().parents[2]
+    / "data"
+    / "raw"
     / "benchmarks"
     / "raw"
     / "openroad_flow_scripts_sky130hd"
@@ -36,7 +38,7 @@ LIB = (
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--circuit", default="s27")
-    p.add_argument("--iscas89-dir", type=Path, default=ROOT / "benchmarks" / "raw" / "iscas89")
+    p.add_argument("--iscas89-dir", type=Path, default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "iscas89")
     p.add_argument("--period", type=float, default=0.5, help="Clock period (ns); tight to create violation")
     p.add_argument("--output-dir", type=Path, required=True)
     return p.parse_args()

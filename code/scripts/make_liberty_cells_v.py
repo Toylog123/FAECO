@@ -23,7 +23,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LIB = (
-    ROOT
+    Path(__file__).resolve().parents[2]
+    / "data"
+    / "raw"
     / "benchmarks"
     / "raw"
     / "openroad_flow_scripts_sky130hd"
@@ -32,7 +34,9 @@ LIB = (
     / "sky130_fd_sc_hd__tt_025C_1v80.lib"
 )
 OUT = (
-    ROOT
+    Path(__file__).resolve().parents[2]
+    / "data"
+    / "raw"
     / "benchmarks"
     / "raw"
     / "skywater_cells_models"

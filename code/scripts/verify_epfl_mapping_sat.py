@@ -24,7 +24,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 CELLS_V2 = (
-    ROOT / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
+    Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
 )
 
 
@@ -33,7 +33,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--epfl-source",
         type=Path,
-        default=ROOT / "benchmarks" / "raw" / "epfl_v2025_1_full",
+        default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "epfl_v2025_1_full",
     )
     parser.add_argument(
         "--stage-b-dir",

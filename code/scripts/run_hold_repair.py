@@ -46,7 +46,7 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--circuit", default="s382", help="ISCAS89 circuit id")
     p.add_argument("--iscas89-dir", type=Path,
-                   default=ROOT / "benchmarks" / "raw" / "iscas89")
+                   default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "iscas89")
     p.add_argument("--period", type=float, default=0.5,
                    help="Clock period (ns)")
     p.add_argument("--hold-uncertainty", type=float, default=0.8,

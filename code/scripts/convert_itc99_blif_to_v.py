@@ -40,8 +40,8 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_ITC99_DIR = ROOT / "benchmarks" / "raw" / "itc99"
-DEFAULT_OUTPUT_DIR = ROOT / "benchmarks" / "raw" / "itc99" / "v"
+DEFAULT_ITC99_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "itc99"
+DEFAULT_OUTPUT_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "itc99" / "v"
 
 # write_verilog prints the blif model name as an escaped identifier:
 # module \b01.blif (...)

@@ -77,7 +77,7 @@ def parse_args() -> argparse.Namespace:
                    help="Online adaptive decision layer (UCB + recency) instead of the "
                         "static priority table")
     p.add_argument("--early-stop", action="store_true")
-    p.add_argument("--iscas89-dir", type=Path, default=ROOT / "benchmarks" / "raw" / "iscas89",
+    p.add_argument("--iscas89-dir", type=Path, default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "iscas89",
                    help="Dir containing <circuit>.v netlists (default ISCAS89 dir)")
     return p.parse_args()
 

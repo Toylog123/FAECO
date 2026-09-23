@@ -29,7 +29,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL = ROOT / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
+MODEL = Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,7 +43,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--itc-b17",
         type=Path,
-        default=ROOT / "benchmarks" / "raw" / "itc99" / "v" / "b17.v",
+        default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "itc99" / "v" / "b17.v",
         help="original ITC-99 b17 RTL/gate-level verilog (golden)",
     )
     p.add_argument(

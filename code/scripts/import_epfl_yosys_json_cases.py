@@ -17,7 +17,7 @@ from rseco.yosys_json import normalize_verilog_to_yosys_json, parse_yosys_json_n
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--manifest", type=Path, default=ROOT / "benchmarks" / "source_manifests" / "epfl_v2025.1.json")
+    parser.add_argument("--manifest", type=Path, default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "source_manifests" / "epfl_v2025.1.json")
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--wave", type=int, default=1)

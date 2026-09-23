@@ -23,7 +23,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ITC99 = ROOT / "benchmarks" / "raw" / "itc99" / "v"
+ITC99 = Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "itc99" / "v"
 
 
 def parse_args() -> argparse.Namespace:

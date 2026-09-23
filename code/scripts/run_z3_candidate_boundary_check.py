@@ -28,7 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--epfl-source",
         type=Path,
-        default=ROOT / "benchmarks" / "raw" / "epfl_v2025_1_full",
+        default=Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "epfl_v2025_1_full",
         help="Root of the pinned EPFL v2025.1 source tree.",
     )
     parser.add_argument(

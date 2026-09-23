@@ -25,7 +25,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_BENCH_DIR = ROOT / "benchmarks" / "raw" / "itc99" / "bench"
+DEFAULT_BENCH_DIR = Path(__file__).resolve().parents[2] / "data" / "raw" / "benchmarks" / "raw" / "itc99" / "bench"
 
 GATE_RE = re.compile(r"^\s*(\S+)\s*=\s*([A-Za-z0-9_]+)\s*\((.*)\)\s*$")
 INPUT_RE = re.compile(r"^INPUT\(\s*([^)]+?)\s*\)")
