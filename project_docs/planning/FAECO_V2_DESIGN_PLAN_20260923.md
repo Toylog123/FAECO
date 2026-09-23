@@ -115,7 +115,7 @@ $$\boxed{\text{事实修正} \rightarrow \text{Mixed-Fixed 消融} \rightarrow \
 
 | 阶段 | 动作 | 前置 | 成本 | 风险 |
 |---|---|---|---|---|
-| **0a（新增，最先）** | **代码基对账（OI-011）**：把 stateful 循环（`SearchState`/`accept_candidate`/`rollback`/`replay` + 接受后重抽锥）移植回 main 的 `code/` 布局；或反向迁移布局并声明 codex 分支为权威 | 无（但阻塞其余全部） | 3–5 天（含 264 测试回归 + sentinel 复跑校验） | 中：需证明移植后能复现既有数字（取 3 个电路做端到端对照） |
+| **0a（新增，最先）** | **代码基对账（OI-011）**：把 stateful 循环（`SearchState`/`accept_candidate`/`rollback`/`replay` + 接受后重抽锥）落到权威布局。**已裁定路径 B**（2026-09-23）：`SearchState` 为唯一运行时状态所有者，`SearchState` 增持 `FailureFeedbackState`/`cone_limit`/`round_id`（精确规格见 `FAECO_V2_TECH_DESIGN_20260923.md` §2、§8 步骤 0a）；前置需先钉死 G2/G3/G4 | 无（但阻塞其余全部） | 3–5 天（含 264 测试回归 + sentinel 复跑校验） | 中：需证明落位后能复现既有数字（取 3 个电路做端到端对照） |
 | **0b** | **事实修正 L1-a**（OI-009 / OI-010 / OI-012 + RESULTS.md §2 同步） | 0a 结论（"实际行为"以哪份代码为准） | 小时级 | 低（纯事实对齐，不改数字） |
 | **1-A** | **Mixed-Fixed 三臂消融 L1-b**（含 schema 扩展） | 0a | 改造 1–2 天 + 单臂约 1 天（8 电路 × 20 轮） | 低 |
 | **1-B** | **失败率反馈 C**（全局 $\rho,\eta$；含退化为现行规则的自洽性） | 1-A 作对照基线 | 改 `refinement.py` 单函数 1 天 + 重跑验证 | 中：必须保留固定权重版作对照；须显式证明"更少 STA 达同等/更优 WNS" |
@@ -206,11 +206,13 @@ $$\boxed{\text{Critical Endpoint}} \rightarrow \boxed{\text{Weighted / Critical-
 ## 8. 阻塞项与下一步
 
 **阻塞（必须先解决，否则阶段 1 全部实验无效）**：**OI-011 —— 仓库内代码 ≠ 产出论文结果的代码**。
-可选路径：
+两个迁移选项：
 
-- **(A) 移植（推荐）**：将 `codex/faeco-unified-loop` 的 stateful 循环移植进 main 的 `code/` 布局，用 3 个电路的 sentinel 复跑校验能复现既有数字；
+- **(A) 移植**：将 `codex/faeco-unified-loop` 的 stateful 循环移植进 main 的 `code/` 布局，用 3 个电路的 sentinel 复跑校验能复现既有数字；
 - **(B) 反向迁移**：把 codex 分支布局迁移为新 main 并声明其为权威实现。
+
+> **✅ 已裁定（2026-09-23）：路径 B**。架构含义 = **`SearchState` 为唯一运行时状态所有者**（`refinement_weights` 只表示代价参数 $\boldsymbol\lambda$，EMA 历史另存 `FailureFeedbackState`）。精确规格见 `FAECO_V2_TECH_DESIGN_20260923.md` §2；实施步骤见其 §8 步骤 0a，前置为 G2/G3/G4（状态与归因语义钉死）。
 
 两条路径都必须同时修好 **新-8 的 schema 记录缺口**（`enable_feedback`/`strategies`/`init_weights`/`toolchain`），否则重做的三臂消融会重复"结论无可追溯证据"。
 
-**建议的立即动作（按序）**：0a 代码基对账 → 0b 事实修正（OI-009/010/012）→ 1-A Mixed-Fixed 三臂 → 1-B 失败率反馈 → 2-A ΔDepth + S。
+**建议的立即动作（按序）**：先钉 G2/G3/G4 → 0a 代码基对账（路径 B）→ 0b 事实修正（OI-009/010/012）→ 1-A Mixed-Fixed 三臂 → 1-B 失败率反馈 → 2-A ΔDepth + S。
