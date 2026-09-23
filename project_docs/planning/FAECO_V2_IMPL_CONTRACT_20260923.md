@@ -123,6 +123,7 @@ class FailureFeedbackState:
     ema: dict[FailureType, float]
     count: dict[FailureType, int]
     last_failure_round: dict[FailureType, int]
+    recent_f5_rounds: tuple[int, ...]   # 实现时新增：F5 连续性门控需要"最近 W 轮内触发轮数"
 ```
 
 ### 2.2 三个事件的更新契约（**本节的表即实现依据**）
@@ -419,7 +420,7 @@ def split_attribution(failures: set[FailureType], stage_tags: list[str]) -> tupl
 
 ### 5.2 执行与判据
 
-- **被比对象**：旧实现 = `run_hybrid_repair.py`（现 main 的逐轮累积运行器）；新实现 = 迁到 `SearchState` 架构后的同一运行器。
+- **被比对象**：~~旧实现 = `run_hybrid_repair.py`~~ → **见 §8.3 的修正**：行为基线 = codex 谱系实现（产出论文主实验数字的那份代码），过程基线 = main 的 `code/` 布局 + main 独有功能；0a 的 E1–E6 是**移植不变性**检验。
 - **哨兵电路**：3 个，取"便宜 + 中等 + 最难"三点以覆盖不同失败模式分布：
   - `s382`（ISCAS89，最便宜，能跑多轮）
   - `b03`（ITC-99，中等规模，多轮累积）
@@ -475,3 +476,65 @@ def split_attribution(failures: set[FailureType], stage_tags: list[str]) -> tupl
 | `to_dict()` 现不含 `_snapshots`（§3.2） | ⚠️ 实现时最易漏，已列入 G3 单测 |
 | 8 电路统计强度弱 | ⚠️ 逐电路配对差值，不做显著性断言（r2 §6.4） |
 | `R_hard=1.5` 偏宽松 | ⚠️ 第一版跑完看分布再收紧 |
+
+---
+
+## 8. 0a 迁移方案（2026-09-23 侦察结论）
+
+> 本节是 0a 动工前的实地核查结果，全部可复核（命令与输出见 `LOGS.md` LOG-20260923-11）。
+
+### 8.1 五条决定性事实
+
+| # | 事实 | 影响 |
+|---|---|---|
+| 1 | **codex 分支是 09-12 框架迁移*之前*的布局**：根目录为 `src/`、`scripts/`、`tests/`、`benchmarks/`，**没有 `code/`** | **"反向迁移布局"会撤销整个 09-12 迁移，不可行**。路径 B 的正确含义是「采用 codex 的**状态架构**，落在 main 现有布局里」 |
+| 2 | merge-base = `b8c3759`（2026-08-13）；main 分叉后**仅 2 个提交**触及源码：`35fd558`（迁移/路径）、`766b589`（`--no-early-stop` 功能）——**二者都不在 codex** | main 有 codex 缺少的**功能**，不能整文件覆盖 |
+| 3 | `code/src/rseco` 11 个差异文件中 **10 个与分叉点逐字节相同**；唯一有内容差异的 `flow.py` 差的 43 行正是 `766b589` 的功能（不是路径修补） | **codex 版本是严格超集**，可作迁移基线 |
+| 4 | `code/scripts/run_hybrid_repair.py` 两侧**逐字节相同**（该运行器从未使用 `SearchState`） | 0a **不能**通过它来验证状态架构 |
+| 5 | `run_outerloop_real_wns.py` 是**双向分叉**：codex 多出预算参数（`--max-patches`/`--sta-budget`/`--formal-budget`/`--wall-timeout-s`）与 SEC/等价/边界 checker 构造器 + import shim；main 多出 `--early-stop`/`--no-early-stop` 且**默认 early-stop 开启** | 必须**三方合并**，不能取任一侧 |
+
+**差异规模（codex 相对 main，新增/删除）**：`real_wns.py` +1522/−65 · `flow.py` +350/−56 · `replacement.py` +304/−1 · `refinement_loop.py` +248/−7 · `cut.py` +155/−0 · `failures.py` +86/−1 · `equivalence.py` +85/−15 · `yosys_abc.py` +73/−13 · `logic_rewrite.py` +58/−0 · `netlist.py` +21/−1 · `refinement.py` +5/−1。
+
+### 8.2 迁移策略：能力合并，不整文件覆盖
+
+1. **仅 codex 有新增**的文件（`refinement_loop.py`/`real_wns.py`/`cut.py`/`failures.py`/`replacement.py`/`equivalence.py`/`logic_rewrite.py`/`yosys_abc.py`/`netlist.py`/`refinement.py`）→ 以 codex 内容为基，落在 `code/` 布局。
+2. **双向分叉**文件（`flow.py`、`run_outerloop_real_wns.py`）→ 逐块合并，**必须保留 main 的 `--no-early-stop`**。
+3. **新增文件**（`feedback.py` 及新测试）→ 直接落在 main 布局；codex 无同名文件，零冲突。
+4. 合并后必须重新执行 §3.3 的 `R1–R6` 与 G2/G3 单测，再进 §5 的等价 gate。
+
+### 8.3 等价基线的修正（对 §5.2 的修订）
+
+侦察前 §5.2 写的是"旧实现 = `run_hybrid_repair.py`"。事实 4 表明该运行器与状态架构无关，故修正为：
+
+| 角色 | 定义 |
+|---|---|
+| **行为基线** | **codex 谱系实现**的行为——它就是产出论文主实验数字的那份代码 |
+| **过程基线** | main 的 `code/` 布局 + main 独有功能（`--no-early-stop`） |
+| **0a 的检验性质** | **移植不变性**：在 main 布局上跑出的结果，与在 codex 分支上跑出的结果 **E1–E6 六项全等** |
+
+**运行条件必须显式对齐**以消除默认值差异：两侧都**显式传 `--early-stop`**、固定 seed、`--workers 1`、`--rounds 20 --period 0.5`。
+
+### 8.4 `--early-stop` 默认值差异（已处置，无需裁决）
+
+main 默认 `early_stop=True`（为兼容 20260826 批次而设），codex 默认 `False`。**处置**：不改任何一侧的默认值，改为**在等价实验中显式传参**。这样既不破坏 main 的向后兼容，也消除比较歧义。
+
+### 8.5 分步计划与进度
+
+| 步骤 | 内容 | 状态 |
+|---|---|---|
+| 1 | 0a 侦察与迁移方案（本 §8） | ✅ 完成 |
+| 2 | `FailureFeedbackState` + `update_feedback` + `describe_actions` + legacy 退化单测 | ✅ 完成 |
+| 3 | `SearchState` 扩展 + checkpoint/恢复一致性 + `candidate_key` | ⏭ 待做 |
+| 4 | 运行器接入（legacy 档）+ codex 能力合并（§8.2） | ⏭ 待做 |
+| 5 | E1–E6 等价报告（`s382`/`b03`/`b06`）+ 全量回归 | ⏭ 待做 |
+
+**步骤 2 交付**：`code/src/rseco/feedback.py`（新模块，与 codex 无冲突）+ `code/tests/test_feedback_legacy_equivalence.py`。
+验证：新单测 17 项 / 155 子测试全绿；**全量 281 passed, 4 skipped**（264 基线 + 17 新增，无回归）。
+
+**步骤 2 抓出的两个实现陷阱**（一度写错，由单测发现，已写入代码注释）：
+
+1. **EMA 必须每轮推进**（含未观察轮）。若只在"该失败再次出现"时推进，单次失败只贡献 $(1-\rho)\eta$ 且**永不衰减**——那是"失败率"而非"释放"，与 r2 §3.3 性质 1 冲突。
+2. **权重在 EMA 非零期间持续移动**（释放就发生在未观察轮），但**锥门控只在 F5 被观察的轮次评估**，否则一次失败 episode 会通过自己的衰减尾巴反复缩锥。
+
+两条在 $\rho=0$ 时都退化为 legacy（观察轮 `rate=1`、未观察轮 `rate=0`），故逐位等价仍然成立——这一点由「64 个子集穷举 + 20 轮累积」测试钉住。
+
