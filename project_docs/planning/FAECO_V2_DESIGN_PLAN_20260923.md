@@ -47,7 +47,7 @@
 | 新-5 | **增量 ECO 的提交/回滚/重抽已完整实现**（唯在 codex 分支）：`SearchState.accept_patch()` 原子追加 + 快照前态 + 推进 $G_r$ + 更新 `critical_endpoints/critical_instances/current_cone_gates`；`rollback()` 撤销末次 patch 并保留审计日志；`replay()` 带 base 哈希链连续性校验（`"accepted patch log is not a contiguous replay"`） | `codex/faeco-unified-loop:src/rseco/refinement_loop.py:134–190` |
 | 新-6 | **OI-012：表 6 的"反馈开/关"对照不成立**。表 6 四列运行器均为 `run_hybrid_repair.py`，该脚本**不使用** `refine_weights`/`RefinementWeights`/`enable_feedback`（imports 仅 gate_sizing/buffer_insertion/logic_rewrite/netlist_audit/strategy_selector）→ 四列均无 F1–F6 反馈。故该表实际对比的是"**候选空间 + 排序启发式**" | `code/scripts/run_hybrid_repair.py`；`20260807_multiround_8c_067/run_all.bat` |
 | 新-7 | 现有消融三臂**已有两臂可复用但不可直接比较**：`20260826_ablation_random_seed{1,2,3}` 的候选空间**已是混合**（B 7154 / G 3114 / R 1954 trials）且 `random_order=true`；缺失的是 **Mixed + 权重驱动排序 + 反馈关**（Mixed-Fixed）。三臂还跨两套运行日期（混合列 20260807 vs 基线 20260826），不可直接对比 | 探针 `scratch/probe_ablation_cfg{,2}.py` |
-| 新-8 | **结果 JSON 未记录对照所必需的关键配置**：`hybrid_result.json` 无 `enable_feedback`/`strategies`/`init_weights`；仅 `random_order`/`rounds`/`seed` 有记录。→ 论文"禁用失效反馈""保持权重固定"等表述**无归档证据**，重做三臂时若不扩 schema 会重复同一缺口 | 同上 |
+| 新-8 | **结果 JSON 未记录对照所必需的关键配置**：`hybrid_result.json` 无 `enable_feedback`/`strategies`/`init_weights`；仅 `random_order`/`rounds`/`seed` 有记录。→ 论文"禁用失效反馈""保持权重固定"等表述**无归档证据**。**且论文表 6 三列基线所用的 `20260826_ablation_pureG/pureB/random_seed{1,2,3}` 目录内顶层运行脚本为 0 个**（无 .bat/.sh/.md/.log），即**调用命令未归档**；仅被取代的 `20260807_pureG_20round_067`/`20260807_pureB_20round_067` 保留了 `run_all.bat`（pureG：`--period 0.5 --rounds 20 --only-strategy G --workers 2`，且只覆盖 s382/s420/s641 3 个电路）。重做三臂时若不扩 schema + 归档命令，会重复同一缺口 | 探针 `scratch/probe_ablation_cfg{,2}.py`；各目录顶层文件清点（0826 家族 0 个 vs 0807 家族 9–10 个） |
 
 ---
 
@@ -61,7 +61,7 @@
 | **L1-b Mixed-Fixed 消融** | 三臂、同预算、同轮数、同候选池、同 $w^{(0)}$：① **Mixed-Fixed**（混合池 + 权重驱动排序 + 反馈关）② **Mixed-Random**（混合池 + 随机顺序 + 反馈关）③ **FAECO-Adaptive**（混合池 + 权重驱动排序 + 反馈开） | 论文现在**无法回答**"收益来自混合候选空间还是失效反馈"；且现有表 6 无任何有效反馈对照（新-6） |
 
 **统一口径（硬约束）**：$N_{\text{round}}=20$、候选级 STA 预算一致、候选池为 R/G/B/JOINT（引入 S 后为 R/G/B/S/JOINT）、$w^{(0)}=(1,1,1,1,1)$、period 0.5 ns、同一工具链、**同一运行日期批**。
-**必须同时扩 schema**（新-8）：结果 JSON 记录 `enable_feedback`、`strategies`、`random_order`、`seed`、`init_weights`、`toolchain`、`n_candidate_sta_runs`、`n_sta_to_first_improvement`。
+**必须同时扩 schema**（新-8）：结果 JSON 记录 `enable_feedback`、`strategies`、`random_order`、`seed`、`init_weights`、`toolchain`、`n_candidate_sta_runs`、`n_sta_to_first_improvement`；**并在实验目录内归档运行命令**（`.bat`/`.sh`/`run_config.json`）——当前论文所引的 20260826 消融家族连调用命令都没有留下（新-8）。
 
 ### 第二层：真正强化 Failure-Aware
 
