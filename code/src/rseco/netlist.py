@@ -11,6 +11,8 @@ class Gate:
     name: str
     output: str
     inputs: tuple[str, ...]
+    pin_names: tuple[str, ...] = ()
+    output_pin: str | None = None
 
 
 @dataclass(frozen=True)
@@ -133,6 +135,8 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
                         name=instance.group(2),
                         output=_follow_alias(raw_output, aliases),
                         inputs=tuple(_follow_alias(signal, aliases) for signal in raw_inputs),
+                        pin_names=tuple(pin for pin, _ in named),
+                        output_pin=output_pin,
                     )
                 )
             else:
@@ -172,8 +176,24 @@ def _collect_declaration(line: str, keyword: str, target: list[str]) -> None:
         return
     for name in match.group(1).replace(";", "").split(","):
         cleaned = name.strip()
-        if cleaned:
+        if not cleaned:
+            continue
+        vec = re.match(r"^\[(\d+):(\d+)\]\s*(.+)$", cleaned)
+        if vec:
+            # Bit-blast vector declarations (e.g. "output [31:0] mem_addr;"
+            # -> mem_addr[0]..mem_addr[31]) so netlist closure checks can
+            # match the bit-level nets used by gate instances.
+            msb, lsb = int(vec.group(1)), int(vec.group(2))
+            base = vec.group(3).strip()
+            lo, hi = min(msb, lsb), max(msb, lsb)
+            if base.startswith("\\"):
+                # Escaped identifier: Yosys writes bit nets as `\name [i]`.
+                target.extend(f"{base} [{i}]" for i in range(lo, hi + 1))
+            else:
+                target.extend(f"{base}[{i}]" for i in range(lo, hi + 1))
+        else:
             target.append(cleaned)
+
 
 
 def _verilog_statements(text: str) -> list[str]:

@@ -15,6 +15,7 @@ class RefinementWeights:
     verification_cost_penalty: float = 1.0
     equivalence_stability_reward: float = 1.0
     max_cone_gates: int = 1000
+    physical_penalty: float = 1.0
 
 
 @dataclass(frozen=True)
@@ -36,6 +37,7 @@ def refine_weights(
     verification_cost_penalty = weights.verification_cost_penalty
     equivalence_stability_reward = weights.equivalence_stability_reward
     max_cone_gates = weights.max_cone_gates
+    physical_penalty = weights.physical_penalty
     actions: list[str] = []
 
     if FailureType.EQUIVALENCE in failures:
@@ -63,7 +65,8 @@ def refine_weights(
         # path; push the cut boundary inward so the next iteration targets
         # gates closer to the endpoint (lower effective wire load).
         boundary_penalty += 1.0
-        actions.append("increase_boundary_penalty_physical")
+        physical_penalty += 1.0
+        actions.extend(["increase_boundary_penalty_physical", "increase_physical_penalty"])
 
     return RefinementDecision(
         weights=RefinementWeights(
@@ -73,6 +76,7 @@ def refine_weights(
             verification_cost_penalty=verification_cost_penalty,
             equivalence_stability_reward=equivalence_stability_reward,
             max_cone_gates=max_cone_gates,
+            physical_penalty=physical_penalty,
         ),
         actions=actions,
     )

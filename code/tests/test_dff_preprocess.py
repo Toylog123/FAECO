@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import re
+import locale
 import sys
 import unittest
 from pathlib import Path
@@ -106,7 +107,7 @@ class DffPreprocessTest(unittest.TestCase):
 
         def fake_run(cmd, **kwargs):
             ys = Path(cmd[1])
-            captured["ys_text"] = ys.read_text(encoding="utf-8")
+            captured["ys_text"] = ys.read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
             return subprocess.CompletedProcess(cmd, 0, "", "")
 
         with tempfile.TemporaryDirectory() as tmp:
@@ -135,6 +136,132 @@ class DffPreprocessTest(unittest.TestCase):
             pre_text = (out / "circuit_pre.v").read_text(encoding="utf-8")
             self.assertIn("module dff(input CK, D, output Q)", pre_text)
             self.assertIn("dff DFF_0(.CK(CK), .D(G90), .Q(G38))", pre_text)
+
+    def test_native_mapping_uses_resolved_liberty_path(self):
+        """Native Yosys must receive the resolved Liberty path, not a path
+        containing unresolved junction/parent components.
+        """
+        import subprocess
+        import tempfile
+
+        captured = {}
+
+        def fake_run(cmd, **kwargs):
+            ys = Path(cmd[1])
+            captured["ys_text"] = ys.read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            out = root / "out"
+            out.mkdir()
+            lib = root / "lib" / ".." / "lib" / "sky130.lib"
+            lib.parent.mkdir()
+            lib.write_text("library (sky130) {}\n", encoding="utf-8")
+            circuit = out / "s27.v"
+            circuit.write_text("module s27; endmodule\n", encoding="utf-8")
+
+            orig_run = self.mod.subprocess.run
+            orig_env = self.mod._yosys_env
+            orig_lib = self.mod.LIB
+            try:
+                self.mod.subprocess.run = fake_run
+                self.mod._yosys_env = lambda: {}
+                self.mod.LIB = lib
+                self.mod.run_yosys_mapping(circuit, out, yosys_cmd=["yosys"])
+            finally:
+                self.mod.subprocess.run = orig_run
+                self.mod._yosys_env = orig_env
+                self.mod.LIB = orig_lib
+
+            self.assertIn("ys_text", captured)
+            quoted_lib = f'"{lib.resolve().as_posix()}"'
+            self.assertIn(f"dfflibmap -liberty {quoted_lib}", captured["ys_text"])
+            self.assertIn(f"abc -liberty {quoted_lib}", captured["ys_text"])
+            self.assertNotIn(f'dfflibmap -liberty "{lib.as_posix()}"', captured["ys_text"])
+
+    def test_native_mapping_quotes_liberty_path_with_spaces(self):
+        """Native Yosys must parse a resolved Liberty path containing spaces."""
+        import subprocess
+        import tempfile
+
+        captured = {}
+
+        def fake_run(cmd, **kwargs):
+            captured["ys_text"] = Path(cmd[-1]).read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            out = root / "out"
+            out.mkdir()
+            lib = root / "lib folder" / "sky 130.lib"
+            lib.parent.mkdir()
+            lib.write_text("library (sky130) {}\n", encoding="utf-8")
+            circuit = out / "s27.v"
+            circuit.write_text("module s27; endmodule\n", encoding="utf-8")
+
+            orig_run = self.mod.subprocess.run
+            orig_env = self.mod._yosys_env
+            orig_lib = self.mod.LIB
+            try:
+                self.mod.subprocess.run = fake_run
+                self.mod._yosys_env = lambda: {}
+                self.mod.LIB = lib
+                self.mod.run_yosys_mapping(circuit, out, yosys_cmd=["yosys"])
+            finally:
+                self.mod.subprocess.run = orig_run
+                self.mod._yosys_env = orig_env
+                self.mod.LIB = orig_lib
+
+            quoted_lib = f'"{lib.resolve().as_posix()}"'
+            self.assertIn(f"dfflibmap -liberty {quoted_lib}", captured["ys_text"])
+            self.assertIn(f"abc -liberty {quoted_lib}", captured["ys_text"])
+
+    def test_wsl_mapping_quotes_translated_liberty_path(self):
+        """WSL mapping must quote the translated Liberty path as one token."""
+        import subprocess
+        import tempfile
+
+        captured = {}
+
+        def fake_run(cmd, **kwargs):
+            captured["ys_text"] = Path(cmd[-1]).read_text(encoding=locale.getpreferredencoding(False) or "utf-8")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            out = root / "out"
+            out.mkdir()
+            lib = root / "sky 130.lib"
+            lib.write_text("library (sky130) {}\n", encoding="utf-8")
+            circuit = out / "s27.v"
+            circuit.write_text("module s27; endmodule\n", encoding="utf-8")
+
+            def fake_to_wsl(path):
+                if path == lib:
+                    return "/mnt/d/lib folder/sky 130.lib"
+                return path.as_posix()
+
+            orig_run = self.mod.subprocess.run
+            orig_lib = self.mod.LIB
+            orig_to_wsl = self.mod._to_wsl
+            try:
+                self.mod.subprocess.run = fake_run
+                self.mod.LIB = lib
+                self.mod._to_wsl = fake_to_wsl
+                self.mod.run_yosys_mapping(
+                    circuit, out,
+                    yosys_cmd=["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"],
+                )
+            finally:
+                self.mod.subprocess.run = orig_run
+                self.mod.LIB = orig_lib
+                self.mod._to_wsl = orig_to_wsl
+
+            quoted_lib = '"/mnt/d/lib folder/sky 130.lib"'
+            self.assertIn(f"dfflibmap -liberty {quoted_lib}", captured["ys_text"])
+            self.assertIn(f"abc -liberty {quoted_lib}", captured["ys_text"])
 
 
 
