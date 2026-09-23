@@ -628,3 +628,9 @@
 | ID | 动作 | 产物 | 备注 |
 |---|---|---|---|
 | LOG-20260917-01 | 项目状态核查 + 测试卫生修复（用户问询"项目是否已完善"触发） | code/tests/test_joint_candidates.py | ① 状态核查：论文/工程/交接均处可投稿前完善状态；git main 与 origin 同步（7fd75b3 已推送确认）；② 发现根目录残留空目录 `_tmp_joint_test/`（09-14 pytest 运行时由 test_joint_candidates.py 的相对路径 output_dir=Path("_tmp_joint_test") 产生）→ 测试改为 pytest tmp_path fixture，残留空目录已删；复跑 3 passed 且根目录无残留；③ 后续 D-01~D-03 决策、T20 投稿打包仍待用户推进。 |
+
+## 2026-09-23
+
+| ID | 动作 | 产物 | 备注 |
+|---|---|---|---|
+| LOG-20260923-01 | 项目状态汇报（用户指令：总情况 + 设计结构 + 效果）+ RESULTS.md 口径修正 | experiments/RESULTS.md | ① 汇报材料基于实际打开的证据文件生成：`20260826_aggregation/summary.json`（ISCAS89 8/8 mean +0.161、ITC-99 19/19 mean +0.429、PicoRV32 2/3 mean +0.60）、论文 tex（§3 方法三阶段 + §4 实验口径）、`RESULTS.md`、`INVENTORY.md`；② **发现并修正 RESULTS.md 三处与权威源不一致**：(a) b21 旧值 +2.16 → **+2.75**（§1 headline、§3 表、§3 highlight 三处；summary.json/md 与论文审计后口径均为 2.75，results.json 无此残留）；(b) b06 accepted patch 由 "—" 补为 `patch_U56_critical_path_cover (tie)`（summary.json final_patch_id）；(c) §1 caveat 派生统计由 "b18..b22 mean ~+1.2 ns" 修正为实测值（六大电路 b14/b15/b17/b20/b21/b22 均值 **+0.98**、b20/b21/b22 均值 **+1.73**、b01–b13 均值 **+0.18**；原表述的大电路清单与实际 19 电路集合不符）；③ 修正后 RESULTS.md 头部标注 rev. 2026-09-23 修订说明；④ 本轮未改动任何实验产物与论文正文。 |

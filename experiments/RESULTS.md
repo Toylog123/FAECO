@@ -1,4 +1,8 @@
-# FAECO Experiments — Results Overview (2026-09-09)
+# FAECO Experiments — Results Overview (2026-09-09; rev. 2026-09-23)
+
+> rev. 2026-09-23: aligned with `20260826_aggregation/summary.json` —
+> b21 best Δ corrected +2.16 → **+2.75**, b06 accepted patch id added
+> (`patch_U56_critical_path_cover`, tie), headline unchanged.
 
 This page is the one-shot human-readable roll-up of every paper-evidence
 experiment in this repository.  The full machine-readable aggregate
@@ -24,7 +28,7 @@ Aggregate numbers below come from:
 |  | n | success | mean Δ (ns) | best Δ (ns) | median Δ (ns) |
 |---|---:|---:|---:|---:|---:|
 | **ISCAS89** unified-loop | 8 | **8 / 8** | **+0.16** | +0.46 | +0.14 |
-| **ITC-99** unified-loop | 19 | **19 / 19** | **+0.43** | +2.16 (b21) | +0.21 |
+| **ITC-99** unified-loop | 19 | **19 / 19** | **+0.43** | +2.75 (b21) | +0.21 |
 | **PicoRV32** hetero | 3 | 2 / 3 | +0.60 | +1.13 | +0.05 |
 | **b17 phase-2 resume** | 1 | Y | **+0.38** | — | — |
 | **joint-depth (b17 × {0,2,4})** | 3 | 0 / 3 | +0.40 (best) | +0.43 (depth=4) | +0.38 (depth=0) |
@@ -32,9 +36,10 @@ Aggregate numbers below come from:
 
 Caveats:
 - Δ is WNS improvement (ns) vs the mapped baseline; positive = better.
-- ITC-99 mean improvement is dominated by the b18..b22 large cases
-  (mean Δ over them is ~+1.2 ns); the smaller b01..b13 cases average
-  ~+0.15 ns.
+- ITC-99 mean improvement is dominated by the six large cases
+  (b14, b15, b17, b20, b21, b22; mean Δ **+0.98 ns** over them, and
+  **+1.73 ns** over b20/b21/b22 alone); the smaller b01..b13 cases
+  average **+0.18 ns**.
 - "b17 phase-2 resume" reports the 2026-08-26 budget was 60 s per
   STA candidate which rejected all 785 patches; the 2026-09-08
   resume uses `--skip-mapping` + `--strategies R,G --workers 4
@@ -66,7 +71,7 @@ JOINT); pure-G is second (3/8); R alone handles only s820.
 | b03 | -1.86 | -1.27 | +0.59 | 70 | patch_U212_critical_path_cover |
 | b04 | -2.43 | -2.25 | +0.18 | 265 | patch_U332_critical_path_cover |
 | b05 | -3.75 | -3.65 | +0.10 | 70 | patch_U738_critical_path_cover |
-| b06 | -0.56 | -0.56 | **0.00** | 664 | — |
+| b06 | -0.56 | -0.56 | **0.00** | 664 | patch_U56_critical_path_cover (tie) |
 | b07 | -2.13 | -1.94 | +0.19 | 304 | patch_U358_critical_path_cover |
 | b08 | -1.23 | -1.12 | +0.11 | 131 | patch_U186_critical_path_cover |
 | b09 | -1.14 | -1.04 | +0.10 | 117 | patch_U116_critical_path_cover |
@@ -78,7 +83,7 @@ JOINT); pure-G is second (3/8); R alone handles only s820.
 | b15 | -12.55 | -12.46 | +0.09 | 25 | patch_U2956_critical_path_cover |
 | **b17** | **-16.53** | **-16.15** | **+0.38** | **104** | **patch_P2_U2983_random_cut** |
 | b20 | -13.21 | -11.23 | **+1.98** | 144 | patch_P1_U3242_critical_path_cover |
-| b21 | -13.70 | -10.95 | **+2.16** | 43 | patch_P1_U3355_critical_path_cover |
+| b21 | -13.70 | -10.95 | **+2.75** | 43 | patch_P1_U3355_critical_path_cover |
 | b22 | -11.68 | -11.21 | +0.47 | 121 | patch_P1_U3525_critical_path_cover |
 
 Highlights:
@@ -86,9 +91,10 @@ Highlights:
   with the original 60 s budget superseded the 785-rejection failure
   reported in `experiments/20260826_aggregation/b17_failure_analysis.md`.
 - **b06** is the lone case where every R/G/JOINT candidate ties the
-  baseline WNS; the runner still records `success=True` because the
-  patch is non-regressive but the Δ is 0.
-- **b20 / b21** are the largest absolute gains (+1.98 / +2.16 ns);
+  baseline WNS; a tie patch (`patch_U56_critical_path_cover`) is
+  accepted and the runner records `success=True` because the patch is
+  non-regressive, but the Δ is 0.
+- **b20 / b21** are the largest absolute gains (+1.98 / +2.75 ns);
   both are JOINT-style patches.
 - b14 / b15 / b17 / b20 / b21 / b22 are the "large ITC-99" cohort;
   all six are now successful in the resume run.
