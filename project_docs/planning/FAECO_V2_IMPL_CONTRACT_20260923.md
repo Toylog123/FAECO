@@ -524,12 +524,26 @@ main 默认 `early_stop=True`（为兼容 20260826 批次而设），codex 默�
 |---|---|---|
 | 1 | 0a 侦察与迁移方案（本 §8） | ✅ 完成 |
 | 2 | `FailureFeedbackState` + `update_feedback` + `describe_actions` + legacy 退化单测 | ✅ 完成 |
-| 3 | `SearchState` 扩展 + checkpoint/恢复一致性 + `candidate_key` | ⏭ 待做 |
+| 3 | `SearchState` 扩展 + checkpoint/恢复一致性 + `candidate_key` + G2/G4 事件契约 | ✅ 完成 |
 | 4 | 运行器接入（legacy 档）+ codex 能力合并（§8.2） | ⏭ 待做 |
 | 5 | E1–E6 等价报告（`s382`/`b03`/`b06`）+ 全量回归 | ⏭ 待做 |
 
 **步骤 2 交付**：`code/src/rseco/feedback.py`（新模块，与 codex 无冲突）+ `code/tests/test_feedback_legacy_equivalence.py`。
 验证：新单测 17 项 / 155 子测试全绿；**全量 281 passed, 4 skipped**（264 基线 + 17 新增，无回归）。
+
+**步骤 3 交付**：`code/src/rseco/search_state.py`（新模块，与 codex 的 `SearchState` 无文件冲突）+ `code/tests/test_search_state.py`（28 项）。
+覆盖：G2 三事件契约（feedback-off 冻结参数但照记分类/日志/去重/预算、reject 不动网表、接受轮不推 EMA、rollback 原子恢复决策状态且保留审计与预算、空栈干净返回、链断拒绝、不变式、replay 一致）、候选身份复合键、过期候选只记账、G4 归因分层（`W_*` 20 轮不改权重、短路不双归因、未知 `W_*` 标签报错、`S_TECHMAP_MISMATCH` 分类）、G3 checkpoint（全字段往返、字节确定性、`effective_config` 记录、**中断等价 R6**、文件名带 epoch/round、R1 config 守卫、R3 链校验、R4 epoch 不变式、R5 快照校验、快照数不匹配拒绝）。
+验证：新单测 28 项全绿；**全量 309 passed, 4 skipped**（281 基线 + 28 新增，无回归）。
+
+**步骤 3 顺带做的交叉核对**：`stop_reason` 的 8 项取值集合与产物实测一致——`experiments/20260826_*/` 中实际出现的仅 `max_iterations`(26) / `max_patches`(30) / `stagnation`(2)，均已在集合内 ✓。
+
+### 8.6 实施中的契约修正（amendment）
+
+| # | 契约原文 | 实施修正 | 理由 |
+|---|---|---|---|
+| A1 | §2.4 伪代码在 `on_accept` 与 `on_reject` 内各自 `round_id += 1` | `round_id` 改由 `begin_round()` **每轮推进一次**；accept/reject 不再自增 | 一轮内"既拒绝候选又接受一个"的场景会**重复计数**。伪代码是示意性的，`round_id` 的语义（"这是第几轮"）未变 |
+| A2 | §3.1 `candidate_key = sha256(netlist_hash ‖ candidate_hash)` | 实现为 `SearchState.candidate_key()`；`tested_candidate_hashes` 存复合键 | 与契约一致，此处仅记录落点 |
+| A3 | §2.2 表的 `tested_*` 在 reject 行为 `↗` | feedback-off 时**仍**标记 | 去重属于"测量事实"，与裁决 1（只关"反馈→参数"这条边）自洽 |
 
 **步骤 2 抓出的两个实现陷阱**（一度写错，由单测发现，已写入代码注释）：
 
