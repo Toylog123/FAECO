@@ -19,7 +19,7 @@
 | OI-004 | 实验目录磁盘占用（历史瘦身残留） | 2026-08-28 | blocked（用户声明不删） | experiments/ 共 116 GB / 122 目录（itc99_main 19G、phys_closure 2.6G 等） | 已清理 STA 中间日志 + 旧仓库副本全删（2026-09-12） | INVENTORY 的 cleanup-candidates 档位待用户逐项确认；实验证据严禁删 | 用户 |
 | OI-005 | 旧目录空壳 `D:\BaiduSyncdisk\03_FAECO` | 2026-09-12 | 基本关闭 | 内容已全删（含旧 .venv、C 盘 3 个 worktree；3 条 codex 分支已推送固化） | robocopy 校验 + 全量删除 | 会话关闭后空壳若仍在，手动删除即可 | 无 |
 | OI-007 | hold 模式跨测试集效果有限 | 2026-09-08 | 记录在案（不阻塞投稿） | 14 电路仅 b01 改善 min_slack；已写入论文 limitation | 单 patch 无法同时改善 setup+hold | 未来工作（多目标 hold/setup 联合搜索） | — |
-| OI-008 | 论文表 F1/F6 反馈动作描述与代码实现不一致 | 2026-09-23 | **待用户决策**（是否改论文/改代码） | 论文表 tab:failures 与 §3.4 正文对两类失败的反馈动作描述与 `code/src/rseco/refinement.py:refine_weights` 实际执行不符（详见下方） | 已逐行对照 `refinement.py`（唯一实现，被 flow.py 与 refinement_loop.py 调用）与论文 §3.3/§3.4 | 二选一：(a) 修论文表述对齐代码；(b) 补代码实现对齐论文。**注意**：F1 在主实验中触发 0 次、F6 仅在物理门控实验触发，故不改变任何已发表实验数字 | 用户 |
+| OI-008 | 论文表 F1/F6 反馈动作描述与代码实现不一致 | 2026-09-23 | **论文侧已修正**（2026-09-23），遗留 1 项可追溯性事项 | 三处差异已按代码事实修正论文 8 处表述（详见下方明细与 `review_history/paper_audit/code_paper_feedback_audit_20260923.md`）；已发表数字不受影响 | 逐行对照 `refinement.py` + `git show 216a118` 溯源 + 实测产物统计 | 遗留：产物旧事件名 `acceptance_budget_violation` 与现行 `F4_timing_gain_insufficient` 字符串不一致，投稿前建议在补充材料说明；另"反馈的独立贡献"仍需隔离实验（现有消融混杂两变量） | 用户（投稿流程） |
 
 ### OI-008 明细（2026-09-23 代码—论文对照，含实测触发分布）
 

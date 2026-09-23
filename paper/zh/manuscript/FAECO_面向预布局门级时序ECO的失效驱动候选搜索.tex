@@ -207,10 +207,10 @@ $G = (V, E)$ & 门级网图，顶点为门/端口，边为信号线 \\
 $C(G, t) \subseteq V$ & 目标输出 $t$ 的扇入锥 \\
 $K(G, t)$ & 由每个门的输入/输出容量边与扇入依赖边构成的 $s$-$t$ 分裂图 \\
 $C_w$ & 加权最小割候选边界（式~\eqref{eq:cost} 控制） \\
-$C_c$ & 关键路径覆盖割候选边界（与 $C_w$ 互补，$\lambda_c$ 仅用于反馈） \\
+$C_c$ & 关键路径覆盖割候选边界（与 $C_w$ 互补，$\lambda_c$ 用于覆盖排序与节点代价深度折扣） \\
 $\mathrm{cost}(v)$ & 门 $v$ 的节点代价，见式~\eqref{eq:cost} \\
 $s(v)$、$n_C=|C(G,t)|$、$S=\sum_u s(u)^2$ & 门 $v$ 的局部扇入锥规模、目标锥门数与锥内规模平方和 \\
-$\lambda_b,\lambda_s,\lambda_v,\lambda_c,\lambda_f$ & 搜索权重；其中 $\lambda_b,\lambda_s,\lambda_v,\lambda_f$ 进入加权最小割的节点代价（式~\eqref{eq:cost}），$\lambda_c$ 用于关键路径覆盖候选的反馈，不直接进入式~\eqref{eq:cost} \\
+$\lambda_b,\lambda_s,\lambda_v,\lambda_c,\lambda_f$ & 搜索权重；$\lambda_b,\lambda_s,\lambda_v,\lambda_f$ 作为代价项进入加权最小割的节点代价（式~\eqref{eq:cost}），$\lambda_c$ 作为深度折扣项进入同一代价的归一化分母，并参与关键路径覆盖候选的排序反馈 \\
 $\mathrm{priority}(p)$ & 候选优先级，由加权割顺序、关键路径覆盖候选和预设策略优先级共同确定 \\
 F1--F6 & 六类失败类型，定义见表~\ref{tab:failures} \\
 \bottomrule
@@ -260,11 +260,11 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \begin{figure*}[!htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{fig_cut_generation_mechanism_imagegen.png}
-\caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径由独立覆盖割 $C_c$ 与 $\lambda_c$ 反馈处理；R 候选可用性驱动策略切换。图中“候选集合 A/B”为示意图标签，实际符号 $C_w/C_c$ 与表~2 一致。}
+\caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径由独立覆盖割 $C_c$ 与 $\lambda_c$ 的深度折扣及排序反馈处理；R 候选可用性驱动策略切换。图中“候选集合 A/B”为示意图标签，实际符号 $C_w/C_c$ 与表~2 一致。}
 \label{fig:cut_generation}
 \end{figure*}
 
-图~\ref{fig:cut_generation} 展示 FAECO 的核心原理。首先，从违例端点反向提取局部组合扇入锥 $C(G,t)$，并为门节点标注功能保持可用性、关键路径覆盖和候选规模等特征。加权最小割的节点代价由边界、候选规模、验证代价和扇出特征构成，如式（2）所示；关键路径覆盖不直接进入节点代价，而是通过独立的关键路径覆盖割 $C_c$ 与权重 $\lambda_c$ 的反馈形成补充候选。R 候选的可用性用于候选实例化与策略切换——若某门缺少 R 等价候选，则其关键路径覆盖奖励降低并自动转向 G/B 策略。
+图~\ref{fig:cut_generation} 展示 FAECO 的核心原理。首先，从违例端点反向提取局部组合扇入锥 $C(G,t)$，并为门节点标注功能保持可用性、关键路径覆盖和候选规模等特征。加权最小割的节点代价由边界、候选规模、验证代价和扇出特征构成，并按权重 $\lambda_c$ 对具备 R 等价候选的门施加深度折扣，如式（2）所示；关键路径覆盖另通过独立的关键路径覆盖割 $C_c$ 形成补充候选，并由 $\lambda_c$ 反馈调整其排序优先级。R 候选的可用性用于候选实例化与策略切换——若某门缺少 R 等价候选，则其关键路径覆盖折扣与扇出代价同时失效并自动转向 G/B 策略。
 
 随后，FAECO 生成两类互补边界：加权最小割 $C_w$ 优先控制局部规模，关键路径覆盖割 $C_c$ 覆盖时序关键门。两类边界分别实例化为 R/G/B/JOINT 候选，统一按割代价、关键路径覆盖和策略优先级排序，交由 OpenSTA 测量 $\Delta_{\mathrm{WNS}}$ 和 $\Delta_{\mathrm{TNS}}$。接受谓词保留有效候选；触发 F1--F6 的失败候选根据失败类型反馈至割权重，驱动下一轮重割。
 
@@ -272,19 +272,21 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \begin{equation}\label{eq:dtiming}
 \Delta_{\mathrm{WNS}}(p) = \mathrm{WNS}_{\mathrm{after}}(p) - \mathrm{WNS}_{\mathrm{before}}.
 \end{equation}
-节点代价 $\mathrm{cost}(v)$ 综合边界、尺寸、验证和扇出因素。设 $\mathrm{depth}(v)$ 为 $v$ 在锥内的逻辑深度，则
+节点代价 $\mathrm{cost}(v)$ 综合边界、尺寸、验证和扇出因素，并按关键路径深度折扣归一化。设 $\mathrm{depth}(v)$ 为 $v$ 在锥内的逻辑深度，$\mathcal{R}$ 为具备 R 等价候选的门集合，$\mathbb{1}[\cdot]$ 为指示函数，则
 {\small
 \begin{equation}
 \label{eq:cost}
 \begin{aligned}
-\mathrm{cost}(v) &= 1 + \frac{\lambda_b}{1+\mathrm{depth}(v)}
- + \lambda_s\,\frac{s(v)^2}{S} \\
- &\quad + 0.01\lambda_v\,n_C
- + 0.1\lambda_f\,\mathrm{fanout}(v),
+\mathrm{cost}(v) ={}& \Big(1 + \frac{\lambda_b}{1+\mathrm{depth}(v)}
+ + \lambda_s\,\frac{s(v)^2}{S}
+ + 0.01\lambda_v\,n_C \\
+ &+ 0.1\lambda_f\,\mathbb{1}[v{\in}\mathcal{R}]\,\mathrm{fanout}(v)\Big) \\
+ &\Big/\Big(1 + \lambda_c\,\mathbb{1}[v{\in}\mathcal{R}]\,
+ \frac{\mathrm{depth}(v)}{\mathrm{depth}_{\max}}\Big),
 \end{aligned}
 \end{equation}
 }
-其中 $\lambda_b/\lambda_s/\lambda_v/\lambda_f$ 分别为边界、尺寸、验证和扇出权重，默认均为 $1.0$；$n_C=|C(G,t)|$ 为目标扇入锥的门数，$s(v)$ 为门 $v$ 的局部扇入锥规模，$S=\sum_u s(u)^2$。$\lambda_c$ 初始为 $1.0$，用于调整关键路径覆盖割 $C_c$ 的排序优先级与覆盖得分权重，使下一轮割集方案集中于真实关键路径门；归一化项用于抑制大锥规模。
+其中 $\lambda_b/\lambda_s/\lambda_v/\lambda_f$ 分别为边界、尺寸、验证和扇出权重，$\lambda_c$ 为关键路径深度折扣权重，默认均为 $1.0$；$n_C=|C(G,t)|$ 为目标扇入锥的门数，$s(v)$ 为门 $v$ 的局部扇入锥规模，$S=\sum_u s(u)^2$，$\mathrm{depth}_{\max}=\max_u \mathrm{depth}(u)$。扇出项与分母折扣均以 $\mathbb{1}[v{\in}\mathcal{R}]$ 为门控：缺少 R 等价候选的门不可重写，若仍被深度折扣，只会把不可重写的门推入候选边界并最终触发 F1 失败，故对这类门同时免除扇出代价与深度折扣。$\lambda_c$ 亦用于调整关键路径覆盖割 $C_c$ 的排序优先级与覆盖得分权重，使下一轮割集方案集中于真实关键路径门；归一化项用于抑制大锥规模。
 
 \subsection{失效反馈与搜索更新}
 
@@ -292,7 +294,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \FloatBarrier
 框架将 F1--F6 定义为统一失败类型，并据此驱动割图—权重更新—重割循环。真实 WNS 主循环主要由 F4（理想线网收益不足）驱动；启用物理门控时，进一步将 SPEF 复测失败记为 F6。F1、F2、F3 和 F5 分别用于功能/结构筛选、边界、规模和运行时间检查，具体条件见表~\ref{tab:failures}；固定权重作为消融对照。
 
-每类失败使对应权重增加 $1.0$：F1/F2 增大边界惩罚 $\lambda_b$，F3 增大尺寸惩罚 $\lambda_s$，F4 增大关键覆盖奖励 $\lambda_c$，F5 增大验证代价惩罚 $\lambda_v$ 并将最大锥门数减半，F6 同时增大边界惩罚 $\lambda_b$ 与尺寸惩罚 $\lambda_s$，收紧候选边界并偏向较小局部以降低高线载候选再次出现的概率。
+每类失败使对应权重增加 $1.0$：F1 增大边界惩罚 $\lambda_b$ 与扇出权重 $\lambda_f$，F2 增大边界惩罚 $\lambda_b$，F3 增大尺寸惩罚 $\lambda_s$，F4 增大关键路径深度折扣 $\lambda_c$，F5 增大验证代价惩罚 $\lambda_v$ 并将最大锥门数减半，F6 增大边界惩罚 $\lambda_b$，收紧候选边界并偏向较小局部以降低高线载候选再次出现的概率。
 
 \begin{table}[!htbp]
 \centering
@@ -304,12 +306,12 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \toprule
 \textbf{失败类型} & \textbf{检测条件} & \textbf{反馈动作} \\
 \midrule
-F1 局部功能/结构失败 & Liberty 文件中的函数匹配或结构检查未通过 & 增加边界惩罚 $\lambda_b$，降低此类节点被选作候选边界的概率 \\
+F1 局部功能/结构失败 & Liberty 文件中的函数匹配或结构检查未通过 & 增加边界惩罚 $\lambda_b$ 与扇出权重 $\lambda_f$（抑制高扇出的不稳定等价点），降低此类节点被选作候选边界的概率 \\
 F2 边界失败 & 锥边界未闭合 & 增加边界惩罚 $\lambda_b$，收紧锥边界，保留已映射门 \\
 F3 尺寸过大 & 候选尺寸超过阈值 & 增加尺寸惩罚，强制更小割 \\
-F4 时序收益不足 & 候选未满足式~\eqref{eq:accept} & 上调关键覆盖奖励，使下一轮割集方案集中于真实关键路径门 \\
+F4 时序收益不足 & 候选未满足式~\eqref{eq:accept} & 上调关键路径深度折扣 $\lambda_c$（同时提高覆盖割排序优先级），使下一轮割集方案集中于真实关键路径门 \\
 F5 验证超时 & 局部检查或 STA 运行时间 $>60\,$s & 增加验证代价惩罚 $\lambda_v$ 并将最大锥门数减半 \\
-F6 SPEF 复测失败 & 启用物理门控且理想线网增益 $>10\,$ps，但 SPEF 下 WNS 不改善 & 增加边界惩罚 $\lambda_b$ 与尺寸惩罚 $\lambda_s$，收紧候选边界并偏向较小局部，降低高线载候选再次出现的概率 \\
+F6 SPEF 复测失败 & 启用物理门控且理想线网增益 $>10\,$ps，但 SPEF 下 WNS 不改善 & 增加边界惩罚 $\lambda_b$，收紧候选边界并偏向较小局部，降低高线载候选再次出现的概率 \\
 \bottomrule
 \end{tabular}
 \end{table}
