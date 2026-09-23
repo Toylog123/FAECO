@@ -535,7 +535,7 @@ main 默认 `early_stop=True`（为兼容 20260826 批次而设），codex 默�
 | 2 | `FailureFeedbackState` + `update_feedback` + `describe_actions` + legacy 退化单测 | ✅ 完成 |
 | 3 | `SearchState` 扩展 + checkpoint/恢复一致性 + `candidate_key` + G2/G4 事件契约 | ✅ 完成 |
 | 4 | 运行器接入（legacy 档）+ codex 能力合并（§8.2） | ✅ 完成（§8.7；`258f588` 合并 + `870d062` 路径） |
-| 5 | E1–E6 等价报告（`s382`/`b03`/`b06`）+ 全量回归 | ⏭ 待做 |
+| 5 | E1–E6 等价报告（`s382`/`b03`/`b06`）+ 全量回归 | ✅ 完成（`reports/FAECO_0A_EQUIVALENCE_20260923.md`；三电路均 24/24 全等） |
 
 **步骤 2 交付**：`code/src/rseco/feedback.py`（新模块，与 codex 无冲突）+ `code/tests/test_feedback_legacy_equivalence.py`。
 验证：新单测 17 项 / 155 子测试全绿；**全量 281 passed, 4 skipped**（264 基线 + 17 新增，无回归）。
@@ -630,6 +630,16 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
 > `--early-stop` 与 `--no-early-stop` 两种，与产物记录的 `n_candidate_sta_runs=22`
 > / `sta_runs=22` / `accepted_patches=3` / `iterations=8` 对齐，取能复现者。
 
+> **A5 已裁定（2026-09-23，步骤 5）**：产物为**串行**（`--workers 1`）且内层
+> `early_stop=True`。依据：产物第 1 轮接受的是 `-0.88`（轮内**首个**改善候选），
+> 而该轮最优为 `-0.85`；并行模式忽略 `early_stop`（`real_wns.py` 仅在串行分支短路），
+> 会直接接受 `-0.85`，与产物不符。`--workers 1 --early-stop
+> --candidates-per-iteration 1` 三者叠加可把 `s382` 产物**逐字段复现（24/24）**。
+> **保留 `early_stop=True` 作为 trunk CLI 默认**，旧口径"首次接受即停"改写为
+> `--max-patches 1`，`--no-early-stop` 降至别名，不再静默翻转默认值。
+> 另由该复现反推出两个论文未记录的批次开关：`--candidates-per-iteration 1`、
+> `--tns-aware`（登记为 OI-013 遗留项）。
+
 #### 8.7.5 顺带修掉的阻塞级缺陷：09-12 迁移遗留数据路径
 
 迁移把 `benchmarks/` 挪到 `data/raw/benchmarks/`、把 `src|scripts|tests` 挪进 `code/`。
@@ -664,3 +674,24 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
 | A4 | §8.1 事实 2「main 分叉后仅 2 个提交触及源码」 | 实为 5 个（漏了 `261a39d`/`303a544`/`5a62360`）；须做真三方合并 | 只统计了 `flow.py` 的提交，低估了 main 独有内容 |
 | A5 | §8.4「不改任何一侧默认值」 | 合并后只剩一个 runner，默认值必须二选一；暂留 `True` 并把裁定方式写成可执行的产物对齐（§8.7.4） | 两侧语义已不同名，"不改默认值"不再是可选项 |
 | A6 | §1.1 权重字段表 | 新增第 7 个权重 `physical_penalty`；F6 同时抬 `boundary_penalty` 与 `physical_penalty`（两条动作 `increase_boundary_penalty_physical` / `increase_physical_penalty`） | codex 谱系的 F6 是双杠杆；legacy 档必须跟它逐位等价（测试已钉住） |
+
+### 8.8 步骤 5 结论：E1–E6 等价门通过（2026-09-23）
+
+完整报告见 `reports/FAECO_0A_EQUIVALENCE_20260923.md`。要点：
+
+- **门通过**：`codex/faeco-unified-loop` @ `9435846` vs `main` @ `fcdf06b`，在 `s382`/`b03`/`b06`
+  三个电路上**均 24/24 项全等**，decision core 与 bookkeeping 双 PASS。两侧使用完全相同的命令行，
+  仅输出目录不同。回归 411 passed / 4 skipped，算法行为未变 ⇒ **0a 第一阶段目标达成**。
+- **环境已钉死**：Yosys `0.67+146 (git sha1 468ba27d9-dirty …)` 与产物 `map.log` 逐字相同；
+  STA 走 WSL `/usr/local/bin/sta`；`mapped.v` 首行哈希两侧一致。
+- **A5 关闭**（§8.7.4）与 **A7 新增**：`--candidates-per-iteration 1` 与 `--tns-aware` 经产物反推确认，
+  论文 `tab:configs` 未登记，登记为 OI-013 遗留项。
+- **新开 OI-013**：`s382` 产物可完全复现，`b03`/`b06` 不可（差异在 decision core）。已排除环境/参数/束宽/
+  HEAD 特有四种解释，定性为 codex 谱系 08-26→08-28 的既有漂移（当天 7 个提交落在产物写入窗口内），
+  非本次合并引入。revision 归属待用户裁定。
+- **新增工具**：`code/scripts/compare_0a_equivalence.py`（把门拆成 24 个可判定项，区分 decision / bookkeeping，
+  支持多候选与 JSON 输出），后续 L2/L3 的 legacy regression 直接复用。
+
+| # | 契约原文 | 实施修正 | 理由 |
+|---|---|---|---|
+| A7 | §1.1 / §4 未记录批次运行开关 | 补记 `--candidates-per-iteration` 与 `--tns-aware` 为影响产物的显式开关；论文 `tab:configs` 待同步 | 二者会改变候选数与接受判据，属复现必需信息 |
