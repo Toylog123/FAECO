@@ -506,12 +506,17 @@ $$\boxed{\ \text{Mixed-Fixed}\ \to\ \text{Adaptive}\ \to\ S\ \text{smoke}\ \to\ 
 
 **当前方案所处的阶段判断**：L2 与 L3 已从"路线图"进入"可直接写代码的技术规格"。**唯一还挡在实现前面的不是新机制，而是 G2/G3/G4 这三项状态与归因语义的钉死**——它们和 §5 同属"实现前必须定死"的类别。
 
+> **✅ 更新（2026-09-23 晚）**：**G2/G3/G4 已写成代码级接口规范**（待确认后冻结）→ `FAECO_V2_IMPL_CONTRACT_20260923.md`（G2 三事件状态更新契约、G3 checkpoint 字段与 `netlist_epoch`/恢复一致性、G4 `W_*`→F1–F6 映射）。本文件据此不再新增机制；后续所有实现遵循该契约。**推进顺序改为**：
+> $$\text{G2/G3/G4 接口冻结} \rightarrow 0a\ \text{状态架构迁移} \rightarrow \text{legacy regression} \rightarrow \text{L2 Adaptive} \rightarrow \text{L3 S}$$
+> **0a 第一阶段不得改变算法行为**，其 gate 是"新架构 ≡ 旧行为"六项全等（候选顺序 / F1–F6 序列 / 每轮权重 / 接受补丁 / 最终 WNS / STA 次数），通过后才打开 $\rho=0.5$。
+
 ---
 
 ## 10. 遗留待裁定 / 风险
 
 | 项 | 状态 |
 |---|---|
+| **G2/G3/G4 接口规格** | ✅ 已写成（待确认）→ `FAECO_V2_IMPL_CONTRACT_20260923.md` |
 | OI-011 路径 | ✅ 已裁定：**B**（`SearchState` 为唯一状态所有者） |
 | S 的 F3-S 阈值 | ✅ 已裁定：窗口局部 $R_{\text{soft}}=1.2$、$R_{\text{hard}}=1.5$ |
 | L2 参数 | ✅ 已裁定：adaptive 默认 $\rho=0.5,\eta_{\text{add}}=0.5,\eta_c=0.25$；legacy 单独一档 |
