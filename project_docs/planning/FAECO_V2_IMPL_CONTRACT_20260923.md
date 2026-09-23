@@ -54,7 +54,16 @@ $$\boxed{\ \text{新 SearchState 架构}\ \equiv\ \text{旧 FAECO 行为}\ }$$
 | $\lambda_c$ | `critical_coverage_reward` | 1.0 |
 | $\lambda_v$ | `verification_cost_penalty` | 1.0 |
 | $\lambda_f$ | `equivalence_stability_reward` | 1.0 |
+| $\lambda_p$ | `physical_penalty` | 1.0 |
 | $M_{\text{cone}}$ | `max_cone_gates` | 1000 |
+
+> **A6（2026-09-23 步骤 4 补登）**：第 7 个权重 $\lambda_p$ = `physical_penalty` 是
+> codex 谱系（= 论文主实验基线）的字段，main 侧原无。F6 在 codex 里是**双杠杆**：
+> 同时 `boundary_penalty += 1.0` **与** `physical_penalty += 1.0`，动作列表为
+> `["increase_boundary_penalty_physical", "increase_physical_penalty"]`。
+> 已同步写入 `feedback.py` 的 `_FEEDBACK_RULES` 与 `ADDITIVE_WEIGHT_FIELDS`，
+> legacy 档因此仍与 `refine_weights` 逐位等价（`test_feedback_legacy_equivalence.py`
+> 的 64 子集穷举已覆盖）。
 
 > **路径 B 的字段迁移**：$M_{\text{cone}}$ **不再属于** `RefinementWeights`，改为 `SearchState.cone_limit`。`flow.py:328` 现在是 `max_gates = max(1, int(getattr(weights, 'max_cone_gates', 1000)))`，迁移后改为读取 `state.cone_limit`。`RefinementWeights` 只保留 5 个 $\lambda$。
 > 过渡期兼容：0a 期间可以保留 `max_cone_gates` 作为 `cone_limit` 的镜像只读属性，避免一次改动过大；legacy regression 通过后再删除。
@@ -488,7 +497,7 @@ def split_attribution(failures: set[FailureType], stage_tags: list[str]) -> tupl
 | # | 事实 | 影响 |
 |---|---|---|
 | 1 | **codex 分支是 09-12 框架迁移*之前*的布局**：根目录为 `src/`、`scripts/`、`tests/`、`benchmarks/`，**没有 `code/`** | **"反向迁移布局"会撤销整个 09-12 迁移，不可行**。路径 B 的正确含义是「采用 codex 的**状态架构**，落在 main 现有布局里」 |
-| 2 | merge-base = `b8c3759`（2026-08-13）；main 分叉后**仅 2 个提交**触及源码：`35fd558`（迁移/路径）、`766b589`（`--no-early-stop` 功能）——**二者都不在 codex** | main 有 codex 缺少的**功能**，不能整文件覆盖 |
+| 2 | merge-base = `b8c3759`（2026-08-13）。main 分叉后触及 `code/src` 或 `code/scripts` 的提交共 **5 个**：`261a39d`（b17 phase-2 + SEC runner）、`303a544`（inventory + joint-depth 消融 + hold-mode 批量）、`5a62360`（多轮消融 + **STA 重试**）、`766b589`（`--no-early-stop`）、`35fd558`（迁移/路径）——**均不在 codex** | ⚠️ **原文写"仅 2 个"是错的**（只统计了触及 `flow.py` 的）。main 的独有内容比原估更多：`run_sequential_timing_check.py` 的 WSL 截断重试、`test_joint_candidates.py` 的 `tmp_path` 卫生改写、`run_hybrid_repair.py`/`run_multi_iter_ablation.py` 等脚本都是 main 独有。**结论不变**（仍不能整文件覆盖），但必须做真三方合并而非"取 codex 侧" |
 | 3 | `code/src/rseco` 11 个差异文件中 **10 个与分叉点逐字节相同**；唯一有内容差异的 `flow.py` 差的 43 行正是 `766b589` 的功能（不是路径修补） | **codex 版本是严格超集**，可作迁移基线 |
 | 4 | `code/scripts/run_hybrid_repair.py` 两侧**逐字节相同**（该运行器从未使用 `SearchState`） | 0a **不能**通过它来验证状态架构 |
 | 5 | `run_outerloop_real_wns.py` 是**双向分叉**：codex 多出预算参数（`--max-patches`/`--sta-budget`/`--formal-budget`/`--wall-timeout-s`）与 SEC/等价/边界 checker 构造器 + import shim；main 多出 `--early-stop`/`--no-early-stop` 且**默认 early-stop 开启** | 必须**三方合并**，不能取任一侧 |
@@ -525,7 +534,7 @@ main 默认 `early_stop=True`（为兼容 20260826 批次而设），codex 默�
 | 1 | 0a 侦察与迁移方案（本 §8） | ✅ 完成 |
 | 2 | `FailureFeedbackState` + `update_feedback` + `describe_actions` + legacy 退化单测 | ✅ 完成 |
 | 3 | `SearchState` 扩展 + checkpoint/恢复一致性 + `candidate_key` + G2/G4 事件契约 | ✅ 完成 |
-| 4 | 运行器接入（legacy 档）+ codex 能力合并（§8.2） | ⏭ 待做 |
+| 4 | 运行器接入（legacy 档）+ codex 能力合并（§8.2） | ✅ 完成（§8.7；`258f588` 合并 + `870d062` 路径） |
 | 5 | E1–E6 等价报告（`s382`/`b03`/`b06`）+ 全量回归 | ⏭ 待做 |
 
 **步骤 2 交付**：`code/src/rseco/feedback.py`（新模块，与 codex 无冲突）+ `code/tests/test_feedback_legacy_equivalence.py`。
@@ -552,3 +561,106 @@ main 默认 `early_stop=True`（为兼容 20260826 批次而设），codex 默�
 
 两条在 $\rho=0$ 时都退化为 legacy（观察轮 `rate=1`、未观察轮 `rate=0`），故逐位等价仍然成立——这一点由「64 个子集穷举 + 20 轮累积」测试钉住。
 
+
+### 8.7 步骤 4 实施结论（2026-09-23，`258f588` + `870d062`）
+
+#### 8.7.1 硬证据：论文主实验确由 codex 谱系产出
+
+先前 §8.3 的判断是**推断**；本次拿到直接证据。`experiments/20260826_iscas89_main/s382/s382/outerloop_result.json`
+的顶层字段含 `state` 与 `stop_reason`，其中：
+
+- `state` 的键集合与 codex 的 `SearchState.to_dict()` **完全一致**（`current_netlist_text`、`current_netlist_hash`、无 `netlist_epoch`）；
+- `state.budget` = `{max_iterations: 8, epsilon: 0.0, sta_budget: None, formal_budget: None, wall_timeout_s: None, max_patches: 8, formal_used: 44, sta_used: 22, iterations_used: 8, sta_runs: 22, formal_runs: 44, stagnation_count: 5, wall_time_s: 39.30}`；
+- `max_patches: 8` 来自 codex `flow.py` 的 `max_patches = max_iterations if max_patches is None else int(max_patches)`（main 无此逻辑）；
+- `min_physical_gain_ns` 只由 codex 的 runner 写入。
+
+**结论**：main 的 `run_outerloop_real_wns.py` **任何历史版本都无法写出这些字段**，故
+`experiments/20260826_*` 出自 codex 谱系。§8.3「行为基线 = codex 谱系」由推断升级为实测。
+同时注意 `netlist_epoch` **不在**产物中——它是 r2 新增字段（契约 §3.1），
+等价 gate 不得假定产物含该字段。
+
+#### 8.7.2 `git merge` 在此仓库不可用（已实测，勿重试）
+
+直接 `git merge codex/faeco-unified-loop` 只报 13 个冲突，看似顺利，但**静默错配**：
+
+| 现象 | 原因 |
+|---|---|
+| `code/src/rseco/flow.py` / `real_wns.py` 未被改动 | 重命名探测把 codex 的 `src/rseco/flow.py`(832 行)、`real_wns.py`(2249 行) 配到了 main 的 `project_docs/archive/superpowers_backup/T19_20260908/{flow,real_wns}.py.orig` —— 两个**最大的改动文件**恰好是合并的核心，却被换成了文档归档 |
+| 5 个 codex 新测试报 add/add 冲突 | 同一探测把 codex `tests/*.py` 配到 main 的其他路径 |
+
+**处置**：改用**逐文件、显式配对的三方合并**（`scratch/xport/merge3.py`，
+base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动合并成功，
+仅 `flow.py` 报 2 处冲突。已把该脚本与 `norm.py` / `resolve_conflicts.py` /
+`redo_flow.py` 留档，供后续同类迁移复用。
+
+**踩坑记录（两条，都会静默丢内容）**：
+
+1. Git-for-Windows 的 `git merge-file` **只给它自己生成的标记行加 CR**（`=======\r`）。
+   若用 `line == "======="` 判分隔符，会匹配失败 → "theirs" 段永远收集不到 →
+   解析结果**静默丢掉对方整块代码**。必须以 `\r` 容错方式匹配标记。
+2. Windows 上 `Path.write_text()` 会把 `\n` 翻成 `\r\n`；若输入缓冲里已有 `\r\n`，
+   就得到 `\r\r\n`，表现为**每隔一行一个空行**。所有读写必须走 `norm.py`。
+
+#### 8.7.3 `flow.py` 冲突的裁决依据（可复核）
+
+`diff base(496 行) → main(538 行)` 在 `flow.py` 上**只有两个 hunk**，且全部属于
+`--no-early-stop` 功能（`@468,7 +468,23` 与 `@493,4 +509,30`）。两处冲突区正好覆盖
+这两个 hunk，故「取 codex 侧」对 main 的意图**可证无损**：main 想要的"接受后继续"
+语义在 codex 架构里由 `SearchState.accept_patch` + `max_patches` 原生提供。
+合并结果与 codex 的 `flow.py` 逐字节相同，且校验「codex 侧 0 行丢失」。
+
+#### 8.7.4 `--early-stop` 的语义合并且**默认值待裁定**（唯一实质分歧点）
+
+两侧同名参数的**语义不同**：
+
+| | main（`766b589`） | codex（= 产物基线） |
+|---|---|---|
+| 位置 | `flow.py` 求值回调里 `getattr(wns_evaluator,"early_stop",True)` | `RealWnsEvaluator.early_stop`，用在 `_eval_one` 内层候选循环 |
+| 作用面 | **外层**：首次接受即 return，整个外层循环结束 | **内层**：本轮候选排序中首次改善即停 |
+| 对照组 | `_accepted_patches` 旁路 + 事后挑最优 | 无（外层本就持续迭代，由 `max_patches` 收口） |
+| 默认 | `True` | `False` |
+
+**合并处置**：保留两个 flag（`--early-stop` / `--no-early-stop`，同一 `dest`），
+代码注释中写明新语义；main 旧的外层早停等价表达为 **`--max-patches 1`**。
+**默认值暂保持 `True`**（不改 trunk CLI 契约），但必须用产物对齐裁定：
+
+> **待裁定项 A5**：合并后 runner 的 `early_stop` 默认值应为 `True`（trunk 契约）
+> 还是 `False`（codex 基线的原值）？
+> **建议的裁定方式（先归因，不靠猜）**：步骤 5 在 codex 分支上对 `s382` 跑
+> `--early-stop` 与 `--no-early-stop` 两种，与产物记录的 `n_candidate_sta_runs=22`
+> / `sta_runs=22` / `accepted_patches=3` / `iterations=8` 对齐，取能复现者。
+
+#### 8.7.5 顺带修掉的阻塞级缺陷：09-12 迁移遗留数据路径
+
+迁移把 `benchmarks/` 挪到 `data/raw/benchmarks/`、把 `src|scripts|tests` 挪进 `code/`。
+顶层移动被记为 rename，但**新加入**的 `code/src/**`、`code/scripts/**` 保留了迁移前的
+相对算法，于是 `<root> / "benchmarks"` 解析到 `code/` 下、指向不存在的路径。
+
+- 影响 18 个文件，其中 `opensta.py` 的 `LIB_SEQ`（`read_liberty`）与
+  `run_sequential_timing_check.py` 的 `LIB` 在 **STA 关键路径**上；
+- 迁移后 main 的 `code/` **从未真实运行过**，所以一直没暴露（也与 OI-011 自洽）；
+- 修法：不动 `ROOT`（多个脚本的 `ROOT / "src" / "rseco" / ...` 本就正确，
+  改 `ROOT` 会静默改道），把每个 benchmarks 表达式就地改写为
+  `Path(__file__).resolve().parents[N] / "data" / "raw" / "benchmarks"`；
+- 校验：7 个关键目录 + 4 个关键常量（`LIB_SEQ`/`LIB`/`_default_liberty_cells_v`/runner `LIB`
+  与 `--iscas89-dir` 默认值）逐个实测解析成功，18 文件 AST 通过。
+
+#### 8.7.6 步骤 4 交付与回归
+
+- **src**：`real_wns.py`(2249) / `flow.py`(832) / `refinement_loop.py`(348) / `cut.py`(873) /
+  `failures.py`(136) / `replacement.py`(370) / `equivalence.py`(245) / `logic_rewrite.py`(227) /
+  `netlist.py`(245) / `yosys_abc.py`(774) / `refinement.py`(82, +`physical_penalty`)。
+- **scripts**：`run_outerloop_real_wns.py`（codex 预算/SEC/checker + main 的
+  early-stop flag；367 行）、`run_sequential_timing_check.py`（保住 main 的 WSL 截断重试
+  **且**取 codex 的路径引号与 ANSI 编码；328 行）。
+- **tests**：新增 5 个 codex 测试（含 1502 行的 SOL 复核残差），4 个 superset 更新。
+- **回归**：**411 passed / 4 skipped**（合并前 309，零回归）。
+- 工作区确认：全部改动限于 `code/`，未触碰论文与 `project_docs` 正文。
+
+#### 8.7.7 修订单
+
+| # | 契约原文 | 实施修正 | 理由 |
+|---|---|---|---|
+| A4 | §8.1 事实 2「main 分叉后仅 2 个提交触及源码」 | 实为 5 个（漏了 `261a39d`/`303a544`/`5a62360`）；须做真三方合并 | 只统计了 `flow.py` 的提交，低估了 main 独有内容 |
+| A5 | §8.4「不改任何一侧默认值」 | 合并后只剩一个 runner，默认值必须二选一；暂留 `True` 并把裁定方式写成可执行的产物对齐（§8.7.4） | 两侧语义已不同名，"不改默认值"不再是可选项 |
+| A6 | §1.1 权重字段表 | 新增第 7 个权重 `physical_penalty`；F6 同时抬 `boundary_penalty` 与 `physical_penalty`（两条动作 `increase_boundary_penalty_physical` / `increase_physical_penalty`） | codex 谱系的 F6 是双杠杆；legacy 档必须跟它逐位等价（测试已钉住） |
