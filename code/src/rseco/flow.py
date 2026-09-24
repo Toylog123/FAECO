@@ -874,7 +874,9 @@ def run_multi_iteration_case(
         # current WNS and corrupt every delta.
         baseline = initial_wns
         if sta_seq and baseline is not None:
-            deltas = [baseline - w for w in sta_seq]
+            # WNS closer to zero is better: delta = w - baseline, so a
+            # positive delta is an improvement (-0.17 vs -0.27 -> +0.10).
+            deltas = [w - baseline for w in sta_seq]
             best_curve: list[float] = []
             running: float | None = None
             for delta in deltas:
