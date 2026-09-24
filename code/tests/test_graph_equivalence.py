@@ -13,9 +13,11 @@ CASE_DIR = ROOT / "data" / "cases" / "minimal" / "iscas85_c17_case01"
 
 class VerilogParserTest(unittest.TestCase):
     def test_parses_multiline_genus_style_declarations(self):
-        with self.subTest("Cadence Genus style declarations span continuation lines"):
-            temp_path = ROOT / "experiments" / "tmp_multiline_parser_test.v"
-            temp_path.parent.mkdir(parents=True, exist_ok=True)
+        with self.subTest("Cadence Genus style declarations span continuation lines"), \
+                tempfile.TemporaryDirectory() as tmp:
+            # never write scratch files inside the repo: an interrupted run
+            # would leave a stray `experiments/tmp_*.v` behind
+            temp_path = Path(tmp) / "multiline_parser_test.v"
             temp_path.write_text(
                 """module tiny(N1, N2, N3, N4, N10, N11);
   input N1, N2,
@@ -33,10 +35,7 @@ endmodule
 """,
                 encoding="utf-8",
             )
-            try:
-                netlist = parse_verilog_netlist(temp_path)
-            finally:
-                temp_path.unlink(missing_ok=True)
+            netlist = parse_verilog_netlist(temp_path)
 
         self.assertEqual(netlist.inputs, ["N1", "N2", "N3", "N4"])
         self.assertEqual(netlist.outputs, ["N10", "N11"])

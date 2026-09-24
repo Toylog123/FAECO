@@ -468,7 +468,7 @@ def split_attribution(failures: set[FailureType], stage_tags: list[str]) -> tupl
 |---|---|---|---|
 | **G2/G3/G4** | 本文件 | 三节单测清单全部实现且绿 | 补规格，不进 0a |
 | **0a** | `SearchState` 架构迁移（legacy 档接入） | §5.1 六项全等 + 264 测试全绿 | 按 §5.3 归因，禁用调参 |
-| **legacy regression** | 与 0a 同一 gate，扩到全 8 电路 | 8/8 电路六项全等 | 同上 |
+| **legacy regression** | 与 0a 同一 gate，扩到全 8 电路 | ✅ **8/8 电路 24/24 项全等**（`s27 s382 s420 s641 s713 s820 s832 s953`，decision + bookkeeping 全 PASS）；敏感性正控制 2/2 电路报出预期差异 | 见 §8.9；已通过 |
 | **L2 Adaptive** | 打开 $\rho=0.5$、$\eta_{\text{add}}=0.5$、$\eta_c=0.25$、clip on | 三臂判读（r2 §6.4）：$B(k)$ 不劣且 $N_{\text{STA-to-first}}$ 显著更低，或如实报告"无独立贡献" | 按判读表改写核心贡献 |
 | **L3 S** | 接入 r2 §5 状态机 | ① §5.5 单测全绿 ② 局部 CEC 通过 ③ ≥1 个 $\Delta L<0$ 且 $\Delta\mathrm{WNS}>0$ 的接受候选 | 按 r2 §7 分级结论如实报告 |
 
@@ -695,3 +695,29 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
 | # | 契约原文 | 实施修正 | 理由 |
 |---|---|---|---|
 | A7 | §1.1 / §4 未记录批次运行开关 | 补记 `--candidates-per-iteration` 与 `--tns-aware` 为影响产物的显式开关；论文 `tab:configs` 待同步 | 二者会改变候选数与接受判据，属复现必需信息 |
+
+### 8.9 步骤 6 结论：legacy regression（8 电路）通过（2026-09-23）
+
+完整报告见 `reports/FAECO_LEGACY_REGRESSION_20260923.md`。要点：
+
+- **门通过**：`codex @ 9435846` vs `main @ fcdf06b`，全部 8 个 ISCAS89 电路
+  （`s27 s382 s420 s641 s713 s820 s832 s953`）**8/8 电路 × 24/24 项全等**，
+  decision core 与 full gate（含 `E1.candidate_order` / `E1.current_cone_gates` / `E6` 计数）双 PASS。
+  两侧 `mapped.v` 头为逐字相同的 Yosys 版本串。⇒ **0a 迁移在全基准集上零行为漂移**。
+- **新增敏感性正控制（必做）**：故意构造"应当有差异"的配置（取两侧 CLI 静态 diff 出的唯一默认值分歧
+  `--early-stop`，**不显式传它**），`s382`/`s832` 均报出 **decision-core DIFF（13/24）**。
+  没有这一步，"8/8 全等"无法与"判据恒真 / 两侧跑同一份代码"区分开。
+- **三个"静默失效"陷阱**（本次全部踩到）：
+  1. **runner 相对路径两侧不同**（main `code/scripts/…` vs codex `scripts/…`）→ 一侧秒退 `exit=2`，
+     另一侧正常，只看到产物存在就会误判；
+  2. **`.venv` 的 editable `.pth` 硬编码 `rseco → <main>/code/src`** → 不设 `PYTHONPATH=<该侧根>/src`
+     时两侧跑同一份代码，gate 变同义反复；
+  3. **Git Bash 的 `pwd` 为 POSIX 形式**（`/d/…`）→ 交给 Windows 解释器成 `\d\…`，源文件找不到；
+     须用 `pwd -W`。
+- **新增工具（可复用）**：`code/scripts/compare_equivalence_sweep.py`（多电路 E1–E6 聚合判定，
+  `--require-full` / `--json-out`）、`code/scripts/run_equivalence_sweep.sh`（复跑驱动，固化三陷阱与
+  四配置，带 `FAECO_DRY_RUN=1` 干跑），配套 6 + 10 项单测。
+
+| # | 契约原文 | 实施修正 | 理由 |
+|---|---|---|---|
+| A8 | §8.8 / A7 把 `--tns-aware` 记为"20260826 批次"开关 | 限定为**仅 ITC-99 批次**：ISCAS89 批次**未**启用 | s382 不含该开关复现归档产物 24/24；含该开关时首轮接受点 `-0.88 → -0.98`（WNS 持平/TNS 改善），匹配度降至 11/24 |
