@@ -721,3 +721,26 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
 | # | 契约原文 | 实施修正 | 理由 |
 |---|---|---|---|
 | A8 | §8.8 / A7 把 `--tns-aware` 记为"20260826 批次"开关 | 限定为**仅 ITC-99 批次**：ISCAS89 批次**未**启用 | s382 不含该开关复现归档产物 24/24；含该开关时首轮接受点 `-0.88 → -0.98`（WNS 持平/TNS 改善），匹配度降至 11/24 |
+
+### 8.10 步骤 7 结论：L2 三臂实验完成——EMA 反馈无独立贡献（2026-09-24）
+
+完整报告见 `reports/FAECO_L2_THREEARM_20260924.md`。要点：
+
+- **实现落地**（`6e44fae`→`6276cff`）：`feedback_config` 选择器贯通
+  refinement_loop / flow / runner（`--feedback-legacy` / `--feedback-ema` 与 `--no-feedback`
+  互斥）；Mixed-Random 臂的种子化候选洗牌；§3.6 字段（`best_wns_curve` 即 B(k)、
+  `n_sta_to_first_improvement`、`wns_gain_per_100_sta`）；**`run_config.json` 归档**
+  （argv + resolved args + git head + 臂身份）落实 OI-012 的"运行命令必须归档"整改。
+- **三臂 × 8 电路完成**（k=8、20 轮、`--joint-k 2`、`--sta-budget 500`、workers=1，
+  40/40 exit=0）：**adaptive vs fixed 在 8/8 电路上最终 ΔWNS、k₁st、max B(k) 全等**；
+  4 电路逐位同轨迹（权重漂移不足以重排小 cone 候选），4 电路多花 9%–116% STA 走
+  不同顺序、同一终点。**§6.4 行 ③ 命中：EMA 反馈在该 regime 下无独立贡献。**
+- **random 臂对照**：随机排序使 k₁st 恶化 1–2 个数量级（s641: 1→123；s713: 5→216；
+  s953: 1→185），终点多数持平或更差 → 价值在「候选空间 + 权重排序」本身。
+- **两个实现层教训**（已修）：B(k) 必须取 `evaluator.trials` 中带 `sta_provenance`
+  的子序列（`wns_history` 是轮级端点，非候选级）；ΔWNS 符号 = `w − baseline`
+  （WNS 越接近 0 越好），且 evaluator 每次 accept 原地改 `baseline_wns`
+  （real_wns.py:794），锚点必须用 loop 前捕获的 `initial_wns`。
+- **边界与待裁定**：设计未冻结 k；k=1（隔离反馈、权重决定唯一候选身份）的
+  fixed vs adaptive 核心对是 L2 的最终判据，待用户裁定是否补跑。
+  F5/F6 EMA 通道在本实验中未触发，未被检验。
