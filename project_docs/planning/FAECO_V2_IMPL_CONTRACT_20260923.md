@@ -744,3 +744,21 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
 - **边界与待裁定**：设计未冻结 k；k=1（隔离反馈、权重决定唯一候选身份）的
   fixed vs adaptive 核心对是 L2 的最终判据，待用户裁定是否补跑。
   F5/F6 EMA 通道在本实验中未触发，未被检验。
+
+### 8.11 步骤 8 结论：L2 k=1 判别实验——EMA 降级，L2 封板（2026-09-24）
+
+完整报告见 `reports/FAECO_L2_K1_DISCRIMINANT_20260924.md`（判据实验前锁死）。
+
+- **结果**：8 电路 × {fixed, adaptive} × k=1，其余口径与三臂一致（`FAECO_K=1`
+  复用 `run_threearm_batch.sh`）。**8/8 电路逐位相同**（nSTA/k₁st/maxB(k)/ΔWNS 全等），
+  且**同决策点上 top-1 候选身份改变轮数 = 0、无轨迹分叉**。
+- **机制闭环**：adaptive 臂 EMA 高频触发（8–17/20 轮）、权重漂移可观
+  （size→1.50、coverage→2.00、boundary→1.50），但加性增量始终低于割评分的
+  top-1 重排阈值；k=8 只扰动第 2–8 名深层排序（4 电路多花 9%–116% STA），
+  k=1 只取决于第 1 名 → 完全无差异。反馈通路全通、对决策变量无可测杠杆。
+- **L2 最终裁定（预锁定判据第 ② 行）**：**EMA/failure-driven adaptation 降级为
+  可选机制，不承担性能主张**；不做 ρ/η 参数搜索（避免 parameter fishing）。
+  方法主线收敛为 Candidate Construction → Weighted Candidate Ranking →
+  Failure Attribution → STA/Validation。
+- 新增工具：`code/scripts/analyze_k1_discriminant.py`（逐电路分类 + 候选身份
+  变化计数 + 多数规则判定，5 项单测）。

@@ -21,6 +21,8 @@
 #
 # 环境变量：
 #   FAECO_OUT_ROOT  产物根目录（默认 <ROOT>/experiments/20260924_threearm）
+#   FAECO_K         候选束宽（默认 8；k=1 是 r2 §6 的反馈隔离口径——权重决定
+#                   唯一候选的身份而非次序，用于 L2 的 k=1 判别实验）
 #   FAECO_DRY_RUN   置 1 只打印解析结果，不执行任何 run（单测/核对用）
 #
 # 断点续跑：某电路已存在 outerloop_result.json 则跳过（幂等）。
@@ -50,7 +52,8 @@ else
   CIRCUITS="$ALL8"
 fi
 
-COMMON=(--period 0.5 --max-iterations 20 --candidates-per-iteration 8
+K="${FAECO_K:-8}"
+COMMON=(--period 0.5 --max-iterations 20 --candidates-per-iteration "$K"
         --joint-k 2 --enable-buffer --workers 1 --early-stop
         --sta-budget 500 --iscas89-dir "$ISCAS")
 
@@ -76,6 +79,7 @@ if [ -n "${FAECO_DRY_RUN:-}" ]; then
   echo "ISCAS=$ISCAS"
   echo "ARMS=$ARMS"
   echo "CIRCUITS=$CIRCUITS"
+  echo "K=$K"
   echo "COMMON=${COMMON[*]}"
   for a in $ARMS; do echo "ARM_FLAGS[$a]=$(arm_flags "$a")"; done
   exit 0
