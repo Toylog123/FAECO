@@ -407,6 +407,9 @@ def run_multi_iteration_case(
     sta_budget: int | None = None,
     formal_budget: int | None = None,
     wall_timeout_s: float | None = None,
+    feedback_config: object | None = None,
+    random_order: bool = False,
+    seed: int = 0,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -502,8 +505,11 @@ def run_multi_iteration_case(
     except (TypeError, ValueError):
         stateful_evaluator = False
     max_candidates_per_iteration = max(1, candidates_per_iteration)
+    _round_seq = 0  # evaluator invocation ordinal (one per outer iteration)
+
     def evaluator(failures, weights):
-        nonlocal cone
+        nonlocal cone, _round_seq
+        _round_seq += 1
         if max_patches == 0 or (stateful_evaluator and len(state.accepted_patches) >= max_patches):
             state.set_stop_reason("max_patches")
             return False, None
@@ -550,7 +556,20 @@ def run_multi_iteration_case(
             failures.add(FailureType.PATCH_TOO_LARGE)
             return False, None
         tried_candidates = 0
-        for boundary in candidates[:max_candidates_per_iteration]:
+        # Mixed-Random arm (r2 §6.1): same candidate space, order shuffled.
+        # The permutation is seeded by (seed, round, epoch) so a run is
+        # reproducible from run_config.json alone and two candidates accepted
+        # at different epochs never share an ordering.  Uses the live-state
+        # accepted-patch count as the epoch (the pre-L2 refinement_loop
+        # SearchState has no dedicated round/epoch fields).
+        round_candidates = list(candidates[:max_candidates_per_iteration])
+        if random_order:
+            import random as _random
+
+            # str seed: random.seed() rejects tuples since Python 3.11, and a
+            # string key is equally deterministic for replay from run_config.
+            _random.Random(f"{int(seed)}|{_round_seq}|{len(state.accepted_patches)}").shuffle(round_candidates)
+        for boundary in round_candidates:
             if state.deadline_expired():
                 state.set_stop_reason("wall_timeout")
                 break
@@ -786,6 +805,7 @@ def run_multi_iteration_case(
         enable_feedback=enable_feedback,
         init_weights=init_weights,
         should_stop=lambda: state.stop_reason is not None,
+        feedback_config=feedback_config,
     )
     result["case_id"] = case.case_id
     state.budget["iterations_used"] = result.get("iterations", 0)
@@ -834,4 +854,31 @@ def run_multi_iteration_case(
     result["logic_level_reduction"] = reduction
     if wns_evaluator is not None:
         result["wns_history"] = wns_history
+    # r2 §3.6 collection fields — search-efficiency metrics derived from the
+    # candidate-level STA sequence.  ``wns_history`` holds the measured WNS of
+    # every candidate that reached real STA, in call order, so ``k`` below is
+    # the candidate-level STA ordinal the three-arm adjudication uses.
+    if wns_evaluator is not None and wns_history:
+        baseline = initial_wns
+        deltas = [None if w is None else (baseline - w)
+                  for w in wns_history] if baseline is not None else []
+        best_curve: list[float] = []
+        running = None
+        for delta in deltas:
+            if delta is None:
+                best_curve.append(running)
+                continue
+            running = delta if running is None else max(running, delta)
+            best_curve.append(running)
+        result["best_wns_curve"] = best_curve            # B(k), k = STA ordinal
+        result["n_sta_to_first_improvement"] = next(
+            (index + 1 for index, delta in enumerate(deltas)
+             if delta is not None and delta > 0.0),
+            None,
+        )
+        used = int(state.budget.get("candidate_sta_used",
+                                    state.budget_used("sta")))
+        if used > 0 and baseline is not None and state.current_wns is not None:
+            result["wns_gain_per_100_sta"] = (
+                (state.current_wns - baseline) / used * 100.0)
     return result

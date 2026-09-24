@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 from dataclasses import asdict
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -34,6 +35,7 @@ except ModuleNotFoundError:  # imported by a test runner rather than executed as
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from run_sequential_timing_check import run_opensta, run_yosys_mapping
 
+from rseco.feedback import ADAPTIVE_CONFIG, LEGACY_CONFIG, FeedbackConfig
 from rseco.flow import run_multi_iteration_case
 from rseco.real_wns import (
     RealWnsEvaluator,
@@ -83,7 +85,26 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--candidates-per-iteration", type=int, default=8,
                    help="Cut candidates explored per iteration (beam width; 1 isolates feedback)")
     p.add_argument("--no-feedback", action="store_true",
-                   help="Disable F1-F5 weight refinement (ablation control)")
+                   help="Disable F1-F5 weight refinement (ablation control; "
+                        "Mixed-Fixed arm of the r2 §6 three-arm experiment)")
+    feedback_group = p.add_mutually_exclusive_group()
+    feedback_group.add_argument(
+        "--feedback-legacy", action="store_const", dest="feedback_config_name",
+        const="legacy",
+        help="Legacy multiplicative weight refinement (LEGACY_CONFIG: "
+             "rho=0, eta=1, clip off) -- bit-identical to the pre-L2 path")
+    feedback_group.add_argument(
+        "--feedback-ema", action="store_const", dest="feedback_config_name",
+        const="ema",
+        help="L2 EMA-smoothed failure feedback (ADAPTIVE_CONFIG: rho=0.5, "
+             "eta_add=0.5, eta_c=0.25, clip on) -- FAECO-Adaptive arm of "
+             "the r2 §6 three-arm experiment")
+    p.set_defaults(feedback_config_name=None)
+    p.add_argument("--random-order", action="store_true",
+                   help="Shuffle candidate cuts within each iteration with a "
+                        "seeded RNG (Mixed-Random arm; pairs with --seed)")
+    p.add_argument("--seed", type=int, default=1,
+                   help="RNG seed for --random-order (use 1, 2, 3 across runs)")
     p.add_argument("--workers", type=int, default=4,
                    help="Parallel OpenSTA evaluations per candidate (1 = serial)")
     p.add_argument("--enable-buffer", action="store_true",
@@ -186,6 +207,23 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    # r2 §6 three-arm selection: --no-feedback -> Mixed-Fixed;
+    # --feedback-legacy -> LEGACY_CONFIG; --feedback-ema -> ADAPTIVE_CONFIG
+    # (FAECO-Adaptive).  ``--adaptive`` (UCB decision layer) is a *separate*
+    # mechanism and stays orthogonal to the feedback config.
+    if args.no_feedback:
+        if args.feedback_config_name is not None:
+            print("--no-feedback is mutually exclusive with the "
+                  "--feedback-legacy/--feedback-ema selectors", file=sys.stderr)
+            return 2
+        enable_feedback = False
+        feedback_config: FeedbackConfig | None = None
+    else:
+        feedback_config = {
+            "legacy": LEGACY_CONFIG,
+            "ema": ADAPTIVE_CONFIG,
+        }.get(args.feedback_config_name)
+        enable_feedback = True
     circuit_path = args.source_file or (args.iscas89_dir / f"{args.circuit}.v")
     if not circuit_path.exists():
         print(f"{args.circuit}: circuit not found: {circuit_path}", file=sys.stderr)
@@ -309,7 +347,7 @@ def main() -> int:
     result = run_multi_iteration_case(
         case_dir,
         max_iterations=args.max_iterations,
-        enable_feedback=not args.no_feedback,
+        enable_feedback=enable_feedback,
         wns_evaluator=evaluator,
         candidates_per_iteration=args.candidates_per_iteration,
         critical_instances=critical,
@@ -324,12 +362,22 @@ def main() -> int:
         sta_budget=args.sta_budget,
         formal_budget=args.formal_budget,
         wall_timeout_s=args.wall_timeout_s,
+        feedback_config=feedback_config,
+        random_order=args.random_order,
+        seed=args.seed,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period
     result["baseline_wns"] = baseline_wns
     result["baseline_min_slack"] = baseline_min_slack
     result["hold_mode"] = args.hold_mode
+    # L2 three-arm identity (explicit at top level; also carried by the
+    # refinement-loop result via _extras() when it produced the trace fields)
+    result["enable_feedback"] = enable_feedback
+    result["feedback_config"] = (None if feedback_config is None
+                                 else asdict(feedback_config))
+    result["random_order"] = args.random_order
+    result["seed"] = args.seed if args.random_order else None
     result["strategies"] = [s.strip() for s in args.strategies.split(',') if s.strip()]
     result["joint_enumerate_depth"] = args.joint_enumerate_depth
     result["init_weights"] = {
@@ -350,6 +398,37 @@ def main() -> int:
         json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     evaluator.write_trials(out / "eval_trials.json")
+
+    # OI-012 remediation: archive the full run configuration so every batch
+    # is reproducible without reverse-engineering CLI flags from logs.
+    def _git_head() -> str | None:
+        try:
+            return subprocess.run(
+                ["git", "rev-parse", "HEAD"], cwd=str(ROOT),
+                capture_output=True, text=True, check=True,
+            ).stdout.strip()
+        except Exception:
+            return None
+
+    run_config = {
+        "argv": sys.argv,
+        "resolved_args": {k: str(v) if isinstance(v, Path) else v
+                          for k, v in vars(args).items()},
+        "git_head": _git_head(),
+        "circuit_path": str(circuit_path),
+        "liberty": str(LIB),
+        "enable_feedback": enable_feedback,
+        "feedback_config_name": args.feedback_config_name,
+        "feedback_config": (None if feedback_config is None
+                            else asdict(feedback_config)),
+        "random_order": args.random_order,
+        "seed": args.seed if args.random_order else None,
+        "adaptive_ucb_decision_layer": args.adaptive,
+    }
+    (out / "run_config.json").write_text(
+        json.dumps(run_config, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
 
     print(f"outer loop: success={result['success']} iterations={result['iterations']}")
     print(f"wns_history={result.get('wns_history')}")

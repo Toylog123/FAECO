@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import threading
@@ -19,6 +19,12 @@ from typing import Callable
 
 from .failures import FailureType
 from .refinement import RefinementWeights, refine_weights
+from .feedback import (
+    FailureFeedbackState,
+    FeedbackConfig,
+    describe_actions,
+    update_feedback,
+)
 
 
 _STOP_REASONS = {
@@ -235,6 +241,7 @@ def simulate_refinement_loop(
     enable_feedback: bool = True,
     init_weights: dict | None = None,
     should_stop: Callable[[], bool] | None = None,
+    feedback_config: FeedbackConfig | None = None,
 ) -> dict:
     """Run the failure-aware refinement loop.
 
@@ -242,6 +249,23 @@ def simulate_refinement_loop(
     loop classifies the failure set and (if enable_feedback) calls
     refine_weights, then re-invokes the evaluator with updated weights.
     enable_feedback=False is the ablation control: weights stay fixed.
+
+    ``feedback_config`` selects *which* feedback mechanism advances the weights
+    (r2 §3.4):
+
+    * ``None`` (default) — the legacy per-round ``refine_weights`` ``+=1.0``
+      update.  This is the exact behaviour the 0a equivalence gate pinned, so
+      the default must stay bit-identical.
+    * ``LEGACY_CONFIG`` — the EMA formulation at ``(rho=0, eta=1, clip off)``.
+      By r2 §3.3 property 2 it is bit-identical to the default path; the two
+      exist so a run can *prove* the equivalence on the same CLI rather than
+      only in a unit test.
+    * ``ADAPTIVE_CONFIG`` — ``rho=0.5, eta_add=0.5, eta_c=0.25, clip on``: the
+      L2 experiment arm.
+
+    ``enable_feedback=False`` still wins: the failure set is recorded (so the
+    failure history stays comparable across arms) but neither mechanism runs
+    and the EMA does not advance (contract §2.3 ruling 1 / ruling 3).
     """
     config = config or RefinementConfig()
     weights = RefinementWeights()
@@ -255,11 +279,45 @@ def simulate_refinement_loop(
             max_cone_gates=int(init_weights.get("max_cone_gates", weights.max_cone_gates)),
             physical_penalty=float(init_weights.get("physical_penalty", weights.physical_penalty)),
         )
+    feedback_state = FailureFeedbackState()
+    weights_trace: list[dict] = []
+    ema_trace: list[dict] = []
+    cone_limit_trace: list[int] = []
+
+    def _snapshot(round_id: int) -> None:
+        """r2 §3.6: per-round traces for explainability / review reproducibility."""
+        weights_trace.append({"round_id": round_id, **asdict(weights)})
+        ema_trace.append({
+            "round_id": round_id,
+            "ema": {key.value: float(value)
+                    for key, value in sorted(feedback_state.ema.items(),
+                                             key=lambda kv: kv[0].value)},
+            "count": {key.value: int(value)
+                      for key, value in sorted(feedback_state.count.items(),
+                                               key=lambda kv: kv[0].value)},
+        })
+        cone_limit_trace.append(
+            int(getattr(weights, "max_cone_gates", 1000)))
+
     history: list[dict] = []
     actions_history: list[list[str]] = []
     accepted_any = False
 
+    def _extras() -> dict:
+        """r2 §3.6 collection fields carried into every return shape."""
+        return {
+            "enable_feedback": bool(enable_feedback),
+            "feedback_config": (None if feedback_config is None
+                                else asdict(feedback_config)),
+            "weights_trace": weights_trace,
+            "failure_ema_trace": ema_trace,
+            "cone_limit_trace": cone_limit_trace,
+        }
+
     for iteration in range(1, config.max_iterations + 1):
+        # r2 §3.6: record the parameter state *in force for this round* —
+        # this is what the round's candidate ordering was computed from.
+        _snapshot(iteration)
         failures: set[FailureType] = set()
         evaluated = evaluator(failures, weights)
         continue_after_success = False
@@ -295,6 +353,7 @@ def simulate_refinement_loop(
                     "history": history,
                     "actions_history": actions_history,
                     "weights": weights,
+                    **_extras(),
                 }
             if not continue_after_success:
                 return {
@@ -303,6 +362,7 @@ def simulate_refinement_loop(
                     "final_patch_id": patch_id,
                     "history": history,
                     "weights": weights,
+                    **_extras(),
                 }
             continue
         if should_stop is not None and should_stop():
@@ -318,11 +378,29 @@ def simulate_refinement_loop(
                 "history": history,
                 "actions_history": actions_history,
                 "weights": weights,
+                **_extras(),
             }
-        decision = refine_weights(weights, failures) if enable_feedback else None
-        if decision is not None:
-            weights = decision.weights
-            actions = decision.actions
+        if enable_feedback and feedback_config is not None:
+            # L2 arm (r2 §3.2): additive EMA-smoothed feedback.  An accepted
+            # round never reaches this line (the success branches return or
+            # `continue` above), which is contract §2.3 ruling 3 — accept does
+            # not advance the EMA.
+            cone_limit = int(getattr(weights, "max_cone_gates", 1000))
+            # describe_actions reads the same private plan as update_feedback,
+            # so the recorded action list can never disagree with the mutation.
+            actions = describe_actions(failures, feedback_config,
+                                       feedback_state, iteration)
+            feedback_state, weights, cone_limit = update_feedback(
+                feedback_state, weights, failures, cone_limit,
+                feedback_config, iteration,
+            )
+        elif enable_feedback:
+            decision = refine_weights(weights, failures)
+            if decision is not None:
+                weights = decision.weights
+                actions = decision.actions
+            else:
+                actions = []
         else:
             actions = []
         if on_refine is not None and enable_feedback:
@@ -345,4 +423,5 @@ def simulate_refinement_loop(
         "history": history,
         "actions_history": actions_history,
         "weights": weights,
+        **_extras(),
     }
