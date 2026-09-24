@@ -855,30 +855,39 @@ def run_multi_iteration_case(
     if wns_evaluator is not None:
         result["wns_history"] = wns_history
     # r2 §3.6 collection fields — search-efficiency metrics derived from the
-    # candidate-level STA sequence.  ``wns_history`` holds the measured WNS of
-    # every candidate that reached real STA, in call order, so ``k`` below is
-    # the candidate-level STA ordinal the three-arm adjudication uses.
-    if wns_evaluator is not None and wns_history:
+    # candidate-level STA sequence.  For the real-STA evaluator the sequence
+    # is ``evaluator.trials`` filtered to the entries that actually executed
+    # OpenSTA (``sta_provenance`` present): pre-STA rejections (budget
+    # exhausted, equivalence failure) carry a placeholder WNS and must NOT
+    # consume a B(k) ordinal.  Proxy evaluators have no trials; ``wns_history``
+    # (per-round endpoints) is the fallback there.
+    if wns_evaluator is not None:
+        trials_ref = getattr(wns_evaluator, "trials", None) or []
+        if trials_ref:
+            sta_seq = [t["wns"] for t in trials_ref
+                       if "sta_provenance" in t and t.get("wns") is not None]
+        else:
+            sta_seq = [w for w in wns_history if w is not None]
+        # NOTE: ``initial_wns`` was captured before the loop; the evaluator
+        # MUTATES ``baseline_wns`` on every accept (real_wns.py:794), so
+        # reading it back post-run would silently re-anchor B(k) to the final
+        # current WNS and corrupt every delta.
         baseline = initial_wns
-        deltas = [None if w is None else (baseline - w)
-                  for w in wns_history] if baseline is not None else []
-        best_curve: list[float] = []
-        running = None
-        for delta in deltas:
-            if delta is None:
+        if sta_seq and baseline is not None:
+            deltas = [baseline - w for w in sta_seq]
+            best_curve: list[float] = []
+            running: float | None = None
+            for delta in deltas:
+                running = delta if running is None else max(running, delta)
                 best_curve.append(running)
-                continue
-            running = delta if running is None else max(running, delta)
-            best_curve.append(running)
-        result["best_wns_curve"] = best_curve            # B(k), k = STA ordinal
-        result["n_sta_to_first_improvement"] = next(
-            (index + 1 for index, delta in enumerate(deltas)
-             if delta is not None and delta > 0.0),
-            None,
-        )
-        used = int(state.budget.get("candidate_sta_used",
-                                    state.budget_used("sta")))
-        if used > 0 and baseline is not None and state.current_wns is not None:
-            result["wns_gain_per_100_sta"] = (
-                (state.current_wns - baseline) / used * 100.0)
+            result["best_wns_curve"] = best_curve        # B(k), k = STA ordinal
+            result["n_sta_to_first_improvement"] = next(
+                (index + 1 for index, delta in enumerate(deltas)
+                 if delta > 0.0),
+                None,
+            )
+            used = len(sta_seq)
+            if used > 0 and state.current_wns is not None:
+                result["wns_gain_per_100_sta"] = (
+                    (state.current_wns - baseline) / used * 100.0)
     return result
