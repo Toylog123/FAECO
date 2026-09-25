@@ -762,3 +762,41 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
   Failure Attribution → STA/Validation。
 - 新增工具：`code/scripts/analyze_k1_discriminant.py`（逐电路分类 + 候选身份
   变化计数 + 多数规则判定，5 项单测）。
+
+### 8.12 步骤 9 结论：L3 S 打通并在真实工具链上取证（2026-09-25）
+
+完整报告见 `reports/FAECO_L3_S_VALIDATION_20260925.md`。
+
+- **交付**：`code/src/rseco/structure_resynthesis.py`（§5.1 数据结构 / §5.2 确定性命名 /
+  §5.3 状态机 / §4.4 R_S 双阈值 / §4.7 归因标签 / §5.4 真实工具绑定）
+  + 22 项单测（§5.5 八项全覆盖）。回归 `477 passed / 4 skipped`（L3 贡献 +22）。
+- **状态机端到端通过**（s27 关键路径窗）：EXTRACT→EMIT→RESYNTH→CEC_PRE→TECHMAP
+  →CEC_POST→RATIO→DEDUP→GRAFT→STRUCT 全部通过并产出候选；
+  S1/S2 与该窗 S0 逐位相同 → 按 §4.7 **DROP（不计失败）**。
+- **真实工具接线缺陷 7 处（全部是"假阴性"型）已修并回归覆盖**：
+  ① CEC 未传 top → 单元模型残留为额外 BLIF 根 → ABC miter 失败（假 F1）；
+  ② `read_blif` 出 `$lut`，`abc -liberty` 抽取 0 gates → 需先 `techmap`（否则
+  CEC_POST 读 `$shr` 失败）；③ `_extract_liberty_cells` 返回带引号 token
+  （**仅在 S 内局部去引号，不动共享函数**，以保护等价门基线）；
+  ④ ABC 未 strash 行报 `nd=` 非 `and=` → "before" 深度丢失；
+  ⑤ `ltp -noff` 被 `-q` 抑制且未读单元模型 → SKY130 深度不可测；
+  ⑥ 宿主解析只认 `sky130_fd_sc_hd__*`，漏掉本地 `dff` 包装模块（包一颗 `dfxtp`）
+  → 既假悬空、又**丢失馈入触发器的窗口输出（graft 会删活网的唯一驱动）**；
+  ⑦ `extract_window` 用"被外部驱动"而非"**被外部消费**"判断窗口输出。
+  **契约增补**：S 必须用宽松宿主解析 `host_cells()`；`extraction_report` 增
+  `boundary_outputs_extended` 字段记录被自动补齐的边界输出。
+- **验收扫描（真实 OpenSTA，与基线同命令）**：端点锥枚举 → graft → STA，取首个
+  ΔL>0 且 ΔWNS>0。**s641 命中**（窗 `DFF_13`/root `G127`，29 门，R_S=1.00）：
+  **ΔL=+1（ltp 28→27）、ΔWNS=+0.03 ns、ΔTNS=+0.01 ns**，CEC-1/CEC-2 双闭合 +
+  全网表 structure_check 通过 + 逐次复跑逐位相同。**s382/s713 无被接受候选**。
+- **判读（如实）**：机制成立、§5.5 gate 达成，但**收益稀疏（1/3 电路、+0.03 ns）**；
+  结构深度下降多落在非时序关键锥（21 窗仅 2 个整网表 ΔL>0），且在 s713 出现
+  "结构变浅但更慢"（ΔL=+2/+3 而 ΔWNS=−0.46/−0.27/−0.34）。
+  与 L2 呼应：单窗小窗 + `resyn2` 族这一 regime 下，增量主要来自**候选排序与验证纪律**，
+  而非新的搜索维度。
+- **边界（必须同时声明）**：本扫描是**代理实验**（仅端点锥、单次 graft、无多轮再分析、
+  无 R/G/B 组合、未用 `weighted_cut_candidates` 的时序加权选窗）→ 是下界而非定论。
+- **下一步**：① 按 r2 §4.9 把 S 接入 `run_multi_iteration_case`（独立候选类型，受
+  `candidates_per_iteration` 约束，至多加一档 `S→G`），**不改** L2 已封板的反馈通路；
+  ② 8 电路 × {S 开, S 关} 正式口径实验；③ 据此定 S 的论文定位（独立贡献 or 可选类型）；
+  ④ 论文改动一律等定案后一次性进行（本轮未触碰 `.tex`）。
