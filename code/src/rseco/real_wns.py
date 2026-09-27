@@ -807,6 +807,144 @@ class RealWnsEvaluator:
         """Recompute R-action availability against the current committed G_r."""
         return build_r_available(self.liberty_text, list(instances), self.mapped_text)
 
+    def evaluate_resynth_candidate(
+        self,
+        candidate_text: str,
+        *,
+        state=None,
+        patch_id: str | None = None,
+        action_scope: list[str] | None = None,
+        resynth_metadata: dict | None = None,
+    ) -> dict:
+        """Measure a pre-built, already formally verified candidate netlist.
+
+        This is the L3 S candidate type's timing half.  The caller
+        (``structure_resynthesis.run_structure_resynthesis``) has already closed
+        CEC-1 (original window ≡ resynthesised window), CEC-2 (original window ≡
+        mapped window) and the full-host structural self-check, so this method
+        only runs the *same* OpenSTA configuration as the ideal R/G/B path and
+        compares the result against the current committed baseline.
+
+        Returns a ``wns_info``-shaped dict identical in contract to
+        :meth:`__call__`, so the outer loop drives it through the same accept
+        path.  The R/G/B evaluation path is deliberately untouched.
+        """
+        action_scope = list(action_scope or [])
+        candidate_hash = hashlib.sha256(candidate_text.encode("utf-8")).hexdigest()
+        base_hash = hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+        iteration = len(self.call_log) + 1
+        self._call_counter += 1
+        sub = self.output_dir / ("iter%03d_s%03d" % (iteration, self._call_counter))
+        sub.mkdir(parents=True, exist_ok=True)
+        (sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
+
+        budget_event = self._deadline_or_budget_event(
+            state, "sta", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=action_scope,
+        )
+        if budget_event is not None:
+            self.trials.append({
+                "patch_id": patch_id, "iteration": iteration,
+                "candidate_hash": candidate_hash, "cut_hash": candidate_hash,
+                "accepted": False, "improved": False, "kind": "S",
+                "wns": self.baseline_wns, "tns": self.baseline_tns,
+                "candidate_netlist_text": candidate_text,
+                "failure_events": [budget_event],
+            })
+            self.call_log.append({"iteration": iteration, "patch_id": patch_id,
+                                  "gates": action_scope, "improved": False,
+                                  "kind": "S", "reason": "sta budget",
+                                  "failure_events": [budget_event]})
+            return {"wns": self.baseline_wns, "tns": self.baseline_tns,
+                    "min_slack": self.baseline_min_slack, "improved": False,
+                    "kind": "S", "failure_events": [budget_event],
+                    "candidate_hash": candidate_hash}
+
+        started_at = time.perf_counter()
+        try:
+            res = run_opensta_sequential(
+                netlist_path=sub / "mapped.v",
+                period=self.period,
+                output_dir=sub,
+                top_module=self.top_module,
+                hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                min_path=self.hold_mode,
+                clock_port=self.clock_port,
+                multi_path=True,
+                timeout_s=self._remaining_tool_timeout(state),
+            )
+        except TimeoutError as exc:
+            res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
+        except Exception as exc:
+            res = {"wns": None, "tns": None, "error": str(exc)}
+
+        report = sub / "sta.log"
+        critical_instances = None
+        critical_endpoints = None
+        if report.exists():
+            report_text = report.read_text(encoding="utf-8", errors="replace")
+            critical_instances = parse_critical_instances(report_text)
+            endpoint = parse_worst_endpoint(report_text)
+            critical_endpoints = [endpoint] if endpoint else None
+
+        wns = res.get("wns")
+        tns = res.get("tns")
+        min_slack = res.get("min_slack")
+        if self.physical_gate:
+            # S is not wired through the SPEF physical gate in this version:
+            # fail closed rather than accept an unpaired candidate.
+            improved = False
+        elif self.hold_mode:
+            improved = (
+                min_slack is not None and self.baseline_min_slack is not None
+                and min_slack > self.baseline_min_slack + self.epsilon
+            )
+        else:
+            improved = (
+                wns is not None and self.baseline_wns is not None
+                and (
+                    wns > self.baseline_wns + self.epsilon
+                    or (self.tns_aware and tns is not None
+                        and self.baseline_tns is not None
+                        and abs(wns - self.baseline_wns) <= self.epsilon
+                        and tns > self.baseline_tns + self.epsilon)
+                )
+            )
+
+        reported_wns = wns if wns is not None else self.baseline_wns
+        trial = {
+            "patch_id": patch_id, "iteration": iteration, "kind": "S",
+            "instance": "S", "from_type": "", "to_type": "",
+            "wns": reported_wns, "tns": tns, "min_slack": min_slack,
+            "physical_failure": False,
+            "candidate_netlist_text": candidate_text,
+            "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+            "failure_events": [],
+            "runtime_s": time.perf_counter() - started_at,
+            "critical_instances": critical_instances,
+            "critical_endpoints": critical_endpoints,
+            "resynth": dict(resynth_metadata or {}),
+            "accepted": bool(improved), "improved": bool(improved),
+        }
+        self.trials.append(trial)
+        self.call_log.append({
+            "iteration": iteration, "patch_id": patch_id, "gates": action_scope,
+            "n_trials": 1, "kind": "S", "best_wns": reported_wns,
+            "baseline_wns": self.baseline_wns, "improved": bool(improved),
+        })
+        return {
+            "wns": reported_wns, "tns": tns, "min_slack": min_slack,
+            "improved": bool(improved), "kind": "S", "failure_events": [],
+            "candidate_netlist_text": candidate_text,
+            "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+            "critical_instances": critical_instances,
+            "critical_endpoints": critical_endpoints,
+            "resynth": dict(resynth_metadata or {}),
+            "sta_provenance": {"tool": "OpenSTA", "output_dir": str(sub),
+                               "report_path": str(report) if report.exists() else None},
+            "runtime_s": trial["runtime_s"],
+        }
+
     # -- candidate construction -------------------------------------------
 
     def _r_candidates(self, cell_type: str) -> list[tuple[str, dict]]:

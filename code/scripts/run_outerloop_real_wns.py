@@ -202,6 +202,21 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--physical-unit-len", type=float, default=40.0,
                    help="SPEF unit wire length (um); lower = lighter physical load "
                         "(2um approximates post-placement Manhattan distance)")
+
+    # L3 S (r2 §4.9): window-local structure resynthesis as an independent
+    # candidate type.  Off by default so every earlier arm stays bit-identical.
+    p.add_argument("--structure-resynth", action="store_true",
+                   help="Enable the L3 S window-local structure resynthesis "
+                        "candidate type (r2 §4.9).  Runs only after the R/G/B "
+                        "candidates of a round all fail to improve timing.")
+    p.add_argument("--resynth-per-iteration", type=int, default=1,
+                   help="How many cut boundaries per round are handed to S "
+                        "(also bounded by --candidates-per-iteration)")
+    p.add_argument("--resynth-variants", default="S0,S1,S2",
+                   help="ABC variant chain for S (default S0,S1,S2 — r2 §4.3)")
+    p.add_argument("--structure-out-dir", type=Path, default=None,
+                   help="Where S window artifacts are written "
+                        "(default: <output-dir>/structure_resynth)")
     return p.parse_args()
 
 
@@ -365,6 +380,13 @@ def main() -> int:
         feedback_config=feedback_config,
         random_order=args.random_order,
         seed=args.seed,
+        structure_resynth=args.structure_resynth,
+        resynth_per_iteration=args.resynth_per_iteration,
+        resynth_variants=tuple(
+            v.strip() for v in args.resynth_variants.split(",") if v.strip()
+        ),
+        resynth_lib_path=LIB,
+        structure_out_dir=args.structure_out_dir,
     )
     result["circuit"] = args.circuit
     result["period_ns"] = args.period
@@ -424,6 +446,13 @@ def main() -> int:
         "random_order": args.random_order,
         "seed": args.seed if args.random_order else None,
         "adaptive_ucb_decision_layer": args.adaptive,
+        # L3 S (r2 §4.9) — archived so the {S on, S off} batch is reproducible
+        # from run_config.json alone (same discipline as the L2 arms).
+        "structure_resynth": args.structure_resynth,
+        "resynth_per_iteration": args.resynth_per_iteration,
+        "resynth_variants": [v.strip() for v in args.resynth_variants.split(",")
+                             if v.strip()],
+        "structure_resynth_stats": result.get("structure_resynth"),
     }
     (out / "run_config.json").write_text(
         json.dumps(run_config, indent=2, ensure_ascii=False) + "\n",
@@ -432,6 +461,13 @@ def main() -> int:
 
     print(f"outer loop: success={result['success']} iterations={result['iterations']}")
     print(f"wns_history={result.get('wns_history')}")
+    if args.structure_resynth:
+        s = result.get("structure_resynth") or {}
+        print(f"S: windows_offered={s.get('windows_offered')} "
+              f"extracted={s.get('windows_extracted')} "
+              f"candidates={s.get('candidates')} measured={s.get('measured')} "
+              f"accepted={s.get('accepted')} "
+              f"rejections={len(s.get('rejections') or [])}")
     if result["success"]:
         print(f"accepted patch: {result['final_patch_id']} at wns="
               f"{result['history'][-1].get('wns')}")

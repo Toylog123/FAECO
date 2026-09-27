@@ -410,6 +410,12 @@ def run_multi_iteration_case(
     feedback_config: object | None = None,
     random_order: bool = False,
     seed: int = 0,
+    structure_resynth: bool = False,
+    resynth_per_iteration: int = 1,
+    resynth_variants: tuple[str, ...] = ("S0", "S1", "S2"),
+    resynth_tools: object | None = None,
+    resynth_lib_path: str | Path | None = None,
+    structure_out_dir: str | Path | None = None,
 ) -> dict:
     """Run the X19 multi-iteration failure-aware refinement loop.
 
@@ -443,6 +449,23 @@ def run_multi_iteration_case(
         report_checks).  When provided with an F4-capable wns_evaluator,
         the weighted cut search can generate a critical-path-cover candidate
         that actually targets the timing-critical gates after an F4 failure.
+
+    structure_resynth: enable the L3 S candidate type (r2 §4.9).  S is an
+        *independent* candidate type: when the R/G/B candidates of an
+        iteration all fail to improve timing, the top ``resynth_per_iteration``
+        cut boundaries are additionally handed to
+        ``run_structure_resynthesis``, and each formally verified (CEC-1 +
+        CEC-2 + full-host structural check) grafted netlist is measured with
+        the same STA configuration as the R/G/B path.  S consumes the same
+        ``candidates_per_iteration`` budget and is never applied on top of
+        itself, so there is at most one S tier per iteration.  The L2 feedback
+        path is untouched: the flag only adds a candidate source.
+    resynth_per_iteration: how many cut boundaries per iteration are offered
+        to S (bounded by ``candidates_per_iteration``).  Default 1 keeps the
+        resynthesis cost bounded; each window costs one ABC run per variant.
+    resynth_variants: ABC variant chain names (default S0/S1/S2).
+    resynth_tools: injectable :class:`ResynthTools`; when omitted the real
+        Yosys/ABC binding is built from ``resynth_lib_path`` on first use.
     """
     from .refinement_loop import RefinementConfig, SearchState, simulate_refinement_loop
     case_dir = Path(case_dir)
@@ -507,8 +530,46 @@ def run_multi_iteration_case(
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     _round_seq = 0  # evaluator invocation ordinal (one per outer iteration)
 
+    # -- L3 S wiring (r2 §4.9) --------------------------------------------
+    # Fail loudly instead of silently degrading to "S off": an experiment that
+    # claims S was enabled but never produced a single candidate would be a
+    # false negative with no error surface (the failure class this project
+    # repeatedly paid for).  `s_stats` doubles as the positive engagement
+    # signal carried into the result.
+    if structure_resynth:
+        if wns_evaluator is None or not callable(
+            getattr(wns_evaluator, "evaluate_resynth_candidate", None)
+        ):
+            raise ValueError(
+                "structure_resynth=True requires a wns_evaluator exposing "
+                "evaluate_resynth_candidate() (e.g. RealWnsEvaluator)"
+            )
+        if resynth_tools is None and not (
+            resynth_lib_path and Path(resynth_lib_path).exists()
+        ):
+            raise ValueError(
+                "structure_resynth=True requires resynth_lib_path (the SKY130 "
+                ".lib used for ABC mapping) when no resynth_tools are injected"
+            )
+    s_stats: dict = {
+        "enabled": bool(structure_resynth),
+        "windows_offered": 0,     # boundaries handed to extract_window
+        "windows_extracted": 0,   # boundaries whose r2 §4.2 invariants held
+        "candidates": 0,          # ResynthCandidates returned by the machine
+        "measured": 0,            # candidates actually measured by STA
+        "accepted": 0,            # candidates committed as a new G_r
+        "rejections": [],         # {round, label, variant} — auditable only
+        "rounds_with_s": [],      # round ordinals in which S actually ran
+    }
+    _s_tools: object | None = resynth_tools
+
+    def _s_boundary_key(boundary) -> str:
+        """Deterministic S-side identity for one cut boundary (r2 §4.3)."""
+        root = boundary.boundary_outputs[0] if boundary.boundary_outputs else ""
+        return f"S|{root}|" + ",".join(sorted(boundary.gates))
+
     def evaluator(failures, weights):
-        nonlocal cone, _round_seq
+        nonlocal cone, _round_seq, _s_tools
         _round_seq += 1
         if max_patches == 0 or (stateful_evaluator and len(state.accepted_patches) >= max_patches):
             state.set_stop_reason("max_patches")
@@ -794,6 +855,223 @@ def run_multi_iteration_case(
                 return True, patch.patch_id
             # legacy single-candidate behaviour: stop after the first cut.
             break
+        # ------------------------------------------------------------------
+        # L3 S — window-local structure resynthesis (r2 §4.9).
+        #
+        # An *independent* candidate type over the *same* cut boundaries the
+        # R/G/B path of this round just exhausted.  Reached only when no R/G/B
+        # candidate improved timing, so S can never displace an R/G/B accept.
+        #
+        # Contract boundaries honoured here:
+        #   * at most one S tier per iteration — S never chains into another S
+        #     (the `S→G` follow-up pass of §4.9 is deliberately NOT applied in
+        #     this version; see the contract note, it would confound the
+        #     single-variable {S on, S off} comparison);
+        #   * bounded by `candidates_per_iteration` (both the offered-window
+        #     quota and the number of S candidates measured per round);
+        #   * the L2 feedback path is untouched — S rejections are recorded
+        #     with severity "info" for auditability but are never added to
+        #     `failures`, so the weights/EMA evolve exactly as they do with
+        #     S off.  {S on, S off} therefore differs only in the extra
+        #     candidate source.
+        # ------------------------------------------------------------------
+        if structure_resynth and wns_evaluator is not None:
+            from .structure_resynthesis import (default_resynth_tools,
+                                                extract_window,
+                                                run_structure_resynthesis)
+
+            if _s_tools is None:
+                _s_tools = default_resynth_tools(resynth_lib_path)
+            s_dir_root = (Path(structure_out_dir) if structure_out_dir is not None
+                          else artifact_dir / "structure_resynth")
+            s_measured_this_round = 0
+            s_attempted_this_round = 0
+            s_engaged = False
+            for boundary in round_candidates:
+                # `resynth_per_iteration` counts *attempted* windows, not raw
+                # cut positions: a boundary whose window was already resynth-
+                # esised at this committed G_r is deterministic to re-run, so
+                # the scan walks on to the next cut instead of stalling there.
+                if s_attempted_this_round >= max(1, int(resynth_per_iteration)):
+                    break
+                if s_measured_this_round >= max_candidates_per_iteration:
+                    break
+                if state.deadline_expired():
+                    state.set_stop_reason("wall_timeout")
+                    break
+                s_stats["windows_offered"] += 1
+                try:
+                    spec = extract_window(state.current_netlist_text, boundary)
+                except Exception:
+                    spec = None
+                if spec is None:
+                    # r2 §4.2 invariant violation (forbidden / sequential cell,
+                    # boundary gate absent from the committed netlist):
+                    # honest "not a window", free of charge.
+                    continue
+                s_stats["windows_extracted"] += 1
+                s_key = state.hash_text(
+                    state.current_netlist_hash + "|" + _s_boundary_key(boundary)
+                )
+                if not state.mark_candidate_tested(s_key):
+                    continue
+                s_attempted_this_round += 1
+                s_engaged = True
+                # The S machine runs CEC-1 and CEC-2 (formal equivalence);
+                # charge the formal budget and fail closed before any tool.
+                if not state.reserve_budget("formal"):
+                    event = {
+                        "type": "formal_budget_exhausted", "candidate_hash": s_key,
+                        "cut_hash": s_key, "severity": "hard", "hard_gate": True,
+                        "action_scope": list(boundary.gates),
+                        "threshold": state.budget.get("formal_budget"),
+                        "observed_value": state.budget_used("formal"),
+                        "runtime_s": 0.0,
+                        "evidence": {"stage": "S", "budget": "formal",
+                                     "reason": "reserved before window CEC"},
+                    }
+                    state.record_failure(event)
+                    state.set_stop_reason("formal_budget")
+                    return False, None
+                s_root = boundary.boundary_outputs[0] if boundary.boundary_outputs else "w"
+                s_out = (s_dir_root / f"round{_round_seq:03d}"
+                         / f"{s_root}_{len(boundary.gates)}g")
+                try:
+                    outcome = run_structure_resynthesis(
+                        state.current_netlist_text, boundary, s_out,
+                        tools=_s_tools, variants=tuple(resynth_variants),
+                    )
+                except Exception as exc:
+                    s_stats["rejections"].append(
+                        {"round": _round_seq, "label": f"W_EXCEPTION:{type(exc).__name__}",
+                         "variant": None})
+                    state.record_failure({
+                        "type": "resynth_exception", "candidate_hash": s_key,
+                        "cut_hash": s_key, "severity": "info", "hard_gate": False,
+                        "runtime_s": 0.0,
+                        "evidence": {"stage": "S", "exception_type": type(exc).__name__,
+                                     "message": str(exc)},
+                    })
+                    continue
+                for rejection in outcome.rejections:
+                    s_stats["rejections"].append(
+                        {"round": _round_seq, "label": rejection.get("label"),
+                         "variant": rejection.get("variant")})
+                    state.record_failure({
+                        "type": "resynth_rejected", "candidate_hash": s_key,
+                        "cut_hash": s_key, "severity": "info", "hard_gate": False,
+                        "runtime_s": 0.0,
+                        "evidence": {"stage": "S",
+                                     "label": rejection.get("label"),
+                                     "variant": rejection.get("variant"),
+                                     "window_root": s_root},
+                    })
+                s_stats["candidates"] += len(outcome.candidates)
+                for cand in outcome.candidates:
+                    if s_measured_this_round >= max_candidates_per_iteration:
+                        break
+                    s_patch_id = f"S::{cand.spec.window_id}::{cand.variant.variant}"
+                    wns_info = wns_evaluator.evaluate_resynth_candidate(
+                        cand.grafted_text, state=state, patch_id=s_patch_id,
+                        action_scope=sorted(boundary.gates),
+                        resynth_metadata=cand.resynth_stats,
+                    )
+                    s_measured_this_round += 1
+                    s_stats["measured"] += 1
+                    for terminal_event in wns_info.get("failure_events", []):
+                        terminal_type = terminal_event.get("type")
+                        if terminal_type in {"deadline_exhausted",
+                                             "sta_budget_exhausted",
+                                             "formal_budget_exhausted"}:
+                            state.record_failure(terminal_event)
+                            if terminal_type == "deadline_exhausted":
+                                state.set_stop_reason("wall_timeout")
+                            elif terminal_type == "sta_budget_exhausted":
+                                state.set_stop_reason("sta_budget")
+                            else:
+                                state.set_stop_reason("formal_budget")
+                    if state.stop_reason is not None:
+                        return False, None
+                    s_wns = wns_info["wns"]
+                    wns_history.append(s_wns)
+                    if not wns_info["improved"]:
+                        continue
+                    s_text = wns_info.get("candidate_netlist_text")
+                    if s_text is None:
+                        continue
+                    state.accept_patch(
+                        s_patch_id, s_text, wns=s_wns,
+                        tns=wns_info.get("tns"),
+                        min_slack=wns_info.get("min_slack"),
+                        candidate_hash=wns_info.get("candidate_hash", s_key),
+                        critical_endpoints=wns_info.get("critical_endpoints"),
+                        critical_instances=wns_info.get("critical_instances"),
+                        metadata={
+                            "cut_hash": s_key,
+                            "kind": "S",
+                            "window_id": cand.spec.window_id,
+                            "window_variant": cand.variant.variant,
+                            "r_s": cand.resynth_stats.get("r_s"),
+                            "r_s_verdict": cand.resynth_stats.get("r_s_verdict"),
+                            "soft_penalty": bool(cand.soft_penalty),
+                            "depth_before_sky130": cand.resynth_stats.get("depth_before_sky130"),
+                            "depth_after_sky130": cand.resynth_stats.get("depth_after_sky130"),
+                            "abc_sequence": cand.resynth_stats.get("abc_sequence"),
+                            "resynth_stats": dict(cand.resynth_stats),
+                            "sta_provenance": wns_info.get("sta_provenance"),
+                            "action_scope": sorted(boundary.gates),
+                        },
+                    )
+                    accept = getattr(wns_evaluator, "accept_candidate", None)
+                    if callable(accept):
+                        accept(wns_info, state=state)
+                    s_stats["accepted"] += 1
+                    # refresh the cone from the grafted netlist so the next
+                    # round's cut search sees the new window cells (same
+                    # contract as the R/G/B accept path).
+                    if getattr(wns_evaluator, "refresh_cone", False):
+                        try:
+                            refreshed_netlist = parse_verilog_netlist_from_text(s_text)
+                            cone = extract_fanin_cone(
+                                refreshed_netlist, roots=[case.target_output]
+                            )
+                            state.current_cone_gates = list(cone.gates)
+                            state.accepted_patches[-1]["metadata"][
+                                "refreshed_cone_gates"] = list(cone.gates)
+                        except Exception:
+                            pass
+                    timing_met = (
+                        state.current_wns is not None
+                        and state.current_wns >= -float(epsilon)
+                        and (
+                            not getattr(wns_evaluator, "hold_mode", False)
+                            or (
+                                state.current_min_slack is not None
+                                and state.current_min_slack >= -float(epsilon)
+                            )
+                        )
+                    )
+                    if timing_met:
+                        state.set_stop_reason("timing_met")
+                        return True, s_patch_id, {
+                            "wns": s_wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, False
+                    if len(state.accepted_patches) >= max_patches:
+                        state.set_stop_reason("max_patches")
+                        return True, s_patch_id, {
+                            "wns": s_wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, False
+                    # S committed a new G_r; continue the closure search.
+                    return True, s_patch_id, {
+                        "wns": s_wns, "tns": wns_info.get("tns"),
+                        "min_slack": wns_info.get("min_slack"),
+                    }, True
+            if s_engaged:
+                s_stats["rounds_with_s"].append(_round_seq)
+        if state.stop_reason is not None:
+            return False, None
         if wns_evaluator is not None:
             failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
             return False, None
@@ -808,6 +1086,11 @@ def run_multi_iteration_case(
         feedback_config=feedback_config,
     )
     result["case_id"] = case.case_id
+    # L3 S engagement ledger.  A run that claims S was on must be provable
+    # from the artifact alone: `windows_offered`/`candidates`/`measured` are
+    # the positive signals, `rejections` the attribution, `accepted` the
+    # committed count.  All zero with enabled=True means S never engaged.
+    result["structure_resynth"] = dict(s_stats)
     state.budget["iterations_used"] = result.get("iterations", 0)
     state.budget["sta_runs"] = state.budget_used("sta")
     state.budget["formal_runs"] = state.budget_used("formal")

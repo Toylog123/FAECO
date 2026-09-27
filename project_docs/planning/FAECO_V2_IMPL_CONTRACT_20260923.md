@@ -800,3 +800,104 @@ base = `b8c3759`，`git merge-file -p --diff3`）。22 对文件中 21 对自动
   `candidates_per_iteration` 约束，至多加一档 `S→G`），**不改** L2 已封板的反馈通路；
   ② 8 电路 × {S 开, S 关} 正式口径实验；③ 据此定 S 的论文定位（独立贡献 or 可选类型）；
   ④ 论文改动一律等定案后一次性进行（本轮未触碰 `.tex`）。
+
+---
+
+### 8.13 步骤 10 开工：S 接入 `run_multi_iteration_case`（2026-09-27）
+
+对应 §8.12 "下一步 ①"。施工顺序仍是**先方案、后论文**：本节只冻结接口与口径，
+`.tex` 不动。
+
+#### 8.13.1 接入语义（r2 §4.9 的落地读法）
+
+`S` 是**独立候选类型**，与 R/G/B 共用同一批割边界、同一预算、同一接受契约：
+一轮里候选的推进顺序是 `R/G/B → S`，因此
+
+* **S 只在同轮 R/G/B 全部未改进时才被报价**（R/G/B 一旦接受即 `continue` 到下一轮）；
+  S 因此**永远不会顶掉**一个 R/G/B 的接受，`{S 开, S 关}` 仍是单变量对照；
+* **至多一档**：S 不会在自身接受后再触发一次 S（`S→G` 见 §8.13.4，v1 有意不做）；
+* **受 `candidates_per_iteration` 约束**（两处）：每轮交出的**边界数**上限
+  `resynth_per_iteration`（再被 `max_candidates_per_iteration` 夹住），每轮**实测的
+  S 候选数**上限亦为 `max_candidates_per_iteration`；
+* **不改 L2 反馈通路**：S 的拒绝事件以 `severity="info"` 记入 `SearchState.record_failure`
+  供审计，但**从不进入驱动权重/EMA 的 `failures` 集合**。该性质有单测把守
+  （`test_s_rejections_do_not_enter_failures`：`weights_trace` / `failure_ema_trace` /
+  `history[*].failures` 与 S 关臂**逐位相同**）。
+
+#### 8.13.2 预算计费（fail closed，调用前预留）
+
+| 阶段 | 预算类目 | 说明 |
+|---|---|---|
+| 窗口 CEC-1 / CEC-2（`yosys equiv`）| `formal` | 每个**尝试的窗口**预留 1 次，预留失败即 `stop_reason="formal_budget"` 并返回 |
+| 候选 WNS 实测（OpenSTA）| `sta` | 每个**实测候选**预留 1 次（`evaluate_resynth_candidate` 内），同一 STA 配置（`multi_path=True`、同 `top_module`、同 clock/period） |
+
+两者都**在工具调用之前**预留（沿用 `_deadline_or_budget_event` 的 fail-closed 契约），
+因此预算耗尽只会表现为"停止"，不会表现为"少测了一个候选却当作已测"。
+
+#### 8.13.3 去重与"必须可证已启用"
+
+* S 侧身份：`hash_text(current_netlist_hash + "|" + "S|" + root + "|" + sorted(gates))`。
+  **同一 `G_r` 上的同一窗口是确定性重跑**，已测则跳过；跳过**不占用**
+  `resynth_per_iteration` 配额（扫描顺延到下一条割），避免"首候选恰好是旧窗口 ⇒ S 整轮空转"。
+* 结果里新增 `structure_resynth` 台账：
+  `{enabled, windows_offered, windows_extracted, candidates, measured, accepted,
+  rejections[{round,label,variant}], rounds_with_s}`。
+  **判读纪律**：`enabled=True` 且 `windows_extracted==0` ⇒ **是"程序问题"（S 未被真正执行），
+  不是"S 无贡献"**；只有 `windows_extracted>0` 而 `accepted==0` 才是能力结论。
+  聚合脚本 `compare_s_ablation.py` 负责区分这两种情形（前者直接判 INVALID ARM）。
+* 配置错误**响亮失败**：`structure_resynth=True` 但 `wns_evaluator` 无
+  `evaluate_resynth_candidate`（或既无 `resynth_lib_path` 也无注入 `resynth_tools`）
+  → `ValueError`，绝不静默退化成"S 关"。
+
+#### 8.13.4 有意不做：`S→G` 一档（v1 范围声明）
+
+r2 §4.9 写"至多加一档 `S→G`"。**v1 不实现**，理由：`S→G` 会在同一次 S 接受后再叠一次
+G 寻优，（a）使 `{S 开}` 臂同时改了**两件事**（新增候选类型 + 新实例上再做 G），
+破坏单变量对照；（b）需要为新窗口实例重建 G 可用集与 patch，属新机制。故此处显式挂起，
+留待 S 的独立贡献判读之后再决定是否加档。
+
+#### 8.13.5 实验口径（`run_s_ablation_batch.sh`）
+
+* 两臂唯一自由度：`off = --no-feedback`；`on = --no-feedback --structure-resynth`。
+  基线取 **fixed** 而非 adaptive：L2 已封板"EMA 在 k=8 regime 无独立贡献"
+  （`reports/FAECO_L2_THREEARM_20260924.md`），用 fixed 作基线才能让 S 成为单变量。
+* 共同口径：`--period 0.5 --max-iterations 20 --candidates-per-iteration 8 --joint-k 2
+  --enable-buffer --workers 1 --early-stop`。
+* **STA 预算取 700（而非 L2 的 500）**，理由是"两臂都不得撞墙"：L2 fixed 臂实测
+  off 侧最大 `sta_used=476`（s420，500 下已接近绑定）；S on 侧每轮最多追加
+  `resynth_per_iteration×|variants|=3` 次测量、20 轮上限 +60 → 536 < 700。
+  否则 on 臂的早停会把"预算被 R/G/B 抢光"**伪装成**"S 无贡献"。
+  **报告必须同时给出两臂 `sta_used` 以证明预算不绑定。**
+* 工具链**钉版本**：驱动脚本显式注入 OSS-CAD `0.67+146` 并断言版本串，不依赖调用者 PATH
+  （版本不对会静默改变 ABC/CEC 结果）。
+
+---
+
+### 8.14 步骤 10 结论：{S 开, S 关} 消融 = 负向（能力型）（2026-09-27）
+
+完整报告见 `reports/FAECO_L3_S_LOOP_ABLATION_20260927.md`。
+
+- **交付**：`evaluate_resynth_candidate`（S 的时序半）+ `run_multi_iteration_case` 的 S 分
+  支与台账 + `--structure-resynth` CLI + 4 个脚本（批量驱动 / 配对聚合 / 惰性 gate /
+  候选机制分析）+ 9 项环路集成单测。回归 `486 passed / 4 skipped`。
+- **单变量对照有 gate 把守**：off 臂 **8/8 电路逐位复现归档 L2 fixed 臂**
+  （success/iterations/stop_reason/final_patch_id/wns/wns_history/接受补丁链/`sta_used`）
+  → S-off 路径完全惰性。
+- **S 真的执行了**（先排除"程序型"假阴性）：7/8 电路成功抽窗合计 **469** 个、产出并实测
+  候选 **37** 个；`s641` 为"报价 72 窗、成功抽窗 0"（r2 §4.2 不变量），属几何原因。
+- **结果**：**接受 0/8**；两臂 `dWNS`、`maxB(k)`、`k₁st`、接受链**逐位相同**。37 个候选
+  **ΔL(BLIF)>0 37/37、ΔL(SKY130)>0 16/37、ΔWNS>0 0/37**（含 16 个权威层变浅者亦无一改善）。
+- **预算不绑定已证**：STA 预算 700 两臂相同，16/16 run 停 `max_iterations`，两臂 `sta_used`
+  最大差 +8。
+- **加宽配额对照排除了"饿着"**：`--resynth-per-iteration 4`（8/8 电路）配对差仍全 `0.000`、
+  接受数仍 0，候选 37 → **39**。
+- **【本条最可复用的结构性发现】S 的可用窗口集合被"接受次数"限流**，与配额无关：
+  窗口身份 `(current_netlist_hash, boundary_key)` 去重使**同一 `G_r` 上同一窗口只付一次**，
+  于是可触及窗口上界 ≈ (不同 `G_r` 个数) × (每 `G_r` 割边界数)；而 `G_r` 只在**接受**时改变，
+  S 又只在 R/G/B **失败**轮被报价 → **加大 `resynth_per_iteration` 给不了 S 更多机会**。
+  要放大 S 的机会，只能改**窗口来源**（时序加权选窗 / 允许跨 `G_r` 重测），不是改配额。
+  → 该发现把"下一步该做什么"从"调参"改成了"改窗口选择"，是本轮真正的方法学产出。
+- **判读**：S 在本 regime 下是**可选候选类型，不是独立贡献**（与 L2 EMA 封板同形）。
+  另反向加强了 §4.8：**结构深度下降（即便在权威的 SKY130 层）不等价于时序改善**。
+- **未决**：S 的论文定位（(A) 独立贡献 / (B) 降级为可选类型）→ OI-014，**待用户裁定**；
+  裁定前**不改 `.tex`**。
