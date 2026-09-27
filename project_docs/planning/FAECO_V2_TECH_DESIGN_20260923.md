@@ -523,3 +523,92 @@ $$\boxed{\ \text{Mixed-Fixed}\ \to\ \text{Adaptive}\ \to\ S\ \text{smoke}\ \to\ 
 | $R_{\text{hard}}=1.5$ 偏宽松 → 会放过面积膨胀候选 | ⚠️ 待第一版跑完看分布再收紧；缓解＝每候选报告面积变化 |
 | 8 电路统计强度弱 | ⚠️ 以逐电路配对差值为准，不做显著性断言（§6.4） |
 | OI-010 的 §4.2 报告口径 | ⚠️ 仍待裁定（不影响本文档的实施，只影响论文改写） |
+
+---
+
+## 11. 阶段 3：电气风险前置（E）与 F6 拆分（2026-09-27 新增）
+
+设计出处：`FAECO_V2_DESIGN_PLAN_20260923.md` §3 阶段 3-A / 3-B。本节只写"怎么做"，
+实施按计划顺序（3-A 结论出来后才决定 3-B 是否值得做）。
+
+### 11.1 3-A：电气量的采集与"入式"判据（**已实现**）
+
+采集口径、四臂实验设计、**预锁定的判定判据**（Gate 0 臂有效性 / 标签可用性下限 /
+多标签一致才判 SIGNAL）已在 `FAECO_V2_IMPL_CONTRACT_20260923.md` §8.15 写死，
+实现见 `code/src/rseco/electrical.py` 与 `code/scripts/analyze_electrical_correlation.py`。
+本节不再重复，只记两条**与后续设计耦合**的决定：
+
+1. **电气量取自理想 STA**（不带 SPEF），因为"前置"的语义就是"在付物理分析的钱之前可得"。
+   若最终决定入 ranking，特征必须保持这一来源，否则排序器会隐式依赖物理 STA 的结论。
+2. **未入式前不新增任何 ranking 路径**：采集与判定都在 evaluator 之外的只读通道完成，
+   trial 记录里的 `electrical` 字段不被 `ranking` / `accept` / `refinement` 读取
+   （有单测断言采集开关不改变 `weights_trace` / `failure_ema_trace` / `history[*].failures`）。
+
+### 11.2 3-B：把 F6 拆成 $F_{6L}$（器件负载）与 $F_{6W}$（线负载）
+
+**问题**：$F_6$ 现在是一个**单一标签**（"理想增益未兑现"），无法回答"为什么未兑现"。
+计划 §3 明令"没有能判定为什么失败的能力时，不要拆 $F_6$"。3-A 的采集提供的正是这个能力
+（负载电容、扇出、关键路径电气剖面），因此 3-B 的前提是 **3-A 判定为 SIGNAL 或至少
+出现"电气量与失败同向"的稳定迹象**；若 3-A 判 NO SIGNAL，则 3-B **不做**（如实写进 limitation）。
+
+**形式化（可加分解，构造性成立）**。关键路径上的延迟增量按来源三分：
+
+$$\Delta d_{\text{total}} \;=\; \underbrace{\Delta d_{\text{cell}}}_{\text{理想 STA}}
+\;+\; \underbrace{\Delta d_{\text{load}}}_{\text{线电容→器件负载}}
+\;+\; \underbrace{\Delta d_{\text{wire}}}_{\text{线电阻→互连延迟}}$$
+
+实现办法是**给 SPEF 模型的 R、C 各加一个独立比例因子**（`estimate_net_rc` 现有
+`r = 0.09·len`、`c = 0.21·len/1000`，R/C 共用同一个 `len`，无法单独缩放）：
+
+| 额外参数 | 默认 | 作用 |
+|---|---|---|
+| `wire_res_scale` | 1.0 | 缩放网表线电阻（SPEF `*RES`） |
+| `wire_cap_scale` | 1.0 | 缩放网表线电容（SPEF `*CAP`） |
+
+**默认均为 1.0 ⇒ SPEF 逐字节不变 ⇒ 既有产物与等价门不受影响**（与 3-A 的 `electrical_capture`
+同一条惰性纪律）。三个 STA 点：
+
+| 点 | 配置 | 语义 |
+|---|---|---|
+| $L$ | 无 SPEF | 理想（cell-only） |
+| $L_{C}$ | SPEF，`wire_res_scale=0` | 只有线**电容**（器件负载） |
+| $L_{RC}$ | SPEF，全比例 | 完整 RC |
+
+于是（对同一候选、同一配对基线）：
+
+$$\Delta d_{\text{cell}} = \Delta d(L) - \Delta d(L_0), \qquad
+\Delta d_{\text{load}} = \Delta d(L_{C}) - \Delta d(L), \qquad
+\Delta d_{\text{wire}} = \Delta d(L_{RC}) - \Delta d(L_{C})$$
+
+**恒等式按构造成立**，不是拟合出来的 —— 这是"可判定"而非"猜测"的关键。
+
+**归因标签**（写入 `failures.py`，替代单一 $F_6$）：
+
+$$F_{6L}:\ \Delta d_{\text{load}} < 0 \ \wedge\ |\Delta d_{\text{load}}| > |\Delta d_{\text{wire}}|,
+\qquad
+F_{6W}:\ \Delta d_{\text{wire}} < 0 \ \wedge\ |\Delta d_{\text{wire}}| \ge |\Delta d_{\text{load}}|$$
+
+（"$<0$"=该项让增益变小。两标签互斥且完备地覆盖 $F_6$ 的"增益被吃掉"情形；
+$\Delta d_{\text{load}} = \Delta d_{\text{wire}} = 0$ 而仍失败者留在 $F_4$ 或新的 $F_{6?}$，不强行归类。）
+
+**代价与记账**：每候选多 **1 次** STA（$L_C$；$L$ 与 $L_{RC}$ 物理门已经在跑），
+必须计入同一个 `sta` 预算（两臂同值），并在报告里给出 `sta_used` 证明预算不绑定。
+
+**验收（3-B 的 gate）**：
+1. 恒等式自检：逐候选核对 $\Delta d_{\text{cell}} + \Delta d_{\text{load}} + \Delta d_{\text{wire}}
+   = \Delta d(L_{RC}) - \Delta d(L_0)$ 在数值容差内成立（$10^{-9}$ 量级）；
+2. **惰性**：`wire_res_scale=wire_cap_scale=1.0` 时与未改动版本逐位相同（SPEF 文本哈希 + 端到端轨迹）；
+3. **可判定性**：$F_{6L}$/$F_{6W}$ 各自都拿到双类 $\ge 20$ 的样本（沿用 3-A 的类别下限纪律），
+   否则如实报"本 regime 不可判定"；
+4. 与 3-A 的电气量对照：$F_{6L}$ 应与 `d_cap_slack` / `cp_total_capacitance` 同向，
+   $F_{6W}$ 应与 `cp_max_fanout` / 线长代理同向 —— **若不对应，说明标签或特征之一有误，
+   先归因再谈入式**。
+
+### 11.3 与 3-A 的依赖关系（冻结）
+
+$$\text{3-A 判定} \to \begin{cases}
+\text{SIGNAL} & \Rightarrow \text{3-B 实施（上表三点 + 新标签），并标定式 (2) 权重} \
+\text{NO SIGNAL} & \Rightarrow \text{3-B 不做；电气量保持"仅采集"，$F_6$ 不拆分（如实写 limitation）}
+\end{cases}$$
+
+**论文侧一律等 3-A 判定与 OI-015 裁定后一次性改**（沿用"技术方案先行、论文后改"）。
