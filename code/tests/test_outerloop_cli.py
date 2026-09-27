@@ -257,3 +257,157 @@ def test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked(monkeyp
     assert result["state"]["accepted_patches"][0]["base_netlist_hash"]
     assert result["stop_reason"] == "max_patches"
     assert result["state"]["critical_instances"] == ["g16"]
+
+
+# --- phase 3-A: electrical capture wiring -----------------------------------
+
+_ELEC_RECORD = {
+    "captured": True,
+    "units": {"time": "ns", "capacitance": "pF"},
+    "worst": {
+        "max_slew": {"pin": "g17/Y", "limit": 1.5, "value": 1.8,
+                     "slack": -0.3, "status": "VIOLATED"},
+        "max_capacitance": {"pin": "g17/Y", "limit": 0.05, "value": 0.006,
+                            "slack": 0.044, "status": "MET"},
+        "max_fanout": None,
+    },
+    "violations": ["max_slew"],
+    "n_violations": 1,
+    "slack_delta_vs_baseline": {"max_slew": None, "max_capacitance": None,
+                                "max_fanout": None},
+    "critical_path": {"pins": 2, "max_slew": 1.8, "max_capacitance": 0.006,
+                      "total_capacitance": 0.006, "max_fanout": 2},
+}
+
+
+def _run_demo_for_electrical(monkeypatch, tmp_path, *, capture: bool):
+    """Drive the real CLI with only the tool boundaries mocked."""
+    runner = _load_runner()
+    source = tmp_path / "demo.v"
+    source.write_text("module demo; endmodule\n", encoding="utf-8")
+    lib = """cell (\"sky130_fd_sc_hd__and2_1\") {
+      pin (\"A\") { direction : \"input\"; }
+      pin (\"B\") { direction : \"input\"; }
+      pin (\"Y\") { direction : \"output\"; function : \"A & B\"; }
+    }
+    cell (\"sky130_fd_sc_hd__and2_2\") {
+      pin (\"A\") { direction : \"input\"; }
+      pin (\"B\") { direction : \"input\"; }
+      pin (\"Y\") { direction : \"output\"; function : \"A & B\"; }
+    }
+    """
+    lib_path = tmp_path / "demo.lib"
+    lib_path.write_text(lib, encoding="utf-8")
+    monkeypatch.setattr(runner, "LIB", lib_path)
+
+    gates = []
+    previous = "A"
+    for index in range(18):
+        output = f"N{index}"
+        gates.append(
+            f"sky130_fd_sc_hd__and2_1 g{index} (.A({previous}), .B(B), .Y({output}));"
+        )
+        previous = output
+    mapped = "module demo(A, B, CK, Q);\ninput A, B, CK;\noutput Q;\nwire " + ", ".join(
+        f"N{i}" for i in range(18)
+    ) + ";\n" + "\n".join(gates) + (
+        "\nsky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK));\nendmodule\n"
+    )
+
+    monkeypatch.setattr(
+        runner, "run_yosys_mapping",
+        lambda _s, out, **_k: (
+            Path(out).mkdir(parents=True, exist_ok=True),
+            (Path(out) / "mapped.v").write_text(mapped, encoding="utf-8"),
+            [],
+        )[-1],
+    )
+
+    def fake_baseline(_mapped, _period, out, **_kwargs):
+        Path(out).mkdir(parents=True, exist_ok=True)
+        (Path(out) / "sta.log").write_text(
+            "Endpoint: ff1\n"
+            "   0.10    0.20 v g17/A (sky130_fd_sc_hd__and2_1)\n"
+            "   0.20    0.30 v g16/A (sky130_fd_sc_hd__and2_1)\n",
+            encoding="utf-8",
+        )
+        return {"wns": -1.0, "tns": -2.0}
+
+    monkeypatch.setattr(runner, "run_opensta", fake_baseline)
+    monkeypatch.setattr(runner, "build_full_netlist_sec_checker",
+                        lambda **_k: (lambda *_a: True))
+
+    sta_log = {
+        "electrical": _ELEC_RECORD,
+        "max_transition": 1.8,
+        "max_capacitance": 0.006,
+        "max_fanout": None,
+    }
+
+    def fake_sta(**kwargs):
+        output = Path(kwargs["output_dir"])
+        output.mkdir(parents=True, exist_ok=True)
+        candidate = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+        resized = candidate.count("and2_2")
+        critical_gate = "g17" if resized == 1 else "g16"
+        (output / "sta.log").write_text(
+            "Endpoint: ff1\n"
+            f"   0.10    0.20 v {critical_gate}/A (sky130_fd_sc_hd__and2_2)\n",
+            encoding="utf-8",
+        )
+        result = {"wns": -0.5 if resized == 1 else -0.4, "tns": -1.0}
+        if kwargs.get("electrical_capture"):
+            import copy
+            result.update(copy.deepcopy(sta_log))
+        return result
+
+    monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", fake_sta)
+
+    argv = [
+        "run_outerloop_real_wns.py",
+        "--source-file", str(source),
+        "--circuit", "demo",
+        "--output-dir", str(tmp_path / "out"),
+        "--max-iterations", "1",
+        "--candidates-per-iteration", "1",
+        "--max-patches", "1",
+        "--workers", "1",
+        "--no-feedback",
+    ]
+    if capture:
+        argv.append("--capture-electrical")
+    monkeypatch.setattr(sys, "argv", argv)
+    assert runner.main() == 0
+    out = tmp_path / "out" / "demo"
+    trials = __import__("json").loads(
+        (out / "eval_trials.json").read_text(encoding="utf-8")
+    )["trials"]
+    cfg = __import__("json").loads(
+        (out / "run_config.json").read_text(encoding="utf-8")
+    )
+    return trials, cfg
+
+
+def test_capture_electrical_is_opt_in_and_inert_when_off(monkeypatch, tmp_path):
+    trials, cfg = _run_demo_for_electrical(monkeypatch, tmp_path, capture=False)
+    assert cfg["capture_electrical"] is False
+    assert cfg["electrical_baseline"] is None
+    # Off by default: no trial carries an electrical record.
+    assert trials and all("electrical" not in trial for trial in trials)
+    # The contract's scalar slots stay null when capture is off.
+    assert all(trial.get("max_transition") is None for trial in trials)
+
+
+def test_capture_electrical_attaches_record_and_deltas(monkeypatch, tmp_path):
+    trials, cfg = _run_demo_for_electrical(monkeypatch, tmp_path, capture=True)
+    assert cfg["capture_electrical"] is True
+    assert cfg["electrical_baseline"]["captured"] is True
+    with_electrical = [t for t in trials if isinstance(t.get("electrical"), dict)]
+    assert with_electrical
+    record = with_electrical[0]["electrical"]
+    assert record["worst"]["max_slew"]["status"] == "VIOLATED"
+    assert record["violations"] == ["max_slew"]
+    # real_wns fills the baseline delta (same value here: the fake baseline
+    # capture returns the identical record).
+    assert "slack_delta_vs_baseline" in record
+    assert record["baseline_available"] is True

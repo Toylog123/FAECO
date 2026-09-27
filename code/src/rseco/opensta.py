@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from .toolchain import resolve_tool_command
+from .electrical import ELECTRICAL_TCL_BLOCK, electrical_from_sta_log
 
 LIB_SEQ = (
     Path(__file__).resolve().parents[3]
@@ -212,6 +213,7 @@ def run_opensta_sequential(
     min_path: bool = False,
     clock_port: str = "CK",
     spef_path=None,
+    electrical_capture: bool = False,
 ):
     """Run sequential pre-layout STA (create_clock on CK) via OpenSTA.
 
@@ -239,6 +241,12 @@ def run_opensta_sequential(
 
     ``spef_path`` (optional) adds ``read_spef`` after link_design so the
     run measures a parasitic-aware netlist (inner-loop physical gate).
+
+    ``electrical_capture`` (default off) appends the sentinel-delimited
+    electrical block from :mod:`rseco.electrical` and returns the parsed
+    record under the ``"electrical"`` key.  Off by default so archived
+    artefacts, the 0a equivalence gate and the legacy regression see the
+    exact same Tcl and result dict as before.
     """
     if top_module is None:
         raw = Path(netlist_path).read_text(encoding="utf-8", errors="replace")
@@ -269,6 +277,8 @@ def run_opensta_sequential(
         "report_worst_slack -max\n"
         "report_worst_slack -min\n"
     )
+    if electrical_capture:
+        tcl_body += ELECTRICAL_TCL_BLOCK
     tcl.write_text(tcl_body, encoding="utf-8")
     if sta_command == "wsl-sta":
         sta_argv = ["wsl.exe", "-d", "Ubuntu", "--", "/usr/local/bin/sta"]
@@ -298,7 +308,7 @@ def run_opensta_sequential(
     wns = _SEQ_WNS_RE.search(raw)
     tns = _SEQ_TNS_RE.search(raw)
     min_slack = _SEQ_MIN_SLACK_RE.search(raw)
-    return {
+    result = {
         "slack": float(slack.group(1)) if slack else None,
         "slack_status": slack.group(2) if slack else None,
         "wns": float(wns.group(1)) if wns else None,
@@ -308,6 +318,28 @@ def run_opensta_sequential(
             "MET" if float(min_slack.group(1)) >= 0 else "VIOLATED"
         ) if min_slack else None,
     }
+    if electrical_capture:
+        # Collection only (design plan §3 phase 3-A): the record carries the
+        # electrical quantities the acceptance contract already reserves slots
+        # for (`max_transition` / `max_capacitance` / `max_fanout`) plus the
+        # critical-path electrical profile.  It never feeds ranking or
+        # acceptance -- the budget/violation paths only engage when a budget is
+        # explicitly configured, which 3-A deliberately does not do.
+        record = electrical_from_sta_log(raw)
+        result["electrical"] = record
+        if record is not None:
+            # The contract's metric names differ from the STA check names:
+            # ``max_transition`` is what OpenSTA calls the max-slew check.
+            worst = record.get("worst") or {}
+            scalar_source = {
+                "max_transition": "max_slew",
+                "max_capacitance": "max_capacitance",
+                "max_fanout": "max_fanout",
+            }
+            for metric, source in scalar_source.items():
+                row = worst.get(source)
+                result[metric] = None if row is None else row.get("value")
+    return result
 
 
 def run_opensta_pre_layout(

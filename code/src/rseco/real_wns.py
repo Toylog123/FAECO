@@ -38,6 +38,7 @@ from .gate_sizing import (
 from .logic_rewrite import apply_rewrite, equivalence_candidates, parse_liberty_cells, canonical_function, function_vars
 from .opensta import run_opensta_sequential
 from .proxy_ranking import ProxyWeights, rank_real_candidates
+from .electrical import attach_baseline
 from .strategy_selector import exploration_order
 from .failures import AcceptanceEvidence
 from .yosys_abc import YosysAbcEquivalenceResult
@@ -652,6 +653,7 @@ class RealWnsEvaluator:
          metric_epsilons: dict[str, float] | None = None,
         allow_singleton: bool = False,
         enable_topology: bool = True,
+        capture_electrical: bool = False,
     ) -> None:
         self.mapped_text = mapped_text
         self.top_module = top_module
@@ -739,6 +741,58 @@ class RealWnsEvaluator:
         self.tested_candidate_hashes: set[str] = set()
         self._sta_cache: dict[str, dict] = {}
         self._active_state = None
+        # Electrical-risk collection (design plan §3 phase 3-A).  Collection
+        # only: the captured record is attached to each trial for the later
+        # correlation study and never feeds ranking, budgets or acceptance.
+        self.capture_electrical = bool(capture_electrical)
+        self.electrical_baseline: dict | None = None
+        self._electrical_baseline_lock = threading.Lock()
+
+    def _baseline_electrical(self) -> dict | None:
+        """Capture the pre-patch netlist's electrical profile once, lazily.
+
+        The delta against this baseline is what makes the electrical stress a
+        candidate *introduces* comparable across circuits of different size.
+        Returns ``None`` when capture is disabled or the tool is unavailable.
+        """
+        if not self.capture_electrical:
+            return None
+        if self.electrical_baseline is not None:
+            return self.electrical_baseline
+        with self._electrical_baseline_lock:
+            if self.electrical_baseline is not None:
+                return self.electrical_baseline
+            base_dir = self.output_dir / "electrical_baseline"
+            base_dir.mkdir(parents=True, exist_ok=True)
+            (base_dir / "mapped.v").write_text(self.mapped_text, encoding="utf-8")
+            try:
+                res = run_opensta_sequential(
+                    netlist_path=base_dir / "mapped.v",
+                    period=self.period,
+                    output_dir=base_dir,
+                    top_module=self.top_module,
+                    hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                    min_path=self.hold_mode,
+                    clock_port=self.clock_port,
+                    multi_path=True,
+                    timeout_s=self._remaining_tool_timeout(None),
+                    electrical_capture=True,
+                )
+            except Exception:
+                res = None
+            record = (res or {}).get("electrical")
+            self.electrical_baseline = record
+            return record
+
+    def _attach_electrical(self, res: dict) -> dict | None:
+        """Return the candidate's electrical record with baseline deltas filled."""
+        record = res.get("electrical")
+        if not isinstance(record, dict):
+            return None
+        baseline = self._baseline_electrical()
+        if baseline is not None:
+            attach_baseline(record, baseline)
+        return record
 
     def _metric_epsilon(self, metric: str) -> float:
         """Return a unit-specific non-timing tolerance."""
@@ -872,6 +926,7 @@ class RealWnsEvaluator:
                 clock_port=self.clock_port,
                 multi_path=True,
                 timeout_s=self._remaining_tool_timeout(state),
+                electrical_capture=self.capture_electrical,
             )
         except TimeoutError as exc:
             res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
@@ -926,6 +981,8 @@ class RealWnsEvaluator:
             "resynth": dict(resynth_metadata or {}),
             "accepted": bool(improved), "improved": bool(improved),
         }
+        if self.capture_electrical:
+            trial["electrical"] = self._attach_electrical(res)
         self.trials.append(trial)
         self.call_log.append({
             "iteration": iteration, "patch_id": patch_id, "gates": action_scope,
@@ -943,6 +1000,7 @@ class RealWnsEvaluator:
             "sta_provenance": {"tool": "OpenSTA", "output_dir": str(sub),
                                "report_path": str(report) if report.exists() else None},
             "runtime_s": trial["runtime_s"],
+            **({"electrical": trial["electrical"]} if self.capture_electrical else {}),
         }
 
     # -- candidate construction -------------------------------------------
@@ -1400,6 +1458,7 @@ class RealWnsEvaluator:
                 clock_port=self.clock_port,
                 multi_path=True,
                 timeout_s=self._remaining_tool_timeout(state),
+                electrical_capture=self.capture_electrical,
             )
         except TimeoutError as exc:
             res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
@@ -1865,6 +1924,9 @@ class RealWnsEvaluator:
             "runtime_s": time.perf_counter() - started_at,
             **proxy_meta,
         }
+        if self.capture_electrical:
+            # Phase 3-A collection: attached for the correlation study only.
+            result["electrical"] = self._attach_electrical(res)
         self._sta_cache[cache_key] = dict(result)
         return result
 

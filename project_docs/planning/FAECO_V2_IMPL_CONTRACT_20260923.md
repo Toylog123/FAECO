@@ -901,3 +901,129 @@ G 寻优，（a）使 `{S 开}` 臂同时改了**两件事**（新增候选类�
   另反向加强了 §4.8：**结构深度下降（即便在权威的 SKY130 层）不等价于时序改善**。
 - **未决**：S 的论文定位（(A) 独立贡献 / (B) 降级为可选类型）→ OI-014，**待用户裁定**；
   裁定前**不改 `.tex`**。
+
+---
+
+### 8.15 步骤 11 开工：阶段 3-A「电气风险前置 E」采集口径（2026-09-27）
+
+设计出处：`planning/FAECO_V2_DESIGN_PLAN_20260923.md` §3 阶段 3-A。计划里这条的形态是
+**三步门**，不是"加个特征"：
+
+$$\text{先采集} \to \text{再统计相关性} \to \text{才决定是否入 ranking}$$
+
+因此本阶段**不改算法**：`ranking` / `accept` / 反馈路径逐字不动，只增**采集**与**判定**。
+
+#### (a) 采集什么（补的是"坑位已有、产出从未发射"的字段）
+
+接受契约里 `max_transition` / `max_capacitance` / `max_fanout` 三个坑位早已在
+`AcceptanceEvidence` 与 trial schema 中（论文式 (2) 的电气项），但
+`run_opensta_sequential` **从未返回过它们** → 覆盖率恒为 0，故 §3 明令"不现在把电气项塞进式 (2)"。
+
+本次实现 `code/src/rseco/electrical.py`，从同一次 OpenSTA 运行里把电气量提出来：
+
+| 量 | 来源 | 语义 |
+|---|---|---|
+| `worst.{max_slew,max_capacitance,max_fanout}` | `report_check_types -max_slew -max_capacitance -max_fanout -digits 5` | **最差行**（`-max_count` 默认 1，OpenSTA 按 slack 升序给出最差者）：`limit / value / slack / status` |
+| `violations` / `n_violations` | 同上 | slack < 0 的类别 |
+| `critical_path.{pins,max_slew,max_capacitance,total_capacitance,max_fanout}` | `report_checks -path_delay max -fields {fanout capacitance slew} -digits 5` | 时序关键路径上的电气剖面 |
+| `slack_delta_vs_baseline.{...}` | 与**打补丁前**网表的同一采集相比 | 候选**自己引入**的电气应力（跨电路可比） |
+
+三条实现纪律：
+
+1. **绝不污染既有解析**：采集块用 `FAECO_ELEC_BEGIN/MID/END` 哨兵包住，解析只在哨兵区间内做，
+   与 `parse_critical_instances` 等读的既有 `report_checks` / `report_worst_slack` 输出互不可见。
+2. **默认关且惰性**：`electrical_capture=False` 时 Tcl 与返回 dict **逐字节不变**，0a / legacy / L3
+   等价门不受影响；trial 里**不新增 key**（`"electrical"` 仅在开启时出现）。
+3. **不伪造**：liberty 不约束的量（sky130 **没有** `max_fanout`）返回 `None`，不是 0。
+
+`-digits 5` 是必需的：sky130 的 slew/cap 在 `1e-2` 量级，默认 2–3 位会把不同候选量化成同一个值。
+
+**已实测**（真实 OpenSTA 3.1.0 + `sky130_fd_sc_hd__tt_025C_1v80`，s27）：
+`max_transition = 0.25543 ns`（limit 1.49676）、`max_capacitance = 0.00616 pF`（limit 0.04945）、
+`max_fanout = None`；关键路径 5 个 pin，`cp_total_capacitance = 0.01228 pF`。
+
+#### (b) 实验口径（`code/scripts/run_electrical_collection.sh`）
+
+**四臂 = 两个 regime × {对照, 采集}**；同一 regime 内两臂唯一自由度是 `--capture-electrical`。
+
+| 臂 | 开关 | 作用 |
+|---|---|---|
+| `phys` | `--no-feedback --physical-gate` | 物理 regime 对照 |
+| `elec` | 同上 **+ `--capture-electrical`** | 物理 regime 采集 |
+| `base` | `--no-feedback` | 理想 regime 对照 |
+| `cap` | 同上 **+ `--capture-electrical`** | 理想 regime 采集 |
+
+统一口径：`--period 0.5 --max-iterations 20 --candidates-per-iteration 8 --joint-k 2
+--enable-buffer --workers 1 --early-stop --no-feedback --sta-budget 1600`，8 个 ISCAS89 电路。
+
+**为什么需要两个 regime**：3-A 的问题形式是"电气量能否预测**增益未兑现**"。
+`F6_physical_load_failure` 只在物理门打开时发射（`real_wns.py` `physical_failure` 分支）；
+但**在论文既有的物理门参数下**（`unit_len_um=40`、`fanout/depth_penalty=1.0`、
+`min_physical_gain_ns=0.01`）该标签**近乎退化** —— s27 探针实测 **32/34 为 F6**，
+`physical_delta` 29/34 为 0。单标签在这套未标定的物理模型上没有判别力，
+若据此宣布"无信号"其实是**标签的伪结论**（口径无效），而不是关于特征的证据。
+故同时采集理想 regime 以提供有方差的标签（`no_ideal_gain` / `hard_fail`）。
+
+**采集点说明（重要）**：电气量取自**理想 STA**（`electrical_capture` 未走上带 SPEF 的
+物理 STA）。这正是"**前置**"的语义：特征必须在付physical分析的钱**之前**可得，否则无从
+用于 ranking。因此本阶段的假设是"理想网表上的电气量 → 预测物理 regime 的结果"。
+
+**预算记账说明**：物理 regime 每候选约消耗 2–3 个 `sta` 记账（理想 STA + 物理候选 STA +
+每次接受后重建的物理基线 STA），理想 regime 每候选 1 个。四臂同值 1600，报告给出各臂
+`sta_used` 以证明预算**不绑定**。另：**电气基线采集（每 evaluator 一次）不记账**，
+与既有物理基线采集口径一致（同为一次性、每次接受后重建的成对参照），二者都在
+`run_config.json` 留痕。
+
+#### (c) 判定判据（**预锁定**，写死在 `code/scripts/analyze_electrical_correlation.py` 头部）
+
+先过 **Gate 0（臂有效性）**：同 regime 内两臂唯一自由度是 `--capture-electrical`，故
+`success / iterations / stop_reason / wns_history / 接受补丁链 / trial 序列(kind,instance,wns)`
+必须**完全一致**；任一不一致或任一 run 缺失 → `INVALID COLLECTION`，**不发判定**。
+
+**预声明标签**（1 = 失败，逐 trial 从记录本身算，采集前写定）：
+
+| 标签 | 定义 | 适用 regime |
+|---|---|---|
+| `f6` | 发射 `F6_physical_load_failure` | 仅物理 |
+| `no_physical_gain` | `physical_delta ≤ 0` | 仅物理 |
+| `hard_fail` | 任一 `hard_gate` 失败事件 | 两者 |
+| `no_ideal_gain` | 锚定 WNS 增量 ≤ 0 | 两者 |
+
+两条**防退化**纪律（同样采集前写定）：
+
+1. **标签可用性下限**：仅当正负两类各 ≥ `MIN_PER_CLASS = 20` 时该标签才**可用**；
+   退化标签如实报为"不可用"，**不产出判定**。这条正是为拦住"s27 物理门 94% 正例"这类
+   伪结论。
+2. **多标签一致才判 SIGNAL**：判据要求**同一特征**在 **≥ `MIN_LABELS_FOR_SIGNAL = 2` 个
+   可用标签**上同时满足定向 AUC ≥ `AUC_THRESHOLD = 0.65`，且方向一致（各电路同号）。
+   这是多重比较护栏 —— 特征不能靠"四个标签里蒙对一个"取胜。
+
+判定：满足上述条件 → **SIGNAL**（建议入 ranking，权重需在留出集标定）；否则 →
+**NO SIGNAL**；若**无任何可用标签** → **NO SIGNAL (untestable)**。
+
+连续量（各特征 vs 成对物理增益 `physical_delta` 的 Spearman）**只作参考输出，不参与判定** ——
+"与增益弱单调相关"不等于"能预测失败"。判据如此写死，是为了让电气量**不能**在数据落地后
+靠挑一个好看统计量/标签被说进式 (2)。统计函数（秩、Spearman、AUC）与判定分支都有独立单测
+（含并列、空类返回 `None`、退化标签、单标签不达标、臂不一致等边界），见
+`code/tests/test_electrical_correlation.py`。
+
+#### (d) 本轮交付与状态
+
+- 代码：`rseco/electrical.py`（新）、`rseco/opensta.py`（`electrical_capture` opt-in）、
+  `rseco/real_wns.py`（`capture_electrical` + 惰性电气基线）、`run_outerloop_real_wns.py`
+  （`--capture-electrical`）、`scripts/run_electrical_collection.sh`（新，四臂）、
+  `scripts/analyze_electrical_correlation.py`（新，预锁定判据）。
+- 测试：`tests/test_electrical_capture.py`（15）+ `tests/test_electrical_correlation.py`（31）
+  + `tests/test_outerloop_cli.py` 增 2 项；全量 `536 passed / 4 skipped`。
+- **端到端惰性已实测**：s27 同配置 {采集关, 采集开} 两跑 `wns_history` 逐位相同
+  （`[-0.19, -0.17, -0.17, -0.17]`）；采集臂 54/56 trial 带电气记录（另 2 个是 F1 前哨
+  失败、未进入 STA），采集关 0/56。
+- **数值语义已实测**（真实 OpenSTA，s27）：`max_transition = 0.25543 ns`、
+  `max_capacitance = 0.00616 pF`、`max_fanout = None`（sky130 不约束）、
+  关键路径 5 pin / `total_capacitance = 0.01228 pF`。
+- **★ 探针发现的既有物理门口径问题（将写入 3-A 报告）**：在论文既有物理门参数下，
+  s27 上 **32/34 候选被物理门判为 F6**、`physical_delta` **29/34 为 0** →
+  该物理门在 ISCAS89 上**几乎无判别力**（既有的"接受/拒绝"几乎不改变成对物理 WNS）。
+  这不是 3-A 引入的问题，是既有物理模型（`unit_len=40 µm` 的预布局 RC 估计）的标定问题；
+  但它决定了 3-A 的主标签必须在两个 regime 上同时判定（见 (b)）。
+- **待办**：跑满 8 电路 × 4 臂 → 出相关性判定 → 报告 `reports/FAECO_ELECTRICAL_3A_<date>.md`。

@@ -217,6 +217,17 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--structure-out-dir", type=Path, default=None,
                    help="Where S window artifacts are written "
                         "(default: <output-dir>/structure_resynth)")
+
+    # Electrical-risk collection (design plan §3 phase 3-A).  Collection only:
+    # it records the worst max-slew / max-capacitance / max-fanout of every
+    # candidate (and of the pre-patch baseline) for the later correlation
+    # study.  Off by default so every earlier arm stays bit-identical, and it
+    # never touches ranking, budgets or acceptance.
+    p.add_argument("--capture-electrical", action="store_true",
+                   help="Capture per-candidate electrical quantities "
+                        "(max_transition / max_capacitance / max_fanout and the "
+                        "critical-path electrical profile) into the trial record "
+                        "(design plan §3 phase 3-A; collection only)")
     return p.parse_args()
 
 
@@ -348,6 +359,7 @@ def main() -> int:
             artifact_dir=out / "topology-sec",
         ),
         boundary_checker=build_boundary_closure_checker(),
+        capture_electrical=args.capture_electrical,
     )
 
     # 5. outer loop.  Candidate-level equivalence is intentionally fail
@@ -453,6 +465,13 @@ def main() -> int:
         "resynth_variants": [v.strip() for v in args.resynth_variants.split(",")
                              if v.strip()],
         "structure_resynth_stats": result.get("structure_resynth"),
+        # Phase 3-A collection flag, archived with the electrical baseline so a
+        # captured batch is self-describing.
+        "capture_electrical": args.capture_electrical,
+        "electrical_baseline": (
+            getattr(evaluator, "electrical_baseline", None)
+            if args.capture_electrical else None
+        ),
     }
     (out / "run_config.json").write_text(
         json.dumps(run_config, indent=2, ensure_ascii=False) + "\n",
