@@ -612,3 +612,86 @@ $$\text{3-A 判定} \to \begin{cases}
 \end{cases}$$
 
 **论文侧一律等 3-A 判定与 OI-015 裁定后一次性改**（沿用"技术方案先行、论文后改"）。
+
+---
+
+## 12. 阶段 1-C：增量 ECO 形式化与失效候选处理（2026-09-27 新增）
+
+设计出处：`FAECO_V2_DESIGN_PLAN_20260923.md` §1-C「增量 ECO 形式化 + stale invalidation
+**写清楚**」。**这不是新机制**：语义早已在 `code/src/rseco/search_state.py` 实现并通过 0a
+等价门；缺口只在论文——现稿仅在 §3 用一句话带过"多轮配置下修复网表由接受的补丁逐轮累积形成"
+（第 257 行），没有形式化，也没写失效候选 / 回退 / 重放。全文检索 `.tex` 无
+`stale`/`epoch`/`rollback`/`回放` 任一关键词。
+
+### 12.1 待写清的机制（与代码一一对应）
+
+| 语义 | 代码位置 | 论文现状 |
+|---|---|---|
+| 补丁累积：$G_k = p_k\circ\cdots\circ p_1(G_0)$ | `accept_patch` / `replay` | 仅一句带过 |
+| 纪元 $e := \lvert\{p_i\}\rvert$，$e = \texttt{netlist\_epoch}$ | `accept_patch`（`e ← len(accepted_patches)`） | 无 |
+| 候选复合身份 $\mathrm{key}=H(H(G_e)\Vert H(\text{cut},\text{action}))$ | `candidate_key` / `mark_candidate_tested` | 无 |
+| 失效判据 $\text{stale}(e_0)\iff e_0<e$，不评估、不记账、不入 EMA | `is_stale` / `record_stale_candidate` | 无 |
+| 回退只恢复**决策态**，审计/预算态不可逆 | `rollback` + `DecisionSnapshot` | 无 |
+| 确定性重放与校验 | `replay`（哈希比对，契约 R5） | 无 |
+| 不变式 $e=\lvert\mathcal P\rvert$、$r\ge e$ | `check_invariants` | 无 |
+
+三条**必须写对、否则与实现不符**的语义：
+
+1. **接受轮不推进 EMA**（契约 §2.3 裁定 3）——否则"接受"会被误报成一次失败反馈。
+2. **失效候选记入工具层**（stage tag `W_STALE_CANDIDATE`），**不得**进入 F1–F6 方法层，
+   否则"失效感知"的失败谱会被基础设施事件污染（同 §4.1 的 $W_*$ 隔离）。
+3. **回退不返还预算**：`tested_candidate_hashes` / `budget` / `failure_history` 是"已发生的事实"，
+   被回退步的事件标 `invalidated_by_rollback` 而非删除——这条直接支撑"审计可复现"的主张。
+
+### 12.2 拟插入论文的文本（`paper/zh/manuscript/…tex`，待贴）
+
+拟作为 §3 末尾新增小节（紧跟第 257 行那段之后），编号顺延。文本以现状代码为准，
+不引入任何新符号约定（沿用稿件既有的 $G_r$ / 补丁 $p$ / 哈希 $H$ 记号）：
+
+```latex
+\subsection{增量式 ECO 的累积语义与失效候选处理}\label{sec:incremental}
+
+多轮配置下，修复网表并非每轮从头重算，而是由接受的补丁\emph{逐轮累积}形成。
+设初始网表为 $G_0$、第 $i$ 次接受的补丁为 $p_i$，则第 $k$ 次接受后的修复网表为
+\begin{equation}\label{eq:accum}
+  G_k \;=\; p_k \circ p_{k-1} \circ \cdots \circ p_1\,(G_0),
+\end{equation}
+其中 $\circ$ 表示在上一轮网表上施加一次局部替换。运行状态因此只需维护
+\emph{累积纪元} $e := |\mathcal{P}|$（已接受补丁数）与当前网表 $G_e$；
+二者一并进入候选身份，使\emph{同一}割窗在不同纪元被视为\emph{不同}候选：
+\begin{equation}\label{eq:candkey}
+  \mathrm{key}(c) \;=\; H\!\bigl(\,H(G_e)\,\|\,H(\text{cut},\text{action})\,\bigr).
+\end{equation}
+每次接受先在当前状态上取一份决策快照，再原子地追加补丁并推进 $e \leftarrow e+1$；
+由于同一轮至多接受一次，恒有 $e = |\mathcal{P}|$，且轮计数不小于 $e$。
+
+由此，候选自生成之时便绑定到生成纪元 $e_0$。若同一轮内先有候选被接受（$e$ 增大），
+则其余候选随之\emph{失效}：
+\begin{equation}\label{eq:stale}
+  \text{stale}(e_0) \;\Longleftrightarrow\; e_0 < e .
+\end{equation}
+失效候选不再提交时序测量、不消耗工具预算，也不更新失败反馈；它被记入\emph{工具层}
+日志而非\emph{方法层}失败谱，因此不污染失效感知的统计口径。同理，回退一次接受只恢复
+决策状态（纪元、权重、反馈），已消耗的预算与已测候选集合作为不可逆的审计事实保留，
+被回退步骤产生的事件仅标记为"已失效"而非删除。该累积语义的直接后果是可重放：给定
+$G_0$ 与补丁序列 $\{p_i\}$，由式~\eqref{eq:accum} 可确定性重建 $G_k$，且重建哈希与
+运行时一致，使多轮搜索可中断续跑。效率优先配置（\S\ref{sec:eff_prio}）仅执行单轮，
+$\mathcal{P}$ 至多含一个补丁，上述累积与失效规则退化于无形。
+```
+
+### 12.3 验收
+
+1. **语义一致**：文中每条断言都能在 `search_state.py` 找到对应实现（见 §12.1 表），
+   无"论文有而代码无"或反之。
+2. **不引入新符号冲突**：与稿件既有记号表一致；`\ref{sec:eff_prio}` 等交叉引用编译后无 `??`。
+3. **质量门不变**：lualatex ×2，0 Error / 0 Overfull / 0 Underfull，页数变化仅因新增小节；
+   日志中 5 处 `undefined` 仍是字体替身警告（非引用）。
+4. **与单轮结果不冲突**：单轮配置下新小节明确退化为空操作，与既有实验数字无张力。
+
+### 12.4 应用 gate
+
+本节只放**待贴文本**。实际改 `.tex` 仍等以下一起做，避免二次返工（沿用"技术方案先行、
+论文后改"）：
+
+- OI-013（主实验基线 revision）与 OI-014（S 定位）**裁定后**；
+- 3-A 判定落地后（若 NO SIGNAL，§7 limitation 需一并写明"电气量仅采集、不入式"）。
