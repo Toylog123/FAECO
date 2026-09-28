@@ -255,10 +255,9 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 算法~\ref{alg:main} 给出从违例端点提取扇入锥、生成候选、时序测量到反馈重搜索的流程。候选按轮提交：每轮接受的候选经验证后成为下一轮的评估基准，故多轮配置下修复网表由接受的补丁逐轮累积形成，效率优先配置（\S\ref{sec:eff_prio}）仅执行单轮；候选接受谓词与验证层次在 \S\ref{sec:validation} 中统一定义。
 
 \subsection{加权割与候选搜索}\label{sec:mechanism}
-\FloatBarrier
-\begin{figure*}[!htbp]
+\begin{figure*}[!tb]
 \centering
-\includegraphics[width=0.85\textwidth]{fig_cut_generation_mechanism_imagegen.png}
+\includegraphics[width=0.55\textwidth]{fig_cut_generation_mechanism_imagegen.png}
 \caption{FAECO 机制原理：局部扇入锥的特征中，边界/尺寸/验证/扇出写入加权最小割的节点代价(式(2))，关键路径由独立覆盖割 $C_c$ 与 $\lambda_c$ 的深度折扣及排序反馈处理；R 候选可用性驱动策略切换。图中“候选集合 A/B”为示意图标签，实际符号 $C_w/C_c$ 与表~2 一致。}
 \label{fig:cut_generation}
 \end{figure*}
@@ -289,7 +288,6 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 
 \subsection{类型化失效归因与搜索控制}
 
-\FloatBarrier
 \FloatBarrier
 框架将 F1--F6 定义为统一的失败类型，用于候选失败的诊断与搜索控制：真实 WNS 主循环中观测到的主要类型为 F4（理想线网收益不足），启用物理门控时进一步将 SPEF 复测失败记为 F6，各类检测条件见表~\ref{tab:failures}。本文只主张这些失效类型可用于结构化诊断与候选控制，不对其作为自适应收敛机制的性能增益作断言；固定权重作为消融对照。
 
@@ -340,7 +338,6 @@ A(p)={}&[\Delta_{\mathrm{WNS}}(p)>0]\\
 % =============================================================================
 % IV. 实验
 % =============================================================================
-\FloatBarrier
 \FloatBarrier
 \section{实验}\label{sec:exp}
 
