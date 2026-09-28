@@ -4,7 +4,7 @@
 生成四张图（PNG 300dpi + PDF）：
   fig3_method_flow.png     三阶段流水线
   fig_cut_generation.png   双目标割与候选生成
-  fig_feedback_loop.png    F1-F6 失效驱动反馈闭环
+  fig_feedback_loop.png    F1-F6 类型化失效归因与搜索控制闭环
   fig_spef_gate.png        简化 SPEF 门控两层验证（新增）
 
 风格：无上/右边框、低饱和配色（hero #0F4D92 / base #8C8C8C）、
@@ -167,7 +167,7 @@ def fig_cut_generation():
 
 
 # =============================================================================
-# 图 3：F1-F6 失效驱动反馈闭环
+# 图 3：F1-F6 类型化失效归因与搜索控制闭环
 # =============================================================================
 def fig_feedback_loop():
     fig, ax = new_ax(7.0, 3.2)
