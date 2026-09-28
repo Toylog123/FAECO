@@ -17,3 +17,6 @@
 | joint-depth | 20260908 b17 joint-depth 消融 | `experiments/20260908_joint_depth_ablation/` | 同上 | depth=4 达 +0.43 ns（批量外探索上限） | active |
 | hold-mode | 20260908 ITC-99 b01–b14 hold 模式 | `experiments/20260908_hold_mode_itc99/` | 同上 | 仅 b01 改善 min_slack；诚实 limitation | active |
 | multi-iter | 20260908 多轮消融 + --no-early-stop 修复 | `experiments/20260908_multi_iter_ablation/`、`experiments/20260908_multi_iter_fix_full/` | 同上 | b17 多轮 516 STA 无改善（actionable 受限，诚实记录） | active |
+| **论文证据清单** | 2026-09-28 改 `.tex` 前的**前置门槛**：逐数字绑定实验族 / revision / 配置 / 结果文件 | `project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md` | — | 8 个实验族（A/A′/A″/B/C/D/E/F/G）；发现 3 项口径问题 D-1/D-2/D-3 待裁定 | **active（改论文前必读）** |
+| s-l1 | 20260928 L1 S 窗口来源三层裁决 | `experiments/20260928_s_l1_ablation/` + `aggregation/summarize_s_l1.json` | tag `faeco-exp-rev1` → `87d01ba` | 37→126（3.4×）；76/126 权威层深度降；0/126 ΔWNS>0；接受 0/8 ⇒ NEGATIVE（能力型） | active |
+| l2-three-arm | 20260924 L2 三臂 + k=1 判别 | `experiments/20260924_threearm*/`、`experiments/20260924_l2_k1*/` | `main @ 6276cff` / `1a54087` | adaptive ≡ fixed 8/8 逐位相同、top-1 身份 0 次改变 ⇒ EMA 无独立贡献，降级 | active |
