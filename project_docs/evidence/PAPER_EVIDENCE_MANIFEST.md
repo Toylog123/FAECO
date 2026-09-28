@@ -110,7 +110,8 @@
 
 ## 6. 最终发布前审计 + 冻结（2026-09-28）
 
-**★ 当前发布版（2026-09-28 版面修复后）**：tag **`faeco-paper-layout-final`**；PDF SHA256 **`5c98b77db8f129a73e9fde826940bca8c983582de743c4a2877c8e6cc4cdfc65`**（`paper/zh/manuscript/` 与 `paper/zh/` 两份一致）；**9 页 / 0 Error / 0 Overfull / 0 Underfull**。
+**★ 当前发布版（2026-09-28 版面修复后）**：tag **`faeco-paper-layout-final`**；PDF SHA256 **`5c98b77db8f129a73e9fde826940bca8c983582de743c4a2877c8e6cc4cdfc65`**（两份一致）；**9 页 / 0 Error / 0 Overfull / 0 Underfull**。
+**★ 内容指纹（判定"内容是否真一致"须用此项）**：`pdftotext -layout` 全文的 SHA256 = **`856fac5b27125dc489bee46f898720721ba56cfa075ab7cfed9d0e2ceb44414d`**。**PDF 字节 SHA256 含编译时间戳，重编译必变，不可作内容指纹**——已实测：同一 `.tex` 重编译后字节 SHA256 由 `5c98b77d…` 变为 `611741c5…`，但页数、质量门、文本指纹三者全同。
 **前序内容冻结版**：tag `faeco-paper-restructure-final`（10 页，SHA256 `2d260b0f…`，正文 §1–§5 = 9 页 + 第 10 页全为参考文献）——**文本与全部数字完全相同，仅版面不同**，保留作为内容基线。
 
 **版面修复（2026-09-28，仅排版、不动任何数字/主张）**：原第 5 页仅 7 行、约 80% 空白，且 §3.3 正文被截断跨页。根因：图 2 是 1254×1254 正方形 `figure*`，`width=0.85\textwidth`（14.4×14.4 cm），配合 `[!htbp]` 中的 `p`（允许生成纯浮动页）与图前 `\FloatBarrier` 夹逼，LaTeX 生成只含图的浮动页。修复：图 2 改 `[!tb]`（禁浮动页）+ `width=0.55\textwidth`、删除图前屏障、合并 2 组相邻重复 `\FloatBarrier`（292/293、343/344）。结果：**10 页 → 9 页**，第 5 页 7→43 行（图 2 + 正文 + 表 3 同页共存），末页结论与参考文献 [1]–[19] 同页、不再孤立成页。
