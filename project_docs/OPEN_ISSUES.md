@@ -31,9 +31,10 @@
 `b03` 取 HEAD 的 **-1.21**（优于产物 -1.27）。08-26 产物**保留为历史实验族，不删除、不改数字**，
 但**不再作为未来主结果的局部补丁来源**；受 revision 影响的结果须以 `faeco-exp-rev1` + 同一 config family 重跑。
 **定性已完成，revision 待钉**：这是 codex 谱系内部 08-26→08-28 的**既有漂移**，非本次合并引入。需用户裁定"论文主实验基线取哪个 revision"——(A) 认 HEAD 行为（则 `b03`/`b06` 相关数字需按 HEAD 重跑更新，方向是 HEAD 更优：-1.21 优于 -1.27）；(B) 认 08-26 产物（则须继续定位到具体 commit 并固化 tag）。**裁定影响面已收窄**：ISCAS89 侧 7/8 电路的论文数字可由 HEAD 复现（`s713`/`s820` 需接受 E6 计数口径差异），`s832` 终值一致仅轨迹不同 ⇒ 实质分歧集中在 **ITC-99 的 `b03`/`b06`（终值不同）**。**另有 2 个未记入论文的开关需登记**：`candidates_per_iteration=1`（两批次共用）与 `tns_aware=true`（**仅 ITC-99 批次**，见报告 §5.3 与契约 A8） | 用户（投稿前） |
-| OI-014 | **L3 S 机制已验证；接入实时循环的 {S 开, S 关} 消融给出"无独立贡献"（能力型）——论文定位待裁定** | 2026-09-25 → 09-28 更新 | **待裁定（不阻塞投稿；阻塞 §4/§5 的 S 相关表述）。2026-09-28 用户裁定：暂不提前裁定，严格等 L1 全量结果，按预锁定判据裁决，不得因"候选数明显增加"就升格** | ① 机制侧（§8.12）：真实工具链九阶段全通过，22 项单测；`s641` 窗 `DFF_13` **ΔL=+1、ΔWNS=+0.03 ns**，CEC-1/2 双闭合 + 全网表 structure_check 通过 + 复跑逐位相同。② **环路侧（09-27 新，§8.13）**：8 电路 × {S 关, S 开}，S 在 **7/8 电路真的执行**（抽窗 469、实测候选 37），**接受 0/8**，两臂 `dWNS`/`maxB(k)`/`k₁st`/接受链**逐位相同**；37 候选 **ΔL(BLIF)>0 37/37、ΔL(SKY130)>0 16/37、ΔWNS>0 0/37**（含 16 个权威层变浅者亦无一改善）→ 窗口不在真时序关键锥上。off 臂 **8/8 逐位复现归档 L2 fixed 臂**（惰性 gate 通过）；两臂 `sta_used` 差 ≤8、全停 `max_iterations`（预算不绑定） | 真实 Yosys `0.67+146`+ABC+WSL OpenSTA；`code/scripts/run_s_ablation_batch.sh`（钉版本）、`compare_s_ablation.py`（配对差 + 台账 + 区分"没执行/执行了没用"）、`verify_s_off_reproduces_l2.py`（惰性 gate）、`analyze_s_candidates.py`（双层深度 × ΔWNS 交叉表）；`code/tests/test_flow_structure_resynth.py`（9 项，含"S 拒绝不改反馈通路"逐位断言）；回归 486 passed / 4 skipped | ① **已完成**加宽分配稳健性对照（`k4`：配对差仍全 0.000、候选 37→39 ⇒ 排除"配额不足"，瓶颈定位为可用窗口集合受"接受次数"限流）；② 裁定 S 定位——证据倾向 **(B) 如实降级为可选类型**并与 L2 封板结论合并，主贡献回到「候选构造 + 加权排序 + 失败归因 + STA 验证」；(A) 独立贡献需先实现**时序加权选窗**（当前割选窗与 R/G/B 同源，正是被实测定位的瓶颈） | 用户（投稿前） |
+| OI-014 | **L3 S 机制已验证；接入实时循环的 {S 开, S 关} 消融给出"无独立贡献"（能力型）——论文定位待裁定** | 2026-09-25 → 09-28 更新 | **已裁定（2026-09-28）：(B) 降级为可选候选类型/探索性能力** —— L1 全量三层裁决为 NEGATIVE（能力型），按预锁定 §13.4-3 规则判 (B)；**不阻塞投稿** | ① 机制侧（§8.12）：真实工具链九阶段全通过，22 项单测；`s641` 窗 `DFF_13` **ΔL=+1、ΔWNS=+0.03 ns**，CEC-1/2 双闭合 + 全网表 structure_check 通过 + 复跑逐位相同。② **环路侧（09-27 新，§8.13）**：8 电路 × {S 关, S 开}，S 在 **7/8 电路真的执行**（抽窗 469、实测候选 37），**接受 0/8**，两臂 `dWNS`/`maxB(k)`/`k₁st`/接受链**逐位相同**；37 候选 **ΔL(BLIF)>0 37/37、ΔL(SKY130)>0 16/37、ΔWNS>0 0/37**（含 16 个权威层变浅者亦无一改善）→ 窗口不在真时序关键锥上。off 臂 **8/8 逐位复现归档 L2 fixed 臂**（惰性 gate 通过）；两臂 `sta_used` 差 ≤8、全停 `max_iterations`（预算不绑定） | 真实 Yosys `0.67+146`+ABC+WSL OpenSTA；`code/scripts/run_s_ablation_batch.sh`（钉版本）、`compare_s_ablation.py`（配对差 + 台账 + 区分"没执行/执行了没用"）、`verify_s_off_reproduces_l2.py`（惰性 gate）、`analyze_s_candidates.py`（双层深度 × ΔWNS 交叉表）；`code/tests/test_flow_structure_resynth.py`（9 项，含"S 拒绝不改反馈通路"逐位断言）；回归 486 passed / 4 skipped | ① **已完成**加宽分配稳健性对照（`k4`：配对差仍全 0.000、候选 37→39 ⇒ 排除"配额不足"，瓶颈定位为可用窗口集合受"接受次数"限流）；② 裁定 S 定位——证据倾向 **(B) 如实降级为可选类型**并与 L2 封板结论合并，主贡献回到「候选构造 + 加权排序 + 失败归因 + STA 验证」；(A) 独立贡献需先实现**时序加权选窗**（当前割选窗与 R/G/B 同源，正是被实测定位的瓶颈） | 用户（投稿前） |
 | OI-015 | **既有物理门（SPEF 复测）在 ISCAS89 上几乎无判别力：F6 标签近乎恒真** | 2026-09-27 | **已裁定（2026-09-28）：降级为物理诊断/过滤机制；标定另开 OI-016，不得以"让 F6 变多"为目标** | s27 实测：20 轮官方口径 **521/532 trial 为 F6**（98%）、小规模探针 **32/34**，`physical_delta` **29/34 恰为 0** → 成对物理增益并不区分候选。**2026-09-27 规模化坐实**：8 电路 4349 条物理 trial 中 `physical_delta≠0` 仅 **10.3%**、F6 少数类仅 **1.17%**（51/4349）。与 OI-008 的"ITC-99 主实验 F6 触发 0 次"互补。直接关切 §7 第⑦条（b17"人工放宽预算"）质疑 | 3-A 四臂采集（`phys`/`elec` 带 `--physical-gate`）；探针 `scratch/elec_probe/phys_elec_probe` | **【2026-09-28 裁定：降级 + 另开标定】** 不采用简单的三选一。① **机制定位先降级**：F6 当前**只能**安全主张"对**少量** ideal-net 有利、但物理估计后失效的候选进行**识别与拒绝**"；**不得**主张"F6 显著改善后续搜索或物理 WNS"。② **同时允许做 `unit_len_um` 标定**，但**标定目标必须在实验前定义，且不得以 `maximize F6 count` 为目标**（否则变成"为了让机制看起来有用而调参"）。合理目标：`min |WNS_simplified_SPEF − WNS_OpenROAD|`，或至少最大化排序/符号一致性 `sign(ΔWNS_SPEF) = sign(ΔWNS_OpenROAD)` —— 即**用 OpenROAD 作外部参照标定物理 proxy，而不是用 F6 命中率标定**。③ 标定后 F6 若仍罕见，**接受该事实**。⇒ 标定工作转为独立任务 **OI-016**。④ (C) 弱化 F6/物理增益表述、主实验只报理想口径 —— 仍作为**兜底**保留 | 用户（投稿前） |
 | OI-016 | **物理 proxy（`unit_len_um` 等）标定：以 OpenROAD 为外部参照** | 2026-09-28 | **已开（由 OI-015 裁定引出；不阻塞 3-A/当前 L1）** | 现状物理门参数（`physical_unit_len_um=40`、`fanout/depth_penalty=1.0`、`min_physical_gain_ns=0.01`）**手工设定且未标定**，判别力弱（见 OI-015）。任务目标：把简化的 SPEF/物理估计与真实物理实现对齐 | 需新增外部参照链：OpenROAD（或等价 STA/RC 工具）在 sky130 上对同一网表出 WNS | **标定目标（须写在实验之前，冻结）**：主判据 `min |WNS_simplified_SPEF − WNS_OpenROAD|`；辅判据 `sign(ΔWNS_SPEF) = sign(ΔWNS_OpenROAD)` 的一致率。**明确禁止**以 `maximize F6 count` / 提升物理门触发率为目标。**产出**：标定后的 `unit_len_um` 等参数 + 标定报告 + 参数依据。**注意**：标定**不得**反改论文既有数字的既有实验族；若标定后 F6 仍罕见，如实接受（联动 OI-015） | 用户（后置；投稿前可选） |
+| OI-017 | **`structure_resynth.rejections` 台账在 s420 上未闭合** | 2026-09-28 | **记录在案（不阻塞 L1 裁决；不影响候选数/实测数/ΔWNS/接受数）** | s420 的 {S on} 报 6 个候选（全 S0）与 6 条变体级拒绝 `W_STRUCT_ERROR`（**均标 S0**），但磁盘 `case/results/structure_resynth/round020/` 下只有 **8 个窗口 × {S0,S1,S2}**。8 个 S0 槽位无法同时产出 6 候选 + 6 条 S0 拒绝 ⇒ 台账不闭合。其余 7 电路 rejections 为空、无此现象。`W_STRUCT_ERROR` 的语义是**硬有效性失败**（`structure_check(grafted, baseline_text=…).ok == False` ⇒ 返回 `(LABEL_STRUCT_ERROR, None)`，**不产候选**） | `experiments/20260928_s_l1_ablation/on/s420/outerloop_result.json`（`structure_resynth.rejections`）、`case/results/structure_resynth/round020/` 目录树；`code/src/rseco/structure_resynthesis.py` L694-712 / L757-774（`if candidate is not None … elif label is not None …`，S1/S2 同 canonical ⇒ `(None,None)` 丢弃） | **待查（低优先，仅记账语义）**：需按 (窗口, 变体) 逐槽打点，确认是 `variant` 标签记录错位还是 S1/S2 的 `(None,None)` 路径在 STRUCT 失败时未走。**在任何后续引用该 `rejections` 台账的结论前必须先解决**；本报告的 L1 裁决**不依赖**该台账 | 后续（S 候选质量归因时顺带） |
 
 ### OI-014 **L3 S（窗口局部结构重综合）机制已验证；接入实时循环的 {S 开, S 关} 消融给出"无独立贡献"（能力型）结论——**但 2026-09-28 定位到该证据被集成缺陷混淆（S 的窗口池被 R/G/B 配额截断）**——论文定位待裁定** | 2026-09-25 开 / 2026-09-28 更新 | 待裁定（不阻塞投稿；阻塞 §4/§5 的 S 相关表述） | 报告 `reports/FAECO_L3_S_VALIDATION_20260925.md`（机制）、`reports/FAECO_L3_S_LOOP_ABLATION_20260927.md`（环路消融）；契约 §8.12 / §8.13；技术设计 §13（窗口来源重设计）
 
@@ -109,7 +110,33 @@
 - **【2026-09-28】L1 已实现并重跑**（`resynth_window_pool`，严格惰性守卫，2 项新单测）：
   `experiments/20260928_s_l1_ablation/`（8 电路 × {off,on}，`on` = `--resynth-per-iteration 8
   --resynth-window-pool 32`，两臂 `--sta-budget 1600`）。
-- **【2026-09-28 用户裁定：三层裁决，禁止跳级】** 不直接看最终 WNS 一项，按三层顺序裁决；
+- **【2026-09-28 ★ L1 全量裁决：NEGATIVE（能力型）⇒ 裁 (B)】** 报告
+  `reports/FAECO_S_L1_WINDOW_POOL_20260928.md`；工具 `code/scripts/summarize_s_l1.py`。
+  8 电路 × {`off`,`on`}，16/16 `ALL_RUNS_DONE`，`on` = `--resynth-per-iteration 8
+  --resynth-window-pool 32`，两臂同 `--sta-budget 1600`（**两侧都不绑定**，max 482）。
+  - **纪律全过**：① 控制臂 8/8 逐位复现归档 `off`（`mapped.v`/`patch_id`/`wns`/停因/预算台账）；
+    ② **单变量干净 8/8**：两臂**非 S（R/G/B/JOINT）试验序列逐位相同**
+    （s27 416、s382 769、s420 1048、s641 596、s713 306、s820 312、s832 306、s953 393）；
+    ③ 惰性单测 11 passed。
+  - **第一层 enumeration ✅**：`s382 8→32`、`s420 1→6`、`s713 7→22`、`s820 6→14`、
+    `s832 5→17`、`s953 8→33`；**37 → 126（3.4×）**。`s27` **SATURATED**（池只有 6）、
+    `s641` **NO-ENGAGE**（抽窗 0）。**机制被完全解释**：历史 s382/s953 候选数**恰好 = 8 = 池上限**；
+    L1 后 = `resynth_per_iteration`(8) × 参与轮数 ⇒ **历史 S 候选数被池子钉死**。
+  - **第二层 candidate quality ⚠️**：`ΔL(SKY130)>0` 由历史 43% 升到 **76/126（60.3%）**
+    ⇒ 新窗口**更常真的降低权威层深度**；但 **`ΔWNS>0` = 0/126**，且 **90/126 的 `ΔWNS<0`**
+    （多数候选**反而让 WNS 变差**）⇒ **问题不在 L1，在 S transformation quality**。
+  - **第三层 repair capability ❌**：**接受 0/8**、配对 `ΔWNS(on−off)` **全 0.000**。
+  - **固定指标集（纪律）**：`N_unique_window` = `N_S candidate` = `N_measured` = **126**
+    （**无重复窗口哈希** ⇒ 126 个候选来自 126 个不同窗口，扩池是真探索）；
+    `N_extracted`=1724 ≫ 126 ⇒ 印证该字段是**重复扫描**指标，**不作**"搜索空间扩大"的证据。
+  - **判定**：**枚举瓶颈已排除，但当前 S 构造在该 benchmark/regime 下没有体现 timing repair
+    capability** ⇒ **(B)**。**明确不做**：不再扩池（32→64→128，池已用满且非瓶颈）。
+  - **下一步（§13.7）**：转 **S 候选质量归因**——为什么通过 CEC 的 S patch 没有 timing gain？
+    (i) 窗口内 depth 是否真的下降（已部分回答 76/126）；(ii) 映射后 depth 是否又回来；
+    (iii) cell delay 是否变差；(iv) fanout/cap 是否抵消结构收益；(v) critical path 是否不穿过窗口。
+  - **⚠️ 待查（不影响上述结论）**：s420 报 6 候选 + 6 条变体级拒绝 `W_STRUCT_ERROR`（均标 S0），
+    但磁盘上只有 8 窗口 × {S0,S1,S2} ⇒ `rejections` 台账在 s420 上**未闭合**，见 **OI-017**。
+- **【2026-09-28 用户三层裁决口径（已执行）】** 不直接看最终 WNS 一项，按三层顺序裁决；
   **不得因"L1 扩池成功、候选数明显增加"就把 S 升格**：
   - **第一层 enumeration（L1 自身是否有效）**：非饱和电路上 `N_S,L1 > N_S,old`。
     成立 ⇒ 只证明"**L1 的 enumeration bottleneck 被真实解除**"，排除"S 没效果只是因为从未获得
