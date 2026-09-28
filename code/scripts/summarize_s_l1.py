@@ -136,6 +136,34 @@ def main() -> int:
           f"{tot['meas']:>10} {tot['acc']:>10}")
     out["totals"] = tot
 
+    print("=" * 84)
+    print("Tier 0 · 纪律 —— 单变量是否干净？（两臂非 S 试验序列须逐位相同）")
+    print("=" * 84)
+    single_var = {}
+    for c in circuits:
+        seqs = {}
+        for arm in ("off", "on"):
+            tj = _load(args.root / arm / c / "eval_trials.json")
+            if tj is None:
+                seqs[arm] = None
+                continue
+            tr = tj.get("trials", tj) if isinstance(tj, dict) else tj
+            seqs[arm] = [(t.get("kind"), t.get("patch_id"), t.get("wns"),
+                          t.get("accepted")) for t in tr if t.get("kind") != "S"]
+        a, b = seqs.get("off"), seqs.get("on")
+        if a is None or b is None:
+            print(f"  {c:8} --")
+            continue
+        same = a == b
+        single_var[c] = same
+        print(f"  {c:8} non-S trials off={len(a)} on={len(b)} "
+              f"identical={same}" + ("" if same else "   *** CONFOUND ***"))
+    if single_var:
+        n_ok = sum(1 for v in single_var.values() if v)
+        print(f"  ⇒ {n_ok}/{len(single_var)} 电路的 R/G/B/JOINT 轨迹逐位相同"
+              f"（L1 只增加 S 候选，未扰动搜索路径）")
+    out["single_variable"] = single_var
+
     print()
     print("=" * 84)
     print("Tier 1 · enumeration —— 池子上限是否被解除？（只证明枚举瓶颈被解除）")
