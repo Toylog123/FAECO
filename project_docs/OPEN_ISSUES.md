@@ -89,10 +89,19 @@
   **不能**实现为"加宽 `candidates[:W_s]` 切片"（切片只会从 9 变 9）。
   —— 这是"最便宜的先做"在设计被实现前就纠正它的收益。
   **补充普查（✅ 已完成）**：`candidates_per_iteration = 32` 时未截断列表 = **33**（s382/s953 一致）；
-  s420 全 20 轮恒为 **9** ⇒ 关系为 **`len(candidates) = k + 1`**，且**与轮次/cone/`G_r` 无关**。
+  s420 全 20 轮恒为 **9** ⇒ 关系为 **`len(candidates) = min(k+1, 该锥体的可计分割空间)`**
+  （未饱和时与轮次/cone/`G_r` 无关）。
   ⇒ **枚举随 `k` 线性增长 ⇒ L1 成立**（给 S 一次 `k=32` 专属枚举即可把窗口池 8 → 32，**4×**），
   无需改 cone / 深度切分。**可引用表述**：S 的可触及窗口上界 = 不同 `G_r` 数 ×
-  `candidates_per_iteration` —— **S 的触达范围被 R/G/B 的束宽直接决定**。
+  `min(candidates_per_iteration, 割空间)` —— **S 的触达范围被 R/G/B 的束宽直接决定**（小锥体除外）。
+- **【2026-09-28】闭合反例：小锥体**饱和**，`k+1` 不是上界（L1 重跑暴露）**：`s27`（10 门，目标锥
+  G10 极小）在 `k=8` 与 `k=32` 下 `len(candidates)` 均为 **6**（`pool_census` = `[3,6,6,…]`，20 轮），
+  L1 重跑中 `window_pool=32` 但 `window_pool_offered` 仍 **6**、S 候选仍 2、接受仍 0。
+  ⇒ L1 对"割空间 < `candidates_per_iteration`"的电路**天然惰性**（非失效，是无可扩余地）；
+  **判定 L1 有效性必须排除饱和电路**。报告 `reports/FAECO_S_WINDOW_CENSUS_20260928.md` §3.1。
+- **【2026-09-28】L1 已实现并重跑**（`resynth_window_pool`，严格惰性守卫，2 项新单测）：
+  `experiments/20260928_s_l1_ablation/`（8 电路 × {off,on}，`on` = `--resynth-per-iteration 8
+  --resynth-window-pool 32`，两臂 `--sta-budget 1600`）。裁决见下方"L1 重跑结果"。
 - **论文改动一律等裁定后一次性进行**（本轮仍未触碰任何 `.tex`）。
 
 ### OI-008 明细（2026-09-23 代码—论文对照，含实测触发分布）**实测触发分布**（权威源：`experiments/20260826_itc99_main/b*/b*/eval_trials.json`，19 电路 / 4044 trials，探针 `scratch/count_failures.py`）：

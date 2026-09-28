@@ -212,6 +212,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--resynth-per-iteration", type=int, default=1,
                    help="How many cut boundaries per round are handed to S "
                         "(also bounded by --candidates-per-iteration)")
+    p.add_argument("--resynth-window-pool", type=int, default=None,
+                   help="Lever L1 (tech design §13.3): size of S's OWN cut-boundary "
+                        "pool. Omit to keep the historical behaviour (S reuses the "
+                        "--candidates-per-iteration-truncated list, i.e. pool == k). "
+                        "Set larger than --candidates-per-iteration to give S a "
+                        "dedicated _cone_candidates(k=pool) enumeration; the weighted "
+                        "cut enumeration returns exactly k+1 boundaries (census "
+                        "2026-09-28), so this is what actually widens S's reach.")
     p.add_argument("--resynth-variants", default="S0,S1,S2",
                    help="ABC variant chain for S (default S0,S1,S2 — r2 §4.3)")
     p.add_argument("--structure-out-dir", type=Path, default=None,
@@ -394,6 +402,7 @@ def main() -> int:
         seed=args.seed,
         structure_resynth=args.structure_resynth,
         resynth_per_iteration=args.resynth_per_iteration,
+        resynth_window_pool=args.resynth_window_pool,
         resynth_variants=tuple(
             v.strip() for v in args.resynth_variants.split(",") if v.strip()
         ),
@@ -462,6 +471,7 @@ def main() -> int:
         # from run_config.json alone (same discipline as the L2 arms).
         "structure_resynth": args.structure_resynth,
         "resynth_per_iteration": args.resynth_per_iteration,
+        "resynth_window_pool": args.resynth_window_pool,
         "resynth_variants": [v.strip() for v in args.resynth_variants.split(",")
                              if v.strip()],
         "structure_resynth_stats": result.get("structure_resynth"),

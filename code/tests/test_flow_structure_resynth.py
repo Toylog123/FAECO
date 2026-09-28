@@ -378,3 +378,81 @@ def test_s_dedups_windows_at_the_same_netlist(tmp_path, monkeypatch) -> None:
     # no window is ever resynthesised twice at the same committed netlist
     seen = [tuple(c["gates"]) for c in calls]
     assert len(seen) == len(set(seen)), seen
+
+
+# --------------------------------------------------------------------------
+# 9. lever L1 (tech design §13.3): S gets its OWN window pool; default inert
+# --------------------------------------------------------------------------
+def test_resynth_window_pool_default_is_inert(tmp_path, monkeypatch) -> None:
+    """Omitted pool == pool == candidates_per_iteration == no extra enumeration."""
+    case_dir = _make_case(tmp_path)
+    tools = _install_s_stubs(monkeypatch, candidates=[])
+
+    def _run(pool):
+        ev = _SOnlyEvaluator([{"improved": False}] * 20)
+        return run_multi_iteration_case(
+            case_dir, max_iterations=3, enable_feedback=True,
+            equivalence_checker=_functional_ok, wns_evaluator=ev,
+            structure_resynth=True, resynth_tools=tools,
+            resynth_window_pool=pool,
+        )
+
+    omitted = _run(None)
+    equal = _run(8)          # == candidates_per_iteration: must not widen
+    for key in ("windows_offered", "windows_extracted", "candidates",
+                "measured", "accepted", "rounds_with_s", "window_pool",
+                "window_pool_offered"):
+        assert omitted["structure_resynth"][key] == equal["structure_resynth"][key], key
+    assert omitted["wns_history"] == equal["wns_history"]
+    assert omitted["structure_resynth"]["window_pool"] == 8
+
+
+def test_resynth_window_pool_widens_only_s_source(tmp_path, monkeypatch) -> None:
+    """L1 wires a *second*, dedicated enumeration at k = resynth_window_pool.
+
+    The synthetic 15-gate case saturates at 6 cut boundaries, so the pool cannot
+    grow measurably here; what this test pins is the *wiring* (S is given its own
+    enumeration at the requested k) and the single-variable property.
+    """
+    case_dir = _make_case(tmp_path)
+    tools = _install_s_stubs(monkeypatch, candidates=[])
+
+    from rseco import flow as flow_mod
+
+    real = flow_mod._cone_candidates
+    seen_k: list[int] = []
+
+    def _spy(cone, weights, critical_instances, r_available, **kw):
+        seen_k.append(int(kw["k"]))
+        return real(cone, weights, critical_instances, r_available, **kw)
+
+    monkeypatch.setattr(flow_mod, "_cone_candidates", _spy)
+
+    def _run(pool):
+        seen_k.clear()
+        ev = _SOnlyEvaluator([{"improved": False}] * 20)
+        res = run_multi_iteration_case(
+            case_dir, max_iterations=3, enable_feedback=True,
+            equivalence_checker=_functional_ok, wns_evaluator=ev,
+            structure_resynth=True, resynth_tools=tools,
+            resynth_window_pool=pool,
+        )
+        return res, list(seen_k)
+
+    d, dk = _run(None)
+    w, wk = _run(32)
+
+    # default: only the R/G/B enumeration runs, always at k == candidates_per_iteration
+    assert set(dk) == {8}, dk
+    assert d["structure_resynth"]["window_pool"] == 8
+    # L1: S gets its own enumeration at k == resynth_window_pool
+    assert 32 in wk, wk
+    assert w["structure_resynth"]["window_pool"] == 32
+    # ...and it stays single-variable: the L2 feedback path is untouched by L1
+    assert w["weights_trace"] == d["weights_trace"]
+    assert w["failure_ema_trace"] == d["failure_ema_trace"]
+    assert [h.get("failures") for h in w["history"]] == [
+        h.get("failures") for h in d["history"]
+    ]
+
+

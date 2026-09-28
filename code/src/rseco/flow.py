@@ -412,6 +412,7 @@ def run_multi_iteration_case(
     seed: int = 0,
     structure_resynth: bool = False,
     resynth_per_iteration: int = 1,
+    resynth_window_pool: int | None = None,
     resynth_variants: tuple[str, ...] = ("S0", "S1", "S2"),
     resynth_tools: object | None = None,
     resynth_lib_path: str | Path | None = None,
@@ -463,6 +464,15 @@ def run_multi_iteration_case(
     resynth_per_iteration: how many cut boundaries per iteration are offered
         to S (bounded by ``candidates_per_iteration``).  Default 1 keeps the
         resynthesis cost bounded; each window costs one ABC run per variant.
+    resynth_window_pool: lever L1 (tech design §13.3) — the size of S's *own*
+        cut-boundary pool.  ``None`` (default) reuses ``round_candidates``, i.e.
+        the ``candidates_per_iteration``-truncated list, which is the historical
+        behaviour and is byte-for-byte inert.  When set to a value larger than
+        ``candidates_per_iteration``, S gets a dedicated
+        ``_cone_candidates(..., k=resynth_window_pool)`` enumeration instead.
+        This matters because the weighted cut enumeration returns exactly
+        ``k + 1`` boundaries (census 2026-09-28), so S's historical reach was
+        capped by R/G/B's beam width rather than by the cut space.
     resynth_variants: ABC variant chain names (default S0/S1/S2).
     resynth_tools: injectable :class:`ResynthTools`; when omitted the real
         Yosys/ABC binding is built from ``resynth_lib_path`` on first use.
@@ -899,7 +909,31 @@ def run_multi_iteration_case(
             s_measured_this_round = 0
             s_attempted_this_round = 0
             s_engaged = False
-            for boundary in round_candidates:
+            # Lever L1 (tech design §13.3): give S its *own*, wider window
+            # source.  `round_candidates` is truncated to
+            # `max_candidates_per_iteration`, and the weighted cut enumeration
+            # returns exactly `k + 1` boundaries (census 2026-09-28), so reusing
+            # that list caps S's reach at R/G/B's beam width.  Re-enumerating at
+            # `resynth_window_pool` widens S's pool without touching the R/G/B
+            # path.  The guard is deliberately strict (`is not None and >`), so
+            # the default keeps S's source byte-for-byte identical.
+            s_pool = max_candidates_per_iteration
+            s_boundaries = round_candidates
+            if (resynth_window_pool is not None
+                    and int(resynth_window_pool) > max_candidates_per_iteration):
+                s_pool = int(resynth_window_pool)
+                wider = _cone_candidates(
+                    cone, weights, active_critical, active_r_available,
+                    constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
+                    k=s_pool,
+                    allow_singleton=bool(getattr(wns_evaluator, "allow_singleton", False)),
+                    wall_timeout_s=None,  # deterministic: no wall-clock truncation
+                )
+                if wider:
+                    s_boundaries = wider
+            s_stats["window_pool"] = s_pool
+            s_stats["window_pool_offered"] = len(s_boundaries)
+            for boundary in s_boundaries:
                 # `resynth_per_iteration` counts *attempted* windows, not raw
                 # cut positions: a boundary whose window was already resynth-
                 # esised at this committed G_r is deterministic to re-run, so

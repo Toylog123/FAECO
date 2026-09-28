@@ -73,6 +73,13 @@ fi
 K="${FAECO_K:-8}"
 RESYNTH_PER_ITER="${FAECO_RESYNTH_PER_ITER:-1}"
 RESYNTH_VARIANTS="${FAECO_RESYNTH_VARIANTS:-S0,S1,S2}"
+# Lever L1 (tech design §13.3): S's own window pool.  Unset ⇒ historical
+# behaviour (S reuses the candidates_per_iteration-truncated list).  Set to e.g.
+# 32 ⇒ S gets a dedicated _cone_candidates(k=pool) enumeration.  The census
+# (2026-09-28) proved the enumeration returns exactly k+1 boundaries, so without
+# this the pool is capped at candidates_per_iteration (8) and resynth_per_iteration
+# cannot reach past it.
+RESYNTH_WINDOW_POOL="${FAECO_RESYNTH_WINDOW_POOL:-}"
 # 候选级 STA 预算：两臂必须相同，且**两臂都不得撞墙**，否则 "S on" 的早停会
 # 把"预算被 R/G/B 抢光"伪装成"S 无贡献"。实测（L2 fixed 臂）off 侧最大
 # sta_used = 476（s420）；S on 侧每轮最多追加 resynth_per_iteration×|variants|
@@ -88,7 +95,7 @@ arm_flags() {
   # 每臂的唯一自由度；未知臂在这里 fail closed。
   case "$1" in
     off) echo "--no-feedback" ;;
-    on)  echo "--no-feedback --structure-resynth --resynth-per-iteration $RESYNTH_PER_ITER --resynth-variants $RESYNTH_VARIANTS" ;;
+    on)  echo "--no-feedback --structure-resynth --resynth-per-iteration $RESYNTH_PER_ITER --resynth-variants $RESYNTH_VARIANTS${RESYNTH_WINDOW_POOL:+ --resynth-window-pool $RESYNTH_WINDOW_POOL}" ;;
     *)   echo "" ; return 1 ;;
   esac
 }

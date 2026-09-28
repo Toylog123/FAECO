@@ -745,19 +745,25 @@ S 无接受"**，不可外推为"S 这一机制无贡献"。
 | 实验口径 | `len(candidates)`（未截断） | `len(round_candidates)`（截断后） |
 |---|---|---|
 | `candidates_per_iteration = 8`，s382 / s713 / s832 / s953，各 2 轮 | **9** | 8 |
-| `candidates_per_iteration = 8`，s420，**20 轮** | **[9] × 20** | [8] × 20 |
+| `candidates_per_iteration = 8`，s420 / s713 / s832 / s953，**各 20 轮** | **[9] × 20** | [8] × 20 |
 | `candidates_per_iteration = 32`，s382 / s953，各 2 轮 | **33** | 32 |
+| `candidates_per_iteration = 8`，**s27**，20 轮（L1 重跑时的反例） | **6** | 6 |
+| `candidates_per_iteration = 32`，**s27**（L1 重跑） | **6（未变）** | — |
 
-两条结论：
+三条结论：
 
-1. **`len(candidates) = k + 1`，且与轮次、cone、`G_r` 无关**（s420 全 20 轮恒为 9）；
-   那个 `+1` 是前置的 `_critical_path_cover_cut`。⇒ **截断只损失 1 个窗口，L626 不是瓶颈**，
-   13.1 把它当主因是**不完全的归因**。
-2. **加权割枚举随 `k` 线性增长**（k=8 → 9，k=32 → 33）⇒ **L1 可行且改动极小**：
+1. **`len(candidates) = min(k + 1, 该锥体的可计分割空间)`**，在**未饱和**的电路上与轮次、cone、
+   `G_r` 无关（s420/s713/s832/s953 各 20 轮恒为 9）；那个 `+1` 是前置的
+   `_critical_path_cover_cut`。⇒ **截断只损失 1 个窗口，L626 不是瓶颈**，13.1 把它当主因是
+   **不完全的归因**。
+2. **反例：小锥体会饱和。** s27（10 门，目标锥 G10 极小）的割图**总共只有 6 个可计分边界**，
+   `k=8` 与 `k=32` 都返回 6 ⇒ 此时 L1 **天然惰性**（`window_pool=32` 但 `window_pool_offered`
+   仍 6、S candidates 仍 2、接受仍 0）。判定 L1 有效性必须**排除饱和电路**。
+3. **加权割枚举随 `k` 线性增长**（未饱和时 k=8 → 9，k=32 → 33）⇒ **L1 可行且改动极小**：
    给 S 一次 `k = resynth_window_pool` 的**专属枚举**，即可把 S 的窗口池从 **8 → 32（4×）**。
 
-> **可引用表述**：S 的可触及窗口上界 = **不同 `G_r` 数 × `candidates_per_iteration`** ——
-> 也就是 **S 的触达范围被 R/G/B 的束宽直接决定**。这是"S 与 R/G/B 耦合"的**定量形式**。
+> **可引用表述**：S 的可触及窗口上界 = **不同 `G_r` 数 × `min(candidates_per_iteration, 割空间)** ——
+> 也就是 **S 的触达范围被 R/G/B 的束宽直接决定**（小锥体除外）。这是"S 与 R/G/B 耦合"的**定量形式**。
 
 ### 13.2 目标与单变量纪律
 
@@ -775,6 +781,19 @@ S 无接受"**，不可外推为"S 这一机制无贡献"。
 `resynth_window_pool` 建议 32 起）。**不可实现为"加宽 `candidates[:W_s]` 切片"** ——
 §13.1.1 实测未截断列表只有 **9**，切片加宽无效。默认 `resynth_window_pool = candidates_per_iteration`
 ⇒ 默认路径与现状**逐位相同**。改动面：`flow.py` 一处（新增参数 + 一次枚举调用）。
+
+> **✅ L1 已实现（2026-09-28，用户定案后）**：`run_multi_iteration_case(..., resynth_window_pool=None)` +
+> CLI `--resynth-window-pool`。惰性判据写成**严格守卫**（`is not None and > candidates_per_iteration`）：
+> 默认与"显式等于 `candidates_per_iteration`"两条路径都与现状逐位相同（2 项新单测把守，含
+> "默认只跑一次枚举、k 恒为 8"与"S 专属枚举出现在 k=32"的 spy 断言，以及 `weights_trace` /
+> `failure_ema_trace` / `history[*].failures` 逐位相同）。
+>
+> **重跑口径（`experiments/20260928_s_l1_ablation`）**：8 电路 × {`off`, `on`}；
+> `on` = `--structure-resynth --resynth-per-iteration 8 --resynth-window-pool 32`，
+> `off` = 无开关；两臂共同 `--period 0.5 --max-iterations 20 --candidates-per-iteration 8
+> --joint-k 2 --enable-buffer --workers 1 --early-stop --no-feedback --sta-budget 1600`。
+> **`resynth_per_iteration` 同时提到 8 是必要的**：池子扩到 32 后，`resynth_per_iteration` 重新成为
+> 每轮的上限（此前 1/轮 × 20 轮根本覆盖不到 32）；两者共同构成"L1 窗口来源"，`off` 臂仍是唯一对照。
 
 **L2（时序加权选窗）**：S 在自己的窗口池内按**时序权重**排序，使每轮名额优先给最关键窗口。
 权重择一（定案时冻结）：
