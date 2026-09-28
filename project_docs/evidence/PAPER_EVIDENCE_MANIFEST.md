@@ -126,3 +126,5 @@
 
 **stale 标记**：`experiments/_stale_20260924_threearm_oldsign/`（旧符号结果，不参与任何证据链）**保留不删**，仅在 `.gitignore`/说明中标注为 stale 排错证据。
 
+**传播性更正（历史文档加注，不改原历史内容）**：`project_docs/review_history/paper_audit/consistency_audit_20260911.md` 第 32 行（原文第 8 项）曾把「b18/b19 门数 37.6 万/75.5 万」列为"对账通过"结论，现将该行划除并加 **【2026-09-28 更正】** 注，指向本节。该文件其余内容为 2026-09-11 历史快照，整体保留；`project_docs/LOGS.md`、`review_history/response_reviewers_*.md`、`design_specs/engineering/n31_05_sequential_eco.md` 中的同源旧数字属**历史流水记录**，按约定原样保留、不篡改。
+

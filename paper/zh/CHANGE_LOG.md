@@ -27,6 +27,7 @@
 | 2026-09-28 | **最终发布前审计 · 更正 b18/b19 门数**：§4.3.1「b18（37.6 万门）/ b19（75.5 万门）」→「b18（SKY130 映射后 7.57 万个单元）/ b19（15.10 万个单元）」。原数字在 `20260804_itc99_b18b19_repair/` 的任何文件中均**不可定位**（`map.log` 实为 75 707 / 151 047 单元；来源 `docs/engineering/n31_05_sequential_eco.md` §12.8 无推导，且同文档内另写过「23–46 万门」自相矛盾） | 审计项 2：所有数字须能在证据中唯一定位；以证据为准 | `PAPER_EVIDENCE_MANIFEST.md` §2/§6；`20260804_itc99_b18b19_repair/{b18,b19}/map.log` |
 | 2026-09-28 | **最终审计 · 更正 §2 对比表旧叙事**：表 `tab:related_diff` 的 FAECO 行「加权割生成候选并按**失败反馈迭代搜索**」→「加权割生成候选并按**失败类型结构化诊断与控制**」 | 与新口径（F1–F6 = 诊断/控制信号，不作独立增益）一致；审计项 1/4 | 用户裁定；§3.4 |
 | 2026-09-28 | **冻结发布**：tag `faeco-paper-restructure-final`；PDF SHA256 `2d260b0f…`；**10 页 / 0 Error / 0 Overfull / 0 Underfull**（正文 §1–§5 = 9 页 + 参考文献 1 页）。stale 目录 `experiments/_stale_20260924_threearm_oldsign/` 标 stale（`.gitignore` + 目录内 `STALE.md`），**保留不删** | 发布前冻结 | `PAPER_EVIDENCE_MANIFEST.md` §6 |
+| 2026-09-28 | **传播性更正加注（不改历史内容）**：`project_docs/review_history/paper_audit/consistency_audit_20260911.md` 第 8 项「b18/b19 门数（37.6 万/75.5 万）= LOG-20260804-42 映射记录…」原列为"对账通过"，现划除并加 **【2026-09-28 更正】** 注（指向 manifest §6）。该文件其余为 2026-09-11 历史快照，整体不动；LOGS.md / reviewer 回复 / 工程 spec 中同源旧数字属历史流水，按约定保留 | 该"已核对通过"结论已证伪，留原地会误导后人；证据侧一律以 `map.log` 为准 | `PAPER_EVIDENCE_MANIFEST.md` §6；`20260804_itc99_b18b19_repair/{b18,b19}/map.log` |
 | YYYY-MM-DD | 修改了… | 因… | r1 / 证据包路径 / commit |
 ## 规则
 
