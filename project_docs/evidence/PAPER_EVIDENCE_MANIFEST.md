@@ -60,8 +60,8 @@
 | §4.3 ITC-99 成本 | 19 电路共 **3363** 次候选级 STA | **B** | 同上 → $\sum$ `n_candidate_sta_runs` = 3363 | ✅ |
 | §4.3 ITC-99 分布 | 中位数 **+0.18** ns、均值 **+0.43** ns | **B** | 同上（19 值重算一致） | ✅ |
 | §4.3 b17 | 默认 60 s 全拒；放宽 180 s 得 **+0.38** ns；**104** 次 STA；接受 G:nor4b₁→nor4b₂ | **B** | `20260908_phase2_b17_resume/`（`summary.json` → `itc99[] b17.scaled_run`） | ✅ |
-| §4.3 b06 | `-0.56` 持平；**664** 次 STA、333 持平 / 0 严格超过 | **B** | `20260826_itc99_main/b06/…/eval_trials.json`（664 = `n_candidate_sta_runs`） | ⚠️ 333 需逐 trial 复算 |
-| §4.3 b18/b19 | +0.07 / +1.44 ns；37.6 万 / 75.5 万门；24 / 59 次 STA | **B** | `20260804_itc99_b18b19_repair/`、`20260803_sequential_hybrid_tns_fixed/` | ⚠️ 待逐项复核 |
+| §4.3 b06 | `-0.56` 持平；**664** 次候选级 STA 中**无一次严格超过基线** | **B** | `20260826_itc99_main/b06/b06/eval_trials.json`（`trials` 长度 = **664**） | ✅ 2026-09-28 审计：正文已删「333 持平」明细，只保留「无一次严格超过」，与 664 trials 口径一致 |
+| §4.3 b18/b19 | +0.07 / +1.44 ns；**7.57 万 / 15.10 万个 SKY130 单元**；24 / 59 次 STA | **B** | `20260804_itc99_b18b19_repair/{b18,b19}/`：`outerloop_result.json`（`baseline_wns` −13.34 / −17.44、`wns_history[-1]` −13.27 / −16.0、`n_candidate_sta_runs` 24 / 59）+ `map.log`（`Number of cells` = **75 707 / 151 047**；dff 3 270 / 6 542，与 ITC'99 官方 b18 3 320 FF、b19 6 642 FF 相符，确认为公开 b18/b19） | ✅ 2026-09-28 全部逐项复核；**原「37.6 万 / 75.5 万门」在任何证据文件中均无法定位，已更正为映射网表单元数** |
 | §4.3.2 PicoRV32 | +1.13 / +0.07 ns | **B** | `20260826_aggregation/summary.json` → `picorv32[]` | ✅ |
 | §4.3 SEC | 30 实例 / 29 修改 / **28/29 完全证明**；b17 12812 已证明 + 1 未证明 | **B**（b17 = phase-2） | `20260826_sec/summary.csv`（22 行 PASS + `picorv32_regs` N/A）、`20260908_phase2_b17_resume/sec/sec_result.json` | ✅ |
 | §4.2 图 3 + §4.5 表 7 预布局列（**效率优先子研究**） | ISCAS89：`-0.18/-0.89/-1.55/-1.59/-1.31/-1.17/-1.17/-1.27`（s420 仅 +0.01 ns） | **A** | `20260805_tcad_sprint1_iscas89/<c>/<c>/outerloop_result.json` → `wns_history[-1]`（8/8 逐值吻合） | ✅ |
@@ -107,3 +107,22 @@
 - 族 A\*：`bash code/scripts/run_sprint1_batch.sh`（`FAECO_OUT_ROOT=experiments/20260928_sprint1 FAECO_K=1 FAECO_PARALLEL=4 FAECO_EXTRA="--priority-table code/src/rseco/strategy_priority_table.json"`）；判分布：读 `eval_trials.json → trials[*].accepted==True → kind`。
 - 族 D：`code/scripts/compare_threearm.py`、`code/scripts/analyze_k1_discriminant.py`。
 - 工具链版本：Yosys `0.67+146`（`map.log` 首行，族 A/B/F 逐字相同）；OpenSTA 3.1.0（WSL）；SEC 走 WSL Yosys 0.33。
+
+## 6. 最终发布前审计 + 冻结（2026-09-28）
+
+**冻结 tag**：`faeco-paper-restructure-final`。**论文 PDF SHA256**：`2d260b0f46ed6836b94e607f5878038f19805e491b6cfd43910fb75c2c5baa2e`（`paper/zh/manuscript/` 与 `paper/zh/` 两份一致）。**10 页 / 0 Error / 0 Overfull / 0 Underfull**（正文 §1–§5 = 9 页，第 10 页为参考文献 [8]–[19]）。
+
+审计五项结论（探针：`scratch/probe_final_audit.py`、`probe_headline_numbers.py`、`probe_c_means.py`）：
+
+1. **四处同口径**：标题（中/英）、摘要（中/英）、§1.3 贡献、§结论 均以「结构化候选搜索 + 类型化失效归因 + 可复现迭代闭环」三支柱叙述；`Failure-Aware` = 0、`失效驱动` = 0、`独立提升` = 0。3 处 `独立贡献` 与 2 处 `自适应收敛` 全为**否定式/对照式**表述。
+2. **数字可唯一定位**：用户点名的 8/8、18/19、2/3、1.07、0.40、37→126、76/126、0/126 全部在族 B/C/F 中定位并复算一致（1.074/0.398；F：uniq=cand=meas=126、sky=76、pos=0、neg=90、acc=0、paired_tied=8）。**审计中新发现并更正**：b18/b19 门数（见下）。
+3. **实验族无交叉混用**：§4.2→族 A、§4.3→族 B、§4.4→族 C(+D)、§4.5→族 A′/A″、§4.6→族 F；§4.1 明示四组子研究不合并统计。
+4. **高风险词扫描**：`失效驱动`/`驱动下一轮`/`提高搜索收益`/`SPEF反馈`/`独立提升`/`Failure-Aware` 均 0；`物理感知`=1（§2 述他人方向）；**修正 1 处**：§2 对比表 FAECO 行「按失败反馈迭代搜索」→「按失败类型结构化诊断与控制」。
+5. **冻结**：打 tag 并记录 SHA256（如上）。
+
+**本次审计更正（2 处，均为口径/事实，非结论）**：
+- **b18/b19 门数**（§4.3.1）：原「37.6 万 / 75.5 万门」在 `20260804_itc99_b18b19_repair/` 的任何文件中均无法定位（`map.log` 实为 75 707 / 151 047 单元；`docs/engineering/n31_05_sequential_eco.md` 同文档内亦自相矛盾地写过「23–46 万门」）。**已更正为映射网表单元数**，绑到 `map.log`。
+- **§2 对比表旧叙事**：「按失败反馈迭代搜索」与新口径（失效反馈为**诊断/控制**，不作独立增益）冲突，**已改为「按失败类型结构化诊断与控制」**。
+
+**stale 标记**：`experiments/_stale_20260924_threearm_oldsign/`（旧符号结果，不参与任何证据链）**保留不删**，仅在 `.gitignore`/说明中标注为 stale 排错证据。
+
