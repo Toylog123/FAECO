@@ -1,0 +1,146 @@
+﻿\section{实验}\label{sec:exp}
+
+\subsection{实验设置}\label{sec:setup}
+
+\textbf{环境与数据集}：OSS-CAD Suite（Yosys 0.67+146）、OpenSTA 3.1.0\cite{opensta}、Z3 5.0.0\cite{z3}、NetworkX 3.6.1\cite{networkx} 与 Python 3.11.9，运行于 WSL2 Ubuntu（8 核 16 线程、32 GB RAM）；固定种子与工具链版本保证流程确定性。时序 ECO 主实验采用 8 个 ISCAS89 顺序电路，经 Yosys 映射到 SKY130 HD 标准单元库，由 OpenSTA 以 0.5 ns 周期制造违例；ITC-99 与 PicoRV32 泛化实验见 \S\ref{sec:itc99}、\S\ref{sec:ood}。质量指标为 OpenSTA 实测 WNS/TNS（理想线网）与布线后 WNS，效率指标为候选 STA 调用次数。
+
+\textbf{配置与参数}：全部电路统一流程，运行两种配置：效率优先（搜索宽度 $w=1$、至多 10 轮，决策层排序并在首个严格改善后即停）与收敛（20 轮至无严格改善）。JOINT 采用沿关键路径深度至多 3 的滑动窗口枚举，上限 50 组合且不含 B；扇入锥分治阈值为 1000 门。评分函数见式~\eqref{eq:score}，默认权重 $\alpha_t=\alpha_s=\alpha_b=\alpha_v=\alpha_e=1.0$、$\alpha_{\mathrm{pen}}=10.0$，作为排序权重区别于割图权重 $\lambda_*$。
+
+\subsection{主结果：ISCAS89 修复质量与效率}\label{sec:iscas}
+
+8 个 ISCAS89 电路全部严格改善并通过网表审计（图~\ref{fig:iscas_main}）。策略分布与设计一致：JOINT 贡献最大（s27/s382/s420/s953），G 次之，R 仅 s820，B 收益不超过 $0.05\,$ns。机理上，JOINT 沿关键路径压缩多级逻辑深度，单门 G 只调整驱动强度而不改变逻辑级数，R 依赖工艺库中的等价布尔候选、在 ISCAS89 中覆盖有限，后者与 \S\ref{sec:itc99} 中 b06 的失败同源。
+
+\begin{figure}[tbp]
+\centering
+\caption{ISCAS89 顺序电路混合修复主结果（周期 0.5 ns）}
+\label{fig:iscas_main}
+\includegraphics[width=0.9\columnwidth]{fig_iscas89.png}
+\end{figure}
+
+\subsection{跨基准泛化验证}\label{sec:ood}
+
+\subsubsection{ITC-99 基准族}\label{sec:itc99}
+
+19 个可映射电路中 18 个 WNS 严格改善（94.7\%），6 个大电路 b14/b15/b17/b20/b21/b22 全部成功（图~\ref{fig:itc99}）。b06 是唯一失败：其关键路径由无等价 R 候选的复合门链构成，G 放大与 JOINT 枚举均因输入电容增大拖累前级，纯 G 与混合的候选全部被拒（148 次与 156 次）。策略分布以 JOINT 为主（12 个，b20/b21 收益最大 $+1.98$、$+2.16\,$ns）；19 电路合计 1693 次候选 STA 调用、约 12.5 分钟。
+
+规模方面，b18 与 b19 分别含 37.6 万与 75.5 万门，各以 93 次与 58 次候选 STA 调用完成修复，规模增大数千倍而 STA 调用仍为数十次量级。
+
+\begin{figure*}[t]
+\centering
+\caption{ITC-99 跨基准泛化：19 个可映射电路的 WNS 修复}
+\label{fig:itc99}
+\includegraphics[width=0.92\textwidth]{fig_itc99.png}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.99\textwidth]{fig_eff_combo_h.png}
+\caption{PicoRV32 泛化与消融效率（a：PicoRV32 异构族跨设计泛化；b：搜索宽度 $\times$ 反馈消融；c：轮内决策与提前停止的 STA 效率）}
+\label{fig:efficiency}
+\end{figure*}
+
+\subsubsection{PicoRV32 异构族}
+
+同一 RTL 源下三个结构差异明显的子模块直接复用 ISCAS89 流程（图~\ref{fig:efficiency}a）：picorv32 与 pcpi\_mul 分别经 R、G 取得 $+1.13$、$+0.05\,$ns 改善，存储密集子模块无改善，为与 b06 同类的结果边界。
+
+\subsection{消融与基线对比}\label{sec:ablation}
+
+本小节逐项剥离反馈、决策层与候选空间，检验各机制对质量与效率的贡献。
+
+\textbf{质量}：收敛配置下，混合策略 8/8 优于纯 G 与随机基线、7/8 严格优于纯 B（图~\ref{fig:baseline}、表~\ref{tab:min_trials}），平均改善 1.07 ns 对纯 G 的 0.16 ns（约 6.7 倍）、中位数 1.13 对 0.09 ns。随机基线与混合共享 R/G 子空间，差距同时包含候选空间与排序/反馈的贡献；纯 G 数轮即收敛，说明其瓶颈在于候选空间表达能力。
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.95\columnwidth]{fig_baseline.png}
+\caption{收敛配置竞争基线对比：左为修复后 WNS，右为候选 STA 调用次数}
+\label{fig:baseline}
+\end{figure}
+
+\textbf{效率}：反馈开启将所需搜索宽度从 $\geq 4$--$8$ 降至 $\leq 2$，STA 开销节省 $44\%$--$89\%$；叠加决策层排序与提前停止后，8 电路候选 STA 调用合计 27 次（均值 3.4 次/电路），较全评估的 110 次削减 75.5\%。留一法（以其他 7 电路归纳决策表、目标电路实测）8/8 成功，最终 WNS 与全数据表逐电路一致，说明决策层可跨电路复用。收敛配置的累计 STA 开销见表~\ref{tab:min_trials}（混合 8069 次、纯 G 约 3066 次、随机约 4800 次），效率优先配置相对削减 99\% 以上。同预算对照中，固定与随机两种非自适应顺序最终 WNS 一致，即非自适应排序不改变同预算质量，失败感知排序的价值体现在提前停止。
+
+\textbf{策略与鲁棒性}：纯策略消融（图~\ref{fig:ablation}）表明，B 单独使用收益不超过 0.06 ns（ISCAS89 无净改善，ITC-99 中 11/19 仅小幅提升），混合收益由 R/G/JOINT 承担；单策略覆盖不完整，如 s382 纯 R 失败，而 b15、picorv32 单策略已达混合水平。参数敏感性上，SPEF 复测阈值（5/10/20 ps）与 s382 权重扰动（$\pm 100\%$）均不改变结论；热启动较冷启动节省近半 STA 开销，代表性收敛轨迹见图~\ref{fig:convergence}。
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.95\columnwidth]{fig_ablation.png}
+\caption{纯策略消融：基线、混合与纯 R/G/B 的最终 WNS（混合含 R/G/B/JOINT，窗口深度 3）}
+\label{fig:ablation}
+\end{figure}
+
+\begin{figure}[b]
+\centering
+\caption{收敛配置下 WNS 随外环轮次收敛（每轮至多接受一个候选，数据点为轮开始时的网表 WNS）}
+\label{fig:convergence}
+\includegraphics[width=0.9\columnwidth]{fig_convergence.png}
+\end{figure}
+
+\begin{table}[!t]
+\centering
+\caption{不同策略在收敛配置（20 轮）下的最终 WNS 与 STA 开销，WNS 单位 ns}
+\label{tab:min_trials}
+\setlength{\tabcolsep}{2pt}
+\footnotesize
+\begin{tabular}{lrrrrrrrr}
+\toprule
+\textbf{电路} & \textbf{混合} & \textbf{混合} & \textbf{纯 G} & \textbf{纯 G} & \textbf{纯 B} & \textbf{纯 B} & \textbf{随机} & \textbf{随机} \\
+ & \textbf{WNS} & \textbf{STA} & \textbf{WNS} & \textbf{STA} & \textbf{WNS} & \textbf{STA} & \textbf{WNS} & \textbf{STA} \\
+\midrule
+s27  & $+0.01$ & 119  & $-0.18$ & 32  & $+0.01$ & 42  & $-0.18$ & 84 \\
+s382 & $+0.02$ & 910  & $-0.81$ & 447 & $-0.79$ & 700 & $-0.81$ & 578 \\
+s420 & $-0.02$ & 580  & $-1.21$ & 146 & $-0.56$ & 328 & $-1.17$ & 330 \\
+s641 & $0.00$  & 814  & $-1.18$ & 451 & $-0.36$ & 980 & $-1.05$ & 894 \\
+s713 & $0.00$  & 784  & $-1.28$ & 313 & $-0.34$ & 974 & $-1.28$ & 699 \\
+s820 & $-0.20$ & 1464 & $-1.17$ & 450 & $-0.93$ & 1740 & $-1.16$ & 635 \\
+s832 & $-0.66$ & 1375 & $-1.16$ & 501 & $-1.17$ & 1236 & $-1.16$ & 640 \\
+s953 & $-0.06$ & 2023 & $-1.22$ & 726 & $-1.07$ & 2782 & $-1.21$ & 944 \\
+\bottomrule
+\multicolumn{9}{p{0.95\columnwidth}}{\footnotesize STA 为达到各自最终 WNS 的累计候选 STA 调用次数；随机基线在 R/G 子空间内随机顺序，未启用 B/JOINT，其 WNS 与 STA 为 3 种子的均值。}\\
+\end{tabular}
+\end{table}
+
+\subsection{物理验证：版图保持性与 SPEF 门控}\label{sec:phys_closure}
+
+真实 P\&R 下 8 个 ISCAS89 电路中 5 个布线后保持改善、1 个持平、2 个轻微恶化不超过 0.02 ns（表~\ref{tab:pr8}），预布局修复大部分可保持到布线后。本节另设（A）独立 SPEF 负载扫描与（B）迭代式 SPEF 门控闭环两组实验，均基于同一网表。
+
+（A）\textbf{独立 SPEF 负载扫描}：s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而衰减归零（图~\ref{fig:spef}），表明理想线网候选的物理保持边界有限。
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.95\columnwidth]{fig_spef.png}
+\caption{SPEF 负载扫描下 WNS 改善随线长的变化（s382 的 R 候选与 b18 的 JOINT 候选）}
+\label{fig:spef}
+\end{figure}
+
+（B）\textbf{迭代式 SPEF 门控闭环}：s382 的 50 个与 b18 的 6 个候选在 40\,$\mu$m/unit 估计线载下全部未通过复测（图~\ref{fig:phys_gate}），说明当前线长估计偏保守、会拒绝真实版图上可能有效的候选。门控参数（复测阈值 10 ps、线长 40\,$\mu$m/unit）为经验设定的保守近似、未经系统校准，属于概念验证：其结论限定为可减少物理无效候选，最终裁决以真实 P\&R 为准；参数校准列为未来工作，见 \S\ref{sec:conclusion}。
+
+\begin{figure}[tb]
+\centering
+\includegraphics[width=0.95\columnwidth]{fig_phys_gate.png}
+\caption{SPEF 门控复测：s382（50 个）与 b18（6 个）候选的复测通过数（当前 40\,$\mu$m/unit 估计线载下全部未通过）}
+\label{fig:phys_gate}
+\end{figure}
+
+\begin{table}[tbp]
+\centering
+\caption{真实 P\&R 版图验证：8 个 ISCAS89 电路布线后 WNS 对比（OpenROAD 2.0 + SKY130 HD PDK，WNS 单位 ns）}
+\label{tab:pr8}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{lrrrrr}
+\toprule
+\textbf{电路} & \textbf{预布局基线} & \textbf{预布局修复} & \textbf{布线后基线} & \textbf{布线后修复} & $\Delta$ \\
+\midrule
+s27  & $-0.27$ & $-0.18$ & $-0.36$ & $-0.22$ & $+0.14$ \\
+s382 & $-0.98$ & $-0.89$ & $-1.16$ & $-1.02$ & $+0.14$ \\
+s420 & $-1.56$ & $-1.55$ & $-1.80$ & $-1.82$ & $-0.02$ \\
+s641 & $-1.63$ & $-1.59$ & $-2.10$ & $-2.02$ & $+0.08$ \\
+s713 & $-1.33$ & $-1.31$ & $-1.59$ & $-1.58$ & $+0.01$ \\
+s820 & $-1.19$ & $-1.17$ & $-1.52$ & $-1.49$ & $+0.03$ \\
+s832 & $-1.23$ & $-1.17$ & $-1.51$ & $-1.51$ & $0.00$ \\
+s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
+\bottomrule
+\multicolumn{6}{p{0.92\columnwidth}}{\footnotesize 统一映射网表与同一接受候选；s27 因面积过小采用 10\% 利用率布局规划；布线后 $\Delta$ 为修复网表相对基线网表的 WNS 变化。}\\
+\end{tabular}
+\end{table}
+
+B 策略在受控保持时间场景下的补充验证见附录~\ref{app:hold}。
