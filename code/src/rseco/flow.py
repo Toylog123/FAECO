@@ -630,6 +630,18 @@ def run_multi_iteration_case(
             # str seed: random.seed() rejects tuples since Python 3.11, and a
             # string key is equally deterministic for replay from run_config.
             _random.Random(f"{int(seed)}|{_round_seq}|{len(state.accepted_patches)}").shuffle(round_candidates)
+        if structure_resynth:
+            # Pool census (tech design §13.4-2), read-only instrumentation.
+            # The S pass reuses `round_candidates` (below), which is
+            # `candidates[:max_candidates_per_iteration]`; if the *untruncated*
+            # `candidates` list is no longer than that truncation, then widening
+            # the S window pool (lever L1) cannot help and the real limit is the
+            # cone's cut enumeration.  Recorded only when S is enabled, so the
+            # {S off} artifact stays byte-identical to the archived baseline.
+            census = s_stats.setdefault(
+                "pool_census", {"candidates_len": [], "round_candidates_len": []})
+            census["candidates_len"].append(len(candidates))
+            census["round_candidates_len"].append(len(round_candidates))
         for boundary in round_candidates:
             if state.deadline_expired():
                 state.set_stop_reason("wall_timeout")
