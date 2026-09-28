@@ -5,7 +5,7 @@
 ## 工具链
 
 1. **Windows Yosys 0.9（32 位）映射大电路 OOM**
-   - 现象：b18/b19（37.6 万/75.5 万门）read_verilog bad_alloc；$shr 技术映射 OOM。
+   - 现象：b18/b19（原型约 7.0 万/23.1 万门；**2026-09-28 更正**：原记「37.6 万/75.5 万门」在任何证据文件中均无法定位，映射后为 7.57 万/15.10 万个 SKY130 单元，见 `project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md` §6）read_verilog bad_alloc；$shr 技术映射 OOM。
    - 解决：WSL2 64 位 Yosys 0.33（`run_yosys_mapping` 增加 `yosys_cmd` 参数）。
    - 验证：b18/b19 映射成功（峰值 4.7 GB）。
 
