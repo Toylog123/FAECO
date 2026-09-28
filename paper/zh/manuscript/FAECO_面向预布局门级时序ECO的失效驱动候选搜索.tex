@@ -88,7 +88,7 @@
 \vspace{6pt}
 \end{center}
 \begin{flushleft}
-  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入与门尺寸调整难以压缩深层逻辑、候选空间受限且验证成本高的问题，本文提出面向失效的候选搜索引擎（Failure-Aware ECO，FAECO）。该方法以多特征加权割与关键路径覆盖割在违例扇入锥上生成 R/G/B/JOINT 候选并结构化排序；候选失效被归为 F1--F6 六种类型，用作搜索诊断与搜索控制信号；候选按轮提交，其生成、理想线网时序分析、简化 SPEF 复测与独立全网表顺序等价检查（SEC）构成分层验证闭环。在三组测试集上，FAECO 分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（仅指 WNS 改善，不等同于 timing closure，见 \S\ref{sec:setup}）；ITC-99 中其余 1 个电路与基线持平，全部 19 个电路均无 WNS 回退（b17 的单候选验证预算放宽至 180\,s，见 \S\ref{sec:itc99}）。独立门级顺序 SEC 覆盖 30 个测试实例：29 个产生实际网表修改，其中 28/29 个修改网表对完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs}（存储簇、无 setup 路径）输出网表与基线一致。固定权重下的 20 轮候选空间与排序对比中，混合候选平均 WNS 改善为 1.07\,ns、纯 G 为 0.16\,ns。本文同时报告一项负结果：解除结构候选的窗口枚举上限后，窗口局部重综合候选由 37 增至 126（3.4$\times$）、其中 76/126 在权威层真实降低逻辑深度，但 0/126 取得正 WNS 增益、接受 0/8；该方向在当前条件下不体现时序修复能力，仅保留为可选候选类型。}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入与门尺寸调整难以压缩深层逻辑、候选空间受限且验证成本高的问题，本文提出面向失效的候选搜索引擎（Failure-Aware ECO，FAECO）。该方法以多特征加权割与关键路径覆盖割在违例扇入锥上生成 R/G/B/JOINT 候选并结构化排序；候选失效被归为 F1--F6 六种类型，用作搜索诊断与搜索控制信号；候选按轮提交，其生成、理想线网时序分析、简化 SPEF 复测与独立全网表顺序等价检查（SEC）构成分层验证闭环。在统一的跨测试集评估中，FAECO 在 ISCAS89、ITC-99 与 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（该三元组出自同一实验族与同一 revision 绑定；ISCAS89 的效率优先子研究另见 \S\ref{sec:iscas}，两者不合并统计。仅指 WNS 改善，不等同于 timing closure，见 \S\ref{sec:setup}）；ITC-99 中其余 1 个电路与基线持平，全部 19 个电路均无 WNS 回退（b17 的单候选验证预算放宽至 180\,s，见 \S\ref{sec:itc99}）。独立门级顺序 SEC 覆盖 30 个测试实例：29 个产生实际网表修改，其中 28/29 个修改网表对完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs}（存储簇、无 setup 路径）输出网表与基线一致。固定权重下的 20 轮候选空间与排序对比中，混合候选平均 WNS 改善为 1.07\,ns、纯 G 为 0.16\,ns。本文同时报告一项负结果：解除结构候选的窗口枚举上限后，窗口局部重综合候选由 37 增至 126（3.4$\times$）、其中 76/126 在权威层真实降低逻辑深度，但 0/126 取得正 WNS 增益、接受 0/8；该方向在当前条件下不体现时序修复能力，仅保留为可选候选类型。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；门级局部重构；多特征加权割；类型化失效归因；分层验证；预布局时序优化}\par
@@ -107,7 +107,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a candidate-search engine for pre-placement gate-level timing ECO, addressing the limited ability of buffer insertion and gate sizing to compress deep logic and the restricted candidate space with high verification cost. FAECO generates R/G/B/JOINT candidates on the violating fan-in cone using a multi-feature weighted cut and a critical-path coverage cut, ranked by cut cost, path coverage, and strategy priority; candidate failures are classified into six types (F1--F6) as search-diagnostic and control signals; candidates are committed round by round, and candidate construction, ideal-net timing analysis, simplified standard parasitic exchange format (SPEF) rechecking, and independent sequential equivalence checking (SEC) form a layered verification closure. Across three benchmark sets, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits, respectively (WNS improvement only, not equivalent to timing closure; see \S\ref{sec:setup}); the remaining ITC-99 circuit matches the baseline, and the per-candidate verification budget of b17 is relaxed to 180\,s (see \S\ref{sec:itc99}). Of the 30 test instances, 29 produce actual netlist modifications, of which sequential SEC fully proves 28/29 pairs; the only instance without an accepted patch, \texttt{picorv32\_regs}, is a storage cluster without a setup path. Under fixed weights, the 20-round candidate-space and ranking comparison gives a mean WNS improvement of 1.07\,ns for the mixed strategy versus 0.16\,ns for pure-G. We also report a negative result: after lifting the window-enumeration cap on structural candidates, window-local resynthesis candidates grow from 37 to 126 (3.4$\times$) and 76/126 genuinely reduce logic depth at the authoritative level, yet 0/126 attain a positive WNS gain and 0/8 are accepted; this direction thus exhibits no timing repair capability and is retained only as an optional candidate type.}\par
+  {\bfseries Abstract:} {\small We present Failure-Aware ECO (FAECO), a candidate-search engine for pre-placement gate-level timing ECO, addressing the limited ability of buffer insertion and gate sizing to compress deep logic and the restricted candidate space with high verification cost. FAECO generates R/G/B/JOINT candidates on the violating fan-in cone using a multi-feature weighted cut and a critical-path coverage cut, ranked by cut cost, path coverage, and strategy priority; candidate failures are classified into six types (F1--F6) as search-diagnostic and control signals; candidates are committed round by round, and candidate construction, ideal-net timing analysis, simplified standard parasitic exchange format (SPEF) rechecking, and independent sequential equivalence checking (SEC) form a layered verification closure. In a unified cross-benchmark evaluation, FAECO achieves strict WNS improvement on 8/8, 18/19, and 2/3 circuits of ISCAS89, ITC-99, and PicoRV32, respectively (this triple comes from a single experiment family and a single revision binding; the efficiency-first ISCAS89 sub-study of \S\ref{sec:iscas} is reported separately and never merged with it; WNS improvement only, not equivalent to timing closure; see \S\ref{sec:setup}); the remaining ITC-99 circuit matches the baseline, and the per-candidate verification budget of b17 is relaxed to 180\,s (see \S\ref{sec:itc99}). Of the 30 test instances, 29 produce actual netlist modifications, of which sequential SEC fully proves 28/29 pairs; the only instance without an accepted patch, \texttt{picorv32\_regs}, is a storage cluster without a setup path. Under fixed weights, the 20-round candidate-space and ranking comparison gives a mean WNS improvement of 1.07\,ns for the mixed strategy versus 0.16\,ns for pure-G. We also report a negative result: after lifting the window-enumeration cap on structural candidates, window-local resynthesis candidates grow from 37 to 126 (3.4$\times$) and 76/126 genuinely reduce logic depth at the authoritative level, yet 0/126 attain a positive WNS gain and 0/8 are accepted; this direction thus exhibits no timing repair capability and is retained only as an optional candidate type.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; local restructuring; multi-feature weighted cut; typed failure attribution; layered verification; pre-placement timing optimization}\par
 \end{flushleft}
@@ -124,7 +124,7 @@
 
 工业实践中，将违例锥（最差负松弛路径所在的扇入逻辑锥）整体替换为时序友好补丁的做法比 B/G 更稳定，但通常依赖工业数据。逻辑补丁构造与物理优化的协同关系直接影响功能等价验证和时序收益；两者失配时，补丁替换收敛缓慢甚至失败。
 
-上述方法留下三个需要在公开工具链上量化的问题：第一，候选构造阶段的功能保持偏好对无效候选数量的影响；第二，理想线网时序收益与线载变化之间的筛选关系；第三，候选失效信息对下一轮搜索空间的收缩作用。
+上述方法留下三个需要在公开工具链上量化的问题：第一，如何扩大深层逻辑的局部门级候选空间；第二，如何控制候选的功能、时序和物理验证成本；第三，如何对候选失败进行结构化归因，以及这些失效信息在搜索诊断与候选控制中的作用。
 \subsection{研究动机}
 本文的研究动机是扩大预布局门级时序 ECO 的局部结构搜索空间，同时让候选验证和物理复测保持在可控成本内。为此，FAECO 在已映射网表的违例扇入锥上构造多特征加权割，将局部功能保持能力、关键路径覆盖和候选规模纳入候选排序，并把候选失败类型转化为下一轮搜索的反馈信号。
 
@@ -293,9 +293,9 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 
 \FloatBarrier
 \FloatBarrier
-框架将 F1--F6 定义为统一失败类型，并据此驱动割图—权重更新—重割循环。真实 WNS 主循环主要由 F4（理想线网收益不足）驱动；启用物理门控时，进一步将 SPEF 复测失败记为 F6。F1、F2、F3 和 F5 分别用于功能/结构筛选、边界、规模和运行时间检查，具体条件见表~\ref{tab:failures}；固定权重作为消融对照。
+框架将 F1--F6 定义为统一的失败类型，用于候选失败的诊断与搜索控制。真实 WNS 主循环中观测到的主要类型为 F4（理想线网收益不足）；启用物理门控时，进一步将 SPEF 复测失败记为 F6。F1、F2、F3 和 F5 分别对应功能/结构筛选、边界、规模和运行时间检查，具体条件见表~\ref{tab:failures}。本文只主张这些失效类型可用于结构化诊断与候选控制，不对其作为自适应收敛机制的性能增益作断言；固定权重作为消融对照。
 
-每类失败使对应权重增加 $1.0$：F1 增大边界惩罚 $\lambda_b$ 与扇出权重 $\lambda_f$，F2 增大边界惩罚 $\lambda_b$，F3 增大尺寸惩罚 $\lambda_s$，F4 增大关键路径深度折扣 $\lambda_c$，F5 增大验证代价惩罚 $\lambda_v$ 并将最大锥门数减半，F6 增大边界惩罚 $\lambda_b$，收紧候选边界并偏向较小局部以降低高线载候选再次出现的概率。
+每类失败使对应权重增加 $1.0$：F1 增大边界惩罚 $\lambda_b$ 与扇出权重 $\lambda_f$，F2 增大边界惩罚 $\lambda_b$，F3 增大尺寸惩罚 $\lambda_s$，F4 增大关键路径深度折扣 $\lambda_c$，F5 增大验证代价惩罚 $\lambda_v$ 并将最大锥门数减半，F6 增大边界惩罚 $\lambda_b$，收紧候选边界并偏向较小局部。F6 记录简化 SPEF 复测下的物理失效，作为可选的搜索控制信号；本文实验主要验证其候选过滤与诊断作用，尚未证明其反馈可独立提高最终物理 WNS。
 
 \begin{table}[!htbp]
 \centering
@@ -312,7 +312,7 @@ F2 边界失败 & 锥边界未闭合 & 增加边界惩罚 $\lambda_b$，收紧�
 F3 尺寸过大 & 候选尺寸超过阈值 & 增加尺寸惩罚，强制更小割 \\
 F4 时序收益不足 & 候选未满足式~\eqref{eq:accept} & 上调关键路径深度折扣 $\lambda_c$（同时提高覆盖割排序优先级），使下一轮割集方案集中于真实关键路径门 \\
 F5 验证超时 & 局部检查或 STA 运行时间 $>60\,$s & 增加验证代价惩罚 $\lambda_v$ 并将最大锥门数减半 \\
-F6 SPEF 复测失败 & 启用物理门控且理想线网增益 $>10\,$ps，但 SPEF 下 WNS 不改善 & 增加边界惩罚 $\lambda_b$，收紧候选边界并偏向较小局部，降低高线载候选再次出现的概率 \\
+F6 SPEF 复测失败 & 启用物理门控且理想线网增益 $>10\,$ps，但 SPEF 下 WNS 不改善 & 增加边界惩罚 $\lambda_b$，收紧候选边界并偏向较小局部 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -375,9 +375,13 @@ F1--F6 失效反馈                  & 仅轮内 & 不启用（固定权重） \
 
 \textbf{接受准则}：以式~\eqref{eq:accept} 的 WNS 严格改善为接受准则，TNS 仅作为辅助判据；本文不将“取得 WNS 改善”等同于 timing closure。
 
-\subsection{主结果：ISCAS89 修复质量与效率}\label{sec:iscas}
+\subsection{效率优先子研究：ISCAS89 修复质量与效率}\label{sec:iscas}
 
-图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本节报告时序搜索结果；主实验的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。策略分布方面：JOINT 候选对应 s27/s382/s420/s953，G 对应 s641/s713/s832，R 对应 s820；B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，该配置\textbf{不启用 §3.5 的 10\,ps 物理门控阈值}，直接以式~\eqref{eq:accept} 的 WNS$>0$ 为接受准则，因此 s420 的 +0.01\,ns（10\,ps）接受候选不与 §3.5 的过滤规则冲突；本节数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置分开统计。
+本小节报告效率优先配置（表~\ref{tab:configs}：单轮、首改进即停、仅轮内失效反馈）在 ISCAS89 上的子研究结果。它与 \S\ref{sec:ood} 的统一跨测试集主实验\textbf{分属不同实验族、分开统计}，其 ISCAS89 数字不得与后者的跨测试集比例混用。
+
+图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。本子研究的 8 个电路均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。接受的候选类型分布为 JOINT 4 个（s27/s382/s420/s953）、G 3 个（s641/s713/s832）、R 1 个（s820）；该分布由本族每电路候选调用台账中被接受 trial 的类型字段直接给出，并与该族接受网表上的后验物理验证清单相互印证。B 策略不纳入本组建立时间对比结果。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，该配置\textbf{不启用 §3.5 的 10\,ps 物理门控阈值}，直接以式~\eqref{eq:accept} 的 WNS$>0$ 为接受准则，因此 s420 的 +0.01\,ns（10\,ps）接受候选不与 §3.5 的过滤规则冲突；本子研究数字与 \S\ref{sec:ablation} 所报告的 20 轮收敛配置亦分开统计。
+
+\textbf{族与可复现性}：本子研究为\textbf{历史冻结产物，其代码 revision 未被完整钉定}，因此不与 \S\ref{sec:ood} 的统一跨测试集结果共享同一 revision 绑定。为量化其可复现性，我们在本文冻结 revision 下以相同配置重跑同一组 8 个电路：严格改善结论保持（8/8），但候选评估顺序发生漂移，接受的类型分布随之变为 G 6 个、JOINT 1 个（s382）、R 1 个（s820），其中 s382 由 2 次候选级 STA 增至 41 次、s420 由 90 次降至 66 次。本文并列报告该差异作为可复现性限制，既不以前一结果替换后一结果，也不据此反向推断历史族对应的 commit。
 
 从机制上看，JOINT 沿关键路径压缩多级逻辑深度，单门 G 只调整驱动强度而不改变逻辑级数；R 依赖工艺库中的等价布尔候选，在 ISCAS89 中的覆盖有限；类似的库等价族限制也出现在 \S\ref{sec:itc99} 对 b06 的分析中。
 
@@ -426,11 +430,11 @@ s953 & 228 & 通过 & 0.537 \\
 
 基于同一寄存器传输级（RTL）源的三个结构差异明显的子模块直接复用 ISCAS89 流程：PicoRV32 主核与其 PCPI 乘法协处理器 \texttt{picorv32\_pcpi\_mul} 分别获得 $+1.13$ 和 $+0.07\,$ns 的改善（修复网表由 R/G/B 多类接受补丁叠加形成），存储密集子模块 \texttt{picorv32\_regs} 为存储簇、无可建立 setup 路径，未纳入改善统计。
 
-三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/3。顺序 SEC 面向 30 个测试实例：29 个实例产生实际网表修改，其中 28/29 个修改网表对完全证明（三组分别为 8/8、18/19 和 2/2）；b06 的最终 WNS 与基线持平，其接受的缓冲器/延迟单元补丁不改变 WNS（TNS 亦不劣于基线），并经顺序 SEC 完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs} 无 setup 路径，其输出网表与基线一致。b17 的修复网表在 SKY130 行为单元模型下经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证，12812 个等价点已证明，剩余 1 个未证明点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换（Liberty function 一致）；鉴于该点未被顺序 SEC 完全消解，本文将其单独报告。
+统一跨测试集评估中，三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/3（该三元组来自同一实验族与同一 revision 绑定，与 \S\ref{sec:iscas} 的效率优先子研究分开统计，两者亦不合并为单一跨 benchmark 统计量）。顺序 SEC 面向 30 个测试实例：29 个实例产生实际网表修改，其中 28/29 个修改网表对完全证明（三组分别为 8/8、18/19 和 2/2）；b06 的最终 WNS 与基线持平，其接受的缓冲器/延迟单元补丁不改变 WNS（TNS 亦不劣于基线），并经顺序 SEC 完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs} 无 setup 路径，其输出网表与基线一致。b17 的修复网表在 SKY130 行为单元模型下经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证，12812 个等价点已证明，剩余 1 个未证明点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换（Liberty function 一致）；鉴于该点未被顺序 SEC 完全消解，本文将其单独报告。
 
 \subsection{消融与基线对比}\label{sec:ablation}
 
-本小节比较候选空间与候选排序两类设置（表~\ref{tab:ablation}）：纯 G、纯 B 采用单策略候选空间；随机列与混合 20 轮列采用混合候选空间，前者随机化候选评估顺序并取种子 1/2/3 的均值，后者按割代价与路径覆盖排序。各方法均采用式~\eqref{eq:accept} 作为候选接受准则，并采用相同的 20 轮上限和候选评估预算。需要说明的是，本组各列由同一固定权重运行器产生，该运行器不包含 F1--F6 权重重整路径，因此本表对比的是候选空间与候选排序的差异，不构成失效反馈的开关对照；失效反馈的独立贡献需另设对照实验量化。在混合候选空间下，纯 B 与随机基线在不同电路上互有胜负，未表现出稳定优势。20 轮混合策略平均 WNS 改善达到 1.07\,ns，在 8/8 个电路上严格高于纯 G，并在 7/8 个电路上严格高于纯 B 和随机基线，s27 上与后二者持平。
+本小节把三件事\textbf{分开}量化：候选空间、候选排序、失效反馈自适应。表~\ref{tab:ablation} 只覆盖前两者：全部四列由\textbf{同一固定权重运行器}产生（不含 F1--F6 权重重整路径），因此本表\textbf{不构成失效反馈的开关对照}。其中纯 G、纯 B 为单策略候选空间；随机列与混合 20 轮列均为混合候选空间，前者随机化每轮候选池的评估顺序并取种子 1/2/3 的均值（用于度量排序的贡献），后者按割代价与路径覆盖排序；各列采用式~\eqref{eq:accept} 与相同的 20 轮上限和候选评估预算。三类角色彼此独立：(i) \textbf{候选空间}——混合候选空间（含 JOINT）的 20 轮平均 WNS 改善为 1.07\,ns，在 8/8 个电路上严格高于纯 G（均值 0.16\,ns）、在 7/8 个上严格高于纯 B（均值 0.54\,ns），s27 上与后者持平；混合候选空间下纯 B 与随机基线在不同电路上互有胜负，无稳定优势。(ii) \textbf{候选排序}——随机化评估顺序（均值 0.40\,ns）不仅降低平均改善，还使取得首个改进所需的候选级 STA 次数恶化 1--2 个数量级（s713 由 5 次升至 216 次、s953 由 1 次升至 185 次），说明排序机制本身具有可测价值。(iii) \textbf{失效反馈自适应}——由另设的三臂对照与 $k=1$ 判别实验单独检验：以失效类型更新权重的自适应档与固定权重档在 8 个 ISCAS89 电路上逐位一致、首选候选身份 0 次改变，其独立贡献无法被证实；据此本文把 F1--F6 定位为搜索诊断与控制信号，并将该自适应机制降级为可选。该结论与 (i)、(ii) 相互独立，不可互相替代。
 
 \begin{table}[H]
 \centering
@@ -496,15 +500,49 @@ s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 \end{table}
 
 \FloatBarrier
+\subsection{结构候选扩展与能力边界}\label{sec:s_boundary}
+\FloatBarrier
+
+除 R/G/B/JOINT 构造级变换外，本文还实现了一类窗口局部结构重综合候选（记为 S），用于检验“更深的结构改写”能否成为新的修复能力来源。S 的价值不能用“是否可选”来评价，故本小节按三层能力边界逐层裁决：枚举能力、结构能力、时序能力；三层共用同一组实验（8 个 ISCAS89 电路、$\{S\ \text{开}, S\ \text{关}\}$ 两臂、每臂 1600 次候选级 STA 预算）。实验纪律为：控制臂（S 关）在 8/8 个电路上逐位复现既有基线产物，两臂的\textbf{非 S 试验序列逐位相同}（唯一自由度即 S 开关），且预算不构成约束（最大用量 482/1600）。
+
+\begin{table}[H]
+\centering
+\caption{结构候选（S）的三层能力边界}
+\label{tab:s_boundary}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lll}
+\toprule
+\textbf{层次} & \textbf{指标} & \textbf{结果} \\
+\midrule
+枚举能力 & 唯一窗口数 & 37 $\rightarrow$ 126（3.4$\times$） \\
+结构能力 & 逻辑深度下降 $\Delta L>0$ & 76/126（60.3\%） \\
+时序能力 & $\Delta_{\mathrm{WNS}}>0$ / $<0$ & 0/126 / 90/126 \\
+时序能力 & 电路级接受数 & 0/8 \\
+时序能力 & 配对 $\Delta_{\mathrm{WNS}}$（开$-$关） & 全部 0.000 \\
+\bottomrule
+\multicolumn{3}{p{0.92\columnwidth}}{\footnotesize 唯一窗口数按窗口哈希去重，与候选数、实际测量数三者相等；历史族在较小池上的深度下降比例为 16/37 = 43\%。解除 S 的枚举上限只在窗口来源侧生效，不改变接受谓词与验证流程。}\\
+\end{tabular}
+\end{table}
+
+\textbf{第一层·枚举能力}：历史 S 候选数长期被候选池上限钉死。为 S 单独提高枚举上限后，参与比对的唯一窗口数由 37 增至 126（3.4$\times$），且 126 个窗口互不相同（按窗口哈希去重后等于候选数与实际测量数）——这排除了“S 无效果是因为枚举不充分”的解释。
+
+\textbf{第二层·结构能力}：在这 126 个候选上，权威层（SKY130 库、映射后）真实降低逻辑深度的比例为 76/126（60.3\%），高于历史族在较小池上的 43\%，即 S 确实能在多数窗口压下逻辑深度。
+
+\textbf{第三层·时序能力}：但深度下降未转化为时序收益：$\Delta_{\mathrm{WNS}}>0$ 为 0/126、$\Delta_{\mathrm{WNS}}<0$ 为 90/126、电路级接受数为 0/8、两臂配对 WNS 差全为 0.000，即深度下降与端到端 WNS 改善之间无可观测传导。
+
+\textbf{结论口径}：本文据此仅主张——\textbf{在本文评测的映射流程、窗口构造与基准集合下，窗口局部结构重综合的逻辑深度下降未转化为端到端 WNS 收益}，其作为独立修复能力不成立；不外推为“S 在一般条件下无法改善时序”。据此不再沿增大枚举池方向投入，S 保留为可选候选类型，其质量归因列为后续工作。
+
+\FloatBarrier
 \section{结论}\label{sec:conclusion}
 
 本文提出 FAECO，一种面向预布局门级时序 ECO 的候选搜索方法，其贡献可归纳为候选空间扩展与结构化排序、类型化失效归因与分层验证、可复现的迭代 ECO 与验证闭环三点。与把候选失效当作自适应收敛机制的做法不同，本文将 F1--F6 定位为搜索诊断与搜索控制信号：三臂对照与 k=1 判别实验表明，以失效类型更新权重的自适应机制与固定权重在 8 个 ISCAS89 电路上逐位一致、首选候选身份 0 次改变，其独立贡献不成立，仅作为可选机制保留。
 
 实验结果表明，FAECO 在 ISCAS89、ITC-99 和 PicoRV32 上分别实现 8/8、18/19 和 2/3 个电路的严格 WNS 改善（b06 与基线持平，仅指 WNS 改善，不等同于 timing closure）；30 个测试实例中 29 个产生实际网表修改，其中 28/29 个修改网表对由顺序 SEC 完全证明。在固定权重、20 轮上限的候选空间与排序对比中，混合候选空间平均 WNS 改善为 1.07\,ns、纯 G 为 0.16\,ns；随机化评估顺序会使首个改进所需的候选级 STA 次数恶化 1--2 个数量级，表明增益来自候选构造与加权排序，而非自适应权重更新。
 
-本文同时报告一项负结果：为检验结构重构能否作为一类新候选，我们解除了窗口局部重综合的窗口枚举上限，结构候选由 37 增至 126（3.4$\times$）且来自互不相同的窗口，其中 76/126 在权威层真实降低逻辑深度，但 0/126 取得正 WNS 增益、8 个电路的接受数均为 0、配对 WNS 差全为 0.000。这说明“逻辑深度下降”不是“时序改善”的可替代指标，候选规模本身也不构成修复能力，该方向在当前条件下仅作为可选候选类型保留。ITC-99 中仅 b06 未达严格改善，其与多个相邻 \texttt{or4b$_1$} 使 G 反向恶化、B 无低扇出网络可利用、R 候选在 SKY130 HD 库中不存在等因素相关，详见 \S\ref{sec:itc99}。
+本文同时报告一项负结果：为检验结构重构能否作为一类新候选，我们解除了窗口局部重综合的窗口枚举上限，结构候选由 37 增至 126（3.4$\times$）且来自互不相同的窗口，其中 76/126 在权威层真实降低逻辑深度，但 0/126 取得正 WNS 增益、8 个电路的接受数均为 0、配对 WNS 差全为 0.000。这说明“逻辑深度下降”不是“时序改善”的可替代指标，候选规模本身也不构成修复能力，该方向在当前条件下仅作为可选候选类型保留；三层能力边界（枚举能力 37$\rightarrow$126、结构能力 76/126、时序能力 0/126 且接受 0/8）及其结论口径见 \S\ref{sec:s_boundary}。ITC-99 中仅 b06 未达严格改善，其与多个相邻 \texttt{or4b$_1$} 使 G 反向恶化、B 无低扇出网络可利用、R 候选在 SKY130 HD 库中不存在等因素相关，详见 \S\ref{sec:itc99}。
 
-OpenROAD 布局及全局布线寄生估计后，5 个 ISCAS89 电路保持改善、1 个持平，2 个退化不超过 0.02\,ns。本文报告的全部数字均绑定到固定代码 revision 与单一配置族，不跨族拼接。
+OpenROAD 布局及全局布线寄生估计后，5 个 ISCAS89 电路保持改善、1 个持平，2 个退化不超过 0.02\,ns。本文报告的全部数字均绑定到明确的实验族与配置族，不跨族拼接；其中 \S\ref{sec:iscas} 的效率优先子研究为历史冻结产物、其代码 revision 未被完整钉定（已在该小节单独给出可复现性限制），因此不与 \S\ref{sec:ood} 的统一跨测试集主实验共享 revision 绑定。
 
 
 

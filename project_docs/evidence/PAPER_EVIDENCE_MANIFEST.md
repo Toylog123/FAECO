@@ -15,7 +15,8 @@
 
 | 族 | 名称 | 产物目录 | git ref | 关键配置 |
 |---|---|---|---|---|
-| **A** | sprint1 / efficiency-first（`iterations=1`） | `experiments/20260805_tcad_sprint1_iscas89/`、`20260805_tcad_sprint1_itc99/` | 未钉 revision（2026-08-05 期历史族）；Yosys `0.67+146`（`map.log` 首行与 B 族逐字相同） | `--max-iterations 1 --early-stop` |
+| **A** | sprint1 / efficiency-first（`iterations=1`） | `experiments/20260805_tcad_sprint1_iscas89/`、`20260805_tcad_sprint1_itc99/` | 未钉 revision（2026-08-05 期历史族），**在冻结 revision 下不可复现**（见 A\*）；Yosys `0.67+146`（`map.log` 首行与 B 族逐字相同） | `--max-iterations 1 --early-stop` |
+| **A\*** | 效率优先 **@ 冻结 revision** 重跑（判 A 的可复现性） | `experiments/20260928_sprint1/`（8/8 `exit=0`） | git HEAD `6b95f8c`（`run_config.json → git_head`） | 与 A 同配置：`--period 0.5 --max-iterations 1 --candidates-per-iteration 1 --joint-enumerate-depth 3 --early-stop --priority-table …` |
 | **A′** | 效率优先候选 → OpenROAD/全局布线后验 | `experiments/20260807_real_pr_iscas8/` | 同上 | 消费 A 族接受候选做后验物理估计 |
 | **A″** | SPEF 负载扫描 + 迭代式物理门控 | `20260805_parasitic_s382_scan/`、`20260805_parasitic_b18_scan/`、`20260805_phys_closure/` | 同上 | `--physical-gate`、`unit_len_um=40`；**未标定**（OI-016） |
 | **B** | 20260826 统一迭代环主实验（≤8 轮，启用跨轮失效反馈） | `20260826_iscas89_main/`、`20260826_itc99_main/`、`20260826_picorv32_hetero/`、`20260826_sec/`、`20260908_phase2_b17_resume/`，聚合 `20260826_aggregation/summary.json` | 历史族（未钉 revision）；**b03/b06 在 HEAD 上有漂移**（OI-013） | `iterations≤8`、跨轮失效反馈；ITC-99 批次含 `--tns-aware`，ISCAS89 批次不含 |
@@ -63,15 +64,18 @@
 | §4.3 b18/b19 | +0.07 / +1.44 ns；37.6 万 / 75.5 万门；24 / 59 次 STA | **B** | `20260804_itc99_b18b19_repair/`、`20260803_sequential_hybrid_tns_fixed/` | ⚠️ 待逐项复核 |
 | §4.3.2 PicoRV32 | +1.13 / +0.07 ns | **B** | `20260826_aggregation/summary.json` → `picorv32[]` | ✅ |
 | §4.3 SEC | 30 实例 / 29 修改 / **28/29 完全证明**；b17 12812 已证明 + 1 未证明 | **B**（b17 = phase-2） | `20260826_sec/summary.csv`（22 行 PASS + `picorv32_regs` N/A）、`20260908_phase2_b17_resume/sec/sec_result.json` | ✅ |
-| §4.2 图 3 + §4.5 表 8 预布局列 | ISCAS89 效率优先：`-0.18/-0.89/-1.55/-1.59/-1.31/-1.17/-1.17/-1.27`（s420 仅 +0.01 ns） | **A** | `20260805_tcad_sprint1_iscas89/<c>/<c>/outerloop_result.json` → `wns_history[-1]`（8/8 逐值吻合） | ✅ |
-| §4.2 策略分布 | "JOINT 4 / G 3 / R 1" | **待重跑** | 两族均不支持该映射（OI-010-A） | ❌ **不得沿用** |
+| §4.2 图 3 + §4.5 表 7 预布局列（**效率优先子研究**） | ISCAS89：`-0.18/-0.89/-1.55/-1.59/-1.31/-1.17/-1.17/-1.27`（s420 仅 +0.01 ns） | **A** | `20260805_tcad_sprint1_iscas89/<c>/<c>/outerloop_result.json` → `wns_history[-1]`（8/8 逐值吻合） | ✅ |
+| §4.5 表 7 全局布线列 | 5 改善 / 1 持平 / 2 退化 ≤0.02 ns | **A′** | `20260807_real_pr_iscas8/post_route_audit_summary.json` / `pre_layout_audit_summary.json` | ✅ 逐值吻合 |
+| §4.2 策略分布 | JOINT 4（s27/s382/s420/s953）/ G 3（s641/s713/s832）/ R 1（s820） | **A** | `20260805_tcad_sprint1_iscas89/<c>/<c>/eval_trials.json` → `call_log[0].accepted.kind`（**注意该文件是多对象拼接、非严格 JSON，须用 `JSONDecoder().raw_decode` 读首对象**）；独立印证 `20260807_real_pr_iscas8/manifest.json` 的 8 条候选标签 | ✅ 两独立台账一致 |
+| §4.2 可复现性限制 | 冻结 revision 重跑：仍 8/8 改善，但分布变为 G 6 / JOINT 1（s382）/ R 1（s820）；s382 2→41 次 STA、s420 90→66 次 | **A\*** | `20260928_sprint1/<c>/outerloop_result.json` + `eval_trials.json`（accepted `kind`） | ✅ |
 | §4.4 表 6 纯 G / 纯 B / 随机（均值 0.161 / 0.536 / 0.398） | — | **C** | `20260826_ablation_pureG`、`_pureB`、`_random_seed{1,2,3}` → `ablation_summary.json` | ✅ |
 | §4.4 表 6 混合 20 轮（均值 **1.074**） | — | **C** | `20260807_multiround_8c_067/convergence_summary.json`（逐值吻合） | ✅ |
-| §4.5 表 8 全局布线列 | 5 改善 / 1 持平 / 2 退化 ≤0.02 ns | **A′** | `20260807_real_pr_iscas8/` | ⚠️ 待逐项复核 |
+| §4.4 (iii) EMA 无独立贡献 | adaptive ≡ fixed 8/8 逐位相同；top-1 身份 0 次改变 | **D** | `20260924_l3s_*` 之外的 `20260924_threearm_*`、`20260924_l2_k1_*` | ✅ |
 | §4.6 SPEF 门控 | s382 的 50、b18 的 6 个候选均未通过复测 | **A″** | `20260805_parasitic_s382_scan/`、`20260805_parasitic_b18_scan/` | ⚠️ 待逐项复核；**表述按 OI-015 降级口径** |
-| §5 S 能力边界（新增） | 37→126（3.4×）；76/126；0/126；90/126；接受 0/8；配对全 0.000；$N_{\text{extracted}}$=1724 | **F** | `20260928_s_l1_ablation/aggregation/summarize_s_l1.json`（`totals` / `tier1` / `tier2_totals` / `tier3`） | ✅ |
-| §5 S 纪律（新增） | 控制臂 8/8 逐位复现；非 S 试验序列逐位相同；预算不绑定（max 482/1600） | **F** | 同上 + `reports/FAECO_S_L1_WINDOW_POOL_20260928.md` §3 | ✅ |
-| §5 / limitation EMA（新增） | adaptive ≡ fixed 8/8 逐位相同；top-1 身份 0 次改变 | **D** | `20260924_l2_k1_aggregation/k1_discriminant.json`、`20260924_threearm_aggregation/threearm_report.json` | ✅ |
+| §4.6 S 能力边界（新增） | 37→126（3.4×）；76/126；0/126；90/126；接受 0/8；配对全 0.000；$N_{\text{extracted}}$=1724 | **F** | `20260928_s_l1_ablation/aggregation/summarize_s_l1.json`（`totals` / `tier1` / `tier2_totals` / `tier3`） | ✅ |
+| §4.6 S 纪律（新增） | 控制臂 8/8 逐位复现；非 S 试验序列逐位相同；预算不绑定（max 482/1600） | **F** | 同上 + `reports/FAECO_S_L1_WINDOW_POOL_20260928.md` §3 | ✅ |
+| §4.6 表 8 S 三层 | 枚举 37→126 / 结构 76/126（60.3%，历史 16/37=43%）/ 时序 0/126、90/126、0/8、配对 0.000 | **F** | 同上 | ✅ |
+| §4.4 / §结论 limitation EMA（新增） | adaptive ≡ fixed 8/8 逐位相同；top-1 身份 0 次改变 | **D** | `20260924_l2_k1_aggregation/k1_discriminant.json`、`20260924_threearm_aggregation/threearm_report.json` | ✅ |
 
 ## 3. 禁用 / 不可用字段
 
@@ -86,16 +90,20 @@
 
 ## 4. 本次核对发现的**口径问题**（需用户确认后才改 `.tex`）
 
-| # | 问题 | 事实 | 建议 |
+| # | 问题 | 事实 | 处置 |
 |---|---|---|---|
-| **D-1** | 摘要/结论"三组 8/8、18/19、2/3"跨族 | "18/19"与"2/3"只来自**族 B**；"8/8"在 §4.2 是**族 A**（sprint1）——同一 claim token 混用两族 | 把该三元组**整体绑到族 B**（族 B 自身即 8/8、18/19、2/3），§4.2 的效率优先数据**单独标注为效率子研究** |
-| **D-2** | 族 B 的 revision 可复现性 | 族 B 为历史族；b03 产物 `-1.27` vs HEAD `-1.21`、b06 产物 6 次 `--tns-aware` 接受 vs HEAD 无接受（OI-013） | 论文§4.1 须**逐族声明 revision 与可复现性**（ISCAS89 7/8 decision-reproducible、b03/b06 有漂移），**不得**把两族拼表 |
-| **D-3** | §4.2 策略分布无证据 | 两族均不支持"JOINT 4 / G 3 / R 1" | 按 OI-010-A **重跑 sprint1** 补齐后再写；本轮改写中该句**先删除/改写为可证形式** |
+| **D-1** ✅ 已落地 | 摘要/结论"三组 8/8、18/19、2/3"跨族 | "18/19"与"2/3"只来自**族 B**；"8/8"在 §4.2 是**族 A**（sprint1）——同一 claim token 混用两族（族 B 自身亦有 ISCAS89 8/8） | 三元组**整体绑到族 B**（摘要中/英与 §4.3 明写"统一跨测试集评估 + 同一实验族 + 同一 revision 绑定"）；§4.2 改题为**效率优先子研究**并与 §4.3 明确分开统计 |
+| **D-2** ✅ 已落地 | 族 A / 族 B 的 revision 可复现性 | 族 B 为历史族（b03/b06 有漂移，OI-013）；**族 A 亦**为历史族，且经 **A\*** 证实**在冻结 revision 下不可复现** | §4.2 加 **"族与可复现性"** 段：声明"A 为历史冻结产物、revision 未完整钉定"，并如实并列 A\* 的分布差异；§结论 把"全部数字绑定固定 revision"改为"绑定明确实验族，A 单独声明限制"；**不做反向 commit 猜测** |
+| **D-3** ❌ **前提被推翻** | §4.2 策略分布无证据（OI-010-A） | **更正**：族 A 自身 `eval_trials.json` 的 `call_log[0].accepted.kind` **支持** JOINT 4/G 3/R 1，且 A′ 的 `manifest.json` 8 条候选标签**逐条印证**。此前"两族均不支持"是把该文件（**多对象拼接、非严格 JSON**）按单对象 `json.load` 读、异常被 `try/except` 静默吞掉所致的**解析错误** | **不删除该分布**（有据可查）；§4.2 补上台账来源说明。A\* 重跑得 G 6/JOINT 1/R 1，只作**可复现性限制**并列报告，**不用它替换 A 的历史数字**（否则即"从其他实验族借数字"） |
 
 ## 5. 复现锚点
 
 - 族 F：`git checkout faeco-exp-rev1`；`bash code/scripts/run_s_ablation_batch.sh off,on s27,s382,s420,s641,s713,s820,s832,s953`（`FAECO_RESYNTH_PER_ITER=8 FAECO_RESYNTH_WINDOW_POOL=32 FAECO_STA_BUDGET=1600`）；裁决 `.venv/Scripts/python.exe code/scripts/summarize_s_l1.py --root experiments/20260928_s_l1_ablation`。
 - 族 B：聚合 `experiments/20260826_aggregation/aggregate.py` → `summary.json`。
 - 族 C：`experiments/20260826_aggregation/ablation_summary.py`；混合列 `20260807_multiround_8c_067/convergence_summary.json`。
+- 族 A：`experiments/20260805_tcad_sprint1_iscas89/`。**读法陷阱**：`eval_trials.json` 为**多对象拼接、非严格 JSON**，必须
+  `json.JSONDecoder().raw_decode(open(p, encoding='utf-8').read())[0]`，**不可**用 `json.load`（会抛 `Extra data`；若被
+  `try/except` 吞掉则误判为"无 kind 字段"，曾据此错判 OI-010）。
+- 族 A\*：`bash code/scripts/run_sprint1_batch.sh`（`FAECO_OUT_ROOT=experiments/20260928_sprint1 FAECO_K=1 FAECO_PARALLEL=4 FAECO_EXTRA="--priority-table code/src/rseco/strategy_priority_table.json"`）；判分布：读 `eval_trials.json → trials[*].accepted==True → kind`。
 - 族 D：`code/scripts/compare_threearm.py`、`code/scripts/analyze_k1_discriminant.py`。
 - 工具链版本：Yosys `0.67+146`（`map.log` 首行，族 A/B/F 逐字相同）；OpenSTA 3.1.0（WSL）；SEC 走 WSL Yosys 0.33。

@@ -1,5 +1,11 @@
-# FAECO Experiments — Results Overview (2026-09-09; rev. 2026-09-23)
+# FAECO Experiments — Results Overview (2026-09-09; rev. 2026-09-28)
 
+> rev. 2026-09-28: **ISCAS89 有两族、必须分开看**。§2 = **族 B 统一迭代环**
+> （`20260826_iscas89_main`，`iterations=8`）——其 `strategy` 列此前误抄了
+> **族 A（效率优先/sprint1）** 的分布，本次按族 B 自身 `eval_trials.json`
+> 的 `accepted.kind` 更正为 **G 7/8、R 2/8、JOINT 0**；族 A 的效率优先
+> 分布（**JOINT 4 / G 3 / R 1**）另见新增 §2b。两族数字**不得混用**。
+>
 > rev. 2026-09-23: aligned with `20260826_aggregation/summary.json` —
 > b21 best Δ corrected +2.16 → **+2.75**, b06 accepted patch id added
 > (`patch_U56_critical_path_cover`, tie), headline unchanged.
@@ -22,6 +28,9 @@ Aggregate numbers below come from:
   for the b17 multi-iter post-fix re-run
 - `experiments/20260908_multi_iter_ablation/multi_iter_summary.json`
   for the b17/b18/b19 multi-iter ablation
+- `experiments/20260805_tcad_sprint1_iscas89/` (族 A) and
+  `experiments/20260928_sprint1/` (族 A\*, frozen-revision re-run) for the
+  efficiency-first sub-study and its reproducibility check (§2b)
 
 ## 1. Headline numbers
 
@@ -46,21 +55,59 @@ Caveats:
   --early-stop` and accepts the first WNS-improving patch in 104
   STA runs.
 
-## 2. ISCAS89 (8 / 8 strict WNS improvement, unified-loop)
+## 2. ISCAS89 (8 / 8 strict WNS improvement, unified-loop = 族 B)
 
-| circuit | baseline | final | Δ (ns) | STA runs | strategy |
+Family: **B** (`experiments/20260826_iscas89_main/`, ≤8 rounds, cross-round
+failure feedback). `strategy` = set of `kind` values actually accepted in that
+circuit, read from `eval_trials.json → trials[*].accepted == True → kind`
+(**note: these files are multi-object concatenated JSON — read the first
+object with `json.JSONDecoder().raw_decode(...)[0]`, not `json.load`**).
+
+| circuit | baseline | final | Δ (ns) | STA runs | accepted kinds |
 |---|---:|---:|---:|---:|---|
-| s27   | -0.27 | -0.18 | +0.09 | 35 | JOINT |
-| s382  | -0.98 | -0.83 | +0.15 | 22 | JOINT |
-| s420  | -1.56 | -1.21 | +0.35 | 43 | JOINT |
-| s641  | -1.63 | -1.17 | +0.46 | 126 | G |
+| s27   | -0.27 | -0.18 | +0.09 | 35 | G |
+| s382  | -0.98 | -0.83 | +0.15 | 22 | G |
+| s420  | -1.56 | -1.21 | +0.35 | 43 | G |
+| s641  | -1.63 | -1.17 | +0.46 | 126 | G, R |
 | s713  | -1.33 | -1.28 | +0.05 | 29 | G |
 | s820  | -1.19 | -1.17 | +0.02 | 57 | R |
 | s832  | -1.23 | -1.16 | +0.07 | 24 | G |
-| s953  | -1.31 | -1.21 | +0.10 | 21 | JOINT |
+| s953  | -1.31 | -1.21 | +0.10 | 21 | G |
 
-Joint-candidate coverage is the dominant gain source (4/8 cases use
-JOINT); pure-G is second (3/8); R alone handles only s820.
+In the unified loop, **G is the dominant accepted type (present in 7/8
+circuits; s641 also accepts R)**, R alone handles only s820, and **JOINT is
+not accepted anywhere in this family**. (This corrects an earlier version of
+this table, which had copied the JOINT/G/R split of the *efficiency-first*
+family A into a family-B table.)
+
+## 2b. ISCAS89 efficiency-first sub-study = 族 A (pre-layout)
+
+Family: **A** (`experiments/20260805_tcad_sprint1_iscas89/`, `iterations=1`,
+first-improvement stop, in-round feedback only). Values as reported in the
+paper's efficiency-first sub-study (`wns_history[-1]`):
+
+| circuit | baseline | final | Δ (ns) | STA runs | accepted kind |
+|---|---:|---:|---:|---:|---|
+| s27   | -0.27 | -0.18 | +0.09 | 30 | JOINT |
+| s382  | -0.98 | -0.89 | +0.09 | 2  | JOINT |
+| s420  | -1.56 | -1.55 | +0.01 | 90 | JOINT |
+| s641  | -1.63 | -1.59 | +0.04 | 1  | G |
+| s713  | -1.33 | -1.31 | +0.02 | 1  | G |
+| s820  | -1.19 | -1.17 | +0.02 | 107 | R |
+| s832  | -1.23 | -1.17 | +0.06 | 93 | G |
+| s953  | -1.31 | -1.27 | +0.04 | 30 | JOINT |
+
+⇒ **族 A 分布 = JOINT 4 (s27/s382/s420/s953) / G 3 (s641/s713/s832) / R 1
+(s820)**, read from `call_log[0].accepted.kind`, independently corroborated by
+`20260807_real_pr_iscas8/manifest.json`'s 8 candidate labels.
+
+**Reproducibility (族 A\*)** — `experiments/20260928_sprint1/` re-runs the
+same efficiency-first config at the frozen revision (HEAD `6b95f8c`):
+8/8 still strictly improved, but the accepted sequence drifts to
+**G 6 / JOINT 1 (s382) / R 1 (s820)** (s382 STA 2→41, s420 90→66). Family A is
+therefore a historical frozen artifact whose code revision is **not fully
+pinned**; A\* is reported as a reproducibility limitation and **does not
+replace** family A's historical numbers.
 
 ## 3. ITC-99 (19 / 19 strict WNS improvement, unified-loop)
 
