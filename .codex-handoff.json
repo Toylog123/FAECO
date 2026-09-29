@@ -1,37 +1,38 @@
 {
-    "timestamp": "2026-09-14 09:40 (Asia/Shanghai)",
-    "status": "submission-ready - repo at D:/BaiduSyncdisk/01_Papers/03_FAECO (template: 99_项目模板); paper 9-page closed; awaiting user decisions D-01~D-03 (see agent_handoff/DECISION_BRIEF_20260912.md); handoff docs committed 2026-09-14",
-    "project": "FAECO — 面向预布局门级时序ECO的失效驱动候选搜索（中文稿 9 页，第 18 轮修订 + 一致性审计闭环）",
+    "timestamp": "2026-09-29 10:20 (Asia/Shanghai)",
+    "status": "paper-frozen + submission-ready-baseline - paper content frozen (tag faeco-paper-final-20260929 = a8142b6, 9 pages, fingerprint 7adf0279...); D-01~D-03 decided A and executed (tag v2026-09-29-submission-ready = d84061a, manifest versions/v1/MANIFEST.sha256); T20 JCAD submission package scaffolded (paper/zh/submission/), JCAD requirements verified (no LaTeX track: Word+PDF required); pending user calls: 1-C insertion timing, Word conversion path, abstract-rewrite authorization, AIGC disclosure wording",
+    "project": "FAECO — 面向预布局门级时序ECO的结构化候选搜索与失效归因（中文稿 9 页内容冻结；投稿目标 JCAD）",
     "read_order": [
         "README.md",
         "project_docs/agent_handoff/START_HERE.md",
-        "project_docs/agent_handoff/status_logs/CURRENT_STATUS.md",
-        "project_docs/agent_handoff/DECISION_BRIEF_20260912.md",
+        "project_docs/agent_handoff/handoff_20260929.md",
+        "project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md",
         "project_docs/OPEN_ISSUES.md",
-        "project_docs/WORK_PROGRESS.md",
-        "project_docs/migration/MIGRATION_20260912.md"
+        "paper/zh/submission/T20_SUBMISSION_PACKAGE.md",
+        "project_docs/WORK_PROGRESS.md"
     ],
     "framework_layout": {
-        "code": "code/src/rseco + code/scripts + code/tests（264 项测试；pyproject 指向 code/src）",
-        "experiments": "experiments/（INVENTORY.md 总索引、RESULTS.md + results.json 顶层汇总、design/ 实验设计）",
+        "code": "code/src/rseco + code/scripts + code/tests（pytest 基线见 handoff_20260929；pyproject 指向 code/src）",
+        "experiments": "experiments/（INVENTORY.md 总索引、RESULTS.md（rev. 2026-09-29 已对齐论文口径）+ results.json、20260826_aggregation/summary.json = 论文主数字源）",
         "data": "data/cases（跟踪）+ data/raw/benchmarks（raw 不跟踪，source_manifests 登记）",
-        "paper": "paper/zh/manuscript + figures + review_rounds + GLOSSARY",
-        "project_docs": "LOGS.md + WORK_PROGRESS.md + agent_handoff/{TASK_BOARD,CURRENT_STATUS,CURRENT_RUN_HANDOFF,START_HERE} + review_history/paper_audit + design_specs + decision_log + roadmap/milestones/planning/risk_register + reports/{legacy,weekly} + migration/MIGRATION_20260912.md + OPEN_ISSUES.md + archive/",
+        "paper": "paper/zh/manuscript（唯一主稿）+ submission/（T20 投稿包）+ figures + review_rounds + responses + GLOSSARY",
+        "project_docs": "LOGS.md + WORK_PROGRESS.md + agent_handoff/* + evidence/PAPER_EVIDENCE_MANIFEST.md + planning/ + baselines/ + review_history/ + reports/ + OPEN_ISSUES.md",
+        "versions": "v1 = 轻量冻结（tag v2026-09-29-submission-ready + MANIFEST.sha256，117 条；不复制完整体，见 versions/v1/README.md）",
         "docs": "environment.md + GLOSSARY.md + EXPERIENCE.md + literature/ + materials/",
-        "scratch": "git-ignored 临时件（旧根目录 tmp_* 全部在此）",
-        "archive": "迁移源目录 D:/BaiduSyncdisk/03_FAECO 保留（处置见 OPEN_ISSUES OI-005）"
+        "scratch": "git-ignored 临时件（jcad_research/ = JCAD 官网抓取证据）"
     },
     "paper_state": {
-        "tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.tex",
-        "pdf": "paper/zh/manuscript/ 同名 PDF（根目录副本同步，SHA256 一致）",
-        "compile": "latexmk -xelatex：0 Error / 0 Overfull / 0 未定义引用，9 页",
-        "rounds": "17 轮命名版审稿（ff8308c）+ 第 18 轮（3d984c6）+ 全文一致性审计（d329f19，8 处矛盾修复）"
+        "tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex",
+        "pdf": "manuscript/ 同名 PDF + paper/zh/ 根副本（字节 SHA256 9af41d77... 双副本一致）",
+        "fingerprint": "pdftotext -layout 全文 SHA256 = 7adf0279...（判内容一致用指纹，不用字节 SHA）",
+        "compile": "lualatex ×2 + latex_quality_gate.py：0 Error / 0 Overfull / 0 Underfull，9 页",
+        "freeze": "内容冻结（用户指令）；任何内容改动须先取得用户同意；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md"
     },
     "git_state": {
         "branch": "main",
+        "head": "d84061a",
         "remote": "https://github.com/Toylog123/FAECO.git",
-        "pre_migration_commit": "d329f19",
-        "note": "迁移以一次语义提交落盘"
+        "tags": "v2026-09-29-submission-ready / faeco-paper-final-20260929 / faeco-exp-rev1 / faeco-paper-layout-final / faeco-paper-restructure-final（均已推送）"
     },
-    "blocker": null
+    "blocker": "用户拍板：① 1-C（论文 §3 增量小节，§12.2 文本已备）插入时机；② JCAD Word 转排路径（已备询问邮件草稿 paper/zh/submission/draft_email_to_jcad.md）；③ 摘要改写授权与 AIGC 披露口径"
 }

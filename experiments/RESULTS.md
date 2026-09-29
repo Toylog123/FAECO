@@ -1,5 +1,17 @@
-# FAECO Experiments — Results Overview (2026-09-09; rev. 2026-09-28)
+# FAECO Experiments — Results Overview (2026-09-09; rev. 2026-09-29)
 
+> rev. 2026-09-29: aligned with the paper's final statistics criterion
+> (paper §4.1). **Headline success = strict WNS improvement (Δ > 0)**:
+> ISCAS89 **8/8**, ITC-99 **18/19**, PicoRV32 **2/3** — b06 (Δ = 0,
+> TNS-assisted acceptance, see §3) is excluded from the ITC-99 strict
+> count; all 19 circuits are non-regressive. §1 medians recomputed from
+> `20260826_aggregation/summary.json`: ISCAS89 **+0.10**, ITC-99
+> **+0.18**, PicoRV32 **+0.60** (the previously listed +0.14 / +0.21 /
+> +0.05 were stale and wrong). Family B (§2/§3/§4) is the archived
+> 2026-08-26 product; its `b03`/`b06` outputs drift at the current frozen
+> revision (`faeco-exp-rev1`: b03 −1.27 → −1.21 at HEAD) — see OPEN_ISSUES
+> OI-013. Numbers here remain the archived products, matching the paper.
+>
 > rev. 2026-09-28: **ISCAS89 有两族、必须分开看**。§2 = **族 B 统一迭代环**
 > （`20260826_iscas89_main`，`iterations=8`）——其 `strategy` 列此前误抄了
 > **族 A（效率优先/sprint1）** 的分布，本次按族 B 自身 `eval_trials.json`
@@ -36,15 +48,22 @@ Aggregate numbers below come from:
 
 |  | n | success | mean Δ (ns) | best Δ (ns) | median Δ (ns) |
 |---|---:|---:|---:|---:|---:|
-| **ISCAS89** unified-loop | 8 | **8 / 8** | **+0.16** | +0.46 | +0.14 |
-| **ITC-99** unified-loop | 19 | **19 / 19** | **+0.43** | +2.75 (b21) | +0.21 |
-| **PicoRV32** hetero | 3 | 2 / 3 | +0.60 | +1.13 | +0.05 |
+| **ISCAS89** unified-loop | 8 | **8 / 8** | **+0.16** | +0.46 | +0.10 |
+| **ITC-99** unified-loop | 19 | **18 / 19** strict; 19/19 non-regressive | **+0.43** | +2.75 (b21) | +0.18 |
+| **PicoRV32** hetero | 3 | 2 / 3 | +0.60 | +1.13 | +0.60 ¹ |
 | **b17 phase-2 resume** | 1 | Y | **+0.38** | — | — |
 | **joint-depth (b17 × {0,2,4})** | 3 | 0 / 3 | +0.40 (best) | +0.43 (depth=4) | +0.38 (depth=0) |
 | **hold-mode ITC-99 (b01-b14)** | 14 | 2 / 14 | 0.0 (best) | 0.0 | 0.0 |
 
+¹ median over the 2 measured circuits (`picorv32_regs` is N/A, no setup path).
+
 Caveats:
 - Δ is WNS improvement (ns) vs the mapped baseline; positive = better.
+- **success = strict WNS improvement (Δ > 0)**, the paper's §4.1 headline
+  criterion. b06 (Δ = 0) is a runner success (`success=True`,
+  TNS-assisted acceptance under the `--tns-aware` ITC-99 batch) but is
+  **excluded** from the 18/19 strict count; the paper declares this
+  acceptance separately.
 - ITC-99 mean improvement is dominated by the six large cases
   (b14, b15, b17, b20, b21, b22; mean Δ **+0.98 ns** over them, and
   **+1.73 ns** over b20/b21/b22 alone); the smaller b01..b13 cases
@@ -109,7 +128,7 @@ therefore a historical frozen artifact whose code revision is **not fully
 pinned**; A\* is reported as a reproducibility limitation and **does not
 replace** family A's historical numbers.
 
-## 3. ITC-99 (19 / 19 strict WNS improvement, unified-loop)
+## 3. ITC-99 (18 / 19 strict WNS improvement, unified-loop = 族 B)
 
 | circuit | baseline | final | Δ (ns) | STA runs | accepted patch id |
 |---|---:|---:|---:|---:|---|
@@ -137,10 +156,14 @@ Highlights:
 - **b17** is no longer a failure: the 2026-09-08 phase-2 resume run
   with the original 60 s budget superseded the 785-rejection failure
   reported in `experiments/20260826_aggregation/b17_failure_analysis.md`.
-- **b06** is the lone case where every R/G/JOINT candidate ties the
-  baseline WNS; a tie patch (`patch_U56_critical_path_cover`) is
-  accepted and the runner records `success=True` because the patch is
-  non-regressive, but the Δ is 0.
+- **b06** is the lone non-strict case (Δ = 0): all 664 candidate STA
+  runs tie or miss the baseline WNS; the accepted
+  `patch_U56_critical_path_cover` ties WNS while TNS improves marginally
+  (−3.97 → −3.92 across rounds, read from the product
+  `outerloop_result.json`), i.e. acceptance uses the TNS-assisted
+  criterion of the `--tns-aware` ITC-99 batch. The runner records
+  `success=True` (non-regressive), but b06 is **excluded from the 18/19
+  strict-WNS count** per the paper's §4.1 statistics criterion.
 - **b20 / b21** are the largest absolute gains (+1.98 / +2.75 ns);
   both are JOINT-style patches.
 - b14 / b15 / b17 / b20 / b21 / b22 are the "large ITC-99" cohort;

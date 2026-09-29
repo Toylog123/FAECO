@@ -1,27 +1,25 @@
 # Current Status
 
-## 2026-09-14 交接整理（本轮）
+## 2026-09-29 决策轮（本轮）
 
-- 补齐交接缺口：上轮未提交的交接文档 + 决策简报已 commit+push；`NEXT_AGENT_PROMPT.md` 由空模板补全（目标/约束/证据门）；`.codex-handoff.json` 刷新。
-- 环境复验：pytest **264 passed + 4 skipped**（2m56s，与基线一致）。
-- 当前位点不变：等待用户对 D-01~D-03 拍板（`../../agent_handoff/DECISION_BRIEF_20260912.md`）→ T20 投稿打包。
+- **决策落地**：D-01=A / D-02=A / D-03=A 已执行（tag `v2026-09-29-submission-ready` = `d84061a` + manifest 117 条全 OK；OI-003/006/001/002 结案）；T20 目标期刊 = **JCAD**。
+- **T20**：`paper/zh/submission/` 投稿包就绪（检查单 + JCAD 要求核实报告 + 官方 2026 Word 模板 + cover letter 草稿 + 补充材料清单 + 询问邮件草稿）。**核心事实：JCAD 无 LaTeX 通道，投稿须 Word+PDF**。
+- **RESULTS.md 对齐**：rev. 2026-09-29 修正 3 处 headline（中位数 ISCAS89 +0.10 / ITC-99 +0.18 / PicoRV32 +0.60；ITC-99 严格改善 18/19）+ b06 TNS 辅助接受事实，全部实查自 `summary.json` 与 b06 产物。
+- **git**：main = `d84061a`（已 push）；5 个 tag 全部上 origin。论文未动（内容指纹仍 `7adf0279…`）。
 
-## 2026-09-12 交接收尾（上轮最终状态）
+## 待用户拍板（OPEN_ISSUES OI-018~OI-022）
 
-- **工程**：`D:\BaiduSyncdisk\01_Papers\03_FAECO` 为唯一工作副本（99_项目模板框架）；`.venv` 已重建（Python 3.11.9 + 依赖），pytest **264 passed + 4 skipped**；旧仓库副本与 C 盘 3 个 worktree 已删（分支已推送固化，未提交文档已抢救归档）。
-- **论文**：中文稿 9 页，0 Error / 0 Overfull / 0 未定义引用；18 轮审稿 + 全文一致性审计（8 处矛盾修复）闭环，数字全部与 `experiments/20260826_aggregation/summary.json` 对账。处于**可投稿前状态**。
-- **git**：main 与 origin/main 同步（f5b6380）；codex/faeco-unified-loop、codex/faeco-integration-audit、codex/faeco-phase0-stabilization 三条历史分支已推送固化。
-- **当前位点**：等待用户对 D-01~D-03 三项决策拍板（简报：`../DECISION_BRIEF_20260912.md`）。
-
-## 下一步（按优先级）
-
-1. **用户决策 D-01~D-03**（读 `../DECISION_BRIEF_20260912.md`，各项均有建议项）。
-2. 执行决策：D-01=A 则打 tag `v2026-09-12-submission-ready` + `make manifest` 入 `versions/v1/`；D-02=A 无动作；D-03=A 关闭对应 OI。
-3. T20 投稿件打包（按目标期刊模板整理投稿包 + cover letter + 补充材料清单）。
-4. 审稿返回后走第 19 轮流程（以 `review_history/paper_audit/consistency_audit_20260911.md` 为数字基线）。
+1. **OI-018** 1-C（§3 增量小节）插入时机——默认留修稿轮。
+2. **OI-019** Word 转排路径——默认先发询问邮件（草稿已备，待确认发送）。
+3. **OI-020** 摘要改写授权（JCAD ≤300 字、禁第一人称）。
+4. **OI-021** AIGC 披露口径（JCAD 2026 硬要求）。
+5. **OI-022** 3 个证据汇总文件是否 `git add`。
 
 ## 不要做
 
-- `experiments/` 证据目录严禁删除；历史产物内旧绝对路径不改写。
-- 论文改动前先跑 `python -m pytest code/tests -q` + 数字对账（`docs/GLOSSARY.md` 关键口径）。
-- 旧目录 `D:\BaiduSyncdisk\03_FAECO` 空壳由用户处置（会话关闭后可删）。
+- 论文内容修改仍冻结（含摘要）；`experiments/` 证据严禁删除；改 `.tex` 前必读 `PAPER_EVIDENCE_MANIFEST.md`。
+- 未跑测试不修改 `code/src/rseco/`；压页先查 `\FloatBarrier`。
+
+## 历史状态（2026-09-14 及以前）
+
+- 见 `agent_handoff/handoff_20260929.md` 与 `WORK_PROGRESS.md`；pytest 基线 264→486+ passed 随 0a/L2/L3 扩展（详见各报告），2026-09-29 轮未跑新测试（未改代码）。
