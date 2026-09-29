@@ -112,6 +112,7 @@
 
 **★ 当前发布版（2026-09-29 终稿收敛两批 + 版面收尾）**：tag **`faeco-paper-final-20260929`**（提交 `a8142b6`）；PDF SHA256 **`9af41d7743cae202e0635b8b653a05cea7211a4242d46ed94f255109d9131a29`**（两份一致）；**9 页 / 0 Error / 0 Overfull / 0 Underfull**。
 **★ 内容指纹（判定"内容是否真一致"须用此项）**：`pdftotext -layout` 全文的 SHA256 = **`7adf027909213f00ba3dab5af68f8189b878e43c63e0a40844ed509bd78587b6`**。**PDF 字节 SHA256 含编译时间戳，重编译必变，不可作内容指纹**——已实测：同一 `.tex` 重编译后字节 SHA256 由 `5c98b77d…` 变为 `611741c5…`，但页数、质量门、文本指纹三者全同。
+**【2026-09-29 晚补注：指纹与 pdftotext 实现绑定】** 本指纹由 **poppler 25.07.0**（WinGet：`%LOCALAPPDATA%\Microsoft\WinGet\Packages\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\poppler-25.07.0\Library\bin\pdftotext.exe`）产出；Git Bash 默认解析的 `pdftotext` 是 **xpdf 4.00**（`C:\Program Files\Git\mingw64\bin\`），对同一 PDF 给出**不同的**指纹 `443c5c3a…`（内容等价、提取文本不同）。复算不一致时先核对工具，再谈内容（经验库第 11 条）。本日已用 poppler 25.07.0 复算**精确复现** `7adf0279…`，且 git 工作区干净、字节 SHA256 与本节记录一致——**冻结完好**。
 **前序版本链（均保留，可逐级回溯）**：`faeco-paper-layout-final`（9 页，SHA256 `5c98b77d…`，指纹 `856fac5b…`）→ 2026-09-29 第一批（评审 10 项，SHA256 `820e8cff…`，指纹 `7da2dc7d…`）→ 2026-09-29 第二批（必改 4 项 + 版面收尾，即当前版）。**当前版相对第一批仅有 4 处口径/表述改动 + 1 处 `\FloatBarrier` 删除；全部数字、实验族归属、表格数值未变。**
 
 **终稿批次一（2026-09-29，评审第二轮 10 项）**：摘要减负约 25%（删 SEC 28/29 与 S 的四个数字）、术语统一「失败→失效」、相关工作两处降调、表 1 定位改「局部时序 ECO」、§4.1 去审计味、**式(2) 的 0.01/0.1 补真实解释**（已回代码核实 `code/src/rseco/cut.py:200/202` 为硬编码常量）、表 2 精简、表 3 改名、图 2 图注压一句并放大、§4.6 措辞、§3.4 改「启用失效反馈控制时」。
