@@ -7,7 +7,7 @@
 | D-01 | versions/v1 冻结方案 | **done（A）** | 用户 2026-09-29 拍板轻量冻结：tag `v2026-09-29-submission-ready`（`d84061a`）+ `versions/v1/MANIFEST.sha256`（117 条全 OK）+ BASELINE_INDEX.csv active 行；已 push。附带发现 3 个证据汇总文件未被 git 跟踪（OI-022） |
 | D-02 | 机制图处置 | **done（A）** | 维持 3 图现状，无动作；投稿后视审稿意见再定（OI-006 结案） |
 | D-03 | DOI / DRC 投稿处置 | **done（A）** | DOI 投稿时按期刊系统生成；DRC 维持如实声明、Magic/KLayout 留作 rebuttal 备选（OI-001/OI-002 结案） |
-| T20 | 投稿件打包（目标期刊 = **JCAD**） | in_progress | **已完成**：JCAD 要求核实报告 + 官方 2026 Word 模板副本 + cover letter 草稿 + 投稿检查单（`paper/zh/submission/`）。**补充材料 S1–S5 初稿全部完成**（2026-09-30，`paper/zh/submission/supplementary/`；S1 闭合 OI-008 遗留事项，S5 顺带补建 picorv32 source manifest）。**待用户拍板**（OI-018~OI-021）：Word 转排路径 / 摘要改写授权 / AIGC 披露口径 / 1-C 插入时机 |
+| T20 | 投稿件打包（目标期刊 = **JCAD**） | in_progress | **已完成**：要求核实报告 + 官方 2026 Word 模板 + cover letter + 补充材料 S1–S5 初稿 + **Word 转排（docx + Word 引擎导出 PDF + 转排说明，本机 Word 实测核验 8 页全对）**；**摘要 JCAD 适配已执行并重冻结 v2**（295 字/149 词，tag `v2026-09-30-submission-ready`）。**余下为用户手工项**：MathType 转换、占位替换（通信作者/基金/日期/简介）、图 2 通栏、AIGC 披露（投稿时必须解决）、终稿 PDF 导出 |
 | 1-C | 技术设计 §12（增量 ECO 形式化） | blocked（待用户） | 代码侧已实现并过 0a 等价门；§12.2 论文文本已备、§12.4 前置 gate 全清；剩余动作 = 插入 `.tex`（属内容修改，与冻结令冲突）→ OI-018 |
 | ALIGN-01 | `experiments/RESULTS.md` 对齐论文口径 | **done** | rev. 2026-09-29：实查修正 3 处 headline（ISCAS89 中位 +0.10 / ITC-99 中位 +0.18 与 18/19 严格 / PicoRV32 中位 +0.60）+ b06 TNS 辅助接受事实；§2b 族 A/A\* 原已对齐 |
 
