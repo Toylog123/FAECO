@@ -15,24 +15,18 @@
 8. paper/zh/submission/JCAD_REQUIREMENTS_20260929.md（JCAD 要求核实报告）
 
 【当前状态（一句话）】
-D-01~D-03 已按 A 方案落地（tag v2026-09-29-submission-ready = d84061a，
-manifest versions/v1/MANIFEST.sha256 117 条）；T20 投稿包已就绪（目标期刊 JCAD，
-无 LaTeX 通道、须 Word+PDF）；论文内容冻结未破（9 页，内容指纹 7adf0279…）。
+OI-018~022 已全部拍板并执行：摘要 JCAD 适配完成并重冻结 v2（tag v2026-09-30-submission-ready，
+内容指纹 43becd39… poppler 25.07 口径）；Word 转排完成（paper/zh/submission/word/ 三件套，
+本机 Word 实测 8 页全对）；补充材料 S1–S5 初稿完成。论文 LaTeX 冻结版不再改动。
 
 【本轮目标（按优先级）】
-1. 等用户拍板 OI-018~OI-022（OPEN_ISSUES.md）：
-   ① OI-018 1-C（论文 §3 增量小节）插入时机——默认留修稿轮；
-   ② OI-019 JCAD Word 转排路径——默认先发询问邮件
-     （草稿 paper/zh/submission/draft_email_to_jcad.md，用户确认后才发）；
-   ③ OI-020 摘要改写授权（JCAD ≤300 字、禁"本文/我们"）；
-   ④ OI-021 AIGC 披露口径（JCAD 2026 硬要求，未披露视为抄袭）；
-   ⑤ OI-022 3 个证据汇总文件（20260826_aggregation/summary.json 等）是否 git add。
-2. 拍板后按 T20_SUBMISSION_PACKAGE.md 检查单推进：Word 转排 → 补充材料定稿
-   （**S1–S5 初稿已完成**于 `paper/zh/submission/supplementary/`，转 Word 时排版；S2 粒度待定）
-   → 作者承诺书/保密审查 → 投稿。S1 已闭合 OI-008 的投稿前必办事项。
+1. 等用户完成 Word 稿手工收尾（word/转排说明.md）：MathType 批量转换（OMML→MathType）、
+   黄色占位替换（通信作者 */基金/收稿日期/作者简介）、图 2 通栏、终稿 PDF 导出。
+2. 投稿时必办：AIGC 使用披露（OI-021，JCAD 硬要求，未披露视为抄袭）——用户拍板暂缓，
+   届时与通信作者共同拟定；作者承诺书/保密审查（单位流程）；作者工作邮箱确认。
 3. 若审稿意见返回：以 project_docs/review_history/paper_audit/
    consistency_audit_20260911.md 为数字基线，并先读 PAPER_EVIDENCE_MANIFEST.md，
-   只处理新意见；新增内容修改须先取得用户同意。
+   只处理新意见；新增内容修改须先取得用户同意（含 1-C 小节插入，OI-018 已拍板留修稿轮）。
 
 【约束 / 不要做】
 - ❌ 不要修改论文内容（含摘要）——用户冻结令；Word 转排稿中的摘要改写也须 OI-020 授权。
