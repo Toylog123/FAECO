@@ -88,7 +88,7 @@
 \vspace{6pt}
 \end{center}
 \begin{flushleft}
-  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入与门尺寸调整难以压缩深层逻辑、验证代价高的问题，提出结构化候选搜索与失效归因框架 FAECO：以多特征加权割与关键路径覆盖割在违例扇入锥上生成 R/G/B/JOINT 候选并结构化排序；候选失效归为 F1--F6 六类，用作搜索诊断与控制信号；候选按轮提交，其生成、理想线网时序分析、简化 SPEF 复测与独立全网表顺序等价检查构成分层验证闭环。统一跨测试集评估中，ISCAS89、ITC-99 与 PicoRV32 分别有 8/8、18/19、2/3 个电路取得严格 WNS 改善（非 timing closure），其余 1 个电路与基线持平，全部电路无 WNS 回退。固定权重消融显示混合候选空间平均改善 1.07\,ns，高于纯 G 的 0.16\,ns，随机化评估顺序显著增加首次改善所需 STA 次数；结构重综合实验表明逻辑深度降低并不必然转化为 WNS 收益。}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 针对预布局门级时序 ECO 中缓冲器插入与门尺寸调整难以压缩深层逻辑的问题，提出结构化候选搜索与失效归因框架 FAECO：以多特征加权割与关键路径覆盖割在违例扇入锥上生成 R/G/B/JOINT 候选并结构化排序；候选失效归为 F1--F6 六类，用作搜索诊断与控制信号；候选按轮提交，生成、理想线网时序分析、简化 SPEF 复测与独立全网表顺序等价检查构成分层验证闭环。统一跨测试集评估中，ISCAS89、ITC-99 与 PicoRV32 分别有 8/8、18/19 和 2/3 个测试实例取得严格 WNS 改善（非 timing closure）；ITC-99 的 b06 持平、其余电路无 WNS 回退，PicoRV32 的 picorv32\_regs 无有效 setup path，不参与改善判定。固定权重消融中混合候选空间平均改善 1.07\,ns，高于纯 G 的 0.16\,ns，随机化评估顺序增加首次改善所需 STA 次数；结构重综合表明逻辑深度降低并不必然转化为 WNS 收益。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；门级局部重构；多特征加权割；类型化失效归因；分层验证；预布局时序优化}\par
@@ -107,7 +107,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small FAECO is a structured candidate-search and failure-attribution framework for pre-placement gate-level timing ECO. R/G/B/JOINT candidates are generated on the violating fan-in cone by a multi-feature weighted cut and a critical-path coverage cut, then structurally ranked. Candidate failures are classified into six types (F1--F6) as search-diagnostic and control signals. Round-by-round candidate commitment, ideal-net timing analysis, simplified standard parasitic exchange format (SPEF) rechecking, and independent sequential equivalence checking form a layered verification closure. In a unified cross-benchmark evaluation, 8/8, 18/19, and 2/3 circuits achieve strict WNS improvement on ISCAS89, ITC-99, and PicoRV32, with no WNS regression; the remaining circuit ties the baseline. Under fixed weights, the mixed candidate space improves WNS by 1.07\,ns on average versus 0.16\,ns for pure gate sizing, while randomizing the evaluation order increases the STA runs to the first improvement. Structural resynthesis shows that reduced logic depth does not necessarily translate into WNS gains.}\par
+  {\bfseries Abstract:} {\small FAECO is a structured candidate-search and failure-attribution framework for pre-placement gate-level timing ECO. R/G/B/JOINT candidates are generated on violating fan-in cones by a multi-feature weighted cut and a critical-path coverage cut, then ranked structurally. Candidate failures are classified into six types (F1--F6) for search diagnosis and control. Round-by-round commitment, ideal-net timing analysis, simplified SPEF rechecking, and independent sequential equivalence checking form a layered verification closure. In a unified cross-benchmark evaluation, 8/8, 18/19, and 2/3 instances on ISCAS89, ITC-99, and PicoRV32 achieve strict WNS improvement (not timing closure); the ITC-99 exception ties the baseline with no regression elsewhere, and the remaining PicoRV32 submodule lacks a setup path, excluded from improvement statistics. Under fixed weights, the mixed candidate space improves WNS by 1.07\,ns versus 0.16\,ns for pure gate sizing; randomized evaluation order increases the STA runs to first improvement. Structural resynthesis shows depth reduction need not translate into WNS gains.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; local restructuring; multi-feature weighted cut; typed failure attribution; layered verification; pre-placement timing optimization}\par
 \end{flushleft}
@@ -286,7 +286,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \subsection{类型化失效归因与搜索控制}
 
 \FloatBarrier
-框架将 F1--F6 定义为统一的候选失效类型，用于对候选验证结果进行结构化归因：真实 WNS 主循环中观测到的主要类型为 F4（理想线网收益不足），启用物理门控时进一步将 SPEF 复测失效记为 F6，各类检测条件见表~\ref{tab:failures}。启用失效反馈控制时，按表~\ref{tab:failures} 的对应动作调整搜索参数（每类失效使相应权重增加 $1.0$，F5 额外将最大锥门数减半），固定权重配置仅记录失效类型。F6 记录简化 SPEF 复测下的物理失效，其反馈能否独立提高最终物理 WNS 由 \S\ref{sec:ablation} 单独检验。本文另实现以指数滑动平均（EMA）平滑的自适应更新，并仅在 \S\ref{sec:ablation} 中作为消融对象。
+框架将 F1--F6 定义为统一的候选失效类型，用于对候选验证结果进行结构化归因：真实 WNS 主循环中观测到的主要类型为 F4（理想线网收益不足），启用物理门控时进一步将 SPEF 复测失效记为 F6，各类检测条件见表~\ref{tab:failures}。启用失效反馈控制时，按表~\ref{tab:failures} 的对应动作调整搜索参数（每类失效使相应权重增加 $1.0$，F5 额外将最大锥门数减半），固定权重配置仅记录失效类型。F6 记录简化 SPEF 复测下的物理失效，并可在启用反馈控制时参与搜索参数更新；本文主要验证其候选识别与过滤作用，尚未证明该反馈能够独立提高最终物理 WNS，见 \S\ref{sec:phys_closure}。本文另实现以指数滑动平均（EMA）平滑的自适应更新，并仅在 \S\ref{sec:ablation} 中作为消融对象。
 
 \begin{table}[!htbp]
 \centering
@@ -362,7 +362,7 @@ F1--F6 失效反馈                  & 仅轮内 & 不启用（固定权重） \
 \end{tabular}
 \end{table}
 
-\textbf{接受准则}：以式~\eqref{eq:accept} 的 WNS 严格改善为接受准则，TNS 仅作为辅助判据；本文不将“取得 WNS 改善”等同于 timing closure。
+\textbf{接受准则}：除 \S\ref{sec:itc99} 所述 b06 的 TNS 辅助接受外，其余主实验均以式~\eqref{eq:accept} 的 WNS 严格改善为主要接受条件；本文不将“取得 WNS 改善”等同于 timing closure。
 
 \subsection{效率优先子研究：ISCAS89 修复质量与效率}\label{sec:iscas}
 
@@ -459,7 +459,7 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
 
 独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网收益逐步衰减。
 
-\textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度），对每条线 $e$ 用简化公式 $L_{\mathrm{est}}(e)=40\,\mu\mathrm{m} \cdot u(e)$、$R_e=r_{\mathrm{unit}}L_{\mathrm{est}}$、$C_e=c_{\mathrm{unit}}L_{\mathrm{est}}$ 估计寄生电阻电容（$r_{\mathrm{unit}}$、$c_{\mathrm{unit}}$ 取自 SKY130 HD \texttt{li1} 层代表 RC），并据此生成简化 SPEF。s382 的 50 个与 b18 的 6 个候选均未通过 SPEF 复测，并按 F6 更新权重。F6 反馈目前可证明的是识别并拒绝 ideal-net 下看似有效、但线载后失效的候选；尚未直接证明迭代后最终物理 WNS 改善。
+\textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度），对每条线 $e$ 用简化公式 $L_{\mathrm{est}}(e)=40\,\mu\mathrm{m} \cdot u(e)$、$R_e=r_{\mathrm{unit}}L_{\mathrm{est}}$、$C_e=c_{\mathrm{unit}}L_{\mathrm{est}}$ 估计寄生电阻电容（$r_{\mathrm{unit}}$、$c_{\mathrm{unit}}$ 取自 SKY130 HD \texttt{li1} 层代表 RC），并据此生成简化 SPEF。s382 的 50 个和 b18 的 6 个候选均未通过 SPEF 复测，并被记录为 F6；在启用反馈控制的配置中，相应失效用于更新搜索参数。该实验能够证明 F6 可识别并拒绝 ideal-net 下有效而在线载后失效的候选，但尚不能证明其反馈能够改善最终物理 WNS。
 
 \FloatBarrier
 
@@ -510,7 +510,7 @@ $\Delta_{\mathrm{WNS}}>0$ & 0 & 0/126 \\
 $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
 接受电路 & 0/8 & 0/8 \\
 \bottomrule
-\multicolumn{3}{p{0.9\columnwidth}}{\footnotesize $\Delta L$ 为 SKY130 映射网表上的逻辑深度变化，$\Delta_{\mathrm{WNS}}$ 为候选级理想线网时序变化；扩池仅在窗口来源侧生效，不改变接受谓词与验证流程。}\\
+\multicolumn{3}{p{0.9\columnwidth}}{\footnotesize $\Delta L=L_{\mathrm{before}}-L_{\mathrm{after}}$，正值表示 SKY130 映射后逻辑深度降低；$\Delta_{\mathrm{WNS}}=\mathrm{WNS}_{\mathrm{after}}-\mathrm{WNS}_{\mathrm{before}}$，正值表示时序改善。扩池仅在窗口来源侧生效，不改变接受谓词与验证流程。}\\
 \end{tabular}
 \end{table}
 
