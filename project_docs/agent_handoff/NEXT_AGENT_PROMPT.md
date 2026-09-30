@@ -27,8 +27,9 @@ manifest versions/v1/MANIFEST.sha256 117 条）；T20 投稿包已就绪（目�
    ③ OI-020 摘要改写授权（JCAD ≤300 字、禁"本文/我们"）；
    ④ OI-021 AIGC 披露口径（JCAD 2026 硬要求，未披露视为抄袭）；
    ⑤ OI-022 3 个证据汇总文件（20260826_aggregation/summary.json 等）是否 git add。
-2. 拍板后按 T20_SUBMISSION_PACKAGE.md 检查单推进：Word 转排 → S1–S5 补充材料
-   → 作者承诺书/保密审查 → 投稿。S1（事件名映射说明）是 OI-008 的投稿前必办项。
+2. 拍板后按 T20_SUBMISSION_PACKAGE.md 检查单推进：Word 转排 → 补充材料定稿
+   （**S1–S5 初稿已完成**于 `paper/zh/submission/supplementary/`，转 Word 时排版；S2 粒度待定）
+   → 作者承诺书/保密审查 → 投稿。S1 已闭合 OI-008 的投稿前必办事项。
 3. 若审稿意见返回：以 project_docs/review_history/paper_audit/
    consistency_audit_20260911.md 为数字基线，并先读 PAPER_EVIDENCE_MANIFEST.md，
    只处理新意见；新增内容修改须先取得用户同意。
@@ -57,7 +58,7 @@ manifest versions/v1/MANIFEST.sha256 117 条）；T20 投稿包已就绪（目�
 - [ ] OI-018~OI-022 用户拍板并按选择执行。
 - [ ] Word 转排稿（若启动）：按官方 2026 模板，转排稿 SHA256 与来源 LaTeX 版本
       登记回 T20_SUBMISSION_PACKAGE.md §3。
-- [ ] S1–S5 补充材料成文并经用户确认。
+- [ ] S1–S5 补充材料定稿（初稿已完成）并经用户确认。
 - [ ] 全套交接文档同步更新并 commit（LOGS.md、WORK_PROGRESS.md、
       status_logs/CURRENT_STATUS.md、TASK_BOARD.md、CURRENT_RUN_HANDOFF.md、
       START_HERE.md、NEXT_AGENT_PROMPT.md、OPEN_ISSUES.md）。
