@@ -1,18 +1,20 @@
-# 补充材料清单（T20 产出，2026-09-29）
+# 补充材料清单（T20，2026-09-30 更新）
 
 > 目标：把"审稿人对照代码 / 产物时可能困惑、正文放不下、但证据链需要"的材料集中成册。
 > 所有材料均来自仓库既有证据文件，**不新增实验、不改任何已发表数字**。
 > 各条目的数字口径必须遵守 `project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md`（铁律：same claim ⇒ same revision + same config family）。
+>
+> **状态（2026-09-30）：S1–S5 初稿全部完成**，成文见 `supplementary/` 子目录；转 Word 时随正文一起排版。
 
 ## 建议随稿提交的材料
 
 | # | 材料 | 内容与来源 | 状态 |
 |---|------|-----------|------|
-| S1 | **失效事件名映射说明** | 产物台账使用旧事件名 `acceptance_budget_violation`，现行代码输出 `F4_timing_gain_insufficient`；两者判定条件一致（`failures.py:47`），语义相同仅字符串不同。来源：OI-008（`project_docs/OPEN_ISSUES.md`）。**这是 OI-008 遗留的投稿前必办项** | 待成文 |
-| S2 | **实验族与可复现性说明** | 论文 §4.1/§4.2 已声明实验族划分与"族 A revision 未完整钉定"限制；补充材料给出更完整的族表（族 A/A′/A″/B/C/D/F 的配置、产物目录映射——**只写功能差异命名，不出现仓库内部路径**，路径映射仅存 `PAPER_EVIDENCE_MANIFEST.md`） | 待成文 |
-| S3 | **SEC 逐实例结果表** | 30 实例 / 29 修改 / 28+1 说明；`experiments/20260826_sec/summary.csv`（22 行 PASS + `picorv32_regs` N/A）+ b17 phase-2 `sec_result.json`（12812/12813 proven，1 个未证明点 = 同函数尺寸替换）。论文 §4.5 已给汇总，补充材料给逐实例明细 | 待整理 |
-| S4 | **复现环境与工具链版本** | Yosys `0.67+146`（主流程 mapping）、OpenSTA `3.1.0`（WSL2）、Yosys `0.33`（WSL，SEC）、SKY130 HD 库；0.5 ns 为统一 stress-test 约束的说明（论文 §4.1 已有，补充材料给版本细节与关键命令骨架） | 待整理 |
-| S5 | **基准电路来源与许可** | ISCAS89 / ITC-99 / EPFL / PicoRV32 的来源版本、固定 blob SHA、许可说明（`data/raw/benchmarks/source_manifests/` 有权威清单；论文用 ITC-99 官方 b18/b19，FF 数与官方一致已在审计中核实） | 待整理 |
+| S1 | **失效事件名映射说明** | 工具层事件名 ↔ F1–F6 方法层分类的对应与实测分布（19 电路 / 4044 trials：F4 2434、F5 915、F1 138、F3 16、F2 3、F6 0）。**OI-008 遗留的投稿前必办项**。成文：`supplementary/S1_失效事件名映射说明.md`（2026-09-30 复跑探针复核一致；并更正两处过时表述——现行合并后代码仍以旧事件名写台账，属两层命名分工而非产物-代码不一致） | ✅ 初稿 |
+| S2 | **实验族与可复现性说明** | 逐实验族的功能配置描述（脱敏：功能差异命名、无仓库内部路径）+ 可复现性诚实边界（族 A revision 未完整钉定、重跑漂移如实并列）。成文：`supplementary/S2_实验族与可复现性声明.md`。表述粒度（是否列配置开关名）仍待用户定 | ✅ 初稿 |
+| S3 | **SEC 逐实例结果表** | 30 实例逐行（**29 PASS + 1 N/A = 30，与论文 30/29/28+1 口径闭合**）+ b17 的 1 个信号级未证明点说明。成文：`supplementary/S3_SEC逐实例结果.md`（实读 `20260826_sec/summary.csv`——manifest 原"22 行 PASS"为笔误，已更正为 29 行） | ✅ 初稿 |
+| S4 | **复现环境与工具链版本** | Yosys `0.67+146`（主流程）/ OpenSTA `3.1.0`（WSL2）/ Yosys `0.33`（仅 SEC）/ 0.5 ns stress-test 约束口径 / 候选级 STA 计数口径 / 接受准则。成文：`supplementary/S4_环境工具链与复现要点.md` | ✅ 初稿 |
+| S5 | **基准电路来源与许可** | ISCAS89（ispras，Apache-2.0）/ ITC-99（I99T，EUPL-1.2）/ PicoRV32（YosysHQ，ISC）/ SKY130 HD（Apache-2.0）+ 未用于论文数字的资产如实声明（EPFL=流程验证、ISCAS85=未声明许可仅冒烟）。成文：`supplementary/S5_基准与工艺库来源许可.md`。**顺带闭合来源缺口**：PicoRV32 原缺 source_manifest，已补 `data/raw/benchmarks/source_manifests/picorv32.json`（clone HEAD `a473fc8f…` + 文件 SHA256） | ✅ 初稿 |
 
 ## 不放入补充材料的（明确排除）
 

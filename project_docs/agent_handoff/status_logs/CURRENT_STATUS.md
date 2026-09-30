@@ -1,6 +1,13 @@
 # Current Status
 
-## 2026-09-29 决策轮（本轮）
+## 2026-09-30 补充材料成文轮（本轮）
+
+- **S1–S5 补充材料初稿全部完成**（`paper/zh/submission/supplementary/`）：S1 事件名映射（**OI-008 投稿前必办项闭合**）、S2 族与可复现性（脱敏）、S3 SEC 逐实例（29 PASS + 1 N/A = 30，口径闭合）、S4 环境工具链、S5 基准来源许可。
+- **两处过时表述更正**：OI-008"当前代码已无旧事件名"（0a 合并后 `real_wns.py:1864` 仍以旧名写台账，属两层命名分工）；`PAPER_EVIDENCE_MANIFEST` SEC 行"22 行 PASS"（实读 29 行 PASS + 1 N/A）。
+- **缺口闭合**：PicoRV32 补建 `data/raw/benchmarks/source_manifests/picorv32.json`（clone HEAD `a473fc8f…`，ISC；三个 modules/*.v 为上游单文件三份相同副本，非导入错误）。
+- 论文未动（指纹 `7adf0279…` 不变）；代码未改；`scratch/failure_dist_full.txt` 为本轮探针留痕。
+
+## 2026-09-29 决策轮（上轮）
 
 - **决策落地**：D-01=A / D-02=A / D-03=A 已执行（tag `v2026-09-29-submission-ready` = `d84061a` + manifest 117 条全 OK；OI-003/006/001/002 结案）；T20 目标期刊 = **JCAD**。
 - **T20**：`paper/zh/submission/` 投稿包就绪（检查单 + JCAD 要求核实报告 + 官方 2026 Word 模板 + cover letter 草稿 + 补充材料清单 + 询问邮件草稿）。**核心事实：JCAD 无 LaTeX 通道，投稿须 Word+PDF**。
