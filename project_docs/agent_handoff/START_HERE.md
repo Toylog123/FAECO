@@ -46,4 +46,4 @@
 
 ## 构建与验收（论文）
 
-见 `handoff_20260929.md` §3：`cd paper/zh/manuscript` → `lualatex` ×2 → 质量门 → 双副本 `cp` + SHA256 核对 → 内容指纹（`pdftotext -layout … | sha256sum`）。
+见 `handoff_20261009.md` §3（格式同 `handoff_20260929.md` §3）：`cd paper/zh/manuscript` → `lualatex` ×2 → 质量门 → 双副本 `cp` + SHA256 核对 → 内容指纹（`pdftotext -layout … | sha256sum`，须用 poppler 25.07）。

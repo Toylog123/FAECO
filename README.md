@@ -1,10 +1,10 @@
-# FAECO：面向预布局门级时序 ECO 的失效驱动候选搜索
+# FAECO：面向预布局门级时序 ECO 的结构化候选搜索与失效归因
 
-本工程实现并验证 **FAECO（Failure-Aware ECO）**——一种面向预布局门级时序 ECO 的失效驱动候选搜索引擎：在已映射网表的违例扇入锥上构造多特征加权割与关键路径覆盖割生成候选，利用 F1–F6 失效反馈更新搜索，并以"库函数/结构筛选 → OpenSTA 理想线网测量 → 简化 SPEF 物理门控 → 独立顺序 SEC"分层验证，覆盖设计、实验、论文全流程。
+本工程实现并验证 **FAECO**（方法名）——面向预布局门级时序 ECO 的**结构化候选搜索与失效归因**框架：在已映射网表的违例路径局部逻辑上，按多种结构特征构造并统一排序修改候选以扩展有效候选空间；将候选失效归纳为若干类型，用于诊断搜索过程并引导后续控制；候选按轮提交，并依次通过时序分析与等价性检查验证，覆盖设计、实验、论文全流程。
 
 - 项目类型：算法研究（EDA / 时序优化）
-- 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + XeLaTeX
-- 当前阶段：论文修订（中文稿 9 页，第 18 轮审稿修订 + 全文一致性审计完成）
+- 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
+- 当前阶段：**论文内容冻结 v5**（中文稿 9 页，JCAD《计算机辅助设计与图形学学报》投稿就绪；剩余为投稿手工/流程项，见 `paper/zh/submission/T20_SUBMISSION_PACKAGE.md`）
 
 ## 整体设计
 
@@ -32,14 +32,16 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-最近一轮（2026-09-12）：工程按 `99_项目模板` 框架完成架构迁移（代码入 `code/`、过程文档入 `project_docs/`、原始基准入 `data/raw/`、临时件入 `scratch/`），映射全记录见 `project_docs/migration/MIGRATION_20260912.md`；迁移前最新工作为第 18 轮审稿修订（3d984c6）与全文一致性审计（d329f19，修复 8 处正文与实验产物的矛盾）。
+最近一轮（2026-10-09）：论文**内容冻结 v5**（tag `v2026-10-09-abstract-plain` = `1c67f50`，9 页 0/0/0）——在用户授权下当日完成两次纯表达/著录层收敛：① 参考文献修复（19→14 条按引用顺序 + 5 条 URL 改脚注，v4）；② 摘要可读性改写（去术语缩写，中 264 字 / 英 148 词，v5）。**未新增实验、未改动数字**。完整交接见 `project_docs/agent_handoff/handoff_20261009.md`，逐条见 `paper/zh/CHANGE_LOG.md`。
+
+更早（2026-09-12）：工程按 `99_项目模板` 框架完成架构迁移（代码入 `code/`、过程文档入 `project_docs/`、原始基准入 `data/raw/`、临时件入 `scratch/`），映射全记录见 `project_docs/migration/MIGRATION_20260912.md`。
 
 ## 快速开始
 
 1. 环境：读 `docs/environment.md`；Python 依赖见根目录 `pyproject.toml`（`pip install -e .`），WSL2 内 Yosys/OpenSTA 按 environment.md 安装。
-2. 测试：`python -m pytest code/tests -q`（264 项）。
+2. 测试：`python -m pytest code/tests -q`（542 项）。
 3. 实验：`experiments/INVENTORY.md` 为全部实验目录总索引，`experiments/RESULTS.md` 为顶层结果汇总；复现入口脚本在 `code/scripts/`。
-4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的失效驱动候选搜索.tex`，latexmk -xelatex 编译；图脚本 `paper/zh/figures/gen_figures.py`。
+4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；图脚本 `paper/zh/figures/gen_figures.py`。
 5. 交接：读 `project_docs/agent_handoff/START_HERE.md` 与 `CURRENT_RUN_HANDOFF.md`。
 
 ## 目录角色
@@ -61,7 +63,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 | 目录 | 角色 |
 |------|------|
-| `code/` | 代码资产：`src/rseco/` 源码 + `scripts/` 实验与审计脚本 + `tests/` 264 项测试 |
+| `code/` | 代码资产：`src/rseco/` 源码 + `scripts/` 实验与审计脚本 + `tests/` 542 项测试 |
 | `project/` | 构建工程 / 运行脚本（生成工程 git-ignored，当前为空） |
 | `experiments/` | 实验定义、设计与输出证据（`INVENTORY.md` 总索引 / `RESULTS.md` 汇总 / `design/` 实验设计文档） |
 | `docs/` | 技术文档：环境（`environment.md`）、术语（`GLOSSARY.md`）、经验库（`EXPERIENCE.md`）、文献（`literature/`）、原始材料（`materials/`） |
@@ -78,7 +80,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 冻结版本集合（当前为空，冻结策略见 `project_docs/versioning.md` 与 OPEN_ISSUES） |
+| `versions/` | 冻结版本集合（v1–v5 具名基线，当前 active = v5 `v2026-10-09-abstract-plain`；冻结策略见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 
