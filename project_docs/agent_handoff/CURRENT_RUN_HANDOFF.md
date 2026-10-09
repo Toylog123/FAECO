@@ -2,6 +2,24 @@
 
 > 最近一轮在最上，历史轮次原样保留在下。**新接手者只需读最上一节**。
 
+## 2026-10-09 — 参考文献修复轮：重排文献表 + 重冻结 v4 + Word 稿重建（用户授权"方案 A"）
+
+**本轮性质**：T20 检查单 #3 参考文献核对（`paper/zh/submission/REFERENCE_AUDIT_20261009.md`，LOG-20261009-02）发现 **1×P0**——参考文献编号未按正文首次引用顺序排列（首处引用渲染 `[1, 7, 9]`，18/19 条错位，违反 JCAD 规范一.1）。用户 **2026-10-09 授权"方案 A"**：从 `.tex` 源头修复 → 重冻结 v4 → Word 稿随管线重建。**零数字、零实验、零正文主张改动**——仅参考文献著录层。记录见 `LOGS.md` LOG-20261009-03。
+
+1. **P0（编号顺序）**：`thebibliography` 由 19 条按正文首次引用顺序重排为 **14 条**；正文首处引用现渲染 `[1, 2, 3]`、全表按引用顺序递增。
+2. **5 条纯 URL 工具/文档引用改正文页脚脚注**（JCAD 规范一.12）：picorv32 / yosys / OpenSTA / skywater-pdk（引用 2 次，含原 `liberty` 所指的 Liberty 文件句）→ 5 处 `\footnote{\url{…}}`；同时消除 `liberty`/`sky130` 的 bibitem-cite 不匹配。
+3. **P1/P2 全处置**：会议文献 `[C] //` 空格（11 条）、期刊名 `Integration, the VLSI Journal` 全称、BUFFALO 题名补全（…`via group relative policy optimization`）、kravets 页码 `1-6`→`71:1-71:6`、`[Z]` 类型移出、DOI 中 `_` 转义（`6\_5`）。
+4. **质量门**：9 页 / 0 Error / 0 Overfull / 0 Underfull；`??`=0；正文无 `[15]`–`[19]`；字节 SHA `dea21bb3…`（双副本一致）、内容指纹 `6ca972d5…`（poppler 25.07）。
+5. **重冻结 v4**：tag `v2026-10-09-reference-fix`（= 提交 `1d01881`）+ 论文 tag `faeco-paper-final-20261009`；`versions/v4/MANIFEST.sha256`（117 条全 OK）；`BASELINE_INDEX.csv` v3→superseded / v4→active；`PAPER_EVIDENCE_MANIFEST.md` §6 置 v4 为当前发布版。
+6. **Word 转排稿随管线重建**：`word/FAECO_投稿Word转排_20261009.docx` + `…_Word导出.pdf`（8 页，本机 Word 实测），5 条 URL 为 Word 原生脚注（落引用页页脚）；`preprocess.py` 守卫 19→14；旧 20260930 稿归档 `word/superseded_20260930/`（附 README 说明作废原因）；`word/转排说明.md` 更新至 20261009。
+7. **T20 包同步**：检查单 #3 状态 → ✅ 已修；§3 登记新 Word 件字节 SHA256（docx `984cf0bc…`、PDF `4cf7dfd4…`）。
+
+**不要做**：论文内容修改仍按用户指令**终止**——此后仅剩投稿手工项与审稿修稿轮（1-C 插入也在修稿轮，OI-018）；`sha256sum -c versions/v4/MANIFEST.sha256` 117 条应全 OK。
+
+> **提交说明**：本轮 `1d01881`（论文制品 + v4 版本记录）已提交并打双 tag；后续文档同步提交见 `git log`。**注意**：v4 双 tag 为附注标签，取提交须用 `<tag>^{commit}`。
+
+---
+
 ## 2026-09-30（傍晚）— 终审修正轮：5 处正文一致性修正 + 冻结 v3（内容修改终止）
 
 **本轮性质**：用户终审确认前 4 项一致性问题已改对，提出**最后 5 处正文修正**并明示"改完即停止内容修改、不加任何实验"。记录见 `LOGS.md` LOG-20260930-07。

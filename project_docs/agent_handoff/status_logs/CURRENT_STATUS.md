@@ -1,8 +1,15 @@
 # Current Status
 
-## 2026-10-09 文档同步轮（本轮最新）
+## 2026-10-09 参考文献修复轮（本轮最新）
 
-- **论文内容冻结 v3，修改已终止**：tag `v2026-09-30-submission-ready-r2` / `faeco-paper-final-20260930-r2` 均 = `26f4f3b`（= 当前 HEAD）；9 页 / 0 Error / 0 Overfull / 0 Underfull；内容指纹 `70bbd610…`（poppler 25.07）；`versions/v3/MANIFEST.sha256` 117 条全 OK（实测复核）。
+- **用户授权"方案 A"完成一次性参考文献著录层修复**（零数字、零实验、零正文主张改动）：① **P0**——`thebibliography` 按正文首次引用顺序由 19 条重排为 **14 条**（原首处引用渲染 `[1, 7, 9]`，18/19 条错位，违反 JCAD 规范一.1）；② 5 条纯 URL 工具/文档引用（picorv32 / yosys / OpenSTA / skywater-pdk×2）改正文**页脚脚注**（`\footnote{\url{…}}`，JCAD 一.12）；③ P1/P2——`[C] //` 空格（11 条）、`Integration` 全称、BUFFALO 题名补全、kravets 页码 `71:1-71:6`、`[Z]` 类型移出、DOI `_` 转义。
+- **质量门**：9 页 / 0 Error / 0 Overfull / 0 Underfull；`??`=0；正文无 `[15]`–`[19]`；字节 SHA `dea21bb3…`（双副本一致）、内容指纹 `6ca972d5…`（poppler 25.07）。
+- **重冻结 v4**：tag `v2026-10-09-reference-fix`（提交 `1d01881`）+ 论文 tag `faeco-paper-final-20261009`；`versions/v4/MANIFEST.sha256` 117 条全 OK；`BASELINE_INDEX.csv` v3→superseded / v4→active。
+- **Word 转排稿随管线重建**：`word/FAECO_投稿Word转排_20261009.docx` + `…_Word导出.pdf`（8 页），5 条 URL 脚注为 Word 原生脚注（落引用页页脚）；旧 20260930 稿（编号错位）归档 `word/superseded_20260930/`。**未改任何数字/实验/主张**。
+
+## 2026-10-09 文档同步轮
+
+- **论文内容冻结 v3，修改已终止**：tag `v2026-09-30-submission-ready-r2` / `faeco-paper-final-20260930-r2` 均 = `26f4f3b`；9 页 / 0 Error / 0 Overfull / 0 Underfull；内容指纹 `70bbd610…`（poppler 25.07）；`versions/v3/MANIFEST.sha256` 117 条全 OK（实测复核）。**（本状态已被上节 v4 取代。）**
 - **本轮仅文档收尾（未动论文、未动代码）**：① 提交 09-30 遗留的 v3 同步批（`5bc0e7d`：LOGS-07 + CURRENT_RUN_HANDOFF v3 节 + T20 锚点 + Word 转排稿重导出）；② 刷新 `START_HERE.md` / `CURRENT_STATUS.md` / `TASK_BOARD.md` / `NEXT_AGENT_PROMPT.md` / `.codex-handoff.json` / T20 包 §0§3 至 v3；③ 登记 Word 转排件字节 SHA256。
 - **投稿剩余动作（非论文内容）**：用户 Word 手工项（MathType / 黄色占位 / 图 2 通栏 / 终稿 PDF）+ 检查单 #3 参考文献核对 + ⚠ OI-021 AIGC 披露 + 承诺书/保密审查/英文长摘要。
 

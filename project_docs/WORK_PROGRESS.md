@@ -2,6 +2,12 @@
 
 本文件按**倒序**记录每一轮工作（最新在上）。完整正序日志见 `LOGS.md`。
 
+## 2026-10-09 参考文献修复轮：重排文献表 + 重冻结 v4 + Word 稿重建（用户授权方案 A）
+
+- **做了什么**：用户授权方案 A（修 `.tex` 源头 → 重冻结 v4 → Word 重建，涉冻结文件）。① **P0**：`thebibliography` 按正文首次引用顺序由 19 条重排为 **14 条**（原首处引用渲染 `[1,7,9]`，18/19 条错位，违反 JCAD 规范一.1）；② 5 条纯 URL 工具/文档引用（picorv32/yosys/OpenSTA/skywater-pdk×2）按规范一.12 改 `\footnote{\url{…}}` 正文页脚脚注，消除文献表序号占用与 `liberty`/`sky130` 的 bibitem-cite 不匹配；③ P1/P2：`[C]//`→`[C] //`（11 条）、`Integration` 全称、BUFFALO 题名补全 "via Group Relative Policy Optimization"、kravets 页码 `1-6`→`71:1-71:6`、`[Z]` 类型移出、DOI `_` 转义（`6\_5`）；④ 重编译 + 质量门；⑤ **重冻结 v4**（manifest 117 条全 OK，`BASELINE_INDEX.csv` v3→superseded）；⑥ Word 转排稿随管线重建（preprocess 守卫 19→14，pandoc 生成 5 条 Word 原生脚注，Word 引擎导出 8 页），旧稿归档。
+- **关键结果**：**9 页 / 0 Error / 0 Overfull / 0 Underfull**；`??`=0；正文无 `[15]`–`[19]`；PDF 字节 SHA `dea21bb3…`（双副本一致）、内容指纹 `6ca972d5…`（poppler 25.07）；tag `v2026-10-09-reference-fix`（投稿就绪）+ 论文 tag `faeco-paper-final-20261009`。**零数字、零实验、零正文主张改动**——仅文献表与引用呈现形式。
+- **下一步**：投稿手工/流程项 —— 用户 Word 手工收尾（MathType/占位/图 2 通栏/终稿 PDF，须重算 Word 件哈希）、⚠ OI-021 AIGC 披露（JCAD 硬要求）、承诺书/工作邮箱/保密审查/英文长摘要。
+
 ## 2026-10-09 文档同步轮：v3 交接文档对齐 + Word 件哈希登记
 
 - **做了什么**：① 提交 09-30 遗留的 v3 同步批（`5bc0e7d`：LOGS-07 + CURRENT_RUN_HANDOFF v3 节 + T20 锚点 + Word 转排稿随管线重导出）；② 实测复核冻结完好——`versions/v3/MANIFEST.sha256` 117/117 OK、PDF 双副本字节 SHA `28647dc0…`、内容指纹 `70bbd610…`（poppler 25.07）、v3 双 tag 经 `^{commit}` 解析均 = `26f4f3b`；③ 刷新 `START_HERE.md`（HEAD/指纹/tag 由 09-29 旧值 → v3）、`CURRENT_STATUS.md`（补本轮 + 09-30 终审轮）、`TASK_BOARD.md`（T20 行 → v3）、`NEXT_AGENT_PROMPT.md`（v2 → v3）、`.codex-handoff.json`（全字段刷新）、T20 包 §0/§3；④ 登记 Word 转排件字节 SHA256 到 T20 包 §3。

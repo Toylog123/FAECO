@@ -7,6 +7,27 @@
 
 ---
 
+## ★ 修复落地（2026-10-09，用户授权方案 A）
+
+**已按本报告完成 `.tex` 修复并重冻结 v4**（tag `v2026-10-09-reference-fix`）：
+
+| 级别 | 处置 | 结果 |
+|---|---|---|
+| **P0** 编号顺序 | 按正文首次引用顺序重排 14 条文献表 | ✅ 首处引用 `[1, 2, 3]`，全表按引用顺序递增 |
+| **P1** `[C]//` 缺空格 | 全部会议文献改 `[C] //`（GB/T 7714 表述） | ✅ 11 条已改 |
+| **P1** 4 条纯网址类 | YosysHQ/picorv32、yosyshq.net/yosys、parallaxsw/OpenSTA、google/skywater-pdk → **改为正文页脚脚注**（JCAD 一.12） | ✅ 5 处脚注（sky130 引用 2 次），不再占文献表序号 |
+| **P1** 期刊名全称 | `Integration` → 全称 | ✅ 已改 |
+| **P1** BUFFALO 题名截断 | 补全 "via Group Relative Policy Optimization" | ✅ 已改 |
+| **P1** `liberty` `[Z]` | 随网址类一并移出文献表（改脚注） | ✅ 解决 |
+| **P2** kravets 页码 | `1-6` → `71:1-71:6` | ✅ 已改 |
+
+**文献表条目数 19 → 14**（5 条工具/文档引用改脚注）。修复后质量门：9 页 / 0 Error / 0 Overfull / 0 Underfull；`??` = 0；正文不再出现 `[15]`–`[19]`。
+**Word 转排稿随管线重建**：`word/FAECO_投稿Word转排_20261009.docx` + `…_Word导出.pdf`（8 页），5 条 URL 脚注为 Word 原生脚注落在引用页页脚；旧 20260930 稿归档至 `word/superseded_20260930/`。
+**重冻结**：`versions/v4/MANIFEST.sha256`（117 条全 OK）+ `BASELINE_INDEX.csv` v3→superseded / v4→active；论文 tag `faeco-paper-final-20261009`。
+
+> 下文为 2026-10-09 **核对原始记录**（修复前状态），保留可追溯。
+
+
 ## 0. 结论（TL;DR）
 
 | 级别 | 数量 | 摘要 |
