@@ -6,12 +6,12 @@
 
 - 项目：FAECO — 面向预布局门级时序 ECO 的结构化候选搜索与失效归因
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
-- 分支：main，HEAD **`1c67f50`**（v5 摘要可读性改写冻结；其后另有文档同步提交）；remote: https://github.com/Toylog123/FAECO.git
-- 主稿件（唯一 `.tex`，**内容冻结 v5，修改已终止**）：
+- 分支：main，HEAD **`b1eee25`**（v6 文字专项审稿全量落地重冻结，= 下方双 tag 所指；其前 `968f9a1` 为本轮论文件提交）；remote: https://github.com/Toylog123/FAECO.git
+- 主稿件（唯一 `.tex`，**内容冻结 v6，修改已终止**）：
   `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex`
-  **9 页 / 0 Error / 0 Overfull / 0 Underfull**；内容指纹 `0a2b0723…`（poppler 25.07）
-- 基线 tag：**`v2026-10-09-abstract-plain`**（= `1c67f50`，四元绑定 manifest `versions/v5/MANIFEST.sha256`，117 条）；
-  论文发布 tag `faeco-paper-final-20261009b`（= `1c67f50`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
+  **8 页 / 0 Error / 0 Overfull / 0 Underfull**；内容指纹 `88b03403…`（poppler 25.07）
+- 基线 tag：**`v2026-10-09-text-review`**（= `b1eee25`，四元绑定 manifest `versions/v6/MANIFEST.sha256`，117 条）；
+  论文发布 tag `faeco-paper-final-20261009c`（= `b1eee25`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
 - 投稿目标期刊：**JCAD（计算机辅助设计与图形学学报）**；投稿包：`paper/zh/submission/`
 - 实验入口：`experiments/INVENTORY.md`、`experiments/RESULTS.md`（rev. 2026-09-29 已对齐论文口径）
 - 环境：`.venv`（Python 3.11.9）；pytest import 报错先 `.venv\Scripts\python.exe -m pip install -e .`
@@ -20,9 +20,9 @@
 
 ## 立即工作
 
-1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-10-09 摘要可读性改写轮）——论文内容**已按用户指令终止修改**，但在用户授权下当日完成两次收敛：① 参考文献著录层修复（文献 19→14 条 + 5 条 URL 改脚注，v4）；② 摘要可读性改写（去术语/缩写，中 264 字·英 148 词，v5）。重冻结 v5（`1c67f50`）；OI-018~OI-022 已全部拍板完毕。
+1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-10-09 文字专项审稿全量落地轮 r7）——论文内容**已按用户指令终止修改**，当日在该授权窗口内完成三次收敛：① 参考文献著录层修复（文献 19→14 条 + 5 条 URL 改脚注，v4）；② 摘要可读性改写（去术语/缩写，中 264 字·英 148 词，v5）；③ **外部「文字专项审稿」P0+P1+P2 全量落地**（v6：口径修正 / 贡献重组 / 术语统一 / §4.6 主张强度下调 / 正文去 `\FloatBarrier` 消除末页孤儿，9 页→8 页）。**均零数字、零实验改动。** 重冻结 v6（`b1eee25`）；OI-018~OI-022 已全部拍板完毕。
 2. **投稿剩余动作均为手工 / 流程项**（非论文内容，见 `paper/zh/submission/T20_SUBMISSION_PACKAGE.md`）：
-   - 用户本机（Word 稿，清单 `word/转排说明.md`）：MathType 批量转换（OMML→MathType）、黄色占位替换（通信作者 */基金/日期/作者简介）、图 2 通栏、终稿 PDF 导出；
+   - 用户本机（Word 稿 `word/FAECO_投稿Word转排_20261009c.docx`，清单 `word/转排说明.md`）：MathType 批量转换（OMML→MathType）、黄色占位替换（通信作者 */基金/日期/作者简介）、图 2 通栏、终稿 PDF 导出；
    - ~~检查单 #3 参考文献核对~~ **✅ 2026-10-09 已完成并修复**（`REFERENCE_AUDIT_20261009.md`，1×P0 + 5×P1 + 4×P2 全处置）；
    - ⚠ 硬项：**OI-021 AIGC 使用披露**（JCAD 2026 硬要求，未披露视为抄袭）；作者承诺书 + 单位工作邮箱；保密审查证明；英文长摘要（3 页，随修改稿）。
 3. 若审稿意见返回：以 `../review_history/paper_audit/consistency_audit_20260911.md` 为数字基线，**先读 `../evidence/PAPER_EVIDENCE_MANIFEST.md`**，只处理新意见；新增内容修改须先取得用户同意（**1-C 插入亦留修稿轮**，OI-018）。
@@ -33,7 +33,7 @@
 - `experiments/` 证据目录严禁删除；`paper/zh/figures/fig_iscas89.pdf` 是编译依赖，亦禁删。
 - 论文数字只认 `experiments/20260826_aggregation/summary.json` 及对应产物；引用任何数字前**实查证据文件**。
 - 未跑测试不修改 `code/src/rseco/`。
-- 压页/版面异常**先查 `\FloatBarrier`**，不要缩字体、行距或砍内容。
+- 双栏模式下 `\FloatBarrier` 遇待排浮动体会**退化为 `\clearpage`**（造成栏底留白 / 末页孤儿）；本稿正文已移除，仅保留图 2 后一处用于约束全宽浮动体。压页/版面异常**勿再插入 `\FloatBarrier`**——优先调浮动体参数，不要缩字体、行距或砍内容。
 - 未拍板前**不要**发送 `draft_email_to_jcad.md`、**不要**启动 Word 转排、**不要**插入 1-C 小节。
 
 ## 证据边界
