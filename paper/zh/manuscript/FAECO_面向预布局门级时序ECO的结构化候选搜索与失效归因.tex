@@ -128,7 +128,7 @@
 \subsection{研究动机}
 本文的研究动机是扩大预布局门级时序 ECO 的局部结构搜索空间，同时让候选验证和物理复测保持在可控成本内。为此，FAECO 在已映射网表的违例扇入锥上构造多特征加权割，将局部功能保持能力、关键路径覆盖和候选规模纳入候选排序，并把候选失效类型化记录，用于搜索诊断与候选控制。
 
-实验范围限定为已映射门级网表和公开的 SKY130 HD 标准单元库。主实验采用 ISCAS89 顺序电路基准集\cite{iscas89}；跨测试集实验采用能够在相同流程下映射到 SKY130 HD 的 ITC-99 电路\cite{itc99}，并加入 PicoRV32 的三个结构不同子模块\cite{picorv32}。时序收益由理想线网 STA 筛选，再用简化 SPEF 复测；最终基线网表与修复网表通过独立顺序 SEC 检查。
+实验范围限定为已映射门级网表和公开的 SKY130 HD 标准单元库。主实验采用 ISCAS89 顺序电路基准集\cite{iscas89}；跨测试集实验采用能够在相同流程下映射到 SKY130 HD 的 ITC-99 电路\cite{itc99}，并加入 PicoRV32 的三个结构不同子模块\footnote{\url{https://github.com/YosysHQ/picorv32}}。时序收益由理想线网 STA 筛选，再用简化 SPEF 复测；最终基线网表与修复网表通过独立顺序 SEC 检查。
 
 \subsection{主要贡献}
 本文的主要贡献体现为以下三个亮点：
@@ -158,7 +158,7 @@ ECO 修复主要分为三类技术路径：基于备用单元的结构重映射�
 B/G 物理优化近年来主要沿门尺寸调整、联合 B/G 和物理感知方向发展\cite{liu2021rlsizer,huang2025phys,chen2024aito,zhang2025buffalo}，学习驱动方法\cite{chen2024aito,zhang2025buffalo}进一步提升了其效率。此类方法均保持布尔功能不变、不进行逻辑级功能重构，主要覆盖路径级负载优化；FAECO 则在已映射网表的违例扇入锥上构造多类局部候选，并利用关键路径信息对候选边界和评估顺序进行结构化排序。
 
 \subsection{B/G 物理优化与研究定位}
-上述相关工作中的若干方法依赖商用 EDA 引擎或内部工业流程；本文选择公开的 Yosys\cite{yosys}、OpenSTA\cite{opensta} 与 OpenROAD\cite{openroad}，在 SKY130 HD\cite{sky130} 上实现并评估门级候选搜索。FAECO 流程覆盖映射网表、候选生成、理想线网静态时序分析（STA）和布局及全局布线寄生估计核验；顺序主实验采用构造级状态保持检查，独立的全网表 SEC 作为后续验证环节。
+上述相关工作中的若干方法依赖商用 EDA 引擎或内部工业流程；本文选择公开的 Yosys\footnote{\url{https://yosyshq.net/yosys/}}、OpenSTA\footnote{\url{https://github.com/parallaxsw/OpenSTA}} 与 OpenROAD\cite{openroad}，在 SKY130 HD\footnote{\url{https://github.com/google/skywater-pdk}} 上实现并评估门级候选搜索。FAECO 流程覆盖映射网表、候选生成、理想线网静态时序分析（STA）和布局及全局布线寄生估计核验；顺序主实验采用构造级状态保持检查，独立的全网表 SEC 作为后续验证环节。
 
 从应用阶段看，结构重映射与 B/G 物理优化通常用于布局后或布线阶段的物理微调，逻辑补丁构造则多在综合后、布局前执行功能修复。FAECO 位于两者之间：在已映射网表上进行局部门级重构，同时用理想线网 STA 和简化线载模型进行预布局筛选。
 
@@ -218,7 +218,7 @@ $\lambda_b,\lambda_s,\lambda_v,\lambda_c,\lambda_f$ & 搜索权重；$\lambda_b,
 FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref{fig:method_flow} 所示。候选策略为 R、G、B 和 JOINT。
 
 \begin{enumerate}
-  \item[(a)] \textbf{映射准备}：经 Yosys 两步流程\cite{yosys}生成 SKY130 HD 映射网表 $G'$；Liberty 文件提供单元逻辑和时序信息\cite{liberty}，BLIF 归一化与 ABC \texttt{cec}\cite{abc} 用于组合网表回验。
+  \item[(a)] \textbf{映射准备}：经 Yosys 两步流程生成 SKY130 HD 映射网表 $G'$；Liberty 文件提供单元逻辑和时序信息\footnote{\url{https://github.com/google/skywater-pdk}}，BLIF 归一化与 ABC \texttt{cec}\cite{abc} 用于组合网表回验。
   \item[(b)] \textbf{加权割与候选生成}：在扇入锥 $C(G,t)$ 上构建 s-t 分裂图。Liberty 函数匹配生成 R 候选集；无 R 候选的门降低关键路径奖励并转向 G/B。候选由加权最小割和关键路径覆盖割产生，按割代价、路径覆盖和策略优先级排序；OpenSTA 结果用于接受判定，F1--F6 用于失效归因，并在启用反馈控制时参与权重更新。
   \item[(c)] \textbf{验证与接受}：候选经库函数和结构规则筛选后，由 OpenSTA 在理想线网模式下测量 WNS/TNS；启用物理门控时，仅理想线网增益超过 10\,ps 的候选进入简化 SPEF 复测。$0<\Delta\mathrm{WNS}\le10\,$ps 的候选被阈值直接过滤，不计入 F1--F6 失效反馈；仅当候选满足式~\eqref{eq:accept} 但 SPEF 复测下 WNS 不改善时记为 F6。
 \end{enumerate}
@@ -533,25 +533,20 @@ $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
 \linespread{0.95}\selectfont
 \balance
 \begin{thebibliography}{99}
-\bibitem{ho2010eco} Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare cells and technology remapping[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2010, 29(5): 697-710.
-\bibitem{kravets2019symbolic} Kravets V N, Lee N Z, Jiang J H R. Comprehensive search for ECO rectification using symbolic sampling[C]//Proceedings of the 56th Annual Design Automation Conference. New York: ACM, 2019: 1-6.
-\bibitem{jiang2010fraig} Wu B H, Yang C J, Huang C Y, et al. A robust functional ECO engine by SAT proof minimization and interpolation techniques[C]//Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2010: 729-734.
-\bibitem{jiang2016resource} Cheng A C, Jiang I H R, Jou J Y. Resource-aware functional ECO patch generation[C]//Proceedings of the Design, Automation \& Test in Europe Conference. Piscataway: IEEE, 2016: 1036-1041.
-\bibitem{zhuo2018patch} Dao A Q, Lee N Z, Chen L C, et al. Efficient computation of ECO patch functions[C]//Proceedings of the 55th Annual Design Automation Conference. New York: ACM, 2018: 1-6.
-\bibitem{zhong2024stp} Pan H, Zhang R, Xia Y, et al. A semi-tensor product based circuit simulation for SAT-sweeping[C]//Proceedings of the Design, Automation \& Test in Europe Conference. Piscataway: IEEE, 2024: 1-6.
-\bibitem{liu2021rlsizer} Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning[C]//Proceedings of the 58th Annual Design Automation Conference. New York: ACM, 2021: 733-738.
-\bibitem{huang2025phys} Ye Y, Xu P, Ren L, et al. Learning-driven physically aware large-scale circuit gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2025, 44(5): 1901-1914.
-\bibitem{chen2024aito} Wu H, Huang Z, Li X, et al. AiTO: Simultaneous gate sizing and buffer insertion for timing optimization with GNNs and RL[J]. Integration, 2024, 98: 102211.
-\bibitem{zhang2025buffalo} Hsiao H H, Lu Y C, Lim S K, et al. BUFFALO: PPA-configurable LLM-based buffer tree generation[C]//Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2025: 1-9.
-\bibitem{yosys} Wolf C. Yosys open synthesis suite[EB/OL]. YosysHQ, 2024. https://yosyshq.net/yosys/.
-\bibitem{liberty} Synopsys Inc. Liberty User Guide, Version 2016.12[Z]. Mountain View: Synopsys, 2016.
-\bibitem{abc} Brayton R, Mishchenko A. ABC: An academic industrial-strength verification tool[C]//Proceedings of the 22nd International Conference on Computer Aided Verification (CAV). Berlin: Springer, 2010: 24-40.
-\bibitem{iscas89} Brglez F, Bryan D, Kozminski K. Combinational profiles of sequential benchmark circuits[C]//Proceedings of IEEE International Symposium on Circuits and Systems. Piscataway: IEEE, 1989: 1929-1934.
-\bibitem{itc99} Davidson S. ITC'99 benchmark circuits: preliminary results[C]//Proceedings of IEEE International Test Conference. Piscataway: IEEE, 1999: 1125-1125.
-\bibitem{picorv32} Wolf C. PicoRV32: A size-optimized RISC-V CPU[EB/OL]. 2024. https://github.com/YosysHQ/picorv32.
-\bibitem{openroad} Ajayi T, Chhabria V A, Fogaça M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C]//Proceedings of the 56th ACM/IEEE Design Automation Conference. New York: ACM, 2019: 1-4.
-\bibitem{sky130} SkyWater Technology Foundry. SkyWater SKY130 PDK[EB/OL]. 2024. https://github.com/google/skywater-pdk.
-\bibitem{opensta} Parallax Software Inc. OpenSTA: Gate-level static timing verifier[EB/OL]. 2024. https://github.com/parallaxsw/OpenSTA.
+\bibitem{ho2010eco} Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare cells and technology remapping[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2010, 29(5): 697-710. DOI: 10.1109/TCAD.2010.2043573.
+\bibitem{liu2021rlsizer} Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning[C] //Proceedings of the 58th ACM/IEEE Design Automation Conference. Piscataway: IEEE, 2021: 733-738. DOI: 10.1109/DAC18074.2021.9586138.
+\bibitem{chen2024aito} Wu H, Huang Z, Li X, et al. AiTO: Simultaneous gate sizing and buffer insertion for timing optimization with GNNs and RL[J]. Integration, the VLSI Journal, 2024, 98: 102211. DOI: 10.1016/j.vlsi.2024.102211.
+\bibitem{iscas89} Brglez F, Bryan D, Kozminski K. Combinational profiles of sequential benchmark circuits[C] //Proceedings of IEEE International Symposium on Circuits and Systems. Piscataway: IEEE, 1989: 1929-1934. DOI: 10.1109/ISCAS.1989.100747.
+\bibitem{itc99} Davidson S. ITC'99 benchmark circuits - preliminary results[C] //Proceedings of IEEE International Test Conference. Piscataway: IEEE, 1999: 1125. DOI: 10.1109/TEST.1999.805857.
+\bibitem{kravets2019symbolic} Kravets V N, Lee N Z, Jiang J H R. Comprehensive search for ECO rectification using symbolic sampling[C] //Proceedings of the 56th Annual Design Automation Conference. New York: ACM, 2019: 71:1-71:6. DOI: 10.1145/3316781.3317790.
+\bibitem{jiang2010fraig} Wu B H, Yang C J, Huang C Y, et al. A robust functional ECO engine by SAT proof minimization and interpolation techniques[C] //Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2010: 729-734. DOI: 10.5555/2133429.2133584.
+\bibitem{jiang2016resource} Cheng A C, Jiang I H R, Jou J Y. Resource-aware functional ECO patch generation[C] //Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition. Piscataway: IEEE, 2016: 1036-1041. DOI: 10.5555/2971808.2972050.
+\bibitem{zhong2024stp} Pan H, Zhang R, Xia Y, et al. A semi-tensor product based circuit simulation for SAT-sweeping[C] //Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition. Piscataway: IEEE, 2024: 1-6. DOI: 10.23919/DATE58400.2024.10546678.
+\bibitem{zhuo2018patch} Dao A Q, Lee N Z, Chen L C, et al. Efficient computation of ECO patch functions[C] //Proceedings of the 55th Annual Design Automation Conference. New York: ACM, 2018: 1-6. DOI: 10.1145/3195970.3196039.
+\bibitem{huang2025phys} Ye Y, Xu P, Ren L, et al. Learning-driven physically aware large-scale circuit gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2025, 44(5): 1901-1914. DOI: 10.1109/TCAD.2024.3488577.
+\bibitem{zhang2025buffalo} Hsiao H H, Lu Y C, Lim S K, et al. BUFFALO: PPA-configurable, LLM-based buffer tree generation via group relative policy optimization[C] //Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2025: 1-9. DOI: 10.1109/ICCAD66269.2025.11240744.
+\bibitem{openroad} Ajayi T, Chhabria V A, Fogaça M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C] //Proceedings of the 56th ACM/IEEE Design Automation Conference. New York: ACM, 2019: 1-4. DOI: 10.1145/3316781.3326334.
+\bibitem{abc} Brayton R, Mishchenko A. ABC: An academic industrial-strength verification tool[C] //Proceedings of the 22nd International Conference on Computer Aided Verification. Berlin: Springer, 2010: 24-40. DOI: 10.1007/978-3-642-14295-6\_5.
 \end{thebibliography}
 
 \end{document}
