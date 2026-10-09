@@ -1,7 +1,7 @@
 # T20 投稿件打包 — JCAD《计算机辅助设计与图形学学报》
 
 > 创建：2026-09-29（本轮）；JCAD 要求已联网核实（见 `JCAD_REQUIREMENTS_20260929.md`，附官方来源）。
-> 主稿当前状态：内容冻结 **v4**（tag `v2026-10-09-reference-fix`；含 2026-10-09 参考文献修复：19 条重排为 14 条 + 5 条 URL 改脚注），9 页 / 0 Error / 0 Overfull / 0 Underfull，LaTeX（ctexart 双栏）。
+> 主稿当前状态：内容冻结 **v5**（tag `v2026-10-09-abstract-plain`；含 2026-10-09 参考文献修复 + 摘要可读性改写），9 页 / 0 Error / 0 Overfull / 0 Underfull，LaTeX（ctexart 双栏）。
 > **核心结论：JCAD 无官方 LaTeX 模板，投稿须 Word(.doc)+PDF 双格式**——主稿需要一次 Word 转排。
 
 ## 0. 包内容清单
@@ -19,8 +19,8 @@
 
 | # | 事项 | 说明 | 状态 |
 |---|---|---|---|
-| 1 | **Word 转排**（最大工作量项） | **✅ 2026-10-09 重建**：`word/FAECO_投稿Word转排_20261009.docx`（题录块/双栏/三线表/OMML 公式/上标引文/首页脚注块 + 5 条 URL 脚注）+ Word 引擎导出 PDF + `word/转排说明.md`；本机 Word 实测核验 8 页全对。旧 20260930 稿（文献编号错位）归档 `word/superseded_20260930/`。**余用户手工项**：MathType 批量转换、图 2 通栏、终稿 PDF | ✅（余手工项） |
-| 2 | **中文摘要 ≤300 字 + 去第一人称**；英文摘要压至 100–150 词 | **✅ 2026-09-30 已执行（OI-020 授权；终审后又按 5 处修正更新）**：298 字 / 150 词（含 PicoRV32 分母解释）；摘要文字随 v4 冻结不变（v3 指纹 `70bbd610…`） | ✅ |
+| 1 | **Word 转排**（最大工作量项） | **✅ 2026-10-09 重建（b）**：`word/FAECO_投稿Word转排_20261009b.docx`（题录块/双栏/三线表/OMML 公式/上标引文/首页脚注块 + 5 条 URL 脚注）+ Word 引擎导出 PDF + `word/转排说明.md`；本机 Word 实测核验 8 页全对。旧 20260930 稿（文献编号错位）与 20261009 稿（摘要术语密集）均归档 `word/superseded/`。**余用户手工项**：MathType 批量转换、图 2 通栏、终稿 PDF | ✅（余手工项） |
+| 2 | **中文摘要 ≤300 字 + 去第一人称**；英文摘要压至 100–150 词 | **✅ 2026-10-09 摘要可读性改写（用户反馈"技术要点过多、大同行难懂"）**：去 R/G/B/JOINT、F1--F6 等未展开术语，概念化 + 补动机；中文 **264 字**（原 298）、英文 **148 词**（原 150），均合规；随 v5 冻结（tag `v2026-10-09-abstract-plain`） | ✅ |
 | 3 | **参考文献核对**：GB/T 7714 + 刊内规范 | **✅ 2026-10-09 已修（方案 A 授权）**：19 条逐条比对权威源（IEEE/ACM/dblp/出版社），无虚构文献；**1×P0（编号未按正文引用顺序）+ 5×P1 + 4×P2 全部处置**——文献按引用顺序重排为 **14 条**（5 条纯 URL 工具/文档引用改正文页脚脚注），`[C] //` 空格、期刊全称、BUFFALO 题名、kravets 页码等同步修正。详见 `REFERENCE_AUDIT_20261009.md`（含"修复落地"节）。19 条全为英文 → 双语著录规则不适用 | ✅ |
 | 4 | **S1 事件名映射说明成文** | OI-008 遗留投稿前建议项（`acceptance_budget_violation` ≡ `F4_timing_gain_insufficient`）——**✅ 2026-09-30 初稿完成**（`supplementary/S1_失效事件名映射说明.md`，并更正 OI-008 两处过时表述） | ✅ |
 | 5 | S2–S5 补充材料成文 | **✅ 2026-09-30 初稿全部完成**（`supplementary/`：S2 族与可复现性 / S3 SEC 逐实例 / S4 环境工具链 / S5 基准来源许可；S2 粒度待用户定） | ✅ |
@@ -43,14 +43,14 @@
 
 ## 3. 版本与完整性锚点（投稿时引用）
 
-- 论文冻结 tag：`faeco-paper-final-20261009`（v4，参考文献修复版）；PDF 字节 SHA256 `dea21bb38b70d4d4ff6c1eb276760da8f3842e78cd738a50ff3199d6a062cd81`（双副本一致）；内容指纹 `6ca972d512132958ed42d29b4eed5f8d3766de4bee0c7b2dc7ca54dc592c4121`（poppler 25.07）。
-- 投稿就绪基线：tag `v2026-10-09-reference-fix`，四元绑定 manifest `versions/v4/MANIFEST.sha256`（117 条全 OK）。历史基线 v3（`26f4f3b`）、v2（`4dc16c6`）、v1（`d84061a`）已依次 superseded。
+- 论文冻结 tag：`faeco-paper-final-20261009b`（v5，参考文献修复 + 摘要可读性改写）；PDF 字节 SHA256 `5c37725a3850a6e18ba2480584f08582d98d143171b9dad0425a528a95a737fa`（双副本一致）；内容指纹 `0a2b0723e174307216184700bc47fa4c0f4ced730c55e373762ff10cbb1573cf`（poppler 25.07）。
+- 投稿就绪基线：tag `v2026-10-09-abstract-plain`，四元绑定 manifest `versions/v5/MANIFEST.sha256`（117 条全 OK）。历史基线 v4（`1d01881`）、v3（`26f4f3b`）、v2（`4dc16c6`）、v1（`d84061a`）已依次 superseded。
 - 数字→实验族绑定：`project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md`。
 - **Word 转排件（新制品，字节 SHA256）**：
-  - `word/FAECO_投稿Word转排_20261009.docx` — `984cf0bc729d9f7a3d6ff2ebcdd32adec4a5a36efb37e67930b9b633b921d0c3`
-  - `word/FAECO_投稿Word转排_20261009_Word导出.pdf` — `4cf7dfd4631dc380f0bc71794a128f58ab7379230a72bc504d13a3b1f2e9f6cb`
-  - 来源 LaTeX 冻结版 tag = `v2026-10-09-reference-fix`，内容一致（转换零内容改动）。
-  - 旧 20260930 稿（文献 [1]–[19] 编号错位）已归档 `word/superseded_20260930/`，**不得投稿**。
+  - `word/FAECO_投稿Word转排_20261009b.docx` — `39f3ed503f16491516d34295552387eb8f75e3a347fac1b634bbb3343346416c`
+  - `word/FAECO_投稿Word转排_20261009b_Word导出.pdf` — `630fc0570a2573accf8edefe32fbf21361135f526ad2b2412507fd1cf47eec11`
+  - 来源 LaTeX 冻结版 tag = `v2026-10-09-abstract-plain`，内容一致（转换零内容改动）。
+  - 旧 20260930 稿（文献编号错位）与 20261009 稿（摘要术语密集）已归档 `word/superseded/`，**不得投稿**。
   - ⚠ 用户完成手工项（MathType / 占位替换 / 图 2 通栏 / 终稿 PDF）后，须重算并更新此处哈希。
 
 ## 4. 明确不做

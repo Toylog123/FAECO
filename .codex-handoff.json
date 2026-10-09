@@ -1,7 +1,7 @@
 {
-    "timestamp": "2026-10-09 10:20 (Asia/Shanghai)",
-    "status": "paper-frozen-v4 (reference-formatting fix only; user-authorized 'Plan A') - tag v2026-10-09-reference-fix = 1d01881 (paper tag faeco-paper-final-20261009), 9 pages, byte SHA dea21bb3..., fingerprint 6ca972d5... (poppler 25.07), manifest versions/v4/MANIFEST.sha256 117/117 OK; bibliography 19 -> 14 entries reordered by first-citation order (fixes P0) + 5 pure-URL tool/doc citations converted to in-text footnotes; ZERO number/experiment/claim changes; Word conversion rebuilt (docx + Word-exported PDF, 8 pages verified in local Word; 5 native Word footnotes); T20 JCAD submission package ready: reference check #3 DONE and fixed, abstract JCAD-adapted (298 chars / 150 words, OI-020), supplementary S1-S5 drafted; OI-018~022 all decided; remaining = submission manual/process items only: MathType conversion / yellow placeholders / full-width Fig.2 / final PDF / AIGC disclosure (OI-021, MANDATORY) / author commitment + confidentiality review / English long abstract",
-    "project": "FAECO — 面向预布局门级时序ECO的结构化候选搜索与失效归因（中文稿 9 页内容冻结 v4；投稿目标 JCAD）",
+    "timestamp": "2026-10-09 10:40 (Asia/Shanghai)",
+    "status": "paper-frozen-v5 (abstract readability rewrite; user-authorized, ZERO number/experiment/claim changes) - tag v2026-10-09-abstract-plain = 1c67f50 (paper tag faeco-paper-final-20261009b), 9 pages, byte SHA 5c37725a..., fingerprint 0a2b0723... (poppler 25.07), manifest versions/v5/MANIFEST.sha256 117/117 OK; abstract de-jargoned for broad readers (dropped R/G/B/JOINT, F1--F6, weighted cut, fan-in cone, SPEF/SEC, pure-G; conceptual paraphrase + motivation; kept 8/8, 18/19, 2/3, 1.07-vs-0.16 and no-regression / not-timing-closure boundary); CN 264 chars (was 298, limit 300), EN 148 words (was 150, limit 150); body still uses mechanism names by design; bibliography 14 entries (v4 fix) unchanged; Word conversion rebuilt (word/FAECO_投稿Word转排_20261009b.* , 8 pages verified in local Word); T20 JCAD submission package ready: reference check #3 DONE and fixed (v4), abstract rewritten (v5), supplementary S1-S5 drafted; OI-018~022 all decided; remaining = submission manual/process items only: MathType conversion / yellow placeholders / full-width Fig.2 / final PDF / AIGC disclosure (OI-021, MANDATORY) / author commitment + confidentiality review / English long abstract",
+    "project": "FAECO — 面向预布局门级时序ECO的结构化候选搜索与失效归因（中文稿 9 页内容冻结 v5；投稿目标 JCAD）",
     "read_order": [
         "README.md",
         "project_docs/agent_handoff/START_HERE.md",
@@ -15,24 +15,24 @@
         "code": "code/src/rseco + code/scripts + code/tests（pytest 基线见 handoff_20260929；pyproject 指向 code/src）",
         "experiments": "experiments/（INVENTORY.md 总索引、RESULTS.md（rev. 2026-09-29 已对齐论文口径）+ results.json、20260826_aggregation/summary.json = 论文主数字源）",
         "data": "data/cases（跟踪）+ data/raw/benchmarks（raw 不跟踪，source_manifests 登记）",
-        "paper": "paper/zh/manuscript（唯一主稿）+ submission/（T20 投稿包，含 word/ 转排件 + word/superseded_20260930/ 归档 + supplementary/ S1–S5）+ figures + review_rounds + responses + GLOSSARY",
+        "paper": "paper/zh/manuscript（唯一主稿）+ submission/（T20 投稿包，含 word/ 转排件 + word/superseded/ 归档 + supplementary/ S1–S5）+ figures + review_rounds + responses + GLOSSARY",
         "project_docs": "LOGS.md + WORK_PROGRESS.md + agent_handoff/* + evidence/PAPER_EVIDENCE_MANIFEST.md + planning/ + baselines/ + review_history/ + reports/ + OPEN_ISSUES.md",
-        "versions": "v4 = 当前冻结（tag v2026-10-09-reference-fix + MANIFEST.sha256，117 条；v1/v2/v3 superseded，见各版本 README）",
+        "versions": "v5 = 当前冻结（tag v2026-10-09-abstract-plain + MANIFEST.sha256，117 条；v1–v4 superseded，见各版本 README）",
         "docs": "environment.md + GLOSSARY.md + EXPERIENCE.md + literature/ + materials/",
         "scratch": "git-ignored 临时件（jcad_research/ = JCAD 官网抓取证据；word_convert/ = Word 转排管线）"
     },
     "paper_state": {
         "tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex",
-        "pdf": "manuscript/ 同名 PDF + paper/zh/ 根副本（字节 SHA256 dea21bb3... 双副本一致）",
-        "fingerprint": "pdftotext -layout 全文 SHA256 = 6ca972d5...（poppler 25.07；判内容一致用指纹，不用字节 SHA）",
+        "pdf": "manuscript/ 同名 PDF + paper/zh/ 根副本（字节 SHA256 5c37725a... 双副本一致）",
+        "fingerprint": "pdftotext -layout 全文 SHA256 = 0a2b0723...（poppler 25.07；判内容一致用指纹，不用字节 SHA）",
         "compile": "lualatex ×2 + latex_quality_gate.py：0 Error / 0 Overfull / 0 Underfull，9 页",
-        "freeze": "内容冻结 v4（用户指令，修改已终止）；2026-10-09 仅在用户授权'方案 A'下做过一次参考文献著录层修复（零数字/零实验/零主张）；任何内容改动须先取得用户同意；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md"
+        "freeze": "内容冻结 v5（用户指令，修改已终止）；2026-10-09 在用户授权下做过两次收敛：参考文献著录层修复（v4）+ 摘要可读性改写（v5），均零数字/零实验/零主张；任何内容改动须先取得用户同意；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md"
     },
     "git_state": {
         "branch": "main",
-        "head": "1d01881（v4 参考文献修复冻结；其后另有文档同步提交）",
+        "head": "1c67f50（v5 摘要可读性改写冻结；其后另有文档同步提交）",
         "remote": "https://github.com/Toylog123/FAECO.git",
-        "tags": "v2026-10-09-reference-fix / faeco-paper-final-20261009（= 1d01881，当前冻结）/ faeco-exp-rev1（= 87d01ba；v3、v2、v1 已 superseded）"
+        "tags": "v2026-10-09-abstract-plain / faeco-paper-final-20261009b（= 1c67f50，当前冻结）/ faeco-exp-rev1（= 87d01ba；v4、v3、v2、v1 已 superseded）"
     },
-    "blocker": "无研究性阻塞；投稿剩余为手工/流程项：① 用户 Word 手工收尾（MathType / 黄色占位 / 图 2 通栏 / 终稿 PDF，清单 paper/zh/submission/word/转排说明.md；完成后须重算 Word 件哈希并更新 T20 包 §3）；② ⚠ OI-021 AIGC 使用披露（JCAD 2026 硬要求，未披露视为抄袭）；③ 作者承诺书 / 单位工作邮箱 / 保密审查 / 英文长摘要。（检查单 #3 参考文献核对已于 2026-10-09 完成并修复。）审稿意见返回后按 consistency_audit_20260911.md 基线处理（1-C 插入亦在修稿轮，OI-018）"
+    "blocker": "无研究性阻塞；投稿剩余为手工/流程项：① 用户 Word 手工收尾（MathType / 黄色占位 / 图 2 通栏 / 终稿 PDF，清单 paper/zh/submission/word/转排说明.md；完成后须重算 Word 件哈希并更新 T20 包 §3）；② ⚠ OI-021 AIGC 使用披露（JCAD 2026 硬要求，未披露视为抄袭）；③ 作者承诺书 / 单位工作邮箱 / 保密审查 / 英文长摘要。（检查单 #3 参考文献核对已于 2026-10-09 完成并修复，摘要亦已改写。）审稿意见返回后按 consistency_audit_20260911.md 基线处理（1-C 插入亦在修稿轮，OI-018）"
 }
