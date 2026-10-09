@@ -2,6 +2,27 @@
 
 本文件按**倒序**记录每一轮工作（最新在上）。完整正序日志见 `LOGS.md`。
 
+## 2026-10-09 文档同步轮：v3 交接文档对齐 + Word 件哈希登记
+
+- **做了什么**：① 提交 09-30 遗留的 v3 同步批（`5bc0e7d`：LOGS-07 + CURRENT_RUN_HANDOFF v3 节 + T20 锚点 + Word 转排稿随管线重导出）；② 实测复核冻结完好——`versions/v3/MANIFEST.sha256` 117/117 OK、PDF 双副本字节 SHA `28647dc0…`、内容指纹 `70bbd610…`（poppler 25.07）、v3 双 tag 经 `^{commit}` 解析均 = `26f4f3b`；③ 刷新 `START_HERE.md`（HEAD/指纹/tag 由 09-29 旧值 → v3）、`CURRENT_STATUS.md`（补本轮 + 09-30 终审轮）、`TASK_BOARD.md`（T20 行 → v3）、`NEXT_AGENT_PROMPT.md`（v2 → v3）、`.codex-handoff.json`（全字段刷新）、T20 包 §0/§3；④ 登记 Word 转排件字节 SHA256 到 T20 包 §3。
+- **关键结果**：main = `5bc0e7d`（论文 v3 tag 仍 = `26f4f3b`）；**未动论文内容、未动代码**；文档与仓库实态对齐。
+- **下一步**：投稿手工/流程项 —— 用户 Word 手工收尾（MathType/占位/图 2 通栏/终稿 PDF）、检查单 #3 参考文献核对、⚠ OI-021 AIGC 披露、承诺书/保密审查/英文长摘要。
+
+## 2026-09-30 终审修正轮：5 处正文修正 + 重冻结 v3（内容修改终止）
+
+- **做了什么**：用户终审确认前 4 项已改对，提出最后 5 处正文一致性修正（零数字、零实验）：§3.4 F6 交叉引用纠错（§4.4→§4.5）/ §4.1 接受准则闭合 b06 TNS 辅助接受例外 / 摘要（中英）PicoRV32 分母解释（`picorv32_regs` 无 setup path 不参与判定；中文 298 字、英文 150 词）/ 表 8 补 $\Delta L$、$\Delta_{\mathrm{WNS}}$ 符号定义 / §4.5 F6 措辞对齐"启用式反馈"。Word 转排稿随管线同步重建，Word 引擎重导出 8 页。
+- **关键结果**：9 页 / 0 Error / 0 Overfull / 0 Underfull / 0 引用警告；字节 SHA `28647dc0…`（双副本一致）、内容指纹 `70bbd610…`；**重冻结 v3**（tag `v2026-09-30-submission-ready-r2` = `26f4f3b` + 论文 tag `faeco-paper-final-20260930-r2`，manifest `versions/v3`，117 条；v2/v1 superseded）。**用户明示"改完即停止内容修改、不加任何实验"。**
+
+## 2026-09-30 投稿执行轮：五项拍板落地 + 摘要适配重冻结 v2 + Word 转排完成
+
+- **做了什么**：① 用户拍板 OI-018~022（1-C 留修稿轮 / 直接转排 / 摘要授权且同步冻结版 / AIGC 暂缓 / 维持 manifest 默认）；② OI-020 执行——中英摘要按 JCAD 规则改写（295 字 / 149 词，去第一人称），其余正文零改动；**重冻结 v2**（tag `v2026-09-30-submission-ready` = `4dc16c6`）；③ OI-019 执行——Word 转排三件套（`paper/zh/submission/word/`：docx + Word 引擎导出 PDF + 转排说明），管线 = 引用字面化预处理 → pandoc（OMML）→ python-docx JCAD 版式；**本机 Microsoft Word 实测 8 页全对**；④ 方正免费字体四款经 AUR SHA256 校验装为用户级字体。
+- **关键结果**：论文未动（v1/v2 冻结版与既有 manifest 未变）；Word 转排件为可溯源新制品（哈希见 T20 包 §3）。
+
+## 2026-09-30 补充材料成文轮：S1–S5 全部初稿完成
+
+- **做了什么**：`paper/zh/submission/supplementary/` 成文 S1（失效事件名映射，**闭合 OI-008 投稿前必办项**）/ S2（实验族与可复现性，脱敏）/ S3（SEC 逐实例，29 PASS + 1 N/A = 30）/ S4（环境工具链）/ S5（基准来源许可）；更正两处过时表述（OI-008 两层命名分工、manifest SEC 行 22→29+1）；补建 PicoRV32 source manifest。
+- **关键结果**：论文未动（内容指纹仍 `7adf0279…`）；代码未改；S1–S5 初稿待用户确认。
+
 ## 2026-09-29 决策轮：D-01~D-03 落地 + RESULTS.md 对齐 + T20 启动
 
 - **做了什么**：① 用户拍板 D-01=A / D-02=A / D-03=A，T20 目标期刊=JCAD；② D-01 落地——`versions/v1` 轻量冻结（manifest 117 条全 OK 自校验 + tag `v2026-09-29-submission-ready` = `d84061a`，已 push），并实测发现 3 个论文数字源证据文件（`20260826_aggregation/summary.json` 等）此前未被 git 跟踪，现由 manifest 锁定；③ D-02/D-03 台账结案（OPEN_ISSUES「已决」表 + 决策简报注记）；④ `experiments/RESULTS.md` 对齐论文终稿口径——实查修正 ISCAS89/ITC-99/PicoRV32 中位数（+0.10/+0.18/+0.60）与 ITC-99 success 口径（18/19 严格改善），b06 补 TNS 辅助接受事实；⑤ T20 投稿包骨架落 `paper/zh/submission/`（检查单 + cover letter 草稿 + 补充材料清单），JCAD 官方要求调研进行中；⑥ 1-C 评估完毕：代码侧已实现并过 gate，剩余动作是论文插入小节，与内容冻结冲突，待用户拍板。

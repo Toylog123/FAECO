@@ -1,7 +1,7 @@
 # T20 投稿件打包 — JCAD《计算机辅助设计与图形学学报》
 
 > 创建：2026-09-29（本轮）；JCAD 要求已联网核实（见 `JCAD_REQUIREMENTS_20260929.md`，附官方来源）。
-> 主稿当前状态：内容冻结（tag `faeco-paper-final-20260929`），9 页 / 0 Error / 0 Overfull / 0 Underfull，LaTeX（ctexart 双栏）。
+> 主稿当前状态：内容冻结 v3（tag `faeco-paper-final-20260930-r2` = `26f4f3b`），9 页 / 0 Error / 0 Overfull / 0 Underfull，LaTeX（ctexart 双栏）。
 > **核心结论：JCAD 无官方 LaTeX 模板，投稿须 Word(.doc)+PDF 双格式**——主稿需要一次 Word 转排。
 
 ## 0. 包内容清单
@@ -42,10 +42,14 @@
 
 ## 3. 版本与完整性锚点（投稿时引用）
 
-- 论文冻结 tag：`faeco-paper-final-20260929`（= `a8142b6`）；PDF 字节 SHA256 `9af41d77…`（双副本一致）；内容指纹 `7adf0279…`。
-- 投稿就绪基线：tag `v2026-09-29-submission-ready`（= `d84061a`），四元绑定 manifest `versions/v1/MANIFEST.sha256`（117 条）。
+- 论文冻结 tag：`faeco-paper-final-20260930-r2`（= `26f4f3b`，终审 5 处修正版）；PDF 字节 SHA256 `28647dc0…`（双副本一致）；内容指纹 `70bbd610…`（poppler 25.07）。
+- 投稿就绪基线：tag `v2026-09-30-submission-ready-r2`（= `26f4f3b`），四元绑定 manifest `versions/v3/MANIFEST.sha256`（117 条全 OK）。历史基线 v2（`4dc16c6`）、v1（`d84061a`）已依次 superseded。
 - 数字→实验族绑定：`project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md`。
-- ⚠️ Word 转排稿属**新制品**：完成后将其字节 SHA256 与来源 LaTeX 版本号登记回本文件，保证投稿件可溯源。
+- **Word 转排件（新制品，字节 SHA256）**：
+  - `word/FAECO_投稿Word转排_20260930.docx` — `121e8539d83f7e97e9570320e19432c65167632a9f692da46763ada269bca3d9`
+  - `word/FAECO_投稿Word转排_20260930_Word导出.pdf` — `b775fef813a4b32d0d27ad1b6b5ff11a7e61c5581d6f94f1deef606a070e8769`
+  - 来源 LaTeX 冻结版 tag = `faeco-paper-final-20260930-r2`（= `26f4f3b`），内容一致（转换零内容改动）。
+  - ⚠ 用户完成手工项（MathType / 占位替换 / 图 2 通栏 / 终稿 PDF）后，须重算并更新此处哈希。
 
 ## 4. 明确不做
 

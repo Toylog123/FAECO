@@ -6,12 +6,12 @@
 
 - 项目：FAECO — 面向预布局门级时序 ECO 的结构化候选搜索与失效归因
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
-- 分支：main，HEAD **`d84061a`**；remote: https://github.com/Toylog123/FAECO.git
-- 主稿件（唯一 `.tex`，**内容冻结**）：
+- 分支：main，HEAD **`26f4f3b`**（+ 文档同步提交 `5bc0e7d`）；remote: https://github.com/Toylog123/FAECO.git
+- 主稿件（唯一 `.tex`，**内容冻结 v3，修改已终止**）：
   `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex`
-  **9 页 / 0 Error / 0 Overfull / 0 Underfull**；内容指纹 `7adf0279…`
-- 基线 tag：**`v2026-09-29-submission-ready`**（= `d84061a`，四元绑定 manifest `versions/v1/MANIFEST.sha256`，117 条）；
-  论文发布 tag `faeco-paper-final-20260929`（= `a8142b6`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
+  **9 页 / 0 Error / 0 Overfull / 0 Underfull**；内容指纹 `70bbd610…`（poppler 25.07）
+- 基线 tag：**`v2026-09-30-submission-ready-r2`**（= `26f4f3b`，四元绑定 manifest `versions/v3/MANIFEST.sha256`，117 条）；
+  论文发布 tag `faeco-paper-final-20260930-r2`（= `26f4f3b`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
 - 投稿目标期刊：**JCAD（计算机辅助设计与图形学学报）**；投稿包：`paper/zh/submission/`
 - 实验入口：`experiments/INVENTORY.md`、`experiments/RESULTS.md`（rev. 2026-09-29 已对齐论文口径）
 - 环境：`.venv`（Python 3.11.9）；pytest import 报错先 `.venv\Scripts\python.exe -m pip install -e .`
@@ -20,10 +20,12 @@
 
 ## 立即工作
 
-1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-09-29 决策轮）——D-01~D-03 已落地（A/A/A），T20 包已就绪。
-2. **等用户拍板 5 项**（`../OPEN_ISSUES.md` OI-018~OI-022）：① 1-C 插入论文时机（默认留修稿轮）；② JCAD Word 转排路径（默认先发询问邮件，草稿已备）；③ 摘要改写授权（JCAD 要求 ≤300 字、禁"本文/我们"）；④ **AIGC 披露口径**（JCAD 2026 硬要求）；⑤ 3 个证据汇总文件是否 `git add`。
-3. 拍板后：按 `paper/zh/submission/T20_SUBMISSION_PACKAGE.md` 检查单推进（Word 转排 → S1–S5 补充材料 → 投稿）。
-4. 若审稿意见返回：以 `../review_history/paper_audit/consistency_audit_20260911.md` 为数字基线，**先读 `../evidence/PAPER_EVIDENCE_MANIFEST.md`**，只处理新意见；新增内容修改须先取得用户同意。
+1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-09-30 傍晚 终审修正轮）——论文内容**已按用户指令终止修改**，冻结 v3（`26f4f3b`）；OI-018~OI-022 已全部拍板完毕。
+2. **投稿剩余动作均为手工 / 流程项**（非论文内容，见 `paper/zh/submission/T20_SUBMISSION_PACKAGE.md`）：
+   - 用户本机（Word 稿，清单 `word/转排说明.md`）：MathType 批量转换（OMML→MathType）、黄色占位替换（通信作者 */基金/日期/作者简介）、图 2 通栏、终稿 PDF 导出；
+   - 技术待办：检查单 #3 参考文献核对（GB/T 7714 + 中文文献须中英文对照著录）；
+   - ⚠ 硬项：**OI-021 AIGC 使用披露**（JCAD 2026 硬要求，未披露视为抄袭）；作者承诺书 + 单位工作邮箱；保密审查证明；英文长摘要（3 页，随修改稿）。
+3. 若审稿意见返回：以 `../review_history/paper_audit/consistency_audit_20260911.md` 为数字基线，**先读 `../evidence/PAPER_EVIDENCE_MANIFEST.md`**，只处理新意见；新增内容修改须先取得用户同意（**1-C 插入亦留修稿轮**，OI-018）。
 
 ## 不要做什么
 

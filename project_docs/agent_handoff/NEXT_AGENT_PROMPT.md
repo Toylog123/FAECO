@@ -1,6 +1,6 @@
 # NEXT AGENT PROMPT
 
-> 给下一位 agent 的完整提示词。**每轮结束前更新**。最后更新：2026-09-29（决策轮）。
+> 给下一位 agent 的完整提示词。**每轮结束前更新**。最后更新：2026-10-09（文档同步轮）。
 
 ```
 你是 FAECO 仓库（D:\BaiduSyncdisk\01_Papers\03_FAECO）的新任执行者。请先按顺序阅读：
@@ -15,9 +15,10 @@
 8. paper/zh/submission/JCAD_REQUIREMENTS_20260929.md（JCAD 要求核实报告）
 
 【当前状态（一句话）】
-OI-018~022 已全部拍板并执行：摘要 JCAD 适配完成并重冻结 v2（tag v2026-09-30-submission-ready，
-内容指纹 43becd39… poppler 25.07 口径）；Word 转排完成（paper/zh/submission/word/ 三件套，
-本机 Word 实测 8 页全对）；补充材料 S1–S5 初稿完成。论文 LaTeX 冻结版不再改动。
+OI-018~022 已全部拍板并执行；用户终审 5 处正文修正后再冻结为 v3（tag `v2026-09-30-submission-ready-r2`
+= `26f4f3b`，内容指纹 `70bbd610…` poppler 25.07 口径）——**论文内容修改已按用户指令终止**；
+Word 转排完成（paper/zh/submission/word/ 三件套，本机 Word 实测 8 页全对）；补充材料 S1–S5 初稿完成。
+剩余仅投稿手工项（MathType/占位/图 2 通栏/终稿 PDF/参考文献核对/AIGC 披露）与审稿修稿轮。
 
 【本轮目标（按优先级）】
 1. 等用户完成 Word 稿手工收尾（word/转排说明.md）：MathType 批量转换（OMML→MathType）、
@@ -45,7 +46,7 @@ OI-018~022 已全部拍板并执行：摘要 JCAD 适配完成并重冻结 v2（
   lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex"   # 跑两遍
   python ../scripts/checks/latex_quality_gate.py        # Errors/Overfull/Underfull 须全 0，PAGES 应为 9
   cp "FAECO_....pdf" ../FAECO_....pdf                   # 同步双副本，二者 SHA256 须一致
-  pdftotext -layout "FAECO_....pdf" - | sha256sum        # 内容指纹（当前 7adf0279…）
+  pdftotext -layout "FAECO_....pdf" - | sha256sum        # 内容指纹（当前 70bbd610…）
   # 质量门的 "Undefined: 5" 是字体替身警告，不是引用未解析；判引用看 '??' 计数。
 
 【完成标准（证据门）】

@@ -1,6 +1,19 @@
 # Current Status
 
-## 2026-09-30 投稿执行轮（本轮最新）
+## 2026-10-09 文档同步轮（本轮最新）
+
+- **论文内容冻结 v3，修改已终止**：tag `v2026-09-30-submission-ready-r2` / `faeco-paper-final-20260930-r2` 均 = `26f4f3b`（= 当前 HEAD）；9 页 / 0 Error / 0 Overfull / 0 Underfull；内容指纹 `70bbd610…`（poppler 25.07）；`versions/v3/MANIFEST.sha256` 117 条全 OK（实测复核）。
+- **本轮仅文档收尾（未动论文、未动代码）**：① 提交 09-30 遗留的 v3 同步批（`5bc0e7d`：LOGS-07 + CURRENT_RUN_HANDOFF v3 节 + T20 锚点 + Word 转排稿重导出）；② 刷新 `START_HERE.md` / `CURRENT_STATUS.md` / `TASK_BOARD.md` / `NEXT_AGENT_PROMPT.md` / `.codex-handoff.json` / T20 包 §0§3 至 v3；③ 登记 Word 转排件字节 SHA256。
+- **投稿剩余动作（非论文内容）**：用户 Word 手工项（MathType / 黄色占位 / 图 2 通栏 / 终稿 PDF）+ 检查单 #3 参考文献核对 + ⚠ OI-021 AIGC 披露 + 承诺书/保密审查/英文长摘要。
+
+## 2026-09-30 终审修正轮（v3 冻结；内容修改终止）
+
+- 用户终审 5 处正文一致性修正落地（零数字、零实验）：§3.4 F6 交叉引用纠错（§4.4→§4.5）/ §4.1 接受准则闭合 b06 TNS 辅助接受 / 摘要（中英）PicoRV32 分母解释（**中文 298 字、英文 150 词**）/ 表 8 补 $\Delta L$、$\Delta_{\mathrm{WNS}}$ 符号定义 / §4.5 F6 措辞对齐"启用式反馈"。
+- **质量门**：9 页 / 0 Error / 0 Overfull / 0 Underfull / 0 引用警告；字节 SHA `28647dc0…`（双副本一致）。
+- **重冻结 v3**：tag `v2026-09-30-submission-ready-r2`（= `26f4f3b`）+ 论文 tag `faeco-paper-final-20260930-r2`；manifest `versions/v3/MANIFEST.sha256`（117 条）；v2/v1 依次 superseded。**用户明示"改完即停止内容修改、不加任何实验"。**
+- **Word 转排稿同步**：摘要串 + 正文 5 处随管线重建，Word 引擎重导出 8 页；`word/转排说明.md` 与 T20 检查单锚点刷新至 v3。
+
+## 2026-09-30 投稿执行轮
 
 - **五项拍板全部落地**：OI-018 1-C 留修稿轮；OI-019 直接转排（询问邮件作废）；OI-020 授权且同步冻结版（**已执行**）；OI-021 AIGC 暂缓（⚠ 投稿时必须解决）；OI-022 维持默认。
 - **摘要 JCAD 适配 + 重冻结 v2**：中文摘要 295 字（去"本文"）、英文 149 词；9 页 / 0/0/0；新指纹 `43becd39…`（poppler 25.07）；tag `v2026-09-30-submission-ready` + `faeco-paper-final-20260930`（提交 `4dc16c6`），v1 superseded。
