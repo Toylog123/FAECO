@@ -113,7 +113,7 @@
 | 质量门 | Errors 0 / Overfull 0 / Underfull 0；`Undefined: 5` = newtxmath 字体替身警告（非引用）→ **GATE: PASS** |
 | 未解析引用 `??` | 0 |
 | `\bibitem` ↔ `\cite` | 14 ↔ 14，且编号按正文首次引用顺序（`scratch/probe_cite_order.py` 一致性 True） |
-| 双副本 PDF | 字节 SHA 一致（`09197e5f…`）；内容指纹 `91034fee…`（poppler 25.07） |
+| 双副本 PDF | 字节 SHA 一致（`09197e5f…`）；内容指纹 `88b03403…`（poppler 25.07） |
 | 摘要字数 | 中文 228 / 英文 148（均在上限内） |
 
 ### 6. 遗留（移交下一轮）

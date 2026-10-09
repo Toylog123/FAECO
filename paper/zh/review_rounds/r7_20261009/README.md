@@ -23,5 +23,5 @@
 
 ## 状态
 
-**已执行完毕（2026-10-09）**，产出 v6 主稿：**8 页 / 0 Error / 0 Overfull / 0 Underfull**，`??`=0，`\bibitem`↔`\cite` 14/14 且编号按首次引用顺序；内容指纹 `91034fee…`（poppler 25.07），双副本 PDF 字节一致。
+**已执行完毕（2026-10-09）**，产出 v6 主稿：**8 页 / 0 Error / 0 Overfull / 0 Underfull**，`??`=0，`\bibitem`↔`\cite` 14/14 且编号按首次引用顺序；内容指纹 `88b03403…`（poppler 25.07），双副本 PDF 字节一致。
 明细见 `response.md` 文末"执行记录（as executed）"。

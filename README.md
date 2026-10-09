@@ -4,7 +4,7 @@
 
 - 项目类型：算法研究（EDA / 时序优化）
 - 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
-- 当前阶段：**论文内容冻结 v5**（中文稿 9 页，JCAD《计算机辅助设计与图形学学报》投稿就绪；剩余为投稿手工/流程项，见 `paper/zh/submission/T20_SUBMISSION_PACKAGE.md`）
+- 当前阶段：**论文内容冻结 v6**（中文稿 8 页，JCAD《计算机辅助设计与图形学学报》投稿就绪；剩余为投稿手工/流程项，见 `paper/zh/submission/T20_SUBMISSION_PACKAGE.md`）
 
 ## 整体设计
 
@@ -32,7 +32,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-最近一轮（2026-10-09）：论文**内容冻结 v5**（tag `v2026-10-09-abstract-plain` = `1c67f50`，9 页 0/0/0）——在用户授权下当日完成两次纯表达/著录层收敛：① 参考文献修复（19→14 条按引用顺序 + 5 条 URL 改脚注，v4）；② 摘要可读性改写（去术语缩写，中 264 字 / 英 148 词，v5）。**未新增实验、未改动数字**。完整交接见 `project_docs/agent_handoff/handoff_20261009.md`，逐条见 `paper/zh/CHANGE_LOG.md`。
+最近一轮（2026-10-09）：论文**内容冻结 v6**（tag `v2026-10-09-text-review`，**8 页** 0/0/0）——当日完成三次纯表达层收敛：① 参考文献修复（19→14 条按引用顺序 + 5 条 URL 改脚注，v4）；② 摘要改写（v5 概念化 → v6 按审稿方向回改，中 228 字 / 英 148 词）；③ **文字专项审稿全量落地**（P0 主张/事实修正 ×5、一致性可读性 ×6、收尾 ×3、术语统一；删正文 10 处 `\FloatBarrier` 消除末页孤儿，9→8 页）。**未新增实验、未改动任何数字**（仅 §4.6 主张强度下调）。完整交接见 `project_docs/agent_handoff/handoff_20261009.md`，逐条见 `paper/zh/CHANGE_LOG.md`。
 
 更早（2026-09-12）：工程按 `99_项目模板` 框架完成架构迁移（代码入 `code/`、过程文档入 `project_docs/`、原始基准入 `data/raw/`、临时件入 `scratch/`），映射全记录见 `project_docs/migration/MIGRATION_20260912.md`。
 
@@ -80,7 +80,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 冻结版本集合（v1–v5 具名基线，当前 active = v5 `v2026-10-09-abstract-plain`；冻结策略见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
+| `versions/` | 冻结版本集合（v1–v6 具名基线，当前 active = v6 `v2026-10-09-text-review`；冻结策略见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 

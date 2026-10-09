@@ -39,7 +39,7 @@ E-mail：chancews@qq.com
 
 ## 编辑部提交时随附清单（对照 `T20_SUBMISSION_PACKAGE.md`）
 
-- [ ] 论文 PDF（当前冻结版：9 页，内容指纹 `7adf0279…`）
+- [ ] 论文 PDF（当前冻结版 **v6**：8 页，内容指纹 `88b03403…`）
 - [ ] LaTeX 源文件（按期刊模板精调后）
 - [ ] Cover letter（本文件替换占位符后）
 - [ ] 补充材料（见 `supplementary_materials.md`）
