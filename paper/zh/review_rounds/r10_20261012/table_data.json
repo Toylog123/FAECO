@@ -1,0 +1,233 @@
+{
+  "source_family": "D / 20260924_threearm (main @ 6276cff)",
+  "config": {
+    "max_iterations": 20,
+    "candidates_per_iteration": 8,
+    "sta_budget": 500,
+    "early_stop": true,
+    "period_ns": 0.5,
+    "strategies": "R,G,B",
+    "joint_k": 2
+  },
+  "counter": "n_candidate_sta_runs",
+  "arms": {
+    "fixed": {
+      "sta": 4146,
+      "wall_s": 2010.8,
+      "per_circuit": {
+        "s27": {
+          "sta": 416,
+          "wall_s": 126.8
+        },
+        "s382": {
+          "sta": 769,
+          "wall_s": 363.0
+        },
+        "s420": {
+          "sta": 1048,
+          "wall_s": 442.2
+        },
+        "s641": {
+          "sta": 596,
+          "wall_s": 320.9
+        },
+        "s713": {
+          "sta": 306,
+          "wall_s": 143.5
+        },
+        "s820": {
+          "sta": 312,
+          "wall_s": 195.8
+        },
+        "s832": {
+          "sta": 306,
+          "wall_s": 174.6
+        },
+        "s953": {
+          "sta": 393,
+          "wall_s": 243.9
+        }
+      }
+    },
+    "adaptive": {
+      "sta": 4883,
+      "wall_s": 2065.3,
+      "per_circuit": {
+        "s27": {
+          "sta": 416,
+          "wall_s": 126.4
+        },
+        "s382": {
+          "sta": 769,
+          "wall_s": 362.4
+        },
+        "s420": {
+          "sta": 1048,
+          "wall_s": 442.2
+        },
+        "s641": {
+          "sta": 880,
+          "wall_s": 331.9
+        },
+        "s713": {
+          "sta": 662,
+          "wall_s": 187.6
+        },
+        "s820": {
+          "sta": 312,
+          "wall_s": 195.4
+        },
+        "s832": {
+          "sta": 376,
+          "wall_s": 176.1
+        },
+        "s953": {
+          "sta": 420,
+          "wall_s": 243.3
+        }
+      }
+    },
+    "random_s1": {
+      "sta": 5356,
+      "wall_s": 2442.7,
+      "per_circuit": {
+        "s27": {
+          "sta": 387,
+          "wall_s": 103.8
+        },
+        "s382": {
+          "sta": 486,
+          "wall_s": 208.2
+        },
+        "s420": {
+          "sta": 1048,
+          "wall_s": 456.6
+        },
+        "s641": {
+          "sta": 703,
+          "wall_s": 453.3
+        },
+        "s713": {
+          "sta": 513,
+          "wall_s": 185.2
+        },
+        "s820": {
+          "sta": 391,
+          "wall_s": 242.8
+        },
+        "s832": {
+          "sta": 708,
+          "wall_s": 289.3
+        },
+        "s953": {
+          "sta": 1120,
+          "wall_s": 503.5
+        }
+      }
+    },
+    "random_s2": {
+      "sta": 5516,
+      "wall_s": 2443.3,
+      "per_circuit": {
+        "s27": {
+          "sta": 416,
+          "wall_s": 126.9
+        },
+        "s382": {
+          "sta": 858,
+          "wall_s": 446.3
+        },
+        "s420": {
+          "sta": 820,
+          "wall_s": 456.4
+        },
+        "s641": {
+          "sta": 1246,
+          "wall_s": 466.5
+        },
+        "s713": {
+          "sta": 306,
+          "wall_s": 140.8
+        },
+        "s820": {
+          "sta": 317,
+          "wall_s": 204.4
+        },
+        "s832": {
+          "sta": 671,
+          "wall_s": 250.9
+        },
+        "s953": {
+          "sta": 882,
+          "wall_s": 351.1
+        }
+      }
+    },
+    "random_s3": {
+      "sta": 6000,
+      "wall_s": 2494.8,
+      "per_circuit": {
+        "s27": {
+          "sta": 284,
+          "wall_s": 122.7
+        },
+        "s382": {
+          "sta": 695,
+          "wall_s": 356.7
+        },
+        "s420": {
+          "sta": 1307,
+          "wall_s": 464.6
+        },
+        "s641": {
+          "sta": 1321,
+          "wall_s": 469.3
+        },
+        "s713": {
+          "sta": 324,
+          "wall_s": 157.7
+        },
+        "s820": {
+          "sta": 530,
+          "wall_s": 282.1
+        },
+        "s832": {
+          "sta": 671,
+          "wall_s": 248.3
+        },
+        "s953": {
+          "sta": 868,
+          "wall_s": 393.4
+        }
+      }
+    }
+  },
+  "random_mean": {
+    "sta": 5624.0,
+    "wall_s": 2460.3
+  },
+  "random_seeds_raw": {
+    "sta": [
+      5356,
+      5516,
+      6000
+    ],
+    "wall_s": [
+      2442.7,
+      2443.3,
+      2494.8
+    ]
+  },
+  "structured_vs_random": {
+    "sta_reduction_pct": 26.3,
+    "wall_reduction_pct": 18.3
+  },
+  "sta_reconciliation": {
+    "paper_4.3_ITC99_total": 3363,
+    "derivation": "18 circuits sum 3259 + b17 phase2-resume (20260908_phase2_b17_resume) 104 = 3363",
+    "tab9_ITC99_total": 4044,
+    "derivation_tab9": "same 18 circuits 3259 + b17 default batch 785 = 4044",
+    "note": "both use n_candidate_sta_runs; difference is purely the b17 run choice",
+    "rejected_counter": "state.budget.sta_runs = 3401 (not the paper's counter)"
+  }
+}
