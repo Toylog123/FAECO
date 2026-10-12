@@ -1,13 +1,14 @@
 {
-    "timestamp": "2026-10-09 13:17 (Asia/Shanghai)",
-    "status": "paper-frozen-v6 (external TEXT-ONLY review fully implemented P0+P1+P2; user-authorized, ZERO number/experiment/claim changes) - tag v2026-10-09-text-review = b1eee25 (paper tag faeco-paper-final-20261009c), 8 pages, byte SHA 09197e5f..., fingerprint 88b03403... (poppler 25.07, method = pdftotext -layout <pdf> - | sha256sum), manifest versions/v6/MANIFEST.sha256 117/117 OK; r7 round: (a) wording/convergence fixes ~20-30 places (abstract re-adopted reviewer version CN 228 chars / EN 148 words; contributions regrouped; terminology unified; journal-ese removed; B(k) definition added; symbols unified), (b) claim STRENGTH lower-bound for section 4.6 / table 8 restructured so arithmetic closes (0+36+90=126), (c) A* disclosure removed per reviewer, (d) page-9 orphan ELIMINATED by removing 10 \\FloatBarrier occurrences (twocolumn degeneration to \\clearpage) + 7 dedupe edits -> 9 pages to 8 pages with figure/table page mapping literally unchanged; body float/table distribution unchanged; NOTE corrected an erroneous propagated v6 fingerprint (91034fee) to the reproducible 88b03403; Word conversion rebuilt (word/FAECO_投稿Word转排_20261009c.*, pipeline hardcoded abstracts synced to v6); T20 JCAD submission package ready: reference check #3 DONE (v4), abstract rewritten (v5), text review implemented (v6), supplementary S1-S5 drafted; OI-018~022 all decided; remaining = submission manual/process items only: MathType conversion / yellow placeholders / full-width Fig.2 / final PDF export / AIGC disclosure (OI-021, MANDATORY) / author commitment + confidentiality review / English long abstract",
-    "project": "FAECO — 面向预布局门级时序ECO的结构化候选搜索与失效归因（中文稿 8 页内容冻结 v6；投稿目标 JCAD）",
+    "timestamp": "2026-10-12 (Asia/Shanghai) — r11 投稿前精修轮，重冻结 v9",
+    "status": "paper-frozen-v9 (r11 submission-polish Step 1; user-authorized, ZERO number/experiment/code changes) - tag v2026-10-12-submission-polish-r11 = daba5ab (paper tag faeco-paper-final-20261012c), 10 pages, byte SHA f642e533... , fingerprint 3832eeb2... (poppler 25.07, method = pdftotext -layout <pdf> - | sha256sum), manifest versions/v9/MANIFEST.sha256 117/117 OK (exactly 3 changed vs v8 = .tex + both PDF copies). r11 changes (7 groups): EN/CN title finalized (EN 'FAECO: Candidate Exploration and Failure Characterization for Pre-Placement Gate-Level Timing ECO'; CN 'FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画'), abstract CN/EN rewritten, section 1.3 contribution 1/2 rewritten (contribution 3 kept), terminology unified (failure attribution -> failure characterization; structured ranking -> candidate ranking x7), conclusion last sentence M4, section 2.2 comparison-focus sentence, 3 language-risk fixes. Main manuscript RENAMED to '...候选探索与失效刻画' (.tex + both PDF copies; live pointers synced, historical records v1-v8 keep old name). NEW .gitattributes forces versions/*/MANIFEST.sha256 to text eol=lf (core.autocrlf=true would otherwise break sha256sum -c on fresh checkout). Prior rounds above v6: r7 text review (v6, 8 pages), r8+r9 targeted enhancement (v7, 9 pages), r10 zero-compute enhancement + journal switch (v8, 10 pages). KEY: goal journal changed JCAD -> Integration, the VLSI Journal (OI-028); OI-026 cost/feature ablation DEFERRED by user (not a submission prerequisite); Word conversion still v6 (OI-024); artifact-capture of exact runtime table: family C ledger has NO time fields.",
+    "project": "FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画（中文稿 10 页内容冻结 v9；投稿目标 Integration, the VLSI Journal，由 JCAD 改投）",
     "read_order": [
         "README.md",
         "project_docs/agent_handoff/START_HERE.md",
         "project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md",
         "project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md",
         "project_docs/OPEN_ISSUES.md",
+        "project_docs/planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md",
         "paper/zh/submission/T20_SUBMISSION_PACKAGE.md",
         "project_docs/WORK_PROGRESS.md"
     ],
@@ -15,24 +16,24 @@
         "code": "code/src/rseco + code/scripts + code/tests（pytest 542 项；基线见 handoff_20261009；pyproject 指向 code/src）",
         "experiments": "experiments/（INVENTORY.md 总索引、RESULTS.md（rev. 2026-09-29 已对齐论文口径）+ results.json、20260826_aggregation/summary.json = 论文主数字源）",
         "data": "data/cases（跟踪）+ data/raw/benchmarks（raw 不跟踪，source_manifests 登记）",
-        "paper": "paper/zh/manuscript（唯一主稿）+ submission/（T20 投稿包，含 word/ 转排件 + word/superseded/ 归档 + supplementary/ S1–S5）+ figures + review_rounds（r7_20261009 = 文字专项审稿轮）+ responses + GLOSSARY",
-        "project_docs": "LOGS.md + WORK_PROGRESS.md + agent_handoff/* + evidence/PAPER_EVIDENCE_MANIFEST.md + planning/ + baselines/ + review_history/ + reports/ + OPEN_ISSUES.md",
-        "versions": "v6 = 当前冻结（tag v2026-10-09-text-review + MANIFEST.sha256，117 条；v1–v5 superseded，见各版本 README）",
+        "paper": "paper/zh/manuscript（唯一主稿，stem「…候选探索与失效刻画」）+ submission/（T20/JCAD 投稿包，内含 word/ 转排件【⚠ 仍 v6 版，OI-024】+ word/superseded/ + supplementary/ S1–S5）+ figures + review_rounds（r7~r10）+ responses + GLOSSARY",
+        "project_docs": "LOGS.md + WORK_PROGRESS.md + agent_handoff/* + evidence/PAPER_EVIDENCE_MANIFEST.md + planning/（含 FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md）+ baselines/ + review_history/ + reports/ + OPEN_ISSUES.md",
+        "versions": "v9 = 当前冻结（tag v2026-10-12-submission-polish-r11 + MANIFEST.sha256，117 条；v1–v8 superseded，见各版本 README）",
         "docs": "environment.md + GLOSSARY.md + EXPERIENCE.md + literature/ + materials/",
-        "scratch": "git-ignored 临时件（jcad_research/ = JCAD 官网抓取证据；word_convert/ = Word 转排管线）"
+        "scratch": "git-ignored 临时件（jcad_research/ = JCAD 官网抓取证据；word_convert/ = Word 转排管线，含硬编码标题/摘要/关键词的 postprocess.py）"
     },
     "paper_state": {
         "tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
-        "pdf": "manuscript/ 同名 PDF + paper/zh/ 根副本（字节 SHA256 09197e5f... 双副本一致）",
-        "fingerprint": "pdftotext -layout 全文 SHA256 = 88b03403...（poppler 25.07；判内容一致用指纹，不用字节 SHA）",
-        "compile": "lualatex ×2 + latex_quality_gate.py：0 Error / 0 Overfull / 0 Underfull，8 页；?? = 0；bibitem<->cite 14/14 按首次引用顺序",
-        "freeze": "内容冻结 v6（用户指令，修改已终止）；2026-10-09 在用户授权窗口内做过三次收敛：参考文献著录层修复（v4）+ 摘要可读性改写（v5）+ 外部文字专项审稿全量落地（v6），均零数字/零实验/零主张；任何内容改动须先取得用户同意；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md"
+        "pdf": "manuscript/ 同名 PDF + paper/zh/ 根副本（字节 SHA256 f642e533... 双副本一致）",
+        "fingerprint": "pdftotext -layout 全文 SHA256 = 3832eeb2...（poppler 25.07；判内容一致用指纹，不用字节 SHA）",
+        "compile": "lualatex ×2 + latex_quality_gate.py：0 Error / 0 Overfull hbox / 0 Underfull hbox / 0 Overfull vbox，10 页；?? = 0（Undefined:5 为字体替身警告）；表图引用 17/17；浮动体编号阅读顺序 1..14 / 1..3",
+        "freeze": "内容冻结 v9（用户裁定，2026-10-12 r11）；任何内容改动须先取得用户同意，留投稿/修稿轮（OI-018）；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md；.tex 须纯 CRLF"
     },
     "git_state": {
         "branch": "main",
-        "head": "b1eee25（v6 文字专项审稿全量落地重冻结，= 双 tag 所指；其前 968f9a1 为本轮论文件提交）",
-        "remote": "https://github.com/Toylog123/FAECO.git",
-        "tags": "v2026-10-09-text-review / faeco-paper-final-20261009c（= b1eee25，当前冻结；其前 968f9a1 为本轮论文件提交）/ faeco-exp-rev1（= 87d01ba；v5、v4、v3、v2、v1 已 superseded）"
+        "head": "daba5ab（r11 投稿前精修重冻结，= 双 tag 所指）",
+        "remote": "https://github.com/Toylog123/FAECO.git（⚠ r9/r10/r11 共 4 提交 + 6 tag 未推送 origin）",
+        "tags": "v2026-10-12-submission-polish-r11 / faeco-paper-final-20261012c（= daba5ab，当前冻结）/ faeco-exp-rev1（= 87d01ba）；v1–v8 已 superseded"
     },
-    "blocker": "无研究性阻塞；投稿剩余为手工/流程项：① 用户 Word 手工收尾（MathType / 黄色占位 / 图 2 通栏 / 终稿 PDF 导出，稿 word/FAECO_投稿Word转排_20261009c.docx，清单 paper/zh/submission/word/转排说明.md；完成后须重算 Word 件哈希并更新 T20 包 §3）；② ⚠ OI-021 AIGC 使用披露（JCAD 2026 硬要求，未披露视为抄袭）；③ 作者承诺书 / 单位工作邮箱 / 保密审查 / 英文长摘要。（检查单 #3 参考文献核对已于 2026-10-09 完成并修复，摘要亦已改写，文字专项审稿亦已全量落地。）审稿意见返回后按 consistency_audit_20260911.md 基线处理（1-C 插入亦在修稿轮，OI-018）"
+    "blocker": "无研究性阻塞；投稿剩余（均为手工/流程或新算力项）：① OI-028 英文稿 + elsarticle 格式 + 投稿材料（cover letter / highlights <=85 chars / graphical abstract），英文标题已定锚；② OI-024 Word 转排件仍为 v6 版（缺 r8–r11 全部改动 + 六张表；postprocess.py 标题/摘要/关键词为硬编码，须同步并改输入新名）；③ OI-021 AIGC 使用披露改按 Elsevier 政策复核；④ OI-025 图源 PNG 不在 manifest 覆盖内；⑤ OI-027 版式压缩（10 页）。已暂缓（用户裁定）：OI-026 cost/feature 消融（非投稿前置条件，审稿人要求再做；方案见 planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md §7，新族 C' + 4–5 h + 允许 NEGATIVE）、§七 大规模验证。审稿意见返回后按 consistency_audit_20260911.md 基线处理（1-C 插入留修稿轮，OI-018）"
 }

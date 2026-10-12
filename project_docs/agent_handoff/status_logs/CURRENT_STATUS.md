@@ -1,6 +1,16 @@
 # Current Status
 
-## 2026-10-09 文字专项审稿全量落地轮（r7，本轮最新）
+## 2026-10-12 投稿前精修轮（r11，本轮最新）：重冻结 v9
+
+> ⚠ r8/r9（v7）、r10（v8）两轮未在本文件登记，见 `LOGS.md` 与 `CURRENT_RUN_HANDOFF.md`。
+
+- **用户三项裁定**：① 中/英标题定稿 —— EN `FAECO: Candidate Exploration and Failure Characterization for Pre-Placement Gate-Level Timing ECO`，CN「面向预布局门级时序 ECO 的候选探索与失效刻画」；② **cost 消融暂缓**（非投稿前置条件）；③ **Step 1 立即执行**。
+- **7 组改动**（零数字/零实验/零代码）：标题 CN/EN + 摘要 CN/EN 重写 + §1.3 贡献 1/2 重写（贡献 3 保留）+ 术语统一（失效归因→失效刻画、结构化排序→候选排序 ×7）+ 结论末句改写 + §2.2 比较焦点句 + 3 处语言风险；**主稿改名**「…候选探索与失效刻画」（`.tex` + 双副本 `.pdf`，同步 live pointers）。
+- **质量门**：**10 页** / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox；`??`=0；表/图引用 17/17；浮动体顺序 1..14 / 1..3；`.tex` `22de39a0…`；双副本 PDF `f642e533…`、内容指纹 `3832eeb2…`（poppler 25.07）。
+- **重冻结 v9**：tag `v2026-10-12-submission-polish-r11`（论文 tag `faeco-paper-final-20261012c`，= `daba5ab`）；`versions/v9/MANIFEST.sha256` 117 条全 OK；`BASELINE_INDEX.csv` v8→superseded / v9→active。
+- **目标期刊改投**：JCAD → **Integration, the VLSI Journal**（OI-028）。**新增 `.gitattributes`**（`versions/*/MANIFEST.sha256` 强制 LF）。
+
+## 2026-10-09 文字专项审稿全量落地轮（r7）
 
 - **用户提供 FAECO 文字专项审稿**（归档 `paper/zh/review_rounds/r7_20261009/`，审稿人明确"不建议大规模重写、不新增实验"）并授权"全部执行（P0+P1+P2）"；落地后**零数字、零实验改动**，主张强度仅 §4.6 一处**下调**。
 - **P0×5**：摘要"其余无退化"限定预布局理想线网 WNS 口径；§4.1 删"保证…setup 违例"；§4.6"枚举瓶颈已排除"→"本次扩大候选池未带来时序收益，尚不能排除更大规模扩展"；§3.1 拆"候选时序接受"与"最终网表独立顺序 SEC"；§3.3 纠正"缺少 R 等价候选的门不可重写"。

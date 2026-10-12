@@ -2,7 +2,7 @@
 
 | 项 | 值 |
 |---|---|
-| 提交 | `待提交`（本轮 tag 见下） |
+| 提交 | `daba5ab`（本轮双 tag 均指向该提交） |
 | tag | `v2026-10-12-submission-polish-r11`（版本 tag）、`faeco-paper-final-20261012c`（论文 tag） |
 | 前置 | v8 = 提交 `df7f5ca`，tag `v2026-10-12-review-r10` / `faeco-paper-final-20261012b` |
 | 触发 | 用户「投稿前精修」六阶段方案（标题 / 贡献 / 语言 / 定位；**cost 消融暂缓**） |
@@ -54,7 +54,7 @@
 ### 7. 文件重命名
 主稿 stem 随标题改名：
 `FAECO_面向预布局门级时序ECO的候选探索与失效刻画.{tex,pdf}`（`manuscript/` 与 `paper/zh/` 双副本）。
-同步更新的**指针**：`tools/sync_to_summary.py`(`PDF_STEM`)、`paper/zh/figures/{insert_spef,convert_tables}.py`、`README.md`、`paper/zh/README.md`、`docs/GLOSSARY.md`、`.codex-handoff.json`。
+同步更新的**指针**（11 处）：`tools/sync_to_summary.py`(`PDF_STEM`)、`paper/zh/figures/{insert_spef,convert_tables}.py`、`paper/zh/manuscript/{_extract_pages,_render_exp}.py`、`README.md`、`paper/zh/README.md`、`docs/GLOSSARY.md`、`.codex-handoff.json`、`project_docs/agent_handoff/{START_HERE,NEXT_AGENT_PROMPT}.md`。
 **未改**（历史记录，保留旧名是正确的）：`versions/v1..v8/`、`paper/zh/CHANGE_LOG.md` 旧行、`project_docs/LOGS.md` 旧行、`agent_handoff/` 旧快照、`paper/zh/submission/`、`paper/zh/review_rounds/`。
 **00_Summary**：已同步为新名作者版，并删除旧名文件（同论文只留一份最新）。
 

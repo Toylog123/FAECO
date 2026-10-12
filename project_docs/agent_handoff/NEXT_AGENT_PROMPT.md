@@ -1,6 +1,6 @@
 # NEXT AGENT PROMPT
 
-> 给下一位 agent 的完整提示词。**每轮结束前更新**。最后更新：2026-10-09（文字专项审稿全量落地轮 r7）。
+> 给下一位 agent 的完整提示词。**每轮结束前更新**。最后更新：2026-10-12（投稿前精修轮 r11，重冻结 v9）。
 
 ```
 你是 FAECO 仓库（D:\BaiduSyncdisk\01_Papers\03_FAECO）的新任执行者。请先按顺序阅读：
@@ -8,33 +8,35 @@
 1. AGENTS.md（协作契约与规则）
 2. project_docs/agent_handoff/README.md（阅读顺序）
 3. project_docs/agent_handoff/START_HERE.md（当前状态与立即工作）
-4. project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md（只读最上一节 = 2026-10-09 文字专项审稿全量落地轮）
+4. project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md（只读最上一节 = 2026-10-12 投稿前精修轮 r11）
 5. project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md（动 .tex 前的强制门槛，含逐数字绑定）
 6. project_docs/OPEN_ISSUES.md（未决问题必须知晓并如实告知用户）
 7. paper/zh/submission/T20_SUBMISSION_PACKAGE.md（投稿检查单 + 决策点）
-8. paper/zh/submission/JCAD_REQUIREMENTS_20260929.md（JCAD 要求核实报告）
+8. project_docs/planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md（r11 精修方案 + 消融设计 + 投稿材料清单；目标期刊已改投 Integration，JCAD 旧核实见 paper/zh/submission/JCAD_REQUIREMENTS_20260929.md）
 
 【当前状态（一句话）】
-OI-018~022 已全部拍板并执行；用户 2026-10-09 授权完成三次收敛——① **参考文献著录层修复**
-（文献 19→14 条按正文首次引用顺序重排，修 P0；5 条纯 URL 工具/文档引用改正文页脚脚注），
-② **摘要可读性改写**（用户反馈"技术要点过多、大同行难懂"：去 R/G/B/JOINT、F1--F6 等未展开术语，
-改概念化 + 补动机；中 264 字·英 148 词），
-③ **外部「文字专项审稿」P0+P1+P2 全量落地**（口径修正 / 贡献重组 / 术语统一 / §4.6 主张强度下调 /
-正文去 `\FloatBarrier` 消除末页孤儿，9 页→8 页）——均零数字/零实验/零主张改动。
-重冻结为 v6（tag `v2026-10-09-text-review` = `b1eee25`，内容指纹 `88b03403…` poppler 25.07 口径）——
-**论文内容修改仍已终止**；Word 转排稿随管线再重建
-（paper/zh/submission/word/FAECO_投稿Word转排_20261009c.docx，旧三批归档 superseded/）；
-补充材料 S1–S5 初稿完成。剩余仅投稿手工项（MathType/占位/图 2 通栏/终稿 PDF/AIGC 披露）与审稿修稿轮。
+用户「投稿前精修」六阶段方案的 **Step 1 全量落地**（先取证核验：阶段 2【§3.4 固定权重声明】/
+阶段 3 的 runtime 表【= 表 11】/阶段 5【§2.2 + 表 2】**已在 v8 落地，不重做**）：中/英标题定稿
+（EN `FAECO: Candidate Exploration and Failure Characterization for Pre-Placement Gate-Level Timing ECO`；
+CN `FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画`）+ 摘要 CN/EN 重写 + §1.3 贡献 1/2 重写
++ 术语统一（失效归因→失效刻画、结构化排序→候选排序 ×7）+ 结论末句 M4 + §2.2 比较焦点句 + 3 处语言风险；
+**主稿改名**为「…候选探索与失效刻画」（.tex + 双副本 .pdf，live pointers 全同步，历史记录保留旧名）。
+重冻结 **v9**（tag `v2026-10-12-submission-polish-r11` = `daba5ab`，内容指纹 `3832eeb2…` poppler 25.07，
+10 页 0/0/0/0；新增 `.gitattributes` 强制 manifest LF）——**均零数字/零实验/零代码改动**。
+**目标期刊已由 JCAD 改投 Integration, the VLSI Journal（OI-028）**；OI-026 cost 消融**用户裁定暂缓**。
+剩余 = 英文稿/`elsarticle` + 投稿材料（OI-028）、Word 转排件重建（OI-024）、AIGC 披露按 Elsevier 复核（OI-021）。
 
 【本轮目标（按优先级）】
-1. 等用户完成 Word 稿手工收尾（word/转排说明.md）：MathType 批量转换（OMML→MathType）、
-   黄色占位替换（通信作者 */基金/收稿日期/作者简介）、图 2 通栏、终稿 PDF 导出；
-   完成后须重算 Word 件哈希并更新 T20_SUBMISSION_PACKAGE.md §3。
-2. 投稿时必办：AIGC 使用披露（OI-021，JCAD 硬要求，未披露视为抄袭）——用户拍板暂缓，
-   届时与通信作者共同拟定；作者承诺书/保密审查（单位流程）；作者工作邮箱确认。
-3. 若审稿意见返回：以 project_docs/review_history/paper_audit/
+1. **OI-028 投 Integration**：以中文稿为内容母本产**英文稿** + `elsarticle` 格式 + 投稿材料
+   （cover letter / highlights ≤85 字符 / graphical abstract）；英文标题已定锚。
+2. **OI-024**：Word 转排件仍为 v6 版，缺 r8–r11 全部改动（标题/摘要/术语 + 六张表）——
+   投稿前**必须**随 `scratch/word_convert/` 管线重建；`postprocess.py` 的标题/摘要/关键词为硬编码，
+   须先同步为 v9 文本并把输入路径改为新稿名。
+3. 投稿必办：**OI-021 AIGC 使用披露**改按 **Elsevier** 政策复核；作者承诺书/保密审查；英文长摘要。
+4. 若审稿意见返回：以 project_docs/review_history/paper_audit/
    consistency_audit_20260911.md 为数字基线，并先读 PAPER_EVIDENCE_MANIFEST.md，
    只处理新意见；新增内容修改须先取得用户同意（含 1-C 小节插入，OI-018 已拍板留修稿轮）。
+5. **暂缓（用户裁定，勿擅启）**：OI-026 cost/feature 消融（非投稿前置条件）、§七 大规模验证、OI-027 版式压缩。
 
 【约束 / 不要做】
 - ❌ 不要修改论文内容（含摘要）——用户冻结令；Word 转排稿中的摘要改写也须 OI-020 授权。
@@ -43,6 +45,7 @@ OI-018~022 已全部拍板并执行；用户 2026-10-09 授权完成三次收敛
 - ❌ 不要跨实验族拼数字。铁律 same claim ⇒ same revision + same config family；
    8/8、18/19、2/3 三元组全属族 B；ITC-99 严格改善 = 18/19（b06 TNS 辅助接受单独声明）。
 - ❌ 不要缩字体/行距/砍内容压页——双栏下 `\FloatBarrier` 会退化为 `\clearpage`（v6 正文已移除，仅留图 2 后一处）；版面异常优先调浮动体参数，勿再插入 `\FloatBarrier`。
+- ❌ 不要删 `\balance`（末页分栏平衡承重件，删则末页右栏只剩一条文献）；不要改 `.tex` 换行风格（**必须纯 CRLF**）；**manifest 必须 LF-only**（`.gitattributes` 已锁 `versions/*/MANIFEST.sha256 text eol=lf`，写完须用 `open(..., newline="\n")`）。
 - ❌ 未拍板前不发询问邮件、不启动 Word 转排、不插 1-C 小节。
 - experiments/ 证据目录严禁删除；paper/zh/figures/fig_iscas89.pdf 是编译依赖，亦禁删。
 - 未跑测试不修改 code/src/rseco/。
@@ -51,13 +54,13 @@ OI-018~022 已全部拍板并执行；用户 2026-10-09 授权完成三次收敛
 【论文构建与验收（照抄）】
   cd paper/zh/manuscript
   lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex"   # 跑两遍
-  python ../scripts/checks/latex_quality_gate.py        # Errors/Overfull/Underfull 须全 0，PAGES 应为 8
+  python ../scripts/checks/latex_quality_gate.py        # Errors/Overfull/Underfull 须全 0（PAGES 当前 10）
   cp "FAECO_....pdf" ../FAECO_....pdf                   # 同步双副本，二者 SHA256 须一致
-  pdftotext -layout "FAECO_....pdf" - | sha256sum        # 内容指纹（当前 88b03403…）
+  pdftotext -layout "FAECO_....pdf" - | sha256sum        # 内容指纹（当前 3832eeb2…）
   # 质量门的 "Undefined: 5" 是字体替身警告，不是引用未解析；判引用看 '??' 计数。
 
 【完成标准（证据门）】
-- [ ] OI-018~OI-022 用户拍板并按选择执行。
+- [ ] r11 三项裁定（标题定稿 / OI-026 暂缓 / Step 1 执行）已落地，v9 已冻结（tag `v2026-10-12-submission-polish-r11`）。
 - [ ] Word 转排稿（若启动）：按官方 2026 模板，转排稿 SHA256 与来源 LaTeX 版本
       登记回 T20_SUBMISSION_PACKAGE.md §3。
 - [ ] S1–S5 补充材料定稿（初稿已完成）并经用户确认。
@@ -69,4 +72,4 @@ OI-018~022 已全部拍板并执行；用户 2026-10-09 授权完成三次收敛
 两点使用提示：
 
 - 若上下文有限，**只读 1/3/4/5/6 五项即可接手**——其余信息在 `CURRENT_RUN_HANDOFF.md` 与 `T20_SUBMISSION_PACKAGE.md` 里都有链接。
-- JCAD 要求的完整核实（费用、流程、2026 新规）在 `paper/zh/submission/JCAD_REQUIREMENTS_20260929.md`，官网抓取原始证据在 `scratch/jcad_research/`（git-ignored）。
+- 目标期刊已改投 **Integration, the VLSI Journal**（OI-028）；JCAD 旧要求核实见 `paper/zh/submission/JCAD_REQUIREMENTS_20260929.md`（历史参考），Elsevier / Integration 要求待补。官网抓取原始证据在 `scratch/jcad_research/`（git-ignored）。
