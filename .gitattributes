@@ -1,0 +1,7 @@
+# ── 行尾策略（FAECO）───────────────────────────────────────
+# versions/vN/MANIFEST.sha256 必须保持 LF-only。
+# 原因：本仓库 core.autocrlf=true，若不强制，检出到 Windows 工作副本时
+# 会被写成 CRLF，`sha256sum -c` 会把 \r 当作文件名的一部分而全行报错
+# （'…'$'\r': No such file or directory）。
+# 教训条见 versions/v9/README.md 与 project_docs/OPEN_ISSUES.md（OI-026 取证）。
+versions/*/MANIFEST.sha256 text eol=lf

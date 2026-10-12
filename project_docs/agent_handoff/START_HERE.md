@@ -4,11 +4,11 @@
 
 ## 当前工作区
 
-- 项目：FAECO — 面向预布局门级时序 ECO 的结构化候选搜索与失效归因
+- 项目：FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
 - 分支：main，HEAD **`b1eee25`**（v6 文字专项审稿全量落地重冻结，= 下方双 tag 所指；其前 `968f9a1` 为本轮论文件提交）；remote: https://github.com/Toylog123/FAECO.git
 - 主稿件（唯一 `.tex`，**内容冻结 v6，修改已终止**）：
-  `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex`
+  `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
   **8 页 / 0 Error / 0 Overfull / 0 Underfull**；内容指纹 `88b03403…`（poppler 25.07）
 - 基线 tag：**`v2026-10-09-text-review`**（= `b1eee25`，四元绑定 manifest `versions/v6/MANIFEST.sha256`，117 条）；
   论文发布 tag `faeco-paper-final-20261009c`（= `b1eee25`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）

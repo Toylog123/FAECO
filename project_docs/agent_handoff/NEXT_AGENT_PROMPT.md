@@ -50,7 +50,7 @@ OI-018~022 已全部拍板并执行；用户 2026-10-09 授权完成三次收敛
 
 【论文构建与验收（照抄）】
   cd paper/zh/manuscript
-  lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex"   # 跑两遍
+  lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex"   # 跑两遍
   python ../scripts/checks/latex_quality_gate.py        # Errors/Overfull/Underfull 须全 0，PAGES 应为 8
   cp "FAECO_....pdf" ../FAECO_....pdf                   # 同步双副本，二者 SHA256 须一致
   pdftotext -layout "FAECO_....pdf" - | sha256sum        # 内容指纹（当前 88b03403…）

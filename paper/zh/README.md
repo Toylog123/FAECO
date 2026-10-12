@@ -5,9 +5,9 @@ tag `faeco-paper-final-20260929`（= `a8142b6`），9 页 / 0 Error / 0 Overfull
 
 ## 结构
 
-- `manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex`：**唯一主稿**（单文件 ctexart，lualatex 编译；JCAD 版式近似）
+- `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`：**唯一主稿**（单文件 ctexart，lualatex 编译；JCAD 版式近似）
 - `manuscript/FAECO_….pdf` 与 `FAECO_….pdf`（本目录）：**双副本**，字节 SHA256 须一致
-- `submission/`：**T20 投稿件打包**（目标期刊 JCAD）——投稿检查单、cover letter 草稿、补充材料清单
+- `submission/`：**T20 投稿件打包**（目标期刊 **Integration, the VLSI Journal**，由 JCAD 改投）——投稿检查单、cover letter 草稿、补充材料清单
 - `figures/`：图源（`fig_iscas89.pdf` 为编译依赖，禁删）
 - `responses/`、`review_rounds/`：审稿轮次记录
 - `build/`：编译中间产物
@@ -17,8 +17,8 @@ tag `faeco-paper-final-20260929`（= `a8142b6`），9 页 / 0 Error / 0 Overfull
 
 ```bash
 cd paper/zh/manuscript
-lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex"   # 跑两遍
-python ../scripts/checks/latex_quality_gate.py   # Errors/Overfull/Underfull 全 0，PAGES=9
+lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex"   # 跑两遍
+python ../scripts/checks/latex_quality_gate.py   # Errors/Overfull/Underfull 全 0，PAGES=10
 cp "FAECO_….pdf" "../FAECO_….pdf"                # 同步双副本，字节 SHA256 一致
 pdftotext -layout "FAECO_….pdf" - | sha256sum    # 内容指纹（判内容一致用这个，不用字节 SHA）
 ```

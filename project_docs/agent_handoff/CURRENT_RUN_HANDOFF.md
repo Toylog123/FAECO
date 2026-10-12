@@ -2,6 +2,27 @@
 
 > 最近一轮在最上，历史轮次原样保留在下。**新接手者只需读最上一节**。
 
+## 2026-10-12 — 投稿前精修（r11：标题 / 摘要 / 贡献定位 / 术语与语言风险）+ 重冻结 v9
+
+**本轮性质**：用户提供一份「投稿前精修」六阶段方案（阶段 1 贡献重定位 / 阶段 2 §3.4 固定权重声明 / 阶段 3 cost 消融 / 阶段 4 英文标题重设计 / 阶段 5 Related Work 比较焦点句 / 阶段 6 语言风险审计），**先取证核验再执行**（方案落 `project_docs/planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md`，不做重复项）。用户随后裁定三则：① **英文标题** = `FAECO: Candidate Exploration and Failure Characterization for Pre-Placement Gate-Level Timing ECO`，**中文标题** = `FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画`；② **cost 消融暂缓**（不作为当前投稿前置条件；理由 = 主论证链已闭合，新增会引入"为什么主实验不用这个配置"的解释成本，**若审稿人要求再做**）；③ **Step 1（标题、贡献、语言风险、定位调整）立即执行**。**零数字、零实验、零代码改动**（纯文字/定位）。记录见 `LOGS.md` LOG-20261012-05/06、`CHANGE_LOG.md` r11 行、`versions/v9/README.md`。
+
+1. **★ 决定性核验：六阶段中三阶段已在 r10/v8 落地，不可重做**。阶段 2（§3.4 特征设计动机 + 固定权重 $1.0$ 声明）、阶段 3 所指的 runtime 表（= 表 11 `tab:runtime`）、阶段 5（§2.2 基线定位 + 表 2 `tab:baseline_cmp`）**均已由 r10 落地**；重做会造出**重复表**与**自相矛盾句**。故本轮只落地真正未做的部分。
+2. **★ 取证更正（OI-026，纠正 r10 台账的误定位）**：审稿人所指的 cost/feature 消融**不能在 §4.4 的运行器上做** —— 表 9/表 10 出自 **族 C**，其运行器 `code/scripts/run_hybrid_repair.py` 的 `parse_args()` **完全没有 λ 参数**，候选排序只由 `--strategy-priorities` + `strategy_selector.exploration_order()` + 可选 `--random-order` 决定，**根本不调用 `cost(v)`（`cut.py:182–213`）**。因此 r10 台账"加权割消融…改 `flow.py:359/385`"属**误定位**（`flow.py:359/385` 是 constrained-cut/cover-cut 分支，不是 λ 硬编码点）。正确表述：式 (2) 消融 = **新实验族 C′**，需给 `real_wns.py` 的权重对象（现仅 3 键 λ_b/λ_s/λ_c）补 **λ_v/λ_f** 并新加 CLI（λ_v/λ_f **无初始参数、无 CLI** = 真正的代码缺口）；预算由"40–60 min"更正为 **4–5 h**。附带澄清 **λ_c 三重角色**：节点代价深度折扣（`cut.py:208`）、关键路径覆盖候选**插入**（`cut.py:306`，门控 `critical_reward > 1.0`）、尺寸精化割 `covered` 奖励（`cut.py:403`）。
+3. **7 组改动（23 insertions / 23 deletions）**：① 标题 CN/EN；② 摘要 CN/EN + 英文关键词（减"structured framework"，增"candidate exploration"）；③ §1.3 贡献 1/2 重写（**贡献 1** 框架定位 = 多特征加权割 + 关键路径覆盖割扩展局部修改空间 + 候选排序降低验证开销，并给 1.07 vs 0.16 ns；**贡献 2** 失效刻画机制 = F1--F6 六类，明确**定位为搜索诊断与候选控制、非独立收敛增益来源**；**贡献 3 保留**）；④ 术语统一（`类型化失效归因`→`类型化失效刻画`、`失效归因`→`失效刻画`、`结构化归因`→`类型化刻画`、**`结构化排序`→`候选排序` ×7**）；⑤ §2.2 比较焦点句；⑥ **结论末句（M4）**不得停在"当前 EMA 反馈与 S 候选均未取得独立收益"，改为"实验分析进一步揭示了候选排序、验证预算和结构扩展之间的关系，为后续预布局 ECO 搜索策略设计提供依据"；⑦ 3 处语言风险修正。
+4. **重命名（live pointers 已更新，历史记录保留旧名）**：`…FAECO_面向预布局门级时序ECO的…结构候选搜索与失效归因.tex` → **`…FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`**（PDF 双副本同步改名）。**live pointers 已同步**：`tools/sync_to_summary.py`、`paper/zh/figures/{insert_spef,convert_tables}.py`、`paper/zh/manuscript/{_extract_pages,_render_exp}.py`、`README.md`、`paper/zh/README.md`、`docs/GLOSSARY.md`、`.codex-handoff.json`、`START_HERE.md`、`NEXT_AGENT_PROMPT.md`。**历史记录刻意保留旧名**：`versions/v1..v8/`、`CHANGE_LOG.md`/`LOGS.md` 旧行、`agent_handoff/` 快照、`submission/`。
+5. **语言风险实测（非臆造）**：v8 `.tex` 计数 —— `首次提出`=0 / `显著`=0 / `有效提升`=0 / `创新`=0 / `突破`=0；`优于`=1（事实陈述）、`有效`=5（均为"有效/valid"义）、`证明`=8（均为 SEC/CEC 形式证明）、`关键`=39（多为"关键路径"）。结论：仅约 5 处真实风险，已逐一处置。
+6. **质量门与终检**：**10 页** / 0 Error / 0 Overfull hbox / 0 Underfull hbox / **0 Overfull vbox** / 0 undefined refs；`??`=0（`Undefined: 5` = **字体替身警告，非引用**）；表/图引用覆盖 **17/17**（`scratch/check_env_refs.py`，硬编码路径已随重命名更新）；浮动体编号阅读顺序 **1..14 / 1..3**（`scratch/float_order_probe2.py`，须传 `<pdf> <tex>`）；论文 `.tex` **`22de39a0…`**（668 CRLF / 0 bare LF, 61,144 B，vs v8 **23 insertions / 23 deletions**）；双副本 PDF 字节 SHA **`f642e533…`**（2,769,731 B）；内容指纹 **`3832eeb2…`**（poppler 25.07 原始输出）。
+7. **重冻结 v9（四要素）**：tag **`v2026-10-12-submission-polish-r11`** + 论文 tag **`faeco-paper-final-20261012c`**；`versions/v9/MANIFEST.sha256`（**117 条全 OK**，相对 v8 **仅 3 条变化** = `.tex` + 双副本 `.pdf`，114 条未变；由 `scratch/gen_manifest_v9.py` 从 v8 派生）；`BASELINE_INDEX.csv` v8→`superseded` / v9→`active`（10 行、恰 1 active）。
+8. **台账收口**：`LOGS.md`（LOG-20261012-05/06）、`CHANGE_LOG.md`（r11 行）、`PAPER_EVIDENCE_MANIFEST.md` §6（新增"★ 当前发布版 v9"，v8 降为"前序发布版"）、`OPEN_ISSUES.md`（**OI-026 标暂缓** / **OI-024 扩到"r8+r9+r10+r11 改动均未同步 + 标题/摘要为旧口径 + 术语仍为旧名"** / **OI-027 更新为 v9 = 10 页** / **OI-028 记入已定标题与重命名**）、`.workbuddy/memory`。
+9. **00_Summary 同步**：按用户 standing 约定同步作者版 PDF 为 **`FAECO_面向预布局门级时序ECO的候选探索与失效刻画_作者版.pdf`**（`f642e533…`），**旧名文件已删除**（同一论文只保留一份最新作者版）。
+
+### 下一步（有明确指令再做）
+
+- **OI-026（cost/feature 消融）= 用户裁定「暂缓」**，**不作为当前投稿前置条件**；方案已就绪（`planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md` §7 = 新族 C′ / 新表 / **4–5 h** / **允许 NEGATIVE**）；**仅当审稿人明确要求时**再启动，且须先落方案。
+- **OI-028 Integration 转化（当前最高优先）**：英文稿 + `elsarticle` 格式 + 投稿材料（cover letter / highlights ≤85 字符 / graphical abstract）；中文稿作内容母本；**英文标题已定锚**（见本轮）。
+- **§七 大规模验证**（OpenCores / RISC-V 完整模块 / 工业网表）：需新基准接入 + 新算力；**暂缓**。
+- **不得触碰**：① 不要删 `\balance`；② 不要把族 D 的数字与表 9/表 10 并表或交叉换算；③ 不要新增/修改任何既有数字（r10/r11 均已确认零数字改动）；④ 不要在正文插 `\FloatBarrier`；⑤ 不要改 `paper/zh/manuscript/` 里 `.tex` 的换行风格（**必须纯 CRLF**，插入块后须重新归一化）；⑥ **manifest 文件必须 LF-only**（`sha256sum -c` 遇 CRLF 会把 `\r` 当文件名，报 `'…'$'\r': No such file or directory`，须用 `open(..., newline="\n")` 写）。
+
 ## 2026-10-12 — 复审四（r10，零算力增强）+ 目标期刊改投 Integration：重冻结 v8
 
 **本轮性质**：用户提供**第三方复审四**（对 **v7 / 作者版 9 页**；总判断 = 已从「实验不闭环」提升为「**基本完整的 EDA 论文实验体系**」，**主要问题不再是实验不足，而是创新高度、方法定位与期刊匹配**；归档 `paper/zh/review_rounds/r10_20261012/comments.md`）。用户三则裁定：① 执行范围 = **只做零算力项**；② 运行时间表口径 = **族 D 三臂**；③ 目标期刊 = **改投 Integration, the VLSI Journal**（取代 JCAD）。**零数字、零实验、零代码改动**。记录见 `LOGS.md` LOG-20261012-03/04、`CHANGE_LOG.md` r10 行、`versions/v8/README.md`。

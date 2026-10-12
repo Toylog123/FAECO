@@ -54,7 +54,7 @@ PAPER_ZH = PROJECT_DIR / "paper" / "zh"
 MANUSCRIPT = PAPER_ZH / "manuscript"
 FIGURES = PAPER_ZH / "figures"
 
-PDF_STEM = "FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因"
+PDF_STEM = "FAECO_面向预布局门级时序ECO的候选探索与失效刻画"
 SRC_PDF = MANUSCRIPT / f"{PDF_STEM}.pdf"        # 编译产物
 DELIVERABLE = PAPER_ZH / f"{PDF_STEM}.pdf"      # paper/zh/ 中文名副本
 DEST_NAME = f"{PDF_STEM}_作者版.pdf"             # 00_Summary 固定文件名

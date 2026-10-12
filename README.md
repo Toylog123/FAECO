@@ -1,6 +1,6 @@
-# FAECO：面向预布局门级时序 ECO 的结构化候选搜索与失效归因
+# FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画
 
-本工程实现并验证 **FAECO**（方法名）——面向预布局门级时序 ECO 的**结构化候选搜索与失效归因**框架：在已映射网表的违例路径局部逻辑上，按多种结构特征构造并统一排序修改候选以扩展有效候选空间；将候选失效归纳为若干类型，用于诊断搜索过程并引导后续控制；候选按轮提交，并依次通过时序分析与等价性检查验证，覆盖设计、实验、论文全流程。
+本工程实现并验证 **FAECO**（方法名）——面向预布局门级时序 ECO 的**候选探索与失效刻画**框架：在已映射网表的违例路径局部逻辑上，按多种结构特征构造并统一排序修改候选以扩展有效候选空间；将候选失效归纳为若干类型，用于诊断搜索过程并引导后续控制；候选按轮提交，并依次通过时序分析与等价性检查验证，覆盖设计、实验、论文全流程。
 
 - 项目类型：算法研究（EDA / 时序优化）
 - 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
@@ -41,7 +41,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 1. 环境：读 `docs/environment.md`；Python 依赖见根目录 `pyproject.toml`（`pip install -e .`），WSL2 内 Yosys/OpenSTA 按 environment.md 安装。
 2. 测试：`python -m pytest code/tests -q`（542 项）。
 3. 实验：`experiments/INVENTORY.md` 为全部实验目录总索引，`experiments/RESULTS.md` 为顶层结果汇总；复现入口脚本在 `code/scripts/`。
-4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；图脚本 `paper/zh/figures/gen_figures.py`。
+4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；图脚本 `paper/zh/figures/gen_figures.py`。
 5. 交接：读 `project_docs/agent_handoff/START_HERE.md` 与 `CURRENT_RUN_HANDOFF.md`。
 
 ## 目录角色

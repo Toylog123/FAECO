@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re, io, sys
 MIGRATION_ROOT = __import__("pathlib").Path(__file__).resolve().parents[3]
-path = str(MIGRATION_ROOT / "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的结构化候选搜索与失效归因.tex")
+path = str(MIGRATION_ROOT / "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex")
 with io.open(path, "r", encoding="utf-8") as f:
     content = f.read()
 
