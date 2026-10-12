@@ -1,7 +1,7 @@
 # 统一命令入口。用法：make help
 SHELL := bash
 
-.PHONY: help check record manifest test
+.PHONY: help check record manifest test summary
 
 help:           ## 显示可用命令
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*## "}; {printf "  %-12s %s\n", $$1, $$2}'
@@ -14,6 +14,9 @@ record:         ## 记录检查（今日是否已更新）
 
 manifest:       ## 生成基线 SHA-256 清单
 	bash code/scripts/make_manifest.sh
+
+summary:        ## 同步最新作者版 PDF 到 01_Papers/00_Summary（编译后收尾步骤）
+	python tools/sync_to_summary.py
 
 test:           ## 运行测试（技术栈相关，请按需定义）
 	@echo "请按技术栈在 Makefile 中定义 test 目标"
