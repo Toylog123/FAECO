@@ -2,7 +2,7 @@
 
 | 项 | 值 |
 |---|---|
-| 提交 | `ac87046`（v10 双 tag 所指冻结提交） |
+| 提交 | v10 双 tag 所指**末端提交**（r12 收敛链：`ac87046` 主稿/台账 → `68a9c69` 台账哈希回填 → 本节「r11 段标签目标更正」提交；`git log -4` 可查） |
 | tag | `v2026-10-12-pre-submission-consistency-r12`（版本 tag）、`faeco-paper-final-20261013`（论文 tag） |
 | 前置 | v9 = 提交 `e00315a`，tag `v2026-10-12-submission-polish-r11` / `faeco-paper-final-20261012c` |
 | 触发 | 用户粘贴的**第五份外部审稿**（「投稿前最后一轮审稿人视角」，对 v9 / 作者版 10 页）；用户裁定 **「不要再加实验。做一次 Submission consistency pass」**（仅 M1–M5） |

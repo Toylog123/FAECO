@@ -6,7 +6,7 @@
 
 - 项目：FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
-- 分支：main（**与 `origin/main` 同步**）；**v10 冻结终态 = `ac87046`**（r12 一致性 pass 的冻结提交，v10 双 tag 所指；前置 v9 终态 = `e00315a`）；remote: https://github.com/Toylog123/FAECO.git（**已推送**）
+- 分支：main（**与 `origin/main` 同步**）；**v10 冻结终态 = 双 tag 所指末端提交**（r12 收敛链：`ac87046` 主稿/台账 → `68a9c69` 哈希回填 → r11 段标签更正；前置 v9 终态 = `e00315a`）；remote: https://github.com/Toylog123/FAECO.git（**已推送**）
 - 主稿件（唯一 `.tex`，**内容冻结 v10，内容改动留投稿/修稿轮**）：
   `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
   **10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；内容指纹 `c7b4d807…`（poppler 25.07）

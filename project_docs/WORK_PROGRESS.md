@@ -14,7 +14,7 @@
 > ⚠ 说明：r8/r9（v7）、r10（v8）两轮未在本文件登记，详见 `LOGS.md`（LOG-20261012-01~04）与 `CURRENT_RUN_HANDOFF.md`。本节从 v9 起恢复登记。
 
 - **做了什么**：用户提供「投稿前精修」六阶段方案，经取证核验后裁定三项（① 中英标题定稿；② cost 消融暂缓；③ Step 1 立即执行）。落地 **7 组改动**：中/英标题定稿（`Candidate Exploration and Failure Characterization…` / 「面向预布局门级时序 ECO 的候选探索与失效刻画」）+ 摘要 CN/EN 重写 + §1.3 贡献 1/2 重写（贡献 3 保留）+ 术语统一（失效归因→失效刻画、结构化排序→候选排序 ×7）+ 结论末句改写（不留"未取得独立收益"式收尾）+ §2.2 比较焦点句 + 3 处语言风险修正；**主稿文件随标题改名**（`.tex` + 双副本 `.pdf`，同步 live pointer 文件；历史记录保留旧名）；新增 `.gitattributes` 强制 `versions/*/MANIFEST.sha256` 为 LF。
-- **关键结果**：**10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；`??`=0；表/图引用覆盖 **17/17**；浮动体编号阅读顺序 1..14 / 1..3；`.tex` `22de39a0…`（668 CRLF / 0 bare LF）；双副本 PDF 字节 `f642e533…`、内容指纹 `3832eeb2…`（poppler 25.07）；tag `v2026-10-12-submission-polish-r11` + 论文 tag `faeco-paper-final-20261012c`（= `daba5ab`）；`versions/v9/MANIFEST.sha256` 117 条全 OK（相对 v8 恰 3 条变化）。**零数字、零实验、零代码改动**（纯文字与定位）。
+- **关键结果**：**10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；`??`=0；表/图引用覆盖 **17/17**；浮动体编号阅读顺序 1..14 / 1..3；`.tex` `22de39a0…`（668 CRLF / 0 bare LF）；双副本 PDF 字节 `f642e533…`、内容指纹 `3832eeb2…`（poppler 25.07）；tag `v2026-10-12-submission-polish-r11` + 论文 tag `faeco-paper-final-20261012c`（= `e00315a` **终态**；r11 收尾时已用 `git tag -f` 由 `daba5ab` 重指）；`versions/v9/MANIFEST.sha256` 117 条全 OK（相对 v8 恰 3 条变化）。**零数字、零实验、零代码改动**（纯文字与定位）。
 - **下一步**：OI-028 投 Integration（英文稿 + `elsarticle` + 投稿材料）；OI-024 Word 转排件仍为 v6 版须随管线重建；OI-021 AIGC 披露改按 Elsevier 政策复核；OI-026 cost 消融**暂缓**。
 
 ## 2026-10-09 文字专项审稿全量落地轮（r7）：重冻结 v6 + 末页孤儿修复 + Word 稿重建

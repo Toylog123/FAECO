@@ -16,7 +16,7 @@
 - **用户三项裁定**：① 中/英标题定稿 —— EN `FAECO: Candidate Exploration and Failure Characterization for Pre-Placement Gate-Level Timing ECO`，CN「面向预布局门级时序 ECO 的候选探索与失效刻画」；② **cost 消融暂缓**（非投稿前置条件）；③ **Step 1 立即执行**。
 - **7 组改动**（零数字/零实验/零代码）：标题 CN/EN + 摘要 CN/EN 重写 + §1.3 贡献 1/2 重写（贡献 3 保留）+ 术语统一（失效归因→失效刻画、结构化排序→候选排序 ×7）+ 结论末句改写 + §2.2 比较焦点句 + 3 处语言风险；**主稿改名**「…候选探索与失效刻画」（`.tex` + 双副本 `.pdf`，同步 live pointers）。
 - **质量门**：**10 页** / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox；`??`=0；表/图引用 17/17；浮动体顺序 1..14 / 1..3；`.tex` `22de39a0…`；双副本 PDF `f642e533…`、内容指纹 `3832eeb2…`（poppler 25.07）。
-- **重冻结 v9**：tag `v2026-10-12-submission-polish-r11`（论文 tag `faeco-paper-final-20261012c`，= `daba5ab`）；`versions/v9/MANIFEST.sha256` 117 条全 OK；`BASELINE_INDEX.csv` v8→superseded / v9→active。
+- **重冻结 v9**：tag `v2026-10-12-submission-polish-r11`（论文 tag `faeco-paper-final-20261012c`，= `e00315a` **终态**；r11 收尾时已用 `git tag -f` 由 `daba5ab` 重指，见 `versions/v9/README.md`）；`versions/v9/MANIFEST.sha256` 117 条全 OK；`BASELINE_INDEX.csv` v8→superseded / v9→active。
 - **目标期刊改投**：JCAD → **Integration, the VLSI Journal**（OI-028）。**新增 `.gitattributes`**（`versions/*/MANIFEST.sha256` 强制 LF）。
 
 ## 2026-10-09 文字专项审稿全量落地轮（r7）
