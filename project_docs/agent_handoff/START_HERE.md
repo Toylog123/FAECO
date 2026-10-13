@@ -6,12 +6,12 @@
 
 - 项目：FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
-- 分支：main；**v16 冻结终态 = v16 双 tag 所指提交**（`git rev-parse v2026-10-13-fig2-update-r18^{commit}`；r18 **单一提交**（图 2 机制图替换 + 台账/交接层同步），其后另有 tag 之外的簿记提交；前置 v15 终态 = `49aa835`、v14 终态 = `4d5e511`、v13 终态 = `0a03841`、v12 终态 = `dfc0394`、v11 终态 = `d59e00f`、v10 终态 = `b1403d9`、v9 终态 = `e00315a`）；remote: https://github.com/Toylog123/FAECO.git（**v11 + v12 + v13 + v14 + v15 + v16 均尚未推送**——按项目惯例 push 等用户明确指令；v10 及以前已推送）
-- 主稿件（唯一 `.tex`，**内容冻结 v16，内容改动留投稿/修稿轮**）：
+- 分支：main；**v17 冻结终态 = v17 双 tag 所指提交**（`git rev-parse v2026-10-13-positioning-r19^{commit}`；r19 **单一提交**（12 处叙述层改写 + 台账/交接层同步），其后另有 tag 之外的簿记提交；前置 v16 终态 = `0000885`、v15 终态 = `49aa835`、v14 终态 = `4d5e511`、v13 终态 = `0a03841`、v12 终态 = `dfc0394`、v11 终态 = `d59e00f`、v10 终态 = `b1403d9`、v9 终态 = `e00315a`）；remote: https://github.com/Toylog123/FAECO.git（**v11 + v12 + v13 + v14 + v15 + v16 + v17 均尚未推送**——按项目惯例 push 等用户明确指令；v10 及以前已推送）
+- 主稿件（唯一 `.tex`，**内容冻结 v17，内容改动留投稿/修稿轮**）：
   `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
-  **10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；内容指纹 `c5fa3f26…`（poppler 25.07）
-- 基线 tag：**`v2026-10-13-fig2-update-r18`**（四元绑定 manifest `versions/v16/MANIFEST.sha256`，117 条）；
-  论文发布 tag `faeco-paper-final-20261013g`；前置 v15 = `v2026-10-13-logic-calibration-r17` / `faeco-paper-final-20261013f`，v14 = `v2026-10-13-terminology-calibration-r16` / `faeco-paper-final-20261013e`，v13 = `v2026-10-13-defensive-purge2-r15` / `faeco-paper-final-20261013d`，v12 = `v2026-10-13-defensive-purge-r14` / `faeco-paper-final-20261013c`，v11 = `v2026-10-13-abstract-broaden-r13` / `faeco-paper-final-20261013b`，v10 = `v2026-10-12-pre-submission-consistency-r12` / `faeco-paper-final-20261013`（= `b1403d9`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
+  **11 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；内容指纹 `42bfb149…`（poppler 25.07）；第 11 页为参考文献孤儿页（版式压缩见 OI-027）
+- 基线 tag：**`v2026-10-13-positioning-r19`**（四元绑定 manifest `versions/v17/MANIFEST.sha256`，117 条）；
+  论文发布 tag `faeco-paper-final-20261013h`；前置 v16 = `v2026-10-13-fig2-update-r18` / `faeco-paper-final-20261013g`，v15 = `v2026-10-13-logic-calibration-r17` / `faeco-paper-final-20261013f`，v14 = `v2026-10-13-terminology-calibration-r16` / `faeco-paper-final-20261013e`，v13 = `v2026-10-13-defensive-purge2-r15` / `faeco-paper-final-20261013d`，v12 = `v2026-10-13-defensive-purge-r14` / `faeco-paper-final-20261013c`，v11 = `v2026-10-13-abstract-broaden-r13` / `faeco-paper-final-20261013b`，v10 = `v2026-10-12-pre-submission-consistency-r12` / `faeco-paper-final-20261013`（= `b1403d9`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
 - 投稿目标期刊：**Integration, the VLSI Journal**（Elsevier；由 JCAD 改投，OI-028）；旧投稿包 `paper/zh/submission/`（T20/JCAD 版，作历史参考）
 - 实验入口：`experiments/INVENTORY.md`、`experiments/RESULTS.md`（rev. 2026-09-29 已对齐论文口径）
 - 环境：`.venv`（Python 3.11.9）；pytest import 报错先 `.venv\Scripts\python.exe -m pip install -e .`
@@ -20,15 +20,15 @@
 
 ## 立即工作
 
-1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-10-13 图 2 机制图替换 r18（零 .tex 改动））：**用户直接指定**的**第四轮审稿意见**（非外部匿名审稿，**不增实验**），对**作者版(5) = v14** 做逻辑链专项复审（自评 8.5/10），裁定「已明显不是防御型论文；问题不是'解释太多'，而是少数地方**贡献强度 > 实验支撑一点点**」，明确「**不要再增加实验；下一轮做逻辑一致性精修（claim calibration）：控制 claim 范围 / 明确模块关系 / 统一'分析/调整/控制'等词**」。**12 处改写**（P0×4 + P1×2 + 配套×6），`.tex` diffstat **11 行**（E8+E12 同处摘要行）；**三处配套可回退**（E2 措辞适配 / E4–E6 随表题统一 / E11–E12「候选级评估开销」统一）；**「控制」保留 12 处**；**零数字/零实验/零代码/零参考文献**。重冻结 **v15**；无新增遗留。
+1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-10-13 论文定位重构 r19（12 处改写））：**用户直接指定**的**论文定位重构轮**（非外部匿名审稿，**不增实验**）。用户自主修正反馈层级（「前面几轮更多是在给『审稿结论』，没有展开到**论文修改指导层面**」），核心判断「当前论文最大的问题不是技术不足，而是论文叙事没有把『FAECO 为什么重要』讲到最高层次」，裁定「最需要的是**论文定位重构**，不是技术重构」；优先级 ① 强化主线 → ② 首次概念定义 → ③ 强化重要性。**12 处改写**（A1–A3 概念定义 / B1–B3 主线与 §3.3 拆 3.3.1–3.3.3 / C1–C3 重要性 / D1–D4 实验定位）；16 次替换全部唯一命中；**零数字/零实验/零代码/零参考文献**；页数 10→11（末页为参考文献孤儿页）。重冻结 **v17**；无新增遗留。
 2. **当前最高优先 = OI-028：投 Integration, the VLSI Journal**——需**英文稿 + `elsarticle` 格式 + 投稿材料**（cover letter / highlights ≤85 字符 / graphical abstract）；中文稿作内容母本；AIGC 披露改按 **Elsevier** 政策复核（OI-021）。
 3. **已暂缓（用户裁定，勿擅启）**：OI-026 cost/feature 消融（**非投稿前置条件**，审稿人要求再做；方案见 `../planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md` §7）、§七 大规模验证、OI-027 版式压缩。
-4. **未同步项（投稿前必办）**：⚠ **OI-024 Word 转排件仍为 v6 版**，现缺 **r8–r18** 全部改动（标题/摘要/术语 + 六张表 + r12 的 15 处文本改动 + r13 的摘要两段 + §1.1 改写 + r14 的 10 处 + r15 的 11 处 + r16 的 17 处 + r17 的 12 处 + r18 的图 2 替换），且 `postprocess.py` 标题/摘要/关键词为硬编码，须随 `scratch/word_convert/` 管线重建并改输入新名；**OI-025** 图源 PNG 不在 manifest 覆盖内。
+4. **未同步项（投稿前必办）**：⚠ **OI-024 Word 转排件仍为 v6 版**，现缺 **r8–r19** 全部改动（标题/摘要/术语 + 六张表 + r12 的 15 处文本改动 + r13 的摘要两段 + §1.1 改写 + r14 的 10 处 + r15 的 11 处 + r16 的 17 处 + r17 的 12 处 + r18 的图 2 替换 + r19 的 12 处定位重构），且 `postprocess.py` 标题/摘要/关键词为硬编码，须随 `scratch/word_convert/` 管线重建并改输入新名；**OI-025** 图源 PNG 不在 manifest 覆盖内。
 5. 若审稿意见返回：以 `../review_history/paper_audit/consistency_audit_20260911.md` 为数字基线，**先读 `../evidence/PAPER_EVIDENCE_MANIFEST.md`**，只处理新意见；新增内容修改须先取得用户同意（**1-C 插入留修稿轮**，OI-018）。
 
 ## 不要做什么
 
-- **不要修改论文内容**（内容已冻结 v16）——任何内容改动（含摘要）须先取得用户同意，一切内容修改留投稿/修稿轮；Word 转排稿中的摘要改写也须先获授权（OI-020）。
+- **不要修改论文内容**（内容已冻结 v17）——任何内容改动（含摘要）须先取得用户同意，一切内容修改留投稿/修稿轮；Word 转排稿中的摘要改写也须先获授权（OI-020）。
 - `experiments/` 证据目录严禁删除；`paper/zh/figures/fig_iscas89.pdf` 是编译依赖，亦禁删。
 - 论文数字只认 `experiments/20260826_aggregation/summary.json` 及对应产物；引用任何数字前**实查证据文件**。
 - 未跑测试不修改 `code/src/rseco/`。
@@ -45,4 +45,4 @@
 
 ## 构建与验收（论文）
 
-见 `CURRENT_RUN_HANDOFF.md` 最上一节与 `versions/v16/README.md`：`cd paper/zh/manuscript` → `lualatex` ×2 → 质量门（`paper/zh/scripts/checks/latex_quality_gate.py`，Errors/Overfull/Underfull 须全 0）→ 双副本 `cp` + SHA256 核对 → 内容指纹（`pdftotext -layout … | sha256sum`，须用 poppler 25.07）。完成后按用户 standing 约定把作者版 PDF 同步到 `01_Papers/00_Summary/`。
+见 `CURRENT_RUN_HANDOFF.md` 最上一节与 `versions/v17/README.md`：`cd paper/zh/manuscript` → `lualatex` ×2 → 质量门（`paper/zh/scripts/checks/latex_quality_gate.py`，Errors/Overfull/Underfull 须全 0）→ 双副本 `cp` + SHA256 核对 → 内容指纹（`pdftotext -layout … | sha256sum`，须用 poppler 25.07）。完成后按用户 standing 约定把作者版 PDF 同步到 `01_Papers/00_Summary/`。
