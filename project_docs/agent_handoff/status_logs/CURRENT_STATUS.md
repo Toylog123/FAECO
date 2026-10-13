@@ -7,7 +7,7 @@
 - **五项改动**（零数字/零实验/零代码）：**M1** 表 5 SEC `19/19`→`18/19` + 表注；**M2** PicoRV32 `2/3`→`2/2` + 分母解释（5 处）；**M3** 表 11 表注补「两个 STA 计数口径不同」；**M4** 贡献 1 弱化 `1.07 ns` ↔ 加权割绑定；**M5** §3.4 + 表 4 措辞降调；另 §4.4 开头补「不单独隔离式 (2)」句。
 - **M3 关键取证**：`state.budget.sta_used`（预约计数，迭代边界判顶，逐电路 ≤500，random 三种子在 s420/s641 触顶）≠ `n_candidate_sta_runs`（`len(trials)`，论文口径，逐电路最高 1321）⇒ 表 11 的 4146/4883/5624 不受 500×8 约束、**数字无需更正**。
 - **质量门**：**10 页（不变）** / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox；`??`=0；表/图引用 17/17；浮动体顺序 1..14 / 1..3；`.tex` `c5828999…`；双副本 PDF `4ef380f7…`、内容指纹 `c7b4d807…`（poppler 25.07）。
-- **重冻结 v10**：tag `v2026-10-12-pre-submission-consistency-r12`（论文 tag `faeco-paper-final-20261013`）；`versions/v10/MANIFEST.sha256` 117 条全 OK；`BASELINE_INDEX.csv` v9→superseded / v10→active。
+- **重冻结 v10**：tag `v2026-10-12-pre-submission-consistency-r12`（论文 tag `faeco-paper-final-20261013`）；`versions/v10/MANIFEST.sha256` 117 条全 OK；`BASELINE_INDEX.csv` v9→superseded / v10→active；**已推送 origin（2026-10-13）**：`main` = `origin/main` = `b1403d9`，v10 双 tag 已上远端。
 
 ## 2026-10-12 投稿前精修轮（r11）：重冻结 v9
 
