@@ -8,7 +8,7 @@
 1. AGENTS.md（协作契约与规则）
 2. project_docs/agent_handoff/README.md（阅读顺序）
 3. project_docs/agent_handoff/START_HERE.md（当前状态与立即工作）
-4. project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md（只读最上一节 = 2026-10-13 投稿前一致性 pass r12）
+4. project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md（只读最上一节 = 2026-10-13 大同行入口改写 r13（摘要 + §1.1））
 5. project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md（动 .tex 前的强制门槛，含逐数字绑定）
 6. project_docs/OPEN_ISSUES.md（未决问题必须知晓并如实告知用户）
 7. paper/zh/submission/T20_SUBMISSION_PACKAGE.md（投稿检查单 + 决策点）
@@ -32,9 +32,9 @@
 【本轮目标（按优先级）】
 1. **OI-028 投 Integration**：以中文稿为内容母本产**英文稿** + `elsarticle` 格式 + 投稿材料
    （cover letter / highlights ≤85 字符 / graphical abstract）；英文标题已定锚。
-2. **OI-024**：Word 转排件仍为 v6 版，缺 **r8–r12** 全部改动（标题/摘要/术语 + 六张表 + r12 的 15 处文本改动）——
+2. **OI-024**：Word 转排件仍为 v6 版，缺 **r8–r13** 全部改动（标题/摘要/术语 + 六张表 + r12 的 15 处文本改动 + r13 的摘要两段与 §1.1 引言改写）——
    投稿前**必须**随 `scratch/word_convert/` 管线重建；`postprocess.py` 的标题/摘要/关键词为硬编码，
-   须先同步为 v9 文本并把输入路径改为新稿名。
+   须先同步为 v11 文本并把输入路径改为新稿名。
 3. 投稿必办：**OI-021 AIGC 使用披露**改按 **Elsevier** 政策复核；作者承诺书/保密审查；英文长摘要。
 4. 若审稿意见返回：以 project_docs/review_history/paper_audit/
    consistency_audit_20260911.md 为数字基线，并先读 PAPER_EVIDENCE_MANIFEST.md，
@@ -64,7 +64,7 @@
   # 质量门的 "Undefined: 5" 是字体替身警告，不是引用未解析；判引用看 '??' 计数。
 
 【完成标准（证据门）】
-- [ ] r13 大同行入口改写已落地，v11 已冻结（tag `v2026-10-13-abstract-broaden-r13`）；
+- [x] r13 大同行入口改写（摘要 + §1.1）已落地，v11 已冻结（tag `v2026-10-13-abstract-broaden-r13`）；
       审稿人判定「完成 M1–M5 后即为真正的投稿版本」。
 - [ ] Word 转排稿（若启动）：按官方 2026 模板，转排稿 SHA256 与来源 LaTeX 版本
       登记回 T20_SUBMISSION_PACKAGE.md §3。

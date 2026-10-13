@@ -2,8 +2,9 @@
 
 | 项 | 值 |
 |---|---|
-| 提交 | **v11 双 tag 所指提交**（r13 **收敛链**：`bd51520` 摘要两段 → 链末提交「§1.1 引言入口 + 台账全量同步」；两 tag 均指向链末提交，`git rev-parse v2026-10-13-abstract-broaden-r13^{commit}` 可验。**v11 从未推送 origin，故 tag 在链内前移，无历史改写影响**，与 r11 先例一致） |
+| 提交 | **`d59e00f`** = v11 双 tag 所指**链末提交**（r13 **收敛链**：`bd51520` 摘要 CN/EN 两段 → `d59e00f`「§1.1 引言入口 + 台账全量同步」；两 tag 均指向链末提交，`git rev-parse v2026-10-13-abstract-broaden-r13^{commit}` 可验。**v11 从未推送 origin，故 tag 在链内前移，无历史改写影响**，与 r11 先例一致） |
 | tag | `v2026-10-13-abstract-broaden-r13`（版本 tag）、`faeco-paper-final-20261013b`（论文 tag） |
+| 远端 | **尚未推送 origin**（v11 双 tag 与 r13 收敛链均未上远端；`origin/main` = `b1403d9`。等待用户「推送」指令后 `git push origin main` + `git push origin --tags`；推送簿记提交将位于 tag 之外，符合 r9/r11 先例） |
 | 前置 | v10 = 提交 `b1403d9`，tag `v2026-10-12-pre-submission-consistency-r12` / `faeco-paper-final-20261013` |
 | 触发 | 用户裁定：**摘要应改** —— 现开头直接进入「预布局门级时序 ECO / 局部修改映射网表 / 候选多」，对 EDA 小同行清楚、对 **Integration 这类期刊的大同行入口偏窄**（缺少"为什么这个问题值得解决"）；要求按「**大背景 → 具体问题 → 方法 → 结果 → 意义**」重排。随后追加指令「**§1.1 引言入口一并补大背**」⇒ 本轮范围 = **摘要 CN/EN + §1.1 引言首段** |
 | 论文中文题 | **FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画**（未变） |
