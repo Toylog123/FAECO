@@ -1,8 +1,8 @@
-# r13 响应：摘要大同行入口改写（已落地 = v11）
+# r13 响应：大同行入口改写（已落地 = v11）
 
 ## 结论
 
-**采纳，已落地并重冻结 v11。** 结构按用户指定的「大背景 → 具体问题 → 方法 → 结果 → 意义」重排；`.tex` diffstat = **2 insertions / 2 deletions**（恰 2 行替换：摘要 CN + 摘要 EN）。**零数字、零实验、零代码改动**；10 页 / 0 Error / 0 Overfull / 0 Underfull 不变。
+**采纳，已落地并重冻结 v11。** 结构按用户指定的「大背景 → 具体问题 → 方法 → 结果 → 意义」重排；`.tex` diffstat = **3 insertions / 3 deletions**（恰 3 行替换：摘要 CN + 摘要 EN + §1.1 引言首段）。**零数字、零实验、零代码改动**；10 页 / 0 Error / 0 Overfull / 0 Underfull 不变。
 
 ## 一、落地文本
 
@@ -51,8 +51,8 @@
 | 质检 | Errors 0 / Overfull 0 / Underfull 0 / Overfull vbox 0 / `undefined` 5（字体替身警告）/ `??` 0 |
 | 表图引用 | **17/17** |
 | 浮动体顺序 | 表 1..14、图 1..3（ALL OK） |
-| `.tex` | `7bd0dd8b…`（62,683 B；668 CRLF / 0 裸 LF） |
-| 双副本 PDF 字节 | `cd5d25ca…`（2,772,353 B，两处一致） |
-| 内容指纹 | `a3def3e0…`（poppler 25.07） |
+| `.tex` | `8fccfab0…`（62,936 B；668 CRLF / 0 裸 LF） |
+| 双副本 PDF 字节 | `a720829b…`（2,773,302 B，两处一致） |
+| 内容指纹 | `65e29b84…`（poppler 25.07） |
 | manifest | `versions/v11/MANIFEST.sha256` 117 条全 OK（相对 v10 恰 3 条变化） |
 | 重冻结 | tag `v2026-10-13-abstract-broaden-r13` + 论文 tag `faeco-paper-final-20261013b` |
