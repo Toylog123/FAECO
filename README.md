@@ -4,7 +4,7 @@
 
 - 项目类型：算法研究（EDA / 时序优化）
 - 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
-- 当前阶段：**论文内容冻结 v10**（中文稿 10 页；目标期刊 **Integration, the VLSI Journal**，由 JCAD 改投；剩余为英文稿 + `elsarticle` 投稿材料【OI-028】、Word 转排件重建【OI-024】、AIGC 披露按 Elsevier 政策复核【OI-021】等手工/流程项）
+- 当前阶段：**论文内容冻结 v11**（中文稿 10 页；目标期刊 **Integration, the VLSI Journal**，由 JCAD 改投；剩余为英文稿 + `elsarticle` 投稿材料【OI-028】、Word 转排件重建【OI-024】、AIGC 披露按 Elsevier 政策复核【OI-021】等手工/流程项）
 
 ## 整体设计
 
@@ -32,7 +32,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-最近一轮（2026-10-13，r12 投稿前一致性 pass）：论文**内容冻结 v10**（tag `v2026-10-12-pre-submission-consistency-r12`，**10 页** 0/0/0/0，内容指纹 `c7b4d807…`）——用户粘贴的**第五份外部审稿**（「投稿前最后一轮审稿人视角」）的 **M1–M5 全量落地**，用户裁定「**不要再加实验**」：M1 表 5 SEC `19/19`→`18/19` + 表注；M2 PicoRV32 `2/3`→`2/2` + 分母解释（5 处）；M3 表 11 表注补「**两个 STA 计数口径不同**」（预约计数 ≤500/电路 vs 论文口径合计 4146，数字无需更正）；M4 贡献 1 弱化 `1.07 ns` ↔ 加权割绑定；M5 §3.4 + 表 4 措辞降调。**零数字/零实验/零代码改动**。目标期刊由 JCAD **改投 Integration, the VLSI Journal**（OI-028）。前序轮：r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v10/README.md`。
+最近一轮（2026-10-13，r13 摘要大同行入口改写）：论文**内容冻结 v11**（tag `v2026-10-13-abstract-broaden-r13`，**10 页** 0/0/0/0，内容指纹 `a3def3e0…`）——**用户直接指定**的摘要改写（非外部审稿）：摘要由「具体问题 → 方法 → 结果」重排为「**大背景 → 具体问题 → 方法 → 结果 → 意义**」，使 Integration 这类期刊的大同行首句即知"为什么值得解决"；**仅中/英摘要两段**（`.tex` diffstat 2/2）。**与用户草案 5 处偏离**：术语「工程变更**优化**」→「**命令**」（ECO = Engineering Change **Order**，与 §1.1 一致）；**保留** r12 的 M2 分母解释（审稿人 ★★★★）；**保留** r6「其余无退化」边界声明；去「快速探索」无据修饰；末句补"意义"。**零数字/零实验/零代码改动**。摘要长度：中文 244→349 汉字、英文 164→214 词。**遗留**：§1.1 引言入口未同步，待裁定。前序轮：r12（v10，第五份外部审稿 M1–M5）、r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v11/README.md`。
 
 更早（2026-09-12）：工程按 `99_项目模板` 框架完成架构迁移（代码入 `code/`、过程文档入 `project_docs/`、原始基准入 `data/raw/`、临时件入 `scratch/`），映射全记录见 `project_docs/migration/MIGRATION_20260912.md`。
 
@@ -80,7 +80,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 冻结版本集合（v1–v10 具名基线，当前 active = v10 `v2026-10-12-pre-submission-consistency-r12`；冻结策略见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
+| `versions/` | 冻结版本集合（v1–v11 具名基线，当前 active = v11 `v2026-10-13-abstract-broaden-r13`；冻结策略见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 

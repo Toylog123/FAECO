@@ -6,12 +6,12 @@
 
 - 项目：FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
-- 分支：main（**与 `origin/main` 同步，已推送**）；**v10 冻结终态 = `b1403d9`**（v10 双 tag 所指末端提交；r12 收敛链：`ac87046` 主稿/台账 → `68a9c69` 台账哈希回填 → `b1403d9` r11 段标签目标更正；前置 v9 终态 = `e00315a`）；remote: https://github.com/Toylog123/FAECO.git（**v10 双 tag 已上远端**；推送簿记提交在 tag 之外，符合 r9/r11 先例）
-- 主稿件（唯一 `.tex`，**内容冻结 v10，内容改动留投稿/修稿轮**）：
+- 分支：main；**v11 冻结终态 = v11 双 tag 所指提交**（`git rev-parse v2026-10-13-abstract-broaden-r13^{commit}`；r13 单一提交含论文 + 台账 + 交接层；前置 v10 终态 = `b1403d9`、v9 终态 = `e00315a`）；remote: https://github.com/Toylog123/FAECO.git（**v11 尚未推送**——按项目惯例 push 等用户明确指令；v10 及以前已推送）
+- 主稿件（唯一 `.tex`，**内容冻结 v11，内容改动留投稿/修稿轮**）：
   `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
-  **10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；内容指纹 `c7b4d807…`（poppler 25.07）
-- 基线 tag：**`v2026-10-12-pre-submission-consistency-r12`**（四元绑定 manifest `versions/v10/MANIFEST.sha256`，117 条）；
-  论文发布 tag `faeco-paper-final-20261013`；前置 v9 = `v2026-10-12-submission-polish-r11` / `faeco-paper-final-20261012c`（= `e00315a`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
+  **10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；内容指纹 `a3def3e0…`（poppler 25.07）
+- 基线 tag：**`v2026-10-13-abstract-broaden-r13`**（四元绑定 manifest `versions/v11/MANIFEST.sha256`，117 条）；
+  论文发布 tag `faeco-paper-final-20261013b`；前置 v10 = `v2026-10-12-pre-submission-consistency-r12` / `faeco-paper-final-20261013`（= `b1403d9`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
 - 投稿目标期刊：**Integration, the VLSI Journal**（Elsevier；由 JCAD 改投，OI-028）；旧投稿包 `paper/zh/submission/`（T20/JCAD 版，作历史参考）
 - 实验入口：`experiments/INVENTORY.md`、`experiments/RESULTS.md`（rev. 2026-09-29 已对齐论文口径）
 - 环境：`.venv`（Python 3.11.9）；pytest import 报错先 `.venv\Scripts\python.exe -m pip install -e .`
@@ -20,15 +20,15 @@
 
 ## 立即工作
 
-1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-10-13 投稿前一致性 pass r12）：r12 = 用户粘贴的**第五份外部审稿**（「投稿前最后一轮审稿人视角」）的 **M1–M5 全量落地**，用户裁定 **「不要再加实验」**。**五项**：M1 表 5 SEC `19/19`→`18/19` + 表注；M2 PicoRV32 `2/3`→`2/2` + 分母解释（5 处）；M3 表 11 表注补「**两个 STA 计数口径不同**」（预约计数 ≤500/电路 vs 论文口径合计 4146，数字无需更正）；M4 贡献 1 弱化 `1.07 ns`↔加权割绑定；M5 §3.4 + 表 4 措辞降调；另 §4.4 开头补「不单独隔离式 (2)」句。**均零数字/零实验/零代码**。重冻结 **v10**。
+1. **读 `CURRENT_RUN_HANDOFF.md` 最上一节**（2026-10-13 摘要大同行入口改写 r13）：**用户直接指定**的摘要改写（非外部审稿），裁定「**摘要应该改**」。**仅中/英摘要两段**按「**大背景 → 具体问题 → 方法 → 结果 → 意义**」重排（`.tex` diffstat 2/2）；**与用户草案 5 处偏离**：术语「工程变更**优化**」→「**命令**」、**保留** r12 M2 分母解释、**保留** r6「其余无退化」、去「快速探索」、补"意义"；**零数字/零实验/零代码**。重冻结 **v11**。**遗留**：§1.1 引言入口未同步，待裁定。
 2. **当前最高优先 = OI-028：投 Integration, the VLSI Journal**——需**英文稿 + `elsarticle` 格式 + 投稿材料**（cover letter / highlights ≤85 字符 / graphical abstract）；中文稿作内容母本；AIGC 披露改按 **Elsevier** 政策复核（OI-021）。
 3. **已暂缓（用户裁定，勿擅启）**：OI-026 cost/feature 消融（**非投稿前置条件**，审稿人要求再做；方案见 `../planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md` §7）、§七 大规模验证、OI-027 版式压缩。
-4. **未同步项（投稿前必办）**：⚠ **OI-024 Word 转排件仍为 v6 版**，现缺 **r8–r12** 全部改动（标题/摘要/术语 + 六张表 + r12 的 15 处文本改动），且 `postprocess.py` 标题/摘要/关键词为硬编码，须随 `scratch/word_convert/` 管线重建并改输入新名；**OI-025** 图源 PNG 不在 manifest 覆盖内。
+4. **未同步项（投稿前必办）**：⚠ **OI-024 Word 转排件仍为 v6 版**，现缺 **r8–r13** 全部改动（标题/摘要/术语 + 六张表 + r12 的 15 处文本改动 + r13 的摘要两段整体改写），且 `postprocess.py` 标题/摘要/关键词为硬编码，须随 `scratch/word_convert/` 管线重建并改输入新名；**OI-025** 图源 PNG 不在 manifest 覆盖内。
 5. 若审稿意见返回：以 `../review_history/paper_audit/consistency_audit_20260911.md` 为数字基线，**先读 `../evidence/PAPER_EVIDENCE_MANIFEST.md`**，只处理新意见；新增内容修改须先取得用户同意（**1-C 插入留修稿轮**，OI-018）。
 
 ## 不要做什么
 
-- **不要修改论文内容**（内容已冻结 v10）——任何内容改动（含摘要）须先取得用户同意，一切内容修改留投稿/修稿轮；Word 转排稿中的摘要改写也须先获授权（OI-020）。
+- **不要修改论文内容**（内容已冻结 v11）——任何内容改动（含摘要）须先取得用户同意，一切内容修改留投稿/修稿轮；Word 转排稿中的摘要改写也须先获授权（OI-020）。
 - `experiments/` 证据目录严禁删除；`paper/zh/figures/fig_iscas89.pdf` 是编译依赖，亦禁删。
 - 论文数字只认 `experiments/20260826_aggregation/summary.json` 及对应产物；引用任何数字前**实查证据文件**。
 - 未跑测试不修改 `code/src/rseco/`。
@@ -45,4 +45,4 @@
 
 ## 构建与验收（论文）
 
-见 `CURRENT_RUN_HANDOFF.md` 最上一节与 `versions/v10/README.md`：`cd paper/zh/manuscript` → `lualatex` ×2 → 质量门（`paper/zh/scripts/checks/latex_quality_gate.py`，Errors/Overfull/Underfull 须全 0）→ 双副本 `cp` + SHA256 核对 → 内容指纹（`pdftotext -layout … | sha256sum`，须用 poppler 25.07）。完成后按用户 standing 约定把作者版 PDF 同步到 `01_Papers/00_Summary/`。
+见 `CURRENT_RUN_HANDOFF.md` 最上一节与 `versions/v11/README.md`：`cd paper/zh/manuscript` → `lualatex` ×2 → 质量门（`paper/zh/scripts/checks/latex_quality_gate.py`，Errors/Overfull/Underfull 须全 0）→ 双副本 `cp` + SHA256 核对 → 内容指纹（`pdftotext -layout … | sha256sum`，须用 poppler 25.07）。完成后按用户 standing 约定把作者版 PDF 同步到 `01_Papers/00_Summary/`。
