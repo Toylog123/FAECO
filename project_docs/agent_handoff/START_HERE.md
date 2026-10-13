@@ -6,12 +6,12 @@
 
 - 项目：FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画
 - 仓库：`D:\BaiduSyncdisk\01_Papers\03_FAECO`（唯一工作副本）
-- 分支：main，HEAD **`daba5ab`**（v9 投稿前精修重冻结，= 下方双 tag 所指）；remote: https://github.com/Toylog123/FAECO.git（⚠ r9/r10/r11 共 4 提交 + 6 tag 未推送 origin）
+- 分支：main（**与 `origin/main` 同步**）；**v9 冻结终态 = `e00315a`**（v9 双 tag 所指；链路：`daba5ab` 主稿/台账 → `da61cdf` 指针状态同步 → `e00315a` handoff 补记）；remote: https://github.com/Toylog123/FAECO.git（**已推送**，本地 21 个 tag 全部上远端）
 - 主稿件（唯一 `.tex`，**内容冻结 v9，内容改动留投稿/修稿轮**）：
   `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
   **10 页 / 0 Error / 0 Overfull / 0 Underfull / 0 Overfull vbox**；内容指纹 `3832eeb2…`（poppler 25.07）
-- 基线 tag：**`v2026-10-12-submission-polish-r11`**（= `daba5ab`，四元绑定 manifest `versions/v9/MANIFEST.sha256`，117 条）；
-  论文发布 tag `faeco-paper-final-20261012c`（= `daba5ab`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
+- 基线 tag：**`v2026-10-12-submission-polish-r11`**（= `e00315a`，四元绑定 manifest `versions/v9/MANIFEST.sha256`，117 条）；
+  论文发布 tag `faeco-paper-final-20261012c`（= `e00315a`）；实验 revision tag `faeco-exp-rev1`（= `87d01ba`）
 - 投稿目标期刊：**Integration, the VLSI Journal**（Elsevier；由 JCAD 改投，OI-028）；旧投稿包 `paper/zh/submission/`（T20/JCAD 版，作历史参考）
 - 实验入口：`experiments/INVENTORY.md`、`experiments/RESULTS.md`（rev. 2026-09-29 已对齐论文口径）
 - 环境：`.venv`（Python 3.11.9）；pytest import 报错先 `.venv\Scripts\python.exe -m pip install -e .`

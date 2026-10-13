@@ -2,7 +2,7 @@
 
 | 项 | 值 |
 |---|---|
-| 提交 | `daba5ab`（本轮双 tag 均指向该提交） |
+| 提交 | `e00315a`（v9 双 tag 所指**终态**；链路：`daba5ab` 主稿/台账 → `da61cdf` 指针状态同步 → `e00315a` handoff 补记） |
 | tag | `v2026-10-12-submission-polish-r11`（版本 tag）、`faeco-paper-final-20261012c`（论文 tag） |
 | 前置 | v8 = 提交 `df7f5ca`，tag `v2026-10-12-review-r10` / `faeco-paper-final-20261012b` |
 | 触发 | 用户「投稿前精修」六阶段方案（标题 / 贡献 / 语言 / 定位；**cost 消融暂缓**） |
