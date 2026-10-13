@@ -91,7 +91,7 @@
 \vspace{6pt}
 \end{center}
 \begin{flushleft}
-  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 随着集成电路规模与设计复杂度持续提升，时序收敛已成为数字芯片设计流程中的关键挑战。工程变更命令（engineering change order，ECO）通过在已有设计上做局部修改，可降低重新综合与物理实现带来的迭代成本。其中，预布局门级时序 ECO 在布局布线前探索局部网表修改方案，但受候选空间限制、候选验证开销较高。为此提出候选探索与失效刻画框架 FAECO：在违例路径局部逻辑上以多特征加权割与关键路径覆盖割生成并排序 R/G/B/JOINT 候选；将候选失效刻画为六类，作为搜索诊断与消融分析的依据；候选按轮提交，依次经函数与结构检查、时序分析与最终等价性检查。在 ISCAS89、ITC-99 和 PicoRV32 上，8/8、18/19 和 2/2 个实例取得预布局理想线网 WNS 改善（PicoRV32 第三个子模块无 setup 路径，不参与改善判定），其余无退化。固定权重、20 轮迭代下，混合候选平均改善 1.07\,ns，高于仅门尺寸调整的 0.16\,ns。消融实验显示，指数滑动平均失效反馈未带来额外收益，结构重综合候选也未带来额外 WNS 改善；逻辑深度降低不等于 WNS 改善，上述结果可为预布局 ECO 搜索策略设计提供参考。}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 随着集成电路规模与设计复杂度持续提升，时序收敛已成为数字芯片设计流程中的关键挑战。工程变更命令（engineering change order，ECO）通过在已有设计上做局部修改，可降低重新综合与物理实现带来的迭代成本。其中，预布局门级时序 ECO 在布局布线前探索局部网表修改方案，但受候选空间限制、候选验证开销较高。为此提出候选探索与失效刻画框架 FAECO：在违例路径局部逻辑上以多特征加权割与关键路径覆盖割生成并排序 R/G/B/JOINT 候选；将候选失效刻画为六类，作为搜索诊断与消融分析的依据；候选按轮提交，依次经函数与结构检查、时序分析与最终等价性检查。在 ISCAS89、ITC-99 和 PicoRV32 上，8/8、18/19 和 2/2 个实例取得预布局理想线网 WNS 改善（PicoRV32 第三个子模块无 setup 路径，不参与改善判定），其余无退化。固定权重、20 轮迭代下，混合候选平均改善 1.07\,ns，高于仅门尺寸调整的 0.16\,ns。消融实验进一步揭示候选反馈机制与结构重综合候选的性能边界，上述结果可为预布局 ECO 搜索策略设计提供参考。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；局部门级修改；多特征加权割；类型化失效刻画；分层验证；预布局时序优化}\par
@@ -110,7 +110,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small Timing closure has become a critical challenge in digital chip design as circuit scale and design complexity continue to grow. Engineering change order (ECO) techniques reduce the iteration cost of re-synthesis and physical implementation by applying localized modifications to an existing design. Among them, pre-placement gate-level timing ECO explores local netlist modifications before placement and routing, but its candidate space is limited and per-candidate verification is costly. FAECO is a framework for candidate exploration and failure characterization. It builds and ranks R/G/B/JOINT candidates over the local logic around violating paths via a multi-feature weighted cut and a critical-path cover cut, characterizes candidate failures into six types used for search diagnosis and ablation analysis, and commits candidates round by round through function and structural checks, timing analysis and final equivalence checking. On ISCAS89, ITC-99 and PicoRV32, 8/8, 18/19 and 2/2 instances achieve pre-placement ideal-net WNS improvement (the third PicoRV32 module has no setup path and is excluded), with no regression on the rest. Under fixed weights and 20 rounds, mixed candidates improve WNS by 1.07\,ns on average versus 0.16\,ns for gate sizing alone. Ablations show no extra benefit from moving-average failure feedback or structure-resynthesis candidates; lower logic depth does not imply WNS improvement, and these results inform the design of future pre-placement ECO search strategies.}\par
+  {\bfseries Abstract:} {\small Timing closure has become a critical challenge in digital chip design as circuit scale and design complexity continue to grow. Engineering change order (ECO) techniques reduce the iteration cost of re-synthesis and physical implementation by applying localized modifications to an existing design. Among them, pre-placement gate-level timing ECO explores local netlist modifications before placement and routing, but its candidate space is limited and per-candidate verification is costly. FAECO is a framework for candidate exploration and failure characterization. It builds and ranks R/G/B/JOINT candidates over the local logic around violating paths via a multi-feature weighted cut and a critical-path cover cut, characterizes candidate failures into six types used for search diagnosis and ablation analysis, and commits candidates round by round through function and structural checks, timing analysis and final equivalence checking. On ISCAS89, ITC-99 and PicoRV32, 8/8, 18/19 and 2/2 instances achieve pre-placement ideal-net WNS improvement (the third PicoRV32 module has no setup path and is excluded), with no regression on the rest. Under fixed weights and 20 rounds, mixed candidates improve WNS by 1.07\,ns on average versus 0.16\,ns for gate sizing alone. Ablations further reveal the performance boundaries of the failure-feedback mechanism and structure-resynthesis candidates, and these results inform the design of future pre-placement ECO search strategies.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; gate-level local modification; multi-feature weighted cut; typed failure characterization; layered verification; pre-placement timing optimization}\par
 \end{flushleft}
@@ -127,7 +127,7 @@
 
 除 B/G 外，已有研究还通过技术重映射和局部逻辑补丁扩大 ECO 的结构调整空间；此类方法能够改变局部逻辑实现，但通常需要额外的功能等价验证与候选筛选。逻辑补丁构造与物理优化的协同关系直接影响功能等价验证和时序收益。
 
-上述方法留下三个需要在公开工具链上量化的问题：第一，如何扩大深层逻辑的局部门级候选空间；第二，如何控制候选的功能、时序和物理验证成本；第三，如何对候选失效进行类型化刻画，以及这些失效信息在搜索诊断与候选控制中的作用。
+因此，预布局门级 ECO 仍需要解决三个问题：第一，如何扩大深层逻辑的局部门级候选空间；第二，如何控制候选的功能、时序和物理验证成本；第三，如何对候选失效进行类型化刻画，以及这些失效信息在搜索诊断与候选控制中的作用。
 \subsection{研究动机}
 本文面向预布局门级时序 ECO，研究如何在违例扇入锥内构造更多局部修改候选，并利用关键路径信息安排候选评估顺序。FAECO 通过多特征加权割与关键路径覆盖割生成候选，并对验证失败的候选进行分类，以支持后续搜索控制。
 
@@ -137,8 +137,8 @@
 本文的主要贡献如下：
 
 \begin{enumerate}
-  \item \textbf{候选探索框架}：提出面向预布局门级时序 ECO 的候选探索框架，通过多类型局部修改候选生成与候选排序扩展搜索空间，并降低候选验证开销。在固定权重、20 轮迭代配置下，混合候选策略相较单一门尺寸调整策略取得更大的平均 WNS 改善（1.07\,ns 对 0.16\,ns）。
-  \item \textbf{候选失效刻画机制}：建立候选失效刻画机制，将验证失败划分为功能与结构、边界、尺寸、时序收益、验证超时和物理复测六类（F1--F6），并利用失效信息分析候选搜索瓶颈、调整后续候选生成策略。
+  \item \textbf{候选探索框架}：提出面向预布局门级时序 ECO 的候选探索框架，通过多类型局部修改候选生成与候选排序扩展搜索空间，并降低候选验证开销。
+  \item \textbf{候选失效刻画机制}：建立候选失效刻画机制，将验证失败划分为功能与结构、边界、尺寸、时序收益、验证超时和物理复测六类（F1--F6），并辅助分析候选搜索瓶颈与候选生成策略调整。
   \item \textbf{迭代 ECO 与分层验证流程}：构建按轮提交的门级 ECO 流程与统一数据流——每轮基于更新后的网表重新提取违例锥并生成候选，候选依次经函数与结构检查、理想线网 STA 评估和简化 SPEF 复测，最终修复网表再经独立顺序 SEC 验证。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/2 个实例取得严格 WNS 改善（PicoRV32 第三个子模块无 setup 路径）。
 \end{enumerate}
 
@@ -165,7 +165,7 @@ B/G 物理优化近年来主要沿门尺寸调整、联合 B/G 和物理感知�
 
 从应用阶段看，结构重映射与 B/G 物理优化通常用于布局后或布线阶段的物理微调，逻辑补丁构造则多在综合后、布局前执行功能修复。FAECO 面向已映射网表，将局部候选搜索与预布局时序评估结合：在已映射网表上进行局部门级修改，同时用理想线网 STA 和简化线载模型进行预布局筛选。
 
-上述方法依赖不同的输入与基础设施，其与直接定量比较之间的主要障碍汇总于表~\ref{tab:baseline_cmp}。本文因此基于公开工具链建立统一实验环境，在统一的映射与约束条件下评估，并以候选级 STA 次数作为可复现的代价度量；比较重点为候选空间扩展、候选排序与验证开销三项。
+由于不同方法依赖不同的输入阶段与评价目标，本文基于公开工具链建立统一实验环境，在统一的映射与约束条件下评估，重点比较候选空间扩展、候选排序与验证开销；各方法的主要差异见表~\ref{tab:baseline_cmp}。
 
 上述四类方法的主要侧重点汇总如表~\ref{tab:related_diff}。
 
@@ -304,11 +304,11 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \end{aligned}
 \end{equation}
 }
-其中 $\lambda_b/\lambda_s/\lambda_v/\lambda_f$ 分别为边界、尺寸、验证和扇出权重，$\lambda_c$ 为关键路径深度折扣权重，默认均为 $1.0$；$n_C=|C(G,t)|$ 为目标扇入锥的门数，$s(v)$ 为门 $v$ 的局部扇入锥规模，$S_2=\sum_u s(u)^2$，$\mathrm{depth}_{\max}=\max_u \mathrm{depth}(u)$。扇出项与分母折扣均以 $\mathbb{1}[v{\in}V_R]$ 为门控：深度折扣与相应扇出项仅作用于存在 R 等价候选的门。对于缺少 R 等价候选的节点，继续施加深度折扣可能使搜索偏向无法实例化为 R 候选的边界，故对此类节点关闭 R 相关折扣，仍允许其参与 G/B 候选生成。$\lambda_c$ 同时参与关键路径覆盖候选的排序，用于调节对高关键度节点的偏好；归一化项用于抑制大锥规模。其中 $0.01$ 和 $0.1$ 为验证规模项与扇出项的固定缩放系数，所有实验均保持不变。
+其中 $\lambda_b/\lambda_s/\lambda_v/\lambda_f$ 分别为边界、尺寸、验证和扇出权重，$\lambda_c$ 为关键路径深度折扣权重，默认均为 $1.0$；$n_C=|C(G,t)|$ 为目标扇入锥的门数，$s(v)$ 为门 $v$ 的局部扇入锥规模，$S_2=\sum_u s(u)^2$，$\mathrm{depth}_{\max}=\max_u \mathrm{depth}(u)$。扇出项与分母折扣均以 $\mathbb{1}[v{\in}V_R]$ 为门控：深度折扣与相应扇出项仅作用于存在 R 等价候选的门。对缺少 R 等价候选的节点不施加 R 相关折扣，其仍可参与 G/B 候选生成。$\lambda_c$ 同时参与关键路径覆盖候选的排序，用于调节对高关键度节点的偏好；归一化项用于抑制大锥规模。其中 $0.01$ 和 $0.1$ 为验证规模项与扇出项的固定缩放系数，所有实验均保持不变。
 
 \subsection{特征设计动机}\label{sec:feature_motivation}
 
-式~\eqref{eq:cost} 中的各项特征分别对应预布局门级 ECO 中一类常见的风险。边界特征控制单次改动的区域范围，降低跨越局部逻辑边界候选被优先选择的概率，从而减少后续验证的额外开销；尺寸特征抑制候选局部扇入锥的规模增长，使候选维持在可枚举、可评估的范围内；验证特征按锥内门数施加与验证规模同向的惩罚，使搜索倾向于选择验证规模较小的候选；扇出特征降低高负载节点候选的优先级，以降低引入电气与负载风险的可能；深度特征则提高接近关键路径节点的优先级，使搜索更倾向于覆盖时序关键门。各特征与对应 ECO 风险的对照关系见表~\ref{tab:feature_motivation}。各权重在本文中均取固定值（默认 $1.0$），不随电路与测试集调整。
+式~\eqref{eq:cost} 中的各项特征分别对应预布局门级 ECO 中一类常见的风险。边界特征控制单次改动的区域范围，降低跨越局部逻辑边界候选被优先选择的概率，从而减少后续验证的额外开销；尺寸特征抑制候选局部扇入锥的规模增长，使候选维持在可枚举、可评估的范围内；验证特征按锥内门数施加与验证规模同向的惩罚，使搜索倾向于选择验证规模较小的候选；扇出特征降低高负载节点被优先选择的概率；深度特征则提高接近关键路径节点的优先级，使搜索更倾向于覆盖时序关键门。各特征与对应 ECO 风险的对照关系见表~\ref{tab:feature_motivation}。各权重在本文中均取固定值（默认 $1.0$），不随电路与测试集调整。
 
 \begin{table}[ht]
 \centering
@@ -382,7 +382,7 @@ FAECO 首先通过局部函数与结构检查筛选候选，再由 OpenSTA 评�
 
 \subsection{实验设置}\label{sec:setup}
 
-\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一采用 0.5 ns 时钟约束以形成时序压力。\textbf{本文将 WNS 改善作为评价指标，不讨论完整时序收敛；所有设计在同一约束下比较。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余实验以 WNS 严格改善为主要接受条件；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。
+\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一采用 0.5 ns 时钟约束以形成时序压力。\textbf{本文采用 WNS 改善作为主要评价指标，所有设计在同一约束下比较；WNS 改善不等同于完整时序收敛。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余实验以 WNS 严格改善为主要接受条件；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。
 
 \textbf{基准电路纳入规则}：ISCAS89 纳入能够经统一 Yosys→SKY130 HD 流程成功映射并形成有效 setup timing path 的 8 个顺序电路；ITC-99 按相同标准纳入 19 个电路（b01--b15、b17、b20--b22），其中 b18、b19 未纳入上述统一统计，在相同流程下作为大规模补充实例单独运行并报告（见 \S\ref{sec:itc99}）；PicoRV32 选择主核 \texttt{picorv32}、乘法协处理器 \texttt{picorv32\_pcpi\_mul} 与存储密集子模块 \texttt{picorv32\_regs}（存储簇）以覆盖控制、算术和存储三类结构差异。
 
@@ -574,7 +574,7 @@ EMA 自适应 & 4883 & 2065.3 \\
 
 \subsection{物理时序评估与失效检测}\label{sec:phys_closure}
 
-本节采用 \S\ref{sec:eff_prio} 效率优先配置的接受候选，与 \S\ref{sec:ablation} 的 20 轮迭代配置分开统计。表~\ref{tab:pr8} 给出了这些接受候选在 OpenROAD 布局及全局布线估计后的时序结果。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个 WNS 下降（幅度分别为 0.02 ns 和 0.01 ns）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束。另行开展 SPEF 负载扫描与门控实验，用于观察候选对线载估计的敏感性，并记录 F6 失效。本节的物理结果为基于布局与全局布线寄生估计的后验评估，用于观察接受候选在物理估计下的时序表现。
+本节采用 \S\ref{sec:eff_prio} 效率优先配置的接受候选，与 \S\ref{sec:ablation} 的 20 轮迭代配置分开统计。表~\ref{tab:pr8} 给出了这些接受候选在 OpenROAD 布局及全局布线估计后的时序结果。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个 WNS 下降（幅度分别为 0.02 ns 和 0.01 ns）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束。另行开展 SPEF 负载扫描与门控实验，用于观察候选对线载估计的敏感性，并记录 F6 失效。本节的物理结果为基于布局与全局布线寄生估计的后验评估，用于分析预布局筛选结果在寄生估计条件下的稳定性。
 
 
 独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网 WNS 改善逐步衰减。
@@ -638,7 +638,7 @@ $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
 
 本文提出面向预布局门级时序 ECO 的 FAECO 框架，通过多特征加权割与关键路径覆盖割构造 R/G/B/JOINT 候选，结合候选失效刻画、迭代提交和分层验证实现局部时序优化。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/2 个实例取得严格 WNS 改善（PicoRV32 第三个子模块无 setup 路径，不计入分母）。在固定权重、20 轮迭代实验中，混合候选策略的平均 WNS 改善为 1.07\,ns，高于纯 G 策略的 0.16\,ns；随机排序实验进一步表明，候选排序在多数电路上减少了取得首次改善所需的候选级 STA 次数。
 
-消融实验表明，EMA 自适应反馈相较固定权重未取得额外收益，扩展后的 S 候选虽能降低部分电路的逻辑深度，但未带来 WNS 改善。OpenROAD 布局及全局布线估计后，8 个 ISCAS89 电路中有 5 个保持改善、1 个持平、2 个出现不超过 0.02\,ns 的退化。失效统计显示，大部分候选的失败来源于时序收益不足（F4 占候选级评估的 60.2\%），而非功能保持问题，这为后续候选空间设计提供了依据。综上，候选空间与评估顺序是取得时序改善的主要因素（见表~\ref{tab:ablation}）。实验分析进一步揭示了候选排序、验证预算与结构扩展之间的关系，为后续预布局 ECO 搜索策略的设计提供依据。
+消融实验表明，EMA 自适应反馈相较固定权重未取得额外收益，扩展后的 S 候选虽能降低部分电路的逻辑深度，但未带来 WNS 改善。OpenROAD 布局及全局布线估计后，8 个 ISCAS89 电路中有 5 个保持改善、1 个持平、2 个出现不超过 0.02\,ns 的退化。失效统计显示，大部分候选的失败来源于时序收益不足（F4 占候选级评估的 60.2\%），而非功能保持问题，这为后续候选空间设计提供了依据。综上，候选空间与评估顺序是取得时序改善的主要因素（见表~\ref{tab:ablation}）。实验分析进一步揭示了候选排序、验证预算与结构扩展之间的关系，为预布局 ECO 候选探索策略设计提供参考。
 
 
 

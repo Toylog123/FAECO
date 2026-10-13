@@ -1,13 +1,13 @@
 # 任务看板
 
-更新时间：2026-10-13（去防御化重构 r14（正文 10 处语言风格改写），重冻结 v12）
+更新时间：2026-10-13（全篇去防御化编辑 r15（正文 11 处语言风格改写），重冻结 v13）
 
 | ID | 任务 | 状态 | 说明 |
 |---|---|---|---|
 | D-01 | versions/v1 冻结方案 | **done（A）** | 用户 2026-09-29 拍板轻量冻结：tag `v2026-09-29-submission-ready`（`d84061a`）+ `versions/v1/MANIFEST.sha256`（117 条全 OK）+ BASELINE_INDEX.csv active 行；已 push。附带发现 3 个证据汇总文件未被 git 跟踪（OI-022） |
 | D-02 | 机制图处置 | **done（A）** | 维持 3 图现状，无动作；投稿后视审稿意见再定（OI-006 结案） |
 | D-03 | DOI / DRC 投稿处置 | **done（A）** | DOI 投稿时按期刊系统生成；DRC 维持如实声明、Magic/KLayout 留作 rebuttal 备选（OI-001/OI-002 结案） |
-| T20 | 投稿件打包（目标期刊 = **Integration, the VLSI Journal**，由 JCAD 改投，OI-028） | in_progress | **中文稿已冻结 v12**（10 页，tag `v2026-10-13-defensive-purge-r14`，重冻结于 r14 去防御化重构）。**⚠ 尚未产出英文稿与 `elsarticle` 投稿材料**（cover letter / highlights ≤85 字符 / graphical abstract）。已完成：JCAD 要求核实报告 + 官方 2026 Word 模板 + 补充材料 S1–S5 初稿 + 参考文献核对（v4）+ 文字专项审稿（v6）+ r9/r10/r11 零算力增强 + r12 投稿前一致性 pass（M1–M5）+ r13 大同行入口改写 + r14 去防御化重构（正文 10 处语言风格改写）。**余下**：OI-028 英文稿 + `elsarticle` + 投稿材料（**英文摘要 214 词须按 Integration 作者指南复核上限**）；OI-024 Word 转排件重建（仍 v6 版，缺 **r8–r14** 全部改动 + 六张表；`postprocess.py` 标题/摘要为硬编码）；OI-021 AIGC 披露（改按 **Elsevier** 政策复核）；承诺书/保密审查/英文长摘要；§1.1 引言入口已一并补齐（r13 同日续轮，摘要 + §1.1 同时定稿） |
+| T20 | 投稿件打包（目标期刊 = **Integration, the VLSI Journal**，由 JCAD 改投，OI-028） | in_progress | **中文稿已冻结 v13**（10 页，tag `v2026-10-13-defensive-purge2-r15`，重冻结于 r15 全篇去防御化编辑）。**⚠ 尚未产出英文稿与 `elsarticle` 投稿材料**（cover letter / highlights ≤85 字符 / graphical abstract）。已完成：JCAD 要求核实报告 + 官方 2026 Word 模板 + 补充材料 S1–S5 初稿 + 参考文献核对（v4）+ 文字专项审稿（v6）+ r9/r10/r11 零算力增强 + r12 投稿前一致性 pass（M1–M5）+ r13 大同行入口改写 + r14 去防御化重构（正文 10 处）+ r15 全篇去防御化编辑（正文 11 处 + 摘要末句）。**余下**：OI-028 英文稿 + `elsarticle` + 投稿材料（**英文摘要 214 词须按 Integration 作者指南复核上限**）；OI-024 Word 转排件重建（仍 v6 版，缺 **r8–r15** 全部改动 + 六张表；`postprocess.py` 标题/摘要为硬编码）；OI-021 AIGC 披露（改按 **Elsevier** 政策复核）；承诺书/保密审查/英文长摘要；§1.1 引言入口已一并补齐（r13 同日续轮，摘要 + §1.1 同时定稿） |
 | 1-C | 技术设计 §12（增量 ECO 形式化） | blocked（待用户） | 代码侧已实现并过 0a 等价门；§12.2 论文文本已备、§12.4 前置 gate 全清；剩余动作 = 插入 `.tex`（属内容修改，与冻结令冲突）→ OI-018 |
 | ALIGN-01 | `experiments/RESULTS.md` 对齐论文口径 | **done** | rev. 2026-09-29：实查修正 3 处 headline（ISCAS89 中位 +0.10 / ITC-99 中位 +0.18 与 18/19 严格 / PicoRV32 中位 +0.60）+ b06 TNS 辅助接受事实；§2b 族 A/A\* 原已对齐 |
 
