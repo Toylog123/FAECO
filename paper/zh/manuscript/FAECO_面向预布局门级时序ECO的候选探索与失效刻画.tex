@@ -91,7 +91,7 @@
 \vspace{6pt}
 \end{center}
 \begin{flushleft}
-  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 预布局门级时序 ECO 通过局部修改映射网表改善时序违例，但候选多、验证开销大。为此提出候选探索与失效刻画框架 FAECO：在违例路径局部逻辑上以多特征加权割生成并排序 R/G/B/JOINT 候选；将候选失效刻画为六类，作为搜索诊断与消融分析的依据；候选按轮提交：先经函数与结构检查，再由时序分析评估，最终网表另经等价性检查。在 ISCAS89、ITC-99 和 PicoRV32 上，8/8、18/19 和 2/3 个实例取得预布局理想线网 WNS 改善，其余无退化。固定权重、20 轮迭代下，混合候选平均改善 1.07\,ns，高于仅门尺寸调整的 0.16\,ns。消融实验显示，指数滑动平均失效反馈未带来额外收益，结构重综合候选也未带来额外 WNS 改善；逻辑深度降低不等于 WNS 改善。}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 预布局门级时序 ECO 通过局部修改映射网表改善时序违例，但候选多、验证开销大。为此提出候选探索与失效刻画框架 FAECO：在违例路径局部逻辑上以多特征加权割生成并排序 R/G/B/JOINT 候选；将候选失效刻画为六类，作为搜索诊断与消融分析的依据；候选按轮提交：先经函数与结构检查，再由时序分析评估，最终网表另经等价性检查。在 ISCAS89、ITC-99 和 PicoRV32 上，8/8、18/19 和 2/2 个实例取得预布局理想线网 WNS 改善（PicoRV32 第三个子模块无 setup 路径，不参与改善判定），其余无退化。固定权重、20 轮迭代下，混合候选平均改善 1.07\,ns，高于仅门尺寸调整的 0.16\,ns。消融实验显示，指数滑动平均失效反馈未带来额外收益，结构重综合候选也未带来额外 WNS 改善；逻辑深度降低不等于 WNS 改善。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；局部门级修改；多特征加权割；类型化失效刻画；分层验证；预布局时序优化}\par
@@ -110,7 +110,7 @@
 \vspace{4pt}
 \end{center}
 \begin{flushleft}
-  {\bfseries Abstract:} {\small Pre-placement gate-level timing ECO improves timing by locally modifying the mapped netlist, yet candidates are numerous and per-candidate verification is costly. FAECO is a framework for candidate exploration and failure characterization. It builds and ranks R/G/B/JOINT candidates over local logic around violating paths via a multi-feature weighted cut and a critical-path cover cut, and characterizes candidate failures into six types used for search diagnosis and ablation analysis. Candidates are committed round by round: first screened by function and structural checks, then evaluated by timing analysis, the final netlist verified by equivalence checking. On ISCAS89, ITC-99 and PicoRV32, 8/8, 18/19 and 2/3 instances achieve pre-placement ideal-net WNS improvement, with no regression on the rest. Under fixed weights and 20 rounds, mixed candidates improve WNS by 1.07\,ns on average versus 0.16\,ns for gate sizing alone. Ablations show no extra benefit from moving-average failure feedback or structure-resynthesis candidates; lower logic depth does not imply WNS improvement.}\par
+  {\bfseries Abstract:} {\small Pre-placement gate-level timing ECO improves timing by locally modifying the mapped netlist, yet candidates are numerous and per-candidate verification is costly. FAECO is a framework for candidate exploration and failure characterization. It builds and ranks R/G/B/JOINT candidates over local logic around violating paths via a multi-feature weighted cut and a critical-path cover cut, and characterizes candidate failures into six types used for search diagnosis and ablation analysis. Candidates are committed round by round: first screened by function and structural checks, then evaluated by timing analysis, the final netlist verified by equivalence checking. On ISCAS89, ITC-99 and PicoRV32, 8/8, 18/19 and 2/2 instances achieve pre-placement ideal-net WNS improvement (the third PicoRV32 module has no setup path and is excluded), with no regression on the rest. Under fixed weights and 20 rounds, mixed candidates improve WNS by 1.07\,ns on average versus 0.16\,ns for gate sizing alone. Ablations show no extra benefit from moving-average failure feedback or structure-resynthesis candidates; lower logic depth does not imply WNS improvement.}\par
 \vspace{3pt}
 {\bfseries Key words:} {\small gate-level timing ECO; gate-level local modification; multi-feature weighted cut; typed failure characterization; layered verification; pre-placement timing optimization}\par
 \end{flushleft}
@@ -137,9 +137,9 @@
 本文的主要贡献如下：
 
 \begin{enumerate}
-  \item \textbf{候选探索框架}：提出面向预布局门级时序 ECO 的候选探索框架，通过多特征加权割与关键路径覆盖割扩展局部修改空间，并利用候选排序降低验证开销。在固定权重、20 轮迭代实验中，混合候选策略的平均 WNS 改善为 1.07\,ns，高于纯 G 策略的 0.16\,ns。
+  \item \textbf{候选探索框架}：提出面向预布局门级时序 ECO 的候选探索框架，通过多类型局部修改候选生成与候选排序扩展搜索空间，并降低候选验证开销。在固定权重、20 轮迭代配置下，混合候选策略相较单一门尺寸调整策略取得更大的平均 WNS 改善（1.07\,ns 对 0.16\,ns）。
   \item \textbf{候选失效刻画机制}：建立候选失效刻画机制，将验证失败划分为功能与结构、边界、尺寸、时序收益、验证超时和物理复测六类（F1--F6），用于分析候选搜索瓶颈并提供参数调整依据。该机制的定位是\textbf{搜索诊断与候选控制}——为下一轮候选构造提供输入，而非独立的收敛增益来源；固定权重与自适应反馈的对照实验支持这一定位。
-  \item \textbf{迭代 ECO 与分层验证流程}：构建按轮提交的门级 ECO 流程与统一数据流——每轮基于更新后的网表重新提取违例锥并生成候选，候选依次经函数与结构检查、理想线网 STA 评估和简化 SPEF 复测，最终修复网表再经独立顺序 SEC 验证。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/3 个实例取得严格 WNS 改善。
+  \item \textbf{迭代 ECO 与分层验证流程}：构建按轮提交的门级 ECO 流程与统一数据流——每轮基于更新后的网表重新提取违例锥并生成候选，候选依次经函数与结构检查、理想线网 STA 评估和简化 SPEF 复测，最终修复网表再经独立顺序 SEC 验证。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/2 个实例取得严格 WNS 改善（PicoRV32 第三个子模块无 setup 路径）。
 \end{enumerate}
 
 % =============================================================================
@@ -308,7 +308,7 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 
 \subsection{特征设计动机}\label{sec:feature_motivation}
 
-式~\eqref{eq:cost} 中的各项特征分别对应预布局门级 ECO 中一类常见的风险。边界特征控制单次改动的区域范围，避免修改跨越局部逻辑闭合边界而在后续验证中引入额外开销；尺寸特征抑制候选局部扇入锥的规模增长，使候选维持在可枚举、可评估的范围内；验证特征按锥内门数施加与验证开销同向的惩罚，用于降低候选的功能与结构验证成本；扇出特征降低高负载节点的候选优先级，避免在扇出较大的节点上引入电气与负载风险；深度特征则提高接近关键路径节点的优先级，使搜索更倾向于覆盖时序关键门。各特征与对应 ECO 风险的对照关系见表~\ref{tab:feature_motivation}。各权重在本文中均取固定值（默认 $1.0$），不随电路与测试集调整。
+式~\eqref{eq:cost} 中的各项特征分别对应预布局门级 ECO 中一类常见的风险。边界特征控制单次改动的区域范围，降低跨越局部逻辑边界候选被优先选择的概率，从而减少后续验证的额外开销；尺寸特征抑制候选局部扇入锥的规模增长，使候选维持在可枚举、可评估的范围内；验证特征按锥内门数施加与验证规模同向的惩罚，使搜索倾向于选择验证规模较小的候选；扇出特征降低高负载节点候选的优先级，以降低引入电气与负载风险的可能；深度特征则提高接近关键路径节点的优先级，使搜索更倾向于覆盖时序关键门。各特征与对应 ECO 风险的对照关系见表~\ref{tab:feature_motivation}。各权重在本文中均取固定值（默认 $1.0$），不随电路与测试集调整。
 
 \begin{table}[ht]
 \centering
@@ -320,10 +320,10 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
 \toprule
 \textbf{特征} & \textbf{式~\eqref{eq:cost} 中的项} & \textbf{对应 ECO 风险与设计取向} \\
 \midrule
-边界 & 边界惩罚 $\lambda_b/(1+\mathrm{depth})$ & 避免改动跨越局部逻辑闭合边界 \\
+边界 & 边界惩罚 $\lambda_b/(1+\mathrm{depth})$ & 降低跨越局部逻辑边界候选的优先级 \\
 尺寸 & 规模惩罚 $\lambda_s s(v)^2/S_2$ & 控制候选规模，使候选可枚举、可评估 \\
-验证 & 验证代价 $0.01\lambda_v n_C$ & 按锥内门数惩罚，降低验证成本 \\
-扇出 & 扇出惩罚 $0.1\lambda_f\mathrm{fanout}$ & 避免高负载节点引入电气与负载风险 \\
+验证 & 验证代价 $0.01\lambda_v n_C$ & 按锥内门数惩罚，倾向选择验证规模较小的候选 \\
+扇出 & 扇出惩罚 $0.1\lambda_f\mathrm{fanout}$ & 降低高负载节点候选的优先级 \\
 深度 & 深度折扣 $\lambda_c\,\mathrm{depth}/\mathrm{depth}_{\max}$ & 提高关键路径覆盖，优先贴近时序关键门 \\
 \bottomrule
 \multicolumn{3}{p{0.92\columnwidth}}{\footnotesize 表中各项与式~\eqref{eq:cost} 逐项对应；扇出项与深度折扣均以存在 R 等价候选为门控条件。本表只给出特征的设计取向，不主张权重取值的理论最优性。}\\
@@ -420,10 +420,10 @@ F1--F6 失效反馈                  & 启用 & 不启用（固定权重） \\
 \textbf{测试集} & \textbf{实例数} & \textbf{严格 WNS 改善} & \textbf{$\Delta_{\mathrm{WNS}}$ 均值\,/\,中位 (ns)} & \textbf{SEC 通过} \\
 \midrule
 ISCAS89  & 8  & 8/8   & 0.16\,/\,0.10 & 8/8 \\
-ITC-99   & 19 & 18/19 & 0.43\,/\,0.18 & 19/19 \\
-PicoRV32 & 3  & 2/3   & 0.60\,/\,0.60 & 2/2 \\
+ITC-99   & 19 & 18/19 & 0.43\,/\,0.18 & 18/19 \\
+PicoRV32 & 3  & 2/2   & 0.60\,/\,0.60 & 2/2 \\
 \bottomrule
-\multicolumn{5}{p{0.95\columnwidth}}{\footnotesize 本表为统一跨测试集配置（最多 8 轮迭代、启用跨轮失效反馈）口径；$\Delta_{\mathrm{WNS}}$ 为预布局理想线网下的 WNS 改善量，均值与中位数只在可评估实例上统计。PicoRV32 的 \texttt{picorv32\_regs} 为存储簇、无寄存器到寄存器时序路径，不参与改善判定与统计，其 SEC 不适用。} \\
+\multicolumn{5}{p{0.95\columnwidth}}{\footnotesize 本表为统一跨测试集配置（最多 8 轮迭代、启用跨轮失效反馈）口径；$\Delta_{\mathrm{WNS}}$ 为预布局理想线网下的 WNS 改善量，均值与中位数只在可评估实例上统计。SEC 列为完全证明的修改网表对数；ITC-99 的 b17 有 1 个等价点未完成证明（见 \S\ref{sec:ood}），故记为 18/19。PicoRV32 的 \texttt{picorv32\_regs} 为存储簇、无寄存器到寄存器时序路径，不参与改善判定与统计，其 SEC 不适用。} \\
 \end{tabular}
 \end{table}
 
@@ -479,11 +479,11 @@ s953 & 228 & 通过 & 0.537 \\
 
 基于同一寄存器传输级（RTL）源的三个结构差异明显的子模块直接复用 ISCAS89 流程。其中 PicoRV32 主核与其 PCPI 乘法协处理器 \texttt{picorv32\_pcpi\_mul} 具有有效 setup 路径，分别获得 $+1.13$ 和 $+0.07\,$ns 的改善（修复网表由 R/G/B 多类接受补丁叠加形成）；存储密集子模块 \texttt{picorv32\_regs} 为存储簇、无可建立 setup 路径，因此未执行对应的时序修复，不参与改善判定；该实例未经历时序修复，不属于算法修复失败。
 
-统一跨测试集评估中，三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/3。顺序 SEC 面向 30 个测试实例：29 个实例产生实际网表修改，其中 28/29 个修改网表对完全证明（三组分别为 8/8、18/19 和 2/2）；b06 的最终 WNS 与基线持平，其接受的缓冲器/延迟单元补丁不改变 WNS，并经顺序 SEC 完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs} 无 setup 路径，其输出网表与基线一致。b17 的修复网表经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证 12812 个等价点，另有 1 个等价点未完成证明。该点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换，本文将其单独报告。
+统一跨测试集评估中，三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/2（PicoRV32 中第三个子模块无 setup 路径，不计入分母）。顺序 SEC 面向 30 个测试实例：29 个实例产生实际网表修改，其中 28/29 个修改网表对完全证明（三组分别为 8/8、18/19 和 2/2）；b06 的最终 WNS 与基线持平，其接受的缓冲器/延迟单元补丁不改变 WNS，并经顺序 SEC 完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs} 无 setup 路径，其输出网表与基线一致。b17 的修复网表经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证 12812 个等价点，另有 1 个等价点未完成证明。该点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换，本文将其单独报告。
 
 \subsection{候选空间、排序与反馈消融}\label{sec:ablation}
 
-本节分两组实验。第一组在固定权重及 20 轮迭代预算下比较候选空间与候选评估顺序：混合候选策略在 8 个 ISCAS89 电路上的平均 WNS 改善为 1.07\,ns，分别高于纯 G 的 0.16\,ns 和纯 B 的 0.54\,ns。保持混合候选空间不变、随机化评估顺序后，平均改善降至 0.40\,ns。以首次取得改善所需的候选级 STA 次数衡量，候选排序在 7 个有台账的电路中有 6 个少于随机排序的三种子均值，但该指标对随机种子高度敏感——同一电路的不同种子间最大相差 7 倍，且在 s713 上随机排序反而更少（见表~\ref{tab:efficiency}）。因此在本文的实验范围内，候选排序在多数电路上减少了取得首次改善所需的 STA 评估次数，但这一优势并非在所有电路上都成立（各列均为固定搜索权重，见表~\ref{tab:ablation}）。
+本节分两组实验。第一组在固定权重及 20 轮迭代预算下比较候选空间与候选评估顺序的联合影响，不单独隔离式~\eqref{eq:cost} 中各特征项的贡献（特征项属候选生成过程的一部分，其权重在本组固定不变）：混合候选策略在 8 个 ISCAS89 电路上的平均 WNS 改善为 1.07\,ns，分别高于纯 G 的 0.16\,ns 和纯 B 的 0.54\,ns。保持混合候选空间不变、随机化评估顺序后，平均改善降至 0.40\,ns。以首次取得改善所需的候选级 STA 次数衡量，候选排序在 7 个有台账的电路中有 6 个少于随机排序的三种子均值，但该指标对随机种子高度敏感——同一电路的不同种子间最大相差 7 倍，且在 s713 上随机排序反而更少（见表~\ref{tab:efficiency}）。因此在本文的实验范围内，候选排序在多数电路上减少了取得首次改善所需的 STA 评估次数，但这一优势并非在所有电路上都成立（各列均为固定搜索权重，见表~\ref{tab:ablation}）。
 
 第二组检验失效反馈的独立作用：保持候选空间、初始权重与候选级 STA 预算（500 次）不变，两配置均采用 20 轮迭代上限并启用提前停止，分别使用固定权重（Fixed）与 EMA 自适应更新（Adaptive）。定义 $B(k)$ 为截至第 $k$ 次候选级 STA 评估的累计最优 WNS 改善（best-so-far 曲线），两种配置在 8 个 ISCAS89 电路上的最终 $\Delta\mathrm{WNS}$、首次改善位置和最大 $B(k)$ 均相同，未观察到 EMA 反馈带来的额外收益。因此，本文不将自适应反馈作为独立的性能提升来源，而把 F1--F6 定位为失效分类及搜索参数调整依据。在第二组的两类配置下，取得相同终点所需的搜索开销见表~\ref{tab:runtime}；表中另列随机排序作为对照。
 
@@ -551,7 +551,7 @@ s953 & 1 & 3 & 1 & 1 & 1.7 \\
 EMA 自适应 & 4883 & 2065.3 \\
 随机排序（三种子均值） & 5624 & 2460.3 \\
 \bottomrule
-\multicolumn{3}{p{0.92\columnwidth}}{\footnotesize 三行均采用 20 轮迭代上限、候选级 STA 预算 500 与提前停止，随机排序行为三个独立种子的均值。STA 次数为 8 个电路累计的候选级 STA 测量次数；时间为各电路墙钟耗时之和（含候选构造、映射与候选级 STA），不计最终 SEC。本表与表~\ref{tab:ablation}、表~\ref{tab:efficiency} 出自不同运行配置，其 STA 计数不与表~\ref{tab:efficiency} 的首次改善位置口径对应。}\\
+\multicolumn{3}{p{0.92\columnwidth}}{\footnotesize 三行均采用 20 轮迭代上限、提前停止与逐电路候选级 STA 预约上限 500（\texttt{--sta-budget}，在迭代边界检查；随机排序臂在 s420 与 s641 上触及该上限）。表中 STA 次数为 8 个电路候选级 STA 测量次数之和，与上述预约为不同计数口径，故不受 $500\times8$ 约束；时间为各电路墙钟耗时之和（含候选构造、映射与候选级 STA），不计最终 SEC。本表与表~\ref{tab:ablation}、表~\ref{tab:efficiency} 出自不同运行配置，其 STA 计数不与表~\ref{tab:efficiency} 的首次改善位置口径对应。}\\
 \end{tabular}
 \end{table}
 
@@ -636,7 +636,7 @@ $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
 
 \section{结论}\label{sec:conclusion}
 
-本文提出面向预布局门级时序 ECO 的 FAECO 框架，通过多特征加权割与关键路径覆盖割构造 R/G/B/JOINT 候选，结合候选失效刻画、迭代提交和分层验证实现局部时序优化。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/3 个实例取得严格 WNS 改善（仅指 WNS 改善，不等同于时序收敛）。在固定权重、20 轮迭代实验中，混合候选策略的平均 WNS 改善为 1.07\,ns，高于纯 G 策略的 0.16\,ns；随机排序实验进一步表明，候选排序在多数电路上减少了取得首次改善所需的候选级 STA 次数。
+本文提出面向预布局门级时序 ECO 的 FAECO 框架，通过多特征加权割与关键路径覆盖割构造 R/G/B/JOINT 候选，结合候选失效刻画、迭代提交和分层验证实现局部时序优化。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/2 个实例取得严格 WNS 改善（PicoRV32 第三个子模块无 setup 路径，不计入分母；仅指 WNS 改善，不等同于时序收敛）。在固定权重、20 轮迭代实验中，混合候选策略的平均 WNS 改善为 1.07\,ns，高于纯 G 策略的 0.16\,ns；随机排序实验进一步表明，候选排序在多数电路上减少了取得首次改善所需的候选级 STA 次数。
 
 消融实验表明，EMA 自适应反馈相较固定权重未取得额外收益，扩展后的 S 候选虽能降低部分电路的逻辑深度，但未带来 WNS 改善。OpenROAD 布局及全局布线估计后，8 个 ISCAS89 电路中有 5 个保持改善、1 个持平、2 个出现不超过 0.02\,ns 的退化。失效统计显示，大部分候选的失败来源于时序收益不足（F4 占候选级评估的 60.2\%），而非功能保持问题，这为后续候选空间设计提供了依据。综上，候选空间与评估顺序是取得时序改善的主要因素（见表~\ref{tab:ablation}）。实验分析进一步揭示了候选排序、验证预算与结构扩展之间的关系，为后续预布局 ECO 搜索策略的设计提供依据。
 
