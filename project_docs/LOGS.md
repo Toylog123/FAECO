@@ -852,3 +852,59 @@
 - 主线已实读domain文档门审查：生产源码没有剩余blocking，但设计中的12静态门仍partial，不以partial直接启动EDA。主线补P4/P6真实flow stub，实际 **3passed/0.37s**；domain继续补P3/P7/P11行动门，真实STA未开。
 - 主线独立复核b17交叉表：104row WNS一致，208份STA.log/Tcl的SHA全部通过；报告级104恢复的来源验证完成，不只是沿用审计者结论。
 - 准备只对代码/历史审计阶段commit钉快照，排除尚未完成英文草稿，不宣称正式实验完成。记录智能体已同步本节点，**按主线要求短暂停止共享记录写入供stage/commit，等待真实Git结果后恢复**；不执行Git。
+
+### LOG-20261014-20 — 代码/历史审计阶段提交与实际推送，恢复记录
+
+- 主线已创建阶段提交 **28c3c2b**（Add controlled cut policies, true STA ledger and historical evidence audit），37files；实际 `git push origin main` exit0，**46ede94→28c3c2b**。记录智能体实查HEAD与origin/main均28c3c2b。
+- 提交包含核心policy/ledger/CLI/batch及测试、约13MB历史SHA档案、r22计划/设计/代码审查、ROOT README/AGENTS/元数据和记录快照；未纳入未完成paper/en草稿。代码/历史审计阶段已固化，可回退；不将其当正式实验完成。
+- **正式EDA仍未启动**。domain继续补P3/P7/P11与K=1/2静态门，不修改production；之后锁actual source SHA及完整配置/输入再开pilot。记录智能体按主线通知恢复即时文档记录，不执行Git。
+
+### LOG-20261014-21 — 正式配置清单锁定dryrun、B18独立复核与母稿来源补充
+
+- `experiments/20261014_r22_cut_ablation/manifest.json`正式dryrun已生成：actual git28c3c2b、72完整命令、八个原始输入SHA、LIB SHA、production code SHA及三工具版本锁。**只有注册/锁定，无mapping/STA、无C′性能结果**；此清单不能写成72运行完成。
+- 主线独立重读B另18台账，`B18_count_verification.json`再证2890有限非缓存记录/独有报告；与b17独立104row/208SHA得到2994个有独有候选报告来源的STA结果，来源计数分层复核完成。
+- 中文母稿只新增3363评估记录中2994具有独立报告来源的候选STA结果说明，paper/zh/CHANGE_LOG已实时追加；旧性能/旧计数字段不改，没有把新族写成已完成。当前新tex尚待PDF编译/副本同步验收，不能沿用旧r21 PDF哈希作为新文本验收。
+
+### LOG-20261014-22 — 最后静态门与稳定全回归、中文来源句验收完成
+
+- domain staticaction最后12passed、主线flowstub3passed；最终稳定全套实际 **644passed/4skip/156subtests，99.14s、包装102s/exit0**。production code无diff，actualsource/LIB与manifest git28c3c2b一致，Python3.11.9；domain final覆盖表/证据正落盘。**准备formal pilot，不将planned写成已运行**。
+- 中文唯一2994来源句LuaLaTeX两次实际11s/10s exit0；r22 build_qa为12页、Error/Overfull hbox/Underfull hbox/Overfull vbox全0、21/21refs/无undefined；完整contactsheet及变更p8目视通过、2994回读存在。
+- manuscript/root/作者版三PDF实际字节一致，SHA **e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb**，**793545B**；旧作者版r21 c651已验证并备份scratch/r22_zh_pages/author_before_r22.pdf后才覆盖。新tex/PDF验收只认此r22证据，不沿用旧c651。
+- 英文完整约52KB tex/首编27页draft已到，但agent视觉QA未完成，未核声明/作者事实不能视为可提交；未使用新C′结果。本轮正式EDA仍未开跑。
+
+### LOG-20261014-23 — 正式pilot首次执行、独立SEC阻断与实现缺陷归因
+
+- 正式EDA首次真实启动：session66717，批超时包装43200s，命令 `.venv/Scripts/python.exe -u -X utf8 code/scripts/run_r22_cut_ablation.py --output-dir experiments/20261014_r22_cut_ablation --circuits s27,s382`，每run3900s包装/3930s硬超时；共享mapping两例完成后LAUNCH s382/W0与s27/W0，production43文件仍绑定28c3c2b。不是72运行完成。
+- domain最后增加JOINT on/off格，static action13项；与flow/candidate/launch联合39passed/0.93s，production无变化。该新增collection独立于前序全套644passed，不声称644中已含新test；preflight JSON/MD/JUnit与源码匹配实读通过。
+- W0/s27与W0/s382 runner分别47s/48s exit0，但独立最终SEC以`SEC helper definitions differ; shared semantics cannot be assumed`正确拦截，batch58s/exit1；未启动其它臂，完整失败目录保留。局部success不能替代最终SEC，无可验收C′效果结果，不把中间+.10/+.05 ns当有效收益。
+- 主线已定位B buffer插入首个endmodule（helper dff），wire/目标pin却在真正top；旧局部F1/F2解析全文件把模块合并一域，截取真实top后F2 declared-undriven。归因为可修实现/namespace隔离缺陷，不据此否定cost设想。新增OI-035插入跨模块错误与OI-036局部门伪pass/历史correctness影响两个独立问题。
+- 记录智能体独立回读原始台账：s27新STA/launch12、评估14；s382新STA/launch11、评估13。两臂cache counter与skipped_duplicate均0，各2条非STA是F1前置拒绝，**不能以records减launch称cache2**；已将实查更正回报主线。
+- domain负责buffer_insertion与多模块TDD，主线负责目标模块隔离/namespace boundary门；修复后须新commit、新pin/新v2目录并完整重跑受影响矩阵。旧权威论文correctness影响另作来源审计；当前旧数字不擅自改。所有正式效果结论继续待修复/独立SEC与新族验收。
+
+### LOG-20261014-24 — 历史correctness独立审计报告到达（待主线复核裁定）
+
+- 已实读 `evidence/r22_historical_correctness_20261014/REPORT.md`、逐实例correctness_audit.json及input_hashes.json，并现算报告/JSON/脚本SHA；派生审计不运行EDA、不改原始数据/论文/production。审计来源410项、r21 SHA匹配42项、既往r22 C输入匹配22项，报告无来源冲突；脚本与input manifest hash回算吻合。
+- 独立报告判定：B30实例中28个实际final/gold完整SEC绑定valid，b17部分证明和regs N/A各1 unidentified；B另14 ITC存在新wire声明在helper、top消费未显式声明的纪律缺口，但buffer逻辑留top且完整功能证明绑定，不能据此推翻功能保持。声明规范和功能证明是不同轴。
+- A八实例的旧SEC gate均读原mapped.v，而非accepted counterpart；s27/s820可复用已完整证明的相同初始/final对象，valid2，其余6 unidentified，需要补确切候选证明。s713 tie-cell parser不支持不作为网表无效证据；未知不等于失败。
+- D40终点中38实证helper新增/修改B逻辑或真实top declared-undriven，k=1另16中14同类invalid；两组固定/EMA s820可绑定已证明对象valid。C只查s27/s382×六配置代表12，9 invalid、3 unidentified，不外推全集48run，不由源码函数风险直接宣判所有旧结果。
+- invalid为保留网表结构/模块边界缺陷，不等于本轮新跑SEC证明不等价。数字可复算/STA来源可对账不证明候选合法；D预算/EMA收益与C代表相关历史效果的合法性受影响，具体论文修订/复验范围待主线复核裁定。原证据不删、不跨族用C′覆盖旧数。
+- 已登记DERIVED-R22-CORRECTNESS。OI-036当前附审计报告，但不自行扩大关闭范围或新增独立A问题；A错绑是否另立OI-037已向主线建议，等待正式裁定。生产修复/新pin/v2门仍未宣布完成。
+
+### LOG-20261014-25 — 用户明确暂停、只读核对与行政交接收口
+
+- 用户明确要求先暂停、总结交接；r22状态改为 **paused，等待用户明确恢复**。仅完成行政交接/文档同步与保存暂停checkpoint；暂停后不得自动恢复修复、实验、构建、稿件推进或扩大审计。所有EDA已结束，**无v2开跑、无新有效C′成果**。
+- 主线最后完成全套回归 **667passed/4skipped/156subtests，100.20s**；该数是当时完成的被测对象记录，不代表新增阻断门已解决、当前全部检查通过或科学结论恢复。buffer/namespace工作区修复与新增测试已有改动，未作修复版本新pin/真实SEC与矩阵验收。
+- 多输出parser任务在写盘前被中断，**尚未实施，不存在半成品**。主线只读检查确认netlist.py/netlist_io.py/replacement.py无git diff、test_r22_cell_outputs.py不存在；记录智能体独立回读也为空diff/False。多输出Liberty模型、合法常量/assign/重复实例及端点namespace边界剩余门仍未解决，见NAMESPACE_FIX_REVIEW.md/JSON，不新跑门。
+- 主线已实读确认历史correctness报告：B28完整SEC实际对象绑定保留；A6接受对象缺确切证明；D38/40与k1 14/16终点结构缺陷；C仅代表9/12缺陷，不外推全集。结构invalid不推断成新SEC已证明不等价，unknown不等失败。新增OI-037专门追踪A接受候选证明错绑/缺证；其它开放问题继续保留。
+- 中文已编译12页/7图14表、英文完整27页初稿/7图已落盘，但**均非科学结论定稿、均非投稿就绪**；英文7个图引用/源资产已回读，tex52680B。D/C旧收益合法性与A证据缺口需恢复后处置，不能将版式通过当科学验收。
+- 主机TOYLOG_DESKTOP、branch main；最后已提交推送28c3c2b，HEAD/origin-main独立回读一致。主线进程枚举无项目Python/STA/Yosys/LaTeX运行。当前有未提交修复/草稿/审计/记录文件；暂停checkpoint由主线检查后保存，**此节点不预写未创建commit/hash**，不冻结v19/新tag。
+- 全部当前状态/看板/交接入口/下一代理提示/实验登记按paused同步；旧规划、运行与通过节点保留历史，恢复须用户明确新指令。记录智能体完成文档自检后报告done并停止写入，Git行政保存由主线执行。
+
+
+## LOG-20261014-PAUSE — 用户暂停、保全与交接
+
+> **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**
+
+暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `CURRENT_RUN_HANDOFF.md`（状态目录内则 ../CURRENT_RUN_HANDOFF.md）。
+
+停止执行类子任务；专职记录最后未写盘的暂停收口由主线完成。checkpoint71a4c12实际推送成功，稿件/图件/失败v1完整ZIP与审计已保存。git差分检查exit0，check_record.sh OK，ZIP CRC/109项清单PASS；未运行新修复/实验。根规则、交接七段、问题表、下一代理提示同步paused，最终行政记录提交后验证origin/main与HEAD一致。

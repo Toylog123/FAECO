@@ -2,6 +2,14 @@
 
 > 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
 
+## 2026-10-14 r22 多模块netlist：局部门成功不能替代独立最终SEC
+
+- **真实反证**：首正式pilot两W0 runner均exit0，独立最终SEC却发现helper definitions不同并停止batch。B instance被insert_buffer放在首个endmodule/helper dff，而新wire/目标pin在真正top；旧局部F1/F2全文件parser合并模块命名域造成伪pass，截取真实top后F2 declared-undriven。
+- **归因**：定位为可修实现与模块namespace边界缺陷，不直接否定cut/cost设想，也不把中间+.10/+.05 ns记作有效成果。原失败目录完整保留，首轮其它臂未启动；旧权威论文哪些accepted动作受影响另做来源审计，不先猜范围。
+- **处置规则（修复尚未验收）**：目标模块必须从真实instance/明确top定位，新增wire、instance和pin改动保持同一模块；helper字节/同名instance/缺失目标/多模块异常都进入TDD。F1/F2必须在正确模块namespace内校验，并保留独立工具最终SEC。修复改变production后新commit/pin/v2，当前版本整体回归与完整受影响矩阵重跑，不能沿用旧通过或借旧pilot结果。
+- **计数教训**：首pilot实读launch12/11、eval14/13，n_cache_replays/skipped_duplicate均0，各2条非STA为F1前置拒绝。差额不是缓存证据；同时保留真实launch、前置门拒绝、缓存与独立SEC状态，避免把局部成功字段升级为全流程验收。
+- **证据**：LOG-20261014-23、OI-035/036、experiments/20261014_r22_cut_ablation的两W0 eval_trials/runner日志/final_sec/batch_failures。生产修复与最终验证继续推进。
+
 ## 2026-10-14 r22 回归时不可并行修改被测源码/fixture
 
 - **现象**：第二次全回归628passed/1fail，batch输入锁stub失败；同一会话pytest已经载入旧fixture，但主线又加入LIB/mapped锁并修改production脚本，发生旧fixture与新脚本组合。

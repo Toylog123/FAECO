@@ -1,3 +1,13 @@
+# 当前进度：r22已暂停（2026-10-14）
+
+> **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**
+
+暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `agent_handoff/CURRENT_RUN_HANDOFF.md`。
+
+恢复后待办P01–P04全部pending；仅用户明确恢复才执行。
+
+## 历史进度
+
 # Work Progress
 
 > r21 Git收口：实现提交 `e592bfd`、SVG导出规范化提交 `483b5e9` 已成功推送 `origin/main`（2026-10-14）。本轮审稿/配图/计数修复已完成，后续只处理保留的未决项；下文Git待办措辞为推送前记录。
@@ -8,7 +18,7 @@
 
 - **新授权**：用户在剩余事项报告后明确“继续推进吧那就”；本轮恢复 OI-031 历史配置、OI-034 计数审计，并推进同运行器的新族双割/cost 消融，之后处理英文 elsarticle、投稿材料、Word 必要性与最终排版。旧消融暂缓与 r21“不新 EDA”仅作历史安排。
 - **起始实查**：main/HEAD/origin-main `46ede94`，clean；r21 PDF 793394B、`c65169b7…`，12页/7图14表。未见既有r22归档。
-- **当前阶段**：仅设计/档案审计启动，尚无新正式 EDA、无结果。规划登记 `PLAN-R22-CUT-COST`；执行revision、输入、消融臂、预算、超时和预锁判据待主线锁定。旧4–5h估计待实测。
+- **当前阶段（LOG-20261014-23）**：正式C′首pilot两W0真实运行、最终独立SEC拦截，batch58s/exit1；原目录完整保留，无有效新族结果、其它臂未启动。OI-035跨模块B插入与OI-036局部namespace门伪pass/历史correctness影响修复中；须新commit/pin/v2与当前版本全回归后完整重跑受影响矩阵。下列先前准备节点按当时状态保留。
 - **独立设计评审**：`R22_ABLATION_DESIGN_REVIEW_20261014.md` 已落盘并实读；仅一次六门静态探针实际执行，登记PROBE-R22-LEGACY-GATING。新源政策/2×2/强反证/12项探针均是待主线审查的建议，未跑正式EDA、不据此声称收益（LOG-20261014-12）。
 - **正式计划与档案恢复**：C′九臂×八电路矩阵已在正式计划预锁，开跑revision/输入/命令仍待登记；历史审计只读51s/exit0，b17从独有报告恢复104、ITC-99可识别候选STA结果合计2994。C完整历史argv/revision仍缺，s382 v3不自动借入；OID关闭范围待主线裁定，正式EDA未跑（LOG-20261014-13）。
 - **主线已确认**：起始回归538 passed/4 skipped/156 subtests（pytest111.16s、包装113s/exit0）；CLI20项RED→GREEN，25 passed/4 deselected。仅CLI门通过、核心实现未完成。OI-031完整复现缺口仍open；OI-034按B/D计数已闭合+C不可识别历史范围细分，正式EDA未启动（LOG-20261014-14）。
@@ -17,12 +27,18 @@
 - **整体验证与后续修复**：首次全回归624/4skip/156subtests（99s，包装102s）；独立review反证批路径/SEC覆盖/伪pass复用/失败调度/timeout后已修，专属91passed/1.13s，需以最终源码再全回归。工具dryrun三版本校验成功、72配置注册但未mapping/STA；英文草稿已并行起步，仅沿r21已证数字（LOG-20261014-17）。
 - **最终稳定回归**：第二次629项中1fail因回归中改脚本/fixture造成对象不稳定（628passed/1fail），已停core编辑重启；最终629passed/4skip/156subtests、99.79s（包装102s/exit0）。只认最终源码对象。文档入口同步，阶段源码commit准备，domain最终门待对照；仍无正式EDA/结果（LOG-20261014-18）。
 - **阶段快照准备**：domain无生产源码blocking、12静态门仍partial；已补P4/P6 flowstub3passed，P3/P7/P11继续补，不以partial开EDA。b17独立104row/208SHA主线复核通过。代码/历史审计阶段commit准备，记录短暂停写入供stage，不纳入未完成英文稿（LOG-20261014-19）。
+- **阶段已提交推送**：28c3c2b、37files，push46ede94→28c3c2b/exit0，HEAD与origin-main实查一致；代码/历史审计固化，不含英文未成稿。记录恢复；最后静态P3/P7/P11/K1/2与source/config锁待完成，formalEDA未启动（LOG-20261014-20）。
+- **正式dryrun锁清单**：experiments/20261014_r22_cut_ablation/manifest已锁git28c3c2b、production/8输入/LIB SHA及72commands、三工具；没有mapping/STA。B18独立复核再证2890，+b17得到2994，母稿只补来源说明，旧数据不改；新tex/PDF验收待编译（LOG-20261014-21）。
+- **启动门与母稿验收**：最后静态12+flow3通过，全套644passed/4skip/156subtests、99.14s（包装102 exit0），production/LIB匹配28c3c2b清单。中文2994来源句编译12页/全0/21refs、变更p8目视与回读通过，三PDF e27eaf3a…/793545B一致；旧作者版先备份。英文52KB/27页首draft，视觉/声明仍待核；准备pilot，尚无正式EDA（LOG-20261014-22）。
+- **真实pilot与归因**：session66717按正式manifest只启s27/s382两W0，runner47/48s exit0，SEC helper变化正确拦截后batch58s exit1；旧B插首helperendmodule、F1/F2全文件合并namespace伪pass，修复分工已启动。新STA12/11、eval14/13、缓存0/0，各2前置F1拒绝，不由差额猜缓存；中间WNS不计有效收益。后加JOINT on/off静态13项联合39passed/0.93s独立于旧644collection，后续修复不能沿用旧source门（LOG-20261014-23）。
+- **历史correctness独立报告已到（待主线裁定）**：B完整SEC绑定28有效、b17部分/regs N/A仍分层；A仅2 exact对象可复用证明、6缺绑定；D38/40与k1 14/16终点结构invalid，C代表9/12 invalid、3未知不外推。报告/JSON/输入/脚本已回读现算SHA，不运行EDA。未知不等失败、计数可核不等候选合法；原数据保留，论文/复验范围等待主线复核（LOG-20261014-24）。
 
 | 工作 | 状态与证据门 |
 |---|---|
 | OI-031历史配置恢复 | 现存档案审计完成；完整flags/argv/revision身份缺口保留 |
 | OI-034计数语义审计 | B/D来源闭合；C精确执行不可识别的历史限制已明确 |
-| 双割/cost新族 | 实现与稳定全回归629passed通过；domain文档门/源码commit/冻结输入与pilot待完成，无EDA |
+| 双割/cost新族 | 首真实pilot被独立SEC拦；原证据保留，OI-035/036修复、新pin/v2/当前版整体回归后完整重跑 |
+| 局部正确性与历史影响 | 跨模块B插入和namespace伪pass已确认；独立历史审计已到，B28完整绑定保留、A/D/C分层，主线复核裁定待完成 |
 | 英文elsarticle/投稿材料 | 并行草稿；只绑定r21已验证母稿，不使用未出r22数据 |
 | Word必要性与最终排版 | 后续评估；尚未转排，旧件仍需口径核对 |
 

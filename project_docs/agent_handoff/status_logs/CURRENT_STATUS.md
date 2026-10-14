@@ -1,15 +1,27 @@
+# 当前状态：paused（2026-10-14）
+
+> **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**
+
+暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `CURRENT_RUN_HANDOFF.md`（状态目录内则 ../CURRENT_RUN_HANDOFF.md）。
+
+
+## 暂停前历史记录
+
 ## 2026-10-14 恢复机制证据与投稿推进（r22_20261014，进行中，本轮最新）
 
-- 用户明确“继续推进吧那就”：恢复 OI-031配置、OI-034计数审计，同运行器双割/cost新族消融及后续英文/投稿材料/Word必要性与排版。新授权覆盖旧消融暂缓，r21“不新EDA”为历史轮范围。
-- 起始main clean、HEAD/origin-main `46ede94`；当前母稿仍为r21已验收稿，PDF793394B/c65169b7…、12页/7图14表。
-- 已记LOG-20261014-11及规划登记PLAN-R22-CUT-COST；无正式新EDA开跑/结果。先反驳候选源可分离性，独立开关/TDD后锁revision、配置、输入及判据；不得与旧族C拼接因果比较。
-- 正式R22计划预锁C′九臂×八电路；历史派生审计已产出并登记，b17报告级恢复104、ITC-99独有候选报告结果2994。C完整argv/revision仍未恢复，s382 v3只是来源候选；关闭范围待主线裁定，正式EDA仍未开跑。
-- 主线确认基线回归538/4skip/156subtests、CLI20项RED→GREEN后25passed/4deselected；核心控制尚未完成，不把CLI通过当全链实现。OI-031完整复现缺口仍保留，OI-034按B/D闭合+C精确执行数不可识别细分，正式EDA仍未启动。
-- 最新candidate_policy TDD已RED→GREEN，真实Cw/Cc/等权/双来源去重与flow分支，联合CLI/legacy38passed；真实STA launch与汇总仍在实现，整体门/pilot/运行revision未锁，正式EDA未启动。
-- 最新整体验证曾624passed，但随后独立批控反证又有修复，不能沿用旧源码通过结论；当前r22专属91passed，最终整回归/review门待完成。preflight工具dryrun成功、72配置未mapping/STA；英文paper/en草稿并行启动，不使用未出r22数字。
-- 最新稳定全回归已629passed/4skip/156subtests、99.79s/包装102s exit0；前一次628+1fail已归因回归中改脚本/fixture的对象混用，未判设计无效。core已停止编辑，准备阶段commit钉源码；domain文档门待确认，正式EDA仍未启动。
-- domain门对照无生产源码剩余blocking，但12静态门仍partial；P4/P6 flowstub已补3passed，P3/P7/P11继续补。b17主线独立104row/208 SHA复核通过。准备代码/历史审计阶段commit，记录写入短暂停供stage；英文未完成稿不混入，正式EDA未开。
-- OI-030/031/034仍开放，OI-032/033历史修复保持closed追踪。后续工作有新授权，不凭旧冻结/暂缓令停住；阶段提交仍由主线按AGENTS执行。
+**当前阶段（LOG-20261014-23）**：C′正式pilot已实际执行，但首W0/s27与W0/s382最终独立SEC拦截，batch58s/exit1；其它臂未启动，**无有效新族效果结果**。原实验目录完整保留，修复后须新commit/production pin与v2目录，重跑完整受影响矩阵。
+
+**最新历史审计（LOG-20261014-24，待主线复核裁定）**：已实读r22_historical_correctness报告/逐实例JSON与输入SHA。B28完整final/gold SEC绑定保留，b17部分/regs N/A；B14 ITC另有声明纪律缺口，不直接推翻功能保持。A有效证明可复用2，另6旧SEC错绑/缺证；D38/40与k1 14/16结构invalid；C仅12代表中9 invalid/3未知，不外推全集。未知不等失败，结构invalid不是本轮新SEC不等价实测，计数可复算不证明合法候选。论文/复验范围待主线裁定，原证据保留、不借C′覆盖旧结果。
+
+**版本与验收**：r22起始main clean/46ede94；源码/历史审计阶段28c3c2b已commit+push，原manifest绑定43 production文件、8原始输入/LIB SHA及72完整commands。旧production稳定全回归644passed/4skip/156subtests（99.14s，wrapper102/exit0）；后加JOINT on/off static action13项，与flow/candidate/launch联合39passed/0.93s，collection分别列证。修复会改变production，旧通过不可替代修复后当前版本门。
+
+**失败归因与计数**：B插入首个endmodule/helper dff，wire/目标pin留真正top；局部全文件F1/F2解析合并namespace形成伪pass，隔离top后F2 declared-undriven。OI-035跨模块插入与OI-036局部namespace门/历史correctness影响已登记open；domain负责buffer多模块TDD，主线负责目标模块隔离/boundary门与历史影响审计。独立SEC正确阻断，不能以中间+.10/+.05 ns称有效收益，也不据此否定cost设想。实读s27 launch12/eval14，s38211/13；cache0/0，各2条非STA是F1前置拒绝。
+
+**实际pilot配置**：`.venv/Scripts/python.exe -u -X utf8 code/scripts/run_r22_cut_ablation.py --output-dir experiments/20261014_r22_cut_ablation --circuits s27,s382`，session66717，batch43200s包装、每run3900/3930s；共享mapping两例完成，runner47/48s exit0，随后独立SEC失败停止。来源见原manifest、W0两目录/batch_failures.json、EXPERIMENT_REGISTRY。
+
+**历史与论文**：OI-031可恢复档案审计完成，但完整flags/argv/revision仍缺；OI-034 B/D来源闭合，C精确执行数/身份不可识别边界保留。b17独立104row/208SHA及B18独有2890合为2994有报告来源的候选STA结果；3363仍评估记录，非全部工具调用。中文母稿唯一补来源句，12页/7图14表/21引用，质量项全0与逐页视觉通过；三PDF SHA e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb，793545B，旧作者版先备份。英文约52KB/27页首draft仅已有结果，视觉/声明待核，不可当提交件。
+
+**授权与分工**：用户“继续推进吧那就”恢复历史审计、同运行器双割/cost新族消融和后续英文/投稿材料/Word必要性与最终排版，取代旧暂缓；r21不新EDA只描述历史。专职记录仅改记录文档，不改稿/图/code/Git。OI-030/031/034/035/036保持开放，OI-032/033已修范围追踪，不删旧问题；每次版本/配置变化先新锁，不拼旧C。
 
 ## 2026-10-14 论文审稿与配图修订（r21_20261014，本轮完成，前序）
 
