@@ -47,6 +47,8 @@ def export(fig, stem, directory=DATA):
     # Fixed physical size; margins are designed explicitly, with no tight crop.
     fig.savefig(directory / f'{stem}.pdf', format='pdf')
     fig.savefig(directory / f'{stem}.svg', format='svg')
+    svg_path=directory / f'{stem}.svg'
+    svg_path.write_text('\n'.join(line.rstrip() for line in svg_path.read_text(encoding='utf-8').splitlines())+'\n',encoding='utf-8')
     fig.savefig(directory / f'{stem}.png', format='png', dpi=600)
     plt.close(fig)
     print('exported', stem, flush=True)
