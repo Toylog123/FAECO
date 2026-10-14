@@ -187,6 +187,12 @@
 
 从 `project_docs/agent_handoff/README.md` 开始，按阅读顺序加载全部上下文——仓库须随时可无口头交接。
 
+## r22专项入口（2026-10-14）
+
+- 来源/代价受控实验：`project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md`；入口 `code/scripts/run_r22_cut_ablation.py`。
+- 历史配置/计数恢复：`project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md`。
+- 候选评估记录、真实STA启动和实际提交分别计数；新族C′不与历史族C/D拼接归因。静态门与源码/输入钉定后才执行正式EDA，输入/库变化必须停止。
+
 ## 当前论文图件入口（2026-10-14，r21）
 
 当前图件生成器为 `paper/zh/figures/data/scripts/review_r21_figures.py`；图1/2矢量源在 `manual/figures/`，图4–7数据图及CSV在 `data/final/`。旧全量 `gen_figures.py` 含历史硬编码，保留作历史，不用于重建当前图件。审稿与计数验收见 `paper/zh/review_rounds/r21_20261014/`；原始实验族必须继续隔离，STA测量计数须排除缓存复用和前置拒绝，旧schema缺字段时不得猜测实际次数。

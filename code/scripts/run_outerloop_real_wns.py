@@ -84,6 +84,14 @@ def parse_args() -> argparse.Namespace:
                    help="Hard wall-clock budget for the outer loop")
     p.add_argument("--candidates-per-iteration", type=int, default=8,
                    help="Cut candidates explored per iteration (beam width; 1 isolates feedback)")
+    p.add_argument("--cut-search-policy", choices=("legacy", "weighted_st"), default="legacy",
+                   help="Candidate-boundary search: preserve legacy behavior or use canonical weighted s-t cuts")
+    p.add_argument("--cut-sources", choices=("full", "weighted", "cover"), default="full",
+                   help="Weighted s-t source control: both sources, Cw only, or Cc only")
+    p.add_argument("--node-cost-mode", choices=("configured", "uniform"), default="configured",
+                   help="Use configured node costs or unit capacities in the weighted s-t path")
+    p.add_argument("--disable-topology", action="store_true",
+                   help="Disable topology-rewrite candidates; preserves the legacy enabled default when omitted")
     p.add_argument("--no-feedback", action="store_true",
                    help="Disable F1-F5 weight refinement (ablation control; "
                         "Mixed-Fixed arm of the r2 §6 three-arm experiment)")
@@ -193,6 +201,10 @@ def parse_args() -> argparse.Namespace:
                    help="Initial cut size penalty (sensitivity analysis lambda_2)")
     p.add_argument("--init-critical-coverage-reward", type=float, default=1.0,
                    help="Initial critical-coverage reward (sensitivity analysis lambda_3)")
+    p.add_argument("--init-verification-cost-penalty", type=float, default=1.0,
+                   help="Initial node-cost verification-scale penalty")
+    p.add_argument("--init-equivalence-stability-reward", type=float, default=1.0,
+                   help="Initial R-gated fanout penalty in the node cost")
     p.add_argument("--epsilon", type=float, default=0.0,
                    help="Configured timing-comparison epsilon (ns), recorded in logs")
     p.add_argument("--required-metrics", default="setup_wns,setup_tns",
@@ -236,7 +248,22 @@ def parse_args() -> argparse.Namespace:
                         "(max_transition / max_capacitance / max_fanout and the "
                         "critical-path electrical profile) into the trial record "
                         "(design plan §3 phase 3-A; collection only)")
-    return p.parse_args()
+    args = p.parse_args()
+    from rseco.candidate_policy import validate_policy
+    try:
+        validate_policy(args.cut_search_policy,args.cut_sources,args.node_cost_mode)
+    except ValueError as exc:
+        p.error(str(exc))
+    experimental_cuts = (args.cut_search_policy != "legacy"
+                         or args.cut_sources != "full"
+                         or args.node_cost_mode != "configured")
+    if experimental_cuts and args.structure_resynth:
+        p.error("experimental cut controls cannot be combined with --structure-resynth")
+    if args.cut_search_policy == "weighted_st":
+        strategies = [s.strip() for s in args.strategies.split(",") if s.strip()]
+        if not strategies or set(strategies) - {"R", "G", "B"}:
+            p.error("--strategies for weighted_st must contain only R, G, or B")
+    return args
 
 
 def main() -> int:
@@ -350,6 +377,12 @@ def main() -> int:
         init_boundary_penalty=args.init_boundary_penalty,
         init_size_penalty=args.init_size_penalty,
         init_critical_coverage_reward=args.init_critical_coverage_reward,
+        init_verification_cost_penalty=args.init_verification_cost_penalty,
+        init_equivalence_stability_reward=args.init_equivalence_stability_reward,
+        cut_search_policy=args.cut_search_policy,
+        cut_sources=args.cut_sources,
+        node_cost_mode=args.node_cost_mode,
+        enable_topology=not args.disable_topology,
         clock_port=args.clock_port,
         physical_gate=args.physical_gate,
         min_physical_gain_ns=args.min_physical_gain,
@@ -391,6 +424,8 @@ def main() -> int:
             "boundary_penalty": args.init_boundary_penalty,
             "size_penalty": args.init_size_penalty,
             "critical_coverage_reward": args.init_critical_coverage_reward,
+            "verification_cost_penalty": args.init_verification_cost_penalty,
+            "equivalence_stability_reward": args.init_equivalence_stability_reward,
         },
         epsilon=args.epsilon,
         max_patches=args.max_patches,
@@ -427,7 +462,13 @@ def main() -> int:
         "boundary_penalty": args.init_boundary_penalty,
         "size_penalty": args.init_size_penalty,
         "critical_coverage_reward": args.init_critical_coverage_reward,
+        "verification_cost_penalty": args.init_verification_cost_penalty,
+        "equivalence_stability_reward": args.init_equivalence_stability_reward,
     }
+    result["cut_search_policy"] = args.cut_search_policy
+    result["cut_sources"] = args.cut_sources
+    result["node_cost_mode"] = args.node_cost_mode
+    result["enable_topology"] = not args.disable_topology
     result["hold_uncertainty_ns"] = args.hold_uncertainty if args.hold_mode else None
     result["min_physical_gain_ns"] = args.min_physical_gain
     result["critical_instances"] = critical
@@ -435,6 +476,9 @@ def main() -> int:
     result["endpoint"] = endpoint
     result["target_net"] = target_net
     result["n_candidate_sta_runs"] = len(evaluator.trials)
+    result['n_candidate_sta_runs_semantics'] = 'legacy_candidate_evaluation_record_count'
+    result['n_new_sta_runs'] = len(getattr(evaluator, 'sta_launch_events', []))
+    result['n_candidate_evaluation_records'] = len(evaluator.trials)
     if hasattr(result.get("weights"), "__dataclass_fields__"):
         result["weights"] = asdict(result["weights"])
     (out / "outerloop_result.json").write_text(

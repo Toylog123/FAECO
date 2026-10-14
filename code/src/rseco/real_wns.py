@@ -630,6 +630,11 @@ class RealWnsEvaluator:
         init_boundary_penalty: float = 1.0,
         init_size_penalty: float = 1.0,
         init_critical_coverage_reward: float = 1.0,
+        init_verification_cost_penalty: float = 1.0,
+        init_equivalence_stability_reward: float = 1.0,
+        cut_search_policy: str = 'legacy',
+        cut_sources: str = 'full',
+        node_cost_mode: str = 'configured',
         clock_port: str = "CK",
         physical_gate: bool = False,
         min_physical_gain_ns: float = 0.010,
@@ -692,7 +697,14 @@ class RealWnsEvaluator:
             "boundary_penalty": float(init_boundary_penalty),
             "size_penalty": float(init_size_penalty),
             "critical_coverage_reward": float(init_critical_coverage_reward),
+            "verification_cost_penalty": float(init_verification_cost_penalty),
+            "equivalence_stability_reward": float(init_equivalence_stability_reward),
         }
+        from .candidate_policy import validate_policy
+        validate_policy(cut_search_policy, cut_sources, node_cost_mode)
+        self.cut_search_policy = cut_search_policy
+        self.cut_sources = cut_sources
+        self.node_cost_mode = node_cost_mode
         self.clock_port = clock_port
         self.physical_gate = bool(physical_gate)
         self.min_physical_gain_ns = min_physical_gain_ns
@@ -734,6 +746,9 @@ class RealWnsEvaluator:
         self.allow_singleton = bool(allow_singleton)
         self.enable_topology = bool(enable_topology)
         self.trials: list[dict] = []
+        self.sta_launch_events: list[dict] = []
+        self._sta_launch_lock = threading.Lock()
+        self._sta_launch_seq = 0
         self.call_log: list[dict] = []
         self._call_counter = 0
         self._physical_baseline_cache: dict[str, dict] = {}
@@ -1166,6 +1181,9 @@ class RealWnsEvaluator:
             proxy_meta,
         ) = job
         started_at = time.perf_counter()
+        # Provenance may describe an earlier cached measurement.  These
+        # fields describe only a tool launch made by this evaluation.
+        proxy_meta = {**proxy_meta, "sta_executed": False, "sta_launch_seq": None}
         topology_window = None
         if kind == "TOPOLOGY":
             topology_replacement, topology_window = pin_map
@@ -1245,6 +1263,7 @@ class RealWnsEvaluator:
         if cache_key in self._sta_cache:
             cached = dict(self._sta_cache[cache_key])
             cached["skipped_duplicate"] = True
+            cached["cached_from_seq"] = cached.get("sta_launch_seq")
             return {**cached, **proxy_meta}
         if candidate_hash in self.tested_candidate_hashes and base_hash == getattr(self, "_last_base_hash", None):
             return {
@@ -1447,6 +1466,24 @@ class RealWnsEvaluator:
             return failed
         self.tested_candidate_hashes.add(candidate_hash)
         self._last_base_hash = base_hash
+        sta_started_at = time.perf_counter()
+        with self._sta_launch_lock:
+            self._sta_launch_seq += 1
+            launch_event = {
+                "seq": self._sta_launch_seq,
+                "kind": "candidate_ideal",
+                "candidate_hash": candidate_hash,
+                "base_netlist_hash": base_hash,
+                "report_dir": str(sub),
+                "wns": None,
+                "tns": None,
+                "error": None,
+                "timeout": False,
+                "status": "running",
+                "runtime_s": 0.0,
+            }
+            self.sta_launch_events.append(launch_event)
+        proxy_meta.update(sta_executed=True, sta_launch_seq=launch_event["seq"])
         try:
             res = run_opensta_sequential(
                 netlist_path=sub / "mapped.v",
@@ -1464,6 +1501,16 @@ class RealWnsEvaluator:
             res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
         except Exception as exc:
             res = {"wns": None, "tns": None, "error": str(exc)}
+        with self._sta_launch_lock:
+            launch_event.update(
+                wns=res.get("wns"),
+                tns=res.get("tns"),
+                error=res.get("error"),
+                timeout=bool(res.get("timeout")),
+                status=("timeout" if res.get("timeout") else
+                        "error" if res.get("error") else "completed"),
+                runtime_s=time.perf_counter() - sta_started_at,
+            )
         critical_refresh = None
         critical_endpoint_refresh = None
         report = sub / "sta.log"
@@ -2331,6 +2378,7 @@ class RealWnsEvaluator:
             trial["patch_id"] = patch_id
             trial["iteration"] = iteration
             trial["accepted"] = False
+            trial["committed"] = False
             self.trials.append(trial)
         if best is not None:
             self.trials[-len(results) + results.index(best)]["accepted"] = True
@@ -2435,12 +2483,16 @@ class RealWnsEvaluator:
                              "physical_candidate_min_slack", "physical_baseline_provenance",
                              "physical_candidate_provenance", "physical_delta", "physical_status", "rc_config_hash", "physical_config", "critical_instances",
                             "critical_endpoints", "sta_provenance", "acceptance_evidence",
+                             "sta_executed", "sta_launch_seq", "cached_from_seq",
                             "base_netlist_hash", "cache_key", "config_hash", "kind",
                             "topology_metrics") if k in best})
         return result
 
     def write_trials(self, path: str | Path) -> None:
-        payload: dict = {"call_log": self.call_log, "trials": self.trials}
+        with self._sta_launch_lock:
+            launches = [dict(event) for event in self.sta_launch_events]
+        payload: dict = {"call_log": self.call_log, "trials": self.trials,
+                         "sta_launch_events": launches}
         if self.adaptive:
             payload["adaptive_snapshot"] = self.adaptive_sel.snapshot()
         Path(path).write_text(

@@ -788,3 +788,67 @@
 - 论文/六新图/五独立审稿/账本审计及记录归档提交 `e592bfd`；Matplotlib生成SVG的行末空白规范化提交 `483b5e9`，SVG XML解析6/6通过、源和字形门再次通过。差分快照的上下文空白为patch格式所需，保留。
 - 当前AGENTS要求阶段commit+push；经180s超时包装实际push成功，origin/main从41397db到483b5e9，退出0；无新tag、未冻结v19。当前PDF仍为793394B/c65169b7…，三副本一致。
 - 最终输入SHA256清单125/125通过，PDF实际宽度170/170/170/170/80/80 mm，CRLF稿件检查、记录自检、差分检查通过。剩余OI030/031/034及既有投稿/Word任务持续保留。
+
+## 2026-10-14（r22_20261014：恢复机制证据、历史档案与投稿推进；进行中）
+
+### LOG-20261014-11 — r22 新授权登记与基线确认
+
+- 用户在剩余事项报告后明确“继续推进吧那就”，本轮恢复 OI-031 历史逐臂配置恢复、OI-034 计数审计，主线设计并执行同运行器的新族双割/cost 消融，之后推进英文 elsarticle、投稿材料、Word 必要性与最终排版。该新授权取代旧消融暂缓安排；r21“不新 EDA”只描述历史轮。
+- 实查起始工作区 clean、main/HEAD **46ede94**，origin/main 同为 **46ede94**；未发现既有 r22 归档。r21 稿仍 **12 页/7 图/14 表**，当前 PDF 实查 **793394 B**、SHA256 **c65169b74925446233345d7dad21ab0abd66b4ff4d9fe2f0c8f2b299c1352ae3**。
+- 执行顺序：先查已有档案/计数证据；主线做候选源可分离性的反驳测试，实施独立开关与 TDD，再锁定同运行器、预算、候选类型、接受方式与初态的新族对照，正负结果均按预锁判据报告，不能接入族 C 旧数作因果对照。
+- **当前仅规划，尚无新正式 EDA 开跑/结果**；旧4–5 h预算为待检验假设，待主线实测。实验登记仅写 planned 状态，后续依真实配置/输入/revision 更新。专职记录智能体只维护文档、日志与登记，不改稿/图/代码、不执行 Git 提交。
+- 已同步r22当前进度/状态/看板/交接入口与独立同日r22 handoff；r21历史段保留。顺带修复r21两处表格中误写的字面量`\n`为实际换行，未改变历史状态或数据。
+
+### LOG-20261014-12 — 核心消融独立领域设计评审落盘（待主线裁定）
+
+- 已实读 `project_docs/planning/R22_ABLATION_DESIGN_REVIEW_20261014.md`，基线46ede94；审查现行cut/flow/real_wns/预算路径与R11方案，未改生产代码、论文或实验。评审建议新族C′使用canonical weighted s-t Cw、独立Cc开关，legacy_constrained保留强当前基线；这些是设计建议，尚非主线锁定配置。
+- 评审仅实际执行一次无EDA/无文件写出的六门旧路径静态探针：λc=0/1下nonconstrained均cover优先且混有备用源；constrained的cover因去重/评分而改变位置。该结果证明当前入口的来源/门控混杂，**不包含时序测量、不证明性能增益**。
+- 报告提出12项启动探针、七policy完整2×2及随机三种子的候选方案；除报告已记六门探针外，其余未运行。具体臂/输入/预算/计数合法性/反证判据仍待主线审查与锁定，旧4–5h估计不转成承诺。
+- 静态探针已独立登记PROBE-R22-LEGACY-GATING，正式EDA规划仍为planned；不将设计评审或静态结果登记成新STA实验完成。
+
+### LOG-20261014-13 — 正式C′预锁计划与历史报告级恢复落盘
+
+- 已实读 `planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md`：新族C′预锁W0/W1/U0/U1/C/UR1/2/3/L共九臂×八电路=72运行；加权/等权与Cw/Cc构成2×2，仅UR改同池边界顺序，legacy为强当前基线。0.5ns、20轮、真实候选STA预算500、k=8、joint_k=2、workers1、反馈/S/TOPOLOGY关闭等配置在计划中锁定；2电路pilot、执行revision/输入哈希/完整命令仍须开跑前登记。尚无正式EDA。
+- 已实读 `evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md` 与两个结果JSON/输入清单：只读审计经300s超时包装，51s完成、exit0，26240原始文件/git blob留SHA/用途。报告来源与脚本指纹可复核，没有写原始实验。
+- 新报告级证据：b17 104条trial与104独有候选日志/Tcl逐一对应，有限WNS与台账相同；与另18实例2890合并得到2994个有独有报告来源的候选STA结果。旧r21“JSON无法识别”的判断保留历史，但当前已可据报告恢复104；不把2994当包含基线/刷新/重试/SEC的全部工具执行次数。
+- C逐臂恢复分recovered/launcher_recovered/inferred/missing；初始mapped.v字节一致，完整argv/revision仍缺。s382 v3与汇总/输入强匹配，但来源身份未证明，不借入canonical合计或替换主表。重复描述不等缓存，残存文件数不等完整新STA执行数。
+- OI-031/034的归档审计已产出；完整复现实验身份/缺失档案的关闭范围仍待主线裁定。输入/两个JSON实际哈希与报告相同；派生审计独立登记DERIVED-R22-HISTORICAL，不是新EDA。
+
+### LOG-20261014-14 — 主线确认历史关闭范围、基线回归与CLI TDD门
+
+- 主线已确认基线pytest实际 **538 passed / 4 skipped / 156 subtests，111.16s**；超时包装墙钟113s、exit0。该项为起始代码回归，不是新EDA实验或性能测量。
+- CLI新增20项控制先RED后GREEN，选择性检查 **25 passed / 4 deselected**；实查 `code/scripts/run_outerloop_real_wns.py` 已新增入口参数。核心policy/flow/evaluator实现仍未完成，不能用CLI门通过宣称控制全链生效；正式EDA仍未启动。
+- 主线裁定OI-031完整历史argv/flags/revision缺口继续保留；OI-034按B/D已闭合与C精确新增执行数不可识别细分。b17报告恢复104及ITC-99来源结果2994为新已证据，不再继续写“b17未知”；C重复描述不当缓存、文件数不当总调用数。
+- 已将b17报告级恢复与计数分层经验同步记录；当前matrix/输入/source revision未开跑，不预填结果。
+
+### LOG-20261014-15 — candidate_policy来源控制TDD局部门通过（核心仍实现中）
+
+- 主线新测试先实际触发ModuleNotFoundError RED，再实施 `code/src/rseco/candidate_policy.py`：真实node-split s–t Cw、独立Cc、uniform五λ全0使节点cost=1、canonical门集去重并保留双origins、cover不按R集合裁剪。已实读新模块入口/WEIGHT_NAMES/validate_policy与cover分支。
+- `flow.py`显式weighted_st绕过旧constrained池并写pool trace，constructor/CLI透传新控制。candidate+CLI+legacy constrained联合实际 **38 passed，0.74s**；这不是全套回归或真实EDA通过，真实STA launch与汇总仍由两个独立子任务实现。
+- 当前仍未锁正式运行revision/输入manifest，未启动EDA；只登记已执行软件TDD门，不把结果当双割时序贡献。核心整体门、预算/cache/硬接受门及pilot仍待汇合。
+
+### LOG-20261014-16 — 批运行器TDD、P2静态反驳归因与工具版本门
+
+- 主线批运行器新测试先因文件缺失实际3fail RED，随后实现九臂锁配置、共享映射/冷输出、源码SHA/输入锁、每run3900s包装与3930s硬超时、最终独立Yosys顺序SEC门。批运行器与candidate十二项联合 **15passed/0.21s**；无EDA。
+- P2探针原假设“uniform与高size必定选不同门”失败；实际求解二者均选g1（uniform为确定tie）。归因为测试预期不成立，不是直接认定cost无效；改比较高size与默认（g2），并保留uniform确定tie与根退化场景。该静态探针只校验可改变候选的能力，不强迫真实电路正收益。
+- OpenSTA版本实读为3.1.0；native Yosys需专用环境，下一步tool_versions实际校验。当前仍未正式EDA开跑，工具/源码/输入版本门与整体核心/STA统计门待汇合。
+
+### LOG-20261014-17 — 首次整体验证、独立反驳后的批控修复与工具dryrun
+
+- 主线首次整体验证实际 **624passed/4skipped/156subtests，pytest99s、包装102s**；之后独立review发现批路径、SEC helper重定义、仅completion伪pass复用、失败后仍继续启动、timeout未归因。已按真实集成路径修复并补RED→GREEN测试、source receipt真实hash绑定、stopEvent及timeout completion=124；因此第一次全回归不能替代最终源码回归。
+- 非默认legacy控制新增启动前failclosed，2RED→GREEN；r22专属当前 **91passed/1.13s**。review门对照仍待final，最终源码整体验证需再跑一次。无正式EDA。
+- `scratch/r22_preflight_config` dryrun实际成功：native Yosys **0.67+146 / git468ba27d9dirty**、OpenSTA **3.1.0**、独立SEC Yosys **0.33**校验，注册72配置，**未mapping/STA**。dirty为native Yosys版本字符串，执行代码revision仍需正式冻结。
+- 英文独立任务已并行推进paper/en草稿，只使用已有r21结果，不使用尚未产出的r22数字；正式实验状态仍未开跑。
+
+### LOG-20261014-18 — 回归期间修改测试对象的失误归因与稳定源码全门
+
+- 第二次全回归实际 **628passed/1fail/4skip/156subtests，97.94s、包装102s/exit1**。期间主线接纳review新增每臂LIB/mapped锁并更新fixture，pytest已载入旧fixture、动态运行新脚本，触发batch stub输入锁失败；归因为测试对象未稳定，不据此否定消融设计。fixture同时统一为Path(m.LIB)类型。
+- 主线停止core编辑，重启稳定源码回归session14951；最终实际 **629passed/4skipped/156subtests，99.79s、超时包装102s/exit0**。当前全门只认此最终源码对象，不混用前两次成功/失败的版本口径。
+- 稳定规则：全回归开始后不改production脚本/测试fixture/输入锁；若接纳代码修改，重新启动与记录测试对象，验收前核对当前版本及源码SHA。不能用刚跑过的旧通过替代当前代码。
+- 主线已更新ROOT README/AGENTS/.codex-handoff/project_docs README的r22入口；准备阶段commit钉源码，domain最终文档门仍待对照，英文草稿独立未完成产物不混入。**正式EDA尚未启动，尚无新性能结果**。
+
+### LOG-20261014-19 — 独立门对照、补静态门与阶段源码快照准备
+
+- 主线已实读domain文档门审查：生产源码没有剩余blocking，但设计中的12静态门仍partial，不以partial直接启动EDA。主线补P4/P6真实flow stub，实际 **3passed/0.37s**；domain继续补P3/P7/P11行动门，真实STA未开。
+- 主线独立复核b17交叉表：104row WNS一致，208份STA.log/Tcl的SHA全部通过；报告级104恢复的来源验证完成，不只是沿用审计者结论。
+- 准备只对代码/历史审计阶段commit钉快照，排除尚未完成英文草稿，不宣称正式实验完成。记录智能体已同步本节点，**按主线要求短暂停止共享记录写入供stage/commit，等待真实Git结果后恢复**；不执行Git。

@@ -1,0 +1,3340 @@
+{
+  "meta": {
+    "audit_date": "2026-10-14",
+    "generated_at_utc": "2026-10-14T01:40:53.599748+00:00",
+    "audit_mode": "no EDA",
+    "input_manifest": "project_docs\\evidence\\r22_historical_audit_20261014\\inputs_manifest.json",
+    "input_manifest_sha256": "c601089b3296c32fefe7ea1b65d85205afd54202cd6e4fface1ed48645da3f74",
+    "audit_script_sha256": "d4aeb8b943b96dd29a9879708039b8b816bfc5e36122984a73b40ecce1cc134e",
+    "configuration_classes": [
+      "recovered",
+      "launcher_recovered",
+      "inferred",
+      "missing"
+    ]
+  },
+  "config_evidence": {
+    "period_ns": {
+      "status": "recovered",
+      "value": 0.5,
+      "evidence": "experiments\\20260908_phase2_b17_resume\\b17\\outerloop_result.json"
+    },
+    "strategies": {
+      "status": "recovered",
+      "value": [
+        "R",
+        "G"
+      ],
+      "evidence": "experiments\\20260908_phase2_b17_resume\\b17\\outerloop_result.json"
+    },
+    "joint_enumerate_depth": {
+      "status": "recovered",
+      "value": 0,
+      "evidence": "experiments\\20260908_phase2_b17_resume\\b17\\outerloop_result.json"
+    },
+    "init_weights": {
+      "status": "recovered",
+      "value": {
+        "boundary_penalty": 1.0,
+        "size_penalty": 1.0,
+        "critical_coverage_reward": 1.0
+      },
+      "evidence": "experiments\\20260908_phase2_b17_resume\\b17\\outerloop_result.json"
+    },
+    "hold_mode": {
+      "status": "recovered",
+      "value": false,
+      "evidence": "experiments\\20260908_phase2_b17_resume\\b17\\outerloop_result.json"
+    },
+    "proxy_ranking": {
+      "status": "recovered",
+      "value": false,
+      "evidence": "experiments\\20260908_phase2_b17_resume\\b17\\outerloop_result.json"
+    }
+  },
+  "input_evidence": {
+    "mapped.v": {
+      "path": "experiments/20260908_phase2_b17_resume/b17/mapped.v",
+      "exists": true,
+      "roles": [
+        "b17 retained input/config/output"
+      ],
+      "sha256": "1e47b8cc8c9c6394488e916ecdcbe89140a0e605e2f43700833b3dec25cbe644",
+      "bytes": 1886480
+    },
+    "map.ys": {
+      "path": "experiments/20260908_phase2_b17_resume/b17/map.ys",
+      "exists": true,
+      "roles": [
+        "b17 retained input/config/output"
+      ],
+      "sha256": "7e63353b5b7b63124aafb4f2739dde8c089a4984cc9dc0d8478c97e87bafbed1",
+      "bytes": 621
+    },
+    "sta.tcl": {
+      "path": "experiments/20260908_phase2_b17_resume/b17/sta.tcl",
+      "exists": true,
+      "roles": [
+        "b17 retained input/config/output"
+      ],
+      "sha256": "f76cd5f6369d247bb041882fa8ce5f96e254259eeee712ce6ff79d2ceb260187",
+      "bytes": 527
+    },
+    "sta.log": {
+      "path": "experiments/20260908_phase2_b17_resume/b17/sta.log",
+      "exists": true,
+      "roles": [
+        "b17 retained input/config/output"
+      ],
+      "sha256": "626758c328311ba5db2314bbfede9512dc6f1f8eb01f803b749366bf61be279d",
+      "bytes": 333472734
+    }
+  },
+  "all_trial_records": 104,
+  "candidate_reports_recovered": 104,
+  "one_to_one_wns_matches": 104,
+  "iteration_counts": {
+    "1": 80,
+    "2": 2,
+    "3": 2,
+    "4": 2,
+    "5": 18
+  },
+  "candidate_STA_result_count": 104,
+  "count_status": "recovered from unique candidate report/tcl paths, ledger ordinal/instance/kind, and finite matching WNS",
+  "runtime_revision": {
+    "status": "missing",
+    "value": null
+  },
+  "full_argv": {
+    "status": "missing",
+    "value": null,
+    "reason": "run.log does not print argv; narrative contains only a partial command"
+  },
+  "rows": [
+    {
+      "ledger_index": 1,
+      "iteration": 1,
+      "local_index": 0,
+      "instance": "_184747_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__fahcin_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/000__184747__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "46d303c280d4619f4aa02b30fea0dd72f03a11bdb4d4816bbb0cd6ab2a14e365",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/000__184747__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d9f58e762c8c26b786c4b78a33c4821444363f86d8489fec8d23f2c71c5ec157",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 2,
+      "iteration": 1,
+      "local_index": 1,
+      "instance": "_184747_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__xnor3_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/001__184747__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c78674ff6e7bdf2cc20b96877dd0876df764b0564239ad1867f4097c0ce762ee",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/001__184747__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "e917c7e18aeb1f90506d6c7816de892b82795074f1abc28126aceba123964aa4",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 3,
+      "iteration": 1,
+      "local_index": 2,
+      "instance": "_184747_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__xnor3_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/002__184747__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "a557360eaa741b399086e0d73097487a2450aa273967dbff5c6838f2748b3bd5",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/002__184747__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f9cedc7a7e49c8e5ab3395d879e85db2c4b629c93a5fd44d06d3c1c3d3c3c9dc",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 4,
+      "iteration": 1,
+      "local_index": 3,
+      "instance": "_185574_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__ha_1",
+      "wns_json": -16.57,
+      "wns_report": -16.57,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/003__185574__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "33d009fa0dea5a040f773a225be652d441a3e6af888c2d1f1b33e897f219a7f1",
+        "bytes": 3783
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/003__185574__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "a05712bcbf0dc1b2a2a4de6a153e4f2a76043eead372ce9f7df93506148e5162",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 5,
+      "iteration": 1,
+      "local_index": 4,
+      "instance": "_185574_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__ha_2",
+      "wns_json": -16.6,
+      "wns_report": -16.6,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/004__185574__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "e1880aa8789ce9bdfee37e291621156bdb7e935ec22dff78cbabcda58fae67d8",
+        "bytes": 3783
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/004__185574__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "aeec698c1d3e574e14c2c7ff6d2c3e54510abf44bde799e202fdb6347fbd60fe",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 6,
+      "iteration": 1,
+      "local_index": 5,
+      "instance": "_185574_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__ha_4",
+      "wns_json": -16.68,
+      "wns_report": -16.68,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/005__185574__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8eeab0cfbff251400b5913912d9437862a3803026d3b9c783af919d5a78075dc",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/005__185574__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "bd9f4cbdce4ac6c360f8a037966671c1533dd0e519359df8f4b51241273d0159",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 7,
+      "iteration": 1,
+      "local_index": 6,
+      "instance": "_185574_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__xor2_2",
+      "wns_json": -16.67,
+      "wns_report": -16.67,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/006__185574__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "25bc7eebc530c86b308de569006667869491605583fe77760a3e82e8533163a0",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/006__185574__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "37c7c1c5ddd84678000a18278761acf680ef80c8e0b098475b7f9022d5f9676b",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 8,
+      "iteration": 1,
+      "local_index": 7,
+      "instance": "_185574_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__xor2_4",
+      "wns_json": -16.89,
+      "wns_report": -16.89,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/007__185574__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "6b5be0a800cf310b43ce93c7fe1c2e59715d954ccedfed21eeae482292397e05",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/007__185574__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "971aaaaef26b3fb1717990a2ff07b49f471b89545bd13ff2a9a618eeb73c4007",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 9,
+      "iteration": 1,
+      "local_index": 8,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__bufinv_16",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/008__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "03e3fb2cd14e5d0f43758976e9c61c5fe6a4eaa995e9ef5d6e69b19d0f447ec1",
+        "bytes": 3728
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/008__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c53f07865e7ca7a1e0e9f60186b927d2ce14b07064bf019bd04e893be5878f4d",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 10,
+      "iteration": 1,
+      "local_index": 9,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__bufinv_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/009__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/009__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "4270f2c3002c99a42abe4978fc5cc051c258063b21578c12e637da95cf2eaa84",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 11,
+      "iteration": 1,
+      "local_index": 10,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__clkinvlp_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/010__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/010__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "062c5c8aa9fcd589ec5c32321ef72bc7c9c2353731f0a527d378fc1845f7a377",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 12,
+      "iteration": 1,
+      "local_index": 11,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__clkinvlp_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/011__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/011__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "362a907ae1cb4232c31fbee8fa171ac2456afcc1dcaf594c8e36a5c9343602b8",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 13,
+      "iteration": 1,
+      "local_index": 12,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_0",
+      "wns_json": -16.59,
+      "wns_report": -16.59,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/012__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "85a492741fe6082db7b69fb342ff3bf5a1d6b52710bec96b6d33c532f8ff949b",
+        "bytes": 3726
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/012__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "a0dbdc0f8feaf28dc75cfb26da0d84b5fc2f709cb3e83010fa78880ab18636c2",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 14,
+      "iteration": 1,
+      "local_index": 13,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/013__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "cb2e32cbd65f36ffb57dc166eaabb5fcb10d9aabff25a283b33e85fa2ba36c0e",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/013__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "5238b32e08d3a6f00d4fb37ba7d4d64a684afb2eaea783bca56a9d6926045904",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 15,
+      "iteration": 1,
+      "local_index": 14,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/014__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/014__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "0cb735c168d7baf29c35e414bf75be3a72821eba2af9bb7d266118a72d0c9e57",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 16,
+      "iteration": 1,
+      "local_index": 15,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/015__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/015__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "86032d6569f64e245a4b11f3f3fa70748e04cfdf89d21ccb7c953685e2040243",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 17,
+      "iteration": 1,
+      "local_index": 16,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/016__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/016__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "3926168f47f712796ecedf38ec1299452276bff64b68f7e0e8956cb2f84a97d2",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 18,
+      "iteration": 1,
+      "local_index": 17,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/017__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "2f8b5cd61c5cac14d0693331df167d6717e6fd07761242820474eb54c235f461",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/017__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8515e82b8154973df12c173422ae93c455423b1f9aba56bfc2931f24e72e595f",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 19,
+      "iteration": 1,
+      "local_index": 18,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/018__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/018__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "3593232323b7870537bd1f3e2cbeb4eb9442d8f342e4b68d997e8b2c0df84963",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 20,
+      "iteration": 1,
+      "local_index": 19,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/019__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/019__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "16052dc8fb13cc1b4a5c92bda62e7fa2d5ba794fdf1f595bb31eb74fe112bd28",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 21,
+      "iteration": 1,
+      "local_index": 20,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/020__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/020__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "da92dec3ca9a30e1fff213c0cb2b9f798bf3a9268757e94504ead6b8019b248a",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 22,
+      "iteration": 1,
+      "local_index": 21,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/021__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/021__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "eb0d9465b9e2f1971aa960b2f48d8ab6af769f970b4358436d88a7682909a852",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 23,
+      "iteration": 1,
+      "local_index": 22,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_12",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/022__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8bf90e6a6712d72ea07ac0fc7ddbe466032ba28efaa9b79b53055a7ca4ec54f7",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/022__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f81fbf1c01403be6beb4aa97bc40c73560c79f05af9da107c09b99559a6ee7e0",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 24,
+      "iteration": 1,
+      "local_index": 23,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_16",
+      "wns_json": -16.57,
+      "wns_report": -16.57,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/023__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "29597076e1b8662de10d775b16107d278cd3a88b8b6e75be3704ecd1c6e37055",
+        "bytes": 3725
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/023__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "0ce198599675616d8d86e3414467ddb8ec63134264849f07926b52ca5339d521",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 25,
+      "iteration": 1,
+      "local_index": 24,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/024__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/024__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c3a20a7b78fe5d811c864982b9fd0d99b221f0fb19113d01f5ec59bd016fd065",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 26,
+      "iteration": 1,
+      "local_index": 25,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/025__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/025__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "7298d01ebcda7f78a8cf623c85e01e5468568bed10e7db403fd2fb70c6105f8f",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 27,
+      "iteration": 1,
+      "local_index": 26,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_6",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/026__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/026__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "058276078b5ac4b6473d81720b846c631ddb2b2dcdd3ae5fc3a44cfafa83933e",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 28,
+      "iteration": 1,
+      "local_index": 27,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/027__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/027__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "4231589321402ba37405d650181d63e62d95d9e052d7418c8f32c2772acca7b2",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 29,
+      "iteration": 1,
+      "local_index": 28,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/028__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/028__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c53b89a3cb705f25e1202be0198ceee3fafa682da084d1181ba07b8762b0fe8d",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 30,
+      "iteration": 1,
+      "local_index": 29,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_16",
+      "wns_json": -16.57,
+      "wns_report": -16.57,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/029__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "41de264346003c9fd822429d86d4c1b5a2ad035d976848dbcc79cdb60f5c9e2e",
+        "bytes": 3740
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/029__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "260badb99c87add98252ed8420db95d56a67901a905a1cd72eb605c0a06abb93",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 31,
+      "iteration": 1,
+      "local_index": 30,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/030__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/030__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "85941d1aff0c290ff0ddd7deae8859f330826837efa1ab8c94ea4f8ceaa5481e",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 32,
+      "iteration": 1,
+      "local_index": 31,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/031__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/031__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f745ea087284b33c57f83c950c23bcc8e0bc46eb2057f69a95a9bc6143917b54",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 33,
+      "iteration": 1,
+      "local_index": 32,
+      "instance": "_184696_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/032__184696__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/032__184696__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "6bc61ad53c8426209f18fac540936da6f110232d74eeaee25679fbfe707f38b9",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 34,
+      "iteration": 1,
+      "local_index": 33,
+      "instance": "_184696_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_16",
+      "wns_json": -16.57,
+      "wns_report": -16.57,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/033__184696__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "06d513637f9ef604ff0005f0f171e2e235b8be81efaf8e271d6dd53e260c4000",
+        "bytes": 3728
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/033__184696__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "38eca136838994df7c540745a4d2f79856eab93c68227be3c5925086af83e23d",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 35,
+      "iteration": 1,
+      "local_index": 34,
+      "instance": "_184696_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/034__184696__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/034__184696__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "494c578a637d08a640483adf3685eea84e63f6d5b7ef553264ef115b71334153",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 36,
+      "iteration": 1,
+      "local_index": 35,
+      "instance": "_184696_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/035__184696__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/035__184696__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "22ab66122ef37a9abac6391778e23cf12755a13aba5a38cc615eca8926cee21f",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 37,
+      "iteration": 1,
+      "local_index": 36,
+      "instance": "_184696_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/036__184696__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "63bbf1fcd97342eddf866398a47f1c22c65f7a23de679eb8e47132f854fbe72b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/036__184696__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "3e5acec40afdc280efb97bcbb802ffdaad86de7607e7fa79caafe5c6ba4c6473",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 38,
+      "iteration": 1,
+      "local_index": 37,
+      "instance": "_184713_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__ha_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/037__184713__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ed03c00f2946a9650fe5c8c0dcfdf618562ec14d2056721c14dc041de47d35b3",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/037__184713__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ac96523d6727acbf1c716efa9c163febea0b39e209e2c5cea1580121c100047b",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 39,
+      "iteration": 1,
+      "local_index": 38,
+      "instance": "_184713_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__ha_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/038__184713__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "5e2a77b8144c0aef9bf9e2c9207765cbafdd6362de3d7d27d98f6bea24b967c9",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/038__184713__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "6c1e03ef14af7c779cfc16b6a46b98c49ae54463e2a4cf6dcce38bf764c3e902",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 40,
+      "iteration": 1,
+      "local_index": 39,
+      "instance": "_184713_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__ha_4",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/039__184713__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "7fd54ad745872e3934be750b5ba4d455971d32533008ea4f00f0b308c4c933cf",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/039__184713__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c836db5062fa534bdd27e67d505da8eccd48d490097ac0d86ace32e209dc167d",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 41,
+      "iteration": 1,
+      "local_index": 40,
+      "instance": "_184713_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__xor2_2",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/040__184713__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "7a12b7e6758ca572587d4e76c39121557ced07d1f66fde9a140f27c1eb29daa1",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/040__184713__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "eb17236ec69002f7fc3f88720420d26b1f07067041ebf84d891f36dbfcfb33b2",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 42,
+      "iteration": 1,
+      "local_index": 41,
+      "instance": "_184713_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__xor2_4",
+      "wns_json": -16.6,
+      "wns_report": -16.6,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/041__184713__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8f72c5c6050e2ffb73fa3db01a9b0584c3550c240dcfd1a7aa71ebbeeb5abf3d",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/041__184713__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "11dbd86785991e46d3902cd4c1d20d87ca665682587778fadeffb13b6aaded74",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 43,
+      "iteration": 1,
+      "local_index": 42,
+      "instance": "_185706_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_isobufsrckapwr_16",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/042__185706__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "0f4930a2c3e3f4f63beda5372b4344f4d2f102c432ef1f042176ea5c8c56c2f2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/042__185706__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "cf7236f69af9c3ee718f2b5bd38d8a7330c6145f2299cf83a1d95db9448e6a72",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 44,
+      "iteration": 1,
+      "local_index": 43,
+      "instance": "_185687_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_0",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/043__185687__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/043__185687__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "42c0b905d76e8c747b50ae39dc4ca1d1b2b1f2bece8a36f944c134c076328e2a",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 45,
+      "iteration": 1,
+      "local_index": 44,
+      "instance": "_185687_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/044__185687__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/044__185687__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8b2d8cfce5356185f9f8172e60409e888d1bb3f20027699d97cec14350cfe88d",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 46,
+      "iteration": 1,
+      "local_index": 45,
+      "instance": "_185687_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/045__185687__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/045__185687__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f1c330a9b04dc0105b474a1a70e0b85aa4f1729be12918ed6353b4627d8412f3",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 47,
+      "iteration": 1,
+      "local_index": 46,
+      "instance": "_185687_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/046__185687__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ceb679dbabd37965d75649564ea78580f362ff623994d9fbbda2eb8107a5e36f",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/046__185687__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "94525564ef7fb8df28eb09a8dc16e037ad38807a75f462e56b6a6f4755ef32d5",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 48,
+      "iteration": 1,
+      "local_index": 47,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__bufinv_16",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/047__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/047__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "26fd2f882619b96a616d394a867b907f8a992cd16223d991b3c84545fa76dfbf",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 49,
+      "iteration": 1,
+      "local_index": 48,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__bufinv_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/048__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/048__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "6eb40b03f9daa5263e6794d19f436cb744f241714bce7d9118c5ce791dcec378",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 50,
+      "iteration": 1,
+      "local_index": 49,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__clkinvlp_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/049__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/049__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "671c401efbb8e655cb0bf5d83bb19cc1c3b093fc50869b8999a3c5c6e33a5c84",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 51,
+      "iteration": 1,
+      "local_index": 50,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__clkinvlp_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/050__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/050__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "1e3cf8885ac05b6bc9aee32b45bcba423cc92e75fdea0e85e6ba9b39dfae35cd",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 52,
+      "iteration": 1,
+      "local_index": 51,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_0",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/051__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/051__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "73ee301bc059e209b7a97e9a346e1d3f9f718dc7b22f71bafc8471c38b0c5d17",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 53,
+      "iteration": 1,
+      "local_index": 52,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/052__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/052__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f989c7ea0ee6545b7377bd2f42b8d06920f98612841a466878b027e82f37fd24",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 54,
+      "iteration": 1,
+      "local_index": 53,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/053__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/053__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d0306e86c9db58f9bb4ac27952cdd84354e1b90a474deecea43cab6c82b09c2a",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 55,
+      "iteration": 1,
+      "local_index": 54,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/054__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/054__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "1f5e7fb659d7b3b5c066482ab6f617fe9e3972f09240663c3da04335ee24030c",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 56,
+      "iteration": 1,
+      "local_index": 55,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvn_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/055__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/055__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "b3082f737cd4826d5cb1e03ada457c1bdef25e76402845f7c6ee72a875e3b070",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 57,
+      "iteration": 1,
+      "local_index": 56,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/056__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/056__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "acf063acf7b4bfc52867000cbfb2fa3d94ba95499754b9eb1931d64e1602fff2",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 58,
+      "iteration": 1,
+      "local_index": 57,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/057__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/057__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "b59ce65d2ba79fe8c4c5331790b9d82d42fab9e40fdaca3a0c71de23b9a4ee10",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 59,
+      "iteration": 1,
+      "local_index": 58,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/058__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/058__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "4466f63a1e20f68a9278bac981cfa7e673cd0804ebf1a3d2e336609b280b64f4",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 60,
+      "iteration": 1,
+      "local_index": 59,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__einvp_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/059__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/059__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "75a04c45c234fa7c26ab184f79c8c11a608e4fd793033b1316453f4aae576afc",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 61,
+      "iteration": 1,
+      "local_index": 60,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/060__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/060__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "32aacf96389901e84d85b23203cd39a71e2fd3bff26e4b4047c48ea6ee99a929",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 62,
+      "iteration": 1,
+      "local_index": 61,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_12",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/061__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/061__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "0c699f9136faff4cfee47401215216dc5cd5236ced13aed925e664ec122eac4f",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 63,
+      "iteration": 1,
+      "local_index": 62,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_16",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/062__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/062__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d6707bdf47320c0de3d3f131dcc8c2b2a90fa7a8c505d90d1785420164bef926",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 64,
+      "iteration": 1,
+      "local_index": 63,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/063__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/063__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "19c29ef3dd98c611a6486af6eff98cd5890475081cf1ae820f1e3af17e9e0e72",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 65,
+      "iteration": 1,
+      "local_index": 64,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/064__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/064__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "3adab73c5588201ab24dc19556201f271110b1d3133f4d902066f5da54bce0f4",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 66,
+      "iteration": 1,
+      "local_index": 65,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_6",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/065__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/065__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "5c7268f4aee1ae54bd9193abac17eb028bc2c70cdc4ac6acdd461e84a09a66a9",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 67,
+      "iteration": 1,
+      "local_index": 66,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__inv_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/066__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/066__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "dfb1d86b17c39acd4ceb6e7adf04c89e9cafec13bd099e0f1081c787a69e0256",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 68,
+      "iteration": 1,
+      "local_index": 67,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/067__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/067__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "2c4a04fc8d3799e47d037864686b8b541a8472c29f4d5c66e7f235aebb8a23c1",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 69,
+      "iteration": 1,
+      "local_index": 68,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_16",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/068__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/068__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d113d13da64b79135b7c511c626b8d44b28d86516e2541182c07508f0c47eff9",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 70,
+      "iteration": 1,
+      "local_index": 69,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/069__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/069__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "2bfdc87a03d8288c013f2cebbeeaaff83b9cbea47c2411b50803a804c12c4a00",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 71,
+      "iteration": 1,
+      "local_index": 70,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/070__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/070__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c81695a7d434edca4475b654f54261cc958e5e0ceabfd3d0e7158dfeb5c17aea",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 72,
+      "iteration": 1,
+      "local_index": 71,
+      "instance": "_184655_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__lpflow_clkinvkapwr_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/071__184655__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/071__184655__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "200fbf4d1732b56297dec920c052f8fd1bb394d0355eee948bef75213461ef66",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 73,
+      "iteration": 1,
+      "local_index": 72,
+      "instance": "_184655_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_16",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/072__184655__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/072__184655__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ad9a7e23cc35a66d5d15f7dbe3bb589fd8d0098303da9b96be7761b4ddeb220b",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 74,
+      "iteration": 1,
+      "local_index": 73,
+      "instance": "_184655_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/073__184655__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/073__184655__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "1c70f1a69dd02f0589b8f19d4d800cb632f789d97b37364750594436cbe94286",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 75,
+      "iteration": 1,
+      "local_index": 74,
+      "instance": "_184655_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/074__184655__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/074__184655__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "12b8e5cfe8fdd08474b0d3874e9e490ae2aa80115065102523addc71e2d6ec1f",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 76,
+      "iteration": 1,
+      "local_index": 75,
+      "instance": "_184655_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__clkinv_8",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/075__184655__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/075__184655__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "74fc0f8de6f92145bc403ebcb8dc5ab74bb283319d939ee8cae395bdee44259c",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 77,
+      "iteration": 1,
+      "local_index": 76,
+      "instance": "_184679_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_0",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/076__184679__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/076__184679__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "5e3b1b65e1cc6a32492442c5f1d92fe8c513e45812cc8913802db4e8635e4538",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 78,
+      "iteration": 1,
+      "local_index": 77,
+      "instance": "_184679_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_1",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/077__184679__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/077__184679__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d8f8ca41b89125032807d19d8b016d18590778affe5cd8ffd85df8c4c0a9e137",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 79,
+      "iteration": 1,
+      "local_index": 78,
+      "instance": "_184679_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/078__184679__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/078__184679__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "2ca62fe2b6d3755beaa7dcd25d204539313aff28d61956ae55aa20b723878a63",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 80,
+      "iteration": 1,
+      "local_index": 79,
+      "instance": "_184679_",
+      "kind": "R",
+      "to_type": "sky130_fd_sc_hd__or2_4",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/079__184679__R/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "8ca92ebbb0ef9c17f4103ac8743617f207e71db1ac01ce2740b696ffc0d098b2",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter001_cand001/079__184679__R/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "6767d77fdb5b3bbe69fe1ced8b7facaf7673fa0fa012550bd6adf92a167099d2",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 81,
+      "iteration": 2,
+      "local_index": 0,
+      "instance": "_187583_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o211ai_2",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter002_cand002/000__187583__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f02c974ad206a7ea260dbbb98cddbd816e815ba7d9635fe8dfc3b08af4e94e2c",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter002_cand002/000__187583__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "722878aea9be84fbb72b61a8a7937a71cd0693105bfcf78b32596290a4f02723",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 82,
+      "iteration": 2,
+      "local_index": 1,
+      "instance": "_187583_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o211ai_4",
+      "wns_json": -16.65,
+      "wns_report": -16.65,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter002_cand002/001__187583__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "23b8fcf103b4f4b05f86f9cc5ec5ffaca2b356662a93a88072292a5a0c0293ef",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter002_cand002/001__187583__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ebe53bc18842d067888c8fae4a0f396f0939e69cf58ff862efedbb19f516161e",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 83,
+      "iteration": 3,
+      "local_index": 0,
+      "instance": "_187583_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o211ai_2",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter003_cand003/000__187583__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f02c974ad206a7ea260dbbb98cddbd816e815ba7d9635fe8dfc3b08af4e94e2c",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter003_cand003/000__187583__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ab4c2dea74a995141a52b76959cff382822ae92915e8da7457085a0fe91b350b",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 84,
+      "iteration": 3,
+      "local_index": 1,
+      "instance": "_187583_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o211ai_4",
+      "wns_json": -16.65,
+      "wns_report": -16.65,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter003_cand003/001__187583__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "23b8fcf103b4f4b05f86f9cc5ec5ffaca2b356662a93a88072292a5a0c0293ef",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter003_cand003/001__187583__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "249e3662f339bb75517b93a53544a58e78a75f74d952b8901cdaafa53c66837e",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 85,
+      "iteration": 4,
+      "local_index": 0,
+      "instance": "_187583_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o211ai_2",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter004_cand004/000__187583__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f02c974ad206a7ea260dbbb98cddbd816e815ba7d9635fe8dfc3b08af4e94e2c",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter004_cand004/000__187583__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "2e40dfb7cdb268ba6c891ed0b85c73cfd5d80586d7ffee7f9318bdbc745db92e",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 86,
+      "iteration": 4,
+      "local_index": 1,
+      "instance": "_187583_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o211ai_4",
+      "wns_json": -16.65,
+      "wns_report": -16.65,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter004_cand004/001__187583__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "23b8fcf103b4f4b05f86f9cc5ec5ffaca2b356662a93a88072292a5a0c0293ef",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter004_cand004/001__187583__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "bca3185ad7a9e32d91a013988cc6a71ab3205bc02c1355444c532de5f6b934fb",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 87,
+      "iteration": 5,
+      "local_index": 0,
+      "instance": "_184320_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nor4b_2",
+      "wns_json": -16.15,
+      "wns_report": -16.15,
+      "accepted": true,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/000__184320__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "adb5eaee6f605fdc520583abb175171a8e44ec9b18dc1ab997a654935cdf2553",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/000__184320__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c3c8cef91d3dd1bc4c91569a4af620173b99f1c2dfa64a7e57f41a79f43fb207",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 88,
+      "iteration": 5,
+      "local_index": 1,
+      "instance": "_184320_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nor4b_4",
+      "wns_json": -16.16,
+      "wns_report": -16.16,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/001__184320__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "c711104f5a1ceb68472ed44b59a79ae7d4222635e2e5087569c4dacd196fe060",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/001__184320__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "e49621e747e576ee828684f64ae4ce24d234bf487b339cdd9bd2307f67a2f717",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 89,
+      "iteration": 5,
+      "local_index": 2,
+      "instance": "_184361_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__a22o_2",
+      "wns_json": -16.57,
+      "wns_report": -16.57,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/002__184361__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d12731d81201ccb7fbcd169f4ae469a4d4f904e33cd398cee45dd3258dffdd29",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/002__184361__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "b908d9c1362a8201cdf915eaa0dd07bbe802e8c24507d14097a6f77c0df6f518",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 90,
+      "iteration": 5,
+      "local_index": 3,
+      "instance": "_184361_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__a22o_4",
+      "wns_json": -16.6,
+      "wns_report": -16.6,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/003__184361__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "2ae1be75d3e8ad609e6bd30223a21fe032ed58278d3f4053d7b56519e2508c68",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/003__184361__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "38cd189ee4d84ce31fb58ce4608044150c5ed10fc7a2c3b4ba92701c69ab5018",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 91,
+      "iteration": 5,
+      "local_index": 4,
+      "instance": "_184362_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__a21oi_2",
+      "wns_json": -16.53,
+      "wns_report": -16.53,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/004__184362__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "e19c3fc9f2fb34b95b86628390475931e6bf1b5c801084fda4455e459747add0",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/004__184362__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "a98cbf75531d0f7130ca413564d179621b8ac361c6b157c254cdd55c4617b5c8",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 92,
+      "iteration": 5,
+      "local_index": 5,
+      "instance": "_184362_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__a21oi_4",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/005__184362__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "37cff1831b143cad173d6aad2ff2984bff5cf0e187eff4a4463f9d3c93910a87",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/005__184362__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "ddea0709c056c3ce6b1a9c00ae2fd795be8051b7346c7820b2ecca911eb713bb",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 93,
+      "iteration": 5,
+      "local_index": 6,
+      "instance": "_184386_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nand2_2",
+      "wns_json": -16.41,
+      "wns_report": -16.41,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/006__184386__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "1229139c77238c0ee2c948b74f94ac4259cdd78a7a2fa2b72dd3c8e77739140b",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/006__184386__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "d2b6de1da10d58e0458451c0ea8414002f2ed56d2b98e2eb23aef7eb2508ceae",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 94,
+      "iteration": 5,
+      "local_index": 7,
+      "instance": "_184386_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nand2_4",
+      "wns_json": -16.35,
+      "wns_report": -16.35,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/007__184386__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "4365593338007406e50864c9aad0ef5a329e4379f103ae7bb7d9c91ca4d41d76",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/007__184386__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "5e325cc0caf2f3009a50b1755f8c5c01637f189aa04a23c041f5f4d48b48f940",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 95,
+      "iteration": 5,
+      "local_index": 8,
+      "instance": "_184386_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nand2_8",
+      "wns_json": -16.4,
+      "wns_report": -16.4,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/008__184386__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "e74a58c1dca1b0a1fe88014e8b4499f85f1d60d42dbdd16bf67506b4dbb5699e",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/008__184386__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "266a02beeafecb3ffd0061801056e541e895d0adf261bf0cf73a6b55a8da5320",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 96,
+      "iteration": 5,
+      "local_index": 9,
+      "instance": "_184687_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nand4_2",
+      "wns_json": -16.62,
+      "wns_report": -16.62,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/009__184687__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "4d0bd5db29b8751d1a34a812d3dd5f7fb8fdabe8198a2661b2b4c3a563d14c59",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/009__184687__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "31b8cd89a2a89a37e970e5e13028a4eb343a6acdd55c04533fc7a66b4936131f",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 97,
+      "iteration": 5,
+      "local_index": 10,
+      "instance": "_184687_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nand4_4",
+      "wns_json": -16.77,
+      "wns_report": -16.77,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/010__184687__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "0013c4ce8bec0144df83f2e9ddb5bdf192f04b0194d9162ba5f86bf267b883d6",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/010__184687__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "736199ef342d1e9f63ea1d5ee50506790b1501562c9d3ec3b23aad7ac41c26d8",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 98,
+      "iteration": 5,
+      "local_index": 11,
+      "instance": "_184688_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__a211oi_2",
+      "wns_json": -16.54,
+      "wns_report": -16.54,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/011__184688__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "3d6b3cb3cfe5ad756bbcfce0a68b37b1bcea382329ec7b8ea699c9c542de8b0d",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/011__184688__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "cbc81d4988968523b65540201d583f08c159ecd0577f2739ba0f3435c30b84a0",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 99,
+      "iteration": 5,
+      "local_index": 12,
+      "instance": "_184688_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__a211oi_4",
+      "wns_json": -16.57,
+      "wns_report": -16.57,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/012__184688__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "f17ea0ae3ce9c4dac0d4ae8daca5f8d9a4945b8493a78fa9b65051c3b7772923",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/012__184688__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "9707e3ee378c5e282372a0ee54b7f9e4197b601f4a78c9259f0217df789f3de3",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 100,
+      "iteration": 5,
+      "local_index": 13,
+      "instance": "_184702_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o21ai_1",
+      "wns_json": -16.5,
+      "wns_report": -16.5,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/013__184702__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "6ef1d0e6b7f37a14424de89baf8441bdb5c69d639f81f99f3fa8d7e591ac8fcd",
+        "bytes": 3782
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/013__184702__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "b77b00fb444af04372afec07611e4c1174b9d55f19a645d66916e89048305ea7",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 101,
+      "iteration": 5,
+      "local_index": 14,
+      "instance": "_184702_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o21ai_2",
+      "wns_json": -16.54,
+      "wns_report": -16.54,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/014__184702__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "3ccf4e7f65242aa38791fee2a621243dd4dd6c1dd2f9a3f471ef754b1d304a12",
+        "bytes": 3722
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/014__184702__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "676b9ef1d7274a30d1087b7af511c3f7675a7d7592edf9f0e028d461af98f55d",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 102,
+      "iteration": 5,
+      "local_index": 15,
+      "instance": "_184702_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__o21ai_4",
+      "wns_json": -16.62,
+      "wns_report": -16.62,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/015__184702__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "901b7731491db39ce150ba6512bf6b2e49779f41ab9a38e35fdb0198f8fe0e16",
+        "bytes": 3722
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/015__184702__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "0d7c324968b7b815130cf21599dd5e0265dbda93eedbb8d9dbab57d3ba291478",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 103,
+      "iteration": 5,
+      "local_index": 16,
+      "instance": "_185455_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nor3_2",
+      "wns_json": -16.56,
+      "wns_report": -16.56,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/016__185455__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "49396b9a3d15aed90356376b232707b7308a95a52ef8a59e531d380382a89211",
+        "bytes": 3784
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/016__185455__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "9937dbe13501cbce9ea30255aef383380080a90aac4f837a506ec793dc1d6c45",
+        "bytes": 496
+      }
+    },
+    {
+      "ledger_index": 104,
+      "iteration": 5,
+      "local_index": 17,
+      "instance": "_185455_",
+      "kind": "G",
+      "to_type": "sky130_fd_sc_hd__nor3_4",
+      "wns_json": -16.64,
+      "wns_report": -16.64,
+      "accepted": false,
+      "sta_log": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/017__185455__G/sta.log",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate execution report",
+          "b17 report crosswalk"
+        ],
+        "sha256": "1136657626149f81293f7b46da7ecb903733c7e00bf06f9bef22bcd1dd1aaf08",
+        "bytes": 3784
+      },
+      "sta_tcl": {
+        "path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/017__185455__G/sta.tcl",
+        "exists": true,
+        "roles": [
+          "b17 one-to-one candidate STA recipe",
+          "b17 report crosswalk"
+        ],
+        "sha256": "60a3c0180c9e9537b45d9776099fa585b432d662cff0cce2a7a3a2962c0d2d81",
+        "bytes": 496
+      }
+    }
+  ]
+}

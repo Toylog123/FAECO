@@ -6,7 +6,7 @@
 
 1. **`same claim ⇒ same code revision + same config family`**（OI-013-A）。一个数字只能来自**一个**实验族。
 2. **禁止跨族拼接**：不得把 08-26 产物、sprint1/efficiency-first、`faeco-exp-rev1` 三者的数字放进同一张表或同一句结论。
-3. **冻结 revision**：annotated tag **`faeco-exp-rev1` → `87d01ba`**。受 revision 影响的结果须以该 tag + 同一 config family 重跑，方可作为未来主结果。
+3. **冻结 revision**：已有 `faeco-exp-rev1` 证据继续绑定 **`87d01ba`**。r22新显式来源/代价实验另建族C′，按 `R22_EVIDENCE_CLOSURE_PLAN_20261014.md` 在正式EDA前提交源码并锁定实际revision+SHA；不能把新政策结果贴回旧族C/D或旧tag。
 4. **零回退 ≠ 无回退声明**：只报 WNS 改善，不等同 timing closure。
 5. **指标纪律**：`windows_offered` / `N_extracted` 是**重复扫描**指标，**不作**"搜索空间扩大"证据；唯一窗口数用 `N_unique_window`（canonical 窗口哈希去重）。
 6. 论文正文**不写工程路径**；路径映射只在本文件与 `CROSSWALK_TEMPLATE.md`。
@@ -15,6 +15,7 @@
 
 | 族 | 名称 | 产物目录 | git ref | 关键配置 |
 |---|---|---|---|---|
+| **C′（r22，预注册；结果待运行）** | 同运行器来源×代价对照、覆盖单源、随机顺序与legacy匹配基线 | `experiments/20261014_r22_cut_ablation/` | 正式source pin及每run manifest为准，尚无EDA结果 | 9臂×8电路；0.5ns、20轮、真实STA500、k8、joint_k2、RGB/buffer、workers1、S/TOPOLOGY/feedback关闭；初态与库同SHA、独立最终SEC |
 | **A** | sprint1 / efficiency-first（`iterations=1`） | `experiments/20260805_tcad_sprint1_iscas89/`、`20260805_tcad_sprint1_itc99/` | 未钉 revision（2026-08-05 期历史族），**在冻结 revision 下不可复现**（见 A\*）；Yosys `0.67+146`（`map.log` 首行与 B 族逐字相同） | `--max-iterations 1 --early-stop` |
 | **A\*** | 效率优先 **@ 冻结 revision** 重跑（判 A 的可复现性） | `experiments/20260928_sprint1/`（8/8 `exit=0`） | git HEAD `6b95f8c`（`run_config.json → git_head`） | 与 A 同配置：`--period 0.5 --max-iterations 1 --candidates-per-iteration 1 --joint-enumerate-depth 3 --early-stop --priority-table …` |
 | **A′** | 效率优先候选 → OpenROAD/全局布线后验 | `experiments/20260807_real_pr_iscas8/` | 同上 | 消费 A 族接受候选做后验物理估计 |

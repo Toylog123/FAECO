@@ -4,6 +4,34 @@
 
 > 最近一轮在最上，历史轮次原样保留在下。**新接手者只需读最上一节**。
 
+## 2026-10-14 — 恢复机制证据、历史档案与投稿推进（r22_20261014，进行中）
+
+**新用户授权**：剩余项报告后用户明确“继续推进吧那就”。本轮先恢复OI-031历史逐臂配置与OI-034计数审计，主线设计并执行同运行器的新族双割/cost消融；之后推进英文elsarticle、投稿材料、Word必要性与最终排版。新授权取代旧消融暂缓，r21“不新EDA”仅是历史轮边界。
+
+**起始状态**：main clean，HEAD/origin-main `46ede94`，已推送；母稿为r21已验收工作修订，12页/7图14表，PDF793394B、SHA256 c65169b74925446233345d7dad21ab0abd66b4ff4d9fe2f0c8f2b299c1352ae3。v18仍作不可变历史参考；未发现既有r22轮次。
+
+**当前只规划**：LOG-20261014-11；EXPERIMENT_REGISTRY登记PLAN-R22-CUT-COST。尚无新正式EDA开跑或结果，实验定义/证据路径与执行revision待主线锁定；旧4–5h预算只是待核假设。
+
+**独立设计评审节点**：`planning/R22_ABLATION_DESIGN_REVIEW_20261014.md`已落盘。评审仅跑一次六门旧路径静态探针（PROBE-R22-LEGACY-GATING），确认来源/门控混杂，无EDA或时序结论。报告的canonical Cw/独立Cc、七policy完整2×2、12项启动探针与真实launch预算纪律仍待主线裁定；未执行其余建议探针，未锁正式臂矩阵（LOG-20261014-12）。
+
+**最新正式计划与恢复（LOG-20261014-13）**：R22_EVIDENCE_CLOSURE_PLAN预锁新族C′ W0/W1/U0/U1/C/UR1/2/3/L共九臂×八电路72运行，先静态门/TDD和2电路pilot，执行revision/输入哈希/完整命令仍待登记；正式EDA未跑。历史包HISTORICAL_RECOVERY_REPORT只读审计51s/exit0，b17独有报告恢复104、ITC-99可识别候选STA结果2994；C完整flags/argv/revision未全恢复，s382 v3不借入canonical。旧“b17未知”仅保留r21历史，当前报告级来源已恢复；OID关闭范围待主线裁定。
+
+**最新实现与裁定（LOG-20261014-14/15）**：主线确认起始全回归538passed/4skip/156subtests（111.16s），CLI20项RED→GREEN后25passed；candidate_policy从ModuleNotFoundError RED到真实Cw/Cc/等权cost1/canonical双origins/flow隔离分支，联合CLI+legacy38passed/0.74s。STA launch/汇总并行实现尚未完成，整体门/pilot/执行revision未锁。OI-031完整历史复现身份缺口继续保留；OI-034 B/D来源闭合，C精确执行数作为不可识别历史限制保留。无正式新EDA。
+
+**最新验证/预检（LOG-20261014-16/17）**：批运行器已锁九臂、冷输出/共享映射、源码/输入receipt、3900s包装+3930s硬超时及最终SEC；首次全回归624passed/4skip/156subtests后，独立review又发现并修批路径/SEChelper覆盖/伪pass复用/失败继续调度/timeout归因。专属现91passed/1.13s，**最终源码仍需全回归与review验收**。scratch/r22_preflight_config已工具dryrun成功、72配置注册，没有mapping/STA；nativeYosys0.67+146/OpenSTA3.1.0/SECYosys0.33。英文paper/en独立草稿已并行启动，source_binding明确r21截止，不用未产r22数值。
+
+**最新稳定源码门（LOG-20261014-18）**：第二次全回归1fail归因回归中修改脚本/fixture，主线已停core编辑、session14951重启，最终实际629passed/4skip/156subtests、99.79s/包装102s exit0。当前只认稳定对象；ROOT README/AGENTS/.codex/project_docs README入口已同步，准备阶段commit钉源码，domain最终文档门待对照。正式EDA仍未启动，英文未完成草稿独立，不混入源码阶段产物。
+
+| 工作顺序 | 当前状态/验收门 |
+|---|---|
+| 配置/计数档案审计 | 启动；逐族、逐臂来源实查，缺失字段不猜测 |
+| 可分离性反驳测试 | 主线设计；先查什么结果推翻双割/cost因果解释 |
+| 独立开关与TDD | 待探针结论；只测当前实现并放回整体回归 |
+| 同运行器新族消融 | 待锁revision/预算/类型/接受/初态及正负判据；不拼旧C |
+| 英文稿/材料/Word必要性/排版 | 证据汇合后推进，当前未开始转排 |
+
+**记录分工**：专职记录智能体只维护日志、状态/交接/问题/经验与实验登记；不改稿/图/代码，不执行Git。每次正式实验开跑前登记真实配置、输入、版本、超时与判据，跑后写实际结果与证据包，不捏造运行。
+
 ## 2026-10-14 — 论文审稿与配图修订（r21_20261014，本轮完成）
 
 **请求与版本**：用户要求审稿本篇论文并修改/增加配图，授权必要图注与引用调整。起始 v18/r20、HEAD `73dc0e7`、工作区 clean。当前为 r21 工作修订，**不冻结 v19**；v18 为不可变参考。下方历史冻结/push 等用户安排不阻塞当前明确授权及 AGENTS。
@@ -23,7 +51,8 @@
 | OI-032 | b17 默认 785 与重跑 104 的批次披露完成 |
 | OI-033 | D 实际计数/曲线/表列修复完成 |
 | OI-034 | 其他历史族计数/旧 schema 审计开放；b17 实际 STA 不可从现档识别 |
-| 视觉/副本/文档/记录 | 本轮全部完成；QA与独立账本审计通过 |\n| 阶段 Git | 待主线按当前 AGENTS commit+push，另记真实 Git 结果 |
+| 视觉/副本/文档/记录 | 本轮全部完成；QA与独立账本审计通过 |
+| 阶段 Git | 待主线按当前 AGENTS commit+push，另记真实 Git 结果 |
 | OI-021/024/027/028 与既有问题 | 保留；Word、成本消融、大规模验证不擅启 |
 
 **接手纪律**：实查证据，不跨族拼接，不删除实验/证据，不擅自插入 1-C。完整原始问题见 `../OPEN_ISSUES.md`；当轮节点日志 LOG-20261014-01～09。

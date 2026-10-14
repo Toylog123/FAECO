@@ -2,9 +2,19 @@
 
 > r21 Git收口：实现提交 `e592bfd`、SVG导出规范化提交 `483b5e9` 已成功推送 `origin/main`（2026-10-14）。本轮审稿/配图/计数修复已完成，后续只处理保留的未决项；下文Git待办措辞为推送前记录。
 
-> 给下一位 agent 的提示词。最后更新：2026-10-14（r21_20261014，本轮完成）。当前指令以下节为准。
+> 给下一位 agent 的提示词。最后更新：2026-10-14（r22_20261014，进行中）。当前指令以下节为准。
 
-## 当前接手提示（r21）
+## 当前接手提示（r22）
+
+按AGENTS和本目录README阅读当前状态/交接、EXPERIMENT_REGISTRY、OPEN_ISSUES与EXPERIENCE。r22起始main clean/HEAD与origin-main `46ede94`，母稿为r21已验收工作修订，12页/793394B/c65169b7…。
+
+用户最新“继续推进吧那就”授权恢复OI-031逐臂配置和OI-034计数审计，并推进同运行器的新族双割/cost消融；之后推进英文elsarticle、投稿材料、Word必要性和最终排版。新授权覆盖旧消融暂缓，r21不新EDA与不启动Word仅描述历史轮范围。
+
+先复用旧证据，明确可分离性与因果归因的反驳条件；独立开关/TDD通过后锁新族revision、预算、类型、接受、初态、输入/种子和正负判据，再正式开跑。当前只有PLAN-R22-CUT-COST规划，尚无正式新EDA/结果。不得跨族拼接C旧数，不预先写“有效”或假定旧4–5h预算。
+
+所有正式实验必须前登记配置、后登记证据与实际结果，长任务超时/监测。缺历史flags不猜测，缺旧schema不补零。OI-030/031/034继续保留；OI-032/033已修范围保持。阶段commit+push依AGENTS由主线执行。
+
+## r21已完成提示（历史；旧暂缓不作为r22当前指令）
 
 你接手 FAECO 仓库 `D:\BaiduSyncdisk\01_Papers\03_FAECO`。按 AGENTS 和本目录 README 阅读 START_HERE、CURRENT_STATUS、TASK_BOARD、CURRENT_RUN_HANDOFF 最上一节，再查证据 manifest、OPEN_ISSUES 与 EXPERIENCE。
 

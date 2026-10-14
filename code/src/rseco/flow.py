@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from .case_loader import load_case
+from .candidate_policy import generate_candidate_boundaries, validate_policy
 from .cut import (
     build_weighted_cut_graph,
     canonical_cut_hash,
@@ -337,7 +338,10 @@ def write_case_metrics(case_dir: str | Path) -> Path:
 
 
 def _cone_candidates(cone, weights, critical_instances, r_available, *, constrained=False, k=8,
-                     allow_singleton=False, wall_timeout_s=None):
+                     allow_singleton=False, wall_timeout_s=None,
+                     cut_search_policy='legacy', cut_sources='full',
+                     node_cost_mode='configured', pool_trace=None):
+    validate_policy(cut_search_policy, cut_sources, node_cost_mode)
     if not getattr(cone, "gates", None):
         return []
     # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
@@ -347,6 +351,14 @@ def _cone_candidates(cone, weights, critical_instances, r_available, *, constrai
     cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]
     out: list = []
     for sub in cones:
+        if cut_search_policy == 'weighted_st':
+            rows, trace = generate_candidate_boundaries(
+                sub, weights, critical_instances, r_available,
+                sources=cut_sources, cost_mode=node_cost_mode)
+            if pool_trace is not None:
+                pool_trace.append(trace)
+            out.extend(rows)
+            continue
         if constrained:
             # The joint bi-objective cut hard-anchors the deepest critical
             # instance and requires >=1 covered critical gate.  Both must be
@@ -539,6 +551,7 @@ def run_multi_iteration_case(
         stateful_evaluator = False
     max_candidates_per_iteration = max(1, candidates_per_iteration)
     _round_seq = 0  # evaluator invocation ordinal (one per outer iteration)
+    candidate_pool_trace = []
 
     # -- L3 S wiring (r2 §4.9) --------------------------------------------
     # Fail loudly instead of silently degrading to "S off": an experiment that
@@ -610,12 +623,20 @@ def run_multi_iteration_case(
         active_r_available = r_available
         recompute_r = getattr(wns_evaluator, "r_available_for", None)
         if callable(recompute_r):
-            active_r_available = recompute_r(active_critical)
+            r_scope = (list(cone.gates)
+                       if getattr(wns_evaluator, 'cut_search_policy', 'legacy') == 'weighted_st'
+                       else active_critical)
+            active_r_available = recompute_r(r_scope)
+        subcone_trace = []
         candidates = _cone_candidates(
             cone, weights, active_critical, active_r_available,
             constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
             k=max_candidates_per_iteration,
             allow_singleton=bool(getattr(wns_evaluator, "allow_singleton", False)),
+            cut_search_policy=getattr(wns_evaluator, 'cut_search_policy', 'legacy'),
+            cut_sources=getattr(wns_evaluator, 'cut_sources', 'full'),
+            node_cost_mode=getattr(wns_evaluator, 'node_cost_mode', 'configured'),
+            pool_trace=subcone_trace,
             wall_timeout_s=(
                 max(0.0, wall_timeout_s - (time.perf_counter() - started_at))
                 if wall_timeout_s is not None else None
@@ -640,6 +661,14 @@ def run_multi_iteration_case(
             # str seed: random.seed() rejects tuples since Python 3.11, and a
             # string key is equally deterministic for replay from run_config.
             _random.Random(f"{int(seed)}|{_round_seq}|{len(state.accepted_patches)}").shuffle(round_candidates)
+        candidate_pool_trace.append({
+            'round': _round_seq, 'base_netlist_hash': state.current_netlist_hash,
+            'critical_instances': active_critical,
+            'r_available': sorted(active_r_available) if active_r_available is not None else None,
+            'subcones': subcone_trace,
+            'pool_hashes': [canonical_cut_hash(c) for c in candidates],
+            'dispatch_hashes': [canonical_cut_hash(c) for c in round_candidates],
+        })
         if structure_resynth:
             # Pool census (tech design §13.4-2), read-only instrumentation.
             # The S pass reuses `round_candidates` (below), which is
@@ -815,6 +844,7 @@ def run_multi_iteration_case(
                                        if refreshed_cone is not None
                                        else state.current_cone_gates),
                             metadata={"cut_hash": candidate_identity,
+                                      "sta_launch_seq": wns_info.get('sta_launch_seq'),
                                       "sta_provenance": wns_info.get("sta_provenance"),
                                       "physical_baseline_provenance": wns_info.get("physical_baseline_provenance"),
                                       "physical_candidate_provenance": wns_info.get("physical_candidate_provenance"),
@@ -830,6 +860,14 @@ def run_multi_iteration_case(
                                       },
                                       "action_scope": list(patch.gates)},
                         )
+                        # Inner best selection is not an outer commit: cone
+                        # refresh or another hard gate may still reject it.
+                        committed_seq = wns_info.get('sta_launch_seq')
+                        for trial in getattr(wns_evaluator, 'trials', []):
+                            if (committed_seq is not None
+                                    and trial.get('sta_launch_seq') == committed_seq
+                                    and not trial.get('skipped_duplicate')):
+                                trial['committed'] = True
                         accept = getattr(wns_evaluator, "accept_candidate", None)
                         if callable(accept):
                             accept(wns_info, state=state)
@@ -1175,6 +1213,7 @@ def run_multi_iteration_case(
     if result.get("final_patch_id") is None and state.accepted_patches:
         result["final_patch_id"] = state.accepted_patches[-1]["patch_id"]
     result["state"] = state.to_dict()
+    result['candidate_pool_trace'] = candidate_pool_trace
     result["wns"] = state.current_wns
     result["tns"] = state.current_tns
     result["min_slack"] = state.current_min_slack
@@ -1183,42 +1222,27 @@ def run_multi_iteration_case(
     result["logic_level_reduction"] = reduction
     if wns_evaluator is not None:
         result["wns_history"] = wns_history
-    # r2 §3.6 collection fields — search-efficiency metrics derived from the
-    # candidate-level STA sequence.  For the real-STA evaluator the sequence
-    # is ``evaluator.trials`` filtered to the entries that actually executed
-    # OpenSTA (``sta_provenance`` present): pre-STA rejections (budget
-    # exhausted, equivalence failure) carry a placeholder WNS and must NOT
-    # consume a B(k) ordinal.  Proxy evaluators have no trials; ``wns_history``
-    # (per-round endpoints) is the fallback there.
+    # Real launch events distinguish fresh measurement from cached provenance.
+    # Keep the original baseline even though accept_candidate mutates the
+    # evaluator's baseline. Proxy endpoints have their own explicitly labeled
+    # fallback and are never labeled physical STA executions.
     if wns_evaluator is not None:
-        trials_ref = getattr(wns_evaluator, "trials", None) or []
-        if trials_ref:
-            sta_seq = [t["wns"] for t in trials_ref
-                       if "sta_provenance" in t and t.get("wns") is not None]
-        else:
-            sta_seq = [w for w in wns_history if w is not None]
-        # NOTE: ``initial_wns`` was captured before the loop; the evaluator
-        # MUTATES ``baseline_wns`` on every accept (real_wns.py:794), so
-        # reading it back post-run would silently re-anchor B(k) to the final
-        # current WNS and corrupt every delta.
-        baseline = initial_wns
-        if sta_seq and baseline is not None:
-            # WNS closer to zero is better: delta = w - baseline, so a
-            # positive delta is an improvement (-0.17 vs -0.27 -> +0.10).
-            deltas = [w - baseline for w in sta_seq]
-            best_curve: list[float] = []
-            running: float | None = None
-            for delta in deltas:
-                running = delta if running is None else max(running, delta)
-                best_curve.append(running)
-            result["best_wns_curve"] = best_curve        # B(k), k = STA ordinal
-            result["n_sta_to_first_improvement"] = next(
-                (index + 1 for index, delta in enumerate(deltas)
-                 if delta > 0.0),
-                None,
-            )
-            used = len(sta_seq)
-            if used > 0 and state.current_wns is not None:
-                result["wns_gain_per_100_sta"] = (
-                    (state.current_wns - baseline) / used * 100.0)
+        if hasattr(wns_evaluator, 'trials') and initial_wns is not None:
+            from .sta_ledger import summarize_sta_ledger
+            result.update(summarize_sta_ledger(
+                getattr(wns_evaluator, 'trials', []), initial_wns,
+                getattr(wns_evaluator, 'sta_launch_events', None)))
+            used = result['n_new_sta_runs']
+            if used and state.current_wns is not None:
+                result['wns_gain_per_100_sta'] = (state.current_wns-initial_wns)/used*100.0
+        elif initial_wns is not None:
+            running = 0.0
+            curve = []
+            for w in wns_history:
+                if w is not None:
+                    running = max(running, w-initial_wns)
+                    curve.append(running)
+            result['best_wns_curve'] = curve
+            result['sta_ledger_schema'] = {'source': 'proxy_round_endpoints',
+                                          'k_unit': 'outer_round_endpoint'}
     return result

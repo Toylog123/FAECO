@@ -4,6 +4,8 @@
 
 当前r21论文审稿与配图入口为 `../paper/zh/review_rounds/r21_20261014/editorial_decision.md`；计数与图件交叉表见 `evidence/R21_FIGURE_EVIDENCE.md`。当前稿为12页、7图14表的工作修订，历史v18基线保留。
 
+当前推进r22：`planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md` 与独立设计评审定义C′受控矩阵；`evidence/r22_historical_audit_20261014/` 保存历史恢复与不可识别项；运行状态以 `agent_handoff/handoff_20261014_r22.md` 为准。
+
 | 子目录 / 文件 | 角色 |
 |---------------|------|
 | `WORK_PROGRESS.md` | 工作进度（倒序，最新在上） |
