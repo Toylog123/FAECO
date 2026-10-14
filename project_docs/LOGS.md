@@ -718,3 +718,67 @@
 | LOG-20261013-10 | **图 2 机制图替换（r18，用户直接指定）+ 重冻结 v16**（零数字/零实验/零代码/零参考文献/零 .tex 改动） | `paper/zh/figures/fig_cut_generation_mechanism_imagegen.png`（图件替换）+ 双副本 PDF + `paper/zh/review_rounds/r18_20261013/`（`README.md` / `figure_before.png`=v15 / `figure_after.png`=v16）+ `versions/v16/{README.md,MANIFEST.sha256}`（117 条全 OK，相对 v15 恰 2 条 PDF 变化）+ `project_docs/planning/FAECO_R18_FIG2_REPLACE_PLAN_20261013.md` | ① 质量门 **10 页 / 0 Error / 0 Overfull(hbox) / 0 Underfull / 0 Overfull vbox**，`??` = 0，`Undefined: 5` 全为字体替身警告；② 表图 `\ref` 覆盖 **17/17**、浮动体顺序 **1..14 / 1..3**；③ 图 2 落点第 5 页，渲染正常；④ 图件：旧 1,251,525 B `a3b53e80…` → 新 1,152,805 B `67af5ce4…`（1,254×1,254 不变）；⑤ `.tex` `5775eb51…`（61,801 B，**与 v15 逐字节相同**）、双副本 PDF `05ee4ec0…`（2,604,856 B）、内容指纹 `c5fa3f26…`（**与 v15 相同 —— 换图不改文本层**）；⑥ `BASELINE_INDEX.csv` v15→superseded / v16→active（16 行、恰 1 active）；⑦ `00_Summary` 同步作者版 PDF（SHA-256 回读校验）；⑧ **仍未推送 origin**（当前 v11 + v12 + v13 + v14 + v15 + v16 均未推送） |
 | LOG-20261013-11 | **论文定位重构（r19，用户直接指定）+ 重冻结 v17**（12 处叙述层改写；零数字/零实验/零代码/零参考文献） | `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`（A1–A3 / B1–B3 / C1–C3 / D1–D4 共 16 次替换）+ 双副本 PDF + `paper/zh/review_rounds/r19_20261013/`（`README.md` / `edits.diff` / `abstract_before.txt` / `abstract_after.txt`）+ `versions/v17/{README.md,MANIFEST.sha256}`（117 条全 OK，相对 v16 恰 3 条变化）+ `project_docs/planning/FAECO_R19_POSITIONING_RESTRUCTURE_PLAN_20261013.md` | ① 质量门 **11 页 / 0 Error / 0 Overfull(hbox) / 0 Underfull / 0 Overfull vbox**，`??` = 0，`Undefined: 5` 全为字体替身警告；② 表图 `\ref` 覆盖 **17/17**、浮动体顺序 **1..14 / 1..3**；③ **页数 10→11**，第 11 页仅含参考文献尾部（孤儿末页）；两道压页实验已做且**均已回退**：删 §3.5 唯一正文 `\FloatBarrier`（仍 11 页）、图 2 宽度 0.65→0.58（仍 11 页且浮动体级联使末页承载更多）⇒ 增长源于用户指定新增叙述内容、非版式缺陷，按纪律未缩字体/行距、未砍内容，压缩并入 OI-027；④ 零数字（**词级 token 多重集比对**：行级 diff 会连带重现已存在数字）+ 零实验 + 零代码 + 零参考文献；⑤ `.tex` `f6269b81…`（64,370 B、680 CRLF / 0 裸 LF / 0 `\r\r\n`）、双副本 PDF `862ee713…`（2,609,658 B）、内容指纹 `42bfb149…`；⑥ 摘要 CN 345→372 汉字、EN 203→217 词（r17 口径）；⑦ `BASELINE_INDEX.csv` v16→superseded / v17→active（18 行、恰 1 active）；⑧ `00_Summary` 同步作者版 PDF（SHA-256 回读校验）；⑨ **仍未推送 origin**（v11 + v12 + v13 + v14 + v15 + v16 + v17 均未推送） |
 | LOG-20261013-12 | **学术叙事收敛（r20）+ 重冻结 v18**（13 处叙述层改写；零数字/零实验/零代码/零参考文献） | `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`（E1–E8 + Edel + 计划外 E6c）+ 双副本 PDF + `paper/zh/review_rounds/r20_20261013/`（`edits.diff` / `abstract_before.txt` / `abstract_after.txt`）+ `versions/v18/{README.md,MANIFEST.sha256}`（117 条全 OK，相对 v17 恰 3 条变化）+ `project_docs/planning/FAECO_R20_NARRATIVE_CONVERGENCE_PLAN_20261013.md` | ① 质量门 **11 页 / 0 Error / 0 Overfull(hbox) / 0 Underfull / 0 Overfull vbox**（页数与 v17 相同、逐页分布不变），`??` = 0，`Undefined: 5` 全为字体替身警告；② 表图 `\ref` 覆盖 **17/17**、浮动体顺序 **1..14 / 1..3**（E7 改标题不改 label，已复核）；③ **零数字（词级 token 多重集比对：数字 token / 引用键 0 差异，`\命令` 差异仅 `\item` 6→5、`\textbf` 83→81 = 结构改动非数据）** + 零实验 + 零代码 + 零参考文献；④ `.tex` `f65929ca…`（64,640 B、681 CRLF / 0 裸 LF / 0 `\r\r\n`）、双副本 PDF `1ebb2864…`（2,610,131 B）、内容指纹 `63e62c52…`；⑤ 摘要 CN 372→410 汉字、EN 217→241 词（r17 口径；EN 241 词逼近 Elsevier ≤250 词上限，并入 OI-028 复核）；⑥ `BASELINE_INDEX.csv` v17→superseded / v18→active（19 行、恰 1 active）；⑦ 计划外发现并修复 E6c（§4.5 第 4 处同源措辞）⇒ 全篇「搜索参数」= 0；⑧ `00_Summary` 同步作者版 PDF（SHA-256 回读校验）；⑨ **仍未推送 origin**（v11–v18 均未推送） |
+
+## 2026-10-14（r21：论文审稿与配图修订；本轮完成，节点最新在上）
+
+### LOG-20261014-09 — 最后视觉/副本/账本验收完成，记录停止写入待 Git
+
+- 主线完成全12页contact与重点页5/9/10/11/12逐页视觉，六新图源预检0FAIL、源PDF最低7pt；40运行D账本审计实际exit0，git diff --check通过。实读qa_notes/sta_ledger_audit与最终build_qa，全部验收记录一致。
+- 双PDF与00_Summary作者版三份字节一致，实查SHA256 `c65169b74925446233345d7dad21ab0abd66b4ff4d9fe2f0c8f2b299c1352ae3`，当前PDF793394B；覆盖前旧作者版已备份scratch/r21_previous_author.pdf。全稿仍12页/7图14表/21引用/质量项全零，无后续tex改动。
+- 五份独立报告、综合决定、改前/改后稿与差分、机器QA、独立复核/账本审计、图源/CSV/指纹/证据交叉表已归档。主线已同步论文/图件CHANGE_LOG、ROOT README/AGENTS/.codex-handoff/project_docs README/环境/派生登记；旧v18元数据移入历史区，本轮r21独立状态。
+- 本轮记录/进度/看板/当前交接/下一agent提示/当轮handoff/经验库已完成收口，不再以“候选/主线正在/收尾中”描述本轮。OI-032/033 closed但保留追踪，OI-030/031/034及所有旧未决仍明确开放；综合Major Revision不改判。
+- 不新EDA、不新tag、不冻结v19；阶段commit+push待主线按当前AGENTS执行，随后另记真实Git结果。专职记录智能体完成自检后停止写入，不执行Git提交。
+- 记录收口自检实际通过：Git Bash运行`bash code/scripts/check_record.sh`返回今日WORK_PROGRESS/CURRENT_STATUS已记录、exit0；记录文档`git diff --check`无错误。此后记录智能体停止写入，交由主线阶段提交及真实Git簿记。
+
+### LOG-20261014-08 — 计数修复复核、完整质量门通过与交接收口
+
+- 已实读 `sta_count_followup.md`：B 族 3363/664/104 全是候选评估记录，主稿指标名已改；18 实例可确认新 STA 2890（有独有报告路径），b17 旧 schema 缺来源/缓存字段，实际数不可识别，不写 0、不把 104 假定为新测量。OI-034 继续保留 C 等其他旧计数/档案审计。
+- 主线确认 D 图 5 已从 40 个原始台账剔除缓存与前置拒绝重建，Fixed 1947、EMA 2003、随机 2439/2476/2527（均值 2480.7）与 sta_used/唯一报告路径一致；表 11 保留旧 4146/4883/5624 为评估记录。新列为已有台账重算的新展示数字，未运行 EDA。OI-033 计数错误修复 closed，OI-032 批次披露 closed；OI-030/031 残余仍 open。
+- 当前构建候选实查 `build_qa.json`：**12 页 / 7 图 / 14 表 / 21/21 引用 / Error0 / Overfull hbox0 / Underfull hbox0 / Overfull vbox0 / undefined refs0**。PDF SHA256 **`c65169b74925446233345d7dad21ab0abd66b4ff4d9fe2f0c8f2b299c1352ae3`**，tex **`d36812c85b457e8b40ebd5a110099d5484a839bfc86735da23c30fcd8c94183c`**；实际 PDF 哈希回算一致。
+- 末页 0.8534 pt vbox 已归因到旧 `balance`：禁用后归零；`enlargethispage` 触发 Infinite glue shrinkage，已回退；最终改用 `flushend[noshrink,nospread]` 保持双栏平衡且零溢出，未縮字体/行距/砍内容。旧 S 浮动图漂页也已修。
+- 进度、状态、看板、交接入口/下一 agent 提示与问题表已改为简明最新状态；Major Revision 与机制/配置/旧 schema 待办保留。当前为 **r21 工作修订，不冻结 v19**，v18 不可变参考。主线正在最后逐页视觉、双副本/作者版同步、文档与阶段提交收尾；尚未 commit。
+
+### LOG-20261014-07 — 独立复核反证“实际 STA”计数，先归因后重建
+
+- 已实读 `methodology_verification.md`：当前图 5 的归档曲线包含 `skipped_duplicate` 缓存副本，复制来源字段不能证明新 OpenSTA 执行；runtime 旧计数包含评估记录/前置拒绝，不能直接称实际测量。主线复核原始台账后裁定为确定错误，登记 **OI-033**；其他历史族同类计数审计登记 **OI-034（需核实，不预判结果错误）**。
+- 主线选择实际数据修复：从原始 eval_trials 筛有效 STA provenance/WNS 并排除缓存重复，重新生成同族 D B(k)，表 11 新增实际 STA 列，保留既有记录数与墙钟值；不通过简单改名回避可恢复的测量数据，不运行 EDA。
+- 独立复核新测量数 Fixed/Adaptive 为 1947/2003，随机三种子为 2439/2476/2527（均值 2480.7）；以正式修订表/派生 CSV 与当前原始来源绑定为最终值，不将旧 4146/4883/5624 继续作为测量开销。
+- 主线通知最新临时 build 的末页 balance 有 0.8534 pt Overfull vbox，正在去重复图注并复编；**当前稿尚未通过最终质量门**。图号映射为 D 曲线 5、物理保持 6、S 7。
+
+### LOG-20261014-06 — 第五审稿视角落盘与预算图进入当前稿（构建中）
+
+- 新增独立交叉视角 `perspective_review.md` 已落盘并实读；聚焦开源流程执行者/实际使用者的图文对应、版本复现、功能验证与物理估计，未查看本轮新图。至此已有领域、方法、期刊匹配、反驳性与交叉视角五份独立报告，综审结论仍由主线裁定。
+- 实查当前 `.tex`：族 D B(k) 曲线已由备选纳入正文，使用 `fig5_budget_curves_r21.pdf`；物理保持图顺延为 `fig6_physical_transfer_r21.pdf`，S 深度/WNS 图为 `fig7_s_boundary_r21.pdf`，图 3 沿用。此前“D 只入审稿包”为该阶段安排，**当前稿以本节点映射为准**。
+- 当前 `build_qa.json` 记录图表引用数 21、未引用 label 空，但有 1 个 Overfull vbox，仍为调整过程。**不记录最终页数，不声称整体验收通过**；最终结果待主线修复与终检。
+
+### LOG-20261014-05 — 首版全稿落页问题归因、图 6 回置与预算曲线备选
+
+- 主线确认第一次编译质量项全零，但 S 数据图漂至参考文献后并独占末页；由浮动体落页造成，不是内容缺失。图 6 已改为单栏上下板并回置正文源位置，保证字号与阅读顺序，当前正在二次 build；**不把首编页数当最终页数，不宣称最终视觉验收完成**。
+- 必要证据说明已落地：表 9/10 改策略配置对照，明确混合含 JOINT、随机无 JOINT；族 C 不调用 cost/双割、轮内逐实例提交、实际 STA 消耗不同、混合 TNS 辅助接受；族 D 参数称 STA 预约上限 500；F1–F6 表注披露 b17 批次不同；setup 披露历史族 A/B revision 与漂移；结论纯排序归因改候选构造与评估顺序的联合作用。既有实验数字全部保留，未运行 EDA。
+- 新增同族 D 备选 `figD_budget_curves_r21`：八电路、Fixed/Adaptive/三随机种子的 B(k)，保留各臂自然终止位置，仅放审稿图包、不插正文，不接族 C 的终点数值。实查 PDF/SVG/PNG/CSV 已导出。
+- 曲线读取首跑误把 `sta_budget` 当配置顶层字段；按实际 `run_config.json` 改读 `resolved_args.sta_budget` 并保留 500 的断言后成功。主线通知全部六张新图已导出，最终字体/落页/验收待当前稿二次构建。
+
+### LOG-20261014-04 — 配图与证据说明首版集成及编译结果（终检中）
+
+- 期刊匹配 `journal_fit_review.md`、反驳性 `challenge_review.md` 亦已落盘并实读建议段，均为 Major Revision；后者直接确认混合含 JOINT、随机不含 JOINT 反证“纯排序消融”的控制条件。综审与最终处置以主线报告为准。
+- 当前 `.tex` 已引用新机制图、插入三张数据图及相关图注/引用；§4.4 披露族 C 关键实例枚举、TNS-aware、逐实例多提交、候选集合不同与实际 STA 不同；`tab:f16_dist` 表注已说明两批 b17 的分母差异。OI-030/031 的独立机制/配置残余仍保留。
+- 实读 `build_qa.json`：首版 **12 页**，errors / overfull_hbox / underfull_hbox / overfull_vbox **均 0**，未定义引用 false，图表引用数 **20**、未引用图表 label 空。实际回算 `.tex` SHA256 `694216dc…`、PDF SHA256 `29f8dff8…`，均与 QA 记录相同；PDF 实际大小 **761674 B**。
+- 此为首版集成与编译记录，**视觉与最终整体验收仍由主线进行**。OI-024 续记 r8–r21 未同步，OI-027 续记当前工作稿 12 页；不冻结 v19、不改动旧 v18 基线。
+
+### LOG-20261014-03 — 双独立审稿落盘、证据问题裁定与图件首跑归因
+
+- 已实读 `r21_20261014/domain_review.md` 和 `methodology_review.md`；两份独立报告均建议 Major Revision。主线裁定按不同问题层次登记 **OI-030（机制归因/排序混杂）**、**OI-031（接受提交与配置缺口）**、**OI-032（b17 批次口径）**，不将配图修复当成这些机制证据已经闭合。
+- 本智能体再次实查：ITC-99 主结果 `n_candidate_sta_runs` 求和 **3363**，聚合 b17 **104**；默认 b17 `trials` **785**、重跑 b17 **104**；默认 ITC-99 首对象 trials 求和 **4044**。随机三种子逐候选策略集合均为 **R/G/B**，混合 `hybrid_config` 为 **R+G+B+JOINT, tns-aware**。未修改任何实验数字。
+- 图件首跑遇 s641 无 `tier2` 导致 KeyError；归因是零抽窗/零候选记录的合法 schema，不是实验缺失。脚本已在 `n_candidate == 0` 分支断言 `n_measured == n_extracted == 0` 后生成全零计数，非零记录仍直接读 `tier2`；缺字的 N 下标/对号改用可显示的标记及字体。
+- 实查图 1/2/4/5/6 的 PDF/SVG/PNG 与数据图 CSV 已导出；**尚待主线视觉与全稿验收**。本轮是 **r21 工作修订，不新冻结 v19**；v18 保持不可变历史参考，重大审稿待办继续保留。
+
+### LOG-20261014-02 — 图件缺口审查与修改方向确认（进行中）
+
+- 主线通知：旧图 1 以失败反馈视觉上支配主循环，未显式展示独立 SEC；旧图 2 的分裂图与原扇入锥结构不一致。将保留旧源资产，新增可编辑矢量图 1/2，并替换主稿引用。
+- 新增数据图方向：统一跨测试集族 B 的逐实例 ΔWNS；效率优先族 A→A′ 的物理保持/退化；族 F 的 S 负结果。各配置族独立绘图，不拼接为跨族因果对照；不运行含历史硬编码的旧全量 `gen_figures.py`。
+- 两位独立审稿者初步指出族 C 运行器与 cost/Cw/Cc 方法归因之间的证据缺口；主线仍在最终核查。**尚未登记新未决问题，待正式报告及主线裁定**。
+- 实查 `paper/zh/review_rounds/r21_20261014/manuscript_before.tex` 已存在，保留本轮修改前母稿；当前稿仍引用旧图 1/2 源文件。当前进度/状态/看板/交接入口已加入 r21 授权和范围，历史 r20 冻结/推送安排已标记为历史。
+
+| ID | 动作 | 产物 / 证据 | 实查结果与边界 |
+|---|---|---|---|
+| LOG-20261014-01 | **启动 r21_20261014：审稿 + 既有证据驱动的配图修改/增加** | `AGENTS.md`、`project_docs/RECORDS.md`、`project_docs/agent_handoff/` 当前入口与状态；`git status --short`、`git rev-parse --short HEAD` | 起始工作区 **clean**，HEAD **`73dc0e7`**，当前内容基线 **v18/r20**；未发现既有 r21 归档。本轮用户已授权论文审稿、配图修改/增加及必要图注/引用调整，旧“v18 冻结/内容修改须再授权”仅作历史状态，不阻塞本轮范围。复用既有实验台账，不启动新 EDA 实验；继续保留暂缓的 cost/feature 消融（OI-026）、大规模验证与 Word 转排工作（OI-024）。按 AGENTS 指定由专职记录智能体实时维护日志/交接，主线及审稿/图件智能体负责各自产物。当前 AGENTS 要求阶段完成 commit+push，旧交接“等用户明确 push”与此冲突时以当前用户规则为准；提交由主线执行。 |

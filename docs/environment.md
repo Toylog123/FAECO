@@ -7,8 +7,8 @@
 
 - Python 3.11；依赖以根目录 `pyproject.toml` 为准：`pip install -e .`
 - 测试：`python -m pytest code/tests -q`（542 项）
-- 论文图脚本：`paper/zh/figures/gen_figures.py`（matplotlib，直读 `experiments/` 聚合 JSON）
-- 论文编译：**LuaLaTeX**（ctexart 双栏；须 `cd paper/zh/manuscript` 后 `lualatex` 连跑两遍），字体走 **OSFONTDIR 项目内字体**（跨电脑免装；官方免费方正书宋/仿宋/黑体简体）
+- 论文图脚本：`paper/zh/figures/data/scripts/review_r21_figures.py`（matplotlib，原始 JSON/逐候选台账与来源SHA256；旧 gen_figures.py 留作历史）
+- 论文编译：**LuaLaTeX**（ctexart 双栏，r21末页采用已安装flushend的noshrink/nospread平衡；须 `cd paper/zh/manuscript` 后 `lualatex` 连跑两遍），字体走 **OSFONTDIR 项目内字体**（跨电脑免装；官方免费方正书宋/仿宋/黑体简体）
 
 > 注意：仓库 2026-09-12 自 `D:\BaiduSyncdisk\03_FAECO` 迁入本路径，旧 `.venv` 内可编辑安装的绝对路径已失效——在本目录重新 `pip install -e .` 即可。
 

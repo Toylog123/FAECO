@@ -12,7 +12,7 @@
 ## 目录卫生（保证不糅杂）
 
 1. **每轮一个文件夹**，命名 `r<N>_<YYYYMMDD>`（如 `r1_20260811`）。
-2. **文件夹内固定 4 个文件**：`README.md` / `comments.md` / `response.md` / `manuscript_before.tex`，不额外堆放。
+2. **文件夹内保留基础归档**：`README.md` / 意见 / 回复 / `manuscript_before.tex`；多视角审稿可补独立报告、综合裁定、改后稿与直接验收证据，临时探针仍放scratch。
 3. **归档只读**：归档后不修改；补充说明写轮次 `README.md`。
 4. **活动文件不散落**：审稿意见 / 回复只在轮次文件夹内；`manuscript/` 只放当前最新稿；`responses/` 只放当前轮回复。
 5. **不建临时文件夹**：不要用 `tmp/`、`review_tmp/` 等堆放审稿文件。

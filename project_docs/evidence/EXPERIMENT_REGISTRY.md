@@ -21,3 +21,9 @@
 - 结果证据：`evidence/<版本>/<类型>/<实验>/<YYYYMMDD>_r<N>/`（自包含包）
 - 论文数字对照：`CROSSWALK_TEMPLATE.md`
 - 分类规范：`../FILE_ORGANIZATION.md`
+
+## 2026-10-14 既有记录重算（非新EDA）
+
+| 登记ID | 类型 | 输入 | 输出 | 结果 |
+|---|---|---|---|---|
+| DERIVED-R21-STA | 原始台账审计与重绘 | B/D/F既有实验族，r21_source_manifest绑定输入 | r21_20261014/sta_ledger_audit.json、sta_count_followup.md及图件CSV | D 40/40通过，固定/EMA新STA1947/2003，随机均值2480.7；B旧schema不补猜测 |

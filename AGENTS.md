@@ -186,3 +186,7 @@
 # 接手者入口
 
 从 `project_docs/agent_handoff/README.md` 开始，按阅读顺序加载全部上下文——仓库须随时可无口头交接。
+
+## 当前论文图件入口（2026-10-14，r21）
+
+当前图件生成器为 `paper/zh/figures/data/scripts/review_r21_figures.py`；图1/2矢量源在 `manual/figures/`，图4–7数据图及CSV在 `data/final/`。旧全量 `gen_figures.py` 含历史硬编码，保留作历史，不用于重建当前图件。审稿与计数验收见 `paper/zh/review_rounds/r21_20261014/`；原始实验族必须继续隔离，STA测量计数须排除缓存复用和前置拒绝，旧schema缺字段时不得猜测实际次数。

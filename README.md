@@ -32,7 +32,9 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-最近一轮（2026-10-13，r15 全篇去防御化编辑）：论文**内容冻结 v13**（tag `v2026-10-13-defensive-purge2-r15`，**10 页** 0/0/0/0，内容指纹 `55bde9d4…`）——**用户直接指定的第二轮语言风格轮**（非外部审稿）：用户在 r14 后按**正式期刊审稿人（Integration / TODAES / TVLSI 方向）视角**通读，裁定「**这一版技术内容已经比较成熟，但文字风格仍有明显'答辩稿/项目报告'痕迹。最大的问题不是 claim 过强，而是作者过于主动解释审稿人可能的问题，导致主线贡献被稀释**」，要求从「证明我没有问题」转向「清楚告诉读者我做了什么、发现什么」，**减少解释性文字、提高陈述力度**（不是增加内容）。落地**正文 11 处语言风格改写**（E1–E11，`.tex` diffstat 11/11）；**三处必要偏离**（§2.3 保表 2 引用 / §4.1 保留全文唯一一处「不等同于」/ §5 结论「参考」口径）；**摘要结构与篇幅未变**；**零数字/零实验/零代码/零参考文献**。前序轮：r14（v12，去防御化重构 10 处）、r13（v11，摘要 + §1.1 大同行入口改写）、r12（v10，第五份外部审稿 M1–M5）、r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v13/README.md`。
+最近一轮（2026-10-14，r21）：完成五视角模拟审稿、图1/2矢量重画与四张数据图补充；7图14表，12页，编译与字形/引用验收通过。实际STA与全部评估记录已分列，历史族配置及机制证据缺口仍按Major Revision保留。入口 `paper/zh/review_rounds/r21_20261014/editorial_decision.md`；r20/v18仍为不可变历史基线，当前为r21工作修订。
+
+历史记录：最近一轮（2026-10-13，r15 全篇去防御化编辑）：论文**内容冻结 v13**（tag `v2026-10-13-defensive-purge2-r15`，**10 页** 0/0/0/0，内容指纹 `55bde9d4…`）——**用户直接指定的第二轮语言风格轮**（非外部审稿）：用户在 r14 后按**正式期刊审稿人（Integration / TODAES / TVLSI 方向）视角**通读，裁定「**这一版技术内容已经比较成熟，但文字风格仍有明显'答辩稿/项目报告'痕迹。最大的问题不是 claim 过强，而是作者过于主动解释审稿人可能的问题，导致主线贡献被稀释**」，要求从「证明我没有问题」转向「清楚告诉读者我做了什么、发现什么」，**减少解释性文字、提高陈述力度**（不是增加内容）。落地**正文 11 处语言风格改写**（E1–E11，`.tex` diffstat 11/11）；**三处必要偏离**（§2.3 保表 2 引用 / §4.1 保留全文唯一一处「不等同于」/ §5 结论「参考」口径）；**摘要结构与篇幅未变**；**零数字/零实验/零代码/零参考文献**。前序轮：r14（v12，去防御化重构 10 处）、r13（v11，摘要 + §1.1 大同行入口改写）、r12（v10，第五份外部审稿 M1–M5）、r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v13/README.md`。
 
 更早（2026-09-12）：工程按 `99_项目模板` 框架完成架构迁移（代码入 `code/`、过程文档入 `project_docs/`、原始基准入 `data/raw/`、临时件入 `scratch/`），映射全记录见 `project_docs/migration/MIGRATION_20260912.md`。
 
@@ -41,7 +43,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 1. 环境：读 `docs/environment.md`；Python 依赖见根目录 `pyproject.toml`（`pip install -e .`），WSL2 内 Yosys/OpenSTA 按 environment.md 安装。
 2. 测试：`python -m pytest code/tests -q`（542 项）。
 3. 实验：`experiments/INVENTORY.md` 为全部实验目录总索引，`experiments/RESULTS.md` 为顶层结果汇总；复现入口脚本在 `code/scripts/`。
-4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；图脚本 `paper/zh/figures/gen_figures.py`。
+4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；当前图脚本 `paper/zh/figures/data/scripts/review_r21_figures.py`。
 5. 交接：读 `project_docs/agent_handoff/START_HERE.md` 与 `CURRENT_RUN_HANDOFF.md`。
 
 ## 目录角色

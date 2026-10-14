@@ -1,0 +1,231 @@
+diff --git "a/paper/zh/manuscript/FAECO_\351\235\242\345\220\221\351\242\204\345\270\203\345\261\200\351\227\250\347\272\247\346\227\266\345\272\217ECO\347\232\204\345\200\231\351\200\211\346\216\242\347\264\242\344\270\216\345\244\261\346\225\210\345\210\273\347\224\273.tex" "b/paper/zh/manuscript/FAECO_\351\235\242\345\220\221\351\242\204\345\270\203\345\261\200\351\227\250\347\272\247\346\227\266\345\272\217ECO\347\232\204\345\200\231\351\200\211\346\216\242\347\264\242\344\270\216\345\244\261\346\225\210\345\210\273\347\224\273.tex"
+index fcb9100..4f90033 100644
+--- "a/paper/zh/manuscript/FAECO_\351\235\242\345\220\221\351\242\204\345\270\203\345\261\200\351\227\250\347\272\247\346\227\266\345\272\217ECO\347\232\204\345\200\231\351\200\211\346\216\242\347\264\242\344\270\216\345\244\261\346\225\210\345\210\273\347\224\273.tex"
++++ "b/paper/zh/manuscript/FAECO_\351\235\242\345\220\221\351\242\204\345\270\203\345\261\200\351\227\250\347\272\247\346\227\266\345\272\217ECO\347\232\204\345\200\231\351\200\211\346\216\242\347\264\242\344\270\216\345\244\261\346\225\210\345\210\273\347\224\273.tex"
+@@ -39,7 +39,7 @@
+ % 正文后移、参考文献被挤成孤儿末页。本稿正文已不再插入 \FloatBarrier（正文仅保留
+ % 图 2 之后一处用于约束全宽浮动体）；压页请优先调整浮动体参数，勿缩字体/行距/砍内容。
+ \usepackage{dblfloatfix}
+-\usepackage{balance}
++\usepackage[noshrink,nospread]{flushend}
+ 
+ % 版面：A4 双栏，栏宽 21.59 字符、栏间距 3 字符（以 3zw 近似）
+ \geometry{a4paper,left=2.0cm,right=2.0cm,top=2.1cm,bottom=2.1cm,columnsep=31.5pt}
+@@ -252,12 +252,12 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
+   \item[(c)] \textbf{验证与接受}：候选经库函数和结构规则筛选后，由 OpenSTA 在理想线网模式下测量 WNS/TNS；启用物理门控时，仅理想线网增益超过 10\,ps 的候选进入简化 SPEF 复测。$0<\Delta\mathrm{WNS}\le10\,$ps 的候选被阈值直接过滤，不计入 F1--F6 失效反馈；仅当候选满足式~\eqref{eq:accept} 但 SPEF 复测下 WNS 不改善时记为 F6。
+ \end{enumerate}
+ 
+-\begin{figure}[!htbp]
++\begin{figure*}[!tb]
+ \centering
+-\includegraphics[width=0.96\columnwidth]{fig_method_flow_redraw_20260814.png}%
+-\caption{FAECO 三阶段流水线：映射网表准备 $\rightarrow$ 切割与候选细化 $\rightarrow$ 验证与时序分析。}
++\includegraphics[width=1.0\textwidth]{manual/figures/fig1_iterative_flow_r21.pdf}
++\caption{FAECO 的候选评估与迭代提交。接受候选提交为下一轮基准，下一轮重新提取违例锥；灰色虚线表示失效记录及可选权重更新。搜索结束后，对最终网表独立执行全网表 SEC。}
+ \label{fig:method_flow}
+-\end{figure}
++\end{figure*}
+ 
+ \begin{algorithm}[H]
+ \footnotesize
+@@ -283,13 +283,13 @@ FAECO 包含映射准备、候选生成和时序验证三个阶段，如图~\ref
+ \subsection{多类型候选探索与排序}\label{sec:mechanism}
+ \begin{figure*}[!tb]
+ \centering
+-\includegraphics[width=0.65\textwidth]{fig_cut_generation_mechanism_imagegen.png}
+-\caption{FAECO 候选构造与排序机制：加权最小割控制候选规模，关键路径覆盖割 $C_c$ 补充时序关键候选，R 候选可用性参与策略切换；图中候选集合 $P_w$ 与 $P_c$ 分别对应 $C_w$ 与 $C_c$。}
++\includegraphics[width=1.0\textwidth]{manual/figures/fig2_candidate_mechanism_r21.pdf}
++\caption{FAECO 候选构造与融合排序。六门示例锥及其节点分裂图具有一一对应的依赖关系，内部边容量为节点代价，依赖边与源、汇连接具有无穷容量。$C_w$ 生成加权割边界，$C_c$ 按关键路径信息补充覆盖候选，R 候选可用性参与实例化与策略切换；二者实例化为候选后融合排序。示例仅说明构造关系。}
+ \label{fig:cut_generation}
+ \end{figure*}
+ 
+ \subsubsection{局部逻辑窗口提取}
+-图~\ref{fig:cut_generation} 展示 FAECO 的主要机制：$C_w$ 用于确定候选修改边界，$\mathrm{cost}(v)$ 用于边界内部节点的选择与排序，$C_c$ 用于补充关键路径覆盖。首先，从违例端点反向提取局部组合扇入锥 $C(G,t)$，并为门节点标注 R 等价候选可用性、关键路径覆盖和候选规模等特征。
++图~\ref{fig:cut_generation} 展示 FAECO 的主要机制：$C_w$ 以 $\mathrm{cost}(v)$ 作为分裂图内部边容量确定候选修改边界，$C_c$ 用于补充关键路径覆盖，两类边界生成的候选随后融合排序。首先，从违例端点反向提取局部组合扇入锥 $C(G,t)$，并为门节点标注 R 等价候选可用性、关键路径覆盖和候选规模等特征。
+ 
+ \subsubsection{多源候选边界生成}
+ 加权最小割的节点代价由边界、候选规模、验证代价和扇出特征构成，并按权重 $\lambda_c$ 对具备 R 等价候选的门施加深度折扣，如式（2）所示；关键路径覆盖割 $C_c$ 生成互补的时序关键候选，其排序优先级同样由 $\lambda_c$ 调节；$\lambda_c$ 因此同时作用于节点代价的深度折扣与覆盖候选排序。R 候选的可用性用于候选实例化与策略切换——若某门缺少 R 等价候选，则其关键路径覆盖折扣与扇出代价同时失效并自动转向 G/B 策略。
+@@ -395,11 +395,11 @@ FAECO 首先通过局部函数与结构检查筛选候选，再由 OpenSTA 评
+ 
+ \subsection{实验设置}\label{sec:setup}
+ 
+-\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一采用 0.5 ns 时钟约束以形成时序压力。\textbf{本文采用 WNS 改善作为主要评价指标，所有设计在同一约束下比较。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余实验以 WNS 严格改善为主要接受条件；TNS-aware 仅作为可选扩展，不与本文物理门控实验联合启用。
++\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一采用 0.5 ns 时钟约束以形成时序压力。\textbf{本文采用 WNS 改善作为主要评价指标，所有设计在同一约束下比较。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余按轮提交实验以 WNS 严格改善为主要接受条件；候选空间对照中的历史策略枚举配置另见 \S\ref{sec:ablation}。TNS-aware 不与本文物理门控实验联合启用。
+ 
+ \textbf{基准电路纳入规则}：ISCAS89 纳入能够经统一 Yosys→SKY130 HD 流程成功映射并形成有效 setup timing path 的 8 个顺序电路；ITC-99 按相同标准纳入 19 个电路（b01--b15、b17、b20--b22），其中 b18、b19 未纳入上述统一统计，在相同流程下作为大规模补充实例单独运行并报告（见 \S\ref{sec:itc99}）；PicoRV32 选择主核 \texttt{picorv32}、乘法协处理器 \texttt{picorv32\_pcpi\_mul} 与存储密集子模块 \texttt{picorv32\_regs}（存储簇）以覆盖控制、算术和存储三类结构差异。
+ 
+-\textbf{实验配置}：本文设置单轮修复、跨测试集评估、候选搜索消融及物理验证等实验，各小节结果仅在相同配置内比较。\S\ref{sec:iscas} 采用单轮、首个改善后停止的配置；\S\ref{sec:ood} 采用最多 8 轮的迭代配置；\S\ref{sec:ablation} 在固定的 20 轮预算下比较候选空间与排序策略，并单独检验失效反馈；\S\ref{sec:phys_closure} 评估接受候选的物理估计结果（OpenROAD 后验验证使用 \S\ref{sec:iscas} 的接受候选，SPEF 负载扫描与门控实验单独报告）；\S\ref{sec:s_boundary} 检验结构重综合候选的效果。b17 的验证时限例外见 \S\ref{sec:itc99}。效率优先与 20 轮迭代配置的关键参数对比见表~\ref{tab:configs}。完整脚本和参数随补充材料一同发布。
++\textbf{实验配置}：本文设置单轮修复、跨测试集评估、候选搜索消融及物理验证等实验，各小节结果仅在相同配置内比较。\S\ref{sec:iscas} 采用单轮、首个改善后停止的配置；\S\ref{sec:ood} 采用最多 8 轮的迭代配置；\S\ref{sec:ablation} 在固定的 20 轮预算下比较候选空间与排序策略，并单独检验失效反馈；\S\ref{sec:phys_closure} 评估接受候选的物理估计结果（OpenROAD 后验验证使用 \S\ref{sec:iscas} 的接受候选，SPEF 负载扫描与门控实验单独报告）；\S\ref{sec:s_boundary} 检验结构重综合候选的效果。b17 的验证时限例外见 \S\ref{sec:itc99}。效率优先与 20 轮迭代配置的关键参数对比见表~\ref{tab:configs}。完整脚本和参数随补充材料一同发布。效率优先与统一跨测试集结果使用历史归档运行，代码 revision 未完整钉定；同配置重跑在部分电路出现结果漂移。反馈对照与 S 候选对照分别保留独立的版本和配置记录，复现时应按实验族核对。
+ 
+ \begin{table}[!htb]
+ \centering
+@@ -482,9 +482,11 @@ s953 & 228 & 通过 & 0.537 \\
+ 
+ \subsubsection{ITC-99 基准族}\label{sec:itc99}
+ 
+-在纳入统一批量评估的 19 个 ITC-99 电路中，18 个电路的 WNS 取得严格改善，b06 与基线持平（$\Delta = 0\,\text{ns}$），19 个电路均无 WNS 回退。b17 在默认 60\,s 单候选验证时限下所有候选均触发 F5 超时而被拒，将其单候选验证时限放宽至 180\,s（其余 18 个电路仍用默认）后，在 104 次候选级 STA 测量内取得 $+0.38\,$ns 改善（接受 G 候选 nor4b$_1\!\to\!$nor4b$_2$）。纳入统计的大规模电路 b14/b15/b17/b20/b21/b22 均取得严格 WNS 改善。b06 的基线 WNS 为 $-0.56\,\text{ns}$，其关键路径包含多个相邻的 \texttt{or4b$_1$} 单元。当前 R/G/B/JOINT 搜索中，G 类替换受到输入电容变化的限制，而 B/R 策略未能形成有效改善；664 次候选级 STA 评估后，未观察到严格 WNS 改善。
++在纳入统一批量评估的 19 个 ITC-99 电路中，18 个电路的 WNS 取得严格改善，b06 与基线持平（$\Delta = 0\,\text{ns}$），19 个电路均无 WNS 回退。b17 在默认 60\,s 单候选验证时限下所有候选均触发 F5 超时而被拒，将其单候选验证时限放宽至 180\,s（其余 18 个电路仍用默认）后，在 104 条候选评估记录内取得 $+0.38\,$ns 改善（接受 G 候选 nor4b$_1\!\to\!$nor4b$_2$）。纳入统计的大规模电路 b14/b15/b17/b20/b21/b22 均取得严格 WNS 改善。b06 的基线 WNS 为 $-0.56\,\text{ns}$，其关键路径包含多个相邻的 \texttt{or4b$_1$} 单元。当前 R/G/B/JOINT 搜索中，G 类替换受到输入电容变化的限制，而 B/R 策略未能形成有效改善；664 条候选评估记录后，未观察到严格 WNS 改善。
++
++接受候选以 G 为主：19 个电路中 17 个含 G 类接受（累计 69 次），B 与 R 类接受分别出现于 14 个和 10 个电路；收益最大的 b20/b21（分别为 $+1.98$ 和 $+2.75\,\text{ns}$）均以 G 为主、辅以 R。19 个电路共记录 3363 条候选评估。19 个电路改善量的中位数为 $+0.18\,\text{ns}$、均值为 $+0.43\,\text{ns}$，两者的差异主要来自 b20 和 b21 较大的 WNS 改善幅度（其基线 WNS $\le -13\,\text{ns}$）。各失效类型在 19 个电路上的触发次数见表~\ref{tab:f16_dist}。表~\ref{tab:f16_dist} 的 F1--F6 触发分布表明，失败候选给出了可用的搜索诊断信息。
+ 
+-接受候选以 G 为主：19 个电路中 17 个含 G 类接受（累计 69 次），B 与 R 类接受分别出现于 14 个和 10 个电路；收益最大的 b20/b21（分别为 $+1.98$ 和 $+2.75\,\text{ns}$）均以 G 为主、辅以 R。19 个电路共进行 3363 次候选级 STA 测量。19 个电路改善量的中位数为 $+0.18\,\text{ns}$、均值为 $+0.43\,\text{ns}$，两者的差异主要来自 b20 和 b21 较大的 WNS 改善幅度（其基线 WNS $\le -13\,\text{ns}$）。各失效类型在 19 个电路上的触发次数见表~\ref{tab:f16_dist}。表~\ref{tab:f16_dist} 的 F1--F6 触发分布表明，失败候选给出了可用的搜索诊断信息。
++本节的候选评估次数按逐候选台账记录统计，包含前置拒绝与缓存复用，不直接等同于新执行的 STA 次数。
+ 
+ 作为大规模补充实例（未纳入上述 19 个电路的统一统计）：b18（SKY130 映射后 7.57 万个单元）的 WNS 在 0.5 ns 下由 $-13.34$ ns 改善至 $-13.27$ ns，经 24 次候选级 STA 测量完成修复；b19（15.10 万个单元）由 $-17.44$ ns 改善至 $-16.00$ ns，经 59 次完成。
+ 
+@@ -494,15 +496,35 @@ s953 & 228 & 通过 & 0.537 \\
+ 
+ 统一跨测试集评估中，三组数据集的 WNS 严格改善比例分别为 8/8、18/19 和 2/2（PicoRV32 中第三个子模块无 setup 路径，不计入分母）。顺序 SEC 面向 30 个测试实例：29 个实例产生实际网表修改，其中 28/29 个修改网表对完全证明（三组分别为 8/8、18/19 和 2/2）；b06 的最终 WNS 与基线持平，其接受的缓冲器/延迟单元补丁不改变 WNS，并经顺序 SEC 完全证明；唯一未产生接受补丁的 \texttt{picorv32\_regs} 无 setup 路径，其输出网表与基线一致。b17 的修复网表经 Yosys \texttt{equiv\_simple} + \texttt{equiv\_induct} 验证 12812 个等价点，另有 1 个等价点未完成证明。该点对应 nor4b$_1\!\to\!$nor4b$_2$ 的同函数尺寸替换，本文将其单独报告。
+ 
++三个测试集中各实例的 WNS 改善量见图~\ref{fig:unified_gain}。图中统一采用跨测试集迭代配置，保留 b06 的零改善及无 setup 路径子模块的非适用状态。
++
++\begin{figure*}[!tb]
++\centering
++\includegraphics[width=1.0\textwidth]{data/final/fig4_unified_gain_r21.pdf}
++\caption{统一迭代配置的逐实例预布局 WNS 改善。三个面板分别展示 ISCAS89、ITC-99 和 PicoRV32 的全部可评估实例，各面板横轴量程不同。改善量以各电路的基线为参照；b17 使用 180\,s 单候选时限，其余默认 60\,s。PicoRV32 的 regs 子模块无 setup 路径，不计入改善分母。图为归档单次运行的描述性结果。}
++\label{fig:unified_gain}
++\end{figure*}
++
+ \subsection{候选空间、排序与反馈消融}\label{sec:ablation}
+ 
+-本节分两组实验。第一组在 20 轮迭代预算下评估候选空间扩展与候选评估顺序对搜索效果的影响，分别验证候选空间扩展（表~\ref{tab:ablation}）与候选排序（表~\ref{tab:efficiency}）对搜索效果与搜索成本的作用；固定权重配置用于保持候选排序规则一致：混合候选策略在 8 个 ISCAS89 电路上的平均 WNS 改善为 1.07\,ns，分别高于纯 G 的 0.16\,ns 和纯 B 的 0.54\,ns。保持混合候选空间不变、随机化评估顺序后，平均改善降至 0.40\,ns。以首次取得改善所需的候选级 STA 次数衡量，候选排序在 7 个有台账的电路中有 6 个少于随机排序的三种子均值，但该指标对随机种子高度敏感——同一电路的不同种子间最大相差 7 倍，且在 s713 上随机排序反而更少（见表~\ref{tab:efficiency}）。因此在本文的实验范围内，候选排序在多数电路上减少了取得首次改善所需的 STA 评估次数，但这一优势并非在所有电路上都成立（各列均为固定搜索权重，见表~\ref{tab:ablation}）。
++本节分两组实验。第一组采用历史关键实例策略枚举运行器，在 20 轮上限下比较局部修改策略配置（表~\ref{tab:ablation}），并记录首次取得改善所需的候选级 STA 次数（表~\ref{tab:efficiency}）。该运行器按关键实例枚举候选并在轮内逐实例提交，未使用式~\eqref{eq:cost} 的加权割与覆盖割；混合配置启用 TNS 辅助接受。混合配置包含 R/G/B/JOINT，随机配置仅枚举 R/G/B，因此两者的差异反映候选构造与评估顺序的联合作用。
++
++固定搜索权重下，混合策略在 8 个 ISCAS89 电路上的平均 WNS 改善为 1.07\,ns，高于纯 G 的 0.16\,ns 和纯 B 的 0.54\,ns；随机策略三种子的平均改善为 0.40\,ns。各列共享 20 轮上限，实际候选级 STA 消耗不同。首次取得改善所需的 STA 次数在 7 个有台账的电路中，有 6 个混合策略少于随机策略三种子均值，s713 则相反；同一电路的不同随机种子间最大相差 7 倍。该对照刻画策略配置的搜索效果与启动开销，加权割和覆盖割各自的贡献仍需同一运行器下的独立对照检验。
+ 
+-第二组检验失效反馈的独立作用：保持候选空间、初始权重与候选级 STA 预算（500 次）不变，两配置均采用 20 轮迭代上限并启用提前停止，分别使用固定权重（Fixed）与 EMA 自适应更新（Adaptive）。定义 $B(k)$ 为截至第 $k$ 次候选级 STA 评估的累计最优 WNS 改善（best-so-far 曲线），两种配置在 8 个 ISCAS89 电路上的最终 $\Delta\mathrm{WNS}$、首次改善位置和最大 $B(k)$ 均相同，未观察到 EMA 反馈带来的额外收益。因此，本文将 F1--F6 用于失效分类与搜索分析。在第二组的两类配置下，取得相同终点所需的搜索开销见表~\ref{tab:runtime}；表中另列随机排序作为对照。
++第二组检验失效反馈的独立作用：保持候选空间、初始权重与运行器的 STA 预约上限（500）不变，两配置均采用 20 轮迭代上限并启用提前停止，分别使用固定权重（Fixed）与 EMA 自适应更新（Adaptive）。定义 $B(k)$ 为截至第 $k$ 次新 STA 测量的累计最优 WNS 改善（best-so-far 曲线），两种配置在 8 个 ISCAS89 电路上的最终 $\Delta\mathrm{WNS}$、首次改善位置和最大 $B(k)$ 均相同，未观察到 EMA 反馈带来的额外收益。因此，本文将 F1--F6 用于失效分类与搜索分析。在第二组的两类配置下，取得相同终点所需的搜索开销见表~\ref{tab:runtime}；表中另列随机排序作为对照。
++
++图~\ref{fig:budget_curves} 展示第二组实验的 $B(k)$ 曲线，按各臂新 STA 测量次数比较收益积累。固定权重与 EMA 自适应的收益积累相近，搜索终止位置不同；随机策略在不同电路与种子间表现不同，其中 s953 的三个随机种子终点均高于固定权重配置。曲线保留各臂的实际停止位置，以区分终点收益与到达该收益的测量开销。
++
++\begin{figure*}[!tb]
++\centering
++\includegraphics[width=1.0\textwidth]{data/final/fig5_budget_curves_r21.pdf}
++\caption{同一运行器配置下的收益积累曲线。横轴 $k$ 为从逐候选台账重建的新 STA 测量次数，保留具有 STA 来源且非缓存复用的记录，排除前置拒绝与缓存命中，纵轴为相对基线的累计最优 WNS 改善；圆点表示该臂实际停止位置，曲线不延伸至停止之后。全部 8 个电路与 3 个随机种子均展示，未作跨电路平均或插值。各臂逐电路的 STA 预约上限为 500；基线测量与最终 SEC 不计入横轴。该反馈对照族与表~\ref{tab:ablation} 的历史策略枚举对照分开统计。}
++\label{fig:budget_curves}
++\end{figure*}
+ 
+ \begin{table}[H]
+ \centering
+-\caption{ISCAS89 候选空间与候选排序设置的 WNS 改善对比（周期 0.5\,ns）}
++\caption{ISCAS89 局部修改策略配置的 WNS 改善对比（周期 0.5\,ns）}
+ \label{tab:ablation}
+ \scriptsize
+ \setlength{\tabcolsep}{3pt}
+@@ -521,7 +543,7 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
+ \midrule
+ \textbf{均值} & 0.16 & 0.54 & 0.40 & \textbf{1.07} \\
+ \bottomrule
+-\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高。纯 G / 纯 B 列为单策略候选空间；随机列与混合 20 轮列为混合候选空间，随机列每轮随机化候选评估顺序并取种子 1、2、3 的均值。四列均为固定搜索权重、不启用 F1--F6 权重重整，采用式~\eqref{eq:accept} 与相同的 20 轮上限和候选评估预算，故本表量化候选空间与候选排序的贡献。} \\
++\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高。纯 G / 纯 B 列为单策略配置；随机列包含 R/G/B，随机化实例内候选顺序并取种子 1、2、3 的均值；混合列另含 JOINT。四列均不启用 F1--F6 权重重整，采用同一 20 轮上限，实际 STA 消耗不同；混合配置保留 WNS 持平时的 TNS 辅助接受。各臂完整命令未全部归档，本表报告历史策略配置的结果。} \\
+ \end{tabular}
+ \end{table}
+ 
+@@ -533,7 +555,7 @@ s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
+ \setlength{\tabcolsep}{2pt}
+ \begin{tabular}{lccccc}
+ \toprule
+-\textbf{电路} & \textbf{候选排序} & \multicolumn{3}{c}{\textbf{随机排序}} & \textbf{随机均值} \\
++\textbf{电路} & \textbf{混合策略} & \multicolumn{3}{c}{\textbf{随机策略}} & \textbf{随机均值} \\
+ \cmidrule(lr){3-5}
+  & & \textbf{种子 1} & \textbf{种子 2} & \textbf{种子 3} & \\
+ \midrule
+@@ -546,25 +568,25 @@ s820 & 1 & 1 & 3 & 1 & 1.7 \\
+ s832 & 1 & 1 & 2 & 1 & 1.3 \\
+ s953 & 1 & 3 & 1 & 1 & 1.7 \\
+ \bottomrule
+-\multicolumn{6}{p{0.95\columnwidth}}{\footnotesize 数字为整次运行中第一个严格优于基线的候选所处的累积候选序号，即首次取得改善时已消耗的候选级 STA 次数；随机排序列为每轮随机化候选评估顺序的三个独立种子，随机均值为三者的算术平均。候选排序在 7 个有台账的电路中有 6 个少于随机均值（s713 相反），但不同种子间最大相差 7 倍，说明该指标对排序扰动敏感。s382 的候选排序逐候选台账缺失，该格留空。本表与表~\ref{tab:ablation} 同属 20 轮、固定搜索权重配置。} \\
++\multicolumn{6}{p{0.95\columnwidth}}{\footnotesize 数字为整次运行中第一个严格优于基线的候选所处的累积候选序号，即首次取得改善时已消耗的候选级 STA 次数；随机策略列为随机化实例内候选顺序的三个种子，随机均值为三者的算术平均。混合策略在 7 个有台账的电路中有 6 个少于随机均值（s713 相反），不同种子间最大相差 7 倍。s382 的混合策略逐候选台账缺失，该格留空。本表与表~\ref{tab:ablation} 同属历史 20 轮策略枚举配置；混合与随机策略的候选类型集合不同。} \\
+ \end{tabular}
+ \end{table}
+ 
+ \begin{table}[!htb]
+ \centering
+-\caption{20 轮迭代配置下的候选级 STA 次数与端到端运行时间（8 个 ISCAS89 电路）}
++\caption{20 轮迭代配置下的候选评估计数与搜索运行时间（8 个 ISCAS89 电路）}
+ \label{tab:runtime}
+ \footnotesize
+-\setlength{\tabcolsep}{4pt}
+-\begin{tabular}{>{\raggedright\arraybackslash}p{3.1cm}rr}
++\setlength{\tabcolsep}{2pt}
++\begin{tabular}{>{\raggedright\arraybackslash}p{2.45cm}rrr}
+ \toprule
+-\textbf{配置} & \textbf{STA 次数} & \textbf{时间 (s)} \\
++\textbf{配置} & \textbf{新 STA} & \textbf{评估记录} & \textbf{时间 (s)} \\
+ \midrule
+-固定权重（候选排序） & 4146 & 2010.8 \\
+-EMA 自适应 & 4883 & 2065.3 \\
+-随机排序（三种子均值） & 5624 & 2460.3 \\
++固定权重（候选排序） & 1947 & 4146 & 2010.8 \\
++EMA 自适应 & 2003 & 4883 & 2065.3 \\
++随机排序（三种子均值） & 2480.7 & 5624 & 2460.3 \\
+ \bottomrule
+-\multicolumn{3}{p{0.92\columnwidth}}{\footnotesize 三行均采用 20 轮迭代上限、提前停止与逐电路候选级 STA 预约上限 500（\texttt{--sta-budget}，在迭代边界检查；随机排序臂在 s420 与 s641 上触及该上限）。表中 STA 次数为 8 个电路候选级 STA 测量次数之和，与上述预约为不同计数口径，故不受 $500\times8$ 约束；时间为各电路墙钟耗时之和（含候选构造、映射与候选级 STA），不计最终 SEC。本表与表~\ref{tab:ablation}、表~\ref{tab:efficiency} 出自不同运行配置，其 STA 计数不与表~\ref{tab:efficiency} 的首次改善位置口径对应。}\\
++\multicolumn{4}{p{0.95\columnwidth}}{\footnotesize 各臂采用 20 轮上限、提前停止与逐电路 STA 预约上限 500。新 STA 为具有 STA 来源且未标记缓存复用的候选记录数；评估记录包含前置拒绝与缓存复用。前两行为 8 电路合计，随机行为三个种子的各电路合计均值；其新 STA 合计分别为 2439、2476、2527。时间含候选构造、映射与候选级 STA，不计最终 SEC。本表与表~\ref{tab:ablation}、表~\ref{tab:efficiency} 的历史运行配置不同。}\\
+ \end{tabular}
+ \end{table}
+ 
+@@ -581,15 +603,22 @@ EMA 自适应 & 4883 & 2065.3 \\
+ \midrule
+ 触发次数 & 138 & 3 & 16 & 2434 & 915 & 0 \\
+ \bottomrule
+-\multicolumn{7}{p{0.95\columnwidth}}{\footnotesize 统计范围为 19 个 ITC-99 电路、4044 次候选级评估。F4 对应未满足接受判据的候选，占候选级评估的 60.2\%，是本配置下的主导失效类型；F6 只在启用物理门控时触发，本配置未启用，故为 0。} \\
++\multicolumn{7}{p{0.95\columnwidth}}{\footnotesize 统计范围为 19 个 ITC-99 电路、4044 次候选级评估。F4 对应未满足接受判据的候选，占候选级评估的 60.2\%，是本配置下的主导失效类型；F6 只在启用物理门控时触发，本配置未启用，故为 0。本表保留 b17 默认 60\,s 批次的 785 次评估；跨测试集主结果及 3363 条评估记录采用其 180\,s 重跑的 104 次评估。} \\
+ \end{tabular}
+ \end{table}
+ 
+ \subsection{预布局候选筛选的物理相关性分析}\label{sec:phys_closure}
+ 
+-本实验验证预布局筛选结果在寄生估计条件下仍具有物理相关性。本节采用 \S\ref{sec:eff_prio} 效率优先配置的接受候选，与 \S\ref{sec:ablation} 的 20 轮迭代配置分开统计。表~\ref{tab:pr8} 给出了这些接受候选在 OpenROAD 布局及全局布线估计后的时序结果。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个 WNS 下降（幅度分别为 0.02 ns 和 0.01 ns）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束。另行开展 SPEF 负载扫描与门控实验，用于观察候选对线载估计的敏感性，并记录 F6 失效。本节的物理结果为基于布局与全局布线寄生估计的后验评估，用于分析预布局筛选结果在寄生估计条件下的稳定性。
++本实验考察预布局筛选收益在布局与全局布线寄生估计条件下的保持情况，如图~\ref{fig:physical_transfer} 所示。本节采用 \S\ref{sec:eff_prio} 效率优先配置的接受候选，与 \S\ref{sec:ablation} 的 20 轮迭代配置分开统计。表~\ref{tab:pr8} 给出了这些接受候选在 OpenROAD 布局及全局布线估计后的时序结果。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个 WNS 下降（幅度分别为 0.02 ns 和 0.01 ns）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束。另行开展 SPEF 负载扫描与门控实验，用于观察候选对线载估计的敏感性，并记录 F6 失效。本节的物理结果为基于布局与全局布线寄生估计的后验评估，用于分析预布局筛选结果在寄生估计条件下的稳定性。
+ 
+ 
++\begin{figure}[!htb]
++\centering
++\includegraphics[width=1.0\columnwidth]{data/final/fig6_physical_transfer_r21.pdf}
++\caption{效率优先候选的收益保持情况。每组柱对应同一电路、同一接受候选，分别以预布局理想线网与全局布线寄生估计条件下的基线为参照。八电路全部纳入，物理估计后 5 个改善、1 个持平、2 个退化；橙色柱表示退化，菱形表示持平。该单轮候选族与图~\ref{fig:unified_gain} 的迭代主结果分开统计。}
++\label{fig:physical_transfer}
++\end{figure}
++
+ 独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网 WNS 改善逐步衰减。
+ 
+ \textbf{迭代式门控}：在 40\,$\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度），对每条线 $e$ 用简化公式 $L_{\mathrm{est}}(e)=40\,\mu\mathrm{m} \cdot u(e)$、$R_e=r_{\mathrm{unit}}L_{\mathrm{est}}$、$C_e=c_{\mathrm{unit}}L_{\mathrm{est}}$ 估计寄生电阻电容（$r_{\mathrm{unit}}$、$c_{\mathrm{unit}}$ 取自 SKY130 HD \texttt{li1} 层代表 RC），并据此生成简化 SPEF。s382 的 50 个和 b18 的 6 个候选均未通过 SPEF 复测，并被记录为 F6；在启用反馈控制的配置中，相应失效作为下一轮搜索分析的输入。SPEF 门控能够识别并过滤线载估计下 WNS 收益消失的候选。
+@@ -624,6 +653,15 @@ s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
+ 
+ 除 R/G/B/JOINT 构造级变换外，本文还实现了一类窗口局部结构重综合候选（记为 S），用于评估其是否带来额外的 WNS 改善。为考察候选数量的影响，本文扩大 S 的候选池并做开关对照：关闭 S 后，8 个电路的结果均与原配置一致，两臂的非 S 候选序列一致，候选级 STA 预算未触及上限。结构候选（S）的能力边界见表~\ref{tab:s_boundary}。
+ 
++候选级深度变化与 WNS 变化的逐电路分布见图~\ref{fig:s_candidate_outcomes}，两类指标分别统计，避免将逻辑深度下降解释为时序收益。
++
++\begin{figure}[!htb]
++\centering
++\includegraphics[width=1.0\columnwidth]{data/final/fig7_s_boundary_r21.pdf}
++\caption{扩大候选池后的 S 候选结果。上图比较候选数与 SKY130 映射后逻辑深度降低的候选数；下图按 WNS 不变或下降分类，两图为同一批 126 个候选的不同分类维度。8 个电路全部展示，其中 s641 未成功抽取窗口，候选数为零。76 个候选降低深度，WNS 改善为 0/126；同预算 S 开关对照的 8 个电路终点 WNS 均不变。}
++\label{fig:s_candidate_outcomes}
++\end{figure}
++
+ \begin{table}[H]
+ \centering
+ \caption{结构候选（S）的能力边界}
+@@ -645,11 +683,13 @@ $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
+ \end{tabular}
+ \end{table}
+ 
++
++
+ 扩大候选池后，S 候选数量由 37 增至 126，其中 76 个候选降低了映射后的逻辑深度，但均未取得严格 WNS 改善，另有 90 个候选导致 WNS 下降（其余 36 个 WNS 不变）。结果表明，在当前窗口构造、重综合与映射流程下，扩大候选池并未带来额外 WNS 改善。因此，本文将 S 保留为可选候选类型，不将其计入主要性能贡献。
+ 
+ \section{结论}\label{sec:conclusion}
+ 
+-本文提出面向预布局门级时序 ECO 的 FAECO 框架，通过多特征加权割与关键路径覆盖割构造 R/G/B/JOINT 候选，结合候选失效刻画、迭代提交和分层验证实现局部时序优化。在固定权重配置下，混合候选策略的平均 WNS 改善为 1.07\,ns，高于纯 G 策略的 0.16\,ns；跨测试集评估与随机排序实验进一步表明，候选排序在多数电路上减少了取得首次改善所需的候选级 STA 次数。
++本文提出面向预布局门级时序 ECO 的 FAECO 框架，通过多特征加权割与关键路径覆盖割构造 R/G/B/JOINT 候选，结合候选失效刻画、迭代提交和分层验证实现局部时序优化。在固定权重配置下，混合候选策略的平均 WNS 改善为 1.07\,ns，高于纯 G 策略的 0.16\,ns；跨测试集评估显示该框架能在多个电路族上取得预布局 WNS 改善；历史策略对照中，混合策略在多数电路上比随机策略更早取得首次改善，反映候选构造与评估顺序的联合作用。
+ 
+ 消融实验表明，EMA 自适应反馈相较固定权重未取得额外收益，扩展后的 S 候选虽能降低部分电路的逻辑深度，但未带来 WNS 改善。OpenROAD 布局及全局布线估计后，8 个 ISCAS89 电路中有 5 个保持改善、1 个持平、2 个出现不超过 0.02\,ns 的退化。失效统计显示，大部分候选的失败来源于时序收益不足（F4 占候选级评估的 60.2\%），而非功能保持问题，这为后续候选空间设计提供了依据。综上，在本文实验范围内，预布局门级时序 ECO 的性能提升可以通过候选空间组织与评估策略优化实现，而不仅依赖单一修改动作。FAECO 在公开 EDA 工具链上实现了这一思路，为自动化 ECO 搜索提供了可复现的方法基础。
+ 
+@@ -660,7 +700,6 @@ $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
+ \ctexset{section = {format=\heiti\fontsize{10.5}{14}\selectfont}}
+ \footnotesize
+ \linespread{0.95}\selectfont
+-\balance
+ \begin{thebibliography}{99}
+ \bibitem{ho2010eco} Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare cells and technology remapping[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2010, 29(5): 697-710. DOI: 10.1109/TCAD.2010.2043573.
+ \bibitem{liu2021rlsizer} Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning[C] //Proceedings of the 58th ACM/IEEE Design Automation Conference. Piscataway: IEEE, 2021: 733-738. DOI: 10.1109/DAC18074.2021.9586138.

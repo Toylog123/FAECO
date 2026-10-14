@@ -2,6 +2,8 @@
 
 本目录存放项目过程与治理文档，而非源码。
 
+当前r21论文审稿与配图入口为 `../paper/zh/review_rounds/r21_20261014/editorial_decision.md`；计数与图件交叉表见 `evidence/R21_FIGURE_EVIDENCE.md`。当前稿为12页、7图14表的工作修订，历史v18基线保留。
+
 | 子目录 / 文件 | 角色 |
 |---------------|------|
 | `WORK_PROGRESS.md` | 工作进度（倒序，最新在上） |

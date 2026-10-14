@@ -1,0 +1,230 @@
+{
+  "source_preflight": {
+    "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\data\\scripts\\review_r21_figures.py",
+    "backend": "python",
+    "summary": {
+      "ready": true,
+      "strict": false,
+      "counts": {
+        "PASS": 18,
+        "WARN": 2,
+        "FAIL": 0
+      }
+    },
+    "findings": [
+      {
+        "check_id": "SOURCE-SYNTAX",
+        "level": "PASS",
+        "message": "Python source parses successfully",
+        "evidence": []
+      },
+      {
+        "check_id": "FONT-FAMILY",
+        "level": "PASS",
+        "message": "A publication-safe sans-serif family is configured",
+        "evidence": [
+          "Arial",
+          "sans-serif"
+        ]
+      },
+      {
+        "check_id": "FONT-SIZE",
+        "level": "PASS",
+        "message": "All detected text sizes are at least 5 pt (minimum 7 pt)",
+        "evidence": []
+      },
+      {
+        "check_id": "FONT-GLYPH-FLOOR",
+        "level": "PASS",
+        "message": "No mathtext superscript/subscript expression detected",
+        "evidence": []
+      },
+      {
+        "check_id": "LEGEND-LABEL-CASE",
+        "level": "PASS",
+        "message": "Detected literal legend labels start with display-style capitalization",
+        "evidence": []
+      },
+      {
+        "check_id": "COLOR-MAP",
+        "level": "PASS",
+        "message": "No rainbow/jet/hsv color mapping detected",
+        "evidence": []
+      },
+      {
+        "check_id": "EDITABLE-TEXT",
+        "level": "PASS",
+        "message": "SVG and PDF editable-text settings are configured",
+        "evidence": []
+      },
+      {
+        "check_id": "EXPORT-VECTOR",
+        "level": "PASS",
+        "message": "Both SVG and PDF exports are present",
+        "evidence": []
+      },
+      {
+        "check_id": "EXPORT-RASTER",
+        "level": "WARN",
+        "message": "PNG preview is present but no TIFF submission raster was found",
+        "evidence": []
+      },
+      {
+        "check_id": "RASTER-DPI",
+        "level": "PASS",
+        "message": "A raster export of at least 600 dpi is configured",
+        "evidence": [
+          "600"
+        ]
+      },
+      {
+        "check_id": "FINAL-WIDTH",
+        "level": "WARN",
+        "message": "Detected width 4318.0 mm is not near the common 89/183 mm defaults; verify the target journal",
+        "evidence": []
+      },
+      {
+        "check_id": "DATA-SAMPLING",
+        "level": "PASS",
+        "message": "No high-confidence row-sampling operation detected",
+        "evidence": []
+      },
+      {
+        "check_id": "DATA-EXCLUSION",
+        "level": "PASS",
+        "message": "No high-confidence missing-data exclusion detected",
+        "evidence": []
+      },
+      {
+        "check_id": "DEMO-DATA",
+        "level": "PASS",
+        "message": "No obvious simulated-data generator detected",
+        "evidence": []
+      },
+      {
+        "check_id": "LOG-GUARD",
+        "level": "PASS",
+        "message": "No logarithmic transform or axis detected",
+        "evidence": []
+      },
+      {
+        "check_id": "INTERP-MONOTONIC",
+        "level": "PASS",
+        "message": "No NumPy interpolation requiring an increasing x-grid detected",
+        "evidence": []
+      },
+      {
+        "check_id": "UNCERTAINTY-ENCODING",
+        "level": "PASS",
+        "message": "No stochastic aggregate requiring a variability audit was inferred",
+        "evidence": []
+      },
+      {
+        "check_id": "ROTATION-ANCHOR",
+        "level": "PASS",
+        "message": "Every detected rotated text call uses anchor-based placement",
+        "evidence": [
+          "line 271: rotation=..."
+        ]
+      },
+      {
+        "check_id": "ANNOTATION-WORKAROUND",
+        "level": "PASS",
+        "message": "No high-risk hard-coded label height or opaque white text mask detected",
+        "evidence": []
+      },
+      {
+        "check_id": "BACKEND-EXCLUSIVE",
+        "level": "PASS",
+        "message": "No obvious cross-backend plotting reference found for python",
+        "evidence": []
+      }
+    ]
+  },
+  "figures": [
+    {
+      "file": "paper/zh/figures/manual/figures/fig1_iterative_flow_r21.pdf",
+      "sha256": "4fad7bfd54ab14be8593b2e10ac4d574ae8074dc355dda4692cde59b5faa9e18",
+      "font_audit": {
+        "pdf": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\manual\\figures\\fig1_iterative_flow_r21.pdf",
+        "auditable": true,
+        "minimum_required_pt": 5.0,
+        "minimum_found_pt": 7.0,
+        "text_run_count": 47,
+        "below_minimum_count": 0,
+        "below_minimum": [],
+        "warnings": []
+      }
+    },
+    {
+      "file": "paper/zh/figures/manual/figures/fig2_candidate_mechanism_r21.pdf",
+      "sha256": "9a95ee5a8aea21d84af018b63cc6a09f9965ce845163fa7ec7150b9dbceb8142",
+      "font_audit": {
+        "pdf": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\manual\\figures\\fig2_candidate_mechanism_r21.pdf",
+        "auditable": true,
+        "minimum_required_pt": 5.0,
+        "minimum_found_pt": 7.0,
+        "text_run_count": 80,
+        "below_minimum_count": 0,
+        "below_minimum": [],
+        "warnings": []
+      }
+    },
+    {
+      "file": "paper/zh/figures/data/final/fig4_unified_gain_r21.pdf",
+      "sha256": "79d1a3e3f6ef1d697fe96c68e97afdc2958b8b2826020e4ba1078c8034ccea81",
+      "font_audit": {
+        "pdf": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\data\\final\\fig4_unified_gain_r21.pdf",
+        "auditable": true,
+        "minimum_required_pt": 5.0,
+        "minimum_found_pt": 7.0,
+        "text_run_count": 87,
+        "below_minimum_count": 0,
+        "below_minimum": [],
+        "warnings": []
+      }
+    },
+    {
+      "file": "paper/zh/figures/data/final/fig5_budget_curves_r21.pdf",
+      "sha256": "f2e69bb98fb4c3792e3001628ffa354c0a459b58e127117ea657fef5371f2495",
+      "font_audit": {
+        "pdf": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\data\\final\\fig5_budget_curves_r21.pdf",
+        "auditable": true,
+        "minimum_required_pt": 5.0,
+        "minimum_found_pt": 7.0,
+        "text_run_count": 78,
+        "below_minimum_count": 0,
+        "below_minimum": [],
+        "warnings": []
+      }
+    },
+    {
+      "file": "paper/zh/figures/data/final/fig6_physical_transfer_r21.pdf",
+      "sha256": "856b72b10530db0ea7bd3976b47e29a15dc5c6f7a9016eba8b7e3ae3dd032e19",
+      "font_audit": {
+        "pdf": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\data\\final\\fig6_physical_transfer_r21.pdf",
+        "auditable": true,
+        "minimum_required_pt": 5.0,
+        "minimum_found_pt": 7.0,
+        "text_run_count": 27,
+        "below_minimum_count": 0,
+        "below_minimum": [],
+        "warnings": []
+      }
+    },
+    {
+      "file": "paper/zh/figures/data/final/fig7_s_boundary_r21.pdf",
+      "sha256": "630f9ba2bbe824a711f8be238a7139048bde20e1ddeb5ec3118d8a00b94efa2f",
+      "font_audit": {
+        "pdf": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\figures\\data\\final\\fig7_s_boundary_r21.pdf",
+        "auditable": true,
+        "minimum_required_pt": 5.0,
+        "minimum_found_pt": 7.0,
+        "text_run_count": 65,
+        "below_minimum_count": 0,
+        "below_minimum": [],
+        "warnings": []
+      }
+    }
+  ]
+}

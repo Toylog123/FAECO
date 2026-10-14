@@ -31,3 +31,7 @@ figures/
 - **矢量优先**：SVG / PDF（投稿 / 出版 / 缩放用）。
 - **高分辨率位图**：PNG ≥ 300 dpi（论文内嵌用）。
 - 脚本默认同时生成矢量 + 高分辨率 PNG；`data/final/` 中保留最清晰版本。
+
+## r21 当前图件入口
+
+`data/scripts/review_r21_figures.py` 使用原始证据与输入指纹生成图1/2/4–7；图3保持原PDF。当前稿使用显式相对图路径，矢量机制图在 `manual/figures/`，数据图在 `data/final/`。本轮用户授权AI直接矢量重画机制图；设计约束在 `manual/drawing_prompts/r21_mechanism_contract.md`。旧全量 `gen_figures.py` 含历史硬编码，仅作历史材料，不用于复现当前图件。

@@ -59,3 +59,12 @@
 2. 修改数字必须同步证据交叉表（`project_docs/evidence/CROSSWALK_TEMPLATE.md`）。
 3. 术语变更同步 `paper/GLOSSARY.md`（先改表再改正文）。
 4. 审稿轮次间：完整归档到 `review_rounds/r<N>/`，本表记录概要。
+
+## 2026-10-14 r21 审稿与配图修订
+
+- 五视角独立模拟审稿与综合裁定，Major Revision；修订前后稿及意见归档于 `review_rounds/r21_20261014/`。
+- 图1/2改为可编辑矢量：按轮提交及独立SEC、六门一一对应的分裂图。新增图4统一主结果、图5同族真实STA预算曲线、图6物理保持、图7 S候选负结果。正文7图14表。
+- 族C明确策略枚举运行器、不使用双割/cost、轮内逐实例提交、混合含JOINT且TNS-aware、随机仅R/G/B；保留1.07/0.16/0.54/0.40收益数字，撤除纯排序归因。
+- 表11把全部评估记录与新STA分列：保留4146/4883/5624，新增1947/2003/2480.7；图5剔除前置拒绝与缓存命中，40运行逐一核对报告来源和sta_used。B族3363/664/104统一称评估记录，b17旧schema实际STA未知。
+- F统计注明b17默认785与重跑104两批次；实验设置补历史revision漂移；cost说明与图注一致；物理收益按保持情况描述。
+- LuaLaTeX两次12页；0 Error/Overfull hbox/Underfull hbox/Overfull vbox，21/21图表引用。旧balance末页溢出经隔离，改用flushend[noshrink,nospread]平衡末页。无新EDA、无源码算法改动；工作修订未冻结为投稿终稿。
