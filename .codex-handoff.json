@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-10-14 (Asia/Shanghai) — r21 review and figure revision",
-  "status": "r21 working revision; five independent simulated reviews recommend Major Revision; seven figures/fourteen tables; twelve pages; compilation errors/overfull/underfull all zero; 21/21 figure-table references; not a new frozen baseline",
+  "timestamp": "2026-10-14 (Asia/Shanghai) — user-requested pause and handoff",
+  "status": "paused by explicit user request; no automatic resume; scientific evidence repair incomplete; not a frozen or submission baseline",
   "project": "FAECO — candidate exploration and failure characterization for pre-placement timing ECO; r21 working manuscript; frozen v18 preserved",
   "read_order": [
+    "AGENTS.md",
     "README.md",
+    "project_docs/agent_handoff/README.md",
     "project_docs/agent_handoff/START_HERE.md",
+    "project_docs/agent_handoff/status_logs/CURRENT_STATUS.md",
     "project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md",
-    "project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md",
     "project_docs/OPEN_ISSUES.md",
-    "paper/zh/review_rounds/r20_20261013/README.md",
-    "project_docs/planning/FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md",
-    "paper/zh/submission/T20_SUBMISSION_PACKAGE.md",
-    "project_docs/WORK_PROGRESS.md"
+    "project_docs/evidence/r22_historical_correctness_20261014/REPORT.md",
+    "project_docs/agent_handoff/NEXT_AGENT_PROMPT.md"
   ],
   "framework_layout": {
-    "code": "code/src/rseco + code/scripts + code/tests（pytest 542 项；基线见 handoff_20261009；pyproject 指向 code/src）",
+    "code": "code/src/rseco + code/scripts + code/tests; latest completed full regression 667 passed/4 skipped/156 subtests; newly discovered blocking cases remain unresolved",
     "experiments": "experiments/（INVENTORY.md 总索引、RESULTS.md（rev. 2026-09-29 已对齐论文口径）+ results.json、20260826_aggregation/summary.json = 论文主数字源）",
     "data": "data/cases（跟踪）+ data/raw/benchmarks（raw 不跟踪，source_manifests 登记）",
-    "paper": "paper/zh/manuscript（唯一主稿，stem「…候选探索与失效刻画」）+ submission/（T20/JCAD 投稿包，内含 word/ 转排件【⚠ 仍 v6 版，OI-024 现缺 r8–r20】+ word/superseded/ + supplementary/ S1–S5）+ figures + review_rounds（r7~r10、r12~r20）+ responses + GLOSSARY",
+    "paper": "paper/zh/ Chinese working draft; paper/en/ complete English elsarticle draft, seven figures, references/scripts/submission and saved build/FAECO.pdf; both await scientific evidence repair",
     "project_docs": "LOGS.md + WORK_PROGRESS.md + agent_handoff/* + evidence/PAPER_EVIDENCE_MANIFEST.md + planning/（含 FAECO_R11_SUBMISSION_POLISH_PLAN_20261012.md、FAECO_R14_DEFENSIVE_PURGE_PLAN_20261013.md、FAECO_R15_DEFENSIVE_PURGE2_PLAN_20261013.md、FAECO_R16_TERMINOLOGY_CALIBRATION_PLAN_20261013.md、FAECO_R17_LOGIC_CALIBRATION_PLAN_20261013.md、FAECO_R18_FIG2_REPLACE_PLAN_20261013.md、FAECO_R19_POSITIONING_RESTRUCTURE_PLAN_20261013.md、FAECO_R20_NARRATIVE_CONVERGENCE_PLAN_20261013.md）+ baselines/ + review_history/ + reports/ + OPEN_ISSUES.md",
     "versions": "v18 = 当前冻结（tag v2026-10-13-narrative-convergence-r20 + MANIFEST.sha256，117 条；v1–v17 superseded，见各版本 README）",
     "docs": "environment.md + GLOSSARY.md + EXPERIENCE.md + literature/ + materials/",
@@ -25,10 +25,10 @@
   },
   "paper_state": {
     "tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
-    "pdf": "manuscript PDF + paper/zh root PDF + 00_Summary author PDF; identical SHA256 c65169b74925446233345d7dad21ab0abd66b4ff4d9fe2f0c8f2b299c1352ae3",
-    "fingerprint": "ced4956de7309b0d6a439ac17fcaa1a5ca4b0f1aad5e04bfe4af60f61ae2f04e (pdftotext -layout, current r21)",
+    "pdf": "Chinese three copies SHA256 e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb; layout verified, historical scientific claims require repair",
+    "fingerprint": "See paper/zh/review_rounds/r22_20261014/build_qa.json; prior r21 fingerprint is historical",
     "compile": "12 pages; 0 Error/Overfull hbox/Underfull hbox/Overfull vbox; 21/21 references; flushend[noshrink,nospread]",
-    "freeze": "r21 working revision, user-authorized review/figure/evidence-scope corrections; not frozen; v18 remains historical immutable baseline",
+    "freeze": "r22 working draft paused, not frozen; v18 remains immutable history, not a current scientific sign-off",
     "r21": {
       "review": "paper/zh/review_rounds/r21_20261014/editorial_decision.md",
       "pages": 12,
@@ -50,21 +50,31 @@
       "fingerprint": "pdftotext -layout 全文 SHA256 = 63e62c52...（poppler 25.07；**v18 ≠ v17 —— 文本层改写故指纹必变**；判内容一致用指纹，不用字节 SHA；回读校验勿用 -layout——双栏会串栏；本文档默认模式还会**逐行交错**双栏、且浮动体会切断段落 ⇒ 用多流重建+容隙+前后缀分离匹配）",
       "compile": "lualatex ×2 + latex_quality_gate.py：0 Error / 0 Overfull hbox / 0 Underfull hbox / 0 Overfull vbox，11 页（第 11 页为参考文献孤儿页，版式压缩见 OI-027）；?? = 0（Undefined:5 为字体替身警告）；表图引用 17/17；浮动体编号阅读顺序 1..14 / 1..3",
       "freeze": "内容冻结 v18（用户裁定，2026-10-13 r20 学术叙事收敛 13 处改写）；任何内容改动须先取得用户同意，留投稿/修稿轮（OI-018）；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md；.tex 须纯 CRLF —— 写盘前先归一化，并断言无 \\r\\r\\n"
+    },
+    "r22": {
+      "zh_pdf_sha256": "e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb",
+      "en_tex": "paper/en/manuscript/FAECO.tex",
+      "en_pdf": "paper/en/build/FAECO.pdf",
+      "en_pdf_sha256": "ba4aba890f7bbceb39fc9cdc2b5e7379044098714c3e3d1311982c74e601d14c",
+      "en_pages": 27,
+      "scientific_status": "A accepted-candidate proof gaps; D invalid endpoint cohort; checked C subset invalid; author declarations incomplete"
     }
   },
   "git_state": {
     "branch": "main",
-    "head": "r21 implementation e592bfd + editable SVG normalization 483b5e9; resolve final docs bookkeeping with git log -1",
-    "remote": "https://github.com/Toylog123/FAECO.git; r21 main successfully pushed through 483b5e9 on 2026-10-14; no new tag; subsequent docs-only bookkeeping follows",
+    "head": "28c3c2b stage implementation pushed; paused checkpoint and final record commit resolve with git log -1",
+    "remote": "https://github.com/Toylog123/FAECO.git; branch main; pause checkpoint push verified in terminal and handoff logs; no new tag or frozen baseline",
     "tags": "v2026-10-13-narrative-convergence-r20 / faeco-paper-final-20261013i（当前冻结，未推送）/ v2026-10-13-positioning-r19 / faeco-paper-final-20261013h（未推送）/ v2026-10-13-fig2-update-r18 / faeco-paper-final-20261013g（未推送）/ v2026-10-13-logic-calibration-r17 / faeco-paper-final-20261013f（未推送）/ v2026-10-13-terminology-calibration-r16 / faeco-paper-final-20261013e（未推送）/ v2026-10-13-defensive-purge2-r15 / faeco-paper-final-20261013d（未推送）/ v2026-10-13-defensive-purge-r14 / faeco-paper-final-20261013c（未推送）/ v2026-10-13-abstract-broaden-r13 / faeco-paper-final-20261013b（= d59e00f，未推送）/ v2026-10-12-pre-submission-consistency-r12 / faeco-paper-final-20261013（= b1403d9，已推送）/ v2026-10-12-submission-polish-r11 / faeco-paper-final-20261012c（= e00315a）/ faeco-exp-rev1（= 87d01ba）；v1–v17 已 superseded"
   },
-  "blocker": "r22 active: controlled C-prime source/cost evidence, historical argv/revision limitations, English elsarticle and declarations; user authorized continuation. See current handoff for live gates/runs; no final-completion claim.",
+  "blocker": "User-requested pause. Resume only after explicit user instruction; Liberty multi-output models/parser, assign changes, duplicate-instance gates and remaining namespace lookups unresolved; A/D/C scientific evidence requires repair.",
   "r22": {
     "plan": "project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md",
     "historical_audit": "project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md",
     "runner": "code/scripts/run_r22_cut_ablation.py",
-    "status": "Static validation and independent code review before pinned formal EDA",
+    "status": "paused; v1 W0/s27 and W0/s382 stopped by final helper-change guard; no v2 or valid new C-prime result",
     "historical_itc_identifiable_sta_results": 2994,
-    "runtime_state": "project_docs/agent_handoff/handoff_20261014_r22.md"
+    "runtime_state": "project_docs/agent_handoff/handoff_20261014_r22.md",
+    "historical_correctness": "project_docs/evidence/r22_historical_correctness_20261014/REPORT.md",
+    "resume_gate": "Fix blocking correctness cases; stable whole-suite regression; independent review; new source pin/new v2 directory; all 18 pilot runs pass before completing 72 runs; repair historical A/D/C separately"
   }
 }

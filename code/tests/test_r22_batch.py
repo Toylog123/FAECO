@@ -92,6 +92,37 @@ def test_driver_matches_real_cli_directory_contract(monkeypatch, tmp_path):
         m.execute_circuit('s27',tmp_path,manifest)
 
 
+def test_final_sec_input_failure_has_per_run_failure_receipt(monkeypatch,tmp_path):
+    import json
+    from types import SimpleNamespace
+    import pytest
+    m=module()
+    baseline=tmp_path/'inputs/s27'
+    baseline.mkdir(parents=True)
+    (baseline/'mapped.v').write_text('initial')
+    manifest={'source_manifest':m.source_manifest(),'inputs':{'s27':'source'},'lib_sha256':'lib'}
+    m.save(baseline/'input.json',{'source_manifest':manifest['source_manifest'],
+                                'mapped_sha256':m.sha(baseline/'mapped.v')})
+    original_sha=m.sha
+    monkeypatch.setattr(m,'sha',lambda p: 'lib' if Path(p)==Path(m.LIB) else
+        'source' if 'iscas89' in str(p) else original_sha(p))
+    def run(cmd,**kwargs):
+        out=Path(cmd[cmd.index('--output-dir')+1])/'s27'
+        m.save(out/'outerloop_result.json',{'n_new_sta_runs':0,'state':{
+            'budget':{},'current_netlist_text':'final'},'baseline_wns':-1,'wns':-1,'stop_reason':'stagnation'})
+        return SimpleNamespace(returncode=0)
+    monkeypatch.setattr(m.subprocess,'run',run)
+    def bad_sec(*args):
+        raise ValueError('helper mismatch')
+    monkeypatch.setattr(m,'final_sec',bad_sec)
+    with pytest.raises(RuntimeError,match='SEC input'):
+        m.execute_circuit('s27',tmp_path,manifest)
+    receipt=json.loads((tmp_path/'W0/s27/completion.json').read_text())
+    assert receipt['sec_status']=='input_error'
+    assert 'helper mismatch' in receipt['failure']
+    assert not (tmp_path/'W1/s27').exists()
+
+
 def test_sec_isolates_identical_shared_helper_and_rejects_changed_helper():
     import pytest
     m=module()

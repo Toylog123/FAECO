@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import re
 
+from .verilog_modules import module_spans
+
 
 def build_net_fanout(cells: list, output_pins: set[str] | None = None) -> dict[str, list[str]]:
     """Map each net to the instance pins that consume it (fanout load).
@@ -74,13 +76,16 @@ def insert_buffer(
     new_net: str,
     *,
     buf_inst: str | None = None,
+    top_module: str | None = None,
 ) -> str:
     """Insert a buffer between the driver of inst.<pin> and inst.
 
     The new buffer instance sky130_fd_sc_hd__buf_1 _bufb_<inst>_<pin> (unless
     buf_inst is given) drives new_net from the original net, and inst.<pin> is
     reconnected to new_net.  A wire declaration for new_net is added after the
-    last standalone wire line of the module.
+    last standalone wire line of the same module.  An explicit top_module
+    resolves instance namespaces.  Otherwise the instance must occur in
+    exactly one module; ambiguous matches fail closed.
     """
     if buf_inst is None:
         buf_inst = "_bufb_" + inst + "_" + pin
@@ -88,9 +93,24 @@ def insert_buffer(
         r"(sky130_fd_sc_hd__\w+)\s+" + re.escape(inst) + r"\s*\((.*?)\)\s*;",
         re.S,
     )
-    m = inst_pat.search(mapped_text)
-    if not m:
-        return mapped_text
+    spans = module_spans(mapped_text)
+    if top_module is not None:
+        targets = [span for span in spans if span.name == top_module]
+        if not targets:
+            raise ValueError(f"Target module unavailable: {top_module}")
+    else:
+        targets = [span for span in spans if inst_pat.search(span.text)]
+        if len(targets) > 1:
+            raise ValueError(f"Ambiguous instance across multiple modules: {inst}")
+        if not targets:
+            return mapped_text
+    target = targets[0]
+    matches = list(inst_pat.finditer(target.text))
+    if len(matches) > 1:
+        raise ValueError(f"Duplicate instance in target module: {inst}")
+    if not matches:
+        raise ValueError(f"Instance unavailable in target module: {inst}")
+    m = matches[0]
     body = m.group(2)
     pin_pat = re.compile(r"(\." + re.escape(pin) + r"\()\s*([^,)]+?)\s*(\))")
     pm = pin_pat.search(body)
@@ -98,7 +118,7 @@ def insert_buffer(
         return mapped_text
     old_net = pm.group(2).strip()
     new_body = body[: pm.start()] + pm.group(1) + new_net + pm.group(3) + body[pm.end():]
-    text = mapped_text[: m.start()] + m.group(1) + " " + inst + " (" + new_body + ");" + mapped_text[m.end():]
+    text = target.text[: m.start()] + m.group(1) + " " + inst + " (" + new_body + ");" + target.text[m.end():]
     buffer_block = (
         "  " + buf_type + " " + buf_inst + " (\n"
         "    .A(" + old_net + "),\n"
@@ -115,7 +135,8 @@ def insert_buffer(
         if mmod:
             insert_at = mmod.end()
             text = text[:insert_at] + "\n  wire " + new_net + ";" + text[insert_at:]
-    em = re.search(r"^endmodule", text, re.M)
-    if em:
-        text = text[: em.start()] + buffer_block + text[em.start():]
-    return text
+    # module_spans guarantees this text ends at its own endmodule token.
+    # This also supports an indented endmodule or a compact module body.
+    end = len(text) - len("endmodule")
+    text = text[:end] + buffer_block + text[end:]
+    return mapped_text[:target.start] + text + mapped_text[target.end:]

@@ -1,0 +1,285 @@
+{
+  "schema": "r22-domain-static-probes-v1",
+  "created_at": "2026-10-14T02:32:58.278363+00:00",
+  "family": "C-prime-r22",
+  "source_pin": "28c3c2b5c6325ffbad4e4ac54cc3caab237d68a5",
+  "all_pinned_production_files_match": true,
+  "source_manifest_entries_verified": 43,
+  "python_executable": "C:\\Users\\佟亚龙\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0\\python.exe",
+  "timeout_s": 120,
+  "timeout_wrapper": "Python subprocess.run(timeout=120); repository Bash wrapper could not find Python under WSL",
+  "eda_executed": false,
+  "production_source_modified": false,
+  "test_result": {
+    "passed": 39,
+    "failed": 0,
+    "pytest_reported_s": 0.93,
+    "junit_s": 0.929,
+    "junit": "project_docs/evidence/r22_preflight_20261014/domain_static_probe_junit.xml",
+    "junit_sha256": "0f748f959d7026161c0f8c2ea71d1ea7a5115ba6cb80296e91c2151101bc1f88"
+  },
+  "test_sha256": {
+    "code/tests/test_r22_static_action_gates.py": "5ca2ff28522b7f631198f6e215cdefff2923bc9464d535afd5fd2519e1d4fd3d",
+    "code/tests/test_r22_static_flow_gates.py": "e18c4ad3743c97513a0aef74f52deb71c6bf1d1c9119ba95837f1b1bfdb878e0",
+    "code/tests/test_r22_candidate_policy.py": "09063cc1c6e15e8caa0b4222212f4390828aafd8446c12a333b326ebea932457",
+    "code/tests/test_r22_sta_launch.py": "419e8d36b68bf59009108c40038e01a6000aa6a5b4207163a63f9599fc79607f"
+  },
+  "core_sha256": {
+    "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+    "code/src/rseco/flow.py": "c9cdea20907dbbb21a5b1c1a041ebae1d5bfe1cdcec7d4609b1848f3b660caad",
+    "code/src/rseco/real_wns.py": "c42ef0dc29c668ee9483ceec380bf3ca528b280ae32ee707ffc40dd0b8a22828"
+  },
+  "probe_assertions": {
+    "P3": "cover gates invariant for lambda_c=0/1/20; weighted source excludes cover/legacy; full is cover-first",
+    "P4": "real flow passes whole cone g1,g2 to weighted R recompute; legacy only critical g2; R availability itself is recording stub",
+    "P6": "real flow initial-epoch base/pool hashes identical for fixed and seeds1/2/3; dispatch only permutation",
+    "P7": "real __call__ generates R/G/B and JOINT on/off; max_instances2 restricts all original changes to g3,g2; empty/unmapped patch no global fallback; topology disabled",
+    "P8": "real _eval_one with K1/K2 evaluates3 distinct candidates; actual launches=sta_used=cap; excess rejected beforeSTA; cache replay consumes0; K0 from launch suite",
+    "P11": "real _eval_one N10/N20 x G1/JOINT2 at ratio0.15; only N10 JOINT hardF3; B inserts one buffer, declares wire and passes real F1/F2; missingwire rejected beforeSTA"
+  },
+  "cases": [
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_generated_rgb_joint_jobs_stay_inside_max_instances_window[0]",
+      "elapsed_s": 0.293,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_generated_rgb_joint_jobs_stay_inside_max_instances_window[2]",
+      "elapsed_s": 0.062,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_empty_or_unmapped_patch_never_falls_back_to_global_critical_gates[gates0]",
+      "elapsed_s": 0.005,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_empty_or_unmapped_patch_never_falls_back_to_global_critical_gates[gates1]",
+      "elapsed_s": 0.005,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_patch_ratio_uses_actual_single_or_joint_change_count[10-G-False]",
+      "elapsed_s": 0.009,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_patch_ratio_uses_actual_single_or_joint_change_count[10-JOINT-True]",
+      "elapsed_s": 0.009,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_patch_ratio_uses_actual_single_or_joint_change_count[20-G-False]",
+      "elapsed_s": 0.011,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_patch_ratio_uses_actual_single_or_joint_change_count[20-JOINT-False]",
+      "elapsed_s": 0.011,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_buffer_insertion_declares_and_closes_new_net_with_single_cell_ratio[10]",
+      "elapsed_s": 0.012,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_buffer_insertion_declares_and_closes_new_net_with_single_cell_ratio[20]",
+      "elapsed_s": 0.014,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_buffer_missing_wire_fails_real_boundary_checker_before_sta",
+      "elapsed_s": 0.008,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_distinct_candidate_launches_never_exceed_small_sta_budget[1]",
+      "elapsed_s": 0.021,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_action_gates",
+      "name": "test_distinct_candidate_launches_never_exceed_small_sta_budget[2]",
+      "elapsed_s": 0.02,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_flow_gates",
+      "name": "test_r_available_domain_includes_noncritical_cone_gates",
+      "elapsed_s": 0.008,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_flow_gates",
+      "name": "test_legacy_r_available_domain_is_unchanged",
+      "elapsed_s": 0.008,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_static_flow_gates",
+      "name": "test_random_order_keeps_exact_same_current_epoch_pool",
+      "elapsed_s": 0.023,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_weighted_only_does_not_leak_cover_or_legacy_baselines",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_cover_only_keeps_non_r_gates_for_rgb_actions",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_uniform_cost_is_one_and_does_not_mutate_input_weights",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_full_is_cover_first_and_records_both_sources",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_overlap_is_evaluated_once_with_both_origins",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_unknown_controls_fail_closed[all-configured]",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_unknown_controls_fail_closed[weighted-bogus]",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_flow_explicit_path_bypasses_legacy_constrained_enumerator",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_cost_can_change_cut_identity_and_preserves_degenerate_case",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_cover_switch_is_independent_of_critical_discount[0]",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_cover_switch_is_independent_of_critical_discount[1]",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_candidate_policy",
+      "name": "test_cover_switch_is_independent_of_critical_discount[20]",
+      "elapsed_s": 0.001,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_actual_ideal_call_has_one_launch_event_and_result_link",
+      "elapsed_s": 0.005,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_cached_result_retains_history_without_consuming_new_sequence",
+      "elapsed_s": 0.007,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_tool_exception_consumes_launch_and_is_linked_to_failure_result[failure0]",
+      "elapsed_s": 0.005,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_tool_exception_consumes_launch_and_is_linked_to_failure_result[failure1]",
+      "elapsed_s": 0.006,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_budget_rejection_is_not_an_ideal_launch",
+      "elapsed_s": 0.005,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_structural_rejection_has_no_launch",
+      "elapsed_s": 0.006,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_physical_sta_does_not_inflate_candidate_ideal_launch_count",
+      "elapsed_s": 0.01,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_trials_link_launches_and_cache_hits_to_distinct_identities",
+      "elapsed_s": 0.009,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_new_base_gets_new_launch_even_for_same_action",
+      "elapsed_s": 0.007,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_parallel_distinct_launches_have_unique_sequences",
+      "elapsed_s": 0.007,
+      "status": "passed"
+    },
+    {
+      "module": "code.tests.test_r22_sta_launch",
+      "name": "test_trial_archive_keeps_launch_ledger_and_trial_links",
+      "elapsed_s": 0.008,
+      "status": "passed"
+    }
+  ],
+  "verification_limit": "Static control probes with actual Python evaluator/checkers and mocked STA; no timing effectiveness or final SEC claim.",
+  "mainline_full_regression_reported": {
+    "passed": 644,
+    "skipped": 4,
+    "subtests": 156,
+    "elapsed_s": 99.14,
+    "wrapper_s": 102,
+    "source": "parent agent completion message; not independently rerun by this reviewer"
+  }
+}

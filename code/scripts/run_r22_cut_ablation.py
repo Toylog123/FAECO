@@ -235,8 +235,17 @@ def execute_circuit(circuit, output, manifest, stop=None):
         state=result['state']
         if result['n_new_sta_runs']!=state['budget'].get('sta_used',0):
             raise RuntimeError('Launch/reservation mismatch')
-        sec=final_sec(state['initial_netlist_text'] if 'initial_netlist_text' in state else
-            (baseline/'mapped.v').read_text(encoding='utf-8'),state['current_netlist_text'],circuit,out/'final_sec')
+        try:
+            sec=final_sec(state['initial_netlist_text'] if 'initial_netlist_text' in state else
+                (baseline/'mapped.v').read_text(encoding='utf-8'),state['current_netlist_text'],circuit,out/'final_sec')
+        except Exception as exc:
+            save(out/'completion.json',{'returncode':proc.returncode,'sec_status':'input_error',
+                'runtime_s':time.monotonic()-started,'failure':str(exc),
+                'result_sha256':sha(out/'outerloop_result.json'),
+                'n_new_sta_runs':result['n_new_sta_runs']})
+            if stop is not None:
+                stop.set()
+            raise RuntimeError(f'SEC input/evaluation error {circuit}/{arm}: {exc}') from exc
         done={'arm':arm,'circuit':circuit,'returncode':proc.returncode,'sec_status':sec['status'],
             'runtime_s':time.monotonic()-started,'n_new_sta_runs':result['n_new_sta_runs'],
             'baseline_wns':result['baseline_wns'],'final_wns':result['wns'],

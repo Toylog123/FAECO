@@ -1,0 +1,252 @@
+{
+  "audit_date": "2026-10-14",
+  "mode": "no EDA; in-process construction/checker/model-generation probes only",
+  "baseline_production_pin": "28c3c2b5c6325ffbad4e4ac54cc3caab237d68a5",
+  "source_sha256_at_start": {
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+    "code/src/rseco/real_wns.py": "58458e1c0090a6fec588683f34778b9d563d208a2510e006b88b4181f27e5b9a",
+    "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+    "code/src/rseco/gate_sizing.py": "b2af6fc81c07105565654a5f67c9b522a829887a9143547f8266d97fb060e643",
+    "code/src/rseco/netlist.py": "49d061884bfb98da63257ab1a61a47bb207b169b33061e67a591ec4c7b8812f2",
+    "code/src/rseco/replacement.py": "6e4d58cdf360f2b5b72bbc8d96a1de5efe6cdcb1d24fda191b4dbc8d67755cce",
+    "code/src/rseco/flow.py": "c36e0a606a79dd64af107abd6f2d62a4e464809fbcf2c42e771f7ccd68112cc9",
+    "code/scripts/run_outerloop_real_wns.py": "13ad3c68648eacf0452ee86679c0790184d862b33871104ff840679750105b96",
+    "code/scripts/run_r22_cut_ablation.py": "a917767305e66c871c202ba13e4bca301ce209facd89e06aaacddd4b2ae2bc29",
+    "code/tests/test_r22_module_namespace.py": "da49cc358a28271699fa49c637eeb3d0e340950b9b7d35a3eaa599ae290d5783",
+    "code/tests/test_r22_multimodule_buffer.py": "84f163e79decc120485f79202bb45f0247f9f04a315981d2d6d9cc04e8524ab2",
+    "code/tests/test_r22_cli_controls.py": "43da9aaebc7f8ff7d3b4d809decc0b8591bb4879a990d35f954e7396a86c07bc"
+  },
+  "source_sha256_at_end": {
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+    "code/src/rseco/real_wns.py": "58458e1c0090a6fec588683f34778b9d563d208a2510e006b88b4181f27e5b9a",
+    "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+    "code/src/rseco/gate_sizing.py": "b2af6fc81c07105565654a5f67c9b522a829887a9143547f8266d97fb060e643",
+    "code/src/rseco/netlist.py": "49d061884bfb98da63257ab1a61a47bb207b169b33061e67a591ec4c7b8812f2",
+    "code/src/rseco/replacement.py": "6e4d58cdf360f2b5b72bbc8d96a1de5efe6cdcb1d24fda191b4dbc8d67755cce",
+    "code/src/rseco/flow.py": "c36e0a606a79dd64af107abd6f2d62a4e464809fbcf2c42e771f7ccd68112cc9",
+    "code/scripts/run_outerloop_real_wns.py": "13ad3c68648eacf0452ee86679c0790184d862b33871104ff840679750105b96",
+    "code/scripts/run_r22_cut_ablation.py": "a917767305e66c871c202ba13e4bca301ce209facd89e06aaacddd4b2ae2bc29",
+    "code/tests/test_r22_module_namespace.py": "da49cc358a28271699fa49c637eeb3d0e340950b9b7d35a3eaa599ae290d5783",
+    "code/tests/test_r22_multimodule_buffer.py": "84f163e79decc120485f79202bb45f0247f9f04a315981d2d6d9cc04e8524ab2",
+    "code/tests/test_r22_cli_controls.py": "43da9aaebc7f8ff7d3b4d809decc0b8591bb4879a990d35f954e7396a86c07bc"
+  },
+  "production_unchanged_during_probe": true,
+  "liberty": {
+    "path": "data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "cells": 428,
+    "multioutput_combinational_cells": 10
+  },
+  "model_generation_probes": [
+    {
+      "cell": "sky130_fd_sc_hd__conb_1",
+      "lib_output_functions": {
+        "HI": "1",
+        "LO": "0"
+      },
+      "output_pin": "LO",
+      "function": "0",
+      "assigned_outputs": [
+        "LO"
+      ],
+      "missing_output_assignments": [
+        "HI"
+      ],
+      "generated_model": "module sky130_fd_sc_hd__conb_1 (HI, LO);\n  output HI, LO;\n  assign LO = 0;\nendmodule"
+    },
+    {
+      "cell": "sky130_fd_sc_hd__fa_1",
+      "lib_output_functions": {
+        "COUT": "(A&B) | (A&CIN) | (B&CIN)",
+        "SUM": "(A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN)"
+      },
+      "output_pin": "SUM",
+      "function": "(A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN)",
+      "assigned_outputs": [
+        "SUM"
+      ],
+      "missing_output_assignments": [
+        "COUT"
+      ],
+      "generated_model": "module sky130_fd_sc_hd__fa_1 (A, B, CIN, COUT, SUM);\n  input A, B, CIN;\n  output COUT, SUM;\n  assign SUM = (A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN);\nendmodule"
+    },
+    {
+      "cell": "sky130_fd_sc_hd__fa_2",
+      "lib_output_functions": {
+        "COUT": "(A&B) | (A&CIN) | (B&CIN)",
+        "SUM": "(A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN)"
+      },
+      "output_pin": "SUM",
+      "function": "(A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN)",
+      "assigned_outputs": [
+        "SUM"
+      ],
+      "missing_output_assignments": [
+        "COUT"
+      ],
+      "generated_model": "module sky130_fd_sc_hd__fa_2 (A, B, CIN, COUT, SUM);\n  input A, B, CIN;\n  output COUT, SUM;\n  assign SUM = (A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN);\nendmodule"
+    },
+    {
+      "cell": "sky130_fd_sc_hd__fa_4",
+      "lib_output_functions": {
+        "COUT": "(A&B) | (A&CIN) | (B&CIN)",
+        "SUM": "(A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN)"
+      },
+      "output_pin": "SUM",
+      "function": "(A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN)",
+      "assigned_outputs": [
+        "SUM"
+      ],
+      "missing_output_assignments": [
+        "COUT"
+      ],
+      "generated_model": "module sky130_fd_sc_hd__fa_4 (A, B, CIN, COUT, SUM);\n  input A, B, CIN;\n  output COUT, SUM;\n  assign SUM = (A&!B&!CIN) | (!A&B&!CIN) | (!A&!B&CIN) | (A&B&CIN);\nendmodule"
+    },
+    {
+      "cell": "sky130_fd_sc_hd__fah_1",
+      "lib_output_functions": {
+        "COUT": "(A&B) | (A&CI) | (B&CI)",
+        "SUM": "(A&!B&!CI) | (!A&B&!CI) | (!A&!B&CI) | (A&B&CI)"
+      },
+      "output_pin": "SUM",
+      "function": "(A&!B&!CI) | (!A&B&!CI) | (!A&!B&CI) | (A&B&CI)",
+      "assigned_outputs": [
+        "SUM"
+      ],
+      "missing_output_assignments": [
+        "COUT"
+      ],
+      "generated_model": "module sky130_fd_sc_hd__fah_1 (A, B, CI, COUT, SUM);\n  input A, B, CI;\n  output COUT, SUM;\n  assign SUM = (A&!B&!CI) | (!A&B&!CI) | (!A&!B&CI) | (A&B&CI);\nendmodule"
+    },
+    {
+      "cell": "sky130_fd_sc_hd__fahcin_1",
+      "lib_output_functions": {
+        "COUT": "(A&!CIN) | (A&B) | (B&!CIN)",
+        "SUM": "(!A&!B&!CIN) | (A&B&!CIN) | (A&!B&CIN) | (!A&B&CIN)"
+      },
+      "output_pin": "SUM",
+      "function": "(!A&!B&!CIN) | (A&B&!CIN) | (A&!B&CIN) | (!A&B&CIN)",
+      "assigned_outputs": [
+        "SUM"
+      ],
+      "missing_output_assignments": [
+        "COUT"
+      ],
+      "generated_model": "module sky130_fd_sc_hd__fahcin_1 (A, B, CIN, COUT, SUM);\n  input A, B, CIN;\n  output COUT, SUM;\n  assign SUM = (!A&!B&!CIN) | (A&B&!CIN) | (A&!B&CIN) | (!A&B&CIN);\nendmodule"
+    }
+  ],
+  "namespace_and_gate_probes": {
+    "legacy_single_module_identity": {
+      "F1": {
+        "status": "pass",
+        "reason": "Liberty functions preserved"
+      },
+      "F2": {
+        "status": "pass",
+        "reason": "boundary inputs/outputs and driver closure preserved"
+      }
+    },
+    "multi_without_explicit_top": {
+      "F1": {
+        "status": "fail",
+        "reason": "checker failed closed: Multi-module verification requires an explicit target module"
+      },
+      "F2": {
+        "status": "fail",
+        "reason": "Multi-module verification requires an explicit target module"
+      }
+    },
+    "unknown_explicit_top": {
+      "F1": {
+        "status": "fail",
+        "reason": "checker failed closed: Verification target module unavailable"
+      },
+      "F2": {
+        "status": "fail",
+        "reason": "Verification target module unavailable"
+      }
+    },
+    "helper_change": {
+      "F1": {
+        "status": "fail",
+        "reason": "checker failed closed: Non-target helper module changed"
+      },
+      "F2": {
+        "status": "fail",
+        "reason": "Non-target helper module changed"
+      }
+    },
+    "port_header_reorder": {
+      "F1": {
+        "status": "pass",
+        "reason": "Liberty functions preserved"
+      },
+      "F2": {
+        "status": "fail",
+        "reason": "module boundary changed"
+      }
+    },
+    "constant_output_behavior_change": {
+      "baseline_assign": "assign Y = 1'b0;",
+      "candidate_assign": "assign Y = 1'b1;",
+      "F1": {
+        "status": "pass",
+        "reason": "Liberty functions preserved"
+      },
+      "F2": {
+        "status": "pass",
+        "reason": "boundary inputs/outputs and driver closure preserved"
+      }
+    },
+    "duplicate_target_instance_identity": {
+      "F1": {
+        "status": "pass",
+        "reason": "Liberty functions preserved"
+      },
+      "F2": {
+        "status": "pass",
+        "reason": "boundary inputs/outputs and driver closure preserved"
+      }
+    },
+    "duplicate_target_G_apply": {
+      "result": "returned_candidate",
+      "changed_instances": 1,
+      "source_instances": 1
+    },
+    "duplicate_target_B_apply": {
+      "result": "raised",
+      "error": "Duplicate instance in target module: g1"
+    },
+    "legal_conb_baseline_identity": {
+      "F1": {
+        "status": "pass",
+        "reason": "Liberty functions preserved"
+      },
+      "F2": {
+        "status": "fail",
+        "reason": "boundary parse failed closed: cannot determine output pin for named-port instance: sky130_fd_sc_hd__conb_1 tie (.HI(H),.LO(L));"
+      },
+      "Liberty": {
+        "HI": "1",
+        "LO": "0"
+      }
+    },
+    "endpoint_D_fulltext_vs_scope": {
+      "lookup_instance": "shared",
+      "full_text_D": "helper_d",
+      "target_module_D": "top_d"
+    },
+    "mask_comments_strings": {
+      "modules": [
+        "helper",
+        "top"
+      ],
+      "original_offsets_exact": true
+    }
+  },
+  "existing_evidence_sha256": {
+    "project_docs/evidence/r22_preflight_20261014/buffer_namespace_junit.xml": "a0b3146c9e7819b81497f8bc325b78c7b03cab337220eeec76a638a93b721320",
+    "project_docs/evidence/r22_preflight_20261014/PILOT_DYNAMIC_AUDIT.json": "45acd98742f5f57a41d44e8157a4649ef1330a062779971a62560bfc2dafc840",
+    "project_docs/evidence/r22_preflight_20261014/pinned_manifest.json": "cc86bdf9fd4e3adf89728bb73754e2e6070371b4b2a435bc914950509b07ee12"
+  }
+}

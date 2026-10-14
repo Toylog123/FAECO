@@ -816,7 +816,10 @@ def run_multi_iteration_case(
                         refreshed_cone = None
                         if getattr(wns_evaluator, "refresh_cone", False):
                             try:
-                                refreshed_netlist = parse_verilog_netlist_from_text(candidate_text)
+                                from .verilog_modules import target_module_text
+                                target_module=getattr(wns_evaluator,'top_module',None)
+                                refreshed_netlist = parse_verilog_netlist_from_text(
+                                    target_module_text(candidate_text,target_module) if target_module else candidate_text)
                                 refreshed_cone = extract_fanin_cone(
                                     refreshed_netlist, roots=[case.target_output]
                                 )

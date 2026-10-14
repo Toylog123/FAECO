@@ -1,0 +1,195 @@
+{
+  "schema": "r22-pilot-dynamic-audit-v1",
+  "date": "2026-10-14T02:44:37.207086+00:00",
+  "source_pin": "28c3c2b5c6325ffbad4e4ac54cc3caab237d68a5",
+  "family": "C-prime-r22",
+  "batch_session_reported_by_mainline": 66717,
+  "eda_executed_by_auditor": false,
+  "planned_pilot_runs": 18,
+  "runner_completed_runs": 2,
+  "passed_dynamic_gate_runs": 0,
+  "failed_runs": 2,
+  "not_launched_runs": 16,
+  "expansion_gate": "closed",
+  "root_cause": "Buffer inserted before first endmodule (dff) while target rewiring and wire declaration are in circuit module; local F1/F2 merge namespaces and falsely pass.",
+  "failure_class": "implementation_bug",
+  "performance_comparison_identifiable": false,
+  "runs": [
+    {
+      "arm": "W0",
+      "circuit": "s27",
+      "status": "failed_final_sec_precondition",
+      "runner_exit": 0,
+      "checks": {
+        "command_matches_locked_manifest": true,
+        "actual_argv_matches_registered_command": true,
+        "run_git_matches_pin": true,
+        "source_sha_matches_manifest": true,
+        "mapped_sha_matches_input_receipt": true,
+        "raw_initial_equals_shared_mapped": true,
+        "raw_final_equals_submitted_state": true,
+        "first_pool_base_matches_initial_state": true,
+        "event_trial_links_unique_and_equal": true,
+        "launches_equal_reservation_and_result": true,
+        "curves_recomputed_match_archive": true,
+        "only_weighted_origins": true,
+        "final_sec_pass": false
+      },
+      "baseline_wns": -0.27,
+      "reported_final_wns": -0.17,
+      "n_new_sta_runs": 12,
+      "sta_used": 12,
+      "n_evaluation_records": 14,
+      "n_cache_replays": 0,
+      "no_launch_failure_types": {
+        "F1_equivalence_failure": 2
+      },
+      "trial_kinds": {
+        "G": 6,
+        "B": 8
+      },
+      "committed_trials": [
+        {
+          "kind": "B",
+          "instance": "_11_",
+          "sta_launch_seq": 5,
+          "accepted": true,
+          "committed": true,
+          "wns": -0.17,
+          "tns": -0.23,
+          "candidate_hash": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+          "failure_events": []
+        }
+      ],
+      "reported_first_valid_seq": 5,
+      "reported_valid_gain": 0.1,
+      "scientifically_valid_gain": null,
+      "helpers_changed": [
+        "dff"
+      ],
+      "initial_helpers": {
+        "dff": "module dff(CK, Q, D);\n  input CK;\n  wire CK;\n  output Q;\n  wire Q;\n  input D;\n  wire D;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(D),\n    .Q(Q)\n  );\nendmodule"
+      },
+      "final_helpers": {
+        "dff": "module dff(CK, Q, D);\n  input CK;\n  wire CK;\n  output Q;\n  wire Q;\n  input D;\n  wire D;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(D),\n    .Q(Q)\n  );\n  sky130_fd_sc_hd__buf_1 _bufb__11__A2 (\n    .A(_03_),\n    .X(_03___buf__11__A2)\n  );\nendmodule"
+      },
+      "sec_receipt_present": false,
+      "completion_present": false,
+      "artifact_sha256": {
+        "experiments/20261014_r22_cut_ablation/W0/s27/outerloop_result.json": "ca446519d5b27c45b4857a78c1df1020f34dd573b0e502325491b70a6686e361",
+        "experiments/20261014_r22_cut_ablation/W0/s27/eval_trials.json": "6d911c0a169607bd02f230b8e0f67990e11879bde3b239448da825c2c38abb86",
+        "experiments/20261014_r22_cut_ablation/W0/s27/run_config.json": "ddf28d5b769ab267ff19ba4df43c79cdb1c597f1a7952eedea8e1f9d5e0a3d7d",
+        "experiments/20261014_r22_cut_ablation/W0/s27/preregistered.json": "74aa1d057be308fcd1d49cbd7531581669d87862d251eaca63274aafbd91ac31",
+        "experiments/20261014_r22_cut_ablation/W0/s27/mapped.v": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+        "experiments/20261014_r22_cut_ablation/W0/s27/runner.log": "62beb28d939b757623ef6626a60028fae5f5a6deaa45094169ff804d376f7e73",
+        "experiments/20261014_r22_cut_ablation/W0/s27/final_sec/initial_raw.v": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+        "experiments/20261014_r22_cut_ablation/W0/s27/final_sec/final_raw.v": "c8ffd7b4bbea0a71ab025d2a944b829aa0229b3f05e8f34ecbf272fbe07fd105"
+      }
+    },
+    {
+      "arm": "W0",
+      "circuit": "s382",
+      "status": "failed_final_sec_precondition",
+      "runner_exit": 0,
+      "checks": {
+        "command_matches_locked_manifest": true,
+        "actual_argv_matches_registered_command": true,
+        "run_git_matches_pin": true,
+        "source_sha_matches_manifest": true,
+        "mapped_sha_matches_input_receipt": true,
+        "raw_initial_equals_shared_mapped": true,
+        "raw_final_equals_submitted_state": true,
+        "first_pool_base_matches_initial_state": true,
+        "event_trial_links_unique_and_equal": true,
+        "launches_equal_reservation_and_result": true,
+        "curves_recomputed_match_archive": true,
+        "only_weighted_origins": true,
+        "final_sec_pass": false
+      },
+      "baseline_wns": -0.98,
+      "reported_final_wns": -0.93,
+      "n_new_sta_runs": 11,
+      "sta_used": 11,
+      "n_evaluation_records": 13,
+      "n_cache_replays": 0,
+      "no_launch_failure_types": {
+        "F1_equivalence_failure": 2
+      },
+      "trial_kinds": {
+        "G": 4,
+        "B": 9
+      },
+      "committed_trials": [
+        {
+          "kind": "B",
+          "instance": "_073_",
+          "sta_launch_seq": 5,
+          "accepted": true,
+          "committed": true,
+          "wns": -0.93,
+          "tns": -12.46,
+          "candidate_hash": "15445711d95268cd8b371be18a614fafdd856a57eeab63be80887a200bab5ba2",
+          "failure_events": []
+        }
+      ],
+      "reported_first_valid_seq": 5,
+      "reported_valid_gain": 0.04999999999999993,
+      "scientifically_valid_gain": null,
+      "helpers_changed": [
+        "dff"
+      ],
+      "initial_helpers": {
+        "dff": "module dff(CK, Q, D);\n  input CK;\n  wire CK;\n  output Q;\n  wire Q;\n  input D;\n  wire D;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(D),\n    .Q(Q)\n  );\nendmodule"
+      },
+      "final_helpers": {
+        "dff": "module dff(CK, Q, D);\n  input CK;\n  wire CK;\n  output Q;\n  wire Q;\n  input D;\n  wire D;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(D),\n    .Q(Q)\n  );\n  sky130_fd_sc_hd__buf_1 _bufb__073__B1_N (\n    .A(_021_),\n    .X(_021___buf__073__B1_N)\n  );\nendmodule"
+      },
+      "sec_receipt_present": false,
+      "completion_present": false,
+      "artifact_sha256": {
+        "experiments/20261014_r22_cut_ablation/W0/s382/outerloop_result.json": "7ed0b166508c915a9b36789575a3d21d759393a0073ba2d19a00b8d124440ae2",
+        "experiments/20261014_r22_cut_ablation/W0/s382/eval_trials.json": "97429241d4266823d6bff99c828703eda47fd53a64a69667350b5688dbc82e32",
+        "experiments/20261014_r22_cut_ablation/W0/s382/run_config.json": "5cee33e11b2eede8f984147b34af2dcce8b92e2f7dcf423c5be6e552303fe6e6",
+        "experiments/20261014_r22_cut_ablation/W0/s382/preregistered.json": "91d0f070d23d3f44d521f06333ff11930ad4b2eb12f728d66751cef63ec6d79e",
+        "experiments/20261014_r22_cut_ablation/W0/s382/mapped.v": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "experiments/20261014_r22_cut_ablation/W0/s382/runner.log": "41cc694249381dab35aaefc35c295d427c5041abfca352f80129a7db24e1312e",
+        "experiments/20261014_r22_cut_ablation/W0/s382/final_sec/initial_raw.v": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "experiments/20261014_r22_cut_ablation/W0/s382/final_sec/final_raw.v": "905e40d074c68f880f96e279b94e86cc0c9e310dc56ecfc6563b113d9f8be79a"
+      }
+    }
+  ],
+  "scope_limit": "No W1/U0/U1/C/UR/L runs; no valid cost/cover/fusion effect estimate; failed original data retained.",
+  "buffer_repair": {
+    "scope": [
+      "code/src/rseco/buffer_insertion.py",
+      "code/tests/test_r22_multimodule_buffer.py"
+    ],
+    "api": "insert_buffer(..., *, buf_inst=None, top_module: str | None=None)",
+    "locator": "shared module_spans utility; explicit top or unique matching module",
+    "ambiguity_policy": "ambiguous module namespace / duplicate instance / unavailable explicit target -> ValueError",
+    "red": {
+      "failed": 9,
+      "passed": 1,
+      "elapsed_s": 0.91
+    },
+    "green": {
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0,
+      "elapsed_s": 1.0,
+      "timeout_s": 120,
+      "junit_sha256": "a0b3146c9e7819b81497f8bc325b78c7b03cab337220eeec76a638a93b721320"
+    },
+    "file_sha256": {
+      "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+      "code/tests/test_r22_multimodule_buffer.py": "84f163e79decc120485f79202bb45f0247f9f04a315981d2d6d9cc04e8524ab2",
+      "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9"
+    },
+    "real_pilot_fixture_cases_executed": 2,
+    "portable_tests": "8 synthetic module-namespace probes; the2 archived-input tests skip explicitly if artifacts absent in fresh checkout",
+    "whole_suite": "Root owns fresh full regression after all namespace fixes; this30-test run is not whole-suite evidence",
+    "source_pin_after_repair": null,
+    "eda_run_after_repair_by_auditor": false,
+    "original_pilot_artifacts_preserved": true
+  }
+}

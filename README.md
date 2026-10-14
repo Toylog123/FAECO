@@ -4,7 +4,7 @@
 
 - 项目类型：算法研究（EDA / 时序优化）
 - 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
-- 当前阶段：**r22 证据补足与投稿准备**。中文r21工作稿12页、7图14表；v18保留为历史冻结基线。目标期刊为 **Integration, the VLSI Journal**；来源/代价受控实验与英文 `elsarticle` 草稿同步推进，实际状态以交接入口为准。
+- 当前阶段：**r22 已按用户要求暂停（2026-10-14）**，等待用户明确恢复。中文工作稿12页、7图14表；英文 `elsarticle` 初稿27页、7图14表。两版科学结论仍待历史正确性补验，不能作为投稿定稿；v18保留为历史冻结基线。目标期刊为 **Integration, the VLSI Journal**。
 
 ## 整体设计
 
@@ -32,7 +32,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-最近一轮（2026-10-14，r22）：历史审计恢复b17的104个STA报告结果；族C完整argv/revision仍不可识别。新显式Cw/Cc/等权控制与真实STA启动台账按TDD实现，独立代码审查及回归后锁定C′矩阵。计划与证据入口：`project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md`、`project_docs/evidence/r22_historical_audit_20261014/`。r21审稿意见仍保留，未将科学问题全部闭合。
+最近一轮（2026-10-14，r22，已暂停）：历史计数恢复2994个可辨识独立STA报告结果；新显式Cw/Cc/等权控制与真实STA启动台账已实现。C′ v1仅W0/s27与W0/s382运行，最终门捕获跨模块B插入缺陷后停止，原始失败结果保留。模块隔离修复后最后完整回归667 passed/4 skipped/156 subtests；多输出Liberty模型/解析器及其他新发现门仍未解决，多输出解析器任务在写盘前中断。历史审计保留B的28个完整SEC绑定，A另6项待补实际接受候选证明，D的38/40终点存在结构缺陷，C代表样本9/12存在缺陷（未外推全集）。详见 `project_docs/evidence/r22_historical_correctness_20261014/REPORT.md` 与当前交接；不得自动恢复实验。
 
 历史记录：最近一轮（2026-10-13，r15 全篇去防御化编辑）：论文**内容冻结 v13**（tag `v2026-10-13-defensive-purge2-r15`，**10 页** 0/0/0/0，内容指纹 `55bde9d4…`）——**用户直接指定的第二轮语言风格轮**（非外部审稿）：用户在 r14 后按**正式期刊审稿人（Integration / TODAES / TVLSI 方向）视角**通读，裁定「**这一版技术内容已经比较成熟，但文字风格仍有明显'答辩稿/项目报告'痕迹。最大的问题不是 claim 过强，而是作者过于主动解释审稿人可能的问题，导致主线贡献被稀释**」，要求从「证明我没有问题」转向「清楚告诉读者我做了什么、发现什么」，**减少解释性文字、提高陈述力度**（不是增加内容）。落地**正文 11 处语言风格改写**（E1–E11，`.tex` diffstat 11/11）；**三处必要偏离**（§2.3 保表 2 引用 / §4.1 保留全文唯一一处「不等同于」/ §5 结论「参考」口径）；**摘要结构与篇幅未变**；**零数字/零实验/零代码/零参考文献**。前序轮：r14（v12，去防御化重构 10 处）、r13（v11，摘要 + §1.1 大同行入口改写）、r12（v10，第五份外部审稿 M1–M5）、r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v13/README.md`。
 
@@ -46,7 +46,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；当前图脚本 `paper/zh/figures/data/scripts/review_r21_figures.py`。
 5. 交接：读 `project_docs/agent_handoff/START_HERE.md` 与 `CURRENT_RUN_HANDOFF.md`。
 
-r22受控实验先执行 `python code/scripts/run_r22_cut_ablation.py --output-dir experiments/20261014_r22_cut_ablation --dry-run` 注册源码、输入与工具版本；静态门通过后同目录执行 `--circuits s27,s382`，核查pilot再执行其余六电路。9臂共享每电路同一映射SHA，workers=1、STA预算500、最多2电路并发，独立最终SEC。已有不完整运行须先归因，不能直接覆盖重跑。
+r22实验当前暂停。恢复后先读 `project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md`，解决全部阻断门并重新整体回归、独立复核，再用新源码pin和新v2目录注册实验。9臂共享每电路同一映射SHA，workers=1、STA预算500、最多2电路并发；两电路18项pilot全部通过独立最终SEC才扩展。不要重用或覆盖 `experiments/20261014_r22_cut_ablation` 的失败v1证据。
 
 ## 目录角色
 
@@ -77,14 +77,14 @@ r22受控实验先执行 `python code/scripts/run_r22_cut_ablation.py --output-d
 | 目录 | 角色 |
 |------|------|
 | `data/` | 数据治理：`cases/` 构造用例（跟踪）+ `raw/benchmarks/` 原始基准（raw 不跟踪，manifests 登记 SHA） |
-| `paper/` | 论文：`zh/` 中文主版（manuscript/figures/review_rounds）；`GLOSSARY.md` 术语表 |
+| `paper/` | 论文：`zh/` 中文主版；`en/` 英文工作初稿（manuscript/figures/references/scripts/submission；build/FAECO.pdf为已保存预览）；两版结论待补验；`GLOSSARY.md` 术语表 |
 | `project_docs/` | 过程文档：交接（agent_handoff）/ 基线（baselines）/ 评审（review_history）/ 进度（WORK_PROGRESS）/ 日志（LOGS.md）/ 未决（OPEN_ISSUES）/ 报告（reports）/ 设计规范（design_specs）/ 决策（decision_log）/ 规划（roadmap、milestones、planning）/ 迁移（migration）/ 归档（archive） |
 
 ### 版本与辅助
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 冻结版本集合（v1–v11 具名基线，当前 active = v11 `v2026-10-13-abstract-broaden-r13`；冻结策略见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
+| `versions/` | 历史冻结版本集合（v18为最近冻结基线，r21/r22是未冻结工作修订；冻结不代表已通过r22科学审计；见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 

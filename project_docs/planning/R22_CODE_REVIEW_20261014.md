@@ -1,12 +1,12 @@
 # R22 核心证据链代码审查
 
-日期：2026-10-14；起点：主线给定 `46ede94`；对象：当前待提交的 `candidate_policy.py`、`flow.py`、真实 STA launch/cache、`sta_ledger.py`、CLI 与 `run_r22_cut_ablation.py`。采用 requesting-code-review 的问题—证据—影响—处置纪律。仅修改本报告；没有运行 EDA 或执行 git 操作。
+日期：2026-10-14；起点：主线给定 `46ede94`；对象：`candidate_policy.py`、`flow.py`、真实 STA launch/cache、`sta_ledger.py`、CLI 与 `run_r22_cut_ablation.py`；补充探针时主线已锁定 `28c3c2b5c6325ffbad4e4ac54cc3caab237d68a5`。采用 requesting-code-review 的问题—证据—影响—处置纪律。审查阶段不改生产源码；按主线追加授权新增 `test_r22_static_action_gates.py` 并保存独占 preflight 证据。没有运行 EDA 或执行 git 操作。
 
 角色说明：CLI 与 launch 计数由本审查者参与实现，这两块属于交叉链路自检；candidate policy、flow、ledger 与 batchdriver 的实现由其他执行者完成，本次对它们作独立只读审查。未将参与者的通过声明直接当作代码正确性证据。
 
 ## 审查结论
 
-**当前没有剩余的实质性启动阻塞。可在主线稳定整体回归、源码提交与 source pin 完成后进入预注册 pilot。** 此结论表示软件控制链路和已执行的静态/桩测试已达到 pilot 门槛，不表示 P1–P12 的全部探针均已执行，也不表示 cost、cover 或融合已经有正向时序贡献。真实输入/工具、独立最终 SEC、来源实际参与程度与真实预算效应仍必须由 pilot/正式实验检验。
+**当前没有剩余的实质性代码启动阻塞。P1–P12 各项现均有已执行的具体静态探针；主线稳定整体回归通过，补充探针所调用生产源码与已锁 manifest 的 SHA256 一致，可进入预注册 pilot。** 这是计划中的反例门通过，未声称穷举全部开关组合，也不表示 cost、cover 或融合已有正向时序贡献。真实输入/工具、独立最终 SEC、来源实际参与程度与真实预算效应仍由 pilot/正式实验检验。
 
 审查发现并向主线即时报告的批处理问题均已修复：重复输出目录破坏共享映射、SEC 重复 helper 定义、凭 completion 标签复用缺少原始证明的结果、首个失败后另一电路继续启动剩余臂、外层超时缺少归因收据，以及逐臂共享 mapped/Liberty 输入未再次锁定。下文保留问题与复核依据，避免只报最终通过而失去记录。
 
@@ -17,6 +17,7 @@
 3. 用仅有 completion/status/result hash、缺少独立 SEC receipt 的临时结果，实际证明旧实现会直接复用；修复后的缺 receipt 测试已通过。
 4. 用真实 flow + RealWnsEvaluator、仅替换 STA 工具结果，构造“内层候选 WNS 改善 0.5、accepted=True，但外层 cone_refresh 强制失败”。当前得到 `committed=False`、外层接受数 0、最终 WNS 保持 −1、`B_observed=[0.5]`、`B_valid=[0.0]`。这直接验证了提交轨迹与候选测量轨迹的区分。
 5. 主线随后报告稳定源码完整回归：**629 passed / 4 skipped / 156 subtests，99.79 s，超时包装 102 s、exit 0**。这是主线执行结果；本审查者没有重新运行完整套件。此前在源码/fixture 并行变化期间的失败轮不作为最终验收依据。
+6. 补充并实际复跑 `test_r22_static_action_gates.py`（13 项）、`test_r22_static_flow_gates.py`（3 项）、`test_r22_candidate_policy.py`（12 项）与 `test_r22_sta_launch.py`（11 项）：**39 passed，0.93 s，exit 0**。真实 evaluator 的 `__call__` / `_eval_one` 与真实 Liberty 等价、boundary closure 检查都执行；仅替换 OpenSTA 调用边界。JUnit 与测试/生产文件 SHA256 保存于 `project_docs/evidence/r22_preflight_20261014/domain_static_probe_junit.xml`、`domain_static_probes.json`、`domain_static_probes.md`。该 39 项为本审查者独立运行结果；主线另报告最新整体回归 **644 passed / 4 skipped / 156 subtests，99.14 s，超时包装 102 s**，两者各按实际运行口径记录。
 
 ## 2. 重要问题与关闭依据
 
@@ -38,18 +39,18 @@
 |---|---|---|---|
 | P1 政策路由 | candidate tests 的 weighted-only、flow bypass legacy；batch 九臂命令与路径桩集成 | 静态控制已验证 | 各真实 run_config 与有效入口一致 |
 | P2 cost 改变能力与退化 | `test_cost_can_change_cut_identity_and_preserves_degenerate_case`：size 权重改变 cut；等权合法 tie 与端点退化保留 | 已有可辨识性例，不等于真实效果 | 八电路 Full/Uniform 是否真改变窗口/动作；不能因退化挑掉实例 |
-| P3 深度与 cover 分离 | reward=0/1/20 下 cover-only 门集不变；weighted-only 无 cover/旧来源 | **部分**：生成分离有测试；未完整跑全部路径/排序组合矩阵 | 真实来源账、cover-first、cost 权重不偷偷改变其他开关 |
-| P4 R 可用性域 | cover 保留无 R 关键门测试；当前 flow weighted_st 的 recompute 范围为 cone.gates，legacy 保持 active_critical | **部分**：完整域修正已读代码，尚无专门“非critical但可R门”全链测试 | 台账 R_available 与当前锥/库一致，不误删 G/B/JOINT 机会 |
+| P3 深度与 cover 分离 | 复跑 reward=0/1/20 的 cover-only 门集不变、weighted-only 无 cover/旧来源、Full cover-first 与去重来源测试 | 计划静态反例已通过；未穷举所有权重组合 | 真实来源账、cover-first、cost 权重不偷偷改变其他开关 |
+| P4 R 可用性域 | 复跑真实 flow + 输入范围记录桩：weighted_st 首次 recompute 为完整锥 `{g1,g2}`，含非critical g1；legacy 仍仅 critical `{g2}`。另有 cover 保留无 R 门测试 | 计划静态域反例已通过；记录桩验证调用范围，不冒充真实库 R 可用性计算 | 台账 R_available 与当前锥/库一致，不误删 G/B/JOINT 机会 |
 | P5 重叠去重 | same window 的 cover+weighted 仅一个区域、origins 同时保留测试 | 单锥已验证 | 真实来源重叠率、动作缓存复用与新 launch 数 |
-| P6 同池顺序对照 | UR 命令除随机/seed 外与 W1 相同；flow 先取相同截断池，再 seeded shuffle | **部分**：未独立运行新 policy 的同 epoch pool/hash 交换全链反例 | 第一个 epoch 池身份一致；后续因提交不同而分岔属于策略下游效应 |
-| P7 动作作用域/类型 | 读真实 evaluator：只取 patch 内关键门，固定 max_instances、joint_k；CLI/batch 明关 TOPOLOGY/S | **部分**：未跑“全部生成 jobs 的改单元均在窗口”专门测试 | R/G/B/JOINT 出现情况，JOINT 受可达门影响，不能声称切源后逐候选集合相同 |
-| P8 实际预算/缓存 | launch tests 覆盖正常、cache、预算0、结构拒绝、超时异常、换 base、并行不同候选、physical不增 ideal count；ledger 别名/重复 seq/空 events | 已有核心桩覆盖；未真实做 K=0/1/2 全组合 | `n_new_sta_runs == sta_used <=500`；真实 launch/event/trial 一一对应，前置拒绝与cache不消耗新k |
+| P6 同池顺序对照 | 复跑真实 flow 的固定初始 epoch：W1/UR1/2/3 共用相同 base hash、两区域 pool hashes，dispatch 仅排列变化 | 计划同池静态反例已通过 | 第一个 epoch 池身份一致；后续因提交不同而分岔属于策略下游效应 |
+| P7 动作作用域/类型 | 真实 evaluator 全生成 R/G/B 与 JOINT on/off，max_instances=2；窗口 `{g1,g2,g3}`、全局 critical 含 g8，全部改单元只在 `{g3,g2}`，无 TOPOLOGY/S；空/不存在窗口在 STA 前拒绝 | 计划动作范围反例已通过；没有全critical fallback | R/G/B/JOINT 出现情况，JOINT 受可达门影响，不能声称切源后逐候选集合相同 |
+| P8 实际预算/缓存 | launch 既有正常/cache/K0/结构拒绝/超时/换 base/并行/physical计数；新 K1/K2 依次评估三个不同真实动作，launch 数=sta_used=cap，超额拒绝、cache 重放不增 k；ledger 重复 seq/空 events | 计划 K=0/1/2 上限反例已通过，非穷举并行/超时所有组合 | `n_new_sta_runs == sta_used <=500`；真实 launch/event/trial 一一对应，前置拒绝与cache不消耗新k |
 | P9 主/观测曲线 | ledger hard failure、timeout/error/running、非有限结果、cache、physical failure、committed 标记测试；真实外层刷新失败反例 | 核心统计口径已验证 | 主曲线终点、实际提交网表 WNS 与最终 SEC 对应 |
 | P10 提交/刷新/缓存 | 新 base 新 seq、既有 production 闭环/拓扑刷新回归；本次强制刷新失败不提交 | 已有核心闭环桩覆盖 | 每轮 committed base hash、accepted metadata、路径更新与 source trace 对应 |
-| P11 patch 与 boundary 安全阈值 | 既有 production F2/F3 测试；代码按实际改门数1或JOINT大小计 ratio，非整个 Cc 窗口 | **部分**：未执行建议的 N=10/20 单门/双门专门矩阵 | 小电路 JOINT 是否被15%阈值拒绝；所有臂同阈值，不能为 Cc 单独放宽 |
-| P12 配置/证据锁/默认兼容 | 新 CLI 两 mode 主流程归档测试；完整五 λ 透传；legacy策略兼容、非法政策提前拒绝；batch receipt/source/input锁；既有整体回归 | 配置软件门已有覆盖，非逐字段动态全验 | 源码 commit/tag+SHA、工具版本、冷缓存、共享 mapped/SDC/Liberty、完整 SEC 证据包 |
+| P11 patch 与 boundary 安全阈值 | 实测 N10/N20 × G单门/JOINT双门四格：仅 N10双门产生 ratio=.20> .15 的硬F3；B 两规模均新增 identity cell/声明wire/唯一driver且通过F1/F2/F3；移除 B 新wire 在 STA 前被真实F2拒绝 | 计划阈值/闭合反例已通过。F3 当前在 STA 后产生，失败也消费一次 launch | 小电路 JOINT 实际拒绝情况；所有臂同阈值，不能为 Cc 单独放宽 |
+| P12 配置/证据锁/默认兼容 | CLI 两 mode 归档与五 λ透传；legacy兼容、非法政策提前拒绝；batch receipt/source/input锁；644整体回归（主线报告）；补充探针逐文件对已锁 manifest 校验 SHA256 | 计划静态配置/schema/兼容门已通过，非逐字段动态全验 | pinned 工具/输入实际可用、冷缓存、共享 mapped/SDC/Liberty、完整 SEC 证据包 |
 
-没有把“candidate tests 的数量”当成十二个门全部通过。标为部分的门也未发现确定性实现阻塞；其未执行的专门探针与真实动态核查应在预注册 pilot 检查中如实记录，而不能后补一句“全验通过”。
+上表逐门写出具体反例及其边界，未把“candidate tests 的数量”替代十二个门。计划缺口 P3/P4/P6/P7/P8/P11 已由本次独立复跑或新增真实路径桩测试补足；真实输入、库、工具、来源参与与最终 SEC 留在 pilot 动态门，不以静态通过代替。
 
 ## 4. 统计效应与默认兼容的使用条件
 
@@ -59,4 +60,4 @@
 
 ## 5. source pin 后的交接门
 
-稳定整体回归已由主线报告；本审查未发现还需改 production code 的实质性阻塞。提交/source pin 后，先执行固定两电路 pilot，核对九臂：共享初始 mapped/Liberty/SDC、政策/五权重/候选类型、actual launch 与预约数、来源参与/重叠、committed主曲线、停止原因、final SEC proof receipt。任何失败先归因为实现、配置、工具/输入或机制退化，再决定修复/建立新 revision；不得看 pilot 收益后改臂以凑正效应。pilot 的正负结果均不替代八电路全集。
+稳定整体回归已由主线报告，source manifest 已锁；本审查未发现还需改 production code 的实质性阻塞。补充测试文件可单独归档，生产 source pin 不变。先执行固定两电路 pilot，核对九臂：共享初始 mapped/Liberty/SDC、政策/五权重/候选类型、actual launch 与预约数、来源参与/重叠、committed主曲线、停止原因、final SEC proof receipt。任何失败先归因为实现、配置、工具/输入或机制退化，再决定修复/建立新 revision；不得看 pilot 收益后改臂以凑正效应。pilot 的正负结果均不替代八电路全集。

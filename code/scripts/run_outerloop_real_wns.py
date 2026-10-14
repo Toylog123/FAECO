@@ -393,13 +393,13 @@ def main() -> int:
         strict_budgets=True,
         required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),
         epsilon=args.epsilon,
-        equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8")),
+        equivalence_checker=build_real_equivalence_checker(LIB.read_text(encoding="utf-8"),top_module=args.circuit),
         topology_sec_checker=build_full_netlist_sec_checker(
             top_module=args.circuit,
             liberty_text=LIB.read_text(encoding="utf-8"),
             artifact_dir=out / "topology-sec",
         ),
-        boundary_checker=build_boundary_closure_checker(),
+        boundary_checker=build_boundary_closure_checker(top_module=args.circuit),
         capture_electrical=args.capture_electrical,
     )
 
@@ -410,7 +410,7 @@ def main() -> int:
     # equivalence candidate so the cut graph applies the hard equivalence
     # constraint and the critical-path cover is a first-round default.
     r_available = build_r_available(
-        LIB.read_text(encoding="utf-8"), critical, mapped_text
+        LIB.read_text(encoding="utf-8"), critical, strip_to_single_module(mapped_text,args.circuit)
     )
     result = run_multi_iteration_case(
         case_dir,

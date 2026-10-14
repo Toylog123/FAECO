@@ -29,6 +29,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from .buffer_insertion import buffer_candidates, build_net_fanout, insert_buffer
+from .verilog_modules import module_spans, target_module_text, replace_target_module
 from .gate_sizing import (
     apply_sizing,
     build_available_sizes,
@@ -146,7 +147,22 @@ def _normalise_failure_events(events, *, candidate_hash: str, cut_hash: str | No
     return normalized
 
 
-def build_real_equivalence_checker(liberty_text: str):
+def _scoped_module_pair(original_text, candidate_text, top_module=None):
+    left={s.name:s.text for s in module_spans(original_text)}
+    right={s.name:s.text for s in module_spans(candidate_text)}
+    if top_module is None:
+        if len(left)!=1 or len(right)!=1:
+            raise ValueError('Multi-module verification requires an explicit target module')
+        top_module=next(iter(left))
+    if top_module not in left or top_module not in right:
+        raise ValueError('Verification target module unavailable')
+    helpers=(set(left)|set(right))-{top_module}
+    if any(left.get(name)!=right.get(name) for name in helpers):
+        raise ValueError('Non-target helper module changed')
+    return left[top_module],right[top_module]
+
+
+def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
     """Build a per-candidate Liberty-function checker for R/G/B actions.
 
     R candidates are checked by canonical Liberty Boolean functions, G keeps
@@ -158,6 +174,7 @@ def build_real_equivalence_checker(liberty_text: str):
     def check(original_text: str, candidate_text: str):
         from .equivalence import EquivalenceResult
         try:
+            original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
             before = parse_mapped_netlist(original_text)
             after = parse_mapped_netlist(candidate_text)
             old = {c.instance: c for c in before}
@@ -259,7 +276,7 @@ def build_full_netlist_sec_checker(
 
     def check(original_text: str, candidate_text: str):
         try:
-            outputs = list(parse_verilog_netlist_from_text(original_text).outputs)
+            outputs = list(parse_verilog_netlist_from_text(target_module_text(original_text,top_module)).outputs)
         except Exception as exc:
             return EquivalenceResult(
                 "fail", "full_netlist_sec", f"SEC input parse failed closed: {exc}"
@@ -403,7 +420,7 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
     return path
 
 
-def build_boundary_closure_checker():
+def build_boundary_closure_checker(*, top_module=None):
     """Build a real module-boundary checker used as the strict F2 gate."""
     def _net_closure(netlist):
         constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
@@ -440,6 +457,10 @@ def build_boundary_closure_checker():
 
     def check(original_text: str, candidate_text: str):
         from .equivalence import EquivalenceResult
+        try:
+            original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
+        except ValueError as exc:
+            return EquivalenceResult('fail','boundary_closure',str(exc))
         pattern = re.compile(r"\bmodule\s+(\w+)\s*\((.*?)\)\s*;", re.S)
         left, right = pattern.search(original_text), pattern.search(candidate_text)
         if left is None or right is None:
@@ -565,27 +586,7 @@ def strip_to_single_module(verilog_text: str, top_module: str) -> str:
     circuit module; the FAECO analysis parser takes the *first* module, so
     the flop model must be removed before building the case netlist.
     """
-    pat = re.compile(
-        r"\bmodule\s+" + re.escape(top_module) + r"\s*\((.*?)\)\s*;",
-        re.S,
-    )
-    m = pat.search(verilog_text)
-    if not m:
-        return verilog_text
-    start = m.start()
-    module_header = m.group(0)
-    rest = verilog_text[m.end():]
-    # module body ends at the matching endmodule (last one in the file)
-    end = rest.rfind("endmodule")
-    if end == -1:
-        return verilog_text
-    body = rest[:end].rstrip()
-    # drop any earlier module definitions (e.g. the ``module dff`` flop
-    # model); keep only the leading comment block.
-    prefix = verilog_text[:start]
-    module_at = prefix.find("module")
-    header = (prefix[:module_at] if module_at != -1 else prefix).rstrip() + "\n"
-    return header + module_header + "\n" + body + "\nendmodule\n"
+    return target_module_text(verilog_text,top_module)+'\n'
 
 
 class RealWnsEvaluator:
@@ -874,7 +875,8 @@ class RealWnsEvaluator:
 
     def r_available_for(self, instances: list[str]) -> set[str]:
         """Recompute R-action availability against the current committed G_r."""
-        return build_r_available(self.liberty_text, list(instances), self.mapped_text)
+        return build_r_available(self.liberty_text, list(instances),
+                                 target_module_text(self.mapped_text,self.top_module))
 
     def evaluate_resynth_candidate(
         self,
@@ -1061,12 +1063,15 @@ class RealWnsEvaluator:
         return exploration_order(cands)
 
     def _apply(self, text: str, inst: str, kind: str, new_type: str, pin_map: dict) -> str:
+        scoped=target_module_text(text,self.top_module)
         if kind == "R":
-            return apply_rewrite(text, inst, new_type, pin_map)
-        if kind == "B":
+            edited=apply_rewrite(scoped, inst, new_type, pin_map)
+        elif kind == "B":
             _, buf_type, bpin, new_net = new_type.split(":")
-            return insert_buffer(text, inst, bpin, buf_type, new_net)
-        return apply_sizing(text, {inst: new_type})
+            edited=insert_buffer(scoped, inst, bpin, buf_type, new_net,top_module=self.top_module)
+        else:
+            edited=apply_sizing(scoped, {inst: new_type})
+        return replace_target_module(text,self.top_module,edited)
 
     def _apply_joint(self, text: str, change) -> str:
         """Apply several instance -> new-type replacements in one shot.
@@ -1076,13 +1081,13 @@ class RealWnsEvaluator:
         instance at a time keeps the joint candidate a single STA-evaluated
         repair combination (joint action space).
         """
-        out = text
+        out = target_module_text(text,self.top_module)
         for inst, (new_type, pin_map, kind) in change.items():
             if kind == "R":
                 out = apply_rewrite(out, inst, new_type, pin_map)
             else:
                 out = apply_sizing(out, {inst: new_type})
-        return out
+        return replace_target_module(text,self.top_module,out)
 
     def _joint_enumerate_combos(self, cells, allowed_instances=None) -> list[tuple[dict, str]]:
         """Joint repair de-humanization (TCAD sprint): enumerate multi-gate
@@ -1187,7 +1192,8 @@ class RealWnsEvaluator:
         topology_window = None
         if kind == "TOPOLOGY":
             topology_replacement, topology_window = pin_map
-            candidate_text = stitch_topology_replacement(text, topology_replacement)
+            candidate_text = replace_target_module(text,self.top_module,
+                stitch_topology_replacement(target_module_text(text,self.top_module),topology_replacement))
         elif kind == "JOINT":
             candidate_text = self._apply_joint(text, pin_map)
         else:
@@ -1788,7 +1794,8 @@ class RealWnsEvaluator:
             changed = len(pin_map)
         else:
             changed = 1
-        gate_count = max(1, len(parse_mapped_netlist(self.mapped_text)))
+        gate_count = max(1, parse_verilog_netlist_from_text(
+            target_module_text(self.mapped_text,self.top_module)).gate_count)
         ratio = changed / gate_count
         if self.strict_gates and ratio > self.max_patch_ratio + self._metric_epsilon("patch_ratio"):
             failure_events.append({
@@ -2020,7 +2027,7 @@ class RealWnsEvaluator:
                     "improved": False, "failure_events": [event],
                     "trial_failure_events": [event], "candidate_hash": candidate_hash}
 
-        cells = parse_mapped_netlist(self.mapped_text)
+        cells = parse_mapped_netlist(target_module_text(self.mapped_text,self.top_module))
         by_inst = {c.instance: c for c in cells}
         in_patch = [g for g in gates if g in by_inst]
         # order: critical-path instances first, then remaining cut gates
@@ -2095,7 +2102,7 @@ class RealWnsEvaluator:
         # candidate evaluation before OpenSTA/acceptance.
         if self.enable_topology and len(actionable) >= 2:
             try:
-                analysis_netlist = parse_verilog_netlist_from_text(self.mapped_text)
+                analysis_netlist = parse_verilog_netlist_from_text(target_module_text(self.mapped_text,self.top_module))
                 window = extract_combinational_window(analysis_netlist, actionable)
                 topology = generate_topology_replacement(window)
                 job = (
