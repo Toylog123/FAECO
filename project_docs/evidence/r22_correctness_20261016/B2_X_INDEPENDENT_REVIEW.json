@@ -4,7 +4,7 @@
   "production_imported": false,
   "inputs_and_checker_sha256": {
     "project_docs\\evidence\\r22_correctness_20261016\\B2_X_SCOPE_CHECK.json": "62b56c8c67a0c06eb7d66c0c3cf2f28b9c05a6bc3a983e8ea3ea7cb8bc41e225",
-    "project_docs\\evidence\\r22_correctness_20261016\\independent_x_review.py": "be108dc78de46c48d818cca3011d4b04faaa342410fd4e8f9e034729b1fb0a1a",
+    "project_docs\\evidence\\r22_correctness_20261016\\independent_x_review.py": "2e8c9905e51e14c04db83ce3a03733db74a5c238b5336fd2ee1e20a0d549ca83",
     "experiments\\20260826_picorv32_hetero\\picorv32\\mapped.v": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
     "experiments\\20260826_picorv32_hetero\\picorv32\\eval\\iter008_cand008\\001__07114__B\\mapped.v": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
     "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\mapped.v": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
@@ -52,7 +52,7 @@
             ],
             "isolated_x_sources": [
               {
-                "lhs": "\\cpuregs[0]",
+                "lhs": "cpuregs[0]",
                 "rhs": "32'hxxxxxxxx",
                 "width": 32,
                 "assign": "assign \\cpuregs[0]  = 32'hxxxxxxxx;",
@@ -214,7 +214,7 @@
             ],
             "isolated_x_sources": [
               {
-                "lhs": "\\cpuregs[0]",
+                "lhs": "cpuregs[0]",
                 "rhs": "32'hxxxxxxxx",
                 "width": 32,
                 "assign": "assign \\cpuregs[0]  = 32'hxxxxxxxx;",
@@ -396,7 +396,15 @@
     },
     "escaped_select_consumer": {
       "rejected": true,
-      "reason": "X source has another use/driver at lines [44816]: \\cpuregs[0]"
+      "reason": "X source has another use/driver at lines [44816]: cpuregs[0]"
+    },
+    "escaped_simple_name_consumer": {
+      "rejected": true,
+      "reason": "X source has another use/driver at lines [44816]: trace_data"
+    },
+    "escaped_simple_alias_consumer": {
+      "rejected": true,
+      "reason": "X source has another use/driver at lines [44816]: decoded_rs"
     },
     "alias_consumer": {
       "rejected": true,

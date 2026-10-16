@@ -1,0 +1,15 @@
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/cells.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/helpers.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/gold.v"
+rename picorv32 gold
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/gate.v"
+rename picorv32 gate
+proc
+memory
+equiv_make gold gate equiv
+hierarchy -top equiv
+flatten
+opt_clean
+equiv_simple
+equiv_induct -seq 10
+equiv_status -assert

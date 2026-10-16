@@ -226,3 +226,28 @@ v3原混编码log保真；harness UTF8展示解码异常不否定已保存JSON/J
 | D56同族实验，先14pilot | pending，真实parse_args56/56预飞已过，不当运行完成 |
 
 暂无STA/pilot；A6真实proof与空三态交集保持。OI038/039及B3/D/C与稿图回填仍待；临时unsupported能力门不是三态真实语义已证，显式四态编码恢复支持路径open。
+
+### 第二阶段Git与新pin正式9控制（LOG-20261016-21）
+
+主线commit/push02e82a2、301files完成，记录员只读实查main/origin refs均02e82a2fd9f2c0a8b446f42413aa42e59b9ba10e；主线166来源提交前逐项匹配v5/code tree clean。不是用旧757替代当前835。
+
+| 实验ID | 新pin/配置/证据 | 当前状态/实读结果 | 边界 |
+|---|---|---|---|
+| SEC-R22-MODEL-CONTROLS-PHASE2 | pin02e82a2、LIB/source/script SHA，9配置：3正确/3故意错/2unsupported/1input_error；sec_controls_phase2/controls.json | completed，预期9/9匹配：3正pass/3负fail/2unsupported/1input_error；source_stable=true、wrapper31exit0，POST_RUN_VERIFICATION后验source/LIB/driver全匹配 | 正式新pinSEC控制，无STA；不覆盖旧6目录，不预填全9通过 |
+
+Xchecker独立代码审查/B2正式proof仍待。C′v3尚未注册，避免后续证据commit改变HEAD；实际mapped复查/18pilot与D14pilot尚未执行，不虚写manifest或运行状态。
+
+### 新pin正式9控制结束（LOG-20261016-22）
+
+02e82a2的sec_controls_phase2/controls.json已completed/passed/source_stable=true；3正确pass、3故意错误fail、2三态unsupported、1缺输入input_error全部预期符合，wrapper31s/exit0。POST_RUN_VERIFICATION.json记录all9_expected_statuses_match=true与source_and_library_and_driver_still_match=true（44source/LIB/driver无漂移）。记录员已实读。
+
+这不是9个等价证明通过，三态unsupported是能力门、非四态支持认证。B2 Xchecker独立review/正式proof仍待，新矩阵尚未注册，无STA/pilot。
+
+### B2新模型正式proof（LOG-20261016-23/24）
+
+| 实验ID | 版本/输入/证明范围 | 命令/证据 | 实际结果/边界 |
+|---|---|---|---|
+| SEC-R22-B2-NEW-MODEL | HEAD44d20bb、44source/LIB/producer/checker SHA，四个原始raw bytes/accepted state绑定；checker66fe72ff…；two-state SEC+独立孤立constant-X identity | prove_actual_pico_pairs.py，wrapper480s/每proof180s；new_model_proof_run.log、new_model_proofs/manifest_and_results.json、逐pair产物/cert、POST_RUN_VERIFICATION | completed/source_stable：corepass6.078s+7X、mulpass0.750s+0X，wrapper16exit0；原bytes/完整decoded/artifacts/动态cert双pair全匹配；无STA，非任意四态/复位等价 |
+| QA-R22-B2-X-CHECKER | checker66fe72ff…与实际四raw；独立代码/黑盒探针，不EDA | B2_X_INDEPENDENT_REVIEW.md/.json、B2_X_PRIMARY_REVIEW.json等 | 20/20负拒、5/6正接受、actual2pair7/0cert；合法escaped output保守误拒不影响B2，不称26/26期待全匹配；独立scanner另8负控制拒绝 |
+
+44d20bb已commit/push（code未变），B2新correct模型缺证已恢复，旧runtime身份不补造，B3仍需同族合法候选恢复/重跑。新矩阵尚未注册、无STA/pilot。权威入口已收口为单一快照，动作/失败事实完整保留本登记/LOGS/原件。

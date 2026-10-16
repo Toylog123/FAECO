@@ -1,0 +1,78 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest -q scratch/r22_tristate_20261016/test_x_identity_certificate.py
+FFFF...........................FF                                        [100%]
+================================== FAILURES ===================================
+_ test_isolated_all_x_sources[module top(Y); output [3:0] Y; wire [3:0] Y; assign Y = 4'bxxxx; endmodule] _
+
+text = "module top(Y); output [3:0] Y; wire [3:0] Y; assign Y = 4'bxxxx; endmodule"
+
+    @pytest.mark.parametrize('text', [BASE, DEAD, "module top(Y); output Y; assign Y = 'x; endmodule", r"module top(Y); output Y; wire [31:0] \cpuregs[0] ; assign \cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule"])
+    def test_isolated_all_x_sources(text):
+        result = certify(text, text)
+>       assert result['certified'], result
+E       AssertionError: {'certified': False, 'reason': 'checker not implemented'}
+E       assert False
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:22: AssertionError
+_ test_isolated_all_x_sources[module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y = A; endmodule] _
+
+text = "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y = A; endmodule"
+
+    @pytest.mark.parametrize('text', [BASE, DEAD, "module top(Y); output Y; assign Y = 'x; endmodule", r"module top(Y); output Y; wire [31:0] \cpuregs[0] ; assign \cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule"])
+    def test_isolated_all_x_sources(text):
+        result = certify(text, text)
+>       assert result['certified'], result
+E       AssertionError: {'certified': False, 'reason': 'checker not implemented'}
+E       assert False
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:22: AssertionError
+_ test_isolated_all_x_sources[module top(Y); output Y; assign Y = 'x; endmodule] _
+
+text = "module top(Y); output Y; assign Y = 'x; endmodule"
+
+    @pytest.mark.parametrize('text', [BASE, DEAD, "module top(Y); output Y; assign Y = 'x; endmodule", r"module top(Y); output Y; wire [31:0] \cpuregs[0] ; assign \cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule"])
+    def test_isolated_all_x_sources(text):
+        result = certify(text, text)
+>       assert result['certified'], result
+E       AssertionError: {'certified': False, 'reason': 'checker not implemented'}
+E       assert False
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:22: AssertionError
+_ test_isolated_all_x_sources[module top(Y); output Y; wire [31:0] \\cpuregs[0] ; assign \\cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule] _
+
+text = "module top(Y); output Y; wire [31:0] \\cpuregs[0] ; assign \\cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule"
+
+    @pytest.mark.parametrize('text', [BASE, DEAD, "module top(Y); output Y; assign Y = 'x; endmodule", r"module top(Y); output Y; wire [31:0] \cpuregs[0] ; assign \cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule"])
+    def test_isolated_all_x_sources(text):
+        result = certify(text, text)
+>       assert result['certified'], result
+E       AssertionError: {'certified': False, 'reason': 'checker not implemented'}
+E       assert False
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:22: AssertionError
+_________ test_namespace_isolation_and_escaped_plain_name_equivalence _________
+
+    def test_namespace_isolation_and_escaped_plain_name_equivalence():
+        text = DEAD + ' module helper(n,Y); input n; output Y; assign Y=n; endmodule'
+>       assert certify(text,text)['certified']
+E       assert False
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:66: AssertionError
+__________________ test_no_x_certificate_is_explicitly_empty __________________
+
+    def test_no_x_certificate_is_explicitly_empty():
+        text = "module top(A,Y); input A; output Y; assign Y=A; endmodule"
+        result=certify(text,text)
+>       assert result['certified'], result
+E       AssertionError: {'certified': False, 'reason': 'checker not implemented'}
+E       assert False
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:73: AssertionError
+=========================== short test summary info ===========================
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_isolated_all_x_sources[module top(Y); output [3:0] Y; wire [3:0] Y; assign Y = 4'bxxxx; endmodule]
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_isolated_all_x_sources[module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y = A; endmodule]
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_isolated_all_x_sources[module top(Y); output Y; assign Y = 'x; endmodule]
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_isolated_all_x_sources[module top(Y); output Y; wire [31:0] \\cpuregs[0] ; assign \\cpuregs[0] = 32'hxxxxxxxx; assign Y = 1'b0; endmodule]
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_namespace_isolation_and_escaped_plain_name_equivalence
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_no_x_certificate_is_explicitly_empty
+6 failed, 27 passed in 0.42s
+[run] 完成（5s），退出码 1

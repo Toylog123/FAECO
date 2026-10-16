@@ -1,0 +1,239 @@
+{
+  "checker_sha256": "66fe72ff542c55f421bce6a2c234749ed802095372a0e2ed0189b1f695cab91a",
+  "eda_executed": false,
+  "pairs": [
+    {
+      "top_module": "picorv32",
+      "inputs": {
+        "gold": {
+          "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20260826_picorv32_hetero\\picorv32\\mapped.v",
+          "sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429"
+        },
+        "gate": {
+          "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20260826_picorv32_hetero\\picorv32\\eval\\iter008_cand008\\001__07114__B\\mapped.v",
+          "sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b"
+        }
+      },
+      "certificate": {
+        "schema": "r22-isolated-X-identity-v1",
+        "certified": true,
+        "scope": "explicit isolated constant-X identity only; not equivalence",
+        "sources": [
+          {
+            "module": "picorv32",
+            "lhs": "cpuregs[0]",
+            "assignment_tokens": [
+              "assign",
+              "\\cpuregs[0]",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "decoded_rs",
+            "assignment_tokens": [
+              "assign",
+              "decoded_rs",
+              "=",
+              "5'hxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "4",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_div_rd",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_div_rd",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_insn",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_insn",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "output",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ],
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "output",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_int_rd",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_int_rd",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_mul_rd",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_mul_rd",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "trace_data",
+            "assignment_tokens": [
+              "assign",
+              "trace_data",
+              "=",
+              "36'hxxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "output",
+                [
+                  "[",
+                  "35",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ],
+              [
+                "wire",
+                [
+                  "[",
+                  "35",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "output",
+            "consumer_count": 0
+          }
+        ],
+        "gold_text_utf8_sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+        "gate_text_utf8_sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+        "reason": "all explicit X sources are identical and isolated"
+      }
+    },
+    {
+      "top_module": "picorv32_pcpi_mul",
+      "inputs": {
+        "gold": {
+          "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\mapped.v",
+          "sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232"
+        },
+        "gate": {
+          "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\eval\\iter005_cand005\\048__0790__B\\mapped.v",
+          "sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c"
+        }
+      },
+      "certificate": {
+        "schema": "r22-isolated-X-identity-v1",
+        "certified": true,
+        "scope": "explicit isolated constant-X identity only; not equivalence",
+        "sources": [],
+        "gold_text_utf8_sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+        "gate_text_utf8_sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c",
+        "reason": "no explicit X literals in supported syntax"
+      }
+    }
+  ]
+}

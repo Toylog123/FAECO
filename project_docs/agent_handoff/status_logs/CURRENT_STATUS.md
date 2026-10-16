@@ -1,12 +1,23 @@
-# r22 已恢复推进 — 2026-10-16
+# r22 当前快照 — 2026-10-16（LOG-20261016-25）
 
-用户2026-10-16明确“继续”，覆盖10-14暂停。唯一工作区main，恢复起点781c031；第一阶段8192193已push/757整套通过，随后新OI-039三态反证触发第二批修复，旧757不覆盖当前新门。第二批production/tests冻结，dirty真三态诊断已暴露Z塌缩；新版完整v3已822pass/2fail，fixture与guard已限定过，完整v4已832pass/3fail，显式全进程PYTHONUTF8=1的v5已running，最终待。
+用户10-16明确“继续”覆盖10-14暂停。唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，恢复起点main/781c031；第一阶段8192193、第二阶段02e82a2及证书/producer阶段44d20bb均已push。记录员只读实查main/origin refs为 `44d20bb341fd7805c10189fa2842f50fc2616845`。当前无STA/pilot，新矩阵尚未注册。
 
-当前接手以本节及handoff_20261016_r22.md为准。A6真实证明已通过且各pair三态usedtypes交集空；B2/B3与D/C科学恢复、稿图回填仍待。C′v2仅dryrun注册禁执行，原manifest不改，后续新source pin/v3目录；18pilot全通过才扩72。旧v1失败与暂停原件保留，暂无STA/pilot。
+- 当前完整v5：835pass/4skip/156subtests，147.00s/wrapper152.781exit0，166源码before/after SHA一致，environment_overrides PYTHONUTF8=1；JSON/JUnit/log已实读。主线提交前再次逐项匹配被测SHA。
+- 新pin正式9控制：3正确pass、3故意错fail、2三态unsupported、1缺输入input_error，预期全部符合，source稳定/wrapper31exit0；POST_RUN_VERIFICATION确认44source/LIB/driver无漂移。不是9个等价证明通过，也不是三态支持已证。
+- A6实际原mapped→accepted fixed新SEC六pass，frozen8192193来源/模型绑定；各pair三态usedtypes交集为空。s713 LF→CRLF字节差经通用换行逐字核验一致。历史runtime身份不补造。
+- B旧28对象绑定仍真，23未见本次used-model defect、5有缺口：两Pico错误edfxtp模型（OI038）与b09/b20/b21缺TE_B/忽略three_state（OI039）。不据缺口判电路不等价，B2新模型正式proof已在44d20bb完成双pair pass并绑定7/0孤立X证书/全部raw及模型产物；后验原byte/decoded/artifact/动态证书均匹配。历史runtime身份不补造，B3仍待同族恢复。
+- 当前三态/显式Z/switch返回structured unsupported非pass，准确writer保留；这是临时二态证明器能力门。显式四态编码为支持恢复路径，OI039仍open。
 
-## 本轮最新阶段（LOG-20261016-20）
+完整权威交接见 `handoff_20261016_r22.md`（status_logs内用 `../handoff_20261016_r22.md`）；逐动作/失败归因见LOGS与实验证据，不把历史667/757当当前835的替代。
 
-完整v5已实际835pass/4skip/156subtests，147.00s/wrapper152.781exit0、166源码before/after SHA稳定，PYTHONUTF8=1；JSON/JUnit/log已实读，当前第二批实现整套通过。记录员停止写入供阶段commit/push，新pin待主线实际保存。后续新pin9正式控制（3正/3负/2unsupported/1input_error）、B2+X identity certificate、C′v3实际mapped复查→18pilot→72、D56预飞56/56后14pilot；均未STA/pilot。A6真实proof且三态交集空保持；OI038/039、B3/D/C及稿图待。unsupported是临时能力门，非四态已证，显式四态编码恢复路径仍open。
+| ID | 任务 | 当前状态 | 验收门 / 下一步 |
+|---|---|---|---|
+| P01 | 当前支持域内实现与证明器能力门 | 代码阶段已验收并push02e82a2；835整套通过/9控制预期符合 | 不等科学闭合；三态真实支持仍属OI039，unsupported仅临时能力门 |
+| P02 | A/B/D/C历史科学证据 | A6+B2新证明已补；B3/D/C与稿图待 | B2正式新模型双pair pass/7与0X证书已补；B3按真实语义恢复；D先14pilot，C完整对象核查/同族复验 |
+| P03 | 新C′受控矩阵 | v3尚未注册，暂无STA/pilot | 待证据/source pin稳定，再actual mapped复查与18pilot全过后扩72；v1失败/v2仅注册均保留 |
+| P04 | 中英稿图与材料回填 | pending，依赖科学证据闭合 | A证明已齐不等整篇ready；统一证据/结论/图表与声明，最后编译/视觉QA |
+
+当前proof/QA/docs阶段准备提交；记录员此轮后冻结写入。phase2_final_qa新增15份已逐条SHA核验，旧58归档保留。B3/C报告只读进行中，不纳半成品。
 
 ## 历史记录（含2026-10-14暂停前状态；不作为当前授权）
 

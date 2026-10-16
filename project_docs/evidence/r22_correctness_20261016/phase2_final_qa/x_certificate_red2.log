@@ -1,0 +1,42 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest -q scratch/r22_tristate_20261016/test_x_identity_certificate.py
+.................................FFF....                                 [100%]
+================================== FAILURES ===================================
+______ test_unknown_or_invalid_syntax_never_certifies[assign 1'b0 = A;] _______
+
+extra = "assign 1'b0 = A;"
+
+    @pytest.mark.parametrize('extra', ["assign 1'b0 = A;", 'assign A+Y = A;', "assign A=1'b2;", "assign A=0'bx;", "assign A=4'dxx;"])
+    def test_unknown_or_invalid_syntax_never_certifies(extra):
+        text=DEAD.replace('assign Y = A;',extra)
+>       assert not certify(text,text)['certified']
+E       assert not True
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:79: AssertionError
+_______ test_unknown_or_invalid_syntax_never_certifies[assign A+Y = A;] _______
+
+extra = 'assign A+Y = A;'
+
+    @pytest.mark.parametrize('extra', ["assign 1'b0 = A;", 'assign A+Y = A;', "assign A=1'b2;", "assign A=0'bx;", "assign A=4'dxx;"])
+    def test_unknown_or_invalid_syntax_never_certifies(extra):
+        text=DEAD.replace('assign Y = A;',extra)
+>       assert not certify(text,text)['certified']
+E       assert not True
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:79: AssertionError
+_______ test_unknown_or_invalid_syntax_never_certifies[assign A=1'b2;] ________
+
+extra = "assign A=1'b2;"
+
+    @pytest.mark.parametrize('extra', ["assign 1'b0 = A;", 'assign A+Y = A;', "assign A=1'b2;", "assign A=0'bx;", "assign A=4'dxx;"])
+    def test_unknown_or_invalid_syntax_never_certifies(extra):
+        text=DEAD.replace('assign Y = A;',extra)
+>       assert not certify(text,text)['certified']
+E       assert not True
+
+scratch\r22_tristate_20261016\test_x_identity_certificate.py:79: AssertionError
+=========================== short test summary info ===========================
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_unknown_or_invalid_syntax_never_certifies[assign 1'b0 = A;]
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_unknown_or_invalid_syntax_never_certifies[assign A+Y = A;]
+FAILED scratch/r22_tristate_20261016/test_x_identity_certificate.py::test_unknown_or_invalid_syntax_never_certifies[assign A=1'b2;]
+3 failed, 37 passed in 0.38s
+[run] 完成（5s），退出码 1

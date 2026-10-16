@@ -2,7 +2,7 @@
 
 用户明确“继续”，覆盖10-14暂停。最新完整七段交接：`CURRENT_RUN_HANDOFF.md` 与 `handoff_20261016_r22.md`。先读取当前修复/证据闭合任务，再按下方索引恢复上下文；旧暂停原件保留在 `handoff_20261014_r22.md`。
 
-当前第二批实现完整v5已835pass/4skip/156subtests，166来源SHA稳定/PYTHONUTF8=1，记录冻结供阶段commit/push，新pin待实际完成。三态证明器临时unsupported门不是四态支持；下一步新pin正式9控制、B2+X证书、C′v3实际mapped复查后18pilot→72、D56预飞后14pilot。C′v2仅注册禁执行，暂无STA/pilot，OI038/039及B3/D/C科学证据与稿图回填仍待。当前权威交接为 `handoff_20261016_r22.md`（项目文档入口请读 `agent_handoff/handoff_20261016_r22.md`）。
+当前代码完整v5=835pass/166来源SHA稳定，正式9控制预期全符合（3正/3负/2unsupported/1input_error）；A6+B2真实新证明已补，B2在44d20bb绑定7/0孤立X identity及原bytes/模型/产物。OI038新缺证恢复、旧runtime身份不补造；B3/D/C、四态支持恢复与稿图仍待。proof/最终QA/docs准备阶段commit，记录员冻结写入；新C′v3尚未注册、无STA/pilot，v2仅注册禁执行。权威交接为 `agent_handoff/handoff_20261016_r22.md`（本目录是agent_handoff时用 `handoff_20261016_r22.md`）。
 
 # Handoff Index
 

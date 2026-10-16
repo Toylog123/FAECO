@@ -57,7 +57,7 @@
       "en_pdf": "paper/en/build/FAECO.pdf",
       "en_pdf_sha256": "ba4aba890f7bbceb39fc9cdc2b5e7379044098714c3e3d1311982c74e601d14c",
       "en_pages": 27,
-      "scientific_status": "A6 new proof recovered; B2 new-model reproof pending and B3 invalid tri candidates require legal reruns; D/C invalid historical cohorts still require same-family recovery; declarations incomplete"
+      "scientific_status": "A6 and B2 new-model proof recovered (B2 has isolated-X identity certificate); B3 invalid tri candidates require legal same-family reruns; D/C invalid historical cohorts still require recovery; declarations incomplete"
     }
   },
   "git_state": {
@@ -66,7 +66,7 @@
     "remote": "https://github.com/Toylog123/FAECO.git; checkpoint push receipts in LOGS.md; no new scientific baseline tag",
     "tags": "v2026-10-13-narrative-convergence-r20 / faeco-paper-final-20261013i（当前冻结，未推送）/ v2026-10-13-positioning-r19 / faeco-paper-final-20261013h（未推送）/ v2026-10-13-fig2-update-r18 / faeco-paper-final-20261013g（未推送）/ v2026-10-13-logic-calibration-r17 / faeco-paper-final-20261013f（未推送）/ v2026-10-13-terminology-calibration-r16 / faeco-paper-final-20261013e（未推送）/ v2026-10-13-defensive-purge2-r15 / faeco-paper-final-20261013d（未推送）/ v2026-10-13-defensive-purge-r14 / faeco-paper-final-20261013c（未推送）/ v2026-10-13-abstract-broaden-r13 / faeco-paper-final-20261013b（= d59e00f，未推送）/ v2026-10-12-pre-submission-consistency-r12 / faeco-paper-final-20261013（= b1403d9，已推送）/ v2026-10-12-submission-polish-r11 / faeco-paper-final-20261012c（= e00315a）/ faeco-exp-rev1（= 87d01ba）；v1–v17 已 superseded"
   },
-  "blocker": "Full v5 passed835; formal model controls, B2 identity+new-model proof and new-pin Cprime v3/D56 pilots remain; four-state backend unsupported; historical C/B3 recovery pending",
+  "blocker": "Full v5 passed835; formal9 controls matched and B2 accepted raw new-model proof passed. New-pin Cprime v3/D56 pilots, historical C/B3 recovery pending. Four-state SEC unsupported remains explicit.",
   "r22": {
     "plan": "project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md",
     "historical_audit": "project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md",
@@ -77,5 +77,5 @@
     "historical_correctness": "project_docs/evidence/r22_historical_correctness_20261014/REPORT.md",
     "resume_gate": "Formal supported-domain controls; new source pin/v3; actual mapped model-domain preflight; all18 Cprime pilot passes before72; D56 independent same-family pilot14 before56; historical C/B3 separately"
   },
-  "current_resume_gate": "Yosys two-state SEC falsely passed Z-vs-zero. Three-state/explicit-Z/switch objects now unsupported non-pass; four-state support remains open. A6 recovered; B2 reproof and C-prime v3/D56 pilots await verified new source pin."
+  "current_resume_gate": "Models/required inputs repaired; Z objects unsupported non-pass. A6+B2 new proofs recovered. Register new Cprime v3, actual mapped preflight then18pilot; D56 same-family14pilot; C/B3 separately."
 }

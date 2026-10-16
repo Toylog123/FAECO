@@ -75,3 +75,13 @@
 28 份旧脚本均有 proc/memory、flatten gold/gate、equiv_simple/induct/status，但 **没有 `equiv_status -assert`**。本轮没有拿 exit 0 充当证明，而是实读每份非空 equiv 数量与零未证日志。b17 例外为原部分证明，仍保留未证点。三个三态对象与两 Pico 的 undef 已逐项解释，其他对象没有因此被一并否定。
 
 审计主程序读取/穷举约 16 s，附加三态/绑定核查约 5 s，均有 180/120 s timeout、exit 0；只生成两份本包文件。没有新的 SEC、STA 或收益结论。后续正式复验必须用真正 accepted raw 对与完整库模型，并单独保存新 source/model pin、输入 hash 与独立工具输出。
+
+## 后续恢复（2026-10-16，LOG-23/24；不改写初审发现）
+
+上节“没有新的SEC/STA”仅指本包初审生成时刻。随后parser已保留完整three_state与联合data/enable候选语义，writer准确输出相关逻辑并修后缀反相；独立Zvs0反例暴露二态工具soundness边界，当前actual三态/Z/switch给structured unsupported非pass。准确writer保留，显式四态编码为支持恢复路径，不能称三态已证。
+
+正式B2已在HEAD44d20bb执行新correct enable-FF模型证明：picorv32 pass（6.078s）并绑定7个孤立constant-X identity，picorv32_pcpi_mul pass（0.750s）且0X；wrapper16s/exit0、source_stable=true。new_model_proofs/manifest_and_results.json保存raw/state/LIB/44source/checker66fe72ff…/producer与全部产物SHA；POST_RUN_VERIFICATION逐原bytes、完整decoded gold/gate、artifactSHA和动态重算cert双pair全匹配。
+
+X checker独立review为20负全拒、5/6正控接受，actual2pair7/0证书；合法escaped关键字网output保守误拒不影响这四文件，不能泛化语法支持。组合证明范围是two-state SEC加独立孤立constant-X identity，不是任意四态或复位等价。
+
+OI038的新correct模型实际对象缺证已恢复；旧模型状态缺陷/旧runtime身份缺失仍是历史事实，不追认、不补造。b09/b20/b21缺TE_B的三态accepted对象仍待同族真实语义恢复/重跑（OI039），不能用B2补证替代。没有STA/pilot，新矩阵尚未注册。

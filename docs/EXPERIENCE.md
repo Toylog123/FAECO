@@ -2,6 +2,14 @@
 
 > 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
 
+## 2026-10-16 B2恒X边界证书须与独立proof和原字节对象同时绑定
+
+B2 checker66fe72ff…独立review准确为20/20负拒、5/6正接受，actual2pair7/0cert；escaped output保守误拒不影响实际对象，不能称26/26期待全匹配。44d20bb正式新模型B2两pair已pass，core6.078s/mul0.750s，wrapper16exit0/source稳定；POST_RUN_VERIFICATION原bytes、完整decoded、全部artifacts和动态cert双pair一致。证明只组合two-state SEC与独立孤立constant-X identity，不泛化四态/复位等价；旧runtimehash不补造。OI038当前新模型缺证已恢复，B3三态缺输入仍另需同族恢复，不能借B2关闭。
+
+## 2026-10-16 控制组通过指预期状态匹配，不等于全部等价证明通过
+
+新pin02e82a2正式9控制为3正确pass/3故意错fail/2三态unsupported/1缺输入input_error，9/9 matches、source稳定、wrapper31exit0，后验44source/LIB/driver无漂移。只有按预锁状态解读才准确：错误应拒、能力外应unsupported、缺输入应input_error。不能称“9个等价证明通过”或三态支持已证；三态能力恢复仍open。来源sec_controls_phase2/controls.json与POST_RUN_VERIFICATION，均已实读。
+
 ## 2026-10-16 父进程-Xutf8不替代全进程PYTHONUTF8环境
 
 - **实际归因**：完整v4运行中3F，独立3个子CLI测试复现3fail+4warnings/0.97s，子CLI仍按CP936输出而父按UTF8读取；父命令-Xutf8不会自动设置所有子Python环境。
