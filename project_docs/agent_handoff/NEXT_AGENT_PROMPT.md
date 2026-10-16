@@ -2,9 +2,27 @@
 
 你接手FAECO唯一仓库 `D:/BaiduSyncdisk/01_Papers/03_FAECO`。用户已明确“继续”，10-14暂停仅作历史。先按本目录README读取全部入口，当前详细断点以 `handoff_20261016_r22.md` 与CURRENT_RUN_HANDOFF最上节为准。恢复起点main clean/HEAD781c031已push；不把旧667回归视为当前修复版通过。
 
-继续P01 K1–K6反例/TDD修复、当前稳定源码整套回归和独立复审；之后新source pin/v2目录，s27/s382×九臂18pilot全部通过才扩72。A六实际接受候选补确切独立证明，D同臂同输入整族恢复，C全实例核查/受影响矩阵；不能用C′覆盖历史C/D。科学证据闭合后回填两版稿图和材料。已有限定parser35/models69与最新scope68+1通过（LOG-04/05、日志已实读）；首整套回归已完成：741pass/1fail/4skip/156subtests，108.20s、wrapper112/exit1，被测SHA稳定。合法B扩展wire声明被新_non_rgb_structure整条比较误拒，models仅修函数并保留既有net宽度/signedness/次数与声明重组支持；不改旧fixture，相关145pass/22.28s。新版完整回归full_regression_v2已757pass/4skip/156subtests、102.50s/wrapper107/exit0，162源码before/after SHA稳定；保留首失败三证据。独立冻结probe已有7源码稳定，但不能代替修后整套。A工具9pass与六对象52输入/44源码干跑完成但未实际证明，s713主pair原A→fixed覆盖tie变化。本轮首整套已失败，当前完整回归已过，科学证据尚未闭合且无有效C′结果。正式SEC正负控制须整套过+commit/模型源码pin后才执行；D56/C边界与B旧模型完整性当前只读恢复，不推断新writer影响旧B。新OI-038两Pico旧proof的edfxtp_1模型缺少IQ driver/always，主线已实查、模型报告待补；B28对象绑定仍真，26其它与2语义缺口分开。新模型/pin补这2实际final SEC，与A6独立，不判电路不等价。记录员当前停写供阶段commit，后续按真实Git/SEC消息更新。
+继续P01 K1–K6反例/TDD修复、当前稳定源码整套回归和独立复审；之后新source pin/v2目录，s27/s382×九臂18pilot全部通过才扩72。A六实际接受候选补确切独立证明，D同臂同输入整族恢复，C全实例核查/受影响矩阵；不能用C′覆盖历史C/D。科学证据闭合后回填两版稿图和材料。已有限定parser35/models69与最新scope68+1通过（LOG-04/05、日志已实读）；首整套回归已完成：741pass/1fail/4skip/156subtests，108.20s、wrapper112/exit1，被测SHA稳定。合法B扩展wire声明被新_non_rgb_structure整条比较误拒，models仅修函数并保留既有net宽度/signedness/次数与声明重组支持；不改旧fixture，相关145pass/22.28s。新版完整回归full_regression_v2已757pass/4skip/156subtests、102.50s/wrapper107/exit0，162源码before/after SHA稳定；保留首失败三证据。独立冻结probe已有7源码稳定，但不能代替修后整套。A工具9pass与六对象52输入/44源码干跑完成但未实际证明，s713主pair原A→fixed覆盖tie变化。本轮首整套已失败，当前完整回归已过，科学证据尚未闭合且无有效C′结果。正式SEC正负控制须整套过+commit/模型源码pin后才执行；D56/C边界与B旧模型完整性当前只读恢复，不推断新writer影响旧B。新OI-038两Pico旧proof的edfxtp_1模型缺少IQ driver/always，主线已实查、模型报告待补；B28对象绑定仍真，26其它与2语义缺口分开。新模型/pin补这2实际final SEC，与A6独立，不判电路不等价。阶段8192193已commit/push（refs实读一致，162被测SHA匹配）；6组模型真SEC控制已3正pass/3负fail均符合、source_stable=true、wrapper15/exit0；A正式frozen六实际对象SEC全pass/wrapper21exit0，s713 LF→CRLF经逐字换行归一证实未改对象。B2仍待，v2新pin正式manifest72 dryrun已锁，18pilot未开始，无STA；记录员已恢复仅docs写入，后续按真实SEC日志更新。
 
 复用NAMESPACE_FIX_REVIEW最小反例与historical_correctness REPORT；保留B已证明对象，未知不等失败、结构invalid不等本轮已证不等价。禁止覆盖v1；真实评估/STA启动/提交分别计数，输入/库变化停止。测试时冻结源码/fixture，长任务设超时并监测。专职记录不改源码/稿图/Git；其它既有未决持续保留并告知用户。
+
+当前新增OI-039优先级P0：实际audit.json已证b09/b20/b21 final/SEC gate漏einvn TE_B，真实three_state(TE_B)被旧模型和8192193 writer忽略。旧B28对象绑定仍真，23未见本次缺口、5有缺口（含Pico2），不能将26说完整真实Lib语义，不先判电路不等价。parser/models/root正修完整metadata/联合候选语义、模型/F1F2必需输入/ABC边界及最终SEC输入门；旧757与6控制不覆盖新反证，新源码须新整体/commit/pin。v2只dryrun、已知缺陷pin不可执行，不改manifest，新源另建v3；暂无STA/pilot。A6真实pass保留为旧pin模型下结果，usedtypes核查待。
+
+三态最新限定独立复核已实读：TRISTATE_INDEPENDENT_REVIEW probe16s/exit0、5来源SHA稳定，联合data/enable映射和batch工具前必需输入门符合，合法仅至sentinel无EDA。作者自审另发现actual4个einvp后缀(TE')被RW writer导出非法，TDD与新冻结待；不能将独立probe冒充writer/真Z控制或新整体通过。B审计README也已实读，23/5与旧runtime模型hash限制保留。
+
+最新以LOG-20261016-14为准：第二批production/tests已冻结，即将dirty工作区真三态SEC正负诊断（非STA）→完整v3，尚无预填结果。限定最新postfix相关187pass/44.27s、输入门24pass、D工具20pass及13三态52行静态导出已实读，不充当整体/真Z证明。A6各pair三态usedtypes交集空，TRISTATE_IMPACT_CHECK已实读，保留其真实证明；B2正式proof待。v2仍只注册禁执行，新pin/v3后18pilot→72，无STA/pilot。
+
+最新LOG-20261016-15：dirty真三态首5控制matches不够，更强Zvs0预期fail实际pass，Zvs1 fail，source_stable=true，当前Yosys默认Z塌缩。OI039工具soundness阻断不关闭；主线+两agent只读composition boundary proof设计，暂不改生产。完整v3已running/165beforeSHA、stdout至少2F未结束，不能预填计数/原因。无STA，A6保持/B2待，v2仅注册禁执行。
+
+最新LOG-20261016-16：完整v3已822pass/2fail/4skip/156subtests、144.12s/wrapper147.735exit1、165SHA稳定；两CLI fixture缺dfrtp/RESET_B被正确拒，拟补真实fixture保留assert。原log混CP936展示报解码错误，但JSON/JUnit/计数完整有效，后续-Xutf8。二态cut被独立Z^Z等反例推翻不实施；actualtri/Z/switch structured unsupported非pass为临时能力门，准确writer保留、显式四态编码恢复路径open。domain红5→绿16含scope与扩展11限定过，完整v4未开始；无STA/pilot，A6保留/B2待。
+
+最新LOG-20261016-17：原Zvs0/1精确输入已unsupported/commandNone/source稳定，拒绝门非四态证明；真实CLI fixture全9pass冻结。完整v4 running/166beforeSHA，3F为-Xutf8未传子CLI的CP936环境，独立3fail+4warn→PYTHONUTF8=1全进程3pass，源码不改。等v4完整结束保留后v5显式该环境，不预填计数；无STA/pilot，B2/D/C等仍待。
+
+最新LOG-20261016-18：完整v4最终832pass/3fail/4skip/5warn/156subtests、148.38s/wrapper152.968exit1、166SHA稳定；3F均父UTF8/子CP936，源码未变。完整v5已running/166beforeSHA且JSON显式environment_overrides PYTHONUTF8=1全children，不能填通过；等真实结束后阶段commit/pin。phase2_tdd58个source/target/manifest SHA记录员实算全匹配。B2显式X身份checker待绑定formalproof，不把二态SAT说四态认证；无STA/pilot。
+
+D56真实CLI内存预飞已56/56无mismatch（LOG19/D56_ACTUAL_CLI_PREFLIGHT.json实读），source稳定/无EDA；这补足buildmanifest/mock范围，不等D56已运行，确切脚本待归档。
+
+当前最终断点LOG-20261016-20：完整v5已835pass/4skip/156subtests、147.00s/wrapper152.781exit0、166SHA稳定、PYTHONUTF8=1，JSON/JUnit/log实读，记录员停止docs写入供主线阶段commit/push。等新pin实际完成，再正式9控制（3正/3负/2unsupported/1input_error）、B2+可重复X identity certificate、C′v3实际mapped复查后18pilot→72、D56预飞56/56后14pilot。当前无STA/pilot，unsupported临时门不等四态支持，OI038/039与B3/D/C/稿图待。
 
 ## 历史提示（旧暂缓/暂停不作为当前授权）
 

@@ -186,6 +186,60 @@ def _assert_unique_physical_instances(text: str) -> None:
         raise ValueError("Duplicate instance in target module: " + ", ".join(duplicates))
 
 
+def two_state_sec_unsupported_reason(text: str, cells) -> str | None:
+    """Refuse high-impedance semantics the Boolean SEC backend cannot prove.
+
+    In particular, correct Z-emitting Verilog is not sufficient: the default
+    Yosys SAT encoding can collapse Z to zero and certify a false equivalence.
+    Keep this gate separate from model generation, which preserves Z faithfully.
+    """
+    masked = re.sub(r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"', ' ', text)
+    used = set(re.findall(r'\b(sky130_fd_sc_hd__\w+)\s+[^\s(]+\s*\(', masked))
+    tri = sorted(name for name in used if name in cells and cells[name].three_state_functions)
+    if tri:
+        return 'Boolean SEC does not prove three-state semantics: ' + ', '.join(tri)
+    literals = re.findall(r"(?:\d[\d_]*)?'[sS]?[bBoOdDhH][0-9a-fA-F_xXzZ?]+|'[zZ]", masked)
+    if any(re.search(r'[zZ?]', literal) for literal in literals):
+        return 'Boolean SEC does not prove explicit high-impedance literals'
+    if re.search(r'\b(?:bufif[01]|notif[01]|r?(?:tran(?:if[01])?|[np]mos|cmos))\b', masked):
+        return 'Boolean SEC does not prove high-impedance switch primitives'
+    return None
+
+
+def validate_cell_input_connections(text: str, cells) -> None:
+    """Validate actual SKY named-port inputs in every module, including helpers.
+
+    ``cells`` is the actual ``parse_liberty_cells`` mapping. Empty/unconnected
+    outputs are legal; every Liberty input must have a nonempty connection.
+    Wrapper instances such as ``dff`` are outside this SKY cell contract.
+    """
+    masked = re.sub(r'\(\*[\s\S]*?\*\)', ' ', _without_verilog_comments(text))
+    pin_pattern = re.compile(r"\.([A-Za-z_][\w$]*)\s*\(([^()]*)\)")
+    parsed_instances = set()
+    for instance in _PHYSICAL_INSTANCE_RE.finditer(masked):
+        cell_type, name, body = instance.groups()
+        if not cell_type.startswith("sky130_fd_sc_hd__"):
+            continue
+        parsed_instances.add(instance.start(1))
+        cell = cells.get(cell_type)
+        if cell is None:
+            raise ValueError(f"Input validation unavailable for unknown Liberty cell {cell_type} at {name}")
+        pins = list(pin_pattern.finditer(body))
+        remainder = pin_pattern.sub("", body)
+        if re.sub(r"[,\s]", "", remainder):
+            raise ValueError(f"Unsupported named-port input syntax at {name} ({cell_type})")
+        counts = Counter(pin.group(1) for pin in pins)
+        if any(count > 1 for count in counts.values()):
+            raise ValueError(f"Duplicate pin connection in input validation at {name} ({cell_type})")
+        connections = {pin.group(1): pin.group(2).strip() for pin in pins}
+        missing = [pin for pin in cell.input_pins if not connections.get(pin)]
+        if missing:
+            raise ValueError(f"Missing or empty required input pins at {name} ({cell_type}): {', '.join(missing)}")
+    for instance in re.finditer(r"\b(sky130_fd_sc_hd__\w+)\s+([^\s(]+)\s*\(", masked):
+        if instance.start(1) not in parsed_instances:
+            raise ValueError(f"Unsupported SKY instance syntax in input validation: {instance.group(1)} {instance.group(2)}")
+
+
 def _non_rgb_structure(text: str):
     """Fingerprint the syntax RGB actions have no authority to change.
 
@@ -236,11 +290,18 @@ def _cell_output_metadata(cells):
 
 def _multioutput_roles_preserved(source, target) -> bool:
     if len(source.output_functions) <= 1 and len(target.output_functions) <= 1:
-        return True
+        def signature(cell):
+            enable = cell.three_state_functions.get(cell.output_pin, "")
+            return canonical_function(re.sub(r"\s+", "", cell.function + "\0" + enable))
+        return signature(source) == signature(target)
     def functions(cell):
         return {pin: re.sub(r"\s+", "", function).replace("*", "&").replace("+", "|")
                 for pin, function in cell.output_functions.items()}
+    def three_states(cell):
+        return {pin: re.sub(r"\s+", "", expression).replace("*", "&").replace("+", "|")
+                for pin, expression in cell.three_state_functions.items()}
     return (functions(source) == functions(target)
+            and three_states(source) == three_states(target)
             and set(source.input_pins) == set(target.input_pins))
 
 
@@ -256,6 +317,8 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
     def check(original_text: str, candidate_text: str):
         from .equivalence import EquivalenceResult
         try:
+            validate_cell_input_connections(original_text, lib)
+            validate_cell_input_connections(candidate_text, lib)
             original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
             _assert_unique_physical_instances(original_text)
             _assert_unique_physical_instances(candidate_text)
@@ -312,6 +375,9 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
                 src_lib, dst_lib = lib.get(source.cell_type), lib.get(target.cell_type)
                 if src_lib is None or dst_lib is None or not src_lib.function or not dst_lib.function:
                     return EquivalenceResult("fail", "liberty_local_function", f"unknown/non-combinational cell at {inst}")
+                if not _multioutput_roles_preserved(src_lib, dst_lib):
+                    return EquivalenceResult("fail", "liberty_local_function",
+                                             f"output function or three-state semantics changed at {inst}")
                 if len(src_lib.output_functions) > 1 or len(dst_lib.output_functions) > 1:
                     # A last-output-only canonical function cannot establish
                     # multi-output equivalence. Conservatively require all
@@ -322,8 +388,8 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
                     continue
                 if canonical_function(src_lib.function) != canonical_function(dst_lib.function):
                     return EquivalenceResult("fail", "liberty_local_function", f"Boolean function changed at {inst}")
-                src_vars = function_vars(src_lib.function)
-                dst_vars = function_vars(dst_lib.function)
+                src_vars = function_vars(src_lib.function + " " + src_lib.three_state_functions.get(src_lib.output_pin, ""))
+                dst_vars = function_vars(dst_lib.function + " " + dst_lib.three_state_functions.get(dst_lib.output_pin, ""))
                 if len(src_vars) != len(dst_vars):
                     return EquivalenceResult("fail", "liberty_local_function", f"Boolean input role count changed at {inst}")
                 for src_pin, dst_pin in zip(src_vars, dst_vars):
@@ -373,9 +439,17 @@ def build_full_netlist_sec_checker(
     artifact_root.mkdir(parents=True, exist_ok=True)
     output_metadata = (_cell_output_metadata(parse_liberty_cells(liberty_text))
                        if liberty_text is not None else None)
+    liberty_cells = parse_liberty_cells(liberty_text) if liberty_text is not None else None
 
     def check(original_text: str, candidate_text: str):
         try:
+            if liberty_cells is not None:
+                validate_cell_input_connections(original_text, liberty_cells)
+                validate_cell_input_connections(candidate_text, liberty_cells)
+            for text in (original_text, candidate_text):
+                unsupported = two_state_sec_unsupported_reason(text, liberty_cells or {})
+                if unsupported:
+                    return EquivalenceResult("unsupported", "full_netlist_sec", unsupported)
             outputs = list(parse_verilog_netlist_from_text(
                 target_module_text(original_text,top_module),
                 cell_output_functions=output_metadata).outputs)
@@ -428,6 +502,78 @@ def build_full_netlist_sec_checker(
     return check
 
 
+def liberty_expression_to_verilog(expression: str) -> str:
+    """Translate the supported Liberty Boolean grammar, including postfix NOT.
+
+    Validate every expression. Preserve the established spelling when postfix
+    inversion is absent; unsupported syntax fails rather than becoming an
+    unparsed Verilog expression or silently changing the cell semantics.
+    """
+    tokens = []
+    offset = 0
+    token_pattern = re.compile(r"\s*([A-Za-z_][A-Za-z0-9_]*|[01]|[!~&|^+*()'])")
+    while offset < len(expression):
+        token = token_pattern.match(expression, offset)
+        if token is None:
+            if not expression[offset:].strip():
+                break
+            raise ValueError(f"Unsupported Liberty Boolean expression syntax: {expression!r}")
+        tokens.append(token.group(1))
+        offset = token.end()
+    position = 0
+    precedence = {"|": 1, "+": 1, "^": 2, "&": 3, "*": 3}
+
+    def primary():
+        nonlocal position
+        if position >= len(tokens):
+            raise ValueError(f"Incomplete Liberty Boolean expression: {expression!r}")
+        token = tokens[position]
+        position += 1
+        if token in {"!", "~"}:
+            node = ("not", primary())
+        elif token == "(":
+            node = ("group", binary(0))
+            if position >= len(tokens) or tokens[position] != ")":
+                raise ValueError(f"Unbalanced Liberty Boolean expression: {expression!r}")
+            position += 1
+        elif re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*|[01]", token):
+            node = ("leaf", token)
+        else:
+            raise ValueError(f"Unsupported Liberty Boolean expression operand: {expression!r}")
+        while position < len(tokens) and tokens[position] == "'":
+            position += 1
+            node = ("not", node)
+        return node
+
+    def binary(minimum):
+        nonlocal position
+        left = primary()
+        while position < len(tokens) and precedence.get(tokens[position], -1) >= minimum:
+            operator = tokens[position]
+            position += 1
+            left = (operator, left, binary(precedence[operator] + 1))
+        return left
+
+    node = binary(0)
+    if position != len(tokens):
+        raise ValueError(f"Unsupported Liberty Boolean expression syntax: {expression!r}")
+    if "'" not in expression:
+        converted = expression.replace("*", "&").replace("+", "|")
+        return re.sub(r"\b([01])\b", lambda match: "1'b" + match.group(1), converted)
+
+    def emit(current):
+        kind = current[0]
+        if kind == "leaf":
+            return "1'b" + current[1] if current[1] in {"0", "1"} else current[1]
+        if kind == "not":
+            return "~(" + emit(current[1]) + ")"
+        if kind == "group":
+            return "(" + emit(current[1]) + ")"
+        operator = {"*": "&", "+": "|"}.get(kind, kind)
+        return "(" + emit(current[1]) + operator + emit(current[2]) + ")"
+    return emit(node)
+
+
 def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
                               *, used_cells: set[str] | None = None,
                               abc_compatible: bool = False) -> Path:
@@ -440,6 +586,8 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
     blocks: list[str] = ["// Generated from Liberty for symmetric Yosys/ABC SEC.\n"]
     for name in selected:
         cell = cells[name]
+        if abc_compatible and cell.three_state_functions:
+            raise ValueError(f"ABC-compatible SEC does not support three-state outputs for {name}; use a backend with explicit Z semantics")
         output_pins = list(cell.output_functions) or ([cell.output_pin] if cell.output_pin else [])
         ports = list(dict.fromkeys([*cell.input_pins, *output_pins]))
         if not ports:
@@ -449,29 +597,44 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
             lines.append("  input " + ", ".join(cell.input_pins) + ";")
         if output_pins:
             lines.append("  output " + ", ".join(output_pins) + ";")
+        def assign_output(pin, expression):
+            enable = cell.three_state_functions.get(pin)
+            if enable:
+                enable = liberty_expression_to_verilog(enable)
+                expression = f"({enable}) ? 1'bz : ({expression})"
+            lines.append(f"  assign {pin} = {expression};")
+
+        def event_signal(expression):
+            raw = expression.strip()
+            if "'" not in raw and raw.startswith("!"):
+                return "negedge", liberty_expression_to_verilog(raw[1:].strip())
+            converted = liberty_expression_to_verilog(raw)
+            return "posedge", converted if re.fullmatch(r"\w+", converted) else f"({converted})"
+
+        next_state = liberty_expression_to_verilog(cell.next_state) if cell.next_state else ""
+        clear = liberty_expression_to_verilog(cell.clear) if cell.clear else ""
+        preset = liberty_expression_to_verilog(cell.preset) if cell.preset else ""
         if cell.sequential_kind == "ff":
             if not (cell.next_state and cell.output_pin and cell.clocked_on):
                 raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
             state = cell.state_var or cell.output_pin
             sequential_outputs = cell.output_functions or {cell.output_pin: state}
-            edge = "negedge" if cell.clocked_on.startswith("!") else "posedge"
-            clock = cell.clocked_on.lstrip("!").strip()
+            edge, clock = event_signal(cell.clocked_on)
             async_controls = []
             for expression in (cell.clear, cell.preset):
                 if expression:
-                    control_edge = "negedge" if expression.startswith("!") else "posedge"
-                    control = expression.lstrip("!").strip()
+                    control_edge, control = event_signal(expression)
                     async_controls.append((expression, f"{control_edge} {control}"))
             lines.append("  reg " + state + ";")
             if not async_controls:
-                lines.append(f"  always @({edge} {clock}) {state} <= {cell.next_state};")
+                lines.append(f"  always @({edge} {clock}) {state} <= {next_state};")
             elif abc_compatible:
                 next_signal = f"_faeco_{state}_next"
-                next_expr = cell.next_state
-                if cell.preset:
-                    next_expr = f"({cell.preset}) ? 1'b1 : ({next_expr})"
-                if cell.clear:
-                    next_expr = f"({cell.clear}) ? 1'b0 : ({next_expr})"
+                next_expr = next_state
+                if preset:
+                    next_expr = f"({preset}) ? 1'b1 : ({next_expr})"
+                if clear:
+                    next_expr = f"({clear}) ? 1'b0 : ({next_expr})"
                 lines.extend([
                     f"  wire {next_signal} = {next_expr};",
                     f"  always @({edge} {clock}) {state} <= {next_signal};",
@@ -482,16 +645,16 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
                     sensitivity += " or " + " or ".join(edge_text for _, edge_text in async_controls)
                 lines.extend([
                     f"  always @({sensitivity}) begin",
-                    *([f"    if ({cell.clear}) {state} <= 1'b0;"] if cell.clear else []),
-                    *([f"    {'else ' if cell.clear else ''}if ({cell.preset}) {state} <= 1'b1;"] if cell.preset else []),
-                    f"    else {state} <= {cell.next_state};",
+                    *([f"    if ({clear}) {state} <= 1'b0;"] if clear else []),
+                    *([f"    {'else ' if clear else ''}if ({preset}) {state} <= 1'b1;"] if preset else []),
+                    f"    else {state} <= {next_state};",
                     "  end",
                 ])
             for pin, function in sequential_outputs.items():
                 if function == state:
-                    lines.append(f"  assign {pin} = {state};")
+                    assign_output(pin, state)
                 elif cell.state_inv_var and function == cell.state_inv_var:
-                    lines.append(f"  assign {pin} = ~{state};")
+                    assign_output(pin, f"~{state}")
                 else:
                     raise ValueError(f"unsupported sequential output mapping for {name}.{pin}: {function}")
         elif cell.sequential_kind == "latch":
@@ -500,20 +663,19 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
             state = cell.state_var or cell.output_pin
             lines.extend([
                 "  reg " + state + ";",
-                f"  always @* if ({cell.latch_enable}) {state} <= {cell.next_state};",
+                f"  always @* if ({liberty_expression_to_verilog(cell.latch_enable)}) {state} <= {next_state};",
             ])
             for pin, function in cell.output_functions.items():
                 if function == state:
-                    lines.append(f"  assign {pin} = {state};")
+                    assign_output(pin, state)
                 elif cell.state_inv_var and function == cell.state_inv_var:
-                    lines.append(f"  assign {pin} = ~{state};")
+                    assign_output(pin, f"~{state}")
                 else:
                     raise ValueError(f"unsupported latch output mapping for {name}.{pin}: {function}")
         elif cell.output_functions:
             for pin, function in cell.output_functions.items():
-                expr = function.replace("*", "&").replace("+", "|")
-                expr = re.sub(r"\b([01])\b", lambda m: "1'b" + m.group(1), expr)
-                lines.append(f"  assign {pin} = {expr};")
+                expr = liberty_expression_to_verilog(function)
+                assign_output(pin, expr)
         elif not cell.function:
             raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
         lines.append("endmodule\n")
@@ -528,6 +690,7 @@ def build_boundary_closure_checker(*, top_module=None, liberty_text=None):
     """Build a real module-boundary checker used as the strict F2 gate."""
     output_metadata = (_cell_output_metadata(parse_liberty_cells(liberty_text))
                        if liberty_text is not None else None)
+    liberty_cells = parse_liberty_cells(liberty_text) if liberty_text is not None else None
     constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
 
     def _physical_net(netlist, signal):
@@ -587,6 +750,9 @@ def build_boundary_closure_checker(*, top_module=None, liberty_text=None):
     def check(original_text: str, candidate_text: str):
         from .equivalence import EquivalenceResult
         try:
+            if liberty_cells is not None:
+                validate_cell_input_connections(original_text, liberty_cells)
+                validate_cell_input_connections(candidate_text, liberty_cells)
             original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
             _assert_unique_physical_instances(original_text)
             _assert_unique_physical_instances(candidate_text)

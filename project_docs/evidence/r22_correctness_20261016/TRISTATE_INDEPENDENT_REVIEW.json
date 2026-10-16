@@ -1,0 +1,827 @@
+{
+  "schema": "r22-tristate-independent-integration-review-v1",
+  "eda_executed": false,
+  "scope": "Independent logic_rewrite parser/shared signature and batch required-input wiring; RW implementation not independently certified",
+  "source_before": {
+    "code/src/rseco/logic_rewrite.py": "b26fbd770bff62b321bbc5e3dee056b4aa4b33a361a63bd2dd4586879f6ecc92",
+    "code/scripts/run_r22_cut_ablation.py": "0dd56195f35066e2b6e6cec649b2b4519ea669575f819e4fc766f6a36651347e",
+    "code/src/rseco/real_wns.py": "e30e44483c0b77effaa21f1c49df53d5821e7a90bae95ae5b1d515f0f1a7d448",
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+  },
+  "source_after": {
+    "code/src/rseco/logic_rewrite.py": "b26fbd770bff62b321bbc5e3dee056b4aa4b33a361a63bd2dd4586879f6ecc92",
+    "code/scripts/run_r22_cut_ablation.py": "0dd56195f35066e2b6e6cec649b2b4519ea669575f819e4fc766f6a36651347e",
+    "code/src/rseco/real_wns.py": "e30e44483c0b77effaa21f1c49df53d5821e7a90bae95ae5b1d515f0f1a7d448",
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+  },
+  "source_changed": [],
+  "shared_variable_mapping_probes": [
+    {
+      "source_data": "(A&B)",
+      "source_disable": {
+        "Z": "(A)"
+      },
+      "target_data": "(D&E)",
+      "target_disable": {
+        "Z": "(E)"
+      },
+      "expected_candidate": false,
+      "actual_candidate": false,
+      "mapping": null
+    },
+    {
+      "source_data": "(A&B)",
+      "source_disable": {
+        "Z": "(B)"
+      },
+      "target_data": "(E&D)",
+      "target_disable": {
+        "Z": "(D)"
+      },
+      "expected_candidate": true,
+      "actual_candidate": true,
+      "mapping": {
+        "A": "E",
+        "B": "D"
+      },
+      "exhaustive_data_enable_rows": [
+        {
+          "input": {
+            "A": 0,
+            "B": 0
+          },
+          "source_data_disable": [
+            0,
+            0
+          ],
+          "mapped_target": [
+            0,
+            0
+          ]
+        },
+        {
+          "input": {
+            "A": 0,
+            "B": 1
+          },
+          "source_data_disable": [
+            0,
+            1
+          ],
+          "mapped_target": [
+            0,
+            1
+          ]
+        },
+        {
+          "input": {
+            "A": 1,
+            "B": 0
+          },
+          "source_data_disable": [
+            0,
+            0
+          ],
+          "mapped_target": [
+            0,
+            0
+          ]
+        },
+        {
+          "input": {
+            "A": 1,
+            "B": 1
+          },
+          "source_data_disable": [
+            1,
+            1
+          ],
+          "mapped_target": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "source_data": "(!A)",
+      "source_disable": {
+        "Z": "(EN)"
+      },
+      "target_data": "(!D)",
+      "target_disable": {
+        "Z": "(!OE)"
+      },
+      "expected_candidate": false,
+      "actual_candidate": false,
+      "mapping": null
+    },
+    {
+      "source_data": "(!A)",
+      "source_disable": {
+        "Z": "(EN)"
+      },
+      "target_data": "(!D)",
+      "target_disable": {
+        "Z": "(OE)"
+      },
+      "expected_candidate": true,
+      "actual_candidate": true,
+      "mapping": {
+        "A": "D",
+        "EN": "OE"
+      },
+      "exhaustive_data_enable_rows": [
+        {
+          "input": {
+            "A": 0,
+            "EN": 0
+          },
+          "source_data_disable": [
+            1,
+            0
+          ],
+          "mapped_target": [
+            1,
+            0
+          ]
+        },
+        {
+          "input": {
+            "A": 0,
+            "EN": 1
+          },
+          "source_data_disable": [
+            1,
+            1
+          ],
+          "mapped_target": [
+            1,
+            1
+          ]
+        },
+        {
+          "input": {
+            "A": 1,
+            "EN": 0
+          },
+          "source_data_disable": [
+            0,
+            0
+          ],
+          "mapped_target": [
+            0,
+            0
+          ]
+        },
+        {
+          "input": {
+            "A": 1,
+            "EN": 1
+          },
+          "source_data_disable": [
+            0,
+            1
+          ],
+          "mapped_target": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "source_data": "(!A)",
+      "source_disable": {
+        "Z": "(EN)"
+      },
+      "target_data": "(!A)",
+      "target_disable": {},
+      "expected_candidate": false,
+      "actual_candidate": false,
+      "mapping": null
+    }
+  ],
+  "actual_liberty_controls": {
+    "parsed_three_state_count": 13,
+    "plain_to_tristate_candidates": [],
+    "tristate_to_plain_candidates": [],
+    "einvn2_mapping": {
+      "A": "A",
+      "TE_B": "TE_B"
+    },
+    "einvp_disable_raw": {
+      "Z": "(TE')"
+    }
+  },
+  "final_sec_process_boundary_probes": [
+    {
+      "name": "legal_tristate_and_wrapper_same_named_instance",
+      "expected_reach_process_boundary": true,
+      "reached_process_boundary": true,
+      "error": {
+        "type": "ProcessBoundaryReached",
+        "message": "Stopped before actual subprocess launch"
+      }
+    },
+    {
+      "name": "gold_missing_enable",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): TE_B"
+      }
+    },
+    {
+      "name": "gate_missing_enable",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): TE_B"
+      }
+    },
+    {
+      "name": "gate_empty_enable",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): TE_B"
+      }
+    },
+    {
+      "name": "gate_ordinary_empty_input",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): A"
+      }
+    },
+    {
+      "name": "both_helpers_missing_required_input",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__buf_1): A"
+      }
+    },
+    {
+      "name": "unknown_sky_cell",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Input validation unavailable for unknown Liberty cell sky130_fd_sc_hd__unknown_cell_1 at g"
+      }
+    },
+    {
+      "name": "wrapper_control_connected_constant",
+      "expected_reach_process_boundary": true,
+      "reached_process_boundary": true,
+      "error": {
+        "type": "ProcessBoundaryReached",
+        "message": "Stopped before actual subprocess launch"
+      }
+    }
+  ],
+  "boundary_limit": "Valid cases only reached an intercepted subprocess boundary; no Yosys/ABC/OpenSTA launched and no equivalence verdict inferred.",
+  "author_self_audit_separate_from_independent_review": {
+    "finding": "Actual four einvp Liberty postfix inverse TE' was emitted as invalid Verilog before writer correction",
+    "actual_fields_scan": "scratch/r22_tristate_20261016/postfix_actual_scan.json",
+    "red_log": "scratch/r22_tristate_20261016/postfix_red.log",
+    "red_failed": 13,
+    "green_log": "scratch/r22_tristate_20261016/postfix_final_related.log",
+    "green_passed": 187,
+    "green_seconds": 44.27,
+    "green_exit_code": 0,
+    "all13_probe_path": "scratch\\r22_tristate_20261016\\postfix_all13_probe.json",
+    "all13_probe_sha256": "3ec3fbf0b3b7a2e326845a299f6fff785c05201565a4ec417fe36e11ee6a558b",
+    "all13_probe": {
+      "source_sha256": "8c8625121be2638090c9f5ea906235888831674acfcc1b6c2b3fe4cf520bec7c",
+      "liberty_sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "models_text_sha256": "30c72aff1fbbe9e09fd44d275dcbf1dc5cae3286704646d1b478a1877b469be4",
+      "cell_count": 13,
+      "checked_rows": 52,
+      "eda_executed": false,
+      "generation": "Real writer with in-memory file boundary; scalar ternary semantics evaluated for every binary input combination",
+      "results": [
+        {
+          "cell": "sky130_fd_sc_hd__ebufn_1",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__ebufn_2",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__ebufn_4",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__ebufn_8",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvn_0",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvn_1",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvn_2",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvn_4",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvn_8",
+          "raw_disable": "(TE_B)",
+          "generated_assign": "assign Z = ((TE_B)) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 0
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 0
+              },
+              "generated": 0,
+              "expected": 0
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE_B": 1
+              },
+              "generated": "z",
+              "expected": "z"
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvp_1",
+          "raw_disable": "(TE')",
+          "generated_assign": "assign Z = ((~(TE))) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 1
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 1
+              },
+              "generated": 0,
+              "expected": 0
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvp_2",
+          "raw_disable": "(TE')",
+          "generated_assign": "assign Z = ((~(TE))) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 1
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 1
+              },
+              "generated": 0,
+              "expected": 0
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvp_4",
+          "raw_disable": "(TE')",
+          "generated_assign": "assign Z = ((~(TE))) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 1
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 1
+              },
+              "generated": 0,
+              "expected": 0
+            }
+          ]
+        },
+        {
+          "cell": "sky130_fd_sc_hd__einvp_8",
+          "raw_disable": "(TE')",
+          "generated_assign": "assign Z = ((~(TE))) ? 1'bz : ((!A));",
+          "truth_rows": [
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 0,
+                "TE": 1
+              },
+              "generated": 1,
+              "expected": 1
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 0
+              },
+              "generated": "z",
+              "expected": "z"
+            },
+            {
+              "inputs": {
+                "A": 1,
+                "TE": 1
+              },
+              "generated": 0,
+              "expected": 0
+            }
+          ]
+        }
+      ]
+    },
+    "final_writer_sha256": "8c8625121be2638090c9f5ea906235888831674acfcc1b6c2b3fe4cf520bec7c",
+    "final_validation_test_sha256": "84ef98757d0aa6db5ab1ca8fba9c06ede1c009a61f84c502d52c89fda925b978",
+    "eda_executed": false
+  }
+}

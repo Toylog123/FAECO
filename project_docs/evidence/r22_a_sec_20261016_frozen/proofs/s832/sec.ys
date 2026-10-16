@@ -1,0 +1,15 @@
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s832/cells.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s832/helpers.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s832/gold.v"
+rename s832 gold
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s832/gate.v"
+rename s832 gate
+proc
+memory
+equiv_make gold gate equiv
+hierarchy -top equiv
+flatten
+opt_clean
+equiv_simple
+equiv_induct -seq 10
+equiv_status -assert

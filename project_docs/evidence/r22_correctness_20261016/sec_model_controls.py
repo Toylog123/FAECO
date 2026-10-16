@@ -1,8 +1,9 @@
-"""Real SEC positive/negative controls for tie outputs and full-adder carry.
+"""Real SEC controls and explicit refusal of unsupported three-state proofs.
 
 Uses the same frozen independent prover as the experiments. No timing runs.
 """
 from pathlib import Path
+import argparse
 import importlib.util
 import json
 import subprocess
@@ -59,10 +60,28 @@ CASES=[('tie_both_outputs',tie_gold,tie_good,'pass'),
        ('fa_same_sum_wrong_carry',fa_gold,fa_bad,'fail'),
        ('enable_ff_hold_semantics',enable_gold,enable_good,'pass'),
        ('enable_ff_inverted_enable',enable_gold,enable_bad,'fail')]
+tri_gold="""module top(A,TE_B,Z);
+input A,TE_B;
+output Z;
+assign Z=TE_B ? 1'bz : ~A;
+endmodule
+"""
+tri_good="""module top(A,TE_B,Z);
+input A,TE_B;
+output Z;
+sky130_fd_sc_hd__einvn_1 g(.A(A),.TE_B(TE_B),.Z(Z));
+endmodule
+"""
+tri_bad=tri_good.replace('output Z;','output Z;\nwire wrong_enable;\nassign wrong_enable=~TE_B;').replace('.TE_B(TE_B)','.TE_B(wrong_enable)')
+CASES += [('tristate_full_semantics',tri_gold,tri_good,'unsupported'),
+          ('tristate_inverted_enable',tri_gold,tri_bad,'unsupported'),
+          ('tristate_missing_input',tri_gold,tri_good.replace('.TE_B(TE_B),',''),'input_error')]
 
 
 def main():
-    out=Path(__file__).resolve().parent/'sec_controls'
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--output-dir',type=Path,default=Path(__file__).resolve().parent/'sec_controls')
+    out=parser.parse_args().output_dir
     if out.exists():
         raise RuntimeError('Never overwrite prior controls')
     if subprocess.check_output(['git','status','--porcelain','--','code'],cwd=ROOT,text=True).strip():
@@ -79,9 +98,13 @@ def main():
     for name,gold,gate,expected in CASES:
         if batch.source_manifest()!=frozen:
             raise RuntimeError('Source drift before control')
-        result=batch.final_sec(gold,gate,'top',out/name)
+        try:
+            result=batch.final_sec(gold,gate,'top',out/name)
+        except ValueError as exc:
+            result={'status':'input_error','returncode':None,'error':str(exc)}
         record['results'].append({'name':name,'expected':expected,'actual':result['status'],
                                   'returncode':result['returncode'],
+                                  'error':result.get('error'),
                                   'matches':result['status']==expected,
                                   'artifacts':{p.name:batch.sha(p) for p in sorted((out/name).iterdir()) if p.is_file()}})
         batch.save(receipt,record)

@@ -1,0 +1,265 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -q -k postfix or expression_unknown
+FFFFFFFFFFFFF                                                            [100%]
+================================== FAILURES ===================================
+___ test_actual_einvp_postfix_inversion_exports_valid_enable_expression[1] ____
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1169/test_actual_einvp_postfix_inve0')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+size = 1
+
+    @pytest.mark.parametrize("size", [1, 2, 4, 8])
+    def test_actual_einvp_postfix_inversion_exports_valid_enable_expression(tmp_path, sky_lib, size):
+        text = rw.write_liberty_cell_models(sky_lib, tmp_path / f"einvp_{size}.v",
+            used_cells={f"sky130_fd_sc_hd__einvp_{size}"}).read_text()
+>       assert "TE'" not in text, text
+E       AssertionError: // Generated from Liberty for symmetric Yosys/ABC SEC.
+E         
+E         module sky130_fd_sc_hd__einvp_1 (A, TE, Z);
+E           input A, TE;
+E           output Z;
+E           assign Z = ((TE')) ? 1'bz : ((!A));
+E         endmodule
+E         
+E       assert "TE'" not in '// Generate...nendmodule\n'
+E         
+E         "TE'" is contained here:
+E           ign Z = ((TE')) ? 1'bz : ((!A));
+E         ?           +++
+E           endmodule
+
+code\tests\test_r22_validation_models.py:65: AssertionError
+___ test_actual_einvp_postfix_inversion_exports_valid_enable_expression[2] ____
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1169/test_actual_einvp_postfix_inve1')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+size = 2
+
+    @pytest.mark.parametrize("size", [1, 2, 4, 8])
+    def test_actual_einvp_postfix_inversion_exports_valid_enable_expression(tmp_path, sky_lib, size):
+        text = rw.write_liberty_cell_models(sky_lib, tmp_path / f"einvp_{size}.v",
+            used_cells={f"sky130_fd_sc_hd__einvp_{size}"}).read_text()
+>       assert "TE'" not in text, text
+E       AssertionError: // Generated from Liberty for symmetric Yosys/ABC SEC.
+E         
+E         module sky130_fd_sc_hd__einvp_2 (A, TE, Z);
+E           input A, TE;
+E           output Z;
+E           assign Z = ((TE')) ? 1'bz : ((!A));
+E         endmodule
+E         
+E       assert "TE'" not in '// Generate...nendmodule\n'
+E         
+E         "TE'" is contained here:
+E           ign Z = ((TE')) ? 1'bz : ((!A));
+E         ?           +++
+E           endmodule
+
+code\tests\test_r22_validation_models.py:65: AssertionError
+___ test_actual_einvp_postfix_inversion_exports_valid_enable_expression[4] ____
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1169/test_actual_einvp_postfix_inve2')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+size = 4
+
+    @pytest.mark.parametrize("size", [1, 2, 4, 8])
+    def test_actual_einvp_postfix_inversion_exports_valid_enable_expression(tmp_path, sky_lib, size):
+        text = rw.write_liberty_cell_models(sky_lib, tmp_path / f"einvp_{size}.v",
+            used_cells={f"sky130_fd_sc_hd__einvp_{size}"}).read_text()
+>       assert "TE'" not in text, text
+E       AssertionError: // Generated from Liberty for symmetric Yosys/ABC SEC.
+E         
+E         module sky130_fd_sc_hd__einvp_4 (A, TE, Z);
+E           input A, TE;
+E           output Z;
+E           assign Z = ((TE')) ? 1'bz : ((!A));
+E         endmodule
+E         
+E       assert "TE'" not in '// Generate...nendmodule\n'
+E         
+E         "TE'" is contained here:
+E           ign Z = ((TE')) ? 1'bz : ((!A));
+E         ?           +++
+E           endmodule
+
+code\tests\test_r22_validation_models.py:65: AssertionError
+___ test_actual_einvp_postfix_inversion_exports_valid_enable_expression[8] ____
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1169/test_actual_einvp_postfix_inve3')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+size = 8
+
+    @pytest.mark.parametrize("size", [1, 2, 4, 8])
+    def test_actual_einvp_postfix_inversion_exports_valid_enable_expression(tmp_path, sky_lib, size):
+        text = rw.write_liberty_cell_models(sky_lib, tmp_path / f"einvp_{size}.v",
+            used_cells={f"sky130_fd_sc_hd__einvp_{size}"}).read_text()
+>       assert "TE'" not in text, text
+E       AssertionError: // Generated from Liberty for symmetric Yosys/ABC SEC.
+E         
+E         module sky130_fd_sc_hd__einvp_8 (A, TE, Z);
+E           input A, TE;
+E           output Z;
+E           assign Z = ((TE')) ? 1'bz : ((!A));
+E         endmodule
+E         
+E       assert "TE'" not in '// Generate...nendmodule\n'
+E         
+E         "TE'" is contained here:
+E           ign Z = ((TE')) ? 1'bz : ((!A));
+E         ?           +++
+E           endmodule
+
+code\tests\test_r22_validation_models.py:65: AssertionError
+___ test_liberty_postfix_converter_preserves_boolean_semantics[A'-<lambda>] ___
+
+expression = "A'", expected = <function <lambda> at 0x000001C9BEA8B060>
+
+    @pytest.mark.parametrize("expression,expected", [
+        ("A'", lambda a, b: 1-a),
+        ("(A&B)'", lambda a, b: 1-(a&b)),
+        ("(A^B)''", lambda a, b: a^b),
+        ("!(A'|B)", lambda a, b: 1-((1-a)|b)),
+    ])
+    def test_liberty_postfix_converter_preserves_boolean_semantics(expression, expected):
+>       converted = rw.liberty_expression_to_verilog(expression)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:78: AttributeError
+_ test_liberty_postfix_converter_preserves_boolean_semantics[(A&B)'-<lambda>] _
+
+expression = "(A&B)'", expected = <function <lambda> at 0x000001C9BEA8B100>
+
+    @pytest.mark.parametrize("expression,expected", [
+        ("A'", lambda a, b: 1-a),
+        ("(A&B)'", lambda a, b: 1-(a&b)),
+        ("(A^B)''", lambda a, b: a^b),
+        ("!(A'|B)", lambda a, b: 1-((1-a)|b)),
+    ])
+    def test_liberty_postfix_converter_preserves_boolean_semantics(expression, expected):
+>       converted = rw.liberty_expression_to_verilog(expression)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:78: AttributeError
+_ test_liberty_postfix_converter_preserves_boolean_semantics[(A^B)''-<lambda>] _
+
+expression = "(A^B)''", expected = <function <lambda> at 0x000001C9BEA8B1A0>
+
+    @pytest.mark.parametrize("expression,expected", [
+        ("A'", lambda a, b: 1-a),
+        ("(A&B)'", lambda a, b: 1-(a&b)),
+        ("(A^B)''", lambda a, b: a^b),
+        ("!(A'|B)", lambda a, b: 1-((1-a)|b)),
+    ])
+    def test_liberty_postfix_converter_preserves_boolean_semantics(expression, expected):
+>       converted = rw.liberty_expression_to_verilog(expression)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:78: AttributeError
+_ test_liberty_postfix_converter_preserves_boolean_semantics[!(A'|B)-<lambda>] _
+
+expression = "!(A'|B)", expected = <function <lambda> at 0x000001C9BEA8B240>
+
+    @pytest.mark.parametrize("expression,expected", [
+        ("A'", lambda a, b: 1-a),
+        ("(A&B)'", lambda a, b: 1-(a&b)),
+        ("(A^B)''", lambda a, b: a^b),
+        ("!(A'|B)", lambda a, b: 1-((1-a)|b)),
+    ])
+    def test_liberty_postfix_converter_preserves_boolean_semantics(expression, expected):
+>       converted = rw.liberty_expression_to_verilog(expression)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:78: AttributeError
+_______ test_liberty_expression_unknown_syntax_fails_closed[A ? B : C] ________
+
+expression = 'A ? B : C'
+
+    @pytest.mark.parametrize("expression", ["A ? B : C", "A@B", "(A&B", "A B"])
+    def test_liberty_expression_unknown_syntax_fails_closed(expression):
+        with pytest.raises(ValueError, match="(?i)Liberty.*expression|unsupported.*syntax"):
+>           rw.liberty_expression_to_verilog(expression)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:88: AttributeError
+__________ test_liberty_expression_unknown_syntax_fails_closed[A@B] ___________
+
+expression = 'A@B'
+
+    @pytest.mark.parametrize("expression", ["A ? B : C", "A@B", "(A&B", "A B"])
+    def test_liberty_expression_unknown_syntax_fails_closed(expression):
+        with pytest.raises(ValueError, match="(?i)Liberty.*expression|unsupported.*syntax"):
+>           rw.liberty_expression_to_verilog(expression)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:88: AttributeError
+__________ test_liberty_expression_unknown_syntax_fails_closed[(A&B] __________
+
+expression = '(A&B'
+
+    @pytest.mark.parametrize("expression", ["A ? B : C", "A@B", "(A&B", "A B"])
+    def test_liberty_expression_unknown_syntax_fails_closed(expression):
+        with pytest.raises(ValueError, match="(?i)Liberty.*expression|unsupported.*syntax"):
+>           rw.liberty_expression_to_verilog(expression)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:88: AttributeError
+__________ test_liberty_expression_unknown_syntax_fails_closed[A B] ___________
+
+expression = 'A B'
+
+    @pytest.mark.parametrize("expression", ["A ? B : C", "A@B", "(A&B", "A B"])
+    def test_liberty_expression_unknown_syntax_fails_closed(expression):
+        with pytest.raises(ValueError, match="(?i)Liberty.*expression|unsupported.*syntax"):
+>           rw.liberty_expression_to_verilog(expression)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.real_wns' has no attribute 'liberty_expression_to_verilog'
+
+code\tests\test_r22_validation_models.py:88: AttributeError
+__________ test_postfix_in_sequential_fields_uses_shared_conversion ___________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1169/test_postfix_in_sequential_fie0')
+
+    def test_postfix_in_sequential_fields_uses_shared_conversion(tmp_path):
+        lib = '''cell ("sky130_fd_sc_hd__custom_1") {
+          pin ("CLK") { direction : "input"; }
+          pin ("D") { direction : "input"; }
+          pin ("RESET") { direction : "input"; }
+          pin ("Q") { direction : "output"; function : "IQ"; }
+          ff ("IQ", "IQ_N") {
+            next_state : "D'"; clocked_on : "CLK'"; clear : "RESET'";
+          }
+        }'''
+        text = rw.write_liberty_cell_models(lib, tmp_path / "seq.v").read_text()
+>       assert "D'" not in text and "CLK'" not in text and "RESET'" not in text
+E       assert ("D'" not in '// Generate...nendmodule\n'
+E         
+E         "D'" is contained here:
+E           lse IQ <= D';
+E         ?           ++
+E             end
+E             assign Q = IQ;
+E           endmodule)
+
+code\tests\test_r22_validation_models.py:102: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_actual_einvp_postfix_inversion_exports_valid_enable_expression[1]
+FAILED code/tests/test_r22_validation_models.py::test_actual_einvp_postfix_inversion_exports_valid_enable_expression[2]
+FAILED code/tests/test_r22_validation_models.py::test_actual_einvp_postfix_inversion_exports_valid_enable_expression[4]
+FAILED code/tests/test_r22_validation_models.py::test_actual_einvp_postfix_inversion_exports_valid_enable_expression[8]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_postfix_converter_preserves_boolean_semantics[A'-<lambda>]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_postfix_converter_preserves_boolean_semantics[(A&B)'-<lambda>]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_postfix_converter_preserves_boolean_semantics[(A^B)''-<lambda>]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_postfix_converter_preserves_boolean_semantics[!(A'|B)-<lambda>]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_expression_unknown_syntax_fails_closed[A ? B : C]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_expression_unknown_syntax_fails_closed[A@B]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_expression_unknown_syntax_fails_closed[(A&B]
+FAILED code/tests/test_r22_validation_models.py::test_liberty_expression_unknown_syntax_fails_closed[A B]
+FAILED code/tests/test_r22_validation_models.py::test_postfix_in_sequential_fields_uses_shared_conversion
+13 failed, 57 deselected in 5.57s
+[run] 完成（11s），退出码 1

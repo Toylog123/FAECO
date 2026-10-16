@@ -1,0 +1,15 @@
+read_verilog "D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_tristate_20261016/independent_batch_probes/legal_tristate_and_wrapper_same_named_instance/cells.v"
+read_verilog "D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_tristate_20261016/independent_batch_probes/legal_tristate_and_wrapper_same_named_instance/helpers.v"
+read_verilog "D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_tristate_20261016/independent_batch_probes/legal_tristate_and_wrapper_same_named_instance/gold.v"
+rename top gold
+read_verilog "D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_tristate_20261016/independent_batch_probes/legal_tristate_and_wrapper_same_named_instance/gate.v"
+rename top gate
+proc
+memory
+equiv_make gold gate equiv
+hierarchy -top equiv
+flatten
+opt_clean
+equiv_simple
+equiv_induct -seq 10
+equiv_status -assert

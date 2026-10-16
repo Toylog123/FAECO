@@ -1,0 +1,143 @@
+[run] ÂêØÂä®ÔºàË∂ÖÊó∂ 300sÔºâÔºö.venv/Scripts/python.exe -m pytest code/tests -q --junitxml=project_docs/evidence/r22_correctness_20261016/full_regression_v3.xml
+........................................................................ [  8%]
+..........sss........................................................... [ 17%]
+............................................................. [ 24%]
+....................................................................... [ 33%]
+.................F.F.................................................... [ 42%]
+........................................................................ [ 50%]
+........................................................................ [ 59%]
+........................................................................ [ 68%]
+........................................................................ [ 76%]
+........................................................................ [ 85%]
+........................................................................ [ 94%]
+.............................s..................                         [100%]
+================================== FAILURES ===================================
+____ test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000218288D1C10>
+tmp_path = WindowsPath('C:/Users/Ÿ°—«¡˙/AppData/Local/Temp/pytest-of-Ÿ°—«¡˙/pytest-1173/test_cli_main_runs_real_closed0')
+
+    def test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked(monkeypatch, tmp_path):
+        """CLI config must reach cut/check/commit/refresh/stop as one transaction."""
+        runner = _load_runner()
+        source = tmp_path / "demo.v"
+        source.write_text("module demo; endmodule\n", encoding="utf-8")
+        lib = """cell (\"sky130_fd_sc_hd__and2_1\") {
+          pin (\"A\") { direction : \"input\"; }
+          pin (\"B\") { direction : \"input\"; }
+          pin (\"Y\") { direction : \"output\"; function : \"A & B\"; }
+        }
+        cell (\"sky130_fd_sc_hd__and2_2\") {
+          pin (\"A\") { direction : \"input\"; }
+          pin (\"B\") { direction : \"input\"; }
+          pin (\"Y\") { direction : \"output\"; function : \"A & B\"; }
+        }
+        """
+        lib_path = tmp_path / "demo.lib"
+        lib_path.write_text(lib, encoding="utf-8")
+        monkeypatch.setattr(runner, "LIB", lib_path)
+    
+        gates = []
+        previous = "A"
+        for index in range(18):
+            output = f"N{index}"
+            gates.append(
+                f"sky130_fd_sc_hd__and2_1 g{index} (.A({previous}), .B(B), .Y({output}));"
+            )
+            previous = output
+        mapped = "module demo(A, B, CK, Q);\ninput A, B, CK;\noutput Q;\nwire " + ", ".join(
+            f"N{i}" for i in range(18)
+        ) + ";\n" + "\n".join(gates) + (
+            "\nsky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK));\nendmodule\n"
+        )
+    
+        def fake_mapping(_source, out, **_kwargs):
+            (Path(out) / "mapped.v").write_text(mapped, encoding="utf-8")
+            return []
+    
+        def fake_baseline(_mapped, _period, out, **_kwargs):
+            Path(out).mkdir(parents=True, exist_ok=True)
+            (Path(out) / "sta.log").write_text(
+                "Endpoint: ff1\n"
+                "   0.10    0.20 v g17/A (sky130_fd_sc_hd__and2_1)\n"
+                "   0.20    0.30 v g16/A (sky130_fd_sc_hd__and2_1)\n",
+                encoding="utf-8",
+            )
+            return {"wns": -1.0, "tns": -2.0}
+    
+        def fake_candidate_sta(**kwargs):
+            output = Path(kwargs["output_dir"])
+            output.mkdir(parents=True, exist_ok=True)
+            candidate = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+            resized = candidate.count("and2_2")
+            critical_gate = "g17" if resized == 1 else "g16"
+            (output / "sta.log").write_text(
+                "Endpoint: ff1\n"
+                f"   0.10    0.20 v {critical_gate}/A (sky130_fd_sc_hd__and2_2)\n",
+                encoding="utf-8",
+            )
+            return {"wns": -0.5 if resized == 1 else -0.4, "tns": -1.0}
+    
+        monkeypatch.setattr(runner, "run_yosys_mapping", fake_mapping)
+        monkeypatch.setattr(runner, "run_opensta", fake_baseline)
+        sec_builder_calls = []
+        def fake_sec_builder(**kwargs):
+            sec_builder_calls.append(kwargs)
+            return lambda *_args: True
+        monkeypatch.setattr(runner, "build_full_netlist_sec_checker", fake_sec_builder)
+        monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", fake_candidate_sta)
+        monkeypatch.setattr(
+            sys,
+            "argv",
+            [
+                "run_outerloop_real_wns.py",
+                "--source-file", str(source),
+                "--circuit", "demo",
+                "--output-dir", str(tmp_path / "out"),
+                "--max-iterations", "2",
+                "--candidates-per-iteration", "2",
+                "--max-patches", "2",
+                "--workers", "1",
+            ],
+        )
+    
+        assert runner.main() == 0
+        assert sec_builder_calls and sec_builder_calls[0]["top_module"] == "demo"
+        assert sec_builder_calls[0]["artifact_dir"].name == "topology-sec"
+        result = __import__("json").loads(
+            (tmp_path / "out" / "demo" / "outerloop_result.json").read_text(encoding="utf-8")
+        )
+>       assert result["success"] is True
+E       assert False is True
+
+code\tests\test_outerloop_cli.py:254: AssertionError
+---------------------------- Captured stdout call -----------------------------
+baseline: wns=-1.0 min_slack=None endpoint=ff1 D=N17
+critical path: ['g17', 'g16']
+outer loop: success=False iterations=2
+wns_history=[-1.0, -1.0]
+no candidate improved WNS; see outerloop_result.json for the refined weights / failure history
+_____________ test_capture_electrical_attaches_record_and_deltas ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021828935B10>
+tmp_path = WindowsPath('C:/Users/Ÿ°—«¡˙/AppData/Local/Temp/pytest-of-Ÿ°—«¡˙/pytest-1173/test_capture_electrical_attach0')
+
+    def test_capture_electrical_attaches_record_and_deltas(monkeypatch, tmp_path):
+        trials, cfg = _run_demo_for_electrical(monkeypatch, tmp_path, capture=True)
+        assert cfg["capture_electrical"] is True
+>       assert cfg["electrical_baseline"]["captured"] is True
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+code\tests\test_outerloop_cli.py:404: TypeError
+---------------------------- Captured stdout call -----------------------------
+baseline: wns=-1.0 min_slack=None endpoint=ff1 D=N17
+critical path: ['g17', 'g16']
+outer loop: success=False iterations=1
+wns_history=[-1.0]
+no candidate improved WNS; see outerloop_result.json for the refined weights / failure history
+=========================== short test summary info ===========================
+FAILED code/tests/test_outerloop_cli.py::test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked
+FAILED code/tests/test_outerloop_cli.py::test_capture_electrical_attaches_record_and_deltas
+2 failed, 822 passed, 4 skipped, 156 subtests passed in 144.12s (0:02:24)
+[run] ÂÆåÊàêÔºà148sÔºâÔºåÈÄÄÂá∫Á†Å 1

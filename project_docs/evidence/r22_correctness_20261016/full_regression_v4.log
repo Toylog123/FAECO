@@ -1,0 +1,182 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -m pytest code/tests -q --junitxml=project_docs/evidence/r22_correctness_20261016/full_regression_v4.xml
+..............................................F.....FF.................. [  8%]
+..........sss........................................................... [ 17%]
+............................................................. [ 24%]
+....................................................................... [ 32%]
+........................................................................ [ 41%]
+........................................................................ [ 50%]
+........................................................................ [ 58%]
+........................................................................ [ 67%]
+........................................................................ [ 75%]
+........................................................................ [ 84%]
+........................................................................ [ 92%]
+........................................s..................              [100%]
+================================== FAILURES ===================================
+__________________ test_cli_exit_code_reflects_decision_gate __________________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1179/test_cli_exit_code_reflects_de0')
+
+    def test_cli_exit_code_reflects_decision_gate(tmp_path: Path) -> None:
+        ref = _write(tmp_path, "ref.json", _product())
+        same = _write(tmp_path, "same.json", _product())
+        worse = _write(tmp_path, "worse.json", _product(wns=-1.21))
+    
+        passing = subprocess.run(
+            [sys.executable, str(SCRIPT), "--reference", str(ref), "--candidate", str(same)],
+            capture_output=True, text=True,
+        )
+        assert passing.returncode == 0
+>       assert "full gate (E1-E6)     : PASS" in passing.stdout
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: argument of type 'NoneType' is not iterable
+
+code\tests\test_compare_0a_equivalence.py:145: TypeError
+_____________________ test_cli_exit_code_and_json_report ______________________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1179/test_cli_exit_code_and_json_re0')
+
+    def test_cli_exit_code_and_json_report(tmp_path: Path) -> None:
+        circuits = ["s27", "s382"]
+        for c in circuits:
+            _write_product(tmp_path, "codex", c, _product())
+            _write_product(tmp_path, "main", c, _product())
+        out = tmp_path / "sweep.json"
+    
+        passing = subprocess.run(
+            [sys.executable, str(SCRIPT), "--root", str(tmp_path),
+             "--circuits", ",".join(circuits), "--json-out", str(out)],
+            capture_output=True, text=True,
+        )
+        assert passing.returncode == 0
+>       assert "SWEEP GATE    : PASS" in passing.stdout
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: argument of type 'NoneType' is not iterable
+
+code\tests\test_compare_equivalence_sweep.py:142: TypeError
+________________ test_cli_require_full_flags_bookkeeping_drift ________________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1179/test_cli_require_full_flags_bo0')
+
+    def test_cli_require_full_flags_bookkeeping_drift(tmp_path: Path) -> None:
+        bump = _product()
+        bump["n_candidate_sta_runs"] = 86
+        bump["state"]["budget"].update({"sta_runs": 53, "sta_used": 53})
+        _write_product(tmp_path, "codex", "s27", _product())
+        _write_product(tmp_path, "main", "s27", bump)
+    
+        lenient = subprocess.run(
+            [sys.executable, str(SCRIPT), "--root", str(tmp_path),
+             "--circuits", "s27"],
+            capture_output=True, text=True,
+        )
+        assert lenient.returncode == 0
+    
+        strict = subprocess.run(
+            [sys.executable, str(SCRIPT), "--root", str(tmp_path),
+             "--circuits", "s27", "--require-full"],
+            capture_output=True, text=True,
+        )
+        assert strict.returncode == 1
+>       assert "SWEEP GATE    : FAIL" in strict.stdout
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: argument of type 'NoneType' is not iterable
+
+code\tests\test_compare_equivalence_sweep.py:168: TypeError
+============================== warnings summary ===============================
+code/tests/test_compare_0a_equivalence.py::test_cli_exit_code_reflects_decision_gate
+  D:\BaiduSyncdisk\01_Papers\03_FAECO\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-25 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045, in _bootstrap_inner
+      self.run()
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd1 in position 23: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+code/tests/test_compare_0a_equivalence.py::test_cli_writes_machine_readable_report
+  D:\BaiduSyncdisk\01_Papers\03_FAECO\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-27 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045, in _bootstrap_inner
+      self.run()
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd1 in position 23: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+code/tests/test_compare_equivalence_sweep.py::test_cli_exit_code_and_json_report
+  D:\BaiduSyncdisk\01_Papers\03_FAECO\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-29 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045, in _bootstrap_inner
+      self.run()
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd1 in position 19: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+code/tests/test_compare_equivalence_sweep.py::test_cli_require_full_flags_bookkeeping_drift
+  D:\BaiduSyncdisk\01_Papers\03_FAECO\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-33 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045, in _bootstrap_inner
+      self.run()
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd1 in position 19: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+code/tests/test_compare_equivalence_sweep.py::test_cli_require_full_flags_bookkeeping_drift
+  D:\BaiduSyncdisk\01_Papers\03_FAECO\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-31 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1045, in _bootstrap_inner
+      self.run()
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 982, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd1 in position 19: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED code/tests/test_compare_0a_equivalence.py::test_cli_exit_code_reflects_decision_gate
+FAILED code/tests/test_compare_equivalence_sweep.py::test_cli_exit_code_and_json_report
+FAILED code/tests/test_compare_equivalence_sweep.py::test_cli_require_full_flags_bookkeeping_drift
+3 failed, 832 passed, 4 skipped, 5 warnings, 156 subtests passed in 148.38s (0:02:28)
+[run] 完成（153s），退出码 1

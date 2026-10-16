@@ -2,6 +2,45 @@
 
 > 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
 
+## 2026-10-16 父进程-Xutf8不替代全进程PYTHONUTF8环境
+
+- **实际归因**：完整v4运行中3F，独立3个子CLI测试复现3fail+4warnings/0.97s，子CLI仍按CP936输出而父按UTF8读取；父命令-Xutf8不会自动设置所有子Python环境。
+- **限定修复**：源码不改，scratch harness设置PYTHONUTF8=1传递全进程，同3例3pass/0.82s。完整v4实际832pass/3fail/4skip/5warn/156subtests、148.38s/wrapper152.968exit1、166SHA稳定，3F均该环境原因；原件保留。完整v5最终835pass/4skip/156subtests，147.00s/wrapper152.781exit0、166来源SHA稳定，JSON显式environment_overrides PYTHONUTF8=1；已可确认该环境下当前实现全回归通过，不升级四态/科学结论。
+- **另一个边界**：原Zvs0/1在临时guard下精确输入均unsupported/commandNone/source稳定，证明门确实拒绝不可靠工具，并非四态证明。两类问题分别归因，不把编码环境修复说成Z语义恢复。
+
+## 2026-10-16 更强反例推翻证明方案时保留准确模型与支持恢复路径
+
+- **归因**：Zvs0工具伪pass之后，二态cut组合方案又被两个独立反例（含Z^Z vs0）推翻，因此不实施。函数/三态公式静态准确，不代表当前二态SEC soundness。
+- **当前处置**：actualtri、显式Z或switch给structured unsupported非pass，准确writer保留；这是临时证明器能力门，三态真实语义支持仍open，恢复路径是显式四态编码，不把unsupported称为已证或科学降级定稿。限定domain红5→含scope16pass/扩展11pass，整体v4未开始。
+- **整体失败层次**：v3=822pass/2fail/4skip/156subtests、165SHA稳定，两CLI旧fixture缺dfrtp/RESET_B被新门正确拒，拟补真实fixture保留assert。不是生产门误拒合法完整输入，不改门放行。
+- **日志纪律**：原CP936混编码log使harness UTF8展示失败，但JSON/JUnit完整有效；原件不改，用适当解码实读，后续-Xutf8。不因展示异常抹掉真实失败结果。
+
+## 2026-10-16 真实三态控制需优先检验Z与常量可区分性
+
+- **实证反驳**：dirty三态首5组2正pass/2负fail/1input_error全部matches，source稳定/0STA；更强控制中Zvs0预期fail实际pass、Zvs1fail，诊断passed=false。首组20s exit0与后组11s exit1均保留，不能只报前组“全过”。
+- **归因**：当前Yosys默认流程Z塌缩，普通真值控制能过不能证明工具保持四态语义；不是已证论文实际电路不等价，也不是writer静态语义检查可替代的工具可靠性门。
+- **处置**：OI039追加soundness阻断，主线+两agent先只读设计composition boundary proof、暂不改生产；验证工具能区分推翻主张的负控制后再谈正式证明。完整v3在跑至少2F待结束归因，无STA/pilot。
+- **来源**：r22_correctness_20261016/tristate_tool_diagnostic/diagnostic.json与tristate_z_diagnostic/diagnostic.json，记录员已实际读取status/expected/actual/source_stable/timing_runs。
+
+## 2026-10-16 独立接线probe通过后仍须核对writer实际导出
+
+- **已实读限定结果**：TRISTATE_INDEPENDENT_REVIEW的联合data/enable映射与batch必需输入门probe16s/exit0、5来源SHA稳定；合法只到subprocess sentinel，无EDA，不认证审查者自己的writer。
+- **新增自审边界**：actual Liberty13个三态中4个einvp使用后缀反相(TE')，parser保留原文但writer只字符串替换导出非法Verilog。不能从metadata解析/接线通过推断模型可编译或工具Z语义可靠。
+- **处理与状态**：另开TDD覆盖全部13三态实际导出、后缀反相转换，再重新冻结/整套与真工具正负控制。OI-039仍open，v2仅dryrun不执行，新v3待；当前不写解决/科学通过。
+
+## 2026-10-16 function真值表一致不能证明三态语义完整
+
+- **实际发现**：B模型audit.json的einvn_1/_2只function真值表与普通inverter相同，但实际Lib还含three_state(TE_B)；b09/b20/b21 actual final和SEC gate均缺TE_B。旧模型及8192193初版writer忽略三态，候选只按function可能误选三态cell。
+- **归因**：同根Lib语义/连接完整性实现缺口；旧28 SEC对象绑定仍真，不证明模型完整，也不能据此直接判电路不等价。本次使用类型审计中23未见缺口，5有缺口（含Pico2），不继续把26统称完整语义。
+- **处理**：完整pin block/three_state metadata与联合候选语义，RW模型/F1F2必需输入、ABC明确不支持边界和最终SEC输入门同步修。旧757/6控制不覆盖新反证，需新整套/commit/pin；v2只dryrun未执行，原manifest保留，新源v3。A6结果保留待usedtypes复核，不轻率推翻或无限外推。
+- **当前状态**：OI-039已登记，修复与新验收尚待；没有STA/pilot。
+
+## 2026-10-16 s713 SEC raw字节SHA差异须先检查实际文本/换行
+
+- **观察**：A s713 receipt的gate归档SHA为3c982ac0…，proof final_raw为5fe19204…，其它五对象相同；记录员先报主线而未宣称六对象全部确切闭合。
+- **实际归因**：原fixed16561B/LF，final_raw17585B、1024CRLF；utf8-sig通用换行读取后逐字完全相同，原LF文本hash与归档SHA一致，是Windows写出CRLF。未改候选/模型，不留虚假科学缺口。
+- **验证**：A六对象proof_run.log/逐receipt全部pass、wrapper21/exit0，frozen8192193/clean source与输入哈希绑定。实际文本一致应明确换行转换，不能仅因字节哈希差就否定对象，也不能不查差异便放行。
+
 ## 2026-10-16 完整回归揭示声明文本比较误拒合法B（当前完整v2已通过）
 
 - **实际失败**：首整套741pass/1fail/4skip/156subtests，108.20s、wrapper112/exit1；源码before/after SHA稳定。旧合法buffer-chain测试中wire N;改wire N,N_BUF;，_non_rgb_structure按整条声明Counter误判N删除。

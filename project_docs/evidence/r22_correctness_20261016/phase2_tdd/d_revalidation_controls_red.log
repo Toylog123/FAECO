@@ -1,0 +1,101 @@
+[run] 启动（超时 180s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_d_revalidation.py -q
+...............FF.F.                                                     [100%]
+================================== FAILURES ===================================
+____________ test_preview_cannot_relabel_fixed_and_random_controls ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E1CE937D90>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1167/test_preview_cannot_relabel_fi0')
+
+    def test_preview_cannot_relabel_fixed_and_random_controls(monkeypatch, tmp_path):
+        import copy
+        m, _, _ = prepared(monkeypatch, tmp_path)
+        read = m._read_json
+        preview = copy.deepcopy(read(m.PREVIEW))
+        for row in preview["D_runs"]:
+            if row["family"] == "D" and row["circuit"] == "s27" and row["arm"] in {"fixed", "random_s1"}:
+                row["arm"] = "random_s1" if row["arm"] == "fixed" else "fixed"
+        monkeypatch.setattr(m, "_read_json", lambda path: preview if Path(path) == m.PREVIEW else read(path))
+>       with pytest.raises(RuntimeError, match="random|Random|control"):
+E       Failed: DID NOT RAISE RuntimeError
+
+code\tests\test_r22_d_revalidation.py:203: Failed
+_________ test_outer_timeout_keeps_failure_receipt_and_no_completion __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E1CEAF04D0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1167/test_outer_timeout_keeps_failu0')
+
+    def test_outer_timeout_keeps_failure_receipt_and_no_completion(monkeypatch, tmp_path):
+        m, output, manifest = prepared(monkeypatch, tmp_path)
+        def timeout(*args, **kwargs):
+            raise m.subprocess.TimeoutExpired(args[0], 3930)
+        monkeypatch.setattr(m.subprocess, "run", timeout)
+        job = manifest["jobs"][0]
+        with pytest.raises(RuntimeError, match="timed out"):
+            m.execute_run(job, output, manifest)
+        run = Path(job["output_dir"])
+>       assert json.loads((run / "failure.json").read_text())["returncode"] == 124
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:216: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\١����\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\١����\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x000001E1CC312250>
+s = '{\n  "key": "D/fixed/s27",\n  "status": "failed",\n  "returncode": 124,\n  "sec_status": "not_run",\n  "error": "Comm...e14d4a8b10b7ceb2f13b",\n    "runner.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"\n  }\n}\n'
+idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+>           obj, end = self.scan_once(s, idx)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+E           json.decoder.JSONDecodeError: Invalid \escape: line 6 column 730 (char 825)
+
+C:\Users\١����\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py:353: JSONDecodeError
+---------------------------- Captured stdout call -----------------------------
+LAUNCH D/fixed/s27
+___________ test_actual_feedback_config_change_rejected_before_sec ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E1CE9A7D90>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1167/test_actual_feedback_config_ch0')
+
+    def test_actual_feedback_config_change_rejected_before_sec(monkeypatch, tmp_path):
+        m, output, manifest = prepared(monkeypatch, tmp_path)
+        stub_tools(monkeypatch, m, manifest)
+        job = next(job for job in manifest["jobs"] if job["arm"] == "adaptive")
+        runner = m.subprocess.run
+        def changed(*args, **kwargs):
+            result = runner(*args, **kwargs)
+            file = Path(job["output_dir"]) / "run_config.json"
+            cfg = json.loads(file.read_text())
+            cfg["feedback_config"]["rho"] = 0.9
+            m.save(file, cfg)
+            return result
+        monkeypatch.setattr(m.subprocess, "run", changed)
+>       with pytest.raises(RuntimeError, match="feedback_config"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'feedback_config'
+E         Actual message: 'D/adaptive/s27: Invalid \\escape: line 24 column 22 (char 527)'
+
+code\tests\test_r22_d_revalidation.py:249: AssertionError
+---------------------------- Captured stdout call -----------------------------
+LAUNCH D/adaptive/s27
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_d_revalidation.py::test_preview_cannot_relabel_fixed_and_random_controls
+FAILED code/tests/test_r22_d_revalidation.py::test_outer_timeout_keeps_failure_receipt_and_no_completion
+FAILED code/tests/test_r22_d_revalidation.py::test_actual_feedback_config_change_rejected_before_sec
+3 failed, 17 passed in 9.31s
+[run] 完成（10s），退出码 1

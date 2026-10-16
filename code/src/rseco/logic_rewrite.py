@@ -11,10 +11,9 @@ The canonical motivating case is ``sky130_fd_sc_hd__lpflow_inputiso1p_1``
 (``X = A | SLEEP``).  It is functionally identical to ``or2`` but carries a
 larger delay, so swapping it for ``or2`` recovers timing.
 
-Equivalence is decided by canonicalising the Liberty ``function`` expression:
-variable names are renamed to ``v0, v1, ...`` in order of first appearance,
-and two cells whose canonical forms match are interchangeable.  The same
-canonical form yields the pin map (``SLEEP -> B`` for the example above).
+Equivalence conservatively matches every Liberty output ``function`` and
+``three_state`` condition.  One shared variable-role map preserves data and
+output-enable relationships, including ``SLEEP -> B`` for the example above.
 
 The hybrid repair loop tries, for every critical-path cell, its
 functionally-equivalent candidates *and* its larger drive sizes, and keeps
@@ -48,14 +47,31 @@ class LibCell:
     state_inv_var: str = ""
     output_functions: dict[str, str] = field(default_factory=dict)
     sequential_kind: str = ""
+    three_state_functions: dict[str, str] = field(default_factory=dict)
 
 
 _CELL_RE = re.compile(r'cell \("sky130_fd_sc_hd__([^"]+)"\) \{')
-# pin definition: a bare `pin ("A")` or `pin(A)` (not `pg_pin (...)`),
-# body up to the first closing brace
+# Pin headers only: output metadata can follow nested timing/power groups.
 _PIN_DEF_RE = re.compile(
-    r'(?<!\w)pin\s*\(\s*"?([A-Za-z0-9_]+)"?\s*\)\s*\{(.*?)\}', re.S
+    r'(?<!\w)pin\s*\(\s*"?([A-Za-z0-9_]+)"?\s*\)\s*\{'
 )
+_LIBERTY_BRACE_RE = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/|[{}]', re.S)
+
+
+def _pin_blocks(block: str):
+    """Yield complete pin bodies, ignoring braces in strings and comments."""
+    for header in _PIN_DEF_RE.finditer(block):
+        depth = 1
+        for token in _LIBERTY_BRACE_RE.finditer(block, header.end()):
+            if token.group() == "{":
+                depth += 1
+            elif token.group() == "}":
+                depth -= 1
+                if depth == 0:
+                    yield header.group(1), block[header.end():token.start()]
+                    break
+        else:
+            raise ValueError(f"Unterminated Liberty pin block: {header.group(1)}")
 
 
 def _split_family_size(cell_name: str) -> tuple[str, int]:
@@ -89,20 +105,24 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
         state_var = ""
         state_inv_var = ""
         output_functions: dict[str, str] = {}
+        three_state_functions: dict[str, str] = {}
         sequential_kind = ""
-        for pm in _PIN_DEF_RE.finditer(block):
-            pin, pblock = pm.group(1), pm.group(2)
-            if "direction" not in pblock:
+        for pin, pblock in _pin_blocks(block):
+            direction = re.search(r'\bdirection\s*:\s*"?(\w+)"?\s*;', pblock)
+            if not direction:
                 continue
-            if '"input"' in pblock:
+            if direction.group(1) == "input":
                 input_pins.append(pin)
                 continue
-            if '"output"' in pblock:
+            if direction.group(1) == "output":
                 output_pin = pin
-                f = re.search(r'function\s*:\s*"([^"]+)"', pblock)
+                f = re.search(r'\bfunction\s*:\s*"([^"]+)"', pblock)
                 if f and "VPWR" not in f.group(1) and "VGND" not in f.group(1):
                     function = f.group(1)
                     output_functions[pin] = f.group(1).strip()
+                three_state = re.search(r'\bthree_state\s*:\s*"([^"]+)"', pblock)
+                if three_state:
+                    three_state_functions[pin] = three_state.group(1).strip()
         ff = re.search(r"\bff\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
         if ff:
             sequential_kind = "ff"
@@ -149,6 +169,7 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
             state_inv_var=state_inv_var,
             output_functions=output_functions,
             sequential_kind=sequential_kind,
+            three_state_functions=three_state_functions,
         )
     return cells
 
@@ -170,6 +191,41 @@ def canonical_function(function: str) -> str:
     return out
 
 
+def _output_semantics(cell: LibCell):
+    """Canonicalise data and Z conditions using one shared input-role map.
+
+    Matching is syntactic and conservative.  In particular, data and enable
+    expressions must share the same variable mapping across every output.
+    """
+    functions = cell.output_functions or {cell.output_pin: cell.function}
+    if cell.output_pin not in functions or not set(cell.three_state_functions) <= set(functions):
+        return None
+    outputs = [cell.output_pin, *sorted(pin for pin in functions if pin != cell.output_pin)]
+    variables: list[str] = []
+
+    def expression(text):
+        for variable in function_vars(text):
+            if variable not in variables:
+                variables.append(variable)
+        roles = {variable: f"v{index}" for index, variable in enumerate(variables)}
+        return re.sub(r"[A-Za-z_][A-Za-z0-9_]*", lambda match: roles[match.group()], text)
+
+    signature = tuple(
+        (expression(functions[pin]),
+         expression(cell.three_state_functions[pin]) if pin in cell.three_state_functions else None)
+        for pin in outputs
+    )
+    if cell.three_state_functions and (
+        set(variables) != set(cell.input_pins)
+        or len(cell.input_pins) != len(set(cell.input_pins))
+        or set(outputs) & set(cell.input_pins)
+    ):
+        # Every enable/data role must be a real input and every required input
+        # must survive the rewrite.  Missing enable metadata is not a tie-off.
+        return None
+    return signature, variables, outputs
+
+
 def equivalence_candidates(
     cell: LibCell, lib: dict[str, LibCell]
 ) -> list[tuple[str, dict[str, str]]]:
@@ -177,24 +233,30 @@ def equivalence_candidates(
 
     ``pin_map`` maps the *source* cell's pin names to the candidate's pin
     names (e.g. ``{"A": "A", "SLEEP": "B"}`` for inputiso1p -> or2).  The
-    source cell itself is excluded.  Cells with no function (DFFs) have no
-    candidates.
+    Data and high-impedance conditions share one pin map; all enable inputs
+    must survive a tristate rewrite.  The source cell itself and cells with
+    no function are excluded.
     """
     if not cell.function:
         return []
-    src_canon = canonical_function(cell.function)
-    src_vars = function_vars(cell.function)
+    source = _output_semantics(cell)
+    if source is None:
+        return []
+    src_canon, src_vars, src_outputs = source
     out: list[tuple[str, dict[str, str]]] = []
     for other in lib.values():
         if other.name == cell.name or not other.function:
             continue
-        if canonical_function(other.function) != src_canon:
+        target = _output_semantics(other)
+        if target is None:
             continue
-        other_vars = function_vars(other.function)
+        other_canon, other_vars, other_outputs = target
+        if other_canon != src_canon:
+            continue
         pin_map = {sv: ov for sv, ov in zip(src_vars, other_vars)}
-        # map the output pin too when names differ
-        if cell.output_pin and other.output_pin and cell.output_pin != other.output_pin:
-            pin_map[cell.output_pin] = other.output_pin
+        for source_pin, target_pin in zip(src_outputs, other_outputs):
+            if source_pin and target_pin and source_pin != target_pin:
+                pin_map[source_pin] = target_pin
         out.append((other.name, pin_map))
     return out
 

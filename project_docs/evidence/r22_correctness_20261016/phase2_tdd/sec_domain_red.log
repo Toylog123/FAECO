@@ -1,0 +1,196 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+____________ test_tristate_is_nonpass_before_two_state_tool[gold] _____________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3A0095210>
+role = 'gold'
+
+    @pytest.mark.parametrize('role', ['gold', 'gate', 'both', 'helper'])
+    def test_tristate_is_nonpass_before_two_state_tool(tmp_path, monkeypatch, role):
+        batch=module()
+        lib=tmp_path/'test.lib'
+        lib.write_text(LIB,encoding='utf-8')
+        monkeypatch.setattr(batch,'LIB',lib)
+        tri="module top(EN,Y); input EN; output Y; sky130_fd_sc_hd__einvn_1 g(.A(1'b1),.TE_B(EN),.Z(Y)); endmodule\n"
+        zero="module top(EN,Y); input EN; output Y; assign Y=1'b0; endmodule\n"
+        gold=tri if role in ('gold','both') else zero
+        gate=tri if role in ('gate','both') else zero
+        if role=='helper':
+            helper=tri.replace('module top(', 'module helper(')
+            gold+=helper
+            gate+=helper
+        monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+>       result=batch.final_sec(gold,gate,'top',tmp_path/'proof')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_sec_domain.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_r22_cut_ablation.py:132: in final_sec
+    p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (['wsl.exe', '-d', 'Ubuntu', '--', '/usr/bin/yosys', 'C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor0/proof/sec.ys'],)
+k = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+>   monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Z reached two-state prover
+
+code\tests\test_r22_tristate_sec_domain.py:26: Failed
+____________ test_tristate_is_nonpass_before_two_state_tool[gate] _____________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3A0095E90>
+role = 'gate'
+
+    @pytest.mark.parametrize('role', ['gold', 'gate', 'both', 'helper'])
+    def test_tristate_is_nonpass_before_two_state_tool(tmp_path, monkeypatch, role):
+        batch=module()
+        lib=tmp_path/'test.lib'
+        lib.write_text(LIB,encoding='utf-8')
+        monkeypatch.setattr(batch,'LIB',lib)
+        tri="module top(EN,Y); input EN; output Y; sky130_fd_sc_hd__einvn_1 g(.A(1'b1),.TE_B(EN),.Z(Y)); endmodule\n"
+        zero="module top(EN,Y); input EN; output Y; assign Y=1'b0; endmodule\n"
+        gold=tri if role in ('gold','both') else zero
+        gate=tri if role in ('gate','both') else zero
+        if role=='helper':
+            helper=tri.replace('module top(', 'module helper(')
+            gold+=helper
+            gate+=helper
+        monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+>       result=batch.final_sec(gold,gate,'top',tmp_path/'proof')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_sec_domain.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_r22_cut_ablation.py:132: in final_sec
+    p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (['wsl.exe', '-d', 'Ubuntu', '--', '/usr/bin/yosys', 'C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor1/proof/sec.ys'],)
+k = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+>   monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Z reached two-state prover
+
+code\tests\test_r22_tristate_sec_domain.py:26: Failed
+____________ test_tristate_is_nonpass_before_two_state_tool[both] _____________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3A1C3E490>
+role = 'both'
+
+    @pytest.mark.parametrize('role', ['gold', 'gate', 'both', 'helper'])
+    def test_tristate_is_nonpass_before_two_state_tool(tmp_path, monkeypatch, role):
+        batch=module()
+        lib=tmp_path/'test.lib'
+        lib.write_text(LIB,encoding='utf-8')
+        monkeypatch.setattr(batch,'LIB',lib)
+        tri="module top(EN,Y); input EN; output Y; sky130_fd_sc_hd__einvn_1 g(.A(1'b1),.TE_B(EN),.Z(Y)); endmodule\n"
+        zero="module top(EN,Y); input EN; output Y; assign Y=1'b0; endmodule\n"
+        gold=tri if role in ('gold','both') else zero
+        gate=tri if role in ('gate','both') else zero
+        if role=='helper':
+            helper=tri.replace('module top(', 'module helper(')
+            gold+=helper
+            gate+=helper
+        monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+>       result=batch.final_sec(gold,gate,'top',tmp_path/'proof')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_sec_domain.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_r22_cut_ablation.py:132: in final_sec
+    p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (['wsl.exe', '-d', 'Ubuntu', '--', '/usr/bin/yosys', 'C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor2/proof/sec.ys'],)
+k = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+>   monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Z reached two-state prover
+
+code\tests\test_r22_tristate_sec_domain.py:26: Failed
+___________ test_tristate_is_nonpass_before_two_state_tool[helper] ____________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3A1C3F450>
+role = 'helper'
+
+    @pytest.mark.parametrize('role', ['gold', 'gate', 'both', 'helper'])
+    def test_tristate_is_nonpass_before_two_state_tool(tmp_path, monkeypatch, role):
+        batch=module()
+        lib=tmp_path/'test.lib'
+        lib.write_text(LIB,encoding='utf-8')
+        monkeypatch.setattr(batch,'LIB',lib)
+        tri="module top(EN,Y); input EN; output Y; sky130_fd_sc_hd__einvn_1 g(.A(1'b1),.TE_B(EN),.Z(Y)); endmodule\n"
+        zero="module top(EN,Y); input EN; output Y; assign Y=1'b0; endmodule\n"
+        gold=tri if role in ('gold','both') else zero
+        gate=tri if role in ('gate','both') else zero
+        if role=='helper':
+            helper=tri.replace('module top(', 'module helper(')
+            gold+=helper
+            gate+=helper
+        monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+>       result=batch.final_sec(gold,gate,'top',tmp_path/'proof')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_sec_domain.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_r22_cut_ablation.py:132: in final_sec
+    p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (['wsl.exe', '-d', 'Ubuntu', '--', '/usr/bin/yosys', 'C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_tristate_is_nonpass_befor3/proof/sec.ys'],)
+k = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+>   monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('Z reached two-state prover'))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: Z reached two-state prover
+
+code\tests\test_r22_tristate_sec_domain.py:26: Failed
+______________ test_explicit_z_also_cannot_reach_two_state_tool _______________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_explicit_z_also_cannot_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A3A1C3D790>
+
+    def test_explicit_z_also_cannot_reach_two_state_tool(tmp_path,monkeypatch):
+        batch=module()
+        lib=tmp_path/'test.lib'
+        lib.write_text(LIB,encoding='utf-8')
+        monkeypatch.setattr(batch,'LIB',lib)
+        gold="module top(EN,Y); input EN; output Y; assign Y=EN ? 1'bz : 1'b0; endmodule\n"
+        gate=gold.replace("1'bz", "1'b0")
+        monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('literal Z reached two-state prover'))
+>       result=batch.final_sec(gold,gate,'top',tmp_path/'proof')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_sec_domain.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_r22_cut_ablation.py:132: in final_sec
+    p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (['wsl.exe', '-d', 'Ubuntu', '--', '/usr/bin/yosys', 'C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1174/test_explicit_z_also_cannot_re0/proof/sec.ys'],)
+k = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+>   monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k:pytest.fail('literal Z reached two-state prover'))
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: literal Z reached two-state prover
+
+code\tests\test_r22_tristate_sec_domain.py:41: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_tristate_sec_domain.py::test_tristate_is_nonpass_before_two_state_tool[gold]
+FAILED code/tests/test_r22_tristate_sec_domain.py::test_tristate_is_nonpass_before_two_state_tool[gate]
+FAILED code/tests/test_r22_tristate_sec_domain.py::test_tristate_is_nonpass_before_two_state_tool[both]
+FAILED code/tests/test_r22_tristate_sec_domain.py::test_tristate_is_nonpass_before_two_state_tool[helper]
+FAILED code/tests/test_r22_tristate_sec_domain.py::test_explicit_z_also_cannot_reach_two_state_tool
+5 failed in 0.57s

@@ -1,0 +1,253 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_tristate_liberty.py -q
+FFFFFFFFFFFFF                                                            [100%]
+================================== FAILURES ===================================
+_______ test_new_metadata_defaults_preserve_legacy_libcell_construction _______
+
+    def test_new_metadata_defaults_preserve_legacy_libcell_construction():
+>       assert LibCell("inv", "inv", 1, "Y", "(!A)").three_state_functions == {}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'LibCell' object has no attribute 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:30: AttributeError
+____________ test_actual_liberty_captures_every_three_state_output ____________
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...te_var='', state_inv_var='', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind=''), ...}
+
+    def test_actual_liberty_captures_every_three_state_output(actual_lib):
+        text = LIBRARY.read_text(encoding="utf-8")
+        expected_count = len(re.findall(r"\bthree_state\s*:", text))
+        assert expected_count == 13
+>       assert sum(len(cell.three_state_functions) for cell in actual_lib.values()) == expected_count
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_liberty.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = <dict_valueiterator object at 0x0000018259E32F20>
+
+>   assert sum(len(cell.three_state_functions) for cell in actual_lib.values()) == expected_count
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'LibCell' object has no attribute 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:37: AttributeError
+_________ test_nested_pin_body_keeps_three_state_after_timing_blocks __________
+
+    def test_nested_pin_body_keeps_three_state_after_timing_blocks():
+        text = '''cell ("sky130_fd_sc_hd__test_1") {
+          pin ("A") { direction : "input"; }
+          pin ("EN") { direction : "input"; }
+          pin ("Z") { direction : "output"; function : "(!A)";
+            timing () { related_pin : "A"; cell_rise (x) { values("0"); } }
+            three_state : "(EN)";
+          }
+          pin ("Y") { direction : "output"; function : "(A)";
+            internal_power () { when : "A"; }
+            three_state : "(!EN)";
+          }
+        }'''
+        cell = parse_liberty_cells(text)["sky130_fd_sc_hd__test_1"]
+        assert cell.output_functions == {"Z": "(!A)", "Y": "(A)"}
+>       assert cell.three_state_functions == {"Z": "(EN)", "Y": "(!EN)"}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'LibCell' object has no attribute 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:57: AttributeError
+______ test_plain_inverter_cannot_rewrite_to_tristate_inverter[clkinv_1] ______
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...te_var='', state_inv_var='', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind=''), ...}
+source = 'clkinv_1'
+
+    @pytest.mark.parametrize("source", ["clkinv_1", "inv_1"])
+    def test_plain_inverter_cannot_rewrite_to_tristate_inverter(actual_lib, source):
+        candidates = equivalence_candidates(actual_lib[f"sky130_fd_sc_hd__{source}"], actual_lib)
+        assert candidates
+>       assert not any(name.startswith(("sky130_fd_sc_hd__einvn_", "sky130_fd_sc_hd__einvp_")) for name, _ in candidates)
+E       assert not True
+E        +  where True = any(<generator object test_plain_inverter_cannot_rewrite_to_tristate_inverter.<locals>.<genexpr> at 0x0000018259DFBBC0>)
+
+code\tests\test_r22_tristate_liberty.py:64: AssertionError
+_______ test_plain_inverter_cannot_rewrite_to_tristate_inverter[inv_1] ________
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...te_var='', state_inv_var='', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind=''), ...}
+source = 'inv_1'
+
+    @pytest.mark.parametrize("source", ["clkinv_1", "inv_1"])
+    def test_plain_inverter_cannot_rewrite_to_tristate_inverter(actual_lib, source):
+        candidates = equivalence_candidates(actual_lib[f"sky130_fd_sc_hd__{source}"], actual_lib)
+        assert candidates
+>       assert not any(name.startswith(("sky130_fd_sc_hd__einvn_", "sky130_fd_sc_hd__einvp_")) for name, _ in candidates)
+E       assert not True
+E        +  where True = any(<generator object test_plain_inverter_cannot_rewrite_to_tristate_inverter.<locals>.<genexpr> at 0x0000018259E544A0>)
+
+code\tests\test_r22_tristate_liberty.py:64: AssertionError
+_____________ test_tristate_inverter_cannot_drop_enable_semantics _____________
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...te_var='', state_inv_var='', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind=''), ...}
+
+    def test_tristate_inverter_cannot_drop_enable_semantics(actual_lib):
+        candidates = dict(equivalence_candidates(actual_lib["sky130_fd_sc_hd__einvn_1"], actual_lib))
+>       assert "sky130_fd_sc_hd__inv_1" not in candidates
+E       AssertionError: assert 'sky130_fd_sc_hd__inv_1' not in {'sky130_fd_sc_hd__bufinv_16': {'A': 'A', 'Z': 'Y'}, 'sky130_fd_sc_hd__bufinv_8': {'A': 'A', 'Z': 'Y'}, 'sky130_fd_sc_hd__clkinv_1': {'A': 'A', 'Z': 'Y'}, 'sky130_fd_sc_hd__clkinv_16': {'A': 'A', 'Z': 'Y'}, ...}
+
+code\tests\test_r22_tristate_liberty.py:69: AssertionError
+____________ test_actual_tristate_equivalence_preserves_enable_pin ____________
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...te_var='', state_inv_var='', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind=''), ...}
+
+    def test_actual_tristate_equivalence_preserves_enable_pin(actual_lib):
+        candidates = dict(equivalence_candidates(actual_lib["sky130_fd_sc_hd__einvn_1"], actual_lib))
+>       assert candidates["sky130_fd_sc_hd__einvn_2"] == {"A": "A", "TE_B": "TE_B"}
+E       AssertionError: assert {'A': 'A'} == {'A': 'A', 'TE_B': 'TE_B'}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Right contains 1 more item:
+E         {'TE_B': 'TE_B'}
+E         Use -v to get more diff
+
+code\tests\test_r22_tristate_liberty.py:76: AssertionError
+________ test_renamed_data_enable_and_output_roles_are_mapped_together ________
+
+    def test_renamed_data_enable_and_output_roles_are_mapped_together():
+>       source = _cell("src")
+                 ^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_liberty.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'src', data = 'A', enable = 'EN', output = 'Z', disable = None
+
+    def _cell(name, *, data="A", enable="EN", output="Z", disable=None):
+>       return LibCell(
+            name, name, 1, output, f"(!{data})", [data, enable],
+            output_functions={output: f"(!{data})"},
+            three_state_functions={output: disable or f"({enable})"},
+        )
+E       TypeError: LibCell.__init__() got an unexpected keyword argument 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:22: TypeError
+_ test_data_and_enable_variable_sharing_cannot_be_canonicalized_independently _
+
+    def test_data_and_enable_variable_sharing_cannot_be_canonicalized_independently():
+>       source = _cell("src", disable="(A)")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_liberty.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'src', data = 'A', enable = 'EN', output = 'Z', disable = '(A)'
+
+    def _cell(name, *, data="A", enable="EN", output="Z", disable=None):
+>       return LibCell(
+            name, name, 1, output, f"(!{data})", [data, enable],
+            output_functions={output: f"(!{data})"},
+            three_state_functions={output: disable or f"({enable})"},
+        )
+E       TypeError: LibCell.__init__() got an unexpected keyword argument 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:22: TypeError
+_ test_incomplete_or_different_tristate_roles_fail_closed[undeclared_enable] __
+
+invalid = 'undeclared_enable'
+
+    @pytest.mark.parametrize("invalid", ["undeclared_enable", "unmapped_required_input", "different_polarity"])
+    def test_incomplete_or_different_tristate_roles_fail_closed(invalid):
+>       source = _cell("src")
+                 ^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_liberty.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'src', data = 'A', enable = 'EN', output = 'Z', disable = None
+
+    def _cell(name, *, data="A", enable="EN", output="Z", disable=None):
+>       return LibCell(
+            name, name, 1, output, f"(!{data})", [data, enable],
+            output_functions={output: f"(!{data})"},
+            three_state_functions={output: disable or f"({enable})"},
+        )
+E       TypeError: LibCell.__init__() got an unexpected keyword argument 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:22: TypeError
+_ test_incomplete_or_different_tristate_roles_fail_closed[unmapped_required_input] _
+
+invalid = 'unmapped_required_input'
+
+    @pytest.mark.parametrize("invalid", ["undeclared_enable", "unmapped_required_input", "different_polarity"])
+    def test_incomplete_or_different_tristate_roles_fail_closed(invalid):
+>       source = _cell("src")
+                 ^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_liberty.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'src', data = 'A', enable = 'EN', output = 'Z', disable = None
+
+    def _cell(name, *, data="A", enable="EN", output="Z", disable=None):
+>       return LibCell(
+            name, name, 1, output, f"(!{data})", [data, enable],
+            output_functions={output: f"(!{data})"},
+            three_state_functions={output: disable or f"({enable})"},
+        )
+E       TypeError: LibCell.__init__() got an unexpected keyword argument 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:22: TypeError
+_ test_incomplete_or_different_tristate_roles_fail_closed[different_polarity] _
+
+invalid = 'different_polarity'
+
+    @pytest.mark.parametrize("invalid", ["undeclared_enable", "unmapped_required_input", "different_polarity"])
+    def test_incomplete_or_different_tristate_roles_fail_closed(invalid):
+>       source = _cell("src")
+                 ^^^^^^^^^^^^
+
+code\tests\test_r22_tristate_liberty.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'src', data = 'A', enable = 'EN', output = 'Z', disable = None
+
+    def _cell(name, *, data="A", enable="EN", output="Z", disable=None):
+>       return LibCell(
+            name, name, 1, output, f"(!{data})", [data, enable],
+            output_functions={output: f"(!{data})"},
+            three_state_functions={output: disable or f"({enable})"},
+        )
+E       TypeError: LibCell.__init__() got an unexpected keyword argument 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:22: TypeError
+___________ test_all_output_roles_are_checked_not_only_last_output ____________
+
+    def test_all_output_roles_are_checked_not_only_last_output():
+>       source = replace(_cell("src"), output_pin="Y", function="(A)",
+                         ^^^^^^^^^^^^
+                         output_functions={"Z": "(!A)", "Y": "(A)"})
+
+code\tests\test_r22_tristate_liberty.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'src', data = 'A', enable = 'EN', output = 'Z', disable = None
+
+    def _cell(name, *, data="A", enable="EN", output="Z", disable=None):
+>       return LibCell(
+            name, name, 1, output, f"(!{data})", [data, enable],
+            output_functions={output: f"(!{data})"},
+            three_state_functions={output: disable or f"({enable})"},
+        )
+E       TypeError: LibCell.__init__() got an unexpected keyword argument 'three_state_functions'
+
+code\tests\test_r22_tristate_liberty.py:22: TypeError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_tristate_liberty.py::test_new_metadata_defaults_preserve_legacy_libcell_construction
+FAILED code/tests/test_r22_tristate_liberty.py::test_actual_liberty_captures_every_three_state_output
+FAILED code/tests/test_r22_tristate_liberty.py::test_nested_pin_body_keeps_three_state_after_timing_blocks
+FAILED code/tests/test_r22_tristate_liberty.py::test_plain_inverter_cannot_rewrite_to_tristate_inverter[clkinv_1]
+FAILED code/tests/test_r22_tristate_liberty.py::test_plain_inverter_cannot_rewrite_to_tristate_inverter[inv_1]
+FAILED code/tests/test_r22_tristate_liberty.py::test_tristate_inverter_cannot_drop_enable_semantics
+FAILED code/tests/test_r22_tristate_liberty.py::test_actual_tristate_equivalence_preserves_enable_pin
+FAILED code/tests/test_r22_tristate_liberty.py::test_renamed_data_enable_and_output_roles_are_mapped_together
+FAILED code/tests/test_r22_tristate_liberty.py::test_data_and_enable_variable_sharing_cannot_be_canonicalized_independently
+FAILED code/tests/test_r22_tristate_liberty.py::test_incomplete_or_different_tristate_roles_fail_closed[undeclared_enable]
+FAILED code/tests/test_r22_tristate_liberty.py::test_incomplete_or_different_tristate_roles_fail_closed[unmapped_required_input]
+FAILED code/tests/test_r22_tristate_liberty.py::test_incomplete_or_different_tristate_roles_fail_closed[different_polarity]
+FAILED code/tests/test_r22_tristate_liberty.py::test_all_output_roles_are_checked_not_only_last_output
+13 failed in 1.30s
+[run] 完成（5s），退出码 1

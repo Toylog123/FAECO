@@ -1,0 +1,36 @@
+[run] 启动（超时 90s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py::test_final_sec_rejects_missing_tristate_control_before_tool -q
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_final_sec_rejects_missing_tristate_control_before_tool _________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1160/test_final_sec_rejects_missing0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000219BF8A3810>
+
+    def test_final_sec_rejects_missing_tristate_control_before_tool(tmp_path,monkeypatch):
+        from test_r22_batch import module
+        batch=module()
+        original='module top(A,Z);\ninput A;\noutput Z;\nsky130_fd_sc_hd__inv_1 g(.A(A),.Y(Z));\nendmodule\n'
+        candidate=original.replace('sky130_fd_sc_hd__inv_1','sky130_fd_sc_hd__einvn_1').replace('.Y(Z)','.Z(Z)')
+        monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k: pytest.fail('invalid input reached SEC tool'))
+        with pytest.raises(ValueError,match='TE_B'):
+>           batch.final_sec(original,candidate,'top',tmp_path/'sec')
+
+code\tests\test_r22_scope_integration.py:168: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_r22_cut_ablation.py:126: in final_sec
+    p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+a = (['wsl.exe', '-d', 'Ubuntu', '--', '/usr/bin/yosys', 'C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1160/test_final_sec_rejects_missing0/sec/sec.ys'],)
+k = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+>   monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k: pytest.fail('invalid input reached SEC tool'))
+                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: invalid input reached SEC tool
+
+code\tests\test_r22_scope_integration.py:166: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_scope_integration.py::test_final_sec_rejects_missing_tristate_control_before_tool
+1 failed in 1.83s
+[run] 完成（5s），退出码 1

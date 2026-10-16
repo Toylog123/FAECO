@@ -1,0 +1,147 @@
+[run] 启动（超时 180s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_d_revalidation.py -q
+....................FFFF                                                 [100%]
+================================== FAILURES ===================================
+______ test_resume_rejects_tampering_when_validator_returns_false[model] ______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196D3F4E9D0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1170/test_resume_rejects_tampering_0')
+tamper = 'model'
+
+    @pytest.mark.parametrize("tamper", ["model", "sec_result", "receipt"])
+    def test_resume_rejects_tampering_when_validator_returns_false(monkeypatch, tmp_path, tamper):
+        m, output, manifest = prepared(monkeypatch, tmp_path)
+        calls = stub_tools(monkeypatch, m, manifest)
+        job = manifest["jobs"][0]
+        m.execute_run(job, output, manifest)
+        run = Path(job["output_dir"])
+        if tamper == "model":
+            (run / "final_sec/cells.v").write_text("tampered model", encoding="utf-8")
+        elif tamper == "sec_result":
+            file = run / "final_sec/result.json"
+            value = m._read_json(file)
+            value["status"] = "fail"
+            m.save(file, value)
+        else:
+            file = run / "completion.json"
+            value = m._read_json(file)
+            value["evidence_receipt"]["final_sec/cells.v"] = "tampered receipt"
+            m.save(file, value)
+        validate = m.validate_completion
+        def boolean_validator(*args):
+            try:
+                return validate(*args)
+            except RuntimeError:
+                return False
+        assert boolean_validator(run, m._read_json(run / "completion.json"), (run / "mapped.v").read_text(encoding="utf-8")) is False
+        monkeypatch.setattr(m, "validate_completion", boolean_validator)
+>       with pytest.raises(RuntimeError, match="SEC|receipt|validation"):
+E       Failed: DID NOT RAISE RuntimeError
+
+code\tests\test_r22_d_revalidation.py:302: Failed
+---------------------------- Captured stdout call -----------------------------
+LAUNCH D/fixed/s27
+COMPLETE D/fixed/s27
+___ test_resume_rejects_tampering_when_validator_returns_false[sec_result] ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196D33BF5D0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1170/test_resume_rejects_tampering_1')
+tamper = 'sec_result'
+
+    @pytest.mark.parametrize("tamper", ["model", "sec_result", "receipt"])
+    def test_resume_rejects_tampering_when_validator_returns_false(monkeypatch, tmp_path, tamper):
+        m, output, manifest = prepared(monkeypatch, tmp_path)
+        calls = stub_tools(monkeypatch, m, manifest)
+        job = manifest["jobs"][0]
+        m.execute_run(job, output, manifest)
+        run = Path(job["output_dir"])
+        if tamper == "model":
+            (run / "final_sec/cells.v").write_text("tampered model", encoding="utf-8")
+        elif tamper == "sec_result":
+            file = run / "final_sec/result.json"
+            value = m._read_json(file)
+            value["status"] = "fail"
+            m.save(file, value)
+        else:
+            file = run / "completion.json"
+            value = m._read_json(file)
+            value["evidence_receipt"]["final_sec/cells.v"] = "tampered receipt"
+            m.save(file, value)
+        validate = m.validate_completion
+        def boolean_validator(*args):
+            try:
+                return validate(*args)
+            except RuntimeError:
+                return False
+        assert boolean_validator(run, m._read_json(run / "completion.json"), (run / "mapped.v").read_text(encoding="utf-8")) is False
+        monkeypatch.setattr(m, "validate_completion", boolean_validator)
+>       with pytest.raises(RuntimeError, match="SEC|receipt|validation"):
+E       Failed: DID NOT RAISE RuntimeError
+
+code\tests\test_r22_d_revalidation.py:302: Failed
+---------------------------- Captured stdout call -----------------------------
+LAUNCH D/fixed/s27
+COMPLETE D/fixed/s27
+_____ test_resume_rejects_tampering_when_validator_returns_false[receipt] _____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196D40329D0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1170/test_resume_rejects_tampering_2')
+tamper = 'receipt'
+
+    @pytest.mark.parametrize("tamper", ["model", "sec_result", "receipt"])
+    def test_resume_rejects_tampering_when_validator_returns_false(monkeypatch, tmp_path, tamper):
+        m, output, manifest = prepared(monkeypatch, tmp_path)
+        calls = stub_tools(monkeypatch, m, manifest)
+        job = manifest["jobs"][0]
+        m.execute_run(job, output, manifest)
+        run = Path(job["output_dir"])
+        if tamper == "model":
+            (run / "final_sec/cells.v").write_text("tampered model", encoding="utf-8")
+        elif tamper == "sec_result":
+            file = run / "final_sec/result.json"
+            value = m._read_json(file)
+            value["status"] = "fail"
+            m.save(file, value)
+        else:
+            file = run / "completion.json"
+            value = m._read_json(file)
+            value["evidence_receipt"]["final_sec/cells.v"] = "tampered receipt"
+            m.save(file, value)
+        validate = m.validate_completion
+        def boolean_validator(*args):
+            try:
+                return validate(*args)
+            except RuntimeError:
+                return False
+        assert boolean_validator(run, m._read_json(run / "completion.json"), (run / "mapped.v").read_text(encoding="utf-8")) is False
+        monkeypatch.setattr(m, "validate_completion", boolean_validator)
+>       with pytest.raises(RuntimeError, match="SEC|receipt|validation"):
+E       Failed: DID NOT RAISE RuntimeError
+
+code\tests\test_r22_d_revalidation.py:302: Failed
+---------------------------- Captured stdout call -----------------------------
+LAUNCH D/fixed/s27
+COMPLETE D/fixed/s27
+__________ test_false_completion_validation_cannot_create_completion __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000196D33BDCD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1170/test_false_completion_validati0')
+
+    def test_false_completion_validation_cannot_create_completion(monkeypatch, tmp_path):
+        m, output, manifest = prepared(monkeypatch, tmp_path)
+        stub_tools(monkeypatch, m, manifest)
+        monkeypatch.setattr(m, "validate_completion", lambda *args: False)
+        job = manifest["jobs"][0]
+>       with pytest.raises(RuntimeError, match="SEC|receipt|validation"):
+E       Failed: DID NOT RAISE RuntimeError
+
+code\tests\test_r22_d_revalidation.py:312: Failed
+---------------------------- Captured stdout call -----------------------------
+LAUNCH D/fixed/s27
+COMPLETE D/fixed/s27
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_d_revalidation.py::test_resume_rejects_tampering_when_validator_returns_false[model]
+FAILED code/tests/test_r22_d_revalidation.py::test_resume_rejects_tampering_when_validator_returns_false[sec_result]
+FAILED code/tests/test_r22_d_revalidation.py::test_resume_rejects_tampering_when_validator_returns_false[receipt]
+FAILED code/tests/test_r22_d_revalidation.py::test_false_completion_validation_cannot_create_completion
+4 failed, 20 passed in 14.65s
+[run] 完成（15s），退出码 1

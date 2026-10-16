@@ -106,11 +106,28 @@ def final_sec(initial, final, circuit, out):
     (out/'initial_raw.v').write_text(initial,encoding='utf-8')
     (out/'final_raw.v').write_text(final,encoding='utf-8')
     gold, gate, helpers = sec_designs(initial,final,circuit)
+    from rseco.logic_rewrite import parse_liberty_cells
+    from rseco.real_wns import validate_cell_input_connections, two_state_sec_unsupported_reason
+    liberty_text = LIB.read_text(encoding='utf-8')
+    cells = parse_liberty_cells(liberty_text)
+    validate_cell_input_connections(initial, cells)
+    validate_cell_input_connections(final, cells)
+    for role, text in (('gold', initial), ('gate', final)):
+        unsupported = two_state_sec_unsupported_reason(text, cells)
+        if unsupported:
+            result = {'status':'unsupported', 'returncode':None, 'command':None,
+                'runtime_s':0.0, 'reason':role + ': ' + unsupported,
+                'initial_sha256':sha(out/'initial_raw.v'),
+                'final_sha256':sha(out/'final_raw.v'),
+                'liberty_sha256':sha(LIB),
+                'method':'Boolean SEC domain check; external prover not started'}
+            save(out/'result.json',result)
+            return result
     (out/'gold.v').write_text(gold,encoding='utf-8')
     (out/'gate.v').write_text(gate,encoding='utf-8')
     (out/'helpers.v').write_text(helpers,encoding='utf-8')
     used = set(re.findall(r'\b(sky130_fd_sc_hd__\w+)\s+\w+\s*\(',initial+'\n'+final))
-    write_liberty_cell_models(LIB.read_text(encoding='utf-8'),out/'cells.v',used_cells=used)
+    write_liberty_cell_models(liberty_text,out/'cells.v',used_cells=used)
     script = '\n'.join([
         f'read_verilog "{_to_wsl(out/"cells.v")}"',
         f'read_verilog "{_to_wsl(out/"helpers.v")}"',

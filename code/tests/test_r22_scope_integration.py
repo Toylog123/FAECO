@@ -156,3 +156,13 @@ def test_split_external_outputs_cannot_also_be_internal():
     cut=fixed_min_cut(part)
     assert 'S' in cut.boundary_outputs
     assert not (set(cut.boundary_outputs)&set(cut.internal_nets))
+
+
+def test_final_sec_rejects_missing_tristate_control_before_tool(tmp_path,monkeypatch):
+    from test_r22_batch import module
+    batch=module()
+    original='module top(A,Z);\ninput A;\noutput Z;\nsky130_fd_sc_hd__inv_1 g(.A(A),.Y(Z));\nendmodule\n'
+    candidate=original.replace('sky130_fd_sc_hd__inv_1','sky130_fd_sc_hd__einvn_1').replace('.Y(Z)','.Z(Z)')
+    monkeypatch.setattr(batch.subprocess,'run',lambda *a,**k: pytest.fail('invalid input reached SEC tool'))
+    with pytest.raises(ValueError,match='TE_B'):
+        batch.final_sec(original,candidate,'top',tmp_path/'sec')

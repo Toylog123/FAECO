@@ -13,6 +13,22 @@ LIB_PATH = (Path(__file__).resolve().parents[2] / "data/raw/benchmarks/raw/"
             "openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/"
             "lib/sky130_fd_sc_hd__tt_025C_1v80.lib")
 
+TRISTATE_LIB = LIB + '\n' + '\n'.join(
+    f'cell ("sky130_fd_sc_hd__einvn_{size}") {{ '
+    'pin ("A") { direction : "input"; } '
+    'pin ("TE_B") { direction : "input"; } '
+    'pin ("Z") { direction : "output"; function : "(!A)"; '
+    f'three_state : "{enable}"; }} }}'
+    for size, enable in ((1, "(TE_B)"), (2, "(TE_B)"), (3, "(!TE_B)")))
+TRISTATE_LIB += '\ncell ("sky130_fd_sc_hd__inv_1") { '
+TRISTATE_LIB += ('pin ("A") { direction : "input"; } '
+                 'pin ("Y") { direction : "output"; function : "(!A)"; } }')
+
+
+def _tristate_top(ports=".A(A), .TE_B(EN), .Z(Y)", cell_type="einvn_1"):
+    return ("module top(A,EN,Y);\ninput A, EN;\noutput Y;\n"
+            f"sky130_fd_sc_hd__{cell_type} g ({ports});\nendmodule\n")
+
 
 @pytest.fixture(scope="module")
 def sky_lib():
@@ -34,6 +50,126 @@ def test_every_real_sky_multioutput_cell_has_each_function(tmp_path, sky_lib, ab
             expected = re.sub(r"\b([01])\b", lambda m: "1'b" + m.group(1),
                               function.replace("*", "&").replace("+", "|"))
             assert assignments[pin] == expected, (name, pin)
+
+
+def test_real_tristate_model_keeps_high_impedance_enable(tmp_path, sky_lib):
+    text = rw.write_liberty_cell_models(
+        sky_lib, tmp_path / "tristate.v", used_cells={"sky130_fd_sc_hd__einvn_1"}).read_text()
+    assert re.search(r"assign Z\s*=\s*\(\(TE_B\)\)\s*\?\s*1'bz\s*:\s*\(\(!A\)\);", text), text
+
+
+@pytest.mark.parametrize("size", [1, 2, 4, 8])
+def test_actual_einvp_postfix_inversion_exports_valid_enable_expression(tmp_path, sky_lib, size):
+    text = rw.write_liberty_cell_models(sky_lib, tmp_path / f"einvp_{size}.v",
+        used_cells={f"sky130_fd_sc_hd__einvp_{size}"}).read_text()
+    assert "TE'" not in text, text
+    expression = re.search(r"assign Z = (.*?) \? 1'bz :", text).group(1)
+    for te in (0, 1):
+        assert eval(expression, {"__builtins__": {}}, {"TE": te}) & 1 == 1 - te
+
+
+@pytest.mark.parametrize("expression,expected", [
+    ("A'", lambda a, b: 1-a),
+    ("(A&B)'", lambda a, b: 1-(a&b)),
+    ("(A^B)''", lambda a, b: a^b),
+    ("!(A'|B)", lambda a, b: 1-((1-a)|b)),
+])
+def test_liberty_postfix_converter_preserves_boolean_semantics(expression, expected):
+    converted = rw.liberty_expression_to_verilog(expression)
+    assert "'" not in converted
+    for a in (0, 1):
+        for b in (0, 1):
+            assert eval(converted, {"__builtins__": {}}, {"A": a, "B": b}) & 1 == expected(a, b)
+
+
+@pytest.mark.parametrize("expression", ["A ? B : C", "A@B", "(A&B", "A B"])
+def test_liberty_expression_unknown_syntax_fails_closed(expression):
+    with pytest.raises(ValueError, match="(?i)Liberty.*expression|unsupported.*syntax"):
+        rw.liberty_expression_to_verilog(expression)
+
+
+def test_postfix_in_sequential_fields_uses_shared_conversion(tmp_path):
+    lib = '''cell ("sky130_fd_sc_hd__custom_1") {
+      pin ("CLK") { direction : "input"; }
+      pin ("D") { direction : "input"; }
+      pin ("RESET") { direction : "input"; }
+      pin ("Q") { direction : "output"; function : "IQ"; }
+      ff ("IQ", "IQ_N") {
+        next_state : "D'"; clocked_on : "CLK'"; clear : "RESET'";
+      }
+    }'''
+    text = rw.write_liberty_cell_models(lib, tmp_path / "seq.v").read_text()
+    assert "D'" not in text and "CLK'" not in text and "RESET'" not in text
+    assert "~(D)" in text and "~(CLK)" in text and "~(RESET)" in text
+
+
+def test_abc_model_rejects_tristate_semantics_instead_of_two_state_downgrade(tmp_path, sky_lib):
+    with pytest.raises(ValueError, match="(?i)ABC.*three.state|three.state.*ABC"):
+        rw.write_liberty_cell_models(sky_lib, tmp_path / "abc.v",
+            used_cells={"sky130_fd_sc_hd__einvn_1"}, abc_compatible=True)
+
+
+@pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                  ".A(), .TE_B(EN), .Z(Y)"])
+@pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                     lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+    text = _tristate_top(ports)
+    result = factory()(text, text)
+    assert result.status == "fail", result
+    assert "input" in result.reason.lower(), result
+
+
+@pytest.mark.parametrize("pin", ["A", "B"])
+def test_f2_required_input_gate_covers_ordinary_cells_too(pin):
+    text = _chain(2)
+    cell_text = "sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(n1));"
+    bad_cell = cell_text.replace(f".{pin}({pin}), ", "")
+    bad = text.replace(cell_text, bad_cell)
+    result = rw.build_boundary_closure_checker(liberty_text=LIB)(bad, bad)
+    assert result.status == "fail", result
+    assert "input" in result.reason.lower(), result
+
+
+def test_f1_rejects_changed_tristate_enable_semantics():
+    text = _tristate_top()
+    result = rw.build_real_equivalence_checker(TRISTATE_LIB)(text, text.replace("einvn_1", "einvn_3"))
+    assert result.status == "fail", result
+
+
+def test_f1_rejects_plain_inverter_to_tristate_without_enable():
+    before = _tristate_top(".A(A), .Y(Y)", "inv_1")
+    after = _tristate_top(".A(A), .Z(Y)", "einvn_1")
+    assert rw.build_real_equivalence_checker(TRISTATE_LIB)(before, after).status == "fail"
+
+
+def test_legal_tristate_identity_and_same_semantics_size_change_are_supported():
+    text = _tristate_top()
+    for check in (rw.build_real_equivalence_checker(TRISTATE_LIB),
+                  rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)):
+        assert check(text, text).status == "pass"
+        assert check(text, text.replace("einvn_1", "einvn_2")).status == "pass"
+
+
+def test_tristate_control_net_change_is_rejected():
+    text = _tristate_top()
+    result = rw.build_real_equivalence_checker(TRISTATE_LIB)(text, text.replace(".TE_B(EN)", ".TE_B(A)"))
+    assert result.status == "fail"
+
+
+def test_public_required_input_validator_checks_helpers_and_allows_unused_outputs():
+    lib = parse_liberty_cells(TRISTATE_LIB)
+    helper = _tristate_top(".A(A), .TE_B(EN), .Z()") .replace("module top", "module helper")
+    top = _tristate_top()
+    assert rw.validate_cell_input_connections(helper + top, lib) is None
+    with pytest.raises(ValueError, match="(?i)input.*TE_B|TE_B.*input"):
+        rw.validate_cell_input_connections(helper.replace(".TE_B(EN), ", "") + top, lib)
+
+
+def test_required_input_validator_does_not_silently_skip_unsupported_sky_instance_names():
+    text = _tristate_top(".A(), .TE_B(EN), .Z(Y)").replace(" g (", " \\escaped.g (")
+    with pytest.raises(ValueError, match="(?i)unsupported.*instance|input"):
+        rw.validate_cell_input_connections(text, parse_liberty_cells(TRISTATE_LIB))
 
 
 def _constant_output():

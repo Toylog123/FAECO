@@ -1,0 +1,824 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.33 (git sha1 2584903a060)
+
+
+-- Executing script file `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/sec.ys' --
+
+1. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/cells.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/cells.v' to AST representation.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__a2111oi_0'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__a21oi_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__a221oi_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__a31oi_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__and2_0'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__and3b_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__and4_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__and4_2'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__and4b_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__clkinv_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__dfxtp_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__lpflow_isobufsrc_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nand2_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nand3_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nand4_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nand4_2'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nor2_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nor4_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__o21ai_0'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__o31ai_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__o41ai_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__xnor2_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__xor2_1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/helpers.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/helpers.v' to AST representation.
+Generating RTLIL representation for module `\dff'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/gold.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/gold.v' to AST representation.
+Generating RTLIL representation for module `\s420'.
+Successfully finished Verilog frontend.
+Renaming module \s420 to \gold.
+
+4. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/gate.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/gate.v' to AST representation.
+Generating RTLIL representation for module `\s420'.
+Successfully finished Verilog frontend.
+Renaming module \s420 to \gate.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 1 assignment to connection.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\sky130_fd_sc_hd__dfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/cells.v:67$72'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\sky130_fd_sc_hd__dfxtp_1.\IQ' using process `\sky130_fd_sc_hd__dfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/cells.v:67$72'.
+  created $dff cell `$procdff$138' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `sky130_fd_sc_hd__dfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_20261016_frozen/proofs/s420/cells.v:67$72'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module gold.
+Optimizing module dff.
+Optimizing module sky130_fd_sc_hd__xor2_1.
+Optimizing module sky130_fd_sc_hd__xnor2_1.
+Optimizing module sky130_fd_sc_hd__o41ai_1.
+Optimizing module sky130_fd_sc_hd__o31ai_1.
+Optimizing module sky130_fd_sc_hd__o21ai_0.
+Optimizing module sky130_fd_sc_hd__nor4_1.
+Optimizing module sky130_fd_sc_hd__nor2_1.
+Optimizing module sky130_fd_sc_hd__nand4_2.
+Optimizing module sky130_fd_sc_hd__nand4_1.
+Optimizing module sky130_fd_sc_hd__nand3_1.
+Optimizing module sky130_fd_sc_hd__nand2_1.
+Optimizing module sky130_fd_sc_hd__lpflow_isobufsrc_1.
+Optimizing module sky130_fd_sc_hd__dfxtp_1.
+Optimizing module sky130_fd_sc_hd__clkinv_1.
+Optimizing module sky130_fd_sc_hd__and4b_1.
+Optimizing module sky130_fd_sc_hd__and4_2.
+Optimizing module sky130_fd_sc_hd__and4_1.
+Optimizing module sky130_fd_sc_hd__and3b_1.
+Optimizing module sky130_fd_sc_hd__and2_0.
+Optimizing module sky130_fd_sc_hd__a31oi_1.
+Optimizing module sky130_fd_sc_hd__a221oi_1.
+Optimizing module sky130_fd_sc_hd__a21oi_1.
+Optimizing module sky130_fd_sc_hd__a2111oi_0.
+
+6. Executing MEMORY pass.
+
+6.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \dff..
+Finding unused cells or wires in module \sky130_fd_sc_hd__xor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__xnor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o41ai_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o31ai_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o21ai_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor4_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand4_2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand4_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand3_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__lpflow_isobufsrc_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__dfxtp_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__clkinv_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and4b_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and4_2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and4_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and3b_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and2_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a31oi_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a221oi_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a21oi_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a2111oi_0..
+Removed 0 unused cells and 23 unused wires.
+<suppressed ~23 debug messages>
+
+6.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dff..
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a2111oi_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a21oi_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a221oi_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a31oi_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and2_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and3b_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and4_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and4_2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__and4b_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__clkinv_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__dfxtp_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__lpflow_isobufsrc_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand3_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand4_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nand4_2..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor4_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o21ai_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o31ai_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o41ai_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__xnor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__xor2_1..
+
+6.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: CK_gold (\CK_gold), CK_gate (\CK_gate) -> CK
+Presumably equivalent wires: C_0_gold (\C_0_gold), C_0_gate (\C_0_gate) -> C_0
+Presumably equivalent wires: C_1_gold (\C_1_gold), C_1_gate (\C_1_gate) -> C_1
+Presumably equivalent wires: C_10_gold (\C_10_gold), C_10_gate (\C_10_gate) -> C_10
+Presumably equivalent wires: C_11_gold (\C_11_gold), C_11_gate (\C_11_gate) -> C_11
+Presumably equivalent wires: C_12_gold (\C_12_gold), C_12_gate (\C_12_gate) -> C_12
+Presumably equivalent wires: C_13_gold (\C_13_gold), C_13_gate (\C_13_gate) -> C_13
+Presumably equivalent wires: C_14_gold (\C_14_gold), C_14_gate (\C_14_gate) -> C_14
+Presumably equivalent wires: C_15_gold (\C_15_gold), C_15_gate (\C_15_gate) -> C_15
+Presumably equivalent wires: C_16_gold (\C_16_gold), C_16_gate (\C_16_gate) -> C_16
+Presumably equivalent wires: C_2_gold (\C_2_gold), C_2_gate (\C_2_gate) -> C_2
+Presumably equivalent wires: C_3_gold (\C_3_gold), C_3_gate (\C_3_gate) -> C_3
+Presumably equivalent wires: C_4_gold (\C_4_gold), C_4_gate (\C_4_gate) -> C_4
+Presumably equivalent wires: C_5_gold (\C_5_gold), C_5_gate (\C_5_gate) -> C_5
+Presumably equivalent wires: C_6_gold (\C_6_gold), C_6_gate (\C_6_gate) -> C_6
+Presumably equivalent wires: C_7_gold (\C_7_gold), C_7_gate (\C_7_gate) -> C_7
+Presumably equivalent wires: C_8_gold (\C_8_gold), C_8_gate (\C_8_gate) -> C_8
+Presumably equivalent wires: C_9_gold (\C_9_gold), C_9_gate (\C_9_gate) -> C_9
+Presumably equivalent wires: I110_gold (\I110_gold), I110_gate (\I110_gate) -> I110
+Presumably equivalent wires: I111_gold (\I111_gold), I111_gate (\I111_gate) -> I111
+Presumably equivalent wires: I112_gold (\I112_gold), I112_gate (\I112_gate) -> I112
+Presumably equivalent wires: I113_gold (\I113_gold), I113_gate (\I113_gate) -> I113
+Presumably equivalent wires: I12_gold (\I12_gold), I12_gate (\I12_gate) -> I12
+Presumably equivalent wires: I13_gold (\I13_gold), I13_gate (\I13_gate) -> I13
+Presumably equivalent wires: I14_gold (\I14_gold), I14_gate (\I14_gate) -> I14
+Presumably equivalent wires: I15_gold (\I15_gold), I15_gate (\I15_gate) -> I15
+Presumably equivalent wires: I208_gold (\I208_gold), I208_gate (\I208_gate) -> I208
+Presumably equivalent wires: I209_gold (\I209_gold), I209_gate (\I209_gate) -> I209
+Presumably equivalent wires: I210_gold (\I210_gold), I210_gate (\I210_gate) -> I210
+Presumably equivalent wires: I211_gold (\I211_gold), I211_gate (\I211_gate) -> I211
+Presumably equivalent wires: I306_gold (\I306_gold), I306_gate (\I306_gate) -> I306
+Presumably equivalent wires: I307_gold (\I307_gold), I307_gate (\I307_gate) -> I307
+Presumably equivalent wires: I308_gold (\I308_gold), I308_gate (\I308_gate) -> I308
+Presumably equivalent wires: I309_gold (\I309_gold), I309_gate (\I309_gate) -> I309
+Presumably equivalent wires: P_0_gold (\P_0_gold), P_0_gate (\P_0_gate) -> P_0
+Presumably equivalent wires: X_1_gold (\X_1_gold), X_1_gate (\X_1_gate) -> X_1
+Presumably equivalent wires: X_10_gold (\X_10_gold), X_10_gate (\X_10_gate) -> X_10
+Presumably equivalent wires: X_11_gold (\X_11_gold), X_11_gate (\X_11_gate) -> X_11
+Presumably equivalent wires: X_12_gold (\X_12_gold), X_12_gate (\X_12_gate) -> X_12
+Presumably equivalent wires: X_13_gold (\X_13_gold), X_13_gate (\X_13_gate) -> X_13
+Presumably equivalent wires: X_14_gold (\X_14_gold), X_14_gate (\X_14_gate) -> X_14
+Presumably equivalent wires: X_15_gold (\X_15_gold), X_15_gate (\X_15_gate) -> X_15
+Presumably equivalent wires: X_16_gold (\X_16_gold), X_16_gate (\X_16_gate) -> X_16
+Presumably equivalent wires: X_2_gold (\X_2_gold), X_2_gate (\X_2_gate) -> X_2
+Presumably equivalent wires: X_3_gold (\X_3_gold), X_3_gate (\X_3_gate) -> X_3
+Presumably equivalent wires: X_4_gold (\X_4_gold), X_4_gate (\X_4_gate) -> X_4
+Presumably equivalent wires: X_5_gold (\X_5_gold), X_5_gate (\X_5_gate) -> X_5
+Presumably equivalent wires: X_6_gold (\X_6_gold), X_6_gate (\X_6_gate) -> X_6
+Presumably equivalent wires: X_7_gold (\X_7_gold), X_7_gate (\X_7_gate) -> X_7
+Presumably equivalent wires: X_8_gold (\X_8_gold), X_8_gate (\X_8_gate) -> X_8
+Presumably equivalent wires: X_9_gold (\X_9_gold), X_9_gate (\X_9_gate) -> X_9
+Presumably equivalent wires: Z_gold (\Z_gold), Z_gate (\Z_gate) -> Z
+Presumably equivalent wires: _000__gold (\_000__gold), _000__gate (\_000__gate) -> _000_
+Presumably equivalent wires: _001__gold (\_001__gold), _001__gate (\_001__gate) -> _001_
+Presumably equivalent wires: _002__gold (\_002__gold), _002__gate (\_002__gate) -> _002_
+Presumably equivalent wires: _003__gold (\_003__gold), _003__gate (\_003__gate) -> _003_
+Presumably equivalent wires: _004__gold (\_004__gold), _004__gate (\_004__gate) -> _004_
+Presumably equivalent wires: _005__gold (\_005__gold), _005__gate (\_005__gate) -> _005_
+Presumably equivalent wires: _006__gold (\_006__gold), _006__gate (\_006__gate) -> _006_
+Presumably equivalent wires: _007__gold (\_007__gold), _007__gate (\_007__gate) -> _007_
+Presumably equivalent wires: _008__gold (\_008__gold), _008__gate (\_008__gate) -> _008_
+Presumably equivalent wires: _009__gold (\_009__gold), _009__gate (\_009__gate) -> _009_
+Presumably equivalent wires: _010__gold (\_010__gold), _010__gate (\_010__gate) -> _010_
+Presumably equivalent wires: _011__gold (\_011__gold), _011__gate (\_011__gate) -> _011_
+Presumably equivalent wires: _012__gold (\_012__gold), _012__gate (\_012__gate) -> _012_
+Presumably equivalent wires: _013__gold (\_013__gold), _013__gate (\_013__gate) -> _013_
+Presumably equivalent wires: _014__gold (\_014__gold), _014__gate (\_014__gate) -> _014_
+Presumably equivalent wires: _015__gold (\_015__gold), _015__gate (\_015__gate) -> _015_
+Presumably equivalent wires: _016__gold (\_016__gold), _016__gate (\_016__gate) -> _016_
+Presumably equivalent wires: _017__gold (\_017__gold), _017__gate (\_017__gate) -> _017_
+Presumably equivalent wires: _018__gold (\_018__gold), _018__gate (\_018__gate) -> _018_
+Presumably equivalent wires: _019__gold (\_019__gold), _019__gate (\_019__gate) -> _019_
+Presumably equivalent wires: _020__gold (\_020__gold), _020__gate (\_020__gate) -> _020_
+Presumably equivalent wires: _021__gold (\_021__gold), _021__gate (\_021__gate) -> _021_
+Presumably equivalent wires: _022__gold (\_022__gold), _022__gate (\_022__gate) -> _022_
+Presumably equivalent wires: _023__gold (\_023__gold), _023__gate (\_023__gate) -> _023_
+Presumably equivalent wires: _024__gold (\_024__gold), _024__gate (\_024__gate) -> _024_
+Presumably equivalent wires: _025__gold (\_025__gold), _025__gate (\_025__gate) -> _025_
+Presumably equivalent wires: _026__gold (\_026__gold), _026__gate (\_026__gate) -> _026_
+Presumably equivalent wires: _027__gold (\_027__gold), _027__gate (\_027__gate) -> _027_
+Presumably equivalent wires: _028__gold (\_028__gold), _028__gate (\_028__gate) -> _028_
+Presumably equivalent wires: _029__gold (\_029__gold), _029__gate (\_029__gate) -> _029_
+Presumably equivalent wires: _030__gold (\_030__gold), _030__gate (\_030__gate) -> _030_
+Presumably equivalent wires: _031__gold (\_031__gold), _031__gate (\_031__gate) -> _031_
+Presumably equivalent wires: _032__gold (\_032__gold), _032__gate (\_032__gate) -> _032_
+Presumably equivalent wires: _033__gold (\_033__gold), _033__gate (\_033__gate) -> _033_
+Presumably equivalent wires: _034__gold (\_034__gold), _034__gate (\_034__gate) -> _034_
+Presumably equivalent wires: _035__gold (\_035__gold), _035__gate (\_035__gate) -> _035_
+Presumably equivalent wires: _036__gold (\_036__gold), _036__gate (\_036__gate) -> _036_
+Presumably equivalent wires: _037__gold (\_037__gold), _037__gate (\_037__gate) -> _037_
+Presumably equivalent wires: _038__gold (\_038__gold), _038__gate (\_038__gate) -> _038_
+Presumably equivalent wires: _039__gold (\_039__gold), _039__gate (\_039__gate) -> _039_
+Presumably equivalent wires: _040__gold (\_040__gold), _040__gate (\_040__gate) -> _040_
+Presumably equivalent wires: _041__gold (\_041__gold), _041__gate (\_041__gate) -> _041_
+Presumably equivalent wires: _042__gold (\_042__gold), _042__gate (\_042__gate) -> _042_
+Presumably equivalent wires: _043__gold (\_043__gold), _043__gate (\_043__gate) -> _043_
+Presumably equivalent wires: _044__gold (\_044__gold), _044__gate (\_044__gate) -> _044_
+Presumably equivalent wires: _045__gold (\_045__gold), _045__gate (\_045__gate) -> _045_
+Changing input D of cell DFF_1_gate (dff): \I13_gate -> \I13
+Changing input D of cell DFF_10_gate (dff): \I210_gate -> \I210
+Changing input D of cell DFF_11_gate (dff): \I211_gate -> \I211
+Changing input D of cell DFF_12_gate (dff): \I306_gate -> \I306
+Changing input D of cell DFF_13_gate (dff): \I307_gate -> \I307
+Changing input D of cell DFF_14_gate (dff): \I308_gate -> \I308
+Changing input D of cell DFF_15_gate (dff): \I309_gate -> \I309
+Changing input D of cell DFF_2_gate (dff): \I14_gate -> \I14
+Changing input D of cell DFF_3_gate (dff): \I15_gate -> \I15
+Changing input D of cell DFF_4_gate (dff): \I110_gate -> \I110
+Changing input D of cell DFF_5_gate (dff): \I111_gate -> \I111
+Changing input D of cell DFF_6_gate (dff): \I112_gate -> \I112
+Changing input D of cell DFF_7_gate (dff): \I113_gate -> \I113
+Changing input D of cell DFF_8_gate (dff): \I208_gate -> \I208
+Changing input D of cell DFF_9_gate (dff): \I209_gate -> \I209
+Changing input A of cell _046__gate (sky130_fd_sc_hd__clkinv_1): \X_10_gate -> \X_10
+Changing input A of cell _047__gate (sky130_fd_sc_hd__clkinv_1): \X_11_gate -> \X_11
+Changing input A of cell _048__gate (sky130_fd_sc_hd__clkinv_1): \X_12_gate -> \X_12
+Changing input B of cell _050__gate (sky130_fd_sc_hd__nand2_1): \X_1_gate -> \X_1
+Changing input B of cell _051__gate (sky130_fd_sc_hd__and4_2): \X_1_gate -> \X_1
+Changing input C of cell _051__gate (sky130_fd_sc_hd__and4_2): \X_2_gate -> \X_2
+Changing input D of cell _051__gate (sky130_fd_sc_hd__and4_2): \X_3_gate -> \X_3
+Changing input A of cell _052__gate (sky130_fd_sc_hd__nand3_1): \X_4_gate -> \X_4
+Changing input B of cell _052__gate (sky130_fd_sc_hd__nand3_1): \X_5_gate -> \X_5
+Changing input C of cell _052__gate (sky130_fd_sc_hd__nand3_1): \_012__gate -> \_012_
+Changing input A of cell _053__gate (sky130_fd_sc_hd__and4_1): \X_4_gate -> \X_4
+Changing input B of cell _053__gate (sky130_fd_sc_hd__and4_1): \X_5_gate -> \X_5
+Changing input C of cell _053__gate (sky130_fd_sc_hd__and4_1): \X_6_gate -> \X_6
+Changing input D of cell _053__gate (sky130_fd_sc_hd__and4_1): \_012__gate -> \_012_
+Changing input A of cell _054__gate (sky130_fd_sc_hd__and2_0): \X_7_gate -> \X_7
+Changing input B of cell _054__gate (sky130_fd_sc_hd__and2_0): \_014__gate -> \_014_
+Changing input A of cell _055__gate (sky130_fd_sc_hd__nand2_1): \X_8_gate -> \X_8
+Changing input B of cell _055__gate (sky130_fd_sc_hd__nand2_1): \_015__gate -> \_015_
+Changing input A of cell _056__gate (sky130_fd_sc_hd__nand4_2): \X_7_gate -> \X_7
+Changing input B of cell _056__gate (sky130_fd_sc_hd__nand4_2): \X_8_gate -> \X_8
+Changing input C of cell _056__gate (sky130_fd_sc_hd__nand4_2): \X_9_gate -> \X_9
+Changing input D of cell _056__gate (sky130_fd_sc_hd__nand4_2): \_014__gate -> \_014_
+Changing input A of cell _057__gate (sky130_fd_sc_hd__nor2_1): \_007__gate -> \_007_
+Changing input B of cell _057__gate (sky130_fd_sc_hd__nor2_1): \_017__gate -> \_017_
+Changing input A of cell _058__gate (sky130_fd_sc_hd__nor4_1): \_007__gate -> \_007_
+Changing input B of cell _058__gate (sky130_fd_sc_hd__nor4_1): \_008__gate -> \_008_
+Changing input C of cell _058__gate (sky130_fd_sc_hd__nor4_1): \_009__gate -> \_009_
+Changing input D of cell _058__gate (sky130_fd_sc_hd__nor4_1): \_017__gate -> \_017_
+Changing input A of cell _059__gate (sky130_fd_sc_hd__nand2_1): \X_13_gate -> \X_13
+Changing input B of cell _059__gate (sky130_fd_sc_hd__nand2_1): \_019__gate -> \_019_
+Changing input A of cell _060__gate (sky130_fd_sc_hd__xnor2_1): \X_14_gate -> \X_14
+Changing input B of cell _060__gate (sky130_fd_sc_hd__xnor2_1): \_020__gate -> \_020_
+Changing input A of cell _061__gate (sky130_fd_sc_hd__xnor2_1): \X_10_gate -> \X_10
+Changing input B of cell _061__gate (sky130_fd_sc_hd__xnor2_1): \_017__gate -> \_017_
+Changing input A of cell _062__gate (sky130_fd_sc_hd__xnor2_1): \X_6_gate -> \X_6
+Changing input B of cell _062__gate (sky130_fd_sc_hd__xnor2_1): \_013__gate -> \_013_
+Changing input A of cell _063__gate (sky130_fd_sc_hd__xnor2_1): \X_2_gate -> \X_2
+Changing input B of cell _063__gate (sky130_fd_sc_hd__xnor2_1): \_011__gate -> \_011_
+Changing input A of cell _064__gate (sky130_fd_sc_hd__nand4_1): \X_13_gate -> \X_13
+Changing input B of cell _064__gate (sky130_fd_sc_hd__nand4_1): \X_14_gate -> \X_14
+Changing input C of cell _064__gate (sky130_fd_sc_hd__nand4_1): \X_15_gate -> \X_15
+Changing input D of cell _064__gate (sky130_fd_sc_hd__nand4_1): \_019__gate -> \_019_
+Changing input A1 of cell _065__gate (sky130_fd_sc_hd__a31oi_1): \X_13_gate -> \X_13
+Changing input A2 of cell _065__gate (sky130_fd_sc_hd__a31oi_1): \X_14_gate -> \X_14
+Changing input A3 of cell _065__gate (sky130_fd_sc_hd__a31oi_1): \_019__gate -> \_019_
+Changing input B1 of cell _065__gate (sky130_fd_sc_hd__a31oi_1): \X_15_gate -> \X_15
+Changing input A of cell _066__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_021__gate -> \_021_
+Changing input SLEEP of cell _066__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_022__gate -> \_022_
+Changing input A of cell _067__gate (sky130_fd_sc_hd__xnor2_1): \X_16_gate -> \X_16
+Changing input B of cell _067__gate (sky130_fd_sc_hd__xnor2_1): \_021__gate -> \_021_
+Changing input A1 of cell _068__gate (sky130_fd_sc_hd__a21oi_1): \X_11_gate -> \X_11
+Changing input A2 of cell _068__gate (sky130_fd_sc_hd__a21oi_1): \_018__gate -> \_018_
+Changing input B1 of cell _068__gate (sky130_fd_sc_hd__a21oi_1): \X_12_gate -> \X_12
+Changing input A of cell _069__gate (sky130_fd_sc_hd__nor2_1): \_019__gate -> \_019_
+Changing input B of cell _069__gate (sky130_fd_sc_hd__nor2_1): \_023__gate -> \_023_
+Changing input A of cell _070__gate (sky130_fd_sc_hd__xor2_1): \X_8_gate -> \X_8
+Changing input B of cell _070__gate (sky130_fd_sc_hd__xor2_1): \_015__gate -> \_015_
+Changing input A of cell _071__gate (sky130_fd_sc_hd__xor2_1): \X_4_gate -> \X_4
+Changing input B of cell _071__gate (sky130_fd_sc_hd__xor2_1): \_012__gate -> \_012_
+Changing input A of cell _072__gate (sky130_fd_sc_hd__nand2_1): \X_6_gate -> \X_6
+Changing input A of cell _073__gate (sky130_fd_sc_hd__nor2_1): \X_5_gate -> \X_5
+Changing input B of cell _073__gate (sky130_fd_sc_hd__nor2_1): \_024__gate -> \_024_
+Changing input A of cell _074__gate (sky130_fd_sc_hd__nor2_1): \X_5_gate -> \X_5
+Changing input B of cell _074__gate (sky130_fd_sc_hd__nor2_1): \X_6_gate -> \X_6
+Changing input A_N of cell _075__gate (sky130_fd_sc_hd__and3b_1): \X_7_gate -> \X_7
+Changing input B of cell _075__gate (sky130_fd_sc_hd__and3b_1): \X_8_gate -> \X_8
+Changing input A1 of cell _076__gate (sky130_fd_sc_hd__a21oi_1): \X_7_gate -> \X_7
+Changing input B1 of cell _076__gate (sky130_fd_sc_hd__a21oi_1): \_027__gate -> \_027_
+Changing input A1 of cell _077__gate (sky130_fd_sc_hd__a21oi_1): \X_12_gate -> \X_12
+Changing input B1 of cell _077__gate (sky130_fd_sc_hd__a21oi_1): \X_11_gate -> \X_11
+Changing input A of cell _078__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_11_gate -> \X_11
+Changing input A1 of cell _079__gate (sky130_fd_sc_hd__a21oi_1): \X_10_gate -> \X_10
+Changing input B1 of cell _079__gate (sky130_fd_sc_hd__a21oi_1): \X_9_gate -> \X_9
+Changing input A1 of cell _080__gate (sky130_fd_sc_hd__o31ai_1): \X_10_gate -> \X_10
+Changing input A2 of cell _080__gate (sky130_fd_sc_hd__o31ai_1): \_029__gate -> \_029_
+Changing input A3 of cell _080__gate (sky130_fd_sc_hd__o31ai_1): \_030__gate -> \_030_
+Changing input B1 of cell _080__gate (sky130_fd_sc_hd__o31ai_1): \_031__gate -> \_031_
+Changing input A1 of cell _081__gate (sky130_fd_sc_hd__a21oi_1): \X_16_gate -> \X_16
+Changing input B1 of cell _081__gate (sky130_fd_sc_hd__a21oi_1): \X_15_gate -> \X_15
+Changing input A of cell _082__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_15_gate -> \X_15
+Changing input A1 of cell _083__gate (sky130_fd_sc_hd__a21oi_1): \X_14_gate -> \X_14
+Changing input B1 of cell _083__gate (sky130_fd_sc_hd__a21oi_1): \X_13_gate -> \X_13
+Changing input A1 of cell _084__gate (sky130_fd_sc_hd__o31ai_1): \X_14_gate -> \X_14
+Changing input A2 of cell _084__gate (sky130_fd_sc_hd__o31ai_1): \_033__gate -> \_033_
+Changing input A3 of cell _084__gate (sky130_fd_sc_hd__o31ai_1): \_034__gate -> \_034_
+Changing input B1 of cell _084__gate (sky130_fd_sc_hd__o31ai_1): \_035__gate -> \_035_
+Changing input A1 of cell _085__gate (sky130_fd_sc_hd__a2111oi_0): \X_13_gate -> \X_13
+Changing input A2 of cell _085__gate (sky130_fd_sc_hd__a2111oi_0): \_010__gate -> \_010_
+Changing input B1 of cell _085__gate (sky130_fd_sc_hd__a2111oi_0): \X_10_gate -> \X_10
+Changing input C1 of cell _085__gate (sky130_fd_sc_hd__a2111oi_0): \X_11_gate -> \X_11
+Changing input D1 of cell _085__gate (sky130_fd_sc_hd__a2111oi_0): \X_12_gate -> \X_12
+Changing input A1 of cell _086__gate (sky130_fd_sc_hd__a21oi_1): \_036__gate -> \_036_
+Changing input A2 of cell _086__gate (sky130_fd_sc_hd__a21oi_1): \_037__gate -> \_037_
+Changing input B1 of cell _086__gate (sky130_fd_sc_hd__a21oi_1): \_032__gate -> \_032_
+Changing input A of cell _087__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_9_gate -> \X_9
+Changing input A1 of cell _088__gate (sky130_fd_sc_hd__o41ai_1): \X_7_gate -> \X_7
+Changing input A2 of cell _088__gate (sky130_fd_sc_hd__o41ai_1): \X_8_gate -> \X_8
+Changing input A3 of cell _088__gate (sky130_fd_sc_hd__o41ai_1): \_038__gate -> \_038_
+Changing input A4 of cell _088__gate (sky130_fd_sc_hd__o41ai_1): \_039__gate -> \_039_
+Changing input B1 of cell _088__gate (sky130_fd_sc_hd__o41ai_1): \_028__gate -> \_028_
+Changing input A1 of cell _089__gate (sky130_fd_sc_hd__a221oi_1): \X_5_gate -> \X_5
+Changing input B1 of cell _089__gate (sky130_fd_sc_hd__a221oi_1): \_026__gate -> \_026_
+Changing input B2 of cell _089__gate (sky130_fd_sc_hd__a221oi_1): \_040__gate -> \_040_
+Changing input C1 of cell _089__gate (sky130_fd_sc_hd__a221oi_1): \_025__gate -> \_025_
+Changing input A of cell _090__gate (sky130_fd_sc_hd__nor2_1): \X_1_gate -> \X_1
+Changing input B of cell _090__gate (sky130_fd_sc_hd__nor2_1): \X_2_gate -> \X_2
+Changing input A of cell _091__gate (sky130_fd_sc_hd__nor2_1): \X_3_gate -> \X_3
+Changing input B of cell _091__gate (sky130_fd_sc_hd__nor2_1): \X_4_gate -> \X_4
+Changing input B of cell _092__gate (sky130_fd_sc_hd__nand3_1): \_042__gate -> \_042_
+Changing input C of cell _092__gate (sky130_fd_sc_hd__nand3_1): \_043__gate -> \_043_
+Changing input A of cell _093__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_3_gate -> \X_3
+Changing input A1 of cell _094__gate (sky130_fd_sc_hd__o21ai_0): \X_3_gate -> \X_3
+Changing input B1 of cell _094__gate (sky130_fd_sc_hd__o21ai_0): \_042__gate -> \_042_
+Changing input A1 of cell _095__gate (sky130_fd_sc_hd__a21oi_1): \X_1_gate -> \X_1
+Changing input A1 of cell _096__gate (sky130_fd_sc_hd__o31ai_1): \_043__gate -> \_043_
+Changing input A2 of cell _096__gate (sky130_fd_sc_hd__o31ai_1): \_045__gate -> \_045_
+Changing input A3 of cell _096__gate (sky130_fd_sc_hd__o31ai_1): \_000__gate -> \_000_
+Changing input B1 of cell _096__gate (sky130_fd_sc_hd__o31ai_1): \_001__gate -> \_001_
+Changing input A_N of cell _097__gate (sky130_fd_sc_hd__and4b_1): \X_1_gate -> \X_1
+Changing input B of cell _097__gate (sky130_fd_sc_hd__and4b_1): \X_2_gate -> \X_2
+Changing input A2 of cell _098__gate (sky130_fd_sc_hd__a21oi_1): \_002__gate -> \_002_
+Changing input B1 of cell _098__gate (sky130_fd_sc_hd__a21oi_1): \_003__gate -> \_003_
+Changing input A1 of cell _099__gate (sky130_fd_sc_hd__o21ai_0): \_041__gate -> \_041_
+Changing input A2 of cell _099__gate (sky130_fd_sc_hd__o21ai_0): \_044__gate -> \_044_
+Changing input B1 of cell _099__gate (sky130_fd_sc_hd__o21ai_0): \_004__gate -> \_004_
+Changing input A of cell _100__gate (sky130_fd_sc_hd__xor2_1): \X_13_gate -> \X_13
+Changing input B of cell _100__gate (sky130_fd_sc_hd__xor2_1): \_019__gate -> \_019_
+Changing input A of cell _101__gate (sky130_fd_sc_hd__xnor2_1): \X_9_gate -> \X_9
+Changing input B of cell _101__gate (sky130_fd_sc_hd__xnor2_1): \_016__gate -> \_016_
+Changing input A of cell _102__gate (sky130_fd_sc_hd__xnor2_1): \_008__gate -> \_008_
+Changing input B of cell _102__gate (sky130_fd_sc_hd__xnor2_1): \_018__gate -> \_018_
+Changing input A1 of cell _103__gate (sky130_fd_sc_hd__a21oi_1): \X_4_gate -> \X_4
+Changing input A2 of cell _103__gate (sky130_fd_sc_hd__a21oi_1): \_012__gate -> \_012_
+Changing input B1 of cell _103__gate (sky130_fd_sc_hd__a21oi_1): \X_5_gate -> \X_5
+Changing input A of cell _104__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_013__gate -> \_013_
+Changing input SLEEP of cell _104__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_005__gate -> \_005_
+Changing input A of cell _105__gate (sky130_fd_sc_hd__xor2_1): \X_7_gate -> \X_7
+Changing input B of cell _105__gate (sky130_fd_sc_hd__xor2_1): \_014__gate -> \_014_
+Changing input B of cell _106__gate (sky130_fd_sc_hd__xor2_1): \X_1_gate -> \X_1
+Changing input A2 of cell _107__gate (sky130_fd_sc_hd__a31oi_1): \X_1_gate -> \X_1
+Changing input A3 of cell _107__gate (sky130_fd_sc_hd__a31oi_1): \X_2_gate -> \X_2
+Changing input B1 of cell _107__gate (sky130_fd_sc_hd__a31oi_1): \X_3_gate -> \X_3
+Changing input A of cell _108__gate (sky130_fd_sc_hd__nor2_1): \_012__gate -> \_012_
+Changing input B of cell _108__gate (sky130_fd_sc_hd__nor2_1): \_006__gate -> \_006_
+Changing input D of cell DFF_0_gate (dff): \I12_gate -> \I12
+Changing input D of cell DFF_1_gold (dff): \I13_gold -> \I13
+Changing input D of cell DFF_10_gold (dff): \I210_gold -> \I210
+Changing input D of cell DFF_11_gold (dff): \I211_gold -> \I211
+Changing input D of cell DFF_12_gold (dff): \I306_gold -> \I306
+Changing input D of cell DFF_13_gold (dff): \I307_gold -> \I307
+Changing input D of cell DFF_14_gold (dff): \I308_gold -> \I308
+Changing input D of cell DFF_15_gold (dff): \I309_gold -> \I309
+Changing input D of cell DFF_2_gold (dff): \I14_gold -> \I14
+Changing input D of cell DFF_3_gold (dff): \I15_gold -> \I15
+Changing input D of cell DFF_4_gold (dff): \I110_gold -> \I110
+Changing input D of cell DFF_5_gold (dff): \I111_gold -> \I111
+Changing input D of cell DFF_6_gold (dff): \I112_gold -> \I112
+Changing input D of cell DFF_7_gold (dff): \I113_gold -> \I113
+Changing input D of cell DFF_8_gold (dff): \I208_gold -> \I208
+Changing input D of cell DFF_9_gold (dff): \I209_gold -> \I209
+Changing input A of cell _046__gold (sky130_fd_sc_hd__clkinv_1): \X_10_gold -> \X_10
+Changing input A of cell _047__gold (sky130_fd_sc_hd__clkinv_1): \X_11_gold -> \X_11
+Changing input A of cell _048__gold (sky130_fd_sc_hd__clkinv_1): \X_12_gold -> \X_12
+Changing input B of cell _050__gold (sky130_fd_sc_hd__nand2_1): \X_1_gold -> \X_1
+Changing input B of cell _051__gold (sky130_fd_sc_hd__and4_1): \X_1_gold -> \X_1
+Changing input C of cell _051__gold (sky130_fd_sc_hd__and4_1): \X_2_gold -> \X_2
+Changing input D of cell _051__gold (sky130_fd_sc_hd__and4_1): \X_3_gold -> \X_3
+Changing input A of cell _052__gold (sky130_fd_sc_hd__nand3_1): \X_4_gold -> \X_4
+Changing input B of cell _052__gold (sky130_fd_sc_hd__nand3_1): \X_5_gold -> \X_5
+Changing input C of cell _052__gold (sky130_fd_sc_hd__nand3_1): \_012__gold -> \_012_
+Changing input A of cell _053__gold (sky130_fd_sc_hd__and4_1): \X_4_gold -> \X_4
+Changing input B of cell _053__gold (sky130_fd_sc_hd__and4_1): \X_5_gold -> \X_5
+Changing input C of cell _053__gold (sky130_fd_sc_hd__and4_1): \X_6_gold -> \X_6
+Changing input D of cell _053__gold (sky130_fd_sc_hd__and4_1): \_012__gold -> \_012_
+Changing input A of cell _054__gold (sky130_fd_sc_hd__and2_0): \X_7_gold -> \X_7
+Changing input B of cell _054__gold (sky130_fd_sc_hd__and2_0): \_014__gold -> \_014_
+Changing input A of cell _055__gold (sky130_fd_sc_hd__nand2_1): \X_8_gold -> \X_8
+Changing input B of cell _055__gold (sky130_fd_sc_hd__nand2_1): \_015__gold -> \_015_
+Changing input A of cell _056__gold (sky130_fd_sc_hd__nand4_1): \X_7_gold -> \X_7
+Changing input B of cell _056__gold (sky130_fd_sc_hd__nand4_1): \X_8_gold -> \X_8
+Changing input C of cell _056__gold (sky130_fd_sc_hd__nand4_1): \X_9_gold -> \X_9
+Changing input D of cell _056__gold (sky130_fd_sc_hd__nand4_1): \_014__gold -> \_014_
+Changing input A of cell _057__gold (sky130_fd_sc_hd__nor2_1): \_007__gold -> \_007_
+Changing input B of cell _057__gold (sky130_fd_sc_hd__nor2_1): \_017__gold -> \_017_
+Changing input A of cell _058__gold (sky130_fd_sc_hd__nor4_1): \_007__gold -> \_007_
+Changing input B of cell _058__gold (sky130_fd_sc_hd__nor4_1): \_008__gold -> \_008_
+Changing input C of cell _058__gold (sky130_fd_sc_hd__nor4_1): \_009__gold -> \_009_
+Changing input D of cell _058__gold (sky130_fd_sc_hd__nor4_1): \_017__gold -> \_017_
+Changing input A of cell _059__gold (sky130_fd_sc_hd__nand2_1): \X_13_gold -> \X_13
+Changing input B of cell _059__gold (sky130_fd_sc_hd__nand2_1): \_019__gold -> \_019_
+Changing input A of cell _060__gold (sky130_fd_sc_hd__xnor2_1): \X_14_gold -> \X_14
+Changing input B of cell _060__gold (sky130_fd_sc_hd__xnor2_1): \_020__gold -> \_020_
+Changing input A of cell _061__gold (sky130_fd_sc_hd__xnor2_1): \X_10_gold -> \X_10
+Changing input B of cell _061__gold (sky130_fd_sc_hd__xnor2_1): \_017__gold -> \_017_
+Changing input A of cell _062__gold (sky130_fd_sc_hd__xnor2_1): \X_6_gold -> \X_6
+Changing input B of cell _062__gold (sky130_fd_sc_hd__xnor2_1): \_013__gold -> \_013_
+Changing input A of cell _063__gold (sky130_fd_sc_hd__xnor2_1): \X_2_gold -> \X_2
+Changing input B of cell _063__gold (sky130_fd_sc_hd__xnor2_1): \_011__gold -> \_011_
+Changing input A of cell _064__gold (sky130_fd_sc_hd__nand4_1): \X_13_gold -> \X_13
+Changing input B of cell _064__gold (sky130_fd_sc_hd__nand4_1): \X_14_gold -> \X_14
+Changing input C of cell _064__gold (sky130_fd_sc_hd__nand4_1): \X_15_gold -> \X_15
+Changing input D of cell _064__gold (sky130_fd_sc_hd__nand4_1): \_019__gold -> \_019_
+Changing input A1 of cell _065__gold (sky130_fd_sc_hd__a31oi_1): \X_13_gold -> \X_13
+Changing input A2 of cell _065__gold (sky130_fd_sc_hd__a31oi_1): \X_14_gold -> \X_14
+Changing input A3 of cell _065__gold (sky130_fd_sc_hd__a31oi_1): \_019__gold -> \_019_
+Changing input B1 of cell _065__gold (sky130_fd_sc_hd__a31oi_1): \X_15_gold -> \X_15
+Changing input A of cell _066__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_021__gold -> \_021_
+Changing input SLEEP of cell _066__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_022__gold -> \_022_
+Changing input A of cell _067__gold (sky130_fd_sc_hd__xnor2_1): \X_16_gold -> \X_16
+Changing input B of cell _067__gold (sky130_fd_sc_hd__xnor2_1): \_021__gold -> \_021_
+Changing input A1 of cell _068__gold (sky130_fd_sc_hd__a21oi_1): \X_11_gold -> \X_11
+Changing input A2 of cell _068__gold (sky130_fd_sc_hd__a21oi_1): \_018__gold -> \_018_
+Changing input B1 of cell _068__gold (sky130_fd_sc_hd__a21oi_1): \X_12_gold -> \X_12
+Changing input A of cell _069__gold (sky130_fd_sc_hd__nor2_1): \_019__gold -> \_019_
+Changing input B of cell _069__gold (sky130_fd_sc_hd__nor2_1): \_023__gold -> \_023_
+Changing input A of cell _070__gold (sky130_fd_sc_hd__xor2_1): \X_8_gold -> \X_8
+Changing input B of cell _070__gold (sky130_fd_sc_hd__xor2_1): \_015__gold -> \_015_
+Changing input A of cell _071__gold (sky130_fd_sc_hd__xor2_1): \X_4_gold -> \X_4
+Changing input B of cell _071__gold (sky130_fd_sc_hd__xor2_1): \_012__gold -> \_012_
+Changing input A of cell _072__gold (sky130_fd_sc_hd__nand2_1): \X_6_gold -> \X_6
+Changing input A of cell _073__gold (sky130_fd_sc_hd__nor2_1): \X_5_gold -> \X_5
+Changing input B of cell _073__gold (sky130_fd_sc_hd__nor2_1): \_024__gold -> \_024_
+Changing input A of cell _074__gold (sky130_fd_sc_hd__nor2_1): \X_5_gold -> \X_5
+Changing input B of cell _074__gold (sky130_fd_sc_hd__nor2_1): \X_6_gold -> \X_6
+Changing input A_N of cell _075__gold (sky130_fd_sc_hd__and3b_1): \X_7_gold -> \X_7
+Changing input B of cell _075__gold (sky130_fd_sc_hd__and3b_1): \X_8_gold -> \X_8
+Changing input A1 of cell _076__gold (sky130_fd_sc_hd__a21oi_1): \X_7_gold -> \X_7
+Changing input B1 of cell _076__gold (sky130_fd_sc_hd__a21oi_1): \_027__gold -> \_027_
+Changing input A1 of cell _077__gold (sky130_fd_sc_hd__a21oi_1): \X_12_gold -> \X_12
+Changing input B1 of cell _077__gold (sky130_fd_sc_hd__a21oi_1): \X_11_gold -> \X_11
+Changing input A of cell _078__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_11_gold -> \X_11
+Changing input A1 of cell _079__gold (sky130_fd_sc_hd__a21oi_1): \X_10_gold -> \X_10
+Changing input B1 of cell _079__gold (sky130_fd_sc_hd__a21oi_1): \X_9_gold -> \X_9
+Changing input A1 of cell _080__gold (sky130_fd_sc_hd__o31ai_1): \X_10_gold -> \X_10
+Changing input A2 of cell _080__gold (sky130_fd_sc_hd__o31ai_1): \_029__gold -> \_029_
+Changing input A3 of cell _080__gold (sky130_fd_sc_hd__o31ai_1): \_030__gold -> \_030_
+Changing input B1 of cell _080__gold (sky130_fd_sc_hd__o31ai_1): \_031__gold -> \_031_
+Changing input A1 of cell _081__gold (sky130_fd_sc_hd__a21oi_1): \X_16_gold -> \X_16
+Changing input B1 of cell _081__gold (sky130_fd_sc_hd__a21oi_1): \X_15_gold -> \X_15
+Changing input A of cell _082__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_15_gold -> \X_15
+Changing input A1 of cell _083__gold (sky130_fd_sc_hd__a21oi_1): \X_14_gold -> \X_14
+Changing input B1 of cell _083__gold (sky130_fd_sc_hd__a21oi_1): \X_13_gold -> \X_13
+Changing input A1 of cell _084__gold (sky130_fd_sc_hd__o31ai_1): \X_14_gold -> \X_14
+Changing input A2 of cell _084__gold (sky130_fd_sc_hd__o31ai_1): \_033__gold -> \_033_
+Changing input A3 of cell _084__gold (sky130_fd_sc_hd__o31ai_1): \_034__gold -> \_034_
+Changing input B1 of cell _084__gold (sky130_fd_sc_hd__o31ai_1): \_035__gold -> \_035_
+Changing input A1 of cell _085__gold (sky130_fd_sc_hd__a2111oi_0): \X_13_gold -> \X_13
+Changing input A2 of cell _085__gold (sky130_fd_sc_hd__a2111oi_0): \_010__gold -> \_010_
+Changing input B1 of cell _085__gold (sky130_fd_sc_hd__a2111oi_0): \X_10_gold -> \X_10
+Changing input C1 of cell _085__gold (sky130_fd_sc_hd__a2111oi_0): \X_11_gold -> \X_11
+Changing input D1 of cell _085__gold (sky130_fd_sc_hd__a2111oi_0): \X_12_gold -> \X_12
+Changing input A1 of cell _086__gold (sky130_fd_sc_hd__a21oi_1): \_036__gold -> \_036_
+Changing input A2 of cell _086__gold (sky130_fd_sc_hd__a21oi_1): \_037__gold -> \_037_
+Changing input B1 of cell _086__gold (sky130_fd_sc_hd__a21oi_1): \_032__gold -> \_032_
+Changing input A of cell _087__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_9_gold -> \X_9
+Changing input A1 of cell _088__gold (sky130_fd_sc_hd__o41ai_1): \X_7_gold -> \X_7
+Changing input A2 of cell _088__gold (sky130_fd_sc_hd__o41ai_1): \X_8_gold -> \X_8
+Changing input A3 of cell _088__gold (sky130_fd_sc_hd__o41ai_1): \_038__gold -> \_038_
+Changing input A4 of cell _088__gold (sky130_fd_sc_hd__o41ai_1): \_039__gold -> \_039_
+Changing input B1 of cell _088__gold (sky130_fd_sc_hd__o41ai_1): \_028__gold -> \_028_
+Changing input A1 of cell _089__gold (sky130_fd_sc_hd__a221oi_1): \X_5_gold -> \X_5
+Changing input B1 of cell _089__gold (sky130_fd_sc_hd__a221oi_1): \_026__gold -> \_026_
+Changing input B2 of cell _089__gold (sky130_fd_sc_hd__a221oi_1): \_040__gold -> \_040_
+Changing input C1 of cell _089__gold (sky130_fd_sc_hd__a221oi_1): \_025__gold -> \_025_
+Changing input A of cell _090__gold (sky130_fd_sc_hd__nor2_1): \X_1_gold -> \X_1
+Changing input B of cell _090__gold (sky130_fd_sc_hd__nor2_1): \X_2_gold -> \X_2
+Changing input A of cell _091__gold (sky130_fd_sc_hd__nor2_1): \X_3_gold -> \X_3
+Changing input B of cell _091__gold (sky130_fd_sc_hd__nor2_1): \X_4_gold -> \X_4
+Changing input B of cell _092__gold (sky130_fd_sc_hd__nand3_1): \_042__gold -> \_042_
+Changing input C of cell _092__gold (sky130_fd_sc_hd__nand3_1): \_043__gold -> \_043_
+Changing input A of cell _093__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \X_3_gold -> \X_3
+Changing input A1 of cell _094__gold (sky130_fd_sc_hd__o21ai_0): \X_3_gold -> \X_3
+Changing input B1 of cell _094__gold (sky130_fd_sc_hd__o21ai_0): \_042__gold -> \_042_
+Changing input A1 of cell _095__gold (sky130_fd_sc_hd__a21oi_1): \X_1_gold -> \X_1
+Changing input A1 of cell _096__gold (sky130_fd_sc_hd__o31ai_1): \_043__gold -> \_043_
+Changing input A2 of cell _096__gold (sky130_fd_sc_hd__o31ai_1): \_045__gold -> \_045_
+Changing input A3 of cell _096__gold (sky130_fd_sc_hd__o31ai_1): \_000__gold -> \_000_
+Changing input B1 of cell _096__gold (sky130_fd_sc_hd__o31ai_1): \_001__gold -> \_001_
+Changing input A_N of cell _097__gold (sky130_fd_sc_hd__and4b_1): \X_1_gold -> \X_1
+Changing input B of cell _097__gold (sky130_fd_sc_hd__and4b_1): \X_2_gold -> \X_2
+Changing input A2 of cell _098__gold (sky130_fd_sc_hd__a21oi_1): \_002__gold -> \_002_
+Changing input B1 of cell _098__gold (sky130_fd_sc_hd__a21oi_1): \_003__gold -> \_003_
+Changing input A1 of cell _099__gold (sky130_fd_sc_hd__o21ai_0): \_041__gold -> \_041_
+Changing input A2 of cell _099__gold (sky130_fd_sc_hd__o21ai_0): \_044__gold -> \_044_
+Changing input B1 of cell _099__gold (sky130_fd_sc_hd__o21ai_0): \_004__gold -> \_004_
+Changing input A of cell _100__gold (sky130_fd_sc_hd__xor2_1): \X_13_gold -> \X_13
+Changing input B of cell _100__gold (sky130_fd_sc_hd__xor2_1): \_019__gold -> \_019_
+Changing input A of cell _101__gold (sky130_fd_sc_hd__xnor2_1): \X_9_gold -> \X_9
+Changing input B of cell _101__gold (sky130_fd_sc_hd__xnor2_1): \_016__gold -> \_016_
+Changing input A of cell _102__gold (sky130_fd_sc_hd__xnor2_1): \_008__gold -> \_008_
+Changing input B of cell _102__gold (sky130_fd_sc_hd__xnor2_1): \_018__gold -> \_018_
+Changing input A1 of cell _103__gold (sky130_fd_sc_hd__a21oi_1): \X_4_gold -> \X_4
+Changing input A2 of cell _103__gold (sky130_fd_sc_hd__a21oi_1): \_012__gold -> \_012_
+Changing input B1 of cell _103__gold (sky130_fd_sc_hd__a21oi_1): \X_5_gold -> \X_5
+Changing input A of cell _104__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_013__gold -> \_013_
+Changing input SLEEP of cell _104__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \_005__gold -> \_005_
+Changing input A of cell _105__gold (sky130_fd_sc_hd__xor2_1): \X_7_gold -> \X_7
+Changing input B of cell _105__gold (sky130_fd_sc_hd__xor2_1): \_014__gold -> \_014_
+Changing input B of cell _106__gold (sky130_fd_sc_hd__xor2_1): \X_1_gold -> \X_1
+Changing input A2 of cell _107__gold (sky130_fd_sc_hd__a31oi_1): \X_1_gold -> \X_1
+Changing input A3 of cell _107__gold (sky130_fd_sc_hd__a31oi_1): \X_2_gold -> \X_2
+Changing input B1 of cell _107__gold (sky130_fd_sc_hd__a31oi_1): \X_3_gold -> \X_3
+Changing input A of cell _108__gold (sky130_fd_sc_hd__nor2_1): \_012__gold -> \_012_
+Changing input B of cell _108__gold (sky130_fd_sc_hd__nor2_1): \_006__gold -> \_006_
+Changing input D of cell DFF_0_gold (dff): \I12_gold -> \I12
+Presumably equivalent cells: DFF_0_gold DFF_0_gate (dff) -> DFF_0
+Presumably equivalent cells: DFF_1_gold DFF_1_gate (dff) -> DFF_1
+Presumably equivalent cells: DFF_10_gold DFF_10_gate (dff) -> DFF_10
+Presumably equivalent cells: DFF_11_gold DFF_11_gate (dff) -> DFF_11
+Presumably equivalent cells: DFF_12_gold DFF_12_gate (dff) -> DFF_12
+Presumably equivalent cells: DFF_13_gold DFF_13_gate (dff) -> DFF_13
+Presumably equivalent cells: DFF_14_gold DFF_14_gate (dff) -> DFF_14
+Presumably equivalent cells: DFF_15_gold DFF_15_gate (dff) -> DFF_15
+Presumably equivalent cells: DFF_2_gold DFF_2_gate (dff) -> DFF_2
+Presumably equivalent cells: DFF_3_gold DFF_3_gate (dff) -> DFF_3
+Presumably equivalent cells: DFF_4_gold DFF_4_gate (dff) -> DFF_4
+Presumably equivalent cells: DFF_5_gold DFF_5_gate (dff) -> DFF_5
+Presumably equivalent cells: DFF_6_gold DFF_6_gate (dff) -> DFF_6
+Presumably equivalent cells: DFF_7_gold DFF_7_gate (dff) -> DFF_7
+Presumably equivalent cells: DFF_8_gold DFF_8_gate (dff) -> DFF_8
+Presumably equivalent cells: DFF_9_gold DFF_9_gate (dff) -> DFF_9
+Presumably equivalent cells: _046__gold _046__gate (sky130_fd_sc_hd__clkinv_1) -> _046_
+Presumably equivalent cells: _047__gold _047__gate (sky130_fd_sc_hd__clkinv_1) -> _047_
+Presumably equivalent cells: _048__gold _048__gate (sky130_fd_sc_hd__clkinv_1) -> _048_
+Presumably equivalent cells: _049__gold _049__gate (sky130_fd_sc_hd__clkinv_1) -> _049_
+Presumably equivalent cells: _050__gold _050__gate (sky130_fd_sc_hd__nand2_1) -> _050_
+Presumably equivalent cells: _052__gold _052__gate (sky130_fd_sc_hd__nand3_1) -> _052_
+Presumably equivalent cells: _053__gold _053__gate (sky130_fd_sc_hd__and4_1) -> _053_
+Presumably equivalent cells: _054__gold _054__gate (sky130_fd_sc_hd__and2_0) -> _054_
+Presumably equivalent cells: _055__gold _055__gate (sky130_fd_sc_hd__nand2_1) -> _055_
+Presumably equivalent cells: _057__gold _057__gate (sky130_fd_sc_hd__nor2_1) -> _057_
+Presumably equivalent cells: _058__gold _058__gate (sky130_fd_sc_hd__nor4_1) -> _058_
+Presumably equivalent cells: _059__gold _059__gate (sky130_fd_sc_hd__nand2_1) -> _059_
+Presumably equivalent cells: _060__gold _060__gate (sky130_fd_sc_hd__xnor2_1) -> _060_
+Presumably equivalent cells: _061__gold _061__gate (sky130_fd_sc_hd__xnor2_1) -> _061_
+Presumably equivalent cells: _062__gold _062__gate (sky130_fd_sc_hd__xnor2_1) -> _062_
+Presumably equivalent cells: _063__gold _063__gate (sky130_fd_sc_hd__xnor2_1) -> _063_
+Presumably equivalent cells: _064__gold _064__gate (sky130_fd_sc_hd__nand4_1) -> _064_
+Presumably equivalent cells: _065__gold _065__gate (sky130_fd_sc_hd__a31oi_1) -> _065_
+Presumably equivalent cells: _066__gold _066__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _066_
+Presumably equivalent cells: _067__gold _067__gate (sky130_fd_sc_hd__xnor2_1) -> _067_
+Presumably equivalent cells: _068__gold _068__gate (sky130_fd_sc_hd__a21oi_1) -> _068_
+Presumably equivalent cells: _069__gold _069__gate (sky130_fd_sc_hd__nor2_1) -> _069_
+Presumably equivalent cells: _070__gold _070__gate (sky130_fd_sc_hd__xor2_1) -> _070_
+Presumably equivalent cells: _071__gold _071__gate (sky130_fd_sc_hd__xor2_1) -> _071_
+Presumably equivalent cells: _072__gold _072__gate (sky130_fd_sc_hd__nand2_1) -> _072_
+Presumably equivalent cells: _073__gold _073__gate (sky130_fd_sc_hd__nor2_1) -> _073_
+Presumably equivalent cells: _074__gold _074__gate (sky130_fd_sc_hd__nor2_1) -> _074_
+Presumably equivalent cells: _075__gold _075__gate (sky130_fd_sc_hd__and3b_1) -> _075_
+Presumably equivalent cells: _076__gold _076__gate (sky130_fd_sc_hd__a21oi_1) -> _076_
+Presumably equivalent cells: _077__gold _077__gate (sky130_fd_sc_hd__a21oi_1) -> _077_
+Presumably equivalent cells: _078__gold _078__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _078_
+Presumably equivalent cells: _079__gold _079__gate (sky130_fd_sc_hd__a21oi_1) -> _079_
+Presumably equivalent cells: _080__gold _080__gate (sky130_fd_sc_hd__o31ai_1) -> _080_
+Presumably equivalent cells: _081__gold _081__gate (sky130_fd_sc_hd__a21oi_1) -> _081_
+Presumably equivalent cells: _082__gold _082__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _082_
+Presumably equivalent cells: _083__gold _083__gate (sky130_fd_sc_hd__a21oi_1) -> _083_
+Presumably equivalent cells: _084__gold _084__gate (sky130_fd_sc_hd__o31ai_1) -> _084_
+Presumably equivalent cells: _085__gold _085__gate (sky130_fd_sc_hd__a2111oi_0) -> _085_
+Presumably equivalent cells: _086__gold _086__gate (sky130_fd_sc_hd__a21oi_1) -> _086_
+Presumably equivalent cells: _087__gold _087__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _087_
+Presumably equivalent cells: _088__gold _088__gate (sky130_fd_sc_hd__o41ai_1) -> _088_
+Presumably equivalent cells: _089__gold _089__gate (sky130_fd_sc_hd__a221oi_1) -> _089_
+Presumably equivalent cells: _090__gold _090__gate (sky130_fd_sc_hd__nor2_1) -> _090_
+Presumably equivalent cells: _091__gold _091__gate (sky130_fd_sc_hd__nor2_1) -> _091_
+Presumably equivalent cells: _092__gold _092__gate (sky130_fd_sc_hd__nand3_1) -> _092_
+Presumably equivalent cells: _093__gold _093__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _093_
+Presumably equivalent cells: _094__gold _094__gate (sky130_fd_sc_hd__o21ai_0) -> _094_
+Presumably equivalent cells: _095__gold _095__gate (sky130_fd_sc_hd__a21oi_1) -> _095_
+Presumably equivalent cells: _096__gold _096__gate (sky130_fd_sc_hd__o31ai_1) -> _096_
+Presumably equivalent cells: _097__gold _097__gate (sky130_fd_sc_hd__and4b_1) -> _097_
+Presumably equivalent cells: _098__gold _098__gate (sky130_fd_sc_hd__a21oi_1) -> _098_
+Presumably equivalent cells: _099__gold _099__gate (sky130_fd_sc_hd__o21ai_0) -> _099_
+Presumably equivalent cells: _100__gold _100__gate (sky130_fd_sc_hd__xor2_1) -> _100_
+Presumably equivalent cells: _101__gold _101__gate (sky130_fd_sc_hd__xnor2_1) -> _101_
+Presumably equivalent cells: _102__gold _102__gate (sky130_fd_sc_hd__xnor2_1) -> _102_
+Presumably equivalent cells: _103__gold _103__gate (sky130_fd_sc_hd__a21oi_1) -> _103_
+Presumably equivalent cells: _104__gold _104__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _104_
+Presumably equivalent cells: _105__gold _105__gate (sky130_fd_sc_hd__xor2_1) -> _105_
+Presumably equivalent cells: _106__gold _106__gate (sky130_fd_sc_hd__xor2_1) -> _106_
+Presumably equivalent cells: _107__gold _107__gate (sky130_fd_sc_hd__a31oi_1) -> _107_
+Presumably equivalent cells: _108__gold _108__gate (sky130_fd_sc_hd__nor2_1) -> _108_
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \equiv
+Used module:     \sky130_fd_sc_hd__nor2_1
+Used module:     \dff
+Used module:         \sky130_fd_sc_hd__dfxtp_1
+Used module:     \sky130_fd_sc_hd__clkinv_1
+Used module:     \sky130_fd_sc_hd__and4_2
+Used module:     \sky130_fd_sc_hd__nand2_1
+Used module:     \sky130_fd_sc_hd__nand3_1
+Used module:     \sky130_fd_sc_hd__and4_1
+Used module:     \sky130_fd_sc_hd__and2_0
+Used module:     \sky130_fd_sc_hd__nand4_2
+Used module:     \sky130_fd_sc_hd__nor4_1
+Used module:     \sky130_fd_sc_hd__xnor2_1
+Used module:     \sky130_fd_sc_hd__nand4_1
+Used module:     \sky130_fd_sc_hd__a31oi_1
+Used module:     \sky130_fd_sc_hd__lpflow_isobufsrc_1
+Used module:     \sky130_fd_sc_hd__a21oi_1
+Used module:     \sky130_fd_sc_hd__xor2_1
+Used module:     \sky130_fd_sc_hd__and3b_1
+Used module:     \sky130_fd_sc_hd__o31ai_1
+Used module:     \sky130_fd_sc_hd__a2111oi_0
+Used module:     \sky130_fd_sc_hd__o41ai_1
+Used module:     \sky130_fd_sc_hd__a221oi_1
+Used module:     \sky130_fd_sc_hd__o21ai_0
+Used module:     \sky130_fd_sc_hd__and4b_1
+
+8.2. Analyzing design hierarchy..
+Top module:  \equiv
+Used module:     \sky130_fd_sc_hd__nor2_1
+Used module:     \dff
+Used module:         \sky130_fd_sc_hd__dfxtp_1
+Used module:     \sky130_fd_sc_hd__clkinv_1
+Used module:     \sky130_fd_sc_hd__and4_2
+Used module:     \sky130_fd_sc_hd__nand2_1
+Used module:     \sky130_fd_sc_hd__nand3_1
+Used module:     \sky130_fd_sc_hd__and4_1
+Used module:     \sky130_fd_sc_hd__and2_0
+Used module:     \sky130_fd_sc_hd__nand4_2
+Used module:     \sky130_fd_sc_hd__nor4_1
+Used module:     \sky130_fd_sc_hd__xnor2_1
+Used module:     \sky130_fd_sc_hd__nand4_1
+Used module:     \sky130_fd_sc_hd__a31oi_1
+Used module:     \sky130_fd_sc_hd__lpflow_isobufsrc_1
+Used module:     \sky130_fd_sc_hd__a21oi_1
+Used module:     \sky130_fd_sc_hd__xor2_1
+Used module:     \sky130_fd_sc_hd__and3b_1
+Used module:     \sky130_fd_sc_hd__o31ai_1
+Used module:     \sky130_fd_sc_hd__a2111oi_0
+Used module:     \sky130_fd_sc_hd__o41ai_1
+Used module:     \sky130_fd_sc_hd__a221oi_1
+Used module:     \sky130_fd_sc_hd__o21ai_0
+Used module:     \sky130_fd_sc_hd__and4b_1
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module dff.
+Deleting now unused module sky130_fd_sc_hd__a2111oi_0.
+Deleting now unused module sky130_fd_sc_hd__a21oi_1.
+Deleting now unused module sky130_fd_sc_hd__a221oi_1.
+Deleting now unused module sky130_fd_sc_hd__a31oi_1.
+Deleting now unused module sky130_fd_sc_hd__and2_0.
+Deleting now unused module sky130_fd_sc_hd__and3b_1.
+Deleting now unused module sky130_fd_sc_hd__and4_1.
+Deleting now unused module sky130_fd_sc_hd__and4_2.
+Deleting now unused module sky130_fd_sc_hd__and4b_1.
+Deleting now unused module sky130_fd_sc_hd__clkinv_1.
+Deleting now unused module sky130_fd_sc_hd__dfxtp_1.
+Deleting now unused module sky130_fd_sc_hd__lpflow_isobufsrc_1.
+Deleting now unused module sky130_fd_sc_hd__nand2_1.
+Deleting now unused module sky130_fd_sc_hd__nand3_1.
+Deleting now unused module sky130_fd_sc_hd__nand4_1.
+Deleting now unused module sky130_fd_sc_hd__nand4_2.
+Deleting now unused module sky130_fd_sc_hd__nor2_1.
+Deleting now unused module sky130_fd_sc_hd__nor4_1.
+Deleting now unused module sky130_fd_sc_hd__o21ai_0.
+Deleting now unused module sky130_fd_sc_hd__o31ai_1.
+Deleting now unused module sky130_fd_sc_hd__o41ai_1.
+Deleting now unused module sky130_fd_sc_hd__xnor2_1.
+Deleting now unused module sky130_fd_sc_hd__xor2_1.
+<suppressed ~82 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 0 unused cells and 46 unused wires.
+<suppressed ~1 debug messages>
+
+11. Executing EQUIV_SIMPLE pass.
+Found 2 unproven $equiv cells (2 groups) in equiv:
+  Trying to prove $equiv for \_057_.B: success!
+  Trying to prove $equiv for \_052_.C: success!
+Proved 2 previously unproven $equiv cells.
+
+12. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+13. Executing EQUIV_STATUS pass.
+Found 79 $equiv cells in equiv:
+  Of those cells 79 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 086aab542a, CPU: user 0.06s system 0.03s, MEM: 14.12 MB peak
+Yosys 0.33 (git sha1 2584903a060)
+Time spent: 22% 8x read_verilog (0 sec), 18% 1x flatten (0 sec), ...
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'

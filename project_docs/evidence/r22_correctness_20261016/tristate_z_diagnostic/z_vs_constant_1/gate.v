@@ -1,0 +1,1 @@
+module top(EN,Y); input EN; output Y; assign Y=1'b1; endmodule

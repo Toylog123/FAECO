@@ -1,0 +1,234 @@
+{
+  "schema": "r22-B2-explicit-X-scope-v1",
+  "eda_executed": false,
+  "source_stable": true,
+  "source_changes": [],
+  "inputs": {
+    "project_docs\\evidence\\r22_b_model_audit_20261016\\audit.json": {
+      "sha256": "0869d234751af08715a15a58c98636e7ae193d8a1d423401f6181fc88a83365d"
+    },
+    "experiments\\20260826_picorv32_hetero\\picorv32\\mapped.v": {
+      "sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+      "bytes": 928014
+    },
+    "experiments\\20260826_picorv32_hetero\\picorv32\\eval\\iter008_cand008\\001__07114__B\\mapped.v": {
+      "sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+      "bytes": 928464
+    },
+    "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\mapped.v": {
+      "sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+      "bytes": 112617
+    },
+    "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\eval\\iter005_cand005\\048__0790__B\\mapped.v": {
+      "sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c",
+      "bytes": 112927
+    }
+  },
+  "pairs": [
+    {
+      "top_module": "picorv32",
+      "same_exact_lhs_rhs_list": true,
+      "all_x_sources_have_no_internal_cell_or_assign_consumers": true,
+      "sides": [
+        {
+          "side": "gold_path",
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32\\mapped.v",
+          "sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+          "explicit_x_literal_count": 7,
+          "x_assigns": [
+            {
+              "lhs": "\\cpuregs[0]",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] \\cpuregs[0] ;"
+              ]
+            },
+            {
+              "lhs": "decoded_rs",
+              "rhs": "5'hxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [4:0] decoded_rs;"
+              ]
+            },
+            {
+              "lhs": "pcpi_int_rd",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] pcpi_int_rd;"
+              ]
+            },
+            {
+              "lhs": "pcpi_div_rd",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] pcpi_div_rd;"
+              ]
+            },
+            {
+              "lhs": "pcpi_mul_rd",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] pcpi_mul_rd;"
+              ]
+            },
+            {
+              "lhs": "trace_data",
+              "rhs": "36'hxxxxxxxxx",
+              "source_token_occurrences": 4,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": true,
+              "net_port_declarations": [
+                "output [35:0] trace_data;",
+                "wire [35:0] trace_data;"
+              ]
+            },
+            {
+              "lhs": "pcpi_insn",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 4,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": true,
+              "net_port_declarations": [
+                "output [31:0] pcpi_insn;",
+                "wire [31:0] pcpi_insn;"
+              ]
+            }
+          ]
+        },
+        {
+          "side": "gate_path",
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32\\eval\\iter008_cand008\\001__07114__B\\mapped.v",
+          "sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+          "explicit_x_literal_count": 7,
+          "x_assigns": [
+            {
+              "lhs": "\\cpuregs[0]",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] \\cpuregs[0] ;"
+              ]
+            },
+            {
+              "lhs": "decoded_rs",
+              "rhs": "5'hxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [4:0] decoded_rs;"
+              ]
+            },
+            {
+              "lhs": "pcpi_int_rd",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] pcpi_int_rd;"
+              ]
+            },
+            {
+              "lhs": "pcpi_div_rd",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] pcpi_div_rd;"
+              ]
+            },
+            {
+              "lhs": "pcpi_mul_rd",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 2,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": false,
+              "net_port_declarations": [
+                "wire [31:0] pcpi_mul_rd;"
+              ]
+            },
+            {
+              "lhs": "trace_data",
+              "rhs": "36'hxxxxxxxxx",
+              "source_token_occurrences": 4,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": true,
+              "net_port_declarations": [
+                "output [35:0] trace_data;",
+                "wire [35:0] trace_data;"
+              ]
+            },
+            {
+              "lhs": "pcpi_insn",
+              "rhs": "32'hxxxxxxxx",
+              "source_token_occurrences": 4,
+              "cell_pin_references": [],
+              "other_assign_rhs_references": [],
+              "is_direct_module_output": true,
+              "net_port_declarations": [
+                "output [31:0] pcpi_insn;",
+                "wire [31:0] pcpi_insn;"
+              ]
+            }
+          ]
+        }
+      ],
+      "same_exact_net_port_declarations_for_x_sources": true
+    },
+    {
+      "top_module": "picorv32_pcpi_mul",
+      "same_exact_lhs_rhs_list": true,
+      "all_x_sources_have_no_internal_cell_or_assign_consumers": true,
+      "sides": [
+        {
+          "side": "gold_path",
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\mapped.v",
+          "sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+          "explicit_x_literal_count": 0,
+          "x_assigns": []
+        },
+        {
+          "side": "gate_path",
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\eval\\iter005_cand005\\048__0790__B\\mapped.v",
+          "sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c",
+          "explicit_x_literal_count": 0,
+          "x_assigns": []
+        }
+      ],
+      "same_exact_net_port_declarations_for_x_sources": true
+    }
+  ],
+  "scope_limit": "Mapped source named SKY cell pins and continuous assign RHS are searched. This is an isolation certificate for these explicit X assignments, not a general four-state SEC or an initial-state/reset proof. X top outputs need separate exact-assignment identity, not default SAT-zero semantics."
+}

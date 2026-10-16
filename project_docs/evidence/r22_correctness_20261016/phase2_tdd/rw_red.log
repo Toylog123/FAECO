@@ -1,0 +1,243 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -k tristate or required_input -q
+FFFFFFFFFFFF..F                                                          [100%]
+================================== FAILURES ===================================
+____________ test_real_tristate_model_keeps_high_impedance_enable _____________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1161/test_real_tristate_model_keeps0')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+
+    def test_real_tristate_model_keeps_high_impedance_enable(tmp_path, sky_lib):
+        text = rw.write_liberty_cell_models(
+            sky_lib, tmp_path / "tristate.v", used_cells={"sky130_fd_sc_hd__einvn_1"}).read_text()
+>       assert re.search(r"assign Z\s*=\s*\(\(TE_B\)\)\s*\?\s*1'bz\s*:\s*\(\(!A\)\);", text), text
+E       AssertionError: // Generated from Liberty for symmetric Yosys/ABC SEC.
+E         
+E         module sky130_fd_sc_hd__einvn_1 (A, TE_B, Z);
+E           input A, TE_B;
+E           output Z;
+E           assign Z = (!A);
+E         endmodule
+E         
+E       assert None
+E        +  where None = <function search at 0x000001FA5104ACA0>("assign Z\\s*=\\s*\\(\\(TE_B\\)\\)\\s*\\?\\s*1'bz\\s*:\\s*\\(\\(!A\\)\\);", '// Generated from Liberty for symmetric Yosys/ABC SEC.\n\nmodule sky130_fd_sc_hd__einvn_1 (A, TE_B, Z);\n  input A, TE_B;\n  output Z;\n  assign Z = (!A);\nendmodule\n')
+E        +    where <function search at 0x000001FA5104ACA0> = re.search
+
+code\tests\test_r22_validation_models.py:58: AssertionError
+__ test_abc_model_rejects_tristate_semantics_instead_of_two_state_downgrade ___
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1161/test_abc_model_rejects_tristat0')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+
+    def test_abc_model_rejects_tristate_semantics_instead_of_two_state_downgrade(tmp_path, sky_lib):
+>       with pytest.raises(ValueError, match="(?i)ABC.*three.state|three.state.*ABC"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_validation_models.py:62: Failed
+_ test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>0-.A(A), .Z(Y)] _
+
+ports = '.A(A), .Z(Y)', factory = <function <lambda> at 0x000001FA543AEAC0>
+
+    @pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                      ".A(), .TE_B(EN), .Z(Y)"])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                         lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+    def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+        text = _tristate_top(ports)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:74: AssertionError
+_ test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>0-.A(A), .TE_B(), .Z(Y)] _
+
+ports = '.A(A), .TE_B(), .Z(Y)'
+factory = <function <lambda> at 0x000001FA543AEAC0>
+
+    @pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                      ".A(), .TE_B(EN), .Z(Y)"])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                         lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+    def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+        text = _tristate_top(ports)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:74: AssertionError
+_ test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>0-.A(), .TE_B(EN), .Z(Y)] _
+
+ports = '.A(), .TE_B(EN), .Z(Y)'
+factory = <function <lambda> at 0x000001FA543AEAC0>
+
+    @pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                      ".A(), .TE_B(EN), .Z(Y)"])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                         lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+    def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+        text = _tristate_top(ports)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:74: AssertionError
+_ test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>1-.A(A), .Z(Y)] _
+
+ports = '.A(A), .Z(Y)', factory = <function <lambda> at 0x000001FA543AEC00>
+
+    @pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                      ".A(), .TE_B(EN), .Z(Y)"])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                         lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+    def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+        text = _tristate_top(ports)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:74: AssertionError
+_ test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>1-.A(A), .TE_B(), .Z(Y)] _
+
+ports = '.A(A), .TE_B(), .Z(Y)'
+factory = <function <lambda> at 0x000001FA543AEC00>
+
+    @pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                      ".A(), .TE_B(EN), .Z(Y)"])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                         lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+    def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+        text = _tristate_top(ports)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:74: AssertionError
+_ test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>1-.A(), .TE_B(EN), .Z(Y)] _
+
+ports = '.A(), .TE_B(EN), .Z(Y)'
+factory = <function <lambda> at 0x000001FA543AEC00>
+
+    @pytest.mark.parametrize("ports", [".A(A), .Z(Y)", ".A(A), .TE_B(), .Z(Y)",
+                                      ".A(), .TE_B(EN), .Z(Y)"])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(TRISTATE_LIB),
+                                         lambda: rw.build_boundary_closure_checker(liberty_text=TRISTATE_LIB)])
+    def test_local_gates_reject_missing_or_empty_actual_required_inputs(ports, factory):
+        text = _tristate_top(ports)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:74: AssertionError
+__________ test_f2_required_input_gate_covers_ordinary_cells_too[A] ___________
+
+pin = 'A'
+
+    @pytest.mark.parametrize("pin", ["A", "B"])
+    def test_f2_required_input_gate_covers_ordinary_cells_too(pin):
+        text = _chain(2)
+        cell_text = "sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(n1));"
+        bad_cell = cell_text.replace(f".{pin}({pin}), ", "")
+        bad = text.replace(cell_text, bad_cell)
+        result = rw.build_boundary_closure_checker(liberty_text=LIB)(bad, bad)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:85: AssertionError
+__________ test_f2_required_input_gate_covers_ordinary_cells_too[B] ___________
+
+pin = 'B'
+
+    @pytest.mark.parametrize("pin", ["A", "B"])
+    def test_f2_required_input_gate_covers_ordinary_cells_too(pin):
+        text = _chain(2)
+        cell_text = "sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(n1));"
+        bad_cell = cell_text.replace(f".{pin}({pin}), ", "")
+        bad = text.replace(cell_text, bad_cell)
+        result = rw.build_boundary_closure_checker(liberty_text=LIB)(bad, bad)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:85: AssertionError
+______________ test_f1_rejects_changed_tristate_enable_semantics ______________
+
+    def test_f1_rejects_changed_tristate_enable_semantics():
+        text = _tristate_top()
+        result = rw.build_real_equivalence_checker(TRISTATE_LIB)(text, text.replace("einvn_1", "einvn_3"))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:92: AssertionError
+__________ test_f1_rejects_plain_inverter_to_tristate_without_enable __________
+
+    def test_f1_rejects_plain_inverter_to_tristate_without_enable():
+        before = _tristate_top(".A(A), .Y(Y)", "inv_1")
+        after = _tristate_top(".A(A), .Z(Y)", "einvn_1")
+>       assert rw.build_real_equivalence_checker(TRISTATE_LIB)(before, after).status == "fail"
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:98: AssertionError
+_ test_public_required_input_validator_checks_helpers_and_allows_unused_outputs _
+
+    def test_public_required_input_validator_checks_helpers_and_allows_unused_outputs():
+        lib = parse_liberty_cells(TRISTATE_LIB)
+        helper = _tristate_top(".A(A), .TE_B(EN), .Z()") .replace("module top", "module helper")
+        top = _tristate_top()
+>       assert rw.validate_cell_input_connections(helper + top, lib) is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.real_wns' has no attribute 'validate_cell_input_connections'
+
+code\tests\test_r22_validation_models.py:119: AttributeError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_real_tristate_model_keeps_high_impedance_enable
+FAILED code/tests/test_r22_validation_models.py::test_abc_model_rejects_tristate_semantics_instead_of_two_state_downgrade
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>0-.A(A), .Z(Y)]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>0-.A(A), .TE_B(), .Z(Y)]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>0-.A(), .TE_B(EN), .Z(Y)]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>1-.A(A), .Z(Y)]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>1-.A(A), .TE_B(), .Z(Y)]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_missing_or_empty_actual_required_inputs[<lambda>1-.A(), .TE_B(EN), .Z(Y)]
+FAILED code/tests/test_r22_validation_models.py::test_f2_required_input_gate_covers_ordinary_cells_too[A]
+FAILED code/tests/test_r22_validation_models.py::test_f2_required_input_gate_covers_ordinary_cells_too[B]
+FAILED code/tests/test_r22_validation_models.py::test_f1_rejects_changed_tristate_enable_semantics
+FAILED code/tests/test_r22_validation_models.py::test_f1_rejects_plain_inverter_to_tristate_without_enable
+FAILED code/tests/test_r22_validation_models.py::test_public_required_input_validator_checks_helpers_and_allows_unused_outputs
+13 failed, 2 passed, 41 deselected in 3.23s
+[run] 完成（5s），退出码 1

@@ -1,0 +1,180 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.33 (git sha1 2584903a060)
+
+
+-- Executing script file `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/sec.ys' --
+
+1. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/cells.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/cells.v' to AST representation.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__edfxtp_1'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/helpers.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/helpers.v' to AST representation.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gold.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gold.v' to AST representation.
+Generating RTLIL representation for module `\top'.
+Successfully finished Verilog frontend.
+Renaming module \top to \gold.
+
+4. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gate.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gate.v' to AST representation.
+Generating RTLIL representation for module `\top'.
+Successfully finished Verilog frontend.
+Renaming module \top to \gate.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 1 assignment to connection.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~1 debug messages>
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gold.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gold.v:4$6'.
+     1/1: $0\Q[0:0]
+Creating decoders for process `\sky130_fd_sc_hd__edfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/cells.v:7$1'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gold.\Q' using process `\gold.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gold.v:4$6'.
+  created $dff cell `$procdff$9' with positive edge clock.
+Creating register for signal `\sky130_fd_sc_hd__edfxtp_1.\IQ' using process `\sky130_fd_sc_hd__edfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/cells.v:7$1'.
+  created $dff cell `$procdff$10' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\gold.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gold.v:4$6'.
+Removing empty process `gold.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/gold.v:4$6'.
+Removing empty process `sky130_fd_sc_hd__edfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls/enable_ff_hold_semantics/cells.v:7$1'.
+Cleaned up 1 empty switch.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module gold.
+Optimizing module sky130_fd_sc_hd__edfxtp_1.
+
+6. Executing MEMORY pass.
+
+6.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \sky130_fd_sc_hd__edfxtp_1..
+Removed 0 unused cells and 3 unused wires.
+<suppressed ~2 debug messages>
+
+6.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \sky130_fd_sc_hd__edfxtp_1..
+
+6.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: CLK_gold (\CLK_gold), CLK_gate (\CLK_gate) -> CLK
+Presumably equivalent wires: D_gold (\D_gold), D_gate (\D_gate) -> D
+Presumably equivalent wires: DE_gold (\DE_gold), DE_gate (\DE_gate) -> DE
+Presumably equivalent wires: Q_gold (\Q_gold), Q_gate (\Q_gate) -> Q
+Changing input A of cell $procmux$7_gold ($mux): \Q_gold -> \Q
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \equiv
+Used module:     \sky130_fd_sc_hd__edfxtp_1
+
+8.2. Analyzing design hierarchy..
+Top module:  \equiv
+Used module:     \sky130_fd_sc_hd__edfxtp_1
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module sky130_fd_sc_hd__edfxtp_1.
+<suppressed ~1 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+
+11. Executing EQUIV_SIMPLE pass.
+Found 1 unproven $equiv cells (1 groups) in equiv:
+  Trying to prove $equiv for \Q: failed.
+Proved 0 previously unproven $equiv cells.
+
+12. Executing EQUIV_INDUCT pass.
+Found 1 unproven $equiv cells in module equiv:
+  Proving existence of base case for step 1. (87 clauses over 38 variables)
+  Proving induction step 1. (191 clauses over 80 variables)
+  Proof for induction step holds. Entire workset of 1 cells proven!
+Proved 1 previously unproven $equiv cells.
+
+13. Executing EQUIV_STATUS pass.
+Found 1 $equiv cells in equiv:
+  Of those cells 1 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: dc8e140b3a, CPU: user 0.03s system 0.02s, MEM: 10.38 MB peak
+Yosys 0.33 (git sha1 2584903a060)
+Time spent: 21% 3x opt_clean (0 sec), 20% 8x read_verilog (0 sec), ...
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'

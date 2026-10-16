@@ -1,0 +1,15 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -q -k silently_skip
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_required_input_validator_does_not_silently_skip_unsupported_sky_instance_names _
+
+    def test_required_input_validator_does_not_silently_skip_unsupported_sky_instance_names():
+        text = _tristate_top(".A(), .TE_B(EN), .Z(Y)").replace(" g (", " \\escaped.g (")
+>       with pytest.raises(ValueError, match="(?i)unsupported.*instance|input"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_validation_models.py:126: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_required_input_validator_does_not_silently_skip_unsupported_sky_instance_names
+1 failed, 56 deselected in 0.42s
+[run] 完成（5s），退出码 1

@@ -1,0 +1,419 @@
+{
+  "schema": "independent-B2-X-token-review-v1",
+  "eda_executed": false,
+  "production_imported": false,
+  "inputs_and_checker_sha256": {
+    "project_docs\\evidence\\r22_correctness_20261016\\B2_X_SCOPE_CHECK.json": "62b56c8c67a0c06eb7d66c0c3cf2f28b9c05a6bc3a983e8ea3ea7cb8bc41e225",
+    "project_docs\\evidence\\r22_correctness_20261016\\independent_x_review.py": "be108dc78de46c48d818cca3011d4b04faaa342410fd4e8f9e034729b1fb0a1a",
+    "experiments\\20260826_picorv32_hetero\\picorv32\\mapped.v": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+    "experiments\\20260826_picorv32_hetero\\picorv32\\eval\\iter008_cand008\\001__07114__B\\mapped.v": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+    "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\mapped.v": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+    "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\eval\\iter005_cand005\\048__0790__B\\mapped.v": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c"
+  },
+  "source_stable": true,
+  "pairs": [
+    {
+      "top": "picorv32",
+      "same_identity_and_no_other_tokens": true,
+      "sides": [
+        {
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32\\mapped.v",
+          "sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+          "analysis": {
+            "top": "picorv32",
+            "ordered_ports": [
+              "clk",
+              "resetn",
+              "trap",
+              "mem_valid",
+              "mem_instr",
+              "mem_ready",
+              "mem_addr",
+              "mem_wdata",
+              "mem_wstrb",
+              "mem_rdata",
+              "mem_la_read",
+              "mem_la_write",
+              "mem_la_addr",
+              "mem_la_wdata",
+              "mem_la_wstrb",
+              "pcpi_valid",
+              "pcpi_insn",
+              "pcpi_rs1",
+              "pcpi_rs2",
+              "pcpi_wr",
+              "pcpi_rd",
+              "pcpi_wait",
+              "pcpi_ready",
+              "irq",
+              "eoi",
+              "trace_valid",
+              "trace_data"
+            ],
+            "isolated_x_sources": [
+              {
+                "lhs": "\\cpuregs[0]",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign \\cpuregs[0]  = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] \\cpuregs[0] ;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "decoded_rs",
+                "rhs": "5'hxx",
+                "width": 5,
+                "assign": "assign decoded_rs = 5'hxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 5,
+                    "signed": false,
+                    "raw": "wire [4:0] decoded_rs;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "pcpi_int_rd",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_int_rd = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_int_rd;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "pcpi_div_rd",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_div_rd = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_div_rd;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "pcpi_mul_rd",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_mul_rd = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_mul_rd;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "trace_data",
+                "rhs": "36'hxxxxxxxxx",
+                "width": 36,
+                "assign": "assign trace_data = 36'hxxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "output",
+                    "width": 36,
+                    "signed": false,
+                    "raw": "output [35:0] trace_data;"
+                  },
+                  {
+                    "role": "wire",
+                    "width": 36,
+                    "signed": false,
+                    "raw": "wire [35:0] trace_data;"
+                  }
+                ],
+                "direct_top_output": true,
+                "whole_identifier_token_occurrences": 4
+              },
+              {
+                "lhs": "pcpi_insn",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_insn = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "output",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "output [31:0] pcpi_insn;"
+                  },
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_insn;"
+                  }
+                ],
+                "direct_top_output": true,
+                "whole_identifier_token_occurrences": 4
+              }
+            ]
+          }
+        },
+        {
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32\\eval\\iter008_cand008\\001__07114__B\\mapped.v",
+          "sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+          "analysis": {
+            "top": "picorv32",
+            "ordered_ports": [
+              "clk",
+              "resetn",
+              "trap",
+              "mem_valid",
+              "mem_instr",
+              "mem_ready",
+              "mem_addr",
+              "mem_wdata",
+              "mem_wstrb",
+              "mem_rdata",
+              "mem_la_read",
+              "mem_la_write",
+              "mem_la_addr",
+              "mem_la_wdata",
+              "mem_la_wstrb",
+              "pcpi_valid",
+              "pcpi_insn",
+              "pcpi_rs1",
+              "pcpi_rs2",
+              "pcpi_wr",
+              "pcpi_rd",
+              "pcpi_wait",
+              "pcpi_ready",
+              "irq",
+              "eoi",
+              "trace_valid",
+              "trace_data"
+            ],
+            "isolated_x_sources": [
+              {
+                "lhs": "\\cpuregs[0]",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign \\cpuregs[0]  = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] \\cpuregs[0] ;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "decoded_rs",
+                "rhs": "5'hxx",
+                "width": 5,
+                "assign": "assign decoded_rs = 5'hxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 5,
+                    "signed": false,
+                    "raw": "wire [4:0] decoded_rs;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "pcpi_int_rd",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_int_rd = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_int_rd;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "pcpi_div_rd",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_div_rd = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_div_rd;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "pcpi_mul_rd",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_mul_rd = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_mul_rd;"
+                  }
+                ],
+                "direct_top_output": false,
+                "whole_identifier_token_occurrences": 2
+              },
+              {
+                "lhs": "trace_data",
+                "rhs": "36'hxxxxxxxxx",
+                "width": 36,
+                "assign": "assign trace_data = 36'hxxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "output",
+                    "width": 36,
+                    "signed": false,
+                    "raw": "output [35:0] trace_data;"
+                  },
+                  {
+                    "role": "wire",
+                    "width": 36,
+                    "signed": false,
+                    "raw": "wire [35:0] trace_data;"
+                  }
+                ],
+                "direct_top_output": true,
+                "whole_identifier_token_occurrences": 4
+              },
+              {
+                "lhs": "pcpi_insn",
+                "rhs": "32'hxxxxxxxx",
+                "width": 32,
+                "assign": "assign pcpi_insn = 32'hxxxxxxxx;",
+                "declarations": [
+                  {
+                    "role": "output",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "output [31:0] pcpi_insn;"
+                  },
+                  {
+                    "role": "wire",
+                    "width": 32,
+                    "signed": false,
+                    "raw": "wire [31:0] pcpi_insn;"
+                  }
+                ],
+                "direct_top_output": true,
+                "whole_identifier_token_occurrences": 4
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "top": "picorv32_pcpi_mul",
+      "same_identity_and_no_other_tokens": true,
+      "sides": [
+        {
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\mapped.v",
+          "sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+          "analysis": {
+            "top": "picorv32_pcpi_mul",
+            "ordered_ports": [
+              "clk",
+              "resetn",
+              "pcpi_valid",
+              "pcpi_insn",
+              "pcpi_rs1",
+              "pcpi_rs2",
+              "pcpi_wr",
+              "pcpi_rd",
+              "pcpi_wait",
+              "pcpi_ready"
+            ],
+            "isolated_x_sources": []
+          }
+        },
+        {
+          "path": "experiments\\20260826_picorv32_hetero\\picorv32_pcpi_mul\\eval\\iter005_cand005\\048__0790__B\\mapped.v",
+          "sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c",
+          "analysis": {
+            "top": "picorv32_pcpi_mul",
+            "ordered_ports": [
+              "clk",
+              "resetn",
+              "pcpi_valid",
+              "pcpi_insn",
+              "pcpi_rs1",
+              "pcpi_rs2",
+              "pcpi_wr",
+              "pcpi_rd",
+              "pcpi_wait",
+              "pcpi_ready"
+            ],
+            "isolated_x_sources": []
+          }
+        }
+      ]
+    }
+  ],
+  "negative_probes": {
+    "concat_select_consumer": {
+      "rejected": true,
+      "reason": "X source has another use/driver at lines [44816]: trace_data"
+    },
+    "escaped_select_consumer": {
+      "rejected": true,
+      "reason": "X source has another use/driver at lines [44816]: \\cpuregs[0]"
+    },
+    "alias_consumer": {
+      "rejected": true,
+      "reason": "X source has another use/driver at lines [44816]: decoded_rs"
+    },
+    "additional_partial_driver": {
+      "rejected": true,
+      "reason": "X source has another use/driver at lines [44816]: trace_data"
+    },
+    "behavioral_consumer": {
+      "rejected": true,
+      "reason": "Unsupported mapped statement kind: always"
+    },
+    "new_x_source": {
+      "rejected": true,
+      "reason": "X source width/role not isolated: dummy"
+    }
+  },
+  "limit": "Exact constant-X identity/isolation only; remaining functional/state equivalence and all library semantics need separately bound proof."
+}

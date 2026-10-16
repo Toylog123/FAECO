@@ -1,0 +1,92 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe scratch/r22_tristate_20261016/independent_review.py
+{
+  "source_changed": [],
+  "mapping_probes": 5,
+  "actual_liberty_controls": {
+    "parsed_three_state_count": 13,
+    "plain_to_tristate_candidates": [],
+    "tristate_to_plain_candidates": [],
+    "einvn2_mapping": {
+      "A": "A",
+      "TE_B": "TE_B"
+    },
+    "einvp_disable_raw": {
+      "Z": "(TE')"
+    }
+  },
+  "batch_probes": [
+    {
+      "name": "legal_tristate_and_wrapper_same_named_instance",
+      "expected_reach_process_boundary": true,
+      "reached_process_boundary": true,
+      "error": {
+        "type": "ProcessBoundaryReached",
+        "message": "Stopped before actual subprocess launch"
+      }
+    },
+    {
+      "name": "gold_missing_enable",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): TE_B"
+      }
+    },
+    {
+      "name": "gate_missing_enable",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): TE_B"
+      }
+    },
+    {
+      "name": "gate_empty_enable",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): TE_B"
+      }
+    },
+    {
+      "name": "gate_ordinary_empty_input",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__einvn_1): A"
+      }
+    },
+    {
+      "name": "both_helpers_missing_required_input",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Missing or empty required input pins at g (sky130_fd_sc_hd__buf_1): A"
+      }
+    },
+    {
+      "name": "unknown_sky_cell",
+      "expected_reach_process_boundary": false,
+      "reached_process_boundary": false,
+      "error": {
+        "type": "ValueError",
+        "message": "Input validation unavailable for unknown Liberty cell sky130_fd_sc_hd__unknown_cell_1 at g"
+      }
+    },
+    {
+      "name": "wrapper_control_connected_constant",
+      "expected_reach_process_boundary": true,
+      "reached_process_boundary": true,
+      "error": {
+        "type": "ProcessBoundaryReached",
+        "message": "Stopped before actual subprocess launch"
+      }
+    }
+  ]
+}
+[run] 完成（16s），退出码 0

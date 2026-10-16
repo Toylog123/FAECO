@@ -1,14 +1,12 @@
 # r22 已恢复推进 — 2026-10-16
 
-用户于2026-10-16明确“继续”，覆盖2026-10-14暂停。恢复起点由主线实查：唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main，HEAD `781c031`，工作区干净且已推送。当前进入K1–K6修复与反驳性验证；首整套失败已修，当前v2整套757pass通过；尚无有效C′结果。
+用户2026-10-16明确“继续”，覆盖10-14暂停。唯一工作区main，恢复起点781c031；第一阶段8192193已push/757整套通过，随后新OI-039三态反证触发第二批修复，旧757不覆盖当前新门。第二批production/tests冻结，dirty真三态诊断已暴露Z塌缩；新版完整v3已822pass/2fail，fixture与guard已限定过，完整v4已832pass/3fail，显式全进程PYTHONUTF8=1的v5已running，最终待。
 
-先复用 `../evidence/r22_preflight_20261014/NAMESPACE_FIX_REVIEW.md` 的最小反例与历史correctness审计；修复后绑定当前源码完整回归、独立复审，随后新source pin与v2目录。两电路九臂共18项pilot全部通过才能扩至72运行。A六实际接受候选证明、D同臂同输入整族复验、C完整核查/受影响矩阵恢复分别处理；不能用C′替代历史C/D。中英文稿与图表在科学证据闭合后统一回填。
+当前接手以本节及handoff_20261016_r22.md为准。A6真实证明已通过且各pair三态usedtypes交集空；B2/B3与D/C科学恢复、稿图回填仍待。C′v2仅dryrun注册禁执行，原manifest不改，后续新source pin/v3目录；18pilot全通过才扩72。旧v1失败与暂停原件保留，暂无STA/pilot。
 
-旧667 passed仅是2026-10-14历史回归记录，不代表当前修复版通过；原失败v1与旧暂停交接完整保留。当前完整接手文档：`handoff_20261016_r22.md`（状态子目录请用 `../handoff_20261016_r22.md`）。
+## 本轮最新阶段（LOG-20261016-20）
 
-## 本轮最新阶段（LOG-20261016-09）
-
-full_regression_v2已实读757pass/4skip/156subtests，102.50s、wrapper107/exit0，162code Python before/after SHA一致；当前修复对象完整回归通过，首失败证据保留。阶段commit/source pin准备，真实SEC/EDA尚未执行。新OI-038：主线实查两Pico旧proof使用edfxtp_1模型，Q=IQ但IQ无driver/always，报告待models补细节；B28实际对象绑定仍真，26其它与2FF语义缺口分别处理，不判电路不等价。后续新模型/pin补B2实际final SEC，与A6及正负模型控制分别登记；A/B/C/D科学缺口仍开放。记录员本轮停写供阶段commit。
+完整v5已实际835pass/4skip/156subtests，147.00s/wrapper152.781exit0、166源码before/after SHA稳定，PYTHONUTF8=1；JSON/JUnit/log已实读，当前第二批实现整套通过。记录员停止写入供阶段commit/push，新pin待主线实际保存。后续新pin9正式控制（3正/3负/2unsupported/1input_error）、B2+X identity certificate、C′v3实际mapped复查→18pilot→72、D56预飞56/56后14pilot；均未STA/pilot。A6真实proof且三态交集空保持；OI038/039、B3/D/C及稿图待。unsupported是临时能力门，非四态已证，显式四态编码恢复路径仍open。
 
 ## 历史记录（含2026-10-14暂停前状态；不作为当前授权）
 

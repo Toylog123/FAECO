@@ -1,0 +1,376 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_d_revalidation.py -q
+FFFFFFFFFFFFFFF                                                          [100%]
+================================== FAILURES ===================================
+__________ test_matrix_preserves_d_commands_and_has_no_cprime_policy __________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2BA750>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_matrix_preserves_d_comman0')
+
+    def test_matrix_preserves_d_commands_and_has_no_cprime_policy(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2BA750>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_matrix_preserves_d_comman0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+______________ test_dry_run_registers_only_and_never_calls_tools ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DB9E3F10>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_dry_run_registers_only_an0')
+
+    def test_dry_run_registers_only_and_never_calls_tools(monkeypatch, tmp_path):
+>       m, output, _ = prepared(monkeypatch, tmp_path)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DB9E3F10>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_dry_run_registers_only_an0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+______________ test_drift_is_rejected_before_any_launch[source] _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2E08D0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_0')
+drift = 'source'
+
+    @pytest.mark.parametrize("drift", ["source", "preview", "liberty", "historical_config", "input"])
+    def test_drift_is_rejected_before_any_launch(monkeypatch, tmp_path, drift):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2E08D0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+______________ test_drift_is_rejected_before_any_launch[preview] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2ECCD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_1')
+drift = 'preview'
+
+    @pytest.mark.parametrize("drift", ["source", "preview", "liberty", "historical_config", "input"])
+    def test_drift_is_rejected_before_any_launch(monkeypatch, tmp_path, drift):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2ECCD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_1')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+______________ test_drift_is_rejected_before_any_launch[liberty] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2BB310>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_2')
+drift = 'liberty'
+
+    @pytest.mark.parametrize("drift", ["source", "preview", "liberty", "historical_config", "input"])
+    def test_drift_is_rejected_before_any_launch(monkeypatch, tmp_path, drift):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2BB310>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_2')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+_________ test_drift_is_rejected_before_any_launch[historical_config] _________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2C3710>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_3')
+drift = 'historical_config'
+
+    @pytest.mark.parametrize("drift", ["source", "preview", "liberty", "historical_config", "input"])
+    def test_drift_is_rejected_before_any_launch(monkeypatch, tmp_path, drift):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2C3710>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_3')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+_______________ test_drift_is_rejected_before_any_launch[input] _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC300C10>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_4')
+drift = 'input'
+
+    @pytest.mark.parametrize("drift", ["source", "preview", "liberty", "historical_config", "input"])
+    def test_drift_is_rejected_before_any_launch(monkeypatch, tmp_path, drift):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC300C10>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_drift_is_rejected_before_4')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+______________ test_ema_configuration_drift_is_not_silently_used ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC29A110>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_ema_configuration_drift_i0')
+
+    def test_ema_configuration_drift_is_not_silently_used(monkeypatch, tmp_path):
+>       m, _, _ = prepared(monkeypatch, tmp_path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC29A110>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_ema_configuration_drift_i0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+____________ test_formal_execution_refuses_dirty_registered_source ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2E2390>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_formal_execution_refuses_0')
+
+    def test_formal_execution_refuses_dirty_registered_source(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:118: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2E2390>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_formal_execution_refuses_0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+___________ test_failed_runner_receipt_prevents_overwrite_or_retry ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DA014790>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_failed_runner_receipt_pre0')
+
+    def test_failed_runner_receipt_prevents_overwrite_or_retry(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:125: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DA014790>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_failed_runner_receipt_pre0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+__________________ test_sec_failure_never_creates_completion __________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DB9ABD90>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_sec_failure_never_creates0')
+
+    def test_sec_failure_never_creates_completion(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DB9ABD90>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_sec_failure_never_creates0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+____________ test_launch_reservation_mismatch_has_failure_receipt _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2BBAD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_launch_reservation_mismat0')
+
+    def test_launch_reservation_mismatch_has_failure_receipt(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:150: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2BBAD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_launch_reservation_mismat0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+___________ test_complete_run_resume_rechecks_all_artifact_receipts ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DA015D10>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_complete_run_resume_reche0')
+
+    def test_complete_run_resume_rechecks_all_artifact_receipts(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:159: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DA015D10>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_complete_run_resume_reche0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+______________ test_unregistered_directory_is_never_overwritten _______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2E2B90>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_unregistered_directory_is0')
+
+    def test_unregistered_directory_is_never_overwritten(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DC2E2B90>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_unregistered_directory_is0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+________________ test_seven_arms_are_serial_within_one_circuit ________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DA011CD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_seven_arms_are_serial_wit0')
+
+    def test_seven_arms_are_serial_within_one_circuit(monkeypatch, tmp_path):
+>       m, output, manifest = prepared(monkeypatch, tmp_path)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_d_revalidation.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204DA011CD0>
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1164/test_seven_arms_are_serial_wit0')
+
+    def prepared(monkeypatch, tmp_path):
+>       assert SCRIPT.is_file(), "D same-family recovery driver is missing"
+E       AssertionError: D same-family recovery driver is missing
+E       assert False
+E        +  where False = is_file()
+E        +    where is_file = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/run_r22_d_revalidation.py').is_file
+
+code\tests\test_r22_d_revalidation.py:16: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_d_revalidation.py::test_matrix_preserves_d_commands_and_has_no_cprime_policy
+FAILED code/tests/test_r22_d_revalidation.py::test_dry_run_registers_only_and_never_calls_tools
+FAILED code/tests/test_r22_d_revalidation.py::test_drift_is_rejected_before_any_launch[source]
+FAILED code/tests/test_r22_d_revalidation.py::test_drift_is_rejected_before_any_launch[preview]
+FAILED code/tests/test_r22_d_revalidation.py::test_drift_is_rejected_before_any_launch[liberty]
+FAILED code/tests/test_r22_d_revalidation.py::test_drift_is_rejected_before_any_launch[historical_config]
+FAILED code/tests/test_r22_d_revalidation.py::test_drift_is_rejected_before_any_launch[input]
+FAILED code/tests/test_r22_d_revalidation.py::test_ema_configuration_drift_is_not_silently_used
+FAILED code/tests/test_r22_d_revalidation.py::test_formal_execution_refuses_dirty_registered_source
+FAILED code/tests/test_r22_d_revalidation.py::test_failed_runner_receipt_prevents_overwrite_or_retry
+FAILED code/tests/test_r22_d_revalidation.py::test_sec_failure_never_creates_completion
+FAILED code/tests/test_r22_d_revalidation.py::test_launch_reservation_mismatch_has_failure_receipt
+FAILED code/tests/test_r22_d_revalidation.py::test_complete_run_resume_rechecks_all_artifact_receipts
+FAILED code/tests/test_r22_d_revalidation.py::test_unregistered_directory_is_never_overwritten
+FAILED code/tests/test_r22_d_revalidation.py::test_seven_arms_are_serial_within_one_circuit
+15 failed in 0.53s
+[run] 完成（5s），退出码 1

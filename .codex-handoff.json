@@ -14,7 +14,7 @@
     "project_docs/agent_handoff/NEXT_AGENT_PROMPT.md"
   ],
   "framework_layout": {
-    "code": "code/src/rseco + code/scripts + code/tests; latest completed full regression 667 passed/4 skipped/156 subtests; newly discovered blocking cases remain unresolved",
+    "code": "code/src/rseco + code/scripts + code/tests; latest full regression v5: 835 passed/4 skipped/156 subtests, 147.00s, 166 Python files before/after SHA identical, PYTHONUTF8=1. Three-state SEC unsupported, four-state backend still open.",
     "experiments": "experiments/（INVENTORY.md 总索引、RESULTS.md（rev. 2026-09-29 已对齐论文口径）+ results.json、20260826_aggregation/summary.json = 论文主数字源）",
     "data": "data/cases（跟踪）+ data/raw/benchmarks（raw 不跟踪，source_manifests 登记）",
     "paper": "paper/zh/ Chinese working draft; paper/en/ complete English elsarticle draft, seven figures, references/scripts/submission and saved build/FAECO.pdf; both await scientific evidence repair",
@@ -28,7 +28,7 @@
     "pdf": "Chinese three copies SHA256 e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb; layout verified, historical scientific claims require repair",
     "fingerprint": "See paper/zh/review_rounds/r22_20261014/build_qa.json; prior r21 fingerprint is historical",
     "compile": "12 pages; 0 Error/Overfull hbox/Underfull hbox/Overfull vbox; 21/21 references; flushend[noshrink,nospread]",
-    "freeze": "r22 working draft paused, not frozen; v18 remains immutable history, not a current scientific sign-off",
+    "freeze": "r22 working draft resumed, not frozen; v18 remains immutable history, not current scientific sign-off",
     "r21": {
       "review": "paper/zh/review_rounds/r21_20261014/editorial_decision.md",
       "pages": 12,
@@ -57,24 +57,25 @@
       "en_pdf": "paper/en/build/FAECO.pdf",
       "en_pdf_sha256": "ba4aba890f7bbceb39fc9cdc2b5e7379044098714c3e3d1311982c74e601d14c",
       "en_pages": 27,
-      "scientific_status": "A accepted-candidate proof gaps; D invalid endpoint cohort; checked C subset invalid; author declarations incomplete"
+      "scientific_status": "A6 new proof recovered; B2 new-model reproof pending and B3 invalid tri candidates require legal reruns; D/C invalid historical cohorts still require same-family recovery; declarations incomplete"
     }
   },
   "git_state": {
     "branch": "main",
-    "head": "paused checkpoint 71a4c12 pushed; final administrative handoff commit resolve via git log -1",
-    "remote": "https://github.com/Toylog123/FAECO.git; main checkpoint 71a4c12 successfully pushed; final handoff record commit follows; no new tag",
+    "head": "Phase1 source/proof commit 81921932d9348408e237edfa13a42257a43007f2 pushed; phase2 verified snapshot recorded in full_regression_v5.json; final checkpoint identity: git log -1",
+    "remote": "https://github.com/Toylog123/FAECO.git; checkpoint push receipts in LOGS.md; no new scientific baseline tag",
     "tags": "v2026-10-13-narrative-convergence-r20 / faeco-paper-final-20261013i（当前冻结，未推送）/ v2026-10-13-positioning-r19 / faeco-paper-final-20261013h（未推送）/ v2026-10-13-fig2-update-r18 / faeco-paper-final-20261013g（未推送）/ v2026-10-13-logic-calibration-r17 / faeco-paper-final-20261013f（未推送）/ v2026-10-13-terminology-calibration-r16 / faeco-paper-final-20261013e（未推送）/ v2026-10-13-defensive-purge2-r15 / faeco-paper-final-20261013d（未推送）/ v2026-10-13-defensive-purge-r14 / faeco-paper-final-20261013c（未推送）/ v2026-10-13-abstract-broaden-r13 / faeco-paper-final-20261013b（= d59e00f，未推送）/ v2026-10-12-pre-submission-consistency-r12 / faeco-paper-final-20261013（= b1403d9，已推送）/ v2026-10-12-submission-polish-r11 / faeco-paper-final-20261012c（= e00315a）/ faeco-exp-rev1（= 87d01ba）；v1–v17 已 superseded"
   },
-  "blocker": "K1-K6 repair, stable current full regression and independent review before new pinned v2 pilot; historical A/D/C require separate evidence repair",
+  "blocker": "Full v5 passed835; formal model controls, B2 identity+new-model proof and new-pin Cprime v3/D56 pilots remain; four-state backend unsupported; historical C/B3 recovery pending",
   "r22": {
     "plan": "project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md",
     "historical_audit": "project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md",
     "runner": "code/scripts/run_r22_cut_ablation.py",
-    "status": "resumed 2026-10-16; source integration and current regression before new formal source pin",
+    "status": "resumed 2026-10-16; full regression v5 passed835 with stable166 source hashes; no pilot STA launched yet",
     "historical_itc_identifiable_sta_results": 2994,
     "runtime_state": "project_docs/agent_handoff/handoff_20261016_r22.md",
     "historical_correctness": "project_docs/evidence/r22_historical_correctness_20261014/REPORT.md",
-    "resume_gate": "Fix blocking correctness cases; stable whole-suite regression; independent review; new source pin/new v2 directory; all 18 pilot runs pass before completing 72 runs; repair historical A/D/C separately"
-  }
+    "resume_gate": "Formal supported-domain controls; new source pin/v3; actual mapped model-domain preflight; all18 Cprime pilot passes before72; D56 independent same-family pilot14 before56; historical C/B3 separately"
+  },
+  "current_resume_gate": "Yosys two-state SEC falsely passed Z-vs-zero. Three-state/explicit-Z/switch objects now unsupported non-pass; four-state support remains open. A6 recovered; B2 reproof and C-prime v3/D56 pilots await verified new source pin."
 }

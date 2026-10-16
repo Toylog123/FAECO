@@ -8,6 +8,18 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "code/scripts" / "run_outerloop_real_wns.py"
 
+# The mapped fixture includes a resettable FF. Keep its real Liberty input
+# roles/transition semantics instead of leaving it outside the toy library.
+_DFF_LIBERTY = '''cell ("sky130_fd_sc_hd__dfrtp_1") {
+  pin ("CLK") { direction : "input"; }
+  pin ("D") { direction : "input"; }
+  pin ("RESET_B") { direction : "input"; }
+  pin ("Q") { direction : "output"; function : "IQ"; }
+  ff ("IQ", "IQ_N") {
+    next_state : "D"; clocked_on : "CLK"; clear : "!RESET_B";
+  }
+}'''
+
 
 def _load_runner():
     spec = importlib.util.spec_from_file_location("run_outerloop_real_wns_cli", SCRIPT)
@@ -103,12 +115,14 @@ def test_run_config_json_archives_arm_identity(monkeypatch, tmp_path):
     }
     """
     lib_path = tmp_path / "demo.lib"
-    lib_path.write_text(lib, encoding="utf-8")
+    lib_path.write_text(lib + _DFF_LIBERTY, encoding="utf-8")
     monkeypatch.setattr(runner, "LIB", lib_path)
-    mapped = "module demo(A, B, CK, Q);\ninput A, B, CK;\noutput Q;\n" + "".join(
+    mapped = "module demo(A, B, CK, Q);\ninput A, B, CK;\noutput Q;\nwire " + ", ".join(
+        f"N{i}" for i in range(18)
+    ) + ";\n" + "".join(
         f"sky130_fd_sc_hd__and2_1 g{i} (.A({'A' if i == 0 else f'N{i-1}'}), .B(B), .Y(N{i}));\n"
         for i in range(18)
-    ) + "sky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK));\nendmodule\n"
+    ) + "sky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK), .RESET_B(1'b1));\nendmodule\n"
 
     monkeypatch.setattr(
         runner, "run_yosys_mapping",
@@ -178,7 +192,7 @@ def test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked(monkeyp
     }
     """
     lib_path = tmp_path / "demo.lib"
-    lib_path.write_text(lib, encoding="utf-8")
+    lib_path.write_text(lib + _DFF_LIBERTY, encoding="utf-8")
     monkeypatch.setattr(runner, "LIB", lib_path)
 
     gates = []
@@ -192,7 +206,7 @@ def test_cli_main_runs_real_closed_loop_with_only_tool_boundaries_mocked(monkeyp
     mapped = "module demo(A, B, CK, Q);\ninput A, B, CK;\noutput Q;\nwire " + ", ".join(
         f"N{i}" for i in range(18)
     ) + ";\n" + "\n".join(gates) + (
-        "\nsky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK));\nendmodule\n"
+        "\nsky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK), .RESET_B(1'b1));\nendmodule\n"
     )
 
     def fake_mapping(_source, out, **_kwargs):
@@ -297,7 +311,7 @@ def _run_demo_for_electrical(monkeypatch, tmp_path, *, capture: bool):
     }
     """
     lib_path = tmp_path / "demo.lib"
-    lib_path.write_text(lib, encoding="utf-8")
+    lib_path.write_text(lib + _DFF_LIBERTY, encoding="utf-8")
     monkeypatch.setattr(runner, "LIB", lib_path)
 
     gates = []
@@ -311,7 +325,7 @@ def _run_demo_for_electrical(monkeypatch, tmp_path, *, capture: bool):
     mapped = "module demo(A, B, CK, Q);\ninput A, B, CK;\noutput Q;\nwire " + ", ".join(
         f"N{i}" for i in range(18)
     ) + ";\n" + "\n".join(gates) + (
-        "\nsky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK));\nendmodule\n"
+        "\nsky130_fd_sc_hd__dfrtp_1 ff1 (.D(N17), .Q(Q), .CLK(CK), .RESET_B(1'b1));\nendmodule\n"
     )
 
     monkeypatch.setattr(
