@@ -1,0 +1,15 @@
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls_phase2/enable_ff_hold_semantics/cells.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls_phase2/enable_ff_hold_semantics/helpers.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls_phase2/enable_ff_hold_semantics/gold.v"
+rename top gold
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_correctness_20261016/sec_controls_phase2/enable_ff_hold_semantics/gate.v"
+rename top gate
+proc
+memory
+equiv_make gold gate equiv
+hierarchy -top equiv
+flatten
+opt_clean
+equiv_simple
+equiv_induct -seq 10
+equiv_status -assert

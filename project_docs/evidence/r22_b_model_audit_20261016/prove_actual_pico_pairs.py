@@ -2,6 +2,7 @@
 from pathlib import Path
 import importlib.util
 import json,hashlib,subprocess,sys
+import x_identity_certificate
 
 ROOT=Path(__file__).resolve().parents[3]
 sys.path.insert(0,str(ROOT/'code/src'))
@@ -21,6 +22,8 @@ def main():
     source=batch.source_manifest()
     audit_sha=batch.sha(audit_path)
     lib_sha=batch.sha(batch.LIB)
+    x_checker_path=Path(x_identity_certificate.__file__).resolve()
+    x_checker_sha=batch.sha(x_checker_path)
     pairs=[]
     for pair in audit['proof_pairs']:
         item=dict(pair)
@@ -45,11 +48,15 @@ def main():
     output.mkdir()
     receipt={'status':'registered','head':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
              'source_manifest':source,'script_sha256':batch.sha(Path(__file__)),
-             'audit_sha256':audit_sha,'liberty_sha256':lib_sha,'pairs':pairs,'results':[]}
+             'audit_sha256':audit_sha,'liberty_sha256':lib_sha,
+             'x_identity_checker_sha256':x_checker_sha,
+             'verification_scope':'two-state SEC plus separate isolated constant-X identity certificate; not arbitrary four-state SEC',
+             'pairs':pairs,'results':[]}
     target=output/'manifest_and_results.json'
     batch.save(target,receipt)
     for pair in pairs:
-        if batch.source_manifest()!=source or batch.sha(audit_path)!=audit_sha or batch.sha(batch.LIB)!=lib_sha:
+        if (batch.source_manifest()!=source or batch.sha(audit_path)!=audit_sha
+                or batch.sha(batch.LIB)!=lib_sha or batch.sha(x_checker_path)!=x_checker_sha):
             raise RuntimeError('Proof source or audit drift')
         for role in ['gold','gate']:
             if batch.sha(Path(pair[role+'_path']))!=pair[role+'_sha256']:
@@ -58,13 +65,21 @@ def main():
             raise RuntimeError('Accepted state receipt drift')
         initial=Path(pair['gold_path']).read_text(encoding='utf-8-sig')
         final=Path(pair['gate_path']).read_text(encoding='utf-8-sig')
+        x_identity=x_identity_certificate.certify_pair(initial,final)
+        if not x_identity['certified']:
+            raise RuntimeError('Explicit X identity/isolation certificate rejected: '+x_identity['reason'])
+        case_dir=output/pair['top_module']
+        case_dir.mkdir()
+        batch.save(case_dir/'x_identity_certificate.json',x_identity)
         result=batch.final_sec(initial,final,pair['top_module'],output/pair['top_module'])
         if (batch.source_manifest()!=source or batch.sha(audit_path)!=audit_sha
-                or batch.sha(batch.LIB)!=lib_sha
+                or batch.sha(batch.LIB)!=lib_sha or batch.sha(x_checker_path)!=x_checker_sha
                 or any(batch.sha(Path(pair[role+'_path']))!=pair[role+'_sha256'] for role in ['gold','gate'])
                 or batch.sha(Path(pair['actual_final_state_source']))!=pair['state_file_sha256']):
             raise RuntimeError('Proof source/input drift after tool execution')
         row={'top':pair['top_module'],'result':result,
+             'x_identity_certified':x_identity['certified'],
+             'x_identity_source_count':len(x_identity['sources']),
              'raw_decoded_text_equal':(output/pair['top_module']/'final_raw.v').read_text(encoding='utf-8-sig')==final,
              'artifacts':{p.name:batch.sha(p) for p in sorted((output/pair['top_module']).iterdir()) if p.is_file()}}
         receipt['results'].append(row)
@@ -72,7 +87,8 @@ def main():
         print(pair['top_module'],result['status'],flush=True)
         if result['status']!='pass' or not row['raw_decoded_text_equal']:
             return 1
-    receipt['source_stable']=batch.source_manifest()==source and batch.sha(batch.LIB)==lib_sha and batch.sha(audit_path)==audit_sha
+    receipt['source_stable']=(batch.source_manifest()==source and batch.sha(batch.LIB)==lib_sha
+                             and batch.sha(audit_path)==audit_sha and batch.sha(x_checker_path)==x_checker_sha)
     receipt['status']='completed'
     batch.save(target,receipt)
     return 0 if receipt['source_stable'] else 1

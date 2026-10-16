@@ -24,6 +24,10 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def identifier(value):
+    return value[1:] if value.startswith("\\") else value
+
+
 def scan(text, top):
     tokens = [(match.lastgroup, match.group(), match.start(), match.end())
               for match in LEXER.finditer(text) if match.lastgroup != "COMMENT"]
@@ -32,7 +36,7 @@ def scan(text, top):
     occurrences = {}
     for index, token in enumerate(tokens):
         if token[0] in {"ID", "ESC"}:
-            occurrences.setdefault(token[1], set()).add(index)
+            occurrences.setdefault(identifier(token[1]), set()).add(index)
     declarations, header, x_sources = {}, {}, {}
     index = 0
     seen_module = ended = False
@@ -59,9 +63,10 @@ def scan(text, top):
                 raise ValueError("Unsupported ANSI/complex module ports")
             for offset, value in enumerate(ports):
                 if value != ",":
-                    if value in header:
+                    name = identifier(value)
+                    if name in header:
                         raise ValueError("Duplicate port")
-                    header[value] = index + 3 + offset
+                    header[name] = index + 3 + offset
             seen_module = True
         elif first in {"wire", "input", "output", "inout"}:
             pos = 1
@@ -86,7 +91,7 @@ def scan(text, top):
                 else:
                     if tokens[index + pos + offset][0] not in {"ID", "ESC"}:
                         raise ValueError("Unsupported declaration net")
-                    declarations.setdefault(value, []).append({"role": first, "width": width, "signed": signed,
+                    declarations.setdefault(identifier(value), []).append({"role": first, "width": width, "signed": signed,
                         "raw": raw, "token_index": index + pos + offset})
         elif first == "assign":
             numbers = [token for token in tokens[index:stop] if token[0] == "NUMBER" and re.search(r"[xXzZ?]", token[1].split("'")[-1])]
@@ -96,9 +101,10 @@ def scan(text, top):
                 literal = re.fullmatch(r"(\d+)'[sS]?[bBoOdDhH]([xX_]+)", values[3])
                 if literal is None or int(literal.group(1)) <= 0:
                     raise ValueError("X/Z assignment is not an explicit sized all-X constant")
-                if values[1] in x_sources:
+                name = identifier(values[1])
+                if name in x_sources:
                     raise ValueError("Multiple X drivers")
-                x_sources[values[1]] = {"lhs": values[1], "rhs": values[3], "width": int(literal.group(1)),
+                x_sources[name] = {"lhs": name, "rhs": values[3], "width": int(literal.group(1)),
                                        "raw": raw, "lhs_token": index + 1}
         elif first.startswith("sky130_fd_sc_hd__"):
             # Every identifier in the complete instance body remains in the
@@ -156,6 +162,8 @@ def main():
     for name, insertion in {
         "concat_select_consumer": "assign dummy = {trace_data[0],1'b0};",
         "escaped_select_consumer": "assign dummy = \\cpuregs[0] [0];",
+        "escaped_simple_name_consumer": "assign dummy = \\trace_data [0];",
+        "escaped_simple_alias_consumer": "assign dummy = \\decoded_rs [0];",
         "alias_consumer": "wire dummy; assign dummy = decoded_rs[0];",
         "additional_partial_driver": "assign trace_data[1] = 1'b0;",
         "behavioral_consumer": "always @* dummy = trace_data[0];",

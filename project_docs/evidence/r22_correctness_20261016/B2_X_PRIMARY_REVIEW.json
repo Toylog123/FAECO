@@ -1,0 +1,413 @@
+{
+  "checker_path": "project_docs\\evidence\\r22_b_model_audit_20261016\\x_identity_certificate.py",
+  "checker_sha256": "66fe72ff542c55f421bce6a2c234749ed802095372a0e2ed0189b1f695cab91a",
+  "source_stable": true,
+  "eda_executed": false,
+  "independent_primary_api_probes": [
+    {
+      "name": "escaped_plain_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y=\\n [0]; endmodule"
+    },
+    {
+      "name": "concat_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y={n[0], A}; endmodule"
+    },
+    {
+      "name": "replicated_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y={2{n[0]}}; endmodule"
+    },
+    {
+      "name": "variable_select",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y=A[n[0]]; endmodule"
+    },
+    {
+      "name": "extra_partial_driver",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign n[0]=1'b0; assign Y=A; endmodule"
+    },
+    {
+      "name": "extra_concat_driver",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign {n[0],Y}=2'b00; endmodule"
+    },
+    {
+      "name": "escaped_partial_driver",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign \\n [0]=1'b0; assign Y=A; endmodule"
+    },
+    {
+      "name": "pin_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; cell u(.A({n[0],A}),.Y(Y)); endmodule"
+    },
+    {
+      "name": "escaped_pin_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; cell u(.A(\\n [0]),.Y(Y)); endmodule"
+    },
+    {
+      "name": "procedural_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "unsupported lexical syntax at offset 74",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; always @* Y=n[0]; endmodule"
+    },
+    {
+      "name": "hierarchical_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "unconsumed expression syntax: . n [ 0 ]",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y=top.n[0]; endmodule"
+    },
+    {
+      "name": "module_duplicate",
+      "expected": false,
+      "actual": false,
+      "reason": "duplicate module top",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y=A; endmodule module top(); endmodule"
+    },
+    {
+      "name": "escaped_duplicate_declaration",
+      "expected": false,
+      "actual": false,
+      "reason": "duplicate X net declaration: n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; wire [3:0] \\n ; assign Y=A; endmodule"
+    },
+    {
+      "name": "comma_duplicate_declaration",
+      "expected": false,
+      "actual": false,
+      "reason": "duplicate X net declaration: n",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; wire [3:0] z,n; assign Y=A; endmodule"
+    },
+    {
+      "name": "parameter_escape",
+      "expected": false,
+      "actual": false,
+      "reason": "expected identifier: parameter",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; parameter P=n; assign Y=A; endmodule"
+    },
+    {
+      "name": "attribute_escape",
+      "expected": false,
+      "actual": false,
+      "reason": "expected identifier: (",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; (* keep=n *) cell u(.A(A),.Y(Y)); endmodule"
+    },
+    {
+      "name": "X_in_unconnected_pin",
+      "expected": false,
+      "actual": false,
+      "reason": "non-assign X/Z cell connection",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; cell u(.A(1'bx),.Y(Y)); endmodule"
+    },
+    {
+      "name": "primitive_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "expected identifier: buf",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; buf u(Y,n[0]); endmodule"
+    },
+    {
+      "name": "function_consumer",
+      "expected": false,
+      "actual": false,
+      "reason": "expected identifier: function",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; function f; input a; f=n[0]; endfunction assign Y=A; endmodule"
+    },
+    {
+      "name": "helper_output_boundary",
+      "expected": false,
+      "actual": false,
+      "reason": "X helper output may escape through a module instance",
+      "text": "module top(Y); output Y; helper u(.Y(Y)); endmodule module helper(Y); output Y; assign Y=1'bx; endmodule"
+    },
+    {
+      "name": "comma_declarations",
+      "expected": true,
+      "actual": true,
+      "reason": "all explicit X sources are identical and isolated",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n,m; assign n=4'hx; assign Y=A; endmodule"
+    },
+    {
+      "name": "comma_outputs",
+      "expected": true,
+      "actual": true,
+      "reason": "all explicit X sources are identical and isolated",
+      "text": "module top(Y,Z); output [3:0] Y,Z; wire [3:0] Y,Z; assign Y=4'hx; assign Z=4'b0000; endmodule"
+    },
+    {
+      "name": "escaped_source",
+      "expected": true,
+      "actual": true,
+      "reason": "all explicit X sources are identical and isolated",
+      "text": "module top(Y); output Y; wire [3:0] \\n ; assign \\n =4'hx; assign Y=1'b0; endmodule"
+    },
+    {
+      "name": "escaped_keyword_source",
+      "expected": true,
+      "actual": false,
+      "reason": "X source has consumer/extra use: top.output",
+      "text": "module top(Y); output Y; wire [3:0] \\output ; assign \\output =4'hx; assign Y=1'b0; endmodule"
+    },
+    {
+      "name": "prefix_distinct",
+      "expected": true,
+      "actual": true,
+      "reason": "all explicit X sources are identical and isolated",
+      "text": "module top(Y); output Y; wire [3:0] n,n1; assign n=4'hx; assign Y=n1[0]; endmodule"
+    },
+    {
+      "name": "module_local_namespace",
+      "expected": true,
+      "actual": true,
+      "reason": "all explicit X sources are identical and isolated",
+      "text": "module top(A,Y); input A; output Y; wire [3:0] n; assign n = 4'hx; assign Y=A; endmodule module helper(n,Y); input n; output Y; assign Y=n; endmodule"
+    }
+  ],
+  "actual_pairs": [
+    {
+      "top": "picorv32",
+      "raw_sha256": [
+        "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+        "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b"
+      ],
+      "certificate": {
+        "schema": "r22-isolated-X-identity-v1",
+        "certified": true,
+        "scope": "explicit isolated constant-X identity only; not equivalence",
+        "sources": [
+          {
+            "module": "picorv32",
+            "lhs": "cpuregs[0]",
+            "assignment_tokens": [
+              "assign",
+              "\\cpuregs[0]",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "decoded_rs",
+            "assignment_tokens": [
+              "assign",
+              "decoded_rs",
+              "=",
+              "5'hxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "4",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_div_rd",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_div_rd",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_insn",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_insn",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "output",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ],
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "output",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_int_rd",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_int_rd",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "pcpi_mul_rd",
+            "assignment_tokens": [
+              "assign",
+              "pcpi_mul_rd",
+              "=",
+              "32'hxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "wire",
+                [
+                  "[",
+                  "31",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "internal_wire",
+            "consumer_count": 0
+          },
+          {
+            "module": "picorv32",
+            "lhs": "trace_data",
+            "assignment_tokens": [
+              "assign",
+              "trace_data",
+              "=",
+              "36'hxxxxxxxxx"
+            ],
+            "declarations": [
+              [
+                "output",
+                [
+                  "[",
+                  "35",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ],
+              [
+                "wire",
+                [
+                  "[",
+                  "35",
+                  ":",
+                  "0",
+                  "]"
+                ]
+              ]
+            ],
+            "port_role": "output",
+            "consumer_count": 0
+          }
+        ],
+        "gold_text_utf8_sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+        "gate_text_utf8_sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+        "reason": "all explicit X sources are identical and isolated"
+      }
+    },
+    {
+      "top": "picorv32_pcpi_mul",
+      "raw_sha256": [
+        "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+        "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c"
+      ],
+      "certificate": {
+        "schema": "r22-isolated-X-identity-v1",
+        "certified": true,
+        "scope": "explicit isolated constant-X identity only; not equivalence",
+        "sources": [],
+        "gold_text_utf8_sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+        "gate_text_utf8_sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c",
+        "reason": "no explicit X literals in supported syntax"
+      }
+    }
+  ]
+}
