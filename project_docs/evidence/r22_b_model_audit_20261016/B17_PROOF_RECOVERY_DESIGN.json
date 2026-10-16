@@ -1,0 +1,766 @@
+{
+  "schema": "r22-B17-proof-recovery-v1",
+  "status": "complete",
+  "eda_authorized": "parent /root explicitly authorized one common.final_sec, internal180s/external240s",
+  "source_head": "ddb4c3319d973aa522aeb652473ee97e960889f2",
+  "producer_source_pin": {
+    "code/src/rseco/__init__.py": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd",
+    "code/src/rseco/abc_baseline.py": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+    "code/src/rseco/adaptive_selector.py": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+    "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+    "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+    "code/src/rseco/case_loader.py": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+    "code/src/rseco/cut.py": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+    "code/src/rseco/electrical.py": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+    "code/src/rseco/equivalence.py": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+    "code/src/rseco/failures.py": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+    "code/src/rseco/feedback.py": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/src/rseco/gate_sizing.py": "b2af6fc81c07105565654a5f67c9b522a829887a9143547f8266d97fb060e643",
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/hold_repair.py": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+    "code/src/rseco/logic_rewrite.py": "b26fbd770bff62b321bbc5e3dee056b4aa4b33a361a63bd2dd4586879f6ecc92",
+    "code/src/rseco/metrics.py": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+    "code/src/rseco/netlist_audit.py": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+    "code/src/rseco/netlist_io.py": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+    "code/src/rseco/opensta.py": "95825d962349c11a16be6f69e1b11fcf1184dcf48474e466337be7db3f13d41c",
+    "code/src/rseco/patch.py": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+    "code/src/rseco/proxy_ranking.py": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+    "code/src/rseco/ranking.py": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+    "code/src/rseco/real_wns.py": "76d6118ddecbabfd5936a8625e7d479374a20b733f51ac7549402219e5cfb73f",
+    "code/src/rseco/refinement.py": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+    "code/src/rseco/refinement_loop.py": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+    "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+    "code/src/rseco/sdc.py": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+    "code/src/rseco/search_state.py": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+    "code/src/rseco/spef.py": "5992fea68f71009fbc9fbf9e498d4ca4dc3e1d7225ae6fb2ec109a1240d95db5",
+    "code/src/rseco/sta_ledger.py": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+    "code/src/rseco/strategy_selector.py": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+    "code/src/rseco/structure_resynthesis.py": "e3dd0a4792bc805479bb7398875bec4b3b1211158305dbd9a18046214ed5e82f",
+    "code/src/rseco/technology_mapping.py": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+    "code/src/rseco/toolchain.py": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+    "code/src/rseco/yosys_abc.py": "26bb65d7c002a7fb32f50c16a4a70f33cfe6d753c4712e1d250c559317cdc2a5",
+    "code/src/rseco/yosys_json.py": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+    "code/src/rseco/z3_formal.py": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+    "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+    "code/scripts/run_r22_cut_ablation.py": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+    "code/scripts/run_sequential_timing_check.py": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+    "code/scripts/run_with_timeout.sh": "6f22e8a0291afbe26b0f00fbc1ee410b4de8ae999995395b2e034aef2f1338f6"
+  },
+  "sources": {
+    "project_docs/evidence/r22_b_model_audit_20261016/audit.json": {
+      "sha256": "0869d234751af08715a15a58c98636e7ae193d8a1d423401f6181fc88a83365d",
+      "bytes": 939944,
+      "roles": [
+        "prior used-model audit, not new proof"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "project_docs/evidence/r22_historical_correctness_20261014/correctness_audit.json": {
+      "sha256": "be190d318d73894366fb716ac54f51cde07beb8533dbc94b87bfd536e387012f",
+      "bytes": 252497,
+      "roles": [
+        "historical actual final crosswalk"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md": {
+      "sha256": "eb092f14f7b1442d6c8bb936cada8397ad16e196ac1553accae8cc9538680ae4",
+      "bytes": 12680,
+      "roles": [
+        "b17 report recovery context"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "project_docs/evidence/r22_historical_audit_20261014/b17_report_crosswalk.json": {
+      "sha256": "66bcb41dacb597f7636db0f59085a050c52f30d68bf3d478abffac4f080bb489",
+      "bytes": 112884,
+      "roles": [
+        "historical 104 independent report crosswalk"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/b17/outerloop_result.json": {
+      "sha256": "80961e3983aa5109c1cb9885dda436d42282d163ac10cec5a1dff0216044031a",
+      "bytes": 6545,
+      "roles": [
+        "historical actual run result, no state text field"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/b17/eval_trials.json": {
+      "sha256": "b5e76e129f42c07f009fc959b1a31489bb6ef65cafa7ae281004e55f92a43b7e",
+      "bytes": 108976,
+      "roles": [
+        "sole accepted trial identity"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/sec/sec_result.json": {
+      "sha256": "7a91c8bbf8c83da2d563b5cca2c9fdbd6d5287310be65792a811947742e49646",
+      "bytes": 949,
+      "roles": [
+        "historical input/model byte hash receipt"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/sec/sec.ys": {
+      "sha256": "39e035cca70007a500421c1890273ea945848c61510e3626292e848ac746b930",
+      "bytes": 556,
+      "roles": [
+        "old unflattened proof script"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/sec/sec.log": {
+      "sha256": "5c590900caf54801eee9eb1173be379ccc1013c90803a0197c5b0f0972429a8b",
+      "bytes": 11221662,
+      "roles": [
+        "actual 12812 proven / 1 unproven log"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/sec_run.log": {
+      "sha256": "28b9ba3947b20efa8c7fa9dfc5df515a881f5aba58df3776fa0ab762af0a8f03",
+      "bytes": 130,
+      "roles": [
+        "old launcher reports failure despite receipt result pass"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/run.log": {
+      "sha256": "5da02a9c680e468959e5563393a6eff480a7020569007fd96e3dcb59fe46d43d",
+      "bytes": 4048,
+      "roles": [
+        "skip-mapping, baseline and accepted patch corroboration"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/b17/map.ys": {
+      "sha256": "7e63353b5b7b63124aafb4f2739dde8c089a4984cc9dc0d8478c97e87bafbed1",
+      "bytes": 621,
+      "roles": [
+        "retained historical mapping recipe, not runtime capture"
+      ],
+      "encoding": "cp936 (legacy ANSI map.ys only)"
+    },
+    "experiments/20260908_phase2_b17_resume/b17/mapped.v": {
+      "sha256": "1e47b8cc8c9c6394488e916ecdcbe89140a0e605e2f43700833b3dec25cbe644",
+      "bytes": 1886480,
+      "roles": [
+        "true raw run baseline including dff helper"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260805_tcad_sprint1_itc99/b17/b17/case/original/original.v": {
+      "sha256": "0c544b388295eaf38ba7fde5c053aece9a8f2ee9575222ad8a9a14fc97771a35",
+      "bytes": 1886480,
+      "roles": [
+        "actual old SEC gold, compared to true baseline"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/000__184320__G/mapped.v": {
+      "sha256": "9903fd632e3e139833b0ef5c308fd6c79f50b22fc7663ec2e46512e54100b82a",
+      "bytes": 1886480,
+      "roles": [
+        "true accepted candidate with dedicated runtime receipt"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "data/raw/benchmarks/raw/skywater_cells_models/sky130_cells_v2.v": {
+      "sha256": "fd864f3ba0776f34a0faf475f733418ffa2b30adead703eaade390c4675fcefc",
+      "bytes": 57512,
+      "roles": [
+        "old runtime receipt-bound cell models"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": {
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135,
+      "roles": [
+        "actual current pinned Liberty"
+      ],
+      "encoding": "utf-8-sig"
+    },
+    "project_docs/evidence/r22_b_model_audit_20261016/x_identity_certificate.py": {
+      "sha256": "66fe72ff542c55f421bce6a2c234749ed802095372a0e2ed0189b1f695cab91a",
+      "bytes": 14732,
+      "roles": [
+        "frozen explicit-X identity certificate dependency"
+      ],
+      "encoding": "utf-8-sig"
+    }
+  },
+  "old_status": {
+    "receipt_result": "pass",
+    "receipt_unproven": 1,
+    "receipt_note": "1/12813 signal unproven but limited to a single Yosys find_same_wires false-negative on the resized gate output wire (liberty function unchanged).",
+    "unproven_cells": [
+      {
+        "line": 115149,
+        "text": "  Unproven $equiv $auto$equiv_make.cc:294:find_same_wires$10593: \\_177917__gold \\_177917__gate"
+      }
+    ],
+    "changed_cell_no_sat_warnings": [
+      {
+        "line": 104061,
+        "text": "Warning: No SAT model available for cell _184320__gate (sky130_fd_sc_hd__nor4b_2)."
+      },
+      {
+        "line": 104062,
+        "text": "Warning: No SAT model available for cell _184320__gold (sky130_fd_sc_hd__nor4b_1)."
+      }
+    ],
+    "no_sat_warning_count": 12814,
+    "explicit_flatten": false,
+    "equiv_status_assert": false,
+    "tool_version": "Yosys 0.33 (git sha1 2584903a060)"
+  },
+  "accepted_object_binding": {
+    "baseline_path": "experiments/20260908_phase2_b17_resume/b17/mapped.v",
+    "old_sec_gold_path": "experiments/20260805_tcad_sprint1_itc99/b17/b17/case/original/original.v",
+    "accepted_raw_candidate_path": "experiments/20260908_phase2_b17_resume/b17/eval/iter005_cand005/000__184320__G/mapped.v",
+    "old_receipt_hashes_rechecked": true,
+    "old_gold_equals_raw_baseline_after_removing_only_blank_lines": true,
+    "baseline_to_final_only_change": "one nor4b_1 to nor4b_2 cell type at _184320_; all other full raw text identical",
+    "accepted_trial": {
+      "instance": "_184320_",
+      "kind": "G",
+      "from_type": "sky130_fd_sc_hd__nor4b_1",
+      "to_type": "sky130_fd_sc_hd__nor4b_2",
+      "wns": -16.15,
+      "tns": -11734.9,
+      "min_slack": 0.39,
+      "min_slack_status": "MET",
+      "slack": -16.15,
+      "slack_status": "VIOLATED",
+      "physical_failure": false,
+      "physical_wns": null,
+      "physical_gate_error": null,
+      "proxy_rank": 9,
+      "proxy_score": -812.4318528194401,
+      "proxy_features": {
+        "timing_gain": 0.6931471805599453,
+        "patch_size": 1.0,
+        "boundary_complexity": 814.0,
+        "verification_cost": 0.25,
+        "equivalence_confidence": 1.0,
+        "critical_path_coverage": 1.0,
+        "strategy_priority": 0.5
+      },
+      "patch_id": "patch_P2_U2983_random_cut",
+      "iteration": 5,
+      "accepted": true
+    },
+    "run_final_patch_id": "patch_P2_U2983_random_cut",
+    "run_final_wns": -16.15,
+    "current_netlist_text_field_exists": false,
+    "state_text_binding": "not available in old schema; accepted row+result+raw candidate+dedicated runtime receipt corroborate exact candidate; not a state.current_netlist_hash claim",
+    "source_initial_text_utf8_lf_sha256": "5ca751664d187b302ddde0de6b6298cebae4c116d763e5aa1457dd791af532f7",
+    "source_final_text_utf8_lf_sha256": "2b9bffa2943a58889466252f8d6a5929d1e9a5277c4331901edd15bde0a07513",
+    "helper_dff_identical": true,
+    "helper_dff_sha256": "f24f3cad3078d6640e24dc61ccdede0e06286a67425fc909a85d3ec145c94461"
+  },
+  "unproven_signal": {
+    "net": "_177917_",
+    "register": false,
+    "driver_instance": "_184320_",
+    "pin": "Y",
+    "changed_cells": {
+      "baseline": "sky130_fd_sc_hd__nor4b_1 _184320_ (\n    .A(P2_INSTQUEUERD_ADDR_REG_1_),\n    .B(P2_INSTQUEUERD_ADDR_REG_0_),\n    .C(P2_INSTQUEUERD_ADDR_REG_2_),\n    .D_N(P2_INSTQUEUERD_ADDR_REG_3_),\n    .Y(_177917_)\n  );",
+      "accepted_final": "sky130_fd_sc_hd__nor4b_2 _184320_ (\n    .A(P2_INSTQUEUERD_ADDR_REG_1_),\n    .B(P2_INSTQUEUERD_ADDR_REG_0_),\n    .C(P2_INSTQUEUERD_ADDR_REG_2_),\n    .D_N(P2_INSTQUEUERD_ADDR_REG_3_),\n    .Y(_177917_)\n  );"
+    },
+    "direct_consumers": [
+      {
+        "cell": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_184321_",
+        "pin": "B"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22o_1",
+        "instance": "_184361_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a221o_1",
+        "instance": "_184412_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_184430_",
+        "pin": "B"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184450_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_184459_",
+        "pin": "B"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_184506_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22o_1",
+        "instance": "_184519_",
+        "pin": "B1"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a221o_1",
+        "instance": "_184540_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184575_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184620_",
+        "pin": "B1"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184768_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184782_",
+        "pin": "B1"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_184796_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22o_1",
+        "instance": "_184808_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_184817_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_184836_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184845_",
+        "pin": "C2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_184853_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_184867_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_184881_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a221oi_1",
+        "instance": "_184894_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22o_1",
+        "instance": "_184980_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22oi_1",
+        "instance": "_185002_",
+        "pin": "A2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_185018_",
+        "pin": "C2"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a22o_1",
+        "instance": "_185024_",
+        "pin": "B1"
+      },
+      {
+        "cell": "sky130_fd_sc_hd__a222oi_1",
+        "instance": "_185517_",
+        "pin": "A2"
+      }
+    ],
+    "actual_cells": {
+      "sky130_fd_sc_hd__nor4b_1": {
+        "actual_input_pins": [
+          "A",
+          "B",
+          "C",
+          "D_N"
+        ],
+        "actual_output_functions": {
+          "Y": "(!A&!B&!C&D_N)"
+        },
+        "actual_three_state_functions": {},
+        "old_model_module": "module sky130_fd_sc_hd__nor4b_1 (A, B, C, D_N, Y);\n  input A;\n  input B;\n  input C;\n  input D_N;\n  output Y;\n  assign Y = (~A&~B&~C&D_N);\nendmodule",
+        "actual_sequential_fields": {
+          "sequential_kind": "",
+          "next_state": "",
+          "clocked_on": "",
+          "latch_enable": "",
+          "clear": "",
+          "preset": "",
+          "state_var": "",
+          "state_inv_var": ""
+        }
+      },
+      "sky130_fd_sc_hd__nor4b_2": {
+        "actual_input_pins": [
+          "A",
+          "B",
+          "C",
+          "D_N"
+        ],
+        "actual_output_functions": {
+          "Y": "(!A&!B&!C&D_N)"
+        },
+        "actual_three_state_functions": {},
+        "old_model_module": "module sky130_fd_sc_hd__nor4b_2 (A, B, C, D_N, Y);\n  input A;\n  input B;\n  input C;\n  input D_N;\n  output Y;\n  assign Y = (~A&~B&~C&D_N);\nendmodule",
+        "actual_sequential_fields": {
+          "sequential_kind": "",
+          "next_state": "",
+          "clocked_on": "",
+          "latch_enable": "",
+          "clear": "",
+          "preset": "",
+          "state_var": "",
+          "state_inv_var": ""
+        }
+      },
+      "sky130_fd_sc_hd__dfxtp_1": {
+        "actual_input_pins": [
+          "CLK",
+          "D"
+        ],
+        "actual_output_functions": {
+          "Q": "IQ"
+        },
+        "actual_three_state_functions": {},
+        "old_model_module": "module sky130_fd_sc_hd__dfxtp_1 (CLK, D, Q);\n  input CLK;\n  input D;\n  output reg Q;\n  always @(posedge CLK)\n    Q <= D;\nendmodule",
+        "actual_sequential_fields": {
+          "sequential_kind": "ff",
+          "next_state": "D",
+          "clocked_on": "CLK",
+          "latch_enable": "",
+          "clear": "",
+          "preset": "",
+          "state_var": "IQ",
+          "state_inv_var": "IQ_N"
+        }
+      }
+    }
+  },
+  "input_domain": {
+    "baseline": {
+      "input_gate": "valid",
+      "two_state_unsupported_reason": null,
+      "used_types": {
+        "sky130_fd_sc_hd__clkinv_1": 204,
+        "sky130_fd_sc_hd__nor2_1": 1011,
+        "sky130_fd_sc_hd__nand2_1": 2131,
+        "sky130_fd_sc_hd__o21ai_0": 1021,
+        "sky130_fd_sc_hd__nand2b_1": 145,
+        "sky130_fd_sc_hd__or3_1": 86,
+        "sky130_fd_sc_hd__nor3_1": 269,
+        "sky130_fd_sc_hd__nand3_1": 502,
+        "sky130_fd_sc_hd__a222oi_1": 533,
+        "sky130_fd_sc_hd__a22o_1": 93,
+        "sky130_fd_sc_hd__a221oi_1": 445,
+        "sky130_fd_sc_hd__nand4_1": 157,
+        "sky130_fd_sc_hd__a21oi_1": 822,
+        "sky130_fd_sc_hd__a22oi_1": 638,
+        "sky130_fd_sc_hd__nor4_1": 80,
+        "sky130_fd_sc_hd__and4_1": 45,
+        "sky130_fd_sc_hd__a211oi_1": 106,
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1": 100,
+        "sky130_fd_sc_hd__a21boi_0": 23,
+        "sky130_fd_sc_hd__a21o_1": 86,
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1": 260,
+        "sky130_fd_sc_hd__maj3_1": 42,
+        "sky130_fd_sc_hd__o21a_1": 33,
+        "sky130_fd_sc_hd__xnor2_1": 412,
+        "sky130_fd_sc_hd__a41oi_1": 9,
+        "sky130_fd_sc_hd__and3_1": 154,
+        "sky130_fd_sc_hd__xor2_1": 244,
+        "sky130_fd_sc_hd__o211ai_1": 229,
+        "sky130_fd_sc_hd__and2_0": 133,
+        "sky130_fd_sc_hd__o221ai_1": 161,
+        "sky130_fd_sc_hd__and3b_1": 7,
+        "sky130_fd_sc_hd__and4b_1": 6,
+        "sky130_fd_sc_hd__nor4b_1": 16,
+        "sky130_fd_sc_hd__nor3b_1": 17,
+        "sky130_fd_sc_hd__or3b_1": 4,
+        "sky130_fd_sc_hd__nor4bb_1": 9,
+        "sky130_fd_sc_hd__mux2_1": 92,
+        "sky130_fd_sc_hd__nand3b_1": 17,
+        "sky130_fd_sc_hd__mux2i_1": 106,
+        "sky130_fd_sc_hd__o22ai_1": 230,
+        "sky130_fd_sc_hd__nand4b_1": 9,
+        "sky130_fd_sc_hd__o2111ai_1": 42,
+        "sky130_fd_sc_hd__a41o_1": 3,
+        "sky130_fd_sc_hd__a2bb2oi_1": 4,
+        "sky130_fd_sc_hd__a221o_1": 171,
+        "sky130_fd_sc_hd__or4_1": 16,
+        "sky130_fd_sc_hd__o2bb2ai_1": 8,
+        "sky130_fd_sc_hd__a32o_1": 14,
+        "sky130_fd_sc_hd__a2111oi_0": 19,
+        "sky130_fd_sc_hd__o21bai_1": 17,
+        "sky130_fd_sc_hd__a31oi_1": 107,
+        "sky130_fd_sc_hd__o32ai_1": 30,
+        "sky130_fd_sc_hd__a311oi_1": 20,
+        "sky130_fd_sc_hd__a311o_1": 5,
+        "sky130_fd_sc_hd__a31o_1": 18,
+        "sky130_fd_sc_hd__o211a_1": 3,
+        "sky130_fd_sc_hd__xnor3_1": 6,
+        "sky130_fd_sc_hd__o21ba_1": 1,
+        "sky130_fd_sc_hd__nor2b_1": 38,
+        "sky130_fd_sc_hd__o31ai_1": 51,
+        "sky130_fd_sc_hd__o31a_1": 8,
+        "sky130_fd_sc_hd__a32oi_1": 22,
+        "sky130_fd_sc_hd__a211o_1": 34,
+        "sky130_fd_sc_hd__o22a_1": 7,
+        "sky130_fd_sc_hd__a21bo_1": 1,
+        "sky130_fd_sc_hd__o311a_1": 4,
+        "sky130_fd_sc_hd__o311ai_0": 30,
+        "sky130_fd_sc_hd__o32a_1": 7,
+        "sky130_fd_sc_hd__o2111a_1": 2,
+        "sky130_fd_sc_hd__or4b_1": 2,
+        "sky130_fd_sc_hd__o41ai_1": 9,
+        "sky130_fd_sc_hd__o221a_1": 9,
+        "sky130_fd_sc_hd__xor3_1": 4,
+        "sky130_fd_sc_hd__dfxtp_1": 1
+      },
+      "tristate_used": [],
+      "module_names": [
+        "b17",
+        "dff"
+      ]
+    },
+    "accepted_final": {
+      "input_gate": "valid",
+      "two_state_unsupported_reason": null,
+      "used_types": {
+        "sky130_fd_sc_hd__clkinv_1": 204,
+        "sky130_fd_sc_hd__nor2_1": 1011,
+        "sky130_fd_sc_hd__nand2_1": 2131,
+        "sky130_fd_sc_hd__o21ai_0": 1021,
+        "sky130_fd_sc_hd__nand2b_1": 145,
+        "sky130_fd_sc_hd__or3_1": 86,
+        "sky130_fd_sc_hd__nor3_1": 269,
+        "sky130_fd_sc_hd__nand3_1": 502,
+        "sky130_fd_sc_hd__a222oi_1": 533,
+        "sky130_fd_sc_hd__a22o_1": 93,
+        "sky130_fd_sc_hd__a221oi_1": 445,
+        "sky130_fd_sc_hd__nand4_1": 157,
+        "sky130_fd_sc_hd__a21oi_1": 822,
+        "sky130_fd_sc_hd__a22oi_1": 638,
+        "sky130_fd_sc_hd__nor4_1": 80,
+        "sky130_fd_sc_hd__and4_1": 45,
+        "sky130_fd_sc_hd__a211oi_1": 106,
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1": 100,
+        "sky130_fd_sc_hd__a21boi_0": 23,
+        "sky130_fd_sc_hd__a21o_1": 86,
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1": 260,
+        "sky130_fd_sc_hd__maj3_1": 42,
+        "sky130_fd_sc_hd__o21a_1": 33,
+        "sky130_fd_sc_hd__xnor2_1": 412,
+        "sky130_fd_sc_hd__a41oi_1": 9,
+        "sky130_fd_sc_hd__and3_1": 154,
+        "sky130_fd_sc_hd__xor2_1": 244,
+        "sky130_fd_sc_hd__o211ai_1": 229,
+        "sky130_fd_sc_hd__and2_0": 133,
+        "sky130_fd_sc_hd__o221ai_1": 161,
+        "sky130_fd_sc_hd__and3b_1": 7,
+        "sky130_fd_sc_hd__and4b_1": 6,
+        "sky130_fd_sc_hd__nor4b_2": 1,
+        "sky130_fd_sc_hd__nor3b_1": 17,
+        "sky130_fd_sc_hd__or3b_1": 4,
+        "sky130_fd_sc_hd__nor4bb_1": 9,
+        "sky130_fd_sc_hd__nor4b_1": 15,
+        "sky130_fd_sc_hd__mux2_1": 92,
+        "sky130_fd_sc_hd__nand3b_1": 17,
+        "sky130_fd_sc_hd__mux2i_1": 106,
+        "sky130_fd_sc_hd__o22ai_1": 230,
+        "sky130_fd_sc_hd__nand4b_1": 9,
+        "sky130_fd_sc_hd__o2111ai_1": 42,
+        "sky130_fd_sc_hd__a41o_1": 3,
+        "sky130_fd_sc_hd__a2bb2oi_1": 4,
+        "sky130_fd_sc_hd__a221o_1": 171,
+        "sky130_fd_sc_hd__or4_1": 16,
+        "sky130_fd_sc_hd__o2bb2ai_1": 8,
+        "sky130_fd_sc_hd__a32o_1": 14,
+        "sky130_fd_sc_hd__a2111oi_0": 19,
+        "sky130_fd_sc_hd__o21bai_1": 17,
+        "sky130_fd_sc_hd__a31oi_1": 107,
+        "sky130_fd_sc_hd__o32ai_1": 30,
+        "sky130_fd_sc_hd__a311oi_1": 20,
+        "sky130_fd_sc_hd__a311o_1": 5,
+        "sky130_fd_sc_hd__a31o_1": 18,
+        "sky130_fd_sc_hd__o211a_1": 3,
+        "sky130_fd_sc_hd__xnor3_1": 6,
+        "sky130_fd_sc_hd__o21ba_1": 1,
+        "sky130_fd_sc_hd__nor2b_1": 38,
+        "sky130_fd_sc_hd__o31ai_1": 51,
+        "sky130_fd_sc_hd__o31a_1": 8,
+        "sky130_fd_sc_hd__a32oi_1": 22,
+        "sky130_fd_sc_hd__a211o_1": 34,
+        "sky130_fd_sc_hd__o22a_1": 7,
+        "sky130_fd_sc_hd__a21bo_1": 1,
+        "sky130_fd_sc_hd__o311a_1": 4,
+        "sky130_fd_sc_hd__o311ai_0": 30,
+        "sky130_fd_sc_hd__o32a_1": 7,
+        "sky130_fd_sc_hd__o2111a_1": 2,
+        "sky130_fd_sc_hd__or4b_1": 2,
+        "sky130_fd_sc_hd__o41ai_1": 9,
+        "sky130_fd_sc_hd__o221a_1": 9,
+        "sky130_fd_sc_hd__xor3_1": 4,
+        "sky130_fd_sc_hd__dfxtp_1": 1
+      },
+      "tristate_used": [],
+      "module_names": [
+        "b17",
+        "dff"
+      ]
+    }
+  },
+  "x_certificate": {
+    "schema": "r22-isolated-X-identity-v1",
+    "certified": true,
+    "scope": "explicit isolated constant-X identity only; not equivalence",
+    "sources": [],
+    "gold_text_utf8_sha256": "5ca751664d187b302ddde0de6b6298cebae4c116d763e5aa1457dd791af532f7",
+    "gate_text_utf8_sha256": "2b9bffa2943a58889466252f8d6a5929d1e9a5277c4331901edd15bde0a07513",
+    "reason": "no explicit X literals in supported syntax"
+  },
+  "model_preflight_sha256": "07e0d0fc964e93158b696d36fb93003899ca0316a5fc14945c59514d81b9bb65",
+  "proof_pair": {
+    "top_module": "b17",
+    "gold_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20260908_phase2_b17_resume\\b17\\mapped.v",
+    "gate_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20260908_phase2_b17_resume\\b17\\eval\\iter005_cand005\\000__184320__G\\mapped.v",
+    "gold_byte_sha256": "1e47b8cc8c9c6394488e916ecdcbe89140a0e605e2f43700833b3dec25cbe644",
+    "gate_byte_sha256": "9903fd632e3e139833b0ef5c308fd6c79f50b22fc7663ec2e46512e54100b82a",
+    "raw_policy": "decode UTF-8 universal newlines; preserve complete top+identical dff helper; proof raw hashes separately bound"
+  },
+  "hypothesis": "Old unflattened hierarchy prevented SAT import of changed NOR4B cell modules. Exact true functional equivalence remains to be decided by the new full-model flatten+assert run; find_same_wires alone is not established root cause.",
+  "unknown": [
+    "no old state.current_netlist_text/hash or runtime revision/full argv",
+    "exact original execution tool binary hash",
+    "no blanket conclusion about other B23 objects"
+  ],
+  "new_proof": {
+    "status": "pass",
+    "returncode": 0,
+    "command": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/usr/bin/yosys",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/sec.ys"
+    ],
+    "runtime_s": 13.375,
+    "initial_sha256": "1e47b8cc8c9c6394488e916ecdcbe89140a0e605e2f43700833b3dec25cbe644",
+    "final_sha256": "9903fd632e3e139833b0ef5c308fd6c79f50b22fc7663ec2e46512e54100b82a",
+    "shared_helpers_sha256": "2a266c1512a406a9c62fc7ce0a8365af8f6bfb3ae1dffc0c42ea9bf9d6cea4e4",
+    "method": "Yosys equiv_simple + equiv_induct seq10, full-netlist"
+  },
+  "stability": {
+    "source_manifest_unchanged": true,
+    "head_unchanged": true,
+    "original_files_unchanged": true,
+    "models_match_preflight": true,
+    "output_hashes": {
+      "model_preflight.v": "07e0d0fc964e93158b696d36fb93003899ca0316a5fc14945c59514d81b9bb65",
+      "final_sec/cells.v": "07e0d0fc964e93158b696d36fb93003899ca0316a5fc14945c59514d81b9bb65",
+      "final_sec/final_raw.v": "9903fd632e3e139833b0ef5c308fd6c79f50b22fc7663ec2e46512e54100b82a",
+      "final_sec/gate.v": "c764485e669870375b6f8a98ca6bf316bafbb1058f46f888fc7505c5fa113970",
+      "final_sec/gold.v": "405e822a29e8e74a8c23912d6f89197d1f86db83a5d331e2392a22d3f0861a75",
+      "final_sec/helpers.v": "2a266c1512a406a9c62fc7ce0a8365af8f6bfb3ae1dffc0c42ea9bf9d6cea4e4",
+      "final_sec/initial_raw.v": "1e47b8cc8c9c6394488e916ecdcbe89140a0e605e2f43700833b3dec25cbe644",
+      "final_sec/result.json": "b5a0d5d40c0e2e533196d7909139eaa97157e4311026dcea2f9e9cf801399fb5",
+      "final_sec/sec.log": "4563350bdbdf70ef925de5b69547a9ca8221e3955d80344ced242223dd650a90",
+      "final_sec/sec.ys": "a96457002b16eb243ae8cf5dcb0eaa5f16d6a537e0191e22dfcea91e5cb05e60"
+    },
+    "wrapper_internal_elapsed_s": 17.14100000000326
+  },
+  "new_proof_log": {
+    "proven_unproven": [
+      [
+        "12879",
+        "0"
+      ]
+    ],
+    "success_marker": true,
+    "no_sat_warning_count": 0,
+    "unproven_lines": []
+  },
+  "audit_driver": {
+    "path": "scratch/r22_tristate_20261016/b17_proof_recovery.py",
+    "sha256": "fdc2df36d1cadfddb1a08347d6b4ffdeb315df447216a7965f9aae3b451cfa0a",
+    "source_base64": "ZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20gY29sbGVjdGlvbnMgaW1wb3J0IENvdW50ZXIKaW1wb3J0IGRpZmZsaWIsaGFzaGxpYixpbXBvcnRsaWIudXRpbCxqc29uLHJlLHN1YnByb2Nlc3Msc3lzLHRpbWUKUj1QYXRoKF9fZmlsZV9fKS5yZXNvbHZlKCkucGFyZW50c1syXQpzeXMucGF0aFs6MF09W3N0cihSLydjb2RlL3NyYycpLHN0cihSLydjb2RlL3NjcmlwdHMnKV0KaW1wb3J0IHJ1bl9yMjJfY3V0X2FibGF0aW9uIGFzIGNvbW1vbgpmcm9tIHJzZWNvLmxvZ2ljX3Jld3JpdGUgaW1wb3J0IHBhcnNlX2xpYmVydHlfY2VsbHMKZnJvbSByc2Vjby5yZWFsX3ducyBpbXBvcnQgdmFsaWRhdGVfY2VsbF9pbnB1dF9jb25uZWN0aW9ucyx0d29fc3RhdGVfc2VjX3Vuc3VwcG9ydGVkX3JlYXNvbix3cml0ZV9saWJlcnR5X2NlbGxfbW9kZWxzCmZyb20gcnNlY28udmVyaWxvZ19tb2R1bGVzIGltcG9ydCBtb2R1bGVfc3BhbnMKRT1SLydwcm9qZWN0X2RvY3MvZXZpZGVuY2UvcjIyX2JfbW9kZWxfYXVkaXRfMjAyNjEwMTYnClA9RS8nQjE3X25ld19tb2RlbF9wcm9vZnMnCmlmIFAuZXhpc3RzKCk6CiBhc3NlcnQgbm90IGFueShQLml0ZXJkaXIoKSksJ1JlZnVzZSBub25lbXB0eSBleGlzdGluZyBwcm9vZiBkaXJlY3RvcnknCmVsc2U6UC5ta2RpcihleGlzdF9vaz1GYWxzZSkKc291cmNlcz17fQpkZWYgaChiKTpyZXR1cm4gaGFzaGxpYi5zaGEyNTYoYikuaGV4ZGlnZXN0KCkKZGVmIHJlYWQocGF0aCxyb2xlKToKIHA9UGF0aChwYXRoKTtwPXAgaWYgcC5pc19hYnNvbHV0ZSgpIGVsc2UgUi9wO2I9cC5yZWFkX2J5dGVzKCk7a2V5PXAucmVsYXRpdmVfdG8oUikuYXNfcG9zaXgoKQogZW50cnk9c291cmNlcy5zZXRkZWZhdWx0KGtleSx7J3NoYTI1Nic6aChiKSwnYnl0ZXMnOmxlbihiKSwncm9sZXMnOltdfSkKIGlmIHJvbGUgbm90IGluIGVudHJ5Wydyb2xlcyddOmVudHJ5Wydyb2xlcyddLmFwcGVuZChyb2xlKQogdHJ5OnRleHQ9Yi5kZWNvZGUoJ3V0Zi04LXNpZycpO2VudHJ5WydlbmNvZGluZyddPSd1dGYtOC1zaWcnCiBleGNlcHQgVW5pY29kZURlY29kZUVycm9yOgogIGlmIHAubmFtZSE9J21hcC55cyc6cmFpc2UKICB0ZXh0PWIuZGVjb2RlKCdjcDkzNicpO2VudHJ5WydlbmNvZGluZyddPSdjcDkzNiAobGVnYWN5IEFOU0kgbWFwLnlzIG9ubHkpJwogcmV0dXJuIHRleHQucmVwbGFjZSgnXHJcbicsJ1xuJykKZGVmIGoocGF0aCxyb2xlKTpyZXR1cm4ganNvbi5sb2FkcyhyZWFkKHBhdGgscm9sZSkpCmF1ZGl0PWooRS8nYXVkaXQuanNvbicsJ3ByaW9yIHVzZWQtbW9kZWwgYXVkaXQsIG5vdCBuZXcgcHJvb2YnKQphcj1uZXh0KHggZm9yIHggaW4gYXVkaXRbJ3J1bnMnXSBpZiB4WydjaXJjdWl0J109PSdiMTcnKQpoaXN0PWooJ3Byb2plY3RfZG9jcy9ldmlkZW5jZS9yMjJfaGlzdG9yaWNhbF9jb3JyZWN0bmVzc18yMDI2MTAxNC9jb3JyZWN0bmVzc19hdWRpdC5qc29uJywnaGlzdG9yaWNhbCBhY3R1YWwgZmluYWwgY3Jvc3N3YWxrJykKaHI9bmV4dCh4IGZvciB4IGluIGhpc3RbJ3J1bnMnXSBpZiB4WydjaXJjdWl0J109PSdiMTcnIGFuZCB4WydmYW1pbHknXT09J0InKQpyZWFkKCdwcm9qZWN0X2RvY3MvZXZpZGVuY2UvcjIyX2hpc3RvcmljYWxfYXVkaXRfMjAyNjEwMTQvSElTVE9SSUNBTF9SRUNPVkVSWV9SRVBPUlQubWQnLCdiMTcgcmVwb3J0IHJlY292ZXJ5IGNvbnRleHQnKQpyZWFkKCdwcm9qZWN0X2RvY3MvZXZpZGVuY2UvcjIyX2hpc3RvcmljYWxfYXVkaXRfMjAyNjEwMTQvYjE3X3JlcG9ydF9jcm9zc3dhbGsuanNvbicsJ2hpc3RvcmljYWwgMTA0IGluZGVwZW5kZW50IHJlcG9ydCBjcm9zc3dhbGsnKQpiYXNlPSdleHBlcmltZW50cy8yMDI2MDkwOF9waGFzZTJfYjE3X3Jlc3VtZScKcmVzdWx0PWooYmFzZSsnL2IxNy9vdXRlcmxvb3BfcmVzdWx0Lmpzb24nLCdoaXN0b3JpY2FsIGFjdHVhbCBydW4gcmVzdWx0LCBubyBzdGF0ZSB0ZXh0IGZpZWxkJykKbGVkZ2VyPWooYmFzZSsnL2IxNy9ldmFsX3RyaWFscy5qc29uJywnc29sZSBhY2NlcHRlZCB0cmlhbCBpZGVudGl0eScpCnJlY2VpcHQ9aihiYXNlKycvc2VjL3NlY19yZXN1bHQuanNvbicsJ2hpc3RvcmljYWwgaW5wdXQvbW9kZWwgYnl0ZSBoYXNoIHJlY2VpcHQnKQpzY3JpcHQ9cmVhZChiYXNlKycvc2VjL3NlYy55cycsJ29sZCB1bmZsYXR0ZW5lZCBwcm9vZiBzY3JpcHQnKQpsb2c9cmVhZChiYXNlKycvc2VjL3NlYy5sb2cnLCdhY3R1YWwgMTI4MTIgcHJvdmVuIC8gMSB1bnByb3ZlbiBsb2cnKQpyZWFkKGJhc2UrJy9zZWNfcnVuLmxvZycsJ29sZCBsYXVuY2hlciByZXBvcnRzIGZhaWx1cmUgZGVzcGl0ZSByZWNlaXB0IHJlc3VsdCBwYXNzJykKcmVhZChiYXNlKycvcnVuLmxvZycsJ3NraXAtbWFwcGluZywgYmFzZWxpbmUgYW5kIGFjY2VwdGVkIHBhdGNoIGNvcnJvYm9yYXRpb24nKQpyZWFkKGJhc2UrJy9iMTcvbWFwLnlzJywncmV0YWluZWQgaGlzdG9yaWNhbCBtYXBwaW5nIHJlY2lwZSwgbm90IHJ1bnRpbWUgY2FwdHVyZScpCmJhc2VsaW5lX3BhdGg9YmFzZSsnL2IxNy9tYXBwZWQudicKZ29sZF9wYXRoPWFyWydnb2xkX3BhdGgnXTtnYXRlX3BhdGg9YXJbJ2dhdGVfcGF0aCddCmluaXRpYWw9cmVhZChiYXNlbGluZV9wYXRoLCd0cnVlIHJhdyBydW4gYmFzZWxpbmUgaW5jbHVkaW5nIGRmZiBoZWxwZXInKQpvbGRnb2xkPXJlYWQoZ29sZF9wYXRoLCdhY3R1YWwgb2xkIFNFQyBnb2xkLCBjb21wYXJlZCB0byB0cnVlIGJhc2VsaW5lJykKZmluYWw9cmVhZChnYXRlX3BhdGgsJ3RydWUgYWNjZXB0ZWQgY2FuZGlkYXRlIHdpdGggZGVkaWNhdGVkIHJ1bnRpbWUgcmVjZWlwdCcpCm9sZG1vZGVsX3BhdGg9J2RhdGEvcmF3L2JlbmNobWFya3MvcmF3L3NreXdhdGVyX2NlbGxzX21vZGVscy9za3kxMzBfY2VsbHNfdjIudicKb2xkbW9kZWw9cmVhZChvbGRtb2RlbF9wYXRoLCdvbGQgcnVudGltZSByZWNlaXB0LWJvdW5kIGNlbGwgbW9kZWxzJykKYXNzZXJ0IGgoKFIvZ2F0ZV9wYXRoKS5yZWFkX2J5dGVzKCkpPT1yZWNlaXB0WydtYXBwZWRfc2hhMjU2J10KYXNzZXJ0IGgoKFIvZ29sZF9wYXRoKS5yZWFkX2J5dGVzKCkpPT1yZWNlaXB0WydpdGNfc2hhMjU2J10KYXNzZXJ0IGgoKFIvb2xkbW9kZWxfcGF0aCkucmVhZF9ieXRlcygpKT09cmVjZWlwdFsnbW9kZWxfc2hhMjU2J10KYXNzZXJ0ICdcbicuam9pbih4IGZvciB4IGluIGluaXRpYWwuc3BsaXRsaW5lcygpIGlmIHguc3RyaXAoKSk9PSdcbicuam9pbih4IGZvciB4IGluIG9sZGdvbGQuc3BsaXRsaW5lcygpIGlmIHguc3RyaXAoKSkKYXNzZXJ0IGluaXRpYWwucmVwbGFjZSgnc2t5MTMwX2ZkX3NjX2hkX19ub3I0Yl8xIF8xODQzMjBfJywnc2t5MTMwX2ZkX3NjX2hkX19ub3I0Yl8yIF8xODQzMjBfJywxKT09ZmluYWwKYWNjZXB0ZWQ9W3ggZm9yIHggaW4gbGVkZ2VyWyd0cmlhbHMnXSBpZiB4LmdldCgnYWNjZXB0ZWQnKV0KYXNzZXJ0IGxlbihhY2NlcHRlZCk9PTEgYW5kIGFjY2VwdGVkWzBdWydpbnN0YW5jZSddPT0nXzE4NDMyMF8nIGFuZCBhY2NlcHRlZFswXVsndG9fdHlwZSddPT0nc2t5MTMwX2ZkX3NjX2hkX19ub3I0Yl8yJwphc3NlcnQgYWNjZXB0ZWRbMF1bJ3BhdGNoX2lkJ109PXJlc3VsdFsnZmluYWxfcGF0Y2hfaWQnXSBhbmQgYWNjZXB0ZWRbMF1bJ3ducyddPT1yZXN1bHRbJ3duc19oaXN0b3J5J11bLTFdCm1vZHM9bGFtYmRhIHRleHQ6e3gubmFtZTp4LnRleHQgZm9yIHggaW4gbW9kdWxlX3NwYW5zKHRleHQpfQpsZWZ0LHJpZ2h0PW1vZHMoaW5pdGlhbCksbW9kcyhmaW5hbCkKYXNzZXJ0IGxlZnRbJ2RmZiddPT1yaWdodFsnZGZmJ10KbGlidGV4dD1yZWFkKGNvbW1vbi5MSUIsJ2FjdHVhbCBjdXJyZW50IHBpbm5lZCBMaWJlcnR5JykKY2VsbHM9cGFyc2VfbGliZXJ0eV9jZWxscyhsaWJ0ZXh0KQpwaW5zPXt9CmZvciByb2xlLHRleHQgaW4gWygnYmFzZWxpbmUnLGluaXRpYWwpLCgnYWNjZXB0ZWRfZmluYWwnLGZpbmFsKV06CiB2YWxpZGF0ZV9jZWxsX2lucHV0X2Nvbm5lY3Rpb25zKHRleHQsY2VsbHMpCiByZWFzb249dHdvX3N0YXRlX3NlY191bnN1cHBvcnRlZF9yZWFzb24odGV4dCxjZWxscykKIGFzc2VydCByZWFzb24gaXMgTm9uZSxyZWFzb24KIHVzZWQ9Q291bnRlcihyZS5maW5kYWxsKHInXGIoc2t5MTMwX2ZkX3NjX2hkX19cdyspXHMrXHcrXHMqXCgnLHRleHQpKQogcGluc1tyb2xlXT17J2lucHV0X2dhdGUnOid2YWxpZCcsJ3R3b19zdGF0ZV91bnN1cHBvcnRlZF9yZWFzb24nOnJlYXNvbiwndXNlZF90eXBlcyc6ZGljdCh1c2VkKSwndHJpc3RhdGVfdXNlZCc6W24gZm9yIG4gaW4gdXNlZCBpZiBjZWxsc1tuXS50aHJlZV9zdGF0ZV9mdW5jdGlvbnNdLCAnbW9kdWxlX25hbWVzJzpsaXN0KG1vZHModGV4dCkpfQpjaGVja2VyPUUvJ3hfaWRlbnRpdHlfY2VydGlmaWNhdGUucHknCnJlYWQoY2hlY2tlciwnZnJvemVuIGV4cGxpY2l0LVggaWRlbnRpdHkgY2VydGlmaWNhdGUgZGVwZW5kZW5jeScpCnNwZWM9aW1wb3J0bGliLnV0aWwuc3BlY19mcm9tX2ZpbGVfbG9jYXRpb24oJ2NlcnRpZmljYXRlJyxjaGVja2VyKTtjZXJ0bW9kPWltcG9ydGxpYi51dGlsLm1vZHVsZV9mcm9tX3NwZWMoc3BlYyk7c3BlYy5sb2FkZXIuZXhlY19tb2R1bGUoY2VydG1vZCkKY2VydGlmaWNhdGU9Y2VydG1vZC5jZXJ0aWZ5X3BhaXIoaW5pdGlhbCxmaW5hbCkKYXNzZXJ0IGNlcnRpZmljYXRlWydjZXJ0aWZpZWQnXSBhbmQgbm90IGNlcnRpZmljYXRlWydzb3VyY2VzJ10sY2VydGlmaWNhdGUKdXNlZD1zZXQocGluc1snYmFzZWxpbmUnXVsndXNlZF90eXBlcyddKXxzZXQocGluc1snYWNjZXB0ZWRfZmluYWwnXVsndXNlZF90eXBlcyddKQp3cml0ZV9saWJlcnR5X2NlbGxfbW9kZWxzKGxpYnRleHQsUC8nbW9kZWxfcHJlZmxpZ2h0LnYnLHVzZWRfY2VsbHM9dXNlZCkKbW9kZWxfYmVmb3JlPWgoKFAvJ21vZGVsX3ByZWZsaWdodC52JykucmVhZF9ieXRlcygpKQpwcm9kdWNlcl9waW49Y29tbW9uLnNvdXJjZV9tYW5pZmVzdCgpCmhlYWQ9c3VicHJvY2Vzcy5jaGVja19vdXRwdXQoWydnaXQnLCdyZXYtcGFyc2UnLCdIRUFEJ10sY3dkPVIsdGV4dD1UcnVlKS5zdHJpcCgpCm5vX3NhdD1beydsaW5lJzppKzEsJ3RleHQnOmxpbmV9IGZvciBpLGxpbmUgaW4gZW51bWVyYXRlKGxvZy5zcGxpdGxpbmVzKCkpIGlmICdObyBTQVQgbW9kZWwgYXZhaWxhYmxlIGZvciBjZWxsIF8xODQzMjBfJyBpbiBsaW5lXQp1bnByb3Zlbj1beydsaW5lJzppKzEsJ3RleHQnOmxpbmV9IGZvciBpLGxpbmUgaW4gZW51bWVyYXRlKGxvZy5zcGxpdGxpbmVzKCkpIGlmICdVbnByb3ZlbiAkZXF1aXYgJyBpbiBsaW5lXQpjaGFuZ2VkPXtyb2xlOnJlLnNlYXJjaChyJ3NreTEzMF9mZF9zY19oZF9fbm9yNGJfWzEyXVxzK18xODQzMjBfXHMqXCguKj9cKVxzKjsnLHRleHQscmUuUykuZ3JvdXAoKSBmb3Igcm9sZSx0ZXh0IGluIFsoJ2Jhc2VsaW5lJyxpbml0aWFsKSwoJ2FjY2VwdGVkX2ZpbmFsJyxmaW5hbCldfQpjb25zdW1lcnM9W10KZm9yIG0gaW4gcmUuZmluZGl0ZXIocidcYihza3kxMzBfZmRfc2NfaGRfX1x3KylccysoXHcrKVxzKlwoKC4qPylcKVxzKjsnLGluaXRpYWwscmUuUyk6CiB0eXAsaW5zdCxib2R5PW0uZ3JvdXBzKCkKIGZvciBwaW4sbmV0IGluIHJlLmZpbmRhbGwocidcLihcdyspXHMqXCgoW14oKV0qKVwpJyxib2R5KToKICBpZiBuZXQuc3RyaXAoKT09J18xNzc5MTdfJyBhbmQgcGluIG5vdCBpbiBjZWxsc1t0eXBdLm91dHB1dF9mdW5jdGlvbnM6Y29uc3VtZXJzLmFwcGVuZCh7J2NlbGwnOnR5cCwnaW5zdGFuY2UnOmluc3QsJ3Bpbic6cGlufSkKZm49e30KZm9yIHR5cCBpbiBbJ3NreTEzMF9mZF9zY19oZF9fbm9yNGJfMScsJ3NreTEzMF9mZF9zY19oZF9fbm9yNGJfMicsJ3NreTEzMF9mZF9zY19oZF9fZGZ4dHBfMSddOgogYz1jZWxsc1t0eXBdCiBvbGQ9cmUuc2VhcmNoKHInXGJtb2R1bGVccysnK3JlLmVzY2FwZSh0eXApK3InXGIuKj9cYmVuZG1vZHVsZScsb2xkbW9kZWwscmUuUykuZ3JvdXAoKQogZm5bdHlwXT17J2FjdHVhbF9pbnB1dF9waW5zJzpsaXN0KGMuaW5wdXRfcGlucyksJ2FjdHVhbF9vdXRwdXRfZnVuY3Rpb25zJzpjLm91dHB1dF9mdW5jdGlvbnMsJ2FjdHVhbF90aHJlZV9zdGF0ZV9mdW5jdGlvbnMnOmMudGhyZWVfc3RhdGVfZnVuY3Rpb25zLCdvbGRfbW9kZWxfbW9kdWxlJzpvbGR9CmFzc2VydCBmblsnc2t5MTMwX2ZkX3NjX2hkX19ub3I0Yl8xJ11bJ2FjdHVhbF9vdXRwdXRfZnVuY3Rpb25zJ109PWZuWydza3kxMzBfZmRfc2NfaGRfX25vcjRiXzInXVsnYWN0dWFsX291dHB1dF9mdW5jdGlvbnMnXQpzdGF0dXM9eydzY2hlbWEnOidyMjItQjE3LXByb29mLXJlY292ZXJ5LXYxJywnc3RhdHVzJzoncmVnaXN0ZXJlZF9ydW5uaW5nJywnZWRhX2F1dGhvcml6ZWQnOidwYXJlbnQgL3Jvb3QgZXhwbGljaXRseSBhdXRob3JpemVkIG9uZSBjb21tb24uZmluYWxfc2VjLCBpbnRlcm5hbDE4MHMvZXh0ZXJuYWwyNDBzJywnc291cmNlX2hlYWQnOmhlYWQsJ3Byb2R1Y2VyX3NvdXJjZV9waW4nOnByb2R1Y2VyX3Bpbiwnc291cmNlcyc6c291cmNlcywKICdvbGRfc3RhdHVzJzp7J3JlY2VpcHRfcmVzdWx0JzpyZWNlaXB0WydyZXN1bHQnXSwncmVjZWlwdF91bnByb3Zlbic6cmVjZWlwdFsnZXF1aXZfdW5wcm92ZW4nXSwncmVjZWlwdF9ub3RlJzpyZWNlaXB0Wydub3RlJ10sJ3VucHJvdmVuX2NlbGxzJzp1bnByb3ZlbiwnY2hhbmdlZF9jZWxsX25vX3NhdF93YXJuaW5ncyc6bm9fc2F0LCdub19zYXRfd2FybmluZ19jb3VudCc6bG9nLmNvdW50KCdXYXJuaW5nOiBObyBTQVQgbW9kZWwgYXZhaWxhYmxlIGZvciBjZWxsICcpLCdleHBsaWNpdF9mbGF0dGVuJzpGYWxzZSwnZXF1aXZfc3RhdHVzX2Fzc2VydCc6RmFsc2UsJ3Rvb2xfdmVyc2lvbic6J1lvc3lzIDAuMzMgKGdpdCBzaGExIDI1ODQ5MDNhMDYwKSd9LAogJ2FjY2VwdGVkX29iamVjdF9iaW5kaW5nJzp7J2Jhc2VsaW5lX3BhdGgnOmJhc2VsaW5lX3BhdGgsJ29sZF9zZWNfZ29sZF9wYXRoJzpnb2xkX3BhdGgsJ2FjY2VwdGVkX3Jhd19jYW5kaWRhdGVfcGF0aCc6Z2F0ZV9wYXRoLCdvbGRfcmVjZWlwdF9oYXNoZXNfcmVjaGVja2VkJzpUcnVlLCdvbGRfZ29sZF9lcXVhbHNfcmF3X2Jhc2VsaW5lX2FmdGVyX3JlbW92aW5nX29ubHlfYmxhbmtfbGluZXMnOlRydWUsJ2Jhc2VsaW5lX3RvX2ZpbmFsX29ubHlfY2hhbmdlJzonb25lIG5vcjRiXzEgdG8gbm9yNGJfMiBjZWxsIHR5cGUgYXQgXzE4NDMyMF87IGFsbCBvdGhlciBmdWxsIHJhdyB0ZXh0IGlkZW50aWNhbCcsJ2FjY2VwdGVkX3RyaWFsJzphY2NlcHRlZFswXSwncnVuX2ZpbmFsX3BhdGNoX2lkJzpyZXN1bHRbJ2ZpbmFsX3BhdGNoX2lkJ10sJ3J1bl9maW5hbF93bnMnOnJlc3VsdFsnd25zX2hpc3RvcnknXVstMV0sJ2N1cnJlbnRfbmV0bGlzdF90ZXh0X2ZpZWxkX2V4aXN0cyc6RmFsc2UsJ3N0YXRlX3RleHRfYmluZGluZyc6J25vdCBhdmFpbGFibGUgaW4gb2xkIHNjaGVtYTsgYWNjZXB0ZWQgcm93K3Jlc3VsdCtyYXcgY2FuZGlkYXRlK2RlZGljYXRlZCBydW50aW1lIHJlY2VpcHQgY29ycm9ib3JhdGUgZXhhY3QgY2FuZGlkYXRlOyBub3QgYSBzdGF0ZS5jdXJyZW50X25ldGxpc3RfaGFzaCBjbGFpbScsJ3NvdXJjZV9pbml0aWFsX3RleHRfdXRmOF9sZl9zaGEyNTYnOmgoaW5pdGlhbC5lbmNvZGUoKSksJ3NvdXJjZV9maW5hbF90ZXh0X3V0ZjhfbGZfc2hhMjU2JzpoKGZpbmFsLmVuY29kZSgpKSwnaGVscGVyX2RmZl9pZGVudGljYWwnOlRydWUsJ2hlbHBlcl9kZmZfc2hhMjU2JzpoKGxlZnRbJ2RmZiddLmVuY29kZSgpKX0sCiAndW5wcm92ZW5fc2lnbmFsJzp7J25ldCc6J18xNzc5MTdfJywncmVnaXN0ZXInOkZhbHNlLCdkcml2ZXJfaW5zdGFuY2UnOidfMTg0MzIwXycsJ3Bpbic6J1knLCdjaGFuZ2VkX2NlbGxzJzpjaGFuZ2VkLCdkaXJlY3RfY29uc3VtZXJzJzpjb25zdW1lcnMsJ2FjdHVhbF9jZWxscyc6Zm59LAogJ2lucHV0X2RvbWFpbic6cGlucywneF9jZXJ0aWZpY2F0ZSc6Y2VydGlmaWNhdGUsJ21vZGVsX3ByZWZsaWdodF9zaGEyNTYnOm1vZGVsX2JlZm9yZSwKICdwcm9vZl9wYWlyJzp7J3RvcF9tb2R1bGUnOidiMTcnLCdnb2xkX3BhdGgnOnN0cihSL2Jhc2VsaW5lX3BhdGgpLCdnYXRlX3BhdGgnOnN0cihSL2dhdGVfcGF0aCksJ2dvbGRfYnl0ZV9zaGEyNTYnOmgoKFIvYmFzZWxpbmVfcGF0aCkucmVhZF9ieXRlcygpKSwnZ2F0ZV9ieXRlX3NoYTI1Nic6aCgoUi9nYXRlX3BhdGgpLnJlYWRfYnl0ZXMoKSksJ3Jhd19wb2xpY3knOidkZWNvZGUgVVRGLTggdW5pdmVyc2FsIG5ld2xpbmVzOyBwcmVzZXJ2ZSBjb21wbGV0ZSB0b3AraWRlbnRpY2FsIGRmZiBoZWxwZXI7IHByb29mIHJhdyBoYXNoZXMgc2VwYXJhdGVseSBib3VuZCd9LAogJ2h5cG90aGVzaXMnOidPbGQgdW5mbGF0dGVuZWQgaGllcmFyY2h5IHByZXZlbnRlZCBTQVQgaW1wb3J0IG9mIGNoYW5nZWQgTk9SNEIgY2VsbCBtb2R1bGVzLiBFeGFjdCB0cnVlIGZ1bmN0aW9uYWwgZXF1aXZhbGVuY2UgcmVtYWlucyB0byBiZSBkZWNpZGVkIGJ5IHRoZSBuZXcgZnVsbC1tb2RlbCBmbGF0dGVuK2Fzc2VydCBydW47IGZpbmRfc2FtZV93aXJlcyBhbG9uZSBpcyBub3QgZXN0YWJsaXNoZWQgcm9vdCBjYXVzZS4nLAogJ3Vua25vd24nOlsnbm8gb2xkIHN0YXRlLmN1cnJlbnRfbmV0bGlzdF90ZXh0L2hhc2ggb3IgcnVudGltZSByZXZpc2lvbi9mdWxsIGFyZ3YnLCdleGFjdCBvcmlnaW5hbCBleGVjdXRpb24gdG9vbCBiaW5hcnkgaGFzaCcsJ25vIGJsYW5rZXQgY29uY2x1c2lvbiBhYm91dCBvdGhlciBCMjMgb2JqZWN0cyddLAogJ25ld19wcm9vZic6Tm9uZSwnc3RhYmlsaXR5JzpOb25lfQpkZWYgc2F2ZSgpOgogKEUvJ0IxN19QUk9PRl9SRUNPVkVSWV9ERVNJR04uanNvbicpLndyaXRlX3RleHQoanNvbi5kdW1wcyhzdGF0dXMsaW5kZW50PTIsZW5zdXJlX2FzY2lpPUZhbHNlKSsnXG4nLGVuY29kaW5nPSd1dGYtOCcpCnNhdmUoKQooRS8nQjE3X1BST09GX1JFQ09WRVJZX0RFU0lHTi5tZCcpLndyaXRlX3RleHQoJyMgQjE3IOivgeaYjuaBouWkje+8iDIwMjYtMTAtMTbvvIlcblxu5bey55m76K6w5LiA5Liq5pyJ55WM5a6M5pW05qih5Z6LIFNFQ++8m+eKtuaAgSByZWdpc3RlcmVkX3J1bm5pbmfjgILml6flr7nosaHjgIHmqKHlnovjgIHllK/kuIDmnKror4Hngrnlkoznu5HlrprlnKjlkIzlkI0gSlNPTuOAguacqumihOWIpOe7k+aenOOAglxuJyxlbmNvZGluZz0ndXRmLTgnKQpwcmludCgnUkVHSVNURVJFRCcsaGVhZCwnaW5pdGlhbCcsc3RhdHVzWydwcm9vZl9wYWlyJ11bJ2dvbGRfYnl0ZV9zaGEyNTYnXSwnZmluYWwnLHN0YXR1c1sncHJvb2ZfcGFpciddWydnYXRlX2J5dGVfc2hhMjU2J10sJ21vZGVsJyxtb2RlbF9iZWZvcmUsZmx1c2g9VHJ1ZSkKc3RhcnQ9dGltZS5tb25vdG9uaWMoKQpuZXc9Y29tbW9uLmZpbmFsX3NlYyhpbml0aWFsLGZpbmFsLCdiMTcnLFAvJ2ZpbmFsX3NlYycpCnByaW50KCdTRUNfUkVUVVJOJyxuZXcsZmx1c2g9VHJ1ZSkKc3RhdHVzWyduZXdfcHJvb2YnXT1uZXcKc3RhdHVzWydzdGFiaWxpdHknXT17J3NvdXJjZV9tYW5pZmVzdF91bmNoYW5nZWQnOnByb2R1Y2VyX3Bpbj09Y29tbW9uLnNvdXJjZV9tYW5pZmVzdCgpLCdoZWFkX3VuY2hhbmdlZCc6aGVhZD09c3VicHJvY2Vzcy5jaGVja19vdXRwdXQoWydnaXQnLCdyZXYtcGFyc2UnLCdIRUFEJ10sY3dkPVIsdGV4dD1UcnVlKS5zdHJpcCgpLCdvcmlnaW5hbF9maWxlc191bmNoYW5nZWQnOmFsbChoKChSL3ApLnJlYWRfYnl0ZXMoKSk9PXZbJ3NoYTI1NiddIGZvciBwLHYgaW4gc291cmNlcy5pdGVtcygpKSwnbW9kZWxzX21hdGNoX3ByZWZsaWdodCc6aCgoUC8nZmluYWxfc2VjL2NlbGxzLnYnKS5yZWFkX2J5dGVzKCkpPT1tb2RlbF9iZWZvcmUsJ291dHB1dF9oYXNoZXMnOntwLnJlbGF0aXZlX3RvKFApLmFzX3Bvc2l4KCk6aChwLnJlYWRfYnl0ZXMoKSkgZm9yIHAgaW4gUC5yZ2xvYignKicpIGlmIHAuaXNfZmlsZSgpfSwnd3JhcHBlcl9pbnRlcm5hbF9lbGFwc2VkX3MnOnRpbWUubW9ub3RvbmljKCktc3RhcnR9Cm5ld2xvZz0oUC8nZmluYWxfc2VjL3NlYy5sb2cnKS5yZWFkX3RleHQoZW5jb2Rpbmc9J3V0Zi04JykKc3RhdHVzWyduZXdfcHJvb2ZfbG9nJ109eydwcm92ZW5fdW5wcm92ZW4nOnJlLmZpbmRhbGwocidPZiB0aG9zZSBjZWxscyAoXGQrKSBhcmUgcHJvdmVuIGFuZCAoXGQrKSBhcmUgdW5wcm92ZW4nLG5ld2xvZyksJ3N1Y2Nlc3NfbWFya2VyJzonRXF1aXZhbGVuY2Ugc3VjY2Vzc2Z1bGx5IHByb3ZlbiEnIGluIG5ld2xvZywnbm9fc2F0X3dhcm5pbmdfY291bnQnOm5ld2xvZy5jb3VudCgnTm8gU0FUIG1vZGVsIGF2YWlsYWJsZScpLCd1bnByb3Zlbl9saW5lcyc6W3ggZm9yIHggaW4gbmV3bG9nLnNwbGl0bGluZXMoKSBpZiAnVW5wcm92ZW4gJGVxdWl2ICcgaW4geF19CnN0YXR1c1snc3RhdHVzJ109J2NvbXBsZXRlJyBpZiBhbGwoc3RhdHVzWydzdGFiaWxpdHknXVtrXSBmb3IgayBpbiBbJ3NvdXJjZV9tYW5pZmVzdF91bmNoYW5nZWQnLCdoZWFkX3VuY2hhbmdlZCcsJ29yaWdpbmFsX2ZpbGVzX3VuY2hhbmdlZCcsJ21vZGVsc19tYXRjaF9wcmVmbGlnaHQnXSkgZWxzZSAnaW52YWxpZF9zb3VyY2Vfb3JfaW5wdXRfZHJpZnQnCnNhdmUoKQpwcmludCgnRklOQUwnLHN0YXR1c1snc3RhdHVzJ10sc3RhdHVzWyduZXdfcHJvb2ZfbG9nJ10sZmx1c2g9VHJ1ZSkK"
+  },
+  "execution_history": [
+    {
+      "attempt": "preflight1",
+      "log": "scratch/r22_tristate_20261016/b17_new_proof_run.log",
+      "result": "UTF-8 decode failed for legacy ANSI map.ys; common.final_sec not invoked, no EDA",
+      "repair": "Only legacy map.ys decoded CP936 strictly; original SHA retained; netlist decoding strict UTF-8 and explicit CRLF-to-LF only."
+    },
+    {
+      "attempt": "proof1",
+      "log": "scratch/r22_tristate_20261016/b17_new_proof_run2.log",
+      "wrapper_timeout_s": 240,
+      "internal_sec_timeout_s": 180,
+      "wrapper_elapsed_s": 25,
+      "exit_code": 0,
+      "sec_runtime_s": 13.375
+    }
+  ],
+  "conclusion": {
+    "scope": "only actual retained phase-2 b17 accepted candidate versus its complete raw mapped baseline",
+    "new_independent_sec": "pass, 12879 proven, 0 unproven; asserted success; zero No SAT model warnings",
+    "old_proof_remains_partial": true,
+    "cause_supported_by_evidence": "Old proof left changed library cell modules hierarchical and SAT explicitly lacked import models. New actual-library model + flatten/proc/memory + asserted SEC eliminates the unresolved point. This supports proof-flow limitation; does not isolate find_same_wires as a Yosys defect.",
+    "other_B23_claim": "no new proof or blanket validation performed for other B23 objects",
+    "new_STA_mapping_or_repair_runs": 0,
+    "new_full_SEC_calls": 1,
+    "old_outputs_modified": false,
+    "production_tests_modified": false
+  },
+  "next_steps": [
+    "Keep old partial receipt/log unmodified and cite the new receipt for this exact b17 pair only.",
+    "If any raw/model/source hash changes, invalidate this receipt and preregister a new proof; no silent regeneration.",
+    "Adversarial controls remain full-pipeline requirements: wrong cell function or input wiring must fail, missing required input/tri/X-consumer domains must reject; this run does not add new negative-control EDA."
+  ]
+}

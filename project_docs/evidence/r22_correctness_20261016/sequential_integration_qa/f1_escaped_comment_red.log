@@ -1,0 +1,21 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest -q code/tests/test_r22_f1_parser_coverage.py -k comment_like
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_comment_like_text_in_escaped_net_is_an_atom _______________
+
+    def test_comment_like_text_in_escaped_net_is_an_atom():
+        original=MULTI.replace('wire N;',r'wire \N//tail ;')
+        original=original.replace('.X(N)',r'.X(\N//tail )').replace('.A(N)',r'.A(\N//tail )')
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(original,original.replace('buf_1 first','buf_2 first'))
+>       assert result.status=='pass',result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='checker failed closed: Unsupported SKY instance syntax in input validation: sky130_fd_sc_hd__buf_1 first')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_f1_parser_coverage.py:98: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_comment_like_text_in_escaped_net_is_an_atom
+1 failed, 12 deselected in 0.38s
+[run] 完成（5s），退出码 1

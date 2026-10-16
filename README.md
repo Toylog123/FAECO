@@ -32,7 +32,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-本轮（2026-10-16，r22恢复）：多输出/模块作用域/提交前刷新修复已提交，第一批完整回归757 passed/4 skipped/156 subtests；A六个实际接受终点已获新独立SEC证明。后续B模型审计发现enable-FF模型缺口和非法三态替换；三态导出、必需输入与候选语义已修复。更强真实反例发现当前Yosys二态SEC把Z/0误判等价，现对该域明确返回unsupported，四态后端问题继续保留。第二批完整回归v5为**835 passed/4 skipped/156 subtests，147.00s，166文件SHA前后一致**，采用全进程`PYTHONUTF8=1`；B两组Pico实际接受候选已用完整模型重新证明通过，并附孤立X身份核验，以当前交接和`project_docs/evidence/r22_correctness_20261016/`实查记录为准。C′ v1失败原件、v2仅登记原件均保留，后续须新pin/v3；D56同族恢复工具独立于C′，历史C还需恢复完整配置/调度。当前论文不是投稿定稿。
+本轮（2026-10-16，r22恢复）：多输出、模块作用域、提交前刷新、三态导出和必需输入检查已修复。A六个实际接受终点、B两组Pico和B17均已获得绑定实际对象的新独立SEC证明。后续反例又发现时序单元仅比较IQ、单行实例漏读和公共唯一性门误拦位置参数三个缺口，现已分别修复；原始反例V3拒绝非法复位→置位替换，保留合法尺寸调整。最新完整回归v8为**969 passed/4 skipped/156 subtests，155.12s，170文件SHA前后一致**，全进程采用`PYTHONUTF8=1`。真实Z/0反例已推翻当前Yosys二态SEC的四态能力，三态对象继续返回unsupported，四态后端问题仍保留。实际证据见`project_docs/evidence/r22_correctness_20261016/`；C′须另建新pin/v3输入和pilot，D56同族恢复独立于C′，历史C/B3另行重建。当前论文不是投稿定稿。
 
 历史记录：最近一轮（2026-10-13，r15 全篇去防御化编辑）：论文**内容冻结 v13**（tag `v2026-10-13-defensive-purge2-r15`，**10 页** 0/0/0/0，内容指纹 `55bde9d4…`）——**用户直接指定的第二轮语言风格轮**（非外部审稿）：用户在 r14 后按**正式期刊审稿人（Integration / TODAES / TVLSI 方向）视角**通读，裁定「**这一版技术内容已经比较成熟，但文字风格仍有明显'答辩稿/项目报告'痕迹。最大的问题不是 claim 过强，而是作者过于主动解释审稿人可能的问题，导致主线贡献被稀释**」，要求从「证明我没有问题」转向「清楚告诉读者我做了什么、发现什么」，**减少解释性文字、提高陈述力度**（不是增加内容）。落地**正文 11 处语言风格改写**（E1–E11，`.tex` diffstat 11/11）；**三处必要偏离**（§2.3 保表 2 引用 / §4.1 保留全文唯一一处「不等同于」/ §5 结论「参考」口径）；**摘要结构与篇幅未变**；**零数字/零实验/零代码/零参考文献**。前序轮：r14（v12，去防御化重构 10 处）、r13（v11，摘要 + §1.1 大同行入口改写）、r12（v10，第五份外部审稿 M1–M5）、r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v13/README.md`。
 
@@ -46,7 +46,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；当前图脚本 `paper/zh/figures/data/scripts/review_r21_figures.py`。
 5. 交接：读 `project_docs/agent_handoff/START_HERE.md` 与 `CURRENT_RUN_HANDOFF.md`。
 
-r22已恢复；先读 `project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md`。第二批完整回归已通过；正式模型控制后用新源码pin和新v3目录注册实验，v2只登记未执行且禁止执行。9臂共享每电路同一映射SHA，workers=1、STA预算500、最多2电路并发；映射后的实际输入先查模型支持域，两电路18项pilot全部通过独立最终SEC才扩展。不要重用或覆盖失败v1或仅登记v2的证据。
+r22已恢复；先读 `project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md`。完整回归v8与精确反例V3已通过；提交源码后用新pin和新v3目录登记实验，v2只登记未执行且禁止执行。9臂共享每电路同一映射SHA，workers=1、STA预算500、最多2电路并发；映射后的实际输入先查模型支持域，两电路18项pilot全部通过独立最终SEC才扩展。不要重用或覆盖失败v1或仅登记v2的证据。
 
 ## 目录角色
 

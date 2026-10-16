@@ -1,12 +1,16 @@
-# NEXT AGENT PROMPT — 当前2026-10-16 LOG-24
+# NEXT AGENT PROMPT — 当前2026-10-16 LOG-29
 
 用户已明确恢复r22，10-14暂停为历史。先按本目录README读当前七段handoff_20261016_r22.md和状态/任务，再读OPEN_ISSUES、EXPERIENCE与EXPERIMENT_REGISTRY。
 
-当前main/origin=44d20bb（生产代码同已验收02e82a2），代码完整v5=835pass/4skip/156subtests、147s/166来源SHA稳定/PYTHONUTF8=1，新pin正式9控制预期全符合（3正/3负/2unsupported/1input_error），后验44source/LIB/driver无漂移。不能说9个等价证明或三态支持通过；unsupported是临时二态能力门，显式四态编码恢复路径仍open。
+当前完整v8已969pass/4skip/156subtests，155.12s/wrapper157.969exit0、170来源SHA稳定/PYTHONUTF8=1，JSON/JUnit/log实读。原始精确V3 reset→set fail/Gpass/R0/parsed1/1/source稳定，公共唯一性opt-in scope限定30pass；OI040/041实现门关闭，原反例/失败receipt/旧v7保留，科学完整性不升级。B3/C恢复ADAPTER仍WIP不纳本次commit，范围外四态/历史配置等pending保持。records冻结docs供阶段commit/push→同HEAD注册C′v3→实际map8/静态门→18pilot；当前未注册/无mapping或STA。
+
+当前main/origin=ddb4c33（生产代码同已验收02e82a2），代码完整v8=969pass/4skip/156subtests、155.12s/170来源SHA稳定/PYTHONUTF8=1，新pin正式9控制预期全符合（3正/3负/2unsupported/1input_error），后验44source/LIB/driver无漂移。不能说9个等价证明或三态支持通过；unsupported是临时二态能力门，显式四态编码恢复路径仍open。
 
 A6真实SEC补证/三态交集空已完成，历史runtimehash不补造；B旧28对象绑定真但5有使用模型缺口，B2已在44d20bb新模型双pair pass，core6.078s+7X identity、mul0.750s+0X，wrapper16exit0/source稳定，后验rawbytes/完整decoded/artifact/动态cert均真。checker独立20负全拒/5of6正接受，escaped output保守误拒不影响actualB2；限定two-state SEC+孤立constant-X identity，不泛化四态/复位等价。OI038新模型缺证已补、旧runtime身份不补造，B3仍待同族恢复。然后稳定证据/source pin，注册C′v3→actual mapped复查→18pilot全过才扩72，D56预飞56/56已过但D14pilot待，C按同族恢复。C′v2仅注册禁执行，v1/v2原件不改，新矩阵尚未注册，无STA/pilot。B3/D/C、三态真实支持及稿图声明仍待，不跨族填补，不弱化科学结论应付。
 
-主线管源码/实验/稿图/Git，records只写责任docs。新运行前锁配置/版本/输入/库/工具/超时，后记真实结果与归因；完整回归期间冻结源码，任务监测不空等。当前快照只一份，过程详LOG-01至25与原证据，不重新堆叠中间banner。
+B17新增恢复：B17_PROOF_RECOVERY_DESIGN.json已实读新common完整模型+flatten/assert真SEC返回pass（13.375s、12879proven/0unproven），源HEADddb4c33/原件稳定；主线POST_RUN_VERIFICATION已完成：原bytes/完整decoded/唯一nor4b尺寸变化/全部artifacts与44source全匹配，12879/0实log成功，producerJSON acaf5f…哈希已核。旧未flatten/NoSATmodel实证不能简写为find_same_wires已证伪阴性。首map.ys CP936预飞读UTF8失败在SEC前；严格CP936保字节SHA后才运行，旧schema无state text/hash不补造。
+
+主线管源码/实验/稿图/Git，records只写责任docs。新运行前锁配置/版本/输入/库/工具/超时，后记真实结果与归因；完整回归期间冻结源码，任务监测不空等。当前快照只一份，过程详LOG-01至36与原证据，不重新堆叠中间banner。
 
 ## 历史提示（旧暂缓/暂停不作为当前授权）
 

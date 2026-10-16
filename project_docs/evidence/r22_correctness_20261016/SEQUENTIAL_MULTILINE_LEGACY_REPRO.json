@@ -1,0 +1,80 @@
+{
+  "schema": "r22-sequential-F1-independent-multiline-legacy-reproduction-v1",
+  "eda_executed": false,
+  "old_RW": {
+    "git_revision": "44d20bb",
+    "git_path": "code/src/rseco/real_wns.py",
+    "sha256": "e2cca745f9e197913bd5bc69e306e05bdb768796285ddb039ed61033432b47fd"
+  },
+  "old_gatesizing": {
+    "git_revision": "44d20bb",
+    "git_path": "code/src/rseco/gate_sizing.py",
+    "sha256": "b2af6fc81c07105565654a5f67c9b522a829887a9143547f8266d97fb060e643"
+  },
+  "current_source_sha256": {
+    "code/src/rseco/real_wns.py": "83c54626e710b5fb7c1503a5a413ba22ab181d2aa19490e9df60763742459cd9",
+    "code/src/rseco/gate_sizing.py": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+    "code/src/rseco/logic_rewrite.py": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54"
+  },
+  "liberty_path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+  "liberty_sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+  "gold_multiline": "module top(CLK,D,RESET_B,Q);\ninput CLK,D,RESET_B;\noutput Q;\nsky130_fd_sc_hd__dfrtp_1 g (.CLK(CLK),.D(D),.RESET_B(RESET_B),.Q(Q));\nendmodule\n",
+  "gate_multiline": "module top(CLK,D,RESET_B,Q);\ninput CLK,D,RESET_B;\noutput Q;\nsky130_fd_sc_hd__dfstp_1 g (.CLK(CLK),.D(D),.SET_B(RESET_B),.Q(Q));\nendmodule\n",
+  "records": [
+    {
+      "source_format": "multiline",
+      "checker": "historical_RW",
+      "parser": "historical_gs",
+      "gold_parsed_count": 1,
+      "gate_parsed_count": 1,
+      "status": "pass",
+      "reason": "Liberty functions preserved"
+    },
+    {
+      "source_format": "multiline",
+      "checker": "historical_RW",
+      "parser": "current_gs",
+      "gold_parsed_count": 1,
+      "gate_parsed_count": 1,
+      "status": "pass",
+      "reason": "Liberty functions preserved"
+    },
+    {
+      "source_format": "multiline",
+      "checker": "current_RW",
+      "parser": "current_gs",
+      "gold_parsed_count": 1,
+      "gate_parsed_count": 1,
+      "status": "fail",
+      "reason": "sequential state/control/output semantics or pin roles changed at g"
+    },
+    {
+      "source_format": "singleline",
+      "checker": "historical_RW",
+      "parser": "historical_gs",
+      "gold_parsed_count": 0,
+      "gate_parsed_count": 0,
+      "status": "pass",
+      "reason": "Liberty functions preserved"
+    },
+    {
+      "source_format": "singleline",
+      "checker": "historical_RW",
+      "parser": "current_gs",
+      "gold_parsed_count": 1,
+      "gate_parsed_count": 1,
+      "status": "pass",
+      "reason": "Liberty functions preserved"
+    },
+    {
+      "source_format": "singleline",
+      "checker": "current_RW",
+      "parser": "current_gs",
+      "gold_parsed_count": 1,
+      "gate_parsed_count": 1,
+      "status": "fail",
+      "reason": "sequential state/control/output semantics or pin roles changed at g"
+    }
+  ],
+  "conclusion": "Multiline historical parser sees both physical FFs and old F1 still incorrectly passes reset-to-set. Sequential semantic defect is independent from historical single-line parser omission. Current RW rejects both complete-parser formats."
+}

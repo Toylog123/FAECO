@@ -35,11 +35,31 @@ class Cell:
         return self.function in {"dfxtp", "dfrtp", "dfbbp", "dfbbn", "dfrbp"}
 
 
+_ESCAPED_TOKEN = r"\\[^\s]+(?=\s)"
 _CELL_INST_RE = re.compile(
-    r"^\s*(sky130_fd_sc_hd__\w+)\s+(\w+)\s*\((.*?)\)\s*;",
+    r"(?:^|(?<=;))\s*(sky130_fd_sc_hd__\w+)\s+"
+    r"([A-Za-z_$][\w$]*|" + _ESCAPED_TOKEN + r")\s*\("
+    r"((?:" + _ESCAPED_TOKEN + r"|[^\\;])*?)\)\s*;",
     re.M | re.S,
 )
-_PIN_RE = re.compile(r"\.(\w+)\(\s*([^)]+?)\s*\)")
+_PIN_RE = re.compile(
+    r"\.([A-Za-z_$][\w$]*)\s*\(\s*((?:" + _ESCAPED_TOKEN + r"|[^)\\])*?)\s*\)"
+)
+_QUOTED_TOKEN = r'"(?:\\[\s\S]|[^"\\])*"'
+_COMMENT_TOKEN = r"//[^\n]*|/\*[\s\S]*?\*/"
+_ATTRIBUTE_TOKEN = (r"\(\*(?:" + _QUOTED_TOKEN + "|" + _COMMENT_TOKEN
+                    + r"|\\[^\s]+|(?!\*\))[\s\S])*\*\)")
+_NONCODE_RE = re.compile(
+    r"(?P<escaped>\\[^\s]+)|(?P<masked>" + _COMMENT_TOKEN + "|"
+    + _QUOTED_TOKEN + "|" + _ATTRIBUTE_TOKEN + ")"
+)
+
+
+def _mapped_code(text: str) -> str:
+    """Mask non-code without mistaking escaped identifier bytes for syntax."""
+    return _NONCODE_RE.sub(
+        lambda match: match.group() if match.lastgroup == "escaped" else
+        "".join("\n" if char == "\n" else " " for char in match.group()), text)
 
 
 def _parse_function(cell_type: str) -> tuple[str, int]:
@@ -50,10 +70,19 @@ def _parse_function(cell_type: str) -> tuple[str, int]:
 
 
 def parse_mapped_netlist(text: str) -> list[Cell]:
+    """Keep one record per physical statement, independent of line wrapping.
+
+    Duplicate instance records remain visible for the caller's namespace
+    validation. Net connections retain their names, removing only the single
+    syntax backslash preceding an escaped identifier, never interior/tail bytes.
+    """
     cells: list[Cell] = []
-    for m in _CELL_INST_RE.finditer(text):
+    for m in _CELL_INST_RE.finditer(_mapped_code(text)):
         cell_type, inst = m.group(1), m.group(2)
-        pins = {p: n.strip().strip("\\") for p, n in _PIN_RE.findall(m.group(3))}
+        pins = {}
+        for pin, connection in _PIN_RE.findall(m.group(3)):
+            net = connection.strip()
+            pins[pin] = net[1:] if net.startswith("\\") else net
         fun, size = _parse_function(cell_type)
         cells.append(Cell(inst, cell_type, fun, size, pins))
     return cells

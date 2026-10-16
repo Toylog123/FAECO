@@ -251,3 +251,92 @@ Xchecker独立代码审查/B2正式proof仍待。C′v3尚未注册，避免后�
 | QA-R22-B2-X-CHECKER | checker66fe72ff…与实际四raw；独立代码/黑盒探针，不EDA | B2_X_INDEPENDENT_REVIEW.md/.json、B2_X_PRIMARY_REVIEW.json等 | 20/20负拒、5/6正接受、actual2pair7/0cert；合法escaped output保守误拒不影响B2，不称26/26期待全匹配；独立scanner另8负控制拒绝 |
 
 44d20bb已commit/push（code未变），B2新correct模型缺证已恢复，旧runtime身份不补造，B3仍需同族合法候选恢复/重跑。新矩阵尚未注册、无STA/pilot。权威入口已收口为单一快照，动作/失败事实完整保留本登记/LOGS/原件。
+
+### 只读同族恢复设计与新v3注册前（LOG-20261016-26）
+
+| 登记ID | 来源/对象 | 实查结果/边界 | 执行状态 |
+|---|---|---|---|
+| DESIGN-R22-B3-REVALIDATION | r22_b_model_audit_20261016/B3_RERUN_DESIGN.md/.json；实际B3 raw/accepted state/旧recipe与blob | execution_ready=false；runtime argv/source/priority等unknown，不默用defaults；须保持B stateful outerloop，不能换C greedy或C′调度 | 只读报告完成，无EDA/STA/SEC；新同族重建参数须明确预注册 |
+| DERIVED-R22-C-RECOVERY-EXTENSION | r22_rerun_design_20261016/C_RECOVERY_EXTENSION.md/.json | execution_ready=false/formal_source_pin=null；14份完整trial/终点跨表相同加强recipe但不证明copy/重跑或runtime argv；canonical s382身份仍缺 | 只读增量报告完成，无EDA，不把新重建起点选择反填历史identity |
+| PLAN-R22-CPRIME-V3-PREPARE | 目标experiments/20261016_r22_cut_ablation_v3 | 实际Test-Path=false/未注册；evidence-only准备工具审查+commit后锁一次新HEAD，再注册mapping/静态域查→18pilot | prepared，尚无mapping/STA/pilot；v1/v2原件不改 |
+
+proof/QA/docs阶段ddb4c33已commit/push，生产166来源不变。原归档phase2_final_qa/independent_primary_x_probes.py的EOF空行保source/target SHA，不改原档；后续diffcheck仅对该原始档和verbatim log/xml作精确排除，不放宽生产/docs。
+
+### B17有界新证明与归因核查（LOG-20261016-27）
+
+| 实验ID | 对象/配置/来源 | 实际文件结果 | 当前边界 |
+|---|---|---|---|
+| SEC-R22-B17-RECOVERY | HEADddb4c33，真正baseline/accepted raw仅nor4b_1→_2变化，helper相同，actualLib/common完整模型+flatten+assert；授权一次internal180/external240s，独占B17_new_model_proofs | B17_PROOF_RECOVERY_DESIGN.json complete/new_proof pass13.375s/return0；12879proven0unproven、NoSAT0，source/head/original/model稳定 | 主线独立POST_RUN_VERIFICATION已完成：原bytes/完整decoded/唯一尺寸变化/全部artifacts与44source匹配、12879/0实log成功；旧无state.current_netlist字段/hash，不补造，用acceptedrow/result/raw/dedicatedruntime收据交叉。无STA，不外推B23全集 |
+
+首map.ys CP936预飞UTF8读取失败发生在SEC前、无EDA；随后严格CP936保原bytes/hash，实际proof网表仍UTF8。旧唯一未证_177917_实际nor4b输出、旧脚本无flatten且NoSATmodel；旧note的find_same_wires false-negative不是已证归因。新真SEC结果不能反填旧运行已证。C′v3只有evidence-only准备工具，实验目录仍未注册，166生产来源未变。
+
+### B17后验与C′v3正式准备工具阶段（LOG-20261016-28）
+
+| 登记ID | 对象/证据 | 实际结果/边界 | 下一门 |
+|---|---|---|---|
+| VERIFY-R22-B17-POST | B17_new_model_proofs/POST_RUN_VERIFICATION.json、producer报告SHAacaf5f… | 原bytes/完整decoded/唯一nor4b尺寸变化/全部artifacts与44source匹配、12879/0实log成功；producerJSON SHA实算一致 | B17新proof已恢复，不反填旧statehash/runtime，稿图待 |
+| QA-R22-CPRIME-V3-PREPARER | r22_cprime_v3_20261016/prepare_inputs.py SHA22a3254c…；qa/独立manifest | crosscase stale input/artifact红3→最终20pass/0.78s；QA5 source/archive/hash实算5/5；evidence-only，production166未变 | 阶段commit+push后锁新HEAD注册v3→真实mapping8例/静态域查→18pilot→72；不是RTL→mapped等价证明，不新增未计划大型前置工具 |
+
+本时点v3实验目录/manifest未创建，真实mapping/STA未开始；records暂停文档写入供B17/B3design/Cprep/QA/docs阶段提交，Git完成后才登记实际新HEAD/运行。
+
+### 顺序单元新反证与源码重开（LOG-20261016-29）
+
+| 登记ID | 对象/来源 | 实际结果 | 后续/边界 |
+|---|---|---|---|
+| PROBE-R22-SEQUENTIAL-F1-R | SEQUENTIAL_GATE_COUNTEREXAMPLE.json，HEADddb4c33/v5旧44production来源；合法dfrtp_1→dfstp_1 | F1期望fail实际pass；LR错误34FF-R候选；actual63seq graph边界全识别；eda_executed=false | OI040 open，LR禁seq组合R/F1完整顺序语义+合法G TDD，新完整v6/commit后才能新C′v3注册；graph不改 |
+
+这不是835回归失败，是未覆盖的新反例。A6/B2/B17模型生成未改、实际修改非seq，精确proof各保原pin不自动否定。准备器20QA已过但不能据此注册旧源码实验；v3实验目录实查不存在/未注册，无mapping/STA，无旧实验需中断。
+
+### 顺序门限定修复/旧证明模型保持/完整v6（LOG-20261016-30）
+
+| 登记ID | 对象/证据 | 实际结果/状态 | 边界 |
+|---|---|---|---|
+| CHECK-R22-SEQUENTIAL-REWRITE | scratch/r22_sequential_20261016/rewrite_red/green.log | 红74fail3pass→相关105pass4.12s，wrapper5exit0 | LR顺序R封闭、合法G保留；非整套 |
+| CHECK-R22-SEQUENTIAL-F1 | sequential_f1_red2/green1/related.log | 有效红12fail2pass→专属14pass6.89s，7文件201pass50.82s/wrapper57exit0 | 首red合法G fixture重复inputpin已纠正，不当生产问题；rawseq groups含clear_preset/statetable |
+| VERIFY-R22-PRIOR-PROOF-MODELS | verify_proof_model_preservation.py、proof_model_preservation/verification.json | A6+B2+B17九份models9/9字节一致/source与LIB稳定/eda=false，wrapper20exit0 | 重生成字节保持非新外部证明，精确proof保原pin；另6statetable writer原不支持failclosed、不扩支持 |
+| CHECK-R22-FULL-V6-20261016 | full_regression_v6.json/.log/.xml目标；168beforeSHA/PYTHONUTF8=1 | completed/passed：926pass/4skip/156subtests、155.08s/wrapper157.875exit0、168before/after SHA稳定/PYTHONUTF8=1；JSON/XML/log实读 | 当前新源码必须待完整v6/commit后才注册C′v3，无mapping/STA |
+
+### 当前完整v6验收与提交前冻结（LOG-20261016-31）
+
+926pass/4skip/156subtests，155.08s/wrapper157.875exit0，168来源SHA稳定、PYTHONUTF8=1，JUnit0fail0error。OI040代码阶段关闭，反例/红绿/旧版本边界保留。preparer在新顺序源码限定再20pass/0.84s，九proof模型字节保持验证保留（非外部重证明）。
+
+记录冻结供立即commit/push→同一新HEAD注册C′v3→真实map8例/静态门→18pilot→72；不再追加前置审计/工具。范围外四态/6statetable支持、B3/C配置与科学回填保持open但不阻碍本已验证域。当前v3未注册/未mapping/无STA，不能预填实验通过。
+
+### 原始顺序反例精确重放失败（LOG-20261016-32）
+
+| 登记ID | 对象/来源 | 实际结果 | 归因/后续 |
+|---|---|---|---|
+| VERIFY-R22-SEQUENTIAL-EXACT-REPLAY | verify_sequential_gate_fix.py，原SEQUENTIAL_GATE_COUNTEREXAMPLE字节SHA e1cc8bf…；SEQUENTIAL_GATE_VERIFICATION.json | passed=false，reset→set仍pass/合法Gpass/seqR0/source_stable/eda=false | gate_sizing行首regex漏单行，两侧parsed=[]，F1空集伪pass；新OI041 open。OI040多行seq子门有效但原反例归因混合不完整，失败verification不覆盖；新v7/commit后注册v3 |
+
+926是v6真实通过，不是回归失败，而是未覆盖新反例。parser单行/$名/注释strings/escapednet、F1物理↔parsed完整覆盖及旧源多行seq反证TDD进行中；当前无v3注册/mapping/STA，无旧实验要停。
+
+### OI041限定修复、精确重放V2、完整v7（LOG-20261016-33）
+
+| 登记ID | 对象/证据 | 实际结果/状态 | 边界 |
+|---|---|---|---|
+| CHECK-R22-MAPPED-STATEMENT | mapped_statement_red/green1/buffer_regression原logs | 红21fail6pass→相关119pass2.47s、buffer17pass0.22s | 单行/$/escaped/comment支持，限定非整套 |
+| CHECK-R22-F1-PARSER-COVERAGE | coverage red/green1/escaped_comment_red/green2/related | 覆盖红11fail1pass，escaped comment反例另红1；最终27pass、相关214pass52.33s/wrapper56exit0 | 独立物理↔parsed覆盖；限定重叠范围不累加 |
+| REPRO-R22-SEQ-MULTILINE-LEGACY | reproduce_multiline_legacy_seq.py+log、SEQUENTIAL_MULTILINE_LEGACY_REPRO.json SHAcd028… | 旧源码多行两物理FF可见仍reset→set伪pass，当前拒两格式 | seq语义缺陷独立于旧单行解析漏匹配，非EDA |
+| VERIFY-R22-SEQ-EXACT-V2 | SEQUENTIAL_GATE_VERIFICATION_V2.json锁原counterexampleSHA | reset→set fail/legalGpass/R0，parsed1/1/source_stable/passedtrue | 原失败receipt不可覆盖，新V2限定通过不等整套 |
+| CHECK-R22-FULL-V7-20261016 | full_regression_v7.json/.log/.xml目标，170beforeSHA/PYTHONUTF8=1，session32703 | completed/failed：965pass/1fail/4skip/156subtests、155.08s/wrapper158exit1，170来源SHA稳定/PYTHONUTF8=1 | OI041不关闭、不冻结完成，v3尚未注册，无STA |
+| ARCHIVE-R22-SEQ-INTEGRATION | 新sequential_integration_qa/ARCHIVE_MANIFEST，10原始完成logs/probe脚本+4派生artifact引用 | source/target/hash亲算10/10，derivedlegacyJSON SHAcd028…匹配 | 旧sequential_tdd/PREIMAGE保留，未覆盖失败verification |
+
+root误直接运行Cprep qa归档副本20F仅为原parents[2]路径上下文不符，未触代码；原scratch同源控制20pass1.10s。归档原件字节不改，重跑用原scratch位置或新副本适配路径，不当生产缺陷。
+
+### 完整v7失败归因（LOG-20261016-34）
+
+唯一失败为test_production_runner::test_runner_accepts_topology_trial_and_records_structural_delta，共享_assert_unique_physical_instances被F1严格named-pin连接提取误扩张，合法positional参数抛Parser coverage异常。实际965pass/1fail/4skip/156subtests，155.08s/wrapper158exit1，170源码SHA稳定；不是来源漂移或科学想法失败。root拟显式opt-in仅F1提取连接，公共唯一性门保留positional；TDD后新完整v8，旧v7原件保真不覆盖。OI041尚未关闭，无C′v3注册/STA。
+
+### 公共唯一性门兼容性修复与完整v8（LOG-20261016-35）
+
+| 登记ID | 对象/证据 | 实际结果/状态 | 边界 |
+|---|---|---|---|
+| CHECK-R22-F1-SCOPE-COMPAT | include_connections=False default，F1两调用True；scope红2fail14pass/0.39s | 主线实际tool限定30pass/1.27s；原绿stdout未保存，不补造log | f1_scope_qa/ GREEN_RUN_NOTE显式标二手tool回显、非raw执行日志；原红和RW/test preimage3件source/target/hash匹配 |
+| VERIFY-R22-SEQ-EXACT-V3 | SEQUENTIAL_GATE_VERIFICATION_V3.json、原counterexampleSHA | reset→set fail/Gpass/R0、parsed1/1/source稳/passedtrue | 原失败/V2/V3并存，限定通过不等整套 |
+| CHECK-R22-FULL-V8-20261016 | full_regression_v8.json/.log/.xml目标，170beforeSHA/PYTHONUTF8=1，session70494 | completed/passed：969pass/4skip/156subtests、155.12s/wrapper157.969exit0、170before/after SHA稳定/PYTHONUTF8=1；JSON/XML/log实读 | OI041仍open、等v8完成再冻结docs；无C′v3注册/STA |
+
+### 当前完整v8通过（LOG-20261016-36）
+
+完整v8实际969pass/4skip/156subtests，155.12s/wrapper157.969exit0，170源码SHA稳定/PYTHONUTF8=1，JUnit0fail0error。原始精确V3 passed/parsed1/1/reset→set fail/合法Gpass/R0；公共scope限定30pass。OI040/041仅实现门关闭，科学pending不变；原failedverification/v7与各轮归档保留。
+
+B3_RECONSTRUCTION_ADAPTER与C_RECONSTRUCTION_ADAPTER仍WIP，不纳本次stagecommit。records冻结docs，root归档harness/更新根入口后阶段commit/push，再同一HEAD注册C′v3→真实map8/静态门→18pilot；当前未注册/未mapping/无STA，不新增前置工具。

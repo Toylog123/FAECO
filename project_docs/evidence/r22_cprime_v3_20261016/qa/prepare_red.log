@@ -1,0 +1,501 @@
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py
+FFFFFFFFFFFFFFF                                                          [100%]
+================================== FAILURES ===================================
+____________________ test_dry_run_never_launches_or_writes ____________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_dry_run_never_launches_or0...st-1183/test_dry_run_never_launches_or0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF3E0E00>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000292FF45B210>
+
+    def test_dry_run_never_launches_or_writes(setup,monkeypatch):
+>       m=load();monkeypatch.setattr(m.subprocess,'run',lambda *a,**k:pytest.fail('external process'))
+          ^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF45B250>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+___________________ test_maps_once_and_revalidates_receipts ___________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_maps_once_and_revalidates0...st-1183/test_maps_once_and_revalidates0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF3E3C40>)
+
+    def test_maps_once_and_revalidates_receipts(setup):
+>       result=prepare(setup);c,o,calls,s,clean,checker=setup
+               ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF44FF10>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+_______________ test_pin_drift_rejected_before_mapping[source] ________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_pin_drift_rejected_before0...st-1183/test_pin_drift_rejected_before0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF3E3920>)
+change = 'source'
+
+    @pytest.mark.parametrize('change',['source','lib','other_rtl','manifest_head'])
+    def test_pin_drift_rejected_before_mapping(setup,change):
+        c,o,calls,s,clean,checker=setup
+        if change=='source':s.write_text('changed')
+        elif change=='lib':c.LIB.write_text('changed')
+        elif change=='other_rtl':(c.ROOT/'data/raw/benchmarks/raw/iscas89/s382.v').write_text('changed')
+        else:
+            def reject(h):raise RuntimeError('HEAD differs')
+            with pytest.raises(RuntimeError):load().prepare(o,['s27'],common=c,code_state_checker=reject,static_checker=checker)
+            assert not calls;return
+>       with pytest.raises(RuntimeError):prepare(setup,circuits=['s27'])
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF4384D0>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+_________________ test_pin_drift_rejected_before_mapping[lib] _________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_pin_drift_rejected_before1...st-1183/test_pin_drift_rejected_before1/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF460A40>)
+change = 'lib'
+
+    @pytest.mark.parametrize('change',['source','lib','other_rtl','manifest_head'])
+    def test_pin_drift_rejected_before_mapping(setup,change):
+        c,o,calls,s,clean,checker=setup
+        if change=='source':s.write_text('changed')
+        elif change=='lib':c.LIB.write_text('changed')
+        elif change=='other_rtl':(c.ROOT/'data/raw/benchmarks/raw/iscas89/s382.v').write_text('changed')
+        else:
+            def reject(h):raise RuntimeError('HEAD differs')
+            with pytest.raises(RuntimeError):load().prepare(o,['s27'],common=c,code_state_checker=reject,static_checker=checker)
+            assert not calls;return
+>       with pytest.raises(RuntimeError):prepare(setup,circuits=['s27'])
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF42A710>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+______________ test_pin_drift_rejected_before_mapping[other_rtl] ______________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_pin_drift_rejected_before2...st-1183/test_pin_drift_rejected_before2/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF461260>)
+change = 'other_rtl'
+
+    @pytest.mark.parametrize('change',['source','lib','other_rtl','manifest_head'])
+    def test_pin_drift_rejected_before_mapping(setup,change):
+        c,o,calls,s,clean,checker=setup
+        if change=='source':s.write_text('changed')
+        elif change=='lib':c.LIB.write_text('changed')
+        elif change=='other_rtl':(c.ROOT/'data/raw/benchmarks/raw/iscas89/s382.v').write_text('changed')
+        else:
+            def reject(h):raise RuntimeError('HEAD differs')
+            with pytest.raises(RuntimeError):load().prepare(o,['s27'],common=c,code_state_checker=reject,static_checker=checker)
+            assert not calls;return
+>       with pytest.raises(RuntimeError):prepare(setup,circuits=['s27'])
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF399E50>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+____________ test_pin_drift_rejected_before_mapping[manifest_head] ____________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_pin_drift_rejected_before3...st-1183/test_pin_drift_rejected_before3/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF461620>)
+change = 'manifest_head'
+
+    @pytest.mark.parametrize('change',['source','lib','other_rtl','manifest_head'])
+    def test_pin_drift_rejected_before_mapping(setup,change):
+        c,o,calls,s,clean,checker=setup
+        if change=='source':s.write_text('changed')
+        elif change=='lib':c.LIB.write_text('changed')
+        elif change=='other_rtl':(c.ROOT/'data/raw/benchmarks/raw/iscas89/s382.v').write_text('changed')
+        else:
+            def reject(h):raise RuntimeError('HEAD differs')
+>           with pytest.raises(RuntimeError):load().prepare(o,['s27'],common=c,code_state_checker=reject,static_checker=checker)
+                                             ^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF4215D0>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+_______ test_orphan_or_incomplete_prior_run_never_overwritten[mapped.v] _______
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_orphan_or_incomplete_prio0...st-1183/test_orphan_or_incomplete_prio0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF4614E0>)
+artifact = 'mapped.v'
+
+    @pytest.mark.parametrize('artifact',['mapped.v','map.ys','input.json'])
+    def test_orphan_or_incomplete_prior_run_never_overwritten(setup,artifact):
+        c,o,calls,s,clean,checker=setup;p=o/'inputs/s27';p.mkdir(parents=True);(p/artifact).write_text('{}')
+>       with pytest.raises((RuntimeError,ValueError,KeyError)):prepare(setup)
+                                                               ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF458D10>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+________ test_orphan_or_incomplete_prior_run_never_overwritten[map.ys] ________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_orphan_or_incomplete_prio1...st-1183/test_orphan_or_incomplete_prio1/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF460F40>)
+artifact = 'map.ys'
+
+    @pytest.mark.parametrize('artifact',['mapped.v','map.ys','input.json'])
+    def test_orphan_or_incomplete_prior_run_never_overwritten(setup,artifact):
+        c,o,calls,s,clean,checker=setup;p=o/'inputs/s27';p.mkdir(parents=True);(p/artifact).write_text('{}')
+>       with pytest.raises((RuntimeError,ValueError,KeyError)):prepare(setup)
+                                                               ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF399810>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+______ test_orphan_or_incomplete_prior_run_never_overwritten[input.json] ______
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_orphan_or_incomplete_prio2...st-1183/test_orphan_or_incomplete_prio2/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF461DA0>)
+artifact = 'input.json'
+
+    @pytest.mark.parametrize('artifact',['mapped.v','map.ys','input.json'])
+    def test_orphan_or_incomplete_prior_run_never_overwritten(setup,artifact):
+        c,o,calls,s,clean,checker=setup;p=o/'inputs/s27';p.mkdir(parents=True);(p/artifact).write_text('{}')
+>       with pytest.raises((RuntimeError,ValueError,KeyError)):prepare(setup)
+                                                               ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF439150>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+____________ test_source_drift_after_mapper_has_no_success_receipt ____________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_source_drift_after_mapper0...st-1183/test_source_drift_after_mapper0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF462200>)
+
+    def test_source_drift_after_mapper_has_no_success_receipt(setup):
+        c,o,calls,s,clean,checker=setup;original=c.run_yosys_mapping
+        def mapper(src,dst):r=original(src,dst);s.write_text('changed');return r
+        c.run_yosys_mapping=mapper
+>       with pytest.raises(RuntimeError):prepare(setup)
+                                         ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF48A050>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+__________ test_static_failure_keeps_mapping_without_success_receipt __________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_static_failure_keeps_mapp0...st-1183/test_static_failure_keeps_mapp0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF461760>)
+
+    def test_static_failure_keeps_mapping_without_success_receipt(setup):
+        c,o,calls,s,clean,checker=setup
+        def bad(*a):raise ValueError('missing required pin')
+>       with pytest.raises(ValueError):load().prepare(o,common=c,code_state_checker=lambda h:None,static_checker=bad)
+                                       ^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF422610>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+_________________________ test_mapping_error_rejected _________________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_mapping_error_rejected0/re...ytest-1183/test_mapping_error_rejected0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF460220>)
+
+    def test_mapping_error_rejected(setup):
+        c,o,calls,s,clean,checker=setup;c.run_yosys_mapping=lambda *a:['ERROR test']
+>       with pytest.raises(RuntimeError):prepare(setup)
+                                         ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF410B50>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+___________________ test_receipt_source_sha_tamper_rejected ___________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_receipt_source_sha_tamper0...st-1183/test_receipt_source_sha_tamper0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF462700>)
+
+    def test_receipt_source_sha_tamper_rejected(setup):
+>       prepare(setup);c,o,calls,s,clean,checker=setup;p=o/'inputs/s27/input.json';r=json.loads(p.read_text());r['source_sha256']='wrong';p.write_text(json.dumps(r))
+        ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FF458B50>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+____________________ test_preflight_mapped_tamper_rejected ____________________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1183/test_preflight_mapped_tamper_r0...st-1183/test_preflight_mapped_tamper_r0/repo/code/s.py'), [], <function setup.<locals>.<lambda> at 0x00000292FF462D40>)
+
+    def test_preflight_mapped_tamper_rejected(setup):
+>       prepare(setup);c,o,calls,s,clean,checker=setup;(o/'inputs/s27/mapped.v').write_text('tampered')
+        ^^^^^^^^^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:72: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:25: in prepare
+    return load().prepare(o,common=c,code_state_checker=lambda h:clean.append(h),static_checker=checker,**kw)
+           ^^^^^^
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FDB5CA50>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+____________ test_actual_static_gates_required_input_and_tristate _____________
+
+    def test_actual_static_gates_required_input_and_tristate():
+>       m=load()
+          ^^^^^^
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:8: in load
+    spec=importlib.util.spec_from_file_location('prep',P); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:936: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <_frozen_importlib_external.SourceFileLoader object at 0x00000292FDAB5750>
+path = 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+>   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cprime_v3_20261016\\prepare_inputs.py'
+
+<frozen importlib._bootstrap_external>:1130: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_dry_run_never_launches_or_writes
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_maps_once_and_revalidates_receipts
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_pin_drift_rejected_before_mapping[source]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_pin_drift_rejected_before_mapping[lib]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_pin_drift_rejected_before_mapping[other_rtl]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_pin_drift_rejected_before_mapping[manifest_head]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_orphan_or_incomplete_prior_run_never_overwritten[mapped.v]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_orphan_or_incomplete_prior_run_never_overwritten[map.ys]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_orphan_or_incomplete_prior_run_never_overwritten[input.json]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_source_drift_after_mapper_has_no_success_receipt
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_static_failure_keeps_mapping_without_success_receipt
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_mapping_error_rejected
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_receipt_source_sha_tamper_rejected
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_preflight_mapped_tamper_rejected
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_actual_static_gates_required_input_and_tristate
+15 failed in 0.76s
+[run] 完成（5s），退出码 1

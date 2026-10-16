@@ -1,0 +1,1315 @@
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q code/tests/test_r22_sequential_rewrite.py
+.FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.FFFFFF [ 93%]
+FFF.F                                                                    [100%]
+================================== FAILURES ===================================
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfbbn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfbbn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_2', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfbbn_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfbbn_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfbbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfbbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfrbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfrbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfrtn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtp_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfrtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfrtp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfrtp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfsbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfsbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfsbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfsbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfstp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfstp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfstp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfstp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfstp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfstp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfxbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfxbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfxtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxtp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfxtp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxtp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dfxtp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrbn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbn_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrbn_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrtn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtn_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrtn_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtn_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrtn_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrtp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlrtp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxbn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxbn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxbn_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxbn_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxtn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtn_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxtn_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtn_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxtn_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__dlxtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__edfxbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__edfxbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__edfxtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__edfxtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__lpflow_inputisolatch_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__lpflow_inputisolatch_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfbbn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfbbn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfbbn_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfbbn_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfbbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfbbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfrbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfrbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtn_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfrtn_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfrtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfrtp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfrtp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfsbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfsbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfsbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfsbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfstp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfstp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfstp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfstp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfstp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfstp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfxbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfxbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfxtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxtp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfxtp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxtp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sdfxtp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxbp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sedfxbp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxbp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sedfxbp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 27 more items, first extra item: ('sky130_fd_sc_hd__dfbbn_1', {'IQ_N': 'IQ_N', 'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxtp_1] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sedfxtp_1'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxtp_2] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sedfxtp_2'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+_ test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxtp_4] _
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+name = 'sky130_fd_sc_hd__sedfxtp_4'
+
+    @pytest.mark.parametrize("name", sorted(ACTUAL_SEQUENTIAL))
+    def test_every_actual_sequential_source_has_no_combinational_R(actual_lib, name):
+        cell = actual_lib[name]
+        assert cell.function  # The dangerous case includes functions such as IQ.
+>       assert equivalence_candidates(cell, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:42: AssertionError
+________ test_actual_dfrtp_state_output_cannot_alias_reset_set_or_edge ________
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+
+    def test_actual_dfrtp_state_output_cannot_alias_reset_set_or_edge(actual_lib):
+        source = actual_lib["sky130_fd_sc_hd__dfrtp_1"]
+        assert source.function == "IQ"
+        assert source.clear == "!RESET_B"
+        assert actual_lib["sky130_fd_sc_hd__dfstp_1"].preset == "!SET_B"
+        assert actual_lib["sky130_fd_sc_hd__dfrtn_1"].clocked_on != source.clocked_on
+>       assert equivalence_candidates(source, actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:51: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata0] __
+
+metadata = {'sequential_kind': 'ff'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata1] __
+
+metadata = {'sequential_kind': 'latch'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata2] __
+
+metadata = {'next_state': 'D'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata3] __
+
+metadata = {'clocked_on': 'CLK'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata4] __
+
+metadata = {'latch_enable': 'GATE'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata5] __
+
+metadata = {'clear': '!RESET_B'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata6] __
+
+metadata = {'preset': '!SET_B'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata7] __
+
+metadata = {'state_var': 'IQ'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+_ test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata8] __
+
+metadata = {'state_inv_var': 'IQ_N'}
+
+    @pytest.mark.parametrize("metadata", [
+        {"sequential_kind": "ff"}, {"sequential_kind": "latch"},
+        {"next_state": "D"}, {"clocked_on": "CLK"}, {"latch_enable": "GATE"},
+        {"clear": "!RESET_B"}, {"preset": "!SET_B"},
+        {"state_var": "IQ"}, {"state_inv_var": "IQ_N"},
+    ])
+    def test_partial_or_legacy_sequential_metadata_is_not_combinational(metadata):
+        source = LibCell("ordinary", "buf", 1, "X", "A", ["A"], output_functions={"X": "A"})
+        sequential = replace(source, name="stateful", family="stateful", **metadata)
+        lib = {source.name: source, sequential.name: sequential}
+>       assert equivalence_candidates(sequential, lib) == []
+E       AssertionError: assert [('ordinary', {'A': 'A'})] == []
+E         
+E         Left contains one more item: ('ordinary', {'A': 'A'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:73: AssertionError
+____________ test_sequential_same_family_G_sizes_remain_available _____________
+
+actual_lib = {'sky130_fd_sc_hd__a2111o_1': LibCell(name='sky130_fd_sc_hd__a2111o_1', family='a2111o', size=1, output_pin='X', funct...', output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...}
+
+    def test_sequential_same_family_G_sizes_remain_available(actual_lib):
+        source = "sky130_fd_sc_hd__dfrtp_1"
+        assert larger_size_candidates(source, build_available_sizes(LIBERTY_TEXT)) == [
+            "sky130_fd_sc_hd__dfrtp_2", "sky130_fd_sc_hd__dfrtp_4"]
+>       assert equivalence_candidates(actual_lib[source], actual_lib) == []
+E       AssertionError: assert [('sky130_fd_...: 'IQ'}), ...] == []
+E         
+E         Left contains 34 more items, first extra item: ('sky130_fd_sc_hd__dfrtn_1', {'IQ': 'IQ'})
+E         Use -v to get more diff
+
+code\tests\test_r22_sequential_rewrite.py:88: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfbbn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfbbn_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfbbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfrtp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfsbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfsbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfstp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfstp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfstp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxtp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dfxtp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbn_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtn_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtn_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlrtp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxbn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxbn_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtn_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtn_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__dlxtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__edfxbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__edfxtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__lpflow_inputisolatch_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfbbn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfbbn_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfbbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtn_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfrtp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfsbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfsbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfstp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfstp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfstp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxtp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sdfxtp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxbp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxbp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxtp_1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxtp_2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_every_actual_sequential_source_has_no_combinational_R[sky130_fd_sc_hd__sedfxtp_4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_actual_dfrtp_state_output_cannot_alias_reset_set_or_edge
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata0]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata1]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata2]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata3]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata4]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata5]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata6]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata7]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_partial_or_legacy_sequential_metadata_is_not_combinational[metadata8]
+FAILED code/tests/test_r22_sequential_rewrite.py::test_sequential_same_family_G_sizes_remain_available
+74 failed, 3 passed in 3.26s
+[run] 完成（5s），退出码 1

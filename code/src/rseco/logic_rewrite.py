@@ -11,9 +11,11 @@ The canonical motivating case is ``sky130_fd_sc_hd__lpflow_inputiso1p_1``
 (``X = A | SLEEP``).  It is functionally identical to ``or2`` but carries a
 larger delay, so swapping it for ``or2`` recovers timing.
 
-Equivalence conservatively matches every Liberty output ``function`` and
+Combinational equivalence conservatively matches every Liberty output ``function`` and
 ``three_state`` condition.  One shared variable-role map preserves data and
 output-enable relationships, including ``SLEEP -> B`` for the example above.
+Cells carrying sequential state metadata are outside strategy R: an output
+function such as ``IQ`` refers to state, not a combinational input function.
 
 The hybrid repair loop tries, for every critical-path cell, its
 functionally-equivalent candidates *and* its larger drive sizes, and keeps
@@ -226,18 +228,26 @@ def _output_semantics(cell: LibCell):
     return signature, variables, outputs
 
 
+def _has_state_semantics(cell: LibCell) -> bool:
+    """Recognize parsed state groups and older/partial sequential metadata."""
+    return any((cell.sequential_kind, cell.next_state, cell.clocked_on,
+                cell.latch_enable, cell.clear, cell.preset,
+                cell.state_var, cell.state_inv_var))
+
+
 def equivalence_candidates(
     cell: LibCell, lib: dict[str, LibCell]
 ) -> list[tuple[str, dict[str, str]]]:
-    """Return ``(new_type, pin_map)`` for every functionally-equivalent cell.
+    """Return ``(new_type, pin_map)`` for equivalent combinational cells.
 
     ``pin_map`` maps the *source* cell's pin names to the candidate's pin
     names (e.g. ``{"A": "A", "SLEEP": "B"}`` for inputiso1p -> or2).  The
     Data and high-impedance conditions share one pin map; all enable inputs
     must survive a tristate rewrite.  The source cell itself and cells with
-    no function are excluded.
+    no function are excluded. Sequential sources and targets are excluded;
+    same-family sequential sizing belongs to strategy G, not this matcher.
     """
-    if not cell.function:
+    if _has_state_semantics(cell) or not cell.function:
         return []
     source = _output_semantics(cell)
     if source is None:
@@ -245,7 +255,7 @@ def equivalence_candidates(
     src_canon, src_vars, src_outputs = source
     out: list[tuple[str, dict[str, str]]] = []
     for other in lib.values():
-        if other.name == cell.name or not other.function:
+        if other.name == cell.name or _has_state_semantics(other) or not other.function:
             continue
         target = _output_semantics(other)
         if target is None:

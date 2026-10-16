@@ -4,7 +4,7 @@
 
 当前r21论文审稿与配图入口为 `../paper/zh/review_rounds/r21_20261014/editorial_decision.md`；计数与图件交叉表见 `evidence/R21_FIGURE_EVIDENCE.md`。当前稿为12页、7图14表的工作修订，历史v18基线保留。
 
-当前代码完整v5=835pass/166来源SHA稳定，正式9控制预期全符合（3正/3负/2unsupported/1input_error）；A6+B2真实新证明已补，B2在44d20bb绑定7/0孤立X identity及原bytes/模型/产物。OI038新缺证恢复、旧runtime身份不补造；B3/D/C、四态支持恢复与稿图仍待。proof/最终QA/docs准备阶段commit，记录员冻结写入；新C′v3尚未注册、无STA/pilot，v2仅注册禁执行。权威交接为 `agent_handoff/handoff_20261016_r22.md`（本目录是agent_handoff时用 `handoff_20261016_r22.md`）。
+当前完整v8已969pass/4skip/156subtests，155.12s/wrapper157.969exit0、170来源SHA稳定/PYTHONUTF8=1。精确V3与scope控制通过，OI040/041实现门关闭，原反例/失败证据与科学边界保留。A6/B2/B17确切proof/后验已恢复，范围外四态/B3/C/D与稿图pending保持。records冻结供root归档harness/阶段commit+push后，同一HEAD注册C′v3→真map8/静态门→18pilot，不新增前置工具；当前未注册/无mapping或STA，B3/C ADAPTER WIP不入本次提交。
 
 | 子目录 / 文件 | 角色 |
 |---------------|------|

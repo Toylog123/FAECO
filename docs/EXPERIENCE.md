@@ -2,6 +2,34 @@
 
 > 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
 
+## 2026-10-16 字节SHA钉定的新证据须防Git换行转换
+
+本次新QA/B17proof/v6-v8/Cprime-v3包由root加.gitattributes -text，防core.autocrlf检出后SHA变化；仅新包、不重写旧证据。提交前仍须核index blob与working raw逐字节一致，属性本身不能替代该检查。当前校验由root执行中，不先称通过。
+
+## 2026-10-16 增强专属检查器不应悄改共享唯一性API的输入语法
+
+完整v7源稳定却965pass/1fail：F1 named-pin覆盖严格性扩入公共_assert_unique_physical_instances，使topology合法positional参数抛异常。归因为实现接口兼容性，不是科学想法失败。仅F1显式opt-in提取连接，公共唯一性检查保留positional；保持严格覆盖同时不误伤其它调用者。最小opt-in修复后scope30pass、精确V3pass与完整v8=969pass/4skip/156subtests、155.12s/wrapper157.969exit0、170SHA稳定。OI040/041实现门现可关闭，旧v7失败原件不覆盖，科学域不泛化。
+
+## 2026-10-16 字节保真QA归档不自动改变脚本的相对路径上下文
+
+直接运行Cprep qa归档副本20例FileNotFoundError，原因测试R=parents[2]依赖原scratch位置，未触生产代码；原位同源控制20pass/1.10s。原件不改，以原scratch上下文重跑或在新副本适配路径/重新锁SHA，不能把归档调用错误当生产缺陷。OI041新集成10原件同样保source/target/hash，README明确该界限。
+
+## 2026-10-16 修复后须原样重放反例，不能仅测格式化改写的同义例
+
+原seq反例是单行：顺序子门多行测试和926整套通过后，原样重放仍reset→set pass；gate_sizing行首regex两侧漏为[]，F1 strip实际cells后空集合伪pass。原反例混合了parser与seq语义两层缺陷，初述归因不完整。保留失败SEQUENTIAL_GATE_VERIFICATION，不覆盖为绿；OI040仅多行子门有效，新增OI041修单行/$/注释strings/escapednet与物理↔parsed完整覆盖，并用旧源多行反证独立归因。需新v7/commit，不能以926通盖该反例。
+
+## 2026-10-16 FF输出同为IQ不等于完整状态机语义相同
+
+合法dfrtp_1→dfstp_1连全输入将reset改set，F1仍返回pass，LR仅按IQ给34个错误顺序R；新SEQUENTIAL_GATE_COUNTEREXAMPLE实证，而旧835通过仅表示未覆盖它。比较next-state/event/clear/preset，顺序单元不进组合R，保留合法同族G；actual63顺序类型已被graph正确识别，不改无缺陷模块。OI040已限定LR105pass/F1专属14pass和相关201pass，v6最终926pass/4skip/156subtests、155.08s/wrapper157.875exit0、168SHA稳定/PYTHONUTF8=1，OI040代码阶段已关闭；九份旧proof模型重生成9/9字节一致/source与LIB稳定（非新外部proof），新整套/commit仍待；不自动否定模型未变、实际非seq修改且已有真实独立proof的A6/B2/B17对象。
+
+## 2026-10-16 B17未证点不能仅凭note认定工具伪阴性
+
+实际旧_177917_由nor4b_1→nor4b_2的改动驱动；旧脚本未flatten/无assert，log有changed cell No SAT model。find_same_wires false-negative旧note不足以归因。按真正baseline/accepted raw与完整模型新flatten/assert proof已返回pass13.375s、12879/0，主线POST_RUN_VERIFICATION已确认原bytes/完整decoded/唯一nor4b尺寸变化/全部artifacts与44source匹配、12879/0实log成功；不得把新证明反填旧运行或补造旧schema没有的state hash。首次历史map.ys因CP936而UTF8预飞失败在SEC前，明确strictCP936保原bytes/hash，不能宽松吞错或改proof网表编码。
+
+## 2026-10-16 同族恢复必须保运行器调度且不把recipe见证当runtime身份
+
+B3_RERUN_DESIGN实际绑定B的stateful outerloop，不能改用C逐实例greedy或C′cut调度；runtime argv/source/priority等未知，execution_ready=false，当前defaults不能冒充恢复值。C增量14对完整trial/终点相同是更强recipe见证，但确定性重跑和派生档案都能产生此观测，不证明复制/重跑，也不补runtimepin；canonical s382仍缺。新同族重建可明确选择参数/冻结输入，必须与旧identity区分，避免因恢复困难悄换算法。两报告均已实读，只读非EDA。
+
 ## 2026-10-16 B2恒X边界证书须与独立proof和原字节对象同时绑定
 
 B2 checker66fe72ff…独立review准确为20/20负拒、5/6正接受，actual2pair7/0cert；escaped output保守误拒不影响实际对象，不能称26/26期待全匹配。44d20bb正式新模型B2两pair已pass，core6.078s/mul0.750s，wrapper16exit0/source稳定；POST_RUN_VERIFICATION原bytes、完整decoded、全部artifacts和动态cert双pair一致。证明只组合two-state SEC与独立孤立constant-X identity，不泛化四态/复位等价；旧runtimehash不补造。OI038当前新模型缺证已恢复，B3三态缺输入仍另需同族恢复，不能借B2关闭。

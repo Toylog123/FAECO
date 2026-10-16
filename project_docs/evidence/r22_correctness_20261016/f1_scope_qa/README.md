@@ -1,0 +1,7 @@
+# v7 公共唯一性门兼容性QA
+
+ARCHIVE_MANIFEST仅归档原scratch/r22_f1_scope_20261016的RW/test preimage及red.log三份，source/target SHA逐条匹配。红2fail14pass；修复后主线tool实际回显30pass/1.27s，未保存原始绿stdout，GREEN_RUN_NOTE明确不是raw日志，不能伪装补造。
+
+修复为include_connections默认False，仅F1两调用显式True，公共唯一性门保持合法positional。精确V3通过，完整v8运行中；旧v7失败原件与其他归档不覆盖，OI041不提前关闭。
+
+追加V8_POST_MANIFEST独立归档scratch/check_r22_v8.py原件与SHA，原ARCHIVE_MANIFEST不覆盖；实际原调用路径保留为scratch/check_r22_v8.py，不改原件定位。V8_POST_RUN_VERIFICATION已实际exit0：170当前code SHA与v8 before/after相同、V3source绑定、XML0fail/0error/4skip。

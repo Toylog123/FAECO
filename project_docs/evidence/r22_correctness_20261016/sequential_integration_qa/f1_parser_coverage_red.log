@@ -1,0 +1,307 @@
+[run] 启动（超时 90s）：.venv/Scripts/python.exe -m pytest -q code/tests/test_r22_f1_parser_coverage.py
+FFFFFFFFF.FF                                                             [100%]
+================================== FAILURES ===================================
+_____________ test_parser_coverage_corruption_fails_closed[empty] _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20BE9D5D0>
+corrupt = 'empty'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+____________ test_parser_coverage_corruption_fails_closed[missing] ____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20BAFDA90>
+corrupt = 'missing'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+_____________ test_parser_coverage_corruption_fails_closed[extra] _____________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20DDA7950>
+corrupt = 'extra'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+_____________ test_parser_coverage_corruption_fails_closed[type] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20DDD3CD0>
+corrupt = 'type'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+______________ test_parser_coverage_corruption_fails_closed[pin] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20DD7E310>
+corrupt = 'pin'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+______________ test_parser_coverage_corruption_fails_closed[net] ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20DDDFBD0>
+corrupt = 'net'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+___________ test_parser_coverage_corruption_fails_closed[duplicate] ___________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002A20DDD2C90>
+corrupt = 'duplicate'
+
+    @pytest.mark.parametrize('corrupt', ['empty','missing','extra','type','pin','net','duplicate'])
+    def test_parser_coverage_corruption_fails_closed(monkeypatch, corrupt):
+        real_parser = rw.parse_mapped_netlist
+        def broken(text):
+            cells = real_parser(text)
+            if corrupt=='empty':
+                return []
+            if corrupt=='missing':
+                return cells[1:]
+            if corrupt=='extra':
+                return cells+[Cell('ghost','sky130_fd_sc_hd__buf_1','buf',1,{'A':'A','X':'Y'})]
+            if corrupt=='type':
+                return [replace(cell,cell_type='sky130_fd_sc_hd__buf_99') for cell in cells]
+            if corrupt=='duplicate':
+                return cells+[cells[0]]
+            if corrupt=='pin':
+                return [replace(cell,pins={key:net for key,net in cell.pins.items() if key!='A'}) for cell in cells]
+            return [replace(cell,pins={key:('WRONG' if key=='A' else net) for key,net in cell.pins.items()}) for cell in cells]
+        monkeypatch.setattr(rw,'parse_mapped_netlist',broken)
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(MULTI,_candidate())
+>       assert result.status=='fail',result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:48: AssertionError
+_________ test_original_single_line_legal_G_has_real_parser_coverage __________
+
+    def test_original_single_line_legal_G_has_real_parser_coverage():
+        original=' '.join(MULTI.splitlines())
+        candidate=original.replace('buf_1 first','buf_2 first')
+>       assert len(rw.parse_mapped_netlist(original))==2
+E       AssertionError: assert 0 == 2
+E        +  where 0 = len([])
+E        +    where [] = <function parse_mapped_netlist at 0x000002A20BEBFA60>('module top(A,Y); input A; output Y; wire N; sky130_fd_sc_hd__buf_1 first (.A(A),.X(N)); sky130_fd_sc_hd__buf_1 second (.A(N),.X(Y)); endmodule')
+E        +      where <function parse_mapped_netlist at 0x000002A20BEBFA60> = rw.parse_mapped_netlist
+
+code\tests\test_r22_f1_parser_coverage.py:55: AssertionError
+_____ test_comments_fake_instances_and_dollar_names_do_not_lose_coverage ______
+
+    def test_comments_fake_instances_and_dollar_names_do_not_lose_coverage():
+        original=MULTI.replace(' first ', ' $first ').replace(' second ', ' mid$second ')
+        original=original.replace('input A;', 'input A; // sky130_fd_sc_hd__buf_1 fake(.A(A),.X(Y));\n')
+        original=original.replace('wire N;', 'wire N; /* another fake sky130_fd_sc_hd__buf_1 fake(.A(A),.X(Y)); */')
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(original,original.replace('buf_1 $first','buf_2 $first'))
+>       assert result.status=='pass',result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='checker failed closed: Unsupported SKY instance syntax in input validation: sky130_fd_sc_hd__buf_1 $first')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_f1_parser_coverage.py:66: AssertionError
+__________ test_escaped_scalar_cannot_be_confused_with_bus_bitselect __________
+
+    def test_escaped_scalar_cannot_be_confused_with_bus_bitselect():
+        original=r'''module top(A,Y);
+    input [1:0] A;
+    output Y;
+    wire \A[0] ;
+    sky130_fd_sc_hd__buf_1 first (.A(\A[0] ),.X(Y));
+    endmodule
+    '''
+        candidate=original.replace('buf_1 first','buf_2 first').replace('.A(\\A[0] )','.A(A[0])')
+>       assert rw.build_real_equivalence_checker(LIB,top_module='top')(original,candidate).status=='fail'
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_f1_parser_coverage.py:84: AssertionError
+_____________ test_escaped_instance_and_net_are_legal_for_same_G ______________
+
+    def test_escaped_instance_and_net_are_legal_for_same_G():
+        original=MULTI.replace(' first ',r' \first[0] ').replace('wire N;',r'wire \N\ ;')
+        original=original.replace('.X(N)',r'.X(\N\ )').replace('.A(N)',r'.A(\N\ )')
+        result=rw.build_real_equivalence_checker(LIB,top_module='top')(original,original.replace('buf_1 \\first[0]','buf_2 \\first[0]'))
+>       assert result.status=='pass',result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='checker failed closed: Unsupported SKY instance syntax in input validation: sky130_fd_sc_hd__buf_1 \\first[0]')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_f1_parser_coverage.py:91: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[empty]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[missing]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[extra]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[type]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[pin]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[net]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_parser_coverage_corruption_fails_closed[duplicate]
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_original_single_line_legal_G_has_real_parser_coverage
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_comments_fake_instances_and_dollar_names_do_not_lose_coverage
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_escaped_scalar_cannot_be_confused_with_bus_bitselect
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_escaped_instance_and_net_are_legal_for_same_G
+11 failed, 1 passed in 0.40s
+[run] 完成（6s），退出码 1

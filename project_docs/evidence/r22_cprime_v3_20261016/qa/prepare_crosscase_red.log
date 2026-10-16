@@ -1,0 +1,68 @@
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py
+...............FFF..                                                     [100%]
+================================== FAILURES ===================================
+__________ test_later_mapping_cannot_mutate_earlier_input[mapped.v] ___________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1185/test_later_mapping_cannot_muta0...code/s.py'), ['abc', 'abc', 'abc', 'abc', 'abc', 'abc', ...], <function setup.<locals>.<lambda> at 0x0000024EAFDDA2A0>)
+artifact = 'mapped.v'
+
+    @pytest.mark.parametrize('artifact',['mapped.v','input.json','map.ys'])
+    def test_later_mapping_cannot_mutate_earlier_input(setup,artifact):
+        c,o,calls,s,clean,checker=setup;original=c.run_yosys_mapping
+        def mapper(src,dst):
+            result=original(src,dst)
+            (dst/'map.ys').write_text('commands')
+            if src.stem=='s382':(o/'inputs/s27'/artifact).write_text('changed after s27 check')
+            return result
+        c.run_yosys_mapping=mapper
+>       with pytest.raises(RuntimeError,match='artifact|input'):
+E       Failed: DID NOT RAISE RuntimeError
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:94: Failed
+_________ test_later_mapping_cannot_mutate_earlier_input[input.json] __________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1185/test_later_mapping_cannot_muta1...code/s.py'), ['abc', 'abc', 'abc', 'abc', 'abc', 'abc', ...], <function setup.<locals>.<lambda> at 0x0000024EAFCD9300>)
+artifact = 'input.json'
+
+    @pytest.mark.parametrize('artifact',['mapped.v','input.json','map.ys'])
+    def test_later_mapping_cannot_mutate_earlier_input(setup,artifact):
+        c,o,calls,s,clean,checker=setup;original=c.run_yosys_mapping
+        def mapper(src,dst):
+            result=original(src,dst)
+            (dst/'map.ys').write_text('commands')
+            if src.stem=='s382':(o/'inputs/s27'/artifact).write_text('changed after s27 check')
+            return result
+        c.run_yosys_mapping=mapper
+>       with pytest.raises(RuntimeError,match='artifact|input'):
+E       Failed: DID NOT RAISE RuntimeError
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:94: Failed
+___________ test_later_mapping_cannot_mutate_earlier_input[map.ys] ____________
+
+setup = (namespace(ROOT=WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1185/test_later_mapping_cannot_muta2...code/s.py'), ['abc', 'abc', 'abc', 'abc', 'abc', 'abc', ...], <function setup.<locals>.<lambda> at 0x0000024EAFCC3EC0>)
+artifact = 'map.ys'
+
+    @pytest.mark.parametrize('artifact',['mapped.v','input.json','map.ys'])
+    def test_later_mapping_cannot_mutate_earlier_input(setup,artifact):
+        c,o,calls,s,clean,checker=setup;original=c.run_yosys_mapping
+        def mapper(src,dst):
+            result=original(src,dst)
+            (dst/'map.ys').write_text('commands')
+            if src.stem=='s382':(o/'inputs/s27'/artifact).write_text('changed after s27 check')
+            return result
+        c.run_yosys_mapping=mapper
+>       with pytest.raises(RuntimeError,match='artifact|input'):
+E       Failed: DID NOT RAISE RuntimeError
+
+scratch\r22_cprime_v3_20261016\test_prepare_inputs_controls.py:94: Failed
+=========================== short test summary info ===========================
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_later_mapping_cannot_mutate_earlier_input[mapped.v]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_later_mapping_cannot_mutate_earlier_input[input.json]
+FAILED scratch/r22_cprime_v3_20261016/test_prepare_inputs_controls.py::test_later_mapping_cannot_mutate_earlier_input[map.ys]
+3 failed, 17 passed in 1.90s
+[run] 完成（5s），退出码 1

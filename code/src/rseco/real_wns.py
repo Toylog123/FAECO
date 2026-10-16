@@ -25,6 +25,7 @@ from __future__ import annotations
 import json
 import re
 import hashlib
+from dataclasses import replace
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -163,27 +164,81 @@ def _scoped_module_pair(original_text, candidate_text, top_module=None):
 
 
 def _without_verilog_comments(text: str) -> str:
-    # Preserve strings: changing an attribute or behavioral string is still a
-    # non-cell edit, even when it contains comment-looking text.
-    return re.sub(r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"',
-                  lambda m: m.group() if m.group().startswith('"') else ' ', text)
+    # Strings and escaped identifier atoms can contain comment-looking text.
+    # They must survive both the independent instance scan and non-RGB checks.
+    return re.sub(r'\\\S+|//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"',
+                  lambda m: m.group() if m.group().startswith(('"', '\\')) else ' ', text)
 
 
 _PHYSICAL_INSTANCE_RE = re.compile(
-    r"(?:^|(?<=;))\s*([A-Za-z_][\w$]*)\s+([A-Za-z_][\w$]*)\s*\(([^;]*?)\)\s*;",
+    r"(?<![\w$\\])([A-Za-z_$][\w$]*)\s+(\\[^\s]+|[A-Za-z_$][\w$]*)\s*\(([^;]*?)\)\s*;",
     re.M,
 )
 
 
-def _assert_unique_physical_instances(text: str) -> None:
-    """Reject duplicate source instances before any lossy instance dictionary."""
+def _connection_tokens(expression: str) -> tuple[str, ...]:
+    # An escaped identifier is one atom: \\bus[0] is a scalar identifier,
+    # whereas bus[0] is a select. Whitespace outside such atoms is immaterial.
+    return tuple(re.findall(r'\\\S+|[A-Za-z_$][\w$]*|[^\s]', expression))
+
+
+def _assert_unique_physical_instances(text: str, *, include_connections=False) -> dict:
+    """Reject duplicate declarations; optionally return source SKY connections.
+
+    F1 opts into strict named-pin extraction to check parser coverage. Other
+    callers only need uniqueness, including topology's positional cell syntax.
+    """
     masked = _without_verilog_comments(text)
     masked = re.sub(r'\(\*[\s\S]*?\*\)', ' ', masked)
-    counts = Counter(match.group(2) for match in _PHYSICAL_INSTANCE_RE.finditer(masked)
-                     if match.group(1) not in {"module", "input", "output", "wire"})
+    counts = Counter()
+    physical = {}
+    for match in _PHYSICAL_INSTANCE_RE.finditer(masked):
+        cell_type, instance, body = match.groups()
+        if cell_type in {'module', 'input', 'output', 'wire'}:
+            continue
+        counts[instance.removeprefix('\\')] += 1
+        if not include_connections or not cell_type.startswith('sky130_fd_sc_hd__'):
+            continue
+        pins = {}
+        offset = 0
+        for pin in re.finditer(r'\.\s*([A-Za-z_$][\w$]*)\s*\(([^()]*)\)', body):
+            separator = body[offset:pin.start()]
+            if not re.fullmatch(r'\s*' if not pins else r'\s*,\s*', separator):
+                raise ValueError(f'Parser coverage: unsupported source pin syntax at {instance}')
+            if pin.group(1) in pins:
+                raise ValueError(f'Parser coverage: duplicate source pin at {instance}')
+            pins[pin.group(1)] = pin.group(2).strip()
+            offset = pin.end()
+        if body[offset:].strip():
+            raise ValueError(f'Parser coverage: unparsed source connection at {instance}')
+        physical[instance] = (cell_type, pins)
     duplicates = sorted(name for name, count in counts.items() if count > 1)
     if duplicates:
         raise ValueError("Duplicate instance in target module: " + ", ".join(duplicates))
+    return physical
+
+
+def _require_cell_parser_coverage(parsed, physical):
+    """Require complete identities/pins, then retain source net-token roles."""
+    observed = Counter((cell.instance, cell.cell_type) for cell in parsed)
+    expected = Counter((instance, cell_type) for instance, (cell_type, _) in physical.items())
+    if observed != expected:
+        raise ValueError(f'Parser coverage: SKY instance/type mismatch (expected {sum(expected.values())}, parsed {sum(observed.values())})')
+    verified = []
+    for cell in parsed:
+        _, raw_pins = physical[cell.instance]
+        # The public parser canonicalizes only one syntactic leading escape.
+        # Check that contract without allowing a missing/extra pin or net.
+        canonical = {pin: _connection_tokens(net.removeprefix('\\'))
+                     for pin, net in raw_pins.items()}
+        actual = {pin: _connection_tokens(net) for pin, net in cell.pins.items()}
+        if canonical != actual:
+            raise ValueError(f'Parser coverage: pin connections lost/changed at {cell.instance}')
+        # F1's subsequent role comparison must still distinguish an escaped
+        # scalar from a bus bitselect, even though the parser API merges them.
+        verified.append(replace(cell, pins={pin: ' '.join(_connection_tokens(net))
+                                            for pin, net in raw_pins.items()}))
+    return verified
 
 
 def two_state_sec_unsupported_reason(text: str, cells) -> str | None:
@@ -305,14 +360,59 @@ def _multioutput_roles_preserved(source, target) -> bool:
             and set(source.input_pins) == set(target.input_pins))
 
 
+def _sequential_liberty_groups(liberty_text: str) -> dict[str, tuple]:
+    """Retain complete state groups, including controls absent from LibCell.
+
+    In particular clear_preset_var1/2 and statetable must not disappear from
+    a sequential size comparison. Quoted content is kept verbatim; only
+    comments and whitespace outside strings are discarded.
+    """
+    cells = list(re.finditer(r'\bcell\s*\("(sky130_fd_sc_hd__[^"\n]+)"\)\s*\{', liberty_text))
+    group_header = re.compile(r'\b(?:ff|latch|ff_bank|latch_bank|statetable)\s*\([^)]*\)\s*\{')
+    lexical = re.compile(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/|[{}]', re.S)
+    fingerprints = {}
+    for index, cell in enumerate(cells):
+        block = liberty_text[cell.end():cells[index+1].start() if index+1 < len(cells) else len(liberty_text)]
+        groups = []
+        for header in group_header.finditer(block):
+            depth = 1
+            for token in lexical.finditer(block, header.end()):
+                if token.group() == '{':
+                    depth += 1
+                elif token.group() == '}':
+                    depth -= 1
+                    if depth == 0:
+                        raw = block[header.start():token.end()]
+                        raw = re.sub(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*.*?\*/',
+                                     lambda match: match.group() if match.group().startswith('"') else ' ', raw, flags=re.S)
+                        groups.append(tuple(re.findall(r'"(?:\\.|[^"\\])*"|[^\s]', raw)))
+                        break
+            else:
+                raise ValueError(f'Unterminated sequential Liberty group in {cell.group(1)}')
+        if groups:
+            fingerprints[cell.group(1)] = tuple(groups)
+    return fingerprints
+
+
+_SEQUENTIAL_FIELDS = ('sequential_kind', 'next_state', 'clocked_on', 'latch_enable',
+                      'clear', 'preset', 'state_var', 'state_inv_var')
+
+
+def _has_sequential_metadata(cell) -> bool:
+    return any(getattr(cell, field, '') for field in _SEQUENTIAL_FIELDS)
+
+
 def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
     """Build a per-candidate Liberty-function checker for R/G/B actions.
 
-    R candidates are checked by canonical Liberty Boolean functions, G keeps
-    the same function family, and B permits only added buffer/identity cells.
+    Combinational R uses canonical Boolean functions. Sequential type changes
+    require identical state/control/output semantics within one size family;
+    the internal state output IQ alone cannot establish equivalence.
+    B permits only added buffer/identity cells.
     Unknown cells or malformed netlists fail closed with a structured result.
     """
     lib = parse_liberty_cells(liberty_text)
+    sequential_groups = _sequential_liberty_groups(liberty_text)
 
     def check(original_text: str, candidate_text: str):
         from .equivalence import EquivalenceResult
@@ -320,16 +420,16 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
             validate_cell_input_connections(original_text, lib)
             validate_cell_input_connections(candidate_text, lib)
             original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
-            _assert_unique_physical_instances(original_text)
-            _assert_unique_physical_instances(candidate_text)
+            original_physical = _assert_unique_physical_instances(original_text, include_connections=True)
+            candidate_physical = _assert_unique_physical_instances(candidate_text, include_connections=True)
             old_structure, old_wires = _non_rgb_structure(original_text)
             new_structure, new_wires = _non_rgb_structure(candidate_text)
             if (old_structure != new_structure
                     or any(new_wires.get(name) != declarations for name, declarations in old_wires.items())):
                 return EquivalenceResult("fail", "liberty_local_function",
                                          "non-RGB structure changed (ports, assigns, wrappers or declarations)")
-            before = parse_mapped_netlist(original_text)
-            after = parse_mapped_netlist(candidate_text)
+            before = _require_cell_parser_coverage(parse_mapped_netlist(original_text), original_physical)
+            after = _require_cell_parser_coverage(parse_mapped_netlist(candidate_text), candidate_physical)
             old = {c.instance: c for c in before}
             new = {c.instance: c for c in after}
             if not set(old).issubset(new):
@@ -373,6 +473,23 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
                 if source.cell_type == target.cell_type:
                     continue
                 src_lib, dst_lib = lib.get(source.cell_type), lib.get(target.cell_type)
+                if src_lib is not None and dst_lib is not None:
+                    src_groups = sequential_groups.get(source.cell_type, ())
+                    dst_groups = sequential_groups.get(target.cell_type, ())
+                    if (src_groups or dst_groups or _has_sequential_metadata(src_lib)
+                            or _has_sequential_metadata(dst_lib)):
+                        if (not src_groups or not dst_groups
+                                or src_lib.family != dst_lib.family
+                                or src_groups != dst_groups
+                                or any(getattr(src_lib, field) != getattr(dst_lib, field)
+                                       for field in _SEQUENTIAL_FIELDS)
+                                or set(src_lib.input_pins) != set(dst_lib.input_pins)
+                                or src_lib.output_functions != dst_lib.output_functions
+                                or src_lib.three_state_functions != dst_lib.three_state_functions
+                                or source.pins != target.pins):
+                            return EquivalenceResult('fail', 'liberty_local_function',
+                                                     f'sequential state/control/output semantics or pin roles changed at {inst}')
+                        continue
                 if src_lib is None or dst_lib is None or not src_lib.function or not dst_lib.function:
                     return EquivalenceResult("fail", "liberty_local_function", f"unknown/non-combinational cell at {inst}")
                 if not _multioutput_roles_preserved(src_lib, dst_lib):

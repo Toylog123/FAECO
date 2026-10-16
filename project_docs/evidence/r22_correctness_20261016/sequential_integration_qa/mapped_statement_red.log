@@ -1,0 +1,382 @@
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q code/tests/test_r22_mapped_statement_parser.py
+FFFFFFFFFF.F.....FFFFFFFFFF                                              [100%]
+================================== FAILURES ===================================
+____________ test_single_line_inv_to_buf_counterexample_is_visible ____________
+
+    def test_single_line_inv_to_buf_counterexample_is_visible():
+        gold = "module top(A,Y); input A; output Y; " + INV + " u(.A(A),.Y(Y)); endmodule"
+        gate = gold.replace(INV, BUF).replace(".Y(Y)", ".X(Y)")
+>       assert [(c.instance, c.cell_type, c.pins) for c in parse_mapped_netlist(gold)] == [
+            ("u", INV, {"A": "A", "Y": "Y"})]
+E       AssertionError: assert [] == [('u', 'sky13...', 'Y': 'Y'})]
+E         
+E         Right contains one more item: ('u', 'sky130_fd_sc_hd__inv_1', {'A': 'A', 'Y': 'Y'})
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:14: AssertionError
+____________ test_multiple_physical_statements_after_semicolon[ ] _____________
+
+separator = ' '
+
+    @pytest.mark.parametrize("separator", [" ", "\n", "\r\n", "/* next */", "\n//next\n"])
+    def test_multiple_physical_statements_after_semicolon(separator):
+        text = "module top(A,Y); " + INV + " first(.A(A),.Y(n));" + separator + BUF + " second(.A(n),.X(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == ["first", "second"]
+E       AssertionError: assert [] == ['first', 'second']
+E         
+E         Right contains 2 more items, first extra item: 'first'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:23: AssertionError
+____________ test_multiple_physical_statements_after_semicolon[\n] ____________
+
+separator = '\n'
+
+    @pytest.mark.parametrize("separator", [" ", "\n", "\r\n", "/* next */", "\n//next\n"])
+    def test_multiple_physical_statements_after_semicolon(separator):
+        text = "module top(A,Y); " + INV + " first(.A(A),.Y(n));" + separator + BUF + " second(.A(n),.X(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == ["first", "second"]
+E       AssertionError: assert ['second'] == ['first', 'second']
+E         
+E         At index 0 diff: 'second' != 'first'
+E         Right contains one more item: 'second'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:23: AssertionError
+___________ test_multiple_physical_statements_after_semicolon[\r\n] ___________
+
+separator = '\r\n'
+
+    @pytest.mark.parametrize("separator", [" ", "\n", "\r\n", "/* next */", "\n//next\n"])
+    def test_multiple_physical_statements_after_semicolon(separator):
+        text = "module top(A,Y); " + INV + " first(.A(A),.Y(n));" + separator + BUF + " second(.A(n),.X(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == ["first", "second"]
+E       AssertionError: assert ['second'] == ['first', 'second']
+E         
+E         At index 0 diff: 'second' != 'first'
+E         Right contains one more item: 'second'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:23: AssertionError
+________ test_multiple_physical_statements_after_semicolon[/* next */] ________
+
+separator = '/* next */'
+
+    @pytest.mark.parametrize("separator", [" ", "\n", "\r\n", "/* next */", "\n//next\n"])
+    def test_multiple_physical_statements_after_semicolon(separator):
+        text = "module top(A,Y); " + INV + " first(.A(A),.Y(n));" + separator + BUF + " second(.A(n),.X(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == ["first", "second"]
+E       AssertionError: assert [] == ['first', 'second']
+E         
+E         Right contains 2 more items, first extra item: 'first'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:23: AssertionError
+________ test_multiple_physical_statements_after_semicolon[\n//next\n] ________
+
+separator = '\n//next\n'
+
+    @pytest.mark.parametrize("separator", [" ", "\n", "\r\n", "/* next */", "\n//next\n"])
+    def test_multiple_physical_statements_after_semicolon(separator):
+        text = "module top(A,Y); " + INV + " first(.A(A),.Y(n));" + separator + BUF + " second(.A(n),.X(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == ["first", "second"]
+E       AssertionError: assert ['second'] == ['first', 'second']
+E         
+E         At index 0 diff: 'second' != 'first'
+E         Right contains one more item: 'second'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:23: AssertionError
+________________ test_dollar_and_escaped_instance_names[$inst] ________________
+
+name = '$inst'
+
+    @pytest.mark.parametrize("name", ["$inst", "u$inst", "_u$2", r"\u$[0]"])
+    def test_dollar_and_escaped_instance_names(name):
+        text = f"module top(A,Y); {INV} {name} (.A(A),.Y(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == [name]
+E       AssertionError: assert [] == ['$inst']
+E         
+E         Right contains one more item: '$inst'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:29: AssertionError
+_______________ test_dollar_and_escaped_instance_names[u$inst] ________________
+
+name = 'u$inst'
+
+    @pytest.mark.parametrize("name", ["$inst", "u$inst", "_u$2", r"\u$[0]"])
+    def test_dollar_and_escaped_instance_names(name):
+        text = f"module top(A,Y); {INV} {name} (.A(A),.Y(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == [name]
+E       AssertionError: assert [] == ['u$inst']
+E         
+E         Right contains one more item: 'u$inst'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:29: AssertionError
+________________ test_dollar_and_escaped_instance_names[_u$2] _________________
+
+name = '_u$2'
+
+    @pytest.mark.parametrize("name", ["$inst", "u$inst", "_u$2", r"\u$[0]"])
+    def test_dollar_and_escaped_instance_names(name):
+        text = f"module top(A,Y); {INV} {name} (.A(A),.Y(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == [name]
+E       AssertionError: assert [] == ['_u$2']
+E         
+E         Right contains one more item: '_u$2'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:29: AssertionError
+_______________ test_dollar_and_escaped_instance_names[\\u$[0]] _______________
+
+name = '\\u$[0]'
+
+    @pytest.mark.parametrize("name", ["$inst", "u$inst", "_u$2", r"\u$[0]"])
+    def test_dollar_and_escaped_instance_names(name):
+        text = f"module top(A,Y); {INV} {name} (.A(A),.Y(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == [name]
+E       AssertionError: assert [] == ['\\u$[0]']
+E         
+E         Right contains one more item: '\\u$[0]'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:29: AssertionError
+_ test_comments_strings_attributes_never_create_fake_cells[/* before\nsky130_fd_sc_hd__inv_1 fake(.A(a),.Y(b));\n*/] _
+
+noise = '/* before\nsky130_fd_sc_hd__inv_1 fake(.A(a),.Y(b));\n*/'
+
+    @pytest.mark.parametrize("noise", [
+        "// " + INV + " fake(.A(a),.Y(b));\n",
+        "/* before\n" + INV + " fake(.A(a),.Y(b));\n*/",
+        'initial $display("' + INV + ' fake(.A(a),.Y(b));");',
+        'initial $display("escaped \\\" ' + INV + ' fake(.A(a),.Y(b));");',
+        "(* " + INV + " fake(.A(a),.Y(b)); *)",
+        '(* note="*)", payload="' + INV + ' fake(.A(a),.Y(b));" *)',
+        '(* note="/* *) */", /* embedded *) comment */ payload="safe" *)',
+    ])
+    def test_comments_strings_attributes_never_create_fake_cells(noise):
+        text = "module top(A,Y);\n" + noise + "\n" + BUF + " real(.A(A),.X(Y)); endmodule"
+>       assert [c.instance for c in parse_mapped_netlist(text)] == ["real"]
+E       AssertionError: assert ['fake', 'real'] == ['real']
+E         
+E         At index 0 diff: 'fake' != 'real'
+E         Left contains one more item: 'real'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:43: AssertionError
+_____ test_escaped_net_removes_only_one_syntax_backslash[\\plain -plain] ______
+
+raw = '\\plain ', expected = 'plain'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+____ test_escaped_net_removes_only_one_syntax_backslash[\\tail\\ -tail\\] _____
+
+raw = '\\tail\\ ', expected = 'tail\\'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+_ test_escaped_net_removes_only_one_syntax_backslash[\\middle\\name -middle\\name] _
+
+raw = '\\middle\\name ', expected = 'middle\\name'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+_____ test_escaped_net_removes_only_one_syntax_backslash[\\\\two -\\two] ______
+
+raw = '\\\\two ', expected = '\\two'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+_ test_escaped_net_removes_only_one_syntax_backslash[\\net//comment -net//comment] _
+
+raw = '\\net//comment ', expected = 'net//comment'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+_ test_escaped_net_removes_only_one_syntax_backslash[\\net"quote -net"quote] __
+
+raw = '\\net"quote ', expected = 'net"quote'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+_ test_escaped_net_removes_only_one_syntax_backslash[\\net);punct -net);punct] _
+
+raw = '\\net);punct ', expected = 'net);punct'
+
+    @pytest.mark.parametrize("raw, expected", [
+        (r"\plain ", "plain"),
+        ("\\tail\\ ", "tail\\"),
+        ("\\middle\\name ", "middle\\name"),
+        ("\\\\two ", "\\two"),
+        (r"\net//comment ", "net//comment"),
+        (r'\net"quote ', 'net"quote'),
+        (r"\net);punct ", "net);punct"),
+    ])
+    def test_escaped_net_removes_only_one_syntax_backslash(raw, expected):
+        text = f"module top(Y); {BUF} u (.A({raw}), .X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert len(cells) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_r22_mapped_statement_parser.py:58: AssertionError
+__________ test_multiline_pin_spacing_and_empty_output_are_preserved __________
+
+    def test_multiline_pin_spacing_and_empty_output_are_preserved():
+        text = f"""module top(A);
+        {BUF} u (
+          .A ( /* note */ A ),
+          .X ()
+        );
+        endmodule"""
+>       assert parse_mapped_netlist(text)[0].pins == {"A": "A", "X": ""}
+E       AssertionError: assert {} == {'A': 'A', 'X': ''}
+E         
+E         Right contains 2 more items:
+E         {'A': 'A', 'X': ''}
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:69: AssertionError
+____ test_duplicate_physical_instances_remain_visible_as_duplicate_records ____
+
+    def test_duplicate_physical_instances_remain_visible_as_duplicate_records():
+        text = f"module top(A,Y); {INV} u(.A(A),.Y(n)); {BUF} u(.A(n),.X(Y)); endmodule"
+        cells = parse_mapped_netlist(text)
+>       assert [c.instance for c in cells] == ["u", "u"]
+E       AssertionError: assert [] == ['u', 'u']
+E         
+E         Right contains 2 more items, first extra item: 'u'
+E         Use -v to get more diff
+
+code\tests\test_r22_mapped_statement_parser.py:75: AssertionError
+____ test_comments_between_type_and_instance_or_inside_pins_are_whitespace ____
+
+    def test_comments_between_type_and_instance_or_inside_pins_are_whitespace():
+        text = f"module top(A,Y); {BUF} /* instance */ u(.A(/* net */ A),.X(Y /* end */)); endmodule"
+>       assert parse_mapped_netlist(text)[0].pins == {"A": "A", "X": "Y"}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+code\tests\test_r22_mapped_statement_parser.py:81: IndexError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_single_line_inv_to_buf_counterexample_is_visible
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_multiple_physical_statements_after_semicolon[ ]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_multiple_physical_statements_after_semicolon[\n]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_multiple_physical_statements_after_semicolon[\r\n]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_multiple_physical_statements_after_semicolon[/* next */]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_multiple_physical_statements_after_semicolon[\n//next\n]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_dollar_and_escaped_instance_names[$inst]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_dollar_and_escaped_instance_names[u$inst]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_dollar_and_escaped_instance_names[_u$2]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_dollar_and_escaped_instance_names[\\u$[0]]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_comments_strings_attributes_never_create_fake_cells[/* before\nsky130_fd_sc_hd__inv_1 fake(.A(a),.Y(b));\n*/]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\plain -plain]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\tail\\ -tail\\]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\middle\\name -middle\\name]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\\\two -\\two]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\net//comment -net//comment]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\net"quote -net"quote]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_escaped_net_removes_only_one_syntax_backslash[\\net);punct -net);punct]
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_multiline_pin_spacing_and_empty_output_are_preserved
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_duplicate_physical_instances_remain_visible_as_duplicate_records
+FAILED code/tests/test_r22_mapped_statement_parser.py::test_comments_between_type_and_instance_or_inside_pins_are_whitespace
+21 failed, 6 passed in 0.39s
+[run] 完成（5s），退出码 1

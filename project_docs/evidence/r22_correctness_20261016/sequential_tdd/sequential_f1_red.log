@@ -1,0 +1,317 @@
+[run] 启动（超时 90s）：.venv/Scripts/python.exe -m pytest -q code/tests/test_r22_sequential_gates.py
+FFFFFFFFFFFFF.                                                           [100%]
+================================== FAILURES ===================================
+__________ test_actual_reset_to_set_rejected_despite_same_IQ_output ___________
+
+actual = ('library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,li..., output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...})
+
+    def test_actual_reset_to_set_rejected_despite_same_IQ_output(actual):
+        text, cells = actual
+        original = _top(cells['sky130_fd_sc_hd__dfrtp_1'])
+        candidate = _top(cells['sky130_fd_sc_hd__dfstp_1'], {'SET_B':'RESET_B'})
+        for gold, gate in ((original,candidate),(candidate,original)):
+            result = build_real_equivalence_checker(text, top_module='top')(gold,gate)
+>           assert result.status == 'fail', result
+E           AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E           assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:37: AssertionError
+__________ test_all_actual_sequential_same_family_sizes_remain_legal __________
+
+actual = ('library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,li..., output_functions={'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, sequential_kind='', three_state_functions={}), ...})
+
+    def test_all_actual_sequential_same_family_sizes_remain_legal(actual):
+        text, cells = actual
+        checker = build_real_equivalence_checker(text, top_module='top')
+        groups = {}
+        for cell in cells.values():
+            if cell.sequential_kind:
+                groups.setdefault(cell.family,[]).append(cell)
+        pairs = 0
+        for group in groups.values():
+            group.sort(key=lambda cell:cell.size)
+            for target in group[1:]:
+                result = checker(_top(group[0]),_top(target))
+>               assert result.status == 'pass', (group[0].name,target.name,result)
+E               AssertionError: ('sky130_fd_sc_hd__sdfbbn_1', 'sky130_fd_sc_hd__sdfbbn_2', EquivalenceResult(status='fail', method='liberty_local_function', reason='checker failed closed: Duplicate pin connection in input validation at g (sky130_fd_sc_hd__sdfbbn_1)'))
+E               assert 'fail' == 'pass'
+E                 
+E                 - pass
+E                 + fail
+
+code\tests\test_r22_sequential_gates.py:52: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed0] ______
+
+changed = {'body': 'next_state : "D"; clocked_on : "!CLK";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed1] ______
+
+changed = {'body': 'next_state : "D&EN"; clocked_on : "CLK";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed2] ______
+
+changed = {'body': 'next_state : "!D"; clocked_on : "CLK";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed3] ______
+
+changed = {'body': 'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed4] ______
+
+changed = {'body': 'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed5] ______
+
+changed = {'group': 'latch', 'body': 'next_state : "D"; enable : "CLK";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed6] ______
+
+changed = {'output': 'IQ_N'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+_____ test_same_family_different_sequential_semantics_rejected[changed7] ______
+
+changed = {'body': 'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'}
+
+    @pytest.mark.parametrize('changed', [
+        {'body':'next_state : "D"; clocked_on : "!CLK";'},
+        {'body':'next_state : "D&EN"; clocked_on : "CLK";'},
+        {'body':'next_state : "!D"; clocked_on : "CLK";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear : "!EN";'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; preset : "!EN";'},
+        {'group':'latch','body':'next_state : "D"; enable : "CLK";'},
+        {'output':'IQ_N'},
+        {'body':'next_state : "D"; clocked_on : "CLK"; clear_preset_var1 : "H";'},
+    ])
+    def test_same_family_different_sequential_semantics_rejected(changed):
+        text = _cell(1) + _cell(2,**changed)
+        cells = parse_liberty_cells(text)
+        original,candidate = [_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in ((original,candidate),(candidate,original)):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status == 'fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:81: AssertionError
+__ test_sequential_and_combinational_cells_cannot_share_only_output_function __
+
+    def test_sequential_and_combinational_cells_cannot_share_only_output_function():
+        text = _cell(1,output='D') + _cell(2,group='',output='D')
+        cells=parse_liberty_cells(text)
+        pair=[_top(cells[f'sky130_fd_sc_hd__testseq_{i}']) for i in (1,2)]
+        for gold,gate in (pair,pair[::-1]):
+>           assert build_real_equivalence_checker(text,top_module='top')(gold,gate).status=='fail'
+E           AssertionError: assert 'pass' == 'fail'
+E             
+E             - fail
+E             + pass
+
+code\tests\test_r22_sequential_gates.py:89: AssertionError
+_____ test_same_family_sequential_size_cannot_swap_input_roles[bindings0] _____
+
+bindings = {'CLK': 'D', 'D': 'CLK'}
+
+    @pytest.mark.parametrize('bindings', [{'CLK':'D','D':'CLK'}, {'EN':'D','D':'EN'}])
+    def test_same_family_sequential_size_cannot_swap_input_roles(bindings):
+        text = _cell(1) + _cell(2)
+        cells=parse_liberty_cells(text)
+        original=_top(cells['sky130_fd_sc_hd__testseq_1'])
+        candidate=_top(cells['sky130_fd_sc_hd__testseq_2'],bindings)
+>       assert build_real_equivalence_checker(text,top_module='top')(original,candidate).status=='fail'
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_sequential_gates.py:98: AssertionError
+_____ test_same_family_sequential_size_cannot_swap_input_roles[bindings1] _____
+
+bindings = {'EN': 'D', 'D': 'EN'}
+
+    @pytest.mark.parametrize('bindings', [{'CLK':'D','D':'CLK'}, {'EN':'D','D':'EN'}])
+    def test_same_family_sequential_size_cannot_swap_input_roles(bindings):
+        text = _cell(1) + _cell(2)
+        cells=parse_liberty_cells(text)
+        original=_top(cells['sky130_fd_sc_hd__testseq_1'])
+        candidate=_top(cells['sky130_fd_sc_hd__testseq_2'],bindings)
+>       assert build_real_equivalence_checker(text,top_module='top')(original,candidate).status=='fail'
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_sequential_gates.py:98: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_sequential_gates.py::test_actual_reset_to_set_rejected_despite_same_IQ_output
+FAILED code/tests/test_r22_sequential_gates.py::test_all_actual_sequential_same_family_sizes_remain_legal
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed0]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed1]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed2]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed3]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed4]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed5]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed6]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_different_sequential_semantics_rejected[changed7]
+FAILED code/tests/test_r22_sequential_gates.py::test_sequential_and_combinational_cells_cannot_share_only_output_function
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_sequential_size_cannot_swap_input_roles[bindings0]
+FAILED code/tests/test_r22_sequential_gates.py::test_same_family_sequential_size_cannot_swap_input_roles[bindings1]
+13 failed, 1 passed in 4.25s
+[run] 完成（5s），退出码 1

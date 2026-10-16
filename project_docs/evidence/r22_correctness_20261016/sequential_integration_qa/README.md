@@ -1,0 +1,7 @@
+# OI041 原始集成QA
+
+本目录新增ARCHIVE_MANIFEST归档本轮已完成10份parser/coverage/独立旧源多行反证原件及其source/target SHA，旧sequential_tdd不覆盖。PREIMAGE_MANIFEST与verify_sequential_gate_fix_v1.py保留先前失败receipt对应verifier；原失败SEQUENTIAL_GATE_VERIFICATION与新V2都保留。
+
+限定parser119pass、buffer17pass、coverage27pass/相关214pass；精确V2 reset→set fail/legalGpass/R0、parsed1/1、source稳定。完整v7仍运行且见1F，不称集成已全部通过。
+
+原件中的scratch invocation路径/parents定位保持字节不改；需要重跑时用原scratch上下文，或在新副本显式适配路径并另锁SHA，不直接运行归档副本后把路径错误当生产问题。

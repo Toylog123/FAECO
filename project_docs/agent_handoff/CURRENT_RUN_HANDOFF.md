@@ -1,4 +1,4 @@
-# r22 恢复推进交接 — 2026-10-16（当前LOG-25）
+# r22 恢复推进交接 — 2026-10-16（当前LOG-36）
 
 ## 1. 项目与授权
 
@@ -6,9 +6,11 @@ FAECO研究预布局门级时序ECO候选探索、验证与失效刻画。用户
 
 ## 2. 当前真实状态
 
-唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main；恢复起点781c031，第一阶段8192193、第二阶段02e82a2与证书/producer阶段44d20bb均已push。main/origin refs已实读为 `44d20bb341fd7805c10189fa2842f50fc2616845`。当前完整v5=835pass/4skip/156subtests，147.00s/wrapper152.781exit0、166Python来源SHA前后一致、PYTHONUTF8=1；提交前再次核对同一被测SHA。当前无STA/pilot，新矩阵尚未注册，记录员只改docs。
+唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main；恢复起点781c031，第一阶段8192193、第二阶段02e82a2与证书/producer阶段44d20bb均已push。main/origin refs已实读为 `ddb4c3319d973aa522aeb652473ee97e960889f2`。当前完整v8=969pass/4skip/156subtests，155.12s/wrapper157.969exit0、170Python来源SHA前后一致、PYTHONUTF8=1；提交前再次核对同一被测SHA。当前无STA/pilot，新矩阵尚未注册，记录员只改docs。
 
 新pinsec_controls_phase2正式9项预期全匹配：3正确pass/3故意错fail/2三态unsupported/1input_error，wrapper31exit0/source稳定；POST_RUN_VERIFICATION确认44source/LIB/driver无漂移。不能说9个等价证明通过，不能说三态支持已证。
+
+当前完整v8已969pass/4skip/156subtests，155.12s/wrapper157.969exit0、170来源SHA稳定/PYTHONUTF8=1，JSON/JUnit/log实读。原始精确V3 reset→set fail/Gpass/R0/parsed1/1/source稳定，公共唯一性opt-in scope限定30pass；OI040/041实现门关闭，原反例/失败receipt/旧v7保留，科学完整性不升级。B3/C恢复ADAPTER仍WIP不纳本次commit，范围外四态/历史配置等pending保持。records冻结docs供阶段commit/push→同HEAD注册C′v3→实际map8/静态门→18pilot；当前未注册/无mapping或STA。
 
 ## 3. 已完成与证据边界
 
@@ -20,12 +22,14 @@ A6实际原mapped→accepted fixed新SEC六pass（wrapper21exit0，frozen8192193
 
 B旧28实际final/gold对象绑定仍真；实际旧模型使用审计为23未见本次used-model defect、5有缺口（Pico2/edfxtp状态，b09/b20/b21三态缺TE_B）。B2 X checker独立review为20/20负拒、5/6正接受（合法escaped output保守误拒不影响actualB2）；checker SHA66fe72ff…绑定正式proof。44d20bb的B2新模型双pair均pass，core6.078s+7X证书、mul0.750s+0X，wrapper16exit0/source稳定；POST_RUN_VERIFICATION确认原bytes/完整decoded/artifactSHA/动态cert双pair一致。仅two-state SEC加独立孤立constant-X identity，不泛化四态或复位等价；OI038新模型缺证已恢复，历史runtime身份不补造。B3仍待真实语义同族恢复。D38/40及k1 14/16结构缺陷、C仅12代表9invalid/3未知的历史结论保持范围，未知非失败、invalid非本轮已新证不等价。
 
+B17新增恢复：B17_PROOF_RECOVERY_DESIGN.json已实读新common完整模型+flatten/assert真SEC返回pass（13.375s、12879proven/0unproven），源HEADddb4c33/原件稳定；主线POST_RUN_VERIFICATION已完成：原bytes/完整decoded/唯一nor4b尺寸变化/全部artifacts与44source全匹配，12879/0实log成功，producerJSON acaf5f…哈希已核。旧未flatten/NoSATmodel实证不能简写为find_same_wires已证伪阴性。首map.ys CP936预飞读UTF8失败在SEC前；严格CP936保字节SHA后才运行，旧schema无state text/hash不补造。
+
 ## 4. 待办与依赖
 
 | ID | 任务 | 当前状态 | 验收门 / 下一步 |
 |---|---|---|---|
-| P01 | 当前支持域内实现与证明器能力门 | 代码阶段已验收并push02e82a2；835整套通过/9控制预期符合 | 不等科学闭合；三态真实支持仍属OI039，unsupported仅临时能力门 |
-| P02 | A/B/D/C历史科学证据 | A6+B2新证明已补；B3/D/C与稿图待 | B2正式新模型双pair pass+7/0X证书已补；B3按真实语义恢复；D先14pilot，C完整对象核查/同族复验 |
+| P01 | 当前支持域内实现与证明器能力门 | 旧代码835/9控制真通过；当前完整v8=969pass/170SHA稳定，精确V3与scope过；OI040/041实现门closed，commit待 | 不等科学闭合；三态真实支持仍属OI039，unsupported仅临时能力门 |
+| P02 | A/B/D/C历史科学证据 | A6+B2+B17新证明及后验已补；B3/D/C与稿图待 | B2正式新模型双pair pass+7/0X证书已补；B3按真实语义恢复；D先14pilot，C完整对象核查/同族复验 |
 | P03 | 新C′受控矩阵 | v3尚未注册，暂无STA/pilot | 待证据/source pin稳定，再actual mapped复查与18pilot全过后扩72；v1失败/v2仅注册均保留 |
 | P04 | 中英稿图与材料回填 | pending，依赖科学证据闭合 | A证明已齐不等整篇ready；统一证据/结论/图表与声明，最后编译/视觉QA |
 
@@ -37,7 +41,7 @@ B旧28实际final/gold对象绑定仍真；实际旧模型使用审计为23未�
 
 ## 6. 关键入口与已保全证据
 
-本目录README→START_HERE→CURRENT_STATUS→TASK_BOARD→本交接→NEXT_AGENT_PROMPT；再读OPEN_ISSUES、docs/EXPERIENCE、EXPERIMENT_REGISTRY。动作/归因完整轨迹为LOG-20261016-01至25，当前入口只保留单一快照。
+本目录README→START_HERE→CURRENT_STATUS→TASK_BOARD→本交接→NEXT_AGENT_PROMPT；再读OPEN_ISSUES、docs/EXPERIENCE、EXPERIMENT_REGISTRY。动作/归因完整轨迹为LOG-20261016-01至36，当前入口只保留单一快照。
 
 `project_docs/evidence/r22_correctness_20261016/`：完整回归v1/v2/v3/v4/v5、独立审查、真SEC控制/诊断/guard、D56实际CLI预飞、phase2_tdd58文件与source/target/manifest SHA实核58/58。首整套741/1fail、v2 757pass、v3 822/2fixturefail、v4 832/3编码fail、v5 835pass均保真，不覆盖。v3混编码log展示错误不破坏JSON/JUnit，v5显式全进程PYTHONUTF8=1。
 
@@ -45,7 +49,7 @@ A证明目录 `project_docs/evidence/r22_a_sec_20261016_frozen/`；B旧模型审
 
 ## 7. 尚缺与下一代理要求
 
-当前B2新模型缺证已补，下一步proof/QA/docs阶段commit后稳定source/evidence pin，再C′v3注册与mapped复查/18pilot，D14pilot和C历史对象恢复；B3合法候选/实际库语义证据、显式四态支持恢复、稿图与作者声明仍待。OI035/036/038/039及既有科学问题持续保留；OI037的A证明已补、转稿图回填，不继续声称六缺证。历史raw/库/工具含本机ignored资产，不能称仅Git可复现全部历史。主线负责Git/源码/稿图，专职记录仅docs；未经真实运行不得填结果。
+当前B2新模型缺证已补且proof/QA/docs已push ddb4c33，下一步evidence-only v3准备工具审查/commit后锁新HEAD，注册C′v3与mapped复查/18pilot，D14pilot和C历史对象恢复；B3合法候选/实际库语义证据、显式四态支持恢复、稿图与作者声明仍待。OI035/036/038/039及既有科学问题持续保留；OI037的A证明已补、转稿图回填，不继续声称六缺证。历史raw/库/工具含本机ignored资产，不能称仅Git可复现全部历史。主线负责Git/源码/稿图，专职记录仅docs；未经真实运行不得填结果。
 
 ---
 

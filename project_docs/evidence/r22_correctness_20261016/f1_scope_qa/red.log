@@ -1,0 +1,59 @@
+.............FF.                                                         [100%]
+================================== FAILURES ===================================
+_______ test_shared_uniqueness_check_accepts_positional_topology_cells ________
+
+    def test_shared_uniqueness_check_accepts_positional_topology_cells():
+        text='module top(A,Y); sky130_fd_sc_hd__buf_1 u (Y,A); endmodule'
+>       rw._assert_unique_physical_instances(text)
+
+code\tests\test_r22_f1_parser_coverage.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+text = 'module top(A,Y); sky130_fd_sc_hd__buf_1 u (Y,A); endmodule'
+
+    def _assert_unique_physical_instances(text: str) -> dict:
+        """Reject duplicate declarations and return source SKY identity/connections.
+    
+        F1 reuses this independent source scan to check its parser's coverage;
+        other callers may ignore the return value as before.
+        """
+        masked = _without_verilog_comments(text)
+        masked = re.sub(r'\(\*[\s\S]*?\*\)', ' ', masked)
+        counts = Counter()
+        physical = {}
+        for match in _PHYSICAL_INSTANCE_RE.finditer(masked):
+            cell_type, instance, body = match.groups()
+            if cell_type in {'module', 'input', 'output', 'wire'}:
+                continue
+            counts[instance.removeprefix('\\')] += 1
+            if not cell_type.startswith('sky130_fd_sc_hd__'):
+                continue
+            pins = {}
+            offset = 0
+            for pin in re.finditer(r'\.\s*([A-Za-z_$][\w$]*)\s*\(([^()]*)\)', body):
+                separator = body[offset:pin.start()]
+                if not re.fullmatch(r'\s*' if not pins else r'\s*,\s*', separator):
+                    raise ValueError(f'Parser coverage: unsupported source pin syntax at {instance}')
+                if pin.group(1) in pins:
+                    raise ValueError(f'Parser coverage: duplicate source pin at {instance}')
+                pins[pin.group(1)] = pin.group(2).strip()
+                offset = pin.end()
+            if body[offset:].strip():
+>               raise ValueError(f'Parser coverage: unparsed source connection at {instance}')
+E               ValueError: Parser coverage: unparsed source connection at u
+
+code\src\rseco\real_wns.py:213: ValueError
+____ test_shared_uniqueness_check_still_rejects_duplicate_positional_cells ____
+
+    def test_shared_uniqueness_check_still_rejects_duplicate_positional_cells():
+        text='module top(A,Y); sky130_fd_sc_hd__buf_1 u (Y,A); sky130_fd_sc_hd__buf_1 u (Y,A); endmodule'
+>       with pytest.raises(ValueError,match='Duplicate instance'):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Duplicate instance'
+E         Actual message: 'Parser coverage: unparsed source connection at u'
+
+code\tests\test_r22_f1_parser_coverage.py:108: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_shared_uniqueness_check_accepts_positional_topology_cells
+FAILED code/tests/test_r22_f1_parser_coverage.py::test_shared_uniqueness_check_still_rejects_duplicate_positional_cells
+2 failed, 14 passed in 0.39s

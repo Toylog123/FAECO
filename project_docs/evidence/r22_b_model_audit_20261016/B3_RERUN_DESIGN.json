@@ -1,0 +1,1342 @@
+{
+  "schema": "r22-B3-same-family-rerun-design-v1",
+  "execution_ready": false,
+  "eda_executed": false,
+  "current_source_pin": "44d20bb341fd7805c10189fa2842f50fc2616845",
+  "historical_runtime_source_pin": null,
+  "historical_argv": null,
+  "batch_parallel": 2,
+  "batch_workers_per_circuit": 1,
+  "runs": [
+    {
+      "circuit": "b09",
+      "historical_root": "experiments/20260826_itc99_main/b09/b09",
+      "observed_result_fields": {
+        "success": true,
+        "iterations": 8,
+        "final_patch_id": "patch_U116_critical_path_cover",
+        "case_id": "b09_real_wns",
+        "stop_reason": "max_patches",
+        "wns": -1.04,
+        "tns": -26.47,
+        "min_slack": 0.44,
+        "logic_level_before": null,
+        "logic_level_after": null,
+        "logic_level_reduction": 0,
+        "wns_history": [
+          -1.13,
+          -1.1,
+          -1.09,
+          -1.07,
+          -1.06,
+          -1.06,
+          -1.05,
+          -1.04
+        ],
+        "circuit": "b09",
+        "period_ns": 0.5,
+        "baseline_wns": -1.14,
+        "baseline_min_slack": 0.44,
+        "hold_mode": false,
+        "strategies": [
+          "R",
+          "G",
+          "B"
+        ],
+        "joint_enumerate_depth": 3,
+        "init_weights": {
+          "boundary_penalty": 1.0,
+          "size_penalty": 1.0,
+          "critical_coverage_reward": 1.0
+        },
+        "hold_uncertainty_ns": null,
+        "min_physical_gain_ns": 0.01,
+        "proxy_ranking": false,
+        "endpoint": "_754_",
+        "target_net": "U116",
+        "n_candidate_sta_runs": 117
+      },
+      "batch_record": {
+        "exit_code": 0,
+        "success": true,
+        "iterations": 8,
+        "wns_history": [
+          -1.13,
+          -1.1,
+          -1.09,
+          -1.07,
+          -1.06,
+          -1.06,
+          -1.05,
+          -1.04
+        ],
+        "baseline_wns": -1.14,
+        "n_candidate_sta_runs": 117,
+        "final_patch_id": "patch_U116_critical_path_cover"
+      },
+      "recorded_state_budget": {
+        "max_iterations": 8,
+        "epsilon": 0.0,
+        "sta_budget": null,
+        "formal_budget": null,
+        "wall_timeout_s": null,
+        "max_patches": 8,
+        "formal_used": 186,
+        "sta_used": 90,
+        "iterations_used": 8,
+        "sta_runs": 90,
+        "formal_runs": 186,
+        "stagnation_count": 0,
+        "wall_time_s": 95.72458860000006
+      },
+      "recorded_final_weights": {
+        "boundary_penalty": 1.0,
+        "size_penalty": 1.0,
+        "critical_coverage_reward": 1.0,
+        "verification_cost_penalty": 1.0,
+        "equivalence_stability_reward": 1.0,
+        "max_cone_gates": 1000,
+        "physical_penalty": 1.0
+      },
+      "recorded_failure_counts": {
+        "acceptance_budget_violation": 66,
+        "F2_boundary_invalid": 3,
+        "iteration_failure": 1
+      },
+      "recorded_f5_thresholds": [],
+      "recorded_ledger_config_hashes": [
+        "cf835d928ebee3595ce65ea93d44c41f0b7470f0700f060ed917f5efeb9f62de"
+      ],
+      "recorded_ledger_call_log_count": 8,
+      "accepted_patch_count": 8,
+      "ledger_record_count": 117,
+      "ledger_kinds": {
+        "R": 55,
+        "B": 50,
+        "G": 12
+      },
+      "old_audit_fields": {
+        "script": "experiments/20260826_sec/b09/verify.ys",
+        "script_sha256": "b2753bd51547d2ef768e2226339264dd18a73effc959a2208c0731817f66d304",
+        "gold_path": "experiments/20260826_itc99_main/b09/b09/case/original/original.v",
+        "gold_sha256": "2c03d9caa5b4e0dfd33f3deb3c5298a39a6497768d037a2699a34617fe112789",
+        "gate_path": "experiments/20260826_sec/b09/final.v",
+        "gate_sha256": "d7917a8f46383fd8270c5263e61248f5c2caa2177d89e81cde53c2a4f0095629",
+        "used_tristate_types": [
+          "sky130_fd_sc_hd__einvn_1"
+        ],
+        "status": "used_model_defect_old_proof_does_not_establish_actual_library_semantics"
+      },
+      "raw_input_path": "experiments/20260826_itc99_main/b09/b09/mapped.v",
+      "rtl_path_current": "data/raw/benchmarks/raw/itc99/v/b09.v",
+      "actual_final_path": "experiments/20260826_itc99_main/b09/b09/eval/iter008_cand008/055__829__G/mapped.v",
+      "actual_final_state_path": "experiments/20260826_itc99_main/b09/b09/outerloop_result.json",
+      "actual_final_state_field": "state.current_netlist_text",
+      "actual_final_text_utf8_lf_sha256": "05f204334ecd76196c0c0761133481c1e4cca46d0e1d0e30bdf0e8a75621f073",
+      "candidate_matches_accepted_state_after_crlf_to_lf": true,
+      "map_script": "read_verilog \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/itc99/v/b09.v\"\r\nsynth -top b09\r\ndfflibmap -liberty \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\r\nabc -liberty \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\r\nclean\r\nwrite_verilog -noattr \"D:/BaiduSyncdisk/03_FAECO/experiments/20260826_itc99_main/b09/b09/mapped.v\"\r\n",
+      "sta_script": "read_liberty /mnt/d/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\r\nread_verilog /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260826_itc99_main/b09/b09/mapped.v\r\nlink_design b09\r\ncreate_clock -name clk -period 0.5 [get_ports CK]\r\nreport_checks -path_delay max\r\nreport_checks -path_delay max -slack_max 0 -endpoint_count 100000\r\nputs \"TNS_BEGIN\"\r\nreport_tns\r\nputs \"TNS_END\"\r\nreport_worst_slack -max\r\nreport_worst_slack -min\r\n",
+      "model_scope": {
+        "mapped_input": {
+          "sky_types": {
+            "sky130_fd_sc_hd__clkinv_1": 2,
+            "sky130_fd_sc_hd__xor2_1": 5,
+            "sky130_fd_sc_hd__lpflow_isobufsrc_1": 2,
+            "sky130_fd_sc_hd__nand2b_1": 3,
+            "sky130_fd_sc_hd__nor4_1": 1,
+            "sky130_fd_sc_hd__o211a_1": 1,
+            "sky130_fd_sc_hd__a2111oi_0": 1,
+            "sky130_fd_sc_hd__and3_1": 8,
+            "sky130_fd_sc_hd__and2_0": 9,
+            "sky130_fd_sc_hd__nand2_1": 5,
+            "sky130_fd_sc_hd__o21ai_0": 5,
+            "sky130_fd_sc_hd__o21a_1": 1,
+            "sky130_fd_sc_hd__nand4_1": 1,
+            "sky130_fd_sc_hd__a21oi_1": 1,
+            "sky130_fd_sc_hd__a22o_1": 8,
+            "sky130_fd_sc_hd__nor2_1": 3,
+            "sky130_fd_sc_hd__a221o_1": 7,
+            "sky130_fd_sc_hd__o211ai_1": 1,
+            "sky130_fd_sc_hd__lpflow_inputiso1p_1": 1,
+            "sky130_fd_sc_hd__dfxtp_1": 1
+          },
+          "tristate_used": [],
+          "module_names": [
+            "b09",
+            "dff"
+          ],
+          "required_inputs": "valid",
+          "two_state_sec_unsupported_reason": null
+        },
+        "actual_final": {
+          "sky_types": {
+            "sky130_fd_sc_hd__einvn_1": 1,
+            "sky130_fd_sc_hd__inv_1": 1,
+            "sky130_fd_sc_hd__xor2_1": 5,
+            "sky130_fd_sc_hd__lpflow_isobufsrc_1": 2,
+            "sky130_fd_sc_hd__nand2b_1": 3,
+            "sky130_fd_sc_hd__nor4_2": 1,
+            "sky130_fd_sc_hd__o211a_1": 1,
+            "sky130_fd_sc_hd__a2111oi_2": 1,
+            "sky130_fd_sc_hd__and3_1": 8,
+            "sky130_fd_sc_hd__and2_0": 9,
+            "sky130_fd_sc_hd__nand2_1": 5,
+            "sky130_fd_sc_hd__o21ai_0": 5,
+            "sky130_fd_sc_hd__o21a_1": 1,
+            "sky130_fd_sc_hd__nand4_1": 1,
+            "sky130_fd_sc_hd__a21oi_1": 1,
+            "sky130_fd_sc_hd__a22o_1": 8,
+            "sky130_fd_sc_hd__nor2_1": 3,
+            "sky130_fd_sc_hd__a221o_1": 7,
+            "sky130_fd_sc_hd__o211ai_1": 1,
+            "sky130_fd_sc_hd__lpflow_inputiso1p_1": 1,
+            "sky130_fd_sc_hd__dfxtp_1": 1
+          },
+          "tristate_used": [
+            "sky130_fd_sc_hd__einvn_1"
+          ],
+          "module_names": [
+            "b09",
+            "dff"
+          ],
+          "required_inputs": "rejected: Missing or empty required input pins at _818_ (sky130_fd_sc_hd__einvn_1): TE_B",
+          "two_state_sec_unsupported_reason": "Boolean SEC does not prove three-state semantics: sky130_fd_sc_hd__einvn_1"
+        }
+      },
+      "tristate_required_input_audit": [
+        {
+          "side": "actual_final",
+          "cell": "sky130_fd_sc_hd__einvn_1",
+          "instance": "_818_",
+          "missing_inputs": [
+            "TE_B"
+          ],
+          "pins": {
+            "A": "D_IN_REG_3_",
+            "Z": "_786_"
+          }
+        }
+      ],
+      "runtime_capture_missing": [
+        "run_config.json",
+        "manifest.json",
+        "runner.log",
+        "map.log",
+        "sta.log"
+      ],
+      "proposed_command_argv": null
+    },
+    {
+      "circuit": "b20",
+      "historical_root": "experiments/20260826_itc99_main/b20/b20",
+      "observed_result_fields": {
+        "success": true,
+        "iterations": 8,
+        "final_patch_id": "patch_P1_U3242_critical_path_cover",
+        "case_id": "b20_real_wns",
+        "stop_reason": "max_patches",
+        "wns": -11.23,
+        "tns": -3263.14,
+        "min_slack": 0.42,
+        "logic_level_before": null,
+        "logic_level_after": null,
+        "logic_level_reduction": 0,
+        "wns_history": [
+          -13.15,
+          -11.23,
+          -11.23,
+          -11.23,
+          -11.23,
+          -11.23,
+          -11.23,
+          -11.23
+        ],
+        "circuit": "b20",
+        "period_ns": 0.5,
+        "baseline_wns": -13.21,
+        "baseline_min_slack": 0.42,
+        "hold_mode": false,
+        "strategies": [
+          "R",
+          "G",
+          "B"
+        ],
+        "joint_enumerate_depth": 3,
+        "init_weights": {
+          "boundary_penalty": 1.0,
+          "size_penalty": 1.0,
+          "critical_coverage_reward": 1.0
+        },
+        "hold_uncertainty_ns": null,
+        "min_physical_gain_ns": 0.01,
+        "proxy_ranking": false,
+        "endpoint": "_102076_",
+        "target_net": "P1_U3242",
+        "n_candidate_sta_runs": 144
+      },
+      "batch_record": {
+        "exit_code": 1,
+        "error": "no outerloop_result.json (rc=1)"
+      },
+      "recorded_state_budget": {
+        "max_iterations": 8,
+        "epsilon": 0.0,
+        "sta_budget": null,
+        "formal_budget": null,
+        "wall_timeout_s": null,
+        "max_patches": 8,
+        "formal_used": 284,
+        "sta_used": 142,
+        "iterations_used": 8,
+        "sta_runs": 142,
+        "formal_runs": 284,
+        "stagnation_count": 0,
+        "wall_time_s": 9134.2315562
+      },
+      "recorded_final_weights": {
+        "boundary_penalty": 1.0,
+        "size_penalty": 1.0,
+        "critical_coverage_reward": 1.0,
+        "verification_cost_penalty": 1.0,
+        "equivalence_stability_reward": 1.0,
+        "max_cone_gates": 1000,
+        "physical_penalty": 1.0
+      },
+      "recorded_failure_counts": {
+        "acceptance_budget_violation": 99,
+        "F5_verification_too_expensive": 96,
+        "iteration_failure": 1
+      },
+      "recorded_f5_thresholds": [
+        "60.0"
+      ],
+      "recorded_ledger_config_hashes": [
+        "cf835d928ebee3595ce65ea93d44c41f0b7470f0700f060ed917f5efeb9f62de"
+      ],
+      "recorded_ledger_call_log_count": 8,
+      "accepted_patch_count": 8,
+      "ledger_record_count": 144,
+      "ledger_kinds": {
+        "R": 52,
+        "B": 65,
+        "G": 27
+      },
+      "old_audit_fields": {
+        "script": "experiments/20260826_sec/b20/verify.ys",
+        "script_sha256": "70373b460b8d66348f005a55ffb983db1a63d50b6067fe9f5b1c4675c9eedaaf",
+        "gold_path": "experiments/20260826_itc99_main/b20/b20/case/original/original.v",
+        "gold_sha256": "07d9d97b14cd75147cef8d6c548a7256f103deaea17c96c92680bbbcbebe0a8c",
+        "gate_path": "experiments/20260826_sec/b20/final.v",
+        "gate_sha256": "f0d9f90256d5fd592f00709b881d840e9e203856edfae3944ca9b62265c5807e",
+        "used_tristate_types": [
+          "sky130_fd_sc_hd__einvn_1"
+        ],
+        "status": "used_model_defect_old_proof_does_not_establish_actual_library_semantics"
+      },
+      "raw_input_path": "experiments/20260826_itc99_main/b20/b20/mapped.v",
+      "rtl_path_current": "data/raw/benchmarks/raw/itc99/v/b20.v",
+      "actual_final_path": "experiments/20260826_itc99_main/b20/b20/eval/iter008_cand008/047__106675__G/mapped.v",
+      "actual_final_state_path": "experiments/20260826_itc99_main/b20/b20/outerloop_result.json",
+      "actual_final_state_field": "state.current_netlist_text",
+      "actual_final_text_utf8_lf_sha256": "8cc9644d680458a31ea490f4f8392a4b342d7e465498ff3004c7617e9ed1219d",
+      "candidate_matches_accepted_state_after_crlf_to_lf": true,
+      "map_script": "read_verilog \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/itc99/v/b20.v\"\r\nsynth -top b20\r\ndfflibmap -liberty \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\r\nabc -liberty \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\r\nclean\r\nwrite_verilog -noattr \"D:/BaiduSyncdisk/03_FAECO/experiments/20260826_itc99_main/b20/b20/mapped.v\"\r\n",
+      "sta_script": "read_liberty /mnt/d/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\r\nread_verilog /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260826_itc99_main/b20/b20/mapped.v\r\nlink_design b20\r\ncreate_clock -name clk -period 0.5 [get_ports CK]\r\nreport_checks -path_delay max\r\nreport_checks -path_delay max -slack_max 0 -endpoint_count 100000\r\nputs \"TNS_BEGIN\"\r\nreport_tns\r\nputs \"TNS_END\"\r\nreport_worst_slack -max\r\nreport_worst_slack -min\r\n",
+      "model_scope": {
+        "mapped_input": {
+          "sky_types": {
+            "sky130_fd_sc_hd__clkinv_1": 55,
+            "sky130_fd_sc_hd__nor2_1": 573,
+            "sky130_fd_sc_hd__nor4_1": 37,
+            "sky130_fd_sc_hd__nand3b_1": 3,
+            "sky130_fd_sc_hd__nor3_1": 62,
+            "sky130_fd_sc_hd__nand2_1": 696,
+            "sky130_fd_sc_hd__nand4_1": 54,
+            "sky130_fd_sc_hd__nand3_1": 108,
+            "sky130_fd_sc_hd__o31ai_1": 35,
+            "sky130_fd_sc_hd__and4_1": 25,
+            "sky130_fd_sc_hd__o31a_1": 8,
+            "sky130_fd_sc_hd__o2bb2ai_1": 11,
+            "sky130_fd_sc_hd__o41a_1": 2,
+            "sky130_fd_sc_hd__o21ai_0": 504,
+            "sky130_fd_sc_hd__a22oi_1": 132,
+            "sky130_fd_sc_hd__xnor2_1": 417,
+            "sky130_fd_sc_hd__xor2_1": 173,
+            "sky130_fd_sc_hd__o22ai_1": 138,
+            "sky130_fd_sc_hd__o21bai_1": 7,
+            "sky130_fd_sc_hd__nand4b_1": 2,
+            "sky130_fd_sc_hd__a31oi_1": 52,
+            "sky130_fd_sc_hd__a2bb2oi_1": 2,
+            "sky130_fd_sc_hd__a31o_1": 4,
+            "sky130_fd_sc_hd__lpflow_isobufsrc_1": 116,
+            "sky130_fd_sc_hd__and3_1": 10,
+            "sky130_fd_sc_hd__a21oi_1": 349,
+            "sky130_fd_sc_hd__lpflow_inputiso1p_1": 65,
+            "sky130_fd_sc_hd__o21a_1": 38,
+            "sky130_fd_sc_hd__or4_1": 11,
+            "sky130_fd_sc_hd__o41ai_1": 3,
+            "sky130_fd_sc_hd__o22a_1": 8,
+            "sky130_fd_sc_hd__mux2i_1": 50,
+            "sky130_fd_sc_hd__nand2b_1": 77,
+            "sky130_fd_sc_hd__or3b_1": 2,
+            "sky130_fd_sc_hd__o221ai_1": 75,
+            "sky130_fd_sc_hd__o211a_1": 5,
+            "sky130_fd_sc_hd__mux2_1": 104,
+            "sky130_fd_sc_hd__maj3_1": 95,
+            "sky130_fd_sc_hd__a211oi_1": 41,
+            "sky130_fd_sc_hd__o311a_1": 1,
+            "sky130_fd_sc_hd__o311ai_0": 15,
+            "sky130_fd_sc_hd__a311o_1": 5,
+            "sky130_fd_sc_hd__a311oi_1": 24,
+            "sky130_fd_sc_hd__a21boi_0": 21,
+            "sky130_fd_sc_hd__and2_0": 93,
+            "sky130_fd_sc_hd__a22o_1": 20,
+            "sky130_fd_sc_hd__a21o_1": 37,
+            "sky130_fd_sc_hd__a211o_1": 15,
+            "sky130_fd_sc_hd__or3_1": 16,
+            "sky130_fd_sc_hd__nor2b_1": 24,
+            "sky130_fd_sc_hd__a222oi_1": 92,
+            "sky130_fd_sc_hd__a221oi_1": 72,
+            "sky130_fd_sc_hd__or4b_1": 3,
+            "sky130_fd_sc_hd__a221o_1": 23,
+            "sky130_fd_sc_hd__mux4_2": 1,
+            "sky130_fd_sc_hd__nor3b_1": 1,
+            "sky130_fd_sc_hd__a41oi_1": 5,
+            "sky130_fd_sc_hd__o221a_1": 4,
+            "sky130_fd_sc_hd__o211ai_1": 60,
+            "sky130_fd_sc_hd__a32oi_1": 6,
+            "sky130_fd_sc_hd__o21ba_1": 1,
+            "sky130_fd_sc_hd__o2111ai_1": 9,
+            "sky130_fd_sc_hd__a2111oi_0": 6,
+            "sky130_fd_sc_hd__o32ai_1": 2,
+            "sky130_fd_sc_hd__a2bb2o_1": 1,
+            "sky130_fd_sc_hd__o2bb2a_1": 1,
+            "sky130_fd_sc_hd__and4b_1": 1,
+            "sky130_fd_sc_hd__o32a_1": 2,
+            "sky130_fd_sc_hd__and3b_1": 1,
+            "sky130_fd_sc_hd__xnor3_1": 1,
+            "sky130_fd_sc_hd__a2111o_1": 1,
+            "sky130_fd_sc_hd__dfxtp_1": 1
+          },
+          "tristate_used": [],
+          "module_names": [
+            "b20",
+            "dff"
+          ],
+          "required_inputs": "valid",
+          "two_state_sec_unsupported_reason": null
+        },
+        "actual_final": {
+          "sky_types": {
+            "sky130_fd_sc_hd__clkinv_1": 54,
+            "sky130_fd_sc_hd__einvn_1": 1,
+            "sky130_fd_sc_hd__nor2_1": 573,
+            "sky130_fd_sc_hd__nor4_1": 37,
+            "sky130_fd_sc_hd__nand3b_1": 3,
+            "sky130_fd_sc_hd__nor3_1": 62,
+            "sky130_fd_sc_hd__nand2_1": 696,
+            "sky130_fd_sc_hd__nand4_1": 54,
+            "sky130_fd_sc_hd__nand3_1": 108,
+            "sky130_fd_sc_hd__o31ai_1": 35,
+            "sky130_fd_sc_hd__and4_1": 25,
+            "sky130_fd_sc_hd__o31a_1": 8,
+            "sky130_fd_sc_hd__o2bb2ai_1": 11,
+            "sky130_fd_sc_hd__o41a_1": 2,
+            "sky130_fd_sc_hd__o21ai_0": 504,
+            "sky130_fd_sc_hd__a22oi_1": 132,
+            "sky130_fd_sc_hd__xnor2_1": 417,
+            "sky130_fd_sc_hd__xor2_1": 173,
+            "sky130_fd_sc_hd__o22ai_1": 137,
+            "sky130_fd_sc_hd__o21bai_1": 7,
+            "sky130_fd_sc_hd__nand4b_1": 2,
+            "sky130_fd_sc_hd__a31oi_1": 52,
+            "sky130_fd_sc_hd__a2bb2oi_1": 2,
+            "sky130_fd_sc_hd__a31o_1": 4,
+            "sky130_fd_sc_hd__lpflow_isobufsrc_1": 116,
+            "sky130_fd_sc_hd__and3_1": 10,
+            "sky130_fd_sc_hd__a21oi_1": 349,
+            "sky130_fd_sc_hd__lpflow_inputiso1p_1": 65,
+            "sky130_fd_sc_hd__o21a_1": 38,
+            "sky130_fd_sc_hd__or4_1": 11,
+            "sky130_fd_sc_hd__o41ai_1": 3,
+            "sky130_fd_sc_hd__o22a_1": 8,
+            "sky130_fd_sc_hd__o22ai_4": 1,
+            "sky130_fd_sc_hd__mux2i_1": 50,
+            "sky130_fd_sc_hd__nand2b_1": 77,
+            "sky130_fd_sc_hd__or3b_1": 2,
+            "sky130_fd_sc_hd__o221ai_1": 75,
+            "sky130_fd_sc_hd__o211a_1": 5,
+            "sky130_fd_sc_hd__mux2_4": 1,
+            "sky130_fd_sc_hd__maj3_4": 1,
+            "sky130_fd_sc_hd__a211oi_2": 1,
+            "sky130_fd_sc_hd__o311a_1": 1,
+            "sky130_fd_sc_hd__o311ai_0": 15,
+            "sky130_fd_sc_hd__a311o_1": 5,
+            "sky130_fd_sc_hd__a311oi_1": 24,
+            "sky130_fd_sc_hd__a21boi_0": 21,
+            "sky130_fd_sc_hd__maj3_1": 94,
+            "sky130_fd_sc_hd__and2_0": 93,
+            "sky130_fd_sc_hd__a22o_1": 20,
+            "sky130_fd_sc_hd__a21o_1": 37,
+            "sky130_fd_sc_hd__a211o_1": 15,
+            "sky130_fd_sc_hd__or3_1": 16,
+            "sky130_fd_sc_hd__a211oi_1": 40,
+            "sky130_fd_sc_hd__nor2b_1": 24,
+            "sky130_fd_sc_hd__mux2_1": 103,
+            "sky130_fd_sc_hd__a222oi_1": 92,
+            "sky130_fd_sc_hd__a221oi_1": 72,
+            "sky130_fd_sc_hd__or4b_1": 3,
+            "sky130_fd_sc_hd__a221o_1": 23,
+            "sky130_fd_sc_hd__mux4_2": 1,
+            "sky130_fd_sc_hd__nor3b_1": 1,
+            "sky130_fd_sc_hd__a41oi_1": 5,
+            "sky130_fd_sc_hd__o221a_1": 4,
+            "sky130_fd_sc_hd__o211ai_1": 60,
+            "sky130_fd_sc_hd__a32oi_1": 6,
+            "sky130_fd_sc_hd__o21ba_1": 1,
+            "sky130_fd_sc_hd__o2111ai_1": 9,
+            "sky130_fd_sc_hd__a2111oi_0": 6,
+            "sky130_fd_sc_hd__o32ai_1": 2,
+            "sky130_fd_sc_hd__a2bb2o_1": 1,
+            "sky130_fd_sc_hd__o2bb2a_1": 1,
+            "sky130_fd_sc_hd__and4b_1": 1,
+            "sky130_fd_sc_hd__o32a_1": 2,
+            "sky130_fd_sc_hd__and3b_1": 1,
+            "sky130_fd_sc_hd__xnor3_1": 1,
+            "sky130_fd_sc_hd__a2111o_1": 1,
+            "sky130_fd_sc_hd__clkbuf_1": 1,
+            "sky130_fd_sc_hd__dfxtp_1": 1
+          },
+          "tristate_used": [
+            "sky130_fd_sc_hd__einvn_1"
+          ],
+          "module_names": [
+            "b20",
+            "dff"
+          ],
+          "required_inputs": "rejected: Missing or empty required input pins at _106558_ (sky130_fd_sc_hd__einvn_1): TE_B",
+          "two_state_sec_unsupported_reason": "Boolean SEC does not prove three-state semantics: sky130_fd_sc_hd__einvn_1"
+        }
+      },
+      "tristate_required_input_audit": [
+        {
+          "side": "actual_final",
+          "cell": "sky130_fd_sc_hd__einvn_1",
+          "instance": "_106558_",
+          "missing_inputs": [
+            "TE_B"
+          ],
+          "pins": {
+            "A": "P1_ADDR_REG_19_",
+            "Z": "_102355_"
+          }
+        }
+      ],
+      "runtime_capture_missing": [
+        "run_config.json",
+        "manifest.json",
+        "runner.log"
+      ],
+      "proposed_command_argv": null
+    },
+    {
+      "circuit": "b21",
+      "historical_root": "experiments/20260826_itc99_main/b21/b21",
+      "observed_result_fields": {
+        "success": true,
+        "iterations": 8,
+        "final_patch_id": "patch_P1_U3355_critical_path_cover",
+        "case_id": "b21_real_wns",
+        "stop_reason": "max_patches",
+        "wns": -10.95,
+        "tns": -2914.28,
+        "min_slack": 0.41,
+        "logic_level_before": null,
+        "logic_level_after": null,
+        "logic_level_reduction": 0,
+        "wns_history": [
+          -11.61,
+          -11.59,
+          -11.59,
+          -11.59,
+          -11.58,
+          -10.99,
+          -10.98,
+          -10.95
+        ],
+        "circuit": "b21",
+        "period_ns": 0.5,
+        "baseline_wns": -13.7,
+        "baseline_min_slack": 0.41,
+        "hold_mode": false,
+        "strategies": [
+          "R",
+          "G",
+          "B"
+        ],
+        "joint_enumerate_depth": 3,
+        "init_weights": {
+          "boundary_penalty": 1.0,
+          "size_penalty": 1.0,
+          "critical_coverage_reward": 1.0
+        },
+        "hold_uncertainty_ns": null,
+        "min_physical_gain_ns": 0.01,
+        "proxy_ranking": false,
+        "endpoint": "_103954_",
+        "target_net": "P1_U3355",
+        "n_candidate_sta_runs": 43
+      },
+      "batch_record": {
+        "exit_code": 1,
+        "error": "no outerloop_result.json (rc=1)"
+      },
+      "recorded_state_budget": {
+        "max_iterations": 8,
+        "epsilon": 0.0,
+        "sta_budget": null,
+        "formal_budget": null,
+        "wall_timeout_s": null,
+        "max_patches": 8,
+        "formal_used": 82,
+        "sta_used": 41,
+        "iterations_used": 8,
+        "sta_runs": 41,
+        "formal_runs": 82,
+        "stagnation_count": 0,
+        "wall_time_s": 1995.1391232999958
+      },
+      "recorded_final_weights": {
+        "boundary_penalty": 1.0,
+        "size_penalty": 1.0,
+        "critical_coverage_reward": 1.0,
+        "verification_cost_penalty": 1.0,
+        "equivalence_stability_reward": 1.0,
+        "max_cone_gates": 1000,
+        "physical_penalty": 1.0
+      },
+      "recorded_failure_counts": {
+        "acceptance_budget_violation": 28,
+        "F5_verification_too_expensive": 1,
+        "iteration_failure": 1
+      },
+      "recorded_f5_thresholds": [
+        "60.0"
+      ],
+      "recorded_ledger_config_hashes": [
+        "cf835d928ebee3595ce65ea93d44c41f0b7470f0700f060ed917f5efeb9f62de"
+      ],
+      "recorded_ledger_call_log_count": 8,
+      "accepted_patch_count": 8,
+      "ledger_record_count": 43,
+      "ledger_kinds": {
+        "R": 20,
+        "B": 16,
+        "G": 7
+      },
+      "old_audit_fields": {
+        "script": "experiments/20260826_sec/b21/verify.ys",
+        "script_sha256": "1ca6d5c32096b219a73682fa8521b0afe3fdfd443f78e411e44868b64377a3af",
+        "gold_path": "experiments/20260826_itc99_main/b21/b21/case/original/original.v",
+        "gold_sha256": "5672015e73c2d8699f77d2566b4e02e0d4ee6af453d637e1f8f298081625d64c",
+        "gate_path": "experiments/20260826_sec/b21/final.v",
+        "gate_sha256": "0ec1e72fa19182f77a68133eec7ca79f1e15a8e1a5a4522eb6964941c2725e66",
+        "used_tristate_types": [
+          "sky130_fd_sc_hd__einvn_2"
+        ],
+        "status": "used_model_defect_old_proof_does_not_establish_actual_library_semantics"
+      },
+      "raw_input_path": "experiments/20260826_itc99_main/b21/b21/mapped.v",
+      "rtl_path_current": "data/raw/benchmarks/raw/itc99/v/b21.v",
+      "actual_final_path": "experiments/20260826_itc99_main/b21/b21/eval/iter008_cand008/009__108657__G/mapped.v",
+      "actual_final_state_path": "experiments/20260826_itc99_main/b21/b21/outerloop_result.json",
+      "actual_final_state_field": "state.current_netlist_text",
+      "actual_final_text_utf8_lf_sha256": "47ee566bbbd91c06d81e891380715bbbadbb455ad3c1bb72f046d9b334fd11f8",
+      "candidate_matches_accepted_state_after_crlf_to_lf": true,
+      "map_script": "read_verilog \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/itc99/v/b21.v\"\r\nsynth -top b21\r\ndfflibmap -liberty \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\r\nabc -liberty \"D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\r\nclean\r\nwrite_verilog -noattr \"D:/BaiduSyncdisk/03_FAECO/experiments/20260826_itc99_main/b21/b21/mapped.v\"\r\n",
+      "sta_script": "read_liberty /mnt/d/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\r\nread_verilog /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260826_itc99_main/b21/b21/mapped.v\r\nlink_design b21\r\ncreate_clock -name clk -period 0.5 [get_ports CK]\r\nreport_checks -path_delay max\r\nreport_checks -path_delay max -slack_max 0 -endpoint_count 100000\r\nputs \"TNS_BEGIN\"\r\nreport_tns\r\nputs \"TNS_END\"\r\nreport_worst_slack -max\r\nreport_worst_slack -min\r\n",
+      "model_scope": {
+        "mapped_input": {
+          "sky_types": {
+            "sky130_fd_sc_hd__clkinv_1": 57,
+            "sky130_fd_sc_hd__lpflow_isobufsrc_1": 154,
+            "sky130_fd_sc_hd__nor2_1": 491,
+            "sky130_fd_sc_hd__o22a_1": 4,
+            "sky130_fd_sc_hd__o22ai_1": 139,
+            "sky130_fd_sc_hd__nand2_1": 739,
+            "sky130_fd_sc_hd__mux2i_1": 47,
+            "sky130_fd_sc_hd__xnor2_1": 407,
+            "sky130_fd_sc_hd__lpflow_inputiso1p_1": 49,
+            "sky130_fd_sc_hd__and2_0": 69,
+            "sky130_fd_sc_hd__nand2b_1": 58,
+            "sky130_fd_sc_hd__a21oi_1": 352,
+            "sky130_fd_sc_hd__o221ai_1": 62,
+            "sky130_fd_sc_hd__o21ai_0": 475,
+            "sky130_fd_sc_hd__o211a_1": 10,
+            "sky130_fd_sc_hd__mux2_1": 116,
+            "sky130_fd_sc_hd__maj3_1": 88,
+            "sky130_fd_sc_hd__o21a_1": 38,
+            "sky130_fd_sc_hd__a31oi_1": 60,
+            "sky130_fd_sc_hd__o311ai_0": 18,
+            "sky130_fd_sc_hd__a21boi_0": 13,
+            "sky130_fd_sc_hd__o31a_1": 12,
+            "sky130_fd_sc_hd__a21bo_1": 2,
+            "sky130_fd_sc_hd__a311o_1": 8,
+            "sky130_fd_sc_hd__a311oi_1": 20,
+            "sky130_fd_sc_hd__o211ai_1": 73,
+            "sky130_fd_sc_hd__o31ai_1": 30,
+            "sky130_fd_sc_hd__nor3_1": 65,
+            "sky130_fd_sc_hd__nor4_1": 27,
+            "sky130_fd_sc_hd__or3_1": 34,
+            "sky130_fd_sc_hd__nand3_1": 148,
+            "sky130_fd_sc_hd__or4_1": 11,
+            "sky130_fd_sc_hd__o41a_1": 2,
+            "sky130_fd_sc_hd__a2bb2oi_1": 8,
+            "sky130_fd_sc_hd__a221oi_1": 104,
+            "sky130_fd_sc_hd__xor2_1": 149,
+            "sky130_fd_sc_hd__nand4_1": 49,
+            "sky130_fd_sc_hd__o41ai_1": 4,
+            "sky130_fd_sc_hd__o2bb2ai_1": 6,
+            "sky130_fd_sc_hd__a211oi_1": 50,
+            "sky130_fd_sc_hd__a2111oi_0": 11,
+            "sky130_fd_sc_hd__and4_1": 34,
+            "sky130_fd_sc_hd__nor3b_1": 2,
+            "sky130_fd_sc_hd__o21ba_1": 1,
+            "sky130_fd_sc_hd__a21o_1": 56,
+            "sky130_fd_sc_hd__xnor3_1": 1,
+            "sky130_fd_sc_hd__a41oi_1": 2,
+            "sky130_fd_sc_hd__and3_1": 16,
+            "sky130_fd_sc_hd__a22oi_1": 134,
+            "sky130_fd_sc_hd__nor2b_1": 30,
+            "sky130_fd_sc_hd__a222oi_1": 82,
+            "sky130_fd_sc_hd__a22o_1": 16,
+            "sky130_fd_sc_hd__a211o_1": 22,
+            "sky130_fd_sc_hd__a221o_1": 21,
+            "sky130_fd_sc_hd__a31o_1": 6,
+            "sky130_fd_sc_hd__o221a_1": 2,
+            "sky130_fd_sc_hd__o21bai_1": 1,
+            "sky130_fd_sc_hd__or3b_1": 1,
+            "sky130_fd_sc_hd__o311a_1": 2,
+            "sky130_fd_sc_hd__o32ai_1": 5,
+            "sky130_fd_sc_hd__a32oi_1": 7,
+            "sky130_fd_sc_hd__o2111ai_1": 11,
+            "sky130_fd_sc_hd__nor4b_1": 3,
+            "sky130_fd_sc_hd__nand3b_1": 1,
+            "sky130_fd_sc_hd__or4b_1": 2,
+            "sky130_fd_sc_hd__nand4b_1": 1,
+            "sky130_fd_sc_hd__mux4_2": 1,
+            "sky130_fd_sc_hd__a41o_1": 1,
+            "sky130_fd_sc_hd__a32o_1": 3,
+            "sky130_fd_sc_hd__and4b_1": 1,
+            "sky130_fd_sc_hd__dfxtp_1": 1
+          },
+          "tristate_used": [],
+          "module_names": [
+            "b21",
+            "dff"
+          ],
+          "required_inputs": "valid",
+          "two_state_sec_unsupported_reason": null
+        },
+        "actual_final": {
+          "sky_types": {
+            "sky130_fd_sc_hd__clkinv_1": 56,
+            "sky130_fd_sc_hd__einvn_2": 1,
+            "sky130_fd_sc_hd__lpflow_isobufsrc_1": 154,
+            "sky130_fd_sc_hd__nor2_2": 1,
+            "sky130_fd_sc_hd__o22a_1": 4,
+            "sky130_fd_sc_hd__o22ai_4": 1,
+            "sky130_fd_sc_hd__nand2_1": 739,
+            "sky130_fd_sc_hd__mux2i_1": 47,
+            "sky130_fd_sc_hd__nor2_1": 490,
+            "sky130_fd_sc_hd__xnor2_1": 407,
+            "sky130_fd_sc_hd__lpflow_inputiso1p_1": 49,
+            "sky130_fd_sc_hd__and2_0": 69,
+            "sky130_fd_sc_hd__nand2b_1": 58,
+            "sky130_fd_sc_hd__a21oi_1": 352,
+            "sky130_fd_sc_hd__o221ai_1": 62,
+            "sky130_fd_sc_hd__o21ai_0": 475,
+            "sky130_fd_sc_hd__o211a_1": 10,
+            "sky130_fd_sc_hd__mux2_1": 116,
+            "sky130_fd_sc_hd__maj3_1": 88,
+            "sky130_fd_sc_hd__o21a_1": 38,
+            "sky130_fd_sc_hd__a31oi_1": 60,
+            "sky130_fd_sc_hd__o311ai_0": 18,
+            "sky130_fd_sc_hd__a21boi_0": 13,
+            "sky130_fd_sc_hd__o31a_1": 12,
+            "sky130_fd_sc_hd__a21bo_1": 2,
+            "sky130_fd_sc_hd__a311o_1": 8,
+            "sky130_fd_sc_hd__a311oi_1": 20,
+            "sky130_fd_sc_hd__o211ai_1": 73,
+            "sky130_fd_sc_hd__o31ai_1": 30,
+            "sky130_fd_sc_hd__nor3_1": 65,
+            "sky130_fd_sc_hd__nor4_1": 27,
+            "sky130_fd_sc_hd__or3_1": 34,
+            "sky130_fd_sc_hd__nand3_1": 148,
+            "sky130_fd_sc_hd__or4_4": 2,
+            "sky130_fd_sc_hd__or4_1": 9,
+            "sky130_fd_sc_hd__o41a_1": 2,
+            "sky130_fd_sc_hd__a2bb2oi_1": 8,
+            "sky130_fd_sc_hd__a221oi_1": 104,
+            "sky130_fd_sc_hd__xor2_1": 149,
+            "sky130_fd_sc_hd__nand4_1": 49,
+            "sky130_fd_sc_hd__o41ai_1": 4,
+            "sky130_fd_sc_hd__o2bb2ai_1": 6,
+            "sky130_fd_sc_hd__o22ai_1": 138,
+            "sky130_fd_sc_hd__a211oi_1": 50,
+            "sky130_fd_sc_hd__a2111oi_0": 11,
+            "sky130_fd_sc_hd__and4_1": 34,
+            "sky130_fd_sc_hd__nor3b_1": 2,
+            "sky130_fd_sc_hd__o21ba_1": 1,
+            "sky130_fd_sc_hd__a21o_1": 56,
+            "sky130_fd_sc_hd__xnor3_1": 1,
+            "sky130_fd_sc_hd__a41oi_1": 2,
+            "sky130_fd_sc_hd__and3_1": 16,
+            "sky130_fd_sc_hd__a22oi_1": 134,
+            "sky130_fd_sc_hd__nor2b_1": 30,
+            "sky130_fd_sc_hd__a222oi_1": 82,
+            "sky130_fd_sc_hd__a22o_1": 16,
+            "sky130_fd_sc_hd__a211o_1": 22,
+            "sky130_fd_sc_hd__a221o_1": 21,
+            "sky130_fd_sc_hd__a31o_1": 6,
+            "sky130_fd_sc_hd__o221a_1": 2,
+            "sky130_fd_sc_hd__o21bai_1": 1,
+            "sky130_fd_sc_hd__or3b_1": 1,
+            "sky130_fd_sc_hd__o311a_1": 2,
+            "sky130_fd_sc_hd__o32ai_1": 5,
+            "sky130_fd_sc_hd__a32oi_1": 7,
+            "sky130_fd_sc_hd__o2111ai_1": 11,
+            "sky130_fd_sc_hd__nor4b_1": 3,
+            "sky130_fd_sc_hd__nand3b_1": 1,
+            "sky130_fd_sc_hd__or4b_1": 2,
+            "sky130_fd_sc_hd__nand4b_1": 1,
+            "sky130_fd_sc_hd__mux4_2": 1,
+            "sky130_fd_sc_hd__a41o_1": 1,
+            "sky130_fd_sc_hd__a32o_1": 3,
+            "sky130_fd_sc_hd__and4b_1": 1,
+            "sky130_fd_sc_hd__dfxtp_1": 1
+          },
+          "tristate_used": [
+            "sky130_fd_sc_hd__einvn_2"
+          ],
+          "module_names": [
+            "b21",
+            "dff"
+          ],
+          "required_inputs": "rejected: Missing or empty required input pins at _108500_ (sky130_fd_sc_hd__einvn_2): TE_B",
+          "two_state_sec_unsupported_reason": "Boolean SEC does not prove three-state semantics: sky130_fd_sc_hd__einvn_2"
+        }
+      },
+      "tristate_required_input_audit": [
+        {
+          "side": "actual_final",
+          "cell": "sky130_fd_sc_hd__einvn_2",
+          "instance": "_108500_",
+          "missing_inputs": [
+            "TE_B"
+          ],
+          "pins": {
+            "A": "P2_ADDR_REG_19_",
+            "Z": "_104286_"
+          }
+        }
+      ],
+      "runtime_capture_missing": [
+        "run_config.json",
+        "manifest.json",
+        "runner.log"
+      ],
+      "proposed_command_argv": null
+    }
+  ],
+  "sources": {
+    "project_docs/evidence/r22_b_model_audit_20261016/audit.json": {
+      "sha256": "0869d234751af08715a15a58c98636e7ae193d8a1d423401f6181fc88a83365d",
+      "bytes": 939944,
+      "roles": [
+        "B original model audit"
+      ]
+    },
+    "project_docs/evidence/r22_historical_correctness_20261014/correctness_audit.json": {
+      "sha256": "be190d318d73894366fb716ac54f51cde07beb8533dbc94b87bfd536e387012f",
+      "bytes": 252497,
+      "roles": [
+        "B accepted state candidate crosswalk"
+      ]
+    },
+    "project_docs/evidence/r22_rerun_design_20261016/manifest_preview.json": {
+      "sha256": "bd0d9ba70f68177addab21139a6e2f92a41630340bf93504982bfe35a9582f9d",
+      "bytes": 876877,
+      "roles": [
+        "D/C same-family preview context, not B command source"
+      ]
+    },
+    "experiments/20260826_itc99_main/summary.json": {
+      "sha256": "2befd7d547db2d83dd53963c90b2bdbf3d88bcbd9478ec5f768e89d1da41f166",
+      "bytes": 5716,
+      "roles": [
+        "B batch observed concurrency and results"
+      ]
+    },
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": {
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135,
+      "roles": [
+        "actual retained Liberty, not original runtime hash receipt"
+      ]
+    },
+    "experiments/20260826_itc99_main/b09/b09/outerloop_result.json": {
+      "sha256": "0b1f73286fb4c6d5b40658a29e6654d09d038b1c3033fa03d55699bfa9853fab",
+      "bytes": 303374,
+      "roles": [
+        "actual historical B accepted state and exposed config"
+      ]
+    },
+    "experiments/20260826_itc99_main/b09/b09/eval_trials.json": {
+      "sha256": "f31dcd30aa586d3bfefb9e9d96a68d6446b0a4ffe76c7b19b3462bbbd42bbe13",
+      "bytes": 2086553,
+      "roles": [
+        "historical candidate ledger"
+      ]
+    },
+    "experiments/20260826_itc99_main/b09/b09/map.ys": {
+      "sha256": "55dfe0089b2ef67549638f3b5141bfa6e41a19a8aa69ce504833737cd889f815",
+      "bytes": 534,
+      "roles": [
+        "historical input and mapping recipe"
+      ]
+    },
+    "experiments/20260826_itc99_main/b09/b09/sta.tcl": {
+      "sha256": "bf2cbaaef35031d24f6e64ebb97239476e7459e49e9e3f7aaf74aaca3d5a2c89",
+      "bytes": 524,
+      "roles": [
+        "historical period/clock/library/baseline input recipe"
+      ]
+    },
+    "experiments/20260826_itc99_main/b09/b09/mapped.v": {
+      "sha256": "7f80e3b9c97d70a4af8a5ca3ab67adc87ed5046bea3f92b018c871d4f8b14337",
+      "bytes": 11283,
+      "roles": [
+        "frozen raw mapped input including helpers"
+      ]
+    },
+    "experiments/20260826_itc99_main/b09/b09/eval/iter008_cand008/055__829__G/mapped.v": {
+      "sha256": "10c6a52c9a646c4aacedaea39766bab66fdd81fe23122e09a3d274739b19ea0a",
+      "bytes": 11279,
+      "roles": [
+        "actual last committed candidate including helpers"
+      ]
+    },
+    "data/raw/benchmarks/raw/itc99/v/b09.v": {
+      "sha256": "ce643d256c913cae218757b657685c9bcdd5130a89b8be0e4a1ee8d65394ca92",
+      "bytes": 33703,
+      "roles": [
+        "current relocated RTL corresponding to map.ys; not runtime content receipt"
+      ]
+    },
+    "experiments/20260826_sec/b09/verify.ys": {
+      "sha256": "b2753bd51547d2ef768e2226339264dd18a73effc959a2208c0731817f66d304",
+      "bytes": 467,
+      "roles": [
+        "old independent SEC script with defective tri model"
+      ]
+    },
+    "experiments/20260826_itc99_main/b20/b20/outerloop_result.json": {
+      "sha256": "f3d19c774aacb0d2c4cebe39dca7d726943834b21f6a9b81afeecba9ecfe8b46",
+      "bytes": 7027602,
+      "roles": [
+        "actual historical B accepted state and exposed config"
+      ]
+    },
+    "experiments/20260826_itc99_main/b20/b20/eval_trials.json": {
+      "sha256": "5cd0d8f1651b0d3db62d5a4e6f6269e7e13ed05b8b05f591f3d7548520fbf8e3",
+      "bytes": 111773609,
+      "roles": [
+        "historical candidate ledger"
+      ]
+    },
+    "experiments/20260826_itc99_main/b20/b20/map.ys": {
+      "sha256": "318502a74d6d1fdbee36c1a61a334f111c07a5e4f7c69a41f645e2ac5de133c7",
+      "bytes": 534,
+      "roles": [
+        "historical input and mapping recipe"
+      ]
+    },
+    "experiments/20260826_itc99_main/b20/b20/sta.tcl": {
+      "sha256": "dbefb7e4ccce1c539dac675a7d1a7dc74eacda14881b54ddd185a33bc3d869e1",
+      "bytes": 524,
+      "roles": [
+        "historical period/clock/library/baseline input recipe"
+      ]
+    },
+    "experiments/20260826_itc99_main/b20/b20/mapped.v": {
+      "sha256": "4a800657a0f64f997fb8d440b5fcc125721b58dd16842524ee9957644a64f377",
+      "bytes": 707881,
+      "roles": [
+        "frozen raw mapped input including helpers"
+      ]
+    },
+    "experiments/20260826_itc99_main/b20/b20/eval/iter008_cand008/047__106675__G/mapped.v": {
+      "sha256": "1df563e97467d12427a3db6e568d48dcbe16f0d5c704f86efce7c62d34c138f8",
+      "bytes": 708062,
+      "roles": [
+        "actual last committed candidate including helpers"
+      ]
+    },
+    "data/raw/benchmarks/raw/itc99/v/b20.v": {
+      "sha256": "da3d249a110d086d062d7121e25dbd3b18970f08003ff9c59c40349d425b6ddd",
+      "bytes": 5376400,
+      "roles": [
+        "current relocated RTL corresponding to map.ys; not runtime content receipt"
+      ]
+    },
+    "experiments/20260826_sec/b20/verify.ys": {
+      "sha256": "70373b460b8d66348f005a55ffb983db1a63d50b6067fe9f5b1c4675c9eedaaf",
+      "bytes": 467,
+      "roles": [
+        "old independent SEC script with defective tri model"
+      ]
+    },
+    "experiments/20260826_itc99_main/b21/b21/outerloop_result.json": {
+      "sha256": "5732128eb77d6f80aaf0ca31bfb726b109f9b782a6ed40733740e81459038f82",
+      "bytes": 6776876,
+      "roles": [
+        "actual historical B accepted state and exposed config"
+      ]
+    },
+    "experiments/20260826_itc99_main/b21/b21/eval_trials.json": {
+      "sha256": "108d38084eef0d542c7c6ea2341de7cd7cb68e455cfbd98300df1787cc71669f",
+      "bytes": 37496438,
+      "roles": [
+        "historical candidate ledger"
+      ]
+    },
+    "experiments/20260826_itc99_main/b21/b21/map.ys": {
+      "sha256": "230962165621bcae12df5b711cfdee7023958b6a191a9f9152c5c7fd773aff10",
+      "bytes": 534,
+      "roles": [
+        "historical input and mapping recipe"
+      ]
+    },
+    "experiments/20260826_itc99_main/b21/b21/sta.tcl": {
+      "sha256": "2c4de9cefcf1042d8bd1eb107e80338ccb71f35d7c3a7cd2f172fa5d2259d162",
+      "bytes": 524,
+      "roles": [
+        "historical period/clock/library/baseline input recipe"
+      ]
+    },
+    "experiments/20260826_itc99_main/b21/b21/mapped.v": {
+      "sha256": "5067fd16ecc1af7a3187479817fe4bc918495a4a02b6c2302f4d436f809b9563",
+      "bytes": 712394,
+      "roles": [
+        "frozen raw mapped input including helpers"
+      ]
+    },
+    "experiments/20260826_itc99_main/b21/b21/eval/iter008_cand008/009__108657__G/mapped.v": {
+      "sha256": "68b3a80960a99f186ea2b1b95dd85ef723ef2d319e31cbb437ac666fb6d96301",
+      "bytes": 712393,
+      "roles": [
+        "actual last committed candidate including helpers"
+      ]
+    },
+    "data/raw/benchmarks/raw/itc99/v/b21.v": {
+      "sha256": "6cf1436533bfcc5ee93cd9521627b0765d6cf0ff5542e9d9bb8e3db946d48be6",
+      "bytes": 5475118,
+      "roles": [
+        "current relocated RTL corresponding to map.ys; not runtime content receipt"
+      ]
+    },
+    "experiments/20260826_sec/b21/verify.ys": {
+      "sha256": "1ca6d5c32096b219a73682fa8521b0afe3fdfd443f78e411e44868b64377a3af",
+      "bytes": 467,
+      "roles": [
+        "old independent SEC script with defective tri model"
+      ]
+    },
+    "code/scripts/run_outerloop_real_wns.py": {
+      "sha256": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+      "bytes": 30603,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/scripts/run_outerloop_batch.py": {
+      "sha256": "97d3ee540145d5359ba96dad9212181edfaaa98730e21bafaab5d4c2c28685b6",
+      "bytes": 9620,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/scripts/run_hybrid_repair.py": {
+      "sha256": "f271d60716f42452f0ab804031b53cc848316096da5cd2902b0c307a8bb2e947",
+      "bytes": 24781,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/scripts/run_sequential_timing_check.py": {
+      "sha256": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+      "bytes": 13696,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/scripts/run_r22_cut_ablation.py": {
+      "sha256": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+      "bytes": 17181,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/scripts/run_r22_d_revalidation.py": {
+      "sha256": "268f637da72249e69d1b75ec7be0a14a38e2f1df6754dcf80b509ebb00a16ee5",
+      "bytes": 19587,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/src/rseco/real_wns.py": {
+      "sha256": "76d6118ddecbabfd5936a8625e7d479374a20b733f51ac7549402219e5cfb73f",
+      "bytes": 149760,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/src/rseco/flow.py": {
+      "sha256": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "bytes": 66128,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/src/rseco/logic_rewrite.py": {
+      "sha256": "b26fbd770bff62b321bbc5e3dee056b4aa4b33a361a63bd2dd4586879f6ecc92",
+      "bytes": 12084,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "code/src/rseco/strategy_priority_table.json": {
+      "sha256": "c6e0dfe8720f4ef8ec12d3c9b149221d62e481adf63392b9df63b914dedb99ef",
+      "bytes": 4219,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "project_docs/LOGS.md": {
+      "sha256": "f972c56bf812c031b0a00ea26e28c7cac29df1bf94fe0a014e1a8b9bc2a4eb19",
+      "bytes": 455721,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md": {
+      "sha256": "53fbb89c31c8aa90824e8c9fb9bf415e06d1900009ed8ef883a28ed98ffcf232",
+      "bytes": 67644,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    },
+    "project_docs/reports/FAECO_LEGACY_REGRESSION_20260923.md": {
+      "sha256": "43453d4a28b64258b3443129984c2567371482929206ef176e36ab2d7a96f4b3",
+      "bytes": 14445,
+      "roles": [
+        "read-only semantic/provenance dependency"
+      ]
+    }
+  },
+  "nearby_historical_blobs": [
+    {
+      "revision": "c58ad8e",
+      "git_path": "scripts/run_outerloop_real_wns.py",
+      "blob_oid": "f1f9f7c11fb0c22e27489a81702e5abd8f03ad75",
+      "sha256": "1ca9cd9b2791f5a4e5f13932653ab184968c9a8cffe3d7836484f8453efc0f10",
+      "bytes": 17168,
+      "runtime_binding": "unknown; nearby history snapshot only",
+      "early_stop_lines": [
+        "    p.add_argument(\"--early-stop\", action=\"store_true\",",
+        "        early_stop=args.early_stop,"
+      ]
+    },
+    {
+      "revision": "c58ad8e",
+      "git_path": "scripts/run_outerloop_batch.py",
+      "blob_oid": "68c67399e7e61bac34d51e38b8b6d8177fc3db4c",
+      "sha256": "af996b7ab52bda641dff4892b54c5f1723ee0f25ede16b61f8a6a13aa2c5f7b1",
+      "bytes": 9354,
+      "runtime_binding": "unknown; nearby history snapshot only"
+    },
+    {
+      "revision": "c58ad8e",
+      "git_path": "src/rseco/real_wns.py",
+      "blob_oid": "b1093cee671abbf2a9202073deca4847ac9b1441",
+      "sha256": "8440761eb20e86ec30d5d1aecdd3340a4b8d9e9c6680dbaf82c1ae530dd3d916",
+      "bytes": 117987,
+      "runtime_binding": "unknown; nearby history snapshot only"
+    },
+    {
+      "revision": "c58ad8e",
+      "git_path": "src/rseco/strategy_priority_table.json",
+      "blob_oid": "a4d0f286a54ab2082466da35eca356c3150bec81",
+      "sha256": "4e718ed3d64add190778dc7fb90e144339cb11aaa8d96288f6bb0a6ffa9df70a",
+      "bytes": 3934,
+      "runtime_binding": "unknown; nearby history snapshot only"
+    },
+    {
+      "revision": "b7abaac",
+      "git_path": "scripts/run_outerloop_real_wns.py",
+      "blob_oid": "f1f9f7c11fb0c22e27489a81702e5abd8f03ad75",
+      "sha256": "1ca9cd9b2791f5a4e5f13932653ab184968c9a8cffe3d7836484f8453efc0f10",
+      "bytes": 17168,
+      "runtime_binding": "unknown; nearby history snapshot only",
+      "early_stop_lines": [
+        "    p.add_argument(\"--early-stop\", action=\"store_true\",",
+        "        early_stop=args.early_stop,"
+      ]
+    },
+    {
+      "revision": "b7abaac",
+      "git_path": "scripts/run_outerloop_batch.py",
+      "blob_oid": "68c67399e7e61bac34d51e38b8b6d8177fc3db4c",
+      "sha256": "af996b7ab52bda641dff4892b54c5f1723ee0f25ede16b61f8a6a13aa2c5f7b1",
+      "bytes": 9354,
+      "runtime_binding": "unknown; nearby history snapshot only"
+    },
+    {
+      "revision": "b7abaac",
+      "git_path": "src/rseco/real_wns.py",
+      "blob_oid": "b1093cee671abbf2a9202073deca4847ac9b1441",
+      "sha256": "8440761eb20e86ec30d5d1aecdd3340a4b8d9e9c6680dbaf82c1ae530dd3d916",
+      "bytes": 117987,
+      "runtime_binding": "unknown; nearby history snapshot only"
+    },
+    {
+      "revision": "b7abaac",
+      "git_path": "src/rseco/strategy_priority_table.json",
+      "blob_oid": "a4d0f286a54ab2082466da35eca356c3150bec81",
+      "sha256": "4e718ed3d64add190778dc7fb90e144339cb11aaa8d96288f6bb0a6ffa9df70a",
+      "bytes": 3934,
+      "runtime_binding": "unknown; nearby history snapshot only"
+    }
+  ],
+  "source_stability": {
+    "production_changed_during_read": {},
+    "production_after_sha256": {
+      "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+      "code/scripts/run_outerloop_batch.py": "97d3ee540145d5359ba96dad9212181edfaaa98730e21bafaab5d4c2c28685b6",
+      "code/scripts/run_hybrid_repair.py": "f271d60716f42452f0ab804031b53cc848316096da5cd2902b0c307a8bb2e947",
+      "code/scripts/run_sequential_timing_check.py": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+      "code/scripts/run_r22_cut_ablation.py": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+      "code/scripts/run_r22_d_revalidation.py": "268f637da72249e69d1b75ec7be0a14a38e2f1df6754dcf80b509ebb00a16ee5",
+      "code/src/rseco/real_wns.py": "76d6118ddecbabfd5936a8625e7d479374a20b733f51ac7549402219e5cfb73f",
+      "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "code/src/rseco/logic_rewrite.py": "b26fbd770bff62b321bbc5e3dee056b4aa4b33a361a63bd2dd4586879f6ecc92",
+      "code/src/rseco/strategy_priority_table.json": "c6e0dfe8720f4ef8ec12d3c9b149221d62e481adf63392b9df63b914dedb99ef"
+    },
+    "production_source_stable": true,
+    "head_at_finish": "ddb4c3319d973aa522aeb652473ee97e960889f2"
+  },
+  "method_identification": {
+    "family": "B: 20260826 unified stateful weighted-cut real-WNS outer loop",
+    "historical_entrypoint_supported_by_artifacts": "scripts/run_outerloop_real_wns.py via scripts/run_outerloop_batch.py; runtime argv/revision not captured",
+    "current_reusable_entrypoint": "code/scripts/run_outerloop_real_wns.py",
+    "current_batch_reusable_scheduler": "code/scripts/run_outerloop_batch.py",
+    "run_hybrid_repair_preserves_B_method": false,
+    "reason": "Hybrid evaluates all candidates for each instance then commits the best, potentially multiple per pass. B uses cut candidates per outer iteration with shared SearchState, acceptance budget and feedback. Hybrid is the separate historical C family."
+  },
+  "configuration_classes": {
+    "direct_artifact_evidence": {
+      "period_ns": 0.5,
+      "clock_port": "CK",
+      "strategies": [
+        "R",
+        "G",
+        "B"
+      ],
+      "workers_per_circuit": 1,
+      "batch_parallel": 2,
+      "max_iterations": 8,
+      "max_patches": 8,
+      "epsilon": 0.0,
+      "joint_enumerate_depth": 3,
+      "hold_mode": false,
+      "proxy_ranking": false,
+      "initial_three_weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sta_budget": null,
+      "formal_budget": null,
+      "wall_timeout_s": null
+    },
+    "documented_not_runtime_argv": {
+      "source": "project_docs/LOGS.md LOG-20260826-01; legacy-regression report",
+      "candidates_per_iteration": 1,
+      "enable_buffer": true,
+      "tns_aware": true,
+      "early_stop": true,
+      "feedback": "legacy cross-iteration failure refinement; not D EMA/adaptive UCB"
+    },
+    "observed_not_parameter_proof": {
+      "B_enabled": "B trial rows exist in all three ledgers",
+      "F5_threshold": "60.0 explicitly recorded in b20/b21 F5 events; none recorded in b09",
+      "required_metrics": "setup_tns nonregression explicitly in acceptance evidence; full original required-metrics argv unknown",
+      "topology": "no TOPOLOGY trial in these observed ledgers does not prove disabled"
+    },
+    "unknown": [
+      "complete original argv and executable identity",
+      "exact running source revision, dirty files and per-file runtime hashes",
+      "runtime priority-table path/content/hash and adaptive UCB flag",
+      "max-instances and joint-k values",
+      "historical runtime topology enable/disable (nearby code defaults enabled)",
+      "full original metric/patch-size/formal-cost settings, except observed events and budgets",
+      "original runtime RTL/Liberty/model byte hashes",
+      "runtime OpenSTA version/binary hash; old map/sta logs absent",
+      "b09 F5 threshold because no such event; do not infer from other cases"
+    ]
+  },
+  "minimal_pending_tooling": [
+    {
+      "item": "B3 transaction/manifest adapter around existing outer loop",
+      "status": "not implemented",
+      "scope": "Three explicit jobs; no new search algorithm or scheduler. Bind same B raw mapped input bytes, full helpers, new clean source pin, Liberty/models, explicit reconstructed args. Refuse overwrite and missing stage. Reuse common source_manifest/final_sec/evidence_receipt/validate_completion, with B-specific config assertions."
+    },
+    {
+      "item": "Mapped input passthrough on existing batch if preserving parallel=2",
+      "status": "not implemented",
+      "scope": "Current batch lacks --skip-mapping passthrough. Add that and required explicit correctness/config flags, or launch predeclared direct outer-loop commands under an existing transaction runner; never route through C greedy or C-prime weighted_st arms."
+    },
+    {
+      "item": "Explicit configuration reconstruction registration",
+      "status": "unresolved",
+      "scope": "Retain direct evidence values; use documented beam1/RGB+B/TNS/inner-first-improve/legacy feedback as reconstruction. Explicitly settle missing priority table/adaptive/max-instances/joint-k/topology and formal thresholds rather than smuggling current defaults. Exact historical command stays null."
+    },
+    {
+      "item": "Final accepted-state proof and ledger receipt",
+      "status": "common components exist; B wiring pending",
+      "scope": "Gold=complete retained mapped.v, gate=state.current_netlist_text. Preserve dff wrapper. Required inputs + tri/Z unsupported gate on both raw sides, actual complete models, X isolation certificate if needed, nonempty full SEC with asserted success/no unproven points; bind accepted state, last candidate and proof hashes. Count records, cache/duplicates, actual launches, baseline/refresh and commits separately."
+    }
+  ],
+  "acceptance_counterexamples": [
+    "Feed each historical bad final into required-input gate: must reject the exact missing TE_B before STA/SEC; recorded read-only checks already do.",
+    "Ordinary clkinv/inv to einvn with same data function must never be generated or accepted as R. A connected genuine tri remains supported locally but independent two-state SEC returns unsupported nonpass.",
+    "Mutate a frozen mapped byte or Liberty/source hash after registration: abort before process launch; missing mapped.v with --skip-mapping must not silently remap.",
+    "Use mapped_hybrid.v/cand_hybrid or weighted_st/C-prime command in a B3 manifest: reject wrong family before execution.",
+    "Distinguish one outer-iteration commit from per-instance greedy multiple commits with a stub two-instance candidate fixture; do not replace B with C.",
+    "Explicit --early-stop/--tns-aware/beam1/legacy-feedback reconstruction must be captured; compare equal-WNS improving/worsening TNS and first-improvement versus later-best fixtures.",
+    "Same instance name in top and dff helper is legal; duplicate within a module or mutation of wrapper state semantics fails. Final proof must use complete raw source.",
+    "Check unchanged baseline and legal R/G/B positive control, plus changed continuous assign, swapped output, duplicate instance, missed required input and altered helper FF negatives; none may pass merely on exit zero.",
+    "Accepted state hash must equal last accepted candidate normalized text, proof gate hash must bind exact raw state bytes, and complete final SEC must have actual nonzero points and zero unproven.",
+    "Repeated cached/duplicate record must not count as a new STA launch; new ledgers must emit launch events. Preserve old 117/144/43 only as ledger record counts.",
+    "Source, input, library and model hashes must stay stable throughout each run; no partial 3-run summary may be called a revalidated B30 matrix or replace C/D evidence."
+  ],
+  "historical_unknowns_policy": "This is a B3 same-family reconstruction design, not an exact historical replay or authorization to run. Unknown fields stay null until evidence or explicit preregistered reconstruction decisions exist.",
+  "read_only_validation": {
+    "command": "bash code/scripts/run_with_timeout.sh 120 .venv/Scripts/python.exe scratch/r22_tristate_20261016/b3_recover.py",
+    "log": "scratch/r22_tristate_20261016/b3_recover_final.log",
+    "exit_code": 0,
+    "wrapper_elapsed_s": 5,
+    "operations": "file reads, git show/rev-parse, Liberty parse, pure input checks only; no EDA"
+  }
+}

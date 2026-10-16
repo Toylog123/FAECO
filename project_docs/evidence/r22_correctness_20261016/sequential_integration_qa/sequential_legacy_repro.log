@@ -1,0 +1,58 @@
+[run] 启动（超时 90s）：.venv/Scripts/python.exe scratch/r22_tristate_20261016/reproduce_multiline_legacy_seq.py
+[
+  {
+    "source_format": "multiline",
+    "checker": "historical_RW",
+    "parser": "historical_gs",
+    "gold_parsed_count": 1,
+    "gate_parsed_count": 1,
+    "status": "pass",
+    "reason": "Liberty functions preserved"
+  },
+  {
+    "source_format": "multiline",
+    "checker": "historical_RW",
+    "parser": "current_gs",
+    "gold_parsed_count": 1,
+    "gate_parsed_count": 1,
+    "status": "pass",
+    "reason": "Liberty functions preserved"
+  },
+  {
+    "source_format": "multiline",
+    "checker": "current_RW",
+    "parser": "current_gs",
+    "gold_parsed_count": 1,
+    "gate_parsed_count": 1,
+    "status": "fail",
+    "reason": "sequential state/control/output semantics or pin roles changed at g"
+  },
+  {
+    "source_format": "singleline",
+    "checker": "historical_RW",
+    "parser": "historical_gs",
+    "gold_parsed_count": 0,
+    "gate_parsed_count": 0,
+    "status": "pass",
+    "reason": "Liberty functions preserved"
+  },
+  {
+    "source_format": "singleline",
+    "checker": "historical_RW",
+    "parser": "current_gs",
+    "gold_parsed_count": 1,
+    "gate_parsed_count": 1,
+    "status": "pass",
+    "reason": "Liberty functions preserved"
+  },
+  {
+    "source_format": "singleline",
+    "checker": "current_RW",
+    "parser": "current_gs",
+    "gold_parsed_count": 1,
+    "gate_parsed_count": 1,
+    "status": "fail",
+    "reason": "sequential state/control/output semantics or pin roles changed at g"
+  }
+]
+[run] 完成（10s），退出码 0

@@ -1,0 +1,15 @@
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/cells.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/helpers.v"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/gold.v"
+rename b17 gold
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/gate.v"
+rename b17 gate
+proc
+memory
+equiv_make gold gate equiv
+hierarchy -top equiv
+flatten
+opt_clean
+equiv_simple
+equiv_induct -seq 10
+equiv_status -assert
