@@ -1,0 +1,50 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -q -k availability or constant_alias or distinct_constant
+FF.                                                                      [100%]
+================================== FAILURES ===================================
+___ test_multioutput_rewrite_availability_excludes_last_output_only_matches ___
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1146/test_multioutput_rewrite_avail0')
+
+    def test_multioutput_rewrite_availability_excludes_last_output_only_matches(tmp_path):
+        lib = "\n".join(
+            f'cell ("sky130_fd_sc_hd__{family}_1") {{ '
+            'pin ("A") { direction : "input"; } '
+            'pin ("B") { direction : "input"; } '
+            f'pin ("COUT") {{ direction : "output"; function : "{carry}"; }} '
+            'pin ("SUM") { direction : "output"; function : "A ^ B"; } }'
+            for family, carry in (("adder", "A & B"), ("other", "A | B")))
+        text = """module top(A, B, Y, Z);
+    input A, B;
+    output Y, Z;
+    sky130_fd_sc_hd__adder_1 add (.A(A), .B(B), .COUT(Y), .SUM(Z));
+    endmodule
+    """
+>       assert rw.build_r_available(lib, ["add"], text) == set()
+E       AssertionError: assert {'add'} == set()
+E         
+E         Extra items in the left set:
+E         'add'
+E         Use -v to get more diff
+
+code\tests\test_r22_validation_models.py:101: AssertionError
+_______ test_f2_constant_alias_does_not_hide_duplicate_physical_driver ________
+
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+
+    def test_f2_constant_alias_does_not_hide_duplicate_physical_driver(sky_lib):
+        text = _conb_top()
+        bad = text.replace("endmodule", "sky130_fd_sc_hd__buf_1 extra (.A(A), .X(H));\nendmodule")
+        result = rw.build_boundary_closure_checker(liberty_text=sky_lib)(text, bad)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:187: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_multioutput_rewrite_availability_excludes_last_output_only_matches
+FAILED code/tests/test_r22_validation_models.py::test_f2_constant_alias_does_not_hide_duplicate_physical_driver
+2 failed, 1 passed, 23 deselected in 1.82s
+[run] 完成（6s），退出码 1

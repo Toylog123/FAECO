@@ -1,12 +1,12 @@
-# NEXT AGENT PROMPT — 用户要求暂停
+# NEXT AGENT PROMPT — r22已恢复（2026-10-16）
 
-> **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**
+你接手FAECO唯一仓库 `D:/BaiduSyncdisk/01_Papers/03_FAECO`。用户已明确“继续”，10-14暂停仅作历史。先按本目录README读取全部入口，当前详细断点以 `handoff_20261016_r22.md` 与CURRENT_RUN_HANDOFF最上节为准。恢复起点main clean/HEAD781c031已push；不把旧667回归视为当前修复版通过。
 
-暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `CURRENT_RUN_HANDOFF.md`（状态目录内则 ../CURRENT_RUN_HANDOFF.md）。
+继续P01 K1–K6反例/TDD修复、当前稳定源码整套回归和独立复审；之后新source pin/v2目录，s27/s382×九臂18pilot全部通过才扩72。A六实际接受候选补确切独立证明，D同臂同输入整族恢复，C全实例核查/受影响矩阵；不能用C′覆盖历史C/D。科学证据闭合后回填两版稿图和材料。已有限定parser35/models69与最新scope68+1通过（LOG-04/05、日志已实读）；首整套回归已完成：741pass/1fail/4skip/156subtests，108.20s、wrapper112/exit1，被测SHA稳定。合法B扩展wire声明被新_non_rgb_structure整条比较误拒，models仅修函数并保留既有net宽度/signedness/次数与声明重组支持；不改旧fixture，相关145pass/22.28s。新版完整回归full_regression_v2已757pass/4skip/156subtests、102.50s/wrapper107/exit0，162源码before/after SHA稳定；保留首失败三证据。独立冻结probe已有7源码稳定，但不能代替修后整套。A工具9pass与六对象52输入/44源码干跑完成但未实际证明，s713主pair原A→fixed覆盖tie变化。本轮首整套已失败，当前完整回归已过，科学证据尚未闭合且无有效C′结果。正式SEC正负控制须整套过+commit/模型源码pin后才执行；D56/C边界与B旧模型完整性当前只读恢复，不推断新writer影响旧B。新OI-038两Pico旧proof的edfxtp_1模型缺少IQ driver/always，主线已实查、模型报告待补；B28对象绑定仍真，26其它与2语义缺口分开。新模型/pin补这2实际final SEC，与A6独立，不判电路不等价。记录员当前停写供阶段commit，后续按真实Git/SEC消息更新。
 
-下一代理只恢复上下文、汇报已保存状态；在用户明确恢复前不得启动修复、测试或EDA。若用户恢复，再执行交接表P01→相应P02/P03→P04，依赖必须满足；不能被下方旧“继续推进”提示自动授权。
+复用NAMESPACE_FIX_REVIEW最小反例与historical_correctness REPORT；保留B已证明对象，未知不等失败、结构invalid不等本轮已证不等价。禁止覆盖v1；真实评估/STA启动/提交分别计数，输入/库变化停止。测试时冻结源码/fixture，长任务设超时并监测。专职记录不改源码/稿图/Git；其它既有未决持续保留并告知用户。
 
-## 下方仅历史提示
+## 历史提示（旧暂缓/暂停不作为当前授权）
 
 # NEXT AGENT PROMPT
 

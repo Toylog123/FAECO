@@ -1,0 +1,36 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -q -k multioutput_function_gate
+F.                                                                       [100%]
+================================== FAILURES ===================================
+__________ test_multioutput_function_gate_checks_every_output[A | B] __________
+
+second_carry = 'A | B'
+
+    @pytest.mark.parametrize("second_carry", ["A | B", "A & B"])
+    def test_multioutput_function_gate_checks_every_output(second_carry):
+        lib = "\n".join(
+            f'cell ("sky130_fd_sc_hd__adder_{size}") {{ '
+            'pin ("A") { direction : "input"; } '
+            'pin ("B") { direction : "input"; } '
+            f'pin ("COUT") {{ direction : "output"; function : "{carry}"; }} '
+            'pin ("SUM") { direction : "output"; function : "A ^ B"; } }'
+            for size, carry in ((1, "A & B"), (2, second_carry)))
+        text = """module top(A, B, Y, Z);
+    input A, B;
+    output Y, Z;
+    sky130_fd_sc_hd__adder_1 add (.A(A), .B(B), .COUT(Y), .SUM(Z));
+    endmodule
+    """
+        after = text.replace("adder_1", "adder_2")
+        result = rw.build_real_equivalence_checker(lib)(text, after)
+>       assert result.status == ("pass" if second_carry == "A & B" else "fail"), result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:84: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_multioutput_function_gate_checks_every_output[A | B]
+1 failed, 1 passed, 21 deselected in 0.39s
+[run] 完成（5s），退出码 1

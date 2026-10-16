@@ -4,7 +4,7 @@
 
 当前r21论文审稿与配图入口为 `../paper/zh/review_rounds/r21_20261014/editorial_decision.md`；计数与图件交叉表见 `evidence/R21_FIGURE_EVIDENCE.md`。当前稿为12页、7图14表的工作修订，历史v18基线保留。
 
-当前r22已按用户要求暂停（2026-10-14），等待明确恢复；`planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md` 定义C′受控矩阵，v1 pilot失败后已停止，v2未开始。`evidence/r22_historical_audit_20261014/` 保存历史计数恢复，`evidence/r22_historical_correctness_20261014/` 保存A/B/C/D终点与证明绑定审计。中英文稿均待科学证据补验；实际暂停断点以 `agent_handoff/handoff_20261014_r22.md` 为准。
+当前r22已按用户2026-10-16明确“继续”恢复：先修K1–K6、当前版本整套回归与独立复审，再新source pin/v2，两电路九臂18pilot全部通过后才扩72。`planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md`定义受控矩阵，旧失败v1保留。历史计数与correctness审计分别见 `evidence/r22_historical_audit_20261014/`、`evidence/r22_historical_correctness_20261014/`；中英文稿待A/D/C科学证据恢复后回填。当前断点以 `agent_handoff/handoff_20261016_r22.md` 为准，10-14暂停仅作历史。
 
 | 子目录 / 文件 | 角色 |
 |---------------|------|

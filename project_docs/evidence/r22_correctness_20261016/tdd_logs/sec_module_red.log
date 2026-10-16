@@ -1,0 +1,22 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py -q
+....F                                                                    [100%]
+================================== FAILURES ===================================
+____________ test_independent_sec_ignores_fake_modules_in_comments ____________
+
+    def test_independent_sec_ignores_fake_modules_in_comments():
+        from test_r22_batch import module
+        batch=module()
+        top='module top(A,Y);\ninput A;\noutput Y;\nbuf g(Y,A);\nendmodule\n'
+        text='// module fake; endmodule\n'+top
+        gold,gate,helpers=batch.sec_designs(text,text,'top')
+        assert gold == gate
+>       assert helpers == ''
+E       AssertionError: assert 'module fake; endmodule' == ''
+E         
+E         + module fake; endmodule
+
+code\tests\test_r22_scope_integration.py:105: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_scope_integration.py::test_independent_sec_ignores_fake_modules_in_comments
+1 failed, 4 passed in 2.71s
+[run] 完成（6s），退出码 1

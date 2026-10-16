@@ -1,0 +1,904 @@
+{
+  "schema": "r22-historical-a-sec-recovery-v1",
+  "created_at_utc": "2026-10-16T05:00:40.335645+00:00",
+  "eda_executed": false,
+  "source_pin": {
+    "head": "781c031f9ad627601350525d4aa6645222ee4c66",
+    "source_tree_clean": false,
+    "files": {
+      "code/src/rseco/__init__.py": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd",
+      "code/src/rseco/abc_baseline.py": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+      "code/src/rseco/adaptive_selector.py": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+      "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+      "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+      "code/src/rseco/case_loader.py": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+      "code/src/rseco/cut.py": "7b082b5b754873808c2d1a1073fd9601f7aee9f5eb9b3608ea678a0c58aa703e",
+      "code/src/rseco/electrical.py": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+      "code/src/rseco/equivalence.py": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+      "code/src/rseco/failures.py": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+      "code/src/rseco/feedback.py": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+      "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "code/src/rseco/gate_sizing.py": "b2af6fc81c07105565654a5f67c9b522a829887a9143547f8266d97fb060e643",
+      "code/src/rseco/graph.py": "805977ec86767c47578b385edba32438a729325c5cc08f21c97fe8efc51f3789",
+      "code/src/rseco/hold_repair.py": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+      "code/src/rseco/logic_rewrite.py": "31155ba98caad58907c092b47f6ac49d7c91307d4b5d9d0198611cac37073416",
+      "code/src/rseco/metrics.py": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+      "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+      "code/src/rseco/netlist_audit.py": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+      "code/src/rseco/netlist_io.py": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+      "code/src/rseco/opensta.py": "95825d962349c11a16be6f69e1b11fcf1184dcf48474e466337be7db3f13d41c",
+      "code/src/rseco/patch.py": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+      "code/src/rseco/proxy_ranking.py": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+      "code/src/rseco/ranking.py": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+      "code/src/rseco/real_wns.py": "7fe0e794252d21016314bbc6274f85267c6395474fd198811e0a6cf34bca2a92",
+      "code/src/rseco/refinement.py": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+      "code/src/rseco/refinement_loop.py": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+      "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+      "code/src/rseco/sdc.py": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+      "code/src/rseco/search_state.py": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+      "code/src/rseco/spef.py": "5992fea68f71009fbc9fbf9e498d4ca4dc3e1d7225ae6fb2ec109a1240d95db5",
+      "code/src/rseco/sta_ledger.py": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+      "code/src/rseco/strategy_selector.py": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+      "code/src/rseco/structure_resynthesis.py": "e3dd0a4792bc805479bb7398875bec4b3b1211158305dbd9a18046214ed5e82f",
+      "code/src/rseco/technology_mapping.py": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+      "code/src/rseco/toolchain.py": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+      "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+      "code/src/rseco/yosys_abc.py": "26bb65d7c002a7fb32f50c16a4a70f33cfe6d753c4712e1d250c559317cdc2a5",
+      "code/src/rseco/yosys_json.py": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+      "code/src/rseco/z3_formal.py": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+      "code/scripts/run_r22_cut_ablation.py": "83cf797171f36edb31ce0a21893cabe848c9db1bb5049896378e4717a140f0bd",
+      "code/scripts/run_sequential_timing_check.py": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+      "code/scripts/run_with_timeout.sh": "6f22e8a0291afbe26b0f00fbc1ee410b4de8ae999995395b2e034aef2f1338f6",
+      "code/scripts/python/prove_historical_a_r22.py": "c58701751cdebbd91191affe8a9e1fb6dd9f9109ecf2351b86ae8ebd4187427c"
+    }
+  },
+  "liberty": {
+    "path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "bytes": 12800135
+  },
+  "files": {
+    "project_docs/evidence/r22_historical_correctness_20261014/correctness_audit.json": {
+      "path": "project_docs/evidence/r22_historical_correctness_20261014/correctness_audit.json",
+      "sha256": "be190d318d73894366fb716ac54f51cde07beb8533dbc94b87bfd536e387012f",
+      "bytes": 252497,
+      "roles": [
+        "prior classification and exact text hashes"
+      ]
+    },
+    "project_docs/evidence/r22_historical_correctness_20261014/audit.py": {
+      "path": "project_docs/evidence/r22_historical_correctness_20261014/audit.py",
+      "sha256": "8829e97be049dfe3326455e50c9436b1bfe3ad14862969dcbcbd2821e29303b7",
+      "bytes": 18231,
+      "roles": [
+        "archived binding audit implementation; not executed"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/pre_layout_audit_summary.json": {
+      "path": "experiments/20260807_real_pr_iscas8/pre_layout_audit_summary.json",
+      "sha256": "0adca9bd6792bb6271ce23781ef56bbe97a50cad549c45bf028768f911700fa1",
+      "bytes": 5625,
+      "roles": [
+        "explicit A-prime baseline/fixed artifact crosswalk"
+      ]
+    },
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": {
+      "path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135,
+      "roles": [
+        "actual Liberty for regenerated SEC models"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s382/s382/outerloop_result.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/outerloop_result.json",
+      "sha256": "bf5d89a0b2121dc2a7520186ffe996e843409240d2d2aa7a62ebb27fcdd4ceb4",
+      "bytes": 2067,
+      "roles": [
+        "original A result (no final runtime hash inferred)"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s382/s382/eval_trials.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/eval_trials.json",
+      "sha256": "531935ca4c2ddf5eb0fb81f73b8ea83dfe7ef9fc75461b217e929571a7d26efc",
+      "bytes": 2148,
+      "roles": [
+        "original A accepted action ledger"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s382/baseline/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s382/baseline/mapped.v",
+      "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+      "bytes": 11037,
+      "roles": [
+        "A-prime counterpart baseline; distinct from original when normalized",
+        "crosswalk witness"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s382/fixed/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s382/fixed/mapped.v",
+      "sha256": "cdbb670f39933e94d5023e0a29cfab3d1bf1dac5cedf2e50ec704ec01dc8925f",
+      "bytes": 11037,
+      "roles": [
+        "accepted counterpart (new SEC gate)",
+        "new proof gate"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s382/s382/mapped.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/mapped.v",
+      "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+      "bytes": 11037,
+      "roles": [
+        "actual original A mapped baseline (new SEC gold)",
+        "old SEC gate_file; not new proof evidence",
+        "new proof gold"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s382/verify.ys": {
+      "path": "experiments/20260814_iscas89_sec/s382/verify.ys",
+      "sha256": "a25adf6411e3e59b772d1db79ea0b2f30b719dd7e2181c7aaf1663465337297c",
+      "bytes": 580,
+      "roles": [
+        "old SEC script; not new proof evidence"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s382/verify.log": {
+      "path": "experiments/20260814_iscas89_sec/s382/verify.log",
+      "sha256": "ddad5e91d96a359e44d39b0323dc27c74eddadb84957ecb0b5f64d0925681fda",
+      "bytes": 169687,
+      "roles": [
+        "old SEC log; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s382/s382/case/original/original.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/case/original/original.v",
+      "sha256": "ed2af4ef8dd663e7fde86d3edba789c4622e72052d7a0f12e338b98b7d2a518a",
+      "bytes": 10851,
+      "roles": [
+        "old SEC gold_file; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s420/s420/outerloop_result.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/outerloop_result.json",
+      "sha256": "70e198e72ddb84ae82386a894d04bfd228df663c4c0c70715b3b81354a5b10d5",
+      "bytes": 1616,
+      "roles": [
+        "original A result (no final runtime hash inferred)"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s420/s420/eval_trials.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/eval_trials.json",
+      "sha256": "fdf9f819ff0fd13f2547dabac9221007f4f859e576bb302e76ba5b870946f98d",
+      "bytes": 48147,
+      "roles": [
+        "original A accepted action ledger"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s420/baseline/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s420/baseline/mapped.v",
+      "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+      "bytes": 9368,
+      "roles": [
+        "A-prime counterpart baseline; distinct from original when normalized",
+        "crosswalk witness"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s420/fixed/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s420/fixed/mapped.v",
+      "sha256": "c6471a72e9ddd5b7995c5519bdeca2fa6473418ce3789d60267a77e4033bc219",
+      "bytes": 9368,
+      "roles": [
+        "accepted counterpart (new SEC gate)",
+        "new proof gate"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s420/s420/mapped.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/mapped.v",
+      "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+      "bytes": 9368,
+      "roles": [
+        "actual original A mapped baseline (new SEC gold)",
+        "old SEC gate_file; not new proof evidence",
+        "new proof gold"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s420/verify.ys": {
+      "path": "experiments/20260814_iscas89_sec/s420/verify.ys",
+      "sha256": "d1745e5b7363124c56a5b603d958f202da17b4c56f7a2eadc887dfa2299a33e6",
+      "bytes": 580,
+      "roles": [
+        "old SEC script; not new proof evidence"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s420/verify.log": {
+      "path": "experiments/20260814_iscas89_sec/s420/verify.log",
+      "sha256": "ebc4fcd2ac83bd9e080320577cf34791628fa742a6e2c0da52029917d47cf509",
+      "bytes": 151359,
+      "roles": [
+        "old SEC log; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s420/s420/case/original/original.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/case/original/original.v",
+      "sha256": "21e47fc3c114a0308a8d8d74d03ec89533831b13ea3ede573f43b7ec5ab57a4d",
+      "bytes": 9182,
+      "roles": [
+        "old SEC gold_file; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s641/s641/outerloop_result.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/outerloop_result.json",
+      "sha256": "38fb00a7f413c5e127137e49b7fbd0c67353bcc597f23fd5f41cd711cc2275dd",
+      "bytes": 1981,
+      "roles": [
+        "original A result (no final runtime hash inferred)"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s641/s641/eval_trials.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/eval_trials.json",
+      "sha256": "c604d876387b42079bd4882aafcc553a66c2a7d95e2489ce93f9ba30ce08951c",
+      "bytes": 1771,
+      "roles": [
+        "original A accepted action ledger"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s641/baseline/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s641/baseline/mapped.v",
+      "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+      "bytes": 16871,
+      "roles": [
+        "A-prime counterpart baseline; distinct from original when normalized",
+        "crosswalk witness"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s641/fixed/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s641/fixed/mapped.v",
+      "sha256": "b3a53ed8a2a6aec8764fadfd98cc89106b13fed599539816b53af7aed86958b1",
+      "bytes": 16871,
+      "roles": [
+        "accepted counterpart (new SEC gate)",
+        "new proof gate"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s641/s641/mapped.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/mapped.v",
+      "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+      "bytes": 16871,
+      "roles": [
+        "actual original A mapped baseline (new SEC gold)",
+        "old SEC gate_file; not new proof evidence",
+        "new proof gold"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s641/verify.ys": {
+      "path": "experiments/20260814_iscas89_sec/s641/verify.ys",
+      "sha256": "71d8c4baed801e22905f22e1d79392ace0b737846cc24627860e841f3c2fe472",
+      "bytes": 580,
+      "roles": [
+        "old SEC script; not new proof evidence"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s641/verify.log": {
+      "path": "experiments/20260814_iscas89_sec/s641/verify.log",
+      "sha256": "185864c143b8cbf73a25903932acfc96ab384cb54880de161122c5c1b80b378a",
+      "bytes": 178054,
+      "roles": [
+        "old SEC log; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s641/s641/case/original/original.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/case/original/original.v",
+      "sha256": "3f6d67ea961bddfa2f8d89ad68f44654a796cad008cdf8ac44d4271bb7eaec3b",
+      "bytes": 16685,
+      "roles": [
+        "old SEC gold_file; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s713/s713/outerloop_result.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/outerloop_result.json",
+      "sha256": "4047a37b6a1ce611f1dda1a623d11e297cfbe5d5a49608fc5760456049aeabaa",
+      "bytes": 2009,
+      "roles": [
+        "original A result (no final runtime hash inferred)"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s713/s713/eval_trials.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/eval_trials.json",
+      "sha256": "f6d0803d6d34387995c2b79e20c465b372a69595414ae0327245e543426c6503",
+      "bytes": 1771,
+      "roles": [
+        "original A accepted action ledger"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s713/baseline/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s713/baseline/mapped.v",
+      "sha256": "5b2313d0a5a2ddcb757bfe66f35d6843f7ea2f98a33e053f43c0e32d75f32308",
+      "bytes": 16561,
+      "roles": [
+        "A-prime counterpart baseline; distinct from original when normalized",
+        "crosswalk witness"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s713/fixed/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s713/fixed/mapped.v",
+      "sha256": "3c982ac08503110ad5d6c64ed76197da7d4c1fc6acc0cc032a8825d6db43a695",
+      "bytes": 16561,
+      "roles": [
+        "accepted counterpart (new SEC gate)",
+        "new proof gate"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s713/s713/mapped.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/mapped.v",
+      "sha256": "a17cf08d47e8d14861f69b96595e380690b471c3044002f22f9c4bb006afb6fd",
+      "bytes": 17271,
+      "roles": [
+        "actual original A mapped baseline (new SEC gold)",
+        "old SEC gate_file; not new proof evidence",
+        "new proof gold"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s713/verify.ys": {
+      "path": "experiments/20260814_iscas89_sec/s713/verify.ys",
+      "sha256": "014e2e11b5916ed36f2ffcd267361ceed5833a49a4c56fddf290a441f3ff5c4a",
+      "bytes": 580,
+      "roles": [
+        "old SEC script; not new proof evidence"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s713/verify.log": {
+      "path": "experiments/20260814_iscas89_sec/s713/verify.log",
+      "sha256": "c22b01e2b48b3dfbbfe26e3b570ed33053486a2efbe67ad0f32939214a4a08ad",
+      "bytes": 187057,
+      "roles": [
+        "old SEC log; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s713/s713/case/original/original.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/case/original/original.v",
+      "sha256": "ecc5979aa2c96ac1439aa55ec34857149e15642a4fb2ab013b57383e6a37408c",
+      "bytes": 17085,
+      "roles": [
+        "old SEC gold_file; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s832/s832/outerloop_result.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/outerloop_result.json",
+      "sha256": "db4de72a5c8c158e88c9884ebfbc0831f72a84619e9a904b6992418b30a6767c",
+      "bytes": 2638,
+      "roles": [
+        "original A result (no final runtime hash inferred)"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s832/s832/eval_trials.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/eval_trials.json",
+      "sha256": "d9d22bc07b2c1a7cff6c9435a29d8fbb204f9c8bb0b5910126357de2d7a11ecb",
+      "bytes": 50273,
+      "roles": [
+        "original A accepted action ledger"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s832/baseline/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s832/baseline/mapped.v",
+      "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+      "bytes": 17990,
+      "roles": [
+        "A-prime counterpart baseline; distinct from original when normalized",
+        "crosswalk witness"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s832/fixed/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s832/fixed/mapped.v",
+      "sha256": "11acbbf2bf61512dc800689e15336d804472c8a009917475da2fc948b7e98a99",
+      "bytes": 17990,
+      "roles": [
+        "accepted counterpart (new SEC gate)",
+        "new proof gate"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s832/s832/mapped.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/mapped.v",
+      "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+      "bytes": 17990,
+      "roles": [
+        "actual original A mapped baseline (new SEC gold)",
+        "old SEC gate_file; not new proof evidence",
+        "new proof gold"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s832/verify.ys": {
+      "path": "experiments/20260814_iscas89_sec/s832/verify.ys",
+      "sha256": "2f4becb33050aaa265d6503eecbecfdb8d87c49585fbcc03578b06514b0ae44e",
+      "bytes": 580,
+      "roles": [
+        "old SEC script; not new proof evidence"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s832/verify.log": {
+      "path": "experiments/20260814_iscas89_sec/s832/verify.log",
+      "sha256": "0f63a3fa012318f2d44a5068a206e73701253d242ca3be93457751b5be477895",
+      "bytes": 223273,
+      "roles": [
+        "old SEC log; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s832/s832/case/original/original.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/case/original/original.v",
+      "sha256": "e1e37ad469ffda207561667a483a2d33fb79a41c0e90e18046513169df4c0288",
+      "bytes": 17804,
+      "roles": [
+        "old SEC gold_file; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s953/s953/outerloop_result.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/outerloop_result.json",
+      "sha256": "e7b4f68480cdd14ceaa6831fd42b957beaf9d2cf0ac42a14f1c6bfa43b5af71d",
+      "bytes": 3354,
+      "roles": [
+        "original A result (no final runtime hash inferred)"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s953/s953/eval_trials.json": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/eval_trials.json",
+      "sha256": "b339fb3f47562e479cd5d848c3eb2df76cce36fc35a972bed55b67d552c243b4",
+      "bytes": 17346,
+      "roles": [
+        "original A accepted action ledger"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s953/baseline/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s953/baseline/mapped.v",
+      "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+      "bytes": 28804,
+      "roles": [
+        "A-prime counterpart baseline; distinct from original when normalized",
+        "crosswalk witness"
+      ]
+    },
+    "experiments/20260807_real_pr_iscas8/s953/fixed/mapped.v": {
+      "path": "experiments/20260807_real_pr_iscas8/s953/fixed/mapped.v",
+      "sha256": "84d5e6ec40ac37c27a67834f676026eb7e4ebb8d12a83707eceb212775e128c6",
+      "bytes": 28804,
+      "roles": [
+        "accepted counterpart (new SEC gate)",
+        "new proof gate"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s953/s953/mapped.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/mapped.v",
+      "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+      "bytes": 28804,
+      "roles": [
+        "actual original A mapped baseline (new SEC gold)",
+        "old SEC gate_file; not new proof evidence",
+        "new proof gold"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s953/verify.ys": {
+      "path": "experiments/20260814_iscas89_sec/s953/verify.ys",
+      "sha256": "6dbacf0f56682a41862b1f4fa78650105d8415c2367769b388a870cff88ed6c8",
+      "bytes": 580,
+      "roles": [
+        "old SEC script; not new proof evidence"
+      ]
+    },
+    "experiments/20260814_iscas89_sec/s953/verify.log": {
+      "path": "experiments/20260814_iscas89_sec/s953/verify.log",
+      "sha256": "8be1b089f073a0d78a4193f0fd902c04bcbadd469137486100d7567ebc91a56e",
+      "bytes": 281697,
+      "roles": [
+        "old SEC log; not new proof evidence"
+      ]
+    },
+    "experiments/20260805_tcad_sprint1_iscas89/s953/s953/case/original/original.v": {
+      "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/case/original/original.v",
+      "sha256": "5463f923432d576960dffe429ea583b1904fbe44b22b97e7b1048db7562e9147",
+      "bytes": 28618,
+      "roles": [
+        "old SEC gold_file; not new proof evidence"
+      ]
+    }
+  },
+  "json_trailers": {
+    "experiments/20260805_tcad_sprint1_iscas89/s382/s382/eval_trials.json": "\\n",
+    "experiments/20260805_tcad_sprint1_iscas89/s420/s420/eval_trials.json": "\\n",
+    "experiments/20260805_tcad_sprint1_iscas89/s641/s641/eval_trials.json": "\\n",
+    "experiments/20260805_tcad_sprint1_iscas89/s713/s713/eval_trials.json": "\\n",
+    "experiments/20260805_tcad_sprint1_iscas89/s832/s832/eval_trials.json": "\\n",
+    "experiments/20260805_tcad_sprint1_iscas89/s953/s953/eval_trials.json": "\\n"
+  },
+  "cases": [
+    {
+      "circuit": "s382",
+      "status": "pending_sec",
+      "gold": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/mapped.v",
+        "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "bytes": 11037
+      },
+      "gate": {
+        "path": "experiments/20260807_real_pr_iscas8/s382/fixed/mapped.v",
+        "sha256": "cdbb670f39933e94d5023e0a29cfab3d1bf1dac5cedf2e50ec704ec01dc8925f",
+        "bytes": 11037
+      },
+      "counterpart_baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s382/baseline/mapped.v",
+        "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "bytes": 11037
+      },
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "from_type": "joint",
+          "to_type": "_057_:sky130_fd_sc_hd__o31a_2,_059_:sky130_fd_sc_hd__o21ai_1",
+          "wns": -0.89,
+          "tns": -12.26,
+          "min_slack": 0.42,
+          "min_slack_status": "MET",
+          "slack": -0.89,
+          "slack_status": "VIOLATED",
+          "physical_failure": false,
+          "physical_wns": null,
+          "physical_gate_error": null,
+          "patch_id": "patch__026__critical_path_cover",
+          "iteration": 1,
+          "accepted": true
+        }
+      ],
+      "old_sec": {
+        "script": "experiments/20260814_iscas89_sec/s382/verify.ys",
+        "log": "experiments/20260814_iscas89_sec/s382/verify.log",
+        "present": true,
+        "bound": false,
+        "gold_file": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/case/original/original.v",
+        "gate_file": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/mapped.v",
+        "log_proved": true,
+        "log_unproven_counts": [
+          [
+            "90",
+            "0"
+          ]
+        ],
+        "gold_top_hash": "b56ddd40194d12fdced46886de5543b1e469e30f9b6f3b9f95e8460825531c4b",
+        "gate_top_hash": "32674c7c6addefef0e0807ded0a9eaf7c8d6a45d8f471ad2c1246c1e4bef6be8",
+        "gold_equals_initial_top": false,
+        "gold_equals_initial_top_ignoring_blank_lines": true,
+        "gate_equals_actual_final_top": false
+      },
+      "binding": {
+        "accepted_type_only_reconstruction_exact": true,
+        "original_equals_counterpart_baseline": true,
+        "baseline_difference_requires_main_proof": false,
+        "runtime_final_hash_recovered": false
+      }
+    },
+    {
+      "circuit": "s420",
+      "status": "pending_sec",
+      "gold": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/mapped.v",
+        "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+        "bytes": 9368
+      },
+      "gate": {
+        "path": "experiments/20260807_real_pr_iscas8/s420/fixed/mapped.v",
+        "sha256": "c6471a72e9ddd5b7995c5519bdeca2fa6473418ce3789d60267a77e4033bc219",
+        "bytes": 9368
+      },
+      "counterpart_baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s420/baseline/mapped.v",
+        "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+        "bytes": 9368
+      },
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "from_type": "joint",
+          "to_type": "_051_:sky130_fd_sc_hd__and4_2,_056_:sky130_fd_sc_hd__nand4_2",
+          "wns": -1.55,
+          "tns": -13.37,
+          "min_slack": 0.44,
+          "min_slack_status": "MET",
+          "slack": -1.55,
+          "slack_status": "VIOLATED",
+          "physical_failure": false,
+          "physical_wns": null,
+          "physical_gate_error": null,
+          "patch_id": "patch_I307_critical_path_cover",
+          "iteration": 1,
+          "accepted": true
+        }
+      ],
+      "old_sec": {
+        "script": "experiments/20260814_iscas89_sec/s420/verify.ys",
+        "log": "experiments/20260814_iscas89_sec/s420/verify.log",
+        "present": true,
+        "bound": false,
+        "gold_file": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/case/original/original.v",
+        "gate_file": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/mapped.v",
+        "log_proved": true,
+        "log_unproven_counts": [
+          [
+            "79",
+            "0"
+          ]
+        ],
+        "gold_top_hash": "e0dbfe711a12d21a76db90f195b0945cb22471a483e06f174f0d56a1ca818172",
+        "gate_top_hash": "e8aee0aa0106978d2e890f58293d3d579e90b4e4d59191d76132801208400872",
+        "gold_equals_initial_top": false,
+        "gold_equals_initial_top_ignoring_blank_lines": true,
+        "gate_equals_actual_final_top": false
+      },
+      "binding": {
+        "accepted_type_only_reconstruction_exact": true,
+        "original_equals_counterpart_baseline": true,
+        "baseline_difference_requires_main_proof": false,
+        "runtime_final_hash_recovered": false
+      }
+    },
+    {
+      "circuit": "s641",
+      "status": "pending_sec",
+      "gold": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/mapped.v",
+        "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+        "bytes": 16871
+      },
+      "gate": {
+        "path": "experiments/20260807_real_pr_iscas8/s641/fixed/mapped.v",
+        "sha256": "b3a53ed8a2a6aec8764fadfd98cc89106b13fed599539816b53af7aed86958b1",
+        "bytes": 16871
+      },
+      "counterpart_baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s641/baseline/mapped.v",
+        "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+        "bytes": 16871
+      },
+      "accepted_actions": [
+        {
+          "instance": "_101_",
+          "kind": "G",
+          "from_type": "sky130_fd_sc_hd__and2_0",
+          "to_type": "sky130_fd_sc_hd__and2_1",
+          "wns": -1.59,
+          "tns": -20.63,
+          "min_slack": 0.44,
+          "min_slack_status": "MET",
+          "slack": -1.59,
+          "slack_status": "VIOLATED",
+          "physical_failure": false,
+          "physical_wns": null,
+          "physical_gate_error": null,
+          "patch_id": "patch__022__critical_path_cover",
+          "iteration": 1,
+          "accepted": true
+        }
+      ],
+      "old_sec": {
+        "script": "experiments/20260814_iscas89_sec/s641/verify.ys",
+        "log": "experiments/20260814_iscas89_sec/s641/verify.log",
+        "present": true,
+        "bound": false,
+        "gold_file": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/case/original/original.v",
+        "gate_file": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/mapped.v",
+        "log_proved": true,
+        "log_unproven_counts": [
+          [
+            "124",
+            "0"
+          ]
+        ],
+        "gold_top_hash": "e69071f6047c1237556a49eb2733860611dcdd8442ce1ca8ae111f53ce27abca",
+        "gate_top_hash": "eb1b289909547bd230972f7ddbe34044c9de7b634c22ce73426a66a81f5475a8",
+        "gold_equals_initial_top": false,
+        "gold_equals_initial_top_ignoring_blank_lines": true,
+        "gate_equals_actual_final_top": false
+      },
+      "binding": {
+        "accepted_type_only_reconstruction_exact": true,
+        "original_equals_counterpart_baseline": true,
+        "baseline_difference_requires_main_proof": false,
+        "runtime_final_hash_recovered": false
+      }
+    },
+    {
+      "circuit": "s713",
+      "status": "pending_sec",
+      "gold": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/mapped.v",
+        "sha256": "a17cf08d47e8d14861f69b96595e380690b471c3044002f22f9c4bb006afb6fd",
+        "bytes": 17271
+      },
+      "gate": {
+        "path": "experiments/20260807_real_pr_iscas8/s713/fixed/mapped.v",
+        "sha256": "3c982ac08503110ad5d6c64ed76197da7d4c1fc6acc0cc032a8825d6db43a695",
+        "bytes": 16561
+      },
+      "counterpart_baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s713/baseline/mapped.v",
+        "sha256": "5b2313d0a5a2ddcb757bfe66f35d6843f7ea2f98a33e053f43c0e32d75f32308",
+        "bytes": 16561
+      },
+      "accepted_actions": [
+        {
+          "instance": "_085_",
+          "kind": "G",
+          "from_type": "sky130_fd_sc_hd__and2_0",
+          "to_type": "sky130_fd_sc_hd__and2_1",
+          "wns": -1.31,
+          "tns": -18.39,
+          "min_slack": 0.44,
+          "min_slack_status": "MET",
+          "slack": -1.31,
+          "slack_status": "VIOLATED",
+          "physical_failure": false,
+          "physical_wns": null,
+          "physical_gate_error": null,
+          "patch_id": "patch__008__critical_path_cover",
+          "iteration": 1,
+          "accepted": true
+        }
+      ],
+      "old_sec": {
+        "script": "experiments/20260814_iscas89_sec/s713/verify.ys",
+        "log": "experiments/20260814_iscas89_sec/s713/verify.log",
+        "present": true,
+        "bound": false,
+        "gold_file": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/case/original/original.v",
+        "gate_file": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/mapped.v",
+        "log_proved": true,
+        "log_unproven_counts": [
+          [
+            "126",
+            "0"
+          ]
+        ],
+        "gold_top_hash": "b5a789b920e5d170c82419df60c0896e50cfa1eb8f921a6cd8e9982bd05d1b27",
+        "gate_top_hash": "32adc8283f20fb54351f857639128809c3a8bb3c2dd2572dd252cd6cbaa2168d",
+        "gold_equals_initial_top": false,
+        "gold_equals_initial_top_ignoring_blank_lines": false,
+        "gate_equals_actual_final_top": false
+      },
+      "binding": {
+        "accepted_type_only_reconstruction_exact": true,
+        "original_equals_counterpart_baseline": false,
+        "baseline_difference_requires_main_proof": true,
+        "runtime_final_hash_recovered": false
+      }
+    },
+    {
+      "circuit": "s832",
+      "status": "pending_sec",
+      "gold": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/mapped.v",
+        "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+        "bytes": 17990
+      },
+      "gate": {
+        "path": "experiments/20260807_real_pr_iscas8/s832/fixed/mapped.v",
+        "sha256": "11acbbf2bf61512dc800689e15336d804472c8a009917475da2fc948b7e98a99",
+        "bytes": 17990
+      },
+      "counterpart_baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s832/baseline/mapped.v",
+        "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+        "bytes": 17990
+      },
+      "accepted_actions": [
+        {
+          "instance": "_140_",
+          "kind": "G",
+          "from_type": "sky130_fd_sc_hd__and2_0",
+          "to_type": "sky130_fd_sc_hd__and2_2",
+          "wns": -1.17,
+          "tns": -5.49,
+          "min_slack": 0.72,
+          "min_slack_status": "MET",
+          "slack": -1.17,
+          "slack_status": "VIOLATED",
+          "physical_failure": false,
+          "physical_wns": null,
+          "physical_gate_error": null,
+          "patch_id": "patch__092__critical_path_cover",
+          "iteration": 1,
+          "accepted": true
+        }
+      ],
+      "old_sec": {
+        "script": "experiments/20260814_iscas89_sec/s832/verify.ys",
+        "log": "experiments/20260814_iscas89_sec/s832/verify.log",
+        "present": true,
+        "bound": false,
+        "gold_file": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/case/original/original.v",
+        "gate_file": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/mapped.v",
+        "log_proved": true,
+        "log_unproven_counts": [
+          [
+            "145",
+            "0"
+          ]
+        ],
+        "gold_top_hash": "902d7867333218cc8c4b35cfdc293b4eabc78759e15fc03bbb699d75338ee777",
+        "gate_top_hash": "12670e1f1986b356860f713e336ae27c0db7ec43c8c19cf2d89d7684030155a9",
+        "gold_equals_initial_top": false,
+        "gold_equals_initial_top_ignoring_blank_lines": true,
+        "gate_equals_actual_final_top": false
+      },
+      "binding": {
+        "accepted_type_only_reconstruction_exact": true,
+        "original_equals_counterpart_baseline": true,
+        "baseline_difference_requires_main_proof": false,
+        "runtime_final_hash_recovered": false
+      }
+    },
+    {
+      "circuit": "s953",
+      "status": "pending_sec",
+      "gold": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/mapped.v",
+        "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+        "bytes": 28804
+      },
+      "gate": {
+        "path": "experiments/20260807_real_pr_iscas8/s953/fixed/mapped.v",
+        "sha256": "84d5e6ec40ac37c27a67834f676026eb7e4ebb8d12a83707eceb212775e128c6",
+        "bytes": 28804
+      },
+      "counterpart_baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s953/baseline/mapped.v",
+        "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+        "bytes": 28804
+      },
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "from_type": "joint",
+          "to_type": "_180_:sky130_fd_sc_hd__nor3b_2,_199_:sky130_fd_sc_hd__nand3_2",
+          "wns": -1.27,
+          "tns": -26.52,
+          "min_slack": 0.58,
+          "min_slack_status": "MET",
+          "slack": -1.27,
+          "slack_status": "VIOLATED",
+          "physical_failure": false,
+          "physical_wns": null,
+          "physical_gate_error": null,
+          "patch_id": "patch__132__critical_path_cover",
+          "iteration": 1,
+          "accepted": true
+        }
+      ],
+      "old_sec": {
+        "script": "experiments/20260814_iscas89_sec/s953/verify.ys",
+        "log": "experiments/20260814_iscas89_sec/s953/verify.log",
+        "present": true,
+        "bound": false,
+        "gold_file": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/case/original/original.v",
+        "gate_file": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/mapped.v",
+        "log_proved": true,
+        "log_unproven_counts": [
+          [
+            "228",
+            "0"
+          ]
+        ],
+        "gold_top_hash": "6d6e7a056a6068bb15e9b763d4b69ff429aedeb230a23a2e2ec6f8dc8554378f",
+        "gate_top_hash": "9c61e5d6d9fe9f8e26e226b3bac2f053027a9c5a9717d209b2076c16317b7fc8",
+        "gold_equals_initial_top": false,
+        "gold_equals_initial_top_ignoring_blank_lines": true,
+        "gate_equals_actual_final_top": false
+      },
+      "binding": {
+        "accepted_type_only_reconstruction_exact": true,
+        "original_equals_counterpart_baseline": true,
+        "baseline_difference_requires_main_proof": false,
+        "runtime_final_hash_recovered": false
+      }
+    }
+  ],
+  "proof_method": "reuse run_r22_cut_ablation.final_sec; equiv_simple + equiv_induct -seq 10 + equiv_status -assert",
+  "binding_limit": "Current archived artifacts and accepted metadata; not reconstructed historical runtime input hashes."
+}

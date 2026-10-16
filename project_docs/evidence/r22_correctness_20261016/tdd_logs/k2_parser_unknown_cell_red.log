@@ -1,0 +1,14 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_cell_outputs.py -q
+.............................F                                           [100%]
+================================== FAILURES ===================================
+________ test_unknown_conb_variant_is_not_assigned_invented_semantics _________
+
+    def test_unknown_conb_variant_is_not_assigned_invented_semantics():
+>       with pytest.raises(ValueError, match="cannot determine output pin"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_cell_outputs.py:149: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_cell_outputs.py::test_unknown_conb_variant_is_not_assigned_invented_semantics
+1 failed, 29 passed in 1.10s
+[run] 完成（5s），退出码 1

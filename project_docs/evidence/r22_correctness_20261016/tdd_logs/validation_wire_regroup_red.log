@@ -1,0 +1,185 @@
+[run] 启动（超时 90s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -k wire_regrouping or wire_type_or_identity code/tests/test_sol_review_residuals.py::test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer -q
+FFFFFF.......F.                                                          [100%]
+================================== FAILURES ===================================
+_ test_local_f1_allows_wire_regrouping_with_same_net_types[wire n1;-wire n1, new_wire;] _
+
+old_wire = 'wire n1;', new_wire = 'wire n1, new_wire;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire n1, new_wire;"),
+        ("wire n1, n2;", "wire n2;\nwire n1;\nwire new_wire;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n2;\nwire [3:0] n1, new_wire;"),
+        ("wire signed [3:0] n1;", "wire signed [3:0] n1, new_wire;"),
+        ("wire unsigned [3:0] n1;", "wire [3:0] n1, new_wire;"),
+        ("wire [W-1:0] n1;", "wire [ W - 1 : 0 ] n1, new_wire;"),
+    ])
+    def test_local_f1_allows_wire_regrouping_with_same_net_types(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "pass", result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='non-RGB structure changed (ports, assigns, wrappers or declarations)')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_validation_models.py:79: AssertionError
+_ test_local_f1_allows_wire_regrouping_with_same_net_types[wire n1, n2;-wire n2;\nwire n1;\nwire new_wire;] _
+
+old_wire = 'wire n1, n2;', new_wire = 'wire n2;\nwire n1;\nwire new_wire;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire n1, new_wire;"),
+        ("wire n1, n2;", "wire n2;\nwire n1;\nwire new_wire;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n2;\nwire [3:0] n1, new_wire;"),
+        ("wire signed [3:0] n1;", "wire signed [3:0] n1, new_wire;"),
+        ("wire unsigned [3:0] n1;", "wire [3:0] n1, new_wire;"),
+        ("wire [W-1:0] n1;", "wire [ W - 1 : 0 ] n1, new_wire;"),
+    ])
+    def test_local_f1_allows_wire_regrouping_with_same_net_types(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "pass", result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='non-RGB structure changed (ports, assigns, wrappers or declarations)')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_validation_models.py:79: AssertionError
+_ test_local_f1_allows_wire_regrouping_with_same_net_types[wire [3:0] n1, n2;-wire [3:0] n2;\nwire [3:0] n1, new_wire;] _
+
+old_wire = 'wire [3:0] n1, n2;'
+new_wire = 'wire [3:0] n2;\nwire [3:0] n1, new_wire;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire n1, new_wire;"),
+        ("wire n1, n2;", "wire n2;\nwire n1;\nwire new_wire;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n2;\nwire [3:0] n1, new_wire;"),
+        ("wire signed [3:0] n1;", "wire signed [3:0] n1, new_wire;"),
+        ("wire unsigned [3:0] n1;", "wire [3:0] n1, new_wire;"),
+        ("wire [W-1:0] n1;", "wire [ W - 1 : 0 ] n1, new_wire;"),
+    ])
+    def test_local_f1_allows_wire_regrouping_with_same_net_types(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "pass", result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='non-RGB structure changed (ports, assigns, wrappers or declarations)')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_validation_models.py:79: AssertionError
+_ test_local_f1_allows_wire_regrouping_with_same_net_types[wire signed [3:0] n1;-wire signed [3:0] n1, new_wire;] _
+
+old_wire = 'wire signed [3:0] n1;', new_wire = 'wire signed [3:0] n1, new_wire;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire n1, new_wire;"),
+        ("wire n1, n2;", "wire n2;\nwire n1;\nwire new_wire;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n2;\nwire [3:0] n1, new_wire;"),
+        ("wire signed [3:0] n1;", "wire signed [3:0] n1, new_wire;"),
+        ("wire unsigned [3:0] n1;", "wire [3:0] n1, new_wire;"),
+        ("wire [W-1:0] n1;", "wire [ W - 1 : 0 ] n1, new_wire;"),
+    ])
+    def test_local_f1_allows_wire_regrouping_with_same_net_types(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "pass", result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='non-RGB structure changed (ports, assigns, wrappers or declarations)')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_validation_models.py:79: AssertionError
+_ test_local_f1_allows_wire_regrouping_with_same_net_types[wire unsigned [3:0] n1;-wire [3:0] n1, new_wire;] _
+
+old_wire = 'wire unsigned [3:0] n1;', new_wire = 'wire [3:0] n1, new_wire;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire n1, new_wire;"),
+        ("wire n1, n2;", "wire n2;\nwire n1;\nwire new_wire;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n2;\nwire [3:0] n1, new_wire;"),
+        ("wire signed [3:0] n1;", "wire signed [3:0] n1, new_wire;"),
+        ("wire unsigned [3:0] n1;", "wire [3:0] n1, new_wire;"),
+        ("wire [W-1:0] n1;", "wire [ W - 1 : 0 ] n1, new_wire;"),
+    ])
+    def test_local_f1_allows_wire_regrouping_with_same_net_types(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "pass", result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='non-RGB structure changed (ports, assigns, wrappers or declarations)')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_validation_models.py:79: AssertionError
+_ test_local_f1_allows_wire_regrouping_with_same_net_types[wire [W-1:0] n1;-wire [ W - 1 : 0 ] n1, new_wire;] _
+
+old_wire = 'wire [W-1:0] n1;', new_wire = 'wire [ W - 1 : 0 ] n1, new_wire;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire n1, new_wire;"),
+        ("wire n1, n2;", "wire n2;\nwire n1;\nwire new_wire;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n2;\nwire [3:0] n1, new_wire;"),
+        ("wire signed [3:0] n1;", "wire signed [3:0] n1, new_wire;"),
+        ("wire unsigned [3:0] n1;", "wire [3:0] n1, new_wire;"),
+        ("wire [W-1:0] n1;", "wire [ W - 1 : 0 ] n1, new_wire;"),
+    ])
+    def test_local_f1_allows_wire_regrouping_with_same_net_types(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "pass", result
+E       AssertionError: EquivalenceResult(status='fail', method='liberty_local_function', reason='non-RGB structure changed (ports, assigns, wrappers or declarations)')
+E       assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_r22_validation_models.py:79: AssertionError
+_ test_local_f1_rejects_existing_wire_type_or_identity_changes[wire n1;-wire n1;\nwire [7:0] n1;] _
+
+old_wire = 'wire n1;', new_wire = 'wire n1;\nwire [7:0] n1;'
+
+    @pytest.mark.parametrize("old_wire,new_wire", [
+        ("wire n1;", "wire [1:0] n1;"),
+        ("wire [3:0] n1;", "wire [7:0] n1;"),
+        ("wire [3:0] n1;", "wire [0:3] n1;"),
+        ("wire signed [3:0] n1;", "wire [3:0] n1;"),
+        ("wire [3:0] n1;", "wire signed [3:0] n1;"),
+        ("wire [3:0] n1, n2;", "wire [3:0] n1;\nwire [7:0] n2;"),
+        ("wire n1;", "wire new_wire;"),
+        ("wire n1;", "wire n1;\nwire [7:0] n1;"),
+        ("wire n1 [3:0];", "wire n1 [7:0];"),
+    ])
+    def test_local_f1_rejects_existing_wire_type_or_identity_changes(old_wire, new_wire):
+        before = _chain(2).replace("wire n1;", old_wire)
+        after = before.replace(old_wire, new_wire)
+        result = rw.build_real_equivalence_checker(LIB)(before, after)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:97: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_allows_wire_regrouping_with_same_net_types[wire n1;-wire n1, new_wire;]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_allows_wire_regrouping_with_same_net_types[wire n1, n2;-wire n2;\nwire n1;\nwire new_wire;]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_allows_wire_regrouping_with_same_net_types[wire [3:0] n1, n2;-wire [3:0] n2;\nwire [3:0] n1, new_wire;]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_allows_wire_regrouping_with_same_net_types[wire signed [3:0] n1;-wire signed [3:0] n1, new_wire;]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_allows_wire_regrouping_with_same_net_types[wire unsigned [3:0] n1;-wire [3:0] n1, new_wire;]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_allows_wire_regrouping_with_same_net_types[wire [W-1:0] n1;-wire [ W - 1 : 0 ] n1, new_wire;]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_existing_wire_type_or_identity_changes[wire n1;-wire n1;\nwire [7:0] n1;]
+7 failed, 8 passed, 27 deselected in 0.48s
+[run] 完成（5s），退出码 1

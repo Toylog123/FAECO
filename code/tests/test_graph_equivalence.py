@@ -53,7 +53,8 @@ class FaninConeTest(unittest.TestCase):
         self.assertEqual(cone.roots, ["N22"])
         self.assertEqual(cone.boundary_inputs, ["N1", "N2", "N3", "N6"])
         self.assertEqual(cone.boundary_outputs, ["N22"])
-        self.assertEqual(cone.internal_nets, ["N10", "N11", "N16"])
+        self.assertEqual(cone.internal_nets, ["N10"])
+        self.assertEqual(cone.external_boundary_outputs, ["N11", "N16"])
         self.assertEqual(cone.gates, ["NAND2_1", "NAND2_2", "NAND2_3", "NAND2_5"])
 
 
@@ -238,7 +239,7 @@ endmodule
             for i in range(1, depth + 1):
                 lines.append(f"  {gate_type} G{i}(N{i}, {prev});")
                 prev = f"N{i}"
-                lines.append(f"  buf GROOT(ROOT, N{depth});")
+            lines.append(f"  buf GROOT(ROOT, N{depth});")
             lines.append("endmodule")
             return "\n".join(lines)
 

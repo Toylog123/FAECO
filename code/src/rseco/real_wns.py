@@ -162,6 +162,88 @@ def _scoped_module_pair(original_text, candidate_text, top_module=None):
     return left[top_module],right[top_module]
 
 
+def _without_verilog_comments(text: str) -> str:
+    # Preserve strings: changing an attribute or behavioral string is still a
+    # non-cell edit, even when it contains comment-looking text.
+    return re.sub(r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"',
+                  lambda m: m.group() if m.group().startswith('"') else ' ', text)
+
+
+_PHYSICAL_INSTANCE_RE = re.compile(
+    r"(?:^|(?<=;))\s*([A-Za-z_][\w$]*)\s+([A-Za-z_][\w$]*)\s*\(([^;]*?)\)\s*;",
+    re.M,
+)
+
+
+def _assert_unique_physical_instances(text: str) -> None:
+    """Reject duplicate source instances before any lossy instance dictionary."""
+    masked = _without_verilog_comments(text)
+    masked = re.sub(r'\(\*[\s\S]*?\*\)', ' ', masked)
+    counts = Counter(match.group(2) for match in _PHYSICAL_INSTANCE_RE.finditer(masked)
+                     if match.group(1) not in {"module", "input", "output", "wire"})
+    duplicates = sorted(name for name, count in counts.items() if count > 1)
+    if duplicates:
+        raise ValueError("Duplicate instance in target module: " + ", ".join(duplicates))
+
+
+def _non_rgb_structure(text: str):
+    """Fingerprint the syntax RGB actions have no authority to change.
+
+    Only SKY cell statements and uninitialized wire declarations are removed.
+    Port declarations, assigns, wrappers and behavioral statements stay in the
+    fingerprint. Each existing wire keeps its dimensions and signedness;
+    declaration grouping may change and B may add new wires.
+    This deliberately rejects unsupported edits rather than claiming full SEC.
+    """
+    text = _without_verilog_comments(text)
+    text = _PHYSICAL_INSTANCE_RE.sub(
+        lambda m: " " if m.group(1).startswith("sky130_fd_sc_hd__") else m.group(), text)
+    wire_declarations = {}
+    def remove_wire(match):
+        body = match.group()[len("wire"):-1]
+        header = re.match(r"\s*(?:(signed|unsigned)\b\s*)?((?:\[[^\[\]]+\]\s*)*)", body)
+        signed = header.group(1) == "signed"
+        packed = tuple(re.findall(r"\\\S+|[\w$]+|[^\s]", header.group(2)))
+        declarator = re.compile(
+            r"\s*(\\[^\s]+(?=\s)|[A-Za-z_$][\w$]*)((?:\s*\[[^\[\]]+\])*)\s*(,|$)")
+        entries = []
+        offset = header.end()
+        while offset < len(body):
+            net = declarator.match(body, offset)
+            if net is None:
+                # Leave unsupported syntax in the immutable fingerprint;
+                # never discard a declaration we could not fully interpret.
+                return match.group()
+            unpacked = tuple(re.findall(r"\\\S+|[\w$]+|[^\s]", net.group(2)))
+            entries.append((net.group(1), (signed, packed, unpacked)))
+            offset = net.end()
+            if not net.group(3):
+                break
+            if offset == len(body):
+                return match.group()
+        if not entries or offset != len(body):
+            return match.group()
+        for name, dimensions in entries:
+            wire_declarations.setdefault(name, Counter())[dimensions] += 1
+        return " "
+    text = re.sub(r"\bwire\s+[^;=]+;", remove_wire, text)
+    return tuple(re.findall(r"\\\S+|[\w$]+|[^\s]", text)), wire_declarations
+
+
+def _cell_output_metadata(cells):
+    return {name: dict(cell.output_functions) for name, cell in cells.items()}
+
+
+def _multioutput_roles_preserved(source, target) -> bool:
+    if len(source.output_functions) <= 1 and len(target.output_functions) <= 1:
+        return True
+    def functions(cell):
+        return {pin: re.sub(r"\s+", "", function).replace("*", "&").replace("+", "|")
+                for pin, function in cell.output_functions.items()}
+    return (functions(source) == functions(target)
+            and set(source.input_pins) == set(target.input_pins))
+
+
 def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
     """Build a per-candidate Liberty-function checker for R/G/B actions.
 
@@ -175,6 +257,14 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
         from .equivalence import EquivalenceResult
         try:
             original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
+            _assert_unique_physical_instances(original_text)
+            _assert_unique_physical_instances(candidate_text)
+            old_structure, old_wires = _non_rgb_structure(original_text)
+            new_structure, new_wires = _non_rgb_structure(candidate_text)
+            if (old_structure != new_structure
+                    or any(new_wires.get(name) != declarations for name, declarations in old_wires.items())):
+                return EquivalenceResult("fail", "liberty_local_function",
+                                         "non-RGB structure changed (ports, assigns, wrappers or declarations)")
             before = parse_mapped_netlist(original_text)
             after = parse_mapped_netlist(candidate_text)
             old = {c.instance: c for c in before}
@@ -222,6 +312,14 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
                 src_lib, dst_lib = lib.get(source.cell_type), lib.get(target.cell_type)
                 if src_lib is None or dst_lib is None or not src_lib.function or not dst_lib.function:
                     return EquivalenceResult("fail", "liberty_local_function", f"unknown/non-combinational cell at {inst}")
+                if len(src_lib.output_functions) > 1 or len(dst_lib.output_functions) > 1:
+                    # A last-output-only canonical function cannot establish
+                    # multi-output equivalence. Conservatively require all
+                    # output functions and input/output pin roles to agree.
+                    if not _multioutput_roles_preserved(src_lib, dst_lib) or source.pins != target.pins:
+                        return EquivalenceResult("fail", "liberty_local_function",
+                                                 f"multi-output function or pin role changed at {inst}")
+                    continue
                 if canonical_function(src_lib.function) != canonical_function(dst_lib.function):
                     return EquivalenceResult("fail", "liberty_local_function", f"Boolean function changed at {inst}")
                 src_vars = function_vars(src_lib.function)
@@ -273,10 +371,14 @@ def build_full_netlist_sec_checker(
 
     artifact_root = Path(artifact_dir)
     artifact_root.mkdir(parents=True, exist_ok=True)
+    output_metadata = (_cell_output_metadata(parse_liberty_cells(liberty_text))
+                       if liberty_text is not None else None)
 
     def check(original_text: str, candidate_text: str):
         try:
-            outputs = list(parse_verilog_netlist_from_text(target_module_text(original_text,top_module)).outputs)
+            outputs = list(parse_verilog_netlist_from_text(
+                target_module_text(original_text,top_module),
+                cell_output_functions=output_metadata).outputs)
         except Exception as exc:
             return EquivalenceResult(
                 "fail", "full_netlist_sec", f"SEC input parse failed closed: {exc}"
@@ -407,9 +509,11 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
                     lines.append(f"  assign {pin} = ~{state};")
                 else:
                     raise ValueError(f"unsupported latch output mapping for {name}.{pin}: {function}")
-        elif cell.function and cell.output_pin:
-            expr = (cell.function.replace("*", "&").replace("+", "|"))
-            lines.append(f"  assign {cell.output_pin} = {expr};")
+        elif cell.output_functions:
+            for pin, function in cell.output_functions.items():
+                expr = function.replace("*", "&").replace("+", "|")
+                expr = re.sub(r"\b([01])\b", lambda m: "1'b" + m.group(1), expr)
+                lines.append(f"  assign {pin} = {expr};")
         elif not cell.function:
             raise ValueError(f"unsupported sequential semantics for instantiated cell {name}")
         lines.append("endmodule\n")
@@ -420,11 +524,35 @@ def write_liberty_cell_models(liberty_text: str, output_path: str | Path,
     return path
 
 
-def build_boundary_closure_checker(*, top_module=None):
+def build_boundary_closure_checker(*, top_module=None, liberty_text=None):
     """Build a real module-boundary checker used as the strict F2 gate."""
+    output_metadata = (_cell_output_metadata(parse_liberty_cells(liberty_text))
+                       if liberty_text is not None else None)
+    constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
+
+    def _physical_net(netlist, signal):
+        # A tie cell drives a physical net H even though H resolves to 1'b1
+        # for logic. Do not merge unrelated ties or hide a second driver on H.
+        seen = set()
+        while signal in netlist.signal_aliases and signal not in seen:
+            seen.add(signal)
+            target = netlist.signal_aliases[signal]
+            if target in constants:
+                break
+            signal = target
+        return signal
+
+    def _drivers(netlist):
+        return Counter(_physical_net(netlist, output)
+                       for gate in netlist.gates for output in gate.all_outputs)
+
     def _net_closure(netlist):
-        constants = {"0", "1", "1'b0", "1'b1", "1'h0", "1'h1", "$false", "$true", "$undef"}
-        drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
+        drivers = _drivers(netlist)
+        for net, count in drivers.items():
+            if count != 1:
+                return {"kind": "multiple-driver", "net": net, "drivers": count}
+            if net in constants:
+                return {"kind": "driven-constant", "net": net}
         declared = set(netlist.inputs) | set(netlist.outputs) | set(netlist.wires)
         # Module-output rewiring is checked *relative* to the baseline in
         # check(): undriven/constant output bits (e.g. Yosys leaves
@@ -448,17 +576,20 @@ def build_boundary_closure_checker(*, top_module=None):
         consumers = {netlist.resolve_alias(net)
                      for gate in netlist.gates for net in gate.inputs}
         for gate in netlist.gates:
-            output = netlist.resolve_alias(gate.output)
-            if output in module_outputs or output in constants:
-                continue
-            if output not in consumers:
-                return {"kind": "dangling-output", "net": output}
+            for raw_output in gate.all_outputs:
+                output = netlist.resolve_alias(raw_output)
+                if output in module_outputs or output in constants:
+                    continue
+                if output not in consumers:
+                    return {"kind": "dangling-output", "net": output}
         return None
 
     def check(original_text: str, candidate_text: str):
         from .equivalence import EquivalenceResult
         try:
             original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
+            _assert_unique_physical_instances(original_text)
+            _assert_unique_physical_instances(candidate_text)
         except ValueError as exc:
             return EquivalenceResult('fail','boundary_closure',str(exc))
         pattern = re.compile(r"\bmodule\s+(\w+)\s*\((.*?)\)\s*;", re.S)
@@ -470,13 +601,13 @@ def build_boundary_closure_checker(*, top_module=None):
         if left.group(1) != right.group(1) or left_ports != right_ports:
             return EquivalenceResult("fail", "boundary_closure", "module boundary changed")
         try:
-            before = parse_verilog_netlist_from_text(original_text)
-            after = parse_verilog_netlist_from_text(candidate_text)
+            before = parse_verilog_netlist_from_text(original_text, cell_output_functions=output_metadata)
+            after = parse_verilog_netlist_from_text(candidate_text, cell_output_functions=output_metadata)
             if before.inputs != after.inputs or before.outputs != after.outputs:
                 return EquivalenceResult("fail", "boundary_closure", "boundary input/output set changed")
             def _output_driver_counts(netlist):
-                drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
-                return {netlist.resolve_alias(o): drivers.get(netlist.resolve_alias(o), 0)
+                drivers = _drivers(netlist)
+                return {_physical_net(netlist, o): drivers.get(_physical_net(netlist, o), 0)
                         for o in netlist.outputs}
             before_out_drivers = _output_driver_counts(before)
             after_out_drivers = _output_driver_counts(after)
@@ -502,8 +633,8 @@ def build_boundary_closure_checker(*, top_module=None):
                         "fail", "boundary_closure",
                         json.dumps({"stage": "consumed_net_closure", "side": label, **issue}, sort_keys=True),
                     )
-                drivers = Counter(netlist.resolve_alias(g.output) for g in netlist.gates)
-                if any(drivers[input_name] for input_name in netlist.inputs):
+                drivers = _drivers(netlist)
+                if any(drivers[_physical_net(netlist, input_name)] for input_name in netlist.inputs):
                     return EquivalenceResult("fail", "boundary_closure",
                                              f"{label} input is driven")
         except Exception as exc:
@@ -559,6 +690,7 @@ def build_r_available(
     different-family equivalent cell in the library).
     """
     lib = parse_liberty_cells(liberty_text)
+    _assert_unique_physical_instances(mapped_text)
     cells = parse_mapped_netlist(mapped_text)
     by_inst = {c.instance: c for c in cells}
     r_ok: set[str] = set()
@@ -572,6 +704,7 @@ def build_r_available(
             continue
         has_r = any(
             lib.get(t) is not None and lib[t].family != c.family
+            and _multioutput_roles_preserved(c, lib[t])
             for t, _pm in equivalence_candidates(c, lib)
         )
         if has_r:
@@ -1030,6 +1163,7 @@ class RealWnsEvaluator:
             (t, pm)
             for t, pm in equivalence_candidates(cell, self.lib)
             if self.lib.get(t) is not None and self.lib[t].family != cell.family
+            and _multioutput_roles_preserved(cell, self.lib[t])
         ]
 
     def _candidates_for(self, cells, inst: str) -> list[tuple[str, dict, str]]:
@@ -1044,7 +1178,7 @@ class RealWnsEvaluator:
         if self.enable_buffer:
             fanout = build_net_fanout(cells)
             lc = self.lib.get(cell.cell_type)
-            output_pins = {lc.output_pin} if lc else None
+            output_pins = set(lc.output_functions) if lc else None
             for pin, net, buf_type, new_net in buffer_candidates(
                 cells, inst, fanout, buf_types=self.buf_types, output_pins=output_pins
             ):
@@ -1064,6 +1198,7 @@ class RealWnsEvaluator:
 
     def _apply(self, text: str, inst: str, kind: str, new_type: str, pin_map: dict) -> str:
         scoped=target_module_text(text,self.top_module)
+        _assert_unique_physical_instances(scoped)
         if kind == "R":
             edited=apply_rewrite(scoped, inst, new_type, pin_map)
         elif kind == "B":
@@ -1082,6 +1217,7 @@ class RealWnsEvaluator:
         repair combination (joint action space).
         """
         out = target_module_text(text,self.top_module)
+        _assert_unique_physical_instances(out)
         for inst, (new_type, pin_map, kind) in change.items():
             if kind == "R":
                 out = apply_rewrite(out, inst, new_type, pin_map)
@@ -1795,7 +1931,8 @@ class RealWnsEvaluator:
         else:
             changed = 1
         gate_count = max(1, parse_verilog_netlist_from_text(
-            target_module_text(self.mapped_text,self.top_module)).gate_count)
+            target_module_text(self.mapped_text,self.top_module),
+            cell_output_functions=_cell_output_metadata(self.lib)).gate_count)
         ratio = changed / gate_count
         if self.strict_gates and ratio > self.max_patch_ratio + self._metric_epsilon("patch_ratio"):
             failure_events.append({
@@ -2027,7 +2164,9 @@ class RealWnsEvaluator:
                     "improved": False, "failure_events": [event],
                     "trial_failure_events": [event], "candidate_hash": candidate_hash}
 
-        cells = parse_mapped_netlist(target_module_text(self.mapped_text,self.top_module))
+        scoped = target_module_text(self.mapped_text,self.top_module)
+        _assert_unique_physical_instances(scoped)
+        cells = parse_mapped_netlist(scoped)
         by_inst = {c.instance: c for c in cells}
         in_patch = [g for g in gates if g in by_inst]
         # order: critical-path instances first, then remaining cut gates
@@ -2102,7 +2241,9 @@ class RealWnsEvaluator:
         # candidate evaluation before OpenSTA/acceptance.
         if self.enable_topology and len(actionable) >= 2:
             try:
-                analysis_netlist = parse_verilog_netlist_from_text(target_module_text(self.mapped_text,self.top_module))
+                analysis_netlist = parse_verilog_netlist_from_text(
+                    target_module_text(self.mapped_text,self.top_module),
+                    cell_output_functions=_cell_output_metadata(self.lib))
                 window = extract_combinational_window(analysis_netlist, actionable)
                 topology = generate_topology_replacement(window)
                 job = (

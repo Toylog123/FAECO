@@ -189,7 +189,7 @@
 
 ## r22专项入口（2026-10-14）
 
-- 当前用户指令为暂停：仅保全状态、总结交接，不得自动恢复实验或修复，须等待用户明确恢复。
+- 用户于2026-10-16明确“继续”，已解除10-14暂停；当前按交接顺序修复正确性、整体回归和独立复核，再新pin/v2验证。旧暂停交接只作历史，不阻塞已恢复工作。
 - 英文工作稿：`paper/en/manuscript/FAECO.tex`；预览 `paper/en/build/FAECO.pdf`；配图/出处/声明草稿在 `paper/en/figures/`、`references/`、`scripts/`、`submission/`。中英均待历史科学证据补验，不是投稿定稿。
 - 已失败v1 pilot及历史正确性：`project_docs/evidence/r22_preflight_20261014/`、`project_docs/evidence/r22_historical_correctness_20261014/REPORT.md`。恢复后修复全部阻断门并验证，另建新source pin和v2目录；不覆盖v1，不跨族替代旧C/D结果。
 - 来源/代价受控实验：`project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md`；入口 `code/scripts/run_r22_cut_ablation.py`。

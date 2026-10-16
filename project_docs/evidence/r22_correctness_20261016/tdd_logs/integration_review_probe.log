@@ -1,0 +1,236 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe scratch/r22_resume_20261016/integration_review_probe.py
+{
+  "scope": "Independent review of graph/cut/flow/CLI integration; no EDA",
+  "source_before": {
+    "code/src/rseco/graph.py": "805977ec86767c47578b385edba32438a729325c5cc08f21c97fe8efc51f3789",
+    "code/src/rseco/cut.py": "7b082b5b754873808c2d1a1073fd9601f7aee9f5eb9b3608ea678a0c58aa703e",
+    "code/src/rseco/flow.py": "8e41e149062a856c8e5679b6ca43cc9e3085e37482dd50efc8e77cdf3dc3e2e6",
+    "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+    "code/scripts/run_r22_cut_ablation.py": "83cf797171f36edb31ce0a21893cabe848c9db1bb5049896378e4717a140f0bd",
+    "code/src/rseco/real_wns.py": "7fe0e794252d21016314bbc6274f85267c6395474fd198811e0a6cf34bca2a92",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4"
+  },
+  "source_after": {
+    "code/src/rseco/graph.py": "805977ec86767c47578b385edba32438a729325c5cc08f21c97fe8efc51f3789",
+    "code/src/rseco/cut.py": "7b082b5b754873808c2d1a1073fd9601f7aee9f5eb9b3608ea678a0c58aa703e",
+    "code/src/rseco/flow.py": "8e41e149062a856c8e5679b6ca43cc9e3085e37482dd50efc8e77cdf3dc3e2e6",
+    "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+    "code/scripts/run_r22_cut_ablation.py": "83cf797171f36edb31ce0a21893cabe848c9db1bb5049896378e4717a140f0bd",
+    "code/src/rseco/real_wns.py": "7fe0e794252d21016314bbc6274f85267c6395474fd198811e0a6cf34bca2a92",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4"
+  },
+  "source_changed": [],
+  "probes": {
+    "actual_evaluator_metadata": {
+      "options": {},
+      "exception": "cannot determine output pin for named-port instance: sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CI(C), .CO(Y), .SUM(Z));",
+      "explicit_metadata_control": [
+        "add"
+      ],
+      "evaluator_has_cells": false,
+      "evaluator_has_lib": true
+    },
+    "zero_input_source": {
+      "cone": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "internal_nets": [
+          "H"
+        ],
+        "gates": [
+          "tie",
+          "sink"
+        ],
+        "gate_outputs": {
+          "tie": "H",
+          "sink": "Y"
+        },
+        "gate_inputs": {
+          "tie": [],
+          "sink": [
+            "H"
+          ]
+        }
+      },
+      "graph_nodes": [
+        "tie",
+        "sink"
+      ],
+      "dependencies": [
+        [
+          "tie:out",
+          "sink:in",
+          1000000000.0
+        ]
+      ],
+      "solution": {
+        "exception": "KeyError",
+        "message": "'source'"
+      }
+    },
+    "same_module_alias_root": {
+      "resolved_root": "n",
+      "cone_unresolved": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "internal_nets": [],
+        "gates": [],
+        "gate_outputs": {},
+        "gate_inputs": {}
+      },
+      "cone_resolved": {
+        "roots": [
+          "n"
+        ],
+        "boundary_inputs": [
+          "A"
+        ],
+        "boundary_outputs": [
+          "n"
+        ],
+        "internal_nets": [],
+        "gates": [
+          "g"
+        ],
+        "gate_outputs": {
+          "g": "n"
+        },
+        "gate_inputs": {
+          "g": [
+            "A"
+          ]
+        }
+      },
+      "flow_refresh": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "internal_nets": [],
+        "gates": [],
+        "gate_outputs": {},
+        "gate_inputs": {}
+      }
+    },
+    "other_output_external_consumer": {
+      "full_gates": [
+        "add",
+        "sinkY",
+        "sinkZ"
+      ],
+      "cone": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [
+          "A",
+          "B"
+        ],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "internal_nets": [
+          "S",
+          "CO"
+        ],
+        "gates": [
+          "add",
+          "sinkY"
+        ],
+        "gate_outputs": {
+          "add": "S",
+          "sinkY": "Y"
+        },
+        "gate_inputs": {
+          "add": [
+            "A",
+            "B"
+          ],
+          "sinkY": [
+            "CO"
+          ]
+        },
+        "gate_additional_outputs": {
+          "add": [
+            "CO"
+          ]
+        }
+      },
+      "cut": {
+        "method": "review",
+        "boundary_inputs": [
+          "A",
+          "B"
+        ],
+        "boundary_outputs": [
+          "CO"
+        ],
+        "internal_nets": [
+          "S"
+        ],
+        "gates": [
+          "add"
+        ],
+        "patch_size": 1
+      }
+    },
+    "s_alias_refresh_commit": {
+      "accepted": 1,
+      "accepted_patches": [
+        {
+          "patch_id": "S::win-1::S0",
+          "candidate_hash": "h1",
+          "base_netlist_hash": "46e995d97578d98ce38bbea6995b32d9efb8a796e6483003dd8512aa94c7d399",
+          "netlist_hash": "49e9a2f89623bcdc0fff17e9357cf92151833a0919dff9b6599fa90acb6eccd8",
+          "netlist_text": "module top(A,Y);\ninput A;\noutput Y;\nwire n;\nbuf g(n,A);\nassign Y = n;\nendmodule\n",
+          "wns": -1.2,
+          "tns": -9.0,
+          "min_slack": -1.2,
+          "metadata": {
+            "cut_hash": "21c85e07ab1ba36718d08717212dc0c8c7d1bf498f642190539688f569521972",
+            "kind": "S",
+            "window_id": "win-1",
+            "window_variant": "S0",
+            "r_s": 1.0,
+            "r_s_verdict": "ok",
+            "soft_penalty": false,
+            "depth_before_sky130": 4,
+            "depth_after_sky130": 3,
+            "abc_sequence": "resyn2",
+            "resynth_stats": {
+              "variant": "S0",
+              "r_s": 1.0,
+              "r_s_verdict": "ok",
+              "depth_before_sky130": 4,
+              "depth_after_sky130": 3,
+              "abc_sequence": "resyn2"
+            },
+            "sta_provenance": {
+              "tool": "stub"
+            },
+            "action_scope": [
+              "g15"
+            ],
+            "refreshed_cone_gates": []
+          }
+        }
+      ],
+      "current_cone_gates": [],
+      "current_wns": -1.2
+    }
+  }
+}
+[run] 完成（5s），退出码 0

@@ -1,6 +1,6 @@
 """Graph helpers for cone extraction."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .netlist import Netlist
 
@@ -14,9 +14,22 @@ class FaninCone:
     gates: list[str]
     gate_outputs: dict[str, str]
     gate_inputs: dict[str, list[str]]
+    gate_additional_outputs: dict[str, list[str]] = field(default_factory=dict)
+    external_boundary_outputs: list[str] = field(default_factory=list)
+
+    def outputs_for_gate(self, gate: str) -> list[str]:
+        return [signal for signal in [self.gate_outputs[gate],
+                *self.gate_additional_outputs.get(gate, [])] if signal]
+
+    def signal_drivers(self) -> dict[str, str]:
+        return {signal: gate for gate in self.gates for signal in self.outputs_for_gate(gate)}
+
+    def interface_outputs(self) -> list[str]:
+        """All exposed nets; external consumers do not become timing roots."""
+        return list(dict.fromkeys([*self.boundary_outputs, *self.external_boundary_outputs]))
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        result = {
             "roots": self.roots,
             "boundary_inputs": self.boundary_inputs,
             "boundary_outputs": self.boundary_outputs,
@@ -25,6 +38,11 @@ class FaninCone:
             "gate_outputs": self.gate_outputs,
             "gate_inputs": self.gate_inputs,
         }
+        if self.gate_additional_outputs:
+            result["gate_additional_outputs"] = self.gate_additional_outputs
+        if self.external_boundary_outputs:
+            result["external_boundary_outputs"] = self.external_boundary_outputs
+        return result
 
 
 def _is_sequential_gate(gate_type: str) -> bool:
@@ -51,11 +69,16 @@ def _is_sequential_gate(gate_type: str) -> bool:
 
 
 def extract_fanin_cone(netlist: Netlist, roots: list[str]) -> FaninCone:
-    output_to_gate = {gate.output: gate for gate in netlist.gates}
+    output_to_gate = {signal: gate for gate in netlist.gates for signal in gate.all_outputs}
     visited_gates: set[str] = set()
     reached_inputs: set[str] = set()
 
+    def physical_signal(signal):
+        # Preserve tie-cell physical identities while resolving ordinary assigns.
+        return signal if signal in output_to_gate else netlist.resolve_alias(signal)
+
     def visit(signal: str) -> None:
+        signal = physical_signal(signal)
         if signal in netlist.inputs:
             reached_inputs.add(signal)
             return
@@ -78,18 +101,31 @@ def extract_fanin_cone(netlist: Netlist, roots: list[str]) -> FaninCone:
 
     gates = [gate.name for gate in netlist.gates if gate.name in visited_gates]
     boundary_inputs = [signal for signal in netlist.inputs if signal in reached_inputs]
+    root_signals = list(dict.fromkeys(physical_signal(root) for root in roots))
+    outside_inputs = {signal for gate in netlist.gates if gate.name not in visited_gates
+                      for signal in gate.inputs}
+    module_outputs = {physical_signal(output) for output in netlist.outputs}
+    external_outputs = list(dict.fromkeys(
+        signal for gate in netlist.gates if gate.name in visited_gates
+        for signal in gate.all_outputs
+        if signal not in root_signals and (signal in outside_inputs or signal in module_outputs)))
     internal_nets = [
-        gate.output
+        signal
         for gate in netlist.gates
-        if gate.name in visited_gates and gate.output not in roots
+        if gate.name in visited_gates
+        for signal in gate.all_outputs if signal not in root_signals and signal not in external_outputs
     ]
 
     return FaninCone(
         roots=list(roots),
         boundary_inputs=boundary_inputs,
-        boundary_outputs=list(roots),
+        boundary_outputs=root_signals,
         internal_nets=internal_nets,
         gates=gates,
         gate_outputs={gate.name: gate.output for gate in netlist.gates if gate.name in visited_gates},
         gate_inputs={gate.name: list(gate.inputs) for gate in netlist.gates if gate.name in visited_gates},
+        gate_additional_outputs={gate.name: list(gate.additional_outputs)
+                                 for gate in netlist.gates
+                                 if gate.name in visited_gates and gate.additional_outputs},
+        external_boundary_outputs=external_outputs,
     )

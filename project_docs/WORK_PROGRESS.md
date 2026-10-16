@@ -1,10 +1,60 @@
-# 当前进度：r22已暂停（2026-10-14）
+# 当前进度：r22已恢复（2026-10-16）
 
-> **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**
+## 2026-10-16 — r22恢复推进（当前权威）
 
-暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `agent_handoff/CURRENT_RUN_HANDOFF.md`。
+用户“继续”覆盖10-14暂停。主线确认恢复起点main clean/HEAD `781c031`，已推送；记录员已实读K1–K6审查和历史correctness报告，保留原失败v1及历史暂停。当前执行K1–K6修复与反驳性验证；旧667回归不充当当前版本通过。
 
-恢复后待办P01–P04全部pending；仅用户明确恢复才执行。
+| 任务 | 当前状态 | 证据门/下一步 |
+|---|---|---|
+| K1–K6源码与库模型/解析修复 | 当前修复完整v2已通过757pass/4skip/156subtests，阶段commit/pin待 | 复用已归档最小反例，保持物理实例口径；修后整套回归、独立复审 |
+| 当前版本source pin与C′ v2 | pending，依赖修复验收 | 新pin/新目录；两电路九臂18项pilot全通过后才扩72 |
+| A/D/C历史科学证据恢复 | pending，各自绑定来源 | A六确切候选证明；D同臂同输入整族；C完整核查/受影响矩阵，不跨族拼接 |
+| 中英文稿、图表、投稿材料 | pending，依赖科学闭合 | 一致回填与最终排版/声明确认 |
+
+### 当前完整修复版本已通过，B两Pico旧模型需补证（LOG-20261016-09）
+
+记录员实读full_regression_v2.log/.json：757passed、4skipped、156subtests，102.50s，wrapper107s/exit0；162个code Python文件before/after SHA一致、source_stable=true。可确认该当前修复对象整套通过；首失败三证据保留，不能将该实现验收升级为科学证据已闭合。
+
+主线新B模型审计通报：两Pico归档proof实际使用edfxtp_1，旧model仅assign Q=IQ而IQ无driver/always；dfxtp_1有always。审计细节正由models补写，记录员待实读正式新报告；先登记OI-038为open。B28实际final/gold对象绑定仍成立，但26其它对象与这2个真实FF语义缺口分开；不据此判定电路功能不等价。后续在新库模型/source pin下对这2实际final补独立SEC，旧证据不改，与A6分别绑定。
+
+主线准备阶段commit+pin，记录员此轮同步后停止写入，等待实际Git/SEC启动消息。正式正负模型SEC控制、A6、B2与v2 pilot尚未执行；科学A/B/C/D缺口仍开放。
+
+### 声明兼容修复与完整v2启动历史（LOG-20261016-08）
+
+记录员已实读validation_wire_regroup_red.log（7failed/8passed/27deselected）及green.log：相关五文件145passed/22.28s，180s包装26s/exit0。原sole failure通过，新增15参数例保留已有net宽度/signedness/声明次数约束，支持合法声明分组/合并/新增线；不是修改旧fixture凑过。
+
+production/tests再次冻结，完整v2实际session54033运行，full_regression_v2.json读为running并保存162项beforeSHA，stdout/JUnit独立前缀不覆盖首失败；300s包装/主线330s外超时。首读stdout仍在前段，不能据此称通过。真实SEC/EDA尚未开始。
+
+证据目录sec_model_controls.py准备正式正负SEC控制：conb双输出及错接HI/LO；fa手写真值函数与保持SUM但故意错误COUT。只在整套通过、commit/模型源码pin之后执行。D56配置恢复与C未知边界为只读设计；B28已有final/gold对象绑定保留，新增实际历史模型完整性审计，不能把新writer缺陷直接外推为旧B无效，也不能未查旧模型便断言其完整。
+
+### 首完整回归失败归因历史（LOG-20261016-07）
+
+已实际读取full_regression.log/.json：741passed、1failed、4skipped、156subtests，108.20s，wrapper112s/exit1；before/after SHA一致、source_stable=true。唯一失败为test_sol_review_residuals.py::test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer，合法B将wire N;扩为wire N,N_BUF;，新_non_rgb_structure以整条声明Counter比较而误判原N删除。
+
+归因为新实现的合法声明重组兼容性错误，不是测试对象漂移，也不改旧fixture凑过。models仅修该函数，须保留已有net宽度/signedness、允许分组合并与新增线；先专属红→绿，再冻结新版整体回归。旧full_regression.{json,log,xml}原件保留，新全回归用full_regression_v2前缀。此刻完整门仍失败，尚未任何真实SEC/EDA；不新pin放行pilot。
+
+### 完整回归启动与监测历史（LOG-20261016-06）
+
+正式完整回归session63511已运行：Git Bash timeout300s，`.venv/Scripts/python.exe -m pytest code/tests -q --junitxml=project_docs/evidence/r22_correctness_20261016/full_regression.xml`。`full_regression.json`记录起始HEAD781c031、运行前源码/fixture SHA及status=running；stdout为full_regression.log，结束后再核验完整JUnit/afterSHA。记录员首次查看尾部已至85%并见1个F，尚无最终计数/归因，已立即通知主线，不能称全过。
+
+独立最终冻结probe已实读INTEGRATION_REVIEW最后一节：7生产文件before/after SHA稳定，IR source/metadata/alias/secondary boundary/split交集及S错误top、SEC假module/helper不变控制符合；约5s/exit0。此为独立构造探针，不代替完整回归。真实A六对象SEC/EDA尚未启动；D/C只读配置恢复并行，不修改被测源码。
+
+### 集成复审反例汇合与冻结（LOG-20261016-05）
+
+记录员实读integration_review_red.log（3failed/6passed：无输入source、assign别名root、cone外secondary消费者）、split_external_red.log（1failed：BO/internal重叠）以及scope_final_green5.log（最新限定68passed+1subtest/3.71s，120s包装exit0）。主线分别修复物理driver/source、alias root、cone外边界及split传播/内部互斥；lib metadata实际属性为lib，原cells路径反例已加入并修。旧c17断言漏N11/N16外部消费者，主线实查原网表后更新期待，未放宽边界检查。
+
+A证明工具test_r22_a_sec_recovery为9passed/0.97s；dry-run六对象、52个输入文件及44个源码SHA已实际查看input_manifest.json，eda_executed=false，source_tree_clean=false（工作区源码快照，不冒称已提交新pin）。s713主pair选原A mapped→实际fixed，counterpart baseline差异由主pair覆盖，不能只证明带tie变化后的baseline→fixed。
+
+主线声明所有production/tests已冻结，当前准备整体回归；预定完整stdout/JUnit/被测SHA保存到 `project_docs/evidence/r22_correctness_20261016/`。A尚未实际执行六对象证明，v2/EDA尚未开始。已有INTEGRATION_REVIEW保留各轮反例/源码身份，最终全门与独立放行仍待主线实际结果。
+
+### 本轮已实读的限定验证（LOG-20261016-04）
+
+- K2 parser相关三文件：`scratch/r22_resume_20261016/k2_parser_final_green.log`，35 passed/1.03s，120s包装exit0。
+- 模型/校验相关四文件：`validation_models_final_related.log`，69 passed/10.03s，180s包装exit0。
+- 主线scope反例先4 failed（次输出依赖/物理节点、CLI同名helper D、S刷新失败仍提交）；修复后独立SEC注释假module反例另1 failed，随后使用公共module_spans。最终相关七文件 `scope_final_green.log` 为63 passed、1 subtest/3.85s，120s包装exit0；红测保留在scope_red.log/sec_module_red.log。
+- 主线说明deep-signature旧fixture把同名GROOT放循环内造成实际重复，改为循环外，保留深链含义，不放宽production唯一性门。parser/models源码已冻结，领域转A六证明对象工具准备与只读集成复审；尚未整体回归/EDA。
+
+以上是各限定范围结果，不相加冒充完整回归，不宣称K1–K6/科学证据全闭合。新恢复计划：`project_docs/planning/R22_CORRECTNESS_RESUME_PLAN_20261016.md`；当前后续为源码/fixture稳定后完整回归、独立复审及新pin。
 
 ## 历史进度
 

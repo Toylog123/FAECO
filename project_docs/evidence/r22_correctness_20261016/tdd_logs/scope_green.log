@@ -1,0 +1,94 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py code/tests/test_flow_structure_resynth.py code/tests/test_graph_equivalence.py code/tests/test_cut_patch.py -q
+..................F.........................                            [100%]
+================================== FAILURES ===================================
+_ StructuralEquivalenceTest.test_deep_combinational_chain_signature_is_iterative _
+
+self = <test_graph_equivalence.StructuralEquivalenceTest testMethod=test_deep_combinational_chain_signature_is_iterative>
+
+    def test_deep_combinational_chain_signature_is_iterative(self):
+        """A >1000-level cone must not hit Python recursion limits (ITC-99 b15)."""
+        def deep_chain(gate_type: str, depth: int = 2500) -> str:
+            wires = ", ".join(f"N{i}" for i in range(1, depth + 1))
+            lines = [
+                "module deep(D, ROOT);",
+                "  input D;",
+                "  output ROOT;",
+                f"  wire {wires};",
+            ]
+            prev = "D"
+            for i in range(1, depth + 1):
+                lines.append(f"  {gate_type} G{i}(N{i}, {prev});")
+                prev = f"N{i}"
+                lines.append(f"  buf GROOT(ROOT, N{depth});")
+            lines.append("endmodule")
+            return "\n".join(lines)
+    
+        def parse(text: str, filename: str):
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / filename
+                path.write_text(text, encoding="utf-8")
+                return parse_verilog_netlist(path)
+    
+>       identical = parse(deep_chain("buf"), "deep_a.v")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_graph_equivalence.py:251: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\tests\test_graph_equivalence.py:249: in parse
+    return parse_verilog_netlist(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/١����/AppData/Local/Temp/tmp0qogjqwg/deep_a.v')
+cell_output_functions = None
+
+    def parse_verilog_netlist(
+        path: str | Path,
+        *,
+        cell_output_functions: dict[str, dict[str, str]] | None = None,
+    ) -> Netlist:
+        text = Path(path).read_text(encoding="utf-8")
+        module_match = re.search(r"\bmodule\s+(\w+)\s*\(", text)
+        if not module_match:
+            raise ValueError(f"missing module declaration: {path}")
+    
+        inputs: list[str] = []
+        outputs: list[str] = []
+        wires: list[str] = []
+        gates: list[Gate] = []
+        aliases: dict[str, str] = {}
+        constant_aliases: dict[str, str] = {}
+        instance_names: set[str] = set()
+    
+        # first pass: declarations and single-identifier assign aliases
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//"):
+                continue
+            assign_match = re.match(r"^assign\s+(\S+)\s*=\s*([^;]+);", line)
+            if assign_match:
+                lhs = assign_match.group(1).strip()
+                rhs = assign_match.group(2).strip()
+                constant = _constant_signal(rhs)
+                if re.fullmatch(r"\w+", rhs) or constant:
+                    aliases[lhs] = constant or rhs
+                continue
+            _collect_declaration(line, "input", inputs)
+            _collect_declaration(line, "output", outputs)
+            _collect_declaration(line, "wire", wires)
+    
+        # second pass: instances (aliases are complete by now)
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//") or line.startswith("assign"):
+                continue
+            instance = re.match(r"^(\w+)\s+(\w+)\s*\((.*)\)\s*;", line)
+            if instance and instance.group(1) not in {"module", "input", "output", "wire"}:
+                cell_type, instance_name = instance.group(1), instance.group(2)
+                if instance_name in instance_names:
+>                   raise ValueError(f"Duplicate instance in parsed netlist: {instance_name}")
+E                   ValueError: Duplicate instance in parsed netlist: GROOT
+
+code\src\rseco\netlist.py:132: ValueError
+=========================== short test summary info ===========================
+FAILED code/tests/test_graph_equivalence.py::StructuralEquivalenceTest::test_deep_combinational_chain_signature_is_iterative
+1 failed, 43 passed, 1 subtests passed in 3.39s
+[run] 完成（5s），退出码 1

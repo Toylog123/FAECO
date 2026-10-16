@@ -1,0 +1,78 @@
+[run] 启动（超时 90s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py -q
+......FFF                                                                [100%]
+================================== FAILURES ===================================
+____________________ test_zero_input_cell_is_a_source_node ____________________
+
+    def test_zero_input_cell_is_a_source_node():
+        from rseco.netlist import Gate
+        netlist=Netlist('top',[],['Y'],['T'],[
+            Gate('tie','tie','T',()),Gate('buf','sink','Y',('T',))])
+        cone=extract_fanin_cone(netlist,['Y'])
+>       result=solve_weighted_cut(cone,build_weighted_cut_graph(cone,RefinementWeights()))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_scope_integration.py:123: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\cut.py:244: in solve_weighted_cut
+    residual = _edmonds_karp(capacities, cut_graph.source, cut_graph.sink)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+code\src\rseco\cut.py:737: in _edmonds_karp
+    parent = _augmenting_path(residual, source, sink)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+residual = {'tie:in': {'tie:out': 1.2133333333333334}, 'tie:out': {'sink:in': 1000000000.0, 'tie:in': 0.0}, 'sink:in': {'sink:out': 1.0766666666666667, 'tie:out': 0.0}, 'sink:out': {'Y': 1000000000.0, 'sink:in': 0.0}, ...}
+source = 'source', sink = 'Y'
+
+    def _augmenting_path(
+        residual: dict[str, dict[str, float]],
+        source: str,
+        sink: str,
+    ) -> dict[str, str]:
+        parent: dict[str, str] = {source: source}
+        queue: deque[str] = deque([source])
+    
+        while queue:
+            node = queue.popleft()
+>           for neighbor, capacity in sorted(residual[node].items()):
+                                             ^^^^^^^^^^^^^^
+E           KeyError: 'source'
+
+code\src\rseco\cut.py:766: KeyError
+_________________ test_alias_root_retains_its_physical_driver _________________
+
+    def test_alias_root_retains_its_physical_driver():
+        from rseco.flow import _refreshed_candidate_cone
+        evaluator=SimpleNamespace(top_module='top')
+        text='module top(A,Y);\ninput A;\noutput Y;\nwire n;\nbuf g(n,A);\nassign Y=n;\nendmodule\n'
+        cone=_refreshed_candidate_cone(text,evaluator,'Y')
+>       assert cone.gates == ['g']
+E       AssertionError: assert [] == ['g']
+E         
+E         Right contains one more item: 'g'
+E         Use -v to get more diff
+
+code\tests\test_r22_scope_integration.py:132: AssertionError
+______ test_cut_preserves_secondary_output_consumed_outside_target_cone _______
+
+    def test_cut_preserves_secondary_output_consumed_outside_target_cone():
+        from rseco.netlist import Gate
+        add=Gate('fa','add','S',('A','B'),additional_outputs=('CO',))
+        netlist=Netlist('top',['A','B'],['Y','Z'],['S','CO'],[
+            add,Gate('buf','sink','Y',('CO',)),Gate('buf','other','Z',('S',))])
+        cone=extract_fanin_cone(netlist,['Y'])
+        cut=_cut_for_selected_gates(cone,['add'],method='counterexample')
+>       assert set(cut.boundary_outputs) == {'CO','S'}
+E       AssertionError: assert {'CO'} == {'CO', 'S'}
+E         
+E         Extra items in the right set:
+E         'S'
+E         Use -v to get more diff
+
+code\tests\test_r22_scope_integration.py:143: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_scope_integration.py::test_zero_input_cell_is_a_source_node
+FAILED code/tests/test_r22_scope_integration.py::test_alias_root_retains_its_physical_driver
+FAILED code/tests/test_r22_scope_integration.py::test_cut_preserves_secondary_output_consumed_outside_target_cone
+3 failed, 6 passed in 2.70s
+[run] 完成（5s），退出码 1

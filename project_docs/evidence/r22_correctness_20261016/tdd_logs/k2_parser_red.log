@@ -1,0 +1,499 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_cell_outputs.py -q
+FFFFFFFFFFFFFFFFFFFFFFFFFF                                               [100%]
+================================== FAILURES ===================================
+_______________ test_gate_all_outputs_keeps_legacy_constructor ________________
+
+    def test_gate_all_outputs_keeps_legacy_constructor():
+        gate = Gate("buf", "u", "Y", ("A",))
+>       assert gate.additional_outputs == ()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Gate' object has no attribute 'additional_outputs'
+
+code\tests\test_r22_cell_outputs.py:30: AttributeError
+______ test_real_conb_preserves_both_drivers_and_constant_aliases[False] ______
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+with_metadata = False
+
+    @pytest.mark.parametrize("with_metadata", [False, True])
+    def test_real_conb_preserves_both_drivers_and_constant_aliases(output_functions, with_metadata):
+        kwargs = {"cell_output_functions": output_functions} if with_metadata else {}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{CONB} tie (.HI(S), .LO(CO));"), **kwargs
+        )
+
+code\tests\test_r22_cell_outputs.py:37: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\replacement.py:287: in parse_verilog_netlist_from_text
+    return parse_verilog_netlist(path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/١����/AppData/Local/Temp/tmpm55h89af.v')
+
+    def parse_verilog_netlist(path: str | Path) -> Netlist:
+        text = Path(path).read_text(encoding="utf-8")
+        module_match = re.search(r"\bmodule\s+(\w+)\s*\(", text)
+        if not module_match:
+            raise ValueError(f"missing module declaration: {path}")
+    
+        inputs: list[str] = []
+        outputs: list[str] = []
+        wires: list[str] = []
+        gates: list[Gate] = []
+        aliases: dict[str, str] = {}
+    
+        # first pass: declarations and single-identifier assign aliases
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//"):
+                continue
+            assign_match = re.match(r"^assign\s+(\S+)\s*=\s*([^;]+);", line)
+            if assign_match:
+                lhs = assign_match.group(1).strip()
+                rhs = assign_match.group(2).strip()
+                if re.fullmatch(r"\w+", rhs):
+                    aliases[lhs] = rhs
+                continue
+            _collect_declaration(line, "input", inputs)
+            _collect_declaration(line, "output", outputs)
+            _collect_declaration(line, "wire", wires)
+    
+        # second pass: instances (aliases are complete by now)
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//") or line.startswith("assign"):
+                continue
+            instance = re.match(r"^(\w+)\s+(\w+)\s*\((.*)\)\s*;", line)
+            if instance and instance.group(1) not in {"module", "input", "output", "wire"}:
+                pins = [pin.strip() for pin in instance.group(3).split(",") if pin.strip()]
+                if pins and pins[0].startswith("."):
+                    connections = [
+                        re.match(r"\.(\w+)\s*\(([^()]*)\)", pin) for pin in pins
+                    ]
+                    if not all(connections):
+                        raise ValueError(f"malformed named-port instance: {line}")
+                    named = [
+                        (match.group(1), match.group(2).strip()) for match in connections
+                    ]
+                    output_pin = next(
+                        (pin for pin, _ in named if pin in {"Y", "X", "Z", "Q", "Q_N"}),
+                        None,
+                    )
+                    if output_pin is None:
+>                       raise ValueError(
+                            f"cannot determine output pin for named-port instance: {line}"
+                        )
+E                       ValueError: cannot determine output pin for named-port instance: sky130_fd_sc_hd__conb_1 tie (.HI(S), .LO(CO));
+
+code\src\rseco\netlist.py:126: ValueError
+______ test_real_conb_preserves_both_drivers_and_constant_aliases[True] _______
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+with_metadata = True
+
+    @pytest.mark.parametrize("with_metadata", [False, True])
+    def test_real_conb_preserves_both_drivers_and_constant_aliases(output_functions, with_metadata):
+        kwargs = {"cell_output_functions": output_functions} if with_metadata else {}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{CONB} tie (.HI(S), .LO(CO));"), **kwargs
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:37: TypeError
+______ test_actual_liberty_full_adder_outputs_do_not_become_inputs[fa_1] ______
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+family = 'fa_1'
+
+    @pytest.mark.parametrize("family", ["fa_1", "fa_2", "fa_4", "fah_1", "fahcin_1"])
+    def test_actual_liberty_full_adder_outputs_do_not_become_inputs(output_functions, family):
+        cell = f"sky130_fd_sc_hd__{family}"
+        assert set(output_functions[cell]) == {"SUM", "COUT"}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{cell} add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:52: TypeError
+______ test_actual_liberty_full_adder_outputs_do_not_become_inputs[fa_2] ______
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+family = 'fa_2'
+
+    @pytest.mark.parametrize("family", ["fa_1", "fa_2", "fa_4", "fah_1", "fahcin_1"])
+    def test_actual_liberty_full_adder_outputs_do_not_become_inputs(output_functions, family):
+        cell = f"sky130_fd_sc_hd__{family}"
+        assert set(output_functions[cell]) == {"SUM", "COUT"}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{cell} add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:52: TypeError
+______ test_actual_liberty_full_adder_outputs_do_not_become_inputs[fa_4] ______
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+family = 'fa_4'
+
+    @pytest.mark.parametrize("family", ["fa_1", "fa_2", "fa_4", "fah_1", "fahcin_1"])
+    def test_actual_liberty_full_adder_outputs_do_not_become_inputs(output_functions, family):
+        cell = f"sky130_fd_sc_hd__{family}"
+        assert set(output_functions[cell]) == {"SUM", "COUT"}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{cell} add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:52: TypeError
+_____ test_actual_liberty_full_adder_outputs_do_not_become_inputs[fah_1] ______
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+family = 'fah_1'
+
+    @pytest.mark.parametrize("family", ["fa_1", "fa_2", "fa_4", "fah_1", "fahcin_1"])
+    def test_actual_liberty_full_adder_outputs_do_not_become_inputs(output_functions, family):
+        cell = f"sky130_fd_sc_hd__{family}"
+        assert set(output_functions[cell]) == {"SUM", "COUT"}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{cell} add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:52: TypeError
+____ test_actual_liberty_full_adder_outputs_do_not_become_inputs[fahcin_1] ____
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+family = 'fahcin_1'
+
+    @pytest.mark.parametrize("family", ["fa_1", "fa_2", "fa_4", "fah_1", "fahcin_1"])
+    def test_actual_liberty_full_adder_outputs_do_not_become_inputs(output_functions, family):
+        cell = f"sky130_fd_sc_hd__{family}"
+        assert set(output_functions[cell]) == {"SUM", "COUT"}
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{cell} add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:52: TypeError
+_ test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(S)-expected0] _
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+connections = '.SUM(S)', expected = ('S',)
+
+    @pytest.mark.parametrize("connections, expected", [
+        (".SUM(S)", ("S",)),
+        (".SUM(), .COUT(CO)", ("CO",)),
+        (".SUM(S), .COUT()", ("S",)),
+        (".SUM(), .COUT()", ()),
+        ("", ()),
+    ])
+    def test_omitted_or_empty_outputs_still_count_one_physical_cell(output_functions, connections, expected):
+        suffix = f", {connections}" if connections else ""
+>       net = parse_verilog_netlist_from_text(
+            _design(f"sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C){suffix});"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:71: TypeError
+_ test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(), .COUT(CO)-expected1] _
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+connections = '.SUM(), .COUT(CO)', expected = ('CO',)
+
+    @pytest.mark.parametrize("connections, expected", [
+        (".SUM(S)", ("S",)),
+        (".SUM(), .COUT(CO)", ("CO",)),
+        (".SUM(S), .COUT()", ("S",)),
+        (".SUM(), .COUT()", ()),
+        ("", ()),
+    ])
+    def test_omitted_or_empty_outputs_still_count_one_physical_cell(output_functions, connections, expected):
+        suffix = f", {connections}" if connections else ""
+>       net = parse_verilog_netlist_from_text(
+            _design(f"sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C){suffix});"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:71: TypeError
+_ test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(S), .COUT()-expected2] _
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+connections = '.SUM(S), .COUT()', expected = ('S',)
+
+    @pytest.mark.parametrize("connections, expected", [
+        (".SUM(S)", ("S",)),
+        (".SUM(), .COUT(CO)", ("CO",)),
+        (".SUM(S), .COUT()", ("S",)),
+        (".SUM(), .COUT()", ()),
+        ("", ()),
+    ])
+    def test_omitted_or_empty_outputs_still_count_one_physical_cell(output_functions, connections, expected):
+        suffix = f", {connections}" if connections else ""
+>       net = parse_verilog_netlist_from_text(
+            _design(f"sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C){suffix});"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:71: TypeError
+_ test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(), .COUT()-expected3] _
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+connections = '.SUM(), .COUT()', expected = ()
+
+    @pytest.mark.parametrize("connections, expected", [
+        (".SUM(S)", ("S",)),
+        (".SUM(), .COUT(CO)", ("CO",)),
+        (".SUM(S), .COUT()", ("S",)),
+        (".SUM(), .COUT()", ()),
+        ("", ()),
+    ])
+    def test_omitted_or_empty_outputs_still_count_one_physical_cell(output_functions, connections, expected):
+        suffix = f", {connections}" if connections else ""
+>       net = parse_verilog_netlist_from_text(
+            _design(f"sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C){suffix});"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:71: TypeError
+___ test_omitted_or_empty_outputs_still_count_one_physical_cell[-expected4] ___
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+connections = '', expected = ()
+
+    @pytest.mark.parametrize("connections, expected", [
+        (".SUM(S)", ("S",)),
+        (".SUM(), .COUT(CO)", ("CO",)),
+        (".SUM(S), .COUT()", ("S",)),
+        (".SUM(), .COUT()", ()),
+        ("", ()),
+    ])
+    def test_omitted_or_empty_outputs_still_count_one_physical_cell(output_functions, connections, expected):
+        suffix = f", {connections}" if connections else ""
+>       net = parse_verilog_netlist_from_text(
+            _design(f"sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C){suffix});"),
+            cell_output_functions=output_functions,
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:71: TypeError
+_____ test_file_entry_points_forward_liberty_roles[parse_verilog_netlist] _____
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1134/test_file_entry_points_forward0')
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+entry = <function parse_verilog_netlist at 0x00000206519FD4E0>
+
+    @pytest.mark.parametrize("entry", [parse_verilog_netlist, load_analysis_netlist])
+    def test_file_entry_points_forward_liberty_roles(tmp_path, output_functions, entry):
+        source = tmp_path / "top.v"
+        source.write_text(_design("sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"), encoding="utf-8")
+>       net = entry(source, cell_output_functions=output_functions)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_verilog_netlist() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:85: TypeError
+_____ test_file_entry_points_forward_liberty_roles[load_analysis_netlist] _____
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1134/test_file_entry_points_forward1')
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+entry = <function load_analysis_netlist at 0x00000206519FE520>
+
+    @pytest.mark.parametrize("entry", [parse_verilog_netlist, load_analysis_netlist])
+    def test_file_entry_points_forward_liberty_roles(tmp_path, output_functions, entry):
+        source = tmp_path / "top.v"
+        source.write_text(_design("sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(CO));"), encoding="utf-8")
+>       net = entry(source, cell_output_functions=output_functions)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: load_analysis_netlist() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:85: TypeError
+________________ test_secondary_output_drives_downstream_gate _________________
+
+output_functions = {'sky130_fd_sc_hd__a2111o_1': {'X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111o_2': {'X': '(A1&A2) | (B1...X': '(A1&A2) | (B1) | (C1) | (D1)'}, 'sky130_fd_sc_hd__a2111oi_0': {'Y': '(!A1&!B1&!C1&!D1) | (!A2&!B1&!C1&!D1)'}, ...}
+
+    def test_secondary_output_drives_downstream_gate(output_functions):
+        source = _design("""sky130_fd_sc_hd__fa_1 add (.A(A), .B(B), .CIN(C), .SUM(S), .COUT(carry));
+    sky130_fd_sc_hd__buf_1 b (.A(carry), .X(CO));""")
+>       net = parse_verilog_netlist_from_text(source, cell_output_functions=output_functions)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:93: TypeError
+_______ test_legacy_named_output_remains_supported_without_metadata[Y] ________
+
+output_pin = 'Y'
+
+    @pytest.mark.parametrize("output_pin", ["Y", "X", "Z", "Q", "Q_N"])
+    def test_legacy_named_output_remains_supported_without_metadata(output_pin):
+        net = parse_verilog_netlist_from_text(_design(f"ordinary u (.A(A), .{output_pin}(S));"))
+>       assert net.gates[0].all_outputs == ("S",)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Gate' object has no attribute 'all_outputs'
+
+code\tests\test_r22_cell_outputs.py:101: AttributeError
+_______ test_legacy_named_output_remains_supported_without_metadata[X] ________
+
+output_pin = 'X'
+
+    @pytest.mark.parametrize("output_pin", ["Y", "X", "Z", "Q", "Q_N"])
+    def test_legacy_named_output_remains_supported_without_metadata(output_pin):
+        net = parse_verilog_netlist_from_text(_design(f"ordinary u (.A(A), .{output_pin}(S));"))
+>       assert net.gates[0].all_outputs == ("S",)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Gate' object has no attribute 'all_outputs'
+
+code\tests\test_r22_cell_outputs.py:101: AttributeError
+_______ test_legacy_named_output_remains_supported_without_metadata[Z] ________
+
+output_pin = 'Z'
+
+    @pytest.mark.parametrize("output_pin", ["Y", "X", "Z", "Q", "Q_N"])
+    def test_legacy_named_output_remains_supported_without_metadata(output_pin):
+        net = parse_verilog_netlist_from_text(_design(f"ordinary u (.A(A), .{output_pin}(S));"))
+>       assert net.gates[0].all_outputs == ("S",)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Gate' object has no attribute 'all_outputs'
+
+code\tests\test_r22_cell_outputs.py:101: AttributeError
+_______ test_legacy_named_output_remains_supported_without_metadata[Q] ________
+
+output_pin = 'Q'
+
+    @pytest.mark.parametrize("output_pin", ["Y", "X", "Z", "Q", "Q_N"])
+    def test_legacy_named_output_remains_supported_without_metadata(output_pin):
+        net = parse_verilog_netlist_from_text(_design(f"ordinary u (.A(A), .{output_pin}(S));"))
+>       assert net.gates[0].all_outputs == ("S",)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Gate' object has no attribute 'all_outputs'
+
+code\tests\test_r22_cell_outputs.py:101: AttributeError
+______ test_legacy_named_output_remains_supported_without_metadata[Q_N] _______
+
+output_pin = 'Q_N'
+
+    @pytest.mark.parametrize("output_pin", ["Y", "X", "Z", "Q", "Q_N"])
+    def test_legacy_named_output_remains_supported_without_metadata(output_pin):
+        net = parse_verilog_netlist_from_text(_design(f"ordinary u (.A(A), .{output_pin}(S));"))
+>       assert net.gates[0].all_outputs == ("S",)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Gate' object has no attribute 'all_outputs'
+
+code\tests\test_r22_cell_outputs.py:101: AttributeError
+__ test_duplicate_physical_instances_rejected[buf u (S, A);\nbuf u (CO, B);] __
+
+instances = 'buf u (S, A);\nbuf u (CO, B);'
+
+    @pytest.mark.parametrize("instances", [
+        "buf u (S, A);\nbuf u (CO, B);",
+        "buf u (.A(A), .Y(S));\nbuf u (.A(B), .Y(CO));",
+    ])
+    def test_duplicate_physical_instances_rejected(instances):
+>       with pytest.raises(ValueError, match="[Dd]uplicate instance"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_cell_outputs.py:110: Failed
+_ test_duplicate_physical_instances_rejected[buf u (.A(A), .Y(S));\nbuf u (.A(B), .Y(CO));] _
+
+instances = 'buf u (.A(A), .Y(S));\nbuf u (.A(B), .Y(CO));'
+
+    @pytest.mark.parametrize("instances", [
+        "buf u (S, A);\nbuf u (CO, B);",
+        "buf u (.A(A), .Y(S));\nbuf u (.A(B), .Y(CO));",
+    ])
+    def test_duplicate_physical_instances_rejected(instances):
+>       with pytest.raises(ValueError, match="[Dd]uplicate instance"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_cell_outputs.py:110: Failed
+_________ test_literal_constant_inputs_and_assign_aliases_have_levels _________
+
+    def test_literal_constant_inputs_and_assign_aliases_have_levels():
+        net = parse_verilog_netlist_from_text(_design("""buf b (.A(1'b0), .Y(S));
+    assign CO = 1'b1;"""))
+>       assert net.logic_level("S") == 1
+               ^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_cell_outputs.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\netlist.py:71: in logic_level
+    return self.logic_levels()[signal]
+           ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Netlist(module_name='top', inputs=['A', 'B', 'C'], outputs=['S', 'CO'], wires=[], gates=[Gate(gate_type='buf', name='b', output='S', inputs=("1'b0",), pin_names=('A', 'Y'), output_pin='Y')], signal_aliases={})
+
+    def logic_levels(self) -> dict[str, int]:
+        levels = {name: 0 for name in self.inputs}
+        levels.update({"$false": 0, "$true": 0, "$undef": 0})
+        remaining = list(self.gates)
+    
+        while remaining:
+            progressed = False
+            next_remaining: list[Gate] = []
+            for gate in remaining:
+                resolved_inputs = [self.resolve_alias(signal) for signal in gate.inputs]
+                if all(signal in levels for signal in resolved_inputs):
+                    levels[gate.output] = max(levels[signal] for signal in resolved_inputs) + 1
+                    progressed = True
+                else:
+                    next_remaining.append(gate)
+            if not progressed:
+                unresolved = ", ".join(gate.name for gate in next_remaining)
+>               raise ValueError(f"cannot resolve logic levels for gates: {unresolved}")
+E               ValueError: cannot resolve logic levels for gates: b
+
+code\src\rseco\netlist.py:56: ValueError
+_______________ test_zero_input_gate_levels_cover_every_output ________________
+
+    def test_zero_input_gate_levels_cover_every_output():
+>       net = Netlist("top", [], ["S", "CO"], [], [Gate("source", "u", "S", (), additional_outputs=("CO",))])
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Gate.__init__() got an unexpected keyword argument 'additional_outputs'
+
+code\tests\test_r22_cell_outputs.py:122: TypeError
+______ test_metadata_overrides_legacy_output_guess_and_constant_fallback ______
+
+    def test_metadata_overrides_legacy_output_guess_and_constant_fallback():
+>       net = parse_verilog_netlist_from_text(
+            _design(f"{CONB} tie (.HI(A), .LO(S), .Y(B));"),
+            cell_output_functions={CONB: {"LO": "1"}},
+        )
+E       TypeError: parse_verilog_netlist_from_text() got an unexpected keyword argument 'cell_output_functions'
+
+code\tests\test_r22_cell_outputs.py:127: TypeError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_cell_outputs.py::test_gate_all_outputs_keeps_legacy_constructor
+FAILED code/tests/test_r22_cell_outputs.py::test_real_conb_preserves_both_drivers_and_constant_aliases[False]
+FAILED code/tests/test_r22_cell_outputs.py::test_real_conb_preserves_both_drivers_and_constant_aliases[True]
+FAILED code/tests/test_r22_cell_outputs.py::test_actual_liberty_full_adder_outputs_do_not_become_inputs[fa_1]
+FAILED code/tests/test_r22_cell_outputs.py::test_actual_liberty_full_adder_outputs_do_not_become_inputs[fa_2]
+FAILED code/tests/test_r22_cell_outputs.py::test_actual_liberty_full_adder_outputs_do_not_become_inputs[fa_4]
+FAILED code/tests/test_r22_cell_outputs.py::test_actual_liberty_full_adder_outputs_do_not_become_inputs[fah_1]
+FAILED code/tests/test_r22_cell_outputs.py::test_actual_liberty_full_adder_outputs_do_not_become_inputs[fahcin_1]
+FAILED code/tests/test_r22_cell_outputs.py::test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(S)-expected0]
+FAILED code/tests/test_r22_cell_outputs.py::test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(), .COUT(CO)-expected1]
+FAILED code/tests/test_r22_cell_outputs.py::test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(S), .COUT()-expected2]
+FAILED code/tests/test_r22_cell_outputs.py::test_omitted_or_empty_outputs_still_count_one_physical_cell[.SUM(), .COUT()-expected3]
+FAILED code/tests/test_r22_cell_outputs.py::test_omitted_or_empty_outputs_still_count_one_physical_cell[-expected4]
+FAILED code/tests/test_r22_cell_outputs.py::test_file_entry_points_forward_liberty_roles[parse_verilog_netlist]
+FAILED code/tests/test_r22_cell_outputs.py::test_file_entry_points_forward_liberty_roles[load_analysis_netlist]
+FAILED code/tests/test_r22_cell_outputs.py::test_secondary_output_drives_downstream_gate
+FAILED code/tests/test_r22_cell_outputs.py::test_legacy_named_output_remains_supported_without_metadata[Y]
+FAILED code/tests/test_r22_cell_outputs.py::test_legacy_named_output_remains_supported_without_metadata[X]
+FAILED code/tests/test_r22_cell_outputs.py::test_legacy_named_output_remains_supported_without_metadata[Z]
+FAILED code/tests/test_r22_cell_outputs.py::test_legacy_named_output_remains_supported_without_metadata[Q]
+FAILED code/tests/test_r22_cell_outputs.py::test_legacy_named_output_remains_supported_without_metadata[Q_N]
+FAILED code/tests/test_r22_cell_outputs.py::test_duplicate_physical_instances_rejected[buf u (S, A);\nbuf u (CO, B);]
+FAILED code/tests/test_r22_cell_outputs.py::test_duplicate_physical_instances_rejected[buf u (.A(A), .Y(S));\nbuf u (.A(B), .Y(CO));]
+FAILED code/tests/test_r22_cell_outputs.py::test_literal_constant_inputs_and_assign_aliases_have_levels
+FAILED code/tests/test_r22_cell_outputs.py::test_zero_input_gate_levels_cover_every_output
+FAILED code/tests/test_r22_cell_outputs.py::test_metadata_overrides_legacy_output_guess_and_constant_fallback
+26 failed in 1.44s
+[run] 完成（5s），退出码 1

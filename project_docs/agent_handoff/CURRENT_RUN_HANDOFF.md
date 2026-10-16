@@ -1,3 +1,97 @@
+# r22 恢复推进交接 — 2026-10-16
+
+## 1. 项目与授权
+
+FAECO：预布局门级时序ECO候选探索、验证与失效刻画。用户2026-10-16明确“继续”，覆盖10-14暂停，恢复机制修复、历史科学证据闭合和后续稿件工作。r22仍为工作修订，v18保持历史冻结；不是投稿定稿，不提交期刊。
+
+## 2. 真实起点与当前阶段
+
+主线恢复实查：唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main，HEAD `781c031`，干净且已push。旧namespace隔离等修复已保存在该起点；K1–K6尚待本轮完成与验收。当前主线及领域任务执行修复/反驳性验证，专职记录同步记录文档；已有限定相关回归通过；本轮首整套741pass/1fail，声明兼容限定145pass后，v2整套757pass/4skip/156subtests、162源码SHA稳定已通过。尚无真实SEC或v2有效结果。
+
+旧667 passed只代表10-14当时对象，原始stdout未归档，不能作为当前修复版本通过。新回归要绑定当前源码/fixture/输入并保存完整日志；测试期间不并行改被测对象。
+
+### 当前完整修复版本已通过，B两Pico旧模型需补证（LOG-20261016-09）
+
+记录员实读full_regression_v2.log/.json：757passed、4skipped、156subtests，102.50s，wrapper107s/exit0；162个code Python文件before/after SHA一致、source_stable=true。可确认该当前修复对象整套通过；首失败三证据保留，不能将该实现验收升级为科学证据已闭合。
+
+主线新B模型审计通报：两Pico归档proof实际使用edfxtp_1，旧model仅assign Q=IQ而IQ无driver/always；dfxtp_1有always。审计细节正由models补写，记录员待实读正式新报告；先登记OI-038为open。B28实际final/gold对象绑定仍成立，但26其它对象与这2个真实FF语义缺口分开；不据此判定电路功能不等价。后续在新库模型/source pin下对这2实际final补独立SEC，旧证据不改，与A6分别绑定。
+
+主线准备阶段commit+pin，记录员此轮同步后停止写入，等待实际Git/SEC启动消息。正式正负模型SEC控制、A6、B2与v2 pilot尚未执行；科学A/B/C/D缺口仍开放。
+
+### 声明兼容修复与完整v2启动历史（LOG-20261016-08）
+
+记录员已实读validation_wire_regroup_red.log（7failed/8passed/27deselected）及green.log：相关五文件145passed/22.28s，180s包装26s/exit0。原sole failure通过，新增15参数例保留已有net宽度/signedness/声明次数约束，支持合法声明分组/合并/新增线；不是修改旧fixture凑过。
+
+production/tests再次冻结，完整v2实际session54033运行，full_regression_v2.json读为running并保存162项beforeSHA，stdout/JUnit独立前缀不覆盖首失败；300s包装/主线330s外超时。首读stdout仍在前段，不能据此称通过。真实SEC/EDA尚未开始。
+
+证据目录sec_model_controls.py准备正式正负SEC控制：conb双输出及错接HI/LO；fa手写真值函数与保持SUM但故意错误COUT。只在整套通过、commit/模型源码pin之后执行。D56配置恢复与C未知边界为只读设计；B28已有final/gold对象绑定保留，新增实际历史模型完整性审计，不能把新writer缺陷直接外推为旧B无效，也不能未查旧模型便断言其完整。
+
+### 首完整回归失败归因历史（LOG-20261016-07）
+
+已实际读取full_regression.log/.json：741passed、1failed、4skipped、156subtests，108.20s，wrapper112s/exit1；before/after SHA一致、source_stable=true。唯一失败为test_sol_review_residuals.py::test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer，合法B将wire N;扩为wire N,N_BUF;，新_non_rgb_structure以整条声明Counter比较而误判原N删除。
+
+归因为新实现的合法声明重组兼容性错误，不是测试对象漂移，也不改旧fixture凑过。models仅修该函数，须保留已有net宽度/signedness、允许分组合并与新增线；先专属红→绿，再冻结新版整体回归。旧full_regression.{json,log,xml}原件保留，新全回归用full_regression_v2前缀。此刻完整门仍失败，尚未任何真实SEC/EDA；不新pin放行pilot。
+
+### 完整回归启动与监测历史（LOG-20261016-06）
+
+正式完整回归session63511已运行：Git Bash timeout300s，`.venv/Scripts/python.exe -m pytest code/tests -q --junitxml=project_docs/evidence/r22_correctness_20261016/full_regression.xml`。`full_regression.json`记录起始HEAD781c031、运行前源码/fixture SHA及status=running；stdout为full_regression.log，结束后再核验完整JUnit/afterSHA。记录员首次查看尾部已至85%并见1个F，尚无最终计数/归因，已立即通知主线，不能称全过。
+
+独立最终冻结probe已实读INTEGRATION_REVIEW最后一节：7生产文件before/after SHA稳定，IR source/metadata/alias/secondary boundary/split交集及S错误top、SEC假module/helper不变控制符合；约5s/exit0。此为独立构造探针，不代替完整回归。真实A六对象SEC/EDA尚未启动；D/C只读配置恢复并行，不修改被测源码。
+
+### 集成复审反例汇合与冻结（LOG-20261016-05）
+
+记录员实读integration_review_red.log（3failed/6passed：无输入source、assign别名root、cone外secondary消费者）、split_external_red.log（1failed：BO/internal重叠）以及scope_final_green5.log（最新限定68passed+1subtest/3.71s，120s包装exit0）。主线分别修复物理driver/source、alias root、cone外边界及split传播/内部互斥；lib metadata实际属性为lib，原cells路径反例已加入并修。旧c17断言漏N11/N16外部消费者，主线实查原网表后更新期待，未放宽边界检查。
+
+A证明工具test_r22_a_sec_recovery为9passed/0.97s；dry-run六对象、52个输入文件及44个源码SHA已实际查看input_manifest.json，eda_executed=false，source_tree_clean=false（工作区源码快照，不冒称已提交新pin）。s713主pair选原A mapped→实际fixed，counterpart baseline差异由主pair覆盖，不能只证明带tie变化后的baseline→fixed。
+
+主线声明所有production/tests已冻结，当前准备整体回归；预定完整stdout/JUnit/被测SHA保存到 `project_docs/evidence/r22_correctness_20261016/`。A尚未实际执行六对象证明，v2/EDA尚未开始。已有INTEGRATION_REVIEW保留各轮反例/源码身份，最终全门与独立放行仍待主线实际结果。
+
+### 本轮已实读的限定验证（LOG-20261016-04）
+
+- K2 parser相关三文件：`scratch/r22_resume_20261016/k2_parser_final_green.log`，35 passed/1.03s，120s包装exit0。
+- 模型/校验相关四文件：`validation_models_final_related.log`，69 passed/10.03s，180s包装exit0。
+- 主线scope反例先4 failed（次输出依赖/物理节点、CLI同名helper D、S刷新失败仍提交）；修复后独立SEC注释假module反例另1 failed，随后使用公共module_spans。最终相关七文件 `scope_final_green.log` 为63 passed、1 subtest/3.85s，120s包装exit0；红测保留在scope_red.log/sec_module_red.log。
+- 主线说明deep-signature旧fixture把同名GROOT放循环内造成实际重复，改为循环外，保留深链含义，不放宽production唯一性门。parser/models源码已冻结，领域转A六证明对象工具准备与只读集成复审；尚未整体回归/EDA。
+
+以上是各限定范围结果，不相加冒充完整回归，不宣称K1–K6/科学证据全闭合。新恢复计划：`project_docs/planning/R22_CORRECTNESS_RESUME_PLAN_20261016.md`；当前后续为源码/fixture稳定后完整回归、独立复审及新pin。
+
+## 3. 已核验的既有证据与边界
+
+记录员已实际读取 `../evidence/r22_preflight_20261014/NAMESPACE_FIX_REVIEW.md` 和 `../evidence/r22_historical_correctness_20261014/REPORT.md`。K1多输出模型漏HI/COUT、K2合法conb解析缺口、K3端点D全文查找、K4常量assign变化穿过局部门、K5重复实例拒绝不一致、K6 legacy S刷新全文解析/吞异常分别保留；其中构造反例不冒称真实生成器已触发。
+
+历史审计确认B28个完整实际final/gold SEC绑定可保留，B14声明纪律缺口另列；A有2个确切对象可复用证明、另6缺证；D38/40及k1 14/16结构invalid；C只查12代表，9 invalid、3未知，不外推全集。结构invalid不等本轮已新证不等价，未知不是失败。计数来源可复算不证明候选合法。
+
+v1首pilot仅两W0在最终helper不变/独立SEC门失败，原目录与归档完整保留，无有效C′效果结果；不覆盖v1、不借中间收益，不用新C′替代历史C/D。
+
+## 4. 当前待办与依赖
+
+| ID | 任务 | 状态 | 优先级 | 完成标准 / 下一动作 |
+|---|---|---|---|---|
+| P01 | K1–K6修复、当前版本回归与独立复审 | in_progress | P0 | K1每输出完整模型；K2多输出分析与物理实例身份分离；K3端点top作用域；K4非局部assign边界；K5实例唯一性；K6 legacy S刷新；反例先失败后通过，稳定源码全回归及独立复审 |
+| P02 | A/D/C历史科学证据恢复 | pending | P0 | A六已识别实际接受对象补独立证明；D同臂同输入整族复验；C完整核查或受影响矩阵重跑；各族单独来源绑定 |
+| P03 | 新C′受控矩阵 | pending，依赖P01 | P1 | 新source pin与v2目录、完整配置/库/输入/工具哈希；s27/s382×九臂18项pilot全部通过才扩72，独立最终SEC有效 |
+| P04 | 中英稿、图表、投稿件一致回填 | pending，依赖科学证据闭合 | P1 | 当前证据对应表图/结论，作者事实与声明确认，最终编译和逐页视觉QA |
+
+## 5. 验收与运行纪律
+
+先复用既有最小反例，以可推翻主张的门优先。修复汇合后，当前版本整体回归与独立审查通过，再新commit/source pin、模型/库/输入/工具哈希及v2配置清单。正式EDA使用超时包装，定期检查日志；输入/库变化停止，不沿用旧source pin通过。每次运行前登记真实配置/对象，后记退出、停止原因、独立SEC与结果。
+
+候选评估记录、真实STA启动、缓存/前置拒绝及实际提交分别计数；不跨族拼接归因。复用历史证据时实际打开文件，不以旧数字或目录名推断当前通过。当前完整回归建议复用 `bash code/scripts/run_with_timeout.sh 300 .venv/Scripts/python.exe -m pytest code/tests -q`，实际命令/版本/输出由主线执行后另记。
+
+## 6. 接手入口与产物
+
+按本目录README → START_HERE → CURRENT_STATUS → TASK_BOARD → CURRENT_RUN_HANDOFF → NEXT_AGENT_PROMPT读取，再查 `../OPEN_ISSUES.md`、`../../docs/EXPERIENCE.md`、`../evidence/EXPERIMENT_REGISTRY.md`。旧暂停原件保存在 `handoff_20261014_r22.md`，仅作历史。
+
+中稿 `../../paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`、英稿 `../../paper/en/manuscript/FAECO.tex` 及 `../../paper/en/build/FAECO.pdf` 均已保存，但A/D/C科学证据未恢复前不能当投稿定稿。图件入口 `../../paper/zh/figures/data/scripts/review_r21_figures.py`，旧gen_figures不用于当前图重建。
+
+## 7. 尚缺与下一代理要求
+
+尚缺本轮K1–K6闭合证据、当前版本完整回归/独立复审、新pin/v2有效pilot、A六确切证明、D/C同族恢复、稿图一致回填与作者声明确认。OI-030/031/034历史限制、OI-035/036/037及其它未决持续保留，不提前关闭。大规模历史raw/库/工具含本机ignored资产，不声称仅Git即可独立复现全部历史。阶段提交/push由主线负责，专职记录不操作Git、源码或稿图。
+
+---
+
+## 历史交接（含2026-10-14暂停；当前授权以上方2026-10-16为准）
+
 # r22 暂停交接 — 2026-10-14
 
 > **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**

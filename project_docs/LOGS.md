@@ -908,3 +908,19 @@
 暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `CURRENT_RUN_HANDOFF.md`（状态目录内则 ../CURRENT_RUN_HANDOFF.md）。
 
 停止执行类子任务；专职记录最后未写盘的暂停收口由主线完成。checkpoint71a4c12实际推送成功，稿件/图件/失败v1完整ZIP与审计已保存。git差分检查exit0，check_record.sh OK，ZIP CRC/109项清单PASS；未运行新修复/实验。根规则、交接七段、问题表、下一代理提示同步paused，最终行政记录提交后验证origin/main与HEAD一致。
+
+
+## 2026-10-16
+
+| 日志ID | 动作 | 来源/落盘 | 结果/边界 |
+|---|---|---|---|
+| LOG-20261016-01 | 用户明确“继续”，恢复r22机制证据修复与科学闭合；读取交接入口、记录制度、K1–K6独立审查和历史correctness报告 | `agent_handoff/README.md`、`evidence/r22_preflight_20261014/NAMESPACE_FIX_REVIEW.md`、`evidence/r22_historical_correctness_20261014/REPORT.md`；专职记录刷新START_HERE/CURRENT_STATUS | 主线实查main clean/HEAD781c031、已push；恢复先修K1–K6，再当前版本整体验证/独立复审、新pin/v2与18pilot→72门。旧667不是本轮通过；无新EDA/SEC/全回归结果登记。 |
+
+| LOG-20261016-02 | 当前交接/任务/未决/登记/经验全入口同步恢复 | 新建 `agent_handoff/handoff_20261016_r22.md`；刷新CURRENT_RUN_HANDOFF、TASK_BOARD、NEXT_AGENT_PROMPT、agent_handoff/README、project_docs/README、OPEN_ISSUES、EXPERIMENT_REGISTRY、EXPERIENCE | 旧暂停原件完整保留，当前授权统一恢复；P01执行、P02–P04依赖pending；v1保持stopped/v2尚未运行，不提前关闭任何科学问题。修正交接README中AGENTS相对链接为../../AGENTS.md。 |
+| LOG-20261016-03 | 恢复记录入口自检 | `bash code/scripts/check_record.sh` exit0；只读Python检查13个责任文档日期及当前权威标题 | check_record报告WORK_PROGRESS/CURRENT_STATUS今日已记录；8个权威状态标题均为恢复。WSL启动提示4个旧E盘PATH翻译失败，但记录检查本体通过；未据此宣称源码/实验验收。 |
+| LOG-20261016-04 | K1/K2模型/解析与主线scope修复限定回归已实际查看 | 实读scratch/r22_resume_20261016/{k2_parser_final_green,validation_models_final_related,scope_red,sec_module_red,scope_final_green}.log与R22_CORRECTNESS_RESUME_PLAN_20261016.md | parser35passed/1.03s、models69passed/10.03s、scope63passed+1subtest/3.85s，各超时包装exit0；scope先4fail、独立SEC假module先1fail均有原日志。主线graph/cut多输出同一物理节点、CLI先top、RGB/S提交前top+Liberty刷新和SEC module_spans已汇合；源码冻结待整回归/独立复审，尚无EDA。旧GROOT重复fixture改循环外是保留深链语义，不放宽唯一性门。 |
+| LOG-20261016-05 | 独立集成反驳再次汇合，限定最新68+1通过；A六对象干跑完成，production/tests冻结待全回归 | 实读integration_review_red/split_external_red/scope_final_green5/a_sec_recovery_green/a_sec_recovery_dry_run日志、INTEGRATION_REVIEW及r22_a_sec_20261016/input_manifest.json | source/alias/external次输出/split BO与internal互斥已按红测修复；scope68passed+1subtest/3.71s/exit0；A工具9passed/0.97s+dryrun6cases/52inputs/44sources、eda_executed=false、source_tree_clean=false。s713原A→fixed主pair覆盖tie变化。仅限定验证与准备，不代表全回归或六对象SEC已通过。 |
+| LOG-20261016-06 | 正式完整回归实际启动；独立最终冻结probe确认；监测发现F标记即报主线 | r22_correctness_20261016/full_regression.json/.log、INTEGRATION_REVIEW最终冻结节；session63511，timeout300s，JUnit目标full_regression.xml | json启动状态running、beforeSHA已保存；stdout至85%已见1个F，最终计数/原因待结果，不称通过。最终独立probe约5s/exit0且7生产SHA稳定；真实SEC/EDA未启动，D/C仅只读恢复不干扰pytest。 |
+| LOG-20261016-07 | 首完整回归失败已实读并归因，安排实现修复/新版全回归 | full_regression.log/.json/.xml：741passed/1failed/4skipped/156subtests、108.20s、wrapper112/exit1，source_stable=true | 唯一合法B链旧测试失败：wire N;→wire N,N_BUF;被_non_rgb_structure整条声明Counter误判删除。实现兼容性错误，models仅修函数，不改旧fixture；保留net宽度/signedness与合法声明重组，专属后full_regression_v2整套，旧三证据不覆盖；无真实SEC/EDA。 |
+| LOG-20261016-08 | 声明语义兼容修复145限定通过，新完整v2已实际启动；正式SEC控制准备与B旧模型审计纳入 | validation_wire_regroup_red/green.log；full_regression_v2.json/.log/.xml；session54033；sec_model_controls.py | 专属红7fail/8pass/27deselect→五文件145pass/22.28s、wrapper26/exit0；原sole failure过，15参数例约束宽度/signedness/次数。production/tests冻结，v2 running、162beforeSHA/300s/外330s。正式SEC controls须整套过+commit/pin才执行；D56/C/B模型审计只读，不新EDA。 |
+| LOG-20261016-09 | 当前修复对象整套757通过已实读；B两Pico历史模型语义缺口登记OI-038，暂停写入供阶段commit | full_regression_v2.log/.json：757pass/4skip/156subtests、102.50s、wrapper107/exit0，162code Python before/after一致source_stable=true；B模型细节主线实际审计通报，正式报告待models补 | 当前实现整套验收通过，不升级科学结论。B28对象绑定仍真，但2Pico所用edfxtp_1旧模型Q=IQ而IQ无driver/always，26其它与2需分开；不判不等价。OI-038 open，待新模型/pin补2actual final SEC，与A6独立；真实SEC/EDA未启动。记录员此轮后停写等阶段commit。 |

@@ -1,0 +1,123 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_cell_outputs.py -q
+..........................F..                                            [100%]
+================================== FAILURES ===================================
+_______ test_conb_all_or_one_output_disconnected_keeps_physical_count[] _______
+
+connections = ''
+
+    @pytest.mark.parametrize("connections", ["", ".HI(), .LO()", ".LO(CO)"])
+    def test_conb_all_or_one_output_disconnected_keeps_physical_count(connections):
+>       net = parse_verilog_netlist_from_text(_design(f"{CONB} tie ({connections});"))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_cell_outputs.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\replacement.py:291: in parse_verilog_netlist_from_text
+    return parse_verilog_netlist(path, cell_output_functions=cell_output_functions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/١����/AppData/Local/Temp/tmpwk4e7lzy.v')
+cell_output_functions = None
+
+    def parse_verilog_netlist(
+        path: str | Path,
+        *,
+        cell_output_functions: dict[str, dict[str, str]] | None = None,
+    ) -> Netlist:
+        text = Path(path).read_text(encoding="utf-8")
+        module_match = re.search(r"\bmodule\s+(\w+)\s*\(", text)
+        if not module_match:
+            raise ValueError(f"missing module declaration: {path}")
+    
+        inputs: list[str] = []
+        outputs: list[str] = []
+        wires: list[str] = []
+        gates: list[Gate] = []
+        aliases: dict[str, str] = {}
+        constant_aliases: dict[str, str] = {}
+        instance_names: set[str] = set()
+    
+        # first pass: declarations and single-identifier assign aliases
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//"):
+                continue
+            assign_match = re.match(r"^assign\s+(\S+)\s*=\s*([^;]+);", line)
+            if assign_match:
+                lhs = assign_match.group(1).strip()
+                rhs = assign_match.group(2).strip()
+                constant = _constant_signal(rhs)
+                if re.fullmatch(r"\w+", rhs) or constant:
+                    aliases[lhs] = constant or rhs
+                continue
+            _collect_declaration(line, "input", inputs)
+            _collect_declaration(line, "output", outputs)
+            _collect_declaration(line, "wire", wires)
+    
+        # second pass: instances (aliases are complete by now)
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//") or line.startswith("assign"):
+                continue
+            instance = re.match(r"^(\w+)\s+(\w+)\s*\((.*)\)\s*;", line)
+            if instance and instance.group(1) not in {"module", "input", "output", "wire"}:
+                cell_type, instance_name = instance.group(1), instance.group(2)
+                if instance_name in instance_names:
+                    raise ValueError(f"Duplicate instance in parsed netlist: {instance_name}")
+                instance_names.add(instance_name)
+                pins = [pin.strip() for pin in instance.group(3).split(",") if pin.strip()]
+                if pins and pins[0].startswith("."):
+                    connections = [
+                        re.match(r"\.(\w+)\s*\(([^()]*)\)", pin) for pin in pins
+                    ]
+                    if not all(connections):
+                        raise ValueError(f"malformed named-port instance: {line}")
+                    named = [
+                        (match.group(1), match.group(2).strip()) for match in connections
+                    ]
+                    signal_map = dict(named)
+                    output_functions = (cell_output_functions or {}).get(cell_type)
+                    if output_functions is None and re.fullmatch(r"sky130_fd_sc_hd__conb_\d+", cell_type):
+                        # Exact known cell semantics, retained for historical callers
+                        # without Liberty metadata.  Both outputs remain represented.
+                        output_functions = {"HI": "1", "LO": "0"}
+                    if output_functions:
+                        output_pins = tuple(output_functions)
+                    else:
+                        legacy_output = next(
+                            (pin for pin, _ in named if pin in {"Y", "X", "Z", "Q", "Q_N"}),
+                            None,
+                        )
+                        if legacy_output is None:
+                            raise ValueError(
+                                f"cannot determine output pin for named-port instance: {line}"
+                            )
+                        output_pins = (legacy_output,)
+                    connected_pins = tuple(pin for pin in output_pins if signal_map.get(pin))
+                    connected_outputs = tuple(_follow_alias(signal_map[pin], aliases) for pin in connected_pins)
+                    output_pin = connected_pins[0] if connected_pins else None
+                    raw_inputs = tuple(signal for pin, signal in named if pin not in output_pins and signal)
+                    for pin, output in zip(connected_pins, connected_outputs):
+                        constant = _constant_signal((output_functions or {}).get(pin, ""))
+                        if constant:
+                            constant_aliases[output] = constant
+                    gates.append(
+                        Gate(
+                            gate_type=instance.group(1),
+                            name=instance.group(2),
+                            output=connected_outputs[0] if connected_outputs else "",
+                            inputs=tuple(_follow_alias(signal, aliases) for signal in raw_inputs),
+                            pin_names=tuple(pin for pin, _ in named),
+                            output_pin=output_pin,
+                            additional_outputs=connected_outputs[1:],
+                        )
+                    )
+                else:
+                    if len(pins) < 2:
+>                       raise ValueError(f"gate instance must have output and inputs: {line}")
+E                       ValueError: gate instance must have output and inputs: sky130_fd_sc_hd__conb_1 tie ();
+
+code\src\rseco\netlist.py:183: ValueError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_cell_outputs.py::test_conb_all_or_one_output_disconnected_keeps_physical_count[]
+1 failed, 28 passed in 1.56s
+[run] 完成（5s），退出码 1

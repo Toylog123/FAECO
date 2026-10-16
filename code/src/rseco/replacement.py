@@ -276,7 +276,11 @@ def check_local_functional_equivalence(window: CombinationalWindow, revised_netl
                              reason="all boundary output truth tables match")
 
 
-def parse_verilog_netlist_from_text(text: str) -> Netlist:
+def parse_verilog_netlist_from_text(
+    text: str,
+    *,
+    cell_output_functions: dict[str, dict[str, str]] | None = None,
+) -> Netlist:
     """Parse text through the existing parser without introducing a temp file."""
     import tempfile
     from pathlib import Path
@@ -284,7 +288,7 @@ def parse_verilog_netlist_from_text(text: str) -> Netlist:
         handle.write(text)
         path = Path(handle.name)
     try:
-        return parse_verilog_netlist(path)
+        return parse_verilog_netlist(path, cell_output_functions=cell_output_functions)
     finally:
         path.unlink(missing_ok=True)
 

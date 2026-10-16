@@ -1,11 +1,16 @@
-# 当前状态：paused（2026-10-14）
+# r22 已恢复推进 — 2026-10-16
 
-> **2026-10-14：用户明确暂停，状态 paused。仅完成状态保全与交接；等待用户明确恢复，不得自动执行下文历史推进任务。**
+用户于2026-10-16明确“继续”，覆盖2026-10-14暂停。恢复起点由主线实查：唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main，HEAD `781c031`，工作区干净且已推送。当前进入K1–K6修复与反驳性验证；首整套失败已修，当前v2整套757pass通过；尚无有效C′结果。
 
-暂停检查点main `71a4c12`已推送；后续仅行政收口，最终HEAD以git log -1为准。没有运行中的项目实验。最后全回归667 passed/4 skipped/156 subtests；新K1–K6仍未解决，多输出parser尚未实施。中文12页/英文27页与各7图14表已保存，但历史A六项缺证、D38/40和C代表9/12结构缺陷需补验，B28完整SEC绑定保留。完整断点与恢复顺序见 `CURRENT_RUN_HANDOFF.md`（状态目录内则 ../CURRENT_RUN_HANDOFF.md）。
+先复用 `../evidence/r22_preflight_20261014/NAMESPACE_FIX_REVIEW.md` 的最小反例与历史correctness审计；修复后绑定当前源码完整回归、独立复审，随后新source pin与v2目录。两电路九臂共18项pilot全部通过才能扩至72运行。A六实际接受候选证明、D同臂同输入整族复验、C完整核查/受影响矩阵恢复分别处理；不能用C′替代历史C/D。中英文稿与图表在科学证据闭合后统一回填。
 
+旧667 passed仅是2026-10-14历史回归记录，不代表当前修复版通过；原失败v1与旧暂停交接完整保留。当前完整接手文档：`handoff_20261016_r22.md`（状态子目录请用 `../handoff_20261016_r22.md`）。
 
-## 暂停前历史记录
+## 本轮最新阶段（LOG-20261016-09）
+
+full_regression_v2已实读757pass/4skip/156subtests，102.50s、wrapper107/exit0，162code Python before/after SHA一致；当前修复对象完整回归通过，首失败证据保留。阶段commit/source pin准备，真实SEC/EDA尚未执行。新OI-038：主线实查两Pico旧proof使用edfxtp_1模型，Q=IQ但IQ无driver/always，报告待models补细节；B28实际对象绑定仍真，26其它与2FF语义缺口分别处理，不判电路不等价。后续新模型/pin补B2实际final SEC，与A6及正负模型控制分别登记；A/B/C/D科学缺口仍开放。记录员本轮停写供阶段commit。
+
+## 历史记录（含2026-10-14暂停前状态；不作为当前授权）
 
 # START HERE
 

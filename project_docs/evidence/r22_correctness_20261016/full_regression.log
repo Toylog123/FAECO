@@ -1,0 +1,42 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -m pytest code/tests -q --junitxml=project_docs/evidence/r22_correctness_20261016/full_regression.xml
+........................................................................ [  9%]
+..........sss........................................................... [ 19%]
+............................................................. [ 27%]
+....................................................................... [ 36%]
+........................................................................ [ 46%]
+........................................................................ [ 56%]
+........................................................................ [ 65%]
+........................................................................ [ 75%]
+............................................F........................... [ 85%]
+........................................................................ [ 94%]
+...................s..................                                   [100%]
+================================== FAILURES ===================================
+_ test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer _
+
+    def test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer():
+        lib = LIB + '''cell ("sky130_fd_sc_hd__buf_1") {
+          pin ("A") { direction : "input"; }
+          pin ("X") { direction : "output"; function : "A"; }
+        }'''
+        original = """module top(A, B, Y);
+    input A, B;
+    output Y;
+    wire N;
+    sky130_fd_sc_hd__and2_1 g1 (.A(A), .B(B), .Y(N));
+    sky130_fd_sc_hd__and2_1 g2 (.A(N), .B(B), .Y(Y));
+    endmodule
+    """
+        candidate = original.replace(".A(N), .B(B), .Y(Y)", ".A(N_BUF), .B(B), .Y(Y)").replace(
+            "wire N;", "wire N, N_BUF;\nsky130_fd_sc_hd__buf_1 b1 (.A(N), .X(N_BUF));")
+        checker = build_real_equivalence_checker(lib)
+>       assert checker(original, candidate).status == "pass"
+E       AssertionError: assert 'fail' == 'pass'
+E         
+E         - pass
+E         + fail
+
+code\tests\test_sol_review_residuals.py:150: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_sol_review_residuals.py::test_strict_buffer_equivalence_accepts_verified_buffer_chain_and_rejects_wrong_buffer
+1 failed, 741 passed, 4 skipped, 156 subtests passed in 108.20s (0:01:48)
+[run] 完成（112s），退出码 1

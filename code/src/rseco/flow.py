@@ -53,6 +53,22 @@ def _default_liberty_cells_v() -> Path | None:
     return candidate if candidate.exists() else None
 
 
+def _analysis_cell_options(evaluator) -> dict:
+    """Use the evaluator's actual Liberty outputs at every analysis entry."""
+    cells = getattr(evaluator, "lib", {})
+    outputs = {name: dict(cell.output_functions) for name, cell in cells.items()
+               if getattr(cell, "output_functions", None)}
+    return {"cell_output_functions": outputs} if outputs else {}
+
+
+def _refreshed_candidate_cone(text, evaluator, target_output):
+    from .verilog_modules import target_module_text
+    top = getattr(evaluator, "top_module", None)
+    scoped = target_module_text(text, top) if top else text
+    netlist = parse_verilog_netlist_from_text(scoped, **_analysis_cell_options(evaluator))
+    return extract_fanin_cone(netlist, roots=[target_output])
+
+
 def build_case_metrics(
     case_dir: str | Path,
     *,
@@ -493,8 +509,9 @@ def run_multi_iteration_case(
     case_dir = Path(case_dir)
     artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
     case = load_case(case_dir)
-    original = load_analysis_netlist(case.original_analysis_netlist_path)
-    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path)
+    analysis_options = _analysis_cell_options(wns_evaluator)
+    original = load_analysis_netlist(case.original_analysis_netlist_path, **analysis_options)
+    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path, **analysis_options)
     cone = extract_fanin_cone(original, roots=[case.target_output])
     if equivalence_checker is not None:
         equivalence = equivalence_checker(
@@ -816,13 +833,8 @@ def run_multi_iteration_case(
                         refreshed_cone = None
                         if getattr(wns_evaluator, "refresh_cone", False):
                             try:
-                                from .verilog_modules import target_module_text
-                                target_module=getattr(wns_evaluator,'top_module',None)
-                                refreshed_netlist = parse_verilog_netlist_from_text(
-                                    target_module_text(candidate_text,target_module) if target_module else candidate_text)
-                                refreshed_cone = extract_fanin_cone(
-                                    refreshed_netlist, roots=[case.target_output]
-                                )
+                                refreshed_cone = _refreshed_candidate_cone(
+                                    candidate_text, wns_evaluator, case.target_output)
                             except Exception as exc:
                                 failure = {
                                     "type": "F2_boundary_invalid",
@@ -1086,6 +1098,21 @@ def run_multi_iteration_case(
                     s_text = wns_info.get("candidate_netlist_text")
                     if s_text is None:
                         continue
+                    refreshed_cone = None
+                    if getattr(wns_evaluator, "refresh_cone", False):
+                        try:
+                            refreshed_cone = _refreshed_candidate_cone(
+                                s_text, wns_evaluator, case.target_output)
+                        except Exception as exc:
+                            state.record_failure({
+                                "type": "F2_boundary_invalid",
+                                "candidate_hash": wns_info.get("candidate_hash", s_key),
+                                "cut_hash": s_key, "severity": "hard",
+                                "threshold": "cone_refresh", "observed_value": "unavailable",
+                                "evidence": {"reason": "cone_refresh_failed", "stage": "S", "error": str(exc)},
+                            })
+                            failures.add(FailureType.BOUNDARY_INVALID)
+                            continue
                     state.accept_patch(
                         s_patch_id, s_text, wns=s_wns,
                         tns=wns_info.get("tns"),
@@ -1116,17 +1143,11 @@ def run_multi_iteration_case(
                     # refresh the cone from the grafted netlist so the next
                     # round's cut search sees the new window cells (same
                     # contract as the R/G/B accept path).
-                    if getattr(wns_evaluator, "refresh_cone", False):
-                        try:
-                            refreshed_netlist = parse_verilog_netlist_from_text(s_text)
-                            cone = extract_fanin_cone(
-                                refreshed_netlist, roots=[case.target_output]
-                            )
-                            state.current_cone_gates = list(cone.gates)
-                            state.accepted_patches[-1]["metadata"][
-                                "refreshed_cone_gates"] = list(cone.gates)
-                        except Exception:
-                            pass
+                    if refreshed_cone is not None:
+                        cone = refreshed_cone
+                        state.current_cone_gates = list(cone.gates)
+                        state.accepted_patches[-1]["metadata"][
+                            "refreshed_cone_gates"] = list(cone.gates)
                     timing_met = (
                         state.current_wns is not None
                         and state.current_wns >= -float(epsilon)

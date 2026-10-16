@@ -13,6 +13,12 @@ class Gate:
     inputs: tuple[str, ...]
     pin_names: tuple[str, ...] = ()
     output_pin: str | None = None
+    additional_outputs: tuple[str, ...] = ()
+
+    @property
+    def all_outputs(self) -> tuple[str, ...]:
+        """Connected output nets belonging to this one physical instance."""
+        return tuple(signal for signal in (self.output, *self.additional_outputs) if signal)
 
 
 @dataclass(frozen=True)
@@ -38,16 +44,22 @@ class Netlist:
 
     def logic_levels(self) -> dict[str, int]:
         levels = {name: 0 for name in self.inputs}
-        levels.update({"$false": 0, "$true": 0, "$undef": 0})
+        levels.update({"$false": 0, "$true": 0, "$undef": 0, "1'b0": 0, "1'b1": 0})
         remaining = list(self.gates)
 
         while remaining:
             progressed = False
             next_remaining: list[Gate] = []
             for gate in remaining:
-                resolved_inputs = [self.resolve_alias(signal) for signal in gate.inputs]
+                resolved_inputs = [
+                    _constant_signal(self.resolve_alias(signal)) or self.resolve_alias(signal)
+                    for signal in gate.inputs
+                ]
                 if all(signal in levels for signal in resolved_inputs):
-                    levels[gate.output] = max(levels[signal] for signal in resolved_inputs) + 1
+                    level = max((levels[signal] for signal in resolved_inputs), default=0) + 1
+                    for output in gate.all_outputs:
+                        constant = _constant_signal(self.resolve_alias(output))
+                        levels[output] = 0 if constant else level
                     progressed = True
                 else:
                     next_remaining.append(gate)
@@ -75,7 +87,11 @@ class Netlist:
         return max(levels[output] for output in self.outputs)
 
 
-def parse_verilog_netlist(path: str | Path) -> Netlist:
+def parse_verilog_netlist(
+    path: str | Path,
+    *,
+    cell_output_functions: dict[str, dict[str, str]] | None = None,
+) -> Netlist:
     text = Path(path).read_text(encoding="utf-8")
     module_match = re.search(r"\bmodule\s+(\w+)\s*\(", text)
     if not module_match:
@@ -86,6 +102,8 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
     wires: list[str] = []
     gates: list[Gate] = []
     aliases: dict[str, str] = {}
+    constant_aliases: dict[str, str] = {}
+    instance_names: set[str] = set()
 
     # first pass: declarations and single-identifier assign aliases
     for line in _verilog_statements(text):
@@ -95,8 +113,9 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
         if assign_match:
             lhs = assign_match.group(1).strip()
             rhs = assign_match.group(2).strip()
-            if re.fullmatch(r"\w+", rhs):
-                aliases[lhs] = rhs
+            constant = _constant_signal(rhs)
+            if re.fullmatch(r"\w+", rhs) or constant:
+                aliases[lhs] = constant or rhs
             continue
         _collect_declaration(line, "input", inputs)
         _collect_declaration(line, "output", outputs)
@@ -108,8 +127,17 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
             continue
         instance = re.match(r"^(\w+)\s+(\w+)\s*\((.*)\)\s*;", line)
         if instance and instance.group(1) not in {"module", "input", "output", "wire"}:
+            cell_type, instance_name = instance.group(1), instance.group(2)
+            if instance_name in instance_names:
+                raise ValueError(f"Duplicate instance in parsed netlist: {instance_name}")
+            instance_names.add(instance_name)
+            output_functions = (cell_output_functions or {}).get(cell_type)
+            if output_functions is None and cell_type == "sky130_fd_sc_hd__conb_1":
+                # Exact known cell semantics, retained for historical callers
+                # without Liberty metadata.  Both outputs remain represented.
+                output_functions = {"HI": "1", "LO": "0"}
             pins = [pin.strip() for pin in instance.group(3).split(",") if pin.strip()]
-            if pins and pins[0].startswith("."):
+            if (pins and pins[0].startswith(".")) or (not pins and output_functions):
                 connections = [
                     re.match(r"\.(\w+)\s*\(([^()]*)\)", pin) for pin in pins
                 ]
@@ -118,25 +146,36 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
                 named = [
                     (match.group(1), match.group(2).strip()) for match in connections
                 ]
-                output_pin = next(
-                    (pin for pin, _ in named if pin in {"Y", "X", "Z", "Q", "Q_N"}),
-                    None,
-                )
-                if output_pin is None:
-                    raise ValueError(
-                        f"cannot determine output pin for named-port instance: {line}"
-                    )
                 signal_map = dict(named)
-                raw_output = signal_map[output_pin]
-                raw_inputs = tuple(signal for pin, signal in named if pin != output_pin)
+                if output_functions:
+                    output_pins = tuple(output_functions)
+                else:
+                    legacy_output = next(
+                        (pin for pin, _ in named if pin in {"Y", "X", "Z", "Q", "Q_N"}),
+                        None,
+                    )
+                    if legacy_output is None:
+                        raise ValueError(
+                            f"cannot determine output pin for named-port instance: {line}"
+                        )
+                    output_pins = (legacy_output,)
+                connected_pins = tuple(pin for pin in output_pins if signal_map.get(pin))
+                connected_outputs = tuple(_follow_alias(signal_map[pin], aliases) for pin in connected_pins)
+                output_pin = connected_pins[0] if connected_pins else None
+                raw_inputs = tuple(signal for pin, signal in named if pin not in output_pins and signal)
+                for pin, output in zip(connected_pins, connected_outputs):
+                    constant = _constant_signal((output_functions or {}).get(pin, ""))
+                    if constant:
+                        constant_aliases[output] = constant
                 gates.append(
                     Gate(
                         gate_type=instance.group(1),
                         name=instance.group(2),
-                        output=_follow_alias(raw_output, aliases),
+                        output=connected_outputs[0] if connected_outputs else "",
                         inputs=tuple(_follow_alias(signal, aliases) for signal in raw_inputs),
                         pin_names=tuple(pin for pin, _ in named),
                         output_pin=output_pin,
+                        additional_outputs=connected_outputs[1:],
                     )
                 )
             else:
@@ -151,6 +190,8 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
                     )
                 )
 
+    # Add constant semantics after constructing physical output net identities.
+    aliases.update(constant_aliases)
     return Netlist(
         module_name=module_match.group(1),
         inputs=inputs,
@@ -159,6 +200,12 @@ def parse_verilog_netlist(path: str | Path) -> Netlist:
         gates=gates,
         signal_aliases=aliases,
     )
+
+
+def _constant_signal(signal: str) -> str | None:
+    """Recognise single-bit constants used by Liberty and mapped Verilog."""
+    match = re.fullmatch(r"(?:1'[bBdDhH]|')?([01])", signal.strip())
+    return f"1'b{match.group(1)}" if match else None
 
 
 def _follow_alias(signal: str, aliases: dict[str, str]) -> str:

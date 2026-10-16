@@ -2,6 +2,33 @@
 
 > 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
 
+## 2026-10-16 完整回归揭示声明文本比较误拒合法B（当前完整v2已通过）
+
+- **实际失败**：首整套741pass/1fail/4skip/156subtests，108.20s、wrapper112/exit1；源码before/after SHA稳定。旧合法buffer-chain测试中wire N;改wire N,N_BUF;，_non_rgb_structure按整条声明Counter误判N删除。
+- **归因与处理**：实现兼容性错误，不是想法失败或测试对象漂移。models仅修函数按既有net语义保持宽度/signedness，允许分组合并与新增线；不改旧fixture凑过，专属后再完整回归。
+- **证据纪律**：full_regression三证据原件保留，修后另用full_regression_v2并重新冻结当前源码。专属红7fail/8pass后相关五文件145pass/22.28s、wrapper26/exit0，原sole failure通过；新增15参数例约束宽度/signedness/次数。新版整套实际757pass/4skip/156subtests，102.50s/wrapper107/exit0、162源码SHA稳定，已可确认当前实现验收；真实SEC/EDA与科学恢复仍不能宣称通过。
+
+## 2026-10-16 物理多输出支持须贯穿source/别名root/锥外边界与split
+
+- **反证/归因**：独立复审找到无输入源未连source、alias root静默空锥、次输出被锥外消费者使用却记internal；修后split仍可能BO与internal重叠。metadata.cells与实际evaluator.lib的属性错配也会丢输出角色。均为可修集成边界，不据此否定方法。
+- **处置/限定验证**：主线按原网表driver/全网消费者维护物理节点、root别名、external boundary与split互斥；integration_review_red 3fail/6pass、split_external_red 1fail之后，scope_final_green5最终68pass+1subtest/3.71s/timeout exit0。旧c17预期漏N11/N16外部消费者，经原网表确认后更新期望，保留检查。
+- **A对象绑定教训**：s713 counterpart baseline带tie变化；只证明该baseline→fixed不足以覆盖原A。恢复工具主pair明确用原A mapped→实际fixed，干跑52输入/44源码SHA及六对象，工具9pass；尚未实际SEC，不把准备成功冒充候选已证明。
+- **下一门**：production/tests冻结后完整回归和最终独立复审，真实证明/EDA另登记。上述限定修复不提前关闭历史A/D/C科学问题。
+
+## 2026-10-16 r22多输出/刷新/SEC模块边界的反例驱动集成（限定范围已验证）
+
+- **红测**：scope_red.log四项分别命中次输出依赖丢失、一个物理实例分裂/次输出根识别、CLI端点取helper同名D、S刷新失败仍提交；sec_module_red.log另命中注释假module污染独立SEC helper。
+- **归因/处置**：主线graph/cut各输出共用同一物理节点、CLI先截取明确top、RGB/S均在提交前按top+Liberty刷新，独立SEC复用公共module_spans避免全文正则误读注释/字符串。深链fixture的循环内同名GROOT属于真实重复，移到循环外保留深链测试意义，不放宽生产唯一性门。
+- **验证/边界**：日志实读scope相关七文件63passed+1subtest/3.85s、timeout120/exit0；parser35、models69为独立限定相关范围，不能加总当全回归。当前完整回归/独立复审与真实SEC/EDA仍待，不提前宣布所有K门或科学证据闭合。
+- **复用**：scratch/r22_resume_20261016/{scope_red,sec_module_red,scope_final_green}.log，恢复计划R22_CORRECTNESS_RESUME_PLAN_20261016.md；有用日志待主线晋级跟踪证据包。
+
+## 2026-10-16 r22恢复复用与验收对象约束（尚非新修复完成记录）
+
+- **复用起点**：用户已明确恢复；先实读NAMESPACE_FIX_REVIEW的K1–K6最小反例、historical_correctness REPORT及已有v1失败原件，不重造归因或把旧667当当前通过。
+- **本轮约束**：修复应同时保持多输出完整语义、物理实例身份/分母、目标module作用域；当前源码/fixture/模型/输入冻结后整套回归、独立复审，新pin/v2与独立最终SEC。旧失败输入和构造反例分别标注，不把构造探针说成真实实验已触发。
+- **科学恢复**：A六补确切接受对象证明，D/C按同族输入/臂恢复；新C′单独18pilot→72，不跨族替换历史。未知不等失败，结构invalid不等新证不等价，计数对账不证明候选合法。
+- **验证状态**：此条仅同步已核验教训与恢复纪律；本轮新的问题解决/测试结果待实际日志后补，不声称K1–K6已闭合。
+
 ## 2026-10-14 r22 多模块netlist：局部门成功不能替代独立最终SEC
 
 - **真实反证**：首正式pilot两W0 runner均exit0，独立最终SEC却发现helper definitions不同并停止batch。B instance被insert_buffer放在首个endmodule/helper dff，而新wire/目标pin在真正top；旧局部F1/F2全文件parser合并模块命名域造成伪pass，截取真实top后F2 declared-undriven。

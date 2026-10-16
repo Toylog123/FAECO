@@ -86,11 +86,10 @@ def tool_versions():
 
 def sec_designs(initial, final, circuit):
     """Share only byte-identical helper definitions, prove both distinct tops."""
-    import re
+    from rseco.verilog_modules import module_spans
     def modules(text):
-        pairs = re.findall(r'\b(module\s+([A-Za-z_][A-Za-z0-9_$]*)\b.*?\bendmodule)',text,re.S)
-        found = {name:block for block,name in pairs}
-        if len(found)!=len(pairs) or circuit not in found:
+        found = {span.name:span.text for span in module_spans(text)}
+        if circuit not in found:
             raise ValueError('Missing/duplicate SEC top or module')
         return found
     left, right = modules(initial), modules(final)

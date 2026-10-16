@@ -1,0 +1,105 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py -q
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+______________ test_secondary_output_is_a_real_fanin_dependency _______________
+
+    def test_secondary_output_is_a_real_fanin_dependency():
+        cone = _adder_cone()
+>       assert cone.gates == ['add','sink']
+E       AssertionError: assert ['sink'] == ['add', 'sink']
+E         
+E         At index 0 diff: 'sink' != 'add'
+E         Right contains one more item: 'sink'
+E         Use -v to get more diff
+
+code\tests\test_r22_scope_integration.py:25: AssertionError
+____________ test_secondary_root_and_split_keep_one_physical_node _____________
+
+    def test_secondary_root_and_split_keep_one_physical_node():
+        cone = _adder_cone('CO')
+>       assert cone.gates == ['add']
+E       AssertionError: assert [] == ['add']
+E         
+E         Right contains one more item: 'add'
+E         Use -v to get more diff
+
+code\tests\test_r22_scope_integration.py:34: AssertionError
+________ test_cli_initial_endpoint_ignores_same_named_helper_instance _________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1139/test_cli_initial_endpoint_igno0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F27F3B7710>
+
+    def test_cli_initial_endpoint_ignores_same_named_helper_instance(tmp_path,monkeypatch):
+        runner=_runner()
+        helper='module helper(A,Y);\ninput A;\noutput Y;\ndff shared (.CK(A), .D(helper_d), .Q(Y));\nendmodule\n'
+        top='module top(A,Y);\ninput A;\noutput Y;\nwire top_d;\nbuf g1(top_d,A);\ndff shared (.CK(A), .D(top_d), .Q(Y));\nendmodule\n'
+        source=tmp_path/'top.v'
+        source.write_text(helper+top,encoding='utf-8')
+        output=tmp_path/'run'
+        (output/'top').mkdir(parents=True)
+        (output/'top/mapped.v').write_text(helper+top,encoding='utf-8')
+        def baseline(*args,**kwargs):
+            (output/'top/sta.log').write_text('',encoding='utf-8')
+            return {'wns':-0.1}
+        class ReachedEvaluator(Exception):
+            pass
+        def evaluator(**kwargs):
+            config=(output/'top/case/case.yaml').read_text(encoding='utf-8')
+            assert 'output: top_d' in config
+            raise ReachedEvaluator
+        monkeypatch.setattr(runner,'run_opensta',baseline)
+        monkeypatch.setattr(runner,'parse_critical_instances',lambda _: ['shared'])
+        monkeypatch.setattr(runner,'parse_worst_endpoint',lambda _: 'shared')
+        monkeypatch.setattr(runner,'RealWnsEvaluator',evaluator)
+        monkeypatch.setattr('sys.argv',['runner','--circuit','top','--source-file',str(source),
+                                      '--output-dir',str(output),'--skip-mapping'])
+        with pytest.raises(ReachedEvaluator):
+>           runner.main()
+
+code\tests\test_r22_scope_integration.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_outerloop_real_wns.py:354: in main
+    evaluator = RealWnsEvaluator(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'mapped_text': 'module helper(A,Y);\ninput A;\noutput Y;\ndff shared (.CK(A), .D(helper_d), .Q(Y));\nendmodule\nmodul...e : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n', ...}
+
+    def evaluator(**kwargs):
+        config=(output/'top/case/case.yaml').read_text(encoding='utf-8')
+>       assert 'output: top_d' in config
+E       AssertionError: assert 'output: top_d' in 'case_id: top_real_wns\ntarget:\n  output: helper_d\n'
+
+code\tests\test_r22_scope_integration.py:66: AssertionError
+---------------------------- Captured stdout call -----------------------------
+top: reusing existing mapped.v (skip mapping)
+baseline: wns=-0.1 min_slack=None endpoint=shared D=helper_d
+critical path: ['shared']
+_______________ test_s_refresh_failure_cannot_commit_candidate ________________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1139/test_s_refresh_failure_cannot_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F27F389850>
+
+    def test_s_refresh_failure_cannot_commit_candidate(tmp_path,monkeypatch):
+        from test_flow_structure_resynth import (_make_case, _SOnlyEvaluator,
+            _install_s_stubs, _fake_candidate, _functional_ok)
+        from rseco.flow import run_multi_iteration_case
+        candidate=_fake_candidate()
+        candidate.grafted_text='module wrong(A,Y);\ninput A;\noutput Y;\nbuf g(Y,A);\nendmodule\n'
+        tools=_install_s_stubs(monkeypatch,candidates=[candidate])
+        evaluator=_SOnlyEvaluator([{'improved':True,'wns':-1.2}])
+        evaluator.top_module='top'
+        evaluator.refresh_cone=True
+        result=run_multi_iteration_case(_make_case(tmp_path),max_iterations=2,max_patches=1,
+            equivalence_checker=_functional_ok,wns_evaluator=evaluator,structure_resynth=True,
+            resynth_tools=tools,structure_out_dir=tmp_path/'s_out')
+>       assert result['structure_resynth']['accepted'] == 0
+E       assert 1 == 0
+
+code\tests\test_r22_scope_integration.py:91: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_scope_integration.py::test_secondary_output_is_a_real_fanin_dependency
+FAILED code/tests/test_r22_scope_integration.py::test_secondary_root_and_split_keep_one_physical_node
+FAILED code/tests/test_r22_scope_integration.py::test_cli_initial_endpoint_ignores_same_named_helper_instance
+FAILED code/tests/test_r22_scope_integration.py::test_s_refresh_failure_cannot_commit_candidate
+4 failed in 1.38s
+[run] 完成（5s），退出码 1

@@ -1,0 +1,398 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_validation_models.py -q
+FFFFFFFF.FFFFFF.FFFFF                                                    [100%]
+================================== FAILURES ===================================
+________ test_every_real_sky_multioutput_cell_has_each_function[False] ________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_every_real_sky_multioutpu0')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+abc_compatible = False
+
+    @pytest.mark.parametrize("abc_compatible", [False, True])
+    def test_every_real_sky_multioutput_cell_has_each_function(tmp_path, sky_lib, abc_compatible):
+        cells = {name: cell for name, cell in parse_liberty_cells(sky_lib).items()
+                 if not cell.sequential_kind and len(cell.output_functions) > 1}
+        assert len(cells) == 10
+        text = rw.write_liberty_cell_models(sky_lib, tmp_path / "cells.v", used_cells=set(cells),
+                                           abc_compatible=abc_compatible).read_text()
+        for name, cell in cells.items():
+            block = re.search(r"module " + re.escape(name) + r"\b(.*?)endmodule", text, re.S).group(1)
+            assignments = dict(re.findall(r"assign\s+(\w+)\s*=\s*(.*?);", block))
+>           assert set(assignments) == set(cell.output_functions), name
+E           AssertionError: sky130_fd_sc_hd__conb_1
+E           assert {'LO'} == {'HI', 'LO'}
+E             
+E             Extra items in the right set:
+E             'HI'
+E             Use -v to get more diff
+
+code\tests\test_r22_validation_models.py:32: AssertionError
+________ test_every_real_sky_multioutput_cell_has_each_function[True] _________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_every_real_sky_multioutpu1')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+abc_compatible = True
+
+    @pytest.mark.parametrize("abc_compatible", [False, True])
+    def test_every_real_sky_multioutput_cell_has_each_function(tmp_path, sky_lib, abc_compatible):
+        cells = {name: cell for name, cell in parse_liberty_cells(sky_lib).items()
+                 if not cell.sequential_kind and len(cell.output_functions) > 1}
+        assert len(cells) == 10
+        text = rw.write_liberty_cell_models(sky_lib, tmp_path / "cells.v", used_cells=set(cells),
+                                           abc_compatible=abc_compatible).read_text()
+        for name, cell in cells.items():
+            block = re.search(r"module " + re.escape(name) + r"\b(.*?)endmodule", text, re.S).group(1)
+            assignments = dict(re.findall(r"assign\s+(\w+)\s*=\s*(.*?);", block))
+>           assert set(assignments) == set(cell.output_functions), name
+E           AssertionError: sky130_fd_sc_hd__conb_1
+E           assert {'LO'} == {'HI', 'LO'}
+E             
+E             Extra items in the right set:
+E             'HI'
+E             Use -v to get more diff
+
+code\tests\test_r22_validation_models.py:32: AssertionError
+_________ test_local_f1_rejects_changes_outside_rgb_cells[<lambda>0] __________
+
+edit = <function <lambda> at 0x0000025FF9DB4900>
+
+    @pytest.mark.parametrize("edit", [
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = 1'b1;"),
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = A;"),
+        lambda text: text.replace("assign Z = 1'b0;", ""),
+        lambda text: text.replace("input A, B;", "input A;\noutput B;"),
+        lambda text: text.replace("top(A, B, Y, Z)", "top(B, A, Y, Z)"),
+        lambda text: text.replace("endmodule", "dff seq1 (.CK(A), .D(B), .Q(Z));\nendmodule"),
+    ])
+    def test_local_f1_rejects_changes_outside_rgb_cells(edit):
+        before = _constant_output()
+        result = rw.build_real_equivalence_checker(LIB)(before, edit(before))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:55: AssertionError
+_________ test_local_f1_rejects_changes_outside_rgb_cells[<lambda>1] __________
+
+edit = <function <lambda> at 0x0000025FF9DB49A0>
+
+    @pytest.mark.parametrize("edit", [
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = 1'b1;"),
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = A;"),
+        lambda text: text.replace("assign Z = 1'b0;", ""),
+        lambda text: text.replace("input A, B;", "input A;\noutput B;"),
+        lambda text: text.replace("top(A, B, Y, Z)", "top(B, A, Y, Z)"),
+        lambda text: text.replace("endmodule", "dff seq1 (.CK(A), .D(B), .Q(Z));\nendmodule"),
+    ])
+    def test_local_f1_rejects_changes_outside_rgb_cells(edit):
+        before = _constant_output()
+        result = rw.build_real_equivalence_checker(LIB)(before, edit(before))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:55: AssertionError
+_________ test_local_f1_rejects_changes_outside_rgb_cells[<lambda>2] __________
+
+edit = <function <lambda> at 0x0000025FF9DB4A40>
+
+    @pytest.mark.parametrize("edit", [
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = 1'b1;"),
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = A;"),
+        lambda text: text.replace("assign Z = 1'b0;", ""),
+        lambda text: text.replace("input A, B;", "input A;\noutput B;"),
+        lambda text: text.replace("top(A, B, Y, Z)", "top(B, A, Y, Z)"),
+        lambda text: text.replace("endmodule", "dff seq1 (.CK(A), .D(B), .Q(Z));\nendmodule"),
+    ])
+    def test_local_f1_rejects_changes_outside_rgb_cells(edit):
+        before = _constant_output()
+        result = rw.build_real_equivalence_checker(LIB)(before, edit(before))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:55: AssertionError
+_________ test_local_f1_rejects_changes_outside_rgb_cells[<lambda>3] __________
+
+edit = <function <lambda> at 0x0000025FF9DB4AE0>
+
+    @pytest.mark.parametrize("edit", [
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = 1'b1;"),
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = A;"),
+        lambda text: text.replace("assign Z = 1'b0;", ""),
+        lambda text: text.replace("input A, B;", "input A;\noutput B;"),
+        lambda text: text.replace("top(A, B, Y, Z)", "top(B, A, Y, Z)"),
+        lambda text: text.replace("endmodule", "dff seq1 (.CK(A), .D(B), .Q(Z));\nendmodule"),
+    ])
+    def test_local_f1_rejects_changes_outside_rgb_cells(edit):
+        before = _constant_output()
+        result = rw.build_real_equivalence_checker(LIB)(before, edit(before))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:55: AssertionError
+_________ test_local_f1_rejects_changes_outside_rgb_cells[<lambda>4] __________
+
+edit = <function <lambda> at 0x0000025FF9DB4B80>
+
+    @pytest.mark.parametrize("edit", [
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = 1'b1;"),
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = A;"),
+        lambda text: text.replace("assign Z = 1'b0;", ""),
+        lambda text: text.replace("input A, B;", "input A;\noutput B;"),
+        lambda text: text.replace("top(A, B, Y, Z)", "top(B, A, Y, Z)"),
+        lambda text: text.replace("endmodule", "dff seq1 (.CK(A), .D(B), .Q(Z));\nendmodule"),
+    ])
+    def test_local_f1_rejects_changes_outside_rgb_cells(edit):
+        before = _constant_output()
+        result = rw.build_real_equivalence_checker(LIB)(before, edit(before))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:55: AssertionError
+_________ test_local_f1_rejects_changes_outside_rgb_cells[<lambda>5] __________
+
+edit = <function <lambda> at 0x0000025FF9DB4C20>
+
+    @pytest.mark.parametrize("edit", [
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = 1'b1;"),
+        lambda text: text.replace("assign Z = 1'b0;", "assign Z = A;"),
+        lambda text: text.replace("assign Z = 1'b0;", ""),
+        lambda text: text.replace("input A, B;", "input A;\noutput B;"),
+        lambda text: text.replace("top(A, B, Y, Z)", "top(B, A, Y, Z)"),
+        lambda text: text.replace("endmodule", "dff seq1 (.CK(A), .D(B), .Q(Z));\nendmodule"),
+    ])
+    def test_local_f1_rejects_changes_outside_rgb_cells(edit):
+        before = _constant_output()
+        result = rw.build_real_equivalence_checker(LIB)(before, edit(before))
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:55: AssertionError
+_ test_local_gates_reject_duplicate_physical_instance_names[<lambda>0-False] __
+
+factory = <function <lambda> at 0x0000025FF9DB4E00>, wrapper = False
+
+    @pytest.mark.parametrize("wrapper", [False, True])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(LIB),
+                                         lambda: rw.build_boundary_closure_checker()])
+    def test_local_gates_reject_duplicate_physical_instance_names(factory, wrapper):
+        text = _duplicates(wrapper)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:81: AssertionError
+__ test_local_gates_reject_duplicate_physical_instance_names[<lambda>0-True] __
+
+factory = <function <lambda> at 0x0000025FF9DB4E00>, wrapper = True
+
+    @pytest.mark.parametrize("wrapper", [False, True])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(LIB),
+                                         lambda: rw.build_boundary_closure_checker()])
+    def test_local_gates_reject_duplicate_physical_instance_names(factory, wrapper):
+        text = _duplicates(wrapper)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='liberty_local_function', reason='Liberty functions preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:81: AssertionError
+_ test_local_gates_reject_duplicate_physical_instance_names[<lambda>1-False] __
+
+factory = <function <lambda> at 0x0000025FF9DB4EA0>, wrapper = False
+
+    @pytest.mark.parametrize("wrapper", [False, True])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(LIB),
+                                         lambda: rw.build_boundary_closure_checker()])
+    def test_local_gates_reject_duplicate_physical_instance_names(factory, wrapper):
+        text = _duplicates(wrapper)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:81: AssertionError
+__ test_local_gates_reject_duplicate_physical_instance_names[<lambda>1-True] __
+
+factory = <function <lambda> at 0x0000025FF9DB4EA0>, wrapper = True
+
+    @pytest.mark.parametrize("wrapper", [False, True])
+    @pytest.mark.parametrize("factory", [lambda: rw.build_real_equivalence_checker(LIB),
+                                         lambda: rw.build_boundary_closure_checker()])
+    def test_local_gates_reject_duplicate_physical_instance_names(factory, wrapper):
+        text = _duplicates(wrapper)
+        result = factory()(text, text)
+>       assert result.status == "fail", result
+E       AssertionError: EquivalenceResult(status='pass', method='boundary_closure', reason='boundary inputs/outputs and driver closure preserved')
+E       assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_r22_validation_models.py:81: AssertionError
+_ test_actions_reject_duplicate_physical_instances[G-sky130_fd_sc_hd__and2_2] _
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_actions_reject_duplicate_0')
+kind = 'G', new_type = 'sky130_fd_sc_hd__and2_2'
+
+    @pytest.mark.parametrize("kind,new_type", [("G", "sky130_fd_sc_hd__and2_2"),
+                                             ("R", "sky130_fd_sc_hd__andx_1"),
+                                             ("B", "buf:sky130_fd_sc_hd__buf_1:B:new_B")])
+    def test_actions_reject_duplicate_physical_instances(tmp_path, kind, new_type):
+        ev = _evaluator(tmp_path, n=2)
+>       with pytest.raises(ValueError, match="[Dd]uplicate"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_validation_models.py:90: Failed
+_ test_actions_reject_duplicate_physical_instances[R-sky130_fd_sc_hd__andx_1] _
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_actions_reject_duplicate_1')
+kind = 'R', new_type = 'sky130_fd_sc_hd__andx_1'
+
+    @pytest.mark.parametrize("kind,new_type", [("G", "sky130_fd_sc_hd__and2_2"),
+                                             ("R", "sky130_fd_sc_hd__andx_1"),
+                                             ("B", "buf:sky130_fd_sc_hd__buf_1:B:new_B")])
+    def test_actions_reject_duplicate_physical_instances(tmp_path, kind, new_type):
+        ev = _evaluator(tmp_path, n=2)
+>       with pytest.raises(ValueError, match="[Dd]uplicate"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_validation_models.py:90: Failed
+___________ test_joint_action_rejects_duplicate_physical_instances ____________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_joint_action_rejects_dupl0')
+
+    def test_joint_action_rejects_duplicate_physical_instances(tmp_path):
+        ev = _evaluator(tmp_path, n=2)
+>       with pytest.raises(ValueError, match="[Dd]uplicate"):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_r22_validation_models.py:96: Failed
+_________ test_evaluator_rejects_duplicates_before_sta_or_action_dict _________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_evaluator_rejects_duplica0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025FF9C786D0>
+
+    def test_evaluator_rejects_duplicates_before_sta_or_action_dict(tmp_path, monkeypatch):
+        ev = _evaluator(tmp_path, n=2)
+        ev.mapped_text = _duplicates()
+        monkeypatch.setattr(rw, "run_opensta_sequential", lambda **kw: pytest.fail("STA forbidden"))
+        with pytest.raises(ValueError, match="[Dd]uplicate"):
+>           ev(_patch(["g1"]), None)
+
+code\tests\test_r22_validation_models.py:105: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\real_wns.py:2364: in __call__
+    r = dict(self._eval_one(j))
+             ^^^^^^^^^^^^^^^^^
+code\src\rseco\real_wns.py:1494: in _eval_one
+    res = run_opensta_sequential(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kw = {'netlist_path': WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_evaluator_rejects_duplica...al/Temp/pytest-of-١����/pytest-1135/test_evaluator_rejects_duplica0/iter001_cand001/000_g1_R'), 'top_module': 'top', ...}
+
+>   monkeypatch.setattr(rw, "run_opensta_sequential", lambda **kw: pytest.fail("STA forbidden"))
+                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: STA forbidden
+
+code\tests\test_r22_validation_models.py:103: Failed
+_____ test_f2_uses_liberty_outputs_and_constants_for_legal_conb_identity ______
+
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+
+    def test_f2_uses_liberty_outputs_and_constants_for_legal_conb_identity(sky_lib):
+        text = _conb_top()
+>       result = rw.build_boundary_closure_checker(liberty_text=sky_lib)(text, text)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_boundary_closure_checker() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_r22_validation_models.py:122: TypeError
+_________ test_f2_counts_additional_output_drivers_and_not_as_inputs __________
+
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+
+    def test_f2_counts_additional_output_drivers_and_not_as_inputs(sky_lib):
+        text = """module top(A, B, C, Y, Z);
+    input A, B, C;
+    output Y, Z;
+    wire carry;
+    sky130_fd_sc_hd__fa_1 adder (.A(A), .B(B), .CIN(C), .COUT(carry), .SUM(Y));
+    sky130_fd_sc_hd__buf_1 g1 (.A(carry), .X(Z));
+    endmodule
+    """
+>       check = rw.build_boundary_closure_checker(liberty_text=sky_lib)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_boundary_closure_checker() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_r22_validation_models.py:135: TypeError
+__________ test_f3_uses_physical_count_with_multioutput_and_wrapper ___________
+
+tmp_path = WindowsPath('C:/Users/١����/AppData/Local/Temp/pytest-of-١����/pytest-1135/test_f3_uses_physical_count_wi0')
+sky_lib = 'library ("sky130_fd_sc_hd__tt_025C_1v80") {\n    define(def_sim_opt,library,string);\n    define(default_arc_mode,lib...ng_type : "combinational";\n            }\n        }\n    }\n    default_operating_conditions : "tt_025C_1v80";\n\n}\n'
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025FF9E3E550>
+
+    def test_f3_uses_physical_count_with_multioutput_and_wrapper(tmp_path, sky_lib, monkeypatch):
+        top = _conb_top().replace("endmodule", "dff seq1 (.CK(A), .D(A), .Q(Q));\nendmodule")
+        top = top.replace("wire H, L;", "wire H, L, Q;").replace("output Y, Z;", "output Y, Z, Q;")
+        ev = rw.RealWnsEvaluator(mapped_text=top, top_module="top", period=1,
+                                liberty_text=sky_lib, baseline_wns=-1, output_dir=tmp_path,
+                                strict_gates=True, max_patch_ratio=0.24,
+                                equivalence_checker=rw.build_real_equivalence_checker(sky_lib),
+>                               boundary_checker=rw.build_boundary_closure_checker(liberty_text=sky_lib))
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: build_boundary_closure_checker() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_r22_validation_models.py:150: TypeError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_validation_models.py::test_every_real_sky_multioutput_cell_has_each_function[False]
+FAILED code/tests/test_r22_validation_models.py::test_every_real_sky_multioutput_cell_has_each_function[True]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_changes_outside_rgb_cells[<lambda>0]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_changes_outside_rgb_cells[<lambda>1]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_changes_outside_rgb_cells[<lambda>2]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_changes_outside_rgb_cells[<lambda>3]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_changes_outside_rgb_cells[<lambda>4]
+FAILED code/tests/test_r22_validation_models.py::test_local_f1_rejects_changes_outside_rgb_cells[<lambda>5]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_duplicate_physical_instance_names[<lambda>0-False]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_duplicate_physical_instance_names[<lambda>0-True]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_duplicate_physical_instance_names[<lambda>1-False]
+FAILED code/tests/test_r22_validation_models.py::test_local_gates_reject_duplicate_physical_instance_names[<lambda>1-True]
+FAILED code/tests/test_r22_validation_models.py::test_actions_reject_duplicate_physical_instances[G-sky130_fd_sc_hd__and2_2]
+FAILED code/tests/test_r22_validation_models.py::test_actions_reject_duplicate_physical_instances[R-sky130_fd_sc_hd__andx_1]
+FAILED code/tests/test_r22_validation_models.py::test_joint_action_rejects_duplicate_physical_instances
+FAILED code/tests/test_r22_validation_models.py::test_evaluator_rejects_duplicates_before_sta_or_action_dict
+FAILED code/tests/test_r22_validation_models.py::test_f2_uses_liberty_outputs_and_constants_for_legal_conb_identity
+FAILED code/tests/test_r22_validation_models.py::test_f2_counts_additional_output_drivers_and_not_as_inputs
+FAILED code/tests/test_r22_validation_models.py::test_f3_uses_physical_count_with_multioutput_and_wrapper
+19 failed, 2 passed in 4.85s
+[run] 完成（10s），退出码 1

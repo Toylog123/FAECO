@@ -1,0 +1,104 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py::test_cone_refresh_uses_real_evaluator_liberty_attribute -q
+F                                                                        [100%]
+================================== FAILURES ===================================
+___________ test_cone_refresh_uses_real_evaluator_liberty_attribute ___________
+
+    def test_cone_refresh_uses_real_evaluator_liberty_attribute():
+        from rseco.flow import _refreshed_candidate_cone
+        evaluator=SimpleNamespace(top_module='top',lib={
+            'dual':SimpleNamespace(output_functions={'P':'A','R':'A'})})
+        text='module top(A,Y,Z);\ninput A;\noutput Y,Z;\ndual g(.A(A),.P(Y),.R(Z));\nendmodule\n'
+>       cone=_refreshed_candidate_cone(text,evaluator,'Z')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_r22_scope_integration.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\flow.py:68: in _refreshed_candidate_cone
+    netlist = parse_verilog_netlist_from_text(scoped, **_analysis_cell_options(evaluator))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+code\src\rseco\replacement.py:291: in parse_verilog_netlist_from_text
+    return parse_verilog_netlist(path, cell_output_functions=cell_output_functions)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/١����/AppData/Local/Temp/tmp9dkjom_c.v')
+cell_output_functions = None
+
+    def parse_verilog_netlist(
+        path: str | Path,
+        *,
+        cell_output_functions: dict[str, dict[str, str]] | None = None,
+    ) -> Netlist:
+        text = Path(path).read_text(encoding="utf-8")
+        module_match = re.search(r"\bmodule\s+(\w+)\s*\(", text)
+        if not module_match:
+            raise ValueError(f"missing module declaration: {path}")
+    
+        inputs: list[str] = []
+        outputs: list[str] = []
+        wires: list[str] = []
+        gates: list[Gate] = []
+        aliases: dict[str, str] = {}
+        constant_aliases: dict[str, str] = {}
+        instance_names: set[str] = set()
+    
+        # first pass: declarations and single-identifier assign aliases
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//"):
+                continue
+            assign_match = re.match(r"^assign\s+(\S+)\s*=\s*([^;]+);", line)
+            if assign_match:
+                lhs = assign_match.group(1).strip()
+                rhs = assign_match.group(2).strip()
+                constant = _constant_signal(rhs)
+                if re.fullmatch(r"\w+", rhs) or constant:
+                    aliases[lhs] = constant or rhs
+                continue
+            _collect_declaration(line, "input", inputs)
+            _collect_declaration(line, "output", outputs)
+            _collect_declaration(line, "wire", wires)
+    
+        # second pass: instances (aliases are complete by now)
+        for line in _verilog_statements(text):
+            if not line or line.startswith("//") or line.startswith("assign"):
+                continue
+            instance = re.match(r"^(\w+)\s+(\w+)\s*\((.*)\)\s*;", line)
+            if instance and instance.group(1) not in {"module", "input", "output", "wire"}:
+                cell_type, instance_name = instance.group(1), instance.group(2)
+                if instance_name in instance_names:
+                    raise ValueError(f"Duplicate instance in parsed netlist: {instance_name}")
+                instance_names.add(instance_name)
+                output_functions = (cell_output_functions or {}).get(cell_type)
+                if output_functions is None and cell_type == "sky130_fd_sc_hd__conb_1":
+                    # Exact known cell semantics, retained for historical callers
+                    # without Liberty metadata.  Both outputs remain represented.
+                    output_functions = {"HI": "1", "LO": "0"}
+                pins = [pin.strip() for pin in instance.group(3).split(",") if pin.strip()]
+                if (pins and pins[0].startswith(".")) or (not pins and output_functions):
+                    connections = [
+                        re.match(r"\.(\w+)\s*\(([^()]*)\)", pin) for pin in pins
+                    ]
+                    if not all(connections):
+                        raise ValueError(f"malformed named-port instance: {line}")
+                    named = [
+                        (match.group(1), match.group(2).strip()) for match in connections
+                    ]
+                    signal_map = dict(named)
+                    if output_functions:
+                        output_pins = tuple(output_functions)
+                    else:
+                        legacy_output = next(
+                            (pin for pin, _ in named if pin in {"Y", "X", "Z", "Q", "Q_N"}),
+                            None,
+                        )
+                        if legacy_output is None:
+>                           raise ValueError(
+                                f"cannot determine output pin for named-port instance: {line}"
+                            )
+E                           ValueError: cannot determine output pin for named-port instance: dual g(.A(A),.P(Y),.R(Z));
+
+code\src\rseco\netlist.py:158: ValueError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_scope_integration.py::test_cone_refresh_uses_real_evaluator_liberty_attribute
+1 failed in 0.36s
+[run] 完成（5s），退出码 1

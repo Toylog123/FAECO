@@ -1,0 +1,335 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe scratch/r22_resume_20261016/integration_review_probe.py
+{
+  "scope": "Independent review of graph/cut/flow/CLI integration; no EDA",
+  "source_before": {
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/cut.py": "18bf02cb9adbdd54f96db5dc915bb373940cf7eb55585e98a8efdf544bc3a5bb",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+    "code/scripts/run_r22_cut_ablation.py": "83cf797171f36edb31ce0a21893cabe848c9db1bb5049896378e4717a140f0bd",
+    "code/src/rseco/real_wns.py": "7fe0e794252d21016314bbc6274f85267c6395474fd198811e0a6cf34bca2a92",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4"
+  },
+  "source_after": {
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/cut.py": "18bf02cb9adbdd54f96db5dc915bb373940cf7eb55585e98a8efdf544bc3a5bb",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+    "code/scripts/run_r22_cut_ablation.py": "83cf797171f36edb31ce0a21893cabe848c9db1bb5049896378e4717a140f0bd",
+    "code/src/rseco/real_wns.py": "7fe0e794252d21016314bbc6274f85267c6395474fd198811e0a6cf34bca2a92",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4"
+  },
+  "source_changed": [],
+  "probes": {
+    "actual_evaluator_metadata": {
+      "options": {
+        "cell_output_functions": {
+          "sky130_fd_sc_hd__fa_1": {
+            "CO": "A&B|A&CI|B&CI",
+            "SUM": "A^B^CI"
+          }
+        }
+      },
+      "gates": [
+        "add"
+      ],
+      "explicit_metadata_control": [
+        "add"
+      ],
+      "evaluator_has_cells": false,
+      "evaluator_has_lib": true
+    },
+    "zero_input_source": {
+      "cone": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "internal_nets": [
+          "H"
+        ],
+        "gates": [
+          "tie",
+          "sink"
+        ],
+        "gate_outputs": {
+          "tie": "H",
+          "sink": "Y"
+        },
+        "gate_inputs": {
+          "tie": [],
+          "sink": [
+            "H"
+          ]
+        }
+      },
+      "graph_nodes": [
+        "tie",
+        "sink"
+      ],
+      "dependencies": [
+        [
+          "tie:out",
+          "sink:in",
+          1000000000.0
+        ]
+      ],
+      "solution": {
+        "method": "weighted_st_min_cut_v1",
+        "source": "source",
+        "sink": "Y",
+        "selected_gate": "sink",
+        "selected_gates": [
+          "sink"
+        ],
+        "cut_cost": 1.0766666666666667,
+        "cut_edges": [
+          [
+            "sink:in",
+            "sink:out"
+          ]
+        ],
+        "boundary_inputs": [
+          "H"
+        ],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "gates": [
+          "sink"
+        ]
+      }
+    },
+    "same_module_alias_root": {
+      "resolved_root": "n",
+      "cone_unresolved": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [
+          "A"
+        ],
+        "boundary_outputs": [
+          "n"
+        ],
+        "internal_nets": [],
+        "gates": [
+          "g"
+        ],
+        "gate_outputs": {
+          "g": "n"
+        },
+        "gate_inputs": {
+          "g": [
+            "A"
+          ]
+        }
+      },
+      "cone_resolved": {
+        "roots": [
+          "n"
+        ],
+        "boundary_inputs": [
+          "A"
+        ],
+        "boundary_outputs": [
+          "n"
+        ],
+        "internal_nets": [],
+        "gates": [
+          "g"
+        ],
+        "gate_outputs": {
+          "g": "n"
+        },
+        "gate_inputs": {
+          "g": [
+            "A"
+          ]
+        }
+      },
+      "flow_refresh": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [
+          "A"
+        ],
+        "boundary_outputs": [
+          "n"
+        ],
+        "internal_nets": [],
+        "gates": [
+          "g"
+        ],
+        "gate_outputs": {
+          "g": "n"
+        },
+        "gate_inputs": {
+          "g": [
+            "A"
+          ]
+        }
+      }
+    },
+    "other_output_external_consumer": {
+      "full_gates": [
+        "add",
+        "sinkY",
+        "sinkZ"
+      ],
+      "cone": {
+        "roots": [
+          "Y"
+        ],
+        "boundary_inputs": [
+          "A",
+          "B"
+        ],
+        "boundary_outputs": [
+          "Y"
+        ],
+        "internal_nets": [
+          "CO"
+        ],
+        "gates": [
+          "add",
+          "sinkY"
+        ],
+        "gate_outputs": {
+          "add": "S",
+          "sinkY": "Y"
+        },
+        "gate_inputs": {
+          "add": [
+            "A",
+            "B"
+          ],
+          "sinkY": [
+            "CO"
+          ]
+        },
+        "gate_additional_outputs": {
+          "add": [
+            "CO"
+          ]
+        },
+        "external_boundary_outputs": [
+          "S"
+        ]
+      },
+      "cut": {
+        "method": "review",
+        "boundary_inputs": [
+          "A",
+          "B"
+        ],
+        "boundary_outputs": [
+          "S",
+          "CO"
+        ],
+        "internal_nets": [],
+        "gates": [
+          "add"
+        ],
+        "patch_size": 1
+      }
+    },
+    "s_alias_refresh_commit": {
+      "accepted": 1,
+      "accepted_patches": [
+        {
+          "patch_id": "S::win-1::S0",
+          "candidate_hash": "h1",
+          "base_netlist_hash": "c6f4cc9ba4584bc6bfd0b120b3e9e5723d5d02a1fa69d4b25dedede34efef2d4",
+          "netlist_hash": "fa18c8b886043042c533ebc8472fce68917cfda1e49e989abf930efecfd49ec9",
+          "netlist_text": "module helper(A,Y);\ninput A;\noutput Y;\nbuf g15(Y,A);\nendmodule\nmodule top(A, B, C, D, E, F, G, H, Y);\n  input A, B, C, D, E, F, G, H;\n  output Y;\n  wire N1, N2, N3, N4, N5, N6, N7, N8, N9, N10, N11, N12, N13, N14;\n  and g1 (N1, A, B);\n  and g2 (N2, C, D);\n  and g3 (N3, E, F);\n  and g4 (N4, G, H);\n  not g5 (N5, N1);\n  not g6 (N6, N5);\n  not g7 (N7, N2);\n  not g8 (N8, N7);\n  not g9 (N9, N3);\n  not g10 (N10, N9);\n  not g11 (N11, N4);\n  not g12 (N12, N11);\n  or g13 (N13, N6, N8);\n  or g14 (N14, N10, N12);\n  wire alias_Y;\nor g15 (alias_Y, N13, N14);\nassign Y = alias_Y;\nendmodule\n",
+          "wns": -1.2,
+          "tns": -9.0,
+          "min_slack": -1.2,
+          "metadata": {
+            "cut_hash": "f3cf6601e1f73cd1eeba994ff0594c0b86711baad27ffa5ff792085744bf524e",
+            "kind": "S",
+            "window_id": "win-1",
+            "window_variant": "S0",
+            "r_s": 1.0,
+            "r_s_verdict": "ok",
+            "soft_penalty": false,
+            "depth_before_sky130": 4,
+            "depth_after_sky130": 3,
+            "abc_sequence": "resyn2",
+            "resynth_stats": {
+              "variant": "S0",
+              "r_s": 1.0,
+              "r_s_verdict": "ok",
+              "depth_before_sky130": 4,
+              "depth_after_sky130": 3,
+              "abc_sequence": "resyn2"
+            },
+            "sta_provenance": {
+              "tool": "stub"
+            },
+            "action_scope": [
+              "g15"
+            ],
+            "refreshed_cone_gates": [
+              "g1",
+              "g2",
+              "g3",
+              "g4",
+              "g5",
+              "g6",
+              "g7",
+              "g8",
+              "g9",
+              "g10",
+              "g11",
+              "g12",
+              "g13",
+              "g14",
+              "g15"
+            ]
+          }
+        }
+      ],
+      "current_cone_gates": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6",
+        "g7",
+        "g8",
+        "g9",
+        "g10",
+        "g11",
+        "g12",
+        "g13",
+        "g14",
+        "g15"
+      ],
+      "current_wns": -1.2,
+      "helper_bytes_preserved": true,
+      "candidate_change": "Only g15 output renamed alias_Y and assign Y=alias_Y added; function preserved"
+    },
+    "s_missing_top_fail_closed_control": {
+      "accepted": 0,
+      "current_wns": -1.5,
+      "failure_types": [
+        "F2_boundary_invalid",
+        "iteration_failure"
+      ]
+    },
+    "sec_namespace_controls": {
+      "same_top_equal": true,
+      "shared_helper_matches": true,
+      "fake_comment_module_ignored": true,
+      "changed_helper_rejected": true
+    }
+  }
+}
+[run] 完成（5s），退出码 0

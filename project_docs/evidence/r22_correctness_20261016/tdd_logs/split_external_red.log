@@ -1,0 +1,28 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest code/tests/test_r22_scope_integration.py::test_split_external_outputs_cannot_also_be_internal -q
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_split_external_outputs_cannot_also_be_internal _____________
+
+    def test_split_external_outputs_cannot_also_be_internal():
+        from rseco.netlist import Gate
+        from rseco.cut import fixed_min_cut
+        netlist=Netlist('top',['A','B'],['Y','Z'],['I','S','CO'],[
+            Gate('buf','src','I',('A',)),
+            Gate('fa','add','S',('I','B'),additional_outputs=('CO',)),
+            Gate('buf','sink','Y',('CO',)),Gate('buf','other','Z',('S',))])
+        parts=split_cone_by_depth(extract_fanin_cone(netlist,['Y']),2)
+        part=next(part for part in parts if 'add' in part.gates)
+        cut=fixed_min_cut(part)
+        assert 'S' in cut.boundary_outputs
+>       assert not (set(cut.boundary_outputs)&set(cut.internal_nets))
+E       AssertionError: assert not ({'S', 'Y'} & {'CO', 'S'})
+E        +  where {'S', 'Y'} = set(['Y', 'S'])
+E        +    where ['Y', 'S'] = CutBoundary(method='fixed_min_cut', boundary_inputs=['I', 'B'], boundary_outputs=['Y', 'S'], internal_nets=['S', 'CO'], gates=['sink', 'add']).boundary_outputs
+E        +  and   {'CO', 'S'} = set(['S', 'CO'])
+E        +    where ['S', 'CO'] = CutBoundary(method='fixed_min_cut', boundary_inputs=['I', 'B'], boundary_outputs=['Y', 'S'], internal_nets=['S', 'CO'], gates=['sink', 'add']).internal_nets
+
+code\tests\test_r22_scope_integration.py:158: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_scope_integration.py::test_split_external_outputs_cannot_also_be_internal
+1 failed in 0.31s
+[run] 完成（6s），退出码 1

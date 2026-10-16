@@ -4,7 +4,7 @@
 
 - 项目类型：算法研究（EDA / 时序优化）
 - 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
-- 当前阶段：**r22 已按用户要求暂停（2026-10-14）**，等待用户明确恢复。中文工作稿12页、7图14表；英文 `elsarticle` 初稿27页、7图14表。两版科学结论仍待历史正确性补验，不能作为投稿定稿；v18保留为历史冻结基线。目标期刊为 **Integration, the VLSI Journal**。
+- 当前阶段：**r22 已于2026-10-16按用户“继续”恢复**；先修正确性门，再整体回归/独立复核和新版本真实实验。中文工作稿12页、7图14表；英文 `elsarticle` 初稿27页、7图14表。两版科学结论仍待历史正确性补验，不能作为投稿定稿；v18保留为历史冻结基线。目标期刊为 **Integration, the VLSI Journal**。
 
 ## 整体设计
 
@@ -46,7 +46,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 4. 论文：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`，**须 `cd` 入 `manuscript/` 目录后用 `lualatex` 连跑两遍**；当前图脚本 `paper/zh/figures/data/scripts/review_r21_figures.py`。
 5. 交接：读 `project_docs/agent_handoff/START_HERE.md` 与 `CURRENT_RUN_HANDOFF.md`。
 
-r22实验当前暂停。恢复后先读 `project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md`，解决全部阻断门并重新整体回归、独立复核，再用新源码pin和新v2目录注册实验。9臂共享每电路同一映射SHA，workers=1、STA预算500、最多2电路并发；两电路18项pilot全部通过独立最终SEC才扩展。不要重用或覆盖 `experiments/20261014_r22_cut_ablation` 的失败v1证据。
+r22已恢复；先读 `project_docs/agent_handoff/CURRENT_RUN_HANDOFF.md`，解决全部阻断门并重新整体回归、独立复核，再用新源码pin和新v2目录注册实验。9臂共享每电路同一映射SHA，workers=1、STA预算500、最多2电路并发；两电路18项pilot全部通过独立最终SEC才扩展。不要重用或覆盖 `experiments/20261014_r22_cut_ablation` 的失败v1证据。
 
 ## 目录角色
 

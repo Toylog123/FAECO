@@ -33,7 +33,8 @@ class FixedMinCutTest(unittest.TestCase):
 
         self.assertEqual(boundary.method, "fixed_min_cut")
         self.assertEqual(boundary.boundary_inputs, ["N1", "N2", "N3", "N6"])
-        self.assertEqual(boundary.boundary_outputs, ["N22"])
+        # N11 and N16 also drive NAND2_4/NAND2_6 outside the N22 cone.
+        self.assertEqual(boundary.boundary_outputs, ["N22", "N11", "N16"])
         self.assertEqual(boundary.gates, ["NAND2_1", "NAND2_2", "NAND2_3", "NAND2_5"])
         self.assertEqual(boundary.patch_size, 4)
 

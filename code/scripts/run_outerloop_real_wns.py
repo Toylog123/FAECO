@@ -305,6 +305,7 @@ def main() -> int:
         print(f"{args.circuit}: mapping failed", file=sys.stderr)
         return 1
     mapped_text = mapped.read_text(encoding="utf-8")
+    single = strip_to_single_module(mapped_text, args.circuit)
 
     # 2. baseline OpenSTA (single worst path -> parse critical instances)
     base = run_opensta(mapped, args.period, out, top_module=args.circuit,
@@ -322,7 +323,7 @@ def main() -> int:
     sta_text = (out / "sta.log").read_text(encoding="utf-8", errors="replace")
     critical = parse_critical_instances(sta_text)
     endpoint = parse_worst_endpoint(sta_text)
-    target_net = dff_d_input_net(mapped_text, endpoint) if endpoint else None
+    target_net = dff_d_input_net(single, endpoint) if endpoint else None
     if not critical or target_net is None:
         print(f"{args.circuit}: no critical instances / endpoint D net "
               f"(endpoint={endpoint})", file=sys.stderr)
@@ -337,7 +338,6 @@ def main() -> int:
     case_dir = out / "case"
     (case_dir / "original").mkdir(parents=True, exist_ok=True)
     (case_dir / "resynthesized").mkdir(parents=True, exist_ok=True)
-    single = strip_to_single_module(mapped_text, args.circuit)
     (case_dir / "original" / "original.v").write_text(single, encoding="utf-8")
     (case_dir / "resynthesized" / "resynthesized.v").write_text(single, encoding="utf-8")
     (case_dir / "case.yaml").write_text(
@@ -399,7 +399,8 @@ def main() -> int:
             liberty_text=LIB.read_text(encoding="utf-8"),
             artifact_dir=out / "topology-sec",
         ),
-        boundary_checker=build_boundary_closure_checker(top_module=args.circuit),
+        boundary_checker=build_boundary_closure_checker(
+            top_module=args.circuit, liberty_text=LIB.read_text(encoding="utf-8")),
         capture_electrical=args.capture_electrical,
     )
 

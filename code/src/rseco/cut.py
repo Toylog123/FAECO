@@ -92,7 +92,7 @@ def fixed_min_cut(cone: FaninCone) -> CutBoundary:
     return CutBoundary(
         method="fixed_min_cut",
         boundary_inputs=cone.boundary_inputs,
-        boundary_outputs=cone.boundary_outputs,
+        boundary_outputs=cone.interface_outputs(),
         internal_nets=cone.internal_nets,
         gates=cone.gates,
     )
@@ -217,7 +217,7 @@ def build_weighted_cut_graph(
         (f"{gate}:in", f"{gate}:out", costs[gate])
         for gate in cone.gates
     ]
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
     dependency_edges: list[tuple[str, str, float]] = []
     for gate in cone.gates:
         for input_signal in cone.gate_inputs[gate]:
@@ -369,7 +369,7 @@ def constrained_weighted_cut_candidates(
     seen: set[str] = set()
     rejected = {"coverage": 0, "window": 0, "anchors": 0, "singleton": 0,
                 "timeout": 0, "budget": 0}
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
     neighbors: dict[str, set[str]] = {gate: set() for gate in gates}
     for gate in gates:
         for signal in cone.gate_inputs[gate]:
@@ -416,7 +416,7 @@ def constrained_weighted_cut_candidates(
             selected = [gate for gate in gates if gate in region]
             if anchors.issubset(region):
                 covered = len(set(selected) & critical)
-                endpoint_singleton = len(region) == 1 and cone.gate_outputs[selected[0]] in cone.boundary_outputs
+                endpoint_singleton = len(region) == 1 and any(out in cone.boundary_outputs for out in cone.outputs_for_gate(selected[0]))
                 valid = covered >= coverage_target
                 if endpoint_singleton and not allow_singleton:
                     rejected["singleton"] += 1
@@ -470,7 +470,7 @@ def _logic_depths(cone: FaninCone) -> dict[str, int]:
     exceed the Python recursion limit, so depth is computed with an
     explicit stack instead of recursive DFS.
     """
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
     memo: dict[str, int] = {}
     stack: list[tuple[str, bool]] = []
     for gate in cone.gates:
@@ -509,7 +509,7 @@ def _logic_depths(cone: FaninCone) -> dict[str, int]:
 
 def _fanin_cone_size(cone: FaninCone, root_gate: str) -> int:
     """Number of cone gates in the fanin cone of root_gate (inclusive)."""
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
     seen: set[str] = set()
     stack = [root_gate]
     while stack:
@@ -527,12 +527,10 @@ def _fanin_cone_size(cone: FaninCone, root_gate: str) -> int:
 def _fanout_counts(cone: FaninCone) -> dict[str, int]:
     """Number of cone-internal consumers of each gate output."""
     counts = {gate: 0 for gate in cone.gates}
+    output_to_gate = cone.signal_drivers()
     for gate in cone.gates:
         for signal in cone.gate_inputs[gate]:
-            driver = next(
-                (g for g, out in cone.gate_outputs.items() if out == signal),
-                None,
-            )
+            driver = output_to_gate.get(signal)
             if driver is not None:
                 counts[driver] += 1
     return counts
@@ -561,7 +559,7 @@ def split_cone_by_depth(cone: FaninCone, max_subcone_gates: int) -> list[FaninCo
     for gate in cone.gates:
         by_depth.setdefault(depths[gate], []).append(gate)
     levels = sorted(by_depth, reverse=True)
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
     # downstream (shallower-band / final) consumers for boundary-output detection
     consumer_of: dict[str, set[str]] = {g: set() for g in cone.gates}
     for gate in cone.gates:
@@ -583,12 +581,13 @@ def _subcone_from_gates(cone, band, consumer_of, output_to_gate, depths) -> Fani
     gate_set = set(band)
     gate_outputs = {g: cone.gate_outputs[g] for g in band}
     gate_inputs = {g: list(cone.gate_inputs[g]) for g in band}
+    band_outputs = {out for g in band for out in cone.outputs_for_gate(g)}
     # boundary inputs: signals not driven inside the band
     boundary_inputs: list[str] = []
     seen_bi: set[str] = set()
     for g in band:
         for signal in cone.gate_inputs[g]:
-            if signal in gate_outputs.values() or signal in seen_bi:
+            if signal in band_outputs or signal in seen_bi:
                 continue
             seen_bi.add(signal)
             boundary_inputs.append(signal)
@@ -598,15 +597,15 @@ def _subcone_from_gates(cone, band, consumer_of, output_to_gate, depths) -> Fani
     seen_bo: set[str] = set()
     for g in band:
         outside = [c for c in consumer_of[g] if c not in gate_set]
-        if outside or (g in output_to_gate.values() and cone.gate_outputs[g] in cone.boundary_outputs):
-            out = cone.gate_outputs[g]
-            if out not in seen_bo:
-                seen_bo.add(out)
-                boundary_outputs.append(out)
+        for out in cone.outputs_for_gate(g):
+            if outside or out in cone.boundary_outputs:
+                if out not in seen_bo:
+                    seen_bo.add(out)
+                    boundary_outputs.append(out)
     # internal nets: band outputs that are not a boundary output
     internal_nets = [
-        gate_outputs[g] for g in band
-        if gate_outputs[g] not in boundary_outputs and gate_outputs[g] not in cone.boundary_outputs
+        out for g in band for out in cone.outputs_for_gate(g)
+        if out not in boundary_outputs and out not in cone.interface_outputs()
     ]
     return FaninCone(
         roots=boundary_outputs or [cone.gate_outputs[band[0]]],
@@ -616,6 +615,9 @@ def _subcone_from_gates(cone, band, consumer_of, output_to_gate, depths) -> Fani
         gates=band,
         gate_outputs=gate_outputs,
         gate_inputs=gate_inputs,
+        gate_additional_outputs={g: list(cone.gate_additional_outputs[g]) for g in band
+                                 if g in cone.gate_additional_outputs},
+        external_boundary_outputs=[out for out in cone.external_boundary_outputs if out in band_outputs],
     )
 
 
@@ -679,7 +681,7 @@ def _deduplicate_candidates(candidates: list[CutBoundary]) -> list[CutBoundary]:
 
 
 def _gate_driving_output(cone: FaninCone, output: str) -> str:
-    return next(gate for gate, gate_output in cone.gate_outputs.items() if gate_output == output)
+    return cone.signal_drivers()[output]
 
 
 def _cut_cost(candidate: CutBoundary, cut_graph: WeightedCutGraph) -> float:
@@ -691,10 +693,11 @@ def _build_st_capacities(
     cut_graph: WeightedCutGraph,
 ) -> dict[str, dict[str, float]]:
     capacities: dict[str, dict[str, float]] = {}
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
 
     for gate in cone.gates:
-        if any(input_signal not in output_to_gate for input_signal in cone.gate_inputs[gate]):
+        if not cone.gate_inputs[gate] or any(
+                input_signal not in output_to_gate for input_signal in cone.gate_inputs[gate]):
             _add_capacity(capacities, cut_graph.source, f"{gate}:in", cut_graph.infinite_capacity)
 
     for from_node, to_node, capacity in cut_graph.split_edges:
@@ -703,7 +706,7 @@ def _build_st_capacities(
         _add_capacity(capacities, from_node, to_node, capacity)
 
     for gate in cone.gates:
-        if cone.gate_outputs[gate] in cone.boundary_outputs:
+        if any(out in cone.boundary_outputs for out in cone.outputs_for_gate(gate)):
             _add_capacity(capacities, f"{gate}:out", cut_graph.sink, cut_graph.infinite_capacity)
 
     return capacities
@@ -818,7 +821,7 @@ def _selected_gates_from_cut_edges(
 
 def _boundary_inputs_for_gates(cone: FaninCone, selected_gates: list[str]) -> list[str]:
     selected_gate_set = set(selected_gates)
-    output_to_gate = {output: gate for gate, output in cone.gate_outputs.items()}
+    output_to_gate = cone.signal_drivers()
     boundary_inputs: list[str] = []
 
     for gate in selected_gates:
@@ -839,29 +842,27 @@ def _boundary_outputs_for_gates(cone: FaninCone, selected_gates: list[str]) -> l
 
     boundary_outputs: list[str] = []
     selected_outputs = {
-        cone.gate_outputs[gate]
-        for gate in selected_gates
+        output for gate in selected_gates for output in cone.outputs_for_gate(gate)
     }
-    for root_output in cone.boundary_outputs:
+    for root_output in cone.interface_outputs():
         if root_output in selected_outputs:
             boundary_outputs.append(root_output)
 
     for gate in selected_gates:
-        output_signal = cone.gate_outputs[gate]
-        if output_signal in boundary_outputs:
-            continue
-        consumers = consumers_by_signal.get(output_signal, [])
-        if output_signal in cone.boundary_outputs or any(consumer not in selected_gate_set for consumer in consumers):
-            boundary_outputs.append(output_signal)
+        for output_signal in cone.outputs_for_gate(gate):
+            if output_signal in boundary_outputs:
+                continue
+            consumers = consumers_by_signal.get(output_signal, [])
+            if output_signal in cone.interface_outputs() or any(consumer not in selected_gate_set for consumer in consumers):
+                boundary_outputs.append(output_signal)
     return boundary_outputs
 
 
 def _internal_nets_for_gates(cone: FaninCone, selected_gates: list[str]) -> list[str]:
     boundary_outputs = set(_boundary_outputs_for_gates(cone, selected_gates))
     return [
-        cone.gate_outputs[gate]
-        for gate in selected_gates
-        if cone.gate_outputs[gate] not in boundary_outputs
+        output for gate in selected_gates for output in cone.outputs_for_gate(gate)
+        if output not in boundary_outputs
     ]
 
 
