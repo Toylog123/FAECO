@@ -1,0 +1,86 @@
+{
+  "eda_executed": false,
+  "external_process_calls": 0,
+  "multioutput_actualLib_fixture_valid_static": "pass",
+  "secondary_output_closed_positive": {
+    "connected": true,
+    "boundary_closed": true,
+    "expected_boundary_inputs": [
+      "A",
+      "B",
+      "CIN"
+    ],
+    "expected_boundary_outputs": [
+      "co",
+      "S"
+    ],
+    "critical_coverage": 0,
+    "multioutput_gate_count": 1
+  },
+  "secondary_output_omission_rejected_by_oracle": true,
+  "secondary_output_disconnect_rejected_by_F1_F2": "fail",
+  "same_union_singleton_fullcover_controls_passed": true,
+  "scope": "Fixtures only geometry/function static controls; no timing benefit",
+  "circuit_audit": [
+    {
+      "circuit": "s27",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 3
+      },
+      "eligible_multigate_regions": 3,
+      "checks": 17,
+      "static_pass_checks": 17,
+      "unexamined_proposals": 18,
+      "bounded_generator_exhausted": {
+        "configured": false,
+        "uniform": false
+      }
+    },
+    {
+      "circuit": "s382",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 8
+      },
+      "eligible_multigate_regions": 3,
+      "checks": 49,
+      "static_pass_checks": 49,
+      "unexamined_proposals": 44,
+      "bounded_generator_exhausted": {
+        "configured": false,
+        "uniform": false
+      }
+    },
+    {
+      "circuit": "s420",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 8
+      },
+      "eligible_multigate_regions": 2,
+      "checks": 58,
+      "static_pass_checks": 58,
+      "unexamined_proposals": 73,
+      "bounded_generator_exhausted": {
+        "configured": false,
+        "uniform": false
+      }
+    },
+    {
+      "circuit": "s641",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 9
+      },
+      "eligible_multigate_regions": 2,
+      "checks": 88,
+      "static_pass_checks": 88,
+      "unexamined_proposals": 95,
+      "bounded_generator_exhausted": {
+        "configured": true,
+        "uniform": true
+      }
+    }
+  ]
+}

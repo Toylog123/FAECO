@@ -1,8 +1,10 @@
-# r22 当前实现与证明证据 — 2026-10-16（LOG-36）
+# r22 当前实现与证明证据 — 2026-10-16（LOG-20261016-53）
 
 当前完整v8：**969pass/4skip/156subtests，155.12s/wrapper157.969exit0，170来源before/after SHA稳定，PYTHONUTF8=1**；JSON/JUnit/log实读，JUnit0fail0error。原始精确V3正确拒reset→set、合法Gpass、R0、parsed1/1，公共scope30pass。OI040/041实现门已闭合，科学范围不泛化。
 
-当前main/origin仍ddb4c33，代码修复阶段commit待；records停写供root归档harness/更新根入口与commit/push。随后同一HEAD注册C′v3→真map8/静态门→18pilot全过才扩72，不再加前置工具。当前v3未注册、无mapping/STA；B3/C ADAPTER WIP不纳此次commit。
+当前main/origin固定3ea0f757f5e9bab4a2df75c458b0c665eabcb258，完整v8=969pass/170源码SHA稳定，OI040/041实现门closed。C′v3 72jobs/manifest72dfbef9…/44source已注册，8例实际mapping/static准备与后验全过（非RTL→mapped等价证明）。18pilot已completed，wrapper1028s/exit0；PILOT_AUDIT_18实际18/18独立核验通过/all_pilot_verified=true/source稳定，全部argv、candidate raw/tcl/log SHA与STA ledger、提交哈希链及finalSEC非零proven/0unproven匹配。首18合计1360候选评估记录、1064 candidate_ideal STA+18baseline=1082实际STA过程、other0、保留提交35；physical/electrical/S均false，不称物理STA。剩余54已实际启动session9345（s420/s641/s713/s820/s832/s953×9，整体108000s、单job3900/3930s/wall3600，PYTHONUTF8=1），最新MATRIX_AUDIT_51由v2（SHAea0a9793…）在开始冻结eligible pair+completion SHA并结束复核，51/72独立通过/source稳定/all_matrix_verified=false。实际s27/s382/s420/s641各9+s713七臂+s820八臂；51范围5887候选评估、4919candidate_ideal STA+51baseline=4970实际过程/other0、137保留提交，physical/electrical/S=false。原log名字v2_50不代表count，以receipt51为准；v2 script/log/51新stage51原件保真归档，旧36不改。s27/s382/s641完整归档已root后验接受；s420全归档已session34681/900s实际启动、验收待。当前运行仍固定3ea0f75，不称全72完成。完整72验收前保持HEAD不commit；B3/C适配器可独立review/QA但不占STA，提交等72全部验收。首18验收不是全72效果闭合，不跨族补旧B3/C/D科学缺口。
+
+当前接受协议为严格WNS改善并满足TNS不退化等既有硬约束；--tns-aware改变平局选择，不意味着关闭setup_tns预算。W0/s27首候选WNS -.27→-.26但TNS -.49→-.50，被setup_tns硬门拒。零提交/零WNS收益如实保留，不为正结果调参。最终审计分开理想候选、baseline/refresh/physical STA与提交。
 
 ## 各轮完整回归保真
 

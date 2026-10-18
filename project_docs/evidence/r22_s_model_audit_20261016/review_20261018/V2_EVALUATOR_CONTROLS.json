@@ -1,0 +1,199 @@
+{
+  "positive": [
+    {
+      "expression": "!A",
+      "actual": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "expected": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "~A",
+      "actual": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "expected": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "A'",
+      "actual": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "expected": [
+        1,
+        1,
+        0,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "!(A&B)",
+      "actual": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "expected": [
+        1,
+        1,
+        1,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "!A&B",
+      "actual": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "expected": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "A^B",
+      "actual": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "expected": [
+        0,
+        1,
+        1,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "A~^B",
+      "actual": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "expected": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "pass": true
+    },
+    {
+      "expression": "A^~B",
+      "actual": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "expected": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "pass": true
+    },
+    {
+      "expression": "1'b0 | (A*B)",
+      "actual": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "pass": true
+    },
+    {
+      "expression": "(A+B)'",
+      "actual": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "expected": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "expression": "!!A",
+      "actual": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "expected": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "pass": true
+    },
+    {
+      "expression": "~(A^B)",
+      "actual": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "expected": [
+        1,
+        0,
+        0,
+        1
+      ],
+      "pass": true
+    }
+  ],
+  "negative_distinctions": 3,
+  "independent_parser": true,
+  "production_expression_parser_used": false
+}

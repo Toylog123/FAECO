@@ -233,7 +233,7 @@ The split graph uses max-flow/min-cut. For $n$ cone gates and $f$ dependency edg
 
 \section{Experiments}\label{sec:exp}
 \subsection{Setup}\label{sec:setup}
-\textbf{Environment and datasets.} Experiments ran in WSL2 (Ubuntu 24.04.4 LTS; kernel 6.6.87.2-microsoft-standard-WSL2) on an AMD Ryzen 7 7435H host, with 16 visible logical cores and 15\,GB memory. The main flow uses OSS-CAD Suite (Yosys 0.67+146, OpenSTA 3.1.0); SEC uses WSL Yosys 0.33. Datasets comprise eight ISCAS89 circuits, 19 ITC-99 circuits and three PicoRV32 modules, using a 0.5\,ns clock period to impose timing pressure. WNS improvement is the primary outcome under identical constraints. Other metrics are global-route-estimated WNS and candidate STA counts; TNS supports optional auxiliary acceptance. b06 retains equal-WNS/improved-TNS acceptance, which is excluded from strict-WNS improvement counts. TNS-aware acceptance is not combined with physical gating in these experiments.
+\textbf{Environment and datasets.} Experiments ran in WSL2 (Ubuntu 24.04.4 LTS; kernel 6.6.87.2-microsoft-standard-WSL2) on an AMD Ryzen 7 7435H host, with 16 visible logical cores and 15\,GB memory. The main flow uses OSS-CAD Suite (Yosys 0.67+146, OpenSTA 3.1.0); SEC uses WSL Yosys 0.33. Datasets comprise eight ISCAS89 circuits, 19 ITC-99 circuits and three PicoRV32 modules. ISCAS89 and ITC-99 circuits use a 0.5\,ns clock period; the PicoRV32 core, multiplier and register bank use 5, 2 and 0.5\,ns, respectively. WNS improvement is the primary outcome, with the baseline and repaired netlist of each circuit evaluated under identical constraints. Other metrics are global-route-estimated WNS and candidate STA counts; TNS supports optional auxiliary acceptance. b06 retains equal-WNS/improved-TNS acceptance, which is excluded from strict-WNS improvement counts. TNS-aware acceptance is not combined with physical gating in these experiments.
 
 \textbf{Inclusion.} ISCAS89 includes eight sequential circuits that map successfully through the common Yosys-to-SKY130 flow and have valid setup paths. ITC-99 includes b01--b15, b17 and b20--b22. b18 and b19 are separately reported large examples, outside the unified 19-circuit statistics. PicoRV32 includes its core, \texttt{picorv32\_pcpi\_mul} multiplier, and storage-dominated \texttt{picorv32\_regs}, covering control, arithmetic and storage structures.
 
@@ -301,7 +301,7 @@ Unified strict-WNS improvement fractions are 8/8, 18/19 and 2/2. SEC considers 3
 
 \begin{figure}[htbp]\centering
 \includegraphics[width=\linewidth]{fig4_unified_gain_r21.pdf}
-\caption{Per-instance ideal-net WNS gain under the unified iterative setting. Panel ranges differ. b17 uses a 180\,s candidate limit; the default is 60\,s. The register bank is excluded because it has no setup path. Results describe single archived runs.}\label{fig:unified_gain}
+\caption{Per-instance ideal-net WNS gain under the unified iterative setting. Panel ranges differ. b17 uses a 180\,s candidate limit; the default is 60\,s. The PicoRV32 core, multiplier and register bank use periods of 5, 2 and 0.5\,ns, respectively. The register bank is excluded because it has no setup path. Results describe single archived runs.}\label{fig:unified_gain}
 \end{figure}
 
 \subsection{Candidate-space, ranking and feedback comparisons}\label{sec:ablation}

@@ -1,0 +1,99 @@
+{
+  "schema": "r22-cprime-partial4-mechanism-independent-review-v1",
+  "created_utc": "2026-10-16T07:09:54.552951+00:00",
+  "scope": "s27,s382,s420,s641 only; W0/U0 and W1/U1; partial4 not eight-circuit conclusion",
+  "decision": "No evidence of weight-routing/solver bug on these traces; exact graph root-cut forcing/dominance explains equal cut identity. No causal weighting benefit established.",
+  "diagnostic_sha256": "09d26ee7407a352346e0b93c12bb9dfa601121b4709bc78e94312c5b267d14a8",
+  "review_md_sha256": "ae61ee2f664496bb125f22994dfdffee5042267711b948082625c4b310d1286c",
+  "auditor_original_path": "scratch/cprime_mechanism_review/diagnose.py",
+  "auditor_archived_path": "project_docs\\evidence\\r22_cprime_v3_20261016\\mechanism_review\\diagnose_exact_invoked.py",
+  "auditor_sha256": "978294bc388488063fb2c636f66bfabd08e3d5769674c1590f9b8cc286363952",
+  "log_path": "scratch/cprime_mechanism_review/diagnostic.log",
+  "log_sha256": "304fa33948901ffd4513555963b7be3f38d5e2f15beb8f32ec247b9a35f98119",
+  "summary": {
+    "circuits": 4,
+    "pairs": 8,
+    "weighted_trace_rows": 160,
+    "root_singletons": 160,
+    "mandatory_root_rows": 120,
+    "finite_nonroot_alternatives": 40,
+    "unique_circuit_base_states": 20
+  },
+  "mandatory_cases": [
+    "s27",
+    "s382",
+    "s641"
+  ],
+  "dominance_case": {
+    "circuit": "s420",
+    "root": "_066_",
+    "root_weighted_cost": 0.7914965986394558,
+    "best_nonroot_gates": [
+      "_064_",
+      "_065_"
+    ],
+    "best_nonroot_weighted_cost": 2.9687074829931976,
+    "margin": 2.177210884353742,
+    "uniform_root_cost": 1,
+    "uniform_nonroot_cost": 2
+  },
+  "weights_or_registered_parameters_changed": false,
+  "eda_executed": false,
+  "production_modified": false,
+  "head_before": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "head_after": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "input_source_stable": true,
+  "source_manifest": {
+    "code/src/rseco/cut.py": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+    "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+    "code/src/rseco/logic_rewrite.py": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9"
+  },
+  "input_sha256": {
+    "project_docs/evidence/r22_cprime_v3_20261016/mechanism_audits/MATCHED_STATE_PAIRS_08.json": "4bb2caf307acf8f85634ee2030e434af9b04e3664e1a9a419b8b86838b26c951",
+    "experiments/20261016_r22_cut_ablation_v3/manifest.json": "72dfbef9dd36101c543f0d3788084579b31482b1a29cdfcc5875826cc445fd41",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s27/outerloop_result.json": "d7f3161b177dfd750f07f6d484d9443ff35c605d32b72233d33067913e861dd8",
+    "experiments/20261016_r22_cut_ablation_v3/U0/s27/outerloop_result.json": "44208cc4f37b8622b4474139f178a4c54b36e736138d47988d55e22de33500c9",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s27/outerloop_result.json": "9fe4b3580c87de58e6a8eb4d0656701a740da3766101b354e890c2481f4ba76e",
+    "experiments/20261016_r22_cut_ablation_v3/U1/s27/outerloop_result.json": "b262ddd18007ebca754f8ba22f045e91d22e4ce04832386ce2d81ec08e23f46b",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s382/outerloop_result.json": "4820449881563150c81bcec6b164d9cf51b3caf35047dee54ace6d2a9140aab6",
+    "experiments/20261016_r22_cut_ablation_v3/U0/s382/outerloop_result.json": "ff8a05a953feff432bd14aa80fafc9dc5807a0d3fd27c96c1b06552b7b65b64f",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s382/outerloop_result.json": "eaea153313af160ff17617a933d5970150522d02bca51efd83a09fc890c322d2",
+    "experiments/20261016_r22_cut_ablation_v3/U1/s382/outerloop_result.json": "4d3ba71a8622aa26e0e48f8e85545c9153f77d69ed4745674a386c80f2d1a88f",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s420/outerloop_result.json": "7555e9e952a24a0457f45849d67ef55ec50ef59210187550bfa213397d52b8f6",
+    "experiments/20261016_r22_cut_ablation_v3/U0/s420/outerloop_result.json": "a6793566556f7d9afebe578bd78bdb2d08e38f800402ec2384b1674989ff3cb3",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s420/outerloop_result.json": "7c0f87851d0051201423ec1b54d36917fb7b4ec5a2322eaf541c4cefab0bb39b",
+    "experiments/20261016_r22_cut_ablation_v3/U1/s420/outerloop_result.json": "9df19d4fb7fee5a61418789760e5e1ce2daafbcffc2a7f146c8fbdaea966a19f",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s641/outerloop_result.json": "3a08bede7e08a4f5a6d450417579f9940fd574bd710da9239bd0a316d4841be1",
+    "experiments/20261016_r22_cut_ablation_v3/U0/s641/outerloop_result.json": "c9ed624d27afad0bb14187868984e5bf05eeabc1c385bd213659f0e26c9a578b",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s641/outerloop_result.json": "74e518d265a0ea6ffc6cea36c84588826876bac3801f680b09e43361213d92c6",
+    "experiments/20261016_r22_cut_ablation_v3/U1/s641/outerloop_result.json": "c7cae749b0aa2da07b1fd73f18604348d1bfd8a4e24a24cde5093f0861747c1e",
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s27/mapped.v": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s27/mapped.v": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s382/mapped.v": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s382/mapped.v": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s420/mapped.v": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s420/mapped.v": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+    "experiments/20261016_r22_cut_ablation_v3/W0/s641/mapped.v": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+    "experiments/20261016_r22_cut_ablation_v3/W1/s641/mapped.v": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e"
+  },
+  "falsifiers": [
+    "Trace cost/boundary mismatch on exact base.",
+    "Independent lower finite mincut.",
+    "Missing asserted source-root path.",
+    "Cheaper valid nonroot separator for s420.",
+    "Same-base pool/dispatch differences."
+  ],
+  "design_reuse": "Existing constrained_weighted_cut_candidates and boundary closure, OI030/R22 planning; future source pin, no current execution.",
+  "do_not_do": [
+    "Delete real source dependency edges for positive result.",
+    "Tune registered lambda/arms or select circuits after WNS.",
+    "Treat toy/model connectivity as real timing benefit.",
+    "Extrapolate partial4 to8."
+  ]
+}

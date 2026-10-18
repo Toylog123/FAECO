@@ -1,0 +1,84 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py --basetemp project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_red3b_tmp
+....................FFF                                                  [100%]
+================================== FAILURES ===================================
+_ test_candidate_launch_commit_and_scientific_epsilon_must_agree[trial_identity] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000189C0FF8F50>
+corrupt = 'trial_identity'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[]
+        def fake_proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',fake_proof)
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:230: Failed
+_ test_candidate_launch_commit_and_scientific_epsilon_must_agree[commit_identity] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000189C1002690>
+corrupt = 'commit_identity'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[]
+        def fake_proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',fake_proof)
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:230: Failed
+___ test_candidate_launch_commit_and_scientific_epsilon_must_agree[epsilon] ___
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000189C1138550>
+corrupt = 'epsilon'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[]
+        def fake_proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',fake_proof)
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:230: Failed
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[trial_identity]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[commit_identity]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[epsilon]
+3 failed, 20 passed in 6.30s
+[run] 完成（10s），退出码 1

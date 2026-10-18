@@ -3,10 +3,10 @@
   "figure_source": "paper\\zh\\figures\\data\\scripts\\review_r21_figures.py",
   "figure_source_sha256": "14b81f2896997bfb0b10506e1192db494904055a6f9ac9d8eee70b1bbe5614f7",
   "figure_adaptation": "Original quantitative data and r21 computation preserved; English labels and layout adapted with Python; Figure 3 reuses the current Chinese paired-plot source and input.",
-  "results_cutoff": "r21 numerical results plus explicitly authorized archived B-result provenance correction; no r22 EDA results",
-  "date": "2026-10-14",
+  "results_cutoff": "r21 numerical results; archived B-count provenance and actual clock-period metadata corrected; no r22 EDA result inserted",
+  "date": "2026-10-16",
   "translation_source_at_capture_sha256": "d36812c85b457e8b40ebd5a110099d5484a839bfc86735da23c30fcd8c94183c",
-  "translation_source_current_sha256": "fe0207c91a567e57b0d4f75e4650ca4b992d094444207cf1da0cd43d0d74083d",
+  "translation_source_current_sha256": "cb9bd94eef62ce51fe2d73960597b5ef9ae4aa33167ebab27c03212084149333",
   "authorized_post_capture_correction": {
     "scope": "B provenance statement only: 3363 evaluation records; 2994 independently traceable candidate STA results; historical timeout launches/baseline/refresh not fully recorded",
     "evidence": [
@@ -25,6 +25,15 @@
     "sha256": "51b2215583fad1b362c8d80e932616deaf572d1483d78144bf129b9233827d25",
     "scope": "Only original single-round ISCAS89 paired plot and its existing input; translated labels and English-label placement"
   },
-  "english_manuscript_sha256": "7914c0bd56fcdf7c6fe966418f9b686f1de8a32802cd08c3b06e610d7c216184",
-  "english_figure_script_sha256": "af40ce6e86fc8208a0eb18e18a2e38aaee9e04f3a0100239167c7577de3acda6"
+  "english_manuscript_sha256": "bdde6acaa8885b88ae850b97e310f403da32200860c4dd82ba6efe8d55f3b6d2",
+  "english_figure_script_sha256": "af40ce6e86fc8208a0eb18e18a2e38aaee9e04f3a0100239167c7577de3acda6",
+  "r22_clock_period_metadata_correction": {
+    "scope": "ISCAS89/ITC-99 .5ns; Pico core5ns/multiplier2ns/registers.5ns; per-circuit baseline and repair share constraints",
+    "receipt": "paper/zh/review_rounds/r22_20261016/metadata_correction_01/FINAL_QA.json",
+    "receipt_sha256": "de63dac11f268274658f08a7b9288cb72ec2a10b32ab6fd022afa04b4848014a",
+    "supporting_audits": [
+      "paper/zh/review_rounds/r22_20261016/TIMING_CONSTRAINT_CHECK.json",
+      "paper/zh/review_rounds/r22_20261016/TIMING_CONSTRAINT_MAIN27.json"
+    ]
+  }
 }

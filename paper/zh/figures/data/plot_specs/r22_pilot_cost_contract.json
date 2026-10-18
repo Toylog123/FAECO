@@ -1,0 +1,18 @@
+{
+  "status": "pilot preview; not inserted into either manuscript",
+  "conclusion": "Within the two preregistered pilot circuits, strategies reaching the same WNS endpoint use different numbers of STA invocations.",
+  "archetype": "quantitative grid",
+  "backend": "python",
+  "style_reuse": "palette and typography only from the established manuscript plotting workflow",
+  "panels": {"a": "s27: gain versus total STA invocations", "b": "s382: the same paired comparison"},
+  "input": "project_docs/evidence/r22_cprime_v3_20261016/PILOT_AUDIT_18.json",
+  "observations": {"circuits": 2, "arms_per_circuit": 9, "jobs": 18, "exclusions": 0, "remaining_circuits": "not part of the preregistered pilot; full matrix is still running"},
+  "mapping": {"x": "candidate_ideal_sta_launches + baseline_sta_process_attempts", "y": "1000 * (final_wns - baseline_wns), ps", "labels": "all registered arm IDs; identical coordinates grouped without jitter"},
+  "baseline": "the same frozen mapped input within each circuit",
+  "acceptance": "strict WNS improvement with the existing TNS non-regression budget",
+  "statistics": "individual deterministic runs and three separately labelled random seeds; no averaging, error bars, or significance claims",
+  "dimensions_mm": [170, 72],
+  "exports": ["editable PDF", "editable SVG", "600 dpi PNG", "source CSV", "QA JSON"],
+  "glyph_floor_pt": 7,
+  "review_risks": ["two-circuit pilot is not the eight-circuit conclusion", "weights must not receive causal credit from equal endpoints", "candidate records are not STA invocations", "grouped labels must preserve all 18 observations"]
+}

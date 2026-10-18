@@ -1,0 +1,64 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py --basetemp project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_red2_tmp
+.................FF.                                                     [100%]
+================================== FAILURES ===================================
+__________ test_failure_receipt_cannot_be_ignored_next_to_completion __________
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000022727902910>
+
+    def test_failure_receipt_cannot_be_ignored_next_to_completion(env,monkeypatch):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+        a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        a.save_new(out/'failure.json',{'status':'failed'})
+>       with pytest.raises(RuntimeError,match='failure'):a.verify_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:184: Failed
+_____________ test_missing_staged_input_rejected_without_fallback _____________
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000227279BA7D0>
+
+    def test_missing_staged_input_rejected_without_fallback(env,monkeypatch):
+        manifest=registered(env);job=manifest['plan']['jobs'][0];out=Path(job['output_dir']);out.mkdir()
+        a.save_new(out/'preregistered.json',{'manifest_fingerprint':a.fingerprint(manifest),'job':job})
+        calls=[];monkeypatch.setattr(a.runner,'main',lambda:calls.append('runner'))
+>       with pytest.raises(RuntimeError,match='staged'):a.guarded_runner(manifest,'b09')
+                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:191: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:351: in guarded_runner
+    if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Missing/changed staged mapped input')
+       ^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:50: in sha
+    def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+                                        ^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\١����\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1050: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_red2_tmp/test_missing_staged_input_reje0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/mapped.v')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_red2_tmp\\test_missing_staged_input_reje0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\mapped.v'
+
+C:\Users\١����\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_failure_receipt_cannot_be_ignored_next_to_completion
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_missing_staged_input_rejected_without_fallback
+2 failed, 18 passed in 4.88s
+[run] 完成（11s），退出码 1

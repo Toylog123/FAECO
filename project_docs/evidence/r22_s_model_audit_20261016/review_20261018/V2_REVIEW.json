@@ -1,0 +1,538 @@
+{
+  "date": "2026-10-18",
+  "EDA_executed": false,
+  "git_executed": false,
+  "old_S_sources_count": 1907,
+  "old_SPEF_sources_count": 570,
+  "old_sources_checked": 2477,
+  "old_sha_mismatches": [
+    {
+      "family": "SPEF",
+      "path": "project_docs/LOGS.md",
+      "expected": "aa2e8407ef706b424240b3f13e8d463fcc2f640c997f38fd1f5ec8f938ac94cb",
+      "actual": "7d38dc002f22aefc9ad0f7bb28e87c41a97a078ef2fc558bb989246c00dcf5b4",
+      "roles": null
+    }
+  ],
+  "new_review_sources_stable": true,
+  "model_recheck_counts": {
+    "match": 1032
+  },
+  "model_recheck_issue_count": 0,
+  "old_258_defect_file_count_valid": false,
+  "S_totals_retained": {
+    "S_records": 126,
+    "depth_metadata_reduced": 76,
+    "accepted": 0,
+    "base_bound": 126,
+    "base_all_module_closure_pass": 14,
+    "candidate_all_module_closure_pass": 10,
+    "candidate_required_inputs_pass": 126,
+    "candidate_two_state_supported": 126,
+    "candidate_exact_STA_bound": 126,
+    "wns_positive": 0,
+    "wns_zero": 36,
+    "wns_negative": 90
+  },
+  "S_s27_first": {
+    "circuit": "s27",
+    "trial_index": 416,
+    "patch_id": "S::793d23844449935f::S0",
+    "call_index": 9,
+    "candidate_text_sha256": "550b021a1e7f91ce97a117297e6d2a7cf6c4922a8de0c954753c2cc34357573d",
+    "declared_candidate_hash": "550b021a1e7f91ce97a117297e6d2a7cf6c4922a8de0c954753c2cc34357573d",
+    "candidate_hash_match": true,
+    "base_text_sha256": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+    "base_binding": {
+      "text_sha256": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+      "wns": -0.17,
+      "role": "accepted commit",
+      "commit_index": 0
+    },
+    "accepted": false,
+    "wns": -0.27,
+    "metadata": {
+      "variant": "S0",
+      "window_gates_before": 2,
+      "window_gates_after": 1,
+      "aig_nodes_before": 15,
+      "aig_nodes_after": 2,
+      "depth_before": 4,
+      "depth_after": 2,
+      "depth_before_sky130": 3,
+      "depth_after_sky130": 3,
+      "depth_layer": "sky130",
+      "abc_sequence": "balance ; rewrite ; refactor ; balance ; rewrite ; rewrite -z ; balance ; refactor -z ; rewrite -z ; balance",
+      "cec_pre_map": "pass",
+      "cec_post_map": "pass",
+      "area_before_um2": null,
+      "area_after_um2": null,
+      "canonical_hash": "977415522d00fb57",
+      "r_s": 0.5,
+      "r_s_verdict": "ok"
+    },
+    "local_proof_options": [
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0",
+        "round_directory": "round002",
+        "window_id": "793d23844449935f",
+        "variant": "S0",
+        "window_before_text_sha256": "963c1f5948f15b58edb05d441d06ee712d7ae0fca77ea295a99d922f6e6cb44e",
+        "window_mapped_text_sha256": "6dc37e8151ddf93ed46d9487e855cd1eb6b9a3f157a15c4b783937373d2bf584",
+        "canonical_hash_match": true,
+        "files": {
+          "window.v": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/window.v",
+            "sha256": "b02e860d572a46dcb210fa34a4ac1adc37d14e545d8c1fbacfebc9ec376a8290"
+          },
+          "window.blif": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/window.blif",
+            "sha256": "276dbb48dbd3083a637f3441dab92c3b0dc84b1e284a910f77144e13657d6bba"
+          },
+          "win_abc.blif": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/win_abc.blif",
+            "sha256": "c0eda7ddcd590c0f727eef9078a830a1d4055c2c995fa4e02c1f290b39fadd2e"
+          },
+          "win_mapped.blif": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/win_mapped.blif",
+            "sha256": "c99caf92db4f8c8446a144a6bec29fd5f511a84ab9515dba8842b54ede429fb6"
+          },
+          "abc.log": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/abc.log",
+            "sha256": "f61dc432e1fcdfe2dadffeb43d1557f3d33ff21668921f9ffb8b4709d064b666"
+          },
+          "abc_cec.log": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/abc_cec.log",
+            "sha256": "0cd16cd25e18c678239be4b929680c98787e2e5618cdf92ca95905dcb0a27c4f"
+          },
+          "cec_left.blif": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_left.blif",
+            "sha256": "38fd33b95a6ab6c8e489ffcf283f0c7da58831f7ec9a07ecdd2740367ad7c297"
+          },
+          "cec_right.blif": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_right.blif",
+            "sha256": "5d963ad0f8fa1f55f9b8b399ee97f7b4a8d3e2a2e3cf411b7a4f2921af242ecb"
+          },
+          "cec_left_cells.v": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_left_cells.v",
+            "sha256": "90355261bdb4fd8eee1e882c2cb9d4d8ac20477fe2751dd25d80a3fbb4d06769"
+          },
+          "cec_right_cells.v": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_right_cells.v",
+            "sha256": "d83f6a26e14b6710b52261ee39d74f7e611fb425e2036958206ae47a4702315c"
+          },
+          "window_cells.v": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/window_cells.v",
+            "sha256": "90355261bdb4fd8eee1e882c2cb9d4d8ac20477fe2751dd25d80a3fbb4d06769"
+          },
+          "ltp.log": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/ltp.log",
+            "sha256": "7ed3232a7d07d609d42a5fd082bdf4891d2bcb8acc637353cbdd75b506288f05"
+          },
+          "techmap.log": {
+            "path": "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/techmap.log",
+            "sha256": "2ec840d69cf8514ca036f408d76fd2e9a42ccf4ddf894de1f7c5d1220185e3fe"
+          }
+        },
+        "old_cec_runtime_input_sha256": "unknown/not recorded",
+        "cec_log_equivalent": true,
+        "cec_actual_command": "command: C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys-abc.EXE -s -c cec D:/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_left.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_right.blif",
+        "ltp_retained_levels": [
+          3
+        ],
+        "ltp_retained_input_lines": [
+          "-- Running command `read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/data/raw/benchmarks/raw/skywater_cells_models/sky130_cells_v2.v ; read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/win_mapped.v ; hierarchy -check -top win_793d23844449935f ; proc ; flatten ; opt_clean ; ltp -noff' --"
+        ],
+        "actual_old_model_defects": {
+          "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_left_cells.v": [
+            "sky130_fd_sc_hd__a21boi_0"
+          ],
+          "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_right_cells.v": [
+            "sky130_fd_sc_hd__a21boi_0"
+          ]
+        },
+        "after_depth_log_matches_metadata": true
+      }
+    ],
+    "sta_binding": {
+      "mapped_path": "experiments/20260928_s_l1_ablation/on/s27/eval/iter009_s009/mapped.v",
+      "raw_sha256": "684139d1a832256f4d44878caa09c7c71833d255bf43928432781eb15961a65b",
+      "full_decoded_text_equal": true,
+      "log_path": "experiments/20260928_s_l1_ablation/on/s27/eval/iter009_s009/sta.log",
+      "tcl_path": "experiments/20260928_s_l1_ablation/on/s27/eval/iter009_s009/sta.tcl",
+      "reported_wns_values": [
+        -0.27
+      ],
+      "wns_match": true,
+      "read_verilog_lines": [
+        "read_verilog /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20260928_s_l1_ablation/on/s27/eval/iter009_s009/mapped.v"
+      ]
+    },
+    "old_local_binding_status": "identified_by_window_module_id_variant_and_canonical_mapped_hash",
+    "relative_current_base_delta_ns": -0.1
+  },
+  "S_paired_endpoints": [
+    {
+      "circuit": "s27",
+      "on_final_text_sha256": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+      "off_final_text_sha256": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s382",
+      "on_final_text_sha256": "7e94bef1a0a85d85371b22ac9d895d42309735c832d934442f15143dd6d3b3b6",
+      "off_final_text_sha256": "7e94bef1a0a85d85371b22ac9d895d42309735c832d934442f15143dd6d3b3b6",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s420",
+      "on_final_text_sha256": "baeb8783a154dbbebf2184ba93a2f6b532349fc76d5245efa61f026a68d1c7a4",
+      "off_final_text_sha256": "baeb8783a154dbbebf2184ba93a2f6b532349fc76d5245efa61f026a68d1c7a4",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s641",
+      "on_final_text_sha256": "58406e0f2a811ab91247beea43673140ef29d2ed6811574d19f57b1094955d4a",
+      "off_final_text_sha256": "58406e0f2a811ab91247beea43673140ef29d2ed6811574d19f57b1094955d4a",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s713",
+      "on_final_text_sha256": "fb5926e2e2416ff03102814caa2b25768d3fad92c5bf763d2767704adbe4a943",
+      "off_final_text_sha256": "fb5926e2e2416ff03102814caa2b25768d3fad92c5bf763d2767704adbe4a943",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s820",
+      "on_final_text_sha256": "4abfd6241ba27b44d514debdf5b7821d2010bc7620218688c69685915841e1ab",
+      "off_final_text_sha256": "4abfd6241ba27b44d514debdf5b7821d2010bc7620218688c69685915841e1ab",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": true,
+      "off_final_all_module_closure_pass": true
+    },
+    {
+      "circuit": "s832",
+      "on_final_text_sha256": "9ff9302f0e9126df567bab0f08b5d6ce12d9109e6698e9b235dbd7e3454dd86e",
+      "off_final_text_sha256": "9ff9302f0e9126df567bab0f08b5d6ce12d9109e6698e9b235dbd7e3454dd86e",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s953",
+      "on_final_text_sha256": "e3cf83e84bdaa4c376516fe2f218de92050161167f3b04c2d4118a7eecc7f79d",
+      "off_final_text_sha256": "e3cf83e84bdaa4c376516fe2f218de92050161167f3b04c2d4118a7eecc7f79d",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    }
+  ],
+  "physical_ledger_summary": [
+    {
+      "folder": "experiments/20260805_phys_closure/s382_big/s382",
+      "F6_records": 50,
+      "candidate_records": 50,
+      "unique_candidate_sha_count": 5,
+      "unique_candidate_shas": [
+        "4990487e9db1a170b566bd35216502f2d11abdb319e6f6e7cd3a25e3c218301a",
+        "50ffb6a165cd40e56c21608f57217ae3b54ae59618b0ff84e9e8ba034db4294b",
+        "af9e416ba634f960304488b870b460dba4f35a050c89528690675d8a301a55c8",
+        "d1d84e6ed3d410d4f53137509cbe8f9d5563ba6888dc1013628935fc4cc8e6f1",
+        "f7726db0d043a8fff87e55ef4727e1f33427fdadcfd1566f32e3bcb7ee812a02"
+      ],
+      "retained_spef_generator_matches": {
+        "{\"1.0\": false, \"40.0\": false}": 50
+      },
+      "read_spef_after_first_report_count": 50,
+      "period_ns": 0.5
+    },
+    {
+      "folder": "experiments/20260805_phys_closure/b18_light/b18",
+      "F6_records": 6,
+      "candidate_records": 6,
+      "unique_candidate_sha_count": 1,
+      "unique_candidate_shas": [
+        "42db3970ed14ba9d99689f5489a1db4cc3074b209c5374b55749fd0a3367e10c"
+      ],
+      "retained_spef_generator_matches": {
+        "{\"1.0\": true, \"40.0\": false}": 6
+      },
+      "read_spef_after_first_report_count": 6,
+      "period_ns": 13.15
+    },
+    {
+      "folder": "experiments/20260805_phys_closure/s382/s382",
+      "F6_records": 0,
+      "candidate_records": 0,
+      "unique_candidate_sha_count": 0,
+      "unique_candidate_shas": [],
+      "retained_spef_generator_matches": {},
+      "read_spef_after_first_report_count": 0,
+      "period_ns": 0.5
+    }
+  ],
+  "scans": [
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u0",
+      "period_ns": 0.5,
+      "unit_len_um": 0.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u0/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u0/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.01
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u5",
+      "period_ns": 0.5,
+      "unit_len_um": 5.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u5/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u5/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.03
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u10",
+      "period_ns": 0.5,
+      "unit_len_um": 10.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u10/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u10/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u20",
+      "period_ns": 0.5,
+      "unit_len_um": 20.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u20/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u20/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u40",
+      "period_ns": 0.5,
+      "unit_len_um": 40.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u40/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u40/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u80",
+      "period_ns": 0.5,
+      "unit_len_um": 80.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u80/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u80/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u120",
+      "period_ns": 0.5,
+      "unit_len_um": 120.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u120/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u120/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u160",
+      "period_ns": 0.5,
+      "unit_len_um": 160.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u160/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u160/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_s382_scan/u200",
+      "period_ns": 0.5,
+      "unit_len_um": 200.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "repaired_path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "repaired_spef_warnings": [
+        "Warning 1647: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u200/estimated.spef line 310, pin _071_:SLEEP not found.",
+        "Warning 1652: /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_parasitic_s382_scan/u200/estimated.spef line 318, pin _071_:SLEEP not found."
+      ],
+      "ideal_delta": 0.01,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u0",
+      "period_ns": 13.15,
+      "unit_len_um": 0.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.13
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u2",
+      "period_ns": 13.15,
+      "unit_len_um": 2.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.11
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u5",
+      "period_ns": 13.15,
+      "unit_len_um": 5.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.07
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u10",
+      "period_ns": 13.15,
+      "unit_len_um": 10.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.03
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u20",
+      "period_ns": 13.15,
+      "unit_len_um": 20.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u40",
+      "period_ns": 13.15,
+      "unit_len_um": 40.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u80",
+      "period_ns": 13.15,
+      "unit_len_um": 80.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u120",
+      "period_ns": 13.15,
+      "unit_len_um": 120.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u160",
+      "period_ns": 13.15,
+      "unit_len_um": 160.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.0
+    },
+    {
+      "path": "experiments/20260805_parasitic_b18_scan/u200",
+      "period_ns": 13.15,
+      "unit_len_um": 200.0,
+      "shared_baseline_spef": true,
+      "baseline_path": "experiments/20260804_itc99_joint/b18/mapped.v",
+      "repaired_path": "experiments/20260804_itc99_joint/b18/eval/iter004_cand004/018_JOINT_JOINT/mapped.v",
+      "repaired_spef_warnings": [],
+      "ideal_delta": 0.13,
+      "spef_delta": 0.0
+    }
+  ],
+  "runtime_seconds": 7.171999999998661,
+  "limits": [
+    "Static closure is not functional equivalence.",
+    "Actual Liberty output fields reused from prior audit; expression evaluator independent from production and prior evaluator.",
+    "Retained byte SHA is not historical runtime byte identity.",
+    "Physical timing values quoted from old reports, not remeasured.",
+    "No production, figure, manuscript or old audit changed."
+  ]
+}

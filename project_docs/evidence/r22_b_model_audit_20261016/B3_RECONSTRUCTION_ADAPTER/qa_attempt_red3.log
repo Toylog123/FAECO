@@ -1,0 +1,60 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py -q --basetemp=project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_attempt_red3_tmp
+..................................F.......                               [100%]
+================================== FAILURES ===================================
+_____________ test_STA_baseline_cannot_read_another_valid_netlist _____________
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001ADE09C9050>
+
+    def test_STA_baseline_cannot_read_another_valid_netlist(env,monkeypatch):
+        manifest=registered(env)
+        def wrong_baseline(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);trace=_trace(out)
+            # Internally consistent bytes and hashes, but baseline TCL read the candidate.
+            for path in [out/'sta_attempts/000001/sta.tcl',out/'sta_attempts/000001/netlist.v',out/'sta_attempts/000001/inputs.json',out/'sta_attempts/000001/result.json',out/'sta_attempts/000001/stdout.bin',out/'sta_attempts/000001/stderr.bin']:
+                path.unlink()
+            (out/'sta_attempts/000001').rmdir()
+            report=out/'eval/iter001_cand001/000_g_G'
+            trace[:2]=_fake_attempt(out,out/'sta.tcl',report/'mapped.v',m,1)
+            (out/'tool_launches.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in trace))
+            return answer
+        monkeypatch.setattr(a,'_run_process',wrong_baseline);calls=[]
+        monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError,match='baseline'):a.execute_job(manifest,'b09')
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:377: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+manifest = {'schema': 'r22-B3-reconstruction-transaction-v1', 'registered': True, 'plan': {'schema': 'r22-B3-reconstruction-trans...ution_ready': False, ...}, 'plan_fingerprint': 'f3e0ec0902fdd3c8c542123bc1cdb9ad35ea5f25197b28722f2c2a23b2c23001', ...}
+circuit = 'b09'
+
+    def execute_job(manifest,circuit):
+        validate_manifest(manifest);job=_job(manifest,circuit);out=Path(job['output_dir'])
+        if out.exists():raise RuntimeError('Job output exists; refuse overwrite or automatic resume')
+        initial_path=ROOT/job['baseline']['path'];initial=initial_path.read_text(encoding='utf-8')
+        _domain(initial,initial)
+        out.mkdir(parents=True,exist_ok=False)
+        save_new(out/'preregistered.json',{'manifest_fingerprint':fingerprint(manifest),'job':job})
+        try:
+            with (out/'mapped.v').open('xb') as handle:handle.write(initial_path.read_bytes())
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Frozen mapped staging changed')
+            validate_manifest(manifest)
+            process=_run_process(job,manifest)
+            if process.returncode!=0:raise RuntimeError('Outerloop process failed: '+str(process.returncode))
+            validate_manifest(manifest)
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Runner changed staged mapped input')
+            result,counts=_run_outputs(job,manifest)
+            certificate=_domain(initial,result['state']['current_netlist_text'])
+            save_new(out/'x_identity_certificate.json',certificate)
+            write_liberty_cell_models(LIB.read_text(encoding='utf-8'),out/'model_preflight.v',used_cells=_used_types(initial,result['state']['current_netlist_text']))
+            sec=final_sec(initial,result['state']['current_netlist_text'],circuit,out/'final_sec')
+>           if sec.get('status')!='pass' or sec.get('returncode')!=0:raise RuntimeError('Independent final SEC failed or unsupported')
+               ^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'get'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: AttributeError
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_baseline_cannot_read_another_valid_netlist
+1 failed, 41 passed in 12.45s
+[run] 完成（16s），退出码 1

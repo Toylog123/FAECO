@@ -1,0 +1,5 @@
+# OI042修前C适配器历史源码快照
+
+六份原件逐项匹配scratch备份before_sha256.json；该原manifest也原字节复制，新增ARCHIVE_MANIFEST.json记录来源/目标SHA与首轮独立review绑定。adapter为6bd06d28…，backend为3d6f1d97…，对应旧38QA/首轮C_ADAPTER_REVIEW及TCL漂移红probe。此目录只保存历史，不作为当前安全适配器或正式运行pin。旧QA_REPORT/README均原字节，不因历史描述变更；当前C_RECONSTRUCTION_ADAPTER与旧review未改。
+
+原调用路径仍见原件和manifest；复现需独立环境/路径适配与新SHA，不在当前C′运行域覆盖源码。所有72验收前不改变HEAD，root最终纳入新包-text原字节保护后再提交。

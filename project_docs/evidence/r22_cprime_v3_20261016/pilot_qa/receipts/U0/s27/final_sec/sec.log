@@ -1,0 +1,280 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2020  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.33 (git sha1 2584903a060)
+
+
+-- Executing script file `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/sec.ys' --
+
+1. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/cells.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/cells.v' to AST representation.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__a21boi_0'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__clkinv_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__dfxtp_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__lpflow_isobufsrc_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nor2_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__nor3b_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__o21a_1'.
+Generating RTLIL representation for module `\sky130_fd_sc_hd__o21ai_0'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/helpers.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/helpers.v' to AST representation.
+Generating RTLIL representation for module `\dff'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/gold.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/gold.v' to AST representation.
+Generating RTLIL representation for module `\s27'.
+Successfully finished Verilog frontend.
+Renaming module \s27 to \gold.
+
+4. Executing Verilog-2005 frontend: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/gate.v
+Parsing Verilog input from `/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/gate.v' to AST representation.
+Generating RTLIL representation for module `\s27'.
+Successfully finished Verilog frontend.
+Renaming module \s27 to \gate.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 1 assignment to connection.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\sky130_fd_sc_hd__dfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/cells.v:19$7'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\sky130_fd_sc_hd__dfxtp_1.\IQ' using process `\sky130_fd_sc_hd__dfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/cells.v:19$7'.
+  created $dff cell `$procdff$25' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `sky130_fd_sc_hd__dfxtp_1.$proc$/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/U0/s27/final_sec/cells.v:19$7'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module gold.
+Optimizing module dff.
+Optimizing module sky130_fd_sc_hd__o21ai_0.
+Optimizing module sky130_fd_sc_hd__o21a_1.
+Optimizing module sky130_fd_sc_hd__nor3b_1.
+Optimizing module sky130_fd_sc_hd__nor2_1.
+Optimizing module sky130_fd_sc_hd__lpflow_isobufsrc_1.
+Optimizing module sky130_fd_sc_hd__dfxtp_1.
+Optimizing module sky130_fd_sc_hd__clkinv_1.
+Optimizing module sky130_fd_sc_hd__a21boi_0.
+
+6. Executing MEMORY pass.
+
+6.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+6.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+6.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+6.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+6.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+6.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \dff..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o21ai_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o21a_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor3b_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__lpflow_isobufsrc_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__dfxtp_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__clkinv_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a21boi_0..
+Removed 0 unused cells and 8 unused wires.
+<suppressed ~8 debug messages>
+
+6.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+6.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+6.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \dff..
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \sky130_fd_sc_hd__a21boi_0..
+Finding unused cells or wires in module \sky130_fd_sc_hd__clkinv_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__dfxtp_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__lpflow_isobufsrc_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor2_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__nor3b_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o21a_1..
+Finding unused cells or wires in module \sky130_fd_sc_hd__o21ai_0..
+
+6.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+6.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+7. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: CK_gold (\CK_gold), CK_gate (\CK_gate) -> CK
+Presumably equivalent wires: G0_gold (\G0_gold), G0_gate (\G0_gate) -> G0
+Presumably equivalent wires: G1_gold (\G1_gold), G1_gate (\G1_gate) -> G1
+Presumably equivalent wires: G10_gold (\G10_gold), G10_gate (\G10_gate) -> G10
+Presumably equivalent wires: G11_gold (\G11_gold), G11_gate (\G11_gate) -> G11
+Presumably equivalent wires: G13_gold (\G13_gold), G13_gate (\G13_gate) -> G13
+Presumably equivalent wires: G17_gold (\G17_gold), G17_gate (\G17_gate) -> G17
+Presumably equivalent wires: G2_gold (\G2_gold), G2_gate (\G2_gate) -> G2
+Presumably equivalent wires: G3_gold (\G3_gold), G3_gate (\G3_gate) -> G3
+Presumably equivalent wires: G5_gold (\G5_gold), G5_gate (\G5_gate) -> G5
+Presumably equivalent wires: G6_gold (\G6_gold), G6_gate (\G6_gate) -> G6
+Presumably equivalent wires: G7_gold (\G7_gold), G7_gate (\G7_gate) -> G7
+Presumably equivalent wires: _00__gold (\_00__gold), _00__gate (\_00__gate) -> _00_
+Presumably equivalent wires: _01__gold (\_01__gold), _01__gate (\_01__gate) -> _01_
+Presumably equivalent wires: _02__gold (\_02__gold), _02__gate (\_02__gate) -> _02_
+Presumably equivalent wires: _03__gold (\_03__gold), _03__gate (\_03__gate) -> _03_
+Changing input D of cell DFF_1_gate (dff): \G11_gate -> \G11
+Changing input D of cell DFF_2_gate (dff): \G13_gate -> \G13
+Changing input A of cell _04__gate (sky130_fd_sc_hd__clkinv_1): \G5_gate -> \G5
+Changing input B of cell _05__gate (sky130_fd_sc_hd__nor2_1): \G7_gate -> \G7
+Changing input B of cell _06__gate (sky130_fd_sc_hd__nor2_1): \_01__gate -> \_01_
+Changing input A of cell _07__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1): \G6_gate -> \G6
+Changing input B of cell _08__gate (sky130_fd_sc_hd__nor3b_1): \G7_gate -> \G7
+Changing input A1 of cell _09__gate (sky130_fd_sc_hd__o21a_1): \_02__gate -> \_02_
+Changing input A2 of cell _09__gate (sky130_fd_sc_hd__o21a_1): \_03__gate -> \_03_
+Changing input B1 of cell _09__gate (sky130_fd_sc_hd__o21a_1): \_00__gate -> \_00_
+Changing input A1 of cell _10__gate (sky130_fd_sc_hd__o21ai_0): \_02__gate -> \_02_
+Changing input A2 of cell _10__gate (sky130_fd_sc_hd__o21ai_0): \_03__gate -> \_03_
+Changing input B1 of cell _10__gate (sky130_fd_sc_hd__o21ai_0): \_00__gate -> \_00_
+Changing input A1 of cell _11__gate (sky130_fd_sc_hd__a21boi_0): \_00__gate -> \_00_
+Changing input A2 of cell _11__gate (sky130_fd_sc_hd__a21boi_0): \_03__gate -> \_03_
+Changing input D of cell DFF_0_gate (dff): \G10_gate -> \G10
+Changing input D of cell DFF_1_gold (dff): \G11_gold -> \G11
+Changing input D of cell DFF_2_gold (dff): \G13_gold -> \G13
+Changing input A of cell _04__gold (sky130_fd_sc_hd__clkinv_1): \G5_gold -> \G5
+Changing input B of cell _05__gold (sky130_fd_sc_hd__nor2_1): \G7_gold -> \G7
+Changing input B of cell _06__gold (sky130_fd_sc_hd__nor2_1): \_01__gold -> \_01_
+Changing input A of cell _07__gold (sky130_fd_sc_hd__lpflow_isobufsrc_1): \G6_gold -> \G6
+Changing input B of cell _08__gold (sky130_fd_sc_hd__nor3b_1): \G7_gold -> \G7
+Changing input A1 of cell _09__gold (sky130_fd_sc_hd__o21a_1): \_02__gold -> \_02_
+Changing input A2 of cell _09__gold (sky130_fd_sc_hd__o21a_1): \_03__gold -> \_03_
+Changing input B1 of cell _09__gold (sky130_fd_sc_hd__o21a_1): \_00__gold -> \_00_
+Changing input A1 of cell _10__gold (sky130_fd_sc_hd__o21ai_0): \_02__gold -> \_02_
+Changing input A2 of cell _10__gold (sky130_fd_sc_hd__o21ai_0): \_03__gold -> \_03_
+Changing input B1 of cell _10__gold (sky130_fd_sc_hd__o21ai_0): \_00__gold -> \_00_
+Changing input A1 of cell _11__gold (sky130_fd_sc_hd__a21boi_0): \_00__gold -> \_00_
+Changing input A2 of cell _11__gold (sky130_fd_sc_hd__a21boi_0): \_03__gold -> \_03_
+Changing input D of cell DFF_0_gold (dff): \G10_gold -> \G10
+Presumably equivalent cells: DFF_0_gold DFF_0_gate (dff) -> DFF_0
+Presumably equivalent cells: DFF_1_gold DFF_1_gate (dff) -> DFF_1
+Presumably equivalent cells: DFF_2_gold DFF_2_gate (dff) -> DFF_2
+Presumably equivalent cells: _04__gold _04__gate (sky130_fd_sc_hd__clkinv_1) -> _04_
+Presumably equivalent cells: _05__gold _05__gate (sky130_fd_sc_hd__nor2_1) -> _05_
+Presumably equivalent cells: _06__gold _06__gate (sky130_fd_sc_hd__nor2_1) -> _06_
+Presumably equivalent cells: _07__gold _07__gate (sky130_fd_sc_hd__lpflow_isobufsrc_1) -> _07_
+Presumably equivalent cells: _08__gold _08__gate (sky130_fd_sc_hd__nor3b_1) -> _08_
+Presumably equivalent cells: _09__gold _09__gate (sky130_fd_sc_hd__o21a_1) -> _09_
+Presumably equivalent cells: _10__gold _10__gate (sky130_fd_sc_hd__o21ai_0) -> _10_
+Presumably equivalent cells: _11__gold _11__gate (sky130_fd_sc_hd__a21boi_0) -> _11_
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+8.1. Analyzing design hierarchy..
+Top module:  \equiv
+Used module:     \sky130_fd_sc_hd__a21boi_0
+Used module:     \dff
+Used module:         \sky130_fd_sc_hd__dfxtp_1
+Used module:     \sky130_fd_sc_hd__clkinv_1
+Used module:     \sky130_fd_sc_hd__nor2_1
+Used module:     \sky130_fd_sc_hd__lpflow_isobufsrc_1
+Used module:     \sky130_fd_sc_hd__nor3b_1
+Used module:     \sky130_fd_sc_hd__o21a_1
+Used module:     \sky130_fd_sc_hd__o21ai_0
+
+8.2. Analyzing design hierarchy..
+Top module:  \equiv
+Used module:     \sky130_fd_sc_hd__a21boi_0
+Used module:     \dff
+Used module:         \sky130_fd_sc_hd__dfxtp_1
+Used module:     \sky130_fd_sc_hd__clkinv_1
+Used module:     \sky130_fd_sc_hd__nor2_1
+Used module:     \sky130_fd_sc_hd__lpflow_isobufsrc_1
+Used module:     \sky130_fd_sc_hd__nor3b_1
+Used module:     \sky130_fd_sc_hd__o21a_1
+Used module:     \sky130_fd_sc_hd__o21ai_0
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+9. Executing FLATTEN pass (flatten design).
+Deleting now unused module dff.
+Deleting now unused module sky130_fd_sc_hd__a21boi_0.
+Deleting now unused module sky130_fd_sc_hd__clkinv_1.
+Deleting now unused module sky130_fd_sc_hd__dfxtp_1.
+Deleting now unused module sky130_fd_sc_hd__lpflow_isobufsrc_1.
+Deleting now unused module sky130_fd_sc_hd__nor2_1.
+Deleting now unused module sky130_fd_sc_hd__nor3b_1.
+Deleting now unused module sky130_fd_sc_hd__o21a_1.
+Deleting now unused module sky130_fd_sc_hd__o21ai_0.
+<suppressed ~12 debug messages>
+
+10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \equiv..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+11. Executing EQUIV_SIMPLE pass.
+Proved 0 previously unproven $equiv cells.
+
+12. Executing EQUIV_INDUCT pass.
+No selected unproven $equiv cells found in equiv.
+Proved 0 previously unproven $equiv cells.
+
+13. Executing EQUIV_STATUS pass.
+Found 11 $equiv cells in equiv:
+  Of those cells 11 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: e79fbbcb9c, CPU: user 0.03s system 0.01s, MEM: 10.62 MB peak
+Yosys 0.33 (git sha1 2584903a060)
+Time spent: 22% 8x read_verilog (0 sec), 17% 3x opt_clean (0 sec), ...
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'

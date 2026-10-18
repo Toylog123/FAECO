@@ -1,0 +1,12 @@
+{
+  "status": "failed_static_oracle_control",
+  "eda_executed": false,
+  "exitcode": 1,
+  "script_sha256": "66bcc99525b1ae2c4d73614880691e9e35b2093b745db851582150d99603e71c",
+  "log_path": "scratch/region_design_review/census.log",
+  "log_sha256": "cfcb4f8718527ebff8d696f2162973242a47570594cb539ed249bd90e3bca233",
+  "actual_four_circuits_completed_checks_before_failure": true,
+  "failure": "Zero-input constant multi-output fixture disagreed with independent boundary oracle.",
+  "attribution": "Independent oracle resolved output ONE to constant alias instead of preserving physical conb driver. Production graph correctly keeps physical outputs; fix oracle driver-priority only. No lambda/parameters/inputs change.",
+  "next": "New exclusive census_v2 directory; preserve original script/log/candidate witnesses."
+}

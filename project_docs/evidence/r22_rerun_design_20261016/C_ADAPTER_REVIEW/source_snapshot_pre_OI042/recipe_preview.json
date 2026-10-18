@@ -1,0 +1,1768 @@
+{
+  "schema": "r22-C-reconstruction-recipe-preview-v1",
+  "family": "C-reconstruction-r22",
+  "execution_ready": false,
+  "formal_source_pin": null,
+  "eda_executed": false,
+  "not_Cprime": true,
+  "source_status": "Preview of a separately adapted evidence runner; production hybrid runner remains unaudited/unmodified",
+  "recovery_inputs": {
+    "README.md": {
+      "path": "project_docs/evidence/r22_rerun_design_20261016/README.md",
+      "sha256": "10ea9c64962de943cfe1004f12865657adb09569c94f665c4020eb7659243eaa"
+    },
+    "manifest_preview.json": {
+      "path": "project_docs/evidence/r22_rerun_design_20261016/manifest_preview.json",
+      "sha256": "bd0d9ba70f68177addab21139a6e2f92a41630340bf93504982bfe35a9582f9d"
+    },
+    "C_RECOVERY_EXTENSION.md": {
+      "path": "project_docs/evidence/r22_rerun_design_20261016/C_RECOVERY_EXTENSION.md",
+      "sha256": "d0eb940c56e64c5444f0dd7e49a048b8d2b64742b6968a442e9cec0025ac39da"
+    },
+    "C_RECOVERY_EXTENSION.json": {
+      "path": "project_docs/evidence/r22_rerun_design_20261016/C_RECOVERY_EXTENSION.json",
+      "sha256": "0f19bfe18915bfb2292bde4bc49867a4f6f39e7525d26a867c70783f9b27ef29"
+    }
+  },
+  "mapped_inputs": {
+    "s27": {
+      "path": "experiments/20260826_ablation_pureG/s27/mapped.v",
+      "sha256": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s382": {
+      "path": "experiments/20260826_ablation_pureG/s382/mapped.v",
+      "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s420": {
+      "path": "experiments/20260826_ablation_pureG/s420/mapped.v",
+      "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s641": {
+      "path": "experiments/20260826_ablation_pureG/s641/mapped.v",
+      "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s713": {
+      "path": "experiments/20260826_ablation_pureG/s713/mapped.v",
+      "sha256": "a17cf08d47e8d14861f69b96595e380690b471c3044002f22f9c4bb006afb6fd",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s820": {
+      "path": "experiments/20260826_ablation_pureG/s820/mapped.v",
+      "sha256": "12a3bc4d0d9bcdd9071250654a9484b80716f94e1eff454e232e2ab7e76d49e8",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s832": {
+      "path": "experiments/20260826_ablation_pureG/s832/mapped.v",
+      "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    },
+    "s953": {
+      "path": "experiments/20260826_ablation_pureG/s953/mapped.v",
+      "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+      "identity": "Retained C pureG initial bytes selected for new reconstruction; not recovered canonical mixed runtime identity"
+    }
+  },
+  "runs": [
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s27",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s382",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "canonical mixed s382 still absent; this selects retained initial bytes only"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s420",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s641",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s713",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s820",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s832",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "hybrid",
+      "circuit": "s953",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": true,
+        "joint_pairs": 3,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s27",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s382",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s420",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s641",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s713",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s820",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s832",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureG",
+      "circuit": "s953",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "G",
+        "enable_buffer": false,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s27",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s382",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s420",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s641",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s713",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s820",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s832",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "pureB",
+      "circuit": "s953",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": "B",
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": false,
+        "seed": 20260806,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": []
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s27",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s382",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s420",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s641",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s713",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s820",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s832",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random1",
+      "circuit": "s953",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 1,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s27",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s382",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s420",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s641",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s713",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s820",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s832",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random2",
+      "circuit": "s953",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 2,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s27",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s382",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s420",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s641",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s713",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s820",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s832",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    },
+    {
+      "family": "C-reconstruction-r22",
+      "arm": "random3",
+      "circuit": "s953",
+      "historical_runtime_argv": null,
+      "historical_runtime_source_pin": null,
+      "new_reconstruction_values": {
+        "rounds": 20,
+        "period": 0.5,
+        "workers": 2,
+        "only_strategy": null,
+        "enable_buffer": true,
+        "buf_types": [
+          "sky130_fd_sc_hd__buf_1",
+          "sky130_fd_sc_hd__buf_2"
+        ],
+        "random_order": true,
+        "seed": 3,
+        "tns_aware": false,
+        "joint_pairs": 0,
+        "sta_budget": 0,
+        "wall_timeout_s": 3600,
+        "clock_port": "CK",
+        "strategy_priorities": ""
+      },
+      "configuration_status": "New declared reconstruction recipe; not a recovered full historical invocation",
+      "unknown_historical_fields": [
+        "full argv/dirty revision",
+        "STA cap and priority",
+        "tns-aware/workers/joint flags where no matching canonical launcher",
+        "raw RTL/Lib/model runtime hashes"
+      ],
+      "notes": [
+        "random JOINT=0 deliberately preserves observed mixed/random asymmetry; original flag remains unknown"
+      ]
+    }
+  ],
+  "new_values_not_recovered": {
+    "workers": 2,
+    "controls_tns_aware": false,
+    "control_joint_pairs": 0,
+    "sta_budget": 0,
+    "strategy_priorities": "",
+    "wall_timeout_s": 3600,
+    "clock_port": "CK",
+    "random_buf_types": [
+      "buf_1",
+      "buf_2"
+    ]
+  },
+  "policy": "Per-pass fixed critical order; per-instance evaluate all same-base candidates, submission-order best then immediate commit; post-single JOINT on current text; no feedback/cache/dedup; corrected legality before STA; no remapping",
+  "budget_change": "New cap counts actual candidate/joint process launches including retries, checks before JOINT too; all preview caps0 so this difference is nonbinding"
+}

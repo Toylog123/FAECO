@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-16 Asia/Shanghai",
-  "status": "active: user explicitly resumed; correctness repair and evidence recovery; not submission-ready",
+  "timestamp": "2026-10-18 Asia/Shanghai",
+  "status": "active: Cprime v3 full72 independently accepted at fixed3ea0f75; archives/figure/commit review in progress, historical same-family scientific recovery pending; not submission-ready",
   "project": "FAECO — candidate exploration and failure characterization for pre-placement timing ECO; r21 working manuscript; frozen v18 preserved",
   "read_order": [
     "AGENTS.md",
@@ -25,9 +25,9 @@
   },
   "paper_state": {
     "tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
-    "pdf": "Chinese three copies SHA256 e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb; layout verified, historical scientific claims require repair",
-    "fingerprint": "See paper/zh/review_rounds/r22_20261014/build_qa.json; prior r21 fingerprint is historical",
-    "compile": "12 pages; 0 Error/Overfull hbox/Underfull hbox/Overfull vbox; 21/21 references; flushend[noshrink,nospread]",
+    "pdf": "Current Chinese build/root/manuscript PDF SHA80416a52fba8c19dd80bad0a2506e54bcc93f1c69c16255dc6b60364fa3ec7e6; metadata-only correction verified; historical science not yet fully repaired",
+    "fingerprint": "Current clock-metadata QA/SYNC receipts in paper/zh/review_rounds/r22_20261016/metadata_correction_01; prior r22_20261014/r21 hashes retained as history.",
+    "compile": "Current metadata correction: zh12p,0overfull/0underfull and one retained fixltx2e warning; en26p,0overfull/10underfull,0warnings; references/missing chars0. Both two-pass,38p visual/readback passed within correction scope.",
     "freeze": "r22 working draft resumed, not frozen; v18 remains immutable history, not current scientific sign-off",
     "r21": {
       "review": "paper/zh/review_rounds/r21_20261014/editorial_decision.md",
@@ -52,30 +52,73 @@
       "freeze": "内容冻结 v18（用户裁定，2026-10-13 r20 学术叙事收敛 13 处改写）；任何内容改动须先取得用户同意，留投稿/修稿轮（OI-018）；改 .tex 前必读 PAPER_EVIDENCE_MANIFEST.md；.tex 须纯 CRLF —— 写盘前先归一化，并断言无 \\r\\r\\n"
     },
     "r22": {
-      "zh_pdf_sha256": "e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb",
+      "zh_pdf_sha256": "80416a52fba8c19dd80bad0a2506e54bcc93f1c69c16255dc6b60364fa3ec7e6",
       "en_tex": "paper/en/manuscript/FAECO.tex",
       "en_pdf": "paper/en/build/FAECO.pdf",
-      "en_pdf_sha256": "ba4aba890f7bbceb39fc9cdc2b5e7379044098714c3e3d1311982c74e601d14c",
-      "en_pages": 27,
-      "scientific_status": "A6/B2/B17 new proofs recovered; B2 isolated X identity separately bound; B3/D/C same-family recovery pending; declarations incomplete"
-    }
+      "en_pdf_sha256": "bb6b35f16b5209c9608590b05f8c7ac50e7eecaeaf474551308ea4385412ac84",
+      "en_pages": 26,
+      "scientific_status": "A6/B2/B17 new proofs recovered; B2 isolated X identity separately bound; B3/D/C same-family recovery pending; declarations incomplete",
+      "metadata_correction_01": {
+        "status": "OI043 closed within clock-period metadata scope: two-pass builds, static QA,38p contact/detail visual, phrase readback and synchronized PDF hashes passed; no effect-value changes",
+        "receipts": "paper/zh/review_rounds/r22_20261016/metadata_correction_01/",
+        "zh_tex_sha256": "cb9bd94eef62ce51fe2d73960597b5ef9ae4aa33167ebab27c03212084149333",
+        "en_tex_sha256": "bdde6acaa8885b88ae850b97e310f403da32200860c4dd82ba6efe8d55f3b6d2",
+        "zh_build_pdf_sha256": "80416a52fba8c19dd80bad0a2506e54bcc93f1c69c16255dc6b60364fa3ec7e6",
+        "en_build_pdf_sha256": "bb6b35f16b5209c9608590b05f8c7ac50e7eecaeaf474551308ea4385412ac84",
+        "scientific_effect_values_changed": false,
+        "static_qa": {
+          "zh_pages": 12,
+          "zh_overfull": 0,
+          "zh_underfull_hbox": 0,
+          "zh_template_warning_count": 1,
+          "en_pages": 26,
+          "en_overfull": 0,
+          "en_underfull_hbox": 10,
+          "en_warning_count": 0,
+          "rendered_pages": 38,
+          "render_returncodes": [
+            0,
+            0
+          ],
+          "visual_review": "passed within metadata-correction scope"
+        },
+        "final_qa": "paper/zh/review_rounds/r22_20261016/metadata_correction_01/FINAL_QA.json",
+        "sync_receipt": "paper/zh/review_rounds/r22_20261016/metadata_correction_01/SYNC_RECEIPT.json"
+      },
+      "en_pdf_sha256_before_metadata_correction_01": "ba4aba890f7bbceb39fc9cdc2b5e7379044098714c3e3d1311982c74e601d14c",
+      "en_pdf_acceptance": "Clock-metadata correction source/build/static/render/visual/synchronized copies verified; current26 pages; scientific recovery pending.",
+      "zh_pdf_sha256_before_metadata_correction_01": "e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb"
+    },
+    "pdf_before_metadata_correction_01": "Chinese three copies SHA256 e27eaf3a2c8eaa693a857135d1e266318c0b40233dd54e2f111a36fd7de088cb; layout verified, historical scientific claims require repair"
   },
   "git_state": {
     "branch": "main",
-    "head": "A6/B2/B17 proof commits retain their recorded pins; current source validation is full_regression_v8.json plus SEQUENTIAL_GATE_VERIFICATION_V3.json. Final checkpoint identity: git log -1",
+    "head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258 main/origin checkpoint; immutable during full72 execution and acceptance. A6/B2/B17 retain their own proof pins; full_v8 969/170 stable and exact V3 bound.",
     "remote": "https://github.com/Toylog123/FAECO.git; checkpoint push receipts in LOGS.md; no new scientific baseline tag",
     "tags": "v2026-10-13-narrative-convergence-r20 / faeco-paper-final-20261013i（当前冻结，未推送）/ v2026-10-13-positioning-r19 / faeco-paper-final-20261013h（未推送）/ v2026-10-13-fig2-update-r18 / faeco-paper-final-20261013g（未推送）/ v2026-10-13-logic-calibration-r17 / faeco-paper-final-20261013f（未推送）/ v2026-10-13-terminology-calibration-r16 / faeco-paper-final-20261013e（未推送）/ v2026-10-13-defensive-purge2-r15 / faeco-paper-final-20261013d（未推送）/ v2026-10-13-defensive-purge-r14 / faeco-paper-final-20261013c（未推送）/ v2026-10-13-abstract-broaden-r13 / faeco-paper-final-20261013b（= d59e00f，未推送）/ v2026-10-12-pre-submission-consistency-r12 / faeco-paper-final-20261013（= b1403d9，已推送）/ v2026-10-12-submission-polish-r11 / faeco-paper-final-20261012c（= e00315a）/ faeco-exp-rev1（= 87d01ba）；v1–v17 已 superseded"
   },
-  "blocker": "Full v8 passed969 and exact sequential counterexample V3 passed. New-pin Cprime v3/D56 pilots and historical C/B3 reconstruction remain pending; WIP adapters are not execution receipts. Four-state SEC unsupported remains explicit.",
+  "blocker": "Full72/all8archives/finalfigure-v3 independent acceptance complete. Stage commit/push awaits root staged-byte checks while records frozen; historical B3/C/D/S/SPEF same-family science, S CEC/SPEF source fixes/full regression/newpin and four-state support remain open.",
   "r22": {
     "plan": "project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md",
     "historical_audit": "project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md",
     "runner": "code/scripts/run_r22_cut_ablation.py",
-    "status": "resumed 2026-10-16; full regression v8 passed969 with stable170 source hashes; Cprime v3 awaits new committed source registration and actual preparation/pilot",
+    "status": "Cprime v3 full72 independently accepted on2026-10-18: all_matrix_verified/source_stable/start-frozen set true;8458 evaluations,6858 candidate+72 baseline=6930 actual STA,other0,192 retained commits. No physical/electrical/S. Archives/whole-trajectory mechanism/finalfigure/commit review in progress.",
     "historical_itc_identifiable_sta_results": 2994,
-    "runtime_state": "project_docs/agent_handoff/handoff_20261016_r22.md",
+    "runtime_state": "project_docs/agent_handoff/handoff_20261018_r22.md",
     "historical_correctness": "project_docs/evidence/r22_historical_correctness_20261014/REPORT.md",
-    "resume_gate": "Formal supported-domain controls; new source pin/v3; actual mapped model-domain preflight; all18 Cprime pilot passes before72; D56 independent same-family pilot14 before56; historical C/B3 separately"
+    "resume_gate": "Do not rerun completed Cprime. Preserve3ea0f75 until archives/figure and commit review complete; checkpoint reviewed adapters/evidence, then fresh clean source/model/input/tool pin for B3/C/D same-family registration/EDA.",
+    "runtime_session": null,
+    "runtime_log": "scratch/r22_cprime_v3_20261016/remaining54.log",
+    "source_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+    "latest_independent_matrix_audit": "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json",
+    "adapter_gate": "B3 root51 bounded QA passed (no EDA); C author84 and independent register38 QA plus exact OI042 PinDrift/zero-commit replay passed; OI042 implementation gate closed only. B3/C formal reconstruction EDA pending fresh post72 clean pin.",
+    "artifact_archives": "All8 producer and independent ROOT_POST accepted; original experiments retained. No active archive jobs.",
+    "matrix_verified_jobs": 72,
+    "matrix_actual_sta_processes": 6930,
+    "matrix_retained_commits": 192,
+    "mechanism_review": "16 weighted/uniform pairs, all5454 repeated-same-base cross comparisons identical cut/pool/dispatch,16 endpoint fulltexts identical; no independent weighting benefit observed within this registered matrix. Not5454 independent samples.",
+    "figure_status": "Latest v3 plotterd9ef05b/FINAL_REVIEW32ff889a and independent layout review71d9a480 passed: data byte-identical v1,collision0/panelPASS/glyph6.8pt/root+independent actual PNG/PDF visual passed. Main manuscript integration pending; v1 negative and prior reviews preserved.",
+    "historical_s_spef_review": "历史S/SPEF已冻结独立审计：旧258 filtered模型defect被V2推翻（1032组合条目全match/0mismatch或unknown）；S接受链非法基准混淆负gain和CEC pre/post覆盖、SPEF漏真实Lib输出direction/两侧共享SPEF/报告顺序混杂为下一阶段必修。s382历史RC对1/40当前生成均不全文等，仍unknown；不借b18 unit1或scan对象填补。提交前保持生产pin，sourcefix与整体回归/同族复验须另新pin。"
   },
-  "current_resume_gate": "Sequential semantics/parser completeness repaired and full v8 passed; exact original V3 counterexample rejects invalid edit and accepts legal sizing. A6/B2/B17 retain independently bound proofs. Commit source, register Cprime v3, actual mapped preflight then18pilot; D56 same-family14pilot; C/B3 separately."
+  "current_resume_gate": "Do not rerun completed Cprime. Preserve3ea0f75 until archives/figure and commit review complete; checkpoint reviewed adapters/evidence, then fresh clean source/model/input/tool pin for B3/C/D same-family registration/EDA."
 }

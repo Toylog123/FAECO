@@ -1,0 +1,40 @@
+--- zh_before.tex
++++ zh_after.tex
+@@ -395,7 +395,7 @@
+ 
+ \subsection{实验设置}\label{sec:setup}
+ 
+-\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块，统一采用 0.5 ns 时钟约束以形成时序压力。\textbf{本文采用 WNS 改善作为主要评价指标，所有设计在同一约束下比较。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余按轮提交实验以 WNS 严格改善为主要接受条件；候选空间对照中的历史策略枚举配置另见 \S\ref{sec:ablation}。TNS-aware 不与本文物理门控实验联合启用。
++\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块。ISCAS89 与 ITC-99 电路采用 0.5\,ns 时钟周期；PicoRV32 主核、乘法器与寄存器模块的时钟周期分别为 5、2 和 0.5\,ns。\textbf{本文以 WNS 改善为主要评价指标，同一电路的基线与修复结果采用相同约束。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；TNS 用于可选的辅助接受判据。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余按轮提交实验以 WNS 严格改善为主要接受条件；候选空间对照中的历史策略枚举配置另见 \S\ref{sec:ablation}。TNS-aware 不与本文物理门控实验联合启用。
+ 
+ \textbf{基准电路纳入规则}：ISCAS89 纳入能够经统一 Yosys→SKY130 HD 流程成功映射并形成有效 setup timing path 的 8 个顺序电路；ITC-99 按相同标准纳入 19 个电路（b01--b15、b17、b20--b22），其中 b18、b19 未纳入上述统一统计，在相同流程下作为大规模补充实例单独运行并报告（见 \S\ref{sec:itc99}）；PicoRV32 选择主核 \texttt{picorv32}、乘法协处理器 \texttt{picorv32\_pcpi\_mul} 与存储密集子模块 \texttt{picorv32\_regs}（存储簇）以覆盖控制、算术和存储三类结构差异。
+ 
+@@ -501,7 +501,7 @@
+ \begin{figure*}[!tb]
+ \centering
+ \includegraphics[width=1.0\textwidth]{data/final/fig4_unified_gain_r21.pdf}
+-\caption{统一迭代配置的逐实例预布局 WNS 改善。三个面板分别展示 ISCAS89、ITC-99 和 PicoRV32 的全部可评估实例，各面板横轴量程不同。改善量以各电路的基线为参照；b17 使用 180\,s 单候选时限，其余默认 60\,s。PicoRV32 的 regs 子模块无 setup 路径，不计入改善分母。图为归档单次运行的描述性结果。}
++\caption{统一迭代配置的逐实例预布局 WNS 改善。三个面板分别展示 ISCAS89、ITC-99 和 PicoRV32 的全部可评估实例，各面板横轴量程不同。改善量以各电路的基线为参照；b17 使用 180\,s 单候选时限，其余默认 60\,s。PicoRV32 主核、乘法器与 regs 的周期分别为 5、2 和 0.5\,ns；regs 无 setup 路径，不计入改善分母。图为归档单次运行的描述性结果。}
+ \label{fig:unified_gain}
+ \end{figure*}
+ 
+--- en_before.tex
++++ en_after.tex
+@@ -233,7 +233,7 @@
+ 
+ \section{Experiments}\label{sec:exp}
+ \subsection{Setup}\label{sec:setup}
+-\textbf{Environment and datasets.} Experiments ran in WSL2 (Ubuntu 24.04.4 LTS; kernel 6.6.87.2-microsoft-standard-WSL2) on an AMD Ryzen 7 7435H host, with 16 visible logical cores and 15\,GB memory. The main flow uses OSS-CAD Suite (Yosys 0.67+146, OpenSTA 3.1.0); SEC uses WSL Yosys 0.33. Datasets comprise eight ISCAS89 circuits, 19 ITC-99 circuits and three PicoRV32 modules, using a 0.5\,ns clock period to impose timing pressure. WNS improvement is the primary outcome under identical constraints. Other metrics are global-route-estimated WNS and candidate STA counts; TNS supports optional auxiliary acceptance. b06 retains equal-WNS/improved-TNS acceptance, which is excluded from strict-WNS improvement counts. TNS-aware acceptance is not combined with physical gating in these experiments.
++\textbf{Environment and datasets.} Experiments ran in WSL2 (Ubuntu 24.04.4 LTS; kernel 6.6.87.2-microsoft-standard-WSL2) on an AMD Ryzen 7 7435H host, with 16 visible logical cores and 15\,GB memory. The main flow uses OSS-CAD Suite (Yosys 0.67+146, OpenSTA 3.1.0); SEC uses WSL Yosys 0.33. Datasets comprise eight ISCAS89 circuits, 19 ITC-99 circuits and three PicoRV32 modules. ISCAS89 and ITC-99 circuits use a 0.5\,ns clock period; the PicoRV32 core, multiplier and register bank use 5, 2 and 0.5\,ns, respectively. WNS improvement is the primary outcome, with the baseline and repaired netlist of each circuit evaluated under identical constraints. Other metrics are global-route-estimated WNS and candidate STA counts; TNS supports optional auxiliary acceptance. b06 retains equal-WNS/improved-TNS acceptance, which is excluded from strict-WNS improvement counts. TNS-aware acceptance is not combined with physical gating in these experiments.
+ 
+ \textbf{Inclusion.} ISCAS89 includes eight sequential circuits that map successfully through the common Yosys-to-SKY130 flow and have valid setup paths. ITC-99 includes b01--b15, b17 and b20--b22. b18 and b19 are separately reported large examples, outside the unified 19-circuit statistics. PicoRV32 includes its core, \texttt{picorv32\_pcpi\_mul} multiplier, and storage-dominated \texttt{picorv32\_regs}, covering control, arithmetic and storage structures.
+ 
+@@ -301,7 +301,7 @@
+ 
+ \begin{figure}[htbp]\centering
+ \includegraphics[width=\linewidth]{fig4_unified_gain_r21.pdf}
+-\caption{Per-instance ideal-net WNS gain under the unified iterative setting. Panel ranges differ. b17 uses a 180\,s candidate limit; the default is 60\,s. The register bank is excluded because it has no setup path. Results describe single archived runs.}\label{fig:unified_gain}
++\caption{Per-instance ideal-net WNS gain under the unified iterative setting. Panel ranges differ. b17 uses a 180\,s candidate limit; the default is 60\,s. The PicoRV32 core, multiplier and register bank use periods of 5, 2 and 0.5\,ns, respectively. The register bank is excluded because it has no setup path. Results describe single archived runs.}\label{fig:unified_gain}
+ \end{figure}
+ 
+ \subsection{Candidate-space, ranking and feedback comparisons}\label{sec:ablation}

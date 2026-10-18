@@ -1,0 +1,1469 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py -q --basetemp=project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_launch_confirmation_green_tmp
+........FFFFFFF.FF.FFFF..............FFFFFFF...FFFF                      [100%]
+================================== FAILURES ===================================
+____________ test_full_mock_transaction_binds_state_counts_and_SEC ____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_full_mock_transaction_bin0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_full_mock_transaction_bin0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9C62F50>
+
+    def test_full_mock_transaction_binds_state_counts_and_SEC(env,monkeypatch):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       done=a.execute_job(manifest,'b09')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:143: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_full_mock_transaction_bin0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_full_mock_transaction_bin0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+__________ test_completed_transaction_tampering_rejected[final_raw] ___________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9E9CA90>
+artifact = 'final_raw'
+
+    @pytest.mark.parametrize('artifact',['final_raw','state','unproven','model','config','launch'])
+    def test_completed_transaction_tampering_rejected(env,monkeypatch,artifact):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:159: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+____________ test_completed_transaction_tampering_rejected[state] _____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9CAD690>
+artifact = 'state'
+
+    @pytest.mark.parametrize('artifact',['final_raw','state','unproven','model','config','launch'])
+    def test_completed_transaction_tampering_rejected(env,monkeypatch,artifact):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:159: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+___________ test_completed_transaction_tampering_rejected[unproven] ___________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7742210>
+artifact = 'unproven'
+
+    @pytest.mark.parametrize('artifact',['final_raw','state','unproven','model','config','launch'])
+    def test_completed_transaction_tampering_rejected(env,monkeypatch,artifact):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:159: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+____________ test_completed_transaction_tampering_rejected[model] _____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam3/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam3\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9F18C10>
+artifact = 'model'
+
+    @pytest.mark.parametrize('artifact',['final_raw','state','unproven','model','config','launch'])
+    def test_completed_transaction_tampering_rejected(env,monkeypatch,artifact):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:159: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam3/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam3\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+____________ test_completed_transaction_tampering_rejected[config] ____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam4/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam4\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9C0CA90>
+artifact = 'config'
+
+    @pytest.mark.parametrize('artifact',['final_raw','state','unproven','model','config','launch'])
+    def test_completed_transaction_tampering_rejected(env,monkeypatch,artifact):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:159: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam4/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam4\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+____________ test_completed_transaction_tampering_rejected[launch] ____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam5/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam5\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9C87590>
+artifact = 'launch'
+
+    @pytest.mark.parametrize('artifact',['final_raw','state','unproven','model','config','launch'])
+    def test_completed_transaction_tampering_rejected(env,monkeypatch,artifact):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:159: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_completed_transaction_tam5/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_completed_transaction_tam5\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_________ test_failure_receipt_retains_failed_SEC_and_never_completes _________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_failure_receipt_retains_f0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_failure_receipt_retains_f0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9F1B510>
+
+    def test_failure_receipt_retains_failed_SEC_and_never_completes(env,monkeypatch):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',lambda *args:{'status':'unsupported','returncode':None})
+>       with pytest.raises(RuntimeError,match='SEC'):a.execute_job(manifest,'b09')
+                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:188: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:186: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_failure_receipt_retains_f0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_failure_receipt_retains_f0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+__________ test_failure_receipt_cannot_be_ignored_next_to_completion __________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_failure_receipt_cannot_be0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_failure_receipt_cannot_be0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7C9E1D0>
+
+    def test_failure_receipt_cannot_be_ignored_next_to_completion(env,monkeypatch):
+        manifest=registered(env)
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+        monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       a.execute_job(manifest,'b09');out=Path(manifest['plan']['jobs'][0]['output_dir'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:195: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m))
+                                                      ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_failure_receipt_cannot_be0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_failure_receipt_cannot_be0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+___________ test_illegal_tristate_actual_final_rejected_before_SEC ____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_illegal_tristate_actual_f0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_illegal_tristate_actual_f0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7CB7F10>
+
+    def test_illegal_tristate_actual_final_rejected_before_SEC(env,monkeypatch):
+        a.LIB.write_text(LIB+'cell ("sky130_fd_sc_hd__einvn_1") { pin ("A") { direction : "input"; } pin ("TE_B") { direction : "input"; } pin ("Z") { direction : "output"; function : "!A"; three_state : "TE_B"; } }')
+        manifest=registered(env)
+        def bad_process(job,m):
+            initial=(Path(job['output_dir'])/'mapped.v').read_text()
+            final=initial.replace('buf_1','einvn_1').replace('.X(Y)','.Z(Y)')
+            return _fake_outputs(job,m,final=final)
+        monkeypatch.setattr(a,'_run_process',bad_process)
+        calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises((RuntimeError,ValueError),match='required input'):a.execute_job(manifest,'b09')
+                                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:219: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:216: in bad_process
+    return _fake_outputs(job,m,final=final)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_illegal_tristate_actual_f0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_illegal_tristate_actual_f0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_ test_candidate_launch_commit_and_scientific_epsilon_must_agree[trial_identity] _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_candidate_launch_commit_a0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_candidate_launch_commit_a0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7C9EA90>
+corrupt = 'trial_identity'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[]
+        def fake_proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',fake_proof)
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:227: in broken
+    answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_candidate_launch_commit_a0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_candidate_launch_commit_a0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_ test_candidate_launch_commit_and_scientific_epsilon_must_agree[commit_identity] _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_candidate_launch_commit_a1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_candidate_launch_commit_a1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9C5BD90>
+corrupt = 'commit_identity'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[]
+        def fake_proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',fake_proof)
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:227: in broken
+    answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_candidate_launch_commit_a1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_candidate_launch_commit_a1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+___ test_candidate_launch_commit_and_scientific_epsilon_must_agree[epsilon] ___
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_candidate_launch_commit_a2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_candidate_launch_commit_a2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BAA09A650>
+corrupt = 'epsilon'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[]
+        def fake_proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',fake_proof)
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:227: in broken
+    answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_candidate_launch_commit_a2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_candidate_launch_commit_a2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_____________ test_STA_baseline_cannot_read_another_valid_netlist _____________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_baseline_cannot_read_0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_baseline_cannot_read_0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9CAD090>
+
+    def test_STA_baseline_cannot_read_another_valid_netlist(env,monkeypatch):
+        manifest=registered(env)
+        def wrong_baseline(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);trace=_trace(out)
+            # Internally consistent bytes and hashes, but baseline TCL read the candidate.
+            for path in [out/'sta_attempts/000001/sta.tcl',out/'sta_attempts/000001/netlist.v',out/'sta_attempts/000001/inputs.json',out/'sta_attempts/000001/result.json',out/'sta_attempts/000001/stdout.bin',out/'sta_attempts/000001/stderr.bin']:
+                path.unlink()
+            (out/'sta_attempts/000001').rmdir()
+            report=out/'eval/iter001_cand001/000_g_G'
+            trace[:2]=_fake_attempt(out,out/'sta.tcl',report/'mapped.v',m,1)
+            (out/'tool_launches.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in trace))
+            return answer
+        monkeypatch.setattr(a,'_run_process',wrong_baseline);calls=[]
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='baseline'):a.execute_job(manifest,'b09')
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:383: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:371: in wrong_baseline
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);trace=_trace(out)
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_baseline_cannot_read_0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_baseline_cannot_read_0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+__________ test_STA_attempt_tampering_is_rejected_before_SEC[stdout] __________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BAA05A210>
+artifact = 'stdout'
+
+    @pytest.mark.parametrize('artifact',['stdout','snapshot','receipt','liberty','extra_attempt'])
+    def test_STA_attempt_tampering_is_rejected_before_SEC(env,monkeypatch,artifact):
+        manifest=registered(env)
+        def changed(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+            if artifact=='stdout':(attempt/'stdout.bin').write_bytes(b'')
+            elif artifact=='snapshot':(attempt/'netlist.v').write_text('truncated')
+            elif artifact=='receipt':
+                result=a.read_json(attempt/'result.json');result['input_drift']=True;a.save_new(attempt/'changed.json',result)
+                (attempt/'result.json').write_text(json.dumps(result))
+            elif artifact=='liberty':
+                inputs=a.read_json(attempt/'inputs.json');inputs['liberty']['sha256']='wrong';(attempt/'inputs.json').write_text(json.dumps(inputs))
+            else:(out/'sta_attempts/000003').mkdir()
+            return answer
+        monkeypatch.setattr(a,'_run_process',changed);calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:391: in changed
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_________ test_STA_attempt_tampering_is_rejected_before_SEC[snapshot] _________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BAA117B90>
+artifact = 'snapshot'
+
+    @pytest.mark.parametrize('artifact',['stdout','snapshot','receipt','liberty','extra_attempt'])
+    def test_STA_attempt_tampering_is_rejected_before_SEC(env,monkeypatch,artifact):
+        manifest=registered(env)
+        def changed(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+            if artifact=='stdout':(attempt/'stdout.bin').write_bytes(b'')
+            elif artifact=='snapshot':(attempt/'netlist.v').write_text('truncated')
+            elif artifact=='receipt':
+                result=a.read_json(attempt/'result.json');result['input_drift']=True;a.save_new(attempt/'changed.json',result)
+                (attempt/'result.json').write_text(json.dumps(result))
+            elif artifact=='liberty':
+                inputs=a.read_json(attempt/'inputs.json');inputs['liberty']['sha256']='wrong';(attempt/'inputs.json').write_text(json.dumps(inputs))
+            else:(out/'sta_attempts/000003').mkdir()
+            return answer
+        monkeypatch.setattr(a,'_run_process',changed);calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:391: in changed
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_________ test_STA_attempt_tampering_is_rejected_before_SEC[receipt] __________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7CA49D0>
+artifact = 'receipt'
+
+    @pytest.mark.parametrize('artifact',['stdout','snapshot','receipt','liberty','extra_attempt'])
+    def test_STA_attempt_tampering_is_rejected_before_SEC(env,monkeypatch,artifact):
+        manifest=registered(env)
+        def changed(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+            if artifact=='stdout':(attempt/'stdout.bin').write_bytes(b'')
+            elif artifact=='snapshot':(attempt/'netlist.v').write_text('truncated')
+            elif artifact=='receipt':
+                result=a.read_json(attempt/'result.json');result['input_drift']=True;a.save_new(attempt/'changed.json',result)
+                (attempt/'result.json').write_text(json.dumps(result))
+            elif artifact=='liberty':
+                inputs=a.read_json(attempt/'inputs.json');inputs['liberty']['sha256']='wrong';(attempt/'inputs.json').write_text(json.dumps(inputs))
+            else:(out/'sta_attempts/000003').mkdir()
+            return answer
+        monkeypatch.setattr(a,'_run_process',changed);calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:391: in changed
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_________ test_STA_attempt_tampering_is_rejected_before_SEC[liberty] __________
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_3/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_3\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9ED3410>
+artifact = 'liberty'
+
+    @pytest.mark.parametrize('artifact',['stdout','snapshot','receipt','liberty','extra_attempt'])
+    def test_STA_attempt_tampering_is_rejected_before_SEC(env,monkeypatch,artifact):
+        manifest=registered(env)
+        def changed(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+            if artifact=='stdout':(attempt/'stdout.bin').write_bytes(b'')
+            elif artifact=='snapshot':(attempt/'netlist.v').write_text('truncated')
+            elif artifact=='receipt':
+                result=a.read_json(attempt/'result.json');result['input_drift']=True;a.save_new(attempt/'changed.json',result)
+                (attempt/'result.json').write_text(json.dumps(result))
+            elif artifact=='liberty':
+                inputs=a.read_json(attempt/'inputs.json');inputs['liberty']['sha256']='wrong';(attempt/'inputs.json').write_text(json.dumps(inputs))
+            else:(out/'sta_attempts/000003').mkdir()
+            return answer
+        monkeypatch.setattr(a,'_run_process',changed);calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:391: in changed
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_3/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_3\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+______ test_STA_attempt_tampering_is_rejected_before_SEC[extra_attempt] _______
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_4/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_4\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BAA090790>
+artifact = 'extra_attempt'
+
+    @pytest.mark.parametrize('artifact',['stdout','snapshot','receipt','liberty','extra_attempt'])
+    def test_STA_attempt_tampering_is_rejected_before_SEC(env,monkeypatch,artifact):
+        manifest=registered(env)
+        def changed(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+            if artifact=='stdout':(attempt/'stdout.bin').write_bytes(b'')
+            elif artifact=='snapshot':(attempt/'netlist.v').write_text('truncated')
+            elif artifact=='receipt':
+                result=a.read_json(attempt/'result.json');result['input_drift']=True;a.save_new(attempt/'changed.json',result)
+                (attempt/'result.json').write_text(json.dumps(result))
+            elif artifact=='liberty':
+                inputs=a.read_json(attempt/'inputs.json');inputs['liberty']['sha256']='wrong';(attempt/'inputs.json').write_text(json.dumps(inputs))
+            else:(out/'sta_attempts/000003').mkdir()
+            return answer
+        monkeypatch.setattr(a,'_run_process',changed);calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:402: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:391: in changed
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);attempt=out/'sta_attempts/000002'
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_attempt_tampering_is_4/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_attempt_tampering_is_4\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+______ test_STA_truncated_baseline_and_refresh_retries_count_separately _______
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_truncated_baseline_an0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_truncated_baseline_an0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7C8ACD0>
+
+    def test_STA_truncated_baseline_and_refresh_retries_count_separately(env,monkeypatch):
+        manifest=registered(env)
+        def retry_process(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);trace=_trace(out)
+            refresh=out/'eval/baseline_001';refresh.mkdir();(refresh/'mapped.v').write_bytes((out/'mapped.v').read_bytes())
+            trace+=_fake_attempt(out,out/'sta.tcl',out/'mapped.v',m,3,stdout='truncated',returncode=1)
+            trace+=_fake_attempt(out,refresh/'sta.tcl',refresh/'mapped.v',m,4,stdout='truncated refresh')
+            trace+=_fake_attempt(out,refresh/'sta.tcl',refresh/'mapped.v',m,5,stdout='valid refresh WNS -1')
+            (out/'tool_launches.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in trace))
+            return answer
+        monkeypatch.setattr(a,'_run_process',retry_process);monkeypatch.setattr(a,'final_sec',_fake_sec)
+>       counts=a.execute_job(manifest,'b09')['accounting']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:417: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:409: in retry_process
+    answer=_fake_outputs(job,m);out=Path(job['output_dir']);trace=_trace(out)
+           ^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_STA_truncated_baseline_an0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_STA_truncated_baseline_an0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error0] _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9C3AB90>
+error = FileNotFoundError('missing executable')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:479: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error1] _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA7C9FA90>
+error = PermissionError('permission denied')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:479: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error2] _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BAA0C8C50>
+error = OSError('unconfirmed OS failure')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:479: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can2/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can2\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error3] _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can3/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can3\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+
+During handling of the above exception, another exception occurred:
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023BA9F1A410>
+error = RuntimeError('unconfirmed run failure')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:450: in execute_job
+    process=_run_process(job,manifest)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:479: in <lambda>
+    monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:119: in _fake_outputs
+    report=out/'eval/iter001_cand001/000_g_G';report.mkdir(parents=True);(report/'mapped.v').write_text(final)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1121: in mkdir
+    self.mkdir(mode, parents=False, exist_ok=exist_ok)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...on_green_tmp/test_unconfirmed_STA_start_can3/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/eval/iter001_cand001/000_g_G')
+mode = 511, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 206] 文件名或扩展名太长。: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_launch_confirmation_green_tmp\\test_unconfirmed_STA_start_can3\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\eval\\iter001_cand001\\000_g_G'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1116: FileNotFoundError
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_full_mock_transaction_binds_state_counts_and_SEC
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_completed_transaction_tampering_rejected[final_raw]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_completed_transaction_tampering_rejected[state]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_completed_transaction_tampering_rejected[unproven]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_completed_transaction_tampering_rejected[model]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_completed_transaction_tampering_rejected[config]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_completed_transaction_tampering_rejected[launch]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_failure_receipt_retains_failed_SEC_and_never_completes
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_failure_receipt_cannot_be_ignored_next_to_completion
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_illegal_tristate_actual_final_rejected_before_SEC
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[trial_identity]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[commit_identity]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[epsilon]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_baseline_cannot_read_another_valid_netlist
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_attempt_tampering_is_rejected_before_SEC[stdout]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_attempt_tampering_is_rejected_before_SEC[snapshot]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_attempt_tampering_is_rejected_before_SEC[receipt]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_attempt_tampering_is_rejected_before_SEC[liberty]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_attempt_tampering_is_rejected_before_SEC[extra_attempt]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_truncated_baseline_and_refresh_retries_count_separately
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error0]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error1]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error2]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error3]
+24 failed, 27 passed in 12.55s
+[run] 完成（15s），退出码 1

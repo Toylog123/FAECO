@@ -1,0 +1,168 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest -q project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py --basetemp project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_red3_tmp
+....................FFF                                                  [100%]
+================================== FAILURES ===================================
+_ test_candidate_launch_commit_and_scientific_epsilon_must_agree[trial_identity] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019D794C4150>
+corrupt = 'trial_identity'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+manifest = {'schema': 'r22-B3-reconstruction-transaction-v1', 'registered': True, 'plan': {'schema': 'r22-B3-reconstruction-trans...ution_ready': False, ...}, 'plan_fingerprint': 'd86d0afa3278f002c1340e79fe59bd297e440efdd56561727f8b2a54c79f6149', ...}
+circuit = 'b09'
+
+    def execute_job(manifest,circuit):
+        validate_manifest(manifest);job=_job(manifest,circuit);out=Path(job['output_dir'])
+        if out.exists():raise RuntimeError('Job output exists; refuse overwrite or automatic resume')
+        initial_path=ROOT/job['baseline']['path'];initial=initial_path.read_text(encoding='utf-8')
+        _domain(initial,initial)
+        out.mkdir(parents=True,exist_ok=False)
+        save_new(out/'preregistered.json',{'manifest_fingerprint':fingerprint(manifest),'job':job})
+        try:
+            with (out/'mapped.v').open('xb') as handle:handle.write(initial_path.read_bytes())
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Frozen mapped staging changed')
+            validate_manifest(manifest)
+            process=_run_process(job,manifest)
+            if process.returncode!=0:raise RuntimeError('Outerloop process failed: '+str(process.returncode))
+            validate_manifest(manifest)
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Runner changed staged mapped input')
+            result,counts=_run_outputs(job,manifest)
+            certificate=_domain(initial,result['state']['current_netlist_text'])
+            save_new(out/'x_identity_certificate.json',certificate)
+            write_liberty_cell_models(LIB.read_text(encoding='utf-8'),out/'model_preflight.v',used_cells=_used_types(initial,result['state']['current_netlist_text']))
+            sec=final_sec(initial,result['state']['current_netlist_text'],circuit,out/'final_sec')
+>           if sec.get('status')!='pass' or sec.get('returncode')!=0:raise RuntimeError('Independent final SEC failed or unsupported')
+               ^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'get'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:320: AttributeError
+_ test_candidate_launch_commit_and_scientific_epsilon_must_agree[commit_identity] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019D794AB250>
+corrupt = 'commit_identity'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+manifest = {'schema': 'r22-B3-reconstruction-transaction-v1', 'registered': True, 'plan': {'schema': 'r22-B3-reconstruction-trans...ution_ready': False, ...}, 'plan_fingerprint': 'bad5302c799253ce066319b0ebc41090712c4916d9ed9b7d93d42cd0191c4ae1', ...}
+circuit = 'b09'
+
+    def execute_job(manifest,circuit):
+        validate_manifest(manifest);job=_job(manifest,circuit);out=Path(job['output_dir'])
+        if out.exists():raise RuntimeError('Job output exists; refuse overwrite or automatic resume')
+        initial_path=ROOT/job['baseline']['path'];initial=initial_path.read_text(encoding='utf-8')
+        _domain(initial,initial)
+        out.mkdir(parents=True,exist_ok=False)
+        save_new(out/'preregistered.json',{'manifest_fingerprint':fingerprint(manifest),'job':job})
+        try:
+            with (out/'mapped.v').open('xb') as handle:handle.write(initial_path.read_bytes())
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Frozen mapped staging changed')
+            validate_manifest(manifest)
+            process=_run_process(job,manifest)
+            if process.returncode!=0:raise RuntimeError('Outerloop process failed: '+str(process.returncode))
+            validate_manifest(manifest)
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Runner changed staged mapped input')
+            result,counts=_run_outputs(job,manifest)
+            certificate=_domain(initial,result['state']['current_netlist_text'])
+            save_new(out/'x_identity_certificate.json',certificate)
+            write_liberty_cell_models(LIB.read_text(encoding='utf-8'),out/'model_preflight.v',used_cells=_used_types(initial,result['state']['current_netlist_text']))
+            sec=final_sec(initial,result['state']['current_netlist_text'],circuit,out/'final_sec')
+>           if sec.get('status')!='pass' or sec.get('returncode')!=0:raise RuntimeError('Independent final SEC failed or unsupported')
+               ^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'get'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:320: AttributeError
+___ test_candidate_launch_commit_and_scientific_epsilon_must_agree[epsilon] ___
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000019D79E62050>
+corrupt = 'epsilon'
+
+    @pytest.mark.parametrize('corrupt',['trial_identity','commit_identity','epsilon'])
+    def test_candidate_launch_commit_and_scientific_epsilon_must_agree(env,monkeypatch,corrupt):
+        manifest=registered(env)
+        def broken(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir'])
+            name='outerloop_result.json' if corrupt=='epsilon' else 'eval_trials.json'
+            data=json.loads((out/name).read_text())
+            if corrupt=='epsilon':data['state']['budget']['epsilon']=0.5
+            elif corrupt=='trial_identity':data['trials'][0]['candidate_hash']='wrong candidate'
+            else:data['trials'][0]['committed']=False
+            (out/name).write_text(json.dumps(data));return answer
+        monkeypatch.setattr(a,'_run_process',broken)
+        calls=[];monkeypatch.setattr(a,'final_sec',lambda *args:calls.append(args))
+>       with pytest.raises(RuntimeError):a.execute_job(manifest,'b09')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:228: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+manifest = {'schema': 'r22-B3-reconstruction-transaction-v1', 'registered': True, 'plan': {'schema': 'r22-B3-reconstruction-trans...ution_ready': False, ...}, 'plan_fingerprint': '3c94f67306584490aad6f77b8c3566c51158892030c6f6e845263306d9982859', ...}
+circuit = 'b09'
+
+    def execute_job(manifest,circuit):
+        validate_manifest(manifest);job=_job(manifest,circuit);out=Path(job['output_dir'])
+        if out.exists():raise RuntimeError('Job output exists; refuse overwrite or automatic resume')
+        initial_path=ROOT/job['baseline']['path'];initial=initial_path.read_text(encoding='utf-8')
+        _domain(initial,initial)
+        out.mkdir(parents=True,exist_ok=False)
+        save_new(out/'preregistered.json',{'manifest_fingerprint':fingerprint(manifest),'job':job})
+        try:
+            with (out/'mapped.v').open('xb') as handle:handle.write(initial_path.read_bytes())
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Frozen mapped staging changed')
+            validate_manifest(manifest)
+            process=_run_process(job,manifest)
+            if process.returncode!=0:raise RuntimeError('Outerloop process failed: '+str(process.returncode))
+            validate_manifest(manifest)
+            if sha(out/'mapped.v')!=job['baseline']['sha256']:raise RuntimeError('Runner changed staged mapped input')
+            result,counts=_run_outputs(job,manifest)
+            certificate=_domain(initial,result['state']['current_netlist_text'])
+            save_new(out/'x_identity_certificate.json',certificate)
+            write_liberty_cell_models(LIB.read_text(encoding='utf-8'),out/'model_preflight.v',used_cells=_used_types(initial,result['state']['current_netlist_text']))
+            sec=final_sec(initial,result['state']['current_netlist_text'],circuit,out/'final_sec')
+>           if sec.get('status')!='pass' or sec.get('returncode')!=0:raise RuntimeError('Independent final SEC failed or unsupported')
+               ^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'get'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:320: AttributeError
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[trial_identity]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[commit_identity]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_candidate_launch_commit_and_scientific_epsilon_must_agree[epsilon]
+3 failed, 20 passed in 5.82s
+[run] 完成（10s），退出码 1

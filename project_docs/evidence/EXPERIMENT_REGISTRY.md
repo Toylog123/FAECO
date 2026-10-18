@@ -340,3 +340,122 @@ root误直接运行Cprep qa归档副本20F仅为原parents[2]路径上下文不�
 完整v8实际969pass/4skip/156subtests，155.12s/wrapper157.969exit0，170源码SHA稳定/PYTHONUTF8=1，JUnit0fail0error。原始精确V3 passed/parsed1/1/reset→set fail/合法Gpass/R0；公共scope限定30pass。OI040/041仅实现门关闭，科学pending不变；原failedverification/v7与各轮归档保留。
 
 B3_RECONSTRUCTION_ADAPTER与C_RECONSTRUCTION_ADAPTER仍WIP，不纳本次stagecommit。records冻结docs，root归档harness/更新根入口后阶段commit/push，再同一HEAD注册C′v3→真实map8/静态门→18pilot；当前未注册/未mapping/无STA，不新增前置工具。
+
+### C′v3正式登记与真实输入准备（LOG-39/40）
+
+| 实验/登记ID | 版本/输入/配置 | 证据/执行 | 当前状态/边界 |
+|---|---|---|---|
+| EXP-R22-CPRIME-V3-72 | pin3ea0f757f5e9bab4a2df75c458b0c665eabcb258、44productionSHA/LIB/tools/input锁，9arms×8circuits72jobs | experiments/20261016_r22_cut_ablation_v3/manifest.json，SHA72dfbef9dd36101c543f0d3788084579b31482b1a29cdfcc5875826cc445fd41 | registered，18pilot尚未起；固定HEAD、不覆盖v1/v2 |
+| DRYRUN-R22-V3-PREP | 已注册v3 manifest全部8例 | prepare_inputs.py --dry-run，root实际8would_map成功 | 非mapping/STA/SEC，不当实验效果 |
+| PREP-R22-V3-MAP-STATIC | 同pin，真实8例首次mapping/静态域/输入receipt，PYTHONUTF8=1，timeout1800s，session21802 | actual_prepare.log（scratch/r22_cprime_v3_20261016），inputs/各例产物；preflight.json目标 | running，首读7STATIC_DONE+s953 MAP，preflight尚未齐；无STA/SEC/18pilot，不是RTL→mapped证明 |
+
+root新包raw-index保护60文件逐字节匹配，renormalize生效，单调用cr-at-eol diffcheck rc0，原raw未改。阶段3ea0f75已push且code/preparer clean；records只写docs不commit，B3/C WIP排除。
+
+### C′v3真实准备完成与18pilot启动（LOG-41）
+
+| 登记ID | 对象/配置 | 当前状态/证据 | 边界 |
+|---|---|---|---|
+| PREP-R22-V3-MAP-STATIC | 同pin3ea0f75/8例/PYTHONUTF8=1 | completed，wrapper46s/exit0；preflight prepared+PREPARATION_POST_VERIFICATION全8artifacts/F1identity/F2/domain匹配/source稳定 | mapping_equivalence not_run、sta_executed false；不是RTL→mapped证明/STA |
+| PILOT-R22-V3-18 | s27/s382×9，session91713，timeout36000s/每job3900或3930s，PYTHONUTF8=1；manifest72dfbef9… | running，pilot.log首W0两例finalSEC pass，候选字段9/8、提交0、WNS-.27/-.98不变；已启动W1 | 首2不等18通过，legacy候选字段不作全部STA次数。18全部独立SEC/分账审计后扩剩余54，不改既有接受预算/参数 |
+
+协议实查：W0/s27首trial WNS-.27→-.26、TNS-.49→-.50，setup_tns硬门拒。当前严格WNS改善受TNS不退化等硬约束，tns-aware只影响平局选择，不能简称无约束唯WNS。
+
+### C′v3 5/18独立核验快照（LOG-42）
+
+最新只读PILOT_AUDIT_05已核验5/18（非全18）：source稳定/argv匹配，candidate_ideal实际launch与mapped/log绑定、commit完整哈希链和finalSEC非零proven/0unproven皆通过。s27 W0/W1/U0候选理想STA=9/41/9、保留提交0/2/0、最终WNS=-.27/-.18/-.27；s382 W0/W1为8/89、提交0/3、最终WNS=-.98/-.83。计数仅candidate_ideal，不含全部baseline/refresh/physical STA。
+
+证据PILOT_AUDIT_05.json；原调用scratch/audit_cprime_v3.py的SHA与receipt实算一致，最终18完成后另建manifest归档。初版审计错误期待未序列化epoch字段KeyError且无receipt，改为实际完整hash链核验；这是证据工具schema假设错误，非生产失败。
+
+监测LOG43：pilot.log实际7/18 DONE均report finalSEC pass，独立PILOT_AUDIT_05仍5/18；新增U0/s382、U1/s27完成，U1/s382与C/s27启动。运行推进，未宣称全18后验通过或扩72。
+
+### C′v3 7/18独立分账审计（LOG-44）
+
+最新PILOT_AUDIT_07独立核验7/18通过（非全18），source稳定/argv匹配，逐candidate mapped/tcl/log SHA、实际launch、commit完整哈希链和finalSEC非零proven/0unproven均匹配。完整sta.log路径恰为candidate理想记录加初始baseline；resolved physical/electrical/S均false。七例每例baseline实际过程1次，candidate_ideal合计205次+baseline7次=212次已审计STA过程（other0），不是物理STA。W1的s27/s382保留提交2/3次，最终WNS-.18/-.83；其余全矩阵效果与验收仍待。
+
+逐项candidate+baseline=actual过程：s27/W0 9+1=10; s27/W1 41+1=42; s27/U0 9+1=10; s27/U1 41+1=42; s382/W0 8+1=9; s382/W1 89+1=90; s382/U0 8+1=9。v05audit原源e6d9…已保留_v1.py；v07新版d932…与receipt SHA一致，最终分别归档。
+
+监测LOG45：日志10/18 DONE均report finalSEC pass，独立最后audit07仍7/18。两电路W0/U0、W1/U1首轮configured实际非均匀、uniform全1，但pool/dispatch hash一致；这是探索观察，不据当前收益归因加权、不调参，完整矩阵后判断。
+
+登记LOG49：source_snapshot/runtime_inputs.zip + snapshot.json确切runtime包62件/2400670B/SHA620a0eb9…，source_stabletrue；root解包核验与记录员直接ZIP SHA62/62一致。44source+Lib1+RTL8+mapped8+prep1，不含二进制工具，仅registered_versions。final72后归档提交ZIP需force-add，本轮不Git。pilot日志15DONE/reportpass，独立audit仍07。
+
+LOG52：18pilot已18DONE全return0/finalSEC reportpass，wrapper1028s/exit0。最后独立audit仍07；最终后验receipt待，不提前登记全18验收或剩余54启动。
+
+### C′v3 18pilot完成独立验收，扩余54（LOG-53）
+
+| 登记ID | 版本/配置 | 实际结果/状态 | 范围 |
+|---|---|---|---|
+| PILOT-R22-V3-18 | 固定3ea0f75/s27+s382×9，原注册不变 | completed；wrapper1028s exit0，PILOT_AUDIT_18 18/18独立全通过/source稳 | 1360评估记录、1064candidate_ideal STA+18baseline=1082实际STA过程，other0；35保留提交，非物理STA |
+| RUN-R22-V3-REMAIN54 | 同HEAD/manifest，s420/s641/s713/s820/s832/s953×9；session9345/108000s/单job3900或3930/wall3600/PYTHONUTF8=1 | running，remaining54.log实际s420W0/s641W0 LAUNCH | 全72验收前不commit/变HEAD，不预填效果或完成，后续B3/C提交等待 |
+
+ARCHIVE-R22-V3-PILOT-QA（LOG54）：pilot_qa新独立manifest共60件source/target/SHA匹配；auditv1/v2分别绑定05和07/18，原pilot stdout与18 completion/SEC receipts/log保真。完整实验raw/models/STA仍单一注册原路径，由manifest证据SHA引用。当前不Git，72验收后root归档提交。
+
+LOG55运行监测：剩54首s420/W0、s641/W0已DONE且finalSEC reportpass；W1运行，全族日志20/72/独立最后audit18。B3已51mockQA通过，C38mock/staticQA通过且formal接口WIP，未注册/未EDA，不计科学复验。
+
+QA-C-ADAPTER-DRIFT（LOG56/OI042）：scratch/c_adapter_review/probe_results_v2.json独立反例，末STA调用TCL Liberty路径漂移仍qa_complete/1commit，mismatch_acceptedtrue。原38mockQA独立再跑38pass66.09s，未EDA/未正式注册；不计新科学结果、不影响C′source矩阵。正式C_ADAPTER_REVIEW报告待落盘，修复闭环待。
+
+LOG58监测：剩54完成6，全族24reportpass/最后独立audit18；s420/s641各W0/W1/U0均完成，U1在跑。18pilot预览图v2独立VISUAL_REVIEW passed-as-preview/18数据全保留，未插正文，不当全72科学结果。
+
+### 全矩阵独立24/72审计（LOG-59）
+
+MATRIX_AUDIT_24已exit0/24已核/source稳定/all_matrix_verifiedfalse：全部candidate raw-tcl-log SHA、argv/STA ledger、commit链、finalSEC非零proven0unproven匹配。当前1418candidate_ideal+24baseline=1442actual STA过程，other0/46保留提交；仅24范围，非物理STA。新增W1s420177STA/6commit/终WNS-1.21，W1s641151/5/-1.17。独立matrix脚本SHA0578cdf9…，原pilot v2/18收据未改；全72运行未完，不跨族归因。
+
+QA-B3-ROOT-FINAL（LOG61）：B3_RECONSTRUCTION_ADAPTER/root_final_qa独立manifest保真2原件；51pass16.28s、wrapper20exit0、runtime20.578s、source before/after/当前SHA全匹配，HEAD3ea/eda=false。仅限定工具QA，正式新pin/B3登记等待C′72完成后提交。
+
+QA-C-TRANSACTION-84（LOG62）：新transaction_interface_20261016/QA_REPORT.json SHAe867e944…，84pass81.73s/wrapper87exit0，mockSTA/SEC，真实8起点仅静态门。原OI042反例作者red→green正确PinDrift拒/无completion；独立修后复核待/OI042仍open，48jobs只是preview，未登记/无EDA。旧C38报告保历史不覆盖。
+
+DIAG-R22-MATCHED-STATE-08（LOG64）：mechanism_audits/MATCHED_STATE_PAIRS_08.json，4完成电路×2配对，各20同baseSHA轮。非均匀weighted代价确实生效但cut/pool/dispatch/endpointSHA均同，EDAfalse/partial。独立ARCHIVE_MANIFEST_08归档脚本原字节3ef4ceaa…，保输入SHA/原scratch调用；重复轮不当独立样本，不能外推全8或因果增益，不调整参数求正结果。
+
+VERIFY-C-OI042-INDEPENDENT（LOG65）：C_TRANSACTION_ADAPTER_REVIEW独立原probe重放PinDrift/exit1，0commit文件和事件/无completion，register38独立QA17.70s/20exit0/60sources稳/新阻断0，原件三SHA核符。主线授权限定关闭OI042实现门；C48未登记/无EDA/非科学恢复。作者84只读不冒充独立全跑，旧红证据保留。
+
+PREP-R22-MATRIX-FIG4（LOG66）：r22_matrix_gain_cost_contract.json+review_r22_matrix_gain_cost.py prepared，72raw增益/实际总STA和64同电路配对差全保留。scratch/r22_matrix_plot_incomplete_guard.json实读对24partial拒绝/exit1/无output，plotterSHA0ff794c6…匹配。未render/未插正文/未验收最终图，等MATRIX_AUDIT72全验收。
+
+ARCHIVE-C-OI042-PREIMAGE-6（LOG67）：C_ADAPTER_REVIEW/source_snapshot_pre_OI042六原件+原before_sha256收据，6/6 source-target-beforeSHA匹配；5条绑定首review frozen表、QA_REPORT绑定其qa_report_sha256。旧adapter6bd06…/backend3d6f…对应38QA/红probe，不覆盖当前代码或旧报告。仅历史快照，HEAD不变。
+
+CHECK-R22-CLOCK-CONSTRAINTS（LOG68）：Pico187脚本+canonical B27 baseline TCL逐SHA/create_clock一致，aggregate source SHA匹配；5ns/2ns/0.5ns明确分模块。只读设置审计无新时序测量，OI043中英环境句错误待主线最小修正，效果数字未动。
+
+LOG70独立mechanism partial4：NetworkX重算160trace/20uniquebase，120根强制+40s420成本优势，source稳/无EDA/无参数改；新mechanism_review/ARCHIVE_MANIFEST保原script/log/reportSHA，非因果收益或8电路结论。LOG71历史B3旧24/44 source查找0匹配，negative lookup二原件独立归档，不声称旧源码恢复/可重放。LOG72 CLAIM_REPLACEMENT_MAP只读17claims/396source冻结matrix24范围，非论文已回填。
+
+### 独立matrix36实际对象与归档（LOG73）
+
+MATRIX_AUDIT_36.json：36已核/72，s27/s382/s641各9+s420八臂（缺L）+s713W0，不是四电路各9。3987评估/3436candidate_ideal+36baseline=3472实际过程/other0/109保留提交，source稳/非物理STA；原stage log10s exit0。matrix_qa/stage36保原脚本/log/receipt3/3SHA，runtime后来的s420L完成待后续新N独立核入，不回写旧36。全证据solid7z分卷仅设计未完成。
+
+EDIT-CLOCK-METADATA-01（LOG75/OI043）：中英setting/图4caption各2处，Pico5/2/.5ns分模块、同电路baseline/repaired同约束。en错误字面转义V1保真且V2修；最新sourcezhcb9bd…/enbdde6…与两遍buildsource稳定实核，buildPDFzh80416…/enbb6b35…当前SHA匹配。仅文稿设置更正非新EDA/非效果数字变化，视觉QA/副本验收待，OI043未关闭。
+
+ARCHIVE-R22-V3-S27-FULL（LOG76）：full_artifact_archives/s27/receipt.json verified：1400原文件/25616925B、9jobs+inputs+固定注册/source/LIB/RTL/audit36；solidLZMA2/80MiB分卷，实际单卷1930551B/SHAfdd26…实核。source稳/member-size/7zt/restore全SHA-size均通过，主线独立复核待；仅s27，不当完整8电路归档或新的EDA。
+
+LOG77 s27全证据包root独立后验accepted：1400source当前SHA-size/所有sidecar/volume/独立7zt匹配。仅s27；s382/s641授权扩大但未预填结果，s420待新N独立9臂。LOG78 metadata zh12/en26静态QA及38p渲染exit0完成，visual仍pending/OI043不关闭。
+
+ARCHIVE-R22-V3-S382-S641（LOG79）：s3822572files/663675739B→5952319B、s6414029files/783814031B→5872335B；receipt/volumeSHA实核，两包均source稳/member-size/7zt/restoreSHA-size true，80MiB配置各一卷。producer verified、root后验待；s27已rootaccepted，s420未授权归档，保持原实验文件。
+
+LOG80/OI043 metadata-only gate closed：FINAL_QA+SYNC独立SHA核符，双语各14表块/7图引用未变、38p visual无缺陷/PDF周期句回读通过、中文双副本80416…和英文bb6b35…当前实核。仅说明修正无新EDA/收益数字变更，不升级科学结论；首提取串栏失败/V1V2/旧PDF备份均留存。
+
+DESIGN-REGION-STATIC-PARTIAL4（LOG81）：先CONTRACT后census，region_design_review三最终SHA核符；初始四电路共同bounded union eligible6/11/10/11=38，212编辑F1/F2静态pass但未SEC/STA/接受，230proposal未检不当invalid。s27top1 null、其余3top1差异/uniform ties/全部singleton均保留。46source17input稳定、无EDA/无参数改/未正式注册；源oracle首失败与v2 exactsrc/TIMING_CORRECTION永久归档。
+
+### v2冻结对象集合独立51/72（LOG83/84）
+
+MATRIX_AUDIT_51 completion_set_frozen_at_starttrue，51eligible当前completionSHA独立复核；范围四电路各9+s7137+s8208，5887评估/4919candidate+51baseline=4970实际STA过程/other0/137保留提交。stage51原v2ea0a…/名含50的原log/51receipt新manifest三件SHA一致；计数以receipt51不以日志名。s27/s382/s641全归档rootaccepted；s420在此51具完整九臂后归档已34681/900s运行，未记结果，全72仍未完成。
+
+PREFLIGHT-S-SPEF-HISTORICAL（LOG85，provisional）：只读初查进行中无EDA；待核S非法起点/可能合法恢复candidate、CEC路径精确绑定，SPEF重复评估/寄生参数/端口方向/paired-baseline。冻结报告未齐，不引用未实读数量、不当新不等价证明或全候选invalid，关联OI014/OI015/OI036开放待核；未改稿或当前C′参数。
+
+
+### VERIFY-R22-CPRIME-V3-FINAL72（2026-10-18，LOG-20261018-03）
+
+最终MATRIX_AUDIT_72.json SHAa34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738；72/72、8circuits×9arms、all_matrix_verified/source_stable/completion_set_frozen_at_start=true，当前72completion SHA逐一匹配。8458评估记录、6858candidate_ideal STA+72baseline=6930实际STA过程、other0、192保留提交；每endpoint独立SEC非零proven/0unproven。固定HEAD3ea0f75/manifest72dfbef9…/v2审计器ea0a9793…；session54830实际exit0/runtime46.546s。physical/electrical/S均禁用，不称物理STA；本次仅读审计不重跑EDA。stage72/ARCHIVE_MANIFEST五原件逐source-target SHA匹配，旧51/54/失败v1保留。剩54原运行wrapper3728s/exit0已完成。B3/C/D同族恢复、四态支持、S/SPEF历史审计及稿图科学回填仍待，不能跨族补证。
+
+
+ARCHIVE-R22-V3-S713-S820（2026-10-18，LOG04）：MATRIX72绑定；s7133390files/645811769B→5439288B、s8202769files/490800683B→4516647B。receipt/volume SHA实核、source稳定/成员/7zt/恢复全SHA-size均true，wrapper103/82s exit0；producer verified、root后验待，原数据不删/无EDA/无Git。s832/s953归档进行中，不预填全八归档完成。
+
+ARCHIVE-R22-V3-S832（2026-10-18，LOG05）：MATRIX72绑定；2721files503246244B→4456881B，receipt f2de16ee…/volume SHA实核，source稳定/成员/7zt/恢复全SHA-size true，wrapper77s exit0；producer verified、root后验待，无EDA/未删原件。
+
+ARCHIVE-R22-V3-S953（2026-10-18，LOG06）：MATRIX72绑定；2485files/1365925045B→11433819B，receiptdf6de53a…/volume SHA核符，source稳定/成员/7zt/恢复全SHA-size均true，wrapper164s exit0；producer verified，root后验待。四新包制作全结束，无EDA、无删除。
+
+
+VERIFY-R22-CPRIME-MECHANISM16/FIGURE（LOG09）：机制16报告ef78ed8a…/32输入SHA实核，ARCHIVE_MANIFEST_16保原script3ef4…与原调用；独立FIGURE_CPRIME_REVIEW269205b9…核raw72/paired64/completion72、16配对全部重复同状态轮5454cross-comparisons零差/终点全文同，source稳定；本矩阵未见独立权重收益，重复轮非独立样本。独立review脚本c410bb…保真归档。v1导出SHA/最小6.8pt/人工及独立视觉均有原件，但LOG11新自动几何门6FAIL推翻无碰撞交付判断，v2待QA；数据/机制科学核验不因此变成失败，不删除旧v1。
+
+REVIEW-S-SPEF-INDEPENDENT-V2（LOG10）：S258文件/1032组合条目match、0issue，旧!解析错误和首新B1误滤错误均保失败原件，V2为权威；126/76/0与静态合法域边界分开。SPEF漏SUM driver、双侧共用SPEF、read_spef后报告混杂均有实对象/静态探针，下一阶段sourcefix+真实同族重跑待。历史s382RC unknown保留，不把b18unit1或scan对象跨借；无EDA/生产改动。
+
+ARCHIVE-R22-V3-ALL8-ROOT-ACCEPTED（LOG08）：八ROOT_POST逐receiptSHA/7zt/source/sidecar/volume等核符；原实验不删。source3ea仍固定，归档accepted不代其他科学族。
+
+VERIFY-R22-MATRIX-FIGURE-V3（LOG12）：FINAL_REVIEW32ff889a…所有14文件SHA核符，源d9ef05b…，CSV与v1逐字节相同；collision0F0W/PanelPASS/glyph6.8pt60runs0below/source19P2W0F，partial51建输出前拒/root四panel+整图视觉通过。仅几何实现门关闭，独立v3视觉追加/主稿整合待；v1负控/人工误漏原件不改。无EDA/生产改动。
+
+VERIFY-R22-MATRIX-FIGURE-V3-INDEPENDENT（LOG13）：独立追加71d9a480…/所有来源当前SHA核符；实际PNG+独立PDF重渲染视觉通过，raw72/paired64与5454同状态既有独立验证保留。v3最终审查预览验收完成，正式主稿整合/其他历史族科学门待，无新EDA/生产/Git。

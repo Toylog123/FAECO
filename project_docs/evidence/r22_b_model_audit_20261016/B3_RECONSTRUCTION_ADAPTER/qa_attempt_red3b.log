@@ -1,0 +1,31 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py -q -k baseline_cannot --basetemp=project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_attempt_red3b_tmp
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________ test_STA_baseline_cannot_read_another_valid_netlist _____________
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000234FED76D10>
+
+    def test_STA_baseline_cannot_read_another_valid_netlist(env,monkeypatch):
+        manifest=registered(env)
+        def wrong_baseline(job,m):
+            answer=_fake_outputs(job,m);out=Path(job['output_dir']);trace=_trace(out)
+            # Internally consistent bytes and hashes, but baseline TCL read the candidate.
+            for path in [out/'sta_attempts/000001/sta.tcl',out/'sta_attempts/000001/netlist.v',out/'sta_attempts/000001/inputs.json',out/'sta_attempts/000001/result.json',out/'sta_attempts/000001/stdout.bin',out/'sta_attempts/000001/stderr.bin']:
+                path.unlink()
+            (out/'sta_attempts/000001').rmdir()
+            report=out/'eval/iter001_cand001/000_g_G'
+            trace[:2]=_fake_attempt(out,out/'sta.tcl',report/'mapped.v',m,1)
+            (out/'tool_launches.jsonl').write_text(''.join(json.dumps(row)+'\n' for row in trace))
+            return answer
+        monkeypatch.setattr(a,'_run_process',wrong_baseline);calls=[]
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='baseline'):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:378: Failed
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_baseline_cannot_read_another_valid_netlist
+1 failed, 41 deselected in 0.87s
+[run] 完成（5s），退出码 1

@@ -1,0 +1,60 @@
+{
+  "status": "full72 independently accepted; rendered and visually reviewed; not inserted into main manuscripts",
+  "question": "Does weighted candidate construction add gain or save STA calls beyond uniform and cover-only controls?",
+  "core_conclusion": "Within the registered eight-circuit matrix, weighted and uniform costs have matching gains and STA counts; candidate-source and ordering policies differ in STA cost.",
+  "evidence_chain": {
+    "a": "All eight circuits and nine arms: absolute WNS gains from each shared mapped baseline",
+    "b": "Actual candidate plus baseline STA process attempts for the same72 jobs",
+    "c": "Within-circuit paired WNS-gain differences across source, weighting and ordering controls",
+    "d": "Within-circuit paired STA-cost differences for the identical contrasts"
+  },
+  "archetype": "quantitative grid",
+  "backend": "python",
+  "dimensions_mm": [
+    170,
+    128
+  ],
+  "input": "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json",
+  "coverage": {
+    "circuits": 8,
+    "arms": 9,
+    "jobs": 72,
+    "exclusions": 0,
+    "paired_contrasts_per_circuit": 8
+  },
+  "contrasts": [
+    "W0-U0",
+    "W1-U1",
+    "W1-W0",
+    "W1-C",
+    "W1-L",
+    "W1-UR1",
+    "W1-UR2",
+    "W1-UR3"
+  ],
+  "interpretation": {
+    "gain_difference": "positive favors left arm",
+    "cost_difference": "negative favors left arm",
+    "random_seeds": "each separately labelled; no averaging or uncertainty estimate",
+    "L": "Common outerloop legacy candidate policy, not historical family C greedy scheduler"
+  },
+  "integrity": [
+    "Require exact72 unique registered circuit/arm pairs and positive proven/zero unproven",
+    "Check actual completion receipt hashes against audit before plotting",
+    "Keep each arm including zero gain",
+    "No extrapolated curves, statistical significance, invented repeats, or pilot-to-matrix substitution",
+    "C-prime does not substitute for historical C, D, B3 or physical/S results"
+  ],
+  "exports": [
+    "editable PDF",
+    "editable SVG",
+    "600dpi PNG",
+    "raw sourceCSV",
+    "paired sourceCSV",
+    "QA JSON"
+  ],
+  "glyph_floor_pt": 6.8,
+  "visual_qa": "all four panels and full page at final size; source preflight and actual PDF glyph audit required",
+  "style_reuse": "Existing manuscript typography and restrained palette only; new data and comparison mapping",
+  "source_audit_sha256": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738"
+}

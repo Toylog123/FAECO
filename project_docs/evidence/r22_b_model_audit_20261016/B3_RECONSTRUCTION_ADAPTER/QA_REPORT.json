@@ -1,0 +1,141 @@
+{
+  "schema": "B3-evidence-adapter-bounded-QA-v1",
+  "ready_for_root_review": true,
+  "ready_for_formal_registration": false,
+  "formal_registration_executed": false,
+  "eda_executed": false,
+  "production_modified": false,
+  "prior_evidence_modified": false,
+  "head_at_readonly_check": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "production_code_clean": true,
+  "preview_source_tree_clean": false,
+  "reason_not_registered": "Root review/authorization and committed adapter/checker clean pin required; rebuild a fresh reviewed preview after commit. No actual tool queries/STA/SEC performed.",
+  "QA": [
+    {
+      "log": "qa_red.log",
+      "failed": 17,
+      "passed": 0
+    },
+    {
+      "log": "qa_green1.log",
+      "failed": 0,
+      "passed": 17
+    },
+    {
+      "log": "qa_red2.log",
+      "failed": 2,
+      "passed": 18
+    },
+    {
+      "log": "qa_green2.log",
+      "failed": 0,
+      "passed": 20
+    },
+    {
+      "log": "qa_red3b.log",
+      "failed": 3,
+      "passed": 20
+    },
+    {
+      "log": "qa_green3.log",
+      "failed": 0,
+      "passed": 23
+    },
+    {
+      "log": "qa_final.log",
+      "failed": 0,
+      "passed": 24,
+      "runtime_s": 6.39,
+      "wrapper_elapsed_s": 11,
+      "timeout_s": 120
+    }
+  ],
+  "live_input_QA": {
+    "inputs": 3,
+    "domain_valid": 3,
+    "X_sources": 0,
+    "historical_missing_TE_B_rejected": 3,
+    "source_stable": true,
+    "formal_output_exists": false,
+    "timeout_s": 120,
+    "wrapper_elapsed_s": 15
+  },
+  "remaining_limits": [
+    "Historical argv/revision/priority table unknown; registered choices are explicit reconstruction, not recovered runtime.",
+    "Real WSL/STA/SEC integration and time profile not exercised; mock QA is not EDA proof.",
+    "Formal tool binary/version pins are queried only on later operator registration.",
+    "One circuit transaction per invocation; root must arrange at most two concurrent jobs using existing orchestration. No new scheduler.",
+    "Four-hour watchdog is operational only; timeout retains an incomplete failure and cannot contribute a completed scientific result.",
+    "Common SEC script/schema changes cause rejection; no automatic weakening."
+  ],
+  "files": {
+    ".gitignore": {
+      "sha256": "60027ba0f5731b7d0a26eaffb041d83eb7feb9945b964a1119b261c3d9033a44",
+      "bytes": 29
+    },
+    "adapter.py": {
+      "sha256": "5f965f57e3b8c91ce041a9a8373e19b938ce70c82181addcc40bc8ae6de26078",
+      "bytes": 26073
+    },
+    "LIVE_INPUT_QA.json": {
+      "sha256": "8f0601382a8dc3e36af3a95d6e5fed24b802717485f16166e23cbbd9d3256ed2",
+      "bytes": 7448
+    },
+    "live_input_qa.log": {
+      "sha256": "52d121fe0b06a9e6511a0f444389bbfa4ca72f4582b384a93fb3b5b11bd2f6f3",
+      "bytes": 1876
+    },
+    "qa_final.log": {
+      "sha256": "600420b1d9c98001453909b514d964f4db7779c1e282db50891b980779e930e9",
+      "bytes": 399
+    },
+    "qa_green1.log": {
+      "sha256": "fc51229cc7c8a75b9730739dee0a382012cb2f0f15471b1824be85fb6d437a04",
+      "bytes": 399
+    },
+    "qa_green2.log": {
+      "sha256": "86831b76652f09697a381318c327e984efdf0ee921471a2fb215d827602599f0",
+      "bytes": 400
+    },
+    "qa_green3.log": {
+      "sha256": "614bad2163c54c30541cc18e5964af803fe313d420bec761f58b04c2f405a7f9",
+      "bytes": 400
+    },
+    "qa_red.log": {
+      "sha256": "023288ca3bf9368aef98aa1339edf083eca5a75e1376a17c0007ab68a2c8aa84",
+      "bytes": 30785
+    },
+    "qa_red2.log": {
+      "sha256": "8a7919fdd88d5593199714e8aa0541be0f3a21abf28b4c50ced526dcf9965aad",
+      "bytes": 5000
+    },
+    "qa_red3.log": {
+      "sha256": "0ba0adf18e0b07f8f73f3e101293798712f9c04b8393ef64c27db85ec78b2bd9",
+      "bytes": 12637
+    },
+    "qa_red3b.log": {
+      "sha256": "76b505c71b074e8dbc50697b2ea5dae6c4e1e65ee4baca526d1dec55ebc7c69f",
+      "bytes": 5945
+    },
+    "README.md": {
+      "sha256": "092da081193d0880bfdb1256c797d1a76423d3fd480552990e54b19ed7cbd49c",
+      "bytes": 6022
+    },
+    "review_preview_20261016.json": {
+      "sha256": "5e7e50094a572461608c5443d0d55addf8fdb0752ca27b447b8973e5a0ff331b",
+      "bytes": 30151
+    },
+    "smoke_readonly.py": {
+      "sha256": "5cfc83f77d7b2208733acad6f1eb552333c769c977cdfb1910b2c6ecf83e0750",
+      "bytes": 2153
+    },
+    "test_adapter.py": {
+      "sha256": "c1052f51962b8ab6c8a467c760db7de6af2b012f3b5195d66e146d7e9949297c",
+      "bytes": 15615
+    }
+  },
+  "historical_design_hashes": {
+    "B3_RERUN_DESIGN.md": "ee879f9c0df80b6376465c16984af8d8311d1faeb683a2a918a8a6c2385cf9c3",
+    "B3_RERUN_DESIGN.json": "4977c00c029feefcba50f494bcbf06f4309ee848331e3a4d9b969bd4e950ee0e"
+  }
+}

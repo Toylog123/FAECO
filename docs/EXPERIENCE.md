@@ -4,7 +4,7 @@
 
 ## 2026-10-16 字节SHA钉定的新证据须防Git换行转换
 
-本次新QA/B17proof/v6-v8/Cprime-v3包由root加.gitattributes -text，防core.autocrlf检出后SHA变化；仅新包、不重写旧证据。提交前仍须核index blob与working raw逐字节一致，属性本身不能替代该检查。当前校验由root执行中，不先称通过。
+本次新QA/B17proof/v6-v8/Cprime-v3包由root加.gitattributes -text，防core.autocrlf检出后SHA变化；仅新包、不重写旧证据。提交前仍须核index blob与working raw逐字节一致，属性本身不能替代该检查。后root实际核60新包index blob==working raw逐字节一致；git add --renormalize才使raw入index，单调用cr-at-eol diffcheck rc0，原件未改。属性保护与实际index校验均须完成，不把仅写属性当已保护。
 
 ## 2026-10-16 增强专属检查器不应悄改共享唯一性API的输入语法
 
@@ -236,3 +236,66 @@ B2 checker66fe72ff…独立review准确为20/20负拒、5/6正接受，actual2pa
    - 排查：以 v5 的 PDF（从 git 取回）反推口径——`pdftotext -layout <pdf> - | sha256sum`（**原始输出，不去空白**）精确复现 v5 记录值 `0a2b0723…`；据此口径，规范脚本对 v6 稳定给出 `88b03403…`（连跑两次一致）。
    - 结论：`91034fee…` 为误值（字节 SHA `09197e5f…` 与页数均正常，说明 PDF 未变）。已更正全部 11 处。
    - 规则：**内容指纹必须由脚本按固定命令现算**，不手抄、不跨文档复制粘贴；跨文档引用指纹时回验一次。判内容一致用**指纹**，判文件副本用**字节 SHA**，两者不可混用。
+
+
+## 2026-10-16 C′v3 pilot：无提交先查预算，不改协议求正结果（LOG-41）
+
+首W0/s27实际候选WNS从-.27改善到-.26，但TNS从-.49退到-.50，eval_trials明确setup_tns hard_gate拒。finalSEC pass但提交0/WNS不变符合当前接受协议；应区分严格WNS接受目标、TNS等硬预算和tns-aware平局选择。不能用“唯WNS无约束”描述，也不为得到改善调整已注册参数。候选9/8字段有legacy计数语义，最终审计必须分别核理想候选、baseline/refresh/physical调用与提交，不能把候选台账字段当全体STA总数。mapping/static准备receipt明确not_run/STAfalse，不把静态门当RTL→mapped证明。
+
+
+## 2026-10-16 只读审计须依据实际序列化schema（LOG-42）
+
+C′v3首次独立audit误期待as_dict未序列化的epoch字段，KeyError且未形成结果receipt；不能记为生产或实验失败。修正审计schema假设，保留实际完整网表commit哈希链，并交叉核argv、source、mapped/log、candidate_ideal launch与finalSEC非零proven/0unproven，前5/18已通过。最终脚本另按receipt SHA归档，旧失败不伪装成实验返回值。
+
+
+## 2026-10-16 权重接通与增益归因分开核验（LOG-45）
+
+两pilot的W0/U0、W1/U1首round candidate_pool_trace显示configured node_costs非均匀且uniform全部1，但pool/dispatch cut hash相同。不能由臂结果相同断言权重未接通，也不能将当前改善直接归因给权重。先记录实现接通与实际cut相同的观察，等待全矩阵比较；不为得到正结论调整已注册参数。
+
+
+## 2026-10-16 跨机器恢复运行pin须保存确切输入字节（LOG-49）
+
+Git换行属性并不包含所有ignored本机输入，也不能保证未来检出的字节等同runtime。C′v3另建source_snapshot将44runtime source/Lib/8RTL/8mapped/preparer共62件原字节入ZIP，用manifest逐项SHA与ZIP SHA双核；记录员独立62/62匹配。保留工具登记版本且明确不含二进制，不能称完整工具环境可搬运。运行pin不变，受ignore的ZIP在72全部验收后归档阶段须force-add，不为快照提前commit。
+
+
+## 2026-10-16 机制比较先按相同网表状态对齐（LOG-64）
+
+同一轮编号可能对应不同累计ECO状态，不能直接把候选差异归因权重。C′v3先按base_netlist_hash匹配四已完成电路的W0/U0、W1/U1八配对，再核nodecost、cut列表、ordered pool、dispatch和最终全文SHA。当前各对20条同状态轮记录均为非均匀weighted代价但行为与终点相同；这是partial诊断，不能由“权重接通”推断“权重有增益”。重复同状态轮不作独立样本，未完成电路排除，不以调参追求预设正结论。
+
+
+## 2026-10-16 输入不可变门须覆盖末次工具调用和提交前（OI042/LOG65）
+
+C适配器原finally只核mapped，末candidate调用期间TCL Lib路径漂移仍1commit/qa_complete；应把TCL/Lib等完整冻结输入在调用finally与提交前核验，末次调用也不能漏。保留原probe原字节，修后独立重放PinDrift/exit1、0commit/无completion，再审注册38控制和60来源前后SHA后仅关闭实现门。作者84联合QA不替独立38接口QA/精确probe；C未正式EDA。plainSHA anchor检测可信本地写入下漂移，不是签名或抗任意整目录重写的授权。
+
+
+## 2026-10-16 并发实验审计的N不能推断具体对象集合（LOG74）
+
+C′v3审计期间运行继续完成。MATRIX_AUDIT_36实际为三电路各9、s420八臂加s713W0；实时后来四电路各9完成，不能倒推旧36快照也覆盖那四电路。原stdout/receipt及单对象验收一致，属于审计集合时点与记录推断问题，不是生产/科学失败。先按receipt明确对象范围并保留原件，再用新auditor在开始冻结eligible pair+completion SHA、结束重核以形成有定义的快照；新N另存，不重写旧报告“凑齐”。
+
+
+## 2026-10-16 双栏PDF回读先区分提取顺序与版式缺陷（OI043/LOG80）
+
+中文page7整页pdftotext-layout把左右栏交错，拼接空白不能恢复周期设置句；这是提取方法问题，不能据此判断句子丢失、版式失败或科学结果错误。保留首READBACK_PROCEDURAL_FAILURE/原全页文本，改用实际左栏crop回读并对照渲染页。时钟元数据修正同时核beforeafter完整14表块/7图引用不变、两遍编译/38页视觉与各PDF副本SHA，才关闭说明门；不能连带关闭历史科学缺口。新命名build路径此前不存在时保留路径说明，从仍完整canonical preview保旧PDF字节后再同步。
+
+
+## 2026-10-16 历史QA源码须在后续修改前按字节备份（OI044）
+
+证据内适配器也属于被测源码。B3旧24/44阶段保留QA日志但未备份对应adapter/tests；2277文件与3ZIP负查找无四目标SHA，不能把当前51QA源码反向重构成旧原件或声称历史可重放。当前51 source/receipt身份独立成立。C修前六原件按before manifest、旧review及旧QA SHA保真快照后才修，可避免同类身份缺口；新区域census首失败与v2也各自exact source归档。负查找与缺失限制须持续保留，不伪造恢复。
+
+
+## 2026-10-18 最终矩阵验收：计数集合与源码身份以实际收据为准
+
+- **现象**：旧current文档停在51运行中，恢复时已有72 completion；另有54快照尚未入记录。仅看完成文件数不能替代最终逐对象审计。主线首次手填完整期望SHA错误导致预飞assert拒绝，实际脚本无变化。
+- **归因与处理**：将期望SHA来源改为实际打开既有MATRIX_AUDIT_54.audit_sha256逐字比较，而非手抄；重新实际启动冻结开始对象集合的v2审计器，不重跑已完成EDA。旧51/54与失败原件保留，不回写扩大范围。
+- **验证**：MATRIX_AUDIT_72 SHAa34da9c3…为72/72、source_stable和all_matrix_verified true；8458评估、6858candidate+72baseline=6930过程、other0、192提交；72completion当前SHA全匹配，endpoint SEC均非零proven/0unproven。stage72五原件SHA独立保真。仅当前已登记支持域闭合，B3/C/D及四态/历史S/SPEF仍各守独立证据门。
+
+
+## 2026-10-18 审计器也须反证：合法!与信号B1不能报模型错误
+
+旧S审计把258 filtered模型标defect，根因Python evaluator不能解析合法Verilog !，不是模型被证伪；独立新parser首版又把B1信号误滤为常量造成314unknown。明确真值表正/负控及B1与1'b1区分后，V2对258文件1032组合条目全match/0mismatch/unknown（V2_REVIEW ed32cbe1…），旧失败原件保留。此结论仅二值组合输出函数，不扩大到顺序/XZ或整机。真正S非法接受链/CEC pre-post覆盖与SPEF驱动/双侧连接/报告顺序另待修，不以审计器错误掩盖。
+
+## 2026-10-18 图件人工无碰撞结论须接受自动几何反例
+
+完整矩阵v1人工与独立视觉均未发现标签问题，但自动COLLISION_AUDIT给出6处旋转tick bbox overlap/FIX BEFORE DELIVERY。原人工报告保留，不回写为未通过；当前交付门改为未过。数据CSV/图源重现一致、面板对齐通过，问题归因到标签几何而非数据/EDA；另出v2、重跑字形/碰撞/对齐/视觉与数据验收后才能闭合，当前尚待。
+
+几何修复后验追加（LOG12）：最新v3源d9ef05b…/FINAL_REVIEW32ff889a…保存最终14文件SHA；raw/paired CSV逐字节不变、collision0/对齐PASS/最小6.8pt、root实际视觉与partial51提前拒绝都过。仅此几何门关闭，独立v3视觉追加和正式稿整合另验，原v1/先前错误判断继续保留。

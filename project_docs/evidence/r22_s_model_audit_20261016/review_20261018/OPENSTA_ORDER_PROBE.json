@@ -1,0 +1,16 @@
+{
+  "production_source_sha256": "95825d962349c11a16be6f69e1b11fcf1184dcf48474e466337be7db3f13d41c",
+  "generated_tcl": "read_liberty /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\nread_verilog /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_model_audit_20261016/review_20261018/not_executed_mapped.v\nlink_design top\ncreate_clock -name clk -period 0.5 [get_ports CK]\nreport_checks -path_delay max\nread_spef /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_model_audit_20261016/review_20261018/not_executed.spef\nputs \"TNS_BEGIN\"\nreport_tns\nputs \"TNS_END\"\nreport_worst_slack -max\nreport_worst_slack -min\n",
+  "return_value": {
+    "slack": null,
+    "slack_status": null,
+    "wns": null,
+    "tns": null,
+    "min_slack": null,
+    "min_slack_status": null,
+    "error": "OpenSTA command not found: probe-missing"
+  },
+  "external_process_calls": 0,
+  "source_stable": true,
+  "confirmed": "first path report is ideal; worst-slack report follows parasitic annotation"
+}

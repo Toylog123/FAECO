@@ -1,0 +1,387 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py -q --basetemp=project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_attempt_red_tmp
+........................FFFFFFFFFF                                       [100%]
+================================== FAILURES ===================================
+_________ test_STA_retry_keeps_exact_prelaunch_bytes_and_full_outputs _________
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C82FB50>
+
+    def test_STA_retry_keeps_exact_prelaunch_bytes_and_full_outputs(env,monkeypatch):
+        manifest,out,script,command=_sta_setup(env);raw=(out/'mapped.v').read_bytes();tcl=script.read_bytes()
+        answers=[SimpleNamespace(returncode=1,stdout='truncated first\n',stderr='first error\n'),
+                 SimpleNamespace(returncode=0,stdout='second WNS -1\n'+'x'*100000,stderr='second warning\n')]
+        calls=[]
+        def process(cmd,*args,**kwargs):
+            assert cmd is command and kwargs=={'capture_output':True,'text':True,'timeout':900}
+            calls.append(cmd);return answers[len(calls)-1]
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():
+            for answer in answers:
+                observed=a.subprocess.run(command,capture_output=True,text=True,timeout=900)
+                assert observed is answer
+                (out/'sta.log').write_text(answer.stdout+answer.stderr)
+            return 0
+        monkeypatch.setattr(a.runner,'main',run)
+        assert a.guarded_runner(manifest,'b09')==0
+        events=_trace(out);assert len(events)==4 and len(calls)==2
+        for index,answer in enumerate(answers,1):
+            attempt=out/'sta_attempts'/f'{index:06d}'
+>           assert (attempt/'sta.tcl').read_bytes()==tcl
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:291: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1050: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...tempt_red_tmp/test_STA_retry_keeps_exact_pre0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/sta_attempts/000001/sta.tcl')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_attempt_red_tmp\\test_STA_retry_keeps_exact_pre0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\sta_attempts\\000001\\sta.tcl'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+_ test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return[netlist] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C8BC9D0>
+changed = 'netlist'
+
+    @pytest.mark.parametrize('changed',['netlist','script','library'])
+    def test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return(env,monkeypatch,changed):
+        manifest,out,script,command=_sta_setup(env);answer=SimpleNamespace(returncode=0,stdout='WNS -1',stderr='')
+        original={'netlist':out/'mapped.v','script':script,'library':a.LIB}[changed]
+        before=original.read_bytes();seen=[]
+        def process(*args,**kwargs):original.write_bytes(before+b'\nchanged');return answer
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():seen.append(a.subprocess.run(command) is answer);return 0
+        monkeypatch.setattr(a.runner,'main',run)
+>       with pytest.raises(RuntimeError,match='drift'):a.guarded_runner(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:312: Failed
+_ test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return[script] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C960A10>
+changed = 'script'
+
+    @pytest.mark.parametrize('changed',['netlist','script','library'])
+    def test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return(env,monkeypatch,changed):
+        manifest,out,script,command=_sta_setup(env);answer=SimpleNamespace(returncode=0,stdout='WNS -1',stderr='')
+        original={'netlist':out/'mapped.v','script':script,'library':a.LIB}[changed]
+        before=original.read_bytes();seen=[]
+        def process(*args,**kwargs):original.write_bytes(before+b'\nchanged');return answer
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():seen.append(a.subprocess.run(command) is answer);return 0
+        monkeypatch.setattr(a.runner,'main',run)
+>       with pytest.raises(RuntimeError,match='drift'):a.guarded_runner(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:312: Failed
+_ test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return[library] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C883710>
+changed = 'library'
+
+    @pytest.mark.parametrize('changed',['netlist','script','library'])
+    def test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return(env,monkeypatch,changed):
+        manifest,out,script,command=_sta_setup(env);answer=SimpleNamespace(returncode=0,stdout='WNS -1',stderr='')
+        original={'netlist':out/'mapped.v','script':script,'library':a.LIB}[changed]
+        before=original.read_bytes();seen=[]
+        def process(*args,**kwargs):original.write_bytes(before+b'\nchanged');return answer
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():seen.append(a.subprocess.run(command) is answer);return 0
+        monkeypatch.setattr(a.runner,'main',run)
+>       with pytest.raises(RuntimeError,match='drift'):a.guarded_runner(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:312: Failed
+____ test_STA_exception_identity_and_partial_output_are_preserved[timeout] ____
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C844810>
+kind = 'timeout'
+
+    @pytest.mark.parametrize('kind',['timeout','oserror'])
+    def test_STA_exception_identity_and_partial_output_are_preserved(env,monkeypatch,kind):
+        manifest,out,script,command=_sta_setup(env)
+        error=a.subprocess.TimeoutExpired(command,900,output=b'partial\x00\xff',stderr=b'error\xfe') if kind=='timeout' else OSError('launch denied')
+        def process(*args,**kwargs):raise error
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():a.subprocess.run(command)
+        monkeypatch.setattr(a.runner,'main',run)
+        with pytest.raises(type(error)) as raised:a.guarded_runner(manifest,'b09')
+        assert raised.value is error
+>       attempt=out/'sta_attempts/000001';result=a.read_json(attempt/'result.json')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:53: in read_json
+    def read_json(path):return json.loads(Path(path).read_text(encoding='utf-8-sig'))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...t_red_tmp/test_STA_exception_identity_an0/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/sta_attempts/000001/result.json')
+mode = 'r', buffering = -1, encoding = 'utf-8-sig', errors = None
+newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_attempt_red_tmp\\test_STA_exception_identity_an0\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\sta_attempts\\000001\\result.json'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+____ test_STA_exception_identity_and_partial_output_are_preserved[oserror] ____
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66CADC9D0>
+kind = 'oserror'
+
+    @pytest.mark.parametrize('kind',['timeout','oserror'])
+    def test_STA_exception_identity_and_partial_output_are_preserved(env,monkeypatch,kind):
+        manifest,out,script,command=_sta_setup(env)
+        error=a.subprocess.TimeoutExpired(command,900,output=b'partial\x00\xff',stderr=b'error\xfe') if kind=='timeout' else OSError('launch denied')
+        def process(*args,**kwargs):raise error
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():a.subprocess.run(command)
+        monkeypatch.setattr(a.runner,'main',run)
+        with pytest.raises(type(error)) as raised:a.guarded_runner(manifest,'b09')
+        assert raised.value is error
+>       attempt=out/'sta_attempts/000001';result=a.read_json(attempt/'result.json')
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:329: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:53: in read_json
+    def read_json(path):return json.loads(Path(path).read_text(encoding='utf-8-sig'))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_AD...t_red_tmp/test_STA_exception_identity_an1/evidence/B3_RECONSTRUCTION_RUNS/new_run/b09/sta_attempts/000001/result.json')
+mode = 'r', buffering = -1, encoding = 'utf-8-sig', errors = None
+newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B3_RECONSTRUCTION_ADAPTER\\qa_attempt_red_tmp\\test_STA_exception_identity_an1\\evidence\\B3_RECONSTRUCTION_RUNS\\new_run\\b09\\sta_attempts\\000001\\result.json'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+______ test_STA_existing_attempt_directory_never_overwritten_or_launched ______
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C90E350>
+
+    def test_STA_existing_attempt_directory_never_overwritten_or_launched(env,monkeypatch):
+        manifest,out,script,command=_sta_setup(env);attempt=out/'sta_attempts/000001';attempt.mkdir(parents=True)
+        sentinel=attempt/'netlist.v';sentinel.write_bytes(b'old immutable evidence');calls=[]
+        monkeypatch.setattr(a.subprocess,'run',lambda *args,**kwargs:calls.append(args))
+        monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+>       with pytest.raises((RuntimeError,FileExistsError)):a.guarded_runner(manifest,'b09')
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:341: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:385: in guarded_runner
+    return runner.main()
+           ^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:340: in <lambda>
+    monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['wsl.exe', '-d', 'Ubuntu', '--', '/usr/local/bin/sta', '-no_splash', ...]
+args = (), kwargs = {}
+
+    def observed_run(command,*args,**kwargs):
+        nonlocal seq
+        argv=list(command) if isinstance(command,(tuple,list)) else []
+        is_sta=any(re.search(r'(?:^|[/\\])sta(?:\.exe)?$',str(token)) for token in argv)
+        if not is_sta:return original_run(command,*args,**kwargs)
+        script=str(argv[-1]);prefix=common._to_wsl(ROOT).rstrip('/')+'/'
+        if script.startswith(prefix):script=str(ROOT/script[len(prefix):])
+        with lock:seq+=1;identity=seq
+        emit({'event':'launch','id':identity,'command':argv,'script':script,'script_sha256':sha(script)})
+        try:
+            answer=original_run(command,*args,**kwargs)
+>           emit({'event':'return','id':identity,'returncode':answer.returncode});return answer
+                                                              ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'returncode'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:379: AttributeError
+_ test_STA_unknown_or_dynamic_TCL_rejected_without_guessing[source /tmp/extra.tcl\n] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66CBD0910>
+suffix = 'source /tmp/extra.tcl\n'
+
+    @pytest.mark.parametrize('suffix',['source /tmp/extra.tcl\n','read_verilog /tmp/other.v\n','read_liberty $LIB\n'])
+    def test_STA_unknown_or_dynamic_TCL_rejected_without_guessing(env,monkeypatch,suffix):
+        manifest,out,script,command=_sta_setup(env);script.write_text(script.read_text()+suffix);calls=[]
+        monkeypatch.setattr(a.subprocess,'run',lambda *args,**kwargs:calls.append(args))
+        monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+>       with pytest.raises((RuntimeError,ValueError)):a.guarded_runner(manifest,'b09')
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:350: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:385: in guarded_runner
+    return runner.main()
+           ^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:349: in <lambda>
+    monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['wsl.exe', '-d', 'Ubuntu', '--', '/usr/local/bin/sta', '-no_splash', ...]
+args = (), kwargs = {}
+
+    def observed_run(command,*args,**kwargs):
+        nonlocal seq
+        argv=list(command) if isinstance(command,(tuple,list)) else []
+        is_sta=any(re.search(r'(?:^|[/\\])sta(?:\.exe)?$',str(token)) for token in argv)
+        if not is_sta:return original_run(command,*args,**kwargs)
+        script=str(argv[-1]);prefix=common._to_wsl(ROOT).rstrip('/')+'/'
+        if script.startswith(prefix):script=str(ROOT/script[len(prefix):])
+        with lock:seq+=1;identity=seq
+        emit({'event':'launch','id':identity,'command':argv,'script':script,'script_sha256':sha(script)})
+        try:
+            answer=original_run(command,*args,**kwargs)
+>           emit({'event':'return','id':identity,'returncode':answer.returncode});return answer
+                                                              ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'returncode'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:379: AttributeError
+_ test_STA_unknown_or_dynamic_TCL_rejected_without_guessing[read_verilog /tmp/other.v\n] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C86C250>
+suffix = 'read_verilog /tmp/other.v\n'
+
+    @pytest.mark.parametrize('suffix',['source /tmp/extra.tcl\n','read_verilog /tmp/other.v\n','read_liberty $LIB\n'])
+    def test_STA_unknown_or_dynamic_TCL_rejected_without_guessing(env,monkeypatch,suffix):
+        manifest,out,script,command=_sta_setup(env);script.write_text(script.read_text()+suffix);calls=[]
+        monkeypatch.setattr(a.subprocess,'run',lambda *args,**kwargs:calls.append(args))
+        monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+>       with pytest.raises((RuntimeError,ValueError)):a.guarded_runner(manifest,'b09')
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:350: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:385: in guarded_runner
+    return runner.main()
+           ^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:349: in <lambda>
+    monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['wsl.exe', '-d', 'Ubuntu', '--', '/usr/local/bin/sta', '-no_splash', ...]
+args = (), kwargs = {}
+
+    def observed_run(command,*args,**kwargs):
+        nonlocal seq
+        argv=list(command) if isinstance(command,(tuple,list)) else []
+        is_sta=any(re.search(r'(?:^|[/\\])sta(?:\.exe)?$',str(token)) for token in argv)
+        if not is_sta:return original_run(command,*args,**kwargs)
+        script=str(argv[-1]);prefix=common._to_wsl(ROOT).rstrip('/')+'/'
+        if script.startswith(prefix):script=str(ROOT/script[len(prefix):])
+        with lock:seq+=1;identity=seq
+        emit({'event':'launch','id':identity,'command':argv,'script':script,'script_sha256':sha(script)})
+        try:
+            answer=original_run(command,*args,**kwargs)
+>           emit({'event':'return','id':identity,'returncode':answer.returncode});return answer
+                                                              ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'returncode'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:379: AttributeError
+_ test_STA_unknown_or_dynamic_TCL_rejected_without_guessing[read_liberty $LIB\n] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001F66C82F790>
+suffix = 'read_liberty $LIB\n'
+
+    @pytest.mark.parametrize('suffix',['source /tmp/extra.tcl\n','read_verilog /tmp/other.v\n','read_liberty $LIB\n'])
+    def test_STA_unknown_or_dynamic_TCL_rejected_without_guessing(env,monkeypatch,suffix):
+        manifest,out,script,command=_sta_setup(env);script.write_text(script.read_text()+suffix);calls=[]
+        monkeypatch.setattr(a.subprocess,'run',lambda *args,**kwargs:calls.append(args))
+        monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+>       with pytest.raises((RuntimeError,ValueError)):a.guarded_runner(manifest,'b09')
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:350: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:385: in guarded_runner
+    return runner.main()
+           ^^^^^^^^^^^^^
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:349: in <lambda>
+    monkeypatch.setattr(a.runner,'main',lambda:a.subprocess.run(command))
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+command = ['wsl.exe', '-d', 'Ubuntu', '--', '/usr/local/bin/sta', '-no_splash', ...]
+args = (), kwargs = {}
+
+    def observed_run(command,*args,**kwargs):
+        nonlocal seq
+        argv=list(command) if isinstance(command,(tuple,list)) else []
+        is_sta=any(re.search(r'(?:^|[/\\])sta(?:\.exe)?$',str(token)) for token in argv)
+        if not is_sta:return original_run(command,*args,**kwargs)
+        script=str(argv[-1]);prefix=common._to_wsl(ROOT).rstrip('/')+'/'
+        if script.startswith(prefix):script=str(ROOT/script[len(prefix):])
+        with lock:seq+=1;identity=seq
+        emit({'event':'launch','id':identity,'command':argv,'script':script,'script_sha256':sha(script)})
+        try:
+            answer=original_run(command,*args,**kwargs)
+>           emit({'event':'return','id':identity,'returncode':answer.returncode});return answer
+                                                              ^^^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'returncode'
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\adapter.py:379: AttributeError
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_retry_keeps_exact_prelaunch_bytes_and_full_outputs
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return[netlist]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return[script]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_input_drift_is_recorded_and_rejects_guard_after_preserving_return[library]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_exception_identity_and_partial_output_are_preserved[timeout]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_exception_identity_and_partial_output_are_preserved[oserror]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_existing_attempt_directory_never_overwritten_or_launched
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_unknown_or_dynamic_TCL_rejected_without_guessing[source /tmp/extra.tcl\n]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_unknown_or_dynamic_TCL_rejected_without_guessing[read_verilog /tmp/other.v\n]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_unknown_or_dynamic_TCL_rejected_without_guessing[read_liberty $LIB\n]
+10 failed, 24 passed in 9.02s
+[run] 完成（10s），退出码 1

@@ -1,0 +1,3161 @@
+{
+  "schema": "r22-S-static-object-model-audit-v1",
+  "created_utc": "2026-10-16T07:37:10.540441+00:00",
+  "head_from_frozen_production_manifest": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "production_source_pin": {
+    "code/src/rseco/__init__.py": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd",
+    "code/src/rseco/abc_baseline.py": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+    "code/src/rseco/adaptive_selector.py": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+    "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+    "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+    "code/src/rseco/case_loader.py": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+    "code/src/rseco/cut.py": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+    "code/src/rseco/electrical.py": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+    "code/src/rseco/equivalence.py": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+    "code/src/rseco/failures.py": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+    "code/src/rseco/feedback.py": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/src/rseco/gate_sizing.py": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/hold_repair.py": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+    "code/src/rseco/logic_rewrite.py": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+    "code/src/rseco/metrics.py": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+    "code/src/rseco/netlist_audit.py": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+    "code/src/rseco/netlist_io.py": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+    "code/src/rseco/opensta.py": "95825d962349c11a16be6f69e1b11fcf1184dcf48474e466337be7db3f13d41c",
+    "code/src/rseco/patch.py": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+    "code/src/rseco/proxy_ranking.py": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+    "code/src/rseco/ranking.py": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+    "code/src/rseco/real_wns.py": "812bafab38f44c889ecb32b5503509b5a0d8e5ed78052507ffcf4a326a92918e",
+    "code/src/rseco/refinement.py": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+    "code/src/rseco/refinement_loop.py": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+    "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+    "code/src/rseco/sdc.py": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+    "code/src/rseco/search_state.py": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+    "code/src/rseco/spef.py": "5992fea68f71009fbc9fbf9e498d4ca4dc3e1d7225ae6fb2ec109a1240d95db5",
+    "code/src/rseco/sta_ledger.py": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+    "code/src/rseco/strategy_selector.py": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+    "code/src/rseco/structure_resynthesis.py": "e3dd0a4792bc805479bb7398875bec4b3b1211158305dbd9a18046214ed5e82f",
+    "code/src/rseco/technology_mapping.py": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+    "code/src/rseco/toolchain.py": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+    "code/src/rseco/verilog_modules.py": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+    "code/src/rseco/yosys_abc.py": "26bb65d7c002a7fb32f50c16a4a70f33cfe6d753c4712e1d250c559317cdc2a5",
+    "code/src/rseco/yosys_json.py": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+    "code/src/rseco/z3_formal.py": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+    "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+    "code/scripts/run_r22_cut_ablation.py": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+    "code/scripts/run_sequential_timing_check.py": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+    "code/scripts/run_with_timeout.sh": "6f22e8a0291afbe26b0f00fbc1ee410b4de8ae999995395b2e034aef2f1338f6"
+  },
+  "eda_executed": false,
+  "git_invoked": false,
+  "external_process_calls": 0,
+  "source_stable": true,
+  "source_files": 1907,
+  "unique_text_objects": 366,
+  "S_records": 126,
+  "paired_runs": 8,
+  "totals": {
+    "S_records": 126,
+    "depth_metadata_reduced": 76,
+    "accepted": 0,
+    "base_bound": 126,
+    "base_all_module_closure_pass": 14,
+    "candidate_all_module_closure_pass": 10,
+    "candidate_required_inputs_pass": 126,
+    "candidate_two_state_supported": 126,
+    "candidate_exact_STA_bound": 126,
+    "wns_positive": 0,
+    "wns_zero": 36,
+    "wns_negative": 90
+  },
+  "per_circuit": {
+    "s27": {
+      "S_records": 2,
+      "depth_metadata_reduced": 0,
+      "accepted": 0,
+      "base_bound": 2,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 2,
+      "candidate_required_inputs_pass": 2,
+      "candidate_two_state_supported": 2,
+      "candidate_exact_STA_bound": 2
+    },
+    "s382": {
+      "S_records": 32,
+      "depth_metadata_reduced": 27,
+      "accepted": 0,
+      "base_bound": 32,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 0,
+      "candidate_required_inputs_pass": 32,
+      "candidate_two_state_supported": 32,
+      "candidate_exact_STA_bound": 32
+    },
+    "s420": {
+      "S_records": 6,
+      "depth_metadata_reduced": 1,
+      "accepted": 0,
+      "base_bound": 6,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 0,
+      "candidate_required_inputs_pass": 6,
+      "candidate_two_state_supported": 6,
+      "candidate_exact_STA_bound": 6
+    },
+    "s641": {
+      "S_records": 0,
+      "depth_metadata_reduced": 0,
+      "accepted": 0,
+      "base_bound": 0,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 0,
+      "candidate_required_inputs_pass": 0,
+      "candidate_two_state_supported": 0,
+      "candidate_exact_STA_bound": 0
+    },
+    "s713": {
+      "S_records": 22,
+      "depth_metadata_reduced": 15,
+      "accepted": 0,
+      "base_bound": 22,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 0,
+      "candidate_required_inputs_pass": 22,
+      "candidate_two_state_supported": 22,
+      "candidate_exact_STA_bound": 22
+    },
+    "s820": {
+      "S_records": 14,
+      "depth_metadata_reduced": 7,
+      "accepted": 0,
+      "base_bound": 14,
+      "base_all_module_closure_pass": 14,
+      "candidate_all_module_closure_pass": 6,
+      "candidate_required_inputs_pass": 14,
+      "candidate_two_state_supported": 14,
+      "candidate_exact_STA_bound": 14
+    },
+    "s832": {
+      "S_records": 17,
+      "depth_metadata_reduced": 5,
+      "accepted": 0,
+      "base_bound": 17,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 0,
+      "candidate_required_inputs_pass": 17,
+      "candidate_two_state_supported": 17,
+      "candidate_exact_STA_bound": 17
+    },
+    "s953": {
+      "S_records": 33,
+      "depth_metadata_reduced": 21,
+      "accepted": 0,
+      "base_bound": 33,
+      "base_all_module_closure_pass": 0,
+      "candidate_all_module_closure_pass": 2,
+      "candidate_required_inputs_pass": 33,
+      "candidate_two_state_supported": 33,
+      "candidate_exact_STA_bound": 33
+    }
+  },
+  "paired_endpoints": [
+    {
+      "circuit": "s27",
+      "on_final_text_sha256": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+      "off_final_text_sha256": "49b0a840581fdd36260df1d14b6d32d709fa83dd65bb230590a9219a13c84037",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s382",
+      "on_final_text_sha256": "7e94bef1a0a85d85371b22ac9d895d42309735c832d934442f15143dd6d3b3b6",
+      "off_final_text_sha256": "7e94bef1a0a85d85371b22ac9d895d42309735c832d934442f15143dd6d3b3b6",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s420",
+      "on_final_text_sha256": "baeb8783a154dbbebf2184ba93a2f6b532349fc76d5245efa61f026a68d1c7a4",
+      "off_final_text_sha256": "baeb8783a154dbbebf2184ba93a2f6b532349fc76d5245efa61f026a68d1c7a4",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s641",
+      "on_final_text_sha256": "58406e0f2a811ab91247beea43673140ef29d2ed6811574d19f57b1094955d4a",
+      "off_final_text_sha256": "58406e0f2a811ab91247beea43673140ef29d2ed6811574d19f57b1094955d4a",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s713",
+      "on_final_text_sha256": "fb5926e2e2416ff03102814caa2b25768d3fad92c5bf763d2767704adbe4a943",
+      "off_final_text_sha256": "fb5926e2e2416ff03102814caa2b25768d3fad92c5bf763d2767704adbe4a943",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s820",
+      "on_final_text_sha256": "4abfd6241ba27b44d514debdf5b7821d2010bc7620218688c69685915841e1ab",
+      "off_final_text_sha256": "4abfd6241ba27b44d514debdf5b7821d2010bc7620218688c69685915841e1ab",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": true,
+      "off_final_all_module_closure_pass": true
+    },
+    {
+      "circuit": "s832",
+      "on_final_text_sha256": "9ff9302f0e9126df567bab0f08b5d6ce12d9109e6698e9b235dbd7e3454dd86e",
+      "off_final_text_sha256": "9ff9302f0e9126df567bab0f08b5d6ce12d9109e6698e9b235dbd7e3454dd86e",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": true,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    },
+    {
+      "circuit": "s953",
+      "on_final_text_sha256": "e3cf83e84bdaa4c376516fe2f218de92050161167f3b04c2d4118a7eecc7f79d",
+      "off_final_text_sha256": "e3cf83e84bdaa4c376516fe2f218de92050161167f3b04c2d4118a7eecc7f79d",
+      "final_full_text_equal": true,
+      "endpoint_wns_equal": false,
+      "on_final_all_module_closure_pass": false,
+      "off_final_all_module_closure_pass": false
+    }
+  ],
+  "old_CEC_filtered_model_files": 258,
+  "old_CEC_model_defect_files": {
+    "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21boi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21boi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21boi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21boi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21boi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s27/case/results/structure_resynth/round002/G10_3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21boi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/C3_Q3VD_9g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ba_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/C3_Q3VD_9g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/C3_Q3VD_9g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ba_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_026__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_026__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_026__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_026__1g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_026__1g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_026__1g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_015__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_015__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_015__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_015__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_015__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round008/_015__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round009/_015__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_015__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_015__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_015__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_016__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_016__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_016__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_017__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_017__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o211ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_017__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_017__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_017__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o211ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_017__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_015__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_015__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round010/_015__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_016__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_016__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_016__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_026__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_026__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_026__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/C3_Q3VD_2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ba_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/C3_Q3VD_2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ba_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/C3_Q3VD_2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ba_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o211ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o211ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_016__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_016__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_016__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o211ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s382/case/results/structure_resynth/round011/_017__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_022__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_022__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_022__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_019__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__inv_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_019__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_019__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__inv_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/I307_3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/I307_3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/I307_3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_019__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_019__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_019__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/I307_5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/I307_5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/I307_5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_022__1g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_022__1g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s420/case/results/structure_resynth/round020/_022__1g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_029__1g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_029__1g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_029__1g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_014__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_014__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a2111oi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_014__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_016__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_016__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__and4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_016__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_042__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_042__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_042__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_016__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_016__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_016__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_019__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_019__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__and4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_019__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_042__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_042__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__and4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round003/_042__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_043__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_043__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4bb_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_043__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/G126_6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/G126_6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21bo_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o41ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/G126_6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_016__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_016__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_016__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_003__7g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_003__7g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_003__7g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_043__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_043__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__and4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_043__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_016__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_016__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a211oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_016__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_019__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_019__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round004/_019__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_019__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_019__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_019__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_019__7g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_019__7g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_019__7g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_003__8g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_003__8g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/_003__8g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__a21oi_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/G126_6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/G126_6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o22ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/G126_6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/G126_7g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/G126_7g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a21oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s713/case/results/structure_resynth/round005/G126_7g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o32ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_106__1g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_106__1g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_106__1g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_106__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_106__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_106__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_039__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_039__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4bb_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_039__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_039__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_039__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round003/_039__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/G99_5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/G99_5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/G99_5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s820/case/results/structure_resynth/round004/_039__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__1g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__1g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__1g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_092__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_092__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_092__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_004__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/G292_2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/G292_2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/G292_2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_092__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_092__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round006/_092__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/_092__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/_092__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/_092__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/G292_3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/G292_3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/G292_3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/_092__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/_092__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a2111oi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/_092__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/G292_4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/G292_4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a2111oi_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round007/G292_4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round008/_060__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round008/_060__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s832/case/results/structure_resynth/round008/_060__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/II23_15g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/II23_15g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o2111ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/II23_15g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_2": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o21ai_0": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_132__1g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_132__1g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_132__1g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__2g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__2g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__2g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round006/_143__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__3g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__3g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__3g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_143__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round007/_148__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__7g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__7g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__7g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round008/_148__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_4": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_148__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__xor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_148__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__or4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__xor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_148__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__xor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__4g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__4g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__clkinv_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__o22ai_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__4g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__5g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__5g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__5g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round009/_156__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__lpflow_isobufsrc_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round010/_156__6g/S0/cec_left_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round010/_156__6g/S0/cec_right_cells.v": {
+      "sky130_fd_sc_hd__a31oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor4b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    },
+    "experiments/20260928_s_l1_ablation/on/s953/case/results/structure_resynth/round010/_156__6g/S0/window_cells.v": {
+      "sky130_fd_sc_hd__a32oi_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand2b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nand3b_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor2_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ],
+      "sky130_fd_sc_hd__nor3_1": [
+        "unsupported_model_expression:invalid syntax (<unknown>, line 1)"
+      ]
+    }
+  },
+  "old_full_model_path": "data/raw/benchmarks/raw/skywater_cells_models/sky130_cells_v2.v",
+  "old_full_model_sha256": "fd864f3ba0776f34a0faf475f733418ffa2b30adead703eaade390c4675fcefc",
+  "actual_liberty_sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+  "runtime_s": 351.14100000000326,
+  "limits": [
+    "Static closure is not functional SEC.",
+    "Old logs identify paths, not runtime input SHA; retained SHA is not fabricated runtime identity.",
+    "CEC_PRE/POST and before/after LTP reuse output paths in retained producer; only retained actual command is credited.",
+    "Defective host bases do not imply every S candidate is itself invalid.",
+    "No repaired/replayed candidate or new timing result was created."
+  ]
+}

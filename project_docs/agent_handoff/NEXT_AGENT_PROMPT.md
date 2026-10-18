@@ -1,16 +1,22 @@
-# NEXT AGENT PROMPT — 当前2026-10-16 LOG-29
+# NEXT AGENT PROMPT — 当前2026-10-18
 
-用户已明确恢复r22，10-14暂停为历史。先按本目录README读当前七段handoff_20261016_r22.md和状态/任务，再读OPEN_ISSUES、EXPERIENCE与EXPERIMENT_REGISTRY。
+用户于2026-10-18明确“继续推进 做好记录”，当前授权为继续执行。唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main与origin/main仍为 `3ea0f757f5e9bab4a2df75c458b0c665eabcb258`。本地稿件、适配器、图预览与证据记录有未提交改动，尚未push；主线要求归档、出图与提交审查齐前继续保持源pin，不恢复已结束的session9345。
 
-当前完整v8已969pass/4skip/156subtests，155.12s/wrapper157.969exit0、170来源SHA稳定/PYTHONUTF8=1，JSON/JUnit/log实读。原始精确V3 reset→set fail/Gpass/R0/parsed1/1/source稳定，公共唯一性opt-in scope限定30pass；OI040/041实现门关闭，原反例/失败receipt/旧v7保留，科学完整性不升级。B3/C恢复ADAPTER仍WIP不纳本次commit，范围外四态/历史配置等pending保持。records冻结docs供阶段commit/push→同HEAD注册C′v3→实际map8/静态门→18pilot；当前未注册/无mapping或STA。
+**C′v3全72已独立验收。** `project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json`（SHA `a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738`）实核8电路×9臂、all_matrix_verified/source_stable/completion_set_frozen_at_start均true，72个当前completion SHA匹配。8458候选评估记录、6858 candidate_ideal STA+72初始baseline=6930实际STA过程，other0，192保留提交；每终点独立SEC均非零proven/0unproven。physical/electrical/S均false，不能称物理STA。最终审计exit0/runtime46.546s；剩54原运行wrapper3728s/exit0。stage72五件script/log/invocation/receipt/原运行log保真归档；旧51/54/v1失败/v2仅注册原件不覆盖。
 
-当前main/origin=ddb4c33（生产代码同已验收02e82a2），代码完整v8=969pass/4skip/156subtests、155.12s/170来源SHA稳定/PYTHONUTF8=1，新pin正式9控制预期全符合（3正/3负/2unsupported/1input_error），后验44source/LIB/driver无漂移。不能说9个等价证明或三态支持通过；unsupported是临时二态能力门，显式四态编码恢复路径仍open。
+当前接受协议是严格WNS改善并满足TNS不退化等既有硬约束；--tns-aware改变平局选择，不关闭setup_tns预算。零收益与不利结果保留，不调参制造正结果。完整16个weighted/uniform配对已按所有重复同base轮独立核查，5454次交叉比较cut/pool/dispatch全同、16终点全文同（FIGURE_CPRIME_REVIEW269205b9…）；本矩阵未观察到独立权重收益，重复轮不是独立统计样本。新C′不替代旧B3/C/D。
 
-A6真实SEC补证/三态交集空已完成，历史runtimehash不补造；B旧28对象绑定真但5有使用模型缺口，B2已在44d20bb新模型双pair pass，core6.078s+7X identity、mul0.750s+0X，wrapper16exit0/source稳定，后验rawbytes/完整decoded/artifact/动态cert均真。checker独立20负全拒/5of6正接受，escaped output保守误拒不影响actualB2；限定two-state SEC+孤立constant-X identity，不泛化四态/复位等价。OI038新模型缺证已补、旧runtime身份不补造，B3仍待同族恢复。然后稳定证据/source pin，注册C′v3→actual mapped复查→18pilot全过才扩72，D56预飞56/56已过但D14pilot待，C按同族恢复。C′v2仅注册禁执行，v1/v2原件不改，新矩阵尚未注册，无STA/pilot。B3/D/C、三态真实支持及稿图声明仍待，不跨族填补，不弱化科学结论应付。
+完整v8历史收据为969pass/4skip/156subtests、170源码SHA稳定，OI040/041实现门closed；A6/B2/B17实际对象新证明已各自绑定原pin，B3主线51QA及C作者84/独立注册38QA、原OI042反例拒绝仅关闭工具实现门，尚未新clean pin正式登记同族EDA。四态支持仍open，实际三态/显式Z/switch须unsupported非pass。中英稿时钟元数据OI043已两遍编译/38p视觉/副本验收，仅设置说明门closed；科学回填和投稿声明仍待。
 
-B17新增恢复：B17_PROOF_RECOVERY_DESIGN.json已实读新common完整模型+flatten/assert真SEC返回pass（13.375s、12879proven/0unproven），源HEADddb4c33/原件稳定；主线POST_RUN_VERIFICATION已完成：原bytes/完整decoded/唯一nor4b尺寸变化/全部artifacts与44source全匹配，12879/0实log成功，producerJSON acaf5f…哈希已核。旧未flatten/NoSATmodel实证不能简写为find_same_wires已证伪阴性。首map.ys CP936预飞读UTF8失败在SEC前；严格CP936保字节SHA后才运行，旧schema无state text/hash不补造。
+| ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
+|---|---|---|---|---|---|
+| P02 | C′最终图正式稿件整合 | pending | P1 | 主稿引用/图注/版式与科学证据对应 | v3独立71d9a480…、数据/几何/字形/root与独立视觉已验收；待其他历史族科学门齐后整合 |
+| P03 | 阶段commit/push与新clean pin | pending | P0 | reviewed改动及保真包全部入库/远端可查 | v3独立视觉追加/提交审查齐后由主线提交，当前HEAD仍3ea0f75 |
+| P04 | B3/C/D同族科学复验 | pending | P0 | 各族独立新pin/配置/实际EDA/计数/SEC验收 | 提交适配器后新登记；D先14pilot再余42，不用C′代替 |
+| P05 | 四态支持及历史S/SPEF风险 | in_progress | P0 | 能力反例与冻结历史对象报告闭环 | 四态继续unsupported；冻结S/SPEF审计已出，commit后修CEC/SPEF实现再全回归/同族重验 |
+| P06 | 中英稿图/声明最终回填 | pending | P1 | 同族证据回填、图表/主张一致、编译和视觉QA | 依据CLAIM_REPLACEMENT_MAP逐项推进，不称投稿定稿 |
 
-主线管源码/实验/稿图/Git，records只写责任docs。新运行前锁配置/版本/输入/库/工具/超时，后记真实结果与归因；完整回归期间冻结源码，任务监测不空等。当前快照只一份，过程详LOG-01至36与原证据，不重新堆叠中间banner。
+完整七段交接：`project_docs/agent_handoff/handoff_20261018_r22.md`。过程见LOG-20261018-01起；历史段只作历史，不能恢复已结束任务。
 
 ## 历史提示（旧暂缓/暂停不作为当前授权）
 

@@ -1,0 +1,174 @@
+[run] 启动（超时 120s）：.venv/Scripts/python.exe -m pytest project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py -q --basetemp=project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/qa_launch_confirmation_red_tmp
+.............................FFFF..............FFFF                      [100%]
+================================== FAILURES ===================================
+____ test_STA_exception_identity_and_partial_output_are_preserved[oserror] ____
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D8963310>
+kind = 'oserror'
+
+    @pytest.mark.parametrize('kind',['timeout','oserror','missing','permission','unknown'])
+    def test_STA_exception_identity_and_partial_output_are_preserved(env,monkeypatch,kind):
+        manifest,out,script,command=_sta_setup(env)
+        error={'timeout':a.subprocess.TimeoutExpired(command,900,output=b'partial\x00\xff',stderr=b'error\xfe'),
+               'oserror':OSError('unconfirmed OS failure'),'missing':FileNotFoundError('missing executable'),
+               'permission':PermissionError('launch denied'),'unknown':RuntimeError('unconfirmed failure')}[kind]
+        def process(*args,**kwargs):raise error
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():a.subprocess.run(command)
+        monkeypatch.setattr(a.runner,'main',run)
+        with pytest.raises(type(error)) as raised:a.guarded_runner(manifest,'b09')
+        assert raised.value is error
+        attempt=out/'sta_attempts/000001';result=a.read_json(attempt/'result.json')
+        assert result['status']=='exception' and result['error_type']==type(error).__name__
+>       assert result['process_launched'] is (True if kind=='timeout' else False if kind in {'missing','permission'} else None)
+E       assert True is None
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:344: AssertionError
+____ test_STA_exception_identity_and_partial_output_are_preserved[missing] ____
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D8A90750>
+kind = 'missing'
+
+    @pytest.mark.parametrize('kind',['timeout','oserror','missing','permission','unknown'])
+    def test_STA_exception_identity_and_partial_output_are_preserved(env,monkeypatch,kind):
+        manifest,out,script,command=_sta_setup(env)
+        error={'timeout':a.subprocess.TimeoutExpired(command,900,output=b'partial\x00\xff',stderr=b'error\xfe'),
+               'oserror':OSError('unconfirmed OS failure'),'missing':FileNotFoundError('missing executable'),
+               'permission':PermissionError('launch denied'),'unknown':RuntimeError('unconfirmed failure')}[kind]
+        def process(*args,**kwargs):raise error
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():a.subprocess.run(command)
+        monkeypatch.setattr(a.runner,'main',run)
+        with pytest.raises(type(error)) as raised:a.guarded_runner(manifest,'b09')
+        assert raised.value is error
+        attempt=out/'sta_attempts/000001';result=a.read_json(attempt/'result.json')
+        assert result['status']=='exception' and result['error_type']==type(error).__name__
+>       assert result['process_launched'] is (True if kind=='timeout' else False if kind in {'missing','permission'} else None)
+E       assert True is False
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:344: AssertionError
+__ test_STA_exception_identity_and_partial_output_are_preserved[permission] ___
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D7F7D490>
+kind = 'permission'
+
+    @pytest.mark.parametrize('kind',['timeout','oserror','missing','permission','unknown'])
+    def test_STA_exception_identity_and_partial_output_are_preserved(env,monkeypatch,kind):
+        manifest,out,script,command=_sta_setup(env)
+        error={'timeout':a.subprocess.TimeoutExpired(command,900,output=b'partial\x00\xff',stderr=b'error\xfe'),
+               'oserror':OSError('unconfirmed OS failure'),'missing':FileNotFoundError('missing executable'),
+               'permission':PermissionError('launch denied'),'unknown':RuntimeError('unconfirmed failure')}[kind]
+        def process(*args,**kwargs):raise error
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():a.subprocess.run(command)
+        monkeypatch.setattr(a.runner,'main',run)
+        with pytest.raises(type(error)) as raised:a.guarded_runner(manifest,'b09')
+        assert raised.value is error
+        attempt=out/'sta_attempts/000001';result=a.read_json(attempt/'result.json')
+        assert result['status']=='exception' and result['error_type']==type(error).__name__
+>       assert result['process_launched'] is (True if kind=='timeout' else False if kind in {'missing','permission'} else None)
+E       assert True is False
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:344: AssertionError
+____ test_STA_exception_identity_and_partial_output_are_preserved[unknown] ____
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D7F2A090>
+kind = 'unknown'
+
+    @pytest.mark.parametrize('kind',['timeout','oserror','missing','permission','unknown'])
+    def test_STA_exception_identity_and_partial_output_are_preserved(env,monkeypatch,kind):
+        manifest,out,script,command=_sta_setup(env)
+        error={'timeout':a.subprocess.TimeoutExpired(command,900,output=b'partial\x00\xff',stderr=b'error\xfe'),
+               'oserror':OSError('unconfirmed OS failure'),'missing':FileNotFoundError('missing executable'),
+               'permission':PermissionError('launch denied'),'unknown':RuntimeError('unconfirmed failure')}[kind]
+        def process(*args,**kwargs):raise error
+        monkeypatch.setattr(a.subprocess,'run',process)
+        def run():a.subprocess.run(command)
+        monkeypatch.setattr(a.runner,'main',run)
+        with pytest.raises(type(error)) as raised:a.guarded_runner(manifest,'b09')
+        assert raised.value is error
+        attempt=out/'sta_attempts/000001';result=a.read_json(attempt/'result.json')
+        assert result['status']=='exception' and result['error_type']==type(error).__name__
+>       assert result['process_launched'] is (True if kind=='timeout' else False if kind in {'missing','permission'} else None)
+E       assert True is None
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:344: AssertionError
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error0] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D89611D0>
+error = FileNotFoundError('missing executable')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: Failed
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error1] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D8954C10>
+error = PermissionError('permission denied')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: Failed
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error2] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D8BB2D90>
+error = OSError('unconfirmed OS failure')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: Failed
+_ test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error3] _
+
+env = namespace(root=WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B3_RE...b21': {'path': 'b21.v', 'sha256': '6c5640ad03424a0b9ed2d49dfbac46677b83d92d7b4505ae48be387ade22679b', 'rtl': 'b21.v'}})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000139D7F54F10>
+error = RuntimeError('unconfirmed run failure')
+
+    @pytest.mark.parametrize('error',[FileNotFoundError('missing executable'),PermissionError('permission denied'),OSError('unconfirmed OS failure'),RuntimeError('unconfirmed run failure')])
+    def test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues(env,monkeypatch,error):
+        manifest=registered(env);calls=[]
+        monkeypatch.setattr(a,'_run_process',lambda job,m:_fake_outputs(job,m,candidate_error=error))
+        def proof(*args):calls.append(args);return _fake_sec(*args)
+        monkeypatch.setattr(a,'final_sec',proof)
+>       with pytest.raises(RuntimeError,match='launch|unconfirmed|incomplete'):a.execute_job(manifest,'b09')
+E       Failed: DID NOT RAISE RuntimeError
+
+project_docs\evidence\r22_b_model_audit_20261016\B3_RECONSTRUCTION_ADAPTER\test_adapter.py:482: Failed
+=========================== short test summary info ===========================
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_exception_identity_and_partial_output_are_preserved[oserror]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_exception_identity_and_partial_output_are_preserved[missing]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_exception_identity_and_partial_output_are_preserved[permission]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_STA_exception_identity_and_partial_output_are_preserved[unknown]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error0]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error1]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error2]
+FAILED project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/test_adapter.py::test_unconfirmed_STA_start_cannot_be_scientific_complete_even_if_runner_continues[error3]
+8 failed, 43 passed in 15.74s
+[run] 完成（20s），退出码 1

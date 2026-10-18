@@ -1,0 +1,175 @@
+{
+  "schema": "r22-region-design-review-v1",
+  "created_utc": "2026-10-16T07:22:03.253626+00:00",
+  "status": "bounded_static_design_and_census_only",
+  "formal_experiment_ready": false,
+  "eda_executed": false,
+  "contract_sha256": "60971de5e2f3d3e45e2f8c106237df8f418bb970a441e041443c01c56811f488",
+  "contract_precedes_census": true,
+  "census_path": "census_v2/CENSUS.json",
+  "census_sha256": "33846a74c6b93d25c4f04d5aad3f11a779ab141a111647e56b4121b01a0f9f76",
+  "controls_sha256": "6388fb3db99bb393d92e215c691ebda26d64a106b0160cd11493183c1b178760",
+  "oracle_failure_receipt_sha256": "5769be674d060bb34a72feeae34ca7f3670155d9e3a449b8b6bb12b789483fa6",
+  "oracle_attribution_sha256": "45de1986b67b07c4a3c8f9486eea3660b7302e6a763e3cc7573861fcf86b21dc",
+  "circuit_summaries": [
+    {
+      "circuit": "s27",
+      "union_regions": 6,
+      "eligible_regions": 6,
+      "multiple_static_witness_regions": true,
+      "distinct_witness_sets": 6,
+      "same_top1": true,
+      "same_order": false,
+      "top1_witness_candidates_differ": false,
+      "no_R_GB_instances": [
+        "_08_",
+        "_11_"
+      ]
+    },
+    {
+      "circuit": "s382",
+      "union_regions": 11,
+      "eligible_regions": 11,
+      "multiple_static_witness_regions": true,
+      "distinct_witness_sets": 11,
+      "same_top1": false,
+      "same_order": false,
+      "top1_witness_candidates_differ": true,
+      "no_R_GB_instances": [
+        "_057_",
+        "_058_",
+        "_059_",
+        "_063_",
+        "_067_",
+        "_061_",
+        "_073_"
+      ]
+    },
+    {
+      "circuit": "s420",
+      "union_regions": 10,
+      "eligible_regions": 10,
+      "multiple_static_witness_regions": true,
+      "distinct_witness_sets": 10,
+      "same_top1": false,
+      "same_order": false,
+      "top1_witness_candidates_differ": true,
+      "no_R_GB_instances": [
+        "_051_",
+        "_058_",
+        "_064_",
+        "_053_",
+        "_056_",
+        "_065_"
+      ]
+    },
+    {
+      "circuit": "s641",
+      "union_regions": 11,
+      "eligible_regions": 11,
+      "multiple_static_witness_regions": true,
+      "distinct_witness_sets": 11,
+      "same_top1": false,
+      "same_order": false,
+      "top1_witness_candidates_differ": true,
+      "no_R_GB_instances": [
+        "_075_",
+        "_138_",
+        "_094_",
+        "_095_",
+        "_141_",
+        "_091_",
+        "_098_",
+        "_140_",
+        "_103_",
+        "_104_"
+      ]
+    }
+  ],
+  "ranking_tie_and_bound_audit": [
+    {
+      "circuit": "s27",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 3
+      },
+      "eligible_multigate_regions": 3,
+      "checks": 17,
+      "static_pass_checks": 17,
+      "unexamined_proposals": 18,
+      "bounded_generator_exhausted": {
+        "configured": false,
+        "uniform": false
+      }
+    },
+    {
+      "circuit": "s382",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 8
+      },
+      "eligible_multigate_regions": 3,
+      "checks": 49,
+      "static_pass_checks": 49,
+      "unexamined_proposals": 44,
+      "bounded_generator_exhausted": {
+        "configured": false,
+        "uniform": false
+      }
+    },
+    {
+      "circuit": "s420",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 8
+      },
+      "eligible_multigate_regions": 2,
+      "checks": 58,
+      "static_pass_checks": 58,
+      "unexamined_proposals": 73,
+      "bounded_generator_exhausted": {
+        "configured": false,
+        "uniform": false
+      }
+    },
+    {
+      "circuit": "s641",
+      "top_score_tie_counts": {
+        "configured": 1,
+        "uniform": 9
+      },
+      "eligible_multigate_regions": 2,
+      "checks": 88,
+      "static_pass_checks": 88,
+      "unexamined_proposals": 95,
+      "bounded_generator_exhausted": {
+        "configured": true,
+        "uniform": true
+      }
+    }
+  ],
+  "eligible_regions": 38,
+  "static_candidate_witnesses": 212,
+  "unexamined_proposals": 230,
+  "source_input_stable": true,
+  "head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "production_or_registered_parameters_modified": false,
+  "scope": "partial4 initial/baseline states only",
+  "elapsed_s": 40.34259739999834,
+  "logs": {
+    "scratch/region_design_review/census.log": "cfcb4f8718527ebff8d696f2162973242a47570594cb539ed249bd90e3bca233",
+    "scratch/region_design_review/census_v2.log": "91f2fd115bdc5b1d9b8f3e5fe763e094d76b0ab154505d1f11976aff265ece18",
+    "scratch/region_design_review/static_controls.log": "6a6634b64533c3c5051b8aa4644311d1f73b408dc9febb132811865cb0994bb6"
+  },
+  "interpretation": "Three top1/witness-set differences and s27 top1 null on common bounded union show static identifiability only; uniform ties, all top1 singleton, no SEC/STA benefit established.",
+  "limits": [
+    "Bounded proposal union, not exhaustive feasible-region universe.",
+    "Witness search bounded first3 eachRGB/instance; untested not invalid.",
+    "Static F1/F2 only: no independent SEC/F3/F5/STA/acceptance or timing benefit.",
+    "Node sum ranking differs from internal full constrained region_score; common-union isolates only declared node-cost ranking.",
+    "Actual four census regions have no multi-output gates; fixture checks separate.",
+    "s641 generation hit320 bound; no exhaustive region/global optimum claim.",
+    "No full-runtime action bank or formal experiment registration."
+  ],
+  "review_md_sha256": "1f688a8f71bbb4c9d63065d6a1e72e28befdaa08adc6480ebd06b5fd9c8eb017"
+}
