@@ -1,0 +1,40 @@
+{
+  "scope": "Root postcheck of actual OpenSTA micro controls, not independent review or benchmark evidence",
+  "positive_api_attempts": 4,
+  "annotation_replay_attempts": 4,
+  "missing_pin_negative_attempts": 2,
+  "all_sources_and_artifacts_match": true,
+  "all_four_annotation_replays_zero_unannotated_and_zero_partial_drivers": true,
+  "escaped_and_ordinary_results_identical_at_each_rc": true,
+  "rc_increase_degrades_both_controls": true,
+  "both_bad_pin_cases_rejected_without_numeric_results": true,
+  "actual_tool_identities": [
+    {
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-version"
+      ],
+      "returncode": 0,
+      "stdout": "3.1.0\n",
+      "stderr": "wsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\nwsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Antigravity\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\n"
+    },
+    {
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "sha256sum",
+        "/usr/local/bin/sta"
+      ],
+      "returncode": 0,
+      "stdout": "96833cf69282803fc44fc8cc343bfe03ad8279bab9fb276d84a6d4532e15b468  /usr/local/bin/sta\n",
+      "stderr": "wsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\nwsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Antigravity\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\n"
+    }
+  ],
+  "result_sha256": "f95890645e6358c47127c3b5225eedd5e947948e5b3137b7156090791ca61843"
+}

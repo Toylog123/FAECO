@@ -1,0 +1,30 @@
+{
+  "source_sha256": "3f24f3e2f8809eaf80f2a02f6b4f0774179e92ff6543d40cdd2b4ba9e844761f",
+  "cases": [
+    {
+      "case": "nonzero_with_pass_phrase",
+      "output": "networks are equivalent",
+      "returncode": 7,
+      "actual_status": "pass"
+    },
+    {
+      "case": "wrong_root_with_pass_phrase",
+      "output": "warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent",
+      "returncode": 0,
+      "actual_status": "pass"
+    },
+    {
+      "case": "zero_valid_pass",
+      "output": "networks are equivalent",
+      "returncode": 0,
+      "actual_status": "pass"
+    },
+    {
+      "case": "conflicting_pass_fail",
+      "output": "networks are not equivalent\nnetworks are equivalent",
+      "returncode": 0,
+      "actual_status": "pass"
+    }
+  ],
+  "native_executed": false
+}

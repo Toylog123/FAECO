@@ -1,0 +1,60 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -m pytest -q code/tests/test_r22_parasitic_measurement.py --basetemp scratch/r22_parasitic_red4_tmp
+...................FF                                                    [100%]
+================================== FAILURES ===================================
+_ test_stderr_diagnostic_cannot_hide_after_stdout_without_trailing_newline[sequential] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red4_tmp/test_stderr_diagnostic_cannot_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E8F0B95810>
+runner = 'sequential'
+
+    @pytest.mark.parametrize("runner", ["sequential", "scan"])
+    def test_stderr_diagnostic_cannot_hide_after_stdout_without_trailing_newline(tmp_path, monkeypatch, runner):
+        if runner == "sequential":
+            _native_runner(monkeypatch, _fake_sta(tmp_path))
+        else:
+            scan = _scan(monkeypatch, tmp_path)
+        def completed(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 0,
+                "-0.10 slack (VIOLATED)\nworst slack max -0.10",
+                "Error 123: failed link_design\n")
+        monkeypatch.setattr(subprocess, "run", completed)
+        if runner == "sequential":
+            row = opensta.run_opensta_sequential(netlist_path=_netlist(tmp_path), period=0.5,
+                output_dir=tmp_path / "stderr_failure", top_module="top", sta_command="controlled")
+        else:
+            row = scan.run_sta(_netlist(tmp_path), 0.5, tmp_path / "stderr_failure", None, "top")
+>       assert row["wns"] is None and row.get("error")
+E       assert (-0.1 is None)
+
+code\tests\test_r22_parasitic_measurement.py:308: AssertionError
+_ test_stderr_diagnostic_cannot_hide_after_stdout_without_trailing_newline[scan] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red4_tmp/test_stderr_diagnostic_cannot_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001E8F0BBF710>
+runner = 'scan'
+
+    @pytest.mark.parametrize("runner", ["sequential", "scan"])
+    def test_stderr_diagnostic_cannot_hide_after_stdout_without_trailing_newline(tmp_path, monkeypatch, runner):
+        if runner == "sequential":
+            _native_runner(monkeypatch, _fake_sta(tmp_path))
+        else:
+            scan = _scan(monkeypatch, tmp_path)
+        def completed(argv, **kwargs):
+            return subprocess.CompletedProcess(argv, 0,
+                "-0.10 slack (VIOLATED)\nworst slack max -0.10",
+                "Error 123: failed link_design\n")
+        monkeypatch.setattr(subprocess, "run", completed)
+        if runner == "sequential":
+            row = opensta.run_opensta_sequential(netlist_path=_netlist(tmp_path), period=0.5,
+                output_dir=tmp_path / "stderr_failure", top_module="top", sta_command="controlled")
+        else:
+            row = scan.run_sta(_netlist(tmp_path), 0.5, tmp_path / "stderr_failure", None, "top")
+>       assert row["wns"] is None and row.get("error")
+E       assert (-0.1 is None)
+
+code\tests\test_r22_parasitic_measurement.py:308: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_parasitic_measurement.py::test_stderr_diagnostic_cannot_hide_after_stdout_without_trailing_newline[sequential]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_stderr_diagnostic_cannot_hide_after_stdout_without_trailing_newline[scan]
+2 failed, 19 passed in 4.37s
+[run] 完成（11s），退出码 1

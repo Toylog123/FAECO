@@ -320,7 +320,7 @@ def test_parallel_physical_candidates_share_single_baseline_cache(tmp_path, monk
         ("sky130_fd_sc_hd__and2_2", {}, "G"),
         ("sky130_fd_sc_hd__or2_1", {}, "R"),
     ]
-    ev._apply = lambda text, _inst, _kind, new, _pin: text.replace("and2_1", new)
+    ev._apply = lambda text, _inst, _kind, new, _pin: text.replace("sky130_fd_sc_hd__and2_1", new)
     calls = []
     def sta(**kwargs):
         calls.append({"path": Path(kwargs["output_dir"]),
@@ -362,8 +362,14 @@ def test_physical_acceptance_uses_paired_baseline_not_ideal_baseline(tmp_path, m
 
 
 def test_physical_hold_candidate_ranking_prioritizes_hold_gain(tmp_path, monkeypatch):
+    # This named synthetic candidate must have pin roles in the test library;
+    # physical topology must not guess directions from its output spelling.
+    hold_lib = LIB + '''cell ("sky130_fd_sc_hd__and2_hold") {
+      pin ("A") { direction : input; } pin ("B") { direction : input; }
+      pin ("Y") { direction : output; function : "A & B"; }
+    }'''
     ev = RealWnsEvaluator(
-        mapped_text=BASE, top_module="top", period=1, liberty_text=LIB,
+        mapped_text=BASE, top_module="top", period=1, liberty_text=hold_lib,
         baseline_wns=-1.0, baseline_min_slack=-0.8,
         output_dir=tmp_path, workers=1, physical_gate=True, hold_mode=True,
     )

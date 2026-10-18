@@ -1,0 +1,1 @@
+module ztop(input A,output Y);sky130_fd_sc_hd__buf_1 u(.A(A),.X(Y));endmodule

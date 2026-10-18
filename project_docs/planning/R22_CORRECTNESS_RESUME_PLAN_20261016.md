@@ -1,5 +1,7 @@
 # r22 correctness repair and evidence recovery — 当前LOG-44
 
+2026-10-18当前覆盖注：C′v3全72、八包ROOT_POST和图v3独立验收已齐；适配器/证据/稿图941files已随阶段7231e02 commit/push。下文旧“ADAPTER WIP不纳本次commit”只属10-16阶段记录，当前适配器已入库但同族科学EDA仍待。当前源码修复依 `R22_S_SPEF_REPAIR_PLAN_20261018.md`，先红后绿、整体回归/独立review/新sourcecommit与clean pin后才正式EDA；C′原3ea身份保历史。
+
 用户10-16恢复。当前代码完整v8=969pass/4skip/156subtests、155.12s/wrapper157.969exit0、170SHA稳定/PYTHONUTF8=1；原始精确V3正确拒reset→set/合法Gpass/R0/parsed1/1。勾选只表示所述实现/证据阶段完成，不等整篇科学ready。
 
 ## 已完成

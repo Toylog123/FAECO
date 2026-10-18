@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-18",
+  "status": "PASS bounded static post-review of original counterexamples",
+  "EDA_executed": false,
+  "git_executed": false,
+  "reviewer_production_changed": false,
+  "case_inputs_byte_identical_to_pre_review": true,
+  "resolved": {
+    "R1": "escaped scalar and bit-select have distinct ports/nets/pins and distinct SPEF textual names",
+    "R2": "port-only feedthrough emits D_NET, both P endpoints and 3.6000-ohm A to Z branch at the unchanged default RC",
+    "R3": "module-external unknown syntax rejected",
+    "R4": "cell output literal rejected"
+  },
+  "existing_rejection_controls": {
+    "missing_header_port_direction": "rejected",
+    "out_of_range_alias": "rejected"
+  },
+  "sources_before": {
+    "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+    "code/tests/test_spef_pin_topology.py": "10082a5993e9295fe6fcc271369ff45fdef201e66caac17804af86063302c0d0",
+    "code/tests/test_real_wns.py": "f33a883f51934b772ae331a7b40fa961c47b74214a3bbdb85c8652ecb6094eb6"
+  },
+  "sources_after": {
+    "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+    "code/tests/test_spef_pin_topology.py": "10082a5993e9295fe6fcc271369ff45fdef201e66caac17804af86063302c0d0",
+    "code/tests/test_real_wns.py": "f33a883f51934b772ae331a7b40fa961c47b74214a3bbdb85c8652ecb6094eb6"
+  },
+  "source_stable": true,
+  "timeout_seconds": 120,
+  "wrapper_exit_code": 0,
+  "wrapper_seconds": 5,
+  "new_tool_processes": 0,
+  "physical_support_claim": "NOT established by static post-review. Escaped-name SPEF annotation must be tested by actual pinned OpenSTA in a separately registered run before physical-gain conclusions.",
+  "remaining_gates": [
+    "root full frozen-source regression currently running",
+    "new clean source pin before formal EDA",
+    "actual annotation completeness/errors and identical RC per-side tool validation"
+  ],
+  "artifacts": {
+    "post_counterexamples\\alias_scalar_width_mismatch.v": "657344659cbc57078be88eba4676a5e27354787469c32a5f339daa58de8181cf",
+    "post_counterexamples\\constant_output_connection.v": "939d25fda2cb7ae5eb14788a20ff721ed90e8136ddd26fbe96fb6d141c02c85e",
+    "post_counterexamples\\escaped_scalar_vs_bitselect.spef": "6e41b1037a2ffd2f23691decf4e454343eddabca2b42d48c8bbc589ce063d1ce",
+    "post_counterexamples\\escaped_scalar_vs_bitselect.v": "88ead2551e7e4560b1c0f595aa7b734d9ef633ce369671b390a589fa355ca1e4",
+    "post_counterexamples\\missing_header_port_direction.v": "7083a1048aa94e8b0b8dce346507fe98d0a18d8d8e79dec23343214c6781ff81",
+    "post_counterexamples\\port_only_feedthrough.spef": "43ebda9ee778c2ec67c1b508025027ebd11c1fb5afdf47e0bf7e6802d2d83191",
+    "post_counterexamples\\port_only_feedthrough.v": "91f4073ef2f444870f394e00235791d3f1ad102e87612470d0b7fe74475199b3",
+    "post_counterexamples\\RESULT.json": "70a7076b52a394628d4a29e05a6e27fefc514a1e4adcabb2efb3092c71aa7231",
+    "post_counterexamples\\unparsed_outside_modules.v": "ec7ecdfece9f6baf857e41a02befa72dc811c6cd2dea228cbb12c567556e79da"
+  },
+  "scope": "No new random cases; reran original six cases (four findings plus two rejection controls)."
+}

@@ -1,0 +1,58 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -u scratch/audit_b18_logic0_domain_20261018.py
+{
+  "source_stable": true,
+  "bench": {
+    "pseudo_input_note": "# Note: added a pseudo-input for LOGIC0",
+    "input": true,
+    "output": true,
+    "driver_definition_count": 0,
+    "consumer_gate_count": 24
+  },
+  "blif": {
+    "logic0_is_input": true,
+    "logic0_is_output": true,
+    "logic0_internal_drivers": [],
+    "root_and_bench_blif_bytes_equal": true,
+    "current_root_blif_sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528",
+    "acquisition_manifest_b18_sha256": "2fe31b6930c7b9f2c7ac6fb43ac4a3a962d7e72433d11fd69ffebd5d3b2bcaa6",
+    "current_matches_acquisition_manifest": false
+  },
+  "baseline_connections": [
+    {
+      "cell_type": "sky130_fd_sc_hd__and2_0",
+      "instance": "_649731_",
+      "pin": "A",
+      "direction": "input",
+      "instance_start_line": 197807,
+      "pin_body": "capacitance : 0.0016000000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0015630000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0028340000, 0.0028350000, 0.0028374000, 0.0028381000, 0.0028398000, 0.0028435000, 0.0028523000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.002302000, -0.002304800, -0.002311300, -0.002307200, -0.002297900, -0.002276400, -0.002226700\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0016370000;"
+    },
+    {
+      "cell_type": "sky130_fd_sc_hd__nand2_1",
+      "instance": "_649732_",
+      "pin": "A",
+      "direction": "input",
+      "instance_start_line": 197812,
+      "pin_body": "capacitance : 0.0023150000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0022540000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0047914000, 0.0048016000, 0.0048250000, 0.0048257000, 0.0048275000, 0.0048316000, 0.0048409000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.003895500, -0.003894100, -0.003890900, -0.003884500, -0.003869900, -0.003836300, -0.003758800\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0023750000;"
+    },
+    {
+      "cell_type": "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+      "instance": "_650494_",
+      "pin": "A",
+      "direction": "input",
+      "instance_start_line": 202151,
+      "pin_body": "capacitance : 0.0014900000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0014340000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0084048000, 0.0083113000, 0.0080958000, 0.0081437000, 0.0082541000, 0.0085086000, 0.0090953000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0021945000, 0.0021390000, 0.0020109000, 0.0020536000, 0.0021519000, 0.0023787000, 0.0029014000\");\n                }\n            }\n            isolation_cell_data_pin : \"true\";\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0015460000;"
+    },
+    {
+      "cell_type": "sky130_fd_sc_hd__nand2_1",
+      "instance": "_650495_",
+      "pin": "B",
+      "direction": "input",
+      "instance_start_line": 202156,
+      "pin_body": "capacitance : 0.0023240000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0022200000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0041316000, 0.0041310000, 0.0041296000, 0.0041311000, 0.0041345000, 0.0041424000, 0.0041606000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.004132500, -0.004132200, -0.004131700, -0.004131700, -0.004131700, -0.004131700, -0.004131700\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0024280000;"
+    }
+  ],
+  "net_connectivity_identical": true,
+  "diff_line_count": 13,
+  "AUDIT_sha256": "2c3ec37aa9492042a8d1aa08b6950f9a0455adde1f230ffeccd680408ede3d15"
+}
+[run] 完成（10s），退出码 0

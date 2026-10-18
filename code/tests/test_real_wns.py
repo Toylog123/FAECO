@@ -562,8 +562,13 @@ class TestPhysicalGate:
     SPEF is reported as F6 (physical load failure) and rejected."""
 
     def _eval(self, tmp_path, sta_fn, **kw):
+        # Unlike ideal-only unit fixtures, physical connectivity needs a closed
+        # netlist whose every cell and pin is present in this exact tiny Liberty.
+        mapped = '''module s382(input A, input S, output Z);
+          sky130_fd_sc_hd__lpflow_inputiso1p_1 _071_ (.A(A),.SLEEP(S),.X(Z));
+        endmodule'''
         ev = RealWnsEvaluator(
-            mapped_text=MAPPED_TEXT,
+            mapped_text=mapped,
             top_module="s382",
             period=0.5,
             liberty_text=LIB_TEXT,
@@ -579,6 +584,15 @@ class TestPhysicalGate:
             result = ev(FakePatch, weights=None)
         result["_ev"] = ev
         return result
+
+    def test_physical_parse_failure_preserves_root_cause(self, tmp_path):
+        with mock.patch('rseco.spef.parse_mapped_verilog',
+                        side_effect=ValueError('intentional unsupported physical input')):
+            result = self._eval(tmp_path, _fake_sta)
+        assert result['improved'] is False
+        failures = [t for t in result['_ev'].trials if t.get('physical_failure')]
+        assert failures
+        assert all('intentional unsupported physical input' in t['physical_gate_error'] for t in failures)
 
     def test_physical_gate_rejects_ideal_only_gain(self, tmp_path):
         calls = {"n": 0}

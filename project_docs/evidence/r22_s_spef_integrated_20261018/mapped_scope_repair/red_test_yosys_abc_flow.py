@@ -1,0 +1,282 @@
+import sys
+import subprocess
+import tempfile
+import unittest
+from pathlib import Path
+
+from rseco.yosys_abc import check_yosys_abc_equivalence, run_yosys_abc_resynthesis_baseline
+
+
+class YosysAbcFlowTest(unittest.TestCase):
+    def test_formal_equivalence_normalizes_to_blif_before_abc_cec(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            original = temp_path / "original.v"
+            revised = temp_path / "revised.v"
+            original.write_text("module top(input a, output y); assign y = a; endmodule\n", encoding="utf-8")
+            revised.write_text("module top(input a, output y); assign y = a; endmodule\n", encoding="utf-8")
+            fake_yosys, fake_abc = _write_fake_tools(temp_path)
+
+            result = check_yosys_abc_equivalence(
+                original,
+                revised,
+                outputs=["y", "z"],
+                artifact_dir=temp_path / "formal",
+                yosys_command=f"{sys.executable} {fake_yosys}",
+                abc_command=f"{sys.executable} {fake_abc}",
+            )
+
+            self.assertEqual(result.status, "pass")
+            self.assertEqual(result.method, "yosys_blif_abc_cec")
+            self.assertEqual(result.outputs, ["y", "z"])
+            self.assertEqual(result.scope, "gate_level_full_netlist_all_primary_outputs")
+            self.assertTrue((temp_path / "formal" / "original.normalized.blif").exists())
+            self.assertTrue((temp_path / "formal" / "revised.normalized.blif").exists())
+            self.assertTrue((temp_path / "formal" / "abc_cec.log").exists())
+            self.assertIn("original.normalized.blif", result.command)
+            self.assertIn("revised.normalized.blif", result.command)
+            self.assertIn("Networks are equivalent", result.stdout_tail)
+
+    def test_resynthesis_baseline_writes_optimized_blif_stats_and_verification(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            original = temp_path / "original.v"
+            original.write_text("module top(input a, output y); assign y = a; endmodule\n", encoding="utf-8")
+            fake_yosys, fake_abc = _write_fake_tools(temp_path)
+
+            result = run_yosys_abc_resynthesis_baseline(
+                original,
+                output_dir=temp_path / "baseline",
+                yosys_command=f"{sys.executable} {fake_yosys}",
+                abc_command=f"{sys.executable} {fake_abc}",
+            )
+
+            self.assertEqual(result.status, "success")
+            self.assertEqual(result.method, "yosys_blif_abc_rewrite_refactor_resyn")
+            self.assertTrue((temp_path / "baseline" / "original.normalized.blif").exists())
+            self.assertTrue((temp_path / "baseline" / "abc_rewrite_refactor_resyn.blif").exists())
+            self.assertTrue((temp_path / "baseline" / "abc_baseline.log").exists())
+            self.assertTrue((temp_path / "baseline" / "abc_baseline_cec.log").exists())
+            self.assertEqual(result.output_netlist, str(temp_path / "baseline" / "abc_rewrite_refactor_resyn.blif"))
+            self.assertEqual(result.stats["before"]["and"], 6)
+            self.assertEqual(result.stats["after"]["and"], 4)
+            self.assertEqual(result.verification_status, "pass")
+
+    def test_normalization_strips_utf8_bom_before_invoking_yosys(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            original = temp_path / "original.v"
+            revised = temp_path / "revised.v"
+            original.write_bytes(b"\xef\xbb\xbfmodule top(input a, output y); assign y = a; endmodule\n")
+            revised.write_bytes(b"\xef\xbb\xbfmodule top(input a, output y); assign y = a; endmodule\n")
+            fake_yosys, fake_abc = _write_fake_tools(temp_path, reject_bom=True)
+
+            formal = check_yosys_abc_equivalence(
+                original,
+                revised,
+                outputs=["y"],
+                artifact_dir=temp_path / "formal",
+                yosys_command=f"{sys.executable} {fake_yosys}",
+                abc_command=f"{sys.executable} {fake_abc}",
+            )
+            baseline = run_yosys_abc_resynthesis_baseline(
+                original,
+                output_dir=temp_path / "baseline",
+                yosys_command=f"{sys.executable} {fake_yosys}",
+                abc_command=f"{sys.executable} {fake_abc}",
+            )
+
+            self.assertEqual(formal.status, "pass")
+            self.assertEqual(baseline.status, "success")
+            self.assertTrue((temp_path / "formal" / "original.sanitized.v").exists())
+            self.assertFalse((temp_path / "formal" / "original.sanitized.v").read_bytes().startswith(b"\xef\xbb\xbf"))
+            self.assertTrue((temp_path / "formal" / "revised.sanitized.v").exists())
+            self.assertFalse((temp_path / "baseline" / "original.sanitized.v").read_bytes().startswith(b"\xef\xbb\xbf"))
+
+
+class LibertyCellsCecTest(unittest.TestCase):
+    """CEC on Liberty-mapped netlists using extracted assign-style cells."""
+
+    ROOT = Path(__file__).resolve().parents[2]
+    CASE_DIR = ROOT / "data" / "cases" / "minimal" / "iscas85_c17_case01"
+    CELLS_V = ROOT / "_tmp_c17_cells.v"
+
+    def test_normalizer_chooses_source_top_before_library_injection(self):
+        from unittest import mock
+        from rseco.yosys_abc import _normalize_to_blif
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';dest=p/'top.blif'
+            src.write_text('module helper(input A,output Y); assign Y=A; endmodule '
+                           'module ztop(input A,output Y); helper h (.A(A),.Y(Y)); endmodule')
+            commands=[]
+            def process(argv,**kwargs):
+                commands.append(argv[-1]);dest.write_text('.model ztop\n.end\n')
+                return subprocess.CompletedProcess(argv,0,'','')
+            with mock.patch('subprocess.run',side_effect=process):
+                result=_normalize_to_blif(src,dest,yosys_argv=['fake'],timeout_s=10)
+            self.assertEqual(result.returncode,0)
+            self.assertIn('hierarchy -check -top ztop',commands[0])
+
+    def test_ambiguous_source_top_is_rejected_before_tool_launch(self):
+        from unittest import mock
+        from rseco.yosys_abc import _normalize_to_blif
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v'
+            src.write_text('module a(input A,output Y); assign Y=A; endmodule '
+                           'module b(input B,output Z); assign Z=B; endmodule')
+            with mock.patch('subprocess.run',return_value=subprocess.CompletedProcess(['fake'],0,'','')) as process:
+                result=_normalize_to_blif(src,p/'out.blif',yosys_argv=['fake'],timeout_s=10)
+            self.assertNotEqual(result.returncode,0)
+            self.assertEqual(process.call_count,0)
+
+    def test_primitive_only_reference_does_not_inject_unrelated_models(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td); src=p/'top.v';lib=p/'lib.v';subset=p/'used.v'
+            src.write_text('module top(input a,b,output y); nand g(y,a,b); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__unused_1(input A,output X); assign X=A; endmodule')
+            original=lib.read_bytes()
+            result=_extract_cells_for_netlist(src,lib,subset)
+            self.assertNotIn('sky130_fd_sc_hd__unused_1',result.read_text())
+            self.assertEqual(lib.read_bytes(),original)
+
+    def test_inline_referenced_cell_selects_only_its_complete_module(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';lib=p/'lib.v'
+            src.write_text('module top(input A,output X); sky130_fd_sc_hd__buf_1 g (.A(A),.X(X)); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule '
+                           'module sky130_fd_sc_hd__unrelated_1(input A,output X); assign X=A*A; endmodule')
+            result=_extract_cells_for_netlist(src,lib,p/'used.v').read_text()
+            self.assertIn('module sky130_fd_sc_hd__buf_1',result)
+            self.assertNotIn('sky130_fd_sc_hd__unrelated_1',result)
+
+    def test_inline_missing_referenced_model_is_rejected(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';lib=p/'lib.v'
+            src.write_text('module top(input A,output X); sky130_fd_sc_hd__absent_1 g (.A(A),.X(X)); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule')
+            with self.assertRaises(ValueError):
+                _extract_cells_for_netlist(src,lib,p/'used.v')
+
+    def _cells(self, temp_path: Path) -> Path:
+        # fall back to full extracted model if the minimal probe file is
+        # absent (it is written by an earlier probe run; keep test robust)
+        if self.CELLS_V.exists():
+            return self.CELLS_V
+        full = self.ROOT / "data" / "raw" / "benchmarks" / "raw" / "skywater_cells_models" / "sky130_cells_v2.v"
+        if not full.exists():
+            self.skipTest("SKY130 cells model not available")
+        return full
+
+    def test_cec_passes_with_liberty_cells_on_real_resynthesized_c17(self):
+        import shutil
+        if shutil.which("yosys") is None or shutil.which("yosys-abc") is None:
+            self.skipTest("real yosys/abc not available")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = check_yosys_abc_equivalence(
+                self.CASE_DIR / "original" / "original.v",
+                self.CASE_DIR / "resynthesized" / "resynthesized.v",
+                outputs=["N22", "N23"],
+                artifact_dir=Path(temp_dir) / "formal",
+                liberty_cells_v=self._cells(Path(temp_dir)),
+            )
+            self.assertEqual(result.status, "pass")
+            self.assertIn("equivalent", result.stdout_tail.lower())
+
+    def test_fake_tools_receive_cells_read_in_normalize_script(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            cells = temp_path / "cells.v"
+            cells.write_text("module dummy(input a, output y); assign y = a; endmodule\n", encoding="utf-8")
+            (temp_path / "a.v").write_text("module top(input a, output y); assign y = a; endmodule\n", encoding="utf-8")
+            (temp_path / "b.v").write_text("module top(input a, output y); assign y = a; endmodule\n", encoding="utf-8")
+
+            log = temp_path / "yosys_cmds.log"
+            fake_yosys = temp_path / "fy.py"
+            fake_yosys.write_text(
+                "import sys, re, pathlib\n"
+                "script = sys.argv[sys.argv.index('-p') + 1]\n"
+                "with open(r'" + str(log).replace("\\", "/") + "', 'a', encoding='utf-8') as f: f.write(script + '\\n')\n"
+                "m = re.search(r'write_blif\\s+([^;]+)', script)\n"
+                "path = pathlib.Path(m.group(1).strip().strip('\"'))\n"
+                "path.parent.mkdir(parents=True, exist_ok=True)\n"
+                "path.write_text('.model fake\\n.inputs a\\n.outputs y\\n.names a y\\n1 1\\n.end\\n', encoding='utf-8')\n",
+                encoding="utf-8",
+            )
+            fake_abc = temp_path / "fa.py"
+            fake_abc.write_text(
+                "import sys, re\n"
+                "script = sys.argv[sys.argv.index('-c') + 1]\n"
+                "print('ABC: ' + script)\n"
+                "if 'cec ' in script: print('Networks are equivalent after structural hashing.')\n",
+                encoding="utf-8",
+            )
+            result = check_yosys_abc_equivalence(
+                temp_path / "a.v",
+                temp_path / "b.v",
+                outputs=["y"],
+                artifact_dir=temp_path / "formal2",
+                yosys_command=f"{sys.executable} {fake_yosys}",
+                abc_command=f"{sys.executable} {fake_abc}",
+                liberty_cells_v=cells,
+            )
+            self.assertEqual(result.status, "pass")
+            recorded = log.read_text(encoding="utf-8")
+            self.assertIn("read_verilog", recorded)
+            self.assertGreaterEqual(recorded.count("read_verilog"), 2)
+
+
+
+def _write_fake_tools(temp_path: Path, *, reject_bom: bool = False) -> tuple[Path, Path]:
+    fake_yosys = temp_path / "fake_yosys.py"
+    reject_bom_code = (
+        "input_match = re.search(r'read_verilog\\s+([^;]+)', script)\n"
+        "if input_match:\n"
+        "    input_path = pathlib.Path(input_match.group(1).strip().strip('\\\"'))\n"
+        "    if input_path.read_bytes().startswith(b'\\xef\\xbb\\xbf'):\n"
+        "        print('BOM was not stripped before Yosys', file=sys.stderr)\n"
+        "        sys.exit(3)\n"
+        if reject_bom
+        else ""
+    )
+    fake_yosys.write_text(
+        "import pathlib\n"
+        "import re\n"
+        "import sys\n"
+        "script = sys.argv[sys.argv.index('-p') + 1]\n"
+        f"{reject_bom_code}"
+        "match = re.search(r'write_blif\\s+([^;]+)', script)\n"
+        "if not match:\n"
+        "    sys.exit(2)\n"
+        "path = pathlib.Path(match.group(1).strip().strip('\\\"'))\n"
+        "path.parent.mkdir(parents=True, exist_ok=True)\n"
+        "path.write_text('.model fake\\n.inputs a\\n.outputs y\\n.names a y\\n1 1\\n.end\\n', encoding='utf-8')\n"
+        "print('fake yosys wrote', path)\n",
+        encoding="utf-8",
+    )
+    fake_abc = temp_path / "fake_abc.py"
+    fake_abc.write_text(
+        "import pathlib\n"
+        "import re\n"
+        "import sys\n"
+        "script = sys.argv[sys.argv.index('-c') + 1]\n"
+        "print('ABC command line: ' + script)\n"
+        "if 'cec ' in script:\n"
+        "    print('Networks are equivalent after structural hashing.')\n"
+        "if 'print_stats' in script:\n"
+        "    print('top : i/o =    5/    2  lat =    0  and =      6  lev =  3')\n"
+        "    print('top : i/o =    5/    2  lat =    0  and =      4  lev =  2')\n"
+        "match = re.search(r'write_blif\\s+([^;]+)', script)\n"
+        "if match:\n"
+        "    path = pathlib.Path(match.group(1).strip().strip('\\\"'))\n"
+        "    path.parent.mkdir(parents=True, exist_ok=True)\n"
+        "    path.write_text('.model optimized\\n.end\\n', encoding='utf-8')\n",
+        encoding="utf-8",
+    )
+    return fake_yosys, fake_abc
+
+
+if __name__ == "__main__":
+    unittest.main()

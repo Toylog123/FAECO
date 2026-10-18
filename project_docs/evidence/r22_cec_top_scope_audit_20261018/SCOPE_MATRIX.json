@@ -1,0 +1,47 @@
+[
+  {
+    "domain": "Cprime72 finalSEC",
+    "verdict": "未受此反例影响",
+    "reason": "72 exact explicit Yosys equiv scripts/results/logs bound"
+  },
+  {
+    "domain": "A6 new proofs",
+    "verdict": "未受此反例影响",
+    "reason": "6 exact explicit Yosys equiv scripts/results/logs bound"
+  },
+  {
+    "domain": "B2 new proofs",
+    "verdict": "未受此反例影响",
+    "reason": "2 exact explicit Yosys equiv scripts/results/logs bound; X scope remains bounded"
+  },
+  {
+    "domain": "B17 new proof",
+    "verdict": "未受此反例影响",
+    "reason": "exact explicit Yosys equiv script with assert; old partial receipt remains distinct"
+  },
+  {
+    "domain": "3ea full-netlist ABC checker used by current campaign",
+    "verdict": "未受此topNone反例影响",
+    "reason": "archived caller passes mandatory circuit top, shared helper explicitly hierarchy-checks it"
+  },
+  {
+    "domain": "S retained local CEC",
+    "verdict": "未受此错选model反例影响（仅已查86份post对象）",
+    "reason": "explicit source win top and single matching win model per retained BLIF; other S issues remain"
+  },
+  {
+    "domain": "native ztop Y=A vs Y=B probe",
+    "verdict": "受影响：真实假pass",
+    "reason": "ABC log explicitly selected first library model; A0B1 differs"
+  },
+  {
+    "domain": "legacy flow.py full ABC and ABC baseline/check_mapped omitted-top callers",
+    "verdict": "受影响调用边界；具体历史proof为unknown",
+    "reason": "top defaults None; no per-object script/BLIF selection verification in this bounded audit"
+  },
+  {
+    "domain": "A reused two legacy proofs and other historical method=pass records",
+    "verdict": "unknown / 本轮未逐对象审计",
+    "reason": "No extrapolation from named method or newer independent finalSEC"
+  }
+]

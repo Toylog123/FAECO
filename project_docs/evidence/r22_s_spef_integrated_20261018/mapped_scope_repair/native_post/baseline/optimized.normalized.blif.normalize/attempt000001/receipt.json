@@ -1,0 +1,77 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe",
+    "-q",
+    "-p",
+    "read_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/baseline/abc_rewrite_refactor_resyn.blif; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/baseline/optimized.normalized.blif"
+  ],
+  "selected_top_module": "ztop",
+  "input_format": "blif",
+  "inputs_before": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122,
+      "snapshot": "original_source.before.blif"
+    },
+    "prepared_blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122,
+      "snapshot": "prepared_blif.before.blif"
+    }
+  },
+  "inputs_after": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122,
+      "snapshot": "original_source.after.blif"
+    },
+    "prepared_blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122,
+      "snapshot": "prepared_blif.after.blif"
+    }
+  },
+  "input_drift": [],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 0,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif",
+  "artifacts": {
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif.normalize\\attempt000001\\normalize.log",
+      "sha256": "149847a506c00007641c4ab99d7b7624a0ceb197a1a116a29854cc08ff74f7e4",
+      "bytes": 505
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif.normalize\\attempt000001\\normalized_output.blif",
+      "sha256": "75b7ab0dc7b32483a27984409d66184bc135434056a16b13e4dbcb336b34d3ff",
+      "bytes": 219
+    },
+    "original_source.after.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif.normalize\\attempt000001\\original_source.after.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122
+    },
+    "original_source.before.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif.normalize\\attempt000001\\original_source.before.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122
+    },
+    "prepared_blif.after.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif.normalize\\attempt000001\\prepared_blif.after.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122
+    },
+    "prepared_blif.before.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\optimized.normalized.blif.normalize\\attempt000001\\prepared_blif.before.blif",
+      "sha256": "8198f165b43525950df2c43405a687be7832a09cab96ecf09a400b92df5afcdd",
+      "bytes": 122
+    }
+  }
+}

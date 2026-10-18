@@ -1,0 +1,1 @@
+module top(input [1:0] A,output Z); wire t; assign t=A[2]; sky130_fd_sc_hd__buf_1 b (.A(t),.X(Z)); endmodule

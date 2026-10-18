@@ -1,0 +1,42 @@
+......................................F................................. [  6%]
+........................................................................ [ 13%]
+............................................................. [ 19%]
+....................................................................... [ 26%]
+........................................................................ [ 33%]
+........................................................................ [ 40%]
+........................................................................ [ 47%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 68%]
+........................................................................ [ 75%]
+........................................................................ [ 82%]
+........................................................................ [ 89%]
+........................................................................ [ 96%]
+.......................................                                  [100%]
+================================== FAILURES ===================================
+_____ CellsExtractTest.test_assign_only_netlist_returns_library_untouched _____
+
+self = <test_cells_extract.CellsExtractTest testMethod=test_assign_only_netlist_returns_library_untouched>
+
+    def test_assign_only_netlist_returns_library_untouched(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            net = self._write(
+                tmp,
+                "top.v",
+                "module top(input a, output y); assign y = a; endmodule\n",
+            )
+            lib = self._write(
+                tmp,
+                "cells.v",
+                "module sky130_fd_sc_hd__buf_1(input A, output X); assign X = A; endmodule\n",
+            )
+            out = tmp / "extracted.v"
+            result = _extract_cells_for_netlist(net, lib, out)
+>           self.assertIs(result, lib)
+E           AssertionError: WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/tmpcuw0il9r/extracted.v') is not WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/tmpcuw0il9r/cells.v')
+
+code\tests\test_cells_extract.py:41: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_cells_extract.py::CellsExtractTest::test_assign_only_netlist_returns_library_untouched
+1 failed, 1034 passed, 156 subtests passed in 158.23s (0:02:38)

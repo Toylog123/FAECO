@@ -1,0 +1,32 @@
+{
+  "result": {
+    "status": "pass",
+    "method": "yosys_blif_abc_cec",
+    "tool": "yosys+abc",
+    "command": "C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys-abc.EXE -s -c cec project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample/proof/original.normalized.blif project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample/proof/revised.normalized.blif",
+    "outputs": [
+      "Y"
+    ],
+    "runtime_s": 0.1994672000000719,
+    "reason": "Yosys-normalized full-netlist ABC cec reported equivalent networks",
+    "scope": "gate_level_full_netlist_all_primary_outputs",
+    "normalized_original": "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample\\proof\\original.normalized.blif",
+    "normalized_revised": "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample\\proof\\revised.normalized.blif",
+    "log_path": "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample\\proof\\abc_cec.log",
+    "returncode": 0,
+    "stdout_tail": "======== ABC command line \"cec project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample/proof/original.normalized.blif project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample/proof/revised.normalized.blif\"\nWarning: The design has 2 root-level modules. The first one (sky130_fd_sc_hd__buf_1) will be used.\nWarning: The design has 2 root-level modules. The first one (sky130_fd_sc_hd__buf_1) will be used.\nNetworks are equivalent after structural hashing.  Time =     0.00 sec",
+    "stderr_tail": ""
+  },
+  "semantic_counterexample": {
+    "A": 0,
+    "B": 1,
+    "original_Y": 0,
+    "revised_Y": 1
+  },
+  "source_sha256": {
+    "code\\src\\rseco\\yosys_abc.py": "bca40dbc716cafba4143f0b5b06a6dce2158b3d0f372456a7ece575e5fc33705",
+    "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample\\original.v": "64f59346e54781a2b32732d031e15e74b24eacd381793df538bbd4614e10c020",
+    "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample\\revised.v": "0a5878eba7cc97031261ee991ab91e781317d7eeafe6224be942bb7b7c215bb1"
+  },
+  "scope": "native tool falsification probe only; not a paper result"
+}

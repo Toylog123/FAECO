@@ -1,0 +1,77 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys.EXE",
+    "-q",
+    "-p",
+    "read_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/results/abc_baseline/abc_rewrite_refactor_resyn.blif; hierarchy -check -top c17_original; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/results/abc_baseline/optimized.normalized.blif"
+  ],
+  "selected_top_module": "c17_original",
+  "input_format": "blif",
+  "inputs_before": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325,
+      "snapshot": "original_source.before.blif"
+    },
+    "prepared_blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325,
+      "snapshot": "prepared_blif.before.blif"
+    }
+  },
+  "inputs_after": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325,
+      "snapshot": "original_source.after.blif"
+    },
+    "prepared_blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\abc_rewrite_refactor_resyn.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325,
+      "snapshot": "prepared_blif.after.blif"
+    }
+  },
+  "input_drift": [],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 0,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif",
+  "artifacts": {
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif.normalize\\attempt000001\\normalize.log",
+      "sha256": "b580f5ece89227caa90f6102faa39ddf45bb64c813da533c8b6161d7eb4d19c8",
+      "bytes": 443
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif.normalize\\attempt000001\\normalized_output.blif",
+      "sha256": "1d5ad3ab8cce8f85af648f2e49f20f6ab4ecfcc83537a1178d5ee89ab9718bd7",
+      "bytes": 1939
+    },
+    "original_source.after.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif.normalize\\attempt000001\\original_source.after.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325
+    },
+    "original_source.before.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif.normalize\\attempt000001\\original_source.before.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325
+    },
+    "prepared_blif.after.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif.normalize\\attempt000001\\prepared_blif.after.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325
+    },
+    "prepared_blif.before.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\optimized.normalized.blif.normalize\\attempt000001\\prepared_blif.before.blif",
+      "sha256": "06622f9b97a1f53c1f785d4b6637245a1f3d4f9a9a682e17f7acbd5cbdf9bc5e",
+      "bytes": 325
+    }
+  }
+}

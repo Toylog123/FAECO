@@ -1,0 +1,34 @@
+reference : project_docs\evidence\r22_s_spef_integrated_20261018\cli_encoding_environment\路径包含中文.json
+candidate : project_docs\evidence\r22_s_spef_integrated_20261018\cli_encoding_environment\路径包含中文.json
+
+item                                                REFERENCE                        CANDIDATE   
+--------------------------------------------------------------------------------------------------
+E1.candidate_order                             ["aaa", "bbb"]                   ["aaa", "bbb"]   OK
+E1.round_status                       [[1, "accepted", -0.9]]          [[1, "accepted", -0.9]]   OK
+E2.feedback_sequence           [["increase_boundary_penalt...   [["increase_boundary_penalt...   OK
+E3.init_weights                {"boundary_penalty": 1.0, "...   {"boundary_penalty": 1.0, "...   OK
+E3.final_weights               {"boundary_penalty": 1.0, "...   {"boundary_penalty": 1.0, "...   OK
+E1.current_cone_gates                               ["_001_"]                        ["_001_"]   OK
+E3.cone_limit                                            1000                             1000   OK
+E3.action_multiset              ["increase_boundary_penalty"]    ["increase_boundary_penalty"]   OK
+E4.accepted_chain              [{"base_netlist_hash": "b0"...   [{"base_netlist_hash": "b0"...   OK
+E4.stop_reason                               "max_iterations"                 "max_iterations"   OK
+E4.max_patches                                              8                                8   OK
+E4.final_patch_id                                   "patch_x"                        "patch_x"   OK
+E5.baseline_wns                                         -0.98                            -0.98   OK
+E5.baseline_min_slack                                    0.42                             0.42   OK
+E5.wns                                                  -0.83                            -0.83   OK
+E5.min_slack                                             0.42                             0.42   OK
+E5.tns                                                 -11.83                           -11.83   OK
+E5.final_netlist_hash                              "deadbeef"                       "deadbeef"   OK
+E6.n_candidate_sta_runs                                    22                               22   OK
+E6.sta_runs                                                22                               22   OK
+E6.sta_used                                                22                               22   OK
+E6.formal_runs                                             44                               44   OK
+E6.formal_used                                             44                               44   OK
+E6.iterations_used                                          8                                8   OK
+--------------------------------------------------------------------------------------------------
+items matching        : 24/24
+decision core (E1.round_status, E2-E5) : PASS
+full gate (E1-E6)     : PASS
+

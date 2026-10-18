@@ -1,0 +1,902 @@
+"""Yosys-normalized BLIF plus ABC wrappers for Stage A experiments."""
+
+from __future__ import annotations
+
+import re
+import hashlib
+import json
+import subprocess
+import time
+from dataclasses import dataclass
+from pathlib import Path
+
+from .toolchain import resolve_tool_command, requested_tool_command
+
+
+FORMAL_SCOPE = "gate_level_full_netlist_all_primary_outputs"
+RESYN2_BUILTIN_SEQUENCE = [
+    "balance",
+    "rewrite",
+    "refactor",
+    "balance",
+    "rewrite",
+    "rewrite -z",
+    "balance",
+    "refactor -z",
+    "rewrite -z",
+    "balance",
+]
+
+
+@dataclass(frozen=True)
+class YosysAbcEquivalenceResult:
+    status: str
+    method: str
+    tool: str
+    command: str
+    outputs: list[str]
+    runtime_s: float
+    reason: str
+    scope: str = FORMAL_SCOPE
+    normalized_original: str | None = None
+    normalized_revised: str | None = None
+    log_path: str | None = None
+    returncode: int | None = None
+    stdout_tail: str = ""
+    stderr_tail: str = ""
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "status": self.status,
+            "method": self.method,
+            "tool": self.tool,
+            "command": self.command,
+            "outputs": self.outputs,
+            "runtime_s": self.runtime_s,
+            "reason": self.reason,
+            "scope": self.scope,
+            "normalized_original": self.normalized_original,
+            "normalized_revised": self.normalized_revised,
+            "log_path": self.log_path,
+            "returncode": self.returncode,
+            "stdout_tail": self.stdout_tail,
+            "stderr_tail": self.stderr_tail,
+        }
+
+
+@dataclass(frozen=True)
+class YosysAbcBaselineResult:
+    method: str
+    status: str
+    tool: str
+    command: str
+    runtime_s: float
+    reason: str
+    output_netlist: str | None = None
+    normalized_original: str | None = None
+    log_path: str | None = None
+    verification_log_path: str | None = None
+    verification_status: str | None = None
+    stats: dict[str, dict[str, int]] | None = None
+    returncode: int | None = None
+    stdout_tail: str = ""
+    stderr_tail: str = ""
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "method": self.method,
+            "status": self.status,
+            "tool": self.tool,
+            "command": self.command,
+            "runtime_s": self.runtime_s,
+            "reason": self.reason,
+            "output_netlist": self.output_netlist,
+            "normalized_original": self.normalized_original,
+            "log_path": self.log_path,
+            "verification_log_path": self.verification_log_path,
+            "verification_status": self.verification_status,
+            "stats": self.stats,
+            "returncode": self.returncode,
+            "stdout_tail": self.stdout_tail,
+            "stderr_tail": self.stderr_tail,
+        }
+
+
+def check_yosys_abc_equivalence(
+    original_netlist_path: str | Path,
+    revised_netlist_path: str | Path,
+    *,
+    outputs: list[str],
+    artifact_dir: str | Path,
+    yosys_command: str = "yosys",
+    abc_command: str = "yosys-abc",
+    timeout_s: float = 60.0,
+    liberty_cells_v: str | Path | None = None,
+    top_module: str | None = None,
+) -> YosysAbcEquivalenceResult:
+    """Normalize Verilog to BLIF with Yosys, then run full-netlist ABC CEC."""
+    started_at = time.perf_counter()
+    artifact_dir = Path(artifact_dir)
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    original_blif = artifact_dir / "original.normalized.blif"
+    revised_blif = artifact_dir / "revised.normalized.blif"
+    log_path = artifact_dir / "abc_cec.log"
+
+    tools = _resolve_yosys_and_abc(yosys_command=yosys_command, abc_command=abc_command)
+    if isinstance(tools, _UnavailableTools):
+        _write_text_log(
+            log_path,
+            [tools.requested_command],
+            "",
+            tools.reason,
+        )
+        return YosysAbcEquivalenceResult(
+            status="unavailable",
+            method="yosys_blif_abc_cec",
+            tool="yosys+abc",
+            command=tools.requested_command,
+            outputs=list(outputs),
+            runtime_s=time.perf_counter() - started_at,
+            reason=tools.reason,
+            log_path=str(log_path),
+        )
+
+    normalize_original = _normalize_to_blif(
+        Path(original_netlist_path),
+        original_blif,
+        yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s,
+        liberty_cells_v=Path(liberty_cells_v) if liberty_cells_v else None,
+        top_module=top_module,
+    )
+    if normalize_original.returncode != 0 or not original_blif.exists():
+        return _formal_error(
+            started_at,
+            outputs,
+            normalize_original,
+            reason="Yosys failed to normalize original netlist to BLIF",
+            normalized_original=str(original_blif) if original_blif.exists() else None,
+            normalized_revised=str(revised_blif) if revised_blif.exists() else None,
+        )
+    normalize_revised = _normalize_to_blif(
+        Path(revised_netlist_path),
+        revised_blif,
+        yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s,
+        liberty_cells_v=Path(liberty_cells_v) if liberty_cells_v else None,
+        top_module=top_module,
+    )
+    if normalize_revised.returncode != 0 or not revised_blif.exists():
+        return _formal_error(
+            started_at,
+            outputs,
+            normalize_revised,
+            reason="Yosys failed to normalize revised netlist to BLIF",
+            normalized_original=str(original_blif),
+            normalized_revised=str(revised_blif) if revised_blif.exists() else None,
+        )
+
+    if top_module is not None:
+        for label, blif in (("original", original_blif), ("revised", revised_blif)):
+            model = _blif_model_name(blif)
+            if model != top_module:
+                return _formal_error(
+                    started_at, outputs, _CommandOutput([], 1, "", ""),
+                    reason=f"{label} BLIF model {model!r} is not requested top {top_module!r}",
+                    normalized_original=str(original_blif),
+                    normalized_revised=str(revised_blif), status="fail",
+                )
+
+    script = f"cec {_abc_path(original_blif, wsl=_is_wsl_argv(tools.abc_argv))} {_abc_path(revised_blif, wsl=_is_wsl_argv(tools.abc_argv))}"
+    command = [*tools.abc_argv, "-s", "-c", script]
+    try:
+        completed = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired as exc:
+        _write_text_log(log_path, command, exc.stdout or "", exc.stderr or "")
+        return YosysAbcEquivalenceResult(
+            status="timeout",
+            method="yosys_blif_abc_cec",
+            tool="yosys+abc",
+            command=" ".join(command),
+            outputs=list(outputs),
+            runtime_s=time.perf_counter() - started_at,
+            reason=f"Yosys/ABC full-netlist cec timed out after {timeout_s} seconds",
+            normalized_original=str(original_blif),
+            normalized_revised=str(revised_blif),
+            log_path=str(log_path),
+            stdout_tail=_tail(exc.stdout or ""),
+            stderr_tail=_tail(exc.stderr or ""),
+        )
+
+    _write_log(log_path, completed)
+    combined_output = f"{completed.stdout}\n{completed.stderr}".lower()
+    status = _abc_status_from_output(combined_output, completed.returncode)
+    return YosysAbcEquivalenceResult(
+        status=status,
+        method="yosys_blif_abc_cec",
+        tool="yosys+abc",
+        command=" ".join(command),
+        outputs=list(outputs),
+        runtime_s=time.perf_counter() - started_at,
+        reason=_formal_reason(status, completed.returncode),
+        normalized_original=str(original_blif),
+        normalized_revised=str(revised_blif),
+        log_path=str(log_path),
+        returncode=completed.returncode,
+        stdout_tail=_tail(completed.stdout),
+        stderr_tail=_tail(completed.stderr),
+    )
+
+
+def run_yosys_abc_resynthesis_baseline(
+    original_netlist_path: str | Path,
+    *,
+    output_dir: str | Path,
+    yosys_command: str = "yosys",
+    abc_command: str = "yosys-abc",
+    timeout_s: float = 60.0,
+) -> YosysAbcBaselineResult:
+    """Normalize to BLIF, run explicit ABC resyn2 sequence, stats, and CEC backcheck."""
+    started_at = time.perf_counter()
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    original_blif = output_dir / "original.normalized.blif"
+    optimized_blif = output_dir / "abc_rewrite_refactor_resyn.blif"
+    log_path = output_dir / "abc_baseline.log"
+    verification_log_path = output_dir / "abc_baseline_cec.log"
+
+    tools = _resolve_yosys_and_abc(yosys_command=yosys_command, abc_command=abc_command)
+    if isinstance(tools, _UnavailableTools):
+        return YosysAbcBaselineResult(
+            method="yosys_blif_abc_rewrite_refactor_resyn",
+            status="unavailable",
+            tool="yosys+abc",
+            command=tools.requested_command,
+            runtime_s=time.perf_counter() - started_at,
+            reason=tools.reason,
+        )
+
+    normalized = _normalize_to_blif(
+        Path(original_netlist_path),
+        original_blif,
+        yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s,
+    )
+    if normalized.returncode != 0 or not original_blif.exists():
+        return YosysAbcBaselineResult(
+            method="yosys_blif_abc_rewrite_refactor_resyn",
+            status="error",
+            tool="yosys+abc",
+            command=" ".join(normalized.command),
+            runtime_s=time.perf_counter() - started_at,
+            reason="Yosys failed to normalize original netlist to BLIF",
+            normalized_original=str(original_blif) if original_blif.exists() else None,
+            returncode=normalized.returncode,
+            stdout_tail=_tail(normalized.stdout),
+            stderr_tail=_tail(normalized.stderr),
+        )
+
+    script = "; ".join(
+        [
+            f"read_blif {_abc_path(original_blif)}",
+            "strash",
+            *RESYN2_BUILTIN_SEQUENCE,
+            "print_stats",
+            f"write_blif {_abc_path(optimized_blif)}",
+        ]
+    )
+    command = [*tools.abc_argv, "-s", "-c", script]
+    try:
+        completed = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired as exc:
+        return YosysAbcBaselineResult(
+            method="yosys_blif_abc_rewrite_refactor_resyn",
+            status="timeout",
+            tool="yosys+abc",
+            command=" ".join(command),
+            runtime_s=time.perf_counter() - started_at,
+            reason=f"Yosys/ABC resynthesis timed out after {timeout_s} seconds",
+            normalized_original=str(original_blif),
+            output_netlist=str(optimized_blif),
+            log_path=str(log_path),
+            stdout_tail=_tail(exc.stdout or ""),
+            stderr_tail=_tail(exc.stderr or ""),
+        )
+
+    _write_log(log_path, completed)
+    stats = _parse_abc_stats(completed.stdout)
+    if completed.returncode != 0 or not optimized_blif.exists():
+        return YosysAbcBaselineResult(
+            method="yosys_blif_abc_rewrite_refactor_resyn",
+            status="error",
+            tool="yosys+abc",
+            command=" ".join(command),
+            runtime_s=time.perf_counter() - started_at,
+            reason=f"Yosys/ABC resynthesis did not generate optimized BLIF; returncode={completed.returncode}",
+            normalized_original=str(original_blif),
+            output_netlist=str(optimized_blif) if optimized_blif.exists() else None,
+            log_path=str(log_path),
+            stats=stats,
+            returncode=completed.returncode,
+            stdout_tail=_tail(completed.stdout),
+            stderr_tail=_tail(completed.stderr),
+        )
+
+    verified_blif = output_dir / "optimized.normalized.blif"
+    normalized_optimized = _normalize_to_blif(
+        optimized_blif, verified_blif, yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s)
+    if normalized_optimized.returncode != 0 or not verified_blif.exists():
+        return YosysAbcBaselineResult(
+            method="yosys_blif_abc_rewrite_refactor_resyn", status="error",
+            tool="yosys+abc", command=" ".join(normalized_optimized.command),
+            runtime_s=time.perf_counter() - started_at,
+            reason="ABC output BLIF has no valid selected normalization scope",
+            output_netlist=str(optimized_blif), normalized_original=str(original_blif),
+            log_path=str(log_path), verification_status="error", stats=stats,
+            returncode=normalized_optimized.returncode,
+            stdout_tail=_tail(normalized_optimized.stdout),
+            stderr_tail=_tail(normalized_optimized.stderr))
+    verification = _run_abc_cec(
+        original_blif,
+        verified_blif,
+        abc_argv=tools.abc_argv,
+        log_path=verification_log_path,
+        timeout_s=timeout_s,
+    )
+    status = "success" if verification.status == "pass" else "error"
+    reason = "Yosys-normalized ABC resynthesis generated BLIF and passed ABC cec backcheck" if status == "success" else (
+        f"Yosys-normalized ABC resynthesis verification status={verification.status}"
+    )
+    return YosysAbcBaselineResult(
+        method="yosys_blif_abc_rewrite_refactor_resyn",
+        status=status,
+        tool="yosys+abc",
+        command=" ".join(command),
+        runtime_s=time.perf_counter() - started_at,
+        reason=reason,
+        output_netlist=str(optimized_blif),
+        normalized_original=str(original_blif),
+        log_path=str(log_path),
+        verification_log_path=str(verification_log_path),
+        verification_status=verification.status,
+        stats=stats,
+        returncode=completed.returncode,
+        stdout_tail=_tail(completed.stdout),
+        stderr_tail=_tail(completed.stderr),
+    )
+
+
+@dataclass(frozen=True)
+class _ToolSet:
+    yosys_argv: list[str]
+    abc_argv: list[str]
+
+
+@dataclass(frozen=True)
+class _UnavailableTools:
+    requested_command: str
+    reason: str
+
+
+@dataclass(frozen=True)
+class _CommandOutput:
+    command: list[str]
+    returncode: int
+    stdout: str
+    stderr: str
+
+
+@dataclass(frozen=True)
+class _CecOutput:
+    status: str
+    returncode: int | None
+    stdout: str
+    stderr: str
+
+
+def _resolve_yosys_and_abc(*, yosys_command: str, abc_command: str) -> _ToolSet | _UnavailableTools:
+    requested_yosys = requested_tool_command("yosys", yosys_command, env_var="FAECO_YOSYS") if yosys_command == "yosys" else yosys_command
+    requested_abc = requested_tool_command("abc", abc_command, env_var="FAECO_ABC") if abc_command == "yosys-abc" else abc_command
+    yosys = resolve_tool_command("yosys", [yosys_command], env_var="FAECO_YOSYS" if yosys_command == "yosys" else None)
+    abc_candidates = [abc_command]
+    if abc_command == "yosys-abc":
+        abc_candidates = ["yosys-abc", "abc"]
+    abc = resolve_tool_command("abc", abc_candidates, env_var="FAECO_ABC" if abc_command == "yosys-abc" else None)
+    if yosys is None:
+        return _UnavailableTools(requested_command=f"{requested_yosys} + {requested_abc}", reason=f"Yosys command not found: {requested_yosys}")
+    if abc is None:
+        return _UnavailableTools(requested_command=f"{requested_yosys} + {requested_abc}", reason=f"ABC command not found: {requested_abc}")
+    return _ToolSet(yosys_argv=yosys.argv, abc_argv=abc.argv)
+
+
+def _normalize_to_blif(
+    netlist_path: Path,
+    output_blif: Path,
+    *,
+    yosys_argv: list[str],
+    timeout_s: float,
+    liberty_cells_v: Path | None = None,
+    top_module: str | None = None,
+) -> _CommandOutput:
+    output_blif.parent.mkdir(parents=True, exist_ok=True)
+    attempt_root = output_blif.with_name(output_blif.name + ".normalize")
+    attempt_root.mkdir(parents=True, exist_ok=True)
+    attempt_number = 1
+    while True:
+        attempt = attempt_root / f"attempt{attempt_number:06d}"
+        try:
+            attempt.mkdir()
+            break
+        except FileExistsError:
+            attempt_number += 1
+    # Each shared-helper call keeps its own receipt, even when legacy callers
+    # intentionally reuse the canonical normalized BLIF path.
+    receipt_stream = (attempt / "receipt.json").open("x", encoding="utf-8")
+    log_path = output_blif.with_suffix(".normalize.log")
+    commands: list[str] = []
+    command: list[str] = []
+    inputs_before, inputs_after = {}, {}
+    actual_inputs = {}
+    process_launched = False
+    process_returncode = None
+    exception_type = None
+    result = _CommandOutput(command=[], returncode=127, stdout="", stderr="Normalization did not complete")
+    selected_top = None
+
+    def identity(path):
+        data = Path(path).read_bytes()
+        return {"path": str(Path(path).resolve()),
+                "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+
+    def snapshot_before(role, path):
+        data = Path(path).read_bytes()
+        name = role + ".before" + (Path(path).suffix or ".bin")
+        with (attempt / name).open("xb") as stream:
+            stream.write(data)
+        inputs_before[role] = {"path": str(Path(path).resolve()),
+                               "sha256": hashlib.sha256(data).hexdigest(),
+                               "bytes": len(data), "snapshot": name}
+
+    try:
+        # Bind the caller's source before preparation or top inference. A BOM
+        # copy alone cannot detect changes to the original proof object.
+        actual_inputs["original_source"] = netlist_path
+        snapshot_before("original_source", netlist_path)
+        yosys_input_path = _prepare_yosys_input(netlist_path, output_blif)
+        from .verilog_modules import select_top_module, select_blif_top_module
+        input_is_blif = Path(yosys_input_path).suffix.lower() == '.blif'
+        source_text = Path(yosys_input_path).read_text(encoding='utf-8')
+        selected_top = (select_blif_top_module(source_text, top_module) if input_is_blif
+                        else select_top_module(source_text, top_module))
+        if liberty_cells_v is not None and not input_is_blif:
+            cells_file = _extract_cells_for_netlist(
+                yosys_input_path, liberty_cells_v,
+                output_blif.with_name(output_blif.stem + "_cells.v"))
+            actual_inputs["cells_model"] = cells_file
+            commands.append(f"read_verilog {_yosys_path(cells_file, wsl=_is_wsl_argv(yosys_argv))}")
+        actual_inputs["prepared_blif" if input_is_blif else "prepared_verilog"] = yosys_input_path
+        commands.extend([
+            f"{'read_blif' if input_is_blif else 'read_verilog'} {_yosys_path(yosys_input_path, wsl=_is_wsl_argv(yosys_argv))}",
+            f"hierarchy -check -top {_yosys_identifier(selected_top)}",
+            "proc", "flatten", "opt_clean", "simplemap", "clean",
+            f"write_blif {_yosys_path(output_blif, wsl=_is_wsl_argv(yosys_argv))}"])
+        command = [*yosys_argv, "-q", "-p", "; ".join(commands)]
+        for role, path in actual_inputs.items():
+            if role not in inputs_before:
+                snapshot_before(role, path)
+        for role, before in inputs_before.items():
+            current = identity(actual_inputs[role])
+            if any(current[key] != before[key] for key in ("sha256", "bytes")):
+                raise ValueError(f"Normalization input drift before launch: {role}")
+        try:
+            process_launched = None  # An unexpected exception cannot confirm a launch.
+            completed = subprocess.run(command, check=False, capture_output=True,
+                                       text=True, encoding="utf-8", errors="replace",
+                                       timeout=timeout_s)
+            process_launched = True
+            process_returncode = completed.returncode
+            result = _CommandOutput(command=command, returncode=completed.returncode,
+                                    stdout=completed.stdout, stderr=completed.stderr)
+        except subprocess.TimeoutExpired as exc:
+            process_launched = True
+            exception_type = type(exc).__name__
+            result = _CommandOutput(command=command, returncode=124,
+                                    stdout=exc.stdout or "", stderr=exc.stderr or "")
+    except Exception as exc:
+        exception_type = type(exc).__name__
+        if isinstance(exc, OSError):
+            process_launched = False
+        result = _CommandOutput(command=command, returncode=127, stdout="",
+                                stderr=f"{exception_type}: {exc}")
+    finally:
+        raw_stdout, raw_stderr = result.stdout, result.stderr
+        drift = []
+        for role, before in inputs_before.items():
+            try:
+                data = Path(actual_inputs[role]).read_bytes()
+                after = {"path": str(Path(actual_inputs[role]).resolve()),
+                         "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+                name = role + ".after" + (Path(actual_inputs[role]).suffix or ".bin")
+                with (attempt / name).open("xb") as stream:
+                    stream.write(data)
+                after["snapshot"] = name
+                inputs_after[role] = after
+                if any(after[key] != before[key] for key in ("sha256", "bytes")):
+                    drift.append(role)
+            except OSError as exc:
+                inputs_after[role] = {"path": before["path"], "error": str(exc)}
+                drift.append(role)
+        if drift:
+            result = _CommandOutput(command=command, returncode=125, stdout=result.stdout,
+                                    stderr=_log_stream_text(result.stderr) + "\nNormalization input drift: " + ", ".join(drift))
+        _write_text_log(log_path, command, result.stdout, result.stderr)
+        (attempt / "normalize.log").write_bytes(log_path.read_bytes())
+        for stream_name, value in (("stdout", raw_stdout), ("stderr", raw_stderr)):
+            if isinstance(value, bytes):
+                (attempt / (stream_name + ".bin")).write_bytes(value)
+        if output_blif.exists():
+            (attempt / "normalized_output.blif").write_bytes(output_blif.read_bytes())
+        artifacts = {p.name: identity(p) for p in sorted(attempt.iterdir())
+                     if p.is_file() and p.name != "receipt.json"}
+        receipt = {"schema": "normalization-input-binding-v1", "command": command,
+                   "selected_top_module": selected_top,
+                   "input_format": "blif" if locals().get('input_is_blif') else "verilog",
+                   "inputs_before": inputs_before, "inputs_after": inputs_after,
+                   "input_drift": drift, "process_launched": process_launched,
+                   "process_returncode": process_returncode,
+                   "returned_returncode": result.returncode, "exception_type": exception_type,
+                   "canonical_output": str(output_blif.resolve()), "artifacts": artifacts}
+        try:
+            json.dump(receipt, receipt_stream, ensure_ascii=False, indent=2)
+            receipt_stream.write("\n")
+        finally:
+            receipt_stream.close()
+    return result
+
+
+def _extract_cells_for_netlist(
+    netlist_path: Path,
+    cells_library: Path,
+    output_cells: Path,
+) -> Path:
+    """Return a cells.v containing only modules instantiated by the netlist.
+
+    The full extracted SKY130 cells library includes sequential / special
+    cells whose models use Yosys-internal primitives (e.g. $mul) that ABC
+    cannot read.  Restricting the cells to the combinational cells actually
+    instantiated keeps the flattened BLIF pure-Boolean and makes ABC CEC
+    readable.
+
+    Raises ValueError when the netlist instantiates a SKY130 cell that is
+    missing from cells_library: silently falling back to the whole library
+    hides the coverage gap and reintroduces unreadable models.
+    """
+    netlist_text = netlist_path.read_text(encoding="utf-8", errors="replace")
+    # gate_type in named-port or positional instantiation, e.g.
+    # sky130_fd_sc_hd__nand2_1 u1 ( ... );
+    from .gate_sizing import parse_mapped_netlist
+    from .verilog_modules import module_spans
+    used = {cell.cell_type for cell in parse_mapped_netlist(netlist_text)}
+    output_cells.parent.mkdir(parents=True, exist_ok=True)
+    if not used:
+        # Builtin/assign-only inputs need no SKY models. Injecting the whole
+        # library adds unrelated modules that ABC may not be able to read.
+        output_cells.write_text('// No referenced SKY130 cell models.\n', encoding='utf-8')
+        return output_cells
+
+    lib_text = cells_library.read_text(encoding="utf-8", errors="replace")
+    modules = {span.name: span.text for span in module_spans(lib_text)}
+    missing = sorted(used - modules.keys())
+    if missing:
+        raise ValueError(
+            "cells_library is missing modules instantiated by the netlist: "
+            + ", ".join(missing)
+        )
+    blocks = [modules[cell] for cell in sorted(used)]
+    output_cells.write_text("\n".join(blocks) + "\n", encoding="utf-8")
+    return output_cells
+
+def _prepare_yosys_input(netlist_path: Path, output_blif: Path) -> Path:
+    try:
+        data = netlist_path.read_bytes()
+    except OSError:
+        return netlist_path
+    if not data.startswith(b"\xef\xbb\xbf"):
+        return netlist_path
+    sanitized_path = output_blif.with_name(_sanitized_verilog_name(output_blif))
+    sanitized_path.write_bytes(data[3:])
+    return sanitized_path
+
+
+def _sanitized_verilog_name(output_blif: Path) -> str:
+    suffix = ".normalized.blif"
+    if output_blif.name.endswith(suffix):
+        return output_blif.name[: -len(suffix)] + ".sanitized.v"
+    return output_blif.stem + ".sanitized.v"
+
+
+def _run_abc_cec(
+    left_blif: Path,
+    right_blif: Path,
+    *,
+    abc_argv: list[str],
+    log_path: Path,
+    timeout_s: float,
+) -> _CecOutput:
+    script = f"cec {_abc_path(left_blif, wsl=_is_wsl_argv(abc_argv))} {_abc_path(right_blif, wsl=_is_wsl_argv(abc_argv))}"
+    command = [*abc_argv, "-s", "-c", script]
+    try:
+        completed = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired as exc:
+        _write_text_log(log_path, command, exc.stdout or "", exc.stderr or "")
+        return _CecOutput(status="timeout", returncode=None, stdout=exc.stdout or "", stderr=exc.stderr or "")
+    _write_log(log_path, completed)
+    status = _abc_status_from_output(f"{completed.stdout}\n{completed.stderr}".lower(), completed.returncode)
+    return _CecOutput(status=status, returncode=completed.returncode, stdout=completed.stdout, stderr=completed.stderr)
+
+
+def check_mapped_blif_equivalence(
+    original_netlist_path: str | Path,
+    mapped_blif_path: str | Path,
+    *,
+    artifact_dir: str | Path,
+    yosys_command: str = "yosys",
+    abc_command: str = "yosys-abc",
+    timeout_s: float = 60.0,
+    top_module: str | None = None,
+    mapped_top_module: str | None = None,
+) -> YosysAbcEquivalenceResult:
+    """Normalize both proof objects to their selected top, then run ABC CEC.
+
+    A mapped BLIF may contain multiple models. Its unique root, or the
+    explicit ``mapped_top_module``, is checked and flattened before CEC so
+    ABC cannot silently select the first unrelated model in the file.
+    """
+    started_at = time.perf_counter()
+    artifact_dir = Path(artifact_dir)
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    original_blif = artifact_dir / "original.normalized.blif"
+    revised_blif = artifact_dir / "revised.normalized.blif"
+    log_path = artifact_dir / "abc_cec.log"
+
+    tools = _resolve_yosys_and_abc(yosys_command=yosys_command, abc_command=abc_command)
+    if isinstance(tools, _UnavailableTools):
+        return YosysAbcEquivalenceResult(
+            status="unavailable",
+            method="yosys_blif_abc_cec_mapped",
+            tool="yosys+abc",
+            command=tools.requested_command,
+            outputs=[],
+            runtime_s=time.perf_counter() - started_at,
+            reason=tools.reason,
+            normalized_original=None,
+            normalized_revised=str(mapped_blif_path),
+        )
+
+    normalize_original = _normalize_to_blif(
+        Path(original_netlist_path),
+        original_blif,
+        yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s,
+        top_module=top_module,
+    )
+    if normalize_original.returncode != 0 or not original_blif.exists():
+        return _formal_error(
+            started_at,
+            [],
+            normalize_original,
+            reason="Yosys failed to normalize original netlist to BLIF",
+            normalized_original=str(original_blif) if original_blif.exists() else None,
+            normalized_revised=str(mapped_blif_path),
+        )
+
+    mapped_blif = Path(mapped_blif_path)
+    if not mapped_blif.exists():
+        return YosysAbcEquivalenceResult(
+            status="error",
+            method="yosys_blif_abc_cec_mapped",
+            tool="yosys+abc",
+            command=" ".join(normalize_original.command),
+            outputs=[],
+            runtime_s=time.perf_counter() - started_at,
+            reason=f"Mapped BLIF not found: {mapped_blif}",
+            normalized_original=str(original_blif),
+            normalized_revised=str(mapped_blif),
+        )
+
+    normalized_revised = _normalize_to_blif(
+        mapped_blif, revised_blif, yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s, top_module=mapped_top_module)
+    if normalized_revised.returncode != 0 or not revised_blif.exists():
+        return _formal_error(
+            started_at, [], normalized_revised,
+            reason="Mapped BLIF has no valid selected normalization scope",
+            normalized_original=str(original_blif),
+            normalized_revised=str(revised_blif) if revised_blif.exists() else None)
+    verification = _run_abc_cec(
+        original_blif,
+        revised_blif,
+        abc_argv=tools.abc_argv,
+        log_path=log_path,
+        timeout_s=timeout_s,
+    )
+    status = verification.status
+    reason_map = {
+        "pass": "Yosys-normalized original-vs-mapped ABC cec reported equivalent networks",
+        "fail": "Yosys-normalized original-vs-mapped ABC cec reported non-equivalent networks",
+        "timeout": f"Yosys-normalized original-vs-mapped ABC cec timed out after {timeout_s} seconds",
+        "error": f"Yosys-normalized original-vs-mapped ABC cec did not produce a recognized equivalence result; returncode={verification.returncode}",
+    }
+    return YosysAbcEquivalenceResult(
+        status=status,
+        method="yosys_blif_abc_cec_mapped",
+        tool="yosys+abc",
+        command=" ".join(normalize_original.command),
+        outputs=[],
+        runtime_s=time.perf_counter() - started_at,
+        reason=reason_map.get(status, verification.stdout[:200]),
+        normalized_original=str(original_blif),
+        normalized_revised=str(revised_blif),
+        log_path=str(log_path),
+        returncode=verification.returncode,
+        stdout_tail=_tail(verification.stdout),
+        stderr_tail=_tail(verification.stderr),
+    )
+
+
+def _formal_error(
+    started_at: float,
+    outputs: list[str],
+    command_output: _CommandOutput,
+    *,
+    reason: str,
+    normalized_original: str | None,
+    normalized_revised: str | None,
+    status: str = "error",
+) -> YosysAbcEquivalenceResult:
+    log_path = None
+    if normalized_original or normalized_revised:
+        anchor = Path(normalized_original or normalized_revised)
+        log_path = anchor.parent / "abc_cec.log"
+        _write_text_log(log_path, command_output.command,
+                        command_output.stdout, command_output.stderr)
+    status = status if status != "error" else ("timeout" if command_output.returncode == 124 else "error")
+    return YosysAbcEquivalenceResult(
+        status=status,
+        method="yosys_blif_abc_cec",
+        tool="yosys+abc",
+        command=" ".join(command_output.command),
+        outputs=list(outputs),
+        runtime_s=time.perf_counter() - started_at,
+        reason=reason,
+        normalized_original=normalized_original,
+        normalized_revised=normalized_revised,
+        log_path=str(log_path) if log_path else None,
+        returncode=command_output.returncode,
+        stdout_tail=_tail(command_output.stdout),
+        stderr_tail=_tail(command_output.stderr),
+    )
+
+
+def _abc_status_from_output(output: str, returncode: int) -> str:
+    output = output.lower()
+    if returncode != 0:
+        return "error"
+    if any(int(count) > 1 for count in re.findall(r'\b(\d+)\s+root-level modules', output)):
+        return "error"
+    # ABC can return zero after a command error. Ignore benign abc.rc
+    # lookup warnings, but never let an explicit input/command error pass.
+    if re.search(r'(?m)^\s*(?:error\s*:|cannot open input file\b)', output):
+        return "error"
+    if ("networks are not equivalent" in output
+            or "circuits are not equivalent" in output
+            or "different number of latches" in output
+            or "miter computation has failed" in output):
+        return "fail"
+    if "networks are equivalent" in output or "circuits are equivalent" in output:
+        return "pass"
+    return "error"
+
+
+def _formal_reason(status: str, returncode: int) -> str:
+    reasons = {
+        "pass": "Yosys-normalized full-netlist ABC cec reported equivalent networks",
+        "fail": "Yosys-normalized full-netlist ABC cec reported non-equivalent networks",
+        "error": f"Yosys-normalized full-netlist ABC cec did not produce a recognized equivalence result; returncode={returncode}",
+    }
+    return reasons[status]
+
+
+def _parse_abc_stats(output: str) -> dict[str, dict[str, int]]:
+    rows = []
+    pattern = re.compile(
+        r"i/o\s*=\s*(?P<inputs>\d+)\s*/\s*(?P<outputs>\d+)\s+lat\s*=\s*(?P<lat>\d+)\s+and\s*=\s*(?P<and>\d+)\s+lev\s*=\s*(?P<lev>\d+)"
+    )
+    for line in output.splitlines():
+        match = pattern.search(line)
+        if match:
+            rows.append({key: int(value) for key, value in match.groupdict().items()})
+    if not rows:
+        return {}
+    if len(rows) == 1:
+        return {"after": rows[-1]}
+    return {"before": rows[0], "after": rows[-1]}
+
+
+def _write_log(path: Path, completed: subprocess.CompletedProcess[str]) -> None:
+    _write_text_log(path, completed.args if isinstance(completed.args, list) else [str(completed.args)], completed.stdout, completed.stderr)
+
+
+def _log_stream_text(value: str | bytes | None) -> str:
+    """Decode timeout streams for readable logs without losing their raw bytes."""
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else (value or "")
+
+
+def _write_text_log(path: Path, command: list[str], stdout: str | bytes | None,
+                    stderr: str | bytes | None) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    for name, value in (("stdout", stdout), ("stderr", stderr)):
+        if isinstance(value, bytes):
+            path.with_name(path.name + "." + name + ".bin").write_bytes(value)
+    path.write_text(
+        "command: " + " ".join(command) + "\n\nstdout:\n" + _log_stream_text(stdout)
+        + "\n\nstderr:\n" + _log_stream_text(stderr) + "\n",
+        encoding="utf-8",
+    )
+
+
+def _is_wsl_argv(argv: list[str]) -> bool:
+    return bool(argv) and Path(argv[0]).name.lower() == "wsl.exe"
+
+
+def _yosys_path(path: Path, *, wsl: bool = False) -> str:
+    value = str(path).replace("\\", "/")
+    if wsl:
+        match = re.match(r"^([A-Za-z]):/(.*)$", value)
+        if match:
+            return f"/mnt/{match.group(1).lower()}/{match.group(2)}"
+    return value
+
+
+def _yosys_identifier(identifier: str) -> str:
+    if not re.fullmatch(r"[A-Za-z_$][A-Za-z0-9_$]*", identifier):
+        raise ValueError(f"unsupported Yosys top identifier: {identifier!r}")
+    return identifier
+
+
+def _blif_model_name(path: Path) -> str | None:
+    match = re.search(r"^\.model\s+(\S+)", path.read_text(encoding="utf-8", errors="replace"), re.M)
+    return match.group(1) if match else None
+
+
+def _abc_path(path: Path, *, wsl: bool = False) -> str:
+    return _yosys_path(path, wsl=wsl)
+
+
+def _tail(text: str, *, max_lines: int = 20) -> str:
+    return "\n".join(text.splitlines()[-max_lines:])

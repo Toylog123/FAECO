@@ -1,0 +1,54 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys.EXE",
+    "-q",
+    "-p",
+    "read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/original/original.v; hierarchy -check -top c17_original; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/results/abc_baseline/original.normalized.blif"
+  ],
+  "selected_top_module": "c17_original",
+  "inputs_before": {
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\original\\original.v",
+      "sha256": "cae41f42d0b36c7480c40c90dd80f0b9a20bfaeddc29bfba9192c8f2b18c3c21",
+      "bytes": 391,
+      "snapshot": "prepared_verilog.before.v"
+    }
+  },
+  "inputs_after": {
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\original\\original.v",
+      "sha256": "cae41f42d0b36c7480c40c90dd80f0b9a20bfaeddc29bfba9192c8f2b18c3c21",
+      "bytes": 391,
+      "snapshot": "prepared_verilog.after.v"
+    }
+  },
+  "input_drift": [],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 0,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\original.normalized.blif",
+  "artifacts": {
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\original.normalized.blif.normalize\\attempt000002\\normalize.log",
+      "sha256": "032d8e7d74c7e9c96c13b104bad6b86eafd5d90bdee2c9044551d21087f36387",
+      "bytes": 412
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\original.normalized.blif.normalize\\attempt000002\\normalized_output.blif",
+      "sha256": "1c4d7b0cc547609a08df12fe6496c284eda4f5d44bfa1010698e18b0ded21f4e",
+      "bytes": 1731
+    },
+    "prepared_verilog.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\original.normalized.blif.normalize\\attempt000002\\prepared_verilog.after.v",
+      "sha256": "cae41f42d0b36c7480c40c90dd80f0b9a20bfaeddc29bfba9192c8f2b18c3c21",
+      "bytes": 391
+    },
+    "prepared_verilog.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\abc_baseline\\original.normalized.blif.normalize\\attempt000002\\prepared_verilog.before.v",
+      "sha256": "cae41f42d0b36c7480c40c90dd80f0b9a20bfaeddc29bfba9192c8f2b18c3c21",
+      "bytes": 391
+    }
+  }
+}

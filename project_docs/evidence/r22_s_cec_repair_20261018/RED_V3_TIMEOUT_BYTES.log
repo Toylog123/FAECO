@@ -1,0 +1,24 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -m pytest code/tests/test_s_cec_evidence.py -q
+.....F...                                                                [100%]
+================================== FAILURES ===================================
+___________ test_timeout_with_byte_output_retains_partial_evidence ____________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1224/test_timeout_with_byte_output_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025D52175CD0>
+
+    def test_timeout_with_byte_output_retains_partial_evidence(tmp_path,monkeypatch):
+        tools,_,_=factory(tmp_path,monkeypatch,abc_timeout=True,timeout_bytes=True)
+        reference=tmp_path/'ref.v';reference.write_text('module win(a,y); input a; output y; assign y=~a; endmodule\n')
+        candidate=tmp_path/'gate.blif';candidate.write_text('.model win\n.end\n')
+        folder=tmp_path/'proof';result=tools.cec(reference,candidate,folder)
+>       assert result.status=='timeout'
+E       AssertionError: assert 'unavailable' == 'timeout'
+E         
+E         - timeout
+E         + unavailable
+
+code\tests\test_s_cec_evidence.py:97: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_s_cec_evidence.py::test_timeout_with_byte_output_retains_partial_evidence
+1 failed, 8 passed in 0.68s
+[run] 完成（5s），退出码 1

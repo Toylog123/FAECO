@@ -1,0 +1,75 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys.EXE",
+    "-q",
+    "-p",
+    "read_verilog project_docs/evidence/r22_s_spef_integrated_20261018/native_cec_reproduction_v2/revised.normalized_cells.v; read_verilog data/cases/minimal/iscas85_c17_case01/resynthesized/resynthesized.v; proc; flatten; opt_clean; simplemap; clean; write_blif project_docs/evidence/r22_s_spef_integrated_20261018/native_cec_reproduction_v2/revised.normalized.blif"
+  ],
+  "inputs_before": {
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized_cells.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426,
+      "snapshot": "cells_model.before.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\resynthesized\\resynthesized.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169,
+      "snapshot": "prepared_verilog.before.v"
+    }
+  },
+  "inputs_after": {
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized_cells.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426,
+      "snapshot": "cells_model.after.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\resynthesized\\resynthesized.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169,
+      "snapshot": "prepared_verilog.after.v"
+    }
+  },
+  "input_drift": [],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 0,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif",
+  "artifacts": {
+    "cells_model.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif.normalize\\attempt000001\\cells_model.after.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426
+    },
+    "cells_model.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif.normalize\\attempt000001\\cells_model.before.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426
+    },
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif.normalize\\attempt000001\\normalize.log",
+      "sha256": "541a84cc4d861bc1d53bac6321ab80a34821d8a72d9cbe4bb6eef47ab50272ed",
+      "bytes": 455
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif.normalize\\attempt000001\\normalized_output.blif",
+      "sha256": "d2c3f7fe527923a0cae61bf8f662a627f8f4359cadc532fef7a5696a330d986d",
+      "bytes": 4245
+    },
+    "prepared_verilog.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif.normalize\\attempt000001\\prepared_verilog.after.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169
+    },
+    "prepared_verilog.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_cec_reproduction_v2\\revised.normalized.blif.normalize\\attempt000001\\prepared_verilog.before.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169
+    }
+  }
+}

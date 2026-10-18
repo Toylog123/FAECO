@@ -1,0 +1,255 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -m pytest code/tests/test_cec_blif_scope.py -q
+FFF..FFFFFFFFFFF                                                         [100%]
+================================== FAILURES ===================================
+_ test_abc_success_needs_clean_exit_and_unambiguous_object[networks are equivalent-7-error] _
+
+output = 'networks are equivalent', rc = 7, wanted = 'error'
+
+    @pytest.mark.parametrize('output,rc,wanted',[
+     ('networks are equivalent',7,'error'),
+     ('warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent',0,'error'),
+     ('networks are not equivalent\nnetworks are equivalent',0,'fail'),
+     ('networks are equivalent',0,'pass'),('networks are not equivalent',0,'fail'),
+    ])
+    def test_abc_success_needs_clean_exit_and_unambiguous_object(output,rc,wanted):
+>       assert ya._abc_status_from_output(output,rc)==wanted
+E       AssertionError: assert 'pass' == 'error'
+E         
+E         - error
+E         + pass
+
+code\tests\test_cec_blif_scope.py:19: AssertionError
+_ test_abc_success_needs_clean_exit_and_unambiguous_object[warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent-0-error] _
+
+output = 'warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent'
+rc = 0, wanted = 'error'
+
+    @pytest.mark.parametrize('output,rc,wanted',[
+     ('networks are equivalent',7,'error'),
+     ('warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent',0,'error'),
+     ('networks are not equivalent\nnetworks are equivalent',0,'fail'),
+     ('networks are equivalent',0,'pass'),('networks are not equivalent',0,'fail'),
+    ])
+    def test_abc_success_needs_clean_exit_and_unambiguous_object(output,rc,wanted):
+>       assert ya._abc_status_from_output(output,rc)==wanted
+E       AssertionError: assert 'pass' == 'error'
+E         
+E         - error
+E         + pass
+
+code\tests\test_cec_blif_scope.py:19: AssertionError
+_ test_abc_success_needs_clean_exit_and_unambiguous_object[networks are not equivalent\nnetworks are equivalent-0-fail] _
+
+output = 'networks are not equivalent\nnetworks are equivalent', rc = 0
+wanted = 'fail'
+
+    @pytest.mark.parametrize('output,rc,wanted',[
+     ('networks are equivalent',7,'error'),
+     ('warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent',0,'error'),
+     ('networks are not equivalent\nnetworks are equivalent',0,'fail'),
+     ('networks are equivalent',0,'pass'),('networks are not equivalent',0,'fail'),
+    ])
+    def test_abc_success_needs_clean_exit_and_unambiguous_object(output,rc,wanted):
+>       assert ya._abc_status_from_output(output,rc)==wanted
+E       AssertionError: assert 'pass' == 'fail'
+E         
+E         - fail
+E         + pass
+
+code\tests\test_cec_blif_scope.py:19: AssertionError
+_ test_selects_actual_blif_root_without_first_model_guess[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n-None-ztop] _
+
+text = '.model ztop\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n'
+requested = None, wanted = 'ztop'
+
+    @pytest.mark.parametrize('text,requested,wanted',[
+     (IDENTITY,None,'ztop'),(HIERARCHY,None,'ztop'),
+     (DUMMY+INVERTER,None,None),(INVERTER+DUMMY,None,None),
+     (DUMMY+INVERTER,'ztop','ztop'),(IDENTITY,'missing',None),
+    ])
+    def test_selects_actual_blif_root_without_first_model_guess(text,requested,wanted):
+        if wanted is None:
+            with pytest.raises(ValueError):vm.select_blif_top_module(text,requested)
+>       else:assert vm.select_blif_top_module(text,requested)==wanted
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.verilog_modules' has no attribute 'select_blif_top_module'
+
+code\tests\test_cec_blif_scope.py:29: AttributeError
+_ test_selects_actual_blif_root_without_first_model_guess[.model helper\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.subckt helper A=A Y=Y\n.end\n-None-ztop] _
+
+text = '.model helper\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.subckt helper A=A Y=Y\n.end\n'
+requested = None, wanted = 'ztop'
+
+    @pytest.mark.parametrize('text,requested,wanted',[
+     (IDENTITY,None,'ztop'),(HIERARCHY,None,'ztop'),
+     (DUMMY+INVERTER,None,None),(INVERTER+DUMMY,None,None),
+     (DUMMY+INVERTER,'ztop','ztop'),(IDENTITY,'missing',None),
+    ])
+    def test_selects_actual_blif_root_without_first_model_guess(text,requested,wanted):
+        if wanted is None:
+            with pytest.raises(ValueError):vm.select_blif_top_module(text,requested)
+>       else:assert vm.select_blif_top_module(text,requested)==wanted
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.verilog_modules' has no attribute 'select_blif_top_module'
+
+code\tests\test_cec_blif_scope.py:29: AttributeError
+_ test_selects_actual_blif_root_without_first_model_guess[.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n-None-None] _
+
+text = '.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n'
+requested = None, wanted = None
+
+    @pytest.mark.parametrize('text,requested,wanted',[
+     (IDENTITY,None,'ztop'),(HIERARCHY,None,'ztop'),
+     (DUMMY+INVERTER,None,None),(INVERTER+DUMMY,None,None),
+     (DUMMY+INVERTER,'ztop','ztop'),(IDENTITY,'missing',None),
+    ])
+    def test_selects_actual_blif_root_without_first_model_guess(text,requested,wanted):
+        if wanted is None:
+>           with pytest.raises(ValueError):vm.select_blif_top_module(text,requested)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.verilog_modules' has no attribute 'select_blif_top_module'
+
+code\tests\test_cec_blif_scope.py:28: AttributeError
+_ test_selects_actual_blif_root_without_first_model_guess[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n-None-None] _
+
+text = '.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n'
+requested = None, wanted = None
+
+    @pytest.mark.parametrize('text,requested,wanted',[
+     (IDENTITY,None,'ztop'),(HIERARCHY,None,'ztop'),
+     (DUMMY+INVERTER,None,None),(INVERTER+DUMMY,None,None),
+     (DUMMY+INVERTER,'ztop','ztop'),(IDENTITY,'missing',None),
+    ])
+    def test_selects_actual_blif_root_without_first_model_guess(text,requested,wanted):
+        if wanted is None:
+>           with pytest.raises(ValueError):vm.select_blif_top_module(text,requested)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.verilog_modules' has no attribute 'select_blif_top_module'
+
+code\tests\test_cec_blif_scope.py:28: AttributeError
+_ test_selects_actual_blif_root_without_first_model_guess[.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n-ztop-ztop] _
+
+text = '.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n'
+requested = 'ztop', wanted = 'ztop'
+
+    @pytest.mark.parametrize('text,requested,wanted',[
+     (IDENTITY,None,'ztop'),(HIERARCHY,None,'ztop'),
+     (DUMMY+INVERTER,None,None),(INVERTER+DUMMY,None,None),
+     (DUMMY+INVERTER,'ztop','ztop'),(IDENTITY,'missing',None),
+    ])
+    def test_selects_actual_blif_root_without_first_model_guess(text,requested,wanted):
+        if wanted is None:
+            with pytest.raises(ValueError):vm.select_blif_top_module(text,requested)
+>       else:assert vm.select_blif_top_module(text,requested)==wanted
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'rseco.verilog_modules' has no attribute 'select_blif_top_module'
+
+code\tests\test_cec_blif_scope.py:29: AttributeError
+_ test_selects_actual_blif_root_without_first_model_guess[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n-missing-None] _
+
+text = '.model ztop\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n'
+requested = 'missing', wanted = None
+
+    @pytest.mark.parametrize('text,requested,wanted',[
+     (IDENTITY,None,'ztop'),(HIERARCHY,None,'ztop'),
+     (DUMMY+INVERTER,None,None),(INVERTER+DUMMY,None,None),
+     (DUMMY+INVERTER,'ztop','ztop'),(IDENTITY,'missing',None),
+    ])
+    def test_selects_actual_blif_root_without_first_model_guess(text,requested,wanted):
+        if wanted is None:
+>           with pytest.raises(ValueError):vm.select_blif_top_module(text,requested)
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: module 'rseco.verilog_modules' has no attribute 'select_blif_top_module'
+
+code\tests\test_cec_blif_scope.py:28: AttributeError
+_ test_mapped_boundary_rejects_independent_roots_in_either_order[.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1252/test_mapped_boundary_rejects_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000269CFB2B810>
+text = '.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n'
+
+    @pytest.mark.parametrize('text',[DUMMY+INVERTER,INVERTER+DUMMY])
+    def test_mapped_boundary_rejects_independent_roots_in_either_order(tmp_path,monkeypatch,text):
+        tools(monkeypatch);original=tmp_path/'original.v';original.write_text('module ztop(input A,output Y);assign Y=A;endmodule\n')
+        mapped=tmp_path/'mapped.blif';mapped.write_text(text)
+        result=ya.check_mapped_blif_equivalence(original,mapped,artifact_dir=tmp_path/'proof')
+>       assert result.status!='pass'
+E       AssertionError: assert 'pass' != 'pass'
+E        +  where 'pass' = YosysAbcEquivalenceResult(status='pass', method='yosys_blif_abc_cec_mapped', tool='yosys+abc', command='fake-yosys -q ...t_mapped_boundary_rejects_i0\\proof\\abc_cec.log', returncode=0, stdout_tail='Networks are equivalent', stderr_tail='').status
+
+code\tests\test_cec_blif_scope.py:51: AssertionError
+_ test_mapped_boundary_rejects_independent_roots_in_either_order[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1252/test_mapped_boundary_rejects_i1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000269CFB50210>
+text = '.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n'
+
+    @pytest.mark.parametrize('text',[DUMMY+INVERTER,INVERTER+DUMMY])
+    def test_mapped_boundary_rejects_independent_roots_in_either_order(tmp_path,monkeypatch,text):
+        tools(monkeypatch);original=tmp_path/'original.v';original.write_text('module ztop(input A,output Y);assign Y=A;endmodule\n')
+        mapped=tmp_path/'mapped.blif';mapped.write_text(text)
+        result=ya.check_mapped_blif_equivalence(original,mapped,artifact_dir=tmp_path/'proof')
+>       assert result.status!='pass'
+E       AssertionError: assert 'pass' != 'pass'
+E        +  where 'pass' = YosysAbcEquivalenceResult(status='pass', method='yosys_blif_abc_cec_mapped', tool='yosys+abc', command='fake-yosys -q ...t_mapped_boundary_rejects_i1\\proof\\abc_cec.log', returncode=0, stdout_tail='Networks are equivalent', stderr_tail='').status
+
+code\tests\test_cec_blif_scope.py:51: AssertionError
+_________ test_mapped_boundary_preserves_reachable_helper_and_receipt _________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1252/test_mapped_boundary_preserves0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000269CFBA6390>
+
+    def test_mapped_boundary_preserves_reachable_helper_and_receipt(tmp_path,monkeypatch):
+        tools(monkeypatch);original=tmp_path/'original.v';original.write_text('module ztop(input A,output Y);assign Y=A;endmodule\n')
+        mapped=tmp_path/'mapped.blif';mapped.write_text(HIERARCHY)
+        result=ya.check_mapped_blif_equivalence(original,mapped,artifact_dir=tmp_path/'proof')
+        assert result.status=='pass'
+        receipts=list((tmp_path/'proof').glob('revised.normalized.blif.normalize/attempt*/receipt.json'))
+>       assert len(receipts)==1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+code\tests\test_cec_blif_scope.py:59: AssertionError
+_____________________ test_explicit_mapped_top_must_exist _____________________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1252/test_explicit_mapped_top_must_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000269CFB20D90>
+
+    def test_explicit_mapped_top_must_exist(tmp_path,monkeypatch):
+        tools(monkeypatch);original=tmp_path/'original.v';original.write_text('module ztop(input A,output Y);assign Y=A;endmodule\n')
+        mapped=tmp_path/'mapped.blif';mapped.write_text(IDENTITY)
+>       result=ya.check_mapped_blif_equivalence(original,mapped,artifact_dir=tmp_path/'proof',mapped_top_module='missing')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: check_mapped_blif_equivalence() got an unexpected keyword argument 'mapped_top_module'
+
+code\tests\test_cec_blif_scope.py:66: TypeError
+_____ test_baseline_backcheck_does_not_accept_multiroot_generated_output ______
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1252/test_baseline_backcheck_does_n0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000269D11C59D0>
+
+    def test_baseline_backcheck_does_not_accept_multiroot_generated_output(tmp_path,monkeypatch):
+        tools(monkeypatch,baseline_multi=True);original=tmp_path/'original.v';original.write_text('module ztop(input A,output Y);assign Y=A;endmodule\n')
+        result=ya.run_yosys_abc_resynthesis_baseline(original,output_dir=tmp_path/'baseline')
+>       assert result.status!='success'
+E       AssertionError: assert 'success' != 'success'
+E        +  where 'success' = YosysAbcBaselineResult(method='yosys_blif_abc_rewrite_refactor_resyn', status='success', tool='yosys+abc', command='fa... 1, 'lat': 0, 'and': 0, 'lev': 0}}, returncode=0, stdout_tail='n : i/o = 1/ 1 lat = 0 and = 0 lev = 0', stderr_tail='').status
+
+code\tests\test_cec_blif_scope.py:72: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_cec_blif_scope.py::test_abc_success_needs_clean_exit_and_unambiguous_object[networks are equivalent-7-error]
+FAILED code/tests/test_cec_blif_scope.py::test_abc_success_needs_clean_exit_and_unambiguous_object[warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent-0-error]
+FAILED code/tests/test_cec_blif_scope.py::test_abc_success_needs_clean_exit_and_unambiguous_object[networks are not equivalent\nnetworks are equivalent-0-fail]
+FAILED code/tests/test_cec_blif_scope.py::test_selects_actual_blif_root_without_first_model_guess[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n-None-ztop]
+FAILED code/tests/test_cec_blif_scope.py::test_selects_actual_blif_root_without_first_model_guess[.model helper\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.subckt helper A=A Y=Y\n.end\n-None-ztop]
+FAILED code/tests/test_cec_blif_scope.py::test_selects_actual_blif_root_without_first_model_guess[.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n-None-None]
+FAILED code/tests/test_cec_blif_scope.py::test_selects_actual_blif_root_without_first_model_guess[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n-None-None]
+FAILED code/tests/test_cec_blif_scope.py::test_selects_actual_blif_root_without_first_model_guess[.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n-ztop-ztop]
+FAILED code/tests/test_cec_blif_scope.py::test_selects_actual_blif_root_without_first_model_guess[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n-missing-None]
+FAILED code/tests/test_cec_blif_scope.py::test_mapped_boundary_rejects_independent_roots_in_either_order[.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n]
+FAILED code/tests/test_cec_blif_scope.py::test_mapped_boundary_rejects_independent_roots_in_either_order[.model ztop\n.inputs A\n.outputs Y\n.names A Y\n0 1\n.end\n.model dummy\n.inputs A\n.outputs Y\n.names A Y\n1 1\n.end\n]
+FAILED code/tests/test_cec_blif_scope.py::test_mapped_boundary_preserves_reachable_helper_and_receipt
+FAILED code/tests/test_cec_blif_scope.py::test_explicit_mapped_top_must_exist
+FAILED code/tests/test_cec_blif_scope.py::test_baseline_backcheck_does_not_accept_multiroot_generated_output
+14 failed, 2 passed in 0.69s
+[run] 完成（5s），退出码 1

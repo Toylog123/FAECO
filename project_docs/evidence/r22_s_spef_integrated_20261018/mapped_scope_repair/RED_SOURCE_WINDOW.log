@@ -1,0 +1,56 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -m pytest code/tests/test_cec_blif_scope.py -k before_top_selection -q
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_________ test_normalization_binds_source_before_top_selection[False] _________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1255/test_normalization_binds_sourc0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000025628DB4910>
+bom = False
+
+    @pytest.mark.parametrize('bom',[False,True])
+    def test_normalization_binds_source_before_top_selection(tmp_path,monkeypatch,bom):
+        tools(monkeypatch)
+        original=tmp_path/'original.v'
+        initial=b'module oldtop(input A,output Y);assign Y=A;endmodule\n'
+        original.write_bytes((b'\xef\xbb\xbf' if bom else b'')+initial)
+        select=vm.select_top_module
+        def mutate_after_select(text,requested=None):
+            chosen=select(text,requested)
+            original.write_text(initial.decode()+'module ztop(input A,output Y);wire H;oldtop h(.A(A),.Y(H));assign Y=~H;endmodule\n')
+            return chosen
+        monkeypatch.setattr(vm,'select_top_module',mutate_after_select)
+        result=ya._normalize_to_blif(original,tmp_path/'proof.normalized.blif',yosys_argv=['fake-yosys'],timeout_s=5)
+>       assert result.returncode!=0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = _CommandOutput(command=['fake-yosys', '-q', '-p', 'read_verilog C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1...-佟亚龙/pytest-1255/test_normalization_binds_sourc0/proof.normalized.blif'], returncode=0, stdout='normalized', stderr='').returncode
+
+code\tests\test_cec_blif_scope.py:91: AssertionError
+_________ test_normalization_binds_source_before_top_selection[True] __________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1255/test_normalization_binds_sourc1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002562A723390>
+bom = True
+
+    @pytest.mark.parametrize('bom',[False,True])
+    def test_normalization_binds_source_before_top_selection(tmp_path,monkeypatch,bom):
+        tools(monkeypatch)
+        original=tmp_path/'original.v'
+        initial=b'module oldtop(input A,output Y);assign Y=A;endmodule\n'
+        original.write_bytes((b'\xef\xbb\xbf' if bom else b'')+initial)
+        select=vm.select_top_module
+        def mutate_after_select(text,requested=None):
+            chosen=select(text,requested)
+            original.write_text(initial.decode()+'module ztop(input A,output Y);wire H;oldtop h(.A(A),.Y(H));assign Y=~H;endmodule\n')
+            return chosen
+        monkeypatch.setattr(vm,'select_top_module',mutate_after_select)
+        result=ya._normalize_to_blif(original,tmp_path/'proof.normalized.blif',yosys_argv=['fake-yosys'],timeout_s=5)
+>       assert result.returncode!=0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = _CommandOutput(command=['fake-yosys', '-q', '-p', 'read_verilog C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1...-佟亚龙/pytest-1255/test_normalization_binds_sourc1/proof.normalized.blif'], returncode=0, stdout='normalized', stderr='').returncode
+
+code\tests\test_cec_blif_scope.py:91: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_cec_blif_scope.py::test_normalization_binds_source_before_top_selection[False]
+FAILED code/tests/test_cec_blif_scope.py::test_normalization_binds_source_before_top_selection[True]
+2 failed, 19 deselected in 0.42s
+[run] 完成（5s），退出码 1

@@ -1,0 +1,45 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ LibertyCellsCecTest.test_ambiguous_source_top_is_rejected_before_tool_launch _
+
+self = <test_yosys_abc_flow.LibertyCellsCecTest testMethod=test_ambiguous_source_top_is_rejected_before_tool_launch>
+
+    def test_ambiguous_source_top_is_rejected_before_tool_launch(self):
+        from unittest import mock
+        from rseco.yosys_abc import _normalize_to_blif
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v'
+            src.write_text('module a(input A,output Y); assign Y=A; endmodule '
+                           'module b(input B,output Z); assign Z=B; endmodule')
+            with mock.patch('subprocess.run',return_value=subprocess.CompletedProcess(['fake'],0,'','')) as process:
+                result=_normalize_to_blif(src,p/'out.blif',yosys_argv=['fake'],timeout_s=10)
+>           self.assertNotEqual(result.returncode,0)
+E           AssertionError: 0 == 0
+
+code\tests\test_yosys_abc_flow.py:129: AssertionError
+_ LibertyCellsCecTest.test_normalizer_chooses_source_top_before_library_injection _
+
+self = <test_yosys_abc_flow.LibertyCellsCecTest testMethod=test_normalizer_chooses_source_top_before_library_injection>
+
+    def test_normalizer_chooses_source_top_before_library_injection(self):
+        from unittest import mock
+        from rseco.yosys_abc import _normalize_to_blif
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';dest=p/'top.blif'
+            src.write_text('module helper(input A,output Y); assign Y=A; endmodule '
+                           'module ztop(input A,output Y); helper h (.A(A),.Y(Y)); endmodule')
+            commands=[]
+            def process(argv,**kwargs):
+                commands.append(argv[-1]);dest.write_text('.model ztop\n.end\n')
+                return subprocess.CompletedProcess(argv,0,'','')
+            with mock.patch('subprocess.run',side_effect=process):
+                result=_normalize_to_blif(src,dest,yosys_argv=['fake'],timeout_s=10)
+            self.assertEqual(result.returncode,0)
+>           self.assertIn('hierarchy -check -top ztop',commands[0])
+E           AssertionError: 'hierarchy -check -top ztop' not found in 'read_verilog C:/Users/佟亚龙/AppData/Local/Temp/tmpmlge1ja4/top.v; proc; flatten; opt_clean; simplemap; clean; write_blif C:/Users/佟亚龙/AppData/Local/Temp/tmpmlge1ja4/top.blif'
+
+code\tests\test_yosys_abc_flow.py:118: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_yosys_abc_flow.py::LibertyCellsCecTest::test_ambiguous_source_top_is_rejected_before_tool_launch
+FAILED code/tests/test_yosys_abc_flow.py::LibertyCellsCecTest::test_normalizer_chooses_source_top_before_library_injection
+2 failed, 8 deselected in 0.48s

@@ -14,6 +14,7 @@ import unittest
 from pathlib import Path
 
 from rseco.yosys_abc import _extract_cells_for_netlist
+from rseco.verilog_modules import module_spans
 
 
 class CellsExtractTest(unittest.TestCase):
@@ -23,7 +24,7 @@ class CellsExtractTest(unittest.TestCase):
         p.write_text(text, encoding="utf-8")
         return p
 
-    def test_assign_only_netlist_returns_library_untouched(self) -> None:
+    def test_assign_only_netlist_excludes_unused_library_models(self) -> None:
         with tempfile.TemporaryDirectory() as td:
             tmp = Path(td)
             net = self._write(
@@ -37,9 +38,11 @@ class CellsExtractTest(unittest.TestCase):
                 "module sky130_fd_sc_hd__buf_1(input A, output X); assign X = A; endmodule\n",
             )
             out = tmp / "extracted.v"
+            original_library = lib.read_bytes()
             result = _extract_cells_for_netlist(net, lib, out)
-            self.assertIs(result, lib)
-            self.assertFalse(out.exists())
+            self.assertIs(result, out)
+            self.assertEqual(lib.read_bytes(), original_library)
+            self.assertEqual(module_spans(out.read_text(encoding="utf-8")), [])
 
     def test_missing_cell_raises_with_cell_name(self) -> None:
         with tempfile.TemporaryDirectory() as td:

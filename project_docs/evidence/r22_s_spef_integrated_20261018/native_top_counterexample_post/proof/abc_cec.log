@@ -1,0 +1,13 @@
+command: C:\oss-cad-suite-build\oss-cad-suite\bin\yosys-abc.EXE -s -c cec project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/original.normalized.blif project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/revised.normalized.blif
+
+stdout:
+======== ABC command line "cec project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/original.normalized.blif project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/revised.normalized.blif"
+Networks are NOT EQUIVALENT.  Time =     0.01 sec
+INPUT: A = 1'h1, B = 1'h0.  OUTPUT: Y = 1'h1 (original.normalized), Y = 1'h0 (revised.normalized).
+Verification failed for at least 1 outputs:  Y
+Output Y: Value in Network1 = 1. Value in Network2 = 0.
+Input pattern: 
+
+
+stderr:
+

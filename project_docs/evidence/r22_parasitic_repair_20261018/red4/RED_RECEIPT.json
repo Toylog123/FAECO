@@ -1,0 +1,52 @@
+{
+  "client_date": "2026-10-18",
+  "created_actual_utc": "2026-10-18T01:00:25.970200+00:00",
+  "observed_result": {
+    "failed": 2,
+    "passed": 19,
+    "runtime_s": 4.37,
+    "wrapper_s": 11,
+    "exitcode": 1,
+    "timeout_s": 300
+  },
+  "actual_opensta_executed": false,
+  "counterexamples": "Concatenating stdout without trailing newline and stderr hid an anchored Error diagnostic from both runners; both returned -0.1 despite error.",
+  "files": [
+    {
+      "source_path": "code/src/rseco/opensta.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red4/code/src/rseco/opensta.py",
+      "sha256": "0ae3322d7348ac6a44cfced26c34cff6f07fc44074d62e17aac9f513aa228a44",
+      "bytes": 20287
+    },
+    {
+      "source_path": "code/scripts/run_parasitic_aware_check.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red4/code/scripts/run_parasitic_aware_check.py",
+      "sha256": "6d8338673abd76844eb35fb9cef41b52f352d10a69abd693510cdcffe66ec055",
+      "bytes": 9754
+    },
+    {
+      "source_path": "code/tests/test_r22_parasitic_measurement.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red4/code/tests/test_r22_parasitic_measurement.py",
+      "sha256": "ef45abef3c22357b6dfbe1ee5357427ac08acb3e5b6a6b0f7d0138bc07488361",
+      "bytes": 15119
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red4_20261018.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red4/scratch/r22_parasitic_red4_20261018.log",
+      "sha256": "714352eab7ce8c9d6b6a4c451101239d210a7769145cb19796f15f5f7d927851",
+      "bytes": 3608
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red4_tmp/test_stderr_diagnostic_cannot_0/stderr_failure/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red4/scratch/r22_parasitic_red4_tmp/test_stderr_diagnostic_cannot_0/stderr_failure/sta.log",
+      "sha256": "505233585831b8db986fd7e098d84c4946902aaf0f59c254fbdd183bac583869",
+      "bytes": 76
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red4_tmp/test_stderr_diagnostic_cannot_1/stderr_failure/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red4/scratch/r22_parasitic_red4_tmp/test_stderr_diagnostic_cannot_1/stderr_failure/sta.log",
+      "sha256": "505233585831b8db986fd7e098d84c4946902aaf0f59c254fbdd183bac583869",
+      "bytes": 76
+    }
+  ]
+}

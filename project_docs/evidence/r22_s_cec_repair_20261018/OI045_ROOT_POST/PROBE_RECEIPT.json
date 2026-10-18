@@ -1,0 +1,75 @@
+{
+  "client_date": "2026-10-18",
+  "created_actual_utc": "2026-10-18T01:14:55.248318+00:00",
+  "probe_sha256": "3d41b67e82c0f113fce03a543d9574c84785602f887fe9daaa1c206b0a016567",
+  "actual_eda_executed": false,
+  "actual_yosys_or_abc_executed": false,
+  "boundary_control": "existing default factory and normalization/artifact code, only subprocess mocked",
+  "source_before": {
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270",
+    "code/src/rseco/yosys_abc.py": "938b649fd0ffc890c702c24f867965140eae566f8f634f3f81ba0dfe4fb11885",
+    "code/tests/test_s_cec_evidence.py": "81220c599b9f2e024b8fd33feb1c444dc59dc8eb47ac01310b26bc7efcdceb68"
+  },
+  "source_after": {
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270",
+    "code/src/rseco/yosys_abc.py": "938b649fd0ffc890c702c24f867965140eae566f8f634f3f81ba0dfe4fb11885",
+    "code/tests/test_s_cec_evidence.py": "81220c599b9f2e024b8fd33feb1c444dc59dc8eb47ac01310b26bc7efcdceb68"
+  },
+  "source_stable": true,
+  "cases": [
+    {
+      "mode": "unchanged_control",
+      "result_status": "pass",
+      "result_reason": "",
+      "receipt_status": "pass",
+      "input_drift": [],
+      "mutations": [],
+      "receipt_path": "scratch/s_cec_independent_probe_root_post_20261018/unchanged_control/proof/receipt.json",
+      "receipt_sha256": "60f130cf1a10c553db080ef1e84d5b0c165b86d280f48041e429739ec7ce7f61",
+      "actual_derived_artifact_sha256": {
+        "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+        "bytes": 81
+      },
+      "normalize_log_exists": true,
+      "command_count": 3
+    },
+    {
+      "mode": "derived_model_drift",
+      "result_status": "unavailable",
+      "result_reason": "yosys failed to normalize CEC reference",
+      "receipt_status": "unavailable",
+      "input_drift": [],
+      "mutations": [
+        {
+          "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left_cells.v",
+          "before_sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+          "after_sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285"
+        }
+      ],
+      "receipt_path": "scratch/s_cec_independent_probe_root_post_20261018/derived_model_drift/proof/receipt.json",
+      "receipt_sha256": "285dca0be273e0c5d5f7b5018b54499da581058349ac396f1fe477db1f350bb8",
+      "actual_derived_artifact_sha256": {
+        "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+        "bytes": 129
+      },
+      "normalize_log_exists": true,
+      "command_count": 1
+    },
+    {
+      "mode": "normalize_launch_error",
+      "result_status": "unavailable",
+      "result_reason": "yosys failed to normalize CEC reference",
+      "receipt_status": "unavailable",
+      "input_drift": [],
+      "mutations": [],
+      "receipt_path": "scratch/s_cec_independent_probe_root_post_20261018/normalize_launch_error/proof/receipt.json",
+      "receipt_sha256": "aa03a514d6a72ab3dee87e910e39c6abed6e19f52206053df5101b69874dbb90",
+      "actual_derived_artifact_sha256": {
+        "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+        "bytes": 81
+      },
+      "normalize_log_exists": true,
+      "command_count": 0
+    }
+  ]
+}

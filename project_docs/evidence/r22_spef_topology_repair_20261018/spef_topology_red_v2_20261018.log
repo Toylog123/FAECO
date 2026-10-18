@@ -1,0 +1,342 @@
+FFFFFFFFFFFF                                                             [100%]
+================================== FAILURES ===================================
+____ test_existing_port_api_must_not_replace_cell_pins_with_repeated_ports ____
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_existing_port_api_must_no0')
+
+    def test_existing_port_api_must_not_replace_cell_pins_with_repeated_ports(tmp_path):
+        p=tmp_path/'port.v'
+        p.write_text('module top(A,Z);\ninput A; output Z;\n'
+            'sky130_fd_sc_hd__buf_1 b1 (.A(A),.X(n));\n'
+            'sky130_fd_sc_hd__buf_1 b2 (.A(A),.X(Z));\nendmodule',encoding='utf-8')
+        spef=build_spef(parse_mapped_verilog(p))
+        section=spef.split('*D_NET A ',1)[1].split('*END',1)[0]
+>       assert section.count('*P A I')==1
+E       AssertionError: assert 2 == 1
+E        +  where 2 = <built-in method count of str object at 0x0000024C2E646AA0>('*P A I')
+E        +    where <built-in method count of str object at 0x0000024C2E646AA0> = '0.008400\n*CONN\n*P A I\n*P A I\n*CAP\n1 A 0.008400\n*RES\n'.count
+
+code\tests\test_spef_pin_topology.py:32: AssertionError
+_______________ test_actual_multioutput_roles_and_input_named_y _______________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_actual_multioutput_roles_0')
+
+    def test_actual_multioutput_roles_and_input_named_y(tmp_path):
+>       nl=parsed(tmp_path,'''module top(input A, input B, output Z);
+        wire s,c,n;
+        sky130_fd_sc_hd__ha_1 h (.A(A),.B(B),.SUM(s),.COUT(c));
+        sky130_fd_sc_hd__custom_1 f (.Y(s),.Q_N(n));
+        sky130_fd_sc_hd__buf_1 b (.A(n),.X(Z)); endmodule''')
+
+code\tests\test_spef_pin_topology.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_actual_multioutput_roles_0')
+text = 'module top(input A, input B, output Z);\n    wire s,c,n;\n    sky130_fd_sc_hd__ha_1 h (.A(A),.B(B),.SUM(s),.COUT(c));\n    sky130_fd_sc_hd__custom_1 f (.Y(s),.Q_N(n));\n    sky130_fd_sc_hd__buf_1 b (.A(n),.X(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+__________ test_port_net_keeps_one_port_and_all_instance_connections __________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_port_net_keeps_one_port_a0')
+
+    def test_port_net_keeps_one_port_and_all_instance_connections(tmp_path):
+>       nl=parsed(tmp_path,'''module top(A,Z); input A; output Z; wire t;
+        sky130_fd_sc_hd__buf_1 b1 (.A(A),.X(t));
+        sky130_fd_sc_hd__buf_1 b2 (.A(A),.X(Z)); endmodule''')
+
+code\tests\test_spef_pin_topology.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_port_net_keeps_one_port_a0')
+text = 'module top(A,Z); input A; output Z; wire t;\n    sky130_fd_sc_hd__buf_1 b1 (.A(A),.X(t));\n    sky130_fd_sc_hd__buf_1 b2 (.A(A),.X(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+______________ test_vectors_and_aliases_preserve_port_endpoints _______________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_vectors_and_aliases_prese0')
+
+    def test_vectors_and_aliases_preserve_port_endpoints(tmp_path):
+>       nl=parsed(tmp_path,'''module top(A,Z); input [1:0] A; output Z;
+        wire a2; assign a2 = A[1];
+        sky130_fd_sc_hd__buf_1 b (.A(a2),.X(Z)); endmodule''')
+
+code\tests\test_spef_pin_topology.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_vectors_and_aliases_prese0')
+text = 'module top(A,Z); input [1:0] A; output Z;\n    wire a2; assign a2 = A[1];\n    sky130_fd_sc_hd__buf_1 b (.A(a2),.X(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+__________ test_top_and_wrapper_roles_come_from_module_declarations ___________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_top_and_wrapper_roles_com0')
+
+    def test_top_and_wrapper_roles_come_from_module_declarations(tmp_path):
+>       nl=parsed(tmp_path,'''module helper(D,Q_N); input D; output Q_N;
+        sky130_fd_sc_hd__custom_1 ff (.Y(D),.Q_N(Q_N)); endmodule
+        module top(input A, output Z); wire n;
+        helper h (.D(A),.Q_N(n)); sky130_fd_sc_hd__buf_1 b (.A(n),.X(Z)); endmodule''',top_module='top')
+
+code\tests\test_spef_pin_topology.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_top_and_wrapper_roles_com0')
+text = 'module helper(D,Q_N); input D; output Q_N;\n    sky130_fd_sc_hd__custom_1 ff (.Y(D),.Q_N(Q_N)); endmodule\n    module top(input A, output Z); wire n;\n    helper h (.D(A),.Q_N(n)); sky130_fd_sc_hd__buf_1 b (.A(n),.X(Z)); endmodule'
+kw = {'top_module': 'top'}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_ test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_0')
+body = 'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));'
+
+    @pytest.mark.parametrize('body',[
+        'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (A,Z);',
+        'sky130_fd_sc_hd__buf_1 u (.A(A&1\'b1),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));',
+    ])
+    def test_unsupported_or_ambiguous_connectivity_rejected(tmp_path,body):
+        with pytest.raises(ValueError):
+>           nl=parsed(tmp_path,'module top(input A, output Z); '+body+' endmodule')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_spef_pin_topology.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_0')
+text = 'module top(input A, output Z); sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_ test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_1')
+body = 'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));'
+
+    @pytest.mark.parametrize('body',[
+        'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (A,Z);',
+        'sky130_fd_sc_hd__buf_1 u (.A(A&1\'b1),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));',
+    ])
+    def test_unsupported_or_ambiguous_connectivity_rejected(tmp_path,body):
+        with pytest.raises(ValueError):
+>           nl=parsed(tmp_path,'module top(input A, output Z); '+body+' endmodule')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_spef_pin_topology.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_1')
+text = 'module top(input A, output Z); sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_ test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_2')
+body = 'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));'
+
+    @pytest.mark.parametrize('body',[
+        'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (A,Z);',
+        'sky130_fd_sc_hd__buf_1 u (.A(A&1\'b1),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));',
+    ])
+    def test_unsupported_or_ambiguous_connectivity_rejected(tmp_path,body):
+        with pytest.raises(ValueError):
+>           nl=parsed(tmp_path,'module top(input A, output Z); '+body+' endmodule')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_spef_pin_topology.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_2')
+text = 'module top(input A, output Z); sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_ test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (A,Z);] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_3')
+body = 'sky130_fd_sc_hd__buf_1 u (A,Z);'
+
+    @pytest.mark.parametrize('body',[
+        'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (A,Z);',
+        'sky130_fd_sc_hd__buf_1 u (.A(A&1\'b1),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));',
+    ])
+    def test_unsupported_or_ambiguous_connectivity_rejected(tmp_path,body):
+        with pytest.raises(ValueError):
+>           nl=parsed(tmp_path,'module top(input A, output Z); '+body+' endmodule')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_spef_pin_topology.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_3')
+text = 'module top(input A, output Z); sky130_fd_sc_hd__buf_1 u (A,Z); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_ test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A&1'b1),.X(Z));] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_4')
+body = "sky130_fd_sc_hd__buf_1 u (.A(A&1'b1),.X(Z));"
+
+    @pytest.mark.parametrize('body',[
+        'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (A,Z);',
+        'sky130_fd_sc_hd__buf_1 u (.A(A&1\'b1),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));',
+    ])
+    def test_unsupported_or_ambiguous_connectivity_rejected(tmp_path,body):
+        with pytest.raises(ValueError):
+>           nl=parsed(tmp_path,'module top(input A, output Z); '+body+' endmodule')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_spef_pin_topology.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_4')
+text = "module top(input A, output Z); sky130_fd_sc_hd__buf_1 u (.A(A&1'b1),.X(Z)); endmodule"
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_ test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_5')
+body = 'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));'
+
+    @pytest.mark.parametrize('body',[
+        'sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (A,Z);',
+        'sky130_fd_sc_hd__buf_1 u (.A(A&1\'b1),.X(Z));',
+        'sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));',
+    ])
+    def test_unsupported_or_ambiguous_connectivity_rejected(tmp_path,body):
+        with pytest.raises(ValueError):
+>           nl=parsed(tmp_path,'module top(input A, output Z); '+body+' endmodule')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_spef_pin_topology.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_unsupported_or_ambiguous_5')
+text = 'module top(input A, output Z); sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z)); endmodule'
+kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+_______________ test_ambiguous_top_requires_explicit_selection ________________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_ambiguous_top_requires_ex0')
+
+    def test_ambiguous_top_requires_explicit_selection(tmp_path):
+        text='module a(input X); endmodule module b(input Y); endmodule'
+        with pytest.raises(ValueError,match='top|Top'):
+>           parsed(tmp_path,text)
+
+code\tests\test_spef_pin_topology.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1222/test_ambiguous_top_requires_ex0')
+text = 'module a(input X); endmodule module b(input Y); endmodule', kw = {}
+
+    def parsed(tmp_path, text, **kw):
+        p=tmp_path/'mapped.v';p.write_text(text,encoding='utf-8')
+>       return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: parse_mapped_verilog() got an unexpected keyword argument 'liberty_text'
+
+code\tests\test_spef_pin_topology.py:23: TypeError
+=========================== short test summary info ===========================
+FAILED code/tests/test_spef_pin_topology.py::test_existing_port_api_must_not_replace_cell_pins_with_repeated_ports
+FAILED code/tests/test_spef_pin_topology.py::test_actual_multioutput_roles_and_input_named_y
+FAILED code/tests/test_spef_pin_topology.py::test_port_net_keeps_one_port_and_all_instance_connections
+FAILED code/tests/test_spef_pin_topology.py::test_vectors_and_aliases_preserve_port_endpoints
+FAILED code/tests/test_spef_pin_topology.py::test_top_and_wrapper_roles_come_from_module_declarations
+FAILED code/tests/test_spef_pin_topology.py::test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__unknown_1 u (.A(A),.X(Z));]
+FAILED code/tests/test_spef_pin_topology.py::test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A),.BOGUS(Z));]
+FAILED code/tests/test_spef_pin_topology.py::test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A),.A(A),.X(Z));]
+FAILED code/tests/test_spef_pin_topology.py::test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (A,Z);]
+FAILED code/tests/test_spef_pin_topology.py::test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A&1'b1),.X(Z));]
+FAILED code/tests/test_spef_pin_topology.py::test_unsupported_or_ambiguous_connectivity_rejected[sky130_fd_sc_hd__buf_1 u (.A(A),.X(Z)); sky130_fd_sc_hd__buf_1 v (.A(A),.X(Z));]
+FAILED code/tests/test_spef_pin_topology.py::test_ambiguous_top_requires_explicit_selection
+12 failed in 0.55s

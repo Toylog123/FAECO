@@ -1,0 +1,1272 @@
+"""Minimal executable flow helpers for FAECO cases."""
+
+import json
+import time
+import inspect
+from dataclasses import asdict
+from pathlib import Path
+from typing import Any
+
+from .case_loader import load_case
+from .candidate_policy import generate_candidate_boundaries, validate_policy
+from .cut import (
+    build_weighted_cut_graph,
+    canonical_cut_hash,
+    fixed_min_cut,
+    solve_weighted_cut,
+    split_cone_by_depth,
+    weighted_cut_candidates,
+    constrained_weighted_cut_candidates,
+    _critical_path_cover_cut,
+)
+from .equivalence import check_structural_equivalence
+from .failures import FailureThresholds, FailureType, classify_failures
+from .graph import extract_fanin_cone
+from .metrics import change_ratio, logic_level_reduction
+from .netlist_io import load_analysis_netlist
+from .patch import make_patch_candidate
+from .ranking import rank_patch_candidates
+from .refinement import RefinementWeights, refine_weights
+from .replacement import apply_patch_replacement
+from .replacement import parse_verilog_netlist_from_text
+from .yosys_abc import check_yosys_abc_equivalence, run_yosys_abc_resynthesis_baseline
+
+
+def _default_liberty_cells_v() -> Path | None:
+    """Path to the extracted assign-style SKY130 cells model if present.
+
+    Used to expand Liberty-mapped (named-port) netlists so ABC CEC can
+    read them.  None disables the expansion (plain gate-level CEC path).
+    """
+    candidate = (
+        # 2026-09-12 migration: the module moved from `src/rseco` to
+        # `code/src/rseco` (one level deeper) and `benchmarks/` became
+        # `data/raw/benchmarks/`.
+        Path(__file__).resolve().parents[3]
+        / "data"
+        / "raw"
+        / "benchmarks"
+        / "raw"
+        / "skywater_cells_models"
+        / "sky130_cells_v2.v"
+    )
+    return candidate if candidate.exists() else None
+
+
+def _analysis_cell_options(evaluator) -> dict:
+    """Use the evaluator's actual Liberty outputs at every analysis entry."""
+    cells = getattr(evaluator, "lib", {})
+    outputs = {name: dict(cell.output_functions) for name, cell in cells.items()
+               if getattr(cell, "output_functions", None)}
+    return {"cell_output_functions": outputs} if outputs else {}
+
+
+def _refreshed_candidate_cone(text, evaluator, target_output):
+    from .verilog_modules import target_module_text
+    top = getattr(evaluator, "top_module", None)
+    scoped = target_module_text(text, top) if top else text
+    netlist = parse_verilog_netlist_from_text(scoped, **_analysis_cell_options(evaluator))
+    return extract_fanin_cone(netlist, roots=[target_output])
+
+
+def build_case_metrics(
+    case_dir: str | Path,
+    *,
+    artifact_dir: str | Path | None = None,
+) -> dict[str, Any]:
+    case_dir = Path(case_dir)
+    artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
+    started_at = time.perf_counter()
+    runtime_marks: dict[str, float] = {}
+
+    def mark(stage: str, stage_started_at: float) -> None:
+        runtime_marks[stage] = time.perf_counter() - stage_started_at
+
+    stage_started_at = time.perf_counter()
+    case = load_case(case_dir)
+    original = load_analysis_netlist(case.original_analysis_netlist_path)
+    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path)
+    mark("parse_netlists", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    cone = extract_fanin_cone(original, roots=[case.target_output])
+    mark("cone_extraction", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    equivalence = check_structural_equivalence(
+        original,
+        resynthesized,
+        outputs=[case.target_output],
+    )
+    mark("equivalence", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    formal_equivalence = check_yosys_abc_equivalence(
+        case.original_netlist_path,
+        case.resynthesized_netlist_path,
+        outputs=[case.target_output],
+        artifact_dir=artifact_dir / "formal_equivalence",
+        liberty_cells_v=_default_liberty_cells_v(),
+    )
+    mark("formal_equivalence", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    abc_baseline = run_yosys_abc_resynthesis_baseline(
+        case.original_netlist_path,
+        output_dir=artifact_dir / "abc_baseline",
+    )
+    mark("abc_baseline", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    boundary = fixed_min_cut(cone)
+    initial_patch = make_patch_candidate(
+        case_id=case.case_id,
+        boundary=boundary,
+        equivalence=equivalence,
+    )
+
+    initial_patch_size = initial_patch.patch_size
+    try:
+        logic_level_before = original.logic_level(case.target_output)
+        logic_level_after = resynthesized.logic_level(case.target_output)
+        reduction = logic_level_reduction(
+            before=logic_level_before, after=logic_level_after
+        )
+    except ValueError:
+        # Sequential netlists (DFF feedback loops) have no acyclic logic
+        # level; the real success criterion is the injected WNS evaluator,
+        # so the logic-level metrics degrade to a neutral 0.
+        logic_level_before = None
+        logic_level_after = None
+        reduction = 0
+
+    # Legacy metrics mode has no boundary-checker invocation.  Treat the
+    # boundary result as "not evaluated" here to preserve its historical
+    # F1/F3-only taxonomy; the strict multi-iteration runner below computes
+    # boundary_closed from the real checker and fails closed when unavailable.
+    boundary_closed = equivalence.status in {"pass", "fail"}
+    failures = classify_failures(
+        equivalence_passed=equivalence.status == "pass",
+        boundary_closed=boundary_closed,
+        patch_size=initial_patch_size,
+        original_gate_count=original.gate_count,
+        logic_level_before=logic_level_before,
+        logic_level_after=logic_level_after,
+        verification_runtime_s=0.0,
+        thresholds=FailureThresholds(),
+    )
+    refinement = refine_weights(RefinementWeights(), failures)
+    cut_graph = build_weighted_cut_graph(cone, refinement.weights)
+    cut_result = solve_weighted_cut(cone, cut_graph)
+    candidate_patches = [
+        make_patch_candidate(
+            case_id=case.case_id,
+            boundary=candidate_boundary,
+            equivalence=equivalence,
+        )
+        for candidate_boundary in weighted_cut_candidates(cone, refinement.weights)
+    ]
+    mark("cut_search", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    ranked_patches = rank_patch_candidates(
+        candidate_patches,
+        timing_gains={patch.patch_id: float(reduction) for patch in candidate_patches},
+        verification_costs={patch.patch_id: 0.0 for patch in candidate_patches},
+    )
+    selected_patch = ranked_patches[0]
+    mark("ranking", stage_started_at)
+
+    stage_started_at = time.perf_counter()
+    patch_replacement = apply_patch_replacement(
+        case_id=case.case_id,
+        cone=cone,
+        patch=selected_patch.patch,
+    )
+    mark("replacement", stage_started_at)
+    refinement_iterations = [
+        {
+            "iteration": 1,
+            "stage": "single_refinement_proxy",
+            "input_failure_types": sorted(failure.value for failure in failures),
+            "actions": refinement.actions,
+            "selected_patch_id": selected_patch.patch.patch_id,
+            "selected_cut_method": selected_patch.patch.cut_method,
+            "replacement_status": patch_replacement.status,
+            "candidate_count": len(ranked_patches),
+        }
+    ]
+    selected_patch_size = selected_patch.patch.patch_size
+    ratio = change_ratio(
+        patch_size=selected_patch_size,
+        original_gate_count=original.gate_count,
+    )
+    runtime_total = time.perf_counter() - started_at
+    runtime = _build_runtime_report(
+        total_s=runtime_total,
+        breakdown=runtime_marks,
+        formal_equivalence_status=formal_equivalence.status,
+        abc_baseline_status=abc_baseline.status,
+    )
+
+    return {
+        "case_id": case.case_id,
+        "status": "draft_metrics_generated",
+        "metrics": {
+            "original_gate_count": original.gate_count,
+            "resynthesized_gate_count": resynthesized.gate_count,
+            "logic_level_before": logic_level_before,
+            "logic_level_after": logic_level_after,
+            "logic_level_reduction": reduction,
+            "patch_size": selected_patch_size,
+            "change_ratio": ratio,
+            "equivalence_result": equivalence.status,
+            "formal_equivalence_result": formal_equivalence.status,
+            "abc_baseline_status": abc_baseline.status,
+            "runtime_total": runtime_total,
+            "runtime_breakdown": runtime_marks,
+            "runtime": runtime,
+        },
+        "cone": cone.to_dict(),
+        "equivalence": {
+            "status": equivalence.status,
+            "method": equivalence.method,
+            "reason": equivalence.reason,
+        },
+        "formal_equivalence": formal_equivalence.to_dict(),
+        "abc_baseline": abc_baseline.to_dict(),
+        "cut_graph": {
+            "nodes": cut_graph.nodes,
+            "node_costs": cut_graph.node_costs,
+            "source": cut_graph.source,
+            "sink": cut_graph.sink,
+            "infinite_capacity": cut_graph.infinite_capacity,
+            "split_edges": cut_graph.split_edges,
+            "dependency_edges": cut_graph.dependency_edges,
+        },
+        "cut_result": cut_result.to_dict(),
+        "patch_ranking": [ranked_patch.to_dict() for ranked_patch in ranked_patches],
+        "selected_patch": selected_patch.to_dict(),
+        "patch_replacement": patch_replacement.to_dict(),
+        "failure_types": sorted(failure.value for failure in failures),
+        "refinement": {
+            "actions": refinement.actions,
+            "weights": asdict(refinement.weights),
+            "iteration_count": len(refinement_iterations),
+            "stage": "single_refinement_proxy",
+        },
+        "refinement_iterations": refinement_iterations,
+    }
+
+
+def _build_runtime_report(
+    *,
+    total_s: float,
+    breakdown: dict[str, float],
+    formal_equivalence_status: str,
+    abc_baseline_status: str,
+) -> dict[str, Any]:
+    status_by_stage = {
+        "formal_equivalence": formal_equivalence_status,
+        "abc_baseline": abc_baseline_status,
+    }
+    return {
+        "schema_version": 1,
+        "total_s": total_s,
+        "stages": [
+            {
+                "id": stage_id,
+                "category": _runtime_stage_category(stage_id),
+                "tool": _runtime_stage_tool(stage_id),
+                "status": status_by_stage.get(stage_id, "success"),
+                "duration_s": breakdown.get(stage_id, 0.0),
+            }
+            for stage_id in [
+                "parse_netlists",
+                "cone_extraction",
+                "equivalence",
+                "formal_equivalence",
+                "abc_baseline",
+                "cut_search",
+                "ranking",
+                "replacement",
+            ]
+        ],
+    }
+
+
+def _runtime_stage_category(stage_id: str) -> str:
+    if stage_id in {"formal_equivalence", "abc_baseline"}:
+        return "external_tool_wrapper"
+    return "python_flow"
+
+
+def _runtime_stage_tool(stage_id: str) -> str:
+    if stage_id in {"formal_equivalence", "abc_baseline"}:
+        return "abc"
+    return "python"
+
+
+def write_case_metrics(case_dir: str | Path) -> Path:
+    case_dir = Path(case_dir)
+    report = build_case_metrics(case_dir, artifact_dir=case_dir / "results")
+    cone_path = case_dir / "cones" / "target_cone.json"
+    cone_payload = {
+        "case_id": report["case_id"],
+        "cone_id": f"cone_{report['cone']['roots'][0]}",
+        **report["cone"],
+        "status": "generated",
+    }
+    cone_path.write_text(json.dumps(cone_payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    patch_payload = {
+        "case_id": report["case_id"],
+        "patch_candidates": report["patch_ranking"],
+    }
+    (case_dir / "patches" / "candidates.json").write_text(
+        json.dumps(patch_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    selected_patch_payload = {
+        "case_id": report["case_id"],
+        "selected_patch": report["selected_patch"],
+        "status": "selected",
+    }
+    (case_dir / "patches" / "selected_patch.json").write_text(
+        json.dumps(selected_patch_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    replacement_payload = {
+        "case_id": report["case_id"],
+        "patch_replacement": report["patch_replacement"],
+        "status": report["patch_replacement"]["status"],
+    }
+    (case_dir / "patches" / "replacement.json").write_text(
+        json.dumps(replacement_payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+    output_path = case_dir / "results" / "metrics.json"
+    output_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return output_path
+
+
+def _cone_candidates(cone, weights, critical_instances, r_available, *, constrained=False, k=8,
+                     allow_singleton=False, wall_timeout_s=None,
+                     cut_search_policy='legacy', cut_sources='full',
+                     node_cost_mode='configured', pool_trace=None):
+    validate_policy(cut_search_policy, cut_sources, node_cost_mode)
+    if not getattr(cone, "gates", None):
+        return []
+    # Divide-and-conquer cut (review shortboard defect 4): a cone larger than
+    # weights.max_cone_gates is split into depth-bounded subcones; each
+    # subcone is cut independently so the global s-t graph stays bounded.
+    max_gates = max(1, int(getattr(weights, 'max_cone_gates', 1000)))
+    cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]
+    out: list = []
+    for sub in cones:
+        if cut_search_policy == 'weighted_st':
+            rows, trace = generate_candidate_boundaries(
+                sub, weights, critical_instances, r_available,
+                sources=cut_sources, cost_mode=node_cost_mode)
+            if pool_trace is not None:
+                pool_trace.append(trace)
+            out.extend(rows)
+            continue
+        if constrained:
+            # The joint bi-objective cut hard-anchors the deepest critical
+            # instance and requires >=1 covered critical gate.  Both must be
+            # filtered to gates actually present in this (sub)cone: an anchor
+            # outside the cone used to suppress every candidate (s27 target
+            # cone G10 does not contain the deepest critical instance).
+            sub_critical = [
+                g for g in (critical_instances or []) if g in set(sub.gates)
+            ]
+            rows = constrained_weighted_cut_candidates(
+                sub, weights, k=k, critical_instances=sub_critical or None,
+                min_critical_coverage=1 if sub_critical else 0,
+                hard_anchors=(sub_critical[-1:] if sub_critical else []),
+                window_size=max(1, getattr(weights, "max_cone_gates", len(sub.gates))),
+                allow_singleton=allow_singleton,
+                wall_timeout_s=wall_timeout_s,
+            )
+            # Joint bi-objective cut: the critical-path cover is the
+            # first-round default candidate even in the constrained path.
+            # Without it, beam-1 loops stay stuck on the cheapest singleton
+            # region and never reach the multi-gate B/JOINT candidates that
+            # actually repair the timing bottleneck.
+            if sub_critical:
+                # The F1 hard constraint zeroes the critical reward of gates
+                # without an R candidate in the cut graph; it must not remove
+                # those gates from the cover itself, otherwise beam-1 loops
+                # never reach the B/G/JOINT candidates that repair them
+                # (s27 cover was reduced to the single R-rewritable gate).
+                cover = _critical_path_cover_cut(sub, sub_critical, r_available=None)
+                if cover is not None and cover.patch_size > 0:
+                    seen = {canonical_cut_hash(c) for c in rows}
+                    if canonical_cut_hash(cover) not in seen:
+                        rows = [cover] + rows
+            out.extend(rows)
+        else:
+            out.extend(weighted_cut_candidates(
+                sub, weights, critical_instances,
+                r_available=r_available,
+                critical_first_default=True,
+            ))
+    return out
+
+
+def run_multi_iteration_case(
+    case_dir: str | Path,
+    *,
+    max_iterations: int = 10,
+    enable_feedback: bool = True,
+    artifact_dir: str | Path | None = None,
+    equivalence_checker: object | None = None,
+    wns_evaluator: object | None = None,
+    candidates_per_iteration: int = 8,
+    max_patches: int | None = None,
+    critical_instances: list[str] | None = None,
+    r_available: set[str] | None = None,
+    init_weights: dict | None = None,
+    epsilon: float = 0.0,
+    sta_budget: int | None = None,
+    formal_budget: int | None = None,
+    wall_timeout_s: float | None = None,
+    feedback_config: object | None = None,
+    random_order: bool = False,
+    seed: int = 0,
+    structure_resynth: bool = False,
+    resynth_per_iteration: int = 1,
+    resynth_window_pool: int | None = None,
+    resynth_variants: tuple[str, ...] = ("S0", "S1", "S2"),
+    resynth_tools: object | None = None,
+    resynth_lib_path: str | Path | None = None,
+    structure_out_dir: str | Path | None = None,
+) -> dict:
+    """Run the X19 multi-iteration failure-aware refinement loop.
+
+    Unlike build_case_metrics (single refinement proxy), this drives
+    cut -> classify -> refine -> re-cut until success or max_iterations.
+    It reuses refine_weights via simulate_refinement_loop.
+
+    equivalence_checker: optional callable(original, resynthesized,
+        outputs=[target]) -> object with .status and .method.  When given,
+        it replaces the default structural-signature equivalence check.
+        This is required for end-to-end success: the default structural
+        check cannot pass when the resynthesized netlist is genuinely
+        restructured (reduction >= 1), because F1 (structural equivalence)
+        and F4 (logic-level reduction) are mutually exclusive by
+        construction -- a structural match implies identical logic levels.
+
+    wns_evaluator: optional callable(patch, weights) -> dict with keys
+        "wns" (float) and "improved" (bool).  When given, the loop uses
+        WNS strict improvement as the success criterion instead of the
+        default logic-level reduction >= 1, and records every measured WNS
+        in "wns_history".  This is the real-STA hook: a runner can apply the
+        candidate patch and call OpenSTA, then report whether WNS improved.
+
+    candidates_per_iteration: how many weighted-ordered cut candidates are
+        explored (and OpenSTA-measured) per iteration before refining the
+        F1-F5 weights.  A beam > 1 finds good cuts within one iteration;
+        beam == 1 isolates the pure failure-feedback loop (each iteration
+        retries only the top cut under the refined weights).
+
+    critical_instances: real critical-path instance names (from OpenSTA
+        report_checks).  When provided with an F4-capable wns_evaluator,
+        the weighted cut search can generate a critical-path-cover candidate
+        that actually targets the timing-critical gates after an F4 failure.
+
+    structure_resynth: enable the L3 S candidate type (r2 §4.9).  S is an
+        *independent* candidate type: when the R/G/B candidates of an
+        iteration all fail to improve timing, the top ``resynth_per_iteration``
+        cut boundaries are additionally handed to
+        ``run_structure_resynthesis``, and each formally verified (CEC-1 +
+        CEC-2 + full-host structural check) grafted netlist is measured with
+        the same STA configuration as the R/G/B path.  S consumes the same
+        ``candidates_per_iteration`` budget and is never applied on top of
+        itself, so there is at most one S tier per iteration.  The L2 feedback
+        path is untouched: the flag only adds a candidate source.
+    resynth_per_iteration: how many cut boundaries per iteration are offered
+        to S (bounded by ``candidates_per_iteration``).  Default 1 keeps the
+        resynthesis cost bounded; each window costs one ABC run per variant.
+    resynth_window_pool: lever L1 (tech design §13.3) — the size of S's *own*
+        cut-boundary pool.  ``None`` (default) reuses ``round_candidates``, i.e.
+        the ``candidates_per_iteration``-truncated list, which is the historical
+        behaviour and is byte-for-byte inert.  When set to a value larger than
+        ``candidates_per_iteration``, S gets a dedicated
+        ``_cone_candidates(..., k=resynth_window_pool)`` enumeration instead.
+        This matters because the weighted cut enumeration returns exactly
+        ``k + 1`` boundaries (census 2026-09-28), so S's historical reach was
+        capped by R/G/B's beam width rather than by the cut space.
+    resynth_variants: ABC variant chain names (default S0/S1/S2).
+    resynth_tools: injectable :class:`ResynthTools`; when omitted the real
+        Yosys/ABC binding is built from ``resynth_lib_path`` on first use.
+    """
+    from .refinement_loop import RefinementConfig, SearchState, simulate_refinement_loop
+    case_dir = Path(case_dir)
+    artifact_dir = Path(artifact_dir) if artifact_dir is not None else case_dir / "results"
+    case = load_case(case_dir)
+    analysis_options = _analysis_cell_options(wns_evaluator)
+    original = load_analysis_netlist(case.original_analysis_netlist_path, **analysis_options)
+    resynthesized = load_analysis_netlist(case.resynthesized_analysis_netlist_path, **analysis_options)
+    cone = extract_fanin_cone(original, roots=[case.target_output])
+    if equivalence_checker is not None:
+        equivalence = equivalence_checker(
+            original, resynthesized, outputs=[case.target_output]
+        )
+    else:
+        equivalence = check_structural_equivalence(
+            original, resynthesized, outputs=[case.target_output]
+        )
+    try:
+        logic_level_before = original.logic_level(case.target_output)
+        logic_level_after = resynthesized.logic_level(case.target_output)
+        reduction = logic_level_reduction(
+            before=logic_level_before, after=logic_level_after
+        )
+    except ValueError:
+        # Sequential netlists (DFF feedback loops) have no acyclic logic
+        # level; the real success criterion is the injected WNS evaluator,
+        # so the logic-level metrics degrade to a neutral 0.
+        logic_level_before = None
+        logic_level_after = None
+        reduction = 0
+
+    wns_history: list[float] = []
+    # ``0`` is a meaningful hard budget: do not let truthiness turn it into
+    # the iteration default.  Normalise once before constructing auditable
+    # state so the configured limit and the runtime guard share one value.
+    max_patches = max_iterations if max_patches is None else int(max_patches)
+    if max_patches < 0:
+        raise ValueError("max_patches must be non-negative")
+    initial_netlist_text = (
+        getattr(wns_evaluator, "mapped_text", None)
+        if wns_evaluator is not None else None
+    ) or (case.original_analysis_netlist_path.read_text(encoding="utf-8"))
+    initial_wns = getattr(wns_evaluator, "baseline_wns", None)
+    started_at = time.perf_counter()
+    deadline = (started_at + float(wall_timeout_s)
+                if wall_timeout_s is not None else None)
+    state = SearchState(
+        current_netlist_text=initial_netlist_text,
+        current_wns=initial_wns,
+        current_tns=getattr(wns_evaluator, "baseline_tns", None),
+        current_min_slack=getattr(wns_evaluator, "baseline_min_slack", None),
+        critical_instances=list(critical_instances or getattr(wns_evaluator, "critical_instances", []) or []),
+        current_cone_gates=list(cone.gates),
+        budget={"max_iterations": max_iterations, "epsilon": float(epsilon),
+                "sta_budget": sta_budget, "formal_budget": formal_budget,
+                "wall_timeout_s": wall_timeout_s, "max_patches": max_patches,
+                "_deadline_monotonic": deadline},
+    )
+    try:
+        stateful_evaluator = "state" in inspect.signature(wns_evaluator).parameters
+    except (TypeError, ValueError):
+        stateful_evaluator = False
+    max_candidates_per_iteration = max(1, candidates_per_iteration)
+    _round_seq = 0  # evaluator invocation ordinal (one per outer iteration)
+    candidate_pool_trace = []
+
+    # -- L3 S wiring (r2 §4.9) --------------------------------------------
+    # Fail loudly instead of silently degrading to "S off": an experiment that
+    # claims S was enabled but never produced a single candidate would be a
+    # false negative with no error surface (the failure class this project
+    # repeatedly paid for).  `s_stats` doubles as the positive engagement
+    # signal carried into the result.
+    if structure_resynth:
+        if wns_evaluator is None or not callable(
+            getattr(wns_evaluator, "evaluate_resynth_candidate", None)
+        ):
+            raise ValueError(
+                "structure_resynth=True requires a wns_evaluator exposing "
+                "evaluate_resynth_candidate() (e.g. RealWnsEvaluator)"
+            )
+        if resynth_tools is None and not (
+            resynth_lib_path and Path(resynth_lib_path).exists()
+        ):
+            raise ValueError(
+                "structure_resynth=True requires resynth_lib_path (the SKY130 "
+                ".lib used for ABC mapping) when no resynth_tools are injected"
+            )
+    s_stats: dict = {
+        "enabled": bool(structure_resynth),
+        "windows_offered": 0,     # boundaries handed to extract_window
+        "windows_extracted": 0,   # boundaries whose r2 §4.2 invariants held
+        "candidates": 0,          # ResynthCandidates returned by the machine
+        "measured": 0,            # candidates actually measured by STA
+        "accepted": 0,            # candidates committed as a new G_r
+        "rejections": [],         # {round, label, variant} — auditable only
+        "rounds_with_s": [],      # round ordinals in which S actually ran
+    }
+    _s_tools: object | None = resynth_tools
+
+    def _s_boundary_key(boundary) -> str:
+        """Deterministic S-side identity for one cut boundary (r2 §4.3)."""
+        root = boundary.boundary_outputs[0] if boundary.boundary_outputs else ""
+        return f"S|{root}|" + ",".join(sorted(boundary.gates))
+
+    def evaluator(failures, weights):
+        nonlocal cone, _round_seq, _s_tools
+        _round_seq += 1
+        if max_patches == 0 or (stateful_evaluator and len(state.accepted_patches) >= max_patches):
+            state.set_stop_reason("max_patches")
+            return False, None
+        if state.deadline_expired():
+            state.set_stop_reason("wall_timeout")
+            return False, None
+        trial_count = state.budget_used("sta")
+        if sta_budget is not None and trial_count >= sta_budget:
+            state.set_stop_reason("sta_budget")
+            return False, None
+        formal_count = state.budget_used("formal")
+        if formal_budget is not None and formal_count >= formal_budget:
+            state.set_stop_reason("formal_budget")
+            return False, None
+        # one iteration: explore the weighted-ordered candidate cuts with the
+        # current weights (so refinement actually changes the boundary /
+        # candidate ordering), build a patch for each, and accept the first
+        # candidate whose real-STA WNS strictly improves.  Without an
+        # injected wns_evaluator the classic reduction >= 1 criterion is used
+        # on the first candidate (legacy behaviour).
+        # Joint bi-objective cut: critical-path cover is a first-round
+        # default candidate; gates without an R equivalence candidate are a
+        # hard constraint (no critical discount, cover skips them).
+        active_critical = list(state.critical_instances or
+                               getattr(wns_evaluator, "critical_instances", []) or
+                               critical_instances or [])
+        active_r_available = r_available
+        recompute_r = getattr(wns_evaluator, "r_available_for", None)
+        if callable(recompute_r):
+            r_scope = (list(cone.gates)
+                       if getattr(wns_evaluator, 'cut_search_policy', 'legacy') == 'weighted_st'
+                       else active_critical)
+            active_r_available = recompute_r(r_scope)
+        subcone_trace = []
+        candidates = _cone_candidates(
+            cone, weights, active_critical, active_r_available,
+            constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
+            k=max_candidates_per_iteration,
+            allow_singleton=bool(getattr(wns_evaluator, "allow_singleton", False)),
+            cut_search_policy=getattr(wns_evaluator, 'cut_search_policy', 'legacy'),
+            cut_sources=getattr(wns_evaluator, 'cut_sources', 'full'),
+            node_cost_mode=getattr(wns_evaluator, 'node_cost_mode', 'configured'),
+            pool_trace=subcone_trace,
+            wall_timeout_s=(
+                max(0.0, wall_timeout_s - (time.perf_counter() - started_at))
+                if wall_timeout_s is not None else None
+            ),
+        )
+        _eval_trials_ref = getattr(wns_evaluator, "trials", None)
+        _trial_start = len(_eval_trials_ref) if _eval_trials_ref is not None else 0
+        if not candidates:
+            failures.add(FailureType.PATCH_TOO_LARGE)
+            return False, None
+        tried_candidates = 0
+        # Mixed-Random arm (r2 §6.1): same candidate space, order shuffled.
+        # The permutation is seeded by (seed, round, epoch) so a run is
+        # reproducible from run_config.json alone and two candidates accepted
+        # at different epochs never share an ordering.  Uses the live-state
+        # accepted-patch count as the epoch (the pre-L2 refinement_loop
+        # SearchState has no dedicated round/epoch fields).
+        round_candidates = list(candidates[:max_candidates_per_iteration])
+        if random_order:
+            import random as _random
+
+            # str seed: random.seed() rejects tuples since Python 3.11, and a
+            # string key is equally deterministic for replay from run_config.
+            _random.Random(f"{int(seed)}|{_round_seq}|{len(state.accepted_patches)}").shuffle(round_candidates)
+        candidate_pool_trace.append({
+            'round': _round_seq, 'base_netlist_hash': state.current_netlist_hash,
+            'critical_instances': active_critical,
+            'r_available': sorted(active_r_available) if active_r_available is not None else None,
+            'subcones': subcone_trace,
+            'pool_hashes': [canonical_cut_hash(c) for c in candidates],
+            'dispatch_hashes': [canonical_cut_hash(c) for c in round_candidates],
+        })
+        if structure_resynth:
+            # Pool census (tech design §13.4-2), read-only instrumentation.
+            # The S pass reuses `round_candidates` (below), which is
+            # `candidates[:max_candidates_per_iteration]`; if the *untruncated*
+            # `candidates` list is no longer than that truncation, then widening
+            # the S window pool (lever L1) cannot help and the real limit is the
+            # cone's cut enumeration.  Recorded only when S is enabled, so the
+            # {S off} artifact stays byte-identical to the archived baseline.
+            census = s_stats.setdefault(
+                "pool_census", {"candidates_len": [], "round_candidates_len": []})
+            census["candidates_len"].append(len(candidates))
+            census["round_candidates_len"].append(len(round_candidates))
+        for boundary in round_candidates:
+            if state.deadline_expired():
+                state.set_stop_reason("wall_timeout")
+                break
+            tried_candidates += 1
+            patch = make_patch_candidate(
+                case_id=case.case_id, boundary=boundary, equivalence=equivalence
+            )
+            candidate_identity = state.hash_text(state.current_netlist_hash + state.candidate_hash(
+                gates=patch.gates,
+                boundary_inputs=patch.boundary_inputs,
+                boundary_outputs=patch.boundary_outputs,
+                action_hash=patch.patch_id,
+            ))
+            if stateful_evaluator and not state.mark_candidate_tested(candidate_identity):
+                failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
+                state.record_failure({"type": "no_new_candidate", "candidate_hash": candidate_identity})
+                continue
+            strict_boundary_missing = bool(
+                getattr(wns_evaluator, "strict_gates", False)
+                and getattr(wns_evaluator, "boundary_checker", None) is None
+            )
+            boundary_closed = (not strict_boundary_missing) and equivalence.status == "pass"
+            failures.update(
+                classify_failures(
+                    equivalence_passed=equivalence.status == "pass",
+                    boundary_closed=boundary_closed,
+                    patch_size=patch.patch_size,
+                    original_gate_count=original.gate_count,
+                    logic_level_before=logic_level_before or 0,
+                    logic_level_after=logic_level_after or 0,
+                    verification_runtime_s=0.0,
+                )
+            )
+            if wns_evaluator is not None:
+                # real-STA hook: the injected runner measures the applied
+                # candidate WNS and reports whether it strictly improved.
+                try:
+                    params = inspect.signature(wns_evaluator).parameters
+                    supports_state = "state" in params
+                except (TypeError, ValueError):
+                    supports_state = False
+                try:
+                    wns_info = (wns_evaluator(patch, weights, state=state)
+                                if supports_state else wns_evaluator(patch, weights))
+                except (TypeError, ValueError) as exc:
+                    event = {
+                        "type": "evaluator_exception",
+                        "candidate_hash": candidate_identity,
+                        "cut_hash": candidate_identity,
+                        "severity": "hard",
+                        "hard_gate": True,
+                        "runtime_s": 0.0,
+                        "evidence": {
+                            "reason": "wns_evaluator_call_failed",
+                            "exception_type": type(exc).__name__,
+                            "message": str(exc),
+                            "supports_state": supports_state,
+                        },
+                    }
+                    state.record_failure(event)
+                    wns_info = {
+                        "wns": state.current_wns,
+                        "tns": state.current_tns,
+                        "min_slack": state.current_min_slack,
+                        "improved": False,
+                        "failure_events": [event],
+                    }
+                for terminal_event in wns_info.get("failure_events", []):
+                    terminal_type = terminal_event.get("type")
+                    if terminal_type in {"deadline_exhausted", "sta_budget_exhausted",
+                                         "formal_budget_exhausted"}:
+                        state.record_failure(terminal_event)
+                    if terminal_type == "deadline_exhausted":
+                        state.set_stop_reason("wall_timeout")
+                    elif terminal_type == "sta_budget_exhausted":
+                        state.set_stop_reason("sta_budget")
+                    elif terminal_type == "formal_budget_exhausted":
+                        state.set_stop_reason("formal_budget")
+                if state.stop_reason is not None:
+                    return False, None
+                wns = wns_info["wns"]
+                wns_history.append(wns)
+                for event in wns_info.get("failure_events", []):
+                    state.record_failure(event)
+                    event_type = event.get("type", FailureType.BOUNDARY_INVALID)
+                    try:
+                        failure_type = FailureType(event_type)
+                    except ValueError:
+                        failure_type = None
+                    if event.get("hard_gate") or event.get("severity") == "hard" or (
+                        failure_type is not None and failure_type in {
+                        FailureType.EQUIVALENCE, FailureType.BOUNDARY_INVALID,
+                        FailureType.PATCH_TOO_LARGE,
+                        FailureType.VERIFICATION_TOO_EXPENSIVE,
+                    }):
+                        if failure_type is not None:
+                            failures.add(failure_type)
+                # F6 physical-load feedback (review shortboard): the
+                # evaluator marks a trial as physical_failure when its
+                # ideal-net gain did not survive the SPEF re-measure;
+                # surface that into the outer-loop failure set so the
+                # weight refinement raises boundary_penalty and the next
+                # cut avoids high-load paths.
+                eval_trials = getattr(wns_evaluator, "trials", None)
+                if eval_trials is not None:
+                    for _t in eval_trials[_trial_start:]:
+                        for trial_event in _t.get("failure_events", []):
+                            state.record_failure(trial_event)
+                            if (trial_event.get("hard_gate") or
+                                trial_event.get("severity") == "hard"):
+                                try:
+                                    trial_failure_type = FailureType(trial_event.get("type"))
+                                except (ValueError, TypeError):
+                                    trial_failure_type = None
+                                if trial_failure_type is not None:
+                                    failures.add(trial_failure_type)
+                        if _t.get("physical_failure"):
+                            failures.add(FailureType.PHYSICAL_LOAD_FAILURE)
+                            break
+                hard_failure = any(
+                    e.get("hard_gate") or e.get("severity") == "hard" or e.get("type") in {
+                        FailureType.EQUIVALENCE.value,
+                        FailureType.BOUNDARY_INVALID.value,
+                        FailureType.PATCH_TOO_LARGE.value,
+                        FailureType.VERIFICATION_TOO_EXPENSIVE.value,
+                    }
+                    for e in wns_info.get("failure_events", [])
+                )
+                if wns_info["improved"] and not hard_failure:
+                    candidate_text = wns_info.get("candidate_netlist_text")
+                    if candidate_text is not None:
+                        refreshed_cone = None
+                        if getattr(wns_evaluator, "refresh_cone", False):
+                            try:
+                                refreshed_cone = _refreshed_candidate_cone(
+                                    candidate_text, wns_evaluator, case.target_output)
+                            except Exception as exc:
+                                failure = {
+                                    "type": "F2_boundary_invalid",
+                                    "candidate_hash": wns_info.get("candidate_hash", candidate_identity),
+                                    "cut_hash": candidate_identity,
+                                    "severity": "hard",
+                                    "threshold": "cone_refresh",
+                                    "observed_value": "unavailable",
+                                    "evidence": {"reason": "cone_refresh_failed", "error": str(exc)},
+                                }
+                                state.record_failure(failure)
+                                failures.add(FailureType.BOUNDARY_INVALID)
+                                continue
+                        state.accept_patch(
+                            patch.patch_id, candidate_text, wns=wns,
+                            tns=wns_info.get("tns"),
+                            min_slack=wns_info.get("min_slack"),
+                            candidate_hash=wns_info.get("candidate_hash", candidate_identity),
+                            critical_endpoints=wns_info.get("critical_endpoints"),
+                            critical_instances=wns_info.get("critical_instances"),
+                            cone_gates=(list(refreshed_cone.gates)
+                                       if refreshed_cone is not None
+                                       else state.current_cone_gates),
+                            metadata={"cut_hash": candidate_identity,
+                                      "sta_launch_seq": wns_info.get('sta_launch_seq'),
+                                      "sta_provenance": wns_info.get("sta_provenance"),
+                                      "physical_baseline_provenance": wns_info.get("physical_baseline_provenance"),
+                                      "physical_candidate_provenance": wns_info.get("physical_candidate_provenance"),
+                                      "physical_metrics": {
+                                          "baseline_wns": wns_info.get("physical_baseline"),
+                                          "candidate_wns": wns_info.get("physical_candidate"),
+                                          "baseline_tns": wns_info.get("physical_baseline_tns"),
+                                          "candidate_tns": wns_info.get("physical_candidate_tns"),
+                                          "baseline_hold": wns_info.get("physical_baseline_min_slack"),
+                                          "candidate_hold": wns_info.get("physical_candidate_min_slack"),
+                                          "min_physical_gain_ns": (wns_info.get("physical_config") or {}).get("min_physical_gain_ns"),
+                                          "rc_config_hash": wns_info.get("rc_config_hash"),
+                                      },
+                                      "action_scope": list(patch.gates)},
+                        )
+                        # Inner best selection is not an outer commit: cone
+                        # refresh or another hard gate may still reject it.
+                        committed_seq = wns_info.get('sta_launch_seq')
+                        for trial in getattr(wns_evaluator, 'trials', []):
+                            if (committed_seq is not None
+                                    and trial.get('sta_launch_seq') == committed_seq
+                                    and not trial.get('skipped_duplicate')):
+                                trial['committed'] = True
+                        accept = getattr(wns_evaluator, "accept_candidate", None)
+                        if callable(accept):
+                            accept(wns_info, state=state)
+                        if refreshed_cone is not None:
+                            cone = refreshed_cone
+                            state.current_cone_gates = list(cone.gates)
+                            state.accepted_patches[-1]["metadata"]["refreshed_cone_gates"] = list(cone.gates)
+                        timing_met = (
+                            state.current_wns is not None
+                            and state.current_wns >= -float(epsilon)
+                            and (
+                                not getattr(wns_evaluator, "hold_mode", False)
+                                or (
+                                    state.current_min_slack is not None
+                                    and state.current_min_slack >= -float(epsilon)
+                                )
+                            )
+                        )
+                        if timing_met:
+                            state.set_stop_reason("timing_met")
+                            return True, patch.patch_id, {
+                                "wns": wns, "tns": wns_info.get("tns"),
+                                "min_slack": wns_info.get("min_slack"),
+                            }, False
+                        if len(state.accepted_patches) >= max_patches:
+                            state.set_stop_reason("max_patches")
+                            return True, patch.patch_id, {
+                                "wns": wns, "tns": wns_info.get("tns"),
+                                "min_slack": wns_info.get("min_slack"),
+                            }, False
+                        # A committed candidate is a new G_r; continue the
+                        # closure search instead of terminating at first gain.
+                        return True, patch.patch_id, {
+                            "wns": wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, True
+                    return True, patch.patch_id, {
+                        "wns": wns, "tns": wns_info.get("tns"),
+                        "min_slack": wns_info.get("min_slack"),
+                    }
+                # no timing gain on this candidate: keep exploring the
+                # remaining cuts in this iteration before refining weights.
+                continue
+            if not failures and reduction >= 1:
+                return True, patch.patch_id
+            # legacy single-candidate behaviour: stop after the first cut.
+            break
+        # ------------------------------------------------------------------
+        # L3 S — window-local structure resynthesis (r2 §4.9).
+        #
+        # An *independent* candidate type over the *same* cut boundaries the
+        # R/G/B path of this round just exhausted.  Reached only when no R/G/B
+        # candidate improved timing, so S can never displace an R/G/B accept.
+        #
+        # Contract boundaries honoured here:
+        #   * at most one S tier per iteration — S never chains into another S
+        #     (the `S→G` follow-up pass of §4.9 is deliberately NOT applied in
+        #     this version; see the contract note, it would confound the
+        #     single-variable {S on, S off} comparison);
+        #   * bounded by `candidates_per_iteration` (both the offered-window
+        #     quota and the number of S candidates measured per round);
+        #   * the L2 feedback path is untouched — S rejections are recorded
+        #     with severity "info" for auditability but are never added to
+        #     `failures`, so the weights/EMA evolve exactly as they do with
+        #     S off.  {S on, S off} therefore differs only in the extra
+        #     candidate source.
+        # ------------------------------------------------------------------
+        if structure_resynth and wns_evaluator is not None:
+            from .structure_resynthesis import (default_resynth_tools,
+                                                extract_window,
+                                                run_structure_resynthesis)
+
+            if _s_tools is None:
+                _s_tools = default_resynth_tools(resynth_lib_path)
+            s_dir_root = (Path(structure_out_dir) if structure_out_dir is not None
+                          else artifact_dir / "structure_resynth")
+            s_measured_this_round = 0
+            s_attempted_this_round = 0
+            s_engaged = False
+            # Lever L1 (tech design §13.3): give S its *own*, wider window
+            # source.  `round_candidates` is truncated to
+            # `max_candidates_per_iteration`, and the weighted cut enumeration
+            # returns exactly `k + 1` boundaries (census 2026-09-28), so reusing
+            # that list caps S's reach at R/G/B's beam width.  Re-enumerating at
+            # `resynth_window_pool` widens S's pool without touching the R/G/B
+            # path.  The guard is deliberately strict (`is not None and >`), so
+            # the default keeps S's source byte-for-byte identical.
+            s_pool = max_candidates_per_iteration
+            s_boundaries = round_candidates
+            if (resynth_window_pool is not None
+                    and int(resynth_window_pool) > max_candidates_per_iteration):
+                s_pool = int(resynth_window_pool)
+                wider = _cone_candidates(
+                    cone, weights, active_critical, active_r_available,
+                    constrained=bool(getattr(wns_evaluator, "use_constrained_cuts", False)),
+                    k=s_pool,
+                    allow_singleton=bool(getattr(wns_evaluator, "allow_singleton", False)),
+                    wall_timeout_s=None,  # deterministic: no wall-clock truncation
+                )
+                if wider:
+                    s_boundaries = wider
+            s_stats["window_pool"] = s_pool
+            s_stats["window_pool_offered"] = len(s_boundaries)
+            for boundary in s_boundaries:
+                # `resynth_per_iteration` counts *attempted* windows, not raw
+                # cut positions: a boundary whose window was already resynth-
+                # esised at this committed G_r is deterministic to re-run, so
+                # the scan walks on to the next cut instead of stalling there.
+                if s_attempted_this_round >= max(1, int(resynth_per_iteration)):
+                    break
+                if s_measured_this_round >= max_candidates_per_iteration:
+                    break
+                if state.deadline_expired():
+                    state.set_stop_reason("wall_timeout")
+                    break
+                s_stats["windows_offered"] += 1
+                try:
+                    spec = extract_window(state.current_netlist_text, boundary)
+                except Exception:
+                    spec = None
+                if spec is None:
+                    # r2 §4.2 invariant violation (forbidden / sequential cell,
+                    # boundary gate absent from the committed netlist):
+                    # honest "not a window", free of charge.
+                    continue
+                s_stats["windows_extracted"] += 1
+                s_key = state.hash_text(
+                    state.current_netlist_hash + "|" + _s_boundary_key(boundary)
+                )
+                if not state.mark_candidate_tested(s_key):
+                    continue
+                s_attempted_this_round += 1
+                s_engaged = True
+                # The S machine runs CEC-1 and CEC-2 (formal equivalence);
+                # charge the formal budget and fail closed before any tool.
+                if not state.reserve_budget("formal"):
+                    event = {
+                        "type": "formal_budget_exhausted", "candidate_hash": s_key,
+                        "cut_hash": s_key, "severity": "hard", "hard_gate": True,
+                        "action_scope": list(boundary.gates),
+                        "threshold": state.budget.get("formal_budget"),
+                        "observed_value": state.budget_used("formal"),
+                        "runtime_s": 0.0,
+                        "evidence": {"stage": "S", "budget": "formal",
+                                     "reason": "reserved before window CEC"},
+                    }
+                    state.record_failure(event)
+                    state.set_stop_reason("formal_budget")
+                    return False, None
+                s_root = boundary.boundary_outputs[0] if boundary.boundary_outputs else "w"
+                s_out = (s_dir_root / f"round{_round_seq:03d}"
+                         / f"{s_root}_{len(boundary.gates)}g")
+                try:
+                    outcome = run_structure_resynthesis(
+                        state.current_netlist_text, boundary, s_out,
+                        tools=_s_tools, variants=tuple(resynth_variants),
+                    )
+                except Exception as exc:
+                    s_stats["rejections"].append(
+                        {"round": _round_seq, "label": f"W_EXCEPTION:{type(exc).__name__}",
+                         "variant": None})
+                    state.record_failure({
+                        "type": "resynth_exception", "candidate_hash": s_key,
+                        "cut_hash": s_key, "severity": "info", "hard_gate": False,
+                        "runtime_s": 0.0,
+                        "evidence": {"stage": "S", "exception_type": type(exc).__name__,
+                                     "message": str(exc)},
+                    })
+                    continue
+                for rejection in outcome.rejections:
+                    s_stats["rejections"].append(
+                        {"round": _round_seq, "label": rejection.get("label"),
+                         "variant": rejection.get("variant")})
+                    state.record_failure({
+                        "type": "resynth_rejected", "candidate_hash": s_key,
+                        "cut_hash": s_key, "severity": "info", "hard_gate": False,
+                        "runtime_s": 0.0,
+                        "evidence": {"stage": "S",
+                                     "label": rejection.get("label"),
+                                     "variant": rejection.get("variant"),
+                                     "window_root": s_root},
+                    })
+                s_stats["candidates"] += len(outcome.candidates)
+                for cand in outcome.candidates:
+                    if s_measured_this_round >= max_candidates_per_iteration:
+                        break
+                    s_patch_id = f"S::{cand.spec.window_id}::{cand.variant.variant}"
+                    wns_info = wns_evaluator.evaluate_resynth_candidate(
+                        cand.grafted_text, state=state, patch_id=s_patch_id,
+                        action_scope=sorted(boundary.gates),
+                        resynth_metadata=cand.resynth_stats,
+                    )
+                    s_measured_this_round += 1
+                    s_stats["measured"] += 1
+                    for terminal_event in wns_info.get("failure_events", []):
+                        terminal_type = terminal_event.get("type")
+                        if terminal_type in {"deadline_exhausted",
+                                             "sta_budget_exhausted",
+                                             "formal_budget_exhausted"}:
+                            state.record_failure(terminal_event)
+                            if terminal_type == "deadline_exhausted":
+                                state.set_stop_reason("wall_timeout")
+                            elif terminal_type == "sta_budget_exhausted":
+                                state.set_stop_reason("sta_budget")
+                            else:
+                                state.set_stop_reason("formal_budget")
+                    if state.stop_reason is not None:
+                        return False, None
+                    s_wns = wns_info["wns"]
+                    wns_history.append(s_wns)
+                    if not wns_info["improved"]:
+                        continue
+                    s_text = wns_info.get("candidate_netlist_text")
+                    if s_text is None:
+                        continue
+                    refreshed_cone = None
+                    if getattr(wns_evaluator, "refresh_cone", False):
+                        try:
+                            refreshed_cone = _refreshed_candidate_cone(
+                                s_text, wns_evaluator, case.target_output)
+                        except Exception as exc:
+                            state.record_failure({
+                                "type": "F2_boundary_invalid",
+                                "candidate_hash": wns_info.get("candidate_hash", s_key),
+                                "cut_hash": s_key, "severity": "hard",
+                                "threshold": "cone_refresh", "observed_value": "unavailable",
+                                "evidence": {"reason": "cone_refresh_failed", "stage": "S", "error": str(exc)},
+                            })
+                            failures.add(FailureType.BOUNDARY_INVALID)
+                            continue
+                    state.accept_patch(
+                        s_patch_id, s_text, wns=s_wns,
+                        tns=wns_info.get("tns"),
+                        min_slack=wns_info.get("min_slack"),
+                        candidate_hash=wns_info.get("candidate_hash", s_key),
+                        critical_endpoints=wns_info.get("critical_endpoints"),
+                        critical_instances=wns_info.get("critical_instances"),
+                        metadata={
+                            "cut_hash": s_key,
+                            "kind": "S",
+                            "window_id": cand.spec.window_id,
+                            "window_variant": cand.variant.variant,
+                            "r_s": cand.resynth_stats.get("r_s"),
+                            "r_s_verdict": cand.resynth_stats.get("r_s_verdict"),
+                            "soft_penalty": bool(cand.soft_penalty),
+                            "depth_before_sky130": cand.resynth_stats.get("depth_before_sky130"),
+                            "depth_after_sky130": cand.resynth_stats.get("depth_after_sky130"),
+                            "abc_sequence": cand.resynth_stats.get("abc_sequence"),
+                            "resynth_stats": dict(cand.resynth_stats),
+                            "sta_provenance": wns_info.get("sta_provenance"),
+                            "action_scope": sorted(boundary.gates),
+                        },
+                    )
+                    accept = getattr(wns_evaluator, "accept_candidate", None)
+                    if callable(accept):
+                        accept(wns_info, state=state)
+                    s_stats["accepted"] += 1
+                    # refresh the cone from the grafted netlist so the next
+                    # round's cut search sees the new window cells (same
+                    # contract as the R/G/B accept path).
+                    if refreshed_cone is not None:
+                        cone = refreshed_cone
+                        state.current_cone_gates = list(cone.gates)
+                        state.accepted_patches[-1]["metadata"][
+                            "refreshed_cone_gates"] = list(cone.gates)
+                    timing_met = (
+                        state.current_wns is not None
+                        and state.current_wns >= -float(epsilon)
+                        and (
+                            not getattr(wns_evaluator, "hold_mode", False)
+                            or (
+                                state.current_min_slack is not None
+                                and state.current_min_slack >= -float(epsilon)
+                            )
+                        )
+                    )
+                    if timing_met:
+                        state.set_stop_reason("timing_met")
+                        return True, s_patch_id, {
+                            "wns": s_wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, False
+                    if len(state.accepted_patches) >= max_patches:
+                        state.set_stop_reason("max_patches")
+                        return True, s_patch_id, {
+                            "wns": s_wns, "tns": wns_info.get("tns"),
+                            "min_slack": wns_info.get("min_slack"),
+                        }, False
+                    # S committed a new G_r; continue the closure search.
+                    return True, s_patch_id, {
+                        "wns": s_wns, "tns": wns_info.get("tns"),
+                        "min_slack": wns_info.get("min_slack"),
+                    }, True
+            if s_engaged:
+                s_stats["rounds_with_s"].append(_round_seq)
+        if state.stop_reason is not None:
+            return False, None
+        if wns_evaluator is not None:
+            failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)
+            return False, None
+        return False, None
+
+    result = simulate_refinement_loop(
+        evaluator,
+        RefinementConfig(max_iterations=max_iterations),
+        enable_feedback=enable_feedback,
+        init_weights=init_weights,
+        should_stop=lambda: state.stop_reason is not None,
+        feedback_config=feedback_config,
+    )
+    result["case_id"] = case.case_id
+    # L3 S engagement ledger.  A run that claims S was on must be provable
+    # from the artifact alone: `windows_offered`/`candidates`/`measured` are
+    # the positive signals, `rejections` the attribution, `accepted` the
+    # committed count.  All zero with enabled=True means S never engaged.
+    result["structure_resynth"] = dict(s_stats)
+    state.budget["iterations_used"] = result.get("iterations", 0)
+    state.budget["sta_runs"] = state.budget_used("sta")
+    state.budget["formal_runs"] = state.budget_used("formal")
+    state.budget["stagnation_count"] = sum(
+        1 for entry in result.get("history", []) if entry.get("status") == "refined"
+    )
+    state.budget["wall_time_s"] = time.perf_counter() - started_at
+    for entry in result.get("history", []):
+        if entry.get("failures"):
+            state.record_failure({
+                "type": "iteration_failure",
+                "iteration": entry.get("iteration"),
+                "failures": list(entry["failures"]),
+                "evidence": {"wns": entry.get("wns")},
+            })
+    if state.stop_reason is None:
+        if stateful_evaluator and len(state.accepted_patches) >= max_patches:
+            state.set_stop_reason("max_patches")
+        elif (stateful_evaluator and result.get("success")
+              and state.current_wns is not None
+              and state.current_wns >= -float(epsilon)
+              and (not getattr(wns_evaluator, "hold_mode", False)
+                   or (state.current_min_slack is not None
+                       and state.current_min_slack >= -float(epsilon)))):
+            state.set_stop_reason("timing_met")
+        elif (stateful_evaluator and state.accepted_patches
+              and result.get("iterations", 0) >= max_iterations):
+            state.set_stop_reason("max_iterations")
+        elif not stateful_evaluator and result.get("success") and state.accepted_patches:
+            state.set_stop_reason("timing_met")
+        elif state.tested_candidate_hashes:
+            state.set_stop_reason("stagnation")
+        else:
+            state.set_stop_reason("no_new_candidate")
+    result["stop_reason"] = state.stop_reason
+    if result.get("final_patch_id") is None and state.accepted_patches:
+        result["final_patch_id"] = state.accepted_patches[-1]["patch_id"]
+    result["state"] = state.to_dict()
+    result['candidate_pool_trace'] = candidate_pool_trace
+    result["wns"] = state.current_wns
+    result["tns"] = state.current_tns
+    result["min_slack"] = state.current_min_slack
+    result["logic_level_before"] = logic_level_before
+    result["logic_level_after"] = logic_level_after
+    result["logic_level_reduction"] = reduction
+    if wns_evaluator is not None:
+        result["wns_history"] = wns_history
+    # Real launch events distinguish fresh measurement from cached provenance.
+    # Keep the original baseline even though accept_candidate mutates the
+    # evaluator's baseline. Proxy endpoints have their own explicitly labeled
+    # fallback and are never labeled physical STA executions.
+    if wns_evaluator is not None:
+        if hasattr(wns_evaluator, 'trials') and initial_wns is not None:
+            from .sta_ledger import summarize_sta_ledger
+            result.update(summarize_sta_ledger(
+                getattr(wns_evaluator, 'trials', []), initial_wns,
+                getattr(wns_evaluator, 'sta_launch_events', None)))
+            used = result['n_new_sta_runs']
+            if used and state.current_wns is not None:
+                result['wns_gain_per_100_sta'] = (state.current_wns-initial_wns)/used*100.0
+        elif initial_wns is not None:
+            running = 0.0
+            curve = []
+            for w in wns_history:
+                if w is not None:
+                    running = max(running, w-initial_wns)
+                    curve.append(running)
+            result['best_wns_curve'] = curve
+            result['sta_ledger_schema'] = {'source': 'proxy_round_endpoints',
+                                          'k_unit': 'outer_round_endpoint'}
+    return result

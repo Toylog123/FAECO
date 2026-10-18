@@ -1,0 +1,92 @@
+{
+  "scope": "independent bounded native correctness and static probes, not scientific EDA",
+  "source_before": {
+    "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+    "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270"
+  },
+  "source_after": {
+    "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+    "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270"
+  },
+  "source_stable": true,
+  "native_cases": [
+    {
+      "case": "single_inverter",
+      "result": {
+        "status": "fail",
+        "method": "yosys_blif_abc_cec_mapped",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/root_mapped_scope_post/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/root_mapped_scope_post/single_inverter/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.2004746000020532,
+        "reason": "Yosys-normalized original-vs-mapped ABC cec reported non-equivalent networks",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\abc_cec.log",
+        "returncode": 0,
+        "stdout_tail": "======== ABC command line \"cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/root_mapped_scope_post/single_inverter/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/root_mapped_scope_post/single_inverter/revised.normalized.blif\"\nNetworks are NOT EQUIVALENT after structural hashing.  INPUT: A = 1'h0.  OUTPUT: Y = 1'h0 (original.normalized), Y = 1'h1 (revised.normalized).\nVerification failed for at least 1 outputs:  Y\nOutput Y: Value in Network1 = 0. Value in Network2 = 1.\nInput pattern: \nTime =     0.00 sec",
+        "stderr_tail": ""
+      },
+      "expected": "fail: source Y=A versus mapped ztop Y=!A",
+      "counterexample": {
+        "A": 0,
+        "source_Y": 0,
+        "intended_mapped_top_Y": 1
+      },
+      "mapped_file_sha256": "bd959ad13dc7c6458c775187eeed62ca89f4c296c442da0c3c3b789e60105b6e"
+    },
+    {
+      "case": "dummy_first_then_inverter",
+      "result": {
+        "status": "error",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "",
+        "outputs": [],
+        "runtime_s": 0.08182639999722596,
+        "reason": "Mapped BLIF has no valid selected normalization scope",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\dummy_first_then_inverter\\original.normalized.blif",
+        "normalized_revised": null,
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\dummy_first_then_inverter\\abc_cec.log",
+        "returncode": 127,
+        "stdout_tail": "",
+        "stderr_tail": "ValueError: A unique BLIF root is required; specify mapped_top_module explicitly"
+      },
+      "expected": "fail: source Y=A versus mapped ztop Y=!A",
+      "counterexample": {
+        "A": 0,
+        "source_Y": 0,
+        "intended_mapped_top_Y": 1
+      },
+      "mapped_file_sha256": "6f0ffbeb131bec9c81c86fd5285aa6ef23777810b96cd1aa46c87867937c27db"
+    }
+  ],
+  "top_controls": [
+    {
+      "name": "helper_before_top",
+      "selected": "ztop"
+    },
+    {
+      "name": "ambiguous",
+      "rejected": "A unique source top is required; specify top_module explicitly"
+    }
+  ],
+  "model_controls": [
+    {
+      "case": "assign_only",
+      "actual_models": [],
+      "sha256": "eafc44c3e75265a5ef8adebd0bf374d540d87f42db79c089f0cb98003f9c1354"
+    },
+    {
+      "case": "inline_used",
+      "actual_models": [
+        "sky130_fd_sc_hd__buf_1"
+      ],
+      "sha256": "4ecf966543d1433e5e2bd192429a4fe5a1673f21278c332832a3953c2b9659b9"
+    }
+  ]
+}

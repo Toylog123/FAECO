@@ -1,0 +1,38 @@
+Startpoint: f0 (rising edge-triggered flip-flop clocked by clk)
+Endpoint: f1 (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ f0/CLK (sky130_fd_sc_hd__dfxtp_1)
+   5.69    5.69 ^ f0/Q (sky130_fd_sc_hd__dfxtp_1)
+   6.86   12.55 ^ b0/X (sky130_fd_sc_hd__buf_1)
+   0.00   12.55 ^ f1/D (sky130_fd_sc_hd__dfxtp_1)
+          12.55   data arrival time
+
+   5.00    5.00   clock clk (rise edge)
+   0.00    5.00   clock network delay (ideal)
+   0.00    5.00   clock reconvergence pessimism
+           5.00 ^ f1/CLK (sky130_fd_sc_hd__dfxtp_1)
+  -0.83    4.17   library setup time
+           4.17   data required time
+---------------------------------------------------------
+           4.17   data required time
+         -12.55   data arrival time
+---------------------------------------------------------
+          -8.38   slack (VIOLATED)
+
+
+TNS_BEGIN
+tns max -8.38
+TNS_END
+worst slack max -8.38
+worst slack min 8.75
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'
+wsl: Failed to translate 'E:\APP\cursor\resources\app\bin'
+wsl: Failed to translate 'E:\APP\Antigravity\bin'
+wsl: Failed to translate 'E:\APP\Texlive\bin\windows'

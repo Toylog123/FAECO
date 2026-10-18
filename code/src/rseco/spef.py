@@ -5,9 +5,21 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 import re
+from functools import lru_cache
+from .gate_sizing import _mapped_code
+from .logic_rewrite import _CELL_RE, _pin_blocks
+from .verilog_modules import module_spans
 
 
-_OUTPUT_PINS = {"Y", "X", "Q", "Z", "SN", "RN"}
+_NAME = r'(?:\\[^\s]+|[A-Za-z_$][\w$]*(?:\[\d+\])?)'
+
+
+def _spef_name(name: str) -> str:
+    # An escaped Verilog scalar a[0] differs from vector bit a[0]. In SPEF,
+    # escape literal bus delimiters (and delimiters inside escaped identifiers).
+    if name.startswith('\\'):
+        return re.sub(r'([\\\[\]:/])', r'\\\1', name[1:])
+    return name
 
 
 @dataclass(frozen=True)
@@ -15,16 +27,21 @@ class MappedNet:
     name: str
     pins: tuple[tuple[str, str], ...] = ()
     is_port: bool = False
+    pin_directions: tuple[str, ...] = ()
+    port_connections: tuple[tuple[str, str], ...] = ()
 
     @property
     def fanout(self) -> int:
-        return max(0, len(self.pins) - 1)
+        return max(0, len(self.pins) + len(self.port_connections) - 1)
 
     def driver(self) -> tuple[str, str] | None:
-        for inst, pin in self.pins:
-            if pin in _OUTPUT_PINS:
-                return (inst, pin)
-        return None
+        if len(self.pin_directions) != len(self.pins):
+            raise ValueError(f'Actual pin directions unavailable for net {self.name}')
+        drivers = [p for p, d in zip(self.pins, self.pin_directions) if d == 'O']
+        external = [p for p, d in self.port_connections if d == 'I']
+        if len(drivers) + len(external) > 1:
+            raise ValueError(f'Ambiguous multiple drivers for net {self.name}')
+        return drivers[0] if drivers else None
 
 
 @dataclass
@@ -34,69 +51,226 @@ class MappedNetlist:
     port_dirs: dict[str, str] = field(default_factory=dict)
     nets: dict[str, MappedNet] = field(default_factory=dict)
     instances: list[tuple[str, str]] = field(default_factory=list)
+    omitted_unused_constant_aliases: list[str] = field(default_factory=list)
 
 
-def parse_mapped_verilog(path: str | Path) -> MappedNetlist:
-    """Parse a Yosys-generated SKY130 mapped netlist into nets (top module)."""
-    text = Path(path).read_text(encoding="utf-8", errors="replace")
-    module_matches = list(re.finditer(r"\bmodule\s+(\w+)\s*\(", text))
-    if not module_matches:
-        raise ValueError(f"no module declaration found: {path}")
-    module_names = [m.group(1) for m in module_matches]
-    # Choose the top module: the one never instantiated by another module.
-    instantiated: set[str] = set()
-    inst_re = re.compile(
-        r"^\s*([A-Za-z_][A-Za-z0-9_$]*)\s+"
-        r"([A-Za-z_][A-Za-z0-9_$]*)\s*\(",
-        re.MULTILINE,
-    )
-    for m in inst_re.finditer(text):
-        cell_type = m.group(1)
-        if cell_type in module_names:
-            instantiated.add(cell_type)
-    top = next((n for n in module_names if n not in instantiated), module_names[-1])
+def _declared_names(declaration: str) -> dict[str, list[str]]:
+    """Expand constant packed ranges; reject expressions and unpacked arrays."""
+    declaration = re.sub(r'\b(?:wire|reg|logic|signed|unsigned)\b', '', declaration).strip()
+    packed = re.match(r'\[\s*(-?\d+)\s*:\s*(-?\d+)\s*\]', declaration)
+    indices = None
+    if packed:
+        left, right = map(int, packed.groups())
+        indices = range(left, right + (1 if right >= left else -1), 1 if right >= left else -1)
+        declaration = declaration[packed.end():].strip()
+    result = {}
+    for entry in declaration.split(','):
+        name = entry.strip()
+        if not re.fullmatch(r'\\[^\s]+|[A-Za-z_$][\w$]*', name):
+            raise ValueError(f'Unsupported net declaration: {declaration}')
+        result[name] = [f'{name}[{i}]' for i in indices] if indices is not None else [name]
+    return result
 
-    top_match = next(m for m in module_matches if m.group(1) == top)
-    starts = [m.start() for m in module_matches]
-    end = min((s for s in starts if s > top_match.start()), default=len(text))
-    body = text[top_match.start():end]
 
-    netlist = MappedNetlist(module_name=top)
-    nets: dict[str, list[tuple[str, str]]] = {}
-    ports: set[str] = set()
-    port_dirs: dict[str, str] = {}
+def _module_interface(text: str):
+    header = re.match(r'\s*module\s+\S+?\s*\((.*?)\)\s*;', text, re.S)
+    if header is None:
+        raise ValueError('Unsupported module header for SPEF')
+    ports, widths = {}, {}
+    def declare(direction, declaration):
+        if direction == 'inout':
+            raise ValueError('Bidirectional SPEF nets are unsupported')
+        entries = _declared_names(declaration)
+        widths.update(entries)
+        for bits in entries.values():
+            for bit in bits:
+                role = {'input': 'I', 'output': 'O'}[direction]
+                if bit in ports and ports[bit] != role:
+                    raise ValueError(f'Conflicting port directions for {bit}')
+                ports[bit] = role
+    ansi = bool(re.search(r'\b(?:input|output|inout)\b', header.group(1)))
+    if ansi:
+        direction, packed = None, ''
+        for item in header.group(1).split(','):
+            match = re.match(r'\s*(input|output|inout)\b(.*)', item, re.S)
+            if match:
+                direction, item = match.groups()
+                item = re.sub(r'\b(?:wire|reg|logic|signed|unsigned)\b', '', item).strip()
+                span = re.match(r'\[[^\]]+\]', item)
+                packed = span.group() if span else ''
+                item = item[span.end():] if span else item
+            if direction is None:
+                raise ValueError('Incomplete ANSI port declaration')
+            declare(direction, packed + ' ' + item)
+    body = text[header.end():]
+    for direction, declaration in re.findall(r'\b(input|output|inout)\s+([^;]+);', body):
+        declare(direction, declaration)
+    for declaration in re.findall(r'\bwire\s+([^;]+);', body):
+        for name, bits in _declared_names(declaration).items():
+            if name in widths and widths[name] != bits:
+                raise ValueError(f'Conflicting ranges for {name}')
+            widths[name] = bits
+    if not ansi:
+        declared_port_names = {name.strip() for name in header.group(1).split(',') if name.strip()}
+        expected_bits = {bit for name in declared_port_names for bit in widths.get(name, [name])}
+        if expected_bits != set(ports):
+            raise ValueError('Incomplete or conflicting non-ANSI port declarations')
+    return ports, widths, body
 
-    for m in re.finditer(r"\b(input|output|inout)\s+[^;]*?(\w+)\s*[;,\n]", body):
-        direction, name = m.group(1), m.group(2)
-        ports.add(name)
-        port_dirs[name] = {"input": "I", "output": "O", "inout": "B"}[direction]
 
-    for m in re.finditer(r"\bwire\s+([^;]+);", body):
-        for name in re.split(r"[,\s]+", m.group(1).strip()):
-            if name:
-                nets.setdefault(name, [])
+@lru_cache(maxsize=4)
+def _liberty_pin_directions(text: str):
+    """Reuse complete Liberty pin blocks, including outputs without functions."""
+    result = {}
+    headers = list(_CELL_RE.finditer(text))
+    for index, header in enumerate(headers):
+        end = headers[index+1].start() if index+1 < len(headers) else len(text)
+        roles = {}
+        for name, body in _pin_blocks(text[header.end():end]):
+            direction = re.search(r'\bdirection\s*:\s*"?(\w+)"?\s*;', body)
+            if direction:
+                roles[name] = {'input':'I', 'output':'O', 'inout':'B'}.get(direction.group(1))
+        result['sky130_fd_sc_hd__'+header.group(1)] = roles
+    return result
 
-    inst_re2 = re.compile(
-        r"^\s*([A-Za-z_][A-Za-z0-9_$]*)\s+"
-        r"([A-Za-z_][A-Za-z0-9_$]*)\s*\(([^;]*?)\)\s*;",
-        re.MULTILINE,
-    )
-    for m in inst_re2.finditer(body):
-        cell_type, inst_name = m.group(1), m.group(2)
-        if cell_type.startswith(("module", "input", "output", "wire", "assign")):
+
+def parse_mapped_verilog(path: str | Path, *, liberty_text: str | None = None,
+                         top_module: str | None = None) -> MappedNetlist:
+    """Parse mapped named-port connectivity with actual library/module roles.
+
+    The no-library convenience API reads the configured actual Liberty. Production
+    callers pass their frozen Liberty and explicit top. Unknown syntax/roles are
+    rejected; output names never determine direction.
+    """
+    from .real_wns import _PHYSICAL_INSTANCE_RE
+    if liberty_text is None:
+        from .opensta import LIB_SEQ
+        liberty_text = Path(LIB_SEQ).read_text(encoding='utf-8')
+    roles = _liberty_pin_directions(liberty_text)
+    source = Path(path).read_text(encoding='utf-8-sig')
+    spans = module_spans(source)
+    outer = _mapped_code(source)
+    for span in reversed(spans):
+        outer = outer[:span.start] + ' '*(span.end-span.start) + outer[span.end:]
+    outer = re.sub(r'(?m)^\s*`(?:timescale|default_nettype)[^\n]*', '', outer)
+    if outer.strip():
+        raise ValueError('Unsupported syntax outside SPEF modules')
+    modules = {span.name: _mapped_code(span.text) for span in spans}
+    interfaces = {name: _module_interface(text) for name, text in modules.items()}
+    instantiated = {m.group(1) for text in modules.values() for m in _PHYSICAL_INSTANCE_RE.finditer(text)
+                    if m.group(1) in modules and m.group(1) != 'module'}
+    tops = set(modules) - instantiated
+    if top_module is None:
+        if len(tops) != 1:
+            raise ValueError('SPEF requires an unambiguous top module')
+        top_module = next(iter(tops))
+    if top_module not in modules:
+        raise ValueError(f'SPEF top module unavailable: {top_module}')
+    ports, widths, body = interfaces[top_module]
+    parent = {}
+    def canonical(name):
+        parent.setdefault(name, name)
+        current, trail = name, []
+        while parent[current] != current:
+            trail.append(current)
+            current = parent[current]
+        for item in trail:
+            parent[item] = current
+        return current
+    def signals(expression):
+        expr = expression.strip()
+        if re.fullmatch(r"(?:\d+)?'[sS]?[bBdDhHoO][0-9a-fA-F_xXzZ]+|'[01]", expr):
+            if re.search('[xXzZ]', expr):
+                raise ValueError('Unknown/high-impedance SPEF literal is unsupported')
+            return []  # Literal ties have no named wire in OpenSTA.
+        if not re.fullmatch(_NAME, expr):
+            raise ValueError(f'Unsupported SPEF connection expression: {expr}')
+        return widths.get(expr, [expr])
+    constant_aliases = set()
+    for lhs, rhs in re.findall(r'\bassign\s+([^;=]+)=([^;]+);', body):
+        left, right = signals(lhs), signals(rhs)
+        if left and not right:
+            constant_aliases.update(left)
             continue
-        netlist.instances.append((cell_type, inst_name))
-        pin_body = m.group(3)
-        for pin_m in re.finditer(r"\.\s*([A-Za-z_][A-Za-z0-9_$]*)\s*\(\s*([^)]*?)\s*\)", pin_body):
-            pin, net = pin_m.group(1), pin_m.group(2).strip()
-            if not net:
+        if len(left) != len(right):
+            raise ValueError('Unsupported constant or width-changing SPEF alias')
+        for a, b in zip(left, right):
+            parent[canonical(a)] = canonical(b)
+    pins = []
+    instances = []
+    seen_instances = set()
+    for match in _PHYSICAL_INSTANCE_RE.finditer(body):
+        cell_type, instance, pin_body = match.groups()
+        if instance in seen_instances:
+            raise ValueError(f'Duplicate SPEF instance: {instance}')
+        seen_instances.add(instance)
+        direction_map = roles.get(cell_type)
+        if cell_type in interfaces:
+            direction_map = interfaces[cell_type][0]
+        if direction_map is None:
+            raise ValueError(f'Unknown SPEF cell/module: {cell_type}')
+        instances.append((cell_type, instance))
+        pin_matches = list(re.finditer(r'\.\s*([A-Za-z_$][\w$]*)\s*\(([^()]*)\)', pin_body))
+        remainder = re.sub(r'\.\s*([A-Za-z_$][\w$]*)\s*\(([^()]*)\)', '', pin_body)
+        if re.sub(r'[,\s]', '', remainder):
+            raise ValueError(f'Unsupported SPEF named pins at {instance}')
+        seen_pins = set()
+        offset = 0
+        for pin_match in pin_matches:
+            if not re.fullmatch(r'\s*' if not seen_pins else r'\s*,\s*', pin_body[offset:pin_match.start()]):
+                raise ValueError(f'Unsupported SPEF pin separator at {instance}')
+            offset = pin_match.end()
+            pin, expression = pin_match.groups()
+            if pin in seen_pins or direction_map.get(pin) not in {'I', 'O'}:
+                raise ValueError(f'Unknown, duplicate or bidirectional SPEF pin: {instance}:{pin}')
+            seen_pins.add(pin)
+            if not expression.strip():
+                if direction_map[pin] == 'I':
+                    raise ValueError(f'Empty input pin: {instance}:{pin}')
                 continue
-            nets.setdefault(net, []).append((inst_name, pin))
-
-    for name, pins in nets.items():
-        netlist.nets[name] = MappedNet(name=name, pins=tuple(pins), is_port=name in ports)
-    netlist.ports = sorted(ports)
-    netlist.port_dirs = port_dirs
+            nets = signals(expression)
+            if not nets and direction_map[pin] == 'O':
+                raise ValueError(f'Output pin cannot connect to a literal: {instance}:{pin}')
+            if len(nets) > 1:
+                raise ValueError(f'Unresolved vector cell pin: {instance}:{pin}')
+            for net in nets:
+                pins.append((canonical(net), (instance, pin), direction_map[pin]))
+        if pin_body[offset:].strip():
+            raise ValueError(f'Unsupported SPEF pin tail at {instance}')
+        missing = [pin for pin, direction in direction_map.items() if direction == 'I' and pin not in seen_pins]
+        if missing:
+            raise ValueError(f'Missing SPEF input pins at {instance}: {missing}')
+    remainder = _PHYSICAL_INSTANCE_RE.sub('', body)
+    remainder = re.sub(r'\b(?:input|output|inout|wire)\s+[^;]+;', '', remainder)
+    remainder = re.sub(r'\bassign\s+[^;]+;', '', remainder)
+    remainder = re.sub(r'\bendmodule\b', '', remainder).strip()
+    if remainder:
+        raise ValueError(f'Unsupported or unparsed SPEF syntax: {remainder[:100]}')
+    all_names = set(ports) | {net for bits in widths.values() for net in bits} | {p[0] for p in pins}
+    groups = {}
+    for name in sorted(all_names):
+        groups.setdefault(canonical(name), []).append(name)
+    netlist = MappedNetlist(top_module, sorted(ports), dict(ports), instances=instances)
+    grouped_pins = {}
+    for net, pin, direction in pins:
+        grouped_pins.setdefault(canonical(net), []).append((pin, direction))
+    grouped_constants = {}
+    for item in constant_aliases:
+        grouped_constants.setdefault(canonical(item), []).append(item)
+    for key, names in groups.items():
+        external = tuple((name, ports[name]) for name in names if name in ports)
+        name = external[0][0] if external else names[0]
+        endpoints = grouped_pins.get(key, [])
+        constants = grouped_constants.get(key, [])
+        if constants:
+            if endpoints or external:
+                raise ValueError(f'Connected constant alias requires an explicit physical tie source: {name}')
+            netlist.omitted_unused_constant_aliases.extend(sorted(constants))
+            continue
+        net = MappedNet(name, tuple(p for p, _ in endpoints), bool(external),
+                        tuple(d for _, d in endpoints), external)
+        net.driver()  # Reject driver ambiguity before writing a partial SPEF.
+        netlist.nets[name] = net
     return netlist
 
 
@@ -151,12 +325,12 @@ def build_spef(
     lines.append("*L_UNIT 1 HENRY")
     lines.append("*PORTS")
     for port in netlist.ports:
-        lines.append(f"{port} {netlist.port_dirs.get(port, 'I')}")
+        lines.append(f"{_spef_name(port)} {netlist.port_dirs.get(port, 'I')}")
     lines.append("")
 
     idx = 1
     for net in netlist.nets.values():
-        if not net.pins:
+        if not net.pins and len(net.port_connections) < 2:
             continue
         r_ohm, c_pf = estimate_net_rc(
             net,
@@ -164,31 +338,25 @@ def build_spef(
             fanout_penalty=fanout_penalty,
             depth_penalty=depth_penalty,
         )
-        lines.append(f"*D_NET {net.name} {c_pf:.6f}")
+        lines.append(f"*D_NET {_spef_name(net.name)} {c_pf:.6f}")
         lines.append("*CONN")
         driver = net.driver()
-        for inst, pin in net.pins:
-            if net.is_port:
-                lines.append(f"*P {net.name} {netlist.port_dirs.get(net.name, 'I')}")
-            else:
-                direction = "O" if driver and (inst, pin) == driver else "I"
-                lines.append(f"*I {inst}:{pin} {direction}")
+        external_drivers = [name for name, direction in net.port_connections if direction == 'I']
+        driver_node = f'{_spef_name(driver[0])}:{_spef_name(driver[1])}' if driver else (_spef_name(external_drivers[0]) if external_drivers else None)
+        if driver_node is None:
+            raise ValueError(f'Undriven SPEF net: {net.name}')
+        for name, direction in net.port_connections:
+            lines.append(f'*P {_spef_name(name)} {direction}')
+        for (inst, pin), direction in zip(net.pins, net.pin_directions):
+            lines.append(f"*I {_spef_name(inst)}:{_spef_name(pin)} {direction}")
         lines.append("*CAP")
-        if driver:
-            lines.append(f"{idx} {driver[0]}:{driver[1]} {c_pf:.6f}")
-        elif net.pins:
-            first = net.pins[0]
-            if net.is_port:
-                lines.append(f"{idx} {net.name} {c_pf:.6f}")
-            else:
-                lines.append(f"{idx} {first[0]}:{first[1]} {c_pf:.6f}")
+        lines.append(f"1 {driver_node} {c_pf:.6f}")
         lines.append("*RES")
-        if driver and len(net.pins) > 1:
-            r_piece = r_ohm / max(1, net.fanout)
-            for inst, pin in net.pins:
-                if (inst, pin) == driver:
-                    continue
-                lines.append(f"{idx} {driver[0]}:{driver[1]} {inst}:{pin} {r_piece:.4f}")
+        nodes = [f'{_spef_name(inst)}:{_spef_name(pin)}' for inst, pin in net.pins] + [_spef_name(name) for name, _ in net.port_connections]
+        sinks = [node for node in nodes if node != driver_node]
+        r_piece = r_ohm / max(1, len(sinks))
+        for res_index, node in enumerate(sinks, 1):
+            lines.append(f"{res_index} {driver_node} {node} {r_piece:.4f}")
         lines.append("*END")
         lines.append("")
         idx += 1

@@ -1,0 +1,77 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+________ test_unused_constant_alias_does_not_block_real_mapped_inputs _________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1228/test_unused_constant_alias_doe0')
+
+    def test_unused_constant_alias_does_not_block_real_mapped_inputs(tmp_path):
+>       nl=parsed(tmp_path,"module top(input A,output Z); wire unused; assign unused=1'h1; "
+            'sky130_fd_sc_hd__buf_1 b (.A(A),.X(Z)); endmodule')
+
+code\tests\test_spef_pin_topology.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\tests\test_spef_pin_topology.py:23: in parsed
+    return parse_mapped_verilog(p, liberty_text=LIB, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1228/test_unused_constant_alias_doe0/mapped.v')
+liberty_text = 'library (tiny) {\ncell ("sky130_fd_sc_hd__ha_1") {\n pin ("A") { direction : input; } pin ("B") { direction : input; ...0_fd_sc_hd__custom_1") {\n pin ("Y") { direction : input; } pin ("Q_N") { direction : output; function : "!Y"; }\n}\n}'
+top_module = 'top'
+
+    def parse_mapped_verilog(path: str | Path, *, liberty_text: str | None = None,
+                             top_module: str | None = None) -> MappedNetlist:
+        """Parse mapped named-port connectivity with actual library/module roles.
+    
+        The no-library convenience API reads the configured actual Liberty. Production
+        callers pass their frozen Liberty and explicit top. Unknown syntax/roles are
+        rejected; output names never determine direction.
+        """
+        from .real_wns import _PHYSICAL_INSTANCE_RE
+        if liberty_text is None:
+            from .opensta import LIB_SEQ
+            liberty_text = Path(LIB_SEQ).read_text(encoding='utf-8')
+        roles = _liberty_pin_directions(liberty_text)
+        spans = module_spans(Path(path).read_text(encoding='utf-8'))
+        modules = {span.name: _mapped_code(span.text) for span in spans}
+        interfaces = {name: _module_interface(text) for name, text in modules.items()}
+        instantiated = {m.group(1) for text in modules.values() for m in _PHYSICAL_INSTANCE_RE.finditer(text)
+                        if m.group(1) in modules and m.group(1) != 'module'}
+        tops = set(modules) - instantiated
+        if top_module is None:
+            if len(tops) != 1:
+                raise ValueError('SPEF requires an unambiguous top module')
+            top_module = next(iter(tops))
+        if top_module not in modules:
+            raise ValueError(f'SPEF top module unavailable: {top_module}')
+        ports, widths, body = interfaces[top_module]
+        parent = {}
+        def canonical(name):
+            parent.setdefault(name, name)
+            current, trail = name, []
+            while parent[current] != current:
+                trail.append(current)
+                current = parent[current]
+            for item in trail:
+                parent[item] = current
+            return current
+        def signals(expression):
+            expr = expression.strip()
+            if re.fullmatch(r"(?:\d+)?'[sS]?[bBdDhHoO][0-9a-fA-F_xXzZ]+|'[01]", expr):
+                if re.search('[xXzZ]', expr):
+                    raise ValueError('Unknown/high-impedance SPEF literal is unsupported')
+                return []  # Literal ties have no named wire in OpenSTA.
+            if not re.fullmatch(_NAME, expr):
+                raise ValueError(f'Unsupported SPEF connection expression: {expr}')
+            expr = expr.removeprefix('\\')
+            return widths.get(expr, [expr])
+        for lhs, rhs in re.findall(r'\bassign\s+([^;=]+)=([^;]+);', body):
+            left, right = signals(lhs), signals(rhs)
+            if len(left) != len(right):
+>               raise ValueError('Unsupported constant or width-changing SPEF alias')
+E               ValueError: Unsupported constant or width-changing SPEF alias
+
+code\src\rseco\spef.py:170: ValueError
+=========================== short test summary info ===========================
+FAILED code/tests/test_spef_pin_topology.py::test_unused_constant_alias_does_not_block_real_mapped_inputs
+1 failed, 1 passed, 12 deselected in 0.47s

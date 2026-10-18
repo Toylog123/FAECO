@@ -1,0 +1,150 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -m pytest -q code/tests/test_r22_parasitic_measurement.py --basetemp scratch/r22_parasitic_red3_tmp
+..............FF...                                                      [100%]
+================================== FAILURES ===================================
+_ test_scan_tcl_mutation_during_tool_call_is_not_certified_as_measured_input __
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red3_tmp/test_scan_tcl_mutation_during_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027891337890>
+
+    def test_scan_tcl_mutation_during_tool_call_is_not_certified_as_measured_input(tmp_path, monkeypatch):
+        scan = _scan(monkeypatch, tmp_path)
+        boundary = scan.subprocess.run
+        def mutate(argv, **kwargs):
+            result = boundary(argv, **kwargs)
+            tcl = Path(argv[-1])
+            tcl.write_text(tcl.read_text() + "\n# changed after invocation\n", encoding="utf-8")
+            return result
+        monkeypatch.setattr(scan.subprocess, "run", mutate)
+        row = scan.run_sta(_netlist(tmp_path), 0.5, tmp_path / "drift", None, "top")
+>       assert row["valid"] is False and row["wns"] is None
+E       assert (True is False)
+
+code\tests\test_r22_parasitic_measurement.py:226: AssertionError
+___ test_scan_rejects_spef_modified_between_generation_and_its_measurement ____
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red3_tmp/test_scan_rejects_spef_modifie0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000027891336E10>
+
+    def test_scan_rejects_spef_modified_between_generation_and_its_measurement(tmp_path, monkeypatch):
+        scan = _scan(monkeypatch, tmp_path)
+        base = _netlist(tmp_path)
+        repaired = _netlist(tmp_path, repaired=True)
+        out = tmp_path / "comparison"
+        boundary = scan.subprocess.run
+        def mutate(argv, **kwargs):
+            result = boundary(argv, **kwargs)
+            if Path(argv[-1]).parent.name == "baseline_ideal":
+                spef = out / "baseline.spef"
+                spef.write_text(spef.read_text() + "\n*D_NET incorrect_topology 9\n", encoding="utf-8")
+            return result
+        monkeypatch.setattr(scan.subprocess, "run", mutate)
+        monkeypatch.setattr(sys, "argv", ["scan", "--baseline", str(base), "--repaired", str(repaired),
+                                       "--period", "0.5", "--top", "top", "--output-dir", str(out)])
+>       assert scan.main() != 0
+E       AssertionError: assert 0 != 0
+E        +  where 0 = <function main at 0x00000278912C3F60>()
+E        +    where <function main at 0x00000278912C3F60> = <module 'r22_controlled_scan' from 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\scripts\\run_parasitic_aware_check.py'>.main
+
+code\tests\test_r22_parasitic_measurement.py:246: AssertionError
+---------------------------- Captured stdout call -----------------------------
+{
+  "circuit": "top",
+  "period_ns": 0.5,
+  "clock_port": "CK",
+  "unit_len_um": 40.0,
+  "rc_model": {
+    "unit_len_um": 40.0,
+    "fanout_penalty": 1.0,
+    "depth_penalty": 1.0
+  },
+  "original_inputs": {
+    "baseline": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\baseline.v",
+      "exists": true,
+      "sha256": "d6c80eb5e8ee2019cad8362e8b0d263c3df782fca350d14a10c7920c38202e00",
+      "bytes": 167
+    },
+    "repaired": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\repaired.v",
+      "exists": true,
+      "sha256": "32fbc2a7c70903ec713b59e26efb04846b7d1bfdb630a894c2c5b40d086957ca",
+      "bytes": 167
+    },
+    "liberty": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\test.lib",
+      "exists": true,
+      "sha256": "db8782ec296f289d1d9e1106695fa295c68b78eda739fa43d30ece183dc857d2",
+      "bytes": 267
+    }
+  },
+  "inputs_after": {
+    "baseline": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\baseline.v",
+      "exists": true,
+      "sha256": "d6c80eb5e8ee2019cad8362e8b0d263c3df782fca350d14a10c7920c38202e00",
+      "bytes": 167
+    },
+    "repaired": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\repaired.v",
+      "exists": true,
+      "sha256": "32fbc2a7c70903ec713b59e26efb04846b7d1bfdb630a894c2c5b40d086957ca",
+      "bytes": 167
+    },
+    "liberty": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\test.lib",
+      "exists": true,
+      "sha256": "db8782ec296f289d1d9e1106695fa295c68b78eda739fa43d30ece183dc857d2",
+      "bytes": 267
+    }
+  },
+  "valid": true,
+  "rows": {
+    "baseline_ideal": {
+      "rc": 0,
+      "slack": -0.1,
+      "status": "VIOLATED",
+      "wns": -0.1,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\comparison\\baseline_ideal\\measurement_receipt.json",
+      "measurement_receipt_sha256": "c8c00dd25a2200b5e3fba0d77909cbeb6d94be1b775adc307896227bf5576cbf"
+    },
+    "baseline_spef": {
+      "rc": 0,
+      "slack": -0.9,
+      "status": "VIOLATED",
+      "wns": -0.9,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\comparison\\baseline_spef\\measurement_receipt.json",
+      "measurement_receipt_sha256": "78ca9188c366ffd114071f99f5a726156149e004e2ad675c084dc6facb51e791"
+    },
+    "repaired_ideal": {
+      "rc": 0,
+      "slack": -0.1,
+      "status": "VIOLATED",
+      "wns": -0.1,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\comparison\\repaired_ideal\\measurement_receipt.json",
+      "measurement_receipt_sha256": "2c6600b2f7c0b53c57c7765ab2f3a1c54c4457273bea25955309165e783e15aa"
+    },
+    "repaired_spef": {
+      "rc": 0,
+      "slack": -0.9,
+      "status": "VIOLATED",
+      "wns": -0.9,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red3_tmp\\test_scan_rejects_spef_modifie0\\comparison\\repaired_spef\\measurement_receipt.json",
+      "measurement_receipt_sha256": "59b4bcaeb0cfbc7c2d739b2bfd8bff74707377ed5b1029a7ae71f6a73964c3ba"
+    }
+  },
+  "ideal_delta": 0.0,
+  "spef_delta": 0.0
+}
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_tcl_mutation_during_tool_call_is_not_certified_as_measured_input
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_rejects_spef_modified_between_generation_and_its_measurement
+2 failed, 17 passed in 3.50s
+[run] 完成（5s），退出码 1

@@ -189,12 +189,14 @@
 
 ## r22专项入口（2026-10-18当前执行；历史失败保留）
 
-- 用户10-18明确“继续推进 做好记录”，继续授权有效。当前main/origin仍3ea0f75；完整v8=969pass/170源码SHA稳定，OI040/041实现门关闭。C′v3最终MATRIX_AUDIT_72 SHAa34da9c3…已实核72/72/source稳定/开始冻结集合true，8458评估、6858candidate+72baseline=6930实际STA、other0、192提交，每终点SEC非零proven/0unproven。原session9345已wrapper3728s/exit0结束，不恢复/重跑；归档/出图/提交审查齐前HEAD仍固定。
-- 最新七段交接 `project_docs/agent_handoff/handoff_20261018_r22.md`；最终审计原字节在 `project_docs/evidence/r22_cprime_v3_20261016/matrix_qa/stage72/`。旧51/54/v1失败/v2仅注册不覆盖。本地稿图/适配器/证据尚未commit/push，不冒称远端已恢复。
+- 当前源修复门（2026-10-18）：当前实现及全v5已最终独立67da65a4…接受/FINAL_CLOSURE9928cd3b…绑定，1056pass156subtests208.27s无skip-warnings，174before=after=current/ZIP全符；当前S证据/inputbinding、OI047模型子集及OI048复现scope/status/window实现层限定闭合。HEAD/origin仍7231e02，正准备stage字节QA/source-evidence阶段commit+push；之后新clean pin登记D56先s27-s382共14pilot，未执行新D。OI048历史省top对象影响/P08、OI049timeout静态待证、OI046/b18/四态/B3-C-D科学及稿件门继续open。
+
+- 用户10-18明确“继续推进 做好记录”，继续授权有效。当前main阶段commit7231e02已成功，push已确认；C′原source pin仍3ea0f75；完整v8=969pass/170源码SHA稳定，OI040/041实现门关闭。C′v3最终MATRIX_AUDIT_72 SHAa34da9c3…已实核72/72/source稳定/开始冻结集合true，8458评估、6858candidate+72baseline=6930实际STA、other0、192提交，每终点SEC非零proven/0unproven。原session9345已wrapper3728s/exit0结束，不恢复/重跑；阶段归档/出图已齐并commit，S/SPEF源码修复按新计划先红后绿、完成整体回归/新commit后新clean pin做EDA。
+- 最新七段交接 `project_docs/agent_handoff/handoff_20261018_r22.md`；最终审计原字节在 `project_docs/evidence/r22_cprime_v3_20261016/matrix_qa/stage72/`。旧51/54/v1失败/v2仅注册不覆盖。稿图/适配器/证据已随7231e02 commit，push已确认origin/main=7231e02；此后记录/修复仍可能dirty，不称永久clean。
 - 英文工作稿 `paper/en/manuscript/FAECO.tex`，预览 `paper/en/build/FAECO.pdf`；中英仍待B3/C/D等历史同族科学补验，不是投稿定稿。OI043仅时钟元数据门已双语编译/38p视觉/副本同步关闭。
 - 真实Yosys二态SEC的四态能力已被Z与0反例推翻。实际三态/显式Z/开关原语须unsupported（非pass），不得删除Z后证明或用二态cut冒充四态；四态支持仍open。
 - B3主线51QA、C作者84及独立注册38QA/原OI042反例拒绝均只关闭相应实现门；正式同族B3/C仍须提交适配器、锁新clean pin登记EDA。D先14pilot后余42；新C′不跨族替代旧B3/C/D，完整16配对5454次同base交叉比较cut/pool/dispatch全同，本矩阵未观察到独立权重收益（不外推一般无效）。
-- S/SPEF已冻独立V2报告，旧258 filtered模型defect为审计器!解析错误，1032组合条目0mismatch/unknown。真实CEC pre/post覆盖、SPEF Lib输出direction/双侧SPEF/报告顺序须commit后修复并整体回归/同族复验；s382历史RC仍unknown，不写已知40。当前C′的S/physical/electrical禁用域不因此自动失效。
+- S/SPEF已冻独立V2报告，旧258 filtered模型defect为审计器!解析错误，1032组合条目0mismatch/unknown。真实CEC pre/post覆盖、SPEF Lib输出direction/双侧SPEF/报告顺序的源码修复已进入限定QA与整体回归；micro真实注入根验收通过，尚须独立复核。当前OI048 mapped-right假pass未修闭，须当前整体回归/独立review/sourcecommit新pin后才同族复验；s382历史RC仍unknown，不写已知40。当前C′的S/physical/electrical禁用域不因此自动失效。
 - 八包ROOT_POST独立接受均齐。全72图v1数据/机制已核但自动几何门六处tick overlap，另出v3已碰撞0/对齐PASS/最小6.8pt/root视觉通过，CSV与v1逐字节同；独立v3视觉71d9a480…已通过，正式稿件整合待。v1及旧报告保留。
 - 来源/代价实验计划 `project_docs/planning/R22_EVIDENCE_CLOSURE_PLAN_20261014.md`，入口 `code/scripts/run_r22_cut_ablation.py`；历史恢复 `project_docs/evidence/r22_historical_audit_20261014/HISTORICAL_RECOVERY_REPORT.md`。候选评估、真实STA、提交分账；正式EDA前源码/输入/库钉定，变化必须停止。
 

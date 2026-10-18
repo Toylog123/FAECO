@@ -1,0 +1,119 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -m pytest code/tests/test_s_cec_evidence.py -q
+..........FFFF                                                           [100%]
+================================== FAILURES ===================================
+_ test_actual_normalization_read_input_drift_rejects_before_cec[filtered_model] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1238/test_actual_normalization_read0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017D6B142050>
+target = 'filtered_model'
+
+    @pytest.mark.parametrize('target',['filtered_model','prepared_verilog'])
+    def test_actual_normalization_read_input_drift_rejects_before_cec(tmp_path,monkeypatch,target):
+        tools,commands,_=factory(tmp_path,monkeypatch,statuses=('pass',))
+        reference=tmp_path/'ref.v'
+        reference.write_bytes(b'\xef\xbb\xbfmodule win(a,y); input a; output y;\nsky130_fd_sc_hd__inv_1 g (.A(a),.Y(y));\nendmodule\n')
+        candidate=tmp_path/'gate.blif';candidate.write_text('.model win\n.end\n')
+        process=subprocess.run;folder=tmp_path/'proof';mutations=[]
+        def mutate(argv,**kwargs):
+            if argv[0]=='fake-yosys' and not mutations:
+                actual_reads=re.findall(r'read_verilog\s+(?:"([^"]+)"|([^;\s]+))',argv[-1])
+                paths=[Path(a or b) for a,b in actual_reads]
+                victim=paths[0] if target=='filtered_model' else paths[-1]
+                before=digest(victim);victim.write_bytes(victim.read_bytes()+b'\n// drifted while consumed\n');mutations.append((before,digest(victim)))
+            return process(argv,**kwargs)
+        monkeypatch.setattr(subprocess,'run',mutate)
+        result=tools.cec(reference,candidate,folder)
+>       assert result.status!='pass','actual read_verilog inputs must be pinned during normalization'
+E       AssertionError: actual read_verilog inputs must be pinned during normalization
+E       assert 'pass' != 'pass'
+E        +  where 'pass' = CecResult(status='pass', reason='', log_path='C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1238\\test_actual_normalization_read0\\proof\\abc_cec.log').status
+
+code\tests\test_s_cec_evidence.py:148: AssertionError
+_ test_actual_normalization_read_input_drift_rejects_before_cec[prepared_verilog] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1238/test_actual_normalization_read1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017D6B120450>
+target = 'prepared_verilog'
+
+    @pytest.mark.parametrize('target',['filtered_model','prepared_verilog'])
+    def test_actual_normalization_read_input_drift_rejects_before_cec(tmp_path,monkeypatch,target):
+        tools,commands,_=factory(tmp_path,monkeypatch,statuses=('pass',))
+        reference=tmp_path/'ref.v'
+        reference.write_bytes(b'\xef\xbb\xbfmodule win(a,y); input a; output y;\nsky130_fd_sc_hd__inv_1 g (.A(a),.Y(y));\nendmodule\n')
+        candidate=tmp_path/'gate.blif';candidate.write_text('.model win\n.end\n')
+        process=subprocess.run;folder=tmp_path/'proof';mutations=[]
+        def mutate(argv,**kwargs):
+            if argv[0]=='fake-yosys' and not mutations:
+                actual_reads=re.findall(r'read_verilog\s+(?:"([^"]+)"|([^;\s]+))',argv[-1])
+                paths=[Path(a or b) for a,b in actual_reads]
+                victim=paths[0] if target=='filtered_model' else paths[-1]
+                before=digest(victim);victim.write_bytes(victim.read_bytes()+b'\n// drifted while consumed\n');mutations.append((before,digest(victim)))
+            return process(argv,**kwargs)
+        monkeypatch.setattr(subprocess,'run',mutate)
+        result=tools.cec(reference,candidate,folder)
+>       assert result.status!='pass','actual read_verilog inputs must be pinned during normalization'
+E       AssertionError: actual read_verilog inputs must be pinned during normalization
+E       assert 'pass' != 'pass'
+E        +  where 'pass' = CecResult(status='pass', reason='', log_path='C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1238\\test_actual_normalization_read1\\proof\\abc_cec.log').status
+
+code\tests\test_s_cec_evidence.py:148: AssertionError
+____________ test_normalization_launch_error_keeps_log_and_receipt ____________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1238/test_normalization_launch_erro0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017D68F4FA50>
+
+    def test_normalization_launch_error_keeps_log_and_receipt(tmp_path,monkeypatch):
+        tools,_,_=factory(tmp_path,monkeypatch)
+        reference=tmp_path/'ref.v';reference.write_text('module win(a,y); input a; output y; assign y=~a; endmodule\n')
+        candidate=tmp_path/'gate.blif';candidate.write_text('.model win\n.end\n')
+        def missing(*args,**kwargs):raise FileNotFoundError('controlled missing normalization executable')
+        monkeypatch.setattr(subprocess,'run',missing)
+        folder=tmp_path/'proof';result=tools.cec(reference,candidate,folder)
+        assert result.status!='pass'
+>       assert 'FileNotFoundError' in (folder/'cec_left.normalize.log').read_text(encoding='utf-8')
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_s_cec_evidence.py:163: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1238/test_normalization_launch_erro0/proof/cec_left.normalize.log')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1238\\test_normalization_launch_erro0\\proof\\cec_left.normalize.log'
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py:1044: FileNotFoundError
+__ test_normalization_receipt_refuses_reuse_before_rewriting_filtered_model ___
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1238/test_normalization_receipt_ref0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000017D6B09C790>
+
+    def test_normalization_receipt_refuses_reuse_before_rewriting_filtered_model(tmp_path,monkeypatch):
+        tools,commands,model=factory(tmp_path,monkeypatch)
+        reference=tmp_path/'ref.v';reference.write_text('module win(a,y); input a; output y;\nsky130_fd_sc_hd__inv_1 g (.A(a),.Y(y));\nendmodule\n')
+        output=tmp_path/'normalized.blif';receipt=tmp_path/'normalized.blif.normalize.receipt.json';receipt.write_text('old immutable receipt')
+        filtered=tmp_path/'normalized_cells.v';filtered.write_text('old exact filtered model');before=digest(filtered)
+>       with pytest.raises(FileExistsError):ya._normalize_to_blif(reference,output,yosys_argv=['fake-yosys'],timeout_s=1,liberty_cells_v=model,top_module='win')
+E       Failed: DID NOT RAISE FileExistsError
+
+code\tests\test_s_cec_evidence.py:172: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_s_cec_evidence.py::test_actual_normalization_read_input_drift_rejects_before_cec[filtered_model]
+FAILED code/tests/test_s_cec_evidence.py::test_actual_normalization_read_input_drift_rejects_before_cec[prepared_verilog]
+FAILED code/tests/test_s_cec_evidence.py::test_normalization_launch_error_keeps_log_and_receipt
+FAILED code/tests/test_s_cec_evidence.py::test_normalization_receipt_refuses_reuse_before_rewriting_filtered_model
+4 failed, 10 passed in 0.92s
+[run] 完成（5s），退出码 1

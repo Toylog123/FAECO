@@ -1,0 +1,20 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -u scratch/audit_cec_top_scope_1018.py
+Cprime checked 72
+Traceback (most recent call last):
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\scratch\audit_cec_top_scope_1018.py", line 36, in <module>
+    b17=load(b/'B17_PROOF_RECOVERY_DESIGN.json');proofs.append(check(b/'B17_new_model_proofs/final_sec','b17','B17',b17['stability']['output_hashes']))
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\scratch\audit_cec_top_scope_1018.py", line 25, in check
+    p=folder/name;read(p);assert sha(p)==(d.get('sha256') if isinstance(d,dict) else d),(folder,name);matched+=1
+                  ^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\scratch\audit_cec_top_scope_1018.py", line 8, in read
+    p=p.resolve();key=p.relative_to(ROOT).as_posix();data=p.read_bytes();digest=hashlib.sha256(data).hexdigest()
+                                                          ^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1050, in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_b_model_audit_20261016\\B17_new_model_proofs\\final_sec\\model_preflight.v'
+[run] 完成（5s），退出码 1

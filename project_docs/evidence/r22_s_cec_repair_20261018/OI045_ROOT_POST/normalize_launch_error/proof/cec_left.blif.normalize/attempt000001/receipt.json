@@ -1,0 +1,70 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "fake-yosys",
+    "-q",
+    "-p",
+    "read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/s_cec_independent_probe_root_post_20261018/normalize_launch_error/proof/cec_left_cells.v; read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/s_cec_independent_probe_root_post_20261018/normalize_launch_error/proof/reference_input.v; hierarchy -check -top win; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/s_cec_independent_probe_root_post_20261018/normalize_launch_error/proof/cec_left.blif"
+  ],
+  "inputs_before": {
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left_cells.v",
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81,
+      "snapshot": "cells_model.before.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89,
+      "snapshot": "prepared_verilog.before.v"
+    }
+  },
+  "inputs_after": {
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left_cells.v",
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81,
+      "snapshot": "cells_model.after.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89,
+      "snapshot": "prepared_verilog.after.v"
+    }
+  },
+  "input_drift": [],
+  "process_launched": false,
+  "process_returncode": null,
+  "returned_returncode": 127,
+  "exception_type": "FileNotFoundError",
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left.blif",
+  "artifacts": {
+    "cells_model.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left.blif.normalize\\attempt000001\\cells_model.after.v",
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81
+    },
+    "cells_model.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left.blif.normalize\\attempt000001\\cells_model.before.v",
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81
+    },
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left.blif.normalize\\attempt000001\\normalize.log",
+      "sha256": "d9bcee00dc1577cc1f8f90ae76bf2c6a61f59bb7be3eed2161e495a063e7876c",
+      "bytes": 622
+    },
+    "prepared_verilog.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left.blif.normalize\\attempt000001\\prepared_verilog.after.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "prepared_verilog.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\normalize_launch_error\\proof\\cec_left.blif.normalize\\attempt000001\\prepared_verilog.before.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    }
+  }
+}

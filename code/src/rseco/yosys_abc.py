@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import re
+import hashlib
+import json
 import subprocess
 import time
 from dataclasses import dataclass
@@ -336,9 +338,24 @@ def run_yosys_abc_resynthesis_baseline(
             stderr_tail=_tail(completed.stderr),
         )
 
+    verified_blif = output_dir / "optimized.normalized.blif"
+    normalized_optimized = _normalize_to_blif(
+        optimized_blif, verified_blif, yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s)
+    if normalized_optimized.returncode != 0 or not verified_blif.exists():
+        return YosysAbcBaselineResult(
+            method="yosys_blif_abc_rewrite_refactor_resyn", status="error",
+            tool="yosys+abc", command=" ".join(normalized_optimized.command),
+            runtime_s=time.perf_counter() - started_at,
+            reason="ABC output BLIF has no valid selected normalization scope",
+            output_netlist=str(optimized_blif), normalized_original=str(original_blif),
+            log_path=str(log_path), verification_status="error", stats=stats,
+            returncode=normalized_optimized.returncode,
+            stdout_tail=_tail(normalized_optimized.stdout),
+            stderr_tail=_tail(normalized_optimized.stderr))
     verification = _run_abc_cec(
         original_blif,
-        optimized_blif,
+        verified_blif,
         abc_argv=tools.abc_argv,
         log_path=verification_log_path,
         timeout_s=timeout_s,
@@ -419,46 +436,139 @@ def _normalize_to_blif(
     top_module: str | None = None,
 ) -> _CommandOutput:
     output_blif.parent.mkdir(parents=True, exist_ok=True)
-    yosys_input_path = _prepare_yosys_input(netlist_path, output_blif)
+    attempt_root = output_blif.with_name(output_blif.name + ".normalize")
+    attempt_root.mkdir(parents=True, exist_ok=True)
+    attempt_number = 1
+    while True:
+        attempt = attempt_root / f"attempt{attempt_number:06d}"
+        try:
+            attempt.mkdir()
+            break
+        except FileExistsError:
+            attempt_number += 1
+    # Each shared-helper call keeps its own receipt, even when legacy callers
+    # intentionally reuse the canonical normalized BLIF path.
+    receipt_stream = (attempt / "receipt.json").open("x", encoding="utf-8")
+    log_path = output_blif.with_suffix(".normalize.log")
     commands: list[str] = []
-    if liberty_cells_v is not None:
-        cells_file = _extract_cells_for_netlist(
-            yosys_input_path,
-            liberty_cells_v,
-            output_blif.with_name(output_blif.stem + "_cells.v"),
-        )
-        commands.append(f"read_verilog {_yosys_path(cells_file, wsl=_is_wsl_argv(yosys_argv))}")
-    commands.extend(
-        [
-            f"read_verilog {_yosys_path(yosys_input_path, wsl=_is_wsl_argv(yosys_argv))}",
-            *( [f"hierarchy -check -top {_yosys_identifier(top_module)}"] if top_module else [] ),
-            "proc",
-            "flatten",
-            # Keep muxes feeding DFFs explicit.  Full ``opt`` folds a
-            # reset-select mux into ``$sdff``, which ABC cannot read; the
-            # explicit DFF+mux form remains CEC-equivalent and preserves the
-            # async-control wiring evidence in the generated Liberty model.
-            "opt_clean",
-            "simplemap",
-            "clean",
-            f"write_blif {_yosys_path(output_blif, wsl=_is_wsl_argv(yosys_argv))}",
-        ]
-    )
-    script = "; ".join(commands)
-    command = [*yosys_argv, "-q", "-p", script]
+    command: list[str] = []
+    inputs_before, inputs_after = {}, {}
+    actual_inputs = {}
+    process_launched = False
+    process_returncode = None
+    exception_type = None
+    result = _CommandOutput(command=[], returncode=127, stdout="", stderr="Normalization did not complete")
+    selected_top = None
+
+    def identity(path):
+        data = Path(path).read_bytes()
+        return {"path": str(Path(path).resolve()),
+                "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+
+    def snapshot_before(role, path):
+        data = Path(path).read_bytes()
+        name = role + ".before" + (Path(path).suffix or ".bin")
+        with (attempt / name).open("xb") as stream:
+            stream.write(data)
+        inputs_before[role] = {"path": str(Path(path).resolve()),
+                               "sha256": hashlib.sha256(data).hexdigest(),
+                               "bytes": len(data), "snapshot": name}
+
     try:
-        completed = subprocess.run(
-            command,
-            check=False,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            timeout=timeout_s,
-        )
-        return _CommandOutput(command=command, returncode=completed.returncode, stdout=completed.stdout, stderr=completed.stderr)
-    except subprocess.TimeoutExpired as exc:
-        return _CommandOutput(command=command, returncode=124, stdout=exc.stdout or "", stderr=exc.stderr or "")
+        # Bind the caller's source before preparation or top inference. A BOM
+        # copy alone cannot detect changes to the original proof object.
+        actual_inputs["original_source"] = netlist_path
+        snapshot_before("original_source", netlist_path)
+        yosys_input_path = _prepare_yosys_input(netlist_path, output_blif)
+        from .verilog_modules import select_top_module, select_blif_top_module
+        input_is_blif = Path(yosys_input_path).suffix.lower() == '.blif'
+        source_text = Path(yosys_input_path).read_text(encoding='utf-8')
+        selected_top = (select_blif_top_module(source_text, top_module) if input_is_blif
+                        else select_top_module(source_text, top_module))
+        if liberty_cells_v is not None and not input_is_blif:
+            cells_file = _extract_cells_for_netlist(
+                yosys_input_path, liberty_cells_v,
+                output_blif.with_name(output_blif.stem + "_cells.v"))
+            actual_inputs["cells_model"] = cells_file
+            commands.append(f"read_verilog {_yosys_path(cells_file, wsl=_is_wsl_argv(yosys_argv))}")
+        actual_inputs["prepared_blif" if input_is_blif else "prepared_verilog"] = yosys_input_path
+        commands.extend([
+            f"{'read_blif' if input_is_blif else 'read_verilog'} {_yosys_path(yosys_input_path, wsl=_is_wsl_argv(yosys_argv))}",
+            f"hierarchy -check -top {_yosys_identifier(selected_top)}",
+            "proc", "flatten", "opt_clean", "simplemap", "clean",
+            f"write_blif {_yosys_path(output_blif, wsl=_is_wsl_argv(yosys_argv))}"])
+        command = [*yosys_argv, "-q", "-p", "; ".join(commands)]
+        for role, path in actual_inputs.items():
+            if role not in inputs_before:
+                snapshot_before(role, path)
+        for role, before in inputs_before.items():
+            current = identity(actual_inputs[role])
+            if any(current[key] != before[key] for key in ("sha256", "bytes")):
+                raise ValueError(f"Normalization input drift before launch: {role}")
+        try:
+            process_launched = None  # An unexpected exception cannot confirm a launch.
+            completed = subprocess.run(command, check=False, capture_output=True,
+                                       text=True, encoding="utf-8", errors="replace",
+                                       timeout=timeout_s)
+            process_launched = True
+            process_returncode = completed.returncode
+            result = _CommandOutput(command=command, returncode=completed.returncode,
+                                    stdout=completed.stdout, stderr=completed.stderr)
+        except subprocess.TimeoutExpired as exc:
+            process_launched = True
+            exception_type = type(exc).__name__
+            result = _CommandOutput(command=command, returncode=124,
+                                    stdout=exc.stdout or "", stderr=exc.stderr or "")
+    except Exception as exc:
+        exception_type = type(exc).__name__
+        if isinstance(exc, OSError):
+            process_launched = False
+        result = _CommandOutput(command=command, returncode=127, stdout="",
+                                stderr=f"{exception_type}: {exc}")
+    finally:
+        raw_stdout, raw_stderr = result.stdout, result.stderr
+        drift = []
+        for role, before in inputs_before.items():
+            try:
+                data = Path(actual_inputs[role]).read_bytes()
+                after = {"path": str(Path(actual_inputs[role]).resolve()),
+                         "sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+                name = role + ".after" + (Path(actual_inputs[role]).suffix or ".bin")
+                with (attempt / name).open("xb") as stream:
+                    stream.write(data)
+                after["snapshot"] = name
+                inputs_after[role] = after
+                if any(after[key] != before[key] for key in ("sha256", "bytes")):
+                    drift.append(role)
+            except OSError as exc:
+                inputs_after[role] = {"path": before["path"], "error": str(exc)}
+                drift.append(role)
+        if drift:
+            result = _CommandOutput(command=command, returncode=125, stdout=result.stdout,
+                                    stderr=_log_stream_text(result.stderr) + "\nNormalization input drift: " + ", ".join(drift))
+        _write_text_log(log_path, command, result.stdout, result.stderr)
+        (attempt / "normalize.log").write_bytes(log_path.read_bytes())
+        for stream_name, value in (("stdout", raw_stdout), ("stderr", raw_stderr)):
+            if isinstance(value, bytes):
+                (attempt / (stream_name + ".bin")).write_bytes(value)
+        if output_blif.exists():
+            (attempt / "normalized_output.blif").write_bytes(output_blif.read_bytes())
+        artifacts = {p.name: identity(p) for p in sorted(attempt.iterdir())
+                     if p.is_file() and p.name != "receipt.json"}
+        receipt = {"schema": "normalization-input-binding-v1", "command": command,
+                   "selected_top_module": selected_top,
+                   "input_format": "blif" if locals().get('input_is_blif') else "verilog",
+                   "inputs_before": inputs_before, "inputs_after": inputs_after,
+                   "input_drift": drift, "process_launched": process_launched,
+                   "process_returncode": process_returncode,
+                   "returned_returncode": result.returncode, "exception_type": exception_type,
+                   "canonical_output": str(output_blif.resolve()), "artifacts": artifacts}
+        try:
+            json.dump(receipt, receipt_stream, ensure_ascii=False, indent=2)
+            receipt_stream.write("\n")
+        finally:
+            receipt_stream.close()
+    return result
 
 
 def _extract_cells_for_netlist(
@@ -481,36 +591,25 @@ def _extract_cells_for_netlist(
     netlist_text = netlist_path.read_text(encoding="utf-8", errors="replace")
     # gate_type in named-port or positional instantiation, e.g.
     # sky130_fd_sc_hd__nand2_1 u1 ( ... );
-    used: set[str] = set()
-    for match in re.finditer(r"^\s*(\w[\w.]*)\s+\w+\s*\(", netlist_text, re.M):
-        cell = match.group(1)
-        if not cell.startswith("sky130_fd_sc_hd__"):
-            continue
-        used.add(cell)
+    from .gate_sizing import parse_mapped_netlist
+    from .verilog_modules import module_spans
+    used = {cell.cell_type for cell in parse_mapped_netlist(netlist_text)}
+    output_cells.parent.mkdir(parents=True, exist_ok=True)
     if not used:
-        # assign-only netlist: no mapped SKY130 cells to inject
-        return cells_library
+        # Builtin/assign-only inputs need no SKY models. Injecting the whole
+        # library adds unrelated modules that ABC may not be able to read.
+        output_cells.write_text('// No referenced SKY130 cell models.\n', encoding='utf-8')
+        return output_cells
 
     lib_text = cells_library.read_text(encoding="utf-8", errors="replace")
-    _module_re = lambda cell: re.compile(
-        r"module\s+" + re.escape(cell) + r"\s*\("
-    )
-    missing = sorted(c for c in used if not _module_re(c).search(lib_text))
+    modules = {span.name: span.text for span in module_spans(lib_text)}
+    missing = sorted(used - modules.keys())
     if missing:
         raise ValueError(
             "cells_library is missing modules instantiated by the netlist: "
             + ", ".join(missing)
         )
-    blocks: list[str] = []
-    for cell in sorted(used):
-        start = _module_re(cell).search(lib_text)
-        if start is None:
-            continue
-        start = start.start()
-        end = lib_text.find("\nmodule ", start + 1)
-        block = lib_text[start : end if end > 0 else len(lib_text)]
-        blocks.append(block)
-    output_cells.parent.mkdir(parents=True, exist_ok=True)
+    blocks = [modules[cell] for cell in sorted(used)]
     output_cells.write_text("\n".join(blocks) + "\n", encoding="utf-8")
     return output_cells
 
@@ -569,18 +668,20 @@ def check_mapped_blif_equivalence(
     yosys_command: str = "yosys",
     abc_command: str = "yosys-abc",
     timeout_s: float = 60.0,
+    top_module: str | None = None,
+    mapped_top_module: str | None = None,
 ) -> YosysAbcEquivalenceResult:
-    """Normalize original Verilog to BLIF, then CEC against an already-mapped BLIF.
+    """Normalize both proof objects to their selected top, then run ABC CEC.
 
-    Stage B batch 3: after Yosys ``abc -liberty`` tech-mapping produces a
-    mapped BLIF, this function skips Yosys normalisation on the right-hand
-    side (because the mapped BLIF is already gate-level BLIF) and runs
-    ABC ``cec`` directly against the normalized reference BLIF.
+    A mapped BLIF may contain multiple models. Its unique root, or the
+    explicit ``mapped_top_module``, is checked and flattened before CEC so
+    ABC cannot silently select the first unrelated model in the file.
     """
     started_at = time.perf_counter()
     artifact_dir = Path(artifact_dir)
     artifact_dir.mkdir(parents=True, exist_ok=True)
     original_blif = artifact_dir / "original.normalized.blif"
+    revised_blif = artifact_dir / "revised.normalized.blif"
     log_path = artifact_dir / "abc_cec.log"
 
     tools = _resolve_yosys_and_abc(yosys_command=yosys_command, abc_command=abc_command)
@@ -602,6 +703,7 @@ def check_mapped_blif_equivalence(
         original_blif,
         yosys_argv=tools.yosys_argv,
         timeout_s=timeout_s,
+        top_module=top_module,
     )
     if normalize_original.returncode != 0 or not original_blif.exists():
         return _formal_error(
@@ -627,9 +729,18 @@ def check_mapped_blif_equivalence(
             normalized_revised=str(mapped_blif),
         )
 
+    normalized_revised = _normalize_to_blif(
+        mapped_blif, revised_blif, yosys_argv=tools.yosys_argv,
+        timeout_s=timeout_s, top_module=mapped_top_module)
+    if normalized_revised.returncode != 0 or not revised_blif.exists():
+        return _formal_error(
+            started_at, [], normalized_revised,
+            reason="Mapped BLIF has no valid selected normalization scope",
+            normalized_original=str(original_blif),
+            normalized_revised=str(revised_blif) if revised_blif.exists() else None)
     verification = _run_abc_cec(
         original_blif,
-        mapped_blif,
+        revised_blif,
         abc_argv=tools.abc_argv,
         log_path=log_path,
         timeout_s=timeout_s,
@@ -650,7 +761,7 @@ def check_mapped_blif_equivalence(
         runtime_s=time.perf_counter() - started_at,
         reason=reason_map.get(status, verification.stdout[:200]),
         normalized_original=str(original_blif),
-        normalized_revised=str(mapped_blif),
+        normalized_revised=str(revised_blif),
         log_path=str(log_path),
         returncode=verification.returncode,
         stdout_tail=_tail(verification.stdout),
@@ -693,15 +804,22 @@ def _formal_error(
 
 
 def _abc_status_from_output(output: str, returncode: int) -> str:
-    if "networks are equivalent" in output or "circuits are equivalent" in output:
-        return "pass"
+    output = output.lower()
+    if returncode != 0:
+        return "error"
+    if any(int(count) > 1 for count in re.findall(r'\b(\d+)\s+root-level modules', output)):
+        return "error"
+    # ABC can return zero after a command error. Ignore benign abc.rc
+    # lookup warnings, but never let an explicit input/command error pass.
+    if re.search(r'(?m)^\s*(?:error\s*:|cannot open input file\b)', output):
+        return "error"
     if ("networks are not equivalent" in output
             or "circuits are not equivalent" in output
             or "different number of latches" in output
             or "miter computation has failed" in output):
         return "fail"
-    if returncode != 0:
-        return "error"
+    if "networks are equivalent" in output or "circuits are equivalent" in output:
+        return "pass"
     return "error"
 
 
@@ -734,10 +852,20 @@ def _write_log(path: Path, completed: subprocess.CompletedProcess[str]) -> None:
     _write_text_log(path, completed.args if isinstance(completed.args, list) else [str(completed.args)], completed.stdout, completed.stderr)
 
 
-def _write_text_log(path: Path, command: list[str], stdout: str, stderr: str) -> None:
+def _log_stream_text(value: str | bytes | None) -> str:
+    """Decode timeout streams for readable logs without losing their raw bytes."""
+    return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else (value or "")
+
+
+def _write_text_log(path: Path, command: list[str], stdout: str | bytes | None,
+                    stderr: str | bytes | None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    for name, value in (("stdout", stdout), ("stderr", stderr)):
+        if isinstance(value, bytes):
+            path.with_name(path.name + "." + name + ".bin").write_bytes(value)
     path.write_text(
-        "command: " + " ".join(command) + "\n\nstdout:\n" + stdout + "\n\nstderr:\n" + stderr + "\n",
+        "command: " + " ".join(command) + "\n\nstdout:\n" + _log_stream_text(stdout)
+        + "\n\nstderr:\n" + _log_stream_text(stderr) + "\n",
         encoding="utf-8",
     )
 

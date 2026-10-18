@@ -1,0 +1,75 @@
+{
+  "client_date": "2026-10-18",
+  "created_actual_utc": "2026-10-18T01:04:11.652119+00:00",
+  "probe_sha256": "0ba45e7b98c2dfbf6af398dbce9bdbb338913735853a91104b7518b102fa9b7a",
+  "actual_eda_executed": false,
+  "actual_yosys_or_abc_executed": false,
+  "boundary_control": "existing default factory and normalization/artifact code, only subprocess mocked",
+  "source_before": {
+    "code/src/rseco/structure_resynthesis.py": "771793f96a6fc5f26998559d7920a9cb4ce4d03b5f2464319258ad5f8035f2fc",
+    "code/src/rseco/yosys_abc.py": "68ebf411d798673a80b362277ec3921f4ac22c79ae00c815f5b7a69ac2576c44",
+    "code/tests/test_s_cec_evidence.py": "f1a7ef273bbd84d5bc8478f216659cd41720246dae9ddda031c7c451372d8ac5"
+  },
+  "source_after": {
+    "code/src/rseco/structure_resynthesis.py": "771793f96a6fc5f26998559d7920a9cb4ce4d03b5f2464319258ad5f8035f2fc",
+    "code/src/rseco/yosys_abc.py": "68ebf411d798673a80b362277ec3921f4ac22c79ae00c815f5b7a69ac2576c44",
+    "code/tests/test_s_cec_evidence.py": "f1a7ef273bbd84d5bc8478f216659cd41720246dae9ddda031c7c451372d8ac5"
+  },
+  "source_stable": true,
+  "cases": [
+    {
+      "mode": "unchanged_control",
+      "result_status": "pass",
+      "result_reason": "",
+      "receipt_status": "pass",
+      "input_drift": [],
+      "mutations": [],
+      "receipt_path": "scratch/s_cec_independent_probe_20261018/unchanged_control/proof/receipt.json",
+      "receipt_sha256": "67911f3ab72bb319892be6369f7bb5eb8cac90dddf024f51cf00f65f84d2430b",
+      "actual_derived_artifact_sha256": {
+        "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+        "bytes": 81
+      },
+      "normalize_log_exists": true,
+      "command_count": 3
+    },
+    {
+      "mode": "derived_model_drift",
+      "result_status": "pass",
+      "result_reason": "",
+      "receipt_status": "pass",
+      "input_drift": [],
+      "mutations": [
+        {
+          "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\proof\\cec_left_cells.v",
+          "before_sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+          "after_sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285"
+        }
+      ],
+      "receipt_path": "scratch/s_cec_independent_probe_20261018/derived_model_drift/proof/receipt.json",
+      "receipt_sha256": "024802030d9e0aa57bab16dada5e7a0b0d25a20f9e59e9f9f324062ce2a0a662",
+      "actual_derived_artifact_sha256": {
+        "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+        "bytes": 129
+      },
+      "normalize_log_exists": true,
+      "command_count": 3
+    },
+    {
+      "mode": "normalize_launch_error",
+      "result_status": "unavailable",
+      "result_reason": "FileNotFoundError: controlled missing normalization executable",
+      "receipt_status": "unavailable",
+      "input_drift": [],
+      "mutations": [],
+      "receipt_path": "scratch/s_cec_independent_probe_20261018/normalize_launch_error/proof/receipt.json",
+      "receipt_sha256": "a58db05c957d9d6b31dec58cb30085deb75a1f02a7709faf88ccb460440f017c",
+      "actual_derived_artifact_sha256": {
+        "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+        "bytes": 81
+      },
+      "normalize_log_exists": false,
+      "command_count": 0
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -u scratch/review_oi048_final_20261018.py
+Traceback (most recent call last):
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\scratch\review_oi048_final_20261018.py", line 72, in <module>
+    assert models(backcheck)==['ztop']
+           ^^^^^^^^^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\scratch\review_oi048_final_20261018.py", line 29, in models
+    def models(p):return re.findall(r'^\.model\s+(\S+)',Path(p).read_text(),re.M)
+                                                        ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1058, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_rewrite_refactor_resyn.normalized.blif'
+[run] 完成（5s），退出码 1

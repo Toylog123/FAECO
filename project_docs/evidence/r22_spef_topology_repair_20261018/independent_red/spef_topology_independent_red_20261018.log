@@ -1,0 +1,79 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+____ test_escaped_scalar_and_vector_bit_have_distinct_physical_connections ____
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1234/test_escaped_scalar_and_vector0')
+
+    def test_escaped_scalar_and_vector_bit_have_distinct_physical_connections(tmp_path):
+        nl=parsed(tmp_path,'''module top(\\a[0] ,a,Y,Z);
+        input \\a[0] ; input [0:0] a; output Y,Z;
+        sky130_fd_sc_hd__buf_1 u (.A(\\a[0] ),.X(Y));
+        sky130_fd_sc_hd__buf_1 v (.A(a[0]),.X(Z)); endmodule''')
+>       assert len(nl.ports)==4
+E       AssertionError: assert 3 == 4
+E        +  where 3 = len(['Y', 'Z', 'a[0]'])
+E        +    where ['Y', 'Z', 'a[0]'] = MappedNetlist(module_name='top', ports=['Y', 'Z', 'a[0]'], port_dirs={'a[0]': 'I', 'Y': 'O', 'Z': 'O'}, nets={'Y': Map...,))}, instances=[('sky130_fd_sc_hd__buf_1', 'u'), ('sky130_fd_sc_hd__buf_1', 'v')], omitted_unused_constant_aliases=[]).ports
+
+code\tests\test_spef_pin_topology.py:120: AssertionError
+_______________ test_pure_port_alias_keeps_physical_feedthrough _______________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1234/test_pure_port_alias_keeps_phy0')
+
+    def test_pure_port_alias_keeps_physical_feedthrough(tmp_path):
+        spef=build_spef(parsed(tmp_path,'module top(input A,output Z); assign Z=A; endmodule'))
+>       assert '*P A I' in spef and '*P Z O' in spef
+E       assert ('*P A I' in '*SPEF "IEEE 1481-1998"\n*DESIGN "top"\n*DATE "2026-08-05"\n*VENDOR "FAECO"\n*PROGRAM "src/rseco/spef.py"\n*VERSION "1...ER /\n*DELIMITER :\n*BUS_DELIMITER [ ]\n*T_UNIT 1 NS\n*C_UNIT 1 PF\n*R_UNIT 1 OHM\n*L_UNIT 1 HENRY\n*PORTS\nA I\nZ O\n')
+
+code\tests\test_spef_pin_topology.py:128: AssertionError
+_ test_unparsed_outer_syntax_and_output_literal_rejected[BROKEN module top(input A); endmodule] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1234/test_unparsed_outer_syntax_and0')
+text = 'BROKEN module top(input A); endmodule'
+
+    @pytest.mark.parametrize('text',[
+        'BROKEN module top(input A); endmodule',
+        'module top(input A); endmodule INVALID',
+        "module top(input A); sky130_fd_sc_hd__buf_1 u (.A(A),.X(1'b0)); endmodule",
+    ])
+    def test_unparsed_outer_syntax_and_output_literal_rejected(tmp_path,text):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_spef_pin_topology.py:137: Failed
+_ test_unparsed_outer_syntax_and_output_literal_rejected[module top(input A); endmodule INVALID] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1234/test_unparsed_outer_syntax_and1')
+text = 'module top(input A); endmodule INVALID'
+
+    @pytest.mark.parametrize('text',[
+        'BROKEN module top(input A); endmodule',
+        'module top(input A); endmodule INVALID',
+        "module top(input A); sky130_fd_sc_hd__buf_1 u (.A(A),.X(1'b0)); endmodule",
+    ])
+    def test_unparsed_outer_syntax_and_output_literal_rejected(tmp_path,text):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_spef_pin_topology.py:137: Failed
+_ test_unparsed_outer_syntax_and_output_literal_rejected[module top(input A); sky130_fd_sc_hd__buf_1 u (.A(A),.X(1'b0)); endmodule] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1234/test_unparsed_outer_syntax_and2')
+text = "module top(input A); sky130_fd_sc_hd__buf_1 u (.A(A),.X(1'b0)); endmodule"
+
+    @pytest.mark.parametrize('text',[
+        'BROKEN module top(input A); endmodule',
+        'module top(input A); endmodule INVALID',
+        "module top(input A); sky130_fd_sc_hd__buf_1 u (.A(A),.X(1'b0)); endmodule",
+    ])
+    def test_unparsed_outer_syntax_and_output_literal_rejected(tmp_path,text):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_spef_pin_topology.py:137: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_spef_pin_topology.py::test_escaped_scalar_and_vector_bit_have_distinct_physical_connections
+FAILED code/tests/test_spef_pin_topology.py::test_pure_port_alias_keeps_physical_feedthrough
+FAILED code/tests/test_spef_pin_topology.py::test_unparsed_outer_syntax_and_output_literal_rejected[BROKEN module top(input A); endmodule]
+FAILED code/tests/test_spef_pin_topology.py::test_unparsed_outer_syntax_and_output_literal_rejected[module top(input A); endmodule INVALID]
+FAILED code/tests/test_spef_pin_topology.py::test_unparsed_outer_syntax_and_output_literal_rejected[module top(input A); sky130_fd_sc_hd__buf_1 u (.A(A),.X(1'b0)); endmodule]
+5 failed, 16 deselected in 0.59s

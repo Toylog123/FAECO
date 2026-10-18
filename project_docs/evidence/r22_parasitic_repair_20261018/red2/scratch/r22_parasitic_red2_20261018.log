@@ -1,0 +1,313 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -X utf8 -m pytest -q code/tests/test_r22_parasitic_measurement.py --basetemp scratch/r22_parasitic_red2_tmp
+F.FFFFFFFFF.FF                                                           [100%]
+================================== FAILURES ===================================
+____ test_parasitic_first_path_and_worst_slack_use_same_annotated_network _____
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_parasitic_first_path_and_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9A81AD0>
+
+    def test_parasitic_first_path_and_worst_slack_use_same_annotated_network(tmp_path, monkeypatch):
+        _native_runner(monkeypatch, _fake_sta(tmp_path))
+        mapped = _netlist(tmp_path)
+        spef = tmp_path / "network.spef"
+        spef.write_text('*SPEF "IEEE 1481-1998"\n', encoding="utf-8")
+        out = tmp_path / "physical"
+        result = opensta.run_opensta_sequential(
+            netlist_path=mapped, period=0.5, output_dir=out,
+            top_module="top", spef_path=spef, multi_path=True, min_path=True,
+            sta_command="controlled", timeout_s=15)
+>       assert result["slack"] == -0.9
+E       assert -0.1 == -0.9
+
+code\tests\test_r22_parasitic_measurement.py:73: AssertionError
+___ test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[-1] ____
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_sequential_tool_failures_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9BAC390>
+diagnostic = '', rc = 1
+
+    @pytest.mark.parametrize("diagnostic,rc", [
+        ("", 1),
+        ("Error 123: cannot link design", 0),
+        ("Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.", 0),
+        ("Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.", 0),
+    ])
+    def test_sequential_tool_failures_cannot_produce_valid_numeric_metrics(tmp_path, monkeypatch, diagnostic, rc):
+        _native_runner(monkeypatch, _fake_sta(tmp_path, diagnostic=diagnostic, returncode=rc))
+        result = opensta.run_opensta_sequential(
+            netlist_path=_netlist(tmp_path), period=0.5, output_dir=tmp_path / "failed",
+            top_module="top", sta_command="controlled", timeout_s=15)
+>       assert result["wns"] is None
+E       assert -0.1 is None
+
+code\tests\test_r22_parasitic_measurement.py:99: AssertionError
+_ test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[Error 123: cannot link design-0] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_sequential_tool_failures_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9B68090>
+diagnostic = 'Error 123: cannot link design', rc = 0
+
+    @pytest.mark.parametrize("diagnostic,rc", [
+        ("", 1),
+        ("Error 123: cannot link design", 0),
+        ("Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.", 0),
+        ("Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.", 0),
+    ])
+    def test_sequential_tool_failures_cannot_produce_valid_numeric_metrics(tmp_path, monkeypatch, diagnostic, rc):
+        _native_runner(monkeypatch, _fake_sta(tmp_path, diagnostic=diagnostic, returncode=rc))
+        result = opensta.run_opensta_sequential(
+            netlist_path=_netlist(tmp_path), period=0.5, output_dir=tmp_path / "failed",
+            top_module="top", sta_command="controlled", timeout_s=15)
+>       assert result["wns"] is None
+E       assert -0.1 is None
+
+code\tests\test_r22_parasitic_measurement.py:99: AssertionError
+_ test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.-0] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_sequential_tool_failures_2')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9B58210>
+diagnostic = 'Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.'
+rc = 0
+
+    @pytest.mark.parametrize("diagnostic,rc", [
+        ("", 1),
+        ("Error 123: cannot link design", 0),
+        ("Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.", 0),
+        ("Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.", 0),
+    ])
+    def test_sequential_tool_failures_cannot_produce_valid_numeric_metrics(tmp_path, monkeypatch, diagnostic, rc):
+        _native_runner(monkeypatch, _fake_sta(tmp_path, diagnostic=diagnostic, returncode=rc))
+        result = opensta.run_opensta_sequential(
+            netlist_path=_netlist(tmp_path), period=0.5, output_dir=tmp_path / "failed",
+            top_module="top", sta_command="controlled", timeout_s=15)
+>       assert result["wns"] is None
+E       assert -0.1 is None
+
+code\tests\test_r22_parasitic_measurement.py:99: AssertionError
+_ test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.-0] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_sequential_tool_failures_3')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9B389D0>
+diagnostic = 'Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.'
+rc = 0
+
+    @pytest.mark.parametrize("diagnostic,rc", [
+        ("", 1),
+        ("Error 123: cannot link design", 0),
+        ("Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.", 0),
+        ("Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.", 0),
+    ])
+    def test_sequential_tool_failures_cannot_produce_valid_numeric_metrics(tmp_path, monkeypatch, diagnostic, rc):
+        _native_runner(monkeypatch, _fake_sta(tmp_path, diagnostic=diagnostic, returncode=rc))
+        result = opensta.run_opensta_sequential(
+            netlist_path=_netlist(tmp_path), period=0.5, output_dir=tmp_path / "failed",
+            top_module="top", sta_command="controlled", timeout_s=15)
+>       assert result["wns"] is None
+E       assert -0.1 is None
+
+code\tests\test_r22_parasitic_measurement.py:99: AssertionError
+__ test_scan_rebuilds_each_sides_changed_pin_and_binds_measurement_artifacts __
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_scan_rebuilds_each_sides_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9BA2110>
+
+    def test_scan_rebuilds_each_sides_changed_pin_and_binds_measurement_artifacts(tmp_path, monkeypatch):
+        scan = _scan(monkeypatch, tmp_path)
+        base = _netlist(tmp_path)
+        repaired = _netlist(tmp_path, repaired=True)
+        out = tmp_path / "comparison"
+        monkeypatch.setattr(sys, "argv", ["scan", "--baseline", str(base), "--repaired", str(repaired),
+                                       "--period", "0.5", "--top", "top", "--output-dir", str(out)])
+>       assert scan.main() == 0
+               ^^^^^^^^^^^
+
+code\tests\test_r22_parasitic_measurement.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_parasitic_aware_check.py:84: in main
+    spef = write_spef(out / "estimated.spef", nl, unit_len_um=args.unit_len_um)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+code\src\rseco\spef.py:217: in write_spef
+    build_spef(
+code\src\rseco\spef.py:177: in build_spef
+    driver = net.driver()
+             ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = MappedNet(name='n', pins=(('u0', 'Y'), ('u1', 'A')), is_port=False, pin_directions=(), port_connections=())
+
+    def driver(self) -> tuple[str, str] | None:
+        if len(self.pin_directions) != len(self.pins):
+>           raise ValueError(f'Actual pin directions unavailable for net {self.name}')
+E           ValueError: Actual pin directions unavailable for net n
+
+code\src\rseco\spef.py:30: ValueError
+_____ test_scan_rejects_float_results_from_failed_or_missing_pin_runs[-7] _____
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_scan_rejects_float_result0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9BB8810>
+diagnostic = '', rc = 7
+
+    @pytest.mark.parametrize("diagnostic,rc", [
+        ("", 7),
+        ("Warning 1647: baseline.spef line 310, pin u0:SLEEP not found.", 0),
+    ])
+    def test_scan_rejects_float_results_from_failed_or_missing_pin_runs(tmp_path, monkeypatch, diagnostic, rc):
+        scan = _scan(monkeypatch, tmp_path, diagnostic=diagnostic, returncode=rc)
+        row = scan.run_sta(_netlist(tmp_path), 0.5, tmp_path / "failed", None, "top")
+>       assert row["wns"] is None
+E       assert -0.1 is None
+
+code\tests\test_r22_parasitic_measurement.py:159: AssertionError
+_ test_scan_rejects_float_results_from_failed_or_missing_pin_runs[Warning 1647: baseline.spef line 310, pin u0:SLEEP not found.-0] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_scan_rejects_float_result1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D8113690>
+diagnostic = 'Warning 1647: baseline.spef line 310, pin u0:SLEEP not found.'
+rc = 0
+
+    @pytest.mark.parametrize("diagnostic,rc", [
+        ("", 7),
+        ("Warning 1647: baseline.spef line 310, pin u0:SLEEP not found.", 0),
+    ])
+    def test_scan_rejects_float_results_from_failed_or_missing_pin_runs(tmp_path, monkeypatch, diagnostic, rc):
+        scan = _scan(monkeypatch, tmp_path, diagnostic=diagnostic, returncode=rc)
+        row = scan.run_sta(_netlist(tmp_path), 0.5, tmp_path / "failed", None, "top")
+>       assert row["wns"] is None
+E       assert -0.1 is None
+
+code\tests\test_r22_parasitic_measurement.py:159: AssertionError
+_ test_sequential_failed_launch_or_timeout_leaves_null_metrics_and_evidence[timeout] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_sequential_failed_launch_0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D8116490>
+failure = 'timeout'
+
+    @pytest.mark.parametrize("failure", ["timeout", "launch"])
+    def test_sequential_failed_launch_or_timeout_leaves_null_metrics_and_evidence(tmp_path, monkeypatch, failure):
+        _native_runner(monkeypatch, _fake_sta(tmp_path))
+        def fail(*args, **kwargs):
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(args[0], 15, output=b"partial stdout\n", stderr=b"partial stderr\n")
+            raise FileNotFoundError("controlled tool unavailable")
+        monkeypatch.setattr(opensta.subprocess, "run", fail)
+        out = tmp_path / "failed"
+>       result = opensta.run_opensta_sequential(netlist_path=_netlist(tmp_path), period=0.5,
+            output_dir=out, top_module="top", sta_command="controlled", timeout_s=15)
+
+code\tests\test_r22_parasitic_measurement.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\opensta.py:297: in run_opensta_sequential
+    proc = subprocess.run(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (['D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\.venv\\Scripts\\python.exe', 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scrat...iduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red2_tmp\\test_sequential_failed_launch_0\\failed\\sta.tcl'],)
+kwargs = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+    def fail(*args, **kwargs):
+        if failure == "timeout":
+>           raise subprocess.TimeoutExpired(args[0], 15, output=b"partial stdout\n", stderr=b"partial stderr\n")
+E           subprocess.TimeoutExpired: Command '['D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\.venv\\Scripts\\python.exe', 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red2_tmp\\test_sequential_failed_launch_0\\controlled_sta.py', '-no_splash', '-exit', 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red2_tmp\\test_sequential_failed_launch_0\\failed\\sta.tcl']' timed out after 15 seconds
+
+code\tests\test_r22_parasitic_measurement.py:169: TimeoutExpired
+_ test_sequential_failed_launch_or_timeout_leaves_null_metrics_and_evidence[launch] _
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_sequential_failed_launch_1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9AD70D0>
+failure = 'launch'
+
+    @pytest.mark.parametrize("failure", ["timeout", "launch"])
+    def test_sequential_failed_launch_or_timeout_leaves_null_metrics_and_evidence(tmp_path, monkeypatch, failure):
+        _native_runner(monkeypatch, _fake_sta(tmp_path))
+        def fail(*args, **kwargs):
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired(args[0], 15, output=b"partial stdout\n", stderr=b"partial stderr\n")
+            raise FileNotFoundError("controlled tool unavailable")
+        monkeypatch.setattr(opensta.subprocess, "run", fail)
+        out = tmp_path / "failed"
+>       result = opensta.run_opensta_sequential(netlist_path=_netlist(tmp_path), period=0.5,
+            output_dir=out, top_module="top", sta_command="controlled", timeout_s=15)
+
+code\tests\test_r22_parasitic_measurement.py:173: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\src\rseco\opensta.py:297: in run_opensta_sequential
+    proc = subprocess.run(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+args = (['D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\.venv\\Scripts\\python.exe', 'D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scrat...iduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_red2_tmp\\test_sequential_failed_launch_1\\failed\\sta.tcl'],)
+kwargs = {'capture_output': True, 'text': True, 'encoding': 'utf-8', 'errors': 'replace', ...}
+
+    def fail(*args, **kwargs):
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(args[0], 15, output=b"partial stdout\n", stderr=b"partial stderr\n")
+>       raise FileNotFoundError("controlled tool unavailable")
+E       FileNotFoundError: controlled tool unavailable
+
+code\tests\test_r22_parasitic_measurement.py:170: FileNotFoundError
+___ test_scan_existing_output_is_rejected_without_overwriting_prior_summary ___
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_scan_existing_output_is_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9BBA610>
+
+    def test_scan_existing_output_is_rejected_without_overwriting_prior_summary(tmp_path, monkeypatch):
+        scan = _scan(monkeypatch, tmp_path)
+        base = _netlist(tmp_path)
+        repaired = _netlist(tmp_path, repaired=True)
+        out = tmp_path / "occupied"
+        out.mkdir()
+        sentinel = out / "summary.json"
+        sentinel.write_bytes(b"prior immutable result")
+        monkeypatch.setattr(sys, "argv", ["scan", "--baseline", str(base), "--repaired", str(repaired),
+                                       "--period", "0.5", "--top", "top", "--output-dir", str(out)])
+>       assert scan.main() != 0
+               ^^^^^^^^^^^
+
+code\tests\test_r22_parasitic_measurement.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\scripts\run_parasitic_aware_check.py:84: in main
+    spef = write_spef(out / "estimated.spef", nl, unit_len_um=args.unit_len_um)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+code\src\rseco\spef.py:217: in write_spef
+    build_spef(
+code\src\rseco\spef.py:177: in build_spef
+    driver = net.driver()
+             ^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = MappedNet(name='n', pins=(('u0', 'Y'), ('u1', 'A')), is_port=False, pin_directions=(), port_connections=())
+
+    def driver(self) -> tuple[str, str] | None:
+        if len(self.pin_directions) != len(self.pins):
+>           raise ValueError(f'Actual pin directions unavailable for net {self.name}')
+E           ValueError: Actual pin directions unavailable for net n
+
+code\src\rseco\spef.py:30: ValueError
+____ test_scan_unparseable_tool_output_is_invalid_even_with_no_exit_error _____
+
+tmp_path = WindowsPath('D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/r22_parasitic_red2_tmp/test_scan_unparseable_tool_out0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000204D9AC8A90>
+
+    def test_scan_unparseable_tool_output_is_invalid_even_with_no_exit_error(tmp_path, monkeypatch):
+        scan = _scan(monkeypatch, tmp_path)
+        monkeypatch.setattr(scan.subprocess, "run",
+                            lambda *args, **kwargs: subprocess.CompletedProcess(args[0], 0, "No paths found\n", ""))
+        row = scan.run_sta(_netlist(tmp_path), 0.5, tmp_path / "unparsed", None, "top")
+>       assert row["valid"] is False and row["wns"] is None
+               ^^^^^^^^^^^^
+E       KeyError: 'valid'
+
+code\tests\test_r22_parasitic_measurement.py:212: KeyError
+=========================== short test summary info ===========================
+FAILED code/tests/test_r22_parasitic_measurement.py::test_parasitic_first_path_and_worst_slack_use_same_annotated_network
+FAILED code/tests/test_r22_parasitic_measurement.py::test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[-1]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[Error 123: cannot link design-0]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[Warning 1647: estimated.spef line 310, pin u0:SLEEP not found.-0]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_sequential_tool_failures_cannot_produce_valid_numeric_metrics[Warning 1652: estimated.spef line 318, pin u0:SLEEP not found.-0]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_rebuilds_each_sides_changed_pin_and_binds_measurement_artifacts
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_rejects_float_results_from_failed_or_missing_pin_runs[-7]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_rejects_float_results_from_failed_or_missing_pin_runs[Warning 1647: baseline.spef line 310, pin u0:SLEEP not found.-0]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_sequential_failed_launch_or_timeout_leaves_null_metrics_and_evidence[timeout]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_sequential_failed_launch_or_timeout_leaves_null_metrics_and_evidence[launch]
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_existing_output_is_rejected_without_overwriting_prior_summary
+FAILED code/tests/test_r22_parasitic_measurement.py::test_scan_unparseable_tool_output_is_invalid_even_with_no_exit_error
+12 failed, 2 passed in 1.77s
+[run] 完成（5s），退出码 1

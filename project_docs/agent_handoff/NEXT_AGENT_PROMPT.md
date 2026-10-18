@@ -1,6 +1,6 @@
 # NEXT AGENT PROMPT — 当前2026-10-18
 
-用户于2026-10-18明确“继续推进 做好记录”，当前授权为继续执行。唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，main与origin/main仍为 `3ea0f757f5e9bab4a2df75c458b0c665eabcb258`。本地稿件、适配器、图预览与证据记录有未提交改动，尚未push；主线要求归档、出图与提交审查齐前继续保持源pin，不恢复已结束的session9345。
+用户于2026-10-18明确“继续推进 做好记录”，当前授权为继续执行。唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，当前main阶段提交为 `7231e0296da357df435414f75b0a41fe78265837`（941files），origin/main已实际push到7231e02（session60883 exit0）；C′原始source pin仍3ea0f75不回写。归档/图件审查已齐，当前进入S/SPEF修复计划先红后绿，生产可按明确文件归属改动，整体回归/独立review/源码新commit后才注册正式EDA；不恢复已结束的session9345。
 
 **C′v3全72已独立验收。** `project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json`（SHA `a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738`）实核8电路×9臂、all_matrix_verified/source_stable/completion_set_frozen_at_start均true，72个当前completion SHA匹配。8458候选评估记录、6858 candidate_ideal STA+72初始baseline=6930实际STA过程，other0，192保留提交；每终点独立SEC均非零proven/0unproven。physical/electrical/S均false，不能称物理STA。最终审计exit0/runtime46.546s；剩54原运行wrapper3728s/exit0。stage72五件script/log/invocation/receipt/原运行log保真归档；旧51/54/v1失败/v2仅注册原件不覆盖。
 
@@ -8,13 +8,30 @@
 
 完整v8历史收据为969pass/4skip/156subtests、170源码SHA稳定，OI040/041实现门closed；A6/B2/B17实际对象新证明已各自绑定原pin，B3主线51QA及C作者84/独立注册38QA、原OI042反例拒绝仅关闭工具实现门，尚未新clean pin正式登记同族EDA。四态支持仍open，实际三态/显式Z/switch须unsupported非pass。中英稿时钟元数据OI043已两遍编译/38p视觉/副本验收，仅设置说明门closed；科学回填和投稿声明仍待。
 
+当前S/SPEF源修复已保留全部红→绿与失败原件：S限定47pass1skip、OpenSTA/双侧SPEF native边界71pass、SPEF58pass；OI045共享helper派生模型漂移真红→51pass1skip及根原12输入重放已过。整体v1为1013pass2fail11skip（两旧夹具修后2case pass），v2在原工具环境1019pass11skip；其后三文件native补测22pass1fail暴露OI047整库fallback，最小模型子集修复后26pass。上述数字分别对应各自版本/设定，不相加。
+
+OI048更强native负控曾因ABC误选库buf而将ztop Y=A与Y=B实际不同误报pass，修前bca40完整源/输入/log保真。当前真实source top/唯一root并hierarchy-check-top修复后，两个原Verilog输入字节相同、native已正确fail/ABC明确NOT EQUIVALENT，tool_checks_v3为28pass4.29s/RUN4.9232689s且source173稳定；仅原负控及该补测范围过，独立生产review与历史top影响分界审计仍待。
+
+OI048 mapped-right与source-window修复已明确冻结：FINAL_RECEIPTcd5361e2…176原件/四frozen源SHA实核，ya0ba8bb70…/vme8aa320b…；原source prepare前保真、launch前后核，普通/BOM窗口2fail与status真红保留，最终邻接47pass1skip4.64s/native七控+baseline合预期。根原probe三输入逐字节同重放，single inverter正确fail、dummy多root正确error，PROBE8b0d7cd1…/三源稳定；仅原反例与限定实现层通过。当前全v5实际1056pass156subtests208.27s、无skip/warnings，RUN209.1403265/600rc0/wrapper210exit0，显式PYTHONUTF8=1/nativePATH；174before=after=current与ZIP逐SHA核符。独立当前复现代码/产物review9cbabd66…通过（263原件稳定），独立最终接受67da65a4…/FINAL_CLOSURE9928cd3b…已通过（174当前源身份/五轮866ZIP成员/86原件核符）；当前复现实现层限定闭合，历史top影响分界审计仍open，不提前sourcecommit/newpin/正式EDA。
+
+整体v3为1034pass1fail156subtests，唯一assign-only旧wholeLib测试契约更新后v4实得1032pass3fail5warnings156subtests181.75s（RUN182.4937594/600/rc1）；173source before=after与ZIP逐SHA核符。三fail均CLI子进程stdout编码：harness仅-X utf8未传PYTHONUTF8=1，原流反证同CLI同参unset非UTF8/设1可UTF8，均rc0；两相关测试文件显式env后13pass2.72s，无生产改。下一full harness显式env，不能把定向13P冒充全量或覆盖v4。5件tracked c17副产物先保generated/HEAD后精确恢复5/5已实核，首次Git CRLF exactassert失败及两脚本保留；不是科学结果修改。当前source修复仍dirty未commit，OI048新mapped右侧原反例已修/根重放通过，独立最终67da65a4…接受当前实现+全v5实际1056P/174来源稳定；待stage字节QA/阶段source-evidence commit+push，不称完整实现通过/新pin/正式EDA。
+
+真实OpenSTA微型注入已产RESULTf9589064…：actualLIB+spef/opensta前后稳定、43原件SHA核符；两DFXTP夹buf的普通/escaped-literal-vs-busbit路径在RC40/4000um均4.43→-8.38 WNS，四annotation均0未/部分未注入，两个错误pin均null/error。仅这类微型注入实现边界通过，不代b18/任意拓扑/同族科学物理收益；根wrapper16exit0/ROOT_ACCEPTANCE79f5725c…已通过；独立micro复核56bdc6b1…已接受该tiny范围（47原件稳定）。
+
+b18物理恢复OI046仍open：真实baseline/唯一R两对象inout LOGIC0明确unsupported。冻结AUDIT2c3ec37a…/REPORTe38dbafd…15来源稳定：bench明确pseudo-input+同名output，预转换V已有inout，不能按名钉0/默改input或丢输出。保单PB+4I外部被动RC与8反驳控制尚为设计，真实工具未验；BLIF acquisition/原转换receipt/EDIF未知保留。新SPEF真实pilot先合法s382，须新clean pin登记。
+
+OI049新静态待验证边界：ABC CEC timeout partial若bytes，_tail的str join可能TypeError；未跑反例/未修，不是误pass或本次引入结论。全v5已1056P/174源稳定，本阶段源仍冻结待commit，另门先反证再回归，不能笼统称所有timeout已闭。
+
 | ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
 |---|---|---|---|---|---|
 | P02 | C′最终图正式稿件整合 | pending | P1 | 主稿引用/图注/版式与科学证据对应 | v3独立71d9a480…、数据/几何/字形/root与独立视觉已验收；待其他历史族科学门齐后整合 |
-| P03 | 阶段commit/push与新clean pin | pending | P0 | reviewed改动及保真包全部入库/远端可查 | v3独立视觉追加/提交审查齐后由主线提交，当前HEAD仍3ea0f75 |
-| P04 | B3/C/D同族科学复验 | pending | P0 | 各族独立新pin/配置/实际EDA/计数/SEC验收 | 提交适配器后新登记；D先14pilot再余42，不用C′代替 |
-| P05 | 四态支持及历史S/SPEF风险 | in_progress | P0 | 能力反例与冻结历史对象报告闭环 | 四态继续unsupported；冻结S/SPEF审计已出，commit后修CEC/SPEF实现再全回归/同族重验 |
+| P03 | 新源码回归/独立审查与sourcecommit | in_progress | P0 | OI048原负控正确拒/当前全源码回归与独立review已通过，stage字节QA/sourcecommit+push及clean pin | 7231已push；OI045原反例层及OI048原native负控/三文件28P通过；v3旧assign-only契约1fail保真，仅测试更新后v4运行，v4环境归因已证，mapped原反例修后根重放通过；独立review9cbabd66…限定通过，全v5已1056P/174源稳且最终独立接受，准备stage字节QA/sourcecommit+push |
+| P04 | B3/C/D同族科学复验 | pending | P0 | 各族独立新pin/配置/实际EDA/计数/SEC验收 | 全v5/独立review后source阶段commit+push，以新clean HEAD登记D56，先s27/s382共14pilot再余42；全56验收前HEAD/code不变，文档可dirty，不用C′代替 |
+| P05 | 四态门与S/SPEF实现修复 | in_progress | P0 | 能力反例与冻结历史对象报告闭环 | 四态继续unsupported；S/SPEF修复限定QA与OI045原反例层已过，整体v2已过/工具skip另补；四态仍unsupported，同族科学复验须新pin |
 | P06 | 中英稿图/声明最终回填 | pending | P1 | 同族证据回填、图表/主张一致、编译和视觉QA | 依据CLAIM_REPLACEMENT_MAP逐项推进，不称投稿定稿 |
+| P07 | b18 LOGIC0窄域被动RC支持 | pending | P0 | 保原PB+4I和真实接口，新pin下真OpenSTA注入/无缺pin及同族比较 | 报告2c3ec37a…来源15稳定/设计与8反驳控制已齐，尚未实施/测试，不按名钉0 |
+| P08 | 历史ABC完整证明真实top影响分界 | pending | P0 | 逐实际调用/CLI/script/log辨识对象与top绑定，不补造缺失身份 | 审OI048受影响API无显式top路径；独立SEQ按实际证据保留，不跨族外推 |
+| P09 | ABC timeout bytes异常呈现边界OI049 | pending | P1 | 先真反例复现，再必要修复/回归并保原始partial | 当前仅静态_tail(str join)疑点，未跑/未修；全v5已过/阶段源仍冻，独立后续门 |
 
 完整七段交接：`project_docs/agent_handoff/handoff_20261018_r22.md`。过程见LOG-20261018-01起；历史段只作历史，不能恢复已结束任务。
 

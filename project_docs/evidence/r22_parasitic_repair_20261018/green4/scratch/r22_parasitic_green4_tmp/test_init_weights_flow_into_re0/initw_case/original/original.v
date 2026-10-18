@@ -1,0 +1,20 @@
+module top(A, B, C, D, E, F, G, H, Y);
+  input A, B, C, D, E, F, G, H;
+  output Y;
+  wire N1, N2, N3, N4, N5, N6, N7, N8, N9, N10, N11, N12, N13, N14;
+  and g1 (N1, A, B);
+  and g2 (N2, C, D);
+  and g3 (N3, E, F);
+  and g4 (N4, G, H);
+  not g5 (N5, N1);
+  not g6 (N6, N5);
+  not g7 (N7, N2);
+  not g8 (N8, N7);
+  not g9 (N9, N3);
+  not g10 (N10, N9);
+  not g11 (N11, N4);
+  not g12 (N12, N11);
+  or g13 (N13, N6, N8);
+  or g14 (N14, N10, N12);
+  or g15 (Y, N13, N14);
+endmodule

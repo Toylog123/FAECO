@@ -1,0 +1,93 @@
+{
+  "schema": "s-cec-stage-v1",
+  "status": "unavailable",
+  "reason": "yosys failed to normalize CEC reference",
+  "inputs": {
+    "reference": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\ref.v",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "candidate": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\gate.blif",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\candidate_input.blif",
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "model": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\cells.v",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\model_input.v",
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    }
+  },
+  "input_drift": [],
+  "normalized_before_abc": {},
+  "artifacts": {
+    "candidate_input.blif": {
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "cec_left.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_left.blif.normalize/attempt000001/cells_model.after.v": {
+      "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+      "bytes": 129
+    },
+    "cec_left.blif.normalize/attempt000001/cells_model.before.v": {
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81
+    },
+    "cec_left.blif.normalize/attempt000001/normalize.log": {
+      "sha256": "ce3f0e7fcce81d046b3b23d9a32eba29fccf9946897d09bc125d006d8646104d",
+      "bytes": 601
+    },
+    "cec_left.blif.normalize/attempt000001/normalized_output.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_left.blif.normalize/attempt000001/prepared_verilog.after.v": {
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "cec_left.blif.normalize/attempt000001/prepared_verilog.before.v": {
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "cec_left.blif.normalize/attempt000001/receipt.json": {
+      "sha256": "48c20e1a91649ecf1de7fea1f08694ba062874c76bb995ee8eb7eaae7d464ccf",
+      "bytes": 4436
+    },
+    "cec_left.normalize.log": {
+      "sha256": "ce3f0e7fcce81d046b3b23d9a32eba29fccf9946897d09bc125d006d8646104d",
+      "bytes": 601
+    },
+    "cec_left_cells.v": {
+      "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+      "bytes": 129
+    },
+    "model_input.v": {
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    },
+    "reference_input.v": {
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    }
+  },
+  "yosys_argv": [
+    "fake-yosys"
+  ],
+  "abc_argv": [
+    "fake-abc"
+  ],
+  "timeout_s": 60.0,
+  "model_semantics": "Existing cells_v bytes; no model replacement or fresh semantic claim",
+  "liberty_configuration": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\cells.lib",
+    "used_directly_by_this_CEC": false
+  }
+}

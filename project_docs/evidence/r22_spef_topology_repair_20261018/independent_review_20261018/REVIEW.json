@@ -1,0 +1,81 @@
+{
+  "date": "2026-10-18",
+  "status": "changes requested; independently reproduced connectivity omissions",
+  "EDA_executed": false,
+  "git_executed": false,
+  "production_changed_by_reviewer": false,
+  "bounded_probe_source_stable": true,
+  "timeout_seconds": 120,
+  "wrapper_seconds": 6,
+  "wrapper_exit_code": 0,
+  "source_snapshot": {
+    "code/src/rseco/spef.py": {
+      "sha256": "875cb754442a71d0252699f84d6abf1ee05ec5002cfd76d8fb611e791de2b1bc",
+      "exact_source_snapshot": true
+    },
+    "code/src/rseco/real_wns.py": {
+      "sha256": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+      "exact_source_snapshot": true
+    },
+    "code/tests/test_spef_pin_topology.py": {
+      "sha256": "f0c6a957059800234968869675419a6e30194b013edf9bc7523d2ba7029c85be",
+      "exact_source_snapshot": true
+    },
+    "code/tests/test_real_wns.py": {
+      "sha256": "f33a883f51934b772ae331a7b40fa961c47b74214a3bbdb85c8652ecb6094eb6",
+      "exact_source_snapshot": true
+    }
+  },
+  "confirmed_findings": [
+    {
+      "id": "SPEF-R1",
+      "priority": "blocking",
+      "case": "escaped_scalar_vs_bitselect",
+      "reason": "Two distinct legal Verilog ports collapse to one net; b1:A and b2:A shorted in generated SPEF.",
+      "minimum_input": "counterexamples/escaped_scalar_vs_bitselect.v"
+    },
+    {
+      "id": "SPEF-R2",
+      "priority": "blocking",
+      "case": "port_only_feedthrough",
+      "reason": "Input A to output Z alias accepted but omitted because zero cell pins; no D_NET/RC for physical port-to-port connection.",
+      "minimum_input": "counterexamples/port_only_feedthrough.v"
+    },
+    {
+      "id": "SPEF-R3",
+      "priority": "blocking",
+      "case": "unparsed_outside_modules",
+      "reason": "Unsupported non-comment bytes outside modules silently ignored, contrary to full syntax coverage fail-closed contract.",
+      "minimum_input": "counterexamples/unparsed_outside_modules.v"
+    },
+    {
+      "id": "SPEF-R4",
+      "priority": "requires explicit contract",
+      "case": "constant_output_connection",
+      "reason": "Cell output bound to constant literal silently skipped; syntactically accepted, no connection accounted or explicit unsupported marker.",
+      "minimum_input": "counterexamples/constant_output_connection.v"
+    }
+  ],
+  "confirmed_passed_rejections": [
+    {
+      "case": "missing_header_port_direction",
+      "note": "Root recent syntax correction rejects this missing declaration; not treated as remaining bug."
+    },
+    {
+      "case": "alias_scalar_width_mismatch",
+      "note": "Undriven/out-of-range select rejects during SPEF build."
+    }
+  ],
+  "root_correction_required": "Preserve semantic identity of escaped scalar versus bit-select and emit correct SPEF escaping, or reject clearly until supported; include legitimate port-only wires in D_NET; reject unsupported external module bytes; reject output-to-literal or account valid literal domains explicitly.",
+  "regression_requirements": [
+    "all existing role/port/vector/helper tests",
+    "own four counterexamples with negative and positive controls",
+    "eight actual mapped inputs static SHA/connectivity rebuild",
+    "whole frozen-source integration suite"
+  ],
+  "limits": [
+    "No new timing or equivalence claims.",
+    "No invalid case establishes method failure.",
+    "Prior root static eight-case success is not universal parser coverage."
+  ]
+}

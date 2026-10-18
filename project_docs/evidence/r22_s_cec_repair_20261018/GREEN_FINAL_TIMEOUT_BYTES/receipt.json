@@ -1,0 +1,90 @@
+{
+  "schema": "s-cec-stage-v1",
+  "status": "timeout",
+  "reason": "timed out",
+  "inputs": {
+    "reference": {
+      "source": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\ref.v",
+      "snapshot": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\proof\\reference_input.v",
+      "sha256": "90a24cf38f1542337a0b8a7f32fd73dc7b9677510946bf795450f1f7b37217da",
+      "bytes": 60
+    },
+    "candidate": {
+      "source": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\gate.blif",
+      "snapshot": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\proof\\candidate_input.blif",
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "model": {
+      "source": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\cells.v",
+      "snapshot": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\proof\\model_input.v",
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    }
+  },
+  "input_drift": [],
+  "normalized_before_abc": {
+    "cec_left.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_right.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    }
+  },
+  "artifacts": {
+    "abc_cec.log": {
+      "sha256": "c0cabade46a9e73172c56433c9076932b394e2b7de5f3a80d500dfac48596291",
+      "bytes": 324
+    },
+    "abc_cec.log.stderr.bin": {
+      "sha256": "3dcd80f1b15f796ea71ac645184ae5302b91734495fc21892c694d46add5adc0",
+      "bytes": 9
+    },
+    "abc_cec.log.stdout.bin": {
+      "sha256": "3c78bb1ba70cfdc6826515607741417ab295c77bd301aebc39b656dc36bcd601",
+      "bytes": 13
+    },
+    "candidate_input.blif": {
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "cec_left.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_left.normalize.log": {
+      "sha256": "9c700b7e99d6b11a450bf71777afe110362c261862e0cf0aee59408bf2710ad9",
+      "bytes": 543
+    },
+    "cec_right.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_right.normalize.log": {
+      "sha256": "0f81d6e0518da4a9c9282e196524233a516f827a2185524bd91758a236653d8d",
+      "bytes": 376
+    },
+    "model_input.v": {
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    },
+    "reference_input.v": {
+      "sha256": "90a24cf38f1542337a0b8a7f32fd73dc7b9677510946bf795450f1f7b37217da",
+      "bytes": 60
+    }
+  },
+  "yosys_argv": [
+    "fake-yosys"
+  ],
+  "abc_argv": [
+    "fake-abc"
+  ],
+  "timeout_s": 60.0,
+  "model_semantics": "Existing cells_v bytes; no model replacement or fresh semantic claim",
+  "liberty_configuration": {
+    "path": "C:\\Users\\佟亚龙\\AppData\\Local\\Temp\\pytest-of-佟亚龙\\pytest-1227\\test_timeout_with_byte_output_0\\cells.lib",
+    "used_directly_by_this_CEC": false
+  }
+}

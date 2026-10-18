@@ -1,0 +1,54 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+____ LibertyCellsCecTest.test_inline_missing_referenced_model_is_rejected _____
+
+self = <test_yosys_abc_flow.LibertyCellsCecTest testMethod=test_inline_missing_referenced_model_is_rejected>
+
+    def test_inline_missing_referenced_model_is_rejected(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';lib=p/'lib.v'
+            src.write_text('module top(input A,output X); sky130_fd_sc_hd__absent_1 g (.A(A),.X(X)); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule')
+>           with self.assertRaises(ValueError):
+E           AssertionError: ValueError not raised
+
+code\tests\test_yosys_abc_flow.py:131: AssertionError
+_ LibertyCellsCecTest.test_inline_referenced_cell_selects_only_its_complete_module _
+
+self = <test_yosys_abc_flow.LibertyCellsCecTest testMethod=test_inline_referenced_cell_selects_only_its_complete_module>
+
+    def test_inline_referenced_cell_selects_only_its_complete_module(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';lib=p/'lib.v'
+            src.write_text('module top(input A,output X); sky130_fd_sc_hd__buf_1 g (.A(A),.X(X)); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule '
+                           'module sky130_fd_sc_hd__unrelated_1(input A,output X); assign X=A*A; endmodule')
+            result=_extract_cells_for_netlist(src,lib,p/'used.v').read_text()
+            self.assertIn('module sky130_fd_sc_hd__buf_1',result)
+>           self.assertNotIn('sky130_fd_sc_hd__unrelated_1',result)
+E           AssertionError: 'sky130_fd_sc_hd__unrelated_1' unexpectedly found in 'module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule module sky130_fd_sc_hd__unrelated_1(input A,output X); assign X=A*A; endmodule'
+
+code\tests\test_yosys_abc_flow.py:123: AssertionError
+_ LibertyCellsCecTest.test_primitive_only_reference_does_not_inject_unrelated_models _
+
+self = <test_yosys_abc_flow.LibertyCellsCecTest testMethod=test_primitive_only_reference_does_not_inject_unrelated_models>
+
+    def test_primitive_only_reference_does_not_inject_unrelated_models(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td); src=p/'top.v';lib=p/'lib.v';subset=p/'used.v'
+            src.write_text('module top(input a,b,output y); nand g(y,a,b); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__unused_1(input A,output X); assign X=A; endmodule')
+            original=lib.read_bytes()
+            result=_extract_cells_for_netlist(src,lib,subset)
+>           self.assertNotIn('sky130_fd_sc_hd__unused_1',result.read_text())
+E           AssertionError: 'sky130_fd_sc_hd__unused_1' unexpectedly found in 'module sky130_fd_sc_hd__unused_1(input A,output X); assign X=A; endmodule'
+
+code\tests\test_yosys_abc_flow.py:111: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_yosys_abc_flow.py::LibertyCellsCecTest::test_inline_missing_referenced_model_is_rejected
+FAILED code/tests/test_yosys_abc_flow.py::LibertyCellsCecTest::test_inline_referenced_cell_selects_only_its_complete_module
+FAILED code/tests/test_yosys_abc_flow.py::LibertyCellsCecTest::test_primitive_only_reference_does_not_inject_unrelated_models
+3 failed, 5 deselected in 0.38s

@@ -1,0 +1,52 @@
+[run] 启动（超时 300s）：.venv/Scripts/python.exe -m pytest code/tests/test_cec_blif_scope.py -k abc_success -q
+.FF.....                                                                 [100%]
+================================== FAILURES ===================================
+_ test_abc_success_needs_clean_exit_and_unambiguous_object[Error: reading network failed.\nNetworks are equivalent-0-error] _
+
+output = 'Error: reading network failed.\nNetworks are equivalent', rc = 0
+wanted = 'error'
+
+    @pytest.mark.parametrize('output,rc,wanted',[
+     ('networks are equivalent',7,'error'),
+     ('Error: reading network failed.\nNetworks are equivalent',0,'error'),
+     ('Cannot open input file \"missing.blif\".\nNetworks are equivalent',0,'error'),
+     ('Cannot open file \"abc.rc\".\nNetworks are equivalent',0,'pass'),
+     ('warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent',0,'error'),
+     ('networks are not equivalent\nnetworks are equivalent',0,'fail'),
+     ('networks are equivalent',0,'pass'),('networks are not equivalent',0,'fail'),
+    ])
+    def test_abc_success_needs_clean_exit_and_unambiguous_object(output,rc,wanted):
+>       assert ya._abc_status_from_output(output,rc)==wanted
+E       AssertionError: assert 'pass' == 'error'
+E         
+E         - error
+E         + pass
+
+code\tests\test_cec_blif_scope.py:22: AssertionError
+_ test_abc_success_needs_clean_exit_and_unambiguous_object[Cannot open input file "missing.blif".\nNetworks are equivalent-0-error] _
+
+output = 'Cannot open input file "missing.blif".\nNetworks are equivalent'
+rc = 0, wanted = 'error'
+
+    @pytest.mark.parametrize('output,rc,wanted',[
+     ('networks are equivalent',7,'error'),
+     ('Error: reading network failed.\nNetworks are equivalent',0,'error'),
+     ('Cannot open input file \"missing.blif\".\nNetworks are equivalent',0,'error'),
+     ('Cannot open file \"abc.rc\".\nNetworks are equivalent',0,'pass'),
+     ('warning: the design has 2 root-level modules. the first one (dummy) will be used.\nnetworks are equivalent',0,'error'),
+     ('networks are not equivalent\nnetworks are equivalent',0,'fail'),
+     ('networks are equivalent',0,'pass'),('networks are not equivalent',0,'fail'),
+    ])
+    def test_abc_success_needs_clean_exit_and_unambiguous_object(output,rc,wanted):
+>       assert ya._abc_status_from_output(output,rc)==wanted
+E       AssertionError: assert 'pass' == 'error'
+E         
+E         - error
+E         + pass
+
+code\tests\test_cec_blif_scope.py:22: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_cec_blif_scope.py::test_abc_success_needs_clean_exit_and_unambiguous_object[Error: reading network failed.\nNetworks are equivalent-0-error]
+FAILED code/tests/test_cec_blif_scope.py::test_abc_success_needs_clean_exit_and_unambiguous_object[Cannot open input file "missing.blif".\nNetworks are equivalent-0-error]
+2 failed, 6 passed, 11 deselected in 0.37s
+[run] 完成（5s），退出码 1

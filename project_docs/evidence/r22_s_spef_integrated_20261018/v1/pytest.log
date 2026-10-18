@@ -1,0 +1,89 @@
+........................................................................ [  7%]
+..........sss........................................................... [ 14%]
+............................................................. [ 19%]
+....................................................................... [ 26%]
+........................................................................ [ 33%]
+........................................................................ [ 40%]
+........................................................................ [ 47%]
+........................................................................ [ 54%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 76%]
+............................sssssss..................................... [ 83%]
+......................F.F............................................... [ 90%]
+........................................................................ [ 97%]
+...........s..................                                           [100%]
+================================== FAILURES ===================================
+________ test_parallel_physical_candidates_share_single_baseline_cache ________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1236/test_parallel_physical_candida0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021E3DC85750>
+
+    def test_parallel_physical_candidates_share_single_baseline_cache(tmp_path, monkeypatch):
+        ev = RealWnsEvaluator(mapped_text=BASE, top_module="top", period=1,
+                              liberty_text=LIB, baseline_wns=-1,
+                              output_dir=tmp_path, workers=2, physical_gate=True)
+        ev._candidates_for = lambda _cells, _inst: [
+            ("sky130_fd_sc_hd__and2_2", {}, "G"),
+            ("sky130_fd_sc_hd__or2_1", {}, "R"),
+        ]
+        ev._apply = lambda text, _inst, _kind, new, _pin: text.replace("and2_1", new)
+        calls = []
+        def sta(**kwargs):
+            calls.append({"path": Path(kwargs["output_dir"]),
+                          "spef": kwargs.get("spef_path")})
+            if kwargs.get("spef_path") is None:
+                return {"wns": -.5, "tns": -1, "min_slack": -.5}
+            if Path(kwargs["output_dir"]).name == "physical_baseline":
+                return {"wns": -1.0, "tns": -2, "min_slack": -.8}
+            return {"wns": -.5, "tns": -1, "min_slack": -.7}
+        monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", sta)
+        result = ev(SimpleNamespace(patch_id="parallel", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"]), None)
+>       assert result["improved"] is True
+E       assert False is True
+
+code\tests\test_sol_review_residuals.py:335: AssertionError
+_________ test_physical_hold_candidate_ranking_prioritizes_hold_gain __________
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1236/test_physical_hold_candidate_r0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021E3DD46B90>
+
+    def test_physical_hold_candidate_ranking_prioritizes_hold_gain(tmp_path, monkeypatch):
+        ev = RealWnsEvaluator(
+            mapped_text=BASE, top_module="top", period=1, liberty_text=LIB,
+            baseline_wns=-1.0, baseline_min_slack=-0.8,
+            output_dir=tmp_path, workers=1, physical_gate=True, hold_mode=True,
+        )
+        ev._candidates_for = lambda _cells, _inst: [
+            ("sky130_fd_sc_hd__and2_2", {}, "G"),
+            ("sky130_fd_sc_hd__and2_hold", {}, "G"),
+        ]
+        ev._apply = lambda text, inst, kind, new, pin: text.replace(
+            "sky130_fd_sc_hd__and2_1", new
+        )
+    
+        def paired_sta(**kwargs):
+            text = Path(kwargs["netlist_path"]).read_text(encoding="utf-8")
+            if kwargs.get("spef_path") is None:
+                return {"wns": -0.9, "tns": -2.0, "min_slack": -0.7}
+            out = str(kwargs["output_dir"])
+            if "physical_baseline" in out:
+                return {"wns": -1.0, "tns": -3.0, "min_slack": -0.8}
+            if "and2_hold" in text:
+                return {"wns": -0.8, "tns": -1.0, "min_slack": -0.2}
+            return {"wns": -0.5, "tns": -2.0, "min_slack": -0.7}
+    
+        monkeypatch.setattr("rseco.real_wns.run_opensta_sequential", paired_sta)
+        patch = SimpleNamespace(patch_id="p", gates=["g1"], boundary_inputs=[], boundary_outputs=["Y"])
+        result = ev(patch, None)
+        assert result["improved"] is True
+>       assert result["candidate_netlist_text"].find("and2_hold") >= 0
+E       AssertionError: assert -1 >= 0
+E        +  where -1 = <built-in method find of str object at 0x0000021E3DEE85D0>('and2_hold')
+E        +    where <built-in method find of str object at 0x0000021E3DEE85D0> = 'module top(A, B, Y);\ninput A, B;\noutput Y;\nsky130_fd_sc_hd__and2_2 g1 (.A(A), .B(B), .Y(Y));\nendmodule\n'.find
+
+code\tests\test_sol_review_residuals.py:393: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_sol_review_residuals.py::test_parallel_physical_candidates_share_single_baseline_cache
+FAILED code/tests/test_sol_review_residuals.py::test_physical_hold_candidate_ranking_prioritizes_hold_gain
+2 failed, 1013 passed, 11 skipped, 156 subtests passed in 205.77s (0:03:25)

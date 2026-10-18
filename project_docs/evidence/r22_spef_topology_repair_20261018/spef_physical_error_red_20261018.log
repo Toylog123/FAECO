@@ -1,0 +1,1013 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ TestPhysicalGate.test_physical_parse_failure_preserves_root_cause ______
+
+self = <rseco.real_wns.RealWnsEvaluator object at 0x0000020D0AB91610>
+job = ('_071_', 'sky130_fd_sc_hd__lpflow_inputiso1p_1', 'sky130_fd_sc_hd__or2_1', {'A': 'A', 'SLEEP': 'B'}, 'R', 'module s38... S, output Z);\n          sky130_fd_sc_hd__lpflow_inputiso1p_1 _071_ (.A(A),.SLEEP(S),.X(Z));\n        endmodule', ...)
+
+    def _eval_one(self, job: tuple) -> dict:
+        (
+            inst,
+            cell_type,
+            new_type,
+            pin_map,
+            kind,
+            text,
+            cand_dir,
+            top_module,
+            index,
+            proxy_meta,
+        ) = job
+        started_at = time.perf_counter()
+        # Provenance may describe an earlier cached measurement.  These
+        # fields describe only a tool launch made by this evaluation.
+        proxy_meta = {**proxy_meta, "sta_executed": False, "sta_launch_seq": None}
+        topology_window = None
+        if kind == "TOPOLOGY":
+            topology_replacement, topology_window = pin_map
+            candidate_text = replace_target_module(text,self.top_module,
+                stitch_topology_replacement(target_module_text(text,self.top_module),topology_replacement))
+        elif kind == "JOINT":
+            candidate_text = self._apply_joint(text, pin_map)
+        else:
+            candidate_text = self._apply(text, inst, kind, new_type, pin_map)
+        sub = cand_dir / ("%03d_" % index + inst + "_" + kind)
+        sub.mkdir(parents=True, exist_ok=True)
+        (sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
+        candidate_hash = hashlib.sha256(candidate_text.encode("utf-8")).hexdigest()
+        base_hash = hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+        analysis_config = {
+            "period": self.period, "clock_port": self.clock_port,
+            "sdc_config": {"period": self.period, "clock_port": self.clock_port,
+                           "hold_mode": self.hold_mode,
+                           "hold_uncertainty": self.hold_uncertainty},
+            "hold_mode": self.hold_mode,
+            "hold_uncertainty": self.hold_uncertainty,
+            "physical_gate": self.physical_gate,
+            "physical_unit_len_um": self.physical_unit_len_um,
+            "physical_fanout_penalty": self.physical_fanout_penalty,
+            "physical_depth_penalty": self.physical_depth_penalty,
+            "liberty_hash": hashlib.sha256(self.liberty_text.encode("utf-8")).hexdigest(),
+            "analysis_config": {"hold_mode": self.hold_mode,
+                                "tns_aware": self.tns_aware,
+                                "epsilon": self.epsilon},
+            "rc_config": {"physical_gate": self.physical_gate,
+                          "unit_len_um": self.physical_unit_len_um,
+                          "fanout_penalty": self.physical_fanout_penalty,
+                          "depth_penalty": self.physical_depth_penalty,
+                          "min_physical_gain_ns": self.min_physical_gain_ns},
+            "formal_config": {"strict_gates": self.strict_gates,
+                              "checker": type(self.equivalence_checker).__name__ if self.equivalence_checker else None},
+            "epsilon": self.epsilon,
+        }
+        config_hash = hashlib.sha256(json.dumps(analysis_config, sort_keys=True).encode()).hexdigest()
+        cache_key = hashlib.sha256((base_hash + candidate_hash + config_hash).encode()).hexdigest()
+        unavailable_gate_events = []
+        if self.strict_gates and kind == "TOPOLOGY" and self.topology_sec_checker is None:
+            unavailable_gate_events.append({
+                "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"stage": "full_netlist_sec", "status": "unavailable",
+                             "reason": "topology SEC backend unavailable",
+                             "formal_backend": "unavailable"},
+            })
+        elif self.strict_gates and kind != "TOPOLOGY" and self.equivalence_checker is None:
+            unavailable_gate_events.append({
+                "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"reason": "per-candidate equivalence checker unavailable",
+                             "formal_backend": "unavailable"},
+            })
+        if self.strict_gates and self.boundary_checker is None:
+            unavailable_gate_events.append({
+                "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"reason": "boundary closure checker unavailable",
+                             "boundary_backend": "unavailable"},
+            })
+        if unavailable_gate_events:
+            failed = {
+                "instance": inst, "kind": kind, "from_type": cell_type,
+                "to_type": new_type, "wns": self.baseline_wns,
+                "tns": self.baseline_tns, "min_slack": None,
+                "physical_failure": False, "candidate_netlist_text": candidate_text,
+                "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                "cache_key": cache_key, "config_hash": config_hash,
+                "failure_events": _normalise_failure_events(
+                    unavailable_gate_events, candidate_hash=candidate_hash),
+                "runtime_s": time.perf_counter() - started_at, **proxy_meta,
+            }
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        if cache_key in self._sta_cache:
+            cached = dict(self._sta_cache[cache_key])
+            cached["skipped_duplicate"] = True
+            cached["cached_from_seq"] = cached.get("sta_launch_seq")
+            return {**cached, **proxy_meta}
+        if candidate_hash in self.tested_candidate_hashes and base_hash == getattr(self, "_last_base_hash", None):
+            return {
+                "instance": inst, "kind": kind, "from_type": cell_type,
+                "to_type": new_type, "wns": self.baseline_wns,
+                "tns": self.baseline_tns, "min_slack": None,
+                "physical_failure": False, "candidate_netlist_text": candidate_text,
+                "candidate_hash": candidate_hash, "runtime_s": 0.0,
+                "skipped_duplicate": True, "cache_key": cache_key,
+                "config_hash": config_hash, **proxy_meta,
+            }
+        state = self._active_state
+        needs_formal = bool(self.strict_gates and
+                            (self.equivalence_checker is not None or kind == "TOPOLOGY"))
+        event = self._deadline_or_budget_event(
+            state, "formal", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        ) if needs_formal else (self._deadline_or_budget_event(
+            state, "local", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        ) if state is not None and kind == "TOPOLOGY" else None)
+        if event is not None:
+            failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                      "to_type": new_type, "wns": self.baseline_wns,
+                      "tns": self.baseline_tns, "min_slack": None,
+                      "physical_failure": False, "candidate_netlist_text": candidate_text,
+                      "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                      "cache_key": cache_key, "config_hash": config_hash,
+                      "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        # All structural gates run before STA.  A topology candidate requires
+        # local truth-table evidence plus a separate full-netlist SEC result;
+        # the latter is never substituted by the local checker.
+        if kind == "TOPOLOGY":
+            sec_unavailable = False
+            sec_status = None
+            sec_details = {}
+            try:
+                local_check = check_local_functional_equivalence(topology_window, candidate_text)
+                if local_check.status != "pass":
+                    raise ValueError(f"local checker: {local_check.reason}")
+                if self.strict_gates:
+                    formal_event = self._deadline_or_budget_event(
+                        state, "formal", candidate_hash=candidate_hash,
+                        cut_hash=candidate_hash, action_scope=[inst],
+                    )
+                    if formal_event is not None:
+                        failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                                  "to_type": new_type, "wns": self.baseline_wns,
+                                  "tns": self.baseline_tns, "min_slack": None,
+                                  "physical_failure": False, "candidate_netlist_text": candidate_text,
+                                  "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                                  "cache_key": cache_key, "config_hash": config_hash,
+                                  "failure_events": [formal_event], "runtime_s": 0.0, **proxy_meta}
+                        self._sta_cache[cache_key] = dict(failed)
+                        return failed
+                    sec = self.topology_sec_checker(self.mapped_text, candidate_text)
+                    sec_details = _checker_details(sec)
+                    sec_status = sec_details.get("status")
+                    sec_unavailable = sec_status == "unavailable"
+                    if not _checker_passed(sec):
+                        raise ValueError(f"full-netlist SEC: {sec}")
+            except TimeoutError as exc:
+                event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                         "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                         "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
+                         "status": "timeout", "reason": str(exc)}}
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            except Exception as exc:
+                event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                         "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                         "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
+                         "status": sec_status or ("unavailable" if sec_unavailable else "fail"),
+                         "reason": sec_details.get("reason", str(exc)), **sec_details}}
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            if boundary_budget_event is not None:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [boundary_budget_event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            if self.boundary_checker is not None:
+                boundary_result = None
+                try:
+                    boundary_result = self.boundary_checker(self.mapped_text, candidate_text)
+                    boundary_ok = _checker_passed(boundary_result)
+                except Exception as exc:
+                    boundary_ok = False
+                    boundary_result = {"status": "error", "reason": str(exc)}
+            else:
+                boundary_ok = False
+                boundary_result = {"status": "unavailable", "reason": "boundary checker unavailable"}
+            if not boundary_ok:
+                    event = {"type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                             "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                             "runtime_s": 0.0, "evidence": {"stage": "boundary_closure",
+                             **_checker_details(boundary_result)}}
+                    failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                              "to_type": new_type, "wns": self.baseline_wns,
+                              "tns": self.baseline_tns, "min_slack": None,
+                              "physical_failure": False, "candidate_netlist_text": candidate_text,
+                              "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                              "cache_key": cache_key, "config_hash": config_hash,
+                              "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                    self._sta_cache[cache_key] = dict(failed)
+                    return failed
+        if self.strict_gates and kind != "TOPOLOGY":
+            structural_events = []
+            try:
+                eq = self.equivalence_checker(self.mapped_text, candidate_text)
+                if not _checker_passed(eq):
+                    structural_events.append({
+                        "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                        "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                        "runtime_s": 0.0, "evidence": {"stage": "equivalence", "result": str(eq)},
+                    })
+            except Exception as exc:
+                structural_events.append({
+                    "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0, "evidence": {"stage": "equivalence", "reason": str(exc)},
+                })
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            boundary_result = None
+            try:
+                if boundary_budget_event is not None:
+                    boundary_ok = False
+                else:
+                    boundary_result = (self.boundary_checker(self.mapped_text, candidate_text)
+                                       if self.boundary_checker is not None else None)
+                    boundary_ok = boundary_result is not None and _checker_passed(boundary_result)
+            except Exception as exc:
+                boundary_ok = False
+                boundary_error = str(exc)
+                boundary_result = {"status": "error", "reason": boundary_error}
+            if boundary_budget_event is not None:
+                structural_events.append(boundary_budget_event)
+            if not boundary_ok and boundary_budget_event is None:
+                structural_events.append({
+                    "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0,
+                    "evidence": {"stage": "boundary_closure",
+                                 **_checker_details(boundary_result or {
+                                     "status": "unavailable",
+                                     "reason": "checker unavailable or false",
+                                 })},
+                })
+            if structural_events:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": structural_events, "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+        event = self._deadline_or_budget_event(
+            state, "sta", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        )
+        if event is not None:
+            failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                      "to_type": new_type, "wns": self.baseline_wns,
+                      "tns": self.baseline_tns, "min_slack": None,
+                      "physical_failure": False, "candidate_netlist_text": candidate_text,
+                      "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                      "cache_key": cache_key, "config_hash": config_hash,
+                      "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        self.tested_candidate_hashes.add(candidate_hash)
+        self._last_base_hash = base_hash
+        sta_started_at = time.perf_counter()
+        with self._sta_launch_lock:
+            self._sta_launch_seq += 1
+            launch_event = {
+                "seq": self._sta_launch_seq,
+                "kind": "candidate_ideal",
+                "candidate_hash": candidate_hash,
+                "base_netlist_hash": base_hash,
+                "report_dir": str(sub),
+                "wns": None,
+                "tns": None,
+                "error": None,
+                "timeout": False,
+                "status": "running",
+                "runtime_s": 0.0,
+            }
+            self.sta_launch_events.append(launch_event)
+        proxy_meta.update(sta_executed=True, sta_launch_seq=launch_event["seq"])
+        try:
+            res = run_opensta_sequential(
+                netlist_path=sub / "mapped.v",
+                period=self.period,
+                output_dir=sub,
+                top_module=top_module,
+                hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                min_path=self.hold_mode,
+                clock_port=self.clock_port,
+                multi_path=True,
+                timeout_s=self._remaining_tool_timeout(state),
+                electrical_capture=self.capture_electrical,
+            )
+        except TimeoutError as exc:
+            res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
+        except Exception as exc:
+            res = {"wns": None, "tns": None, "error": str(exc)}
+        with self._sta_launch_lock:
+            launch_event.update(
+                wns=res.get("wns"),
+                tns=res.get("tns"),
+                error=res.get("error"),
+                timeout=bool(res.get("timeout")),
+                status=("timeout" if res.get("timeout") else
+                        "error" if res.get("error") else "completed"),
+                runtime_s=time.perf_counter() - sta_started_at,
+            )
+        critical_refresh = None
+        critical_endpoint_refresh = None
+        report = sub / "sta.log"
+        critical_report = report
+        if state is not None and state.deadline_expired():
+            event = {
+                "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "runtime_s": time.perf_counter() - started_at,
+                "evidence": {"stage": "sta", "reason": "deadline expired after ideal STA"},
+            }
+            return {"instance": inst, "kind": kind, "from_type": cell_type,
+                    "to_type": new_type, "wns": self.baseline_wns,
+                    "tns": self.baseline_tns, "min_slack": None,
+                    "candidate_netlist_text": candidate_text,
+                    "candidate_hash": candidate_hash, "failure_events": [event],
+                    "runtime_s": time.perf_counter() - started_at, **proxy_meta}
+        if report.exists():
+            report_text = report.read_text(encoding="utf-8", errors="replace")
+            critical_refresh = parse_critical_instances(report_text)
+            critical_endpoint_refresh = parse_worst_endpoint(report_text)
+        # Physical mode is evaluated exclusively against a paired physical
+        # baseline/candidate under one RC model.  Ideal STA is retained only
+        # as an independent diagnostic, never as an acceptance prefilter.
+        if self.physical_gate:
+            rc_config = {
+                "unit_len_um": self.physical_unit_len_um,
+                "fanout_penalty": self.physical_fanout_penalty,
+                "depth_penalty": self.physical_depth_penalty,
+            }
+            physical_config = {**rc_config,
+                               "min_physical_gain_ns": self.min_physical_gain_ns}
+            rc_config_hash = hashlib.sha256(
+                json.dumps(physical_config, sort_keys=True).encode()
+            ).hexdigest()
+            try:
+                    from .spef import build_spef, parse_mapped_verilog, write_spef
+                    import hashlib as _hashlib
+                    rc_config_hash = _hashlib.sha256(
+                        json.dumps(physical_config, sort_keys=True).encode()
+                    ).hexdigest()
+                    baseline_hash = _hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+                    physical_baseline_cache_key = baseline_hash + ":" + rc_config_hash
+                    self._physical_baseline_lock.acquire()
+                    physical_lock_held = True
+                    baseline = self._physical_baseline_cache.get(physical_baseline_cache_key)
+                    if baseline is None:
+                        base_dir = cand_dir / "physical_baseline"
+                        base_dir.mkdir(parents=True, exist_ok=True)
+                        (base_dir / "mapped.v").write_text(self.mapped_text, encoding="utf-8")
+>                       base_nl = parse_mapped_verilog(base_dir / "mapped.v",
+                            liberty_text=self.liberty_text, top_module=top_module)
+
+code\src\rseco\real_wns.py:1989: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1124: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1128: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <MagicMock name='parse_mapped_verilog' id='2254997103312'>
+args = (WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1230/test_physical_parse_failure_pr0/iter001_cand001/physical_baseline/mapped.v'),)
+kwargs = {'liberty_text': 'library (sky130_fd_sc_hd) {\n  cell ("sky130_fd_sc_hd__or2_1") {\n    pin (A) { direction : "input";...direction : "input"; }\n    pin (X) { direction : "output"; function : "A | SLEEP"; }\n  }\n}\n', 'top_module': 's382'}
+
+    def _execute_mock_call(self, /, *args, **kwargs):
+        # separate from _increment_mock_call so that awaited functions are
+        # executed separately from their call, also AsyncMock overrides this method
+    
+        effect = self.side_effect
+        if effect is not None:
+            if _is_exception(effect):
+>               raise effect
+E               ValueError: intentional unsupported physical input
+
+C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py:1183: ValueError
+
+During handling of the above exception, another exception occurred:
+
+self = <test_real_wns.TestPhysicalGate object at 0x0000020D0AB8B150>
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1230/test_physical_parse_failure_pr0')
+
+    def test_physical_parse_failure_preserves_root_cause(self, tmp_path):
+        with mock.patch('rseco.spef.parse_mapped_verilog',
+                        side_effect=ValueError('intentional unsupported physical input')):
+>           result = self._eval(tmp_path, _fake_sta)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+code\tests\test_real_wns.py:591: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+code\tests\test_real_wns.py:584: in _eval
+    result = ev(FakePatch, weights=None)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+code\src\rseco\real_wns.py:2790: in __call__
+    r = dict(self._eval_one(j))
+             ^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <rseco.real_wns.RealWnsEvaluator object at 0x0000020D0AB91610>
+job = ('_071_', 'sky130_fd_sc_hd__lpflow_inputiso1p_1', 'sky130_fd_sc_hd__or2_1', {'A': 'A', 'SLEEP': 'B'}, 'R', 'module s38... S, output Z);\n          sky130_fd_sc_hd__lpflow_inputiso1p_1 _071_ (.A(A),.SLEEP(S),.X(Z));\n        endmodule', ...)
+
+    def _eval_one(self, job: tuple) -> dict:
+        (
+            inst,
+            cell_type,
+            new_type,
+            pin_map,
+            kind,
+            text,
+            cand_dir,
+            top_module,
+            index,
+            proxy_meta,
+        ) = job
+        started_at = time.perf_counter()
+        # Provenance may describe an earlier cached measurement.  These
+        # fields describe only a tool launch made by this evaluation.
+        proxy_meta = {**proxy_meta, "sta_executed": False, "sta_launch_seq": None}
+        topology_window = None
+        if kind == "TOPOLOGY":
+            topology_replacement, topology_window = pin_map
+            candidate_text = replace_target_module(text,self.top_module,
+                stitch_topology_replacement(target_module_text(text,self.top_module),topology_replacement))
+        elif kind == "JOINT":
+            candidate_text = self._apply_joint(text, pin_map)
+        else:
+            candidate_text = self._apply(text, inst, kind, new_type, pin_map)
+        sub = cand_dir / ("%03d_" % index + inst + "_" + kind)
+        sub.mkdir(parents=True, exist_ok=True)
+        (sub / "mapped.v").write_text(candidate_text, encoding="utf-8")
+        candidate_hash = hashlib.sha256(candidate_text.encode("utf-8")).hexdigest()
+        base_hash = hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+        analysis_config = {
+            "period": self.period, "clock_port": self.clock_port,
+            "sdc_config": {"period": self.period, "clock_port": self.clock_port,
+                           "hold_mode": self.hold_mode,
+                           "hold_uncertainty": self.hold_uncertainty},
+            "hold_mode": self.hold_mode,
+            "hold_uncertainty": self.hold_uncertainty,
+            "physical_gate": self.physical_gate,
+            "physical_unit_len_um": self.physical_unit_len_um,
+            "physical_fanout_penalty": self.physical_fanout_penalty,
+            "physical_depth_penalty": self.physical_depth_penalty,
+            "liberty_hash": hashlib.sha256(self.liberty_text.encode("utf-8")).hexdigest(),
+            "analysis_config": {"hold_mode": self.hold_mode,
+                                "tns_aware": self.tns_aware,
+                                "epsilon": self.epsilon},
+            "rc_config": {"physical_gate": self.physical_gate,
+                          "unit_len_um": self.physical_unit_len_um,
+                          "fanout_penalty": self.physical_fanout_penalty,
+                          "depth_penalty": self.physical_depth_penalty,
+                          "min_physical_gain_ns": self.min_physical_gain_ns},
+            "formal_config": {"strict_gates": self.strict_gates,
+                              "checker": type(self.equivalence_checker).__name__ if self.equivalence_checker else None},
+            "epsilon": self.epsilon,
+        }
+        config_hash = hashlib.sha256(json.dumps(analysis_config, sort_keys=True).encode()).hexdigest()
+        cache_key = hashlib.sha256((base_hash + candidate_hash + config_hash).encode()).hexdigest()
+        unavailable_gate_events = []
+        if self.strict_gates and kind == "TOPOLOGY" and self.topology_sec_checker is None:
+            unavailable_gate_events.append({
+                "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"stage": "full_netlist_sec", "status": "unavailable",
+                             "reason": "topology SEC backend unavailable",
+                             "formal_backend": "unavailable"},
+            })
+        elif self.strict_gates and kind != "TOPOLOGY" and self.equivalence_checker is None:
+            unavailable_gate_events.append({
+                "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"reason": "per-candidate equivalence checker unavailable",
+                             "formal_backend": "unavailable"},
+            })
+        if self.strict_gates and self.boundary_checker is None:
+            unavailable_gate_events.append({
+                "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "evidence": {"reason": "boundary closure checker unavailable",
+                             "boundary_backend": "unavailable"},
+            })
+        if unavailable_gate_events:
+            failed = {
+                "instance": inst, "kind": kind, "from_type": cell_type,
+                "to_type": new_type, "wns": self.baseline_wns,
+                "tns": self.baseline_tns, "min_slack": None,
+                "physical_failure": False, "candidate_netlist_text": candidate_text,
+                "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                "cache_key": cache_key, "config_hash": config_hash,
+                "failure_events": _normalise_failure_events(
+                    unavailable_gate_events, candidate_hash=candidate_hash),
+                "runtime_s": time.perf_counter() - started_at, **proxy_meta,
+            }
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        if cache_key in self._sta_cache:
+            cached = dict(self._sta_cache[cache_key])
+            cached["skipped_duplicate"] = True
+            cached["cached_from_seq"] = cached.get("sta_launch_seq")
+            return {**cached, **proxy_meta}
+        if candidate_hash in self.tested_candidate_hashes and base_hash == getattr(self, "_last_base_hash", None):
+            return {
+                "instance": inst, "kind": kind, "from_type": cell_type,
+                "to_type": new_type, "wns": self.baseline_wns,
+                "tns": self.baseline_tns, "min_slack": None,
+                "physical_failure": False, "candidate_netlist_text": candidate_text,
+                "candidate_hash": candidate_hash, "runtime_s": 0.0,
+                "skipped_duplicate": True, "cache_key": cache_key,
+                "config_hash": config_hash, **proxy_meta,
+            }
+        state = self._active_state
+        needs_formal = bool(self.strict_gates and
+                            (self.equivalence_checker is not None or kind == "TOPOLOGY"))
+        event = self._deadline_or_budget_event(
+            state, "formal", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        ) if needs_formal else (self._deadline_or_budget_event(
+            state, "local", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        ) if state is not None and kind == "TOPOLOGY" else None)
+        if event is not None:
+            failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                      "to_type": new_type, "wns": self.baseline_wns,
+                      "tns": self.baseline_tns, "min_slack": None,
+                      "physical_failure": False, "candidate_netlist_text": candidate_text,
+                      "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                      "cache_key": cache_key, "config_hash": config_hash,
+                      "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        # All structural gates run before STA.  A topology candidate requires
+        # local truth-table evidence plus a separate full-netlist SEC result;
+        # the latter is never substituted by the local checker.
+        if kind == "TOPOLOGY":
+            sec_unavailable = False
+            sec_status = None
+            sec_details = {}
+            try:
+                local_check = check_local_functional_equivalence(topology_window, candidate_text)
+                if local_check.status != "pass":
+                    raise ValueError(f"local checker: {local_check.reason}")
+                if self.strict_gates:
+                    formal_event = self._deadline_or_budget_event(
+                        state, "formal", candidate_hash=candidate_hash,
+                        cut_hash=candidate_hash, action_scope=[inst],
+                    )
+                    if formal_event is not None:
+                        failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                                  "to_type": new_type, "wns": self.baseline_wns,
+                                  "tns": self.baseline_tns, "min_slack": None,
+                                  "physical_failure": False, "candidate_netlist_text": candidate_text,
+                                  "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                                  "cache_key": cache_key, "config_hash": config_hash,
+                                  "failure_events": [formal_event], "runtime_s": 0.0, **proxy_meta}
+                        self._sta_cache[cache_key] = dict(failed)
+                        return failed
+                    sec = self.topology_sec_checker(self.mapped_text, candidate_text)
+                    sec_details = _checker_details(sec)
+                    sec_status = sec_details.get("status")
+                    sec_unavailable = sec_status == "unavailable"
+                    if not _checker_passed(sec):
+                        raise ValueError(f"full-netlist SEC: {sec}")
+            except TimeoutError as exc:
+                event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                         "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                         "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
+                         "status": "timeout", "reason": str(exc)}}
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            except Exception as exc:
+                event = {"type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                         "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                         "runtime_s": 0.0, "evidence": {"stage": "full_netlist_sec",
+                         "status": sec_status or ("unavailable" if sec_unavailable else "fail"),
+                         "reason": sec_details.get("reason", str(exc)), **sec_details}}
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            if boundary_budget_event is not None:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": [boundary_budget_event], "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+            if self.boundary_checker is not None:
+                boundary_result = None
+                try:
+                    boundary_result = self.boundary_checker(self.mapped_text, candidate_text)
+                    boundary_ok = _checker_passed(boundary_result)
+                except Exception as exc:
+                    boundary_ok = False
+                    boundary_result = {"status": "error", "reason": str(exc)}
+            else:
+                boundary_ok = False
+                boundary_result = {"status": "unavailable", "reason": "boundary checker unavailable"}
+            if not boundary_ok:
+                    event = {"type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                             "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                             "runtime_s": 0.0, "evidence": {"stage": "boundary_closure",
+                             **_checker_details(boundary_result)}}
+                    failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                              "to_type": new_type, "wns": self.baseline_wns,
+                              "tns": self.baseline_tns, "min_slack": None,
+                              "physical_failure": False, "candidate_netlist_text": candidate_text,
+                              "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                              "cache_key": cache_key, "config_hash": config_hash,
+                              "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+                    self._sta_cache[cache_key] = dict(failed)
+                    return failed
+        if self.strict_gates and kind != "TOPOLOGY":
+            structural_events = []
+            try:
+                eq = self.equivalence_checker(self.mapped_text, candidate_text)
+                if not _checker_passed(eq):
+                    structural_events.append({
+                        "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                        "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                        "runtime_s": 0.0, "evidence": {"stage": "equivalence", "result": str(eq)},
+                    })
+            except Exception as exc:
+                structural_events.append({
+                    "type": "F1_equivalence_failure", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0, "evidence": {"stage": "equivalence", "reason": str(exc)},
+                })
+            boundary_budget_event = self._deadline_or_budget_event(
+                state, "formal", candidate_hash=candidate_hash,
+                cut_hash=candidate_hash, action_scope=[inst],
+            )
+            boundary_result = None
+            try:
+                if boundary_budget_event is not None:
+                    boundary_ok = False
+                else:
+                    boundary_result = (self.boundary_checker(self.mapped_text, candidate_text)
+                                       if self.boundary_checker is not None else None)
+                    boundary_ok = boundary_result is not None and _checker_passed(boundary_result)
+            except Exception as exc:
+                boundary_ok = False
+                boundary_error = str(exc)
+                boundary_result = {"status": "error", "reason": boundary_error}
+            if boundary_budget_event is not None:
+                structural_events.append(boundary_budget_event)
+            if not boundary_ok and boundary_budget_event is None:
+                structural_events.append({
+                    "type": "F2_boundary_invalid", "candidate_hash": candidate_hash,
+                    "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                    "runtime_s": 0.0,
+                    "evidence": {"stage": "boundary_closure",
+                                 **_checker_details(boundary_result or {
+                                     "status": "unavailable",
+                                     "reason": "checker unavailable or false",
+                                 })},
+                })
+            if structural_events:
+                failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                          "to_type": new_type, "wns": self.baseline_wns,
+                          "tns": self.baseline_tns, "min_slack": None,
+                          "physical_failure": False, "candidate_netlist_text": candidate_text,
+                          "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                          "cache_key": cache_key, "config_hash": config_hash,
+                          "failure_events": structural_events, "runtime_s": 0.0, **proxy_meta}
+                self._sta_cache[cache_key] = dict(failed)
+                return failed
+        event = self._deadline_or_budget_event(
+            state, "sta", candidate_hash=candidate_hash, cut_hash=candidate_hash,
+            action_scope=[inst],
+        )
+        if event is not None:
+            failed = {"instance": inst, "kind": kind, "from_type": cell_type,
+                      "to_type": new_type, "wns": self.baseline_wns,
+                      "tns": self.baseline_tns, "min_slack": None,
+                      "physical_failure": False, "candidate_netlist_text": candidate_text,
+                      "candidate_hash": candidate_hash, "base_netlist_hash": base_hash,
+                      "cache_key": cache_key, "config_hash": config_hash,
+                      "failure_events": [event], "runtime_s": 0.0, **proxy_meta}
+            self._sta_cache[cache_key] = dict(failed)
+            return failed
+        self.tested_candidate_hashes.add(candidate_hash)
+        self._last_base_hash = base_hash
+        sta_started_at = time.perf_counter()
+        with self._sta_launch_lock:
+            self._sta_launch_seq += 1
+            launch_event = {
+                "seq": self._sta_launch_seq,
+                "kind": "candidate_ideal",
+                "candidate_hash": candidate_hash,
+                "base_netlist_hash": base_hash,
+                "report_dir": str(sub),
+                "wns": None,
+                "tns": None,
+                "error": None,
+                "timeout": False,
+                "status": "running",
+                "runtime_s": 0.0,
+            }
+            self.sta_launch_events.append(launch_event)
+        proxy_meta.update(sta_executed=True, sta_launch_seq=launch_event["seq"])
+        try:
+            res = run_opensta_sequential(
+                netlist_path=sub / "mapped.v",
+                period=self.period,
+                output_dir=sub,
+                top_module=top_module,
+                hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                min_path=self.hold_mode,
+                clock_port=self.clock_port,
+                multi_path=True,
+                timeout_s=self._remaining_tool_timeout(state),
+                electrical_capture=self.capture_electrical,
+            )
+        except TimeoutError as exc:
+            res = {"wns": None, "tns": None, "error": str(exc), "timeout": True}
+        except Exception as exc:
+            res = {"wns": None, "tns": None, "error": str(exc)}
+        with self._sta_launch_lock:
+            launch_event.update(
+                wns=res.get("wns"),
+                tns=res.get("tns"),
+                error=res.get("error"),
+                timeout=bool(res.get("timeout")),
+                status=("timeout" if res.get("timeout") else
+                        "error" if res.get("error") else "completed"),
+                runtime_s=time.perf_counter() - sta_started_at,
+            )
+        critical_refresh = None
+        critical_endpoint_refresh = None
+        report = sub / "sta.log"
+        critical_report = report
+        if state is not None and state.deadline_expired():
+            event = {
+                "type": "deadline_exhausted", "candidate_hash": candidate_hash,
+                "cut_hash": candidate_hash, "severity": "hard", "hard_gate": True,
+                "runtime_s": time.perf_counter() - started_at,
+                "evidence": {"stage": "sta", "reason": "deadline expired after ideal STA"},
+            }
+            return {"instance": inst, "kind": kind, "from_type": cell_type,
+                    "to_type": new_type, "wns": self.baseline_wns,
+                    "tns": self.baseline_tns, "min_slack": None,
+                    "candidate_netlist_text": candidate_text,
+                    "candidate_hash": candidate_hash, "failure_events": [event],
+                    "runtime_s": time.perf_counter() - started_at, **proxy_meta}
+        if report.exists():
+            report_text = report.read_text(encoding="utf-8", errors="replace")
+            critical_refresh = parse_critical_instances(report_text)
+            critical_endpoint_refresh = parse_worst_endpoint(report_text)
+        # Physical mode is evaluated exclusively against a paired physical
+        # baseline/candidate under one RC model.  Ideal STA is retained only
+        # as an independent diagnostic, never as an acceptance prefilter.
+        if self.physical_gate:
+            rc_config = {
+                "unit_len_um": self.physical_unit_len_um,
+                "fanout_penalty": self.physical_fanout_penalty,
+                "depth_penalty": self.physical_depth_penalty,
+            }
+            physical_config = {**rc_config,
+                               "min_physical_gain_ns": self.min_physical_gain_ns}
+            rc_config_hash = hashlib.sha256(
+                json.dumps(physical_config, sort_keys=True).encode()
+            ).hexdigest()
+            try:
+                    from .spef import build_spef, parse_mapped_verilog, write_spef
+                    import hashlib as _hashlib
+                    rc_config_hash = _hashlib.sha256(
+                        json.dumps(physical_config, sort_keys=True).encode()
+                    ).hexdigest()
+                    baseline_hash = _hashlib.sha256(self.mapped_text.encode("utf-8")).hexdigest()
+                    physical_baseline_cache_key = baseline_hash + ":" + rc_config_hash
+                    self._physical_baseline_lock.acquire()
+                    physical_lock_held = True
+                    baseline = self._physical_baseline_cache.get(physical_baseline_cache_key)
+                    if baseline is None:
+                        base_dir = cand_dir / "physical_baseline"
+                        base_dir.mkdir(parents=True, exist_ok=True)
+                        (base_dir / "mapped.v").write_text(self.mapped_text, encoding="utf-8")
+                        base_nl = parse_mapped_verilog(base_dir / "mapped.v",
+                            liberty_text=self.liberty_text, top_module=top_module)
+                        base_spef = write_spef(base_dir / "physical.spef", base_nl, **rc_config)
+                        budget_event = self._deadline_or_budget_event(
+                            state, "sta", candidate_hash=candidate_hash,
+                            cut_hash=candidate_hash, action_scope=[inst])
+                        base_sta = None if budget_event else run_opensta_sequential(
+                            netlist_path=base_dir / "mapped.v",
+                            period=self.period, output_dir=base_dir,
+                            top_module=top_module, clock_port=self.clock_port,
+                            spef_path=base_spef,
+                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                            min_path=self.hold_mode,
+                            timeout_s=self._remaining_tool_timeout(state),
+                        )
+                        # Keep a physical baseline artifact alongside the
+                        # candidate, and fail closed if it is incomplete.
+                        baseline = {"wns": base_sta.get("wns") if base_sta else None,
+                                    "tns": base_sta.get("tns") if base_sta else None,
+                                    "min_slack": base_sta.get("min_slack") if base_sta else None,
+                                    "budget_event": budget_event,
+                                    "rc_config_hash": rc_config_hash,
+                                    "provenance": _physical_sta_provenance(
+                                        base_dir, base_sta, rc_config, rc_config_hash)}
+                        self._physical_baseline_cache[physical_baseline_cache_key] = baseline
+                    self._physical_baseline_lock.release()
+                    physical_lock_held = False
+                    if baseline.get("budget_event"):
+                        phys = {"wns": None, "tns": None, "min_slack": None,
+                                "budget_event": baseline["budget_event"]}
+                    else:
+                        nl = parse_mapped_verilog(sub / "mapped.v",
+                            liberty_text=self.liberty_text, top_module=top_module)
+                        spef = write_spef(sub / "physical.spef", nl, **rc_config)
+                        budget_event = self._deadline_or_budget_event(
+                            state, "sta", candidate_hash=candidate_hash,
+                            cut_hash=candidate_hash, action_scope=[inst])
+                        phys = {"wns": None, "tns": None, "min_slack": None,
+                                "budget_event": budget_event} if budget_event else run_opensta_sequential(
+                            netlist_path=sub / "mapped.v",
+                            period=self.period,
+                            output_dir=sub / "physical",
+                            top_module=top_module,
+                            clock_port=self.clock_port,
+                            spef_path=spef,
+                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+                            min_path=self.hold_mode,
+                            timeout_s=self._remaining_tool_timeout(state),
+                        )
+                    phys_wns = phys.get("wns")
+                    phys_tns = phys.get("tns")
+                    phys_min_slack = phys.get("min_slack")
+                    baseline_provenance = baseline.get("provenance")
+                    candidate_provenance = _physical_sta_provenance(
+                        sub / "physical", phys, rc_config, rc_config_hash)
+                    base_phys_wns = baseline.get("wns")
+                    base_phys_tns = baseline.get("tns")
+                    base_phys_min_slack = baseline.get("min_slack")
+                    if baseline.get("budget_event") or phys.get("budget_event"):
+                        res = {**res, "wns": self.baseline_wns,
+                               "physical_failure": True,
+                               "physical_status": "budget_exhausted",
+                               "physical_wns": phys_wns, "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": None,
+                               "physical_budget_event": baseline.get("budget_event") or phys.get("budget_event"),
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+                    elif (base_phys_wns is None or phys_wns is None
+                          or base_phys_tns is None or phys_tns is None
+                          or (self.hold_required and (base_phys_min_slack is None
+                                                      or phys_min_slack is None))):
+                        # physical load failure: the ideal gain does not
+                        # have a complete paired physical measurement.
+                        res = {**res, "wns": self.baseline_wns,
+                               "physical_failure": True,
+                               "physical_status": "paired_incomplete",
+                               "physical_wns": phys_wns,
+                               "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": None,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+                    elif ((phys_wns < base_phys_wns - self.epsilon
+                           if self.hold_mode else
+                           phys_wns - base_phys_wns + 1e-12
+                           < self.min_physical_gain_ns - self.epsilon)
+                          or phys_tns < base_phys_tns - self.epsilon
+                          or (self.hold_required and (
+                              base_phys_min_slack is None or phys_min_slack is None
+                              or phys_min_slack < base_phys_min_slack - self.epsilon))):
+                        # physical load failure: candidate is compared to the
+                        # paired current baseline under exactly one RC model.
+                        res = {**res, "wns": self.baseline_wns,
+                               "physical_failure": True,
+                               "physical_status": "paired_rejected",
+                               "physical_wns": phys_wns,
+                               "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": phys_wns - base_phys_wns,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+                    else:
+                        # parasitic-aware gain survives: report the SPEF WNS
+                        res = {**res, "wns": phys_wns, "tns": phys_tns,
+                               "min_slack": phys_min_slack,
+                               "physical_status": "paired_improved",
+                               "physical_wns": phys_wns,
+                               "physical_tns": phys_tns,
+                               "physical_min_slack": phys_min_slack,
+                               "physical_baseline": base_phys_wns,
+                               "physical_candidate": phys_wns,
+                               "physical_baseline_tns": base_phys_tns,
+                               "physical_candidate_tns": phys_tns,
+                               "physical_baseline_min_slack": base_phys_min_slack,
+                               "physical_candidate_min_slack": phys_min_slack,
+                               "physical_delta": phys_wns - base_phys_wns,
+                               "physical_baseline_provenance": baseline_provenance,
+                               "physical_candidate_provenance": candidate_provenance,
+                               "rc_config_hash": rc_config_hash}
+            except Exception as exc:
+                    if locals().get("physical_lock_held"):
+                        self._physical_baseline_lock.release()
+                    res = {**res, "wns": self.baseline_wns,
+                           "physical_failure": True,
+                           "physical_status": "error",
+>                          "physical_baseline": (baseline.get("wns") if "baseline" in locals() else None),
+                                                 ^^^^^^^^^^^^
+                           "physical_candidate": None,
+                           "physical_baseline_tns": (baseline.get("tns") if "baseline" in locals() else None),
+                           "physical_candidate_tns": None,
+                           "physical_delta": None,
+                           "physical_baseline_provenance": (baseline.get("provenance") if "baseline" in locals() and baseline else None),
+                           "physical_candidate_provenance": (_physical_sta_provenance(sub / "physical", phys, rc_config, rc_config_hash) if "phys" in locals() and phys else None),
+                           "rc_config_hash": (rc_config_hash if "rc_config_hash" in locals() else None),
+                           "physical_gate_error": str(exc)}
+E                   AttributeError: 'NoneType' object has no attribute 'get'
+
+code\src\rseco\real_wns.py:2136: AttributeError
+=========================== short test summary info ===========================
+FAILED code/tests/test_real_wns.py::TestPhysicalGate::test_physical_parse_failure_preserves_root_cause
+1 failed, 19 deselected in 0.99s

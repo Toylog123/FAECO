@@ -1,0 +1,152 @@
+{
+  "sources_before": {
+    "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+    "code/tests/test_spef_pin_topology.py": "10082a5993e9295fe6fcc271369ff45fdef201e66caac17804af86063302c0d0",
+    "code/tests/test_real_wns.py": "f33a883f51934b772ae331a7b40fa961c47b74214a3bbdb85c8652ecb6094eb6"
+  },
+  "sources_after": {
+    "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+    "code/tests/test_spef_pin_topology.py": "10082a5993e9295fe6fcc271369ff45fdef201e66caac17804af86063302c0d0",
+    "code/tests/test_real_wns.py": "f33a883f51934b772ae331a7b40fa961c47b74214a3bbdb85c8652ecb6094eb6"
+  },
+  "cases": [
+    {
+      "case": "escaped_scalar_vs_bitselect",
+      "status": "accepted",
+      "ports": [
+        "\\a[0]",
+        "a[0]",
+        "a[1]",
+        "z1",
+        "z2"
+      ],
+      "nets": {
+        "\\a[0]": {
+          "pins": [
+            [
+              "b2",
+              "A"
+            ]
+          ],
+          "ports": [
+            [
+              "\\a[0]",
+              "I"
+            ]
+          ],
+          "driver": null
+        },
+        "a[0]": {
+          "pins": [
+            [
+              "b1",
+              "A"
+            ]
+          ],
+          "ports": [
+            [
+              "a[0]",
+              "I"
+            ]
+          ],
+          "driver": null
+        },
+        "a[1]": {
+          "pins": [],
+          "ports": [
+            [
+              "a[1]",
+              "I"
+            ]
+          ],
+          "driver": null
+        },
+        "z1": {
+          "pins": [
+            [
+              "b1",
+              "X"
+            ]
+          ],
+          "ports": [
+            [
+              "z1",
+              "O"
+            ]
+          ],
+          "driver": [
+            "b1",
+            "X"
+          ]
+        },
+        "z2": {
+          "pins": [
+            [
+              "b2",
+              "X"
+            ]
+          ],
+          "ports": [
+            [
+              "z2",
+              "O"
+            ]
+          ],
+          "driver": [
+            "b2",
+            "X"
+          ]
+        }
+      },
+      "spef": "*SPEF \"IEEE 1481-1998\"\n*DESIGN \"top\"\n*DATE \"2026-08-05\"\n*VENDOR \"FAECO\"\n*PROGRAM \"src/rseco/spef.py\"\n*VERSION \"1.0\"\n*DESIGN_FLOW \"PIN_CAP NONE\"\n*DIVIDER /\n*DELIMITER :\n*BUS_DELIMITER [ ]\n*T_UNIT 1 NS\n*C_UNIT 1 PF\n*R_UNIT 1 OHM\n*L_UNIT 1 HENRY\n*PORTS\na\\[0\\] I\na[0] I\na[1] I\nz1 O\nz2 O\n\n*D_NET a\\[0\\] 0.008400\n*CONN\n*P a\\[0\\] I\n*I b2:A I\n*CAP\n1 a\\[0\\] 0.008400\n*RES\n1 a\\[0\\] b2:A 3.6000\n*END\n\n*D_NET a[0] 0.008400\n*CONN\n*P a[0] I\n*I b1:A I\n*CAP\n1 a[0] 0.008400\n*RES\n1 a[0] b1:A 3.6000\n*END\n\n*D_NET z1 0.008400\n*CONN\n*P z1 O\n*I b1:X O\n*CAP\n1 b1:X 0.008400\n*RES\n1 b1:X z1 3.6000\n*END\n\n*D_NET z2 0.008400\n*CONN\n*P z2 O\n*I b2:X O\n*CAP\n1 b2:X 0.008400\n*RES\n1 b2:X z2 3.6000\n*END\n"
+    },
+    {
+      "case": "port_only_feedthrough",
+      "status": "accepted",
+      "ports": [
+        "A",
+        "Z"
+      ],
+      "nets": {
+        "A": {
+          "pins": [],
+          "ports": [
+            [
+              "A",
+              "I"
+            ],
+            [
+              "Z",
+              "O"
+            ]
+          ],
+          "driver": null
+        }
+      },
+      "spef": "*SPEF \"IEEE 1481-1998\"\n*DESIGN \"top\"\n*DATE \"2026-08-05\"\n*VENDOR \"FAECO\"\n*PROGRAM \"src/rseco/spef.py\"\n*VERSION \"1.0\"\n*DESIGN_FLOW \"PIN_CAP NONE\"\n*DIVIDER /\n*DELIMITER :\n*BUS_DELIMITER [ ]\n*T_UNIT 1 NS\n*C_UNIT 1 PF\n*R_UNIT 1 OHM\n*L_UNIT 1 HENRY\n*PORTS\nA I\nZ O\n\n*D_NET A 0.008400\n*CONN\n*P A I\n*P Z O\n*CAP\n1 A 0.008400\n*RES\n1 A Z 3.6000\n*END\n"
+    },
+    {
+      "case": "unparsed_outside_modules",
+      "status": "rejected",
+      "error": "ValueError('Unsupported syntax outside SPEF modules')"
+    },
+    {
+      "case": "missing_header_port_direction",
+      "status": "rejected",
+      "error": "ValueError('Incomplete or conflicting non-ANSI port declarations')"
+    },
+    {
+      "case": "alias_scalar_width_mismatch",
+      "status": "rejected",
+      "error": "ValueError('Undriven SPEF net: A[2]')"
+    },
+    {
+      "case": "constant_output_connection",
+      "status": "rejected",
+      "error": "ValueError('Output pin cannot connect to a literal: b:X')"
+    }
+  ],
+  "EDA_executed": false
+}

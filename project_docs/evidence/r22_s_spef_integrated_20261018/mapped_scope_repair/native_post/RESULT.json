@@ -1,0 +1,199 @@
+{
+  "scope": "native tiny correctness controls, not scientific EDA",
+  "source_before": {
+    "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+    "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+    "code/tests/test_cec_blif_scope.py": "e4a6ceaa85e73fa48595ffe4d92dd671b602c4d16e982b83b9ab876f190df666",
+    "code/tests/test_yosys_abc_flow.py": "017f28c9b801fba2afabc8cde69fefa6ee5abe67de653708eb4f550535dd1371"
+  },
+  "source_after": {
+    "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+    "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+    "code/tests/test_cec_blif_scope.py": "e4a6ceaa85e73fa48595ffe4d92dd671b602c4d16e982b83b9ab876f190df666",
+    "code/tests/test_yosys_abc_flow.py": "017f28c9b801fba2afabc8cde69fefa6ee5abe67de653708eb4f550535dd1371"
+  },
+  "source_stable": true,
+  "cases": [
+    {
+      "case": "single_identity",
+      "input_sha256": "9d5d51e11a3b645a46b22cbb4829b48b65b290f78c38d6ffc8b190b83518e5b3",
+      "expected": "pass",
+      "result": {
+        "status": "pass",
+        "method": "yosys_blif_abc_cec_mapped",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/single_identity/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.16725769999902695,
+        "reason": "Yosys-normalized original-vs-mapped ABC cec reported equivalent networks",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\single_identity\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\single_identity\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\single_identity\\abc_cec.log",
+        "returncode": 0,
+        "stdout_tail": "======== ABC command line \"cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/single_identity/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/single_identity/revised.normalized.blif\"\nNetworks are equivalent after structural hashing.  Time =     0.00 sec",
+        "stderr_tail": ""
+      }
+    },
+    {
+      "case": "single_inverter",
+      "input_sha256": "bd959ad13dc7c6458c775187eeed62ca89f4c296c442da0c3c3b789e60105b6e",
+      "expected": "fail",
+      "result": {
+        "status": "fail",
+        "method": "yosys_blif_abc_cec_mapped",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/single_inverter/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.17585540000436595,
+        "reason": "Yosys-normalized original-vs-mapped ABC cec reported non-equivalent networks",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\single_inverter\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\single_inverter\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\single_inverter\\abc_cec.log",
+        "returncode": 0,
+        "stdout_tail": "======== ABC command line \"cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/single_inverter/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/single_inverter/revised.normalized.blif\"\nNetworks are NOT EQUIVALENT after structural hashing.  INPUT: A = 1'h0.  OUTPUT: Y = 1'h0 (original.normalized), Y = 1'h1 (revised.normalized).\nVerification failed for at least 1 outputs:  Y\nOutput Y: Value in Network1 = 0. Value in Network2 = 1.\nInput pattern: \nTime =     0.00 sec",
+        "stderr_tail": ""
+      }
+    },
+    {
+      "case": "dummy_then_inverter",
+      "input_sha256": "8791bad4044883cb8a1dbc6a9b5762ced9713af6340bc624c0559acc78539bfb",
+      "expected": "error",
+      "result": {
+        "status": "error",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "",
+        "outputs": [],
+        "runtime_s": 0.06536659999983385,
+        "reason": "Mapped BLIF has no valid selected normalization scope",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\dummy_then_inverter\\original.normalized.blif",
+        "normalized_revised": null,
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\dummy_then_inverter\\abc_cec.log",
+        "returncode": 127,
+        "stdout_tail": "",
+        "stderr_tail": "ValueError: A unique BLIF root is required; specify mapped_top_module explicitly"
+      }
+    },
+    {
+      "case": "inverter_then_dummy",
+      "input_sha256": "491e196c1a14d46d3094cd8aa6147376c078f4d1725b9106d2aa1423e3223823",
+      "expected": "error",
+      "result": {
+        "status": "error",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "",
+        "outputs": [],
+        "runtime_s": 0.0638969999999972,
+        "reason": "Mapped BLIF has no valid selected normalization scope",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\inverter_then_dummy\\original.normalized.blif",
+        "normalized_revised": null,
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\inverter_then_dummy\\abc_cec.log",
+        "returncode": 127,
+        "stdout_tail": "",
+        "stderr_tail": "ValueError: A unique BLIF root is required; specify mapped_top_module explicitly"
+      }
+    },
+    {
+      "case": "explicit_ztop",
+      "input_sha256": "8791bad4044883cb8a1dbc6a9b5762ced9713af6340bc624c0559acc78539bfb",
+      "expected": "fail",
+      "result": {
+        "status": "fail",
+        "method": "yosys_blif_abc_cec_mapped",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/explicit_ztop/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.17097890000150073,
+        "reason": "Yosys-normalized original-vs-mapped ABC cec reported non-equivalent networks",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\explicit_ztop\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\explicit_ztop\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\explicit_ztop\\abc_cec.log",
+        "returncode": 0,
+        "stdout_tail": "======== ABC command line \"cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/explicit_ztop/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/explicit_ztop/revised.normalized.blif\"\nNetworks are NOT EQUIVALENT after structural hashing.  INPUT: A = 1'h0.  OUTPUT: Y = 1'h0 (original.normalized), Y = 1'h1 (revised.normalized).\nVerification failed for at least 1 outputs:  Y\nOutput Y: Value in Network1 = 0. Value in Network2 = 1.\nInput pattern: \nTime =     0.00 sec",
+        "stderr_tail": ""
+      }
+    },
+    {
+      "case": "explicit_missing",
+      "input_sha256": "9d5d51e11a3b645a46b22cbb4829b48b65b290f78c38d6ffc8b190b83518e5b3",
+      "expected": "error",
+      "result": {
+        "status": "error",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "",
+        "outputs": [],
+        "runtime_s": 0.06732509999710601,
+        "reason": "Mapped BLIF has no valid selected normalization scope",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\explicit_missing\\original.normalized.blif",
+        "normalized_revised": null,
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\explicit_missing\\abc_cec.log",
+        "returncode": 127,
+        "stdout_tail": "",
+        "stderr_tail": "ValueError: Requested proof top is not a BLIF model: missing"
+      }
+    },
+    {
+      "case": "reachable_helper_first",
+      "input_sha256": "4c8f47fbe2b46fe12ab767694750833ffedba189f139bb8ed34b41252168c75b",
+      "expected": "pass",
+      "result": {
+        "status": "pass",
+        "method": "yosys_blif_abc_cec_mapped",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/reachable_helper_first/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.15386839999700896,
+        "reason": "Yosys-normalized original-vs-mapped ABC cec reported equivalent networks",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\reachable_helper_first\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\reachable_helper_first\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\reachable_helper_first\\abc_cec.log",
+        "returncode": 0,
+        "stdout_tail": "======== ABC command line \"cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/reachable_helper_first/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/reachable_helper_first/revised.normalized.blif\"\nNetworks are equivalent after structural hashing.  Time =     0.00 sec",
+        "stderr_tail": ""
+      }
+    }
+  ],
+  "baseline": {
+    "method": "yosys_blif_abc_rewrite_refactor_resyn",
+    "status": "success",
+    "tool": "yosys+abc",
+    "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys-abc.exe -s -c read_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/baseline/original.normalized.blif; strash; balance; rewrite; refactor; balance; rewrite; rewrite -z; balance; refactor -z; rewrite -z; balance; print_stats; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/baseline/abc_rewrite_refactor_resyn.blif",
+    "runtime_s": 0.21838450000359444,
+    "reason": "Yosys-normalized ABC resynthesis generated BLIF and passed ABC cec backcheck",
+    "output_netlist": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_rewrite_refactor_resyn.blif",
+    "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\original.normalized.blif",
+    "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_baseline.log",
+    "verification_log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_s_spef_integrated_20261018\\mapped_scope_repair\\native_post\\baseline\\abc_baseline_cec.log",
+    "verification_status": "pass",
+    "stats": {
+      "after": {
+        "inputs": 1,
+        "outputs": 1,
+        "lat": 0,
+        "and": 0,
+        "lev": 0
+      }
+    },
+    "returncode": 0,
+    "stdout_tail": "======== ABC command line \"read_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/baseline/original.normalized.blif; strash; balance; rewrite; refactor; balance; rewrite; rewrite -z; balance; refactor -z; rewrite -z; balance; print_stats; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_s_spef_integrated_20261018/mapped_scope_repair/native_post/baseline/abc_rewrite_refactor_resyn.blif\"\nztop                          : i/o =    1/    1  lat =    0  and =      0  lev =  0",
+    "stderr_tail": ""
+  },
+  "native_zero_rc_input_error": {
+    "command": [
+      "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys-abc.exe",
+      "-c",
+      "cec definitely_missing_left.blif definitely_missing_right.blif"
+    ],
+    "returncode": 0,
+    "with_appended_success_status": "error"
+  }
+}

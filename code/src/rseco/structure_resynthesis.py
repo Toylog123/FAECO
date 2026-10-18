@@ -21,6 +21,7 @@ so the whole machine is unit-testable without Yosys/ABC on the host.
 from __future__ import annotations
 
 import hashlib
+import json
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -731,7 +732,7 @@ def _run_one_variant(*, spec: WindowSpec, variant: str, netlist_text: str,
 
     # CEC_PRE (must precede TECHMAP so pre-pass/post-fail is cleanly
     # attributable to S_TECHMAP_MISMATCH — r2 §5.3 hard constraint #1)
-    pre = tools.cec(window_v, Path(result.window_blif), variant_dir)
+    pre = tools.cec(window_v, Path(result.window_blif), variant_dir / "cec_pre")
     if pre.status != "pass":
         return LABEL_F1_CEC_PRE, None
 
@@ -742,7 +743,7 @@ def _run_one_variant(*, spec: WindowSpec, variant: str, netlist_text: str,
     mapped_text = Path(mapped_v).read_text(encoding="utf-8")
 
     # CEC_POST — original ≡ mapped (whole resynthesis+mapping chain)
-    post = tools.cec(window_v, Path(mapped_v), variant_dir)
+    post = tools.cec(window_v, Path(mapped_v), variant_dir / "cec_post")
     if post.status != "pass":
         return LABEL_CEC_POST, None
 
@@ -954,7 +955,8 @@ def default_resynth_tools(
                                        liberty_cells_v=cells_v)
         return result.returncode == 0 and dst.exists()
 
-    def _normalize_any(src: Path, dst: Path) -> bool:
+    def _normalize_any(src: Path, dst: Path, *, model_path: Path | None,
+                       log_path: Path) -> bool:
         """Normalize a Verilog OR an already-gate-level BLIF to BLIF.
 
         The CEC reference is always the window Verilog; the candidate is a
@@ -982,10 +984,18 @@ def default_resynth_tools(
                                            check=False, capture_output=True,
                                            text=True, encoding="utf-8",
                                            errors="replace", timeout=timeout_s)
-            except Exception:
+            except Exception as exc:
+                ya._write_text_log(log_path, [*yosys_argv, "-q", "-p", script],
+                                   getattr(exc, "stdout", None) or "",
+                                   getattr(exc, "stderr", None) or str(exc))
                 return False
+            ya._write_log(log_path, completed)
             return completed.returncode == 0 and dst.exists()
-        return _normalize(src, dst, top=top)
+        completed = ya._normalize_to_blif(
+            src, dst, yosys_argv=yosys_argv, timeout_s=timeout_s,
+            top_module=top, liberty_cells_v=model_path)
+        # The shared normalizer owns the log and before/after read-input receipt.
+        return completed.returncode == 0 and dst.exists()
 
     def run_variant(spec: WindowSpec, variant: str, out_dir) -> VariantResult:
         out_dir = Path(out_dir)
@@ -1084,18 +1094,83 @@ def default_resynth_tools(
         out_dir = Path(out_dir)
         reference = Path(reference)
         candidate = Path(candidate)
+        # A proof attempt owns one new directory. Never overwrite an earlier
+        # pre/post attempt, including a failed or interrupted normalization.
+        out_dir.mkdir(parents=True, exist_ok=False)
         left = out_dir / "cec_left.blif"
         right = out_dir / "cec_right.blif"
-        if not _normalize_any(reference, left) or not _normalize_any(candidate, right):
-            return CecResult(status="unavailable",
-                             reason="yosys failed to normalize a CEC side")
-        output = ya._run_abc_cec(left, right, abc_argv=abc_argv,
-                                 log_path=out_dir / "abc_cec.log",
-                                 timeout_s=timeout_s)
-        return CecResult(status=output.status,
-                         reason="" if output.status == "pass"
-                         else (output.stderr or "")[-200:],
-                         log_path=str(out_dir / "abc_cec.log"))
+        inputs = {}
+        normalized_before_abc = {}
+        result = CecResult(status="unavailable", reason="CEC did not complete")
+
+        def file_identity(path):
+            data = Path(path).read_bytes()
+            return {"sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
+
+        def snapshot(role, source):
+            source = Path(source)
+            data = source.read_bytes()
+            target = out_dir / (role + "_input" + (source.suffix or ".bin"))
+            with target.open("xb") as stream:
+                stream.write(data)
+            inputs[role] = {"source": str(source.resolve()),
+                            "snapshot": str(target.resolve()),
+                            "sha256": hashlib.sha256(data).hexdigest(),
+                            "bytes": len(data)}
+            return target
+
+        try:
+            ref_input = snapshot("reference", reference)
+            cand_input = snapshot("candidate", candidate)
+            model_input = snapshot("model", cells_v) if cells_v is not None else None
+            if not _normalize_any(ref_input, left, model_path=model_input,
+                                  log_path=out_dir / "cec_left.normalize.log"):
+                result = CecResult(status="unavailable", reason="yosys failed to normalize CEC reference")
+            elif not _normalize_any(cand_input, right, model_path=model_input,
+                                    log_path=out_dir / "cec_right.normalize.log"):
+                result = CecResult(status="unavailable", reason="yosys failed to normalize CEC candidate")
+            else:
+                normalized_before_abc = {p.name: file_identity(p) for p in (left, right)}
+                output = ya._run_abc_cec(left, right, abc_argv=abc_argv,
+                                        log_path=out_dir / "abc_cec.log",
+                                        timeout_s=timeout_s)
+                result = CecResult(status=output.status,
+                                   reason="" if output.status == "pass" else ya._log_stream_text(output.stderr)[-200:],
+                                   log_path=str(out_dir / "abc_cec.log"))
+        except Exception as exc:
+            result = CecResult(status="unavailable", reason=f"{type(exc).__name__}: {exc}")
+        finally:
+            drift = []
+            for role, row in inputs.items():
+                wanted = {key: row[key] for key in ("sha256", "bytes")}
+                for kind in ("source", "snapshot"):
+                    try:
+                        if file_identity(row[kind]) != wanted:
+                            drift.append(role + ":" + kind)
+                    except OSError:
+                        drift.append(role + ":" + kind)
+            for name, wanted in normalized_before_abc.items():
+                try:
+                    if file_identity(out_dir / name) != wanted:
+                        drift.append(name)
+                except OSError:
+                    drift.append(name)
+            if drift:
+                result = CecResult(status="unavailable", reason="CEC input drift: " + ", ".join(drift))
+            artifacts = {p.relative_to(out_dir).as_posix(): file_identity(p)
+                         for p in sorted(out_dir.rglob("*")) if p.is_file()}
+            receipt = {"schema": "s-cec-stage-v1", "status": result.status,
+                       "reason": result.reason, "inputs": inputs,
+                       "input_drift": drift, "normalized_before_abc": normalized_before_abc,
+                       "artifacts": artifacts, "yosys_argv": list(yosys_argv),
+                       "abc_argv": list(abc_argv), "timeout_s": timeout_s,
+                       "model_semantics": "Existing cells_v bytes; no model replacement or fresh semantic claim",
+                       "liberty_configuration": {"path": str(lib_path.resolve()),
+                                                   "used_directly_by_this_CEC": False}}
+            with (out_dir / "receipt.json").open("x", encoding="utf-8") as stream:
+                json.dump(receipt, stream, ensure_ascii=False, indent=2)
+                stream.write("\n")
+        return result
 
     return ResynthTools(run_variant=run_variant, techmap=techmap, cec=cec,
                         sky130_level=lambda mapped_v: _yosys_ltp_max_level(

@@ -1,0 +1,204 @@
+{
+  "client_date": "2026-10-18",
+  "created_actual_utc": "2026-10-18T00:55:00.699865+00:00",
+  "head": "7231e0296da357df435414f75b0a41fe78265837",
+  "test_command": ".venv/Scripts/python.exe -X utf8 -m pytest -q code/tests/test_r22_parasitic_measurement.py --basetemp scratch/r22_parasitic_red_tmp",
+  "wrapper_timeout_s": 300,
+  "observed_exitcode": 1,
+  "observed_result": {
+    "failed": 8,
+    "passed": 1,
+    "pytest_runtime_s": 2.06
+  },
+  "actual_opensta_executed": false,
+  "native_deterministic_boundary_control": true,
+  "interpretation": "Expected first physical path report was ideal -0.1 while later WNS was -0.9; failed/diagnostic tool outputs retained numeric results; comparison reused a single baseline SPEF. Ideal control passes. Production files not changed before red run.",
+  "files": [
+    {
+      "source_path": "code/src/rseco/opensta.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/code/src/rseco/opensta.py",
+      "sha256": "95825d962349c11a16be6f69e1b11fcf1184dcf48474e466337be7db3f13d41c",
+      "bytes": 17227
+    },
+    {
+      "source_path": "code/scripts/run_parasitic_aware_check.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/code/scripts/run_parasitic_aware_check.py",
+      "sha256": "cdc22b7110c2084e4169ce56bec4997fe22258ebd63a6d94bf3f829c7a5d0532",
+      "bytes": 4433
+    },
+    {
+      "source_path": "code/src/rseco/spef.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/code/src/rseco/spef.py",
+      "sha256": "5992fea68f71009fbc9fbf9e498d4ca4dc3e1d7225ae6fb2ec109a1240d95db5",
+      "bytes": 7429
+    },
+    {
+      "source_path": "code/tests/test_r22_parasitic_measurement.py",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/code/tests/test_r22_parasitic_measurement.py",
+      "sha256": "b8469ddfefe80c04507476d32bd4bd5f4db172d80dbd3361dbb28c576af3d8de",
+      "bytes": 7373
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_20261018.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_20261018.log",
+      "sha256": "de0580d99cf60372ae714c8adac14be67941dff033d305833e19e56087a3b596",
+      "bytes": 12679
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_ideal_first_path_control_0/ideal/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_ideal_first_path_control_0/ideal/sta.tcl",
+      "sha256": "849163fbe4a019a68b07e6338d6d2d03836cc03d61d406d294aab719b23b1f59",
+      "bytes": 502
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_parasitic_first_path_and_0/physical/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_parasitic_first_path_and_0/physical/sta.tcl",
+      "sha256": "824d48d5f579d9d1b908cf201b39285facb4322192f7a8763688787244c11a7f",
+      "bytes": 758
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_ideal/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_ideal/sta.tcl",
+      "sha256": "fa4f32e2ee5f2f37becafb96a41ac1503e1dd52e8180a0b2f15de046e3c8dd08",
+      "bytes": 391
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_spef/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_spef/sta.tcl",
+      "sha256": "7afb7cadd10bcd5deb1b2c65c47b7ec3b787d6fa14d1772d703a703a03c2ef12",
+      "bytes": 526
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_ideal/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_ideal/sta.tcl",
+      "sha256": "591a5368a4e2ae6efd8827b9e044169845e9f1a9ebc46137fe96d2456cf50f7a",
+      "bytes": 391
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_spef/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_spef/sta.tcl",
+      "sha256": "a0d8c1e645b1b1466a8d5669f0cb8678d9cff20a00bc20f824674b72c1457b7e",
+      "bytes": 526
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result0/failed/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result0/failed/sta.tcl",
+      "sha256": "2565a885b7f7d2a775039ebe7488b878e31c8c13c47f70f2c14704fbe551a63e",
+      "bytes": 391
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result1/failed/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result1/failed/sta.tcl",
+      "sha256": "7a06cbd09875e411beb842e9f31bf7e90067dd85d220e80cb10c1cc95983b055",
+      "bytes": 391
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_0/failed/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_0/failed/sta.tcl",
+      "sha256": "b0eb30515236688c3b8fee639b925cf0bb337a6e59d2d4584f4570d9bd82eeb0",
+      "bytes": 502
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_1/failed/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_1/failed/sta.tcl",
+      "sha256": "539ef93c27c7e2c1f5d6e7a90fcd4b01148b4948a9e43d93c4c0805744fa9369",
+      "bytes": 502
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_2/failed/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_2/failed/sta.tcl",
+      "sha256": "d831ca25210b0fe95682857a61d0a5d90d8d244c700d88e07f2e412ffd20f224",
+      "bytes": 502
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_3/failed/sta.tcl",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_3/failed/sta.tcl",
+      "sha256": "0951cd5771d3a0cb9fdbf09b8be8d91917e80637377d2df8dd1b3786d8883cec",
+      "bytes": 502
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_ideal_first_path_control_0/ideal/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_ideal_first_path_control_0/ideal/sta.log",
+      "sha256": "46a968e0f8afca75472af5b5cf9317c22f7c24c3fa299a4bcf483c5c5289d977",
+      "bytes": 84
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_parasitic_first_path_and_0/physical/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_parasitic_first_path_and_0/physical/sta.log",
+      "sha256": "13ec87752ed894604e6803ae950d1a769276cfd429624fd8ee1ee10d7d9c846f",
+      "bytes": 132
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_ideal/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_ideal/sta.log",
+      "sha256": "9115ca6ab40b6220cde68164bd775823bebc59bccbeb0efc0243ebc72c62dcfd",
+      "bytes": 69
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_spef/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/baseline_spef/sta.log",
+      "sha256": "8481f7bf137fcb5c1994839bc131dbb5f98550acb3945108a5da1cf8555adf43",
+      "bytes": 69
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_ideal/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_ideal/sta.log",
+      "sha256": "9115ca6ab40b6220cde68164bd775823bebc59bccbeb0efc0243ebc72c62dcfd",
+      "bytes": 69
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_spef/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/repaired_spef/sta.log",
+      "sha256": "8481f7bf137fcb5c1994839bc131dbb5f98550acb3945108a5da1cf8555adf43",
+      "bytes": 69
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result0/failed/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result0/failed/sta.log",
+      "sha256": "9115ca6ab40b6220cde68164bd775823bebc59bccbeb0efc0243ebc72c62dcfd",
+      "bytes": 69
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result1/failed/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rejects_float_result1/failed/sta.log",
+      "sha256": "588063ff492c7b52c84269c50c5b7a3b8ed657ad0185c40eb0601f49f1e4faa3",
+      "bytes": 132
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_0/failed/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_0/failed/sta.log",
+      "sha256": "46a968e0f8afca75472af5b5cf9317c22f7c24c3fa299a4bcf483c5c5289d977",
+      "bytes": 84
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_1/failed/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_1/failed/sta.log",
+      "sha256": "e76c6f5773d7ec75e998b9de42d62a56b96d314ce1eaa4ce6a544b59eb6dcf80",
+      "bytes": 115
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_2/failed/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_2/failed/sta.log",
+      "sha256": "e7c3c53991595a4dea2b6a6d05c910fd6b6d377184c8172c41aea50a7611b1c8",
+      "bytes": 148
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_3/failed/sta.log",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_sequential_tool_failures_3/failed/sta.log",
+      "sha256": "90406de7d812739ce7be72edce52121cc226251146ed4a721b2983c95e15000f",
+      "bytes": 148
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/estimated.spef",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/estimated.spef",
+      "sha256": "e94216d687dc15005cb6668dddd3ff446eba415c3508f0af1154b8b21aee0e94",
+      "bytes": 525
+    },
+    {
+      "source_path": "scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/summary.json",
+      "archive_path": "project_docs/evidence/r22_parasitic_repair_20261018/red/scratch/r22_parasitic_red_tmp/test_scan_rebuilds_each_sides_0/comparison/summary.json",
+      "sha256": "3ead1e0bf741e95683080f9f6d975a4a8788fef3b73e0d503f294b4616885260",
+      "bytes": 606
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "fake-yosys",
+    "-q",
+    "-p",
+    "read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/s_cec_independent_probe_root_post_20261018/derived_model_drift/proof/cec_left_cells.v; read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/s_cec_independent_probe_root_post_20261018/derived_model_drift/proof/reference_input.v; hierarchy -check -top win; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/scratch/s_cec_independent_probe_root_post_20261018/derived_model_drift/proof/cec_left.blif"
+  ],
+  "inputs_before": {
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left_cells.v",
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81,
+      "snapshot": "cells_model.before.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89,
+      "snapshot": "prepared_verilog.before.v"
+    }
+  },
+  "inputs_after": {
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left_cells.v",
+      "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+      "bytes": 129,
+      "snapshot": "cells_model.after.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89,
+      "snapshot": "prepared_verilog.after.v"
+    }
+  },
+  "input_drift": [
+    "cells_model"
+  ],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 125,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif",
+  "artifacts": {
+    "cells_model.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif.normalize\\attempt000001\\cells_model.after.v",
+      "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+      "bytes": 129
+    },
+    "cells_model.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif.normalize\\attempt000001\\cells_model.before.v",
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81
+    },
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif.normalize\\attempt000001\\normalize.log",
+      "sha256": "ce3f0e7fcce81d046b3b23d9a32eba29fccf9946897d09bc125d006d8646104d",
+      "bytes": 601
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif.normalize\\attempt000001\\normalized_output.blif",
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "prepared_verilog.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif.normalize\\attempt000001\\prepared_verilog.after.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "prepared_verilog.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_root_post_20261018\\derived_model_drift\\proof\\cec_left.blif.normalize\\attempt000001\\prepared_verilog.before.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    }
+  }
+}

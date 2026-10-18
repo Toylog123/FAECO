@@ -10,6 +10,8 @@ paths. It does not modify the input netlist, Liberty or SDC.
 from __future__ import annotations
 
 import re
+import hashlib
+import json
 import subprocess
 import time
 from dataclasses import dataclass
@@ -198,6 +200,68 @@ _SEQ_SLACK_RE = re.compile(r"(-?\d+\.\d+)\s+slack \(([A-Z]+)\)")
 _SEQ_WNS_RE = re.compile(r"worst slack max\s+(-?\d+\.\d+)")
 _SEQ_MIN_SLACK_RE = re.compile(r"worst slack min\s+(-?\d+\.\d+)")
 _SEQ_TNS_RE = re.compile(r"tns\s+max\s+(-?\d+\.\d+)")
+_STA_ERROR_RE = re.compile(r"^\s*Error(?:\s+\d+)?(?:\s*:|\s+)", re.MULTILINE)
+_STA_MISSING_PIN_RE = re.compile(
+    r"^\s*Warning\s+(?:1647|1652):[^\r\n]*\bpin\b[^\r\n]*\bnot found\b",
+    re.MULTILINE,
+)
+
+
+def _sta_failure_reason(raw: str, returncode: int) -> str | None:
+    """Reject actual tool diagnostics, including known missing SPEF pins."""
+    if returncode != 0:
+        return f"OpenSTA returncode={returncode}"
+    diagnostic = _STA_ERROR_RE.search(raw) or _STA_MISSING_PIN_RE.search(raw)
+    if diagnostic:
+        return raw[diagnostic.start():].splitlines()[0].strip()
+    return None
+
+
+def _output_text(value) -> str:
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return value or ""
+
+
+def _sta_artifact(path) -> dict:
+    p = Path(path)
+    result = {"path": str(p.resolve()), "exists": p.is_file()}
+    if p.is_file():
+        raw = p.read_bytes()
+        result.update(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw))
+    return result
+
+
+def _sequential_failure(*, error, output_dir, tcl, netlist, spef, argv, raw, returncode=None):
+    """Keep failure Tcl/log snapshots even when a caller later reuses its directory."""
+    (output_dir / "sta.log").write_text(raw, encoding="utf-8")
+    index = 1
+    while True:
+        failure_dir = output_dir / f"sta_failure_{index:04d}"
+        try:
+            failure_dir.mkdir()
+            break
+        except FileExistsError:
+            index += 1
+    saved_tcl = failure_dir / "sta.tcl"
+    saved_log = failure_dir / "sta.log"
+    saved_tcl.write_bytes(tcl.read_bytes())
+    saved_log.write_bytes((output_dir / "sta.log").read_bytes())
+    receipt = {
+        "valid": False, "error": str(error), "returncode": returncode, "argv": argv,
+        "netlist": _sta_artifact(netlist), "liberty": _sta_artifact(LIB_SEQ),
+        "spef": _sta_artifact(spef) if spef is not None else None,
+        "tcl": _sta_artifact(saved_tcl), "log": _sta_artifact(saved_log),
+    }
+    receipt_path = failure_dir / "receipt.json"
+    with receipt_path.open("x", encoding="utf-8") as stream:
+        json.dump(receipt, stream, indent=2)
+        stream.write("\n")
+    return {
+        "slack": None, "slack_status": None, "wns": None, "tns": None,
+        "min_slack": None, "min_slack_status": None, "error": str(error),
+        "failure_receipt_path": str(receipt_path),
+    }
 
 
 def run_opensta_sequential(
@@ -260,10 +324,10 @@ def run_opensta_sequential(
         "read_verilog " + _to_sta_path(Path(netlist_path)) + "\n"
         "link_design " + str(top_module) + "\n"
         "create_clock -name clk -period " + str(period) + " [get_ports " + clock_port + "]\n"
-        "report_checks -path_delay max\n"
     )
     if spef_path is not None:
         tcl_body += "read_spef " + _to_sta_path(Path(spef_path)) + "\n"
+    tcl_body += "report_checks -path_delay max\n"
     if hold_uncertainty and hold_uncertainty > 0:
         tcl_body += "set_clock_uncertainty -hold " + str(hold_uncertainty) + " [get_clocks clk]\n"
     if min_path:
@@ -285,25 +349,26 @@ def run_opensta_sequential(
     else:
         sta_argv = _resolve_sta(sta_command=sta_command)
     if sta_argv is None:
-        return {
-            "slack": None,
-            "slack_status": None,
-            "wns": None,
-            "tns": None,
-            "min_slack": None,
-            "min_slack_status": None,
-            "error": "OpenSTA command not found: " + str(sta_command),
-        }
-    proc = subprocess.run(
-        [*sta_argv, "-no_splash", "-exit", _to_sta_path(tcl)],
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        timeout=timeout_s,
-    )
+        return _sequential_failure(
+            error="OpenSTA command not found: " + str(sta_command), output_dir=output_dir,
+            tcl=tcl, netlist=netlist_path, spef=spef_path, argv=[], raw="OpenSTA command not found\n")
+    command = [*sta_argv, "-no_splash", "-exit", _to_sta_path(tcl)]
+    try:
+        proc = subprocess.run(
+            command, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=timeout_s,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raw = _output_text(getattr(exc, "stdout", None)) + _output_text(getattr(exc, "stderr", None))
+        raw += "\n" + type(exc).__name__ + ": " + str(exc) + "\n"
+        return _sequential_failure(error=str(exc), output_dir=output_dir, tcl=tcl,
+            netlist=netlist_path, spef=spef_path, argv=command, raw=raw)
     (output_dir / "sta.log").write_text(proc.stdout + proc.stderr, encoding="utf-8")
     raw = proc.stdout + proc.stderr
+    error = (_sta_failure_reason(proc.stdout, proc.returncode)
+             or _sta_failure_reason(proc.stderr, proc.returncode))
+    if error:
+        return _sequential_failure(error=error, output_dir=output_dir, tcl=tcl,
+            netlist=netlist_path, spef=spef_path, argv=command, raw=raw, returncode=proc.returncode)
     slack = _SEQ_SLACK_RE.search(raw)
     wns = _SEQ_WNS_RE.search(raw)
     tns = _SEQ_TNS_RE.search(raw)

@@ -1,0 +1,1025 @@
+{
+  "schema": "b18-logic0-readonly-domain-audit-v1",
+  "client_date": "2026-10-18",
+  "created_actual_utc": "2026-10-18T01:14:46.990068+00:00",
+  "EDA_executed": false,
+  "source_or_input_modified": false,
+  "source_before": {
+    "bench": {
+      "path": "data/raw/benchmarks/raw/itc99/bench/b18.bench",
+      "sha256": "ba232b64dd146a7ab37f127dbc32bcefb192c342e4420af9b131051f27c609ce",
+      "bytes": 6233138
+    },
+    "root_blif": {
+      "path": "data/raw/benchmarks/raw/itc99/b18.blif",
+      "sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528",
+      "bytes": 6946788
+    },
+    "bench_blif": {
+      "path": "data/raw/benchmarks/raw/itc99/bench/b18.blif",
+      "sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528",
+      "bytes": 6946788
+    },
+    "preconverted_verilog": {
+      "path": "data/raw/benchmarks/raw/itc99/v/b18.v",
+      "sha256": "069b7120c98445180205e18cd6dfa403b05e7509f5a30bbf86f2a195d6c48063",
+      "bytes": 33642719
+    },
+    "base": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/mapped.v",
+      "sha256": "c5c89e3a218557797b9c6868a95b1ffea22f0cf324a7d188bf4d5f669bb5ed33",
+      "bytes": 4873665
+    },
+    "candidate": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/eval/iter009_cand009/029__649725__R/mapped.v",
+      "sha256": "42db3970ed14ba9d99689f5489a1db4cc3074b209c5374b55749fd0a3367e10c",
+      "bytes": 4873665
+    },
+    "map_script": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/map.ys",
+      "sha256": "8a164aac10780cc8107205d289ca25b3c4dced3ddc51bf252498bbe32feae2d1",
+      "bytes": 482
+    },
+    "map_log": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/map.log",
+      "sha256": "fe2ba0da0ca2718b2af9ed77e7b75122f7918972fb8b76739648bfd89a5b458b",
+      "bytes": 277825
+    },
+    "sta_tcl": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/sta.tcl",
+      "sha256": "69acc6c9c37fb3b9c2230ef4e06a7b023fca77b37fb2c071a31fbbd3805c8232",
+      "bytes": 534
+    },
+    "raw_source_manifest": {
+      "path": "data/raw/benchmarks/source_manifests/itc99.json",
+      "sha256": "b27cc26f4ca35cc196d21449d3c0b8bc05e7f5d5edbdc74ff0f8ed59c8c08632",
+      "bytes": 3824
+    },
+    "bench_converter": {
+      "path": "code/scripts/convert_itc99_bench_to_blif.py",
+      "sha256": "d5cf8a5a03aa4f6c6fd88166e8c8874fe3602530e443a92dd13c42cc19d87b32",
+      "bytes": 5981
+    },
+    "verilog_converter": {
+      "path": "code/scripts/convert_itc99_blif_to_v.py",
+      "sha256": "32f5cbc6f5e4a3c9862e04ba11e8018afb401802dcd692fdee8c1705464416cd",
+      "bytes": 8203
+    },
+    "historical_family_review": {
+      "path": "project_docs/evidence/r22_spef_audit_20261016/review_20261018/REVIEW.json",
+      "sha256": "ebc9bc5e707c9dfeef065f88a2411d30b84269e241865758c79f2a1987a7da27",
+      "bytes": 15103
+    },
+    "static_report": {
+      "path": "project_docs/evidence/r22_spef_topology_repair_20261018/FINAL_ACTUAL_INPUT_STATIC_CHECK.json",
+      "sha256": "a9c10bcd08993542627fe69675687d453769f4671a73673f2b6d568c0d1efb93",
+      "bytes": 4877
+    },
+    "lib": {
+      "path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135
+    }
+  },
+  "source_after": {
+    "bench": {
+      "path": "data/raw/benchmarks/raw/itc99/bench/b18.bench",
+      "sha256": "ba232b64dd146a7ab37f127dbc32bcefb192c342e4420af9b131051f27c609ce",
+      "bytes": 6233138
+    },
+    "root_blif": {
+      "path": "data/raw/benchmarks/raw/itc99/b18.blif",
+      "sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528",
+      "bytes": 6946788
+    },
+    "bench_blif": {
+      "path": "data/raw/benchmarks/raw/itc99/bench/b18.blif",
+      "sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528",
+      "bytes": 6946788
+    },
+    "preconverted_verilog": {
+      "path": "data/raw/benchmarks/raw/itc99/v/b18.v",
+      "sha256": "069b7120c98445180205e18cd6dfa403b05e7509f5a30bbf86f2a195d6c48063",
+      "bytes": 33642719
+    },
+    "base": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/mapped.v",
+      "sha256": "c5c89e3a218557797b9c6868a95b1ffea22f0cf324a7d188bf4d5f669bb5ed33",
+      "bytes": 4873665
+    },
+    "candidate": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/eval/iter009_cand009/029__649725__R/mapped.v",
+      "sha256": "42db3970ed14ba9d99689f5489a1db4cc3074b209c5374b55749fd0a3367e10c",
+      "bytes": 4873665
+    },
+    "map_script": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/map.ys",
+      "sha256": "8a164aac10780cc8107205d289ca25b3c4dced3ddc51bf252498bbe32feae2d1",
+      "bytes": 482
+    },
+    "map_log": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/map.log",
+      "sha256": "fe2ba0da0ca2718b2af9ed77e7b75122f7918972fb8b76739648bfd89a5b458b",
+      "bytes": 277825
+    },
+    "sta_tcl": {
+      "path": "experiments/20260805_phys_closure/b18_light/b18/sta.tcl",
+      "sha256": "69acc6c9c37fb3b9c2230ef4e06a7b023fca77b37fb2c071a31fbbd3805c8232",
+      "bytes": 534
+    },
+    "raw_source_manifest": {
+      "path": "data/raw/benchmarks/source_manifests/itc99.json",
+      "sha256": "b27cc26f4ca35cc196d21449d3c0b8bc05e7f5d5edbdc74ff0f8ed59c8c08632",
+      "bytes": 3824
+    },
+    "bench_converter": {
+      "path": "code/scripts/convert_itc99_bench_to_blif.py",
+      "sha256": "d5cf8a5a03aa4f6c6fd88166e8c8874fe3602530e443a92dd13c42cc19d87b32",
+      "bytes": 5981
+    },
+    "verilog_converter": {
+      "path": "code/scripts/convert_itc99_blif_to_v.py",
+      "sha256": "32f5cbc6f5e4a3c9862e04ba11e8018afb401802dcd692fdee8c1705464416cd",
+      "bytes": 8203
+    },
+    "historical_family_review": {
+      "path": "project_docs/evidence/r22_spef_audit_20261016/review_20261018/REVIEW.json",
+      "sha256": "ebc9bc5e707c9dfeef065f88a2411d30b84269e241865758c79f2a1987a7da27",
+      "bytes": 15103
+    },
+    "static_report": {
+      "path": "project_docs/evidence/r22_spef_topology_repair_20261018/FINAL_ACTUAL_INPUT_STATIC_CHECK.json",
+      "sha256": "a9c10bcd08993542627fe69675687d453769f4671a73673f2b6d568c0d1efb93",
+      "bytes": 4877
+    },
+    "lib": {
+      "path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135
+    }
+  },
+  "source_stable": true,
+  "bench": {
+    "pseudo_input_note": "# Note: added a pseudo-input for LOGIC0",
+    "input": true,
+    "output": true,
+    "driver_definition_count": 0,
+    "consumer_gate_count": 24
+  },
+  "blif": {
+    "logic0_is_input": true,
+    "logic0_is_output": true,
+    "logic0_internal_drivers": [],
+    "root_and_bench_blif_bytes_equal": true,
+    "current_root_blif_sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528",
+    "acquisition_manifest_b18_sha256": "2fe31b6930c7b9f2c7ac6fb43ac4a3a962d7e72433d11fd69ffebd5d3b2bcaa6",
+    "current_matches_acquisition_manifest": false
+  },
+  "preconverted_verilog": {
+    "inout_declaration": true,
+    "direct_assign_logic0_driver_count": 0
+  },
+  "baseline": {
+    "top_declared_direction": "inout",
+    "occurrence_lines": [
+      {
+        "line": 4,
+        "text": ", DIN_15_, DIN_14_, DIN_13_, DIN_12_, DIN_11_, DIN_10_, DIN_9_, DIN_8_, DIN_7_, DIN_6_, DIN_5_, DIN_4_, DIN_3_, DIN_2_, DIN_1_, DIN_0_, LOGIC0, MUL_1411_U378, MUL_1411_U438, MUL_1411_U10, MUL_1411_U439"
+      },
+      {
+        "line": 80,
+        "text": "  inout LOGIC0;"
+      },
+      {
+        "line": 81,
+        "text": "  wire LOGIC0;"
+      },
+      {
+        "line": 197808,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 197813,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202152,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202158,
+        "text": "    .B(LOGIC0),"
+      }
+    ],
+    "connections": [
+      {
+        "cell_type": "sky130_fd_sc_hd__and2_0",
+        "instance": "_649731_",
+        "pin": "A",
+        "direction": "input",
+        "instance_start_line": 197807,
+        "pin_body": "capacitance : 0.0016000000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0015630000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0028340000, 0.0028350000, 0.0028374000, 0.0028381000, 0.0028398000, 0.0028435000, 0.0028523000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.002302000, -0.002304800, -0.002311300, -0.002307200, -0.002297900, -0.002276400, -0.002226700\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0016370000;"
+      },
+      {
+        "cell_type": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_649732_",
+        "pin": "A",
+        "direction": "input",
+        "instance_start_line": 197812,
+        "pin_body": "capacitance : 0.0023150000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0022540000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0047914000, 0.0048016000, 0.0048250000, 0.0048257000, 0.0048275000, 0.0048316000, 0.0048409000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.003895500, -0.003894100, -0.003890900, -0.003884500, -0.003869900, -0.003836300, -0.003758800\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0023750000;"
+      },
+      {
+        "cell_type": "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "instance": "_650494_",
+        "pin": "A",
+        "direction": "input",
+        "instance_start_line": 202151,
+        "pin_body": "capacitance : 0.0014900000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0014340000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0084048000, 0.0083113000, 0.0080958000, 0.0081437000, 0.0082541000, 0.0085086000, 0.0090953000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0021945000, 0.0021390000, 0.0020109000, 0.0020536000, 0.0021519000, 0.0023787000, 0.0029014000\");\n                }\n            }\n            isolation_cell_data_pin : \"true\";\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0015460000;"
+      },
+      {
+        "cell_type": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_650495_",
+        "pin": "B",
+        "direction": "input",
+        "instance_start_line": 202156,
+        "pin_body": "capacitance : 0.0023240000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0022200000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0041316000, 0.0041310000, 0.0041296000, 0.0041311000, 0.0041345000, 0.0041424000, 0.0041606000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.004132500, -0.004132200, -0.004131700, -0.004131700, -0.004131700, -0.004131700, -0.004131700\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0024280000;"
+      }
+    ],
+    "internal_output_or_inout_connections": [],
+    "direct_assign_driver_count": 0,
+    "contains_tran_or_bidirectional_primitive": false
+  },
+  "unique_candidate": {
+    "top_declared_direction": "inout",
+    "occurrence_lines": [
+      {
+        "line": 4,
+        "text": ", DIN_15_, DIN_14_, DIN_13_, DIN_12_, DIN_11_, DIN_10_, DIN_9_, DIN_8_, DIN_7_, DIN_6_, DIN_5_, DIN_4_, DIN_3_, DIN_2_, DIN_1_, DIN_0_, LOGIC0, MUL_1411_U378, MUL_1411_U438, MUL_1411_U10, MUL_1411_U439"
+      },
+      {
+        "line": 80,
+        "text": "  inout LOGIC0;"
+      },
+      {
+        "line": 81,
+        "text": "  wire LOGIC0;"
+      },
+      {
+        "line": 197808,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 197813,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202152,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202158,
+        "text": "    .B(LOGIC0),"
+      }
+    ],
+    "connections": [
+      {
+        "cell_type": "sky130_fd_sc_hd__and2_0",
+        "instance": "_649731_",
+        "pin": "A",
+        "direction": "input",
+        "instance_start_line": 197807,
+        "pin_body": "capacitance : 0.0016000000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0015630000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0028340000, 0.0028350000, 0.0028374000, 0.0028381000, 0.0028398000, 0.0028435000, 0.0028523000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.002302000, -0.002304800, -0.002311300, -0.002307200, -0.002297900, -0.002276400, -0.002226700\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0016370000;"
+      },
+      {
+        "cell_type": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_649732_",
+        "pin": "A",
+        "direction": "input",
+        "instance_start_line": 197812,
+        "pin_body": "capacitance : 0.0023150000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0022540000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0047914000, 0.0048016000, 0.0048250000, 0.0048257000, 0.0048275000, 0.0048316000, 0.0048409000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.003895500, -0.003894100, -0.003890900, -0.003884500, -0.003869900, -0.003836300, -0.003758800\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0023750000;"
+      },
+      {
+        "cell_type": "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "instance": "_650494_",
+        "pin": "A",
+        "direction": "input",
+        "instance_start_line": 202151,
+        "pin_body": "capacitance : 0.0014900000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0014340000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0084048000, 0.0083113000, 0.0080958000, 0.0081437000, 0.0082541000, 0.0085086000, 0.0090953000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0021945000, 0.0021390000, 0.0020109000, 0.0020536000, 0.0021519000, 0.0023787000, 0.0029014000\");\n                }\n            }\n            isolation_cell_data_pin : \"true\";\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0015460000;"
+      },
+      {
+        "cell_type": "sky130_fd_sc_hd__nand2_1",
+        "instance": "_650495_",
+        "pin": "B",
+        "direction": "input",
+        "instance_start_line": 202156,
+        "pin_body": "capacitance : 0.0023240000;\n            clock : \"false\";\n            direction : \"input\";\n            fall_capacitance : 0.0022200000;\n            internal_power () {\n                fall_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"0.0041316000, 0.0041310000, 0.0041296000, 0.0041311000, 0.0041345000, 0.0041424000, 0.0041606000\");\n                }\n                rise_power (\"power_inputs_1\") {\n                    index_1(\"0.0100000000, 0.0230506000, 0.0531329000, 0.1224740000, 0.2823110000, 0.6507430000, 1.5000000000\");\n                    values(\"-0.004132500, -0.004132200, -0.004131700, -0.004131700, -0.004131700, -0.004131700, -0.004131700\");\n                }\n            }\n            max_transition : 1.5000000000;\n            related_ground_pin : \"VGND\";\n            related_power_pin : \"VPWR\";\n            rise_capacitance : 0.0024280000;"
+      }
+    ],
+    "internal_output_or_inout_connections": [],
+    "direct_assign_driver_count": 0,
+    "contains_tran_or_bidirectional_primitive": false
+  },
+  "net_connectivity_identical": true,
+  "mapper_script": "read_verilog benchmarks/raw/itc99/v/b18.v\nsynth -top b18\ndfflibmap -liberty D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\nabc -liberty D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\nclean\nwrite_verilog -noattr experiments/20260805_phys_closure/b18_light/b18/mapped.v\n",
+  "mapping_has_logic0_setundef_tieoff_or_direction_rewrite": false,
+  "pair_diff": [
+    "--- baseline\n",
+    "+++ unique_R_candidate\n",
+    "@@ -197771,8 +197771,8 @@\n",
+    "     .Y(_616581_)",
+    "   );",
+    "-  sky130_fd_sc_hd__xor2_1 _649725_ (",
+    "+  sky130_fd_sc_hd__ha_1 _649725_ (",
+    "     .A(P3_IR_REG_27_),",
+    "     .B(_616136_),",
+    "-    .X(_616582_)",
+    "+    .SUM(_616582_)",
+    "   );",
+    "   sky130_fd_sc_hd__mux2_1 _649726_ ("
+  ],
+  "historical_family": {
+    "folder": "experiments/20260805_phys_closure/b18_light/b18",
+    "F6_records": 6,
+    "candidate_records": 6,
+    "unique_candidate_sha_count": 1,
+    "unique_candidate_shas": [
+      "42db3970ed14ba9d99689f5489a1db4cc3074b209c5374b55749fd0a3367e10c"
+    ],
+    "retained_spef_generator_matches": {
+      "{\"1.0\": true, \"40.0\": false}": 6
+    },
+    "read_spef_after_first_report_count": 6,
+    "period_ns": 13.15
+  },
+  "bounded_conclusion": "The retained benchmark interface exposes LOGIC0 as an external pseudo-input and simultaneously a same-named output. Both actual mapped objects preserve that inout interface, with four Liberty-input loads and no observed internal driver/assign/switch. Existing evidence does not justify a constant-0 tie or interface rewrite.",
+  "unknowns": [
+    "Original EDIF source is not present in inspected local raw tree; any physical ground/constant intent before edf2bench remains unknown.",
+    "The acquisition BLIF SHA may differ from current reconstructed complete BLIF; explicit equality field above bounds provenance. No converter run receipt ties current BLIF to current Verilog byte-for-byte, so conversion path is reconstructed from content/scripts, not claimed newly proved.",
+    "Passive *P B support and actual OpenSTA annotation acceptance are proposed but untested; external excitation/load assumptions must be explicit before valid timing comparison."
+  ],
+  "excerpts": {
+    "bench": [
+      {
+        "line": 6,
+        "text": "# Note: added a pseudo-input for LOGIC0"
+      },
+      {
+        "line": 49,
+        "text": "INPUT(LOGIC0)"
+      },
+      {
+        "line": 51,
+        "text": "OUTPUT(LOGIC0)"
+      },
+      {
+        "line": 5132,
+        "text": "P3_U3394 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5134,
+        "text": "P3_U3396 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5136,
+        "text": "P3_U3398 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5138,
+        "text": "P3_U3400 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5140,
+        "text": "P3_U3402 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5142,
+        "text": "P3_U3404 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5144,
+        "text": "P3_U3406 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5146,
+        "text": "P3_U3408 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5148,
+        "text": "P3_U3410 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5150,
+        "text": "P3_U3412 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5152,
+        "text": "P3_U3414 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5153,
+        "text": "P3_U3415 = NAND(LOGIC0, P3_U3980)"
+      },
+      {
+        "line": 5869,
+        "text": "P3_U4131 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5872,
+        "text": "P3_U4134 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5875,
+        "text": "P3_U4137 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5878,
+        "text": "P3_U4140 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5881,
+        "text": "P3_U4143 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5884,
+        "text": "P3_U4146 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5887,
+        "text": "P3_U4149 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5890,
+        "text": "P3_U4152 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5893,
+        "text": "P3_U4155 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5896,
+        "text": "P3_U4158 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5899,
+        "text": "P3_U4161 = NAND(LOGIC0, P3_U3084)"
+      },
+      {
+        "line": 5902,
+        "text": "P3_U4164 = NAND(LOGIC0, P3_U3084)"
+      }
+    ],
+    "root_blif": [
+      {
+        "line": 2,
+        "text": ".inputs HOLD NA BS SEL DIN_31_ DIN_30_ DIN_29_ DIN_28_ DIN_27_ DIN_26_ DIN_25_ DIN_24_ DIN_23_ DIN_22_ DIN_21_ DIN_20_ DIN_19_ DIN_18_ DIN_17_ DIN_16_ DIN_15_ DIN_14_ DIN_13_ DIN_12_ DIN_11_ DIN_10_ DIN_9_ DIN_8_ DIN_7_ DIN_6_ DIN_5_ DIN_4_ DIN_3_ DIN_2_ DIN_1_ DIN_0_ LOGIC0"
+      },
+      {
+        "line": 3,
+        "text": ".outputs LOGIC0 MUL_1411_U378 MUL_1411_U438 MUL_1411_U10 MUL_1411_U439 MUL_1411_U9 MUL_1411_U440 MUL_1411_U8 MUL_1411_U441 MUL_1411_U7 MUL_1411_U385 MUL_1411_U14 MUL_1411_U386 MUL_1411_U13 MUL_1411_U387 MUL_1411_U12 MUL_1411_U388 MUL_1411_U11 MUL_1411_U15 MUL_1411_U5 MUL_1421_A1_U5 U154 U39"
+      },
+      {
+        "line": 6867,
+        "text": ".names LOGIC0 P3_U3980 P3_U3394"
+      },
+      {
+        "line": 6871,
+        "text": ".names LOGIC0 P3_U3980 P3_U3396"
+      },
+      {
+        "line": 6875,
+        "text": ".names LOGIC0 P3_U3980 P3_U3398"
+      },
+      {
+        "line": 6879,
+        "text": ".names LOGIC0 P3_U3980 P3_U3400"
+      },
+      {
+        "line": 6883,
+        "text": ".names LOGIC0 P3_U3980 P3_U3402"
+      },
+      {
+        "line": 6887,
+        "text": ".names LOGIC0 P3_U3980 P3_U3404"
+      },
+      {
+        "line": 6891,
+        "text": ".names LOGIC0 P3_U3980 P3_U3406"
+      },
+      {
+        "line": 6895,
+        "text": ".names LOGIC0 P3_U3980 P3_U3408"
+      },
+      {
+        "line": 6899,
+        "text": ".names LOGIC0 P3_U3980 P3_U3410"
+      },
+      {
+        "line": 6903,
+        "text": ".names LOGIC0 P3_U3980 P3_U3412"
+      },
+      {
+        "line": 6907,
+        "text": ".names LOGIC0 P3_U3980 P3_U3414"
+      },
+      {
+        "line": 6909,
+        "text": ".names LOGIC0 P3_U3980 P3_U3415"
+      },
+      {
+        "line": 8393,
+        "text": ".names LOGIC0 P3_U3084 P3_U4131"
+      },
+      {
+        "line": 8399,
+        "text": ".names LOGIC0 P3_U3084 P3_U4134"
+      },
+      {
+        "line": 8405,
+        "text": ".names LOGIC0 P3_U3084 P3_U4137"
+      },
+      {
+        "line": 8411,
+        "text": ".names LOGIC0 P3_U3084 P3_U4140"
+      },
+      {
+        "line": 8417,
+        "text": ".names LOGIC0 P3_U3084 P3_U4143"
+      },
+      {
+        "line": 8423,
+        "text": ".names LOGIC0 P3_U3084 P3_U4146"
+      },
+      {
+        "line": 8429,
+        "text": ".names LOGIC0 P3_U3084 P3_U4149"
+      },
+      {
+        "line": 8435,
+        "text": ".names LOGIC0 P3_U3084 P3_U4152"
+      },
+      {
+        "line": 8441,
+        "text": ".names LOGIC0 P3_U3084 P3_U4155"
+      },
+      {
+        "line": 8447,
+        "text": ".names LOGIC0 P3_U3084 P3_U4158"
+      },
+      {
+        "line": 8453,
+        "text": ".names LOGIC0 P3_U3084 P3_U4161"
+      },
+      {
+        "line": 8459,
+        "text": ".names LOGIC0 P3_U3084 P3_U4164"
+      }
+    ],
+    "bench_blif": [
+      {
+        "line": 2,
+        "text": ".inputs HOLD NA BS SEL DIN_31_ DIN_30_ DIN_29_ DIN_28_ DIN_27_ DIN_26_ DIN_25_ DIN_24_ DIN_23_ DIN_22_ DIN_21_ DIN_20_ DIN_19_ DIN_18_ DIN_17_ DIN_16_ DIN_15_ DIN_14_ DIN_13_ DIN_12_ DIN_11_ DIN_10_ DIN_9_ DIN_8_ DIN_7_ DIN_6_ DIN_5_ DIN_4_ DIN_3_ DIN_2_ DIN_1_ DIN_0_ LOGIC0"
+      },
+      {
+        "line": 3,
+        "text": ".outputs LOGIC0 MUL_1411_U378 MUL_1411_U438 MUL_1411_U10 MUL_1411_U439 MUL_1411_U9 MUL_1411_U440 MUL_1411_U8 MUL_1411_U441 MUL_1411_U7 MUL_1411_U385 MUL_1411_U14 MUL_1411_U386 MUL_1411_U13 MUL_1411_U387 MUL_1411_U12 MUL_1411_U388 MUL_1411_U11 MUL_1411_U15 MUL_1411_U5 MUL_1421_A1_U5 U154 U39"
+      },
+      {
+        "line": 6867,
+        "text": ".names LOGIC0 P3_U3980 P3_U3394"
+      },
+      {
+        "line": 6871,
+        "text": ".names LOGIC0 P3_U3980 P3_U3396"
+      },
+      {
+        "line": 6875,
+        "text": ".names LOGIC0 P3_U3980 P3_U3398"
+      },
+      {
+        "line": 6879,
+        "text": ".names LOGIC0 P3_U3980 P3_U3400"
+      },
+      {
+        "line": 6883,
+        "text": ".names LOGIC0 P3_U3980 P3_U3402"
+      },
+      {
+        "line": 6887,
+        "text": ".names LOGIC0 P3_U3980 P3_U3404"
+      },
+      {
+        "line": 6891,
+        "text": ".names LOGIC0 P3_U3980 P3_U3406"
+      },
+      {
+        "line": 6895,
+        "text": ".names LOGIC0 P3_U3980 P3_U3408"
+      },
+      {
+        "line": 6899,
+        "text": ".names LOGIC0 P3_U3980 P3_U3410"
+      },
+      {
+        "line": 6903,
+        "text": ".names LOGIC0 P3_U3980 P3_U3412"
+      },
+      {
+        "line": 6907,
+        "text": ".names LOGIC0 P3_U3980 P3_U3414"
+      },
+      {
+        "line": 6909,
+        "text": ".names LOGIC0 P3_U3980 P3_U3415"
+      },
+      {
+        "line": 8393,
+        "text": ".names LOGIC0 P3_U3084 P3_U4131"
+      },
+      {
+        "line": 8399,
+        "text": ".names LOGIC0 P3_U3084 P3_U4134"
+      },
+      {
+        "line": 8405,
+        "text": ".names LOGIC0 P3_U3084 P3_U4137"
+      },
+      {
+        "line": 8411,
+        "text": ".names LOGIC0 P3_U3084 P3_U4140"
+      },
+      {
+        "line": 8417,
+        "text": ".names LOGIC0 P3_U3084 P3_U4143"
+      },
+      {
+        "line": 8423,
+        "text": ".names LOGIC0 P3_U3084 P3_U4146"
+      },
+      {
+        "line": 8429,
+        "text": ".names LOGIC0 P3_U3084 P3_U4149"
+      },
+      {
+        "line": 8435,
+        "text": ".names LOGIC0 P3_U3084 P3_U4152"
+      },
+      {
+        "line": 8441,
+        "text": ".names LOGIC0 P3_U3084 P3_U4155"
+      },
+      {
+        "line": 8447,
+        "text": ".names LOGIC0 P3_U3084 P3_U4158"
+      },
+      {
+        "line": 8453,
+        "text": ".names LOGIC0 P3_U3084 P3_U4161"
+      },
+      {
+        "line": 8459,
+        "text": ".names LOGIC0 P3_U3084 P3_U4164"
+      }
+    ],
+    "preconverted_verilog": [
+      {
+        "line": 3,
+        "text": "module b18(CK, HOLD, NA, BS, SEL, DIN_31_, DIN_30_, DIN_29_, DIN_28_, DIN_27_, DIN_26_, DIN_25_, DIN_24_, DIN_23_, DIN_22_, DIN_21_, DIN_20_, DIN_19_, DIN_18_, DIN_17_, DIN_16_, DIN_15_, DIN_14_, DIN_13_, DIN_12_, DIN_11_, DIN_10_, DIN_9_, DIN_8_, DIN_7_, DIN_6_, DIN_5_, DIN_4_, DIN_3_, DIN_2_, DIN_1_, DIN_0_, LOGIC0, MUL_1411_U378, MUL_1411_U438, MUL_1411_U10, MUL_1411_U439, MUL_1411_U9, MUL_1411_U440, MUL_1411_U8, MUL_1411_U441, MUL_1411_U7, MUL_1411_U385, MUL_1411_U14, MUL_1411_U386, MUL_1411_U13, MUL_1411_U387, MUL_1411_U12, MUL_1411_U388, MUL_1411_U11, MUL_1411_U15, MUL_1411_U5, MUL_1421_A1_U5, U154, U39);"
+      },
+      {
+        "line": 215884,
+        "text": "  inout LOGIC0;"
+      },
+      {
+        "line": 337692,
+        "text": "  assign _003779_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337693,
+        "text": "  assign _003779_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337710,
+        "text": "  assign _003785_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337711,
+        "text": "  assign _003785_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337728,
+        "text": "  assign _003791_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337729,
+        "text": "  assign _003791_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337746,
+        "text": "  assign _003797_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337747,
+        "text": "  assign _003797_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337764,
+        "text": "  assign _003803_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337765,
+        "text": "  assign _003803_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337782,
+        "text": "  assign _003809_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337783,
+        "text": "  assign _003809_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337800,
+        "text": "  assign _003815_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337801,
+        "text": "  assign _003815_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337818,
+        "text": "  assign _003821_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337819,
+        "text": "  assign _003821_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337836,
+        "text": "  assign _003827_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337837,
+        "text": "  assign _003827_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337854,
+        "text": "  assign _003833_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337855,
+        "text": "  assign _003833_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337860,
+        "text": "  assign _003837_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337861,
+        "text": "  assign _003837_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 337863,
+        "text": "  assign _003839_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 337864,
+        "text": "  assign _003839_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341063,
+        "text": "  assign _005421_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341064,
+        "text": "  assign _005421_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341072,
+        "text": "  assign _005427_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341073,
+        "text": "  assign _005427_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341081,
+        "text": "  assign _005433_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341082,
+        "text": "  assign _005433_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341090,
+        "text": "  assign _005439_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341091,
+        "text": "  assign _005439_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341099,
+        "text": "  assign _005445_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341100,
+        "text": "  assign _005445_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341108,
+        "text": "  assign _005451_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341109,
+        "text": "  assign _005451_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341117,
+        "text": "  assign _005457_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341118,
+        "text": "  assign _005457_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341126,
+        "text": "  assign _005463_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341127,
+        "text": "  assign _005463_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341135,
+        "text": "  assign _005469_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341136,
+        "text": "  assign _005469_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341144,
+        "text": "  assign _005475_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341145,
+        "text": "  assign _005475_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341153,
+        "text": "  assign _005481_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341154,
+        "text": "  assign _005481_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      },
+      {
+        "line": 341162,
+        "text": "  assign _005487_[0] = LOGIC0 ? 1'h1 : 1'h1;"
+      },
+      {
+        "line": 341163,
+        "text": "  assign _005487_[1] = LOGIC0 ? 1'h0 : 1'h1;"
+      }
+    ],
+    "base": [
+      {
+        "line": 4,
+        "text": ", DIN_15_, DIN_14_, DIN_13_, DIN_12_, DIN_11_, DIN_10_, DIN_9_, DIN_8_, DIN_7_, DIN_6_, DIN_5_, DIN_4_, DIN_3_, DIN_2_, DIN_1_, DIN_0_, LOGIC0, MUL_1411_U378, MUL_1411_U438, MUL_1411_U10, MUL_1411_U439"
+      },
+      {
+        "line": 80,
+        "text": "  inout LOGIC0;"
+      },
+      {
+        "line": 81,
+        "text": "  wire LOGIC0;"
+      },
+      {
+        "line": 197808,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 197813,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202152,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202158,
+        "text": "    .B(LOGIC0),"
+      }
+    ],
+    "candidate": [
+      {
+        "line": 4,
+        "text": ", DIN_15_, DIN_14_, DIN_13_, DIN_12_, DIN_11_, DIN_10_, DIN_9_, DIN_8_, DIN_7_, DIN_6_, DIN_5_, DIN_4_, DIN_3_, DIN_2_, DIN_1_, DIN_0_, LOGIC0, MUL_1411_U378, MUL_1411_U438, MUL_1411_U10, MUL_1411_U439"
+      },
+      {
+        "line": 80,
+        "text": "  inout LOGIC0;"
+      },
+      {
+        "line": 81,
+        "text": "  wire LOGIC0;"
+      },
+      {
+        "line": 197808,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 197813,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202152,
+        "text": "    .A(LOGIC0),"
+      },
+      {
+        "line": 202158,
+        "text": "    .B(LOGIC0),"
+      }
+    ],
+    "map_script": [
+      {
+        "line": 1,
+        "text": "read_verilog benchmarks/raw/itc99/v/b18.v"
+      },
+      {
+        "line": 2,
+        "text": "synth -top b18"
+      },
+      {
+        "line": 3,
+        "text": "dfflibmap -liberty D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+      },
+      {
+        "line": 4,
+        "text": "abc -liberty D:/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+      },
+      {
+        "line": 5,
+        "text": "clean"
+      },
+      {
+        "line": 6,
+        "text": "write_verilog -noattr experiments/20260805_phys_closure/b18_light/b18/mapped.v"
+      }
+    ],
+    "map_log": [],
+    "sta_tcl": [
+      {
+        "line": 1,
+        "text": "read_liberty /mnt/d/BaiduSyncdisk/03_FAECO/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+      },
+      {
+        "line": 2,
+        "text": "read_verilog /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260805_phys_closure/b18_light/b18/mapped.v"
+      },
+      {
+        "line": 3,
+        "text": "link_design b18"
+      },
+      {
+        "line": 4,
+        "text": "create_clock -name clk -period 13.15 [get_ports CK]"
+      },
+      {
+        "line": 5,
+        "text": "report_checks -path_delay max"
+      },
+      {
+        "line": 6,
+        "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000"
+      },
+      {
+        "line": 7,
+        "text": "puts \"TNS_BEGIN\""
+      },
+      {
+        "line": 8,
+        "text": "report_tns"
+      },
+      {
+        "line": 9,
+        "text": "puts \"TNS_END\""
+      },
+      {
+        "line": 10,
+        "text": "report_worst_slack -max"
+      },
+      {
+        "line": 11,
+        "text": "report_worst_slack -min"
+      }
+    ],
+    "raw_source_manifest": [],
+    "bench_converter": [],
+    "verilog_converter": [],
+    "historical_family_review": [],
+    "static_report": []
+  },
+  "audit_script_sha256": "e0cefa195dcdb6ac792f2f91efdbbb3d9c97ae451bcfdabff78074b3167c1490"
+}

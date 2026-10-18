@@ -299,3 +299,38 @@ C′v3审计期间运行继续完成。MATRIX_AUDIT_36实际为三电路各9、s
 完整矩阵v1人工与独立视觉均未发现标签问题，但自动COLLISION_AUDIT给出6处旋转tick bbox overlap/FIX BEFORE DELIVERY。原人工报告保留，不回写为未通过；当前交付门改为未过。数据CSV/图源重现一致、面板对齐通过，问题归因到标签几何而非数据/EDA；另出v2、重跑字形/碰撞/对齐/视觉与数据验收后才能闭合，当前尚待。
 
 几何修复后验追加（LOG12）：最新v3源d9ef05b…/FINAL_REVIEW32ff889a…保存最终14文件SHA；raw/paired CSV逐字节不变、collision0/对齐PASS/最小6.8pt、root实际视觉与partial51提前拒绝都过。仅此几何门关闭，独立v3视觉追加和正式稿整合另验，原v1/先前错误判断继续保留。
+
+
+## 2026-10-18 物理测量边界：输入漂移和双流诊断必须独立留证
+
+确定性native控制重现Tcl调用中变化/SPEF生成后跨阶段变化（red3 2F17P）和stdout无末换行掩盖stderr锚定Error（red4 2F19P）。修复按实际两侧网表各自SPEF、同RC与逐侧输入/Tcl前后绑定；两个输出流分别检查诊断，失败/缺pin/无法解析不记有效float。限定green4 71pass/6.43s、221原件SHA-size全符。仅local QA完成snapshot未采source-before，整体回归必须另做前后锁；不是实际OpenSTA/科学效果验证。首green1 synthetic CELL_A句法不符现有quoted extractor属于夹具问题，保独立Y→Z意图改句法，不能把夹具失败计成新的生产bug。
+
+
+## 2026-10-18 SPEF连接必须区分词法身份与物理端点
+
+独立四类反例揭示escaped scalar和vector bit合网、纯port alias没有D_NET、module外未知文本漏覆盖、cell输出literal丢pin；不能因作者51/53限定测试通过跳过独立最小输入。红5case保真后修复，v5 58pass，POST_REVIEW46d9972e…原输入SHA相同/四source前后一致，身份与RC feedthrough/拒绝行为静态闭合。8实际mapped仅静态parsed，12无pin常量alias显式记录，不把无tie源的connected constant当可注入。真实escaped SPEF工具注入尚须新pin实际OpenSTA验证，静态通过不能推广物理收益。
+
+
+## 2026-10-18 已完成agent续工必须触发新turn
+
+OI045修复指令仅用send_message发给completed agent时只入队，未实际执行。根list_agents实查状态后改followup_task才启动；之前是协作调度空等，不是模型/代码技术卡死。续工需先查状态，idle/completed用followup_task，执行中才用send_message补充；派发后看实际消息/工具/产出，不把已发消息当已执行。原反例与全v1原件不受影响，后续红绿须凭实际收据再登记。
+
+
+## 2026-10-18 native正控通过不能替代真实top反例（OI047/048）
+
+primitive-only c17缺少used SKY时返回整库使无关$mul模型污染归一化（正确error）；精确used模型/显式空model修后native26pass仍不能证明完整CEC对象正确。更强ztop Y=A/Y=B反例实际不同，ABC却选first库buf而假pass，故必须绑定真实source top/唯一root并hierarchy-check-top。保真bca40修前源、原两个Verilog、native日志；修后原字节输入正确fail/NOT EQUIVALENT，三文件28pass。整体v3唯一旧assign-only测试仍要求wholeLib返回，属已被真实工具风险证伪的旧测试契约；仅更新该测试保原Lib字节/无无关module/缺model报错，再做v4。正控、原负控、整体回归、历史影响边界分别验收，不用限定绿声称全部旧证明有效/无效。
+
+
+## 2026-10-18 Windows子进程编码与Git文本checkout必须实测
+
+全v4三CLI失败伴stdout None/UnicodeDecodeError，-X utf8只约束当前Python，不能替子进程继承的PYTHONUTF8=1。相同CLI/参数两次rc0的原始stdout显示unset非UTF8/set1UTF8，两个文件显式env13pass，不改生产来掩环境；原v4失败保留，下一整套显式记录env。native测试改写5个tracked c17产物须先保generated/HEAD；Git restore自动CRLF可文本等同而exactSHA不同，保首assert失败后核归一文本再恢复HEAD精确字节，最终逐SHA5/5，而非猜同步软件或覆盖科学结果。
+
+
+## 2026-10-18 SPEF静态身份分离须用有约束真实路径反证注入
+
+无约束单buf组合网即便工具给数也不足以证明RC注入；微型控制改为两DFXTP夹buf真实reg→reg、同actualLib/CK/5ns，普通与busbit+escaped literal两条不同D_NET在40/4000um对RC正响应且四report_parasitic_annotation均零未/部分注入，两个错误pin底层仍有有限slack但API全null/error。根与独立56bdc6b1…核43manifest/47原件，关闭该tiny注入边界，仍不代RC几何标定、b18双向或benchmark收益；tool身份独立review仅核原收据，不能冒称复测Linuxbinary或stderr空。
+
+
+## 2026-10-18 完整CEC须绑定两侧真实对象、状态优先级和选择前源窗口（OI048）
+
+修Verilog原top后仍须用mapped右侧反例：同ztop inverter前插dummy identity可令ABC选firstdummy误pass。mapped/generated BLIF统一走共享normalizer，按引用图唯一root或显式有效模型、hierarchy/flatten；独立多root不猜，保raw与normalized各自SHA。实际ABC缺输入可rc0，错误/多root/非零优先于equivalence字样，保benign abc.rc查找区别。selector运行后原source新增wrapper仍能选旧top的普通/BOM2fail说明绑定要早于prepare/top推断，launch前与after也核原始source，不能仅核派生BOM副本。176原件/20normalization收据和原三输入根重放、独立263原件9cbabd66…闭合当前反例；全v5显式UTF8/native环境1056pass/174来源稳定。此实现门不自动关闭历史省top证明对象影响或静态timeout bytes异常OI049，历史旧报告继续保留/按实际调用与top逐对象界定。

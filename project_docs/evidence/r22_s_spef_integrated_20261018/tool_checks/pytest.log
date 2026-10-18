@@ -1,0 +1,27 @@
+.....................F.                                                  [100%]
+================================== FAILURES ===================================
+_ LibertyCellsCecTest.test_cec_passes_with_liberty_cells_on_real_resynthesized_c17 _
+
+self = <test_yosys_abc_flow.LibertyCellsCecTest testMethod=test_cec_passes_with_liberty_cells_on_real_resynthesized_c17>
+
+    def test_cec_passes_with_liberty_cells_on_real_resynthesized_c17(self):
+        import shutil
+        if shutil.which("yosys") is None or shutil.which("yosys-abc") is None:
+            self.skipTest("real yosys/abc not available")
+        with tempfile.TemporaryDirectory() as temp_dir:
+            result = check_yosys_abc_equivalence(
+                self.CASE_DIR / "original" / "original.v",
+                self.CASE_DIR / "resynthesized" / "resynthesized.v",
+                outputs=["N22", "N23"],
+                artifact_dir=Path(temp_dir) / "formal",
+                liberty_cells_v=self._cells(Path(temp_dir)),
+            )
+>           self.assertEqual(result.status, "pass")
+E           AssertionError: 'error' != 'pass'
+E           - error
+E           + pass
+
+code\tests\test_yosys_abc_flow.py:125: AssertionError
+=========================== short test summary info ===========================
+FAILED code/tests/test_yosys_abc_flow.py::LibertyCellsCecTest::test_cec_passes_with_liberty_cells_on_real_resynthesized_c17
+1 failed, 22 passed in 8.18s

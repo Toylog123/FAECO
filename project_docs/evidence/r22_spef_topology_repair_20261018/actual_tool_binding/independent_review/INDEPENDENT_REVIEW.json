@@ -1,0 +1,791 @@
+{
+  "schema": "actual-spef-tiny-binding-independent-review-v1",
+  "client_date": "2026-10-18",
+  "created_actual_utc": "2026-10-18T01:39:44.958859+00:00",
+  "decision": "accepted only within retained tiny ordinary/escaped binding controls",
+  "new_sta_or_eda_or_test_or_git_executed": false,
+  "producer_evidence_modified": false,
+  "result_sha256": "f95890645e6358c47127c3b5225eedd5e947948e5b3137b7156090791ca61843",
+  "root_acceptance_sha256": "79f5725cfdc64de8b1c9a1a7aacffa3650a9741ce6c54c73be4eb0cc2635e09b",
+  "pre_register_sha256": "433d9a227621d889aee9cd80a067d95cc0e7a8685671a1d7a22b6f168ed18cac",
+  "manifest_artifact_count": 43,
+  "all_manifest_artifact_sha_match": true,
+  "source_before_after_current_all_match": {
+    "code\\src\\rseco\\spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code\\src\\rseco\\opensta.py": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+  },
+  "positive_api_attempts_rechecked": 4,
+  "annotation_replay_attempts_rechecked": 4,
+  "missing_pin_negative_attempts_rechecked": 2,
+  "positive_rows": [
+    {
+      "case": "ordinary",
+      "length_um": 40,
+      "observed_metrics": {
+        "slack": 4.43,
+        "slack_status": "MET",
+        "wns": 4.43,
+        "tns": 0.0,
+        "min_slack": 0.5,
+        "min_slack_status": "MET"
+      },
+      "api_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_argv_matches_tcl": true,
+      "annotation_log_matches_raw_streams": true,
+      "zero_unannotated_drivers": true,
+      "zero_partially_unannotated_drivers": true,
+      "distinct_internal_net_endpoint_sets": {
+        "qvec": [
+          [
+            "b0:A",
+            "I"
+          ],
+          [
+            "f0:Q",
+            "O"
+          ]
+        ],
+        "qlit": [
+          [
+            "b0:X",
+            "O"
+          ],
+          [
+            "f1:D",
+            "I"
+          ]
+        ]
+      },
+      "raw_stderr_has_wsl_path_translation_messages": true,
+      "artifact_bindings": {
+        "ordinary/mapped.v": {
+          "sha256": "e8467a498cc0cc911d15914b1c0a7519321c6692c38c5139dc9744347caa57e0",
+          "bytes": 222
+        },
+        "ordinary/40/net.spef": {
+          "sha256": "ae2775390af1226e2d82a6241359fc58f4d3242dd947bbbe4f604a35189bb2d6",
+          "bytes": 829
+        },
+        "ordinary/40/measurement/sta.tcl": {
+          "sha256": "cc8bc0abe59ac221a8d04620609b14d6c2babb23bc3cfbc8da7cfed7507f9580",
+          "bytes": 677
+        },
+        "ordinary/40/measurement/sta.log": {
+          "sha256": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+          "bytes": 1437
+        },
+        "ordinary/40/annotation.tcl": {
+          "sha256": "093631922b14ee396e371a9d1b78e0d0763369c758e6bfb90fb426f26a63a98d",
+          "bytes": 726
+        },
+        "ordinary/40/annotation.stdout.bin": {
+          "sha256": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+          "bytes": 1191
+        },
+        "ordinary/40/annotation.stderr.bin": {
+          "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+          "bytes": 276
+        },
+        "ordinary/40/annotation.log": {
+          "sha256": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+          "bytes": 1509
+        }
+      }
+    },
+    {
+      "case": "ordinary",
+      "length_um": 4000,
+      "observed_metrics": {
+        "slack": -8.38,
+        "slack_status": "VIOLATED",
+        "wns": -8.38,
+        "tns": -8.38,
+        "min_slack": 8.75,
+        "min_slack_status": "MET"
+      },
+      "api_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_argv_matches_tcl": true,
+      "annotation_log_matches_raw_streams": true,
+      "zero_unannotated_drivers": true,
+      "zero_partially_unannotated_drivers": true,
+      "distinct_internal_net_endpoint_sets": {
+        "qvec": [
+          [
+            "b0:A",
+            "I"
+          ],
+          [
+            "f0:Q",
+            "O"
+          ]
+        ],
+        "qlit": [
+          [
+            "b0:X",
+            "O"
+          ],
+          [
+            "f1:D",
+            "I"
+          ]
+        ]
+      },
+      "raw_stderr_has_wsl_path_translation_messages": true,
+      "artifact_bindings": {
+        "ordinary/mapped.v": {
+          "sha256": "e8467a498cc0cc911d15914b1c0a7519321c6692c38c5139dc9744347caa57e0",
+          "bytes": 222
+        },
+        "ordinary/4000/net.spef": {
+          "sha256": "5ff999838022823743984eb8f0f668b14473982d97c060129759b31fa74b3f57",
+          "bytes": 841
+        },
+        "ordinary/4000/measurement/sta.tcl": {
+          "sha256": "0530a0976f3c3cb783f47f9b1d2c6cf1424a6322dc1b274a9dcaace3d65db790",
+          "bytes": 679
+        },
+        "ordinary/4000/measurement/sta.log": {
+          "sha256": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+          "bytes": 1444
+        },
+        "ordinary/4000/annotation.tcl": {
+          "sha256": "5be0ba7c3dd20ec7f6896bbca0a9efc40e618d1ae434cc96e1b95e0c5316ca66",
+          "bytes": 728
+        },
+        "ordinary/4000/annotation.stdout.bin": {
+          "sha256": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+          "bytes": 1198
+        },
+        "ordinary/4000/annotation.stderr.bin": {
+          "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+          "bytes": 276
+        },
+        "ordinary/4000/annotation.log": {
+          "sha256": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+          "bytes": 1516
+        }
+      }
+    },
+    {
+      "case": "escaped",
+      "length_um": 40,
+      "observed_metrics": {
+        "slack": 4.43,
+        "slack_status": "MET",
+        "wns": 4.43,
+        "tns": 0.0,
+        "min_slack": 0.5,
+        "min_slack_status": "MET"
+      },
+      "api_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_argv_matches_tcl": true,
+      "annotation_log_matches_raw_streams": true,
+      "zero_unannotated_drivers": true,
+      "zero_partially_unannotated_drivers": true,
+      "distinct_internal_net_endpoint_sets": {
+        "q[0]": [
+          [
+            "b0:A",
+            "I"
+          ],
+          [
+            "f0:Q",
+            "O"
+          ]
+        ],
+        "q\\[0\\]": [
+          [
+            "b0:X",
+            "O"
+          ],
+          [
+            "f1:D",
+            "I"
+          ]
+        ]
+      },
+      "raw_stderr_has_wsl_path_translation_messages": true,
+      "artifact_bindings": {
+        "escaped/mapped.v": {
+          "sha256": "84f8b76914b7494c1d0efb7e5af7923d8f80a391c50aa6cc4af43e6a58fc1871",
+          "bytes": 236
+        },
+        "escaped/40/net.spef": {
+          "sha256": "df96d86f7388f24e23f4c4695fadd1d25626d7354d25bc6178fab08251019b91",
+          "bytes": 831
+        },
+        "escaped/40/measurement/sta.tcl": {
+          "sha256": "2eb7c37b2fd09f4a4cf81cb72a541f95fef40e05b6ed2db547b031282f36c718",
+          "bytes": 675
+        },
+        "escaped/40/measurement/sta.log": {
+          "sha256": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+          "bytes": 1437
+        },
+        "escaped/40/annotation.tcl": {
+          "sha256": "25616ab02b85d996cd2fcadecea9cc27298a2227f7595b6b3253b31564b1deb5",
+          "bytes": 724
+        },
+        "escaped/40/annotation.stdout.bin": {
+          "sha256": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+          "bytes": 1191
+        },
+        "escaped/40/annotation.stderr.bin": {
+          "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+          "bytes": 276
+        },
+        "escaped/40/annotation.log": {
+          "sha256": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+          "bytes": 1509
+        }
+      }
+    },
+    {
+      "case": "escaped",
+      "length_um": 4000,
+      "observed_metrics": {
+        "slack": -8.38,
+        "slack_status": "VIOLATED",
+        "wns": -8.38,
+        "tns": -8.38,
+        "min_slack": 8.75,
+        "min_slack_status": "MET"
+      },
+      "api_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_tcl": {
+        "liberty_netlist_spef_exact_paths_match": true,
+        "clock_top_period_match": true,
+        "all_reports_after_read_spef": true
+      },
+      "annotation_argv_matches_tcl": true,
+      "annotation_log_matches_raw_streams": true,
+      "zero_unannotated_drivers": true,
+      "zero_partially_unannotated_drivers": true,
+      "distinct_internal_net_endpoint_sets": {
+        "q[0]": [
+          [
+            "b0:A",
+            "I"
+          ],
+          [
+            "f0:Q",
+            "O"
+          ]
+        ],
+        "q\\[0\\]": [
+          [
+            "b0:X",
+            "O"
+          ],
+          [
+            "f1:D",
+            "I"
+          ]
+        ]
+      },
+      "raw_stderr_has_wsl_path_translation_messages": true,
+      "artifact_bindings": {
+        "escaped/mapped.v": {
+          "sha256": "84f8b76914b7494c1d0efb7e5af7923d8f80a391c50aa6cc4af43e6a58fc1871",
+          "bytes": 236
+        },
+        "escaped/4000/net.spef": {
+          "sha256": "401a6afdf53a91bf12244a1d3990c59fd79e7a4e460de34c9c467530cf5b12d6",
+          "bytes": 843
+        },
+        "escaped/4000/measurement/sta.tcl": {
+          "sha256": "cc43f3d1ecd4827397b87a7c2de5a6ca2a2a7788a7f942ee4adca0349b1981eb",
+          "bytes": 677
+        },
+        "escaped/4000/measurement/sta.log": {
+          "sha256": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+          "bytes": 1444
+        },
+        "escaped/4000/annotation.tcl": {
+          "sha256": "39e213343053fcce0b8061ddbc5d930cf287500c1f2d72fabeac62e55481997f",
+          "bytes": 726
+        },
+        "escaped/4000/annotation.stdout.bin": {
+          "sha256": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+          "bytes": 1198
+        },
+        "escaped/4000/annotation.stderr.bin": {
+          "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+          "bytes": 276
+        },
+        "escaped/4000/annotation.log": {
+          "sha256": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+          "bytes": 1516
+        }
+      }
+    }
+  ],
+  "negative_rows": [
+    {
+      "case": "ordinary",
+      "raw_missing_pin_diagnostic_matches_api_error": true,
+      "api_all_numeric_metrics_null": true,
+      "failure_receipt_input_and_saved_tcl_log_hashes_match": true,
+      "receipt_sha256": "2af9c13e8992e9280a68ea824692ba623a5802530081e49d0436339a491c15c5",
+      "tool_returncode_recorded_in_failure_receipt": 0
+    },
+    {
+      "case": "escaped",
+      "raw_missing_pin_diagnostic_matches_api_error": true,
+      "api_all_numeric_metrics_null": true,
+      "failure_receipt_input_and_saved_tcl_log_hashes_match": true,
+      "receipt_sha256": "a5bf94ab0d9eb1bb7e956392c4ac6c1bbc143952b2bbb272218a351abd40e8d7",
+      "tool_returncode_recorded_in_failure_receipt": 0
+    }
+  ],
+  "root_acceptance_claims_independently_correspond_to_raw_artifacts": true,
+  "tool_identity_receipts": [
+    {
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-version"
+      ],
+      "returncode": 0,
+      "stdout": "3.1.0\n",
+      "stderr": "wsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\nwsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Antigravity\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\n"
+    },
+    {
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "sha256sum",
+        "/usr/local/bin/sta"
+      ],
+      "returncode": 0,
+      "stdout": "96833cf69282803fc44fc8cc343bfe03ad8279bab9fb276d84a6d4532e15b468  /usr/local/bin/sta\n",
+      "stderr": "wsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\nwsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Antigravity\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\n"
+    }
+  ],
+  "tool_identity_coverage": "Recorded successful version/hash queries validated; reviewer did not relaunch WSL or re-read Linux executable bytes.",
+  "reviewed_artifact_before": {
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/accept_actual_spef_binding_20261018.py": {
+      "sha256": "73e6796aa656aaa3ece7f5ebd485834b6ffc69b4303f8713ae61418619c45294",
+      "bytes": 2626
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/PRE_REGISTER.json": {
+      "sha256": "433d9a227621d889aee9cd80a067d95cc0e7a8685671a1d7a22b6f168ed18cac",
+      "bytes": 762
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/probe_actual_spef_binding_20261018.py": {
+      "sha256": "3e124efda99aba0461e0acb23119b5c8c0fb031b3e646e5d86f70f9261815e5d",
+      "bytes": 3835
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/RESULT.json": {
+      "sha256": "f95890645e6358c47127c3b5225eedd5e947948e5b3137b7156090791ca61843",
+      "bytes": 9855
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ROOT_ACCEPTANCE.json": {
+      "sha256": "79f5725cfdc64de8b1c9a1a7aacffa3650a9741ce6c54c73be4eb0cc2635e09b",
+      "bytes": 1793
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/mapped.v": {
+      "sha256": "84f8b76914b7494c1d0efb7e5af7923d8f80a391c50aa6cc4af43e6a58fc1871",
+      "bytes": 236
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin.spef": {
+      "sha256": "3d248e0c9afd0c1452d2740627b191abb38ec4298360c77cf26349504e2e773c",
+      "bytes": 841
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.log": {
+      "sha256": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+      "bytes": 1509
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.stdout.bin": {
+      "sha256": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+      "bytes": 1191
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.tcl": {
+      "sha256": "25616ab02b85d996cd2fcadecea9cc27298a2227f7595b6b3253b31564b1deb5",
+      "bytes": 724
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/net.spef": {
+      "sha256": "df96d86f7388f24e23f4c4695fadd1d25626d7354d25bc6178fab08251019b91",
+      "bytes": 831
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/measurement/sta.log": {
+      "sha256": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+      "bytes": 1437
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/measurement/sta.tcl": {
+      "sha256": "2eb7c37b2fd09f4a4cf81cb72a541f95fef40e05b6ed2db547b031282f36c718",
+      "bytes": 675
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.log": {
+      "sha256": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+      "bytes": 1516
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.stdout.bin": {
+      "sha256": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+      "bytes": 1198
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.tcl": {
+      "sha256": "39e213343053fcce0b8061ddbc5d930cf287500c1f2d72fabeac62e55481997f",
+      "bytes": 726
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/net.spef": {
+      "sha256": "401a6afdf53a91bf12244a1d3990c59fd79e7a4e460de34c9c467530cf5b12d6",
+      "bytes": 843
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/measurement/sta.log": {
+      "sha256": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+      "bytes": 1444
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/measurement/sta.tcl": {
+      "sha256": "cc43f3d1ecd4827397b87a7c2de5a6ca2a2a7788a7f942ee4adca0349b1981eb",
+      "bytes": 677
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta.log": {
+      "sha256": "b760b6c0ccd628e7de39cc6aed8b3239b958c36346d142ec3486eb9090763ff1",
+      "bytes": 1817
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta.tcl": {
+      "sha256": "21a91f1999135dce876c0d140113e49e08ccb24e402e328bf5ee0b159410cbc6",
+      "bytes": 680
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta_failure_0001/receipt.json": {
+      "sha256": "a5bf94ab0d9eb1bb7e956392c4ac6c1bbc143952b2bbb272218a351abd40e8d7",
+      "bytes": 2123
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta_failure_0001/sta.log": {
+      "sha256": "b760b6c0ccd628e7de39cc6aed8b3239b958c36346d142ec3486eb9090763ff1",
+      "bytes": 1817
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta_failure_0001/sta.tcl": {
+      "sha256": "21a91f1999135dce876c0d140113e49e08ccb24e402e328bf5ee0b159410cbc6",
+      "bytes": 680
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/mapped.v": {
+      "sha256": "e8467a498cc0cc911d15914b1c0a7519321c6692c38c5139dc9744347caa57e0",
+      "bytes": 222
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin.spef": {
+      "sha256": "142465d0d770f71af6285c27f43784bc8d2fbe86bf92c65739bd5740f60b36c0",
+      "bytes": 839
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.log": {
+      "sha256": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+      "bytes": 1509
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.stdout.bin": {
+      "sha256": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+      "bytes": 1191
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.tcl": {
+      "sha256": "093631922b14ee396e371a9d1b78e0d0763369c758e6bfb90fb426f26a63a98d",
+      "bytes": 726
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/net.spef": {
+      "sha256": "ae2775390af1226e2d82a6241359fc58f4d3242dd947bbbe4f604a35189bb2d6",
+      "bytes": 829
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/measurement/sta.log": {
+      "sha256": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+      "bytes": 1437
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/measurement/sta.tcl": {
+      "sha256": "cc8bc0abe59ac221a8d04620609b14d6c2babb23bc3cfbc8da7cfed7507f9580",
+      "bytes": 677
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.log": {
+      "sha256": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+      "bytes": 1516
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.stdout.bin": {
+      "sha256": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+      "bytes": 1198
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.tcl": {
+      "sha256": "5be0ba7c3dd20ec7f6896bbca0a9efc40e618d1ae434cc96e1b95e0c5316ca66",
+      "bytes": 728
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/net.spef": {
+      "sha256": "5ff999838022823743984eb8f0f668b14473982d97c060129759b31fa74b3f57",
+      "bytes": 841
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/measurement/sta.log": {
+      "sha256": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+      "bytes": 1444
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/measurement/sta.tcl": {
+      "sha256": "0530a0976f3c3cb783f47f9b1d2c6cf1424a6322dc1b274a9dcaace3d65db790",
+      "bytes": 679
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta.log": {
+      "sha256": "5f5d58e98580aa37a42c9b8815bb1dadac96a93baff099527f68caa5b5217645",
+      "bytes": 1819
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta.tcl": {
+      "sha256": "f2e1f733851045466bdce921155b9571a1441e071de280493781897cf2b59346",
+      "bytes": 682
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta_failure_0001/receipt.json": {
+      "sha256": "2af9c13e8992e9280a68ea824692ba623a5802530081e49d0436339a491c15c5",
+      "bytes": 2129
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta_failure_0001/sta.log": {
+      "sha256": "5f5d58e98580aa37a42c9b8815bb1dadac96a93baff099527f68caa5b5217645",
+      "bytes": 1819
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta_failure_0001/sta.tcl": {
+      "sha256": "f2e1f733851045466bdce921155b9571a1441e071de280493781897cf2b59346",
+      "bytes": 682
+    }
+  },
+  "reviewed_artifact_after": {
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/accept_actual_spef_binding_20261018.py": {
+      "sha256": "73e6796aa656aaa3ece7f5ebd485834b6ffc69b4303f8713ae61418619c45294",
+      "bytes": 2626
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/PRE_REGISTER.json": {
+      "sha256": "433d9a227621d889aee9cd80a067d95cc0e7a8685671a1d7a22b6f168ed18cac",
+      "bytes": 762
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/probe_actual_spef_binding_20261018.py": {
+      "sha256": "3e124efda99aba0461e0acb23119b5c8c0fb031b3e646e5d86f70f9261815e5d",
+      "bytes": 3835
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/RESULT.json": {
+      "sha256": "f95890645e6358c47127c3b5225eedd5e947948e5b3137b7156090791ca61843",
+      "bytes": 9855
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ROOT_ACCEPTANCE.json": {
+      "sha256": "79f5725cfdc64de8b1c9a1a7aacffa3650a9741ce6c54c73be4eb0cc2635e09b",
+      "bytes": 1793
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/mapped.v": {
+      "sha256": "84f8b76914b7494c1d0efb7e5af7923d8f80a391c50aa6cc4af43e6a58fc1871",
+      "bytes": 236
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin.spef": {
+      "sha256": "3d248e0c9afd0c1452d2740627b191abb38ec4298360c77cf26349504e2e773c",
+      "bytes": 841
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.log": {
+      "sha256": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+      "bytes": 1509
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.stdout.bin": {
+      "sha256": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+      "bytes": 1191
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.tcl": {
+      "sha256": "25616ab02b85d996cd2fcadecea9cc27298a2227f7595b6b3253b31564b1deb5",
+      "bytes": 724
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/net.spef": {
+      "sha256": "df96d86f7388f24e23f4c4695fadd1d25626d7354d25bc6178fab08251019b91",
+      "bytes": 831
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/measurement/sta.log": {
+      "sha256": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+      "bytes": 1437
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/measurement/sta.tcl": {
+      "sha256": "2eb7c37b2fd09f4a4cf81cb72a541f95fef40e05b6ed2db547b031282f36c718",
+      "bytes": 675
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.log": {
+      "sha256": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+      "bytes": 1516
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.stdout.bin": {
+      "sha256": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+      "bytes": 1198
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.tcl": {
+      "sha256": "39e213343053fcce0b8061ddbc5d930cf287500c1f2d72fabeac62e55481997f",
+      "bytes": 726
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/net.spef": {
+      "sha256": "401a6afdf53a91bf12244a1d3990c59fd79e7a4e460de34c9c467530cf5b12d6",
+      "bytes": 843
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/measurement/sta.log": {
+      "sha256": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+      "bytes": 1444
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/measurement/sta.tcl": {
+      "sha256": "cc43f3d1ecd4827397b87a7c2de5a6ca2a2a7788a7f942ee4adca0349b1981eb",
+      "bytes": 677
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta.log": {
+      "sha256": "b760b6c0ccd628e7de39cc6aed8b3239b958c36346d142ec3486eb9090763ff1",
+      "bytes": 1817
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta.tcl": {
+      "sha256": "21a91f1999135dce876c0d140113e49e08ccb24e402e328bf5ee0b159410cbc6",
+      "bytes": 680
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta_failure_0001/receipt.json": {
+      "sha256": "a5bf94ab0d9eb1bb7e956392c4ac6c1bbc143952b2bbb272218a351abd40e8d7",
+      "bytes": 2123
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta_failure_0001/sta.log": {
+      "sha256": "b760b6c0ccd628e7de39cc6aed8b3239b958c36346d142ec3486eb9090763ff1",
+      "bytes": 1817
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin_measurement/sta_failure_0001/sta.tcl": {
+      "sha256": "21a91f1999135dce876c0d140113e49e08ccb24e402e328bf5ee0b159410cbc6",
+      "bytes": 680
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/mapped.v": {
+      "sha256": "e8467a498cc0cc911d15914b1c0a7519321c6692c38c5139dc9744347caa57e0",
+      "bytes": 222
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin.spef": {
+      "sha256": "142465d0d770f71af6285c27f43784bc8d2fbe86bf92c65739bd5740f60b36c0",
+      "bytes": 839
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.log": {
+      "sha256": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+      "bytes": 1509
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.stdout.bin": {
+      "sha256": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+      "bytes": 1191
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.tcl": {
+      "sha256": "093631922b14ee396e371a9d1b78e0d0763369c758e6bfb90fb426f26a63a98d",
+      "bytes": 726
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/net.spef": {
+      "sha256": "ae2775390af1226e2d82a6241359fc58f4d3242dd947bbbe4f604a35189bb2d6",
+      "bytes": 829
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/measurement/sta.log": {
+      "sha256": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+      "bytes": 1437
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/measurement/sta.tcl": {
+      "sha256": "cc8bc0abe59ac221a8d04620609b14d6c2babb23bc3cfbc8da7cfed7507f9580",
+      "bytes": 677
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.log": {
+      "sha256": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+      "bytes": 1516
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.stderr.bin": {
+      "sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+      "bytes": 276
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.stdout.bin": {
+      "sha256": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+      "bytes": 1198
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.tcl": {
+      "sha256": "5be0ba7c3dd20ec7f6896bbca0a9efc40e618d1ae434cc96e1b95e0c5316ca66",
+      "bytes": 728
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/net.spef": {
+      "sha256": "5ff999838022823743984eb8f0f668b14473982d97c060129759b31fa74b3f57",
+      "bytes": 841
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/measurement/sta.log": {
+      "sha256": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+      "bytes": 1444
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/measurement/sta.tcl": {
+      "sha256": "0530a0976f3c3cb783f47f9b1d2c6cf1424a6322dc1b274a9dcaace3d65db790",
+      "bytes": 679
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta.log": {
+      "sha256": "5f5d58e98580aa37a42c9b8815bb1dadac96a93baff099527f68caa5b5217645",
+      "bytes": 1819
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta.tcl": {
+      "sha256": "f2e1f733851045466bdce921155b9571a1441e071de280493781897cf2b59346",
+      "bytes": 682
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta_failure_0001/receipt.json": {
+      "sha256": "2af9c13e8992e9280a68ea824692ba623a5802530081e49d0436339a491c15c5",
+      "bytes": 2129
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta_failure_0001/sta.log": {
+      "sha256": "5f5d58e98580aa37a42c9b8815bb1dadac96a93baff099527f68caa5b5217645",
+      "bytes": 1819
+    },
+    "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin_measurement/sta_failure_0001/sta.tcl": {
+      "sha256": "f2e1f733851045466bdce921155b9571a1441e071de280493781897cf2b59346",
+      "bytes": 682
+    }
+  },
+  "all_reviewed_bytes_stable": true,
+  "coverage_limits": [
+    "This verifies actual retained tiny OpenSTA binding controls, not benchmark gain or sign-off physical accuracy.",
+    "RC40/4000 is a sensitivity/falsification control, not calibrated geometry or an improvement target.",
+    "No s382/b18 scientific timing result, inout/tri-state support, sequential proof, scientific campaign or full regression is established here.",
+    "Nonfatal WSL PATH translation stderr is present in retained replays/identity queries; it is preserved and not described as empty stderr."
+  ],
+  "review_script_sha256": "983f3bb08ce20baf7ea737d21797da3f378fdc058fb9483c2a8e4ffc83661b75"
+}

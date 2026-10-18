@@ -1,0 +1,34 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_incomplete_ports_and_malformed_named_pin_separators_rejected[module top(A,Z); input A; sky130_fd_sc_hd__buf_1 b (.A(A),.X(Z)); endmodule] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1232/test_incomplete_ports_and_malf0')
+text = 'module top(A,Z); input A; sky130_fd_sc_hd__buf_1 b (.A(A),.X(Z)); endmodule'
+
+    @pytest.mark.parametrize('text',[
+        'module top(A,Z); input A; sky130_fd_sc_hd__buf_1 b (.A(A),.X(Z)); endmodule',
+        'module top(input A,output Z); sky130_fd_sc_hd__buf_1 b (.A(A).X(Z)); endmodule',
+    ])
+    def test_incomplete_ports_and_malformed_named_pin_separators_rejected(tmp_path,text):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_spef_pin_topology.py:112: Failed
+_ test_incomplete_ports_and_malformed_named_pin_separators_rejected[module top(input A,output Z); sky130_fd_sc_hd__buf_1 b (.A(A).X(Z)); endmodule] _
+
+tmp_path = WindowsPath('C:/Users/佟亚龙/AppData/Local/Temp/pytest-of-佟亚龙/pytest-1232/test_incomplete_ports_and_malf1')
+text = 'module top(input A,output Z); sky130_fd_sc_hd__buf_1 b (.A(A).X(Z)); endmodule'
+
+    @pytest.mark.parametrize('text',[
+        'module top(A,Z); input A; sky130_fd_sc_hd__buf_1 b (.A(A),.X(Z)); endmodule',
+        'module top(input A,output Z); sky130_fd_sc_hd__buf_1 b (.A(A).X(Z)); endmodule',
+    ])
+    def test_incomplete_ports_and_malformed_named_pin_separators_rejected(tmp_path,text):
+>       with pytest.raises(ValueError):
+E       Failed: DID NOT RAISE ValueError
+
+code\tests\test_spef_pin_topology.py:112: Failed
+=========================== short test summary info ===========================
+FAILED code/tests/test_spef_pin_topology.py::test_incomplete_ports_and_malformed_named_pin_separators_rejected[module top(A,Z); input A; sky130_fd_sc_hd__buf_1 b (.A(A),.X(Z)); endmodule]
+FAILED code/tests/test_spef_pin_topology.py::test_incomplete_ports_and_malformed_named_pin_separators_rejected[module top(input A,output Z); sky130_fd_sc_hd__buf_1 b (.A(A).X(Z)); endmodule]
+2 failed, 14 deselected in 0.57s

@@ -1,0 +1,86 @@
+{
+  "schema": "s-cec-stage-v1",
+  "status": "pass",
+  "reason": "",
+  "inputs": {
+    "reference": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\ref.v",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "candidate": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\gate.blif",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\proof\\candidate_input.blif",
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "model": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\cells.v",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\proof\\model_input.v",
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    }
+  },
+  "input_drift": [],
+  "normalized_before_abc": {
+    "cec_left.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_right.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    }
+  },
+  "artifacts": {
+    "abc_cec.log": {
+      "sha256": "3a33589ee519d50cf5b0f4394eaadc6459c00c9332cc634d865ee01e39e4980c",
+      "bytes": 313
+    },
+    "candidate_input.blif": {
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "cec_left.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_left.normalize.log": {
+      "sha256": "c1e9f9209ee00ef24614be8afde18dfba8c1d2709cf2b5550e2861ada2e9f6f2",
+      "bytes": 531
+    },
+    "cec_left_cells.v": {
+      "sha256": "b38ef96b8db09209a5d6844ed1b82de1a9bfbdeb93f06c78d20a33ab4c175285",
+      "bytes": 129
+    },
+    "cec_right.blif": {
+      "sha256": "e2af3360d981fdcf274d9036b9809f77a55c1903217386c0ef76c682b3aec267",
+      "bytes": 58
+    },
+    "cec_right.normalize.log": {
+      "sha256": "e868af4baaa6894e9b706507ed7af9954946ebf481b14148febbbc538b229110",
+      "bytes": 366
+    },
+    "model_input.v": {
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    },
+    "reference_input.v": {
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    }
+  },
+  "yosys_argv": [
+    "fake-yosys"
+  ],
+  "abc_argv": [
+    "fake-abc"
+  ],
+  "timeout_s": 60.0,
+  "model_semantics": "Existing cells_v bytes; no model replacement or fresh semantic claim",
+  "liberty_configuration": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\derived_model_drift\\cells.lib",
+    "used_directly_by_this_CEC": false
+  }
+}

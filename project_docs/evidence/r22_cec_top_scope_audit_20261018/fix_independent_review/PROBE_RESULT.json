@@ -1,0 +1,92 @@
+{
+  "scope": "independent bounded native correctness and static probes, not scientific EDA",
+  "source_before": {
+    "code/src/rseco/yosys_abc.py": "3f24f3e2f8809eaf80f2a02f6b4f0774179e92ff6543d40cdd2b4ba9e844761f",
+    "code/src/rseco/verilog_modules.py": "4a8354bfbfc7278ee94119d0a2511996fbcb90b82ffd1df69f8d3c7d92d87cc7",
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270"
+  },
+  "source_after": {
+    "code/src/rseco/yosys_abc.py": "3f24f3e2f8809eaf80f2a02f6b4f0774179e92ff6543d40cdd2b4ba9e844761f",
+    "code/src/rseco/verilog_modules.py": "4a8354bfbfc7278ee94119d0a2511996fbcb90b82ffd1df69f8d3c7d92d87cc7",
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270"
+  },
+  "source_stable": true,
+  "native_cases": [
+    {
+      "case": "single_inverter",
+      "result": {
+        "status": "error",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/fix_independent_review/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/fix_independent_review/single_inverter/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.046019400004297495,
+        "reason": "Yosys failed to normalize original netlist to BLIF",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": null,
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\fix_independent_review\\single_inverter.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\fix_independent_review\\abc_cec.log",
+        "returncode": 3221225785,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "expected": "fail: source Y=A versus mapped ztop Y=!A",
+      "counterexample": {
+        "A": 0,
+        "source_Y": 0,
+        "intended_mapped_top_Y": 1
+      },
+      "mapped_file_sha256": "bd959ad13dc7c6458c775187eeed62ca89f4c296c442da0c3c3b789e60105b6e"
+    },
+    {
+      "case": "dummy_first_then_inverter",
+      "result": {
+        "status": "error",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe -q -p read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/fix_independent_review/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/fix_independent_review/dummy_first_then_inverter/original.normalized.blif",
+        "outputs": [],
+        "runtime_s": 0.04610369999863906,
+        "reason": "Yosys failed to normalize original netlist to BLIF",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": null,
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\fix_independent_review\\dummy_first_then_inverter.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\fix_independent_review\\abc_cec.log",
+        "returncode": 3221225785,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "expected": "fail: source Y=A versus mapped ztop Y=!A",
+      "counterexample": {
+        "A": 0,
+        "source_Y": 0,
+        "intended_mapped_top_Y": 1
+      },
+      "mapped_file_sha256": "6f0ffbeb131bec9c81c86fd5285aa6ef23777810b96cd1aa46c87867937c27db"
+    }
+  ],
+  "top_controls": [
+    {
+      "name": "helper_before_top",
+      "selected": "ztop"
+    },
+    {
+      "name": "ambiguous",
+      "rejected": "A unique source top is required; specify top_module explicitly"
+    }
+  ],
+  "model_controls": [
+    {
+      "case": "assign_only",
+      "actual_models": [],
+      "sha256": "eafc44c3e75265a5ef8adebd0bf374d540d87f42db79c089f0cb98003f9c1354"
+    },
+    {
+      "case": "inline_used",
+      "actual_models": [
+        "sky130_fd_sc_hd__buf_1"
+      ],
+      "sha256": "4ecf966543d1433e5e2bd192429a4fe5a1673f21278c332832a3953c2b9659b9"
+    }
+  ]
+}

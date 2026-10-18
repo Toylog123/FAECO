@@ -1,10 +1,12 @@
 # FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画
 
+当前源修复门（2026-10-18）：当前实现及全v5已最终独立67da65a4…接受/FINAL_CLOSURE9928cd3b…绑定，1056pass156subtests208.27s无skip-warnings，174before=after=current/ZIP全符；当前S证据/inputbinding、OI047模型子集及OI048复现scope/status/window实现层限定闭合。HEAD/origin仍7231e02，正准备stage字节QA/source-evidence阶段commit+push；之后新clean pin登记D56先s27-s382共14pilot，未执行新D。OI048历史省top对象影响/P08、OI049timeout静态待证、OI046/b18/四态/B3-C-D科学及稿件门继续open。
+
 本工程实现并验证 **FAECO**（方法名）——面向预布局门级时序 ECO 的**候选探索与失效刻画**框架：在已映射网表的违例路径局部逻辑上，按多种结构特征构造并统一排序修改候选以扩展有效候选空间；将候选失效归纳为若干类型，用于诊断搜索过程并引导后续控制；候选按轮提交，并依次通过时序分析与等价性检查验证，覆盖设计、实验、论文全流程。
 
 - 项目类型：算法研究（EDA / 时序优化）
 - 主要技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
-- 当前阶段：**r22于2026-10-18继续推进**；C′v3全部72已独立验收，原pin3ea0f75保持至归档/出图/提交审查齐。历史B3/C/D同族科学证据与四态/S/SPEF风险继续恢复。中文12页、英文elsarticle 26页，均7图14表；当前均为工作稿，目标期刊Integration, the VLSI Journal。
+- 当前阶段：**r22于2026-10-18继续推进**；C′v3全部72已独立验收，原pin3ea0f75保历史，阶段7231e02已commit/push已确认，现进入S/SPEF源码修复。历史B3/C/D同族科学证据与四态/S/SPEF风险继续恢复。中文12页、英文elsarticle 26页，均7图14表；当前均为工作稿，目标期刊Integration, the VLSI Journal。
 
 ## 整体设计
 
@@ -32,7 +34,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 5. 未决问题（未解决持续保留，必须告知）：`project_docs/OPEN_ISSUES.md`
 6. 论文一致性审计：`project_docs/review_history/paper_audit/`（含 consistency_audit_20260911.md）
 
-本轮（2026-10-18）：C′v3最终72独立验收见`project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json`，8×9完整/source稳定/全部非空SEC；8458评估、6858候选理想STA+72baseline=6930实际STA、other0、192提交，非物理STA。独立审计原件在matrix_qa/stage72。八包ROOT_POST独立后验已齐，16配对5454次同base交叉比较cut/pool/dispatch全同，本矩阵未观察到独立权重收益；图v1数据/机制和人工视觉通过但自动几何发现6处tick重叠，另出v3已碰撞0/对齐PASS/6.8pt/root视觉通过、CSV不变，独立v3视觉71d9a480…已通过；B3/C适配器QA与OI042实现门已过，正式同族EDA须提交后新clean pin登记，D先14pilot再余42。四态支持/S与SPEF历史风险、论文科学回填均待。完整v8=969pass/170来源稳定，OI043中英元数据修正已编译/视觉/副本验收；本地未提交稿图与证据尚未push，不能称投稿定稿。最新交接：`project_docs/agent_handoff/handoff_20261018_r22.md`。
+本轮（2026-10-18）：C′v3最终72独立验收见`project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json`，8×9完整/source稳定/全部非空SEC；8458评估、6858候选理想STA+72baseline=6930实际STA、other0、192提交，非物理STA。独立审计原件在matrix_qa/stage72。八包ROOT_POST独立后验已齐，16配对5454次同base交叉比较cut/pool/dispatch全同，本矩阵未观察到独立权重收益；图v1数据/机制和人工视觉通过但自动几何发现6处tick重叠，另出v3已碰撞0/对齐PASS/6.8pt/root视觉通过、CSV不变，独立v3视觉71d9a480…已通过；B3/C适配器QA与OI042实现门已过，正式同族EDA须提交后新clean pin登记，D先14pilot再余42。四态支持/S与SPEF历史风险、论文科学回填均待。完整v8=969pass/170来源稳定，OI043中英元数据修正已编译/视觉/副本验收；审查稿图/证据已随7231e02提交，push已确认；新修复源码将另冻结，不能称投稿定稿。最新交接：`project_docs/agent_handoff/handoff_20261018_r22.md`。
 
 历史记录：最近一轮（2026-10-13，r15 全篇去防御化编辑）：论文**内容冻结 v13**（tag `v2026-10-13-defensive-purge2-r15`，**10 页** 0/0/0/0，内容指纹 `55bde9d4…`）——**用户直接指定的第二轮语言风格轮**（非外部审稿）：用户在 r14 后按**正式期刊审稿人（Integration / TODAES / TVLSI 方向）视角**通读，裁定「**这一版技术内容已经比较成熟，但文字风格仍有明显'答辩稿/项目报告'痕迹。最大的问题不是 claim 过强，而是作者过于主动解释审稿人可能的问题，导致主线贡献被稀释**」，要求从「证明我没有问题」转向「清楚告诉读者我做了什么、发现什么」，**减少解释性文字、提高陈述力度**（不是增加内容）。落地**正文 11 处语言风格改写**（E1–E11，`.tex` diffstat 11/11）；**三处必要偏离**（§2.3 保表 2 引用 / §4.1 保留全文唯一一处「不等同于」/ §5 结论「参考」口径）；**摘要结构与篇幅未变**；**零数字/零实验/零代码/零参考文献**。前序轮：r14（v12，去防御化重构 10 处）、r13（v11，摘要 + §1.1 大同行入口改写）、r12（v10，第五份外部审稿 M1–M5）、r11（v9，投稿前精修 Step 1）、r10（v8，零算力增强 + 改投 Integration）、r8/r9（v7）、r7 文字专项审稿（v6）。逐条见 `paper/zh/CHANGE_LOG.md` 与 `versions/v13/README.md`。
 

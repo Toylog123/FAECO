@@ -1986,7 +1986,8 @@ class RealWnsEvaluator:
                         base_dir = cand_dir / "physical_baseline"
                         base_dir.mkdir(parents=True, exist_ok=True)
                         (base_dir / "mapped.v").write_text(self.mapped_text, encoding="utf-8")
-                        base_nl = parse_mapped_verilog(base_dir / "mapped.v")
+                        base_nl = parse_mapped_verilog(base_dir / "mapped.v",
+                            liberty_text=self.liberty_text, top_module=top_module)
                         base_spef = write_spef(base_dir / "physical.spef", base_nl, **rc_config)
                         budget_event = self._deadline_or_budget_event(
                             state, "sta", candidate_hash=candidate_hash,
@@ -2016,7 +2017,8 @@ class RealWnsEvaluator:
                         phys = {"wns": None, "tns": None, "min_slack": None,
                                 "budget_event": baseline["budget_event"]}
                     else:
-                        nl = parse_mapped_verilog(sub / "mapped.v")
+                        nl = parse_mapped_verilog(sub / "mapped.v",
+                            liberty_text=self.liberty_text, top_module=top_module)
                         spef = write_spef(sub / "physical.spef", nl, **rc_config)
                         budget_event = self._deadline_or_budget_event(
                             state, "sta", candidate_hash=candidate_hash,
@@ -2131,9 +2133,9 @@ class RealWnsEvaluator:
                     res = {**res, "wns": self.baseline_wns,
                            "physical_failure": True,
                            "physical_status": "error",
-                           "physical_baseline": (baseline.get("wns") if "baseline" in locals() else None),
+                           "physical_baseline": ((baseline or {}).get("wns") if "baseline" in locals() else None),
                            "physical_candidate": None,
-                           "physical_baseline_tns": (baseline.get("tns") if "baseline" in locals() else None),
+                           "physical_baseline_tns": ((baseline or {}).get("tns") if "baseline" in locals() else None),
                            "physical_candidate_tns": None,
                            "physical_delta": None,
                            "physical_baseline_provenance": (baseline.get("provenance") if "baseline" in locals() and baseline else None),

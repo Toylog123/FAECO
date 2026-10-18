@@ -1,0 +1,57 @@
+{
+  "schema": "s-cec-stage-v1",
+  "status": "unavailable",
+  "reason": "FileNotFoundError: controlled missing normalization executable",
+  "inputs": {
+    "reference": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\ref.v",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\proof\\reference_input.v",
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    },
+    "candidate": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\gate.blif",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\proof\\candidate_input.blif",
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "model": {
+      "source": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\cells.v",
+      "snapshot": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\proof\\model_input.v",
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    }
+  },
+  "input_drift": [],
+  "normalized_before_abc": {},
+  "artifacts": {
+    "candidate_input.blif": {
+      "sha256": "8ff4911b91bc0f25c176f41e97b75747e369fc64864ff21938c65bdb81e93f78",
+      "bytes": 18
+    },
+    "cec_left_cells.v": {
+      "sha256": "caef908a4b36de7820a88cb1fa824795ab0242a891dd22abd039f03df3ff8c6e",
+      "bytes": 81
+    },
+    "model_input.v": {
+      "sha256": "aa472982611082eb6c0272520212da7c115be96f05c26e7c2c8959a8ddecda4a",
+      "bytes": 79
+    },
+    "reference_input.v": {
+      "sha256": "ab9c1b59ca82690c1537bf55d068e2788f67049328acafaeea57a96a9757a59a",
+      "bytes": 89
+    }
+  },
+  "yosys_argv": [
+    "fake-yosys"
+  ],
+  "abc_argv": [
+    "fake-abc"
+  ],
+  "timeout_s": 60.0,
+  "model_semantics": "Existing cells_v bytes; no model replacement or fresh semantic claim",
+  "liberty_configuration": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\s_cec_independent_probe_20261018\\normalize_launch_error\\cells.lib",
+    "used_directly_by_this_CEC": false
+  }
+}

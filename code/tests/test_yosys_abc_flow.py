@@ -1,4 +1,5 @@
 import sys
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -99,6 +100,65 @@ class LibertyCellsCecTest(unittest.TestCase):
     ROOT = Path(__file__).resolve().parents[2]
     CASE_DIR = ROOT / "data" / "cases" / "minimal" / "iscas85_c17_case01"
     CELLS_V = ROOT / "_tmp_c17_cells.v"
+
+    def test_normalizer_chooses_source_top_before_library_injection(self):
+        from unittest import mock
+        from rseco.yosys_abc import _normalize_to_blif
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';dest=p/'top.blif'
+            src.write_text('module helper(input A,output Y); assign Y=A; endmodule '
+                           'module ztop(input A,output Y); helper h (.A(A),.Y(Y)); endmodule')
+            commands=[]
+            def process(argv,**kwargs):
+                commands.append(argv[-1]);dest.write_text('.model ztop\n.end\n')
+                return subprocess.CompletedProcess(argv,0,'','')
+            with mock.patch('subprocess.run',side_effect=process):
+                result=_normalize_to_blif(src,dest,yosys_argv=['fake'],timeout_s=10)
+            self.assertEqual(result.returncode,0)
+            self.assertIn('hierarchy -check -top ztop',commands[0])
+
+    def test_ambiguous_source_top_is_rejected_before_tool_launch(self):
+        from unittest import mock
+        from rseco.yosys_abc import _normalize_to_blif
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v'
+            src.write_text('module a(input A,output Y); assign Y=A; endmodule '
+                           'module b(input B,output Z); assign Z=B; endmodule')
+            with mock.patch('subprocess.run',return_value=subprocess.CompletedProcess(['fake'],0,'','')) as process:
+                result=_normalize_to_blif(src,p/'out.blif',yosys_argv=['fake'],timeout_s=10)
+            self.assertNotEqual(result.returncode,0)
+            self.assertEqual(process.call_count,0)
+
+    def test_primitive_only_reference_does_not_inject_unrelated_models(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td); src=p/'top.v';lib=p/'lib.v';subset=p/'used.v'
+            src.write_text('module top(input a,b,output y); nand g(y,a,b); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__unused_1(input A,output X); assign X=A; endmodule')
+            original=lib.read_bytes()
+            result=_extract_cells_for_netlist(src,lib,subset)
+            self.assertNotIn('sky130_fd_sc_hd__unused_1',result.read_text())
+            self.assertEqual(lib.read_bytes(),original)
+
+    def test_inline_referenced_cell_selects_only_its_complete_module(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';lib=p/'lib.v'
+            src.write_text('module top(input A,output X); sky130_fd_sc_hd__buf_1 g (.A(A),.X(X)); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule '
+                           'module sky130_fd_sc_hd__unrelated_1(input A,output X); assign X=A*A; endmodule')
+            result=_extract_cells_for_netlist(src,lib,p/'used.v').read_text()
+            self.assertIn('module sky130_fd_sc_hd__buf_1',result)
+            self.assertNotIn('sky130_fd_sc_hd__unrelated_1',result)
+
+    def test_inline_missing_referenced_model_is_rejected(self):
+        from rseco.yosys_abc import _extract_cells_for_netlist
+        with tempfile.TemporaryDirectory() as td:
+            p=Path(td);src=p/'top.v';lib=p/'lib.v'
+            src.write_text('module top(input A,output X); sky130_fd_sc_hd__absent_1 g (.A(A),.X(X)); endmodule')
+            lib.write_text('module sky130_fd_sc_hd__buf_1(input A,output X); assign X=A; endmodule')
+            with self.assertRaises(ValueError):
+                _extract_cells_for_netlist(src,lib,p/'used.v')
 
     def _cells(self, temp_path: Path) -> Path:
         # fall back to full extracted model if the minimal probe file is

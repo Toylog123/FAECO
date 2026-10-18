@@ -1,0 +1,77 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "C:/oss-cad-suite-build/oss-cad-suite/bin/yosys.exe",
+    "-q",
+    "-p",
+    "read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/root_mapped_scope_post/original.v; hierarchy -check -top ztop; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_cec_top_scope_audit_20261018/root_mapped_scope_post/single_inverter/original.normalized.blif"
+  ],
+  "selected_top_module": "ztop",
+  "input_format": "verilog",
+  "inputs_before": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\original.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54,
+      "snapshot": "original_source.before.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\original.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54,
+      "snapshot": "prepared_verilog.before.v"
+    }
+  },
+  "inputs_after": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\original.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54,
+      "snapshot": "original_source.after.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\original.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54,
+      "snapshot": "prepared_verilog.after.v"
+    }
+  },
+  "input_drift": [],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 0,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif",
+  "artifacts": {
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif.normalize\\attempt000001\\normalize.log",
+      "sha256": "4d4e9bcf889f72a19c7cab415ea4fa668649ba71ed77cda90abcd3e87696e3da",
+      "bytes": 470
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif.normalize\\attempt000001\\normalized_output.blif",
+      "sha256": "75b7ab0dc7b32483a27984409d66184bc135434056a16b13e4dbcb336b34d3ff",
+      "bytes": 219
+    },
+    "original_source.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif.normalize\\attempt000001\\original_source.after.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54
+    },
+    "original_source.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif.normalize\\attempt000001\\original_source.before.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54
+    },
+    "prepared_verilog.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif.normalize\\attempt000001\\prepared_verilog.after.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54
+    },
+    "prepared_verilog.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_cec_top_scope_audit_20261018\\root_mapped_scope_post\\single_inverter\\original.normalized.blif.normalize\\attempt000001\\prepared_verilog.before.v",
+      "sha256": "85c47707758d63c96e005f8f84914c876d9049ffe3d2c980a9fc653590710949",
+      "bytes": 54
+    }
+  }
+}

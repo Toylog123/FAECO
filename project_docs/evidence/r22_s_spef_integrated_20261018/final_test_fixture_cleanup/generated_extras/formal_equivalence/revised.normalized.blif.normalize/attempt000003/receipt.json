@@ -1,0 +1,99 @@
+{
+  "schema": "normalization-input-binding-v1",
+  "command": [
+    "C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys.EXE",
+    "-q",
+    "-p",
+    "read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/results/formal_equivalence/revised.normalized_cells.v; read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/resynthesized/resynthesized.v; hierarchy -check -top c17_original; proc; flatten; opt_clean; simplemap; clean; write_blif D:/BaiduSyncdisk/01_Papers/03_FAECO/data/cases/minimal/iscas85_c17_case01/results/formal_equivalence/revised.normalized.blif"
+  ],
+  "selected_top_module": "c17_original",
+  "input_format": "verilog",
+  "inputs_before": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\resynthesized\\resynthesized.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169,
+      "snapshot": "original_source.before.v"
+    },
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized_cells.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426,
+      "snapshot": "cells_model.before.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\resynthesized\\resynthesized.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169,
+      "snapshot": "prepared_verilog.before.v"
+    }
+  },
+  "inputs_after": {
+    "original_source": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\resynthesized\\resynthesized.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169,
+      "snapshot": "original_source.after.v"
+    },
+    "cells_model": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized_cells.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426,
+      "snapshot": "cells_model.after.v"
+    },
+    "prepared_verilog": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\resynthesized\\resynthesized.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169,
+      "snapshot": "prepared_verilog.after.v"
+    }
+  },
+  "input_drift": [],
+  "process_launched": true,
+  "process_returncode": 0,
+  "returned_returncode": 0,
+  "exception_type": null,
+  "canonical_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif",
+  "artifacts": {
+    "cells_model.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\cells_model.after.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426
+    },
+    "cells_model.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\cells_model.before.v",
+      "sha256": "8a80ceb6f150cad59a9be6e3e4f078b0982b4d1e7e97aea7fa7245662368e573",
+      "bytes": 426
+    },
+    "normalize.log": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\normalize.log",
+      "sha256": "eeaea86d12fb3a202417da7b178c68f44288c39f46bd3dddbddca35e1ffad585",
+      "bytes": 569
+    },
+    "normalized_output.blif": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\normalized_output.blif",
+      "sha256": "c62aecb5bf1afd7a77a8343835bcccf5cc2aa98164d637504afea1733b63bde5",
+      "bytes": 2547
+    },
+    "original_source.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\original_source.after.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169
+    },
+    "original_source.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\original_source.before.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169
+    },
+    "prepared_verilog.after.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\prepared_verilog.after.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169
+    },
+    "prepared_verilog.before.v": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\cases\\minimal\\iscas85_c17_case01\\results\\formal_equivalence\\revised.normalized.blif.normalize\\attempt000003\\prepared_verilog.before.v",
+      "sha256": "c73b4adc2c73cfb0b2c80f4d442e22a32ef8aa16a68fd8fc715b75b54756faf7",
+      "bytes": 1169
+    }
+  }
+}

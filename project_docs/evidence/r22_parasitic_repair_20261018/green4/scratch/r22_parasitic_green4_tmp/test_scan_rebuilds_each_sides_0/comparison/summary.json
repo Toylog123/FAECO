@@ -1,0 +1,110 @@
+{
+  "circuit": "top",
+  "period_ns": 0.5,
+  "clock_port": "CK",
+  "unit_len_um": 40.0,
+  "rc_model": {
+    "unit_len_um": 40.0,
+    "fanout_penalty": 1.0,
+    "depth_penalty": 1.0
+  },
+  "original_inputs": {
+    "baseline": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\baseline.v",
+      "exists": true,
+      "sha256": "d6c80eb5e8ee2019cad8362e8b0d263c3df782fca350d14a10c7920c38202e00",
+      "bytes": 167
+    },
+    "repaired": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\repaired.v",
+      "exists": true,
+      "sha256": "32fbc2a7c70903ec713b59e26efb04846b7d1bfdb630a894c2c5b40d086957ca",
+      "bytes": 167
+    },
+    "liberty": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\test.lib",
+      "exists": true,
+      "sha256": "db8782ec296f289d1d9e1106695fa295c68b78eda739fa43d30ece183dc857d2",
+      "bytes": 267
+    }
+  },
+  "inputs_after": {
+    "baseline": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\baseline.v",
+      "exists": true,
+      "sha256": "d6c80eb5e8ee2019cad8362e8b0d263c3df782fca350d14a10c7920c38202e00",
+      "bytes": 167
+    },
+    "repaired": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\repaired.v",
+      "exists": true,
+      "sha256": "32fbc2a7c70903ec713b59e26efb04846b7d1bfdb630a894c2c5b40d086957ca",
+      "bytes": 167
+    },
+    "liberty": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\test.lib",
+      "exists": true,
+      "sha256": "db8782ec296f289d1d9e1106695fa295c68b78eda739fa43d30ece183dc857d2",
+      "bytes": 267
+    }
+  },
+  "derived_spefs": {
+    "baseline": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\comparison\\baseline.spef",
+      "exists": true,
+      "sha256": "e10c7b93b20d2d9cb421f7a4893d0197e5f2d78c169cd3b3d300bf0e65b5bb6b",
+      "bytes": 581
+    },
+    "repaired": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\comparison\\repaired.spef",
+      "exists": true,
+      "sha256": "9ec5f8db323ba90d8128e51a0fa09954ecf8c1d0cbc47befef8e61d0bb4d71ba",
+      "bytes": 581
+    }
+  },
+  "valid": true,
+  "rows": {
+    "baseline_ideal": {
+      "rc": 0,
+      "slack": -0.1,
+      "status": "VIOLATED",
+      "wns": -0.1,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\comparison\\baseline_ideal\\measurement_receipt.json",
+      "measurement_receipt_sha256": "5cb30214e41ecd2c0161a8ec834e7a9db3b15119b6d85451b48e0039c3051aef"
+    },
+    "baseline_spef": {
+      "rc": 0,
+      "slack": -0.9,
+      "status": "VIOLATED",
+      "wns": -0.9,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\comparison\\baseline_spef\\measurement_receipt.json",
+      "measurement_receipt_sha256": "a59dcea1981cd832ab514306eb02d63dd51131ee49dce5ce50fafb38ba53fd13"
+    },
+    "repaired_ideal": {
+      "rc": 0,
+      "slack": -0.1,
+      "status": "VIOLATED",
+      "wns": -0.1,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\comparison\\repaired_ideal\\measurement_receipt.json",
+      "measurement_receipt_sha256": "13409f8efc5f9757119aa56a4d946fd75560fe607ee9c8a45f58f7f9fd63112b"
+    },
+    "repaired_spef": {
+      "rc": 0,
+      "slack": -0.9,
+      "status": "VIOLATED",
+      "wns": -0.9,
+      "valid": true,
+      "error": null,
+      "measurement_receipt_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\scratch\\r22_parasitic_green4_tmp\\test_scan_rebuilds_each_sides_0\\comparison\\repaired_spef\\measurement_receipt.json",
+      "measurement_receipt_sha256": "5496bf14bd5e0397d2969ff9c088c1e2fd1c4c6d8bc92400008e77b828ebe428"
+    }
+  },
+  "ideal_delta": 0.0,
+  "spef_delta": 0.0
+}

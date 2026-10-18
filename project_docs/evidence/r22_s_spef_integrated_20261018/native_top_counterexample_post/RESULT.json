@@ -1,0 +1,32 @@
+{
+  "result": {
+    "status": "fail",
+    "method": "yosys_blif_abc_cec",
+    "tool": "yosys+abc",
+    "command": "C:\\oss-cad-suite-build\\oss-cad-suite\\bin\\yosys-abc.EXE -s -c cec project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/original.normalized.blif project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/revised.normalized.blif",
+    "outputs": [
+      "Y"
+    ],
+    "runtime_s": 0.18955350000032922,
+    "reason": "Yosys-normalized full-netlist ABC cec reported non-equivalent networks",
+    "scope": "gate_level_full_netlist_all_primary_outputs",
+    "normalized_original": "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample_post\\proof\\original.normalized.blif",
+    "normalized_revised": "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample_post\\proof\\revised.normalized.blif",
+    "log_path": "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample_post\\proof\\abc_cec.log",
+    "returncode": 0,
+    "stdout_tail": "======== ABC command line \"cec project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/original.normalized.blif project_docs/evidence/r22_s_spef_integrated_20261018/native_top_counterexample_post/proof/revised.normalized.blif\"\nNetworks are NOT EQUIVALENT.  Time =     0.01 sec\nINPUT: A = 1'h1, B = 1'h0.  OUTPUT: Y = 1'h1 (original.normalized), Y = 1'h0 (revised.normalized).\nVerification failed for at least 1 outputs:  Y\nOutput Y: Value in Network1 = 1. Value in Network2 = 0.\nInput pattern: ",
+    "stderr_tail": ""
+  },
+  "semantic_counterexample": {
+    "A": 0,
+    "B": 1,
+    "original_Y": 0,
+    "revised_Y": 1
+  },
+  "source_sha256": {
+    "code\\src\\rseco\\yosys_abc.py": "3f24f3e2f8809eaf80f2a02f6b4f0774179e92ff6543d40cdd2b4ba9e844761f",
+    "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample_post\\original.v": "64f59346e54781a2b32732d031e15e74b24eacd381793df538bbd4614e10c020",
+    "project_docs\\evidence\\r22_s_spef_integrated_20261018\\native_top_counterexample_post\\revised.v": "0a5878eba7cc97031261ee991ab91e781317d7eeafe6224be942bb7b7c215bb1"
+  },
+  "scope": "native tool falsification probe only; not a paper result"
+}

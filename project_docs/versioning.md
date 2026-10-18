@@ -1,6 +1,6 @@
 # 版本管理
 
-2026-10-18执行注：当前main/origin仍3ea0f75，C′v3全72实际验收，证据/适配器/稿图有本地未提交改动；主线在归档、出图与提交审查齐后执行阶段commit/push，再锁新clean pin供B3/C/D同族复验。本轮尚未产生新具名基线或tag，v18历史冻结不变。
+2026-10-18执行注：main/origin阶段7231e02已实际commit/push（941files），C′原运行source pin仍3ea0f75；此后按R22_S_SPEF_REPAIR_PLAN_20261018先红后绿修源码；当前完整v5=1056pass/174来源稳定，最终独立接受67da65a4…过、阶段stage字节QA/sourcecommit+push待，之后新clean pin才注册D56先14pilot及其余同族EDA。新记录/修复仍会dirty，未产生新具名科学基线/tag，v18历史冻结不变。
 
 ## 一个版本 = 什么
 

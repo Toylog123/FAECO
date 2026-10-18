@@ -2,7 +2,9 @@
 
 > 记录**所有做过 / 正在做的实验**，避免重复做。**做新实验前先查本表**。
 
-**当前状态（2026-10-16）**：用户“继续”已恢复r22。起点main clean/781c031已push；K1–K6修复进行中，首整套741pass/1fail修后v2完整757pass/4skip/156subtests、162源码SHA稳定已通过；尚无新真实EDA结果。v1保持stopped且原件不改；新v2须修复版整套回归/独立复审后另锁source pin、配置、模型/库/输入/工具，再18pilot→72。旧667不能作当前版本验收。
+**历史恢复起点（2026-10-16，以下保留当时状态）**：用户“继续”已恢复r22。起点main clean/781c031已push；K1–K6修复进行中，首整套741pass/1fail修后v2完整757pass/4skip/156subtests、162源码SHA稳定已通过；尚无新真实EDA结果。v1保持stopped且原件不改；新v2须修复版整套回归/独立复审后另锁source pin、配置、模型/库/输入/工具，再18pilot→72。旧667不能作当前版本验收。
+
+**当前状态（2026-10-18/LOG59）**：C′全72/八归档/最终v3图审查已随7231e02提交并push；当前sourcefix未commit。S/SPEF当前实现与完整v51056pass/174稳定已最终独立67da65a4…接受，原v1/v3/v4失败保真。OI048当前复现实现范围已限定闭合，历史top/proof影响仍open；当前准备stage字节QA/source阶段提交推送，才sourcecommit/newpin正式同族EDA。micro非科学benchmark；OI046/b18、四态、B3/C/D科学和稿件门继续open。
 
 ## 登记表
 
@@ -459,3 +461,79 @@ ARCHIVE-R22-V3-ALL8-ROOT-ACCEPTED（LOG08）：八ROOT_POST逐receiptSHA/7zt/sou
 VERIFY-R22-MATRIX-FIGURE-V3（LOG12）：FINAL_REVIEW32ff889a…所有14文件SHA核符，源d9ef05b…，CSV与v1逐字节相同；collision0F0W/PanelPASS/glyph6.8pt60runs0below/source19P2W0F，partial51建输出前拒/root四panel+整图视觉通过。仅几何实现门关闭，独立v3视觉追加/主稿整合待；v1负控/人工误漏原件不改。无EDA/生产改动。
 
 VERIFY-R22-MATRIX-FIGURE-V3-INDEPENDENT（LOG13）：独立追加71d9a480…/所有来源当前SHA核符；实际PNG+独立PDF重渲染视觉通过，raw72/paired64与5454同状态既有独立验证保留。v3最终审查预览验收完成，正式主稿整合/其他历史族科学门待，无新EDA/生产/Git。
+
+
+TDD-SPEF-TOPOLOGY-RED-V2（LOG17）：7231修复基线，12fail0.55s=11新API尚未实现TypeError+1旧API真实端口重复/丢cellpin，不是12独立bug；原log在scratch/spef_topology_red_v2_20261018.log，source/test/log原件由主线后续归档绑定。无真实STA。
+TDD-S-CEC-RED-V2（LOG18）：RED_V2_RECEIPT2815e4ea…/14件SHA实核，5fail3.10s/wrapper5exit1；首fixture错保留，正确V2先红/production未改后minimalfix。mock边界，不是新SEC。
+TDD-OPENSTA-PAIRED-SPEF-RED（LOG19）：RED_RECEIPTd6e4cf50…/31件SHA-size实核，8fail1pass2.06s/wrapper5exit1，native fake、actual_opensta=false。确认timing来源、失败float及共享baseline SPEF现有缺口，不是物理效果实验，后续绿灯与完整集成待。
+
+TDD-S-CEC-GREEN-LIMITED（LOG20）：GREEN_FINAL47pass1skip3.69s/wrapper5exit0，SOURCE_FINAL_BEFORE/AFTER三SHA与当前文件实核一致。原timeout-byte RED_V3 1fail8pass保留；仅限定S/邻接测试，不等完整回归/独立审查/正式新SEC，完整作者报告待。
+
+TDD-OPENSTA-PAIRED-SPEF-GREEN4（LOG21）：green4 receipt08a1df80…/221件369464B SHA-size实核，71pass6.43s/wrapper10exit0/300s。native controls/no actualOpenSTA/EDA，source只有completion snapshot无before，不声称运行前后稳定。red2(12F2P)、red3(2F17P输入漂移)、red4(2F19P双流诊断)及各green/夹具误配保原件，主线整体与独立验收待。
+
+TDD-SPEF-TOPOLOGY-GREEN5（LOG22）：独立四类5case真红5fail0.59s保修前source/探针，修后v5 58pass2.08s/wrapper5exit0；v3 51pass/v4 53pass各原log保留。8实际rawmapped当前SHA核符/staticparsed，12无pin常量alias显式omission，仅静态非STA/SEC。fixture合法化与nullbaseline真bug分开，不借QA称科学效果。
+REGRESSION-S-SPEF-INTEGRATED-V1（LOG23）：HEAD7231/working repaired source173个code.py beforeSHA当前核符，session90911实际启动pytest600s/外650s，result/after待；不得提前填通过，不新正式EDA。
+
+VERIFY-SPEF-STATIC-POST（LOG24）：POST_REVIEW46d9972e…/四source before=after=current/9artifact SHA核符，原四类及两拒绝控制静态通过、120s/wrapper5exit0/toolprocess0。仅静态连接实现门，escaped真实OpenSTA注入/同RC各侧验证待新pin正式登记，不是物理结果或全修复。
+
+REVIEW-S-CEC-INDEPENDENT-DRIFT（LOG25/OI045）：review5f7d5cfe…/66作者+40独立原件SHA-size全核、3source前后/current稳定；controlled派生_cells.v81→129B后仍pass/input_drift空，启动错误unavailable但缺normalize.log。仅input identity/diagnostic缺口、无真实EDA/函数错误证明；共享归一化helper待修，原47QA/旧报告保留，full173v1结束后才能解冻source。
+
+REGRESSION-S-SPEF-INTEGRATED-V1-FAILED（LOG26）：1013P2F11skip156subtests/205.77s，RUN206.789275s/600s，wrapper210exit1，173before=after及ZIP173成员SHA逐件核符，source snapshot records验收独存。两fail为旧physical fixture非法；仅修fixture且保断言后2case pass0.37s，整体v2待OI045修复冻结后-ra。失败原件不覆盖、不把fixture修复当生产降级或新科学结果。
+
+STATIC-ACTUAL-SPEF-FINAL10（LOG27/OI046）：FINAL_ACTUAL_INPUT_STATIC_CHECK source2前后/current与10原mapped SHA核符；8ISCAS parsed、b18_light baseline c5c89e3a…/R42db3970…两者在真实inout LOGIC0上unsupported。仅静态、非STA/SEC/整机合法性。b18双向/常量驱动语义待分析设计支持，不默改方向/不造物理比较；s382最小合法pilot另待新pin。
+
+ARCHIVE-SPEF-TOPOLOGY-QA（LOG28）：TOPOLOGY_QA_RECEIPTc6abaae2…/5current-source与5final-source snapshots SHA核符，12原log/独立pre-post/最终static10保留；中间仅有manifest的source字节声明可重放。port fanout/pureport/RES编号修正会改变新SPEF，旧RC原件不可覆盖或借新生成器追认，未新STA/SEC。
+
+TDD-OI045-SHARED-NORMALIZER（LOG31）：author FINAL4456ddb7…/73原件SHA-size+3source beforeaftercurrent核符；最终兼容RED_V2 4F10P2.32s→51P1skip4.28s。根ROOT_ACCEPTANCEbcbfdfb1…/56manifest核符，原三case12输入逐字节同、drift非pass/launch日志齐，原反例层关闭，整体v2待；未真实Yosys/ABC/STA。
+REGRESSION-S-SPEF-INTEGRATED-V2-START（LOG32）：session73955/-ra/pytest600s外650s，173source before current/前置ZIP173成员SHA已核，SOURCE_SNAPSHOT_RECORDS_PRE_VERIFICATION独存；result/after待，不提前写全过。
+
+AUDIT-B18-DOMAIN-PASSIVE-DESIGN（LOG33/OI046）：AUDIT2c3ec37a…/report e38dbafd…/receipt8cb35f3d…，15sources前后/current及artifact SHA-size核符，300s/wrapper10exit0。bench24consumer/无driver与mapped4input端点相同，BLIF acquisition身份/EDIF/转换运行receipt unknown保留。单PB+4I被动外部边界窄域与8反驳控制仅设计，未实现/未测试/无EDA，不能填双向支持或恒0。
+
+REGRESSION-S-SPEF-INTEGRATED-V2-PASSED（LOG34）：1019P11skip156subtests220.11s，RUN221.0839812/600s/rc0、wrapper225s0；173before=after=current及前置ZIP成员逐SHA实核，logb4c176a4…，POST_VERIFICATION独存。-ra skip3convert/1realc17工具不可见+7Gitbashpwd-W，后续childPATH显式现有工具只补4文件独立计，不与1019合并总数；sourcecommit与真实同族科学门仍待。
+
+REGRESSION-TOOL-VISIBILITY-SUPPLEMENT-NATIVE-FAILED（LOG35/OI047）：实际3文件（修正此前计划4）22P1F0skip8.18s，RUN8.7945943/300/rc1；源173map与fullv2after同/稳定、logSHA实核，不与1019累加。native c17真实Yosys/ABC error，$mul来自noused时整库fallback/未top剪枝混入无关模型，底层rc0但正确非pass。定向红→最小used模型提取修复/native与全当前回归待，非新科学campaign。
+
+TDD-OI047-MODEL-SUBSET-LOCAL/NATIVE（LOG36）：真red3F5deselected0.38s→43P1skip3.27s；tool_checks_v2真26P5.77s/RUN6.4527533/300/rc0/source173stable，nativec17pass只是该正控，不代top绑定。
+FALSIFY-NATIVE-CEC-WRONG-TOP（LOG37/OI048）：RESULTd3822ed1…，ztop Y=A vsY=B在A0B1不同却APIpass；ABC实际first sky130_buf_1，源bca40已在top_scope_repair完整保真核符。根requested/unique-source-top修复局部45P1skip尚待native原负控与全当前回归；旧scope审计独立门，禁止跨推C′SEQ无效。
+
+NATIVE-OI048-POST/TOOL-V3（LOG38）：两个原Verilog输入字节同，native_top_counterexample_post statusfail/ABC NOT EQUIVALENT，tool_checks_v3三文件28P4.29s/RUN4.9232689/300/rc0/173stable，log e48fa860…；限定门通过，历史top分界/独立review/当前整体验收待，不与1019相加。
+
+REGRESSION-S-SPEF-INTEGRATED-V3-FAILED（LOG39）：1034P1F156subtests158.23s/RUN158.9890298/600/rc1，173before=after+ZIP173逐SHA核符，logd067e517…；唯一旧assign-only wholeLib测试契约失败，不回退生产提取。原件保留。
+
+REGRESSION-S-SPEF-INTEGRATED-V4-START（LOG40）：实际session11108/native childPATH/600pytest650wrapper，173before=current/ZIP173逐SHA匹配，与v3仅test_cells_extract.py变更53ad1713…。结果待，native改写5个受跟踪c17产物拟保真/diff再恢复，非科学成果。
+
+FALSIFY-OI048-MAPPED-RIGHT-TOP（LOG41）：fix_independent_review_v2/PROBE_RESULT892ff5b7…，三源beforeaftercurrent符，native sourceY=A/单ztopinv正确fail，但前置dummyY=A后ABC选dummy假pass，mapped两文件SHA符。OI048仍阻断，不能以原双Verilog负控28P关闭所有接口；v4冻结结束后才改源。
+
+REVIEW-INTEGRATED-V1-V3（LOG42）：独立REVIEWf980e55f…/70原件前后当前SHA-size全符，173×3ZIP/log/RUN/源稳定通过；仅原范围审计，v4未定。root_invocations/MANIFESTd6aaf66c…18原脚本/log逐SHA符，保真而非新测试/EDA。
+
+REGRESSION-S-SPEF-INTEGRATED-V4-FAILED/ENV-ATTRIBUTION（LOG43）：1032P3F5warnings156subtests181.75s/RUN182.4937594/600/rc1，173beforeafter/ZIP核符。三CLI失败环境漏子进程PYTHONUTF8=1；同CLI同参两rawstreamsrc0但unset非UTF8/set1UTF8，RECEIPT5ccc14f8…/四源符；两文件13P2.72s定向绿、无生产改、不替新全量。
+
+RESTORE-NATIVE-TRACKED-OUTPUTS（LOG44）：RESTORE_RECEIPT697c0b70…5当前path逐HEAD exactSHA符，generated/head快照各5件保留。首GitCRLF转换导致exactassert失败/finalize文本等同再写HEAD字节；非科学回滚或新实验，未宣workspaceclean。
+
+PLAN-NATIVE-SPEF-MICRO-INJECTION（LOG45/2026-10-18）：根即执行真实OpenSTA tiny单buf实现反证：普通标识与literal escaped bracket/busbit身份，RC放大正控、错误pin负控；串行每次≤30s，opensta4a59e0f1…/spef5a9d6075…当前核符，actualLIB与输入须运行收据绑定。结果/路径待；不是收益实验/原族复验，不改变旧RC，不提前关闭escaped实际注入门。
+
+NATIVE-SPEF-MICRO-ACTUAL（LOG46–47）：PRE_REGISTER433d9a22…/RESULTf9589064…43artifacts SHA、spef/opensta及actual LIB_SEQ ec0e1067…前后当前全符。实际两DFXTP夹buf reg→reg（取代无约束单buf草拟），普通/escaped-vs-busbit×RC40/4000um×API+annotation共8过程，另2缺pin负控，总10串行/每30s；四annotation均0未注入/0部分未注入，WNS4.43→-8.38同响应，缺pin两者null/error。仅微型注入实现控制，不是论文benchmark/收益或新同族实验；wrapper待根回传。
+
+REVIEW-INTEGRATED-V1-V4/MICRO-ROOT（LOG48）：FINALfc5a87ef…listedSHA-size核符，REVIEWac4d71c4…/77evidence当前核符、692 ZIPmembers四套173/logRUN全符，v1/v3/v4保持fail/v2仅scope过。micro根wrapper16exit0/ROOT_ACCEPTANCE79f5725c…、真实OpenSTA3.1.0 binary96833cf6…，4API+4annotation+2neg有限slack但API全None，根通过/独立复核待；非科学benchmark。
+
+REVIEW-NATIVE-SPEF-MICRO（LOG49）：INDEPENDENT_REVIEW56bdc6b1…/MD74e3aee5…/ARTIFACT0ef9e64d…实际读核43manifest+47总原件beforeafter/currentSHA-size/receiptSHA全符；仅tiny ordinary/escaped endpoint+annotation accepted，未重启STA/WSL/EDA。非致命WSLstderr留存，非物理benchmark或b18/任意域支持。
+
+TDD-OI048-SOURCE-WINDOW（LOG50）：mapped_scope_repair/RED_SOURCE_WINDOW实际2F19deselected0.42s/wrapper5exit1；ordinary+BOM在top选择后原source新增wrapper仍normalizerrc0，PRE_SOURCE_WINDOW源原件保。根要求prepare前original-source绑定/保真、launch前后校验。fake边界非真实EDA，GREEN_V2 45P1skip属修前局部，GREEN_V3无结果；关联OI048/OI045不新编号。
+
+TDD-OI048-MAPPED-SCOPE-FINAL（LOG51）：FINALcd5361e2…176artifact/四source当前SHA核符；14F2P/diagnostic2F6P/window2F原红保留，rc127仅bash环境；47P1skip4.64s/native7预期+baseline合且源stable，仅作者限定冻结。
+
+ROOT-OI048-MAPPED-ORIGINAL-REPLAY（LOG52）：PROBE8b0d7cd1…三原输入逐字节同，singleinverterfail、dummy多rooterror，三sourcebeforeaftercurrent符/wrapper6exit0，原反例层过非历史全证明。
+
+REGRESSION-S-SPEF-INTEGRATED-V5-START（LOG53）：session19880，显式PYTHONUTF8=1/nativePATH/600pytest650wrapper，174真实before/current+ZIP174逐SHA核符，result待/独立review待，不能以47限定或根反例层代全量。
+
+STATIC-ABC-TIMEOUT-BYTES-PENDING（LOG54/OI049）：仅读ya0ba8bb70…_tail与两个CEC TimeoutExpired路径，partial bytes可TypeError疑点，未跑反例/红绿/修复，不新增执行或科学计数；当前v5源冻，后续独立异常呈现门验证，不等误pass或已修。
+
+PLAN-D56-POST-SOURCE-CLOSURE（LOG55，仅计划待注册）：当前全v5/独立review/source-evidence阶段commit+push通过后，另以实际新cleanHEAD与manifest登记D56，先s27/s382×7共14pilot，余42须pilot验收后；全56验收前HEAD/code固定，记录文档可dirty/scoped source洁净。当前无正式newpin/manifest/D执行/结果，不把预备条目称正式实验。OI048当前实现反例层与历史省top证明影响分别验收，OI049仍待验证。
+
+REVIEW-OI048-FINAL-CODE-EVIDENCE（LOG56）：INDEPENDENT9cbabd66…/MD9b99d34e…/receipt67922982…实际读核263原件beforeafter/currentSHA-size及receipt SHA全符；176owner artifacts/4frozen/20normalization/native7+baseline/root原输入byte对照/source-window链接受，仅读无新求解。首错派生文件名审查失败保真/纠正actual optimized.normalized.blif后过；非生产缺陷。仅当前复现范围通过，v5结果/历史top影响与OI049另门。
+
+REGRESSION-S-SPEF-INTEGRATED-V5-PASSED（LOG57）：1056P156subtests208.27s/no skip-warnings，RUN209.1403265/600/rc0/wrapper210exit0/log3f5f39fa…，174beforeaftercurrent/ZIP174逐SHA集合核符，POST_VERIFICATION另存，完整收据独立补验待。仅当前冻结源码整体门，不闭历史proof/科学/timeout能力。
+
+CLEANUP-NATIVE-FINAL-BYPRODUCTS（LOG58）：CLEANUP8e1bfdcc…85ZIP09ce0b9f…逐成员SHA核符、6items72movedSHA符、5tracked exactHEAD符；indexrefresh7608f2d2 beforeafter5blob同，修stat虚M后data状态clean，非科学结果改写/删除。wholeworkspace仍source+recordsdirty待stagecommit。
+
+ACCEPT-CURRENT-IMPLEMENTATION-V5-FINAL（LOG59）：STAGE_ACCEPTANCE67da65a4…/MD20b001e5…/REVIEWv1-v5 0b7d8bed…/FINAL_CLOSURE9928cd3b…7final逐SHA-size核符；当前174/sourcebeforeafterZIP与五轮866ZIP成员/86evidence核符，v5真实1056P156subtests/no skipwarnings。当前复现实现scope接受，历史OI048/P08及OI049/OI046/四态/科学稿件门open；HEAD7231阶段sourcecommit/push尚待stage字节QA。

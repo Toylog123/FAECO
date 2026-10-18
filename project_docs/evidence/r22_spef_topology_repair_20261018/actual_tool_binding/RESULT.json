@@ -1,0 +1,183 @@
+{
+  "scope": "actual OpenSTA micro annotation controls only",
+  "source_before": {
+    "code\\src\\rseco\\spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code\\src\\rseco\\opensta.py": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+  },
+  "source_after": {
+    "code\\src\\rseco\\spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code\\src\\rseco\\opensta.py": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+  },
+  "source_stable": true,
+  "cases": [
+    {
+      "case": "ordinary",
+      "length_um": 40,
+      "result": {
+        "slack": 4.43,
+        "slack_status": "MET",
+        "wns": 4.43,
+        "tns": 0.0,
+        "min_slack": 0.5,
+        "min_slack_status": "MET"
+      },
+      "annotation_argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/40/annotation.tcl"
+      ],
+      "annotation_returncode": 0,
+      "annotation_error": null
+    },
+    {
+      "case": "ordinary",
+      "length_um": 4000,
+      "result": {
+        "slack": -8.38,
+        "slack_status": "VIOLATED",
+        "wns": -8.38,
+        "tns": -8.38,
+        "min_slack": 8.75,
+        "min_slack_status": "MET"
+      },
+      "annotation_argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/4000/annotation.tcl"
+      ],
+      "annotation_returncode": 0,
+      "annotation_error": null
+    },
+    {
+      "case": "ordinary_missing_pin",
+      "result": {
+        "slack": null,
+        "slack_status": null,
+        "wns": null,
+        "tns": null,
+        "min_slack": null,
+        "min_slack_status": null,
+        "error": "Warning 1647: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ordinary/missing_pin.spef line 65, pin b0:ABSENT not found.",
+        "failure_receipt_path": "project_docs\\evidence\\r22_spef_topology_repair_20261018\\actual_tool_binding\\ordinary\\missing_pin_measurement\\sta_failure_0001\\receipt.json"
+      }
+    },
+    {
+      "case": "escaped",
+      "length_um": 40,
+      "result": {
+        "slack": 4.43,
+        "slack_status": "MET",
+        "wns": 4.43,
+        "tns": 0.0,
+        "min_slack": 0.5,
+        "min_slack_status": "MET"
+      },
+      "annotation_argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/40/annotation.tcl"
+      ],
+      "annotation_returncode": 0,
+      "annotation_error": null
+    },
+    {
+      "case": "escaped",
+      "length_um": 4000,
+      "result": {
+        "slack": -8.38,
+        "slack_status": "VIOLATED",
+        "wns": -8.38,
+        "tns": -8.38,
+        "min_slack": 8.75,
+        "min_slack_status": "MET"
+      },
+      "annotation_argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/4000/annotation.tcl"
+      ],
+      "annotation_returncode": 0,
+      "annotation_error": null
+    },
+    {
+      "case": "escaped_missing_pin",
+      "result": {
+        "slack": null,
+        "slack_status": null,
+        "wns": null,
+        "tns": null,
+        "min_slack": null,
+        "min_slack_status": null,
+        "error": "Warning 1647: /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/escaped/missing_pin.spef line 65, pin b0:ABSENT not found.",
+        "failure_receipt_path": "project_docs\\evidence\\r22_spef_topology_repair_20261018\\actual_tool_binding\\escaped\\missing_pin_measurement\\sta_failure_0001\\receipt.json"
+      }
+    }
+  ],
+  "artifacts": {
+    "PRE_REGISTER.json": "433d9a227621d889aee9cd80a067d95cc0e7a8685671a1d7a22b6f168ed18cac",
+    "escaped\\mapped.v": "84f8b76914b7494c1d0efb7e5af7923d8f80a391c50aa6cc4af43e6a58fc1871",
+    "escaped\\missing_pin.spef": "3d248e0c9afd0c1452d2740627b191abb38ec4298360c77cf26349504e2e773c",
+    "escaped\\40\\annotation.log": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+    "escaped\\40\\annotation.stderr.bin": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+    "escaped\\40\\annotation.stdout.bin": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+    "escaped\\40\\annotation.tcl": "25616ab02b85d996cd2fcadecea9cc27298a2227f7595b6b3253b31564b1deb5",
+    "escaped\\40\\net.spef": "df96d86f7388f24e23f4c4695fadd1d25626d7354d25bc6178fab08251019b91",
+    "escaped\\40\\measurement\\sta.log": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+    "escaped\\40\\measurement\\sta.tcl": "2eb7c37b2fd09f4a4cf81cb72a541f95fef40e05b6ed2db547b031282f36c718",
+    "escaped\\4000\\annotation.log": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+    "escaped\\4000\\annotation.stderr.bin": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+    "escaped\\4000\\annotation.stdout.bin": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+    "escaped\\4000\\annotation.tcl": "39e213343053fcce0b8061ddbc5d930cf287500c1f2d72fabeac62e55481997f",
+    "escaped\\4000\\net.spef": "401a6afdf53a91bf12244a1d3990c59fd79e7a4e460de34c9c467530cf5b12d6",
+    "escaped\\4000\\measurement\\sta.log": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+    "escaped\\4000\\measurement\\sta.tcl": "cc43f3d1ecd4827397b87a7c2de5a6ca2a2a7788a7f942ee4adca0349b1981eb",
+    "escaped\\missing_pin_measurement\\sta.log": "b760b6c0ccd628e7de39cc6aed8b3239b958c36346d142ec3486eb9090763ff1",
+    "escaped\\missing_pin_measurement\\sta.tcl": "21a91f1999135dce876c0d140113e49e08ccb24e402e328bf5ee0b159410cbc6",
+    "escaped\\missing_pin_measurement\\sta_failure_0001\\receipt.json": "a5bf94ab0d9eb1bb7e956392c4ac6c1bbc143952b2bbb272218a351abd40e8d7",
+    "escaped\\missing_pin_measurement\\sta_failure_0001\\sta.log": "b760b6c0ccd628e7de39cc6aed8b3239b958c36346d142ec3486eb9090763ff1",
+    "escaped\\missing_pin_measurement\\sta_failure_0001\\sta.tcl": "21a91f1999135dce876c0d140113e49e08ccb24e402e328bf5ee0b159410cbc6",
+    "ordinary\\mapped.v": "e8467a498cc0cc911d15914b1c0a7519321c6692c38c5139dc9744347caa57e0",
+    "ordinary\\missing_pin.spef": "142465d0d770f71af6285c27f43784bc8d2fbe86bf92c65739bd5740f60b36c0",
+    "ordinary\\40\\annotation.log": "5c45b1fe23ca1667969a22d9a0bcc8b705835723d0bf7d813b4123e7153daef8",
+    "ordinary\\40\\annotation.stderr.bin": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+    "ordinary\\40\\annotation.stdout.bin": "60c04ecdb84c9e240971fddd33db8dde1e5d285c5468fc924f95ada125e729fb",
+    "ordinary\\40\\annotation.tcl": "093631922b14ee396e371a9d1b78e0d0763369c758e6bfb90fb426f26a63a98d",
+    "ordinary\\40\\net.spef": "ae2775390af1226e2d82a6241359fc58f4d3242dd947bbbe4f604a35189bb2d6",
+    "ordinary\\40\\measurement\\sta.log": "f98ff26743c3f14f6a9ee7b8a5069ba8f2ab97edffa06423106710dbaea858c2",
+    "ordinary\\40\\measurement\\sta.tcl": "cc8bc0abe59ac221a8d04620609b14d6c2babb23bc3cfbc8da7cfed7507f9580",
+    "ordinary\\4000\\annotation.log": "2640a5a8ee44887a1f93da7e24f65c79d7022fb72d2b4aff11336408dcbd29a6",
+    "ordinary\\4000\\annotation.stderr.bin": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1",
+    "ordinary\\4000\\annotation.stdout.bin": "b37cb8fa858fb00280293d913605087b6568771e70e38791e7636692e87a0414",
+    "ordinary\\4000\\annotation.tcl": "5be0ba7c3dd20ec7f6896bbca0a9efc40e618d1ae434cc96e1b95e0c5316ca66",
+    "ordinary\\4000\\net.spef": "5ff999838022823743984eb8f0f668b14473982d97c060129759b31fa74b3f57",
+    "ordinary\\4000\\measurement\\sta.log": "91261ba67665d2aee01063d2338ffec689dce2c4f853ff1dba43c64a64aaf942",
+    "ordinary\\4000\\measurement\\sta.tcl": "0530a0976f3c3cb783f47f9b1d2c6cf1424a6322dc1b274a9dcaace3d65db790",
+    "ordinary\\missing_pin_measurement\\sta.log": "5f5d58e98580aa37a42c9b8815bb1dadac96a93baff099527f68caa5b5217645",
+    "ordinary\\missing_pin_measurement\\sta.tcl": "f2e1f733851045466bdce921155b9571a1441e071de280493781897cf2b59346",
+    "ordinary\\missing_pin_measurement\\sta_failure_0001\\receipt.json": "2af9c13e8992e9280a68ea824692ba623a5802530081e49d0436339a491c15c5",
+    "ordinary\\missing_pin_measurement\\sta_failure_0001\\sta.log": "5f5d58e98580aa37a42c9b8815bb1dadac96a93baff099527f68caa5b5217645",
+    "ordinary\\missing_pin_measurement\\sta_failure_0001\\sta.tcl": "f2e1f733851045466bdce921155b9571a1441e071de280493781897cf2b59346"
+  }
+}
