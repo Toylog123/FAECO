@@ -1,0 +1,51 @@
+{
+  "utc": "2026-10-19T04:57:00.380164+00:00",
+  "reviewer": "r28_size_audit subagent, bounded visual layout check",
+  "scope": "Actual main_build03 raw PDF pages6-8 plus main_build02 page7 failure image; no compile or document/image/shared-record edits. This is not a full19-page review.",
+  "source_sha256": "f0f4d5e003076e5bb8123f39655ec99e6afa4520823609000e0ade652cf9d57b",
+  "reviewed_pdf_sha256": "711248c2fadbd0528da6a6bed2e6f4c0b313382aa78861348e6d3dd3bf420b28",
+  "matches_build03_raw_receipt": true,
+  "page_count": 10,
+  "reviewed_pages": [
+    6,
+    7,
+    8
+  ],
+  "render_scale": 1.5,
+  "actual_render_files": [
+    {
+      "path": "independent_main03_p06.png",
+      "sha256": "e788dfb06afd5ac8cf55e012d9004d2cac1d72638cb1aa3d9226af91666312b1"
+    },
+    {
+      "path": "independent_main03_p07.png",
+      "sha256": "b4c76701f83c9e3106012a1990dc4caa3d99834bce0c7f37795dd98b6a396bf4"
+    },
+    {
+      "path": "independent_main03_p08.png",
+      "sha256": "3d8939caf072ae47461970037efec965c1cf06a24bcc7110efb84dae0e2a6e43"
+    }
+  ],
+  "log_overfull_count": 0,
+  "log_underfull_count": 0,
+  "findings": [
+    {
+      "page": 6,
+      "decision": "PASS_WITH_DENSITY_OBSERVATION",
+      "evidence": "Table1 and Fig3 remain together above two columns; table2/table3 plus multiple body paragraphs and subsection5.4 are present. No all-float page or Fig4 stacking onto this page, no clipping/overlap seen. Page remains relatively dense but relevant to configuration/results."
+    },
+    {
+      "page": 7,
+      "decision": "PASS",
+      "evidence": "Only Fig4 spans the top; table4 and main text fill lower columns. The second wide Fig5 is now deferred. The table4 annotation is completely visible and does not enter footer; no bottom cropping seen."
+    },
+    {
+      "page": 8,
+      "decision": "PASS_WITH_DENSITY_OBSERVATION",
+      "evidence": "Fig5 spans top; Fig6/Table5/Fig7 interleave with prose and subsection5.6. Full axes, legends, captions and last text line are visible inside page. No overlap or cropped bottom; graphic density still relatively high but accompanied by related interpretation."
+    }
+  ],
+  "failure_comparison": "main_build02/page7_overflow_diagnosis.png actually inspected; two wide figures plus table4 crowded the bottom and clipped annotation. That visible failure is absent in main_build03.",
+  "decision": "ACCEPT_BOUND_LIMITED_LAYOUT_PAGES6_8_FOR_MAIN_BUILD03_RAW",
+  "remaining_requirement": "Root must bind final monochrome-export PDF and complete whole-document QA; source/font warnings and scientific pending gates not closed by this check."
+}

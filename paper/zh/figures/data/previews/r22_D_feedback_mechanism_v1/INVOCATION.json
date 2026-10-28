@@ -1,0 +1,43 @@
+{
+  "environment": {
+    "PYTHONUTF8": "1"
+  },
+  "render_argv": [
+    "C:/Program Files/Git/bin/bash.exe",
+    "code/scripts/run_with_timeout.sh",
+    "120",
+    ".venv/Scripts/python.exe",
+    "paper/zh/figures/data/scripts/review_r22_D_feedback_mechanism.py",
+    "--output-dir",
+    "paper/zh/figures/data/previews/r22_D_feedback_mechanism_v1/iteration02",
+    "--alignment-auditor",
+    "paper/zh/figures/data/previews/r22_matrix_gain_cost_v3/alignment_auditor_snapshot.py"
+  ],
+  "render_stdout_stderr": "RENDER_02.log",
+  "render_exitcode": 0,
+  "qa_commands": [
+    [
+      "validate_figure.py",
+      "paper/zh/figures/data/scripts/review_r22_D_feedback_mechanism.py",
+      "--json"
+    ],
+    [
+      "audit_pdf_text.py",
+      "iteration02/r22_D_feedback_mechanism.pdf",
+      "--min-pt",
+      "5",
+      "--json"
+    ],
+    [
+      "audit_figure_collisions.py",
+      "iteration02/r22_D_feedback_mechanism.pdf",
+      "--json-out",
+      "iteration02/COLLISION_AUDIT.json",
+      "--overlay-pdf",
+      "iteration02/COLLISION_OVERLAY.pdf"
+    ]
+  ],
+  "qa_runtime": ".venv/Scripts/python.exe",
+  "auditor_origin": "nature-figure skill scripts; exact alignment helper snapshot retained",
+  "pdf_visual_render": "Python pymupdf get_pixmap(dpi=200), plus 250dpi per-panel QA clips; exports remain matplotlib originals"
+}

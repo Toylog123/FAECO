@@ -1,0 +1,42 @@
+{
+  "cause": "Upstream revision_roadmap._read_path_once opens os.O_RDONLY without O_BINARY on Windows; CRLF becomes LF on os.read so byte count differs from stat while metadata unchanged, falsely reported artifact changed.",
+  "recovery": "Preserved originals; write generated review deliverables with LF raw bytes. No guard bypass and no production/source edits.",
+  "files": [
+    {
+      "name": "REVISION_ROADMAP.json",
+      "before_sha256": "abce463bde43597842e0476739c4b698ee277d762d077ce39e7a9c015bfc012b",
+      "after_sha256": "a9d502e39a77374dc8f90ee6fa9c4b27b7099622896592d60c050c1fa9550654",
+      "before_stat_size": 64803,
+      "os_read_length": 62797,
+      "stat_unchanged": true,
+      "crlf_to_lf_only": true
+    },
+    {
+      "name": "REVIEW_PACKAGE.json",
+      "before_sha256": "3771c2f0684836e648fca6b756a124e00267c0723091bd5366670e4ebe14e6d5",
+      "after_sha256": "90fd9a8cd50d659edfe6f03dee303fbee9d6e3b93c1ff6c8e5b38056e7a3f310",
+      "before_stat_size": 117813,
+      "os_read_length": 114900,
+      "stat_unchanged": true,
+      "crlf_to_lf_only": true
+    },
+    {
+      "name": "FINDING_INVENTORY.json",
+      "before_sha256": "14de1e0665ea4ccc927c0db83b792b323e5f760edc78600ec68a46fbf57e4861",
+      "after_sha256": "85bdab1dc04ebd137715bc7e5928d3b8ded30bb9a200539d1ded54dfc6e4a87f",
+      "before_stat_size": 43591,
+      "os_read_length": 43303,
+      "stat_unchanged": true,
+      "crlf_to_lf_only": true
+    },
+    {
+      "name": "REVISION_ROADMAP.md",
+      "before_sha256": "e864dc532eae81b299fb1b5a47269e1899492bb71239788d10753d505109acc6",
+      "after_sha256": "299ba5832963cafa6a493fa40c2d93623c88fef6a2a1a08f2512c9ea8f7d4ce8",
+      "before_stat_size": 19682,
+      "os_read_length": 19429,
+      "stat_unchanged": true,
+      "crlf_to_lf_only": true
+    }
+  ]
+}

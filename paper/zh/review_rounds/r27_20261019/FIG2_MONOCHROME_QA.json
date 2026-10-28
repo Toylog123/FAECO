@@ -1,0 +1,141 @@
+{
+  "operator": "/root/r27_ai_qa",
+  "generated_by": "root built-in image_gen.imagegen edit call",
+  "provider": null,
+  "model": null,
+  "version": null,
+  "identity_note": "The API did not expose provider/model/version. No identity is inferred.",
+  "pixel_editing": false,
+  "postprocessing": "Byte-for-byte copy only; PIL/NumPy used for read-only color audit.",
+  "no_new_EDA": true,
+  "no_scientific_measurement_added": true,
+  "caption_and_manuscript_dependency": true,
+  "vector_font_or_submission_eligibility_not_claimed": true,
+  "figure": 2,
+  "created_utc": "2026-10-19T04:30:15.281517+00:00",
+  "original_generated_output": "C:\\Users\\佟亚龙\\.codex\\generated_images\\01a137d2-44cd-70d1-b5c0-b5d876d2f488\\exec-105006d0-9c9f-4c20-bb81-740f2b1f8e7a.png",
+  "original_generated_sha256": "6e6a575a5907f6ed0b860de5bda90093c47662e9873b4fd1902dcf4f9bfaac53",
+  "original_generated_bytes": 1115908,
+  "reference_image": "paper\\zh\\figures\\manual\\figures\\r26_ai_regions\\r26_ai_regions.png",
+  "reference_image_sha256": "f852a69f076484c2d4377e852b9813cae3596444c04d02a26477d5259d21d010",
+  "prompt": "paper\\zh\\review_rounds\\r27_20261019\\FIG2_MONOCHROME_PROMPT.txt",
+  "prompt_sha256": "ea4386a2d5feec82793d487f1bb6d6feba12c7eb400f5356f3bd03c5baaee2c3",
+  "selected_output": "paper\\zh\\figures\\manual\\figures\\r27_mono_regions\\r27_mono_regions.png",
+  "selected_output_sha256": "6e6a575a5907f6ed0b860de5bda90093c47662e9873b4fd1902dcf4f9bfaac53",
+  "byte_identical_copy": true,
+  "scientific_invariants": "paper/zh/review_rounds/r26_20261018/FIGURE_INVARIANTS.md",
+  "scientific_invariants_sha256": "2eb35230bb5231ac7236efa3406be8a118ad4fdd8dc6d783389fe6c7577dad3b",
+  "color_audit": {
+    "input_mode": "RGB",
+    "dimensions_px": [
+      1536,
+      1024
+    ],
+    "total_pixels": 1572864,
+    "exact_neutral_pixels": 1233853,
+    "nonneutral_pixels": 339011,
+    "exact_neutral_fraction": 0.7844626108805338,
+    "max_channel_spread_8bit": 12,
+    "mean_channel_spread_8bit": 0.2640380859375,
+    "channel_spread_percentiles": {
+      "50": 0.0,
+      "90": 1.0,
+      "95": 1.0,
+      "99": 3.0,
+      "100": 12.0
+    },
+    "strict_R_equals_G_equals_B": false,
+    "visual_appearance": "neutral black-white-grey; faint generated texture remains"
+  },
+  "scientific_content_status": "PASS, conditional on preserved caption/body definitions",
+  "visual_grayscale_status": "ACCEPTABLE_APPEARANCE",
+  "strict_color_contract_status": "FAIL: RGB channel differences remain in original generated output",
+  "publication_eligibility": "NOT_ASSESSED",
+  "verification": "Actual view_image of complete generated PNG; manual tracing against r26 invariant checklist; read-only pixel audit; copy hash equality.",
+  "manual_checks": [
+    {
+      "id": 1,
+      "status": "PASS",
+      "observation": "六门及类型：g1 INV、g2 INV、g3 NOR2、g4 AND2、g5 OR2、g6 NOR2逐项正确。"
+    },
+    {
+      "id": 2,
+      "status": "PASS",
+      "observation": "R+仅g1/g2/g4/g5，R−仅g3/g6；图例为有/无R候选，没有把R+当时序接受或证明。"
+    },
+    {
+      "id": 3,
+      "status": "PASS",
+      "observation": "a→g1与b→g2独立；c分成g3两个不同输入引脚，NOR2未简化为INV。"
+    },
+    {
+      "id": 4,
+      "status": "PASS",
+      "observation": "g1/n1→g4；g2/n2有明确分支点，分别→g4、g5；g3/n3→g5。"
+    },
+    {
+      "id": 5,
+      "status": "PASS",
+      "observation": "g4/n4与g5/n5分别接g6两个输入；g6唯一输出为n6。"
+    },
+    {
+      "id": 6,
+      "status": "PASS",
+      "observation": "没有新增g1→g5、g2→g6等错误连线，没有新增门。"
+    },
+    {
+      "id": 7,
+      "status": "PASS",
+      "observation": "P=(g1,g4,g6)文字准确，这三门有很浅灰填充，其余门白色。"
+    },
+    {
+      "id": 8,
+      "status": "PASS",
+      "observation": "Cc门集合{g1,g4,g6}、输入{a,n2,n5}、输出{n6}、内部网{n1,n4}逐项准确。"
+    },
+    {
+      "id": 9,
+      "status": "PASS",
+      "observation": "Cc节点代价和4.190474逐位准确，实例顺序g1→g4→g6。"
+    },
+    {
+      "id": 10,
+      "status": "PASS",
+      "observation": "Cw门集合{g6}、输入{n4,n5}、输出{n6}、内部网无逐项准确。"
+    },
+    {
+      "id": 11,
+      "status": "PASS",
+      "observation": "Cw节点代价和1.941579逐位准确，实例顺序g6。"
+    },
+    {
+      "id": 12,
+      "status": "PASS",
+      "observation": "先Cc后Cw明确，序号1/2未颠倒；两集合卡片为替代区域，没有画成串联电路。"
+    },
+    {
+      "id": 13,
+      "status": "PASS",
+      "observation": "十个信号名、六门标记、两个代价及两卡片均可读，无裁切或文字交叠。"
+    },
+    {
+      "id": 14,
+      "status": "PASS",
+      "observation": "无时序改善、接受、STA/SEC通过或新实验数据；人工静态/全权重1限定由图注保留。"
+    }
+  ],
+  "observations": [
+    "P成员的浅灰填充与其余白色门差别较淡，明确P文字及Cc卡片提供冗余识别；图注需改浅灰而非浅蓝。",
+    "个别浅灰带仍有细微明度渐变，未完全遵从prompt平涂要求；外观为黑白灰。",
+    "模型输出为RGB且有微小通道差，严格R=G=B验收失败；不得声称图像已是单通道灰度。"
+  ],
+  "caption_dependency": "图注保留“人工六门静态例、全权重为1、不代表STA测量结果”，将浅蓝描述改为浅灰；图内文字P及两集合保留。",
+  "changes_outside_own_qa_and_output_paths": false,
+  "root_delivery_decision": {
+    "native_generated_PNG": "Preserve original byte-identical RGB image and strict-color FAIL observation.",
+    "document_output": "Root will export the complete final PDF using bundled Ghostscript to neutral DeviceGray as a document output color-space operation.",
+    "pixel_editing_by_QA_agent": false,
+    "required_separate_acceptance": "Root must verify before/after PDF text, page count/layout, image dimensions, DeviceGray encoding and rendered all-page R=G=B. These are not certified by the native PNG QA.",
+    "status": "Root authorized workflow; final PDF verification pending outside this report."
+  }
+}

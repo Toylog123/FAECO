@@ -1,0 +1,16 @@
+\begin{table}[htbp]\centering\small
+\caption{Sequential equivalence of the efficiency-first repaired pairs.}\label{tab:sec_iscas8}
+\begin{tabular}{lrrr}\toprule
+Circuit & Proven/unproven & SEC & Wall time (s)\\\midrule
+s27 & 11/0 & Proven & 0.281\\
+s382 & 90/0 & Proven & 0.281\\
+s420 & 79/0 & Proven & 0.250\\
+s641 & 124/0 & Proven & 0.313\\
+s713 & 126/0 & Proven & 0.328\\
+s820 & 139/0 & Proven & 0.344\\
+s832 & 146/0 & Proven & 0.391\\
+s953 & 228/0 & Proven & 0.407\\
+\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize All eight pairs are checked in one verification batch with Yosys 0.33 under SKY130 behavioral cell models using \texttt{equiv\_make}, \texttt{equiv\_simple} and \texttt{equiv\_induct -seq 10}, with \texttt{equiv\_status -assert} requiring complete proof. Wall time covers each independent prover invocation and excludes mapping, candidate STA and model preparation.
+\end{table}

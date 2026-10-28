@@ -1,0 +1,336 @@
+{
+  "scope": "Bounded read-only preservation check of 8 previously specified minimum scientific conditions; not a new broad manuscript review. No EDA, TeX edits, production edits, or frozen artifact edits.",
+  "status": "EIGHT_CONDITIONS_PRESERVED_TWO_MINOR_CROSSREFERENCE_ISSUES",
+  "manuscript_snapshots": {
+    "main": {
+      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+      "sha256": "965cfe91ca74cf1cdf166cf91dd8cbe225a84e2a0a1a3982cb3a459d81863c57",
+      "size_bytes": 24330
+    },
+    "supplement": {
+      "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+      "sha256": "6e4b97c1272a1c970962a38a5394e5c5698333df8841e922ba5822685909a649",
+      "size_bytes": 51676
+    }
+  },
+  "evidence_read": [
+    {
+      "path": "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json",
+      "sha256": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738",
+      "size_bytes": 3025552
+    },
+    {
+      "path": "paper/zh/figures/data/previews/r24_cp_budget_curves_v2/COMMON_BUDGET_COUNTERCHECK.csv",
+      "sha256": "589a7af5b6c1d452a9fff657346f504b7aec62fd6179c61117022c04c9962507",
+      "size_bytes": 3914
+    },
+    {
+      "path": "project_docs/evidence/r24_paper_revision_20261018/netlist_cost_W1.csv",
+      "sha256": "7d0b17e5256341e5c43c5c04dc803c337c9358da208c9bf999eb55a87c3f05e3",
+      "size_bytes": 1650
+    },
+    {
+      "path": "project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2_STA_runs/RESULT.json",
+      "sha256": "eebc53982adeccb789022ebdc50252b65e8fa7196d1724f803afed0f172c358f",
+      "size_bytes": 73102
+    },
+    {
+      "path": "project_docs/evidence/r24_paper_revision_20261018/PAIRED_SPEF_FLAT_V2_STA_ROOT_ACCEPTANCE.json",
+      "sha256": "43ccd357209d5890fb0a2e700b04260778bc3036b362185660361d1ed2636489",
+      "size_bytes": 1745
+    },
+    {
+      "path": "paper/zh/review_rounds/r25_20261018/TNS_HARD_GATE_EVIDENCE.json",
+      "sha256": "0bdad71a9796af30db948c5fbe3b5c73136eaf534b3ff971242fe7fd0db03e43",
+      "size_bytes": 21410
+    }
+  ],
+  "computed_existing_evidence": {
+    "matrix_verified": 72,
+    "all_matrix_verified": true,
+    "new_candidate_STA_by_arm": {
+      "W0": 71,
+      "U0": 71,
+      "W1": 847,
+      "U1": 847,
+      "C": 839,
+      "UR1": 1046,
+      "UR2": 919,
+      "UR3": 944,
+      "L": 1274
+    },
+    "W1_mean_ideal_gain_ns": 0.16125000000000003,
+    "W1_area_min_max_pct": [
+      0.27359781121751026,
+      4.92091388400703
+    ],
+    "UR_common_budget_counterexamples": [
+      {
+        "circuit": "s27",
+        "control": "UR3",
+        "compared_common_budget_k_max": "36",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "2",
+        "max_control_advantage_ns": "0.01",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR1",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "10",
+        "max_control_advantage_ns": "0.17",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR2",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "63",
+        "max_control_advantage_ns": "0.01",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR3",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "5",
+        "max_control_advantage_ns": "0.17",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      }
+    ],
+    "load_actual_API_launches": 16,
+    "load_actual_annotation_launches": 8,
+    "load_actual_total_launches": 24,
+    "load_values": [
+      {
+        "case": "control_same_u40",
+        "length_um": 40,
+        "ideal_delta": 0.0,
+        "spef_delta": 0.0,
+        "baseline_spef": -2.1,
+        "final_spef": -2.1
+      },
+      {
+        "case": "pair_u10",
+        "length_um": 10,
+        "ideal_delta": 0.15,
+        "spef_delta": 0.11,
+        "baseline_spef": -1.23,
+        "final_spef": -1.12
+      },
+      {
+        "case": "pair_u40",
+        "length_um": 40,
+        "ideal_delta": 0.15,
+        "spef_delta": 0.0,
+        "baseline_spef": -2.1,
+        "final_spef": -2.1
+      },
+      {
+        "case": "pair_u160",
+        "length_um": 160,
+        "ideal_delta": 0.15,
+        "spef_delta": 0.0,
+        "baseline_spef": -6.0,
+        "final_spef": -6.0
+      }
+    ],
+    "TNS_witness": {
+      "candidate_hash": "92085689c92eed9168da24e1c3a2416d025631d6e042cdc6713ae369164b6a14",
+      "wns": -0.26,
+      "tns": -0.5,
+      "reference": {
+        "setup_wns": -0.27,
+        "setup_tns": -0.49,
+        "hold_min_slack": 0.44
+      },
+      "only_violation": [
+        "setup_tns"
+      ]
+    }
+  },
+  "checks": [
+    {
+      "id": "C1",
+      "condition": "核心构造与人工示例身份",
+      "main_lines": [
+        146,
+        150,
+        152,
+        157,
+        163,
+        165
+      ],
+      "supplement_lines": [
+        134,
+        138,
+        153,
+        156,
+        158,
+        190
+      ],
+      "status": "PRESERVED",
+      "finding": "覆盖区域先于节点割；容量是结构代理；人工六门不是实测。没有将代价统一排序或R不可用错误等同删门。"
+    },
+    {
+      "id": "C2",
+      "condition": "TNS硬门、局部/终点证明分层及模型域",
+      "main_lines": [
+        177,
+        189,
+        191
+      ],
+      "supplement_lines": [
+        231,
+        233,
+        237,
+        242
+      ],
+      "status": "PRESERVED_WITH_RESIDUAL_REFERENCE_ISSUE",
+      "finding": "正文准确保留WNS严格改善、TNS不退化、容差0，以及对应寄存器共同任意二值初态/真实三态不支持。补充定义完整条件，但旧算法仍引用仅Timing的公式；见R1/R2。"
+    },
+    {
+      "id": "C3",
+      "condition": "受控族、臂、约束与预算身份",
+      "main_lines": [
+        197,
+        199,
+        210,
+        211,
+        212,
+        213,
+        214,
+        236
+      ],
+      "supplement_lines": [
+        250,
+        350,
+        597
+      ],
+      "status": "PRESERVED",
+      "finding": "同映射输入/TT角/.5ns、8×9、20轮/20提交/500新STA预约、单worker和物理/反馈关闭均保留；L同时变生成与顺序，不能作为纯排序归因。ZIP源码3ea在补充明示。"
+    },
+    {
+      "id": "C4",
+      "condition": "终点收益与实际新STA计数口径",
+      "main_lines": [
+        219,
+        223,
+        230,
+        236
+      ],
+      "supplement_lines": [
+        597
+      ],
+      "status": "PRESERVED",
+      "finding": "847对1046/919/944合计成本和相同终点保留；未称walltime加速或独立随机统计推断。基线、缓存、前置拒绝不计新STA。"
+    },
+    {
+      "id": "C5",
+      "condition": "节点权重零额外差异与cover-only更省",
+      "main_lines": [
+        223,
+        225,
+        274,
+        280
+      ],
+      "supplement_lines": [
+        156
+      ],
+      "status": "PRESERVED",
+      "finding": "W0/U0、W1/U1零差异与C相同终点但s641少8次明确保留，未把节点权重写成收益来源。"
+    },
+    {
+      "id": "C6",
+      "condition": "提交曲线定义、真实停止与UR局部反例",
+      "main_lines": [
+        219,
+        238,
+        243,
+        274
+      ],
+      "supplement_lines": [
+        390
+      ],
+      "status": "PRESERVED",
+      "finding": "B(k)仅明确提交更新，真实停止；s27 UR3少5次与s420最大局部领先0.17ns保留。未升级为所有实例/预算支配。S3旧反馈曲线另族定义不替代主文提交曲线。"
+    },
+    {
+      "id": "C7",
+      "condition": "网表面积代价与未验收PPA项",
+      "main_lines": [
+        94,
+        249
+      ],
+      "supplement_lines": [
+        481,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        494,
+        496
+      ],
+      "status": "PRESERVED",
+      "finding": "同库单元面积+0.27%–4.92%保留且不等同核心面积；单元数不变未冒充无代价；功耗/hold/最大电容/转换时间未验收明确留正文。"
+    },
+    {
+      "id": "C8",
+      "condition": "flatpair负载数值、模型语义、新输入域与旧失败隔离",
+      "main_lines": [
+        251,
+        253,
+        264,
+        265,
+        266,
+        268
+      ],
+      "supplement_lines": [
+        511,
+        514,
+        515,
+        516,
+        519,
+        521,
+        523,
+        525,
+        527,
+        599
+      ],
+      "status": "PRESERVED",
+      "finding": "理想+.15→简化负载+.11/0/0、单一同源s382派生pair、两原→flat SEC129/0、同网表delta0、双侧各自SPEF、8次注释完整保留。补充给R/C/单位与16+8=24新STA及原失败5次，明确不恢复原层级或旧共享SPEF。"
+    }
+  ],
+  "issues": [
+    {
+      "id": "R1",
+      "severity": "minor_textual_ambiguity",
+      "supplement_lines": [
+        121,
+        176,
+        237,
+        242,
+        272
+      ],
+      "description": "eq:accept现在命名Timing而非完整Accept；算法121/176仍直接用满足该式作提交条件。S2完整H说明和主文硬门正确，但交叉引用应显式H(p)且Timing(p)，避免脱离S2阅读时再漏硬门。旧单轮272的式引用应表述该归档族的时序分支而非Cprime完整接受。",
+      "notified_root_before_report": true
+    },
+    {
+      "id": "R2",
+      "severity": "minor_scope_wording",
+      "supplement_lines": [
+        246
+      ],
+      "description": "TNS用于可选的辅助接受判据这一句没有同时限定Cprime固定TNS硬门；前文233/242和主文189已正确。建议加还可用于或明确族别，避免把硬门读成开关项。",
+      "notified_root_before_report": true
+    }
+  ],
+  "snapshot_stable_during_check": true
+}

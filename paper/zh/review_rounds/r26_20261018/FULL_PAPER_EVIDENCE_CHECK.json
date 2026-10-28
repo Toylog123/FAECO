@@ -1,0 +1,4713 @@
+{
+  "status": "PASS_BOUNDED_CHECK_AFTER_ROOT_RESOLVED_TEXT_CORRECTIONS",
+  "scope": "r26 restored full-paper bounded completeness/numeric/claim-to-existing-evidence check. Not a fresh full review or experiment reproduction. No EDA, production/TeX edits, proof reruns, AI pixel checks or compilation/visual acceptance by this worker.",
+  "initial_reviewed_main_sha256": "8160546802698d1174787fc5a2eafe145e5ce2ad3e7b61b658b1d4ad872d504a",
+  "final_binding": {
+    "main": {
+      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+      "sha256": "e8413a7bb3c176583468d2e2a1edb47b2b9b14376d705d3f561e51bf4a5c6160",
+      "size_bytes": 46466
+    },
+    "supplement": {
+      "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+      "sha256": "44ba6e888047a69ba13155177ce4890c980b60e4c0f77876b7719ecee66710bd",
+      "size_bytes": 51779
+    },
+    "edit_receipts": [
+      {
+        "binding": {
+          "path": "paper/zh/review_rounds/r26_20261018/EDIT_01_FULL_PAPER.json",
+          "sha256": "9174114d792dbce76ae11ca130e449767eab911f33d48ec62984b5e7c6a73e54",
+          "size_bytes": 683
+        },
+        "data": {
+          "utc": "2026-10-18T15:16:19.389956+00:00",
+          "before_sha256": "0c8b79b68d40cf786ea0b280cfff898f1a6d3d61d2c08f42f108b91725c24388",
+          "after_sha256": "8160546802698d1174787fc5a2eafe145e5ce2ad3e7b61b658b1d4ad872d504a",
+          "CJK_characters": 8544,
+          "figures": 7,
+          "tables": 6,
+          "restored_sections": [
+            "method equations/model/actions/commit flow",
+            "core72 mechanism and budget",
+            "A8 and ITC/Pico",
+            "strategy feedback and structure",
+            "netlist area and physical transfer",
+            "paired load and discussion"
+          ],
+          "new_scientific_results": false,
+          "AI_figures": "two new paths reserved; acceptance pending image output and scientific visual QA"
+        }
+      },
+      {
+        "binding": {
+          "path": "paper/zh/review_rounds/r26_20261018/EDIT_02_PREFLIGHT.json",
+          "sha256": "e341c19445fe36140917c78ea3a06d1dfd1a868d5f2ce702a53972de28e91ee8",
+          "size_bytes": 1691
+        },
+        "data": {
+          "utc": "2026-10-18T15:20:00.494093+00:00",
+          "files": [
+            {
+              "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+              "before_sha256": "8160546802698d1174787fc5a2eafe145e5ce2ad3e7b61b658b1d4ad872d504a",
+              "after_sha256": "474636e2c135d75f90bc88f74e53e3b84ff9361a4a5813f69fd26c986bee5989",
+              "edits": [
+                {
+                  "old": "人工六门例中的逻辑依赖与候选区域。",
+                  "new": "人工六门静态例中的逻辑依赖与候选区域，全权重为1，不代表STA测量结果。"
+                }
+              ],
+              "supplement_external_pointers": null
+            },
+            {
+              "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+              "before_sha256": "eb9c81cbc0d01ab7718da63267f3d50ea358e26661ae3e132f46097a5cdd8443",
+              "after_sha256": "7eb58c6adb1a2547aefac6168f06efcd8a5a5393799fc4fcb6d046f55dc90875",
+              "edits": [
+                {
+                  "old": "\\begin{figure*}[!tb]\n\\centering\n\\includegraphics[width=1.0\\textwidth]{manual/figures/fig1_iterative_flow_r21.pdf}\n\\caption{FAECO 的候选评估与迭代提交。接受候选提交为下一轮基准，下一轮重新提取违例锥；灰色虚线表示失效记录及可选权重更新。搜索结束后，对最终网表独立执行全网表 SEC。}\n\\label{fig:method_flow}\n\\end{figure*}",
+                  "new": "总框架见主文图1；本补充保留完整参数、枚举与失效分析。"
+                }
+              ],
+              "supplement_external_pointers": "six-gate→main2, heatmap→main3, curve→main4, pairedload→main table6, overview→main1"
+            }
+          ],
+          "full_paper_not_page_limited": true,
+          "new_EDA": false
+        }
+      },
+      {
+        "binding": {
+          "path": "paper/zh/review_rounds/r26_20261018/EDIT_03_TERMS.json",
+          "sha256": "1a5aa41ebe9ec8772f5d504fce21ba3ae83c9fe366aa93d0915399da1b59f854",
+          "size_bytes": 761
+        },
+        "data": {
+          "utc": "2026-10-18T15:22:34.662804+00:00",
+          "before_sha256": "474636e2c135d75f90bc88f74e53e3b84ff9361a4a5813f69fd26c986bee5989",
+          "after_sha256": "e8413a7bb3c176583468d2e2a1edb47b2b9b14376d705d3f561e51bf4a5c6160",
+          "edits": [
+            [
+              "利用稀疏单元和技术重映射改善时序",
+              "利用备用单元和技术重映射改善时序"
+            ],
+            [
+              "证明过程先由组合化步骤完成目标等价点，再检查未证明点为空，不能将有限展开深度本身称为完整顺序证明的依据。",
+              "证明中结构归并与\\texttt{equiv\\_simple}已完成全部目标点，进入归纳步骤前未证明点为空；有限展开深度不是该组完整证明的依据。"
+            ]
+          ],
+          "new_EDA": false
+        }
+      },
+      {
+        "binding": {
+          "path": "paper/zh/review_rounds/r26_20261018/EDIT_04_SUP_REF.json",
+          "sha256": "51193e461f460311c3b418ad3342a69a1995f4d9e40c99055db59d4c835e77ee",
+          "size_bytes": 453
+        },
+        "data": {
+          "utc": "2026-10-18T15:27:07.534130+00:00",
+          "before_sha256": "7eb58c6adb1a2547aefac6168f06efcd8a5a5393799fc4fcb6d046f55dc90875",
+          "after_sha256": "44ba6e888047a69ba13155177ce4890c980b60e4c0f77876b7719ecee66710bd",
+          "change": "Replace remaining local reference to removed legacy overview with explicit main Fig1; no result/method/data change.",
+          "reason": "source-reference QA rejected supplement_build01 despite successful TeX process"
+        }
+      }
+    ],
+    "corrected_text": [
+      {
+        "line": 146,
+        "text": "\\textbf{时序ECO与局部优化。}Ho等\\cite{ho2010eco}利用备用单元和技术重映射改善时序，侧重局部实现的重新选择。RL-Sizer\\cite{liu2021rlsizer}学习尺寸决策，AiTO\\cite{chen2024aito}联合尺寸与缓冲动作。物理感知尺寸优化\\cite{huang2025phys}和缓冲树生成\\cite{zhang2025buffalo}进一步使用物理信息或学习策略。本文复用等价替换、尺寸和缓冲这些局部动作，研究报告实例如何形成候选范围、有限STA预算如何分配；没有把动作类型本身作为新的优化原语。"
+      },
+      {
+        "line": 327,
+        "text": "单轮实验考察首个改善候选及其最终网表，不与受控20轮结果混合。8个ISCAS89网表均取得严格WNS改善，接受类型为4个JOINT、3个G和1个R，没有单独B。对应8对初始/最终网表已在共同任意二值初态模型下完成独立证明；各例证明点数与耗时见补充材料S2。证明中结构归并与\\texttt{equiv\\_simple}已完成全部目标点，进入归纳步骤前未证明点为空；有限展开深度不是该组完整证明的依据。"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "id": "METHOD",
+      "lines": [
+        164,
+        166,
+        174,
+        176,
+        178,
+        191,
+        193,
+        197,
+        199,
+        216,
+        220,
+        222,
+        248
+      ],
+      "status": "MATCH_WITH_PRIOR_PINNED_METHOD_EVIDENCE",
+      "finding": "固定t、报告序列、cover-first、结构代理/最小割、动作边界、完整H/TNS硬门/epsilon0及no-feedback语义保留。人工六门只演算，不冒称STA。原3ea ZIP与r25硬门证据沿用已核身份；本次未重新做算法全审。"
+    },
+    {
+      "id": "CP72",
+      "lines": [
+        293,
+        301,
+        303,
+        313,
+        315,
+        317
+      ],
+      "status": "MATCH",
+      "finding": "MATRIX实际重读：8458评估、6858新候选STA、192提交、72基线；W1=847、C=839、UR=1046/919/944、L=1274。保留uniform零差异、C同终点、更省例、UR局部优势，未将L差427归因纯排序。"
+    },
+    {
+      "id": "A8",
+      "lines": [
+        327
+      ],
+      "status": "MATCH_CORRECTION_RESOLVED",
+      "finding": "实际读8个SEC原日志/result/script及精确pair绑定；11/90/79/124/126/139/146/228已证明点、均0未证明；simple新增2/2/2/1/1/1/1/2，induct新增0。4JOINT/3G/1R。已由root更正证明阶段措辞。"
+    },
+    {
+      "id": "ITC_PICO",
+      "lines": [
+        329,
+        331,
+        333,
+        345,
+        346,
+        347,
+        349
+      ],
+      "status": "MATCH_WITH_DECLARED_HISTORICAL_IDENTITY_LIMITS",
+      "finding": "重读19个实际ITC结果，18严格改善；16支持域15严格改善，均值.208125/中位.18；三态3例均值1.61；全19均值.42947。b06接受台账显示WNS-.56持平、TNS逐次改善；b17完整新证明12879/0，Pico两对独立证明及X身份证书存在；regs不适用。本文保留历史runtime/model身份限制。"
+    },
+    {
+      "id": "STRATEGY",
+      "lines": [
+        360,
+        362,
+        374,
+        375,
+        376,
+        377,
+        378,
+        379,
+        380,
+        381,
+        383,
+        385
+      ],
+      "status": "MATCH_AS_DESCRIPTIVE_DISTINCT_FAMILY",
+      "finding": "实际读47个可用原result及s382旁系来源；纯G/B/随机均值/混合均值为.16125/.53625/.3975/1.07375，逐表行吻合。7个有台账例6个混合首优少于随机均值，s713相反。s382 canonical台账缺失，旁系不当作其启动证据。保留JOINT/TNS与RGB差异和命令缺项，未作割或纯排序因果归因。"
+    },
+    {
+      "id": "FEEDBACK",
+      "lines": [
+        388
+      ],
+      "status": "MATCH_FROM_40_ORIGINAL_LEDGERS",
+      "finding": "实际重读5臂×8例台账/config/result，沿已登记筛选有STA来源且非skipped_duplicate规则：Fixed1947/4146，EMA2003/4883，随机三种子2439/2476/2527（均2480.6667）。Fixed/EMA首个新STA改善位置逐例相同；最终与最大候选收益相同。该族候选累计收益与Cprime提交曲线分开。"
+    },
+    {
+      "id": "S",
+      "lines": [
+        390,
+        394
+      ],
+      "status": "MATCH_USING_COMMITTED_FINAL_FIELDS",
+      "finding": "原37汇总与126汇总、16个on/off实际result均打开；126独有/候选/测量，76降深、0改善/36持平/90退化，s641零候选。顶层wns与state.current_wns一致且八对on/off相同。non-S序列一致与预算未饱和按已登记汇总核查，没有新跑或扩大为普遍结构ECO结论。"
+    },
+    {
+      "id": "AREA_PR",
+      "lines": [
+        400,
+        409,
+        410,
+        411,
+        412,
+        413,
+        414,
+        415,
+        416,
+        418,
+        421,
+        423,
+        427
+      ],
+      "status": "MATCH",
+      "finding": "同库面积明细与既有QUANT记录相符。实际打开16份PR原日志及16份Tcl，原max WNS支持5改善/1持平/2退化(-.02/-.01)；同case脚本相同，TT/.5ns/util10或30/density.7/全局布线估计和IO未显设匹配。明确独立A8族、非签核及环境身份缺项。"
+    },
+    {
+      "id": "FLATLOAD",
+      "lines": [
+        433,
+        435,
+        437,
+        444,
+        445,
+        446,
+        448
+      ],
+      "status": "MATCH_WITH_ROOT_ACCEPTED_SCOPE",
+      "finding": "重新打开fresh RESULT与43ccd357根接受：两侧fresh理想-.98→-.83；u10 -1.23→-1.12(+.11)，u40 -2.10→-2.10，u160 -6→-6。24新STA与5失败分开，原→flat129/0、同网表控制和8零partial/零unannotated；不恢复原层级/旧F6或真实几何物理改善。"
+    },
+    {
+      "id": "COMPLETENESS",
+      "lines": [
+        135,
+        258,
+        267,
+        268,
+        269,
+        270,
+        271,
+        455,
+        457,
+        459,
+        463
+      ],
+      "status": "PRESERVED",
+      "finding": "方法→同源机制→有限预算/代价→A8跨族功能域→策略反馈/S→物理边界的角色完整；正文保留负结果与条件，未把所有族合成统一性能主张。"
+    }
+  ],
+  "must_fix_remaining": [],
+  "must_fix_identified_and_resolved": [
+    {
+      "id": "R26-M1",
+      "line": 146,
+      "initial": "稀疏单元",
+      "corrected": "备用单元",
+      "status": "root_EDIT03_resolved_and_actual_text_rechecked"
+    }
+  ],
+  "optional_identified_and_resolved": [
+    {
+      "id": "R26-O1",
+      "line": 327,
+      "initial": "组合化步骤完成目标等价点",
+      "corrected": "结构归并与equiv_simple已完成全部目标点，进入归纳前无未证明点",
+      "status": "root_EDIT03_resolved_and_actual_text_rechecked"
+    }
+  ],
+  "self_check_diagnosis": {
+    "status": "RESOLVED_WITHOUT_MANUSCRIPT_OR_EVIDENCE_CHANGE",
+    "description": "The first read-only extractor incorrectly compared S wns_history[-1] as committed final; four on-side histories differ from final committed state. Actual top-level wns and state.current_wns match each other and registered pair summary for all eight. This was an audit-extraction mistake, not a changed scientific result or new original experiment failure. No frozen artifact changed.",
+    "affected_cases": [
+      "s27",
+      "s382",
+      "s713",
+      "s953"
+    ],
+    "authoritative_fields": [
+      "outerloop_result.wns",
+      "outerloop_result.state.current_wns"
+    ],
+    "non_authoritative_for_this_endpoint": "wns_history[-1]"
+  },
+  "actual_primary_evidence_checks": {
+    "bindings": [
+      {
+        "path": "paper/zh/review_rounds/r24_20261018/METHOD_EVIDENCE.json",
+        "sha256": "b0eff5f45bf8d6ef91798e37cbbbdf5f92f9aa6ed509d4eafeaa9858471967b2",
+        "size_bytes": 115500
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/manifest.json",
+        "sha256": "2cdedb1d6316188a0ea2ebd592c879efa3ef81fabb4e033632537dd424223325",
+        "size_bytes": 27348
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/result.json",
+        "sha256": "36faa2a085569e68f377982cb135e10442db3054c5d3b88bf7456f2bf3efd758",
+        "size_bytes": 637
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/sec.log",
+        "sha256": "6a0caef6de9c301f6f806ad3cf5e3e0660a9ff877ee3c61cc92d893c343b40b8",
+        "size_bytes": 16769
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/sec.ys",
+        "sha256": "d6885b88c72c00857e6a3ae700a5411f6803d011a5f93e03d0e8db79fc287e6d",
+        "size_bytes": 672
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s27/s27/mapped.v",
+        "sha256": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+        "size_bytes": 1547
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s27/fixed/mapped.v",
+        "sha256": "b7d74dc321b08907d523f671d4cd10f63ac223cae605c7db95dc5812cb325976",
+        "size_bytes": 1547
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/result.json",
+        "sha256": "bfc15312855e23e13e9dfaa3cc22d0148b792ffa28b654c46ef451ff2a8e7d50",
+        "size_bytes": 637
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/sec.log",
+        "sha256": "f0703d9cd20bd635f5594f6b83594caa85ce62894cdc401eb0541b6c1e8c870c",
+        "size_bytes": 69205
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/sec.ys",
+        "sha256": "009c2b2e34d213b0c48a3da17612d67a8096412811229f3ae1713bb0b45a504f",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/mapped.v",
+        "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "size_bytes": 11037
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s382/fixed/mapped.v",
+        "sha256": "cdbb670f39933e94d5023e0a29cfab3d1bf1dac5cedf2e50ec704ec01dc8925f",
+        "size_bytes": 11037
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/result.json",
+        "sha256": "9647b93e1477993bd32e26fcd454e428d83372a35e840ee07301d3365fce8f26",
+        "size_bytes": 623
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/sec.log",
+        "sha256": "aecb80ed6ce8e31a7969f2ce20c8993c4f2e3561d6dfe540e5adde9e2eba5c5b",
+        "size_bytes": 59209
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/sec.ys",
+        "sha256": "e976f04aa67ecef0947aed9647e7d5081be85196211f9b0e88f878e8e88e5665",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/mapped.v",
+        "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+        "size_bytes": 9368
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s420/fixed/mapped.v",
+        "sha256": "c6471a72e9ddd5b7995c5519bdeca2fa6473418ce3789d60267a77e4033bc219",
+        "size_bytes": 9368
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/result.json",
+        "sha256": "601ea412f24ef58cf2cd9e053a47eda334f8e7cff6db79501a84bf0548813340",
+        "size_bytes": 637
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/sec.log",
+        "sha256": "ebc6876b4f9c0f3065a6444b0ba783ea99adcc1479c78fd5da2c3aae9db022dd",
+        "size_bytes": 80427
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/sec.ys",
+        "sha256": "79c28dd057c72ca6670de6b46f35bbc735d842624c4e678cf12c8743e9df8665",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/mapped.v",
+        "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+        "size_bytes": 16871
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s641/fixed/mapped.v",
+        "sha256": "b3a53ed8a2a6aec8764fadfd98cc89106b13fed599539816b53af7aed86958b1",
+        "size_bytes": 16871
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/result.json",
+        "sha256": "43850fed04715264e44d2fa3d0f84c64ba5c2ff10b528acdf0a86a3782e8fc2b",
+        "size_bytes": 637
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/sec.log",
+        "sha256": "ea28fe9ce243c8d7ca67fb7022101de2b5f649d7a64c3c4106be77e6cfc0e7d4",
+        "size_bytes": 82255
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/sec.ys",
+        "sha256": "7c99e765effba86165b29e779c87823b7dd676203346aa1ccf4e5cabc96ca8bb",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/mapped.v",
+        "sha256": "a17cf08d47e8d14861f69b96595e380690b471c3044002f22f9c4bb006afb6fd",
+        "size_bytes": 17271
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s713/fixed/mapped.v",
+        "sha256": "3c982ac08503110ad5d6c64ed76197da7d4c1fc6acc0cc032a8825d6db43a695",
+        "size_bytes": 16561
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/result.json",
+        "sha256": "bb8c37e56589b19b4e0059af415800ab1313b037dc4089a01d069fce9b1dfcc6",
+        "size_bytes": 637
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/sec.log",
+        "sha256": "442f85e2508448dc5e47b7f9189f3911b1ccb92b54fb89314f8bb96a704c2a99",
+        "size_bytes": 103431
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/sec.ys",
+        "sha256": "a8b924335753e7bb43f6f1ed7786ddc7291739820020109dfba64a043a81fe6c",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s820/s820/mapped.v",
+        "sha256": "12a3bc4d0d9bcdd9071250654a9484b80716f94e1eff454e232e2ab7e76d49e8",
+        "size_bytes": 17529
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s820/fixed/mapped.v",
+        "sha256": "2d4217b27555d6142c77bf5d707764ce7e6685d0f160f2d8373ce433365f06a6",
+        "size_bytes": 17527
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/result.json",
+        "sha256": "7bb48aa04bff170760508bcbee2cbed59fdbe00ab40959c9fa4f4f62150bd3ec",
+        "size_bytes": 638
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/sec.log",
+        "sha256": "e131eb7bdbb1734731fdb1f3685d21ac472014ec7684b6040979703cbdd3ebd0",
+        "size_bytes": 106049
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/sec.ys",
+        "sha256": "78b6aef4e2c39d273006fb035914503808d8b5823fbee2213da7b3efe0ac52c0",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/mapped.v",
+        "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+        "size_bytes": 17990
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s832/fixed/mapped.v",
+        "sha256": "11acbbf2bf61512dc800689e15336d804472c8a009917475da2fc948b7e98a99",
+        "size_bytes": 17990
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/result.json",
+        "sha256": "fb7ec9c6b21b1c1461f3775f1aaab2ca2c899b5c2872f0d7a1b49458e769fa09",
+        "size_bytes": 637
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/sec.log",
+        "sha256": "a0f8aa84e1b51c729b206052871de4a113693b7ac5fa0f66a987be9c5fa129ce",
+        "size_bytes": 149515
+      },
+      {
+        "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/sec.ys",
+        "sha256": "f20207c3476911c2e1d0c16e47b9f648614b4765065a5c7a89cdedf7135b0ed1",
+        "size_bytes": 678
+      },
+      {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/mapped.v",
+        "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+        "size_bytes": 28804
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s953/fixed/mapped.v",
+        "sha256": "84d5e6ec40ac37c27a67834f676026eb7e4ebb8d12a83707eceb212775e128c6",
+        "size_bytes": 28804
+      },
+      {
+        "path": "experiments/20260826_aggregation/summary.json",
+        "sha256": "1ca58f0fca289551557a138fc3b7c8ca1f88db777f4c91a9fa0d86d421cf5eaf",
+        "size_bytes": 10018
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/audit.json",
+        "sha256": "0869d234751af08715a15a58c98636e7ae193d8a1d423401f6181fc88a83365d",
+        "size_bytes": 939944
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b01/b01/outerloop_result.json",
+        "sha256": "5a63269ca89aba6bad08c0e67cf02ee9b9dfe9b6327d27444a1f46e061bc46f7",
+        "size_bytes": 1224652
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b02/b02/outerloop_result.json",
+        "sha256": "1948ac8cfdf8cc786a147d0d362450113c71f2fd8d04d4aec579512d73d37050",
+        "size_bytes": 104257
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b03/b03/outerloop_result.json",
+        "sha256": "6309a4fd3afb7b362cff119f6031dbd661fe98e96837eca30dc16c2df4187f6c",
+        "size_bytes": 253687
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b04/b04/outerloop_result.json",
+        "sha256": "fd8eee68e751cc33af48988738861d8d1384a59c1d3bf316bc8297deba3bcdc6",
+        "size_bytes": 683030
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b05/b05/outerloop_result.json",
+        "sha256": "44652f6e7d17fccb213854590e7c3f0a3e68f8decb5548f87178abe926ae7194",
+        "size_bytes": 539565
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b06/b06/outerloop_result.json",
+        "sha256": "4f38f19eafd5dca6bc2fa75e07672ee6a8bcb2f8f87a7d934ae60028f72f48ed",
+        "size_bytes": 1396330
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b07/b07/outerloop_result.json",
+        "sha256": "a836294bd41375dd424650eb59ff4cf49f4bd18b5b8354112f36edb31d161b41",
+        "size_bytes": 866441
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b08/b08/outerloop_result.json",
+        "sha256": "c046f79b87b6cd5f14b0f6f42331dabe41f318ba5e8b9cbcc60a299071872e36",
+        "size_bytes": 328316
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b09/b09/outerloop_result.json",
+        "sha256": "0b1f73286fb4c6d5b40658a29e6654d09d038b1c3033fa03d55699bfa9853fab",
+        "size_bytes": 303374
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b10/b10/outerloop_result.json",
+        "sha256": "44a2657f59225643125e55b09438a28515bdbb72761fff62b5eb115bd9dddacb",
+        "size_bytes": 564255
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b11/b11/outerloop_result.json",
+        "sha256": "81e97072000f6f5379a1eccc104fca766afcc06a8ac4679b5a424f4cd8771843",
+        "size_bytes": 570229
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b12/b12/outerloop_result.json",
+        "sha256": "d3e8536b530842f6e1000e326aec05f4ee778f89e46c1d077c9a30f1aca54bbb",
+        "size_bytes": 921936
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b13/b13/outerloop_result.json",
+        "sha256": "1a43501001f97b758319a2592bacca082fa461a33b54d134298630948900ed34",
+        "size_bytes": 411656
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b14/b14/outerloop_result.json",
+        "sha256": "85a514b6fe2be54059d756a1c9b891256605371473a7ef0c825a07a8c8260604",
+        "size_bytes": 3262800
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b15/b15/outerloop_result.json",
+        "sha256": "973eb355993a4f3fd21014d5ef522508c5270d01b6e25b3a000e8f2bfdfdcddf",
+        "size_bytes": 5459103
+      },
+      {
+        "path": "experiments/20260908_phase2_b17_resume/b17/outerloop_result.json",
+        "sha256": "80961e3983aa5109c1cb9885dda436d42282d163ac10cec5a1dff0216044031a",
+        "size_bytes": 6545
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b20/b20/outerloop_result.json",
+        "sha256": "f3d19c774aacb0d2c4cebe39dca7d726943834b21f6a9b81afeecba9ecfe8b46",
+        "size_bytes": 7027602
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b21/b21/outerloop_result.json",
+        "sha256": "5732128eb77d6f80aaf0ca31bfb726b109f9b782a6ed40733740e81459038f82",
+        "size_bytes": 6776876
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b22/b22/outerloop_result.json",
+        "sha256": "945f154826f8dd909518614ddabf417525cb30ba43d58d0b250f67aea6d3a723",
+        "size_bytes": 9885355
+      },
+      {
+        "path": "experiments/20260826_itc99_main/b06/b06/eval_trials.json",
+        "sha256": "b87ac975652a7952a62b96e76479cc42aea41104fff96ac2125a5d50725dbb5b",
+        "size_bytes": 7271755
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/result.json",
+        "sha256": "b5a0d5d40c0e2e533196d7909139eaa97157e4311026dcea2f9e9cf801399fb5",
+        "size_bytes": 644
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/sec.log",
+        "sha256": "4563350bdbdf70ef925de5b69547a9ca8221e3955d80344ced242223dd650a90",
+        "size_bytes": 10052501
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/sec.ys",
+        "sha256": "a96457002b16eb243ae8cf5dcb0eaa5f16d6a537e0191e22dfcea91e5cb05e60",
+        "size_bytes": 752
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/result.json",
+        "sha256": "5ab92ee6dfc534010835c41da2a46688fff48af14d1c854833170bb93de66b2b",
+        "size_bytes": 650
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/x_identity_certificate.json",
+        "sha256": "a6b7bef3261e19050f5b95389b3ecea3777a765ca442921855bcba17c4bd050c",
+        "size_bytes": 3865
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/sec.ys",
+        "sha256": "a91e49a44ff86d5b564efd45535962511c51dbca91fb90b38fa26c18350d3af9",
+        "size_bytes": 742
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/sec.log",
+        "sha256": "08e505c9abee7d8dc7aadfbe44d49472c6dbffe8970dd94053d920c067c72688",
+        "size_bytes": 4711420
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32_pcpi_mul/result.json",
+        "sha256": "9beb1707cbd29ffc60f48d6b53f9be2e3d19aa73f0e4d4e40ff2a6e5af606a65",
+        "size_bytes": 646
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32_pcpi_mul/x_identity_certificate.json",
+        "sha256": "423b5340eae49d45eb33d9aee430ef978cb73914fba3733f29b17f5017249054",
+        "size_bytes": 414
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32_pcpi_mul/sec.ys",
+        "sha256": "03efdde1ba1269981e573b4a997ee4fd47a5bb0df720b3dbc27eb337b65ce17c",
+        "size_bytes": 796
+      },
+      {
+        "path": "project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32_pcpi_mul/sec.log",
+        "sha256": "29db29ee960a293b5aa4bdb1fc0d7380c739bc5c8009ad647b6bf13288806e13",
+        "size_bytes": 533751
+      },
+      {
+        "path": "experiments/20260924_l3s_ablation/aggregation/s_ablation_summary.json",
+        "sha256": "776686560a7140d541313f02b26e8920429daf87d98ed30831b7ad97212963e3",
+        "size_bytes": 11339
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/aggregation/summarize_s_l1.json",
+        "sha256": "6c5c67026478a5555b8cc71befc6738fd00fa324385a0c6e124621e8021b9bb8",
+        "size_bytes": 5446
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/aggregation/s_ablation_summary_l1.json",
+        "sha256": "3f35207393e9a64007e23262f4f68d133edfbf1da429fc3aba1ced13e3991dfe",
+        "size_bytes": 11218
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s27/outerloop_result.json",
+        "sha256": "70c947bfd4f2c594a5492ce4326ed5b64e7be1157acf8224533e6804cec86b89",
+        "size_bytes": 121169
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s27/outerloop_result.json",
+        "sha256": "da83dea6aad3bb063fe1de20df3a54e9024a8eb9a8a48ea9eedf7defa7d768e7",
+        "size_bytes": 122000
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s382/outerloop_result.json",
+        "sha256": "e8f30fa48b2be64816f7c858078f87786a884cd42f21293c7f39f5c4ea964b19",
+        "size_bytes": 270689
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s382/outerloop_result.json",
+        "sha256": "cb57649edddcac65e1b2bd8f72d4b065b88f988a08e2c191120e91173576d9b2",
+        "size_bytes": 274146
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s420/outerloop_result.json",
+        "sha256": "3fd99f937cc83615dbf05949ad1750776a1e70eb8a6a4e5588b306885dc7de75",
+        "size_bytes": 867834
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s420/outerloop_result.json",
+        "sha256": "59ed37d992603ac480afbe6245d305e702da647bd6ffb98e07711a995faa2d59",
+        "size_bytes": 874219
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s641/outerloop_result.json",
+        "sha256": "5cff9c79c7ca0a508e77ff0c96678d6f48f54a8cfb4e7eae74f0c9b023c1e0c7",
+        "size_bytes": 672566
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s641/outerloop_result.json",
+        "sha256": "6665c67d99e25d497b44dbb00c2bd22cff0e75e73bc0b3b0cd2c297139aa29ac",
+        "size_bytes": 673191
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s713/outerloop_result.json",
+        "sha256": "6075c09b24cd928ad13b733184a8922380fd68e83449e9a79273d9405dcb58b4",
+        "size_bytes": 202107
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s713/outerloop_result.json",
+        "sha256": "afd0615afea16616054e7f80f74405dfe10943636db35f43202f5739988ee236",
+        "size_bytes": 204696
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s820/outerloop_result.json",
+        "sha256": "9b873736016495d3c299d79fe5e2880dc9b04ab2ea02521a25b3400e60237fea",
+        "size_bytes": 193986
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s820/outerloop_result.json",
+        "sha256": "27fb2e746bf64ec3ca7f37bd7c941964161926c62b3aa6047391942bbda7ce5a",
+        "size_bytes": 195874
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s832/outerloop_result.json",
+        "sha256": "438d1856635f0aabe090f26c7d7a41f4183ccd1d827616e5df80f1057cf9303d",
+        "size_bytes": 256079
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s832/outerloop_result.json",
+        "sha256": "45c82d065c12ab1db257c8ccc98070e3bd27072ed3fb9405bee7862295a309f4",
+        "size_bytes": 258229
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/off/s953/outerloop_result.json",
+        "sha256": "36ad52221df7b10a665bf6adfd1540306bf532c9965b3a6d7bcef8a167d73b31",
+        "size_bytes": 258048
+      },
+      {
+        "path": "experiments/20260928_s_l1_ablation/on/s953/outerloop_result.json",
+        "sha256": "02584569a6323966d7d2f39c40aabea6965262bfc944b9cc372ce9b5f1d81537",
+        "size_bytes": 261607
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/post_route_audit_summary.json",
+        "sha256": "20ab56b5dbcda68acf8eec775956470bec3bdf31e3fb288503c60ba188232391",
+        "size_bytes": 820
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/pre_layout_audit_summary.json",
+        "sha256": "0adca9bd6792bb6271ce23781ef56bbe97a50cad549c45bf028768f911700fa1",
+        "size_bytes": 5625
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s27/baseline/pr_run.log",
+        "sha256": "7f6e2468bfe196d21d20ab1d150fc2b80f222bf070777e53d18d9179ba54ceca",
+        "size_bytes": 31544
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s27/baseline/pr.tcl",
+        "sha256": "65c4b8e29da0716915953e40eed9feaa502efc5c91b6bc9c757bcca7267e8dc7",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s27/fixed/pr_run.log",
+        "sha256": "bb729bf107fb10824d853b5e4c1b3b7aa71586c61f152ab808a40c6dddaa3fef",
+        "size_bytes": 33592
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s27/fixed/pr.tcl",
+        "sha256": "65c4b8e29da0716915953e40eed9feaa502efc5c91b6bc9c757bcca7267e8dc7",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s382/baseline/pr_run.log",
+        "sha256": "06df586edba6f2ee62b4a2048c29efcf1a024019cb6322d0e51326c3e90b9fe2",
+        "size_bytes": 1703990
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s382/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s382/fixed/pr_run.log",
+        "sha256": "7fd49491a1f61f578f8c58e91dfd313714d1c97289de6f9f31cf9edb6cd86727",
+        "size_bytes": 853873
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s382/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s420/baseline/pr_run.log",
+        "sha256": "75b3c699d582f516321cd4d64f9ba1e42f7d722cd26ba2cfbed4598bf5b58a9b",
+        "size_bytes": 691029
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s420/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s420/fixed/pr_run.log",
+        "sha256": "f0bb220c11d0aefcf4cf5566f2234f9386aedcf747634c4fd3dedfbded204c3b",
+        "size_bytes": 691161
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s420/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s641/baseline/pr_run.log",
+        "sha256": "a843597c0acbd8ea950b65217f78d4428e96f9803f0fc6d4bac9b0f4b9271114",
+        "size_bytes": 596157
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s641/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s641/fixed/pr_run.log",
+        "sha256": "fe48f37895eb0f014b557393f0d09d4f262443c0ec5eb92e60036962f1a25384",
+        "size_bytes": 596233
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s641/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s713/baseline/pr_run.log",
+        "sha256": "5b152638ceda50af98f790a5837c6948a9f2a44c0b44ae4e63237d4d99f31dae",
+        "size_bytes": 608381
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s713/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s713/fixed/pr_run.log",
+        "sha256": "92546ec68d9fc38117c96921876e5d499485ba530bd7efac1388b6d68ae543c5",
+        "size_bytes": 609544
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s713/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s820/baseline/pr_run.log",
+        "sha256": "7e48d2844cfba380be70804a3f5777f4d478f8102a1f0dd3fb208c17503e7801",
+        "size_bytes": 551711
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s820/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s820/fixed/pr_run.log",
+        "sha256": "1b33d1b7882f95c102b7c8bcd92131b9a8ba860247fe3100a43864969880e3d7",
+        "size_bytes": 553330
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s820/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s832/baseline/pr_run.log",
+        "sha256": "a7459305b4d45e10659f0a3b3fbf07d8addbd14469bb527830edc5cc770f7c6a",
+        "size_bytes": 565709
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s832/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s832/fixed/pr_run.log",
+        "sha256": "ade44250fbd3673284b85a6dfc4828c09c13e1869c51b40ce3b0698fa46867e1",
+        "size_bytes": 567413
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s832/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s953/baseline/pr_run.log",
+        "sha256": "9150a8c9e44214ff859a7ccf719261991141f66342e2a36234d5d34bb5f7be7c",
+        "size_bytes": 1817929
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s953/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s953/fixed/pr_run.log",
+        "sha256": "cff4d8dd5b38e112b5808b215f6fd9d3f1a15693fdfe827220666bf052859e5f",
+        "size_bytes": 1818445
+      },
+      {
+        "path": "experiments/20260807_real_pr_iscas8/s953/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "size_bytes": 1122
+      },
+      {
+        "path": "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json",
+        "sha256": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738",
+        "size_bytes": 3025552
+      },
+      {
+        "path": "paper/zh/review_rounds/r25_20261018/TNS_HARD_GATE_EVIDENCE.json",
+        "sha256": "0bdad71a9796af30db948c5fbe3b5c73136eaf534b3ff971242fe7fd0db03e43",
+        "size_bytes": 21410
+      },
+      {
+        "path": "project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2_STA_runs/RESULT.json",
+        "sha256": "eebc53982adeccb789022ebdc50252b65e8fa7196d1724f803afed0f172c358f",
+        "size_bytes": 73102
+      },
+      {
+        "path": "project_docs/evidence/r24_paper_revision_20261018/PAIRED_SPEF_FLAT_V2_STA_ROOT_ACCEPTANCE.json",
+        "sha256": "43ccd357209d5890fb0a2e700b04260778bc3036b362185660361d1ed2636489",
+        "size_bytes": 1745
+      },
+      {
+        "path": "project_docs/evidence/r24_paper_revision_20261018/QUANTITATIVE_REUSE.json",
+        "sha256": "4eb77b2417b3a7008564b960d30306f850e822f5bb1d7444dfaa5cf2d61fcf81",
+        "size_bytes": 26562
+      }
+    ],
+    "A8": [
+      {
+        "circuit": "s27",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          11,
+          0
+        ],
+        "simple_new": 2,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "JOINT"
+        ]
+      },
+      {
+        "circuit": "s382",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          90,
+          0
+        ],
+        "simple_new": 2,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "JOINT"
+        ]
+      },
+      {
+        "circuit": "s420",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          79,
+          0
+        ],
+        "simple_new": 2,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "JOINT"
+        ]
+      },
+      {
+        "circuit": "s641",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          124,
+          0
+        ],
+        "simple_new": 1,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "G"
+        ]
+      },
+      {
+        "circuit": "s713",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          126,
+          0
+        ],
+        "simple_new": 1,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "G"
+        ]
+      },
+      {
+        "circuit": "s820",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          139,
+          0
+        ],
+        "simple_new": 1,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "R"
+        ]
+      },
+      {
+        "circuit": "s832",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          146,
+          0
+        ],
+        "simple_new": 1,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "G"
+        ]
+      },
+      {
+        "circuit": "s953",
+        "status": "pass",
+        "rc": 0,
+        "counts": [
+          228,
+          0
+        ],
+        "simple_new": 2,
+        "induct_new": 0,
+        "zero_before_induct": true,
+        "action_kinds": [
+          "JOINT"
+        ]
+      }
+    ],
+    "unified": {
+      "iscas89": [
+        {
+          "circuit": "s27",
+          "baseline_wns": -0.27,
+          "final_wns": -0.18,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 35,
+          "final_patch_id": "patch_G10_critical_path_cover",
+          "hist_baseline_wns": -0.27,
+          "hist_final_wns": -0.18
+        },
+        {
+          "circuit": "s382",
+          "baseline_wns": -0.98,
+          "final_wns": -0.83,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 22,
+          "final_patch_id": "patch_C3_Q3VD_critical_path_cover",
+          "hist_baseline_wns": -0.98,
+          "hist_final_wns": -0.89
+        },
+        {
+          "circuit": "s420",
+          "baseline_wns": -1.56,
+          "final_wns": -1.21,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 43,
+          "final_patch_id": "patch_I307_critical_path_cover",
+          "hist_baseline_wns": -1.56,
+          "hist_final_wns": -1.55
+        },
+        {
+          "circuit": "s641",
+          "baseline_wns": -1.63,
+          "final_wns": -1.17,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 126,
+          "final_patch_id": "patch_G125_critical_path_cover",
+          "hist_baseline_wns": -1.63,
+          "hist_final_wns": -1.59
+        },
+        {
+          "circuit": "s713",
+          "baseline_wns": -1.33,
+          "final_wns": -1.28,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 29,
+          "final_patch_id": "patch_G126_critical_path_cover",
+          "hist_baseline_wns": -1.33,
+          "hist_final_wns": -1.31
+        },
+        {
+          "circuit": "s820",
+          "baseline_wns": -1.19,
+          "final_wns": -1.17,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 57,
+          "final_patch_id": "patch_G99_critical_path_cover",
+          "hist_baseline_wns": -1.19,
+          "hist_final_wns": -1.17
+        },
+        {
+          "circuit": "s832",
+          "baseline_wns": -1.23,
+          "final_wns": -1.16,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 24,
+          "final_patch_id": "patch_G96_critical_path_cover",
+          "hist_baseline_wns": -1.23,
+          "hist_final_wns": -1.17
+        },
+        {
+          "circuit": "s953",
+          "baseline_wns": -1.31,
+          "final_wns": -1.21,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 21,
+          "final_patch_id": "patch_II23_critical_path_cover",
+          "hist_baseline_wns": -1.31,
+          "hist_final_wns": -1.27
+        }
+      ],
+      "itc99": [
+        {
+          "circuit": "b01",
+          "baseline_wns": -0.63,
+          "final_wns": -0.62,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 597,
+          "final_patch_id": "patch_U36_critical_path_cover",
+          "hist_baseline_wns": -0.63,
+          "hist_final_wns": -0.62
+        },
+        {
+          "circuit": "b02",
+          "baseline_wns": -0.24,
+          "final_wns": -0.22,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 97,
+          "final_patch_id": "patch_U33_critical_path_cover",
+          "hist_baseline_wns": -0.24,
+          "hist_final_wns": -0.22
+        },
+        {
+          "circuit": "b03",
+          "baseline_wns": -1.86,
+          "final_wns": -1.27,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 70,
+          "final_patch_id": "patch_U212_critical_path_cover",
+          "hist_baseline_wns": -1.86,
+          "hist_final_wns": -1.43
+        },
+        {
+          "circuit": "b04",
+          "baseline_wns": -2.43,
+          "final_wns": -2.25,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 265,
+          "final_patch_id": "patch_U332_critical_path_cover",
+          "hist_baseline_wns": -2.43,
+          "hist_final_wns": -2.28
+        },
+        {
+          "circuit": "b05",
+          "baseline_wns": -3.75,
+          "final_wns": -3.65,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 70,
+          "final_patch_id": "patch_U738_critical_path_cover",
+          "hist_baseline_wns": -3.75,
+          "hist_final_wns": -3.63
+        },
+        {
+          "circuit": "b06",
+          "baseline_wns": -0.56,
+          "final_wns": -0.56,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 664,
+          "final_patch_id": "patch_U56_critical_path_cover",
+          "hist_baseline_wns": -0.56,
+          "hist_final_wns": -0.56
+        },
+        {
+          "circuit": "b07",
+          "baseline_wns": -2.13,
+          "final_wns": -1.94,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 304,
+          "final_patch_id": "patch_U358_critical_path_cover",
+          "hist_baseline_wns": -2.13,
+          "hist_final_wns": -2.02
+        },
+        {
+          "circuit": "b08",
+          "baseline_wns": -1.23,
+          "final_wns": -1.12,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 131,
+          "final_patch_id": "patch_U186_critical_path_cover",
+          "hist_baseline_wns": -1.23,
+          "hist_final_wns": -1.18
+        },
+        {
+          "circuit": "b09",
+          "baseline_wns": -1.14,
+          "final_wns": -1.04,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 117,
+          "final_patch_id": "patch_U116_critical_path_cover",
+          "hist_baseline_wns": -1.14,
+          "hist_final_wns": -1.13
+        },
+        {
+          "circuit": "b10",
+          "baseline_wns": -1.4,
+          "final_wns": -1.26,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 214,
+          "final_patch_id": "patch_U239_critical_path_cover",
+          "hist_baseline_wns": -1.4,
+          "hist_final_wns": -1.28
+        },
+        {
+          "circuit": "b11",
+          "baseline_wns": -1.95,
+          "final_wns": -1.75,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 85,
+          "final_patch_id": "patch_U377_critical_path_cover",
+          "hist_baseline_wns": -1.95,
+          "hist_final_wns": -1.82
+        },
+        {
+          "circuit": "b12",
+          "baseline_wns": -2.28,
+          "final_wns": -1.8,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 64,
+          "final_patch_id": "patch_U1568_critical_path_cover",
+          "hist_baseline_wns": -2.28,
+          "hist_final_wns": -1.99
+        },
+        {
+          "circuit": "b13",
+          "baseline_wns": -1.45,
+          "final_wns": -1.26,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 133,
+          "final_patch_id": "patch_U462_critical_path_cover",
+          "hist_baseline_wns": -1.45,
+          "hist_final_wns": -1.36
+        },
+        {
+          "circuit": "b14",
+          "baseline_wns": -12.53,
+          "final_wns": -12.35,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 115,
+          "final_patch_id": "patch_U3211_critical_path_cover",
+          "hist_baseline_wns": -12.53,
+          "hist_final_wns": -12.38
+        },
+        {
+          "circuit": "b15",
+          "baseline_wns": -12.55,
+          "final_wns": -12.46,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 25,
+          "final_patch_id": "patch_U2956_critical_path_cover",
+          "hist_baseline_wns": -12.55,
+          "hist_final_wns": -11.85
+        },
+        {
+          "circuit": "b17",
+          "baseline_wns": -16.53,
+          "final_wns": -16.15,
+          "success": true,
+          "iterations": 1,
+          "n_candidate_sta_runs": 104,
+          "final_patch_id": "patch_P2_U2983_random_cut",
+          "hist_baseline_wns": -16.53,
+          "hist_final_wns": -16.1,
+          "scaled_run": {
+            "output_dir": "experiments/20260908_phase2_b17_resume",
+            "strategies": [
+              "R",
+              "G"
+            ],
+            "clock_port": "CK",
+            "endpoint": "_173336_",
+            "target_net": "P2_U2983",
+            "accepted_change": {
+              "instance": "_184320_",
+              "kind": "G",
+              "from_type": "sky130_fd_sc_hd__nor4b_1",
+              "to_type": "sky130_fd_sc_hd__nor4b_2"
+            },
+            "improvement_ns": 0.38,
+            "sec": {
+              "result": "pass",
+              "equiv_proven": 12812,
+              "equiv_unproven": 1,
+              "sec_dir": "experiments/20260908_phase2_b17_resume/sec",
+              "sec_result": "experiments/20260908_phase2_b17_resume/sec/sec_result.json"
+            }
+          }
+        },
+        {
+          "circuit": "b20",
+          "baseline_wns": -13.21,
+          "final_wns": -11.23,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 144,
+          "final_patch_id": "patch_P1_U3242_critical_path_cover",
+          "hist_baseline_wns": -13.21,
+          "hist_final_wns": -11.23
+        },
+        {
+          "circuit": "b21",
+          "baseline_wns": -13.7,
+          "final_wns": -10.95,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 43,
+          "final_patch_id": "patch_P1_U3355_critical_path_cover",
+          "hist_baseline_wns": -13.7,
+          "hist_final_wns": -11.54
+        },
+        {
+          "circuit": "b22",
+          "baseline_wns": -11.68,
+          "final_wns": -11.21,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 121,
+          "final_patch_id": "patch_P1_U3525_critical_path_cover",
+          "hist_baseline_wns": -11.68,
+          "hist_final_wns": -11.21
+        }
+      ],
+      "picorv32": [
+        {
+          "circuit": "picorv32",
+          "baseline_wns": -9.96,
+          "final_wns": -8.83,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 25,
+          "final_patch_id": "patch__00005_[0]_critical_path_cover",
+          "hist_baseline_wns": -7.66,
+          "hist_final_wns": -7.65
+        },
+        {
+          "circuit": "picorv32_pcpi_mul",
+          "baseline_wns": -4.22,
+          "final_wns": -4.15,
+          "success": true,
+          "iterations": 8,
+          "n_candidate_sta_runs": 166,
+          "final_patch_id": "patch__0121__critical_path_cover",
+          "hist_baseline_wns": -4.09,
+          "hist_final_wns": -4.09
+        },
+        {
+          "circuit": "picorv32_regs",
+          "baseline_wns": null,
+          "final_wns": null,
+          "success": null,
+          "iterations": null,
+          "n_candidate_sta_runs": null,
+          "final_patch_id": null,
+          "hist_baseline_wns": -0.19,
+          "hist_final_wns": -0.19
+        }
+      ]
+    },
+    "ITC_actual_endpoint_checks": [
+      {
+        "circuit": "b01",
+        "baseline": -0.63,
+        "final": -0.62,
+        "delta": 0.010000000000000009,
+        "supported": true
+      },
+      {
+        "circuit": "b02",
+        "baseline": -0.24,
+        "final": -0.22,
+        "delta": 0.01999999999999999,
+        "supported": true
+      },
+      {
+        "circuit": "b03",
+        "baseline": -1.86,
+        "final": -1.27,
+        "delta": 0.5900000000000001,
+        "supported": true
+      },
+      {
+        "circuit": "b04",
+        "baseline": -2.43,
+        "final": -2.25,
+        "delta": 0.18000000000000016,
+        "supported": true
+      },
+      {
+        "circuit": "b05",
+        "baseline": -3.75,
+        "final": -3.65,
+        "delta": 0.10000000000000009,
+        "supported": true
+      },
+      {
+        "circuit": "b06",
+        "baseline": -0.56,
+        "final": -0.56,
+        "delta": 0,
+        "supported": true
+      },
+      {
+        "circuit": "b07",
+        "baseline": -2.13,
+        "final": -1.94,
+        "delta": 0.18999999999999995,
+        "supported": true
+      },
+      {
+        "circuit": "b08",
+        "baseline": -1.23,
+        "final": -1.12,
+        "delta": 0.10999999999999988,
+        "supported": true
+      },
+      {
+        "circuit": "b09",
+        "baseline": -1.14,
+        "final": -1.04,
+        "delta": 0.09999999999999987,
+        "supported": false
+      },
+      {
+        "circuit": "b10",
+        "baseline": -1.4,
+        "final": -1.26,
+        "delta": 0.1399999999999999,
+        "supported": true
+      },
+      {
+        "circuit": "b11",
+        "baseline": -1.95,
+        "final": -1.75,
+        "delta": 0.19999999999999996,
+        "supported": true
+      },
+      {
+        "circuit": "b12",
+        "baseline": -2.28,
+        "final": -1.8,
+        "delta": 0.47999999999999976,
+        "supported": true
+      },
+      {
+        "circuit": "b13",
+        "baseline": -1.45,
+        "final": -1.26,
+        "delta": 0.18999999999999995,
+        "supported": true
+      },
+      {
+        "circuit": "b14",
+        "baseline": -12.53,
+        "final": -12.35,
+        "delta": 0.17999999999999972,
+        "supported": true
+      },
+      {
+        "circuit": "b15",
+        "baseline": -12.55,
+        "final": -12.46,
+        "delta": 0.08999999999999986,
+        "supported": true
+      },
+      {
+        "circuit": "b17",
+        "baseline": -16.53,
+        "final": -16.15,
+        "delta": 0.38000000000000256,
+        "supported": true
+      },
+      {
+        "circuit": "b20",
+        "baseline": -13.21,
+        "final": -11.23,
+        "delta": 1.9800000000000004,
+        "supported": false
+      },
+      {
+        "circuit": "b21",
+        "baseline": -13.7,
+        "final": -10.95,
+        "delta": 2.75,
+        "supported": false
+      },
+      {
+        "circuit": "b22",
+        "baseline": -11.68,
+        "final": -11.21,
+        "delta": 0.46999999999999886,
+        "supported": true
+      }
+    ],
+    "ITC_recomputed_stats": [
+      {
+        "stratum": "all19",
+        "n": 19,
+        "strict_improvements": 18,
+        "mean": 0.42947368421052634,
+        "median": 0.18000000000000016
+      },
+      {
+        "stratum": "supported16",
+        "n": 16,
+        "strict_improvements": 15,
+        "mean": 0.20812500000000003,
+        "median": 0.17999999999999994
+      },
+      {
+        "stratum": "tristate3",
+        "n": 3,
+        "strict_improvements": 3,
+        "mean": 1.61,
+        "median": 1.9800000000000004
+      }
+    ],
+    "B06_accepted_TNS_records": [
+      {
+        "wns": -0.56,
+        "tns": -3.97,
+        "reference": {
+          "setup_wns": -0.56,
+          "setup_tns": -3.98,
+          "hold_min_slack": 0.53
+        }
+      },
+      {
+        "wns": -0.56,
+        "tns": -3.96,
+        "reference": {
+          "setup_wns": -0.56,
+          "setup_tns": -3.97,
+          "hold_min_slack": 0.53
+        }
+      },
+      {
+        "wns": -0.56,
+        "tns": -3.95,
+        "reference": {
+          "setup_wns": -0.56,
+          "setup_tns": -3.96,
+          "hold_min_slack": 0.53
+        }
+      },
+      {
+        "wns": -0.56,
+        "tns": -3.94,
+        "reference": {
+          "setup_wns": -0.56,
+          "setup_tns": -3.95,
+          "hold_min_slack": 0.53
+        }
+      },
+      {
+        "wns": -0.56,
+        "tns": -3.93,
+        "reference": {
+          "setup_wns": -0.56,
+          "setup_tns": -3.94,
+          "hold_min_slack": 0.53
+        }
+      },
+      {
+        "wns": -0.56,
+        "tns": -3.92,
+        "reference": {
+          "setup_wns": -0.56,
+          "setup_tns": -3.93,
+          "hold_min_slack": 0.53
+        }
+      }
+    ],
+    "B17": {
+      "result": {
+        "status": "pass",
+        "returncode": 0,
+        "command": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/bin/yosys",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/sec.ys"
+        ],
+        "runtime_s": 13.375,
+        "initial_sha256": "1e47b8cc8c9c6394488e916ecdcbe89140a0e605e2f43700833b3dec25cbe644",
+        "final_sha256": "9903fd632e3e139833b0ef5c308fd6c79f50b22fc7663ec2e46512e54100b82a",
+        "shared_helpers_sha256": "2a266c1512a406a9c62fc7ce0a8365af8f6bfb3ae1dffc0c42ea9bf9d6cea4e4",
+        "method": "Yosys equiv_simple + equiv_induct seq10, full-netlist"
+      },
+      "counts": [
+        [
+          "12879",
+          "0"
+        ]
+      ]
+    },
+    "Pico": [
+      {
+        "circuit": "picorv32",
+        "delta": 1.1300000000000008,
+        "proof_result": {
+          "status": "pass",
+          "returncode": 0,
+          "command": [
+            "wsl.exe",
+            "-d",
+            "Ubuntu",
+            "--",
+            "/usr/bin/yosys",
+            "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32/sec.ys"
+          ],
+          "runtime_s": 6.078000000008615,
+          "initial_sha256": "67a47d9d78215ed2422bf5076fb609baae096c74e8e557aa54aa42fc2f3e0429",
+          "final_sha256": "b5fd51c45519123c9eb293a7d347ad57c4bed053e83875d51752a01e0297704b",
+          "shared_helpers_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "method": "Yosys equiv_simple + equiv_induct seq10, full-netlist"
+        },
+        "x_certificate_status": null,
+        "x_certificate_keys": [
+          "schema",
+          "certified",
+          "scope",
+          "sources",
+          "gold_text_utf8_sha256",
+          "gate_text_utf8_sha256",
+          "reason"
+        ]
+      },
+      {
+        "circuit": "picorv32_pcpi_mul",
+        "delta": 0.0699999999999994,
+        "proof_result": {
+          "status": "pass",
+          "returncode": 0,
+          "command": [
+            "wsl.exe",
+            "-d",
+            "Ubuntu",
+            "--",
+            "/usr/bin/yosys",
+            "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_b_model_audit_20261016/new_model_proofs/picorv32_pcpi_mul/sec.ys"
+          ],
+          "runtime_s": 0.75,
+          "initial_sha256": "1097f15e277ed20a86b75e94c1bd996002ed3413a15ef305e5eebcbd3f6a5232",
+          "final_sha256": "d64a98ec6e5b105aa736352d3733551918cd4308a0cf696bf51449b8c707180c",
+          "shared_helpers_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "method": "Yosys equiv_simple + equiv_induct seq10, full-netlist"
+        },
+        "x_certificate_status": null,
+        "x_certificate_keys": [
+          "schema",
+          "certified",
+          "scope",
+          "sources",
+          "gold_text_utf8_sha256",
+          "gate_text_utf8_sha256",
+          "reason"
+        ]
+      }
+    ],
+    "S": {
+      "original37": 37,
+      "totals": {
+        "uniq": 126,
+        "extr": 1724,
+        "cand": 126,
+        "meas": 126,
+        "acc": 0
+      },
+      "tier2": {
+        "n": 126,
+        "ok": 109,
+        "sky": 76,
+        "pos": 0,
+        "zero": 36,
+        "neg": 90
+      },
+      "tier3": {
+        "paired_improved": 0,
+        "paired_tied": 8,
+        "paired_worse": 0,
+        "n_paired": 8,
+        "total_accepted": 0
+      },
+      "per_circuit": [
+        {
+          "circuit": "s27",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -0.27,
+              "actual_top_level_final_wns": -0.17,
+              "state_current_wns": -0.17,
+              "wns_history_last_not_endpoint": -0.17,
+              "sta_used": 127,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -0.27,
+              "actual_top_level_final_wns": -0.17,
+              "state_current_wns": -0.17,
+              "wns_history_last_not_endpoint": -0.27,
+              "sta_used": 129,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s382",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -0.98,
+              "actual_top_level_final_wns": -0.76,
+              "state_current_wns": -0.76,
+              "wns_history_last_not_endpoint": -0.76,
+              "sta_used": 366,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -0.98,
+              "actual_top_level_final_wns": -0.76,
+              "state_current_wns": -0.76,
+              "wns_history_last_not_endpoint": -0.86,
+              "sta_used": 398,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s420",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -1.56,
+              "actual_top_level_final_wns": -0.59,
+              "state_current_wns": -0.59,
+              "wns_history_last_not_endpoint": -0.59,
+              "sta_used": 476,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -1.56,
+              "actual_top_level_final_wns": -0.59,
+              "state_current_wns": -0.59,
+              "wns_history_last_not_endpoint": -0.59,
+              "sta_used": 482,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s641",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -1.63,
+              "actual_top_level_final_wns": -0.99,
+              "state_current_wns": -0.99,
+              "wns_history_last_not_endpoint": -0.99,
+              "sta_used": 319,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -1.63,
+              "actual_top_level_final_wns": -0.99,
+              "state_current_wns": -0.99,
+              "wns_history_last_not_endpoint": -0.99,
+              "sta_used": 319,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s713",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -1.33,
+              "actual_top_level_final_wns": -1.2,
+              "state_current_wns": -1.2,
+              "wns_history_last_not_endpoint": -1.2,
+              "sta_used": 127,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -1.33,
+              "actual_top_level_final_wns": -1.2,
+              "state_current_wns": -1.2,
+              "wns_history_last_not_endpoint": -1.21,
+              "sta_used": 149,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s820",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -1.19,
+              "actual_top_level_final_wns": -1.17,
+              "state_current_wns": -1.17,
+              "wns_history_last_not_endpoint": -1.17,
+              "sta_used": 185,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -1.19,
+              "actual_top_level_final_wns": -1.17,
+              "state_current_wns": -1.17,
+              "wns_history_last_not_endpoint": -1.17,
+              "sta_used": 199,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s832",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -1.23,
+              "actual_top_level_final_wns": -1.14,
+              "state_current_wns": -1.14,
+              "wns_history_last_not_endpoint": -1.14,
+              "sta_used": 157,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -1.23,
+              "actual_top_level_final_wns": -1.14,
+              "state_current_wns": -1.14,
+              "wns_history_last_not_endpoint": -1.14,
+              "sta_used": 174,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        },
+        {
+          "circuit": "s953",
+          "rows": [
+            {
+              "arm": "off",
+              "baseline": -1.31,
+              "actual_top_level_final_wns": -1.2,
+              "state_current_wns": -1.2,
+              "wns_history_last_not_endpoint": -1.2,
+              "sta_used": 190,
+              "sta_budget": 1600
+            },
+            {
+              "arm": "on",
+              "baseline": -1.31,
+              "actual_top_level_final_wns": -1.2,
+              "state_current_wns": -1.2,
+              "wns_history_last_not_endpoint": -1.43,
+              "sta_used": 223,
+              "sta_budget": 1600
+            }
+          ],
+          "nonS_sequence_same_registered": true
+        }
+      ]
+    },
+    "PR_actual_logs_and_Tcl": [
+      {
+        "circuit": "s27",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -0.36,
+            "Tcl_SHA": "65c4b8e29da0716915953e40eed9feaa502efc5c91b6bc9c757bcca7267e8dc7",
+            "utilization": 10,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -0.22,
+            "Tcl_SHA": "65c4b8e29da0716915953e40eed9feaa502efc5c91b6bc9c757bcca7267e8dc7",
+            "utilization": 10,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": 0.14
+      },
+      {
+        "circuit": "s382",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -1.16,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -1.02,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": 0.14
+      },
+      {
+        "circuit": "s420",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -1.8,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -1.82,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": -0.02
+      },
+      {
+        "circuit": "s641",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -2.1,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -2.02,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": 0.08
+      },
+      {
+        "circuit": "s713",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -1.59,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -1.58,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": 0.01
+      },
+      {
+        "circuit": "s820",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -1.52,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -1.49,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": 0.03
+      },
+      {
+        "circuit": "s832",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -1.51,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -1.51,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": 0
+      },
+      {
+        "circuit": "s953",
+        "rows": [
+          {
+            "side": "baseline",
+            "raw_log_WNS": -1.6,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          },
+          {
+            "side": "fixed",
+            "raw_log_WNS": -1.61,
+            "Tcl_SHA": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+            "utilization": 30,
+            "density_07": true,
+            "TT_lib": true,
+            "period_05": true,
+            "global_routing_parasitics": true,
+            "explicit_IO_set": false
+          }
+        ],
+        "delta": -0.01
+      }
+    ],
+    "Cprime_totals": {
+      "eval": 8458,
+      "STA": 6858,
+      "commits": 192,
+      "baseline_STA": 72
+    },
+    "Cprime_arm_counts": {
+      "W0": 71,
+      "U0": 71,
+      "W1": 847,
+      "U1": 847,
+      "C": 839,
+      "UR1": 1046,
+      "UR2": 919,
+      "UR3": 944,
+      "L": 1274
+    }
+  },
+  "strategy_primary_evidence_checks": {
+    "means": {
+      "pureG": 0.16125000000000003,
+      "pureB": 0.53625,
+      "random_mean": 0.3975,
+      "hybrid": 1.07375
+    },
+    "table": [
+      {
+        "circuit": "s27",
+        "pureG": 0.09000000000000002,
+        "pureB": 0.28,
+        "random_mean": 0.28,
+        "hybrid": 0.28
+      },
+      {
+        "circuit": "s382",
+        "pureG": 0.16999999999999993,
+        "pureB": 0.18999999999999995,
+        "random_mean": 0.18999999999999995,
+        "hybrid": 1
+      },
+      {
+        "circuit": "s420",
+        "pureG": 0.3500000000000001,
+        "pureB": 1,
+        "random_mean": 1.1466666666666667,
+        "hybrid": 1.54
+      },
+      {
+        "circuit": "s641",
+        "pureG": 0.44999999999999996,
+        "pureB": 1.27,
+        "random_mean": 0.5733333333333333,
+        "hybrid": 1.63
+      },
+      {
+        "circuit": "s713",
+        "pureG": 0.050000000000000044,
+        "pureB": 0.99,
+        "random_mean": 0.64,
+        "hybrid": 1.33
+      },
+      {
+        "circuit": "s820",
+        "pureG": 0.020000000000000018,
+        "pureB": 0.2599999999999999,
+        "random_mean": 0.15,
+        "hybrid": 0.99
+      },
+      {
+        "circuit": "s832",
+        "pureG": 0.07000000000000006,
+        "pureB": 0.06000000000000005,
+        "random_mean": 0.08000000000000007,
+        "hybrid": 0.57
+      },
+      {
+        "circuit": "s953",
+        "pureG": 0.09000000000000008,
+        "pureB": 0.24,
+        "random_mean": 0.1200000000000001,
+        "hybrid": 1.25
+      }
+    ],
+    "first_strict_records": [
+      {
+        "circuit": "s27",
+        "hybrid": 1,
+        "random": [
+          3,
+          3,
+          1
+        ],
+        "random_mean": 2.3333333333333335,
+        "hybrid_less": true
+      },
+      {
+        "circuit": "s420",
+        "hybrid": 2,
+        "random": [
+          5,
+          1,
+          1
+        ],
+        "random_mean": 2.3333333333333335,
+        "hybrid_less": true
+      },
+      {
+        "circuit": "s641",
+        "hybrid": 1,
+        "random": [
+          7,
+          5,
+          1
+        ],
+        "random_mean": 4.333333333333333,
+        "hybrid_less": true
+      },
+      {
+        "circuit": "s713",
+        "hybrid": 7,
+        "random": [
+          1,
+          5,
+          2
+        ],
+        "random_mean": 2.6666666666666665,
+        "hybrid_less": false
+      },
+      {
+        "circuit": "s820",
+        "hybrid": 1,
+        "random": [
+          1,
+          3,
+          1
+        ],
+        "random_mean": 1.6666666666666667,
+        "hybrid_less": true
+      },
+      {
+        "circuit": "s832",
+        "hybrid": 1,
+        "random": [
+          1,
+          2,
+          1
+        ],
+        "random_mean": 1.3333333333333333,
+        "hybrid_less": true
+      },
+      {
+        "circuit": "s953",
+        "hybrid": 1,
+        "random": [
+          3,
+          1,
+          1
+        ],
+        "random_mean": 1.6666666666666667,
+        "hybrid_less": true
+      }
+    ],
+    "observations": [
+      {
+        "arm": "hybrid",
+        "circuit": "s27",
+        "gain": 0.28,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s27/hybrid_result.json",
+          "sha256": "85fa5800476ac72ba4251d39285c640a23f20a0fa5bcbbcde84eef7eb723aab9",
+          "size_bytes": 33684
+        }
+      },
+      {
+        "arm": "hybrid",
+        "circuit": "s420",
+        "gain": 1.54,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 2,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s420/hybrid_result.json",
+          "sha256": "166ffb8c3585597f0f86eea6aaa0ecae265dbe94276b88ccf3e93424162f27a5",
+          "size_bytes": 167520
+        }
+      },
+      {
+        "arm": "hybrid",
+        "circuit": "s641",
+        "gain": 1.63,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s641/hybrid_result.json",
+          "sha256": "07187f3efe91627a89725e9172e72adef2d9c489cc121218c5bad55b795903f9",
+          "size_bytes": 234182
+        }
+      },
+      {
+        "arm": "hybrid",
+        "circuit": "s713",
+        "gain": 1.33,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 7,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s713/hybrid_result.json",
+          "sha256": "07af529702d7db977d7b6cb6129cf55809d339765380fd3344d0ae4ef88ff61a",
+          "size_bytes": 224910
+        }
+      },
+      {
+        "arm": "hybrid",
+        "circuit": "s820",
+        "gain": 0.99,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s820/hybrid_result.json",
+          "sha256": "0662e36a17157e7c35a71b79df5212d4df1acf80e51bfae4773b261254d8713c",
+          "size_bytes": 425665
+        }
+      },
+      {
+        "arm": "hybrid",
+        "circuit": "s832",
+        "gain": 0.57,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s832/hybrid_result.json",
+          "sha256": "04d12dbcde476a8f571adeeab2b80e105d93c1cb96ae6fec3fe3cbcc80aa40d4",
+          "size_bytes": 399798
+        }
+      },
+      {
+        "arm": "hybrid",
+        "circuit": "s953",
+        "gain": 1.25,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "JOINT",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260807_multiround_8c_067/s953/hybrid_result.json",
+          "sha256": "20111c500778fdd40546c42d9d34382216d79e3c18d2dfd0d92a8da087d79f25",
+          "size_bytes": 598621
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s27",
+        "gain": 0.09000000000000002,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s27/hybrid_result.json",
+          "sha256": "c872b2a7aee8a8ac81f719689b4abc054f2ef4cb1366b85cf6205c51cf996b1f",
+          "size_bytes": 9639
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s382",
+        "gain": 0.16999999999999993,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s382/hybrid_result.json",
+          "sha256": "399289dbfe55996fe183fd0abd2ec497e9a634086e37b4c77d191b9abf061bcf",
+          "size_bytes": 121695
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s420",
+        "gain": 0.3500000000000001,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 2,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s420/hybrid_result.json",
+          "sha256": "9261ae3276f582b2b67ec46ad63000f45893914d139c6e9f75bf0de703ec3c92",
+          "size_bytes": 40752
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s641",
+        "gain": 0.44999999999999996,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s641/hybrid_result.json",
+          "sha256": "d4b4adbe7ccce5aef716ff2d5bc30b15ff310e960625918c41010d1f4a0f3d8d",
+          "size_bytes": 123184
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s713",
+        "gain": 0.050000000000000044,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 5,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s713/hybrid_result.json",
+          "sha256": "097c17ccc359c17755e6997e64939156f2dbf5e0b621390417a068dd1c4fd6e1",
+          "size_bytes": 85606
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s820",
+        "gain": 0.020000000000000018,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 6,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s820/hybrid_result.json",
+          "sha256": "35c61038fc70610b63750f0b1eff1beba92eb081ce40bfa09f944ac67ff99494",
+          "size_bytes": 122305
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s832",
+        "gain": 0.07000000000000006,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s832/hybrid_result.json",
+          "sha256": "75aec55b35a25d76d0f14d28c7b85967abec2a55e320a1365997b143c1732f60",
+          "size_bytes": 135915
+        }
+      },
+      {
+        "arm": "pureG",
+        "circuit": "s953",
+        "gain": 0.09000000000000008,
+        "rounds": 20,
+        "trial_kinds": [
+          "G"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureG/s953/hybrid_result.json",
+          "sha256": "766159e6393c8f39f66d5521c79d3eec34bf96a27636e44321f0685bf086b895",
+          "size_bytes": 197536
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s27",
+        "gain": 0.28,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s27/hybrid_result.json",
+          "sha256": "9f0e4dbbc43b65688907a02c8eb408705be52ea8169ddeaf0e7e0011e05afe9a",
+          "size_bytes": 13525
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s382",
+        "gain": 0.18999999999999995,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s382/hybrid_result.json",
+          "sha256": "930b3067b335236a0495164ef4f673f5e9689ceff0e8a84272cc006d4e6490fb",
+          "size_bytes": 206241
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s420",
+        "gain": 1,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s420/hybrid_result.json",
+          "sha256": "21dba9a61d76546b30d6c46f6d1e069215247264b09ca57e9c6e5fa927370ac5",
+          "size_bytes": 97296
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s641",
+        "gain": 1.27,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 11,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s641/hybrid_result.json",
+          "sha256": "54c2380c3932237f5d94d7cf371f3413b17ec304a15c14f86a71c75a16658d52",
+          "size_bytes": 290911
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s713",
+        "gain": 0.99,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 5,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s713/hybrid_result.json",
+          "sha256": "50c26b7768726917bb1b44c4a4de5a5e45ceaeb3b6a41c9ee83b7e408c308734",
+          "size_bytes": 288999
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s820",
+        "gain": 0.2599999999999999,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s820/hybrid_result.json",
+          "sha256": "b20e332ccd0412a6cdbe70648cbe2b379415108085c11eaf30b990151ff44eda",
+          "size_bytes": 510261
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s832",
+        "gain": 0.06000000000000005,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s832/hybrid_result.json",
+          "sha256": "1f77c8006c0b7ef8390f2cb58c9d626ecbc9f335a4015e6cfb5a03a086941ee1",
+          "size_bytes": 361241
+        }
+      },
+      {
+        "arm": "pureB",
+        "circuit": "s953",
+        "gain": 0.24,
+        "rounds": 20,
+        "trial_kinds": [
+          "B"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_pureB/s953/hybrid_result.json",
+          "sha256": "47465cf40ec411b65efbc484f5ac99ed546ff987959c9ac7e0e8ffd37388e43c",
+          "size_bytes": 821366
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s27",
+        "gain": 0.28,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s27/hybrid_result.json",
+          "sha256": "983dc9d9f37ead92c14d1c89ce149e3053b4080a4cdf0c4fb763325033e88451",
+          "size_bytes": 35489
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s382",
+        "gain": 0.18999999999999995,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 6,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s382/hybrid_result.json",
+          "sha256": "c0e5cffedf86a5dd6565ad21a1597f21d2c1dbc88f546c856c7dfbc6dbc64ee8",
+          "size_bytes": 312479
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s420",
+        "gain": 1.1,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 5,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s420/hybrid_result.json",
+          "sha256": "3bd825b163d525552c52dcd3bf0ee0e74c4f277a729ac7264f6911ed80293f9f",
+          "size_bytes": 281389
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s641",
+        "gain": 0.5999999999999999,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 7,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s641/hybrid_result.json",
+          "sha256": "73622d5215890b4c6eafa54b02b6e982bf333a5d7db7f8c3183093bc5e9b6d71",
+          "size_bytes": 351364
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s713",
+        "gain": 0.67,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s713/hybrid_result.json",
+          "sha256": "5a81c4eaba79c667c853fbd281539356850c560abdebd4f595c8e8f98c22c8c8",
+          "size_bytes": 642414
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s820",
+        "gain": 0.20999999999999996,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s820/hybrid_result.json",
+          "sha256": "88dc817e8c4219474efd6f78ea654c702790d4d1e153c8c0eaed935fd1bcbbe1",
+          "size_bytes": 504268
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s832",
+        "gain": 0.09000000000000008,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s832/hybrid_result.json",
+          "sha256": "3d8341c94f275c7b9e218fee1f3bf70aefdb3116509801a72c8f3a9fe4a5aa6a",
+          "size_bytes": 533503
+        }
+      },
+      {
+        "arm": "random1",
+        "circuit": "s953",
+        "gain": 0.1200000000000001,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed1/s953/hybrid_result.json",
+          "sha256": "4698f2fec981ec76db06ec3de144a046f01c41c4a028c0ea5902a44d4baabcce",
+          "size_bytes": 812373
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s27",
+        "gain": 0.28,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s27/hybrid_result.json",
+          "sha256": "9898238ede34934b7ba86f131c76e94c4deefc206f06f826347bf7293385d7f3",
+          "size_bytes": 35488
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s382",
+        "gain": 0.18999999999999995,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s382/hybrid_result.json",
+          "sha256": "94e5aa3fd9af1410e08f8ac903ec5c2aa9fda298daa939bfbae99f8209462797",
+          "size_bytes": 312471
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s420",
+        "gain": 1.1,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s420/hybrid_result.json",
+          "sha256": "bf4a8d306a99501d82c8c2b200bbae5cc1d6260fd482bb20bdb64d2e090a6b53",
+          "size_bytes": 280809
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s641",
+        "gain": 0.49,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 5,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s641/hybrid_result.json",
+          "sha256": "0f8e427520183175309a7ecdb83462c950313a3ec530bde0e8efc7cb327d1151",
+          "size_bytes": 353618
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s713",
+        "gain": 0.5800000000000001,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 5,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s713/hybrid_result.json",
+          "sha256": "ad8fd3b0dd7856eef0b83bcd94aa2f212920bb5c059d70e3fc7b409112145883",
+          "size_bytes": 506778
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s820",
+        "gain": 0.030000000000000027,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 3,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s820/hybrid_result.json",
+          "sha256": "ce451e56d4214aab61b2c36fdd1e1ec417e0e255d5962689cfb54f1d7178bc7f",
+          "size_bytes": 517781
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s832",
+        "gain": 0.09000000000000008,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 2,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s832/hybrid_result.json",
+          "sha256": "fff3bbe650c4f0542ee8b9f021d5a35e0f048bd9d69d69048035eb2c7bfe830b",
+          "size_bytes": 533509
+        }
+      },
+      {
+        "arm": "random2",
+        "circuit": "s953",
+        "gain": 0.1200000000000001,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed2/s953/hybrid_result.json",
+          "sha256": "8c3ccc1f284329e8a62719addd557596826dd8432540f6dece3e5bd7c449a574",
+          "size_bytes": 812376
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s27",
+        "gain": 0.28,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s27/hybrid_result.json",
+          "sha256": "105ec3f957c245232337007bbeb99dad404e1d0b68ab0321bf3a2a3859b55188",
+          "size_bytes": 35490
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s382",
+        "gain": 0.18999999999999995,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 8,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s382/hybrid_result.json",
+          "sha256": "4b2fa30647dd994ec4d1f1991e96721e9d77842cca76f75201d01a6e91257f3d",
+          "size_bytes": 312480
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s420",
+        "gain": 1.24,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s420/hybrid_result.json",
+          "sha256": "25a7f93009bc33b0e3823427a14f37f5be661f6665ac713df2bed38b7c50d71a",
+          "size_bytes": 450134
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s641",
+        "gain": 0.6299999999999999,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s641/hybrid_result.json",
+          "sha256": "d6d13549d2b44a7167c30a14c98a52b599036ebc71f94fc565611244dca59cc3",
+          "size_bytes": 348233
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s713",
+        "gain": 0.67,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 2,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s713/hybrid_result.json",
+          "sha256": "5b98f906603da7b573610bbd325474d0e0e628072b68c49864cbf74dace1d00d",
+          "size_bytes": 642410
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s820",
+        "gain": 0.20999999999999996,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s820/hybrid_result.json",
+          "sha256": "87e4571566fde36344785b84ccdbd40e076838237c71cf90ee9688ac5fc55f73",
+          "size_bytes": 517511
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s832",
+        "gain": 0.06000000000000005,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s832/hybrid_result.json",
+          "sha256": "f838bfdb6df38742c5aa2bcd4aeb1226b8f8edbfc9e8fea0c12d0411c5db0c31",
+          "size_bytes": 534110
+        }
+      },
+      {
+        "arm": "random3",
+        "circuit": "s953",
+        "gain": 0.1200000000000001,
+        "rounds": 20,
+        "trial_kinds": [
+          "B",
+          "G",
+          "R"
+        ],
+        "first_strict_record": 1,
+        "binding": {
+          "path": "experiments/20260826_ablation_random_seed3/s953/hybrid_result.json",
+          "sha256": "fc5b5b8c447696c357290a631152eca1e8d84275d527c5b4afe8dc8194926362",
+          "size_bytes": 812367
+        }
+      },
+      {
+        "arm": "hybrid_s382_inferred_sibling_only",
+        "circuit": "s382",
+        "gain": 1,
+        "not_canonical_launch_certified": true,
+        "binding": {
+          "path": "experiments/20260807_multiround_s382_067_v3/s382/hybrid_result.json",
+          "sha256": "fc05c78d8d6a265bd1b8a8f9b6fed5d33066dbc75ee77ab72fc27d77400b48d9",
+          "size_bytes": 268420
+        }
+      }
+    ]
+  },
+  "feedback_40_primary_ledger_checks": {
+    "totals": {
+      "fixed": {
+        "new_STA": 1947,
+        "eval_records": 4146
+      },
+      "adaptive": {
+        "new_STA": 2003,
+        "eval_records": 4883
+      },
+      "random_s1": {
+        "new_STA": 2439,
+        "eval_records": 5356
+      },
+      "random_s2": {
+        "new_STA": 2476,
+        "eval_records": 5516
+      },
+      "random_s3": {
+        "new_STA": 2527,
+        "eval_records": 6000
+      }
+    },
+    "fixed_adaptive_first_equal": true,
+    "observations": [
+      {
+        "arm": "fixed",
+        "circuit": "s27",
+        "eval_records": 416,
+        "new_STA": 127,
+        "first_new_STA_improvement": 30,
+        "final_gain": 0.1,
+        "max_measured_gain": 0.1,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s27/eval_trials.json",
+            "sha256": "bd362406e9f0ae85cba301c99d40ed79814a6adcca85e2673d1d3c19cdf0c9af",
+            "size_bytes": 2461204
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s27/run_config.json",
+            "sha256": "8287a7deed366deb3ebafe3a49bf4ef39dc4fafa4e5f425a3e41b1caf90ca744",
+            "size_bytes": 2432
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s27/outerloop_result.json",
+            "sha256": "b360d7c1c5d1cb0c3d081243927894cecaccaf8894391b4e64ab4b5cf49f3f44",
+            "size_bytes": 120939
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s382",
+        "eval_records": 769,
+        "new_STA": 366,
+        "first_new_STA_improvement": 3,
+        "final_gain": 0.21999999999999997,
+        "max_measured_gain": 0.21999999999999997,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s382/eval_trials.json",
+            "sha256": "6741f206e92fa83c9d44c435c553cf072061f70a647c0e72a3e54e2c6d0535df",
+            "size_bytes": 12755446
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s382/run_config.json",
+            "sha256": "85df6a54509e2661a3b640078be3eecce53528ab1db2cbf7c809969a76ccf2dc",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s382/outerloop_result.json",
+            "sha256": "35d74b30a4ed453d4c8deb21e3f813db337ab73e06af35875182b43c63e2fe07",
+            "size_bytes": 270423
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s420",
+        "eval_records": 1048,
+        "new_STA": 476,
+        "first_new_STA_improvement": 2,
+        "final_gain": 0.9700000000000001,
+        "max_measured_gain": 0.9700000000000001,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s420/eval_trials.json",
+            "sha256": "1f7f986269ff5e96dda3e67410c7aa7d34ee88ffac328a44df6bec9e0fbcea34",
+            "size_bytes": 16008045
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s420/run_config.json",
+            "sha256": "e86ce5922a4e7665de6424a95333a5f016be00fa65f603e3478c01e7e772c224",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s420/outerloop_result.json",
+            "sha256": "438e8350bb08f2a9f45ef9bb7e394edc1ee553a03a473f62ee04087170ffa0ef",
+            "size_bytes": 867492
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s641",
+        "eval_records": 596,
+        "new_STA": 319,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.6399999999999999,
+        "max_measured_gain": 0.6399999999999999,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s641/eval_trials.json",
+            "sha256": "9f8f0c513a7099e72217075620e766e4b13944d726158ebdaf648b63952fa194",
+            "size_bytes": 13403217
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s641/run_config.json",
+            "sha256": "f81f116e3d917fde0bd8aa70e83a9bc418ead4b06540be7257cde8c90151d331",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s641/outerloop_result.json",
+            "sha256": "75e5b0edace7509140ae2f85d5abe6c296f5918874714b40334388a5d8b17357",
+            "size_bytes": 672278
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s713",
+        "eval_records": 306,
+        "new_STA": 127,
+        "first_new_STA_improvement": 5,
+        "final_gain": 0.13000000000000012,
+        "max_measured_gain": 0.13000000000000012,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s713/eval_trials.json",
+            "sha256": "6641ba14d4760509f2182a7afc0e9d653731e69dd313a49e8324e476c1cfbf40",
+            "size_bytes": 6984786
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s713/run_config.json",
+            "sha256": "e240976a9f8e9f9d5c8f06e77478eec556e2bec39c48e83da864c3583bb78181",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s713/outerloop_result.json",
+            "sha256": "4f359a61635da725f318e2c7ae4eb66ee1d9fdec6cc3d475ba10b43723aa9436",
+            "size_bytes": 201874
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s820",
+        "eval_records": 312,
+        "new_STA": 185,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.020000000000000018,
+        "max_measured_gain": 0.020000000000000018,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s820/eval_trials.json",
+            "sha256": "4948988e660246763a28c07f2528395854ed8d1eaf2a2fb6deb3022a21b4455c",
+            "size_bytes": 7290255
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s820/run_config.json",
+            "sha256": "3fe2ba1d85a22ad3d31417680c660bb70aea78b259a0cb00d88e43d8cdbf2e1c",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s820/outerloop_result.json",
+            "sha256": "11422d854ef922b80addd0a2f21028efa68f046784b9f05373333b4be4070c16",
+            "size_bytes": 193750
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s832",
+        "eval_records": 306,
+        "new_STA": 157,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.09000000000000008,
+        "max_measured_gain": 0.09000000000000008,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s832/eval_trials.json",
+            "sha256": "a9551b8955748ac61c1f7182c0b6b484cc7aa93e71370a748ebefae531b705a4",
+            "size_bytes": 7438114
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s832/run_config.json",
+            "sha256": "6974be005f0a7eb0388daca4eaaae43522bea83de6cbe7e9c1a633f05361cd15",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s832/outerloop_result.json",
+            "sha256": "b7cb8cf11024877f1cca36e4f06de7cb3e896f5119352611df6f752f96d7233c",
+            "size_bytes": 255826
+          }
+        ]
+      },
+      {
+        "arm": "fixed",
+        "circuit": "s953",
+        "eval_records": 393,
+        "new_STA": 190,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.1100000000000001,
+        "max_measured_gain": 0.1100000000000001,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/fixed/s953/eval_trials.json",
+            "sha256": "1a4407904d9ea7739ddfc06c7452b23f9e93e99266cf649ba8004c4106856031",
+            "size_bytes": 14035398
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s953/run_config.json",
+            "sha256": "6343b89bd0893dfa2d607d852cfe8ca8cc3fd1c61fbc19a0128429309c7883d9",
+            "size_bytes": 2435
+          },
+          {
+            "path": "experiments/20260924_threearm/fixed/s953/outerloop_result.json",
+            "sha256": "614585ff551aa290a19a5a423b147d2cbd09e0e99903a788a99d2aec2f8e2008",
+            "size_bytes": 257797
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s27",
+        "eval_records": 416,
+        "new_STA": 127,
+        "first_new_STA_improvement": 30,
+        "final_gain": 0.1,
+        "max_measured_gain": 0.1,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s27/eval_trials.json",
+            "sha256": "723f327e662d5caa0ae2062b5113ac02606d54959d781f09ea2a38131da39407",
+            "size_bytes": 2463629
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s27/run_config.json",
+            "sha256": "98aa0591364308ff029fa649ba448e62d519f60fc8ff8b852c382f4688e6a469",
+            "size_bytes": 2766
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s27/outerloop_result.json",
+            "sha256": "59ec9c3517f09c71f1dbad14a9030f2559266f935ca7a0dbdc9de6ab551e58c8",
+            "size_bytes": 135506
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s382",
+        "eval_records": 769,
+        "new_STA": 366,
+        "first_new_STA_improvement": 3,
+        "final_gain": 0.21999999999999997,
+        "max_measured_gain": 0.21999999999999997,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s382/eval_trials.json",
+            "sha256": "35727ff357638f995d8a4556263a2e87db3ac1d0b7833f9e7dac9f6570fd6d2b",
+            "size_bytes": 12759698
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s382/run_config.json",
+            "sha256": "6aa390ac6d19934ec6da33ab819b9f7defca7d1b463504d4d86fffd756bbf41b",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s382/outerloop_result.json",
+            "sha256": "dfd44f501b680abf306c34c4428da66c40c2e327d20fe7ef9b96c767105afb4a",
+            "size_bytes": 278786
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s420",
+        "eval_records": 1048,
+        "new_STA": 476,
+        "first_new_STA_improvement": 2,
+        "final_gain": 0.9700000000000001,
+        "max_measured_gain": 0.9700000000000001,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s420/eval_trials.json",
+            "sha256": "48dc8dcc03ab2b236d07d7ae9b483f1e74b6878d05c21f216c0bf3cb767b1702",
+            "size_bytes": 16014156
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s420/run_config.json",
+            "sha256": "7dedbb6077ee9f1f97795f683e9426b01a8f66f2f9ea883a006977bdad1f0de2",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s420/outerloop_result.json",
+            "sha256": "0d830e5e9da3f40ef202450697a72a7228651e920970482d2e984da9227a50d8",
+            "size_bytes": 868217
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s641",
+        "eval_records": 880,
+        "new_STA": 328,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.6399999999999999,
+        "max_measured_gain": 0.6399999999999999,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s641/eval_trials.json",
+            "sha256": "f38d3a167a3b3cb011a53c7e15b5641850da0617a14a1cfbf9b12161c36c8a89",
+            "size_bytes": 19622754
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s641/run_config.json",
+            "sha256": "68ea2981511de7d737b897f10fb8075d7ae950fc79153d2d441478f580491db2",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s641/outerloop_result.json",
+            "sha256": "b058c7680f05dfa995fdf495e08c2c5b0f4bfa08341fb54c8d6edaf49e25662b",
+            "size_bytes": 690687
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s713",
+        "eval_records": 662,
+        "new_STA": 173,
+        "first_new_STA_improvement": 5,
+        "final_gain": 0.13000000000000012,
+        "max_measured_gain": 0.13000000000000012,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s713/eval_trials.json",
+            "sha256": "b72207f1cb7dd0d0a5d5156f61794536372f6d639bc3f0cc9ead059578bbf5d5",
+            "size_bytes": 14915299
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s713/run_config.json",
+            "sha256": "71c4debbb637e82c313ba359b036908696d3341f9b2d210cde8c59ff43f63dea",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s713/outerloop_result.json",
+            "sha256": "132357c21c71cb9ab9cb584f92aa1e3eeb820de4293a4b4b20d6e93d89778ffa",
+            "size_bytes": 233107
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s820",
+        "eval_records": 312,
+        "new_STA": 185,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.020000000000000018,
+        "max_measured_gain": 0.020000000000000018,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s820/eval_trials.json",
+            "sha256": "9091a0fed616b0a915be47321358cdcd26d8d43d947ad2518253c24e5cba75e0",
+            "size_bytes": 7292122
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s820/run_config.json",
+            "sha256": "ca5ae86d10ce47a5a618614e40584b2128289ed3a0223117e1b5165b98171e87",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s820/outerloop_result.json",
+            "sha256": "fbfafe703417376cc6f4b0cfe46b7b8558b6f29d17f0a2893537c4ec531ace51",
+            "size_bytes": 203312
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s832",
+        "eval_records": 376,
+        "new_STA": 157,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.09000000000000008,
+        "max_measured_gain": 0.09000000000000008,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s832/eval_trials.json",
+            "sha256": "12575e817ed990934166ca3d0876930911201cc771b6cb75610d07452aab8e00",
+            "size_bytes": 9129527
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s832/run_config.json",
+            "sha256": "fdd793264cda9ebda4bce477dc87521ec9065c24124a575655ccab6894f6409d",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s832/outerloop_result.json",
+            "sha256": "d16662e53a7aef125f72475a6e44a1acb35b4d868a250be3d760b327b3d0faf0",
+            "size_bytes": 269671
+          }
+        ]
+      },
+      {
+        "arm": "adaptive",
+        "circuit": "s953",
+        "eval_records": 420,
+        "new_STA": 191,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.1100000000000001,
+        "max_measured_gain": 0.1100000000000001,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": false
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/adaptive/s953/eval_trials.json",
+            "sha256": "c46e0a69258b67783046bbe055a1d38fdd4c3c56a801d2af37e0d1c32890532e",
+            "size_bytes": 14999141
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s953/run_config.json",
+            "sha256": "15a373509323829d26eb8f8f9ca6beb04ac6f4b2cc8db5c2206363b1293c2987",
+            "size_bytes": 2769
+          },
+          {
+            "path": "experiments/20260924_threearm/adaptive/s953/outerloop_result.json",
+            "sha256": "fc384266c00b1f17782edf542f04b6d8b788aef943ffd650a46803354cbf5162",
+            "size_bytes": 268815
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s27",
+        "eval_records": 387,
+        "new_STA": 98,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.1,
+        "max_measured_gain": 0.1,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s27/eval_trials.json",
+            "sha256": "486d9919c4331e3ae627b155fbf63b2f5ad2843f4c6e44ce28e450cb01cbe72c",
+            "size_bytes": 2311006
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s27/run_config.json",
+            "sha256": "b9d973d77eefbaaff3dfaf5e5ed13ef10024e7f59bad4bebc0bca03b7a5b2456",
+            "size_bytes": 2483
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s27/outerloop_result.json",
+            "sha256": "b43dd31c852d074f5e7705e2bbdbac364eaf434076f22d31581fe79c8ff2575a",
+            "size_bytes": 112816
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s382",
+        "eval_records": 486,
+        "new_STA": 196,
+        "first_new_STA_improvement": 17,
+        "final_gain": 0.18999999999999995,
+        "max_measured_gain": 0.18999999999999995,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s382/eval_trials.json",
+            "sha256": "9b1c46c40093c291bfea17fdc389c58508b882bbf1aef79a7e6333b1515c54a4",
+            "size_bytes": 7894327
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s382/run_config.json",
+            "sha256": "4532e00ec2e8bb4934cff068adbc5410172b0c9aeb00532998c0e71d815ab3c4",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s382/outerloop_result.json",
+            "sha256": "79026dfe25ee0f396d29943b0ee9f15011bf20ece3b4cfde9eba8432f2fa36bb",
+            "size_bytes": 173173
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s420",
+        "eval_records": 1048,
+        "new_STA": 500,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.7000000000000001,
+        "max_measured_gain": 0.7000000000000001,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s420/eval_trials.json",
+            "sha256": "cbb42d506700b7f4c175c50467c179bd0853ffb6ba866c734b5c2973e3fcad4d",
+            "size_bytes": 14794150
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s420/run_config.json",
+            "sha256": "f65935d48166d493124364d8ac5fa8279fefb6426a7df8903b3544208ab50d22",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s420/outerloop_result.json",
+            "sha256": "103e971bcfba6a6a3c057a62db0eae43150b7d98b6b7fd85a55bf81091098773",
+            "size_bytes": 393182
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s641",
+        "eval_records": 703,
+        "new_STA": 479,
+        "first_new_STA_improvement": 50,
+        "final_gain": 0.6999999999999998,
+        "max_measured_gain": 0.6999999999999998,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s641/eval_trials.json",
+            "sha256": "2ba19f52b67fa93619137914f9eb2356438ead10d15e16fafbe0c85bcb8218a3",
+            "size_bytes": 15839389
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s641/run_config.json",
+            "sha256": "3ca31fb4d7d22c8420dd51b304a3fff309ad5e7a334d72c7bb3a4556182dd37f",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s641/outerloop_result.json",
+            "sha256": "ab5253c578c422dc86c038e7cc925f3dfd2c64a28ee30eb5d384a5a10da593a3",
+            "size_bytes": 701109
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s713",
+        "eval_records": 513,
+        "new_STA": 173,
+        "first_new_STA_improvement": 55,
+        "final_gain": 0.13000000000000012,
+        "max_measured_gain": 0.13000000000000012,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s713/eval_trials.json",
+            "sha256": "b6fcb5c85d0a50cf1be6b7710ca2ebba044ec0892f3726f9425d50a85232328c",
+            "size_bytes": 11624391
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s713/run_config.json",
+            "sha256": "f833d9b3be34f6af71d9058f32a7f3b88ce96833fd4007bee369978d04fb6ee3",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s713/outerloop_result.json",
+            "sha256": "9522a8c4a8389ea0f77b3169fbcd6cfbcc305b7d5a2c2339cea7ac344cd8cb24",
+            "size_bytes": 230041
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s820",
+        "eval_records": 391,
+        "new_STA": 238,
+        "first_new_STA_improvement": 21,
+        "final_gain": 0.020000000000000018,
+        "max_measured_gain": 0.020000000000000018,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s820/eval_trials.json",
+            "sha256": "1a5ff04529a0df56b7bd93cd9af86b2f300ec11ebc2033f16e5516e51c98eea0",
+            "size_bytes": 9111017
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s820/run_config.json",
+            "sha256": "8e06700db1966ce77a548c26796c598b7cc56bb6899c4b0dc4d8fa2392aa67a5",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s820/outerloop_result.json",
+            "sha256": "796cb2643b8993c1af776641d867766b5da8dd90f0a55efca6dade68272ac4b4",
+            "size_bytes": 175645
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s832",
+        "eval_records": 708,
+        "new_STA": 274,
+        "first_new_STA_improvement": 18,
+        "final_gain": 0.06000000000000005,
+        "max_measured_gain": 0.06000000000000005,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s832/eval_trials.json",
+            "sha256": "116617980003632b9b323405c2ca99345ca43d40f15bb3ec154ae2852dad22a8",
+            "size_bytes": 16777171
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s832/run_config.json",
+            "sha256": "d401354e8106bf267f6dbe3d35c835587b50a9f5f01727348f8d2da16bd3f5fa",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s832/outerloop_result.json",
+            "sha256": "1896dda193080c76e3220456e9f926620007c39544a3307fc621a573b7f1a584",
+            "size_bytes": 234484
+          }
+        ]
+      },
+      {
+        "arm": "random_s1",
+        "circuit": "s953",
+        "eval_records": 1120,
+        "new_STA": 481,
+        "first_new_STA_improvement": 49,
+        "final_gain": 0.19999999999999996,
+        "max_measured_gain": 0.19999999999999996,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s1/s953/eval_trials.json",
+            "sha256": "0576752409502564465f1c542192356b815e4167bd57724a5bc2dcba8e8419a1",
+            "size_bytes": 40072434
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s953/run_config.json",
+            "sha256": "a62c6358df84b3de1d954aaa018a778c5a7451663775402938e7e3117707aba9",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s1/s953/outerloop_result.json",
+            "sha256": "4830f39ec98880de90dddfa5399c9ad25931d2dcc220c875d1f9635b3dba5fb2",
+            "size_bytes": 482338
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s27",
+        "eval_records": 416,
+        "new_STA": 127,
+        "first_new_STA_improvement": 30,
+        "final_gain": 0.1,
+        "max_measured_gain": 0.1,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s27/eval_trials.json",
+            "sha256": "f71db922969ca843e7356ce5b52c0c27ec2244ed9326b3a29e51ffd09da70aa6",
+            "size_bytes": 2464446
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s27/run_config.json",
+            "sha256": "4b90e91f405a21b14afa6cdca443514cd7c72cd27ef7b4d2a0d680a5c17969eb",
+            "size_bytes": 2483
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s27/outerloop_result.json",
+            "sha256": "49f9de677177c3400530630c01efb35cc934f28a9e6ec44fa1fc0698822ecf44",
+            "size_bytes": 120947
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s382",
+        "eval_records": 858,
+        "new_STA": 459,
+        "first_new_STA_improvement": 3,
+        "final_gain": 0.21999999999999997,
+        "max_measured_gain": 0.21999999999999997,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s382/eval_trials.json",
+            "sha256": "3c90c696e7ec3090fd603caecde5c6a77aced09fe0a0ee88e940263ee50b1db5",
+            "size_bytes": 14202930
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s382/run_config.json",
+            "sha256": "dd2cd93f83a89950e5eef2d52cb6825e5efadab7f5524e310d6d7c5d1b0180e3",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s382/outerloop_result.json",
+            "sha256": "9a127ef753d68988ceeecc9f03a04aa61796fc501bfb02178e739fd5d50c4180",
+            "size_bytes": 300205
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s420",
+        "eval_records": 820,
+        "new_STA": 500,
+        "first_new_STA_improvement": 2,
+        "final_gain": 0.9500000000000001,
+        "max_measured_gain": 0.9500000000000001,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s420/eval_trials.json",
+            "sha256": "c2848572eab1c3aa53c965acb88de41dc245939be85e79bd7e0d2007d18af885",
+            "size_bytes": 11814690
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s420/run_config.json",
+            "sha256": "bb76ab8739116345d80372d96f5b3924a27858b83439ac83685442a635a2304f",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s420/outerloop_result.json",
+            "sha256": "ad37de0782f7957efea50006c404fd556686fa5a391b84b78ea8e08ca0924da1",
+            "size_bytes": 348459
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s641",
+        "eval_records": 1246,
+        "new_STA": 500,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.6299999999999999,
+        "max_measured_gain": 0.6299999999999999,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s641/eval_trials.json",
+            "sha256": "b5664d6495dadec136c33add2d319c14cbd2ef7b85980155b35f851628a06e42",
+            "size_bytes": 28175186
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s641/run_config.json",
+            "sha256": "014d704a733a69d27737f544ec79cbc2e90eca717bad7e560cb0d7cc5ced4ecc",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s641/outerloop_result.json",
+            "sha256": "94e83913c4f69442522c189179aa2aa4fea55664250cbc9ef901331d6bef4b09",
+            "size_bytes": 870298
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s713",
+        "eval_records": 306,
+        "new_STA": 127,
+        "first_new_STA_improvement": 5,
+        "final_gain": 0.13000000000000012,
+        "max_measured_gain": 0.13000000000000012,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s713/eval_trials.json",
+            "sha256": "55458b5f2525525cc30257c67729e67b9b4b831c553e2f67ef4956c59977eb45",
+            "size_bytes": 6986942
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s713/run_config.json",
+            "sha256": "c0946e6536161ca079a4068f4b48ae9f695c35afae445dca68c7526c563fa476",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s713/outerloop_result.json",
+            "sha256": "cd581ae0fe85f69a3510381b18d222dec11a76d8b6c3d916d28174964bee6fac",
+            "size_bytes": 201538
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s820",
+        "eval_records": 317,
+        "new_STA": 191,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.020000000000000018,
+        "max_measured_gain": 0.020000000000000018,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s820/eval_trials.json",
+            "sha256": "9b5093da0a3844284fd3f6b79b098dd8b1d0c96bb5d2babe292aeb86c690adad",
+            "size_bytes": 7404833
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s820/run_config.json",
+            "sha256": "4549600e4a62e71f44621ab9103c4391681527505cffe3397fefba2768c2fb80",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s820/outerloop_result.json",
+            "sha256": "e014493f06515d01f3ffb9a6cbccad6e01b5a9ffb47d1473141121a8b97996cc",
+            "size_bytes": 156492
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s832",
+        "eval_records": 671,
+        "new_STA": 237,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.06000000000000005,
+        "max_measured_gain": 0.06000000000000005,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s832/eval_trials.json",
+            "sha256": "477a99330f198b129236c04dcfc8ff692d607e5270a0333949effcebb32d45ff",
+            "size_bytes": 15901137
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s832/run_config.json",
+            "sha256": "4885a90cf82d2febbea305d57256210d26429374e21bf83f6e00ca2ecddb826b",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s832/outerloop_result.json",
+            "sha256": "ddf5c4b918bbb8b49f15edff95d98d8eaa8de09a29f0ba13f6f6e2cee8be7a54",
+            "size_bytes": 223935
+          }
+        ]
+      },
+      {
+        "arm": "random_s2",
+        "circuit": "s953",
+        "eval_records": 882,
+        "new_STA": 335,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.19999999999999996,
+        "max_measured_gain": 0.19999999999999996,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s2/s953/eval_trials.json",
+            "sha256": "1400634a0a6c4532aec122ff57e23b968cea9ecd3299c6a92535c903b8d7f0b9",
+            "size_bytes": 31684961
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s953/run_config.json",
+            "sha256": "215c1a73f359fec02c3c7681f267c9cb7f6e47c1f9fe16f443eb43e3a455cd99",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s2/s953/outerloop_result.json",
+            "sha256": "c28bf96523d2c207deca74c68235566ee367ce5ab960db1e06fd27cfab8cb673",
+            "size_bytes": 436865
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s27",
+        "eval_records": 284,
+        "new_STA": 124,
+        "first_new_STA_improvement": 30,
+        "final_gain": 0.1,
+        "max_measured_gain": 0.1,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s27/eval_trials.json",
+            "sha256": "2c00ba6344ac886eff6c8e4539c86786e8c09d7327a13ae896a787345baefd13",
+            "size_bytes": 1670016
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s27/run_config.json",
+            "sha256": "52abd5bf40030faa925e300786424859fdf6183e22fffb1558f57bd9136f1b5f",
+            "size_bytes": 2483
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s27/outerloop_result.json",
+            "sha256": "a4ea067752c48db0aa8ac6c5c9a2e0539baee1cd88d22b47abb53f2b12592b48",
+            "size_bytes": 105803
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s382",
+        "eval_records": 695,
+        "new_STA": 357,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.18999999999999995,
+        "max_measured_gain": 0.18999999999999995,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s382/eval_trials.json",
+            "sha256": "2bb65141ca8c41539b60241558a43d8f140024934ee1e454995df7a6606b621d",
+            "size_bytes": 11308205
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s382/run_config.json",
+            "sha256": "b6d3047e81de327803d3df985b5cc5774c98f22ecb3902903bde567b1483a48f",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s382/outerloop_result.json",
+            "sha256": "66cf7f9741da78a9ea3ebbf9c3ddb692e697ffc0acb115af0fe8b905e0237dc0",
+            "size_bytes": 193221
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s420",
+        "eval_records": 1307,
+        "new_STA": 500,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.8,
+        "max_measured_gain": 0.8,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s420/eval_trials.json",
+            "sha256": "0b431053eea4583e49eee3c92e3a62149317c14707f840a5f437652c89e941a3",
+            "size_bytes": 18525460
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s420/run_config.json",
+            "sha256": "91c64da6f8b093d76324cee9b90ed50eb95cae0d058cb812c2583a4dc4e87a93",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s420/outerloop_result.json",
+            "sha256": "51eedc9b9b72f6a13d0bf4c044d4bff214d71169e4849ad168ad942dc2df66af",
+            "size_bytes": 544517
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s641",
+        "eval_records": 1321,
+        "new_STA": 500,
+        "first_new_STA_improvement": 39,
+        "final_gain": 0.44999999999999996,
+        "max_measured_gain": 0.44999999999999996,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s641/eval_trials.json",
+            "sha256": "2a5b2cc385de4e38e6e91d9783fcd4ec9edb3103678183aabd811c4760fc0282",
+            "size_bytes": 29819127
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s641/run_config.json",
+            "sha256": "582d7b0a2b0ed59d59ad4fc679225304d0608193326cd82729a77e758687a9ba",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s641/outerloop_result.json",
+            "sha256": "df0dbaf972c29c7e52873858125a9639527e7465fdf478231ed293a48439edfb",
+            "size_bytes": 724888
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s713",
+        "eval_records": 324,
+        "new_STA": 145,
+        "first_new_STA_improvement": 23,
+        "final_gain": 0.13000000000000012,
+        "max_measured_gain": 0.13000000000000012,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s713/eval_trials.json",
+            "sha256": "98f3fc21d3d6540b8825676c030bf3d1edc5348f819056a409d19cfedb8a348c",
+            "size_bytes": 7391023
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s713/run_config.json",
+            "sha256": "4f2ea67ba290cc4c4d68a70aa4f9ca1d2e08c86f3fa3b753526bffb3b294dddb",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s713/outerloop_result.json",
+            "sha256": "98315666b369b08cd47a0da4d95f5fbf359ad577c289d62d9ca7505e084fb1ad",
+            "size_bytes": 212133
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s820",
+        "eval_records": 530,
+        "new_STA": 277,
+        "first_new_STA_improvement": 2,
+        "final_gain": 0.020000000000000018,
+        "max_measured_gain": 0.020000000000000018,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s820/eval_trials.json",
+            "sha256": "56374cb8bcaf1eaf43dc0fbafd59a2799c22e4c94802e5f1d7ef595a7f20006c",
+            "size_bytes": 12320531
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s820/run_config.json",
+            "sha256": "5505b67888ffe5c2499ad4b541dd49baae8242dc719b2c940acdd2d45264748e",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s820/outerloop_result.json",
+            "sha256": "99395e05fdf5524951cdc223a151bec999550ca3736348b465f1c7e123a55e95",
+            "size_bytes": 174805
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s832",
+        "eval_records": 671,
+        "new_STA": 237,
+        "first_new_STA_improvement": 1,
+        "final_gain": 0.06000000000000005,
+        "max_measured_gain": 0.06000000000000005,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s832/eval_trials.json",
+            "sha256": "14d90e9d9c41db5ac4719202b39c1f013fab9f10244b67628c4b7b14cf7cc6a2",
+            "size_bytes": 15900484
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s832/run_config.json",
+            "sha256": "0fc8a277401b9c579e9293635cc7dd4e30451a810eed4b0734c8c49bae828f16",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s832/outerloop_result.json",
+            "sha256": "38be9a2f0994715f717d6337c59eff76fdb8939ddf642f2d7ff3e8d97cca3d80",
+            "size_bytes": 223252
+          }
+        ]
+      },
+      {
+        "arm": "random_s3",
+        "circuit": "s953",
+        "eval_records": 868,
+        "new_STA": 387,
+        "first_new_STA_improvement": 28,
+        "final_gain": 0.19999999999999996,
+        "max_measured_gain": 0.19999999999999996,
+        "config": {
+          "period": 0.5,
+          "max_iterations": 20,
+          "sta_budget": 500,
+          "joint_k": 2,
+          "joint_enumerate_depth": 0,
+          "strategies": "R,G,B",
+          "tns_aware": false,
+          "early_stop": true,
+          "physical_gate": false,
+          "no_feedback": true
+        },
+        "bindings": [
+          {
+            "path": "experiments/20260924_threearm/random_s3/s953/eval_trials.json",
+            "sha256": "91491d19bcb1850811931172ac629c299ac8ff3afa8aabd58da1b03965d23c3e",
+            "size_bytes": 31092544
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s953/run_config.json",
+            "sha256": "a621b838336337a605ab320bbbc689c5632ebd47322a5eb0fca21124cc7a7106",
+            "size_bytes": 2486
+          },
+          {
+            "path": "experiments/20260924_threearm/random_s3/s953/outerloop_result.json",
+            "sha256": "4902fb84c0c896e651781acc09043fa49531c5b3a499e713d2a9910c7d5bbea4",
+            "size_bytes": 447857
+          }
+        ]
+      }
+    ]
+  },
+  "not_reaudited": [
+    "AI figures and pixels, geometry, labels or appearance (separate root/figure review)",
+    "Citation correctness or new literature searches",
+    "Full historical runtime/library identity recovery; existing explicit limits retained",
+    "Fresh EDA, scientific reruns, full proof replay or toolchain benchmarking",
+    "Independent replay of all non-S raw candidate sequences; existing registered summary reused for that one claim",
+    "New broad methodology/field novelty review beyond restored sections and prior accepted method conditions"
+  ]
+}

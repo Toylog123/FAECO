@@ -1,0 +1,15 @@
+\begin{table}[htbp]\centering\small
+\caption{Gate-level sequential equivalence checks on ISCAS89.}\label{tab:sec_iscas8}
+\begin{tabular}{lrrr}\toprule
+Circuit & Equivalence cells & SEC & Time (s)\\\midrule
+s27 & 11 & Proven & 0.303\\
+s382 & 90 & Proven & 0.382\\
+s420 & 79 & Proven & 0.368\\
+s641 & 124 & Proven & 0.381\\
+s713 & 126 & Proven & 0.410\\
+s820 & 138 & Proven & 0.454\\
+s832 & 145 & Proven & 0.437\\
+s953 & 228 & Proven & 0.537\\\bottomrule
+\end{tabular}
+\par\smallskip\footnotesize Yosys \texttt{equiv\_make}, \texttt{equiv\_simple} and \texttt{equiv\_induct}; all eight pass under SKY130 behavioral cell models.
+\end{table}

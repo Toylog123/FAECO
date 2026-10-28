@@ -1,0 +1,22 @@
+--- 
++++ 
+@@ -19,7 +19,7 @@
+ import matplotlib.pyplot as plt
+ import numpy as np
+ 
+-ROOT = Path(__file__).resolve().parents[5]
++ROOT = next(p for p in Path(__file__).resolve().parents if (p/'AGENTS.md').is_file())
+ CIRCUITS = ('s27', 's382', 's420', 's641', 's713', 's820', 's832', 's953')
+ ARMS = ('W0', 'W1', 'U0', 'U1', 'C', 'UR1', 'UR2', 'UR3', 'L')
+ CONTRASTS = (('W0', 'U0'), ('W1', 'U1'), ('W1', 'W0'), ('W1', 'C'),
+@@ -149,8 +149,8 @@
+     })
+     gain = np.array([[by[c, a]['wns_gain_ps'] for a in ARMS] for c in CIRCUITS])
+     cost = np.array([[by[c, a]['candidate_ideal_sta'] for a in ARMS] for c in CIRCUITS])
+-    blue = LinearSegmentedColormap.from_list('gain', ['#FFFFFF', '#245B9E'])
+-    grey = LinearSegmentedColormap.from_list('cost', ['#FFFFFF', '#596575'])
++    blue = LinearSegmentedColormap.from_list('gain', ['#FFFFFF', '#516779'])
++    grey = LinearSegmentedColormap.from_list('cost', ['#FFFFFF', '#87949F'])
+     # Fixed 170 x 70 mm manuscript width; no tight-crop resizing.
+     fig = plt.figure(figsize=(6.6929133858, 2.7559055118))
+     axes = []

@@ -1,0 +1,85 @@
+{
+  "utc": "2026-10-18T12:57:40.679865+00:00",
+  "before_sha256": "9225c198792e055a2b245fd3067483c25d686bc9ffbe4419d2041f8de25ec307",
+  "after_sha256": "e5cd95b7c1872fab83a4a1a025d0b1c9e12189062a4ae3c24032861a7a06b5a4",
+  "items": [
+    "REV-03",
+    "REV-04",
+    "REV-21",
+    "REV-22"
+  ],
+  "new_figures": [
+    "fig2 static algorithm",
+    "fig4 unsupported markers"
+  ],
+  "bibliography_first_use_order": [
+    "ho2010eco",
+    "liu2021rlsizer",
+    "chen2024aito",
+    "iscas89",
+    "itc99",
+    "jiang2010fraig",
+    "kravets2019symbolic",
+    "jiang2016resource",
+    "zhuo2018patch",
+    "zhong2024stp",
+    "huang2025phys",
+    "zhang2025buffalo",
+    "openroad",
+    "abc"
+  ],
+  "edits": [
+    {
+      "old": "  {\\heiti\\fontsize{8.5}{13}\\selectfont 摘\\quad 要：}{\\songti\\fontsize{8.5}{13}\\selectfont 随着集成电路规模与设计复杂度持续提升，时序收敛已成为数字芯片设计流程中的关键挑战。工程变更命令（engineering change order，ECO）通过在已有设计上做局部修改，可降低重新综合与物理实现带来的迭代成本。其中，预布局门级时序 ECO 在布局布线前探索局部网表修改方案，但受候选空间限制、候选级评估开销较高。为此提出候选探索与失效刻画框架 FAECO：在违例路径局部逻辑上以多特征加权割与关键路径覆盖割生成并排序四类局部修改候选——逻辑等价替换（R）、门尺寸调整（G）、缓冲器插入（B）与联合修改（JOINT）；将候选失效刻画为六类，作为搜索诊断与消融分析的依据；候选按轮提交，依次经函数与结构检查、时序分析与最终等价性检查。其核心思想是通过组织多类型候选空间并安排评估顺序，提高有限验证预算下的搜索效率。在 ISCAS89、ITC-99 和 PicoRV32 上，8/8、18/19 和 2/2 个实例取得预布局理想线网 WNS 改善（PicoRV32 第三个子模块无 setup 路径，不参与改善判定），其余无退化。固定权重、20 轮迭代下，混合候选平均改善 1.07\\,ns，高于仅门尺寸调整的 0.16\\,ns。消融实验进一步分析候选反馈机制与结构重综合候选对搜索效果的影响；实验结果表明，候选空间扩展与候选排序是预布局 ECO 搜索效果的重要影响因素。}",
+      "new": "  {\\heiti\\fontsize{8.5}{13}\\selectfont 摘\\quad 要：}{\\songti\\fontsize{8.5}{13}\\selectfont 预布局门级时序工程变更（engineering change order，ECO）需要在缺少物理信息的条件下组织多类型局部修改，并控制候选的时序评估成本。本文提出候选探索与失效刻画框架FAECO，以加权节点割与报告关键实例覆盖区域确定修改范围，按区域和实例顺序枚举逻辑等价替换、门尺寸调整、缓冲器插入与联合动作。框架将局部检查、静态时序分析（static timing analysis，STA）和最终独立顺序等价检查分层执行，逐轮提交可接受候选，并以六类失效记录分析搜索瓶颈。在固定源码、输入与库的8电路$\\times$9臂受控对照中，覆盖优先配置的理想线网最差负松弛（worst negative slack，WNS）平均改善0.161\\,ns，到达相同终点时八电路合计候选STA比三个随机顺序配置少7.8\\%--19.0\\%，加权与统一节点容量未观察到差异，同库单元面积和增加0.27\\%--4.92\\%，表明候选覆盖与评估次序的收益需结合实现代价评价。}"
+    },
+    {
+      "old": "  {\\bfseries Abstract:} {\\small Timing closure has become a critical challenge in digital chip design as circuit scale and design complexity continue to grow. Engineering change order (ECO) techniques reduce the iteration cost of re-synthesis and physical implementation by applying localized modifications to an existing design. Among them, pre-placement gate-level timing ECO explores local netlist modifications before placement and routing, but its candidate space is limited and per-candidate evaluation is costly. FAECO is a framework for candidate exploration and failure characterization. It builds and ranks four types of local modification candidates — logic-equivalent replacement (R), gate sizing (G), buffer insertion (B), and joint modification (JOINT) — over the local logic around violating paths via a multi-feature weighted cut and a critical-path cover cut, characterizes candidate failures into six types used for search diagnosis and ablation analysis, and commits candidates round by round through function and structural checks, timing analysis and final equivalence checking. Its core idea is to organize the multi-type candidate space and the evaluation order so as to improve search efficiency under a limited verification budget. On ISCAS89, ITC-99 and PicoRV32, 8/8, 18/19 and 2/2 instances achieve pre-placement ideal-net WNS improvement (the third PicoRV32 module has no setup path and is excluded), with no regression on the rest. Under fixed weights and 20 rounds, mixed candidates improve WNS by 1.07\\,ns on average versus 0.16\\,ns for gate sizing alone. Ablations further analyze the effects of the failure-feedback mechanism and structure-resynthesis candidates on search performance. These results highlight the importance of candidate exploration and ranking in pre-placement ECO search.}\\par",
+      "new": "  {\\bfseries Abstract:} {\\small Pre-placement gate-level engineering change order (ECO) must organize multiple local modification types and control timing-evaluation cost without placement information. FAECO combines weighted node cuts with regions covering instances reported by static timing analysis (STA), then enumerates logic-equivalent replacements, gate sizing, buffer insertion and joint actions in a defined region and instance order. The framework separates local checks, candidate STA and final independent sequential-equivalence checking, commits accepted candidates round by round, and records six failure types for search analysis. In a controlled experiment with eight circuits and nine arms at fixed source, input and library identities, cover-first scheduling improves ideal-net worst negative slack (WNS) by 0.161 ns on average and reaches the same endpoints with 7.8\\%--19.0\\% fewer total candidate STA measurements than three random-order configurations; weighted and uniform node capacities produce no observed difference, while the sum of cell areas in the same library increases by 0.27\\%--4.92\\%, exposing the implementation cost accompanying the timing benefit.}\\par"
+    },
+    {
+      "old": "  \\item \\textbf{候选探索框架}：作为本文的核心贡献，提出面向预布局门级时序 ECO 的候选探索框架：针对预布局阶段缺少物理信息、候选类型单一的问题，以违例路径的局部逻辑窗口为输入，由多特征加权割与关键路径覆盖割生成 R/G/B/JOINT 多类型候选，并按割代价、关键路径覆盖和策略优先级融合排序，从而扩展局部修改空间并减少候选级评估开销。",
+      "new": "  \\item \\textbf{多源区域与分层候选调度}：针对缺少物理信息时修改空间与评估资源难以协调的问题，将报告关键实例覆盖与加权节点割作为可切换的区域来源，再在区域内实例化R/G/B/JOINT动作，明确区域、动作全文与实际STA的不同身份。通过同一运行器的边界、容量及顺序控制，检验覆盖与调度如何影响到达相同终点的测量成本，同时保留加权机制未显示额外收益的结果。"
+    },
+    {
+      "old": "在上述贡献之外，本文构建基于公开 EDA 工具链的实现与验证平台作为实验基础：采用按轮提交的门级 ECO 流程与统一数据流——每轮基于更新后的网表重新提取违例锥并生成候选，候选依次经函数与结构检查、理想线网 STA 评估和简化 SPEF 复测，最终修复网表再经独立顺序 SEC 验证。在 ISCAS89、ITC-99 和 PicoRV32 测试集上，分别有 8/8、18/19 和 2/2 个实例取得严格 WNS 改善（PicoRV32 第三个子模块无 setup 路径）。",
+      "new": "本文在公开Yosys、OpenSTA与SKY130 HD库上实现上述流程，提供固定代码、输入、库、逐次候选与最终证明的对应证据。核心受控对照覆盖8个ISCAS89电路和9种配置；ITC-99与PicoRV32的归档结果按时序可评估性和模型支持域分层补充。原始候选、完整命令及测量台账用于连接设计定义与可重复检验，避免将不同生成器和接受规则的结果合并归因。"
+    },
+    {
+      "old": "{manual/figures/fig2_candidate_mechanism_r21.pdf}",
+      "new": "{manual/figures/r24_toy_mechanism/r24_toy_mechanism.pdf}"
+    },
+    {
+      "old": "\\caption{FAECO 候选构造与融合排序。六门示例锥及其节点分裂图具有一一对应的依赖关系，内部边容量为节点代价，依赖边与源、汇连接具有无穷容量。$C_w$ 生成加权割边界，$C_c$ 按关键路径信息补充覆盖候选，R 候选可用性参与实例化与策略切换；二者实例化为候选后融合排序。示例仅说明构造关系。}",
+      "new": "\\caption{六门静态算例的区域生成与调度。a为人工指定输入锥、报告实例序列及全1权重的节点代价，$c$同时连接$g_3$的两个输入；R+与R$-$表示有、无库等价匹配。b为覆盖区域$C_c$，c为加权节点割$C_w$，分别列完整边界与内部网。覆盖优先先调度$C_c$后调度$C_w$，不按节点代价和升序；相同区域合并来源。该例仅演示算法构造，不是时序测量轨迹。}"
+    },
+    {
+      "old": "{data/final/fig4_unified_gain_r21.pdf}",
+      "new": "{data/final/r24_unified_status/fig4_r24.pdf}"
+    },
+    {
+      "old": "\\caption{三个测试集的总体结果（统一迭代配置）}",
+      "new": "\\caption{统一跨测试集配置的逐实例理想线网WNS观察。全部实例保留；空心端点与虚线标出含实际三态、二态功能证明不支持的b09、b20和b21，其时序测量不等于功能已验证。b06持平，PicoRV32寄存器模块无setup路径。各模型支持域和证明身份见正文及表~\\ref{tab:overview}。}"
+    },
+    {
+      "old": "本实验考察预布局筛选收益在布局与全局布线寄生估计条件下的保持情况，如图~\\ref{fig:physical_transfer} 所示。本节采用 \\S\\ref{sec:eff_prio} 效率优先配置的接受候选，与 \\S\\ref{sec:ablation} 的 20 轮迭代配置分开统计。表~\\ref{tab:pr8} 给出了这些接受候选在 OpenROAD 布局及全局布线估计后的时序结果。在 OpenROAD 2.0 布局与全局布线（global routing）寄生估计后，8 个 ISCAS89 电路中有 5 个电路保持时序改善，1 个持平，2 个 WNS 下降（幅度分别为 0.02 ns 和 0.01 ns）。流程使用 OpenROAD 2.0、SKY130 HD 和 0.5 ns 时钟约束。另行开展 SPEF 负载扫描与门控实验，用于观察候选对线载估计的敏感性，并记录 F6 失效。本节的物理结果为基于布局与全局布线寄生估计的后验评估，用于分析预布局筛选结果在寄生估计条件下的稳定性。",
+      "new": "本实验考察\\S\\ref{sec:eff_prio}单轮候选在布局和全局布线寄生估计下的收益保持情况，独立于割边界受控配置。图~\\ref{fig:physical_transfer}和表~\\ref{tab:pr8}保留全部8例：5个改善、1个持平、2个退化，退化分别为0.02和0.01\\,ns。每例基线与候选使用字节相同的OpenROAD脚本，TT25℃、1.8\\,V、CK周期0.5\\,ns；s27利用率10\\%，其余30\\%，布局密度0.7。时序寄生由\\texttt{estimate\\_parasitics -global\\_routing}给出，不称为最终签核结果。脚本未显式设置I/O延迟、外加输出负载、输入转换时间及额外时钟不确定度，运行时平台全文件及随机种子身份也未完整保留；这些条件限定了物理结果的可复验范围。"
+    },
+    {
+      "old": "独立 SPEF 负载扫描显示，s382 的 R 候选与 b18 的 JOINT 候选的 WNS 改善随估计线长增大而归零，表明线载增大后理想线网 WNS 改善逐步衰减。",
+      "new": "简化线载试验与OpenROAD几何寄生估计分开。对网$e$，估计器采用\n\\begin{equation}\\label{eq:estimated_rc}\n\\begin{aligned}\nL(e)&=\\ell\\max\\{1,\\sqrt{F(e)}\\}\\,p_f p_d,\\\\\nR(e)&=0.09\\,L(e)\\ [\\Omega],\\\\\nC(e)&=0.00021\\,L(e)\\ [\\mathrm{pF}],\n\\end{aligned}\n\\end{equation}\n其中$\\ell$以$\\mu$m计，$F(e)$为生成器记录的扇出数，$p_f,p_d$均为全局乘数，设为1；它不从坐标或曼哈顿距离提取线长，$p_d$也不是逐网深度。单位电阻0.09\\,$\\Omega/\\mu$m、单位电容0.21\\,fF/$\\mu$m作为敏感性模型的设定，不宣称经过物理提取标定。SPEF不含引脚电容，线电容集中到驱动端，电阻按星形支路分配。"
+    },
+    {
+      "old": "\\textbf{迭代式门控}：在 40\\,$\\mu$m/unit 估计线载下（unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度），对每条线 $e$ 用简化公式 $L_{\\mathrm{est}}(e)=40\\,\\mu\\mathrm{m} \\cdot u(e)$、$R_e=r_{\\mathrm{unit}}L_{\\mathrm{est}}$、$C_e=c_{\\mathrm{unit}}L_{\\mathrm{est}}$ 估计寄生电阻电容（$r_{\\mathrm{unit}}$、$c_{\\mathrm{unit}}$ 取自 SKY130 HD \\texttt{li1} 层代表 RC），并据此生成简化 SPEF。s382 的 50 个和 b18 的 6 个候选均未通过 SPEF 复测，并被记录为 F6；在启用反馈控制的配置中，相应失效作为下一轮搜索分析的输入。SPEF 门控能够识别并过滤线载估计下 WNS 收益消失的候选。",
+      "new": "归档线载扫描曾对基线与候选共用基线SPEF，s382候选还出现缺引脚告警，因此不能据其曲线认定收益衰减或门控有效。门控记录中的s382与b18分别有50条和6条评估，但仅对应5个和1个不同候选全文；b18保留SPEF与1\\,$\\mu$m单位长度匹配，s382的原始RC配方未恢复，不能将它们统一记作40\\,$\\mu$m、56个独有候选。本文保留这些记录用于来源与计数审计，不用其估计物理失败率。有效的双侧后验须由各自网表生成寄生文件，核对所有层级引脚的实际注入；仅返回码为0或同网表时序差值为0不足以通过这项验收。"
+    },
+    {
+      "old": "各电路物理估计采用与预布局评估一致的映射网表及接受候选；s27 采用 10\\% 利用率布局规划；",
+      "new": "各例均为对应单轮基线及其接受候选；s27利用率10\\%，其余30\\%，两侧相同脚本，TT25℃/1.8V/0.5ns；"
+    },
+    {
+      "old": "\\section{结论}\\label{sec:conclusion}\n\n本文提出面向预布局门级时序 ECO 的 FAECO 框架，通过多特征加权割与关键路径覆盖割构造 R/G/B/JOINT 候选，结合候选失效刻画、迭代提交和分层验证实现局部时序优化。在固定权重配置下，混合候选策略的平均 WNS 改善为 1.07\\,ns，高于纯 G 策略的 0.16\\,ns；跨测试集评估显示该框架能在多个电路族上取得预布局 WNS 改善；历史策略对照中，混合策略在多数电路上比随机策略更早取得首次改善，反映候选构造与评估顺序的联合作用。\n\n消融实验表明，EMA 自适应反馈相较固定权重未取得额外收益，扩展后的 S 候选虽能降低部分电路的逻辑深度，但未带来 WNS 改善。OpenROAD 布局及全局布线估计后，8 个 ISCAS89 电路中有 5 个保持改善、1 个持平、2 个出现不超过 0.02\\,ns 的退化。失效统计显示，大部分候选的失败来源于时序收益不足（F4 占候选级评估的 60.2\\%），而非功能保持问题，这为后续候选空间设计提供了依据。综上，在本文实验范围内，预布局门级时序 ECO 的性能提升可以通过候选空间组织与评估策略优化实现，而不仅依赖单一修改动作。FAECO 在公开 EDA 工具链上实现了这一思路，为自动化 ECO 搜索提供了可复现的方法基础。\n\n\n\n\n",
+      "new": "\\section{结论}\\label{sec:conclusion}\n\n本文实现了面向预布局门级时序ECO的多源区域构造与分层候选调度，将关键实例覆盖、节点割、局部动作及测量资源的身份明确分开。固定源码与输入的72运行对照中，覆盖优先在八电路上平均改善理想线网WNS约0.161\\,ns，到达相同终点的候选STA总次数比三个随机区域顺序减少7.8\\%--19.0\\%；节点加权相较统一容量未显示额外收益。网表单元数不变并不意味着无代价，同库面积和增加0.27\\%--4.92\\%。\n\nEMA反馈和结构候选扩展均未带来额外终点收益；单轮候选的OpenROAD后验保留5例改善、1例持平和2例退化，说明理想线网收益不能直接代替后续物理判断。ITC-99含实际三态的三例仅保留时序观察，功能证据需保留输出使能与Z语义后重新建立；有模型与原始端点绑定的子集另行统计。上述分离使候选搜索的有效部分、零收益设计和未闭合验证具有可核查的边界。\n\n进一步提升应围绕可改变实际候选选择的区域设计、同一输入域的强基线比较及层级完整的物理/功能验证展开，而不能以增加候选数量或深度下降替代时序证据。本文的固定输入、代码、完整候选和测量台账为这些检验提供可复用起点。\n\n"
+    }
+  ]
+}

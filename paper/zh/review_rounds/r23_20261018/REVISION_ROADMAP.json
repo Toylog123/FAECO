@@ -1,0 +1,2006 @@
+{
+  "schema_version": "revision-roadmap/1.0",
+  "revision_round": 23,
+  "base_draft_sha256": "c329418f0b3cf2dd9c13e2cb0c5bc50cdfb6ceac8fa9f7140d47280daa1556fc",
+  "block_manifest_sha256": "7d2f393a0383c0683d26e5ce9d977dd11e3b53e27f8f9e097a537f54f350ab0e",
+  "items": [
+    {
+      "id": "REV-01",
+      "source_refs": [
+        {
+          "seat": "EIC",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 0
+        },
+        {
+          "seat": "R1",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 0
+        },
+        {
+          "seat": "DA",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-01"
+      ],
+      "description": "隔离割机制与排序的独立收益",
+      "reviewer": "EIC:W1,R1:W1,DA:M1",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "§4.4、图5及表9–11",
+        "absence_scope": "在相同运行器、候选集合、接受条件及测量预算下隔离加权割、覆盖割或融合排序价值的对照",
+        "check_performed": "§1.3、§3.3–3.4及§4.4全文、图5、表9–11"
+      },
+      "confidence": 5,
+      "competence_basis": "稿件直接说明历史运行器未使用两类割，并承认其独立贡献仍需检验",
+      "cost_scope": {
+        "kind": "re_analysis",
+        "locator": "源稿L508,589"
+      },
+      "consequence_if_unaddressed": {
+        "code": "evidence_gap_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "隔离割机制与排序的独立收益"
+        }
+      },
+      "target_section": "源稿L508,589",
+      "suggested_action": "在同一冻结运行器、输入、接受谓词和新STA预算下比较边界与排序；候选生成对照允许候选池变化，纯排序对照固定候选池。逐实例报告收益—成本曲线、实际测量和多种子。优先审查已验收C′72证据，再决定剩余工作，不能把C′改名为历史C/D。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "能从图表追踪每个对照的版本、输入、开关与预算；权重零收益及不利结果保留；历史1.07 ns不用于证明割机制。",
+      "proposed_targets": [
+        {
+          "block_id": "B0088",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0089",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0090",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0091",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0092",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0093",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0094",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0095",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0096",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ],
+      "corroborating_sources": [
+        {
+          "reviewer": "R1:W1",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "主要贡献与候选空间排序消融",
+            "absence_scope": "同一运行器、相同接受准则和新STA预算下的加权割及覆盖割控制比较",
+            "check_performed": "L144–149主要贡献、L398–419实验配置、L508–546策略对照说明与表注、L575–589反馈运行开销、L692–694结论"
+          },
+          "confidence": 5,
+          "competence_basis": "设计对照与方法归因"
+        },
+        {
+          "reviewer": "DA:M1",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "text",
+            "locator": "主要贡献第1项“从而扩展局部修改空间并减少候选级评估开销”；候选空间、排序与反馈消融第一组“未使用式~\\eqref{eq:cost} 的加权割与覆盖割”；同段“混合配置启用 TNS 辅助接受”；策略对比表注“实际 STA 消耗不同”",
+            "quote": "从而扩展局部修改空间并减少候选级评估开销"
+          },
+          "confidence": 5,
+          "competence_basis": "同稿贡献与实验设计直接交叉核对；未断言控制后收益消失"
+        }
+      ]
+    },
+    {
+      "id": "REV-02",
+      "source_refs": [
+        {
+          "seat": "EIC",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-02"
+      ],
+      "description": "与强相关方法建立算法层面的差异",
+      "reviewer": "EIC:W2",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "§2及表1–2",
+        "absence_scope": "将最相关代表工作与本文候选生成、候选组合、排序依据及验证资源分配逐项对应的贡献比较",
+        "check_performed": "§1.1–1.3、§2.1–2.2、表1–2及§3.3"
+      },
+      "confidence": 4,
+      "competence_basis": "可直接核查稿内比较内容；未据此断言引用文献实际上已覆盖本文贡献",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L156,195"
+      },
+      "consequence_if_unaddressed": {
+        "code": "claim_scope_unsupported",
+        "target": {
+          "kind": "manuscript",
+          "locator": "与强相关方法建立算法层面的差异"
+        }
+      },
+      "target_section": "源稿L156,195",
+      "suggested_action": "以原始文献逐项比较候选空间、组合粒度、排序信号和验证预算；对相容可运行强基线实施统一比较，对不相容方法说明具体接口/目标障碍。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "逐项差异有原文支持，新增部件与已有部件明确；商用/需训练的概括不能代替逐项分析。",
+      "proposed_targets": [
+        {
+          "block_id": "B0023",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0024",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0025",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0026",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0027",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0028",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0029",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0030",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0031",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0032",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0033",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-03",
+      "source_refs": [
+        {
+          "seat": "EIC",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-03"
+      ],
+      "description": "摘要和结论绑定正确实验族",
+      "reviewer": "EIC:W3",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "中文摘要，源码第94行“固定权重、20 轮迭代下”；§4.4，源码第512行“加权割和覆盖割各自的贡献仍需同一运行器下的独立对照检验”",
+        "quote": "固定权重、20 轮迭代下"
+      },
+      "confidence": 5,
+      "competence_basis": "摘要与结果配置说明之间可直接逐段核对",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L94,102,692,694"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "摘要和结论绑定正确实验族"
+        }
+      },
+      "target_section": "源稿L94,102,692,694",
+      "suggested_action": "就地标明1.07/0.16 ns属于未用两类割的历史策略枚举；主机制效率用实际同族对照支撑。增加实验族—研究问题—图表对应表。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "摘要、结论、实验设置和图题对同一数字的版本/机制身份一致。",
+      "proposed_targets": [
+        {
+          "block_id": "B0009",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0116",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0117",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-04",
+      "source_refs": [
+        {
+          "seat": "EIC",
+          "channel": "finding",
+          "ordinal": 4,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-04"
+      ],
+      "description": "分开候选检查与最终全网表SEC",
+      "reviewer": "EIC:W4",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "中文摘要，源码第94行“候选按轮提交，依次经函数与结构检查、时序分析与最终等价性检查”；§3.2，源码第281行“独立顺序 SEC 在生成最终修复网表后执行”",
+        "quote": "候选按轮提交，依次经函数与结构检查、时序分析与最终等价性检查"
+      },
+      "confidence": 5,
+      "competence_basis": "摘要语法与方法正文、图1的检查对象和时机可直接对照",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L94,102,264,281"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "分开候选检查与最终全网表SEC"
+        }
+      },
+      "target_section": "源稿L94,102,264,281",
+      "suggested_action": "摘要分别说明候选的局部检查/STA及搜索结束后的最终独立全网表SEC，保持中英文摘要一致。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "读者不会理解成每个候选都执行最终SEC；证明完成状态与当前绑定证据一致。",
+      "proposed_targets": [
+        {
+          "block_id": "B0009",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0044",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0045",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-05",
+      "source_refs": [
+        {
+          "seat": "R1",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 0
+        },
+        {
+          "seat": "DA",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-05"
+      ],
+      "description": "闭合主要历史结果的版本与输入身份",
+      "reviewer": "R1:W2,DA:M3",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "实验设置L402“代码 revision 未完整钉定”；同段“同配置重跑在部分电路出现结果漂移”；策略表注L546“各臂完整命令未全部归档”",
+        "quote": "代码 revision 未完整钉定"
+      },
+      "confidence": 5,
+      "competence_basis": "复现身份与配置追踪",
+      "cost_scope": {
+        "kind": "re_analysis",
+        "locator": "源稿L398,419,546,546,692,694"
+      },
+      "consequence_if_unaddressed": {
+        "code": "method_reproducibility_unresolved",
+        "target": {
+          "kind": "manuscript",
+          "locator": "闭合主要历史结果的版本与输入身份"
+        }
+      },
+      "target_section": "源稿L398,419,546,546,692,694",
+      "suggested_action": "逐族绑定代码、参数、输入、库、约束、种子及输出；先分析已知漂移。无法恢复旧身份时保留历史观察，另外呈现当前冻结族重验，不能以当前源码替代旧数字身份。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "每个主要数字可追踪同一族的代码/输入/设定/输出；漂移有归因，未恢复项持续登记。",
+      "proposed_targets": [
+        {
+          "block_id": "B0065",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0066",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0067",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0068",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0094",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0116",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0117",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ],
+      "corroborating_sources": [
+        {
+          "reviewer": "DA:M3",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "text",
+            "locator": "实验设置“效率优先与统一跨测试集结果使用历史归档运行，代码 revision 未完整钉定”；同段“同配置重跑在部分电路出现结果漂移”；结论“为自动化 ECO 搜索提供了可复现的方法基础”",
+            "quote": "效率优先与统一跨测试集结果使用历史归档运行，代码 revision 未完整钉定"
+          },
+          "confidence": 5,
+          "competence_basis": "稿件自述的身份缺口与结论直接核对；漂移原因未知"
+        }
+      ]
+    },
+    {
+      "id": "REV-06",
+      "source_refs": [
+        {
+          "seat": "R1",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 0
+        },
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 0
+        },
+        {
+          "seat": "DA",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-06"
+      ],
+      "description": "定义覆盖割的构造目标和步骤",
+      "reviewer": "R1:W3,R2:W1,DA:M2",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "方法的多源候选边界与融合排序",
+        "absence_scope": "关键路径覆盖割构造规则及两类边界到候选和最终顺序的确定性映射",
+        "check_performed": "L233–240符号表、L264–281算法、L291–320候选生成与代价式、L385–389复杂度说明"
+      },
+      "confidence": 4,
+      "competence_basis": "算法可重建性检查",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L291,320,267,281,387,389"
+      },
+      "consequence_if_unaddressed": {
+        "code": "method_reproducibility_unresolved",
+        "target": {
+          "kind": "manuscript",
+          "locator": "定义覆盖割的构造目标和步骤"
+        }
+      },
+      "target_section": "源稿L291,320,267,281,387,389",
+      "suggested_action": "定义关键路径集合来源、覆盖对象、覆盖判定、割生成规则和数量上限；补可执行伪代码。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "不查外部口头约定即可复建覆盖割；六门算例列出输入与输出边界。",
+      "proposed_targets": [
+        {
+          "block_id": "B0044",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0045",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0047",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0048",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0049",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0050",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0051",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0061",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0062",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ],
+      "corroborating_sources": [
+        {
+          "reviewer": "R2:W1",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "§3.3及算法1、图2",
+            "absence_scope": "关键路径覆盖割的集合生成规则、割到修改候选的实例化及融合排序的确定规则",
+            "check_performed": "母稿L267–300、L306–320、L387–389，表3，算法1，实际渲染图2"
+          },
+          "confidence": 5,
+          "competence_basis": "已逐项核对方法正文、符号表、伪代码和图2；结论针对论文定义完整性。"
+        },
+        {
+          "reviewer": "DA:M2",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "方法“多类型候选探索与排序”的覆盖割及融合步骤",
+            "absence_scope": "覆盖割的可执行定义与融合排序的确定规则",
+            "check_performed": "方法该小节全部文字、式(2)、符号表、算法1及图2图题"
+          },
+          "confidence": 4,
+          "competence_basis": "全部可见方法定义核对；未检查外部补充代码"
+        }
+      ]
+    },
+    {
+      "id": "REV-07",
+      "source_refs": [
+        {
+          "seat": "R1",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 1
+        },
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 1
+        },
+        {
+          "seat": "DA",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 1
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-07"
+      ],
+      "description": "定义割边界到实际动作的实例化",
+      "reviewer": "R1:W3,R2:W1,DA:M2",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "方法的多源候选边界与融合排序",
+        "absence_scope": "关键路径覆盖割构造规则及两类边界到候选和最终顺序的确定性映射",
+        "check_performed": "L233–240符号表、L264–281算法、L291–320候选生成与代价式、L385–389复杂度说明"
+      },
+      "confidence": 4,
+      "competence_basis": "算法可重建性检查",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L264,300,306,320"
+      },
+      "consequence_if_unaddressed": {
+        "code": "method_reproducibility_unresolved",
+        "target": {
+          "kind": "manuscript",
+          "locator": "定义割边界到实际动作的实例化"
+        }
+      },
+      "target_section": "源稿L264,300,306,320",
+      "suggested_action": "说明边界到R/G/B/JOINT的映射、合法组合、候选枚举上限和去重；算例给出实际动作。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "同一输入能确定候选身份，JOINT组合范围和去重可验证。",
+      "proposed_targets": [
+        {
+          "block_id": "B0044",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0045",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0046",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0047",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0048",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0049",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0050",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0051",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ],
+      "corroborating_sources": [
+        {
+          "reviewer": "R2:W1",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "§3.3及算法1、图2",
+            "absence_scope": "关键路径覆盖割的集合生成规则、割到修改候选的实例化及融合排序的确定规则",
+            "check_performed": "母稿L267–300、L306–320、L387–389，表3，算法1，实际渲染图2"
+          },
+          "confidence": 5,
+          "competence_basis": "已逐项核对方法正文、符号表、伪代码和图2；结论针对论文定义完整性。"
+        },
+        {
+          "reviewer": "DA:M2",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "方法“多类型候选探索与排序”的覆盖割及融合步骤",
+            "absence_scope": "覆盖割的可执行定义与融合排序的确定规则",
+            "check_performed": "方法该小节全部文字、式(2)、符号表、算法1及图2图题"
+          },
+          "confidence": 4,
+          "competence_basis": "全部可见方法定义核对；未检查外部补充代码"
+        }
+      ]
+    },
+    {
+      "id": "REV-08",
+      "source_refs": [
+        {
+          "seat": "R1",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 2
+        },
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 2
+        },
+        {
+          "seat": "DA",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 2
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-08"
+      ],
+      "description": "定义融合排序的唯一顺序",
+      "reviewer": "R1:W3,R2:W1,DA:M2",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "方法的多源候选边界与融合排序",
+        "absence_scope": "关键路径覆盖割构造规则及两类边界到候选和最终顺序的确定性映射",
+        "check_performed": "L233–240符号表、L264–281算法、L291–320候选生成与代价式、L385–389复杂度说明"
+      },
+      "confidence": 4,
+      "competence_basis": "算法可重建性检查",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L264,320"
+      },
+      "consequence_if_unaddressed": {
+        "code": "method_reproducibility_unresolved",
+        "target": {
+          "kind": "manuscript",
+          "locator": "定义融合排序的唯一顺序"
+        }
+      },
+      "target_section": "源稿L264,320",
+      "suggested_action": "给出割代价、覆盖与策略优先级的精确计算、字典序/加权方式、并列处理与停止规则；展示最终次序。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "同一候选池产生确定可核查的次序，能明确区分基线排序和所提排序。",
+      "proposed_targets": [
+        {
+          "block_id": "B0044",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0045",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0046",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0047",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0048",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0049",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0050",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0051",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ],
+      "corroborating_sources": [
+        {
+          "reviewer": "R2:W1",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "§3.3及算法1、图2",
+            "absence_scope": "关键路径覆盖割的集合生成规则、割到修改候选的实例化及融合排序的确定规则",
+            "check_performed": "母稿L267–300、L306–320、L387–389，表3，算法1，实际渲染图2"
+          },
+          "confidence": 5,
+          "competence_basis": "已逐项核对方法正文、符号表、伪代码和图2；结论针对论文定义完整性。"
+        },
+        {
+          "reviewer": "DA:M2",
+          "severity": "major",
+          "evidence_anchor": {
+            "anchor_type": "absence",
+            "locator": "方法“多类型候选探索与排序”的覆盖割及融合步骤",
+            "absence_scope": "覆盖割的可执行定义与融合排序的确定规则",
+            "check_performed": "方法该小节全部文字、式(2)、符号表、算法1及图2图题"
+          },
+          "confidence": 4,
+          "competence_basis": "全部可见方法定义核对；未检查外部补充代码"
+        }
+      ]
+    },
+    {
+      "id": "REV-09",
+      "source_refs": [
+        {
+          "seat": "R1",
+          "channel": "finding",
+          "ordinal": 4,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-09"
+      ],
+      "description": "同步b17最终证明状态和效果绑定",
+      "reviewer": "R1:W4",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "跨测试集评估L497“另有 1 个等价点未完成证明”",
+        "quote": "另有 1 个等价点未完成证明"
+      },
+      "confidence": 5,
+      "competence_basis": "验证状态与效果指标对应",
+      "cost_scope": {
+        "kind": "re_analysis",
+        "locator": "源稿L435,439,491,497"
+      },
+      "consequence_if_unaddressed": {
+        "code": "evidence_gap_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "同步b17最终证明状态和效果绑定"
+        }
+      },
+      "target_section": "源稿L435,439,491,497",
+      "suggested_action": "先复用已恢复的b17原始候选新证明，确认其与正文时序端点一一对应，再更新证明计数、均值口径与表注；不能把新模型证明点数冒充历史旧日志。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "绑定新证据的12879/0与旧12812+1清楚区分；0.38 ns端点身份经核对后才合并。",
+      "proposed_targets": [
+        {
+          "block_id": "B0070",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0082",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0083",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0084",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0085",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-10",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-10"
+      ],
+      "description": "说明并验证顺序等价保证的初态与状态域",
+      "reviewer": "R2:W2",
+      "obligation_class": "must_fix",
+      "severity": "major",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§4.2及表8注，母稿L445与L477，“独立顺序等价检查完全证明了这8对基线与最终修复网表”，“equiv\\_induct -seq 10”。",
+        "quote": "独立顺序等价检查完全证明了这8对基线与最终修复网表"
+      },
+      "confidence": 4,
+      "competence_basis": "已核对稿件所列流程与Yosys 0.33官方文档、同版本源码；未读取实际证明脚本或日志。",
+      "cost_scope": {
+        "kind": "re_analysis",
+        "locator": "源稿L218,220,371,383,445,477"
+      },
+      "consequence_if_unaddressed": {
+        "code": "claim_scope_unsupported",
+        "target": {
+          "kind": "manuscript",
+          "locator": "说明并验证顺序等价保证的初态与状态域"
+        }
+      },
+      "target_section": "源稿L218,220,371,383,445,477",
+      "suggested_action": "展示实际模型准备、寄存器对应、输入/复位与X/undef假设；分开equiv_simple与归纳证明点。若恒等状态映射建立保持性，给出实际下一状态/输出证据；若靠复位同步，补基例。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "已建立所称保证需要的状态关系和基例；不以删除“完全”替代补证，不据此推断网表已不等价。",
+      "proposed_targets": [
+        {
+          "block_id": "B0037",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0038",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0058",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0059",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0072",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0073",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0074",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0075",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0076",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-11",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-11"
+      ],
+      "description": "纠正功能ECO的等价目标",
+      "reviewer": "R2:W3",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§2.1，母稿L161，“再通过 SAT 证明筛选与原逻辑功能等价的补丁”。",
+        "quote": "再通过 SAT 证明筛选与原逻辑功能等价的补丁"
+      },
+      "confidence": 5,
+      "competence_basis": "已查Wu2010作者PDF的摘要、§II和Cheng2016官方PDF的研究目标。",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L159,161"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "纠正功能ECO的等价目标"
+        }
+      },
+      "target_section": "源稿L159,161",
+      "suggested_action": "区分与修订后规格等价及保持原基线功能；按Wu原文说明FRAIG识别共享部分和补丁修正差异。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "修复功能不再被写成只与旧错误函数等价；与本文功能保持型时序修改清楚区分。",
+      "proposed_targets": [
+        {
+          "block_id": "B0024",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0025",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-12",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 3,
+          "subclaim_ordinal": 1
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-12"
+      ],
+      "description": "纠正Kravets工作的技术定位",
+      "reviewer": "R2:W3",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§2.1，母稿L161，“再通过 SAT 证明筛选与原逻辑功能等价的补丁”。",
+        "quote": "再通过 SAT 证明筛选与原逻辑功能等价的补丁"
+      },
+      "confidence": 5,
+      "competence_basis": "已查Wu2010作者PDF的摘要、§II和Cheng2016官方PDF的研究目标。",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L159,159"
+      },
+      "consequence_if_unaddressed": {
+        "code": "reader_traceability_reduced",
+        "target": {
+          "kind": "manuscript",
+          "locator": "纠正Kravets工作的技术定位"
+        }
+      },
+      "target_section": "源稿L159,159",
+      "suggested_action": "按IBM官方摘要把符号采样定位于规格修正点与功能补丁搜索，不能直接作为WNS导向时序重映射证据。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "论述与实际取得的摘要证据相符，未取得全文的覆盖边界明确。",
+      "proposed_targets": [
+        {
+          "block_id": "B0024",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-13",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 4,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-13"
+      ],
+      "description": "修正Pan2024引用的技术归属",
+      "reviewer": "R2:W4",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§2.1，母稿L163，“后续工作进一步将资源代价纳入补丁生成”。",
+        "quote": "后续工作进一步将资源代价纳入补丁生成"
+      },
+      "confidence": 5,
+      "competence_basis": "已查Pan等作者arXiv全文的摘要、§II-C、§III及SAT-sweeping实验定位。",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L163,163,704,717"
+      },
+      "consequence_if_unaddressed": {
+        "code": "reader_traceability_reduced",
+        "target": {
+          "kind": "manuscript",
+          "locator": "修正Pan2024引用的技术归属"
+        }
+      },
+      "target_section": "源稿L163,163,704,717",
+      "suggested_action": "将Pan2024移至STP仿真/SAT-sweeping与等价节点识别的实际论述；资源感知补丁陈述只引用支持该内容的原文。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "每条引文支撑相邻技术陈述，不把仿真论文归为补丁生成。",
+      "proposed_targets": [
+        {
+          "block_id": "B0026",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0121",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-14",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 5,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-14"
+      ],
+      "description": "分开Dao2018失败分支和后续动作",
+      "reviewer": "R2:W5",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§2.1，母稿L165，“代表性流程通常需要扩大搜索窗口或增加补丁规模重新枚举”。",
+        "quote": "代表性流程通常需要扩大搜索窗口或增加补丁规模重新枚举"
+      },
+      "confidence": 4,
+      "competence_basis": "已查Dao2018作者PDF的§3.2–3.6；未声称穷尽功能ECO文献。",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L165,165"
+      },
+      "consequence_if_unaddressed": {
+        "code": "reader_traceability_reduced",
+        "target": {
+          "kind": "manuscript",
+          "locator": "分开Dao2018失败分支和后续动作"
+        }
+      },
+      "target_section": "源稿L165,165",
+      "suggested_action": "区分不可修复、超时与不等价，按原文指出具体回退分支；不能笼统写成验证失败后扩窗。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "扩窗/规模增长论述有对应原文算法分支；无法支持的泛化被纠正。",
+      "proposed_targets": [
+        {
+          "block_id": "B0027",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-15",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 6,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-15"
+      ],
+      "description": "修正功能补丁的阶段分类",
+      "reviewer": "R2:W6",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§2.2，母稿L172，“逻辑补丁构造则多在综合后、布局前执行功能修复”。",
+        "quote": "逻辑补丁构造则多在综合后、布局前执行功能修复"
+      },
+      "confidence": 5,
+      "competence_basis": "Cheng2016官方全文§I明确将场景设为placement frozen之后的metal-only ECO。",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L172,195"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "修正功能补丁的阶段分类"
+        }
+      },
+      "target_section": "源稿L172,195",
+      "suggested_action": "分别按问题目标、设计阶段、备用单元与物理信息分类，保留Cheng metal-only布局冻结后场景。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "不再把逻辑补丁构造整体视为布局前，也不以无覆盖依据的频率词定位。",
+      "proposed_targets": [
+        {
+          "block_id": "B0030",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0031",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0032",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0033",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-16",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 7,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-16"
+      ],
+      "description": "区分逻辑深度代理与真实时序关键度",
+      "reviewer": "R2:W7",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "equation",
+        "locator": "式（2）及§3.4、表4，母稿L306–342。"
+      },
+      "confidence": 5,
+      "competence_basis": "依据稿件自身数学定义核对，未猜测实现细节。",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L306,342"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "区分逻辑深度代理与真实时序关键度"
+        }
+      },
+      "target_section": "源稿L306,342",
+      "suggested_action": "说明depth是逻辑层数，覆盖割是否另用真实STA路径；以算例展示深度项如何影响选择。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "深度折扣不自行被称为关键路径覆盖保证；确定性效果有对照证据。",
+      "proposed_targets": [
+        {
+          "block_id": "B0051",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0052",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0053",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0054",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-17",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 7,
+          "subclaim_ordinal": 1
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-17"
+      ],
+      "description": "解释锥规模常数项对割目标的作用",
+      "reviewer": "R2:W7",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "equation",
+        "locator": "式（2）及§3.4、表4，母稿L306–342。"
+      },
+      "confidence": 5,
+      "competence_basis": "依据稿件自身数学定义核对，未猜测实现细节。",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L306,342"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "解释锥规模常数项对割目标的作用"
+        }
+      },
+      "target_section": "源稿L306,342",
+      "suggested_action": "说明同一锥nC是节点共享常数，如何通过割节点数量和深度分母影响目标；区别实际验证工作量。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "公式解释与其数学作用一致，减少验证代价的效果有实际对照。",
+      "proposed_targets": [
+        {
+          "block_id": "B0051",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0052",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0053",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0054",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-18",
+      "source_refs": [
+        {
+          "seat": "R2",
+          "channel": "finding",
+          "ordinal": 7,
+          "subclaim_ordinal": 2
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-18"
+      ],
+      "description": "说明扇出与电气负载的代理关系",
+      "reviewer": "R2:W7",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "equation",
+        "locator": "式（2）及§3.4、表4，母稿L306–342。"
+      },
+      "confidence": 5,
+      "competence_basis": "依据稿件自身数学定义核对，未猜测实现细节。",
+      "cost_scope": {
+        "kind": "sentence",
+        "locator": "源稿L306,342"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "说明扇出与电气负载的代理关系"
+        }
+      },
+      "target_section": "源稿L306,342",
+      "suggested_action": "将fanout明确表述为负载代理，并交代未直接包含负载引脚电容及线载。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "不把fanout数直接当作实际电容或已测负载风险。",
+      "proposed_targets": [
+        {
+          "block_id": "B0051",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0052",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0053",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0054",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-19",
+      "source_refs": [
+        {
+          "seat": "R3",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-19"
+      ],
+      "description": "报告接受候选的网表代价",
+      "reviewer": "R3:W1",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "§3.1、§3.6及§4.1的目标与接受条件",
+        "absence_scope": "接受候选的单元面积或规模变化，以及面积、功耗和电气约束是否纳入筛选的明确状态",
+        "check_performed": "全文方法与实验设置、表7至表14、图3至图7及结论"
+      },
+      "confidence": 5,
+      "competence_basis": "已逐段检查接受条件与结果指标，判断限于稿件所报告的信息。",
+      "cost_scope": {
+        "kind": "re_analysis",
+        "locator": "源稿L218,220,371,419,435,439"
+      },
+      "consequence_if_unaddressed": {
+        "code": "reporting_requirement_unmet",
+        "target": {
+          "kind": "manuscript",
+          "locator": "报告接受候选的网表代价"
+        }
+      },
+      "target_section": "源稿L218,220,371,419,435,439",
+      "suggested_action": "对绑定基线/最终网表列逐实例单元数、缓冲变化和同库单元面积；不能取得的项目标未评。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "实际网表规模/面积能与WNS端点对应；候选锥尺寸不冒充网表代价。",
+      "proposed_targets": [
+        {
+          "block_id": "B0037",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0038",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0058",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0059",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0060",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0061",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0062",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0063",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0064",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0065",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0066",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0067",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0068",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0070",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-20",
+      "source_refs": [
+        {
+          "seat": "R3",
+          "channel": "finding",
+          "ordinal": 1,
+          "subclaim_ordinal": 1
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-20"
+      ],
+      "description": "明确额外工程指标的评价状态",
+      "reviewer": "R3:W1",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "absence",
+        "locator": "§3.1、§3.6及§4.1的目标与接受条件",
+        "absence_scope": "接受候选的单元面积或规模变化，以及面积、功耗和电气约束是否纳入筛选的明确状态",
+        "check_performed": "全文方法与实验设置、表7至表14、图3至图7及结论"
+      },
+      "confidence": 5,
+      "competence_basis": "已逐段检查接受条件与结果指标，判断限于稿件所报告的信息。",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L371,419"
+      },
+      "consequence_if_unaddressed": {
+        "code": "interpretive_ambiguity_remains",
+        "target": {
+          "kind": "manuscript",
+          "locator": "明确额外工程指标的评价状态"
+        }
+      },
+      "target_section": "源稿L371,419",
+      "suggested_action": "说明面积、功耗、hold、最大电容和转换时间是约束、观察量还是未评项目；已有检查给限值与违例数，无结果不写通过。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "读者知道候选进入下一阶段仍需哪些检查；不强制扩展成完整PPA签核论文。",
+      "proposed_targets": [
+        {
+          "block_id": "B0058",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0059",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0060",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0061",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0062",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0063",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0064",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0065",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0066",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0067",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0068",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-21",
+      "source_refs": [
+        {
+          "seat": "R3",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 0
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-21"
+      ],
+      "description": "补齐简化SPEF的模型定义",
+      "reviewer": "R3:W2",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§4.5迭代式门控，PDF第10至11页，源稿第624行 \"unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度\"；表13注释，源稿第648行 \"s27 采用 10\\% 利用率布局规划\"",
+        "quote": "§4.5迭代式门控，PDF第10至11页，源稿第624行 \"unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度\"；表13注释，源稿第648行 \"s27 采用 10\\% 利用率布局规划\""
+      },
+      "confidence": 5,
+      "competence_basis": "已核看物理段落、公式、表13及原始渲染页，判断限于模型与条件说明的充分性。",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L624,624"
+      },
+      "consequence_if_unaddressed": {
+        "code": "method_reproducibility_unresolved",
+        "target": {
+          "kind": "manuscript",
+          "locator": "补齐简化SPEF的模型定义"
+        }
+      },
+      "target_section": "源稿L624,624",
+      "suggested_action": "给出u(e)逐边计算规则、单位RC数值/单位及负载扫描范围，区分模型设定和物理提取。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "40 μm/unit与实际RC可重建；不能用新配置覆盖历史条件。",
+      "proposed_targets": [
+        {
+          "block_id": "B0104",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "REV-22",
+      "source_refs": [
+        {
+          "seat": "R3",
+          "channel": "finding",
+          "ordinal": 2,
+          "subclaim_ordinal": 1
+        }
+      ],
+      "sub_claim_ids": [
+        "SC-22"
+      ],
+      "description": "补齐物理后验运行条件",
+      "reviewer": "R3:W2",
+      "obligation_class": "should_fix",
+      "severity": "minor",
+      "evidence_anchor": {
+        "anchor_type": "text",
+        "locator": "§4.5迭代式门控，PDF第10至11页，源稿第624行 \"unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度\"；表13注释，源稿第648行 \"s27 采用 10\\% 利用率布局规划\"",
+        "quote": "§4.5迭代式门控，PDF第10至11页，源稿第624行 \"unit 表示一次扇出后沿拓扑/曼哈顿距离累加的相对单位长度\"；表13注释，源稿第648行 \"s27 采用 10\\% 利用率布局规划\""
+      },
+      "confidence": 5,
+      "competence_basis": "已核看物理段落、公式、表13及原始渲染页，判断限于模型与条件说明的充分性。",
+      "cost_scope": {
+        "kind": "section",
+        "locator": "源稿L612,648"
+      },
+      "consequence_if_unaddressed": {
+        "code": "reader_traceability_reduced",
+        "target": {
+          "kind": "manuscript",
+          "locator": "补齐物理后验运行条件"
+        }
+      },
+      "target_section": "源稿L612,648",
+      "suggested_action": "列分析角、利用率、关键I/O约束和基线/候选是否同设置；历史缺项明确登记。",
+      "consensus_level": "SINGLE-VERIFIER",
+      "verification_criteria": "每例物理比较对应可核查配置；仍限定于布局和全局布线寄生估计。",
+      "proposed_targets": [
+        {
+          "block_id": "B0100",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0101",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0102",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0103",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0104",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0105",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        },
+        {
+          "block_id": "B0106",
+          "allowed_operations": [
+            "replace_block",
+            "insert_after"
+          ]
+        }
+      ]
+    }
+  ],
+  "total_items": 22,
+  "obligation_counts": {
+    "must_fix": 8,
+    "should_fix": 14,
+    "consider": 0
+  },
+  "editorial_decision": "Major Revision",
+  "consensus_summary": "核心归因缺口EIC+R1两席，算法定义R1+R2两席，均为2/4 corroborated findings；DA另外提出相应Major。其余席未提不是反对。S负结果保留获四非DA席肯定。非共识条目用schema SINGLE-VERIFIER代码并保留corroborating_sources，不宣称3/4或4/4缺陷共识。",
+  "dissenting_opinions": [
+    "没有可确认的互不相容修复意见；不同职责导致的沉默不构成异议。证明范围补证并不等于发现实际网表错误。"
+  ]
+}

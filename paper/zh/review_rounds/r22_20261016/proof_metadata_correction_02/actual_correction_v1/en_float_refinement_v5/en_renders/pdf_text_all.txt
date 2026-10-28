@@ -1,0 +1,1464 @@
+FAECO: Candidate Exploration and Failure
+Characterization for Pre-Placement Gate-Level Timing
+ECO⋆
+Yalong Tonga,1, Chang Liua
+aCollege of Computer Science, National University of Defense
+Technology, Changsha, 410073, China
+Abstract
+Timing closure has become a critical challenge in digital chip design as circuit
+scale and design complexity continue to grow. Engineering change order (ECO)
+techniques reduce the iteration cost of re-synthesis and physical implementation by
+applying localized modifications to an existing design. Among them, pre-placement
+gate-level timing ECO explores local netlist modifications before placement and
+routing, but its candidate space is limited and per-candidate evaluation is costly.
+FAECO is a framework for candidate exploration and failure characterization. It
+builds and ranks four types of local modification candidates—logic-equivalent
+replacement (R), gate sizing (G), buffer insertion (B), and joint modification
+(JOINT)—over the local logic around violating paths via a multi-feature weighted
+cut and a critical-path cover cut, characterizes candidate failures into six types used
+for search diagnosis and ablation analysis, and commits candidates round by round
+through function and structural checks, timing analysis and final equivalence check-
+ing. Its core idea is to organize the multi-type candidate space and the evaluation
+order so as to improve search efficiency under a limited verification budget. On IS-
+CAS89, ITC-99 and PicoRV32, 8/8, 18/19 and 2/2 instances achieve pre-placement
+ideal-net WNS improvement (the third PicoRV32 module has no setup path and
+is excluded), with no regression on the rest. Under fixed weights and 20 rounds,
+mixed candidates improve WNS by 1.07 ns on average versus 0.16 ns for gate sizing
+⋆Submission draft. Author identities, correspondence, declarations, AI-use provenance and
+journal-specific requirements require author confirmation.
+1AUTHOR INPUT REQUIRED: Confirm the English forms and order of the two names,
+identify the corresponding author, and confirm the contact address supplied in the Chinese master:
+chancews@qq.com.
+
+
+alone. Ablations further analyze the effects of the failure-feedback mechanism and
+structure-resynthesis candidates on search performance. These results highlight
+the importance of candidate exploration and ranking in pre-placement ECO search.
+Keywords: Gate-level timing ECO, Gate-level local modification, Multi-feature
+weighted cut, Typed failure characterization, Layered verification, Pre-placement
+timing optimization
+1. Introduction
+1.1. Background and problem
+Timing closure is a major challenge in digital chip design as integrated circuits
+become larger and more complex. Engineering change order (ECO) techniques
+apply local modifications to an existing design, avoiding complete re-synthesis
+and physical implementation and reducing iteration cost. ECO can target either
+functional errors or timing violations. This work addresses gate-level timing ECO
+after synthesis and before placement and routing. A gate-level local modification
+applies an equivalent-cell replacement, gate sizing, buffer insertion, or a small
+combination of gate modifications within the fanin cone of violating logic in an
+already mapped netlist. Conventional timing ECO mainly uses buffer insertion (B)
+and gate sizing (G) to change driving capability and path load, improving worst
+negative slack (WNS) and total negative slack (TNS). For severe path violations,
+the capability of B/G optimization is limited, and structural remapping remains
+constrained by the available candidate space[1–3]. The increasing cost of post-
+placement modifications makes early ECO exploration more valuable. However,
+physical information is unavailable before placement, and systematic choices of
+what to modify and in what order to evaluate the alternatives remain difficult.
+Beyond B/G optimization, technology remapping and local logic patches ex-
+pand the space of structural changes. These methods can change the local logic
+implementation but require additional functional-equivalence checks and candidate
+screening. The interaction between patch construction and physical optimization
+affects both verification cost and timing benefit.
+Pre-placement gate-level timing ECO faces two related limitations: restricted
+candidate types and costly candidate evaluation. B/G modifications mainly change
+driving capability and load, while structural remapping needs an effective way
+to organize and rank many alternatives. Three questions follow: how to expand
+the local modification space for deep logic, how to control functional, timing
+and physical validation cost, and how to characterize candidate failures so that
+2
+
+
+they inform search diagnosis. FAECO addresses candidate expansion through the
+exploration framework in Section 3.3, evaluation cost through layered validation in
+Section 3.6, and search analysis through typed failure characterization in Section 3.5.
+We define candidate exploration as the generation, screening and ranking of
+multiple types of local modification around violating logic windows. It organizes
+alternative structural changes and prioritizes candidates with timing potential under
+a limited validation budget. The central problem is therefore how to organize
+multiple local modification types and allocate finite validation resources effectively
+when physical information is incomplete.
+1.2. Motivation
+This work investigates how to construct additional local modification candidates
+within violating fanin cones and use critical-path information to arrange their
+evaluation order. Many candidates fail functional, structural or timing checks during
+the search. These failures characterize limitations of the current candidate space
+and ranking. FAECO uses a multi-feature weighted cut and a critical-path cover
+cut to generate candidates, and classifies validation failures to support subsequent
+search analysis.
+The experiments use ISCAS89[4], ITC-99[5] and PicoRV322 netlists mapped to
+the public SKY130 HD standard-cell library. Ideal-net static timing analysis (STA)
+measures candidate timing benefit. Selected experiments also apply a simplified
+Standard Parasitic Exchange Format (SPEF) model, and independent sequential
+equivalence checking (SEC) evaluates the final repaired netlists.
+1.3. Contributions
+The work centers on candidate exploration for pre-placement gate-level timing
+ECO:
+1. A candidate exploration framework. FAECO takes local windows around
+violating paths, constructs R/G/B/JOINT candidates using weighted and
+critical-path cover cuts, and combines cut cost, critical-path coverage and
+strategy priority to rank them. The design expands local modification al-
+ternatives and aims to reduce candidate evaluation cost in the absence of
+placement information.
+2. Failure characterization and search analysis. Six failure classes cover
+local function/structure, boundary closure, candidate size, insufficient timing
+2https://github.com/YosysHQ/picorv32
+3
+
+
+gain, validation timeout and parasitic re-evaluation. They identify search
+bottlenecks and provide evidence for refining candidate-generation strategies.
+A public-tool implementation and validation platform supports these contribu-
+tions. Each accepted modification becomes the baseline for the next round, which
+extracts new violating cones and generates fresh candidates. Local function/struc-
+ture checks, ideal-net STA and optional simplified SPEF re-evaluation precede
+final independent SEC. Across ISCAS89, ITC-99 and PicoRV32, 8/8, 18/19 and
+2/2 assessable instances respectively obtain strict WNS improvement; the third
+PicoRV32 module has no setup path.
+2. Related work
+2.1. Structural remapping and logic patches
+ECO research includes structural remapping, logic-patch construction, and
+B/G physical optimization. Structural remapping changes local cells and their
+implementation to improve timing. Some methods combine remapping with buffer
+insertion and sizing[1], while symbolic sampling explores rectification points[6].
+FAECO uses Liberty function matching to screen replaceable cells before timing
+evaluation, and performs global SEC independently. Spare-cell allocation in[1] uses
+post-route load and spare-cell placement, whereas FAECO constructs candidates
+before placement. Symbolic sampling in[6] expands the search space and uses
+validation results to screen rectification points.
+Logic-patch methods typically extract a local window around a target rectifica-
+tion point, represent candidate logic with functionally reduced and-inverter graphs
+(FRAIGs), and use Boolean satisfiability (SAT) proofs to select functionally equiv-
+alent patches for functional repair[7, 8]. Subsequent work incorporates resource
+cost into patch generation and uses SAT or combinational equivalence checking
+(CEC) for validation[8, 9]. FAECO brings computable local function-preservation
+information into candidate ranking and uses ideal-net timing as a separate accep-
+tance signal. When equivalence validation fails, representative patch flows expand
+the window or patch size and enumerate again[10], increasing construction and
+validation cost.
+Recent B/G physical optimization includes gate sizing, joint B/G optimization
+and physically aware approaches[2, 3, 11, 12]. Learning-based methods further
+improve efficiency[3, 12]. They primarily change driving capability and network
+load and generally do not reconstruct Boolean functions. FAECO constructs several
+local candidate types in violating fanin cones of mapped netlists and ranks them
+using critical-path information.
+4
+
+
+2.2. B/G physical optimization and positioning
+Several related approaches use commercial EDA engines or internal industrial
+flows. We use public Yosys3, OpenSTA4 and OpenROAD[13] tools to implement
+gate-level candidate search on SKY130 HD5. The flow covers mapped netlists,
+candidate construction, ideal-net STA, and post-placement/global-route parasitic
+estimation. Sequential experiments apply construction-level state-preservation
+checks, followed by independent whole-netlist SEC.
+Structural remapping and B/G physical optimization are commonly used for
+physical adjustments after placement or during routing; logic-patch construction
+often performs functional repair between synthesis and placement. FAECO com-
+bines local modification of a mapped netlist with pre-placement timing screening,
+using ideal-net STA and a simplified wire-load model. Different input stages and
+evaluation goals impede direct quantitative comparisons, so the experiments use
+a common public mapping and constraint environment to investigate candidate
+spaces, evaluation order and cost. Tables 1 and 2 summarize the methodological
+positioning and comparison constraints.
+Table 1: Main emphases of four method categories.
+Method
+Main characteristic
+Target problem
+Structural remap-
+ping
+Changes local logic topology
+Deep logic and structural timing
+violations
+Logic patches
+Local logic changes with
+SAT/CEC validation
+Functional ECO or joint func-
+tional/timing repair
+B/G optimization
+Physical adjustments using
+drive/load information
+Small post-placement timing vio-
+lations
+FAECO
+Weighted-cut candidate gener-
+ation and typed failure diagno-
+sis
+Local
+timing
+ECO
+on
+pre-
+placement mapped netlists
+3https://yosyshq.net/yosys/
+4https://github.com/parallaxsw/OpenSTA
+5https://github.com/google/skywater-pdk
+5
+
+
+Table 2: Main obstacles to direct quantitative comparisons.
+Category
+Comparison constraint
+Structural remapping
+Spare-cell allocation depends on post-route load and the
+spare-cell layout
+Logic patches
+Acceptance
+targets
+functional
+equivalence
+through
+SAT/CEC rather than WNS gain
+B/G physical optimiza-
+tion
+Learning-based methods require training environments/data;
+many physical flows use commercial engines or internal
+infrastructure
+FAECO
+Public tools and process library; scripts and parameters are
+intended for the supplementary package
+3. Method
+3.1. Problem definition
+Given a mapped netlist G′, target period T, timing constraints and cell library
+L, FAECO searches local candidates p in fanin cones of violating endpoints to
+produce G∗. The main timing acceptance condition is ∆WNS(p) > 0. Independent
+SEC compares the final repaired netlist with the baseline. Optional physical gating
+adds the SPEF condition in Section 3.6. Optional TNS-aware acceptance allows
+equal WNS with improved TNS.
+The four transformations are R, a cross-equivalent-cell or logic-implementation
+replacement excluding pure drive-size changes; G, a drive-size change within
+the same functional cell family; B, an identity buffer insertion; and JOINT, joint
+enumeration. Sequential experiments do not modify flip-flops, clock or reset cells.
+A candidate comprises local gates and boundary ports and is generated only in
+combinational regions without tri-state, clock-gating or reset logic. Library function
+matching and structural rules screen constructions before final SEC. Table 3 defines
+the main notation.
+3.2. Overview
+FAECO has three stages (Fig. 1):
+1. Mapping preparation. A two-step Yosys flow produces a SKY130 HD
+mapped netlist G′. Liberty provides cell functions and timing. Berkeley
+Logic Interchange Format (BLIF) normalization and ABC cec[14] support
+combinational checks.
+6
+
+
+Table 3: Notation.
+Symbol
+Definition
+G = (V, E)
+Gate graph: gates/ports are vertices and signal connec-
+tions are edges
+C(G, t) ⊆V
+Fanin cone of target output t
+K(G, t)
+s–t split graph with gate input/output capacity edges
+and fanin dependencies
+Cw
+Weighted minimum-cut candidate boundary controlled
+by Eq. (2)
+Cc
+Critical-path cover boundary complementary to Cw; λc
+affects cover ranking and depth discount
+cost(v)
+Node cost of gate v
+s(v), nC, S2
+Local fanin-cone size; target-cone size nC = |C(G, t)|;
+S2 = P
+u s(u)2
+λb, λs, λv, λc, λf
+Search weights: boundary, size, verification and fanout
+terms enter node cost; λc discounts depth in the denom-
+inator and adjusts cover ranking
+2. Cut-based candidate generation. An s–t split graph is built over C(G, t).
+Liberty matching determines R availability; gates without R candidates re-
+ceive less critical-path reward and fall back to G/B. Weighted and critical-path
+cover cuts generate candidates ranked by cut cost, coverage and strategy pri-
+ority. OpenSTA supplies acceptance metrics. F1–F6 characterize failures
+and optionally update search weights.
+3. Validation and acceptance. Function/structure screening precedes ideal-net
+WNS/TNS evaluation. With physical gating enabled, only ideal gains above
+10 ps enter simplified SPEF re-evaluation. Gains in 0 < ∆WNS ≤10 ps are
+filtered without F1–F6 feedback. F6 denotes a candidate satisfying the ideal
+acceptance predicate whose WNS does not improve under SPEF.
+Algorithm 1 describes search and submission; final SEC is separate. Multi-
+round repaired netlists accumulate accepted patches round by round, while the
+efficiency-first setting in Section 4.2 runs once. Failure feedback updates weights
+after candidate evaluation and affects construction in the next round, without re-
+ordering candidates already generated for the current round. If a round exhausts
+candidates without acceptance and a stopping condition has not been reached,
+updated weights initiate another search round.
+7
+
+
+Mapping preparation
+Yosys / Liberty
+Baseline netlist N0
+Current netlist N → violating cone
+Cw / Cc + fused ranking
+R / G / B / JOINT
+Layered candidate verification
+Local function / structure → ideal STA
+Simplified SPEF (optional)
+Accept candidate
+Commit N ← N + Δ
+Next round
+Refresh cone
+F1–F6 records / diagnosis
+Weight update (optional)
+Stop
+search
+Final netlist → independent SEC
+Figure 1: Candidate evaluation and iterative submission. An accepted candidate becomes the
+next-round baseline, and the violating cone is extracted again. Dashed gray links denote failure
+recording and optional weight updates. Whole-netlist SEC is applied after search. This explanatory
+diagram was scripted with OpenAI Codex assistance; exact model/version: AUTHOR INPUT
+REQUIRED.
+Algorithm 1 FAECO search and submission
+Require: Mapped netlist G′, timing constraints T, library L
+Ensure: Repaired netlist G∗, accepted candidate set A
+1: Save G0 ←G′; initialize N ←G0, G∗←G0, A ←∅, weights λ
+2: repeat
+3:
+Extract the fanin cone of the worst violating endpoint in current N; partition by
+depth if needed
+4:
+Generate and rank R/G/B/JOINT candidates using weighted and critical-path cover
+cuts
+5:
+Perform local function/structure checks and OpenSTA measurements
+6:
+Re-evaluate qualifying candidates under simplified SPEF when enabled
+7:
+If a candidate satisfies Eq. (3) and any enabled SPEF gate, add it to A, submit
+N ←N+∆, and update G∗. Candidates within a round share N and do not accumulate.
+After submission, discard remaining candidates built from the previous N; regenerate
+them in the next round
+8:
+Record F1–F6. If feedback is enabled, update subsequent search inputs/weights;
+fixed-weight runs only record failures. Candidates filtered by the 10 ps threshold do
+not participate in feedback
+9: until Timing is met, candidates are exhausted, or a stopping condition holds
+10: return G∗, A
+8
+
+
+3.3. Multi-type candidate exploration and ranking
+a
+Violating fanin cone
+b
+Node splitting and capacities
+g1
+R+
+g2
+R+
+g3
+R−
+g4
+R+
+g5
+R+
+g6
+R−
+t
+Dashed: critical path; R+ / R−: R available / unavailable
+w1
+w2
+w3
+w4
+w5
+w6
+1i
+1o
+2i
+2o
+3i
+3o
+4i
+4o
+5i
+5o
+6i
+6o
+s
+t
+i / o: input / output; internal wi = cost(gi)
+Gray: dependencies / source–sink links; capacity ∞
+Weighted min-cut Cw → Pw
+Critical cover Cc → Pc
+Candidate instantiation
+R / G / B / JOINT
+Fused candidate ranking
+Cut cost / cover / strategy priority
+R
+Logic-equivalent replacement
+G
+Gate sizing
+B
+Buffer insertion
+JOINT
+Path-segment joint edit
+Figure 2: Candidate construction and fused ranking. The six-gate cone and split graph have matching
+dependencies. Internal-edge capacities equal node costs; dependency and source/sink edges have
+infinite capacity. Cw produces weighted boundaries, while Cc supplements coverage candidates
+using cone criticality and R availability. The example illustrates construction relationships. This
+explanatory diagram was scripted with OpenAI Codex assistance; exact model/version: AUTHOR
+INPUT REQUIRED.
+3.3.1. Local window extraction
+As illustrated in Fig. 2, Cw determines candidate boundaries, node cost guides
+selection/ranking within the boundary, and Cc supplements critical-path coverage.
+Reverse traversal from a violating endpoint extracts a local combinational fanin
+cone C(G, t). Gate annotations include R availability, critical-path coverage and
+candidate-size features.
+3.3.2. Candidate boundaries from complementary sources
+Weighted minimum-cut cost combines boundary, candidate-size, verification-
+cost and fanout features. For gates with R candidates, λc introduces the depth
+discount in Eq. (2). The same weight adjusts ranking of complementary critical-
+path cover candidates. R availability controls candidate instantiation and strategy
+switching: when a gate has no R equivalent, its R-related coverage discount and
+9
+
+
+fanout term are disabled and the search turns to G/B. The weighted boundary Cw
+prioritizes local scale, while Cc covers timing-critical gates.
+3.3.3. Fused candidate ranking
+Both boundary sets instantiate R/G/B/JOINT candidates. Fused ranking com-
+bines cut cost, coverage and strategy priority before OpenSTA measures WNS/TNS
+changes. The acceptance predicate retains effective candidates. Optional feed-
+back updates the weights associated with F1–F6 for the next construction round;
+Section 4.4 evaluates its search effect.
+With identical SDC and clock constraints, candidate gain is
+∆WNS(p) = WNSafter(p) −WNSbefore.
+(1)
+Let depth(v) be cone logic depth, VR the gates with R candidates, and ⊮[·] the
+indicator. Node cost is
+cost(v) =
+
+1 +
+λb
+1 + depth(v) + λs
+s(v)2
+S2
++ 0.01λvnC
++ 0.1λf⊮[v ∈VR]fanout(v)
+
+.
+1 + λc⊮[v ∈VR]depth(v)
+depthmax
+
+.
+(2)
+Boundary, size, verification and fanout weights are λb, λs, λv, λf; λc controls the
+depth discount. All default to 1.0. Here nC = |C(G, t)|, s(v) is the local fanin-
+cone size of v, S2 = P
+u s(u)2, and depthmax = maxu depth(u). The fanout term
+and depth discount apply only where R candidates exist. Other nodes remain
+available for G/B. λc also adjusts critical-cover ranking toward highly critical
+nodes. Normalization controls preference for large cones. The fixed coefficients
+0.01 and 0.1 scale verification-size and fanout terms and remain unchanged in all
+experiments.
+3.4. Feature motivation
+Each cost feature addresses a common pre-placement ECO risk (Table 4).
+Boundary features affect modification extent, size features discourage large local
+cones, verification features penalize cone size, fanout features lower priority of
+heavily loaded nodes, and depth features prioritize timing-critical logic. Fixed
+default weights are used without tuning by circuit or dataset.
+10
+
+
+Table 4: Weighted-cut features and ECO design considerations.
+Feature
+Cost term
+Risk and design preference
+Boundary
+λb/(1 + depth)
+Lower priority for candidates crossing
+local logic boundaries
+Size
+λss(v)2/S2
+Prefer enumerable and assessable candi-
+date scales
+Verification
+0.01λvnC
+Penalize cone size as a verification-scale
+proxy
+Fanout
+0.1λffanout
+Lower priority for high-load nodes
+Depth
+λcdepth/depthmax
+Prioritize timing-critical coverage
+Fanout and depth terms are gated by R availability. The table summarizes the intended ranking
+roles of Eq. (2).
+3.5. Typed failure characterization and search analysis
+Table 5 defines F1–F6 and their search-analysis actions. Fixed-weight runs only
+record failures. With feedback enabled, the corresponding weights increase by 1.0
+per failure class; F5 also halves the maximum cone size. F6 records failure under
+simplified SPEF re-evaluation. An exponential moving average (EMA) variant
+smooths adaptive updates and is tested separately in Section 4.4.
+Table 5: Failure classes and search-analysis actions.
+Failure
+Detection
+Action when feedback is enabled
+F1:
+local
+func-
+tion/structure
+Liberty function matching or
+structural checks fail
+Increase λb and λf, lowering high-
+fanout/boundary priority
+F2: boundary
+Cone boundary is not closed
+Increase λb; tighten boundaries and
+retain mapped gates
+F3: excessive size
+Candidate exceeds the size
+threshold
+Increase size penalty and prefer
+smaller cuts
+F4: insufficient tim-
+ing gain
+Candidate fails Eq. (3)
+Increase λc and critical-cover priority
+in the next round
+F5: validation time-
+out
+Local check or STA exceeds
+the per-candidate limit (default
+60 s)
+Increase λv and halve the maximum
+cone size
+F6: wire-load tim-
+ing failure
+Physical gate enabled, ideal gain
+> 10 ps, but no SPEF WNS
+gain
+Increase λb and prefer smaller local
+boundaries
+11
+
+
+3.6. Validation and acceptance
+Local function and structure checks screen candidates before OpenSTA tim-
+ing evaluation. R candidates use Liberty matching; G/B use function-preserving
+constructions. ABC cec can validate combinational netlists when enabled. The
+main and cross-dataset experiments apply independent SEC to each final base-
+line/repaired pair, separately from ideal-net candidate acceptance. Under SKY130
+behavioral cell models, SEC checks combinational logic and state-transition rela-
+tionships. OpenSTA measures ideal-net timing; the OpenROAD flow measures
+timing with global-route parasitic estimates.
+Under the same SDC, clock and analysis corner,
+Accept(p) = [∆WNS(p) > 0]
+∨[tns_aware ∧∆WNS(p) = 0
+∧∆TNS(p) > 0].
+(3)
+With physical gating, candidates satisfying this predicate with ideal gain above
+10 ps enter SPEF re-evaluation. Gains in (0, 10] ps are excluded from the final
+accepted set. Candidates with SPEF WNS improvement enter A; otherwise F6 is
+recorded and optionally informs next-round search. Without the gate, SPEF is an
+independent re-evaluation and does not alter ideal-net acceptance.
+3.7. Construction complexity
+The split graph uses max-flow/min-cut. For n cone gates and f dependency
+edges, there are V = 2n+2 nodes and E = O(n+f) edges. Edmonds–Karp costs
+O(V E2) per cut. This excludes candidate STA and final SEC, which dominate
+practical runtime; the individual cut solve contributes little. Reverse breadth-first
+search extracts C(G, t). Large violating cones are partitioned by depth into sub-
+cones bounded by gate count, with independently generated candidates ranked
+along critical paths to control memory and solve size.
+3.8. AI-assisted research and figure preparation
+AUTHOR INPUT REQUIRED: Confirm and complete the research-use
+record before submission. OpenAI Codex assisted code implementation and inspec-
+tion, test construction, experimental-workflow analysis, evidence-ledger audits, and
+reproducible Python figure scripts in the project records. These activities extend
+beyond language editing. Numerical plots are computed from archived EDA results;
+explanatory figures are drawn as editable vector diagrams. The tools did not serve
+as the timing or equivalence oracle: the reported measurements and proofs come
+12
+
+
+from the EDA tools described above. Exact AI tools/models, versions, access dates,
+activities in earlier project stages, and the scope of human review must be supplied
+and confirmed by the authors. This draft does not assert that all generated code or
+interpretations have already been approved by both authors.
+4. Experiments
+4.1. Setup
+Environment and datasets. Experiments ran in WSL2 (Ubuntu 24.04.4 LTS;
+kernel 6.6.87.2-microsoft-standard-WSL2) on an AMD Ryzen 7 7435H host, with
+16 visible logical cores and 15 GB memory. The main flow uses OSS-CAD Suite
+(Yosys 0.67+146, OpenSTA 3.1.0); SEC uses WSL Yosys 0.33. Datasets com-
+prise eight ISCAS89 circuits, 19 ITC-99 circuits and three PicoRV32 modules.
+ISCAS89 and ITC-99 circuits use a 0.5 ns clock period; the PicoRV32 core, multi-
+plier and register bank use 5, 2 and 0.5 ns, respectively. WNS improvement is the
+primary outcome, with the baseline and repaired netlist of each circuit evaluated
+under identical constraints. Other metrics are global-route-estimated WNS and
+candidate STA counts; TNS supports optional auxiliary acceptance. b06 retains
+equal-WNS/improved-TNS acceptance, which is excluded from strict-WNS im-
+provement counts. TNS-aware acceptance is not combined with physical gating in
+these experiments.
+Inclusion. ISCAS89 includes eight sequential circuits that map successfully
+through the common Yosys-to-SKY130 flow and have valid setup paths. ITC-
+99 includes b01–b15, b17 and b20–b22. b18 and b19 are separately reported
+large examples, outside the unified 19-circuit statistics. PicoRV32 includes its
+core, picorv32_pcpi_mul multiplier, and storage-dominated picorv32_regs,
+covering control, arithmetic and storage structures.
+Configurations. Section 4.2 uses one round and stops after the first improve-
+ment; Section 4.3 permits eight rounds. Section 4.4 compares strategy configura-
+tions under a 20-round limit and separately tests feedback. OpenROAD re-evaluates
+the accepted candidates from Section 4.2; SPEF scans/gating are separate experi-
+ments. Section 4.6 evaluates local resynthesis. b17 has the timeout exception in
+Section 4.3.1. Table 6 summarizes settings. Scripts and parameters are intended
+for the supplementary package. Efficiency-first and unified cross-dataset results
+use archived runs whose code revision was not fully recorded; same-configuration
+reruns drift on some circuits. Feedback and S comparisons retain separate ver-
+sion/configuration records and must be reproduced using their own records.
+13
+
+
+Table 6: Efficiency-first and 20-round configurations.
+Parameter
+Efficiency-first
+20-round comparison
+Maximum rounds
+1; stop after first
+gain
+20
+F1–F6 feedback
+Enabled
+Disabled; fixed weights
+10 ps SPEF gate
+Off
+Off
+Default per-candidate limit
+60 s
+60 s
+The strategy comparisons use a fixed-weight runner. Unified cross-dataset runs permit eight rounds
+and cross-round feedback. In the one-round setting, any weight update cannot affect subsequent
+candidate construction. b17’s 180 s exception belongs to the cross-dataset study.
+Except for b06’s auxiliary TNS acceptance, the primary criterion is strict WNS
+improvement in Eq. (3). Table 7 reports unified outcomes.
+Table 7: Unified cross-dataset outcomes.
+Dataset
+Instances
+Strict gain
+Mean/median gain (ns)
+SEC proven
+ISCAS89
+8
+8/8
+0.16/0.10
+8/8
+ITC-99
+19
+18/19
+0.43/0.18
+18/19
+PicoRV32
+3
+2/2
+0.60/0.60
+2/2
+Up to eight rounds with cross-round feedback; gains refer to pre-placement ideal nets. Statistics use
+assessable instances. SEC counts completely proven modified pairs; b17 has one unproven point.
+The register-bank module has no register-to-register setup path and is excluded from gain and SEC
+denominators.
+4.2. Single-round repair quality and efficiency
+The single-round study evaluates repair quality and efficiency. Figure 3 com-
+pares baseline and repaired ISCAS89 netlists; all eight improve strictly under
+ideal-net OpenSTA. R/G/B/JOINT constructions preserve flip-flops, clock and reset
+logic. Independent SEC fully proves all eight baseline/final repaired pairs; Table 8
+reports the proof counts and wall time. Accepted candidate types are JOINT for
+s27/s382/s420/s953, G for s641/s713/s832, and R for s820; no standalone B candi-
+date is accepted. This is the efficiency-first configuration, with the 10 ps physical
+gate disabled. Thus s420’s +0.01 ns candidate is accepted under ∆WNS > 0. The
+stopping condition differs from the subsequent multi-round study, so results are
+reported separately. JOINT combines local implementation and drive changes; G
+14
+
+
+changes drive strength; R depends on equivalent Boolean implementations available
+in the library.
+-1.75
+-1.50
+-1.25
+-1.00
+-0.75
+-0.50
+-0.25
+0.00
+WNS (ns)
+s27
+s382
+s420
+s641
+s713
+s820
+s832
+s953
++0.09
++0.09
++0.01
++0.04
++0.02
++0.02
++0.06
++0.04
+ISCAS89: paired ideal-net WNS
+Pre-placement screening
+Baseline
+FAECO
+Figure 3: Baseline and FAECO WNS on ISCAS89 sequential circuits at 0.5 ns. Labels report gain
+relative to baseline.
+Table 8: Sequential equivalence of the efficiency-first repaired pairs.
+Circuit
+Proven/unproven
+SEC
+Wall time (s)
+s27
+11/0
+Proven
+0.281
+s382
+90/0
+Proven
+0.281
+s420
+79/0
+Proven
+0.250
+s641
+124/0
+Proven
+0.313
+s713
+126/0
+Proven
+0.328
+s820
+139/0
+Proven
+0.344
+s832
+146/0
+Proven
+0.391
+s953
+228/0
+Proven
+0.407
+Yosys 0.33 and SKY130 behavioral models: equiv_make, equiv_simple, equiv_induct
+-seq 10 and equiv_status -assert. Wall time covers each prover call in one batch; mapping,
+candidate STA and model preparation are excluded.
+15
+
+
+4.3. Cross-dataset evaluation
+4.3.1. ITC-99
+Eighteen of the 19 unified ITC-99 circuits obtain strict WNS gain, while b06
+remains unchanged; none regresses. At the default 60 s per-candidate limit, b17
+candidates time out as F5. Increasing only b17’s limit to 180 s yields +0.38 ns
+within 104 candidate evaluation records, accepting a G replacement from nor4b_1
+to nor4b_2. The larger included circuits b14/b15/b17/b20/b21/b22 all improve. b06
+has baseline WNS=-0.56 ns and several adjacent or4b_1 gates on its critical path.
+In this R/G/B/JOINT search, G replacements are constrained by input-capacitance
+changes, and B/R do not yield an effective gain. No strict WNS improvement is
+observed in 664 candidate evaluation records.
+G dominates accepted modifications: 17 circuits contain G acceptances (69 in
+total), while B and R occur in 14 and ten circuits. b20 and b21 have the largest gains,
++1.98 and +2.75 ns, mainly from G with additional R modifications. The 19-circuit
+set contains 3363 candidate evaluation records, of which 2994 STA results can be
+independently traced to unique candidate reports (2890 in the 18-circuit archive and
+104 recovered for b17). This is an identifiable result count; the historical archives
+do not record all timeout launches, baseline analyses or cone refreshes. Median
+and mean gain are +0.18 and +0.43 ns; b20/b21, whose baseline WNS is at most
+-13 ns, account for much of the difference. Table 12 reports failure triggers and
+provides search-diagnostic evidence.
+Two separate large examples are outside these 19-circuit statistics. Mapped b18
+has 75,700 cells approximately, with WNS changing from -13.34 to -13.27 ns at
+0.5 ns in 24 candidate-level STA measurements. b19 has approximately 151,000
+cells, changing from -17.44 to -16.00 ns in 59 measurements.
+4.3.2. PicoRV32 modules
+Three structurally different modules from one RTL source reuse the ISCAS89
+flow. The core and picorv32_pcpi_mul have valid setup paths and improve by
++1.13 and +0.07 ns through accumulated R/G/B modifications. The storage-bank
+module has no assessable setup path and is not repaired or included in improvement
+counts.
+Unified strict-WNS improvement fractions are 8/8, 18/19 and 2/2. SEC consid-
+ers 30 instances: 29 have actual netlist modifications, and 28/29 modified pairs are
+completely proven. b06’s buffer/delay patches leave WNS unchanged and pass SEC.
+The unmodified register bank remains identical to baseline. b17 proves 12,812
+equivalence points with equiv_simple and equiv_induct, leaving one point
+16
+
+
+unproven; it corresponds to the same-function nor4b_1 to nor4b_2 sizing change
+and is reported separately. Figure 4 shows all assessable instances.
+0.0
+0.2
+0.4
+0.6
+ΔWNS (ns)
+s27
+s382
+s420
+s641
+s713
+s820
+s832
+s953
++0.09
++0.15
++0.35
++0.46
++0.05
++0.02
++0.07
++0.10
+a
+ISCAS89 · 8/8
+0
+1
+2
+3
+ΔWNS (ns)
+b01
+b02
+b03
+b04
+b05
+b06
+b07
+b08
+b09
+b10
+b11
+b12
+b13
+b14
+b15
+b17
+b20
+b21
+b22
++0.01
++0.02
++0.59
++0.18
++0.10
++0.00
++0.19
++0.11
++0.10
++0.14
++0.20
++0.48
++0.19
++0.18
++0.09
++0.38
++1.98
++2.75
++0.47
+b
+ITC-99 · 18/19
+0.0
+0.5
+1.0
+ΔWNS (ns)
+Core
+PCPI mul
++1.13
++0.07
+c
+regs: no setup path
+N/A; excluded from denominator
+PicoRV32 · 2/2
+Figure 4: Per-instance ideal-net WNS gain under the unified iterative setting. Panel ranges differ.
+b17 uses a 180 s candidate limit; the default is 60 s. The PicoRV32 core, multiplier and register
+bank use periods of 5, 2 and 0.5 ns, respectively. The register bank is excluded because it has no
+setup path. Results describe single archived runs.
+4.4. Candidate-space, ranking and feedback comparisons
+The first experiment uses an archived critical-instance strategy-enumeration
+runner under a 20-pass limit (Table 9), with first-improvement cost in Table 10.
+It enumerates candidates and submits changes instance by instance within a pass,
+without the weighted or cover cuts in Eq. (2). The mixed configuration uses auxil-
+iary TNS acceptance and R/G/B/JOINT; the randomized configuration enumerates
+R/G/B only. Their differences therefore reflect the joint effects of candidate con-
+struction and evaluation order.
+With fixed search weights, mixed strategies average 1.07 ns gain versus 0.16 ns
+for G alone, 0.54 ns for B alone and 0.40 ns for the three randomized seeds. The
+shared 20-pass limit does not imply equal actual STA consumption. In six of seven
+circuits with ledgers, the mixed strategy reaches its first gain before the random-
+seed mean; s713 is the exception. First-improvement cost varies by up to sevenfold
+between seeds. The comparison describes strategy-level outcomes and startup cost;
+separate controls in the same runner are still needed to isolate weighted and cover
+cuts.
+17
+
+
+The second experiment isolates EMA feedback, holding candidate space, initial
+weights and the runner’s STA reservation cap of 500 fixed. Fixed and Adaptive
+permit 20 rounds with early stopping. Let B(k) be the best WNS gain through the
+kth new STA measurement. Final gain, first-improvement position and maximum
+B(k) agree for the two configurations on all eight circuits; EMA provides no
+additional observed benefit. F1–F6 are therefore used for failure classification
+and search analysis. Table 11 gives the cost to reach these endpoints and includes
+randomized ordering.
+Figure 5 plots this second experiment against new STA measurements. Fixed
+and EMA accumulate similar gains but stop at different positions. Randomized
+outcomes differ by circuit and seed; all three s953 randomized endpoints exceed
+Fixed. Natural endpoints distinguish terminal quality from measurement cost.
+0
+50
+100
+0.00
+0.05
+0.10
+B(k) (ns)
+s27
+0
+200
+400
+0.0
+0.1
+0.2
+s382
+0
+200
+400
+0.0
+0.5
+1.0
+s420
+0
+200
+400
+0.0
+0.2
+0.4
+0.6
+s641
+0
+100
+New STA measurements k
+0.00
+0.05
+0.10
+B(k) (ns)
+s713
+0
+200
+New STA measurements k
+0.00
+0.01
+0.02
+s820
+0
+200
+New STA measurements k
+0.000
+0.025
+0.050
+0.075
+s832
+0
+200
+400
+New STA measurements k
+0.0
+0.1
+0.2
+s953
+Fixed weights
+EMA adaptive
+Random seed 1
+Random seed 2
+Random seed 3
+Figure 5: Gain accumulation in the same-runner feedback comparison. k counts new STA mea-
+surements reconstructed from records with STA provenance and no cache-replay marker; pre-STA
+rejections and cache hits are excluded. Dots mark natural endpoints; curves do not extrapolate. All
+eight circuits and three random seeds are shown without cross-circuit averaging or interpolation.
+The per-circuit reservation cap is 500; baseline STA and final SEC are excluded. This family is
+separate from Table 9.
+4.5. Physical relevance of pre-placement screening
+This study examines whether the efficiency-first candidate gains persist after
+placement/global-route parasitic estimation (Fig. 6). These candidates are separate
+18
+
+
+Table 9: WNS gains of local modification strategies on ISCAS89 (0.5 ns).
+Circuit
+G only
+B only
+Random
+Mixed, 20 passes
+s27
++0.09
++0.28
++0.28
++0.28
+s382
++0.17
++0.19
++0.19
++1.00
+s420
++0.35
++1.00
++1.15
++1.54
+s641
++0.45
++1.27
++0.57
++1.63
+s713
++0.05
++0.99
++0.64
++1.33
+s820
++0.02
++0.26
++0.15
++0.99
+s832
++0.07
++0.06
++0.08
++0.57
+s953
++0.09
++0.24
++0.12
++1.25
+Mean
+0.16
+0.54
+0.40
+1.07
+Gains are in ns. Random contains R/G/B, shuffles candidates within each instance, and averages
+seeds 1/2/3. Mixed additionally contains JOINT. None updates F1–F6 weights; all have the same
+pass limit but different STA consumption. Mixed retains equal-WNS/improved-TNS acceptance.
+Complete invocation commands were not archived for every arm.
+Table 10: Candidate-level STA count to the first improvement (0.5 ns).
+Circuit
+Mixed
+Seed 1
+Seed 2
+Seed 3
+Random mean
+s27
+1
+3
+3
+1
+2.3
+s382
+—
+6
+3
+8
+5.7
+s420
+2
+5
+1
+1
+2.3
+s641
+1
+7
+5
+1
+4.3
+s713
+7
+1
+5
+2
+2.7
+s820
+1
+1
+3
+1
+1.7
+s832
+1
+1
+2
+1
+1.3
+s953
+1
+3
+1
+1
+1.7
+Entries are cumulative candidate ordinals at the first result strictly above baseline. Mixed is lower
+than the random mean in six of seven assessable ledgers; s713 is the exception. Seeds vary by up to
+sevenfold. The mixed s382 ledger is missing. This archived 20-pass enumeration study has
+different candidate types between Mixed and Random.
+19
+
+
+Table 11: Candidate accounting and search time for the 20-round feedback study.
+Configuration
+New STA
+Evaluation records
+Time (s)
+Fixed weights
+1947
+4146
+2010.8
+EMA adaptive
+2003
+4883
+2065.3
+Random, three-seed mean
+2480.7
+5624
+2460.3
+All arms permit 20 rounds with early stopping and 500 STA reservations per circuit. New STA
+excludes provenance-bearing cache replay; evaluation records also include pre-STA rejection.
+Fixed/EMA totals sum eight circuits. Random averages totals 2439/2476/2527 across seeds. Time
+includes construction, mapping and candidate STA, excluding final SEC. This configuration differs
+from Tables 9 and 10.
+Table 12: Failure triggers in the ITC-99 main study.
+F1
+F2
+F3
+F4
+F5
+F6
+Triggers
+138
+3
+16
+2434
+915
+0
+Nineteen circuits and 4044 candidate evaluations. F4 accounts for 60.2%; F6 is zero because the
+physical gate is disabled. This distribution retains b17’s default 60 s batch with 785 evaluations.
+Unified outcomes and 3363 evaluation records instead use its 180 s rerun with 104 evaluations.
+from the 20-round study. Table 13 shows that five of eight ISCAS89 circuits
+improve, one is unchanged, and two regress by 0.02 and 0.01 ns. The flow uses
+OpenROAD 2.0, SKY130 HD and a 0.5 ns clock. SPEF load scans/gating separately
+characterize wire-load sensitivity and F6. The OpenROAD results are post-hoc
+timing estimates used to assess stability under estimated parasitics.
+Independent SPEF scans show that ideal gains of an s382 R candidate and a b18
+JOINT candidate approach zero as estimated wire length increases. At 40 µm/unit,
+where a unit accumulates relative topological/Manhattan length after fanout, each
+net e uses
+Lest(e) = 40 µm · u(e),
+Re = runitLest,
+Ce = cunitLest.
+(4)
+Representative SKY130 HD li1 RC values define the simplified SPEF. Fifty s382
+candidates and six b18 candidates fail re-evaluation and are recorded as F6. Under
+enabled feedback, those failures inform subsequent search analysis. The gate
+identifies candidates whose WNS gains vanish under this load estimate.
+4.6. Structural candidate expansion and capability boundary
+In addition to R/G/B/JOINT constructions, a window-local structural resynthesis
+candidate S tests whether further structural change adds WNS benefit. Enlarging
+20
+
+
+-0.05
+0.00
+0.05
+0.10
+0.15
+ΔWNS vs. baseline (ns)
+s27
+s382
+s420
+s641
+s713
+s820
+s832
+s953
++0.14
++0.14
+-0.02
++0.08
++0.01
++0.03
++0.00
+-0.01
+Pre-placement ideal nets
+Global-route parasitics
+Figure 6: Gain retention for efficiency-first candidates. Each pair uses the same circuit/candidate,
+referenced to its baseline under ideal-net and global-route-estimated parasitics. All eight circuits
+are included: five improve, one is unchanged, and two regress; orange denotes regression and the
+diamond denotes no change. This one-round family is separate from Fig. 4.
+Table 13: WNS after placement/global-route parasitic estimation.
+Pre-placement
+Global-route estimate
+Circuit
+Baseline
+Repair
+Baseline
+Repair
+Gain
+s27
+-0.27
+-0.18
+-0.36
+-0.22
++0.14
+s382
+-0.98
+-0.89
+-1.16
+-1.02
++0.14
+s420
+-1.56
+-1.55
+-1.80
+-1.82
+-0.02
+s641
+-1.63
+-1.59
+-2.10
+-2.02
++0.08
+s713
+-1.33
+-1.31
+-1.59
+-1.58
++0.01
+s820
+-1.19
+-1.17
+-1.52
+-1.49
++0.03
+s832
+-1.23
+-1.17
+-1.51
+-1.51
+0.00
+s953
+-1.31
+-1.27
+-1.60
+-1.61
+-0.01
+All values are ns; mapped inputs and accepted candidates match the pre-placement study. s27 uses
+10% floorplan utilization. Gain is repaired-minus-baseline WNS under global-route parasitic
+estimation.
+21
+
+
+the S pool and disabling S provide controls. Disabling S reproduces the original
+endpoint on all eight circuits; non-S candidate sequences agree between arms and
+the STA cap is not reached. Table 14 and Fig. 7 distinguish depth changes from
+timing outcomes.
+s27
+s382
+s420
+s641
+s713
+s820
+s832
+s953
+0
+10
+20
+30
+Candidate count
+2 0
+32
+27
+6
+1
+0 0
+22
+15
+14
+7
+17
+5
+33
+21
+a
+Measured candidates
+Lower mapped logic depth
+s27
+s382
+s420
+s641
+s713
+s820
+s832
+s953
+0
+10
+20
+30
+Candidate count
+2
+32
+6
+0
+22
+14
+17
+33
+b
+WNS worsened (90)
+WNS unchanged (36)
+WNS improved: 0 / 126
+Figure 7: Expanded S-candidate outcomes. The top panel compares measured candidates with those
+reducing mapped logic depth; the bottom divides WNS-unchanged and WNS-worsened candidates.
+These are separate classifications of the same 126 candidates. All eight circuits are shown; s641 has
+no successfully extracted window. Seventy-six candidates reduce depth, none improves WNS, and
+the paired S on/off endpoints agree on all eight circuits.
+Expanding the pool increases S candidates from 37 to 126. Seventy-six reduce
+mapped depth, but none obtains strict WNS gain; 90 worsen WNS and 36 leave it
+unchanged. Under this window construction, resynthesis and mapping flow, pool
+expansion adds no WNS benefit. S remains optional and is excluded from the main
+performance contribution.
+22
+
+
+Table 14: Capability boundary of structural candidates.
+Metric
+Original pool
+Expanded pool
+S candidates
+37
+126
+∆L > 0
+—
+76/126
+∆WNS > 0
+0
+0/126
+∆WNS = 0
+—
+36/126
+∆WNS < 0
+—
+90/126
+Circuits accepting S
+0/8
+0/8
+∆L = Lbefore −Lafter is mapped-depth reduction; ∆WNS = WNSafter −WNSbefore. Depth and
+timing classifications are separate and can overlap, so all rows are not additive.
+5. Conclusion
+FAECO constructs R/G/B/JOINT candidates through weighted and critical-path
+cover cuts, combining failure characterization, iterative submission and layered
+validation for local pre-placement timing optimization. In the fixed-weight strategy
+study, mixed candidates average 1.07 ns WNS gain versus 0.16 ns for G alone.
+Cross-dataset evaluation demonstrates gains across multiple circuit families. In
+archived strategy comparisons, mixed candidates reach first improvement earlier
+than randomized strategies on most circuits, reflecting the joint effects of candidate
+construction and evaluation order.
+EMA does not add observed benefit over fixed weights, and expanded S can-
+didates do not improve WNS despite reducing some mapped depths. After Open-
+ROAD placement/global-route estimation, five circuits retain gains, one is un-
+changed and two regress by at most 0.02 ns. Insufficient timing gain dominates
+recorded failures (F4: 60.2% of evaluations), providing direction for candidate-
+space design. Within these experiments, organizing the candidate space and evalua-
+tion strategy offers a route to better pre-placement ECO outcomes beyond reliance
+on a single modification type. The public-tool implementation provides a basis for
+reproducible study of automated ECO search.
+Author contributions
+AUTHOR INPUT REQUIRED: Supply and approve CRediT roles for Yalong
+Tong and Chang Liu. This draft does not assign roles or attest joint approval.
+23
+
+
+Funding
+AUTHOR INPUT REQUIRED: Provide funder names, grant numbers and
+funder roles, or confirm that no specific funding was received.
+Declaration of competing interest
+AUTHOR INPUT REQUIRED: Each author must confirm relevant finan-
+cial/non-financial interests. A no-conflict statement has not been assumed.
+Data availability
+The study uses public ISCAS89, ITC-99, PicoRV32 and SKY130 inputs, with
+project-specific mapped netlists, candidate records and analysis scripts. AUTHOR
+INPUT REQUIRED: Provide the public archival repository, persistent identifier,
+release/commit, licenses and access conditions for the reproducibility package. The
+package has not been represented here as already publicly deposited.
+Ethics declaration
+AUTHOR INPUT REQUIRED: Confirm whether institutional ethics approval
+is applicable and provide the appropriate statement. The described experiments
+concern public digital-circuit benchmarks and EDA outputs; no human-subject
+approval statement is inferred.
+Declaration of generative AI and AI-assisted technologies in the manuscript
+preparation process
+OpenAI Codex assisted English translation, manuscript organization, consis-
+tency checking, LaTeX preparation and reproducible figure-label adaptation. AI
+assistance also extended to research software and evidence analysis, as identi-
+fied in the Methods record. AUTHOR INPUT REQUIRED: Confirm every
+tool/model/version used, any other manuscript or research activities, and the ex-
+tent of human review. Replace this draft only after the authors have reviewed the
+scientific content, verified the outputs and approved their accountability statement.
+24
+
+
+References
+[1] Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare
+cells and technology remapping[J]. IEEE Transactions on Computer-Aided
+Design of Integrated Circuits and Systems, 2010, 29(5): 697-710. DOI:
+10.1109/TCAD.2010.2043573.
+[2] Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing
+optimization using deep reinforcement learning[C] //Proceedings of the 58th
+ACM/IEEE Design Automation Conference. Piscataway: IEEE, 2021: 733-
+738. DOI: 10.1109/DAC18074.2021.9586138.
+[3] Wu H, Huang Z, Li X, et al. AiTO: Simultaneous gate sizing and buffer
+insertion for timing optimization with GNNs and RL[J]. Integration, the VLSI
+Journal, 2024, 98: 102211. DOI: 10.1016/j.vlsi.2024.102211.
+[4] Brglez F, Bryan D, Kozminski K. Combinational profiles of sequential bench-
+mark circuits[C] //Proceedings of IEEE International Symposium on Cir-
+cuits and Systems. Piscataway: IEEE, 1989: 1929-1934. DOI: 10.1109/IS-
+CAS.1989.100747.
+[5] Davidson S. ITC’99 benchmark circuits - preliminary results[C] //Proceedings
+of IEEE International Test Conference. Piscataway: IEEE, 1999: 1125. DOI:
+10.1109/TEST.1999.805857.
+[6] Kravets V N, Lee N Z, Jiang J H R. Comprehensive search for ECO rec-
+tification using symbolic sampling[C] //Proceedings of the 56th Annual
+Design Automation Conference. New York: ACM, 2019: 71:1-71:6. DOI:
+10.1145/3316781.3317790.
+[7] Wu B H, Yang C J, Huang C Y, et al. A robust functional ECO engine by
+SAT proof minimization and interpolation techniques[C] //Proceedings of
+IEEE/ACM International Conference on Computer-Aided Design. Piscataway:
+IEEE, 2010: 729-734. DOI: 10.5555/2133429.2133584.
+[8] Cheng A C, Jiang I H R, Jou J Y. Resource-aware functional ECO patch
+generation[C] //Proceedings of the Design, Automation & Test in Eu-
+rope Conference & Exhibition. Piscataway: IEEE, 2016: 1036-1041. DOI:
+10.5555/2971808.2972050.
+25
+
+
+[9] Pan H, Zhang R, Xia Y, et al. A semi-tensor product based circuit simula-
+tion for SAT-sweeping[C] //Proceedings of the Design, Automation & Test
+in Europe Conference & Exhibition. Piscataway: IEEE, 2024: 1-6. DOI:
+10.23919/DATE58400.2024.10546678.
+[10] Dao A Q, Lee N Z, Chen L C, et al. Efficient computation of ECO patch
+functions[C] //Proceedings of the 55th Annual Design Automation Conference.
+New York: ACM, 2018: 1-6. DOI: 10.1145/3195970.3196039.
+[11] Ye Y, Xu P, Ren L, et al. Learning-driven physically aware large-
+scale circuit gate sizing[J]. IEEE Transactions on Computer-Aided De-
+sign of Integrated Circuits and Systems, 2025, 44(5): 1901-1914. DOI:
+10.1109/TCAD.2024.3488577.
+[12] Hsiao H H, Lu Y C, Lim S K, et al. BUFFALO: PPA-configurable, LLM-based
+buffer tree generation via group relative policy optimization[C] //Proceed-
+ings of IEEE/ACM International Conference on Computer-Aided Design.
+Piscataway: IEEE, 2025: 1-9. DOI: 10.1109/ICCAD66269.2025.11240744.
+[13] Ajayi T, Chhabria V A, Fogaça M, et al. Toward an open-source digital flow:
+First learnings from the OpenROAD project[C] //Proceedings of the 56th
+ACM/IEEE Design Automation Conference. New York: ACM, 2019: 1-4.
+DOI: 10.1145/3316781.3326334.
+[14] Brayton R, Mishchenko A. ABC: An academic industrial-strength verification
+tool[C] //Proceedings of the 22nd International Conference on Computer
+Aided Verification. Berlin: Springer, 2010: 24-40. DOI: 10.1007/978-3-642-
+14295-6_5.
+26

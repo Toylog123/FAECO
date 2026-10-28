@@ -1,0 +1,214 @@
+{
+  "format": "native-latex-author-revision-response/1.0",
+  "UTC": "2026-10-18T13:35:42.292290+00:00",
+  "source_sha256": "a2349e07027e60058cccf23afa8465e1ec117468fd09886f9a608f40165c38ee",
+  "roadmap_sha256": "69caffaf26aaca0a3569e06963b3466aaf078517ed7b701c11df7375a27239c3",
+  "scope": "Author-side bounded revision and evidence check, not a new peer-review decision or ARS Markdown patch-apply PASS.",
+  "items": [
+    {
+      "id": "REV-01",
+      "description": "隔离割机制与排序的独立收益",
+      "obligation": "must_fix",
+      "status": "部分落实",
+      "location": "§3.3、§4.4；图5及受控曲线",
+      "implemented": "复用同源8×9矩阵，保留weighted/uniform零差异；分开边界生成与调度、缓存与真实STA，历史1.07ns不归因割。",
+      "remaining": "未取得全程固定同一候选池的离线纯排序因果重放；W1/UR为策略级比较，轨迹可分叉。"
+    },
+    {
+      "id": "REV-02",
+      "description": "与强相关方法建立算法层面的差异",
+      "obligation": "must_fix",
+      "status": "部分落实",
+      "location": "§2；表1–2",
+      "implemented": "逐原文纠正候选对象、设计阶段、生成与筛选依据，列出备用资源/规格/学习策略的具体接口差别。",
+      "remaining": "相容强外部基线的同库同预算直接性能比较尚未执行；AiTO全文获取边界保留。"
+    },
+    {
+      "id": "REV-03",
+      "description": "摘要和结论绑定正确实验族",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "中英文摘要、§1.3、§4.1、§4.4、§5",
+      "implemented": "摘要结论主数改为C′受控族0.161ns/7.8–19.0%，新增实验族—问题—设定表，历史策略/反馈/结构族分别陈述。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-04",
+      "description": "分开候选检查与最终全网表SEC",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "中英文摘要、§3.2、§3.6；图1",
+      "implemented": "候选局部检查/STA与搜索结束后的独立全网表SEC明确分开；不表述每候选都最终SEC。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-05",
+      "description": "闭合主要历史结果的版本与输入身份",
+      "obligation": "must_fix",
+      "status": "部分落实",
+      "location": "§4.1、§4.3–4.7及证据登记",
+      "implemented": "当前C′完整代码/输入/库/约束/输出可追踪，旧族缺项明确分开；不拿新族代历史族，不补造旧运行时模型摘要。",
+      "remaining": "历史A/B及B3/C/D/结构族尚有版本、输入、模型运行身份或科学恢复门；D56及8归档完整验收未完成。"
+    },
+    {
+      "id": "REV-06",
+      "description": "定义覆盖割的构造目标和步骤",
+      "obligation": "must_fix",
+      "status": "已落实",
+      "location": "§3.3.1；算法2、图2",
+      "implemented": "定义STA报告实例有序并集、与当前锥取交集、输入输出边界、区域去重与8区域上限；覆盖是区域包含而非最小集合覆盖。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-07",
+      "description": "定义割边界到实际动作的实例化",
+      "obligation": "must_fix",
+      "status": "已落实",
+      "location": "§3.3.3–3.3.4；算法2、图2",
+      "implemented": "明确每区域8实例、R/G/B顺序、同类字典序、两首G联合一个JOINT、实际候选全文/配置身份与缓存。给真实库动作构造例。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-08",
+      "description": "定义融合排序的唯一顺序",
+      "obligation": "must_fix",
+      "status": "已落实",
+      "location": "§3.3.3–3.4；算法2",
+      "implemented": "覆盖先、加权后，区域身份合并保首次出现；节点cost不作区域统一分数，排序与反馈作用分开，写清first-improvement停止和下一轮重建。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-09",
+      "description": "同步b17最终证明状态和效果绑定",
+      "obligation": "must_fix",
+      "status": "已落实",
+      "location": "§4.3.1、§4.3.3；表8及图4",
+      "implemented": "原b17时序端点−16.53→−16.15及唯一NOR4B尺寸候选与新完整模型证明12879/0一一绑定；旧12812+1仍为旧未全证记录。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-10",
+      "description": "说明并验证顺序等价保证的初态与状态域",
+      "obligation": "must_fix",
+      "status": "已落实（限A8所称域）",
+      "location": "§3.6、§4.2–4.3；表8–9、图4",
+      "implemented": "实读八对实际模型/脚本/log：共同任意二值寄存器初态与一一状态映射，不改CK/D/Q；列simple先全证、induct新增0，未添加reset/assume。三态3例从功能通过分母剔除。",
+      "remaining": "一般四态/三态Z使能证明仍未恢复；此项A8域闭合不能冒充三态功能闭合。"
+    },
+    {
+      "id": "REV-11",
+      "description": "纠正功能ECO的等价目标",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§2.1",
+      "implemented": "功能补丁目标更正为修订规格，而非旧错误函数；说明FRAIG共享逻辑和SAT/插值的作用。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-12",
+      "description": "纠正Kravets工作的技术定位",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§2.1",
+      "implemented": "Kravets符号采样归入功能修正点/补丁搜索；不作WNS时序重映射依据。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-13",
+      "description": "修正Pan2024引用的技术归属",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§2.1、参考文献",
+      "implemented": "Pan归入STP仿真及SAT-sweeping等价节点识别；资源感知功能补丁引用Cheng。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-14",
+      "description": "分开Dao2018失败分支和后续动作",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§2.1",
+      "implemented": "区分Dao不可修复/超时/支持集与补丁计算分支，删除无对应算法证据的统一扩窗推断。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-15",
+      "description": "修正功能补丁的阶段分类",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§2.1–2.2、表1–2",
+      "implemented": "Cheng明确是布局冻结后的metal-only；功能目标、阶段、备用单元和物理资源分开定义。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-16",
+      "description": "区分逻辑深度代理与真实时序关键度",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§3.3–3.4、式2、图2、表4",
+      "implemented": "depth明确是逻辑层数而非STA关键度，真实报告实例另建覆盖区域；六门例展示节点cost与覆盖优先不等价。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-17",
+      "description": "解释锥规模常数项对割目标的作用",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§3.3.2、§3.4、式2、表4",
+      "implemented": "锥规模项是同锥共享常数，通过被选门数与深度分母影响容量；不解释为实测验证时间。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-18",
+      "description": "说明扇出与电气负载的代理关系",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§3.3.2、§3.4、式2、表4",
+      "implemented": "fanout定义为锥内输入连接消费数，仅结构代理；不含实际引脚电容、线载及锥外负载。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-19",
+      "description": "报告接受候选的网表代价",
+      "obligation": "should_fix",
+      "status": "已落实（W1八对端点）",
+      "location": "§4.4、表11",
+      "implemented": "从16原始网表递归展开DFF，核全单元/独立buf数并按同Liberty逐类面积求和；报告面积+0.27–4.92%，不把单元数不变写成面积不变。",
+      "remaining": "该补分析明确绑定C′W1八对，不冒充其它历史族全部PPA。"
+    },
+    {
+      "id": "REV-20",
+      "description": "明确额外工程指标的评价状态",
+      "obligation": "should_fix",
+      "status": "已落实",
+      "location": "§4.4、§4.6",
+      "implemented": "区分同库面积观察量与未评的功耗、hold、最大电容和转换时间；未取得限值/违例数不标通过。",
+      "remaining": ""
+    },
+    {
+      "id": "REV-21",
+      "description": "补齐简化SPEF的模型定义",
+      "obligation": "should_fix",
+      "status": "部分落实",
+      "location": "§4.6、RC公式、tab:paired_load",
+      "implemented": "更正真实fanout平方根长度、单位RC与集中C/星形R，无几何Manhattan外推；旧共享SPEF、unit1/40不符与重复候选数保留。另注册派生输入完成24次真实STA，八注释全0，理想+.15/基础长度10+.11/40与160均0。",
+      "remaining": "新数据不能恢复旧共享SPEF扫描；原raw层级helper端点缺口OI051仍待生产修复与回归。"
+    },
+    {
+      "id": "REV-22",
+      "description": "补齐物理后验运行条件",
+      "obligation": "should_fix",
+      "status": "已落实（可恢复设定）",
+      "location": "§4.6、tab:pr8、tab:paired_load",
+      "implemented": "逐16份原PR脚本核同设定、TT25C1.8V、CK0.5ns、s27利用率10%其余30%/density0.7；报告global-routing估计及缺省I/O等，新负载试验逐输入/库/Tcl/真实注入绑定。",
+      "remaining": "旧二进制/平台完整文件、seed等运行身份未全部恢复，归REV-05持续登记。"
+    }
+  ],
+  "status_counts": {
+    "部分落实": 4,
+    "已落实": 15,
+    "已落实（限A8所称域）": 1,
+    "已落实（W1八对端点）": 1,
+    "已落实（可恢复设定）": 1
+  }
+}

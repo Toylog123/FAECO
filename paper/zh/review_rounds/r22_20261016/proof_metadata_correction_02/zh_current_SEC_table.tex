@@ -1,0 +1,22 @@
+\begin{table}[!htb]
+\centering
+\caption{ISCAS89 顺序门级 SEC 结果}
+\label{tab:sec_iscas8}
+\setlength{\tabcolsep}{4pt}
+\footnotesize
+\begin{tabular}{lrrr}
+\toprule
+\textbf{电路} & \textbf{$\mathrm{equiv}$ 单元} & \textbf{SEC} & \textbf{时间 (s)} \\
+\midrule
+s27  & 11  & 通过 & 0.303 \\
+s382 & 90  & 通过 & 0.382 \\
+s420 & 79  & 通过 & 0.368 \\
+s641 & 124 & 通过 & 0.381 \\
+s713 & 126 & 通过 & 0.410 \\
+s820 & 138 & 通过 & 0.454 \\
+s832 & 145 & 通过 & 0.437 \\
+s953 & 228 & 通过 & 0.537 \\
+\bottomrule
+\multicolumn{4}{p{0.92\columnwidth}}{\footnotesize 使用 \texttt{equiv\_make} + \texttt{equiv\_simple} + \texttt{equiv\_induct} 进行证明；8 个电路共 8/8 通过。该结果对应 SKY130 行为单元模型下的逻辑门级顺序等价证明。}\\
+\end{tabular}
+\end{table}

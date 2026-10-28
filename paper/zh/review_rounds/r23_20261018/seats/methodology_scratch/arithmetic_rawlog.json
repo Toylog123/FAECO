@@ -1,0 +1,308 @@
+{
+  "scope": "Manuscript-internal arithmetic only; no replication of reported experiments.",
+  "source_sha256": "bdedb8be55b7c124f30223586bc1e5d4c3dede9fa325436b2bf893c0c25f8954",
+  "ablation_means_from_printed_rows": [
+    {
+      "column": "G",
+      "values": [
+        "9/100",
+        "17/100",
+        "7/20",
+        "9/20",
+        "1/20",
+        "1/50",
+        "7/100",
+        "9/100"
+      ],
+      "sum": "129/100",
+      "n": 8,
+      "mean_exact": "129/800",
+      "mean_decimal": 0.16125,
+      "nearest_0.01_if_half_up": "0.16"
+    },
+    {
+      "column": "B",
+      "values": [
+        "7/25",
+        "19/100",
+        "1",
+        "127/100",
+        "99/100",
+        "13/50",
+        "3/50",
+        "6/25"
+      ],
+      "sum": "429/100",
+      "n": 8,
+      "mean_exact": "429/800",
+      "mean_decimal": 0.53625,
+      "nearest_0.01_if_half_up": "0.54"
+    },
+    {
+      "column": "random",
+      "values": [
+        "7/25",
+        "19/100",
+        "23/20",
+        "57/100",
+        "16/25",
+        "3/20",
+        "2/25",
+        "3/25"
+      ],
+      "sum": "159/50",
+      "n": 8,
+      "mean_exact": "159/400",
+      "mean_decimal": 0.3975,
+      "nearest_0.01_if_half_up": "0.40"
+    },
+    {
+      "column": "mixed",
+      "values": [
+        "7/25",
+        "1",
+        "77/50",
+        "163/100",
+        "133/100",
+        "99/100",
+        "57/100",
+        "5/4"
+      ],
+      "sum": "859/100",
+      "n": 8,
+      "mean_exact": "859/800",
+      "mean_decimal": 1.07375,
+      "nearest_0.01_if_half_up": "1.07"
+    }
+  ],
+  "first_improvement_STA": [
+    {
+      "circuit": "s27",
+      "mixed": "1",
+      "seeds": [
+        3,
+        3,
+        1
+      ],
+      "reported_mean": "2.3",
+      "mean_exact": "7/3",
+      "mean_decimal": 2.3333333333333335,
+      "seed_ratio": "3",
+      "mixed_less_than_seed_mean": true
+    },
+    {
+      "circuit": "s382",
+      "mixed": null,
+      "seeds": [
+        6,
+        3,
+        8
+      ],
+      "reported_mean": "5.7",
+      "mean_exact": "17/3",
+      "mean_decimal": 5.666666666666667,
+      "seed_ratio": "8/3",
+      "mixed_less_than_seed_mean": null
+    },
+    {
+      "circuit": "s420",
+      "mixed": "2",
+      "seeds": [
+        5,
+        1,
+        1
+      ],
+      "reported_mean": "2.3",
+      "mean_exact": "7/3",
+      "mean_decimal": 2.3333333333333335,
+      "seed_ratio": "5",
+      "mixed_less_than_seed_mean": true
+    },
+    {
+      "circuit": "s641",
+      "mixed": "1",
+      "seeds": [
+        7,
+        5,
+        1
+      ],
+      "reported_mean": "4.3",
+      "mean_exact": "13/3",
+      "mean_decimal": 4.333333333333333,
+      "seed_ratio": "7",
+      "mixed_less_than_seed_mean": true
+    },
+    {
+      "circuit": "s713",
+      "mixed": "7",
+      "seeds": [
+        1,
+        5,
+        2
+      ],
+      "reported_mean": "2.7",
+      "mean_exact": "8/3",
+      "mean_decimal": 2.6666666666666665,
+      "seed_ratio": "5",
+      "mixed_less_than_seed_mean": false
+    },
+    {
+      "circuit": "s820",
+      "mixed": "1",
+      "seeds": [
+        1,
+        3,
+        1
+      ],
+      "reported_mean": "1.7",
+      "mean_exact": "5/3",
+      "mean_decimal": 1.6666666666666667,
+      "seed_ratio": "3",
+      "mixed_less_than_seed_mean": true
+    },
+    {
+      "circuit": "s832",
+      "mixed": "1",
+      "seeds": [
+        1,
+        2,
+        1
+      ],
+      "reported_mean": "1.3",
+      "mean_exact": "4/3",
+      "mean_decimal": 1.3333333333333333,
+      "seed_ratio": "2",
+      "mixed_less_than_seed_mean": true
+    },
+    {
+      "circuit": "s953",
+      "mixed": "1",
+      "seeds": [
+        3,
+        1,
+        1
+      ],
+      "reported_mean": "1.7",
+      "mean_exact": "5/3",
+      "mean_decimal": 1.6666666666666667,
+      "seed_ratio": "3",
+      "mixed_less_than_seed_mean": true
+    }
+  ],
+  "mixed_less_count": 6,
+  "available_mixed_count": 7,
+  "runtime_random_STA_mean": {
+    "values": [
+      2439,
+      2476,
+      2527
+    ],
+    "sum": 7442,
+    "n": 3,
+    "mean_exact": "7442/3",
+    "mean_decimal": 2480.6666666666665,
+    "reported": "2480.7",
+    "rounding_rule_in_manuscript": "unstated"
+  },
+  "F4_fraction": {
+    "numerator": 2434,
+    "denominator": 4044,
+    "exact": "1217/2022",
+    "percent": 60.18793273986152,
+    "reported_percent": "60.2"
+  },
+  "F1_F6_sum": 3506,
+  "candidate_record_batch_reconciliation": {
+    "old_total": 4044,
+    "old_b17": 785,
+    "new_b17": 104,
+    "replaced_total": 3363,
+    "reported_new_total": 3363
+  },
+  "physical_deltas": [
+    {
+      "circuit": "s27",
+      "calculated_delta": "7/50",
+      "reported_delta": "+0.14"
+    },
+    {
+      "circuit": "s382",
+      "calculated_delta": "7/50",
+      "reported_delta": "+0.14"
+    },
+    {
+      "circuit": "s420",
+      "calculated_delta": "-1/50",
+      "reported_delta": "-0.02"
+    },
+    {
+      "circuit": "s641",
+      "calculated_delta": "2/25",
+      "reported_delta": "+0.08"
+    },
+    {
+      "circuit": "s713",
+      "calculated_delta": "1/100",
+      "reported_delta": "+0.01"
+    },
+    {
+      "circuit": "s820",
+      "calculated_delta": "3/100",
+      "reported_delta": "+0.03"
+    },
+    {
+      "circuit": "s832",
+      "calculated_delta": "0",
+      "reported_delta": "0.00"
+    },
+    {
+      "circuit": "s953",
+      "calculated_delta": "-1/100",
+      "reported_delta": "-0.01"
+    }
+  ],
+  "physical_sign_counts": {
+    "positive": 5,
+    "zero": 1,
+    "negative": 2
+  },
+  "S_WNS_partition": {
+    "positive": 0,
+    "zero": 36,
+    "negative": 90,
+    "sum": 126,
+    "reported_total": 126
+  },
+  "read_file_receipt": [
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\review_rounds\\r23_20261018\\contract.json",
+      "bytes": 4089,
+      "sha256": "9e8eb029f0fe893b07ffc6a8f74d2e5a4d9c7ebdc3e5f52b08ac2ddaf773620d"
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\review_rounds\\r23_20261018\\metadata.json",
+      "bytes": 209,
+      "sha256": "69701f593cc9e431e94cb252e82ba11a14b1992ec91722c83b93d7ded55fa0d6"
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\review_rounds\\r23_20261018\\seats\\methodology_phase1.md",
+      "bytes": 3858,
+      "sha256": "cf6279f911957255b887e068b325b6f6c565d00d0b60288d19fb8dfe0e7a105c"
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\review_rounds\\r23_20261018\\seats\\methodology_phase2_input.txt",
+      "bytes": 77375,
+      "sha256": "f8e8a65e4ebabebe9c407c955979204018a3ba275ccbabb49eee3f8ce547702b"
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\review_rounds\\r23_20261018\\inputs\\manuscript_numbered.txt",
+      "bytes": 73594,
+      "sha256": "bdedb8be55b7c124f30223586bc1e5d4c3dede9fa325436b2bf893c0c25f8954"
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\review_rounds\\r23_20261018\\inputs\\manuscript_pdf_text.txt",
+      "bytes": 56834,
+      "sha256": "39c772f87e2548b3003036f2321ae5d50ba361179d484143d0a68efc63c9fd71"
+    }
+  ]
+}

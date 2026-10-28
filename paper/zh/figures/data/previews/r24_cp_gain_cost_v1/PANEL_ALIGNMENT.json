@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "applicable": true,
+  "auditable": true,
+  "verdict": "REVIEW REQUIRED",
+  "backend": "python-matplotlib",
+  "summary": {
+    "fail": 0,
+    "warn": 1,
+    "comparisons": 1,
+    "exemptions": 0
+  },
+  "tolerances": {
+    "alignment_pt": 1.5,
+    "gutter_pt": 1.5
+  },
+  "layout": {
+    "schema_version": 1,
+    "backend": "python-matplotlib",
+    "figure": {
+      "width_pt": 481.88976377759997,
+      "height_pt": 198.4251968496
+    },
+    "panels": [
+      {
+        "id": "a",
+        "bbox_pt": [
+          40.960629921096,
+          37.700787401424,
+          219.259842518808,
+          136.913385826224
+        ]
+      },
+      {
+        "id": "b",
+        "bbox_pt": [
+          281.905511809896,
+          37.700787401424,
+          460.20472440760796,
+          136.913385826224
+        ]
+      }
+    ],
+    "row_groups": [
+      {
+        "id": "row-1",
+        "panels": [
+          "a",
+          "b"
+        ]
+      }
+    ],
+    "column_groups": [],
+    "boundary_groups": [],
+    "exemptions": []
+  },
+  "findings": [
+    {
+      "severity": "WARN",
+      "kind": "panel-label-not-auditable",
+      "group": "row-1",
+      "panels": [
+        "a",
+        "b"
+      ],
+      "message": "Comparable panels are missing detectable top-left panel-label anchors"
+    }
+  ]
+}

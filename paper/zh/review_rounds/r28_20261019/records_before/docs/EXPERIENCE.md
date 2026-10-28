@@ -1,0 +1,457 @@
+# 开发经验库（踩坑记录）
+
+> 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
+
+## 2026-10-16 字节SHA钉定的新证据须防Git换行转换
+
+本次新QA/B17proof/v6-v8/Cprime-v3包由root加.gitattributes -text，防core.autocrlf检出后SHA变化；仅新包、不重写旧证据。提交前仍须核index blob与working raw逐字节一致，属性本身不能替代该检查。后root实际核60新包index blob==working raw逐字节一致；git add --renormalize才使raw入index，单调用cr-at-eol diffcheck rc0，原件未改。属性保护与实际index校验均须完成，不把仅写属性当已保护。
+
+## 2026-10-16 增强专属检查器不应悄改共享唯一性API的输入语法
+
+完整v7源稳定却965pass/1fail：F1 named-pin覆盖严格性扩入公共_assert_unique_physical_instances，使topology合法positional参数抛异常。归因为实现接口兼容性，不是科学想法失败。仅F1显式opt-in提取连接，公共唯一性检查保留positional；保持严格覆盖同时不误伤其它调用者。最小opt-in修复后scope30pass、精确V3pass与完整v8=969pass/4skip/156subtests、155.12s/wrapper157.969exit0、170SHA稳定。OI040/041实现门现可关闭，旧v7失败原件不覆盖，科学域不泛化。
+
+## 2026-10-16 字节保真QA归档不自动改变脚本的相对路径上下文
+
+直接运行Cprep qa归档副本20例FileNotFoundError，原因测试R=parents[2]依赖原scratch位置，未触生产代码；原位同源控制20pass/1.10s。原件不改，以原scratch上下文重跑或在新副本适配路径/重新锁SHA，不能把归档调用错误当生产缺陷。OI041新集成10原件同样保source/target/hash，README明确该界限。
+
+## 2026-10-16 修复后须原样重放反例，不能仅测格式化改写的同义例
+
+原seq反例是单行：顺序子门多行测试和926整套通过后，原样重放仍reset→set pass；gate_sizing行首regex两侧漏为[]，F1 strip实际cells后空集合伪pass。原反例混合了parser与seq语义两层缺陷，初述归因不完整。保留失败SEQUENTIAL_GATE_VERIFICATION，不覆盖为绿；OI040仅多行子门有效，新增OI041修单行/$/注释strings/escapednet与物理↔parsed完整覆盖，并用旧源多行反证独立归因。需新v7/commit，不能以926通盖该反例。
+
+## 2026-10-16 FF输出同为IQ不等于完整状态机语义相同
+
+合法dfrtp_1→dfstp_1连全输入将reset改set，F1仍返回pass，LR仅按IQ给34个错误顺序R；新SEQUENTIAL_GATE_COUNTEREXAMPLE实证，而旧835通过仅表示未覆盖它。比较next-state/event/clear/preset，顺序单元不进组合R，保留合法同族G；actual63顺序类型已被graph正确识别，不改无缺陷模块。OI040已限定LR105pass/F1专属14pass和相关201pass，v6最终926pass/4skip/156subtests、155.08s/wrapper157.875exit0、168SHA稳定/PYTHONUTF8=1，OI040代码阶段已关闭；九份旧proof模型重生成9/9字节一致/source与LIB稳定（非新外部proof），新整套/commit仍待；不自动否定模型未变、实际非seq修改且已有真实独立proof的A6/B2/B17对象。
+
+## 2026-10-16 B17未证点不能仅凭note认定工具伪阴性
+
+实际旧_177917_由nor4b_1→nor4b_2的改动驱动；旧脚本未flatten/无assert，log有changed cell No SAT model。find_same_wires false-negative旧note不足以归因。按真正baseline/accepted raw与完整模型新flatten/assert proof已返回pass13.375s、12879/0，主线POST_RUN_VERIFICATION已确认原bytes/完整decoded/唯一nor4b尺寸变化/全部artifacts与44source匹配、12879/0实log成功；不得把新证明反填旧运行或补造旧schema没有的state hash。首次历史map.ys因CP936而UTF8预飞失败在SEC前，明确strictCP936保原bytes/hash，不能宽松吞错或改proof网表编码。
+
+## 2026-10-16 同族恢复必须保运行器调度且不把recipe见证当runtime身份
+
+B3_RERUN_DESIGN实际绑定B的stateful outerloop，不能改用C逐实例greedy或C′cut调度；runtime argv/source/priority等未知，execution_ready=false，当前defaults不能冒充恢复值。C增量14对完整trial/终点相同是更强recipe见证，但确定性重跑和派生档案都能产生此观测，不证明复制/重跑，也不补runtimepin；canonical s382仍缺。新同族重建可明确选择参数/冻结输入，必须与旧identity区分，避免因恢复困难悄换算法。两报告均已实读，只读非EDA。
+
+## 2026-10-16 B2恒X边界证书须与独立proof和原字节对象同时绑定
+
+B2 checker66fe72ff…独立review准确为20/20负拒、5/6正接受，actual2pair7/0cert；escaped output保守误拒不影响实际对象，不能称26/26期待全匹配。44d20bb正式新模型B2两pair已pass，core6.078s/mul0.750s，wrapper16exit0/source稳定；POST_RUN_VERIFICATION原bytes、完整decoded、全部artifacts和动态cert双pair一致。证明只组合two-state SEC与独立孤立constant-X identity，不泛化四态/复位等价；旧runtimehash不补造。OI038当前新模型缺证已恢复，B3三态缺输入仍另需同族恢复，不能借B2关闭。
+
+## 2026-10-16 控制组通过指预期状态匹配，不等于全部等价证明通过
+
+新pin02e82a2正式9控制为3正确pass/3故意错fail/2三态unsupported/1缺输入input_error，9/9 matches、source稳定、wrapper31exit0，后验44source/LIB/driver无漂移。只有按预锁状态解读才准确：错误应拒、能力外应unsupported、缺输入应input_error。不能称“9个等价证明通过”或三态支持已证；三态能力恢复仍open。来源sec_controls_phase2/controls.json与POST_RUN_VERIFICATION，均已实读。
+
+## 2026-10-16 父进程-Xutf8不替代全进程PYTHONUTF8环境
+
+- **实际归因**：完整v4运行中3F，独立3个子CLI测试复现3fail+4warnings/0.97s，子CLI仍按CP936输出而父按UTF8读取；父命令-Xutf8不会自动设置所有子Python环境。
+- **限定修复**：源码不改，scratch harness设置PYTHONUTF8=1传递全进程，同3例3pass/0.82s。完整v4实际832pass/3fail/4skip/5warn/156subtests、148.38s/wrapper152.968exit1、166SHA稳定，3F均该环境原因；原件保留。完整v5最终835pass/4skip/156subtests，147.00s/wrapper152.781exit0、166来源SHA稳定，JSON显式environment_overrides PYTHONUTF8=1；已可确认该环境下当前实现全回归通过，不升级四态/科学结论。
+- **另一个边界**：原Zvs0/1在临时guard下精确输入均unsupported/commandNone/source稳定，证明门确实拒绝不可靠工具，并非四态证明。两类问题分别归因，不把编码环境修复说成Z语义恢复。
+
+## 2026-10-16 更强反例推翻证明方案时保留准确模型与支持恢复路径
+
+- **归因**：Zvs0工具伪pass之后，二态cut组合方案又被两个独立反例（含Z^Z vs0）推翻，因此不实施。函数/三态公式静态准确，不代表当前二态SEC soundness。
+- **当前处置**：actualtri、显式Z或switch给structured unsupported非pass，准确writer保留；这是临时证明器能力门，三态真实语义支持仍open，恢复路径是显式四态编码，不把unsupported称为已证或科学降级定稿。限定domain红5→含scope16pass/扩展11pass，整体v4未开始。
+- **整体失败层次**：v3=822pass/2fail/4skip/156subtests、165SHA稳定，两CLI旧fixture缺dfrtp/RESET_B被新门正确拒，拟补真实fixture保留assert。不是生产门误拒合法完整输入，不改门放行。
+- **日志纪律**：原CP936混编码log使harness UTF8展示失败，但JSON/JUnit完整有效；原件不改，用适当解码实读，后续-Xutf8。不因展示异常抹掉真实失败结果。
+
+## 2026-10-16 真实三态控制需优先检验Z与常量可区分性
+
+- **实证反驳**：dirty三态首5组2正pass/2负fail/1input_error全部matches，source稳定/0STA；更强控制中Zvs0预期fail实际pass、Zvs1fail，诊断passed=false。首组20s exit0与后组11s exit1均保留，不能只报前组“全过”。
+- **归因**：当前Yosys默认流程Z塌缩，普通真值控制能过不能证明工具保持四态语义；不是已证论文实际电路不等价，也不是writer静态语义检查可替代的工具可靠性门。
+- **处置**：OI039追加soundness阻断，主线+两agent先只读设计composition boundary proof、暂不改生产；验证工具能区分推翻主张的负控制后再谈正式证明。完整v3在跑至少2F待结束归因，无STA/pilot。
+- **来源**：r22_correctness_20261016/tristate_tool_diagnostic/diagnostic.json与tristate_z_diagnostic/diagnostic.json，记录员已实际读取status/expected/actual/source_stable/timing_runs。
+
+## 2026-10-16 独立接线probe通过后仍须核对writer实际导出
+
+- **已实读限定结果**：TRISTATE_INDEPENDENT_REVIEW的联合data/enable映射与batch必需输入门probe16s/exit0、5来源SHA稳定；合法只到subprocess sentinel，无EDA，不认证审查者自己的writer。
+- **新增自审边界**：actual Liberty13个三态中4个einvp使用后缀反相(TE')，parser保留原文但writer只字符串替换导出非法Verilog。不能从metadata解析/接线通过推断模型可编译或工具Z语义可靠。
+- **处理与状态**：另开TDD覆盖全部13三态实际导出、后缀反相转换，再重新冻结/整套与真工具正负控制。OI-039仍open，v2仅dryrun不执行，新v3待；当前不写解决/科学通过。
+
+## 2026-10-16 function真值表一致不能证明三态语义完整
+
+- **实际发现**：B模型audit.json的einvn_1/_2只function真值表与普通inverter相同，但实际Lib还含three_state(TE_B)；b09/b20/b21 actual final和SEC gate均缺TE_B。旧模型及8192193初版writer忽略三态，候选只按function可能误选三态cell。
+- **归因**：同根Lib语义/连接完整性实现缺口；旧28 SEC对象绑定仍真，不证明模型完整，也不能据此直接判电路不等价。本次使用类型审计中23未见缺口，5有缺口（含Pico2），不继续把26统称完整语义。
+- **处理**：完整pin block/three_state metadata与联合候选语义，RW模型/F1F2必需输入、ABC明确不支持边界和最终SEC输入门同步修。旧757/6控制不覆盖新反证，需新整套/commit/pin；v2只dryrun未执行，原manifest保留，新源v3。A6结果保留待usedtypes复核，不轻率推翻或无限外推。
+- **当前状态**：OI-039已登记，修复与新验收尚待；没有STA/pilot。
+
+## 2026-10-16 s713 SEC raw字节SHA差异须先检查实际文本/换行
+
+- **观察**：A s713 receipt的gate归档SHA为3c982ac0…，proof final_raw为5fe19204…，其它五对象相同；记录员先报主线而未宣称六对象全部确切闭合。
+- **实际归因**：原fixed16561B/LF，final_raw17585B、1024CRLF；utf8-sig通用换行读取后逐字完全相同，原LF文本hash与归档SHA一致，是Windows写出CRLF。未改候选/模型，不留虚假科学缺口。
+- **验证**：A六对象proof_run.log/逐receipt全部pass、wrapper21/exit0，frozen8192193/clean source与输入哈希绑定。实际文本一致应明确换行转换，不能仅因字节哈希差就否定对象，也不能不查差异便放行。
+
+## 2026-10-16 完整回归揭示声明文本比较误拒合法B（当前完整v2已通过）
+
+- **实际失败**：首整套741pass/1fail/4skip/156subtests，108.20s、wrapper112/exit1；源码before/after SHA稳定。旧合法buffer-chain测试中wire N;改wire N,N_BUF;，_non_rgb_structure按整条声明Counter误判N删除。
+- **归因与处理**：实现兼容性错误，不是想法失败或测试对象漂移。models仅修函数按既有net语义保持宽度/signedness，允许分组合并与新增线；不改旧fixture凑过，专属后再完整回归。
+- **证据纪律**：full_regression三证据原件保留，修后另用full_regression_v2并重新冻结当前源码。专属红7fail/8pass后相关五文件145pass/22.28s、wrapper26/exit0，原sole failure通过；新增15参数例约束宽度/signedness/次数。新版整套实际757pass/4skip/156subtests，102.50s/wrapper107/exit0、162源码SHA稳定，已可确认当前实现验收；真实SEC/EDA与科学恢复仍不能宣称通过。
+
+## 2026-10-16 物理多输出支持须贯穿source/别名root/锥外边界与split
+
+- **反证/归因**：独立复审找到无输入源未连source、alias root静默空锥、次输出被锥外消费者使用却记internal；修后split仍可能BO与internal重叠。metadata.cells与实际evaluator.lib的属性错配也会丢输出角色。均为可修集成边界，不据此否定方法。
+- **处置/限定验证**：主线按原网表driver/全网消费者维护物理节点、root别名、external boundary与split互斥；integration_review_red 3fail/6pass、split_external_red 1fail之后，scope_final_green5最终68pass+1subtest/3.71s/timeout exit0。旧c17预期漏N11/N16外部消费者，经原网表确认后更新期望，保留检查。
+- **A对象绑定教训**：s713 counterpart baseline带tie变化；只证明该baseline→fixed不足以覆盖原A。恢复工具主pair明确用原A mapped→实际fixed，干跑52输入/44源码SHA及六对象，工具9pass；尚未实际SEC，不把准备成功冒充候选已证明。
+- **下一门**：production/tests冻结后完整回归和最终独立复审，真实证明/EDA另登记。上述限定修复不提前关闭历史A/D/C科学问题。
+
+## 2026-10-16 r22多输出/刷新/SEC模块边界的反例驱动集成（限定范围已验证）
+
+- **红测**：scope_red.log四项分别命中次输出依赖丢失、一个物理实例分裂/次输出根识别、CLI端点取helper同名D、S刷新失败仍提交；sec_module_red.log另命中注释假module污染独立SEC helper。
+- **归因/处置**：主线graph/cut各输出共用同一物理节点、CLI先截取明确top、RGB/S均在提交前按top+Liberty刷新，独立SEC复用公共module_spans避免全文正则误读注释/字符串。深链fixture的循环内同名GROOT属于真实重复，移到循环外保留深链测试意义，不放宽生产唯一性门。
+- **验证/边界**：日志实读scope相关七文件63passed+1subtest/3.85s、timeout120/exit0；parser35、models69为独立限定相关范围，不能加总当全回归。当前完整回归/独立复审与真实SEC/EDA仍待，不提前宣布所有K门或科学证据闭合。
+- **复用**：scratch/r22_resume_20261016/{scope_red,sec_module_red,scope_final_green}.log，恢复计划R22_CORRECTNESS_RESUME_PLAN_20261016.md；有用日志待主线晋级跟踪证据包。
+
+## 2026-10-16 r22恢复复用与验收对象约束（尚非新修复完成记录）
+
+- **复用起点**：用户已明确恢复；先实读NAMESPACE_FIX_REVIEW的K1–K6最小反例、historical_correctness REPORT及已有v1失败原件，不重造归因或把旧667当当前通过。
+- **本轮约束**：修复应同时保持多输出完整语义、物理实例身份/分母、目标module作用域；当前源码/fixture/模型/输入冻结后整套回归、独立复审，新pin/v2与独立最终SEC。旧失败输入和构造反例分别标注，不把构造探针说成真实实验已触发。
+- **科学恢复**：A六补确切接受对象证明，D/C按同族输入/臂恢复；新C′单独18pilot→72，不跨族替换历史。未知不等失败，结构invalid不等新证不等价，计数对账不证明候选合法。
+- **验证状态**：此条仅同步已核验教训与恢复纪律；本轮新的问题解决/测试结果待实际日志后补，不声称K1–K6已闭合。
+
+## 2026-10-14 r22 多模块netlist：局部门成功不能替代独立最终SEC
+
+- **真实反证**：首正式pilot两W0 runner均exit0，独立最终SEC却发现helper definitions不同并停止batch。B instance被insert_buffer放在首个endmodule/helper dff，而新wire/目标pin在真正top；旧局部F1/F2全文件parser合并模块命名域造成伪pass，截取真实top后F2 declared-undriven。
+- **归因**：定位为可修实现与模块namespace边界缺陷，不直接否定cut/cost设想，也不把中间+.10/+.05 ns记作有效成果。原失败目录完整保留，首轮其它臂未启动；旧权威论文哪些accepted动作受影响另做来源审计，不先猜范围。
+- **处置规则（修复尚未验收）**：目标模块必须从真实instance/明确top定位，新增wire、instance和pin改动保持同一模块；helper字节/同名instance/缺失目标/多模块异常都进入TDD。F1/F2必须在正确模块namespace内校验，并保留独立工具最终SEC。修复改变production后新commit/pin/v2，当前版本整体回归与完整受影响矩阵重跑，不能沿用旧通过或借旧pilot结果。
+- **计数教训**：首pilot实读launch12/11、eval14/13，n_cache_replays/skipped_duplicate均0，各2条非STA为F1前置拒绝。差额不是缓存证据；同时保留真实launch、前置门拒绝、缓存与独立SEC状态，避免把局部成功字段升级为全流程验收。
+- **证据**：LOG-20261014-23、OI-035/036、experiments/20261014_r22_cut_ablation的两W0 eval_trials/runner日志/final_sec/batch_failures。生产修复与最终验证继续推进。
+
+## 2026-10-14 r22 回归时不可并行修改被测源码/fixture
+
+- **现象**：第二次全回归628passed/1fail，batch输入锁stub失败；同一会话pytest已经载入旧fixture，但主线又加入LIB/mapped锁并修改production脚本，发生旧fixture与新脚本组合。
+- **归因**：测试对象跨版本，不是这个结果已推翻实验设计。新输入锁与Path(m.LIB)统一必须在稳定组合中重测。
+- **处理**：停止core编辑，重启session14951全回归，测试期间保持production源码、fixture与输入锁不变；若必须接纳修改，废弃旧验收对象并重新启动，不边测边改。
+- **验证**：稳定最终源码实际629passed/4skipped/156subtests、99.79s，timeout包装102s/exit0。前两次回归只作历史，不合并为当前门；正式EDA未启动。
+
+## 2026-10-14 r22 静态mincut探针：先检验预期，保留无作用与tie
+
+- **现象**：P2原断言uniform与高size权重应选不同门，实际两者都选g1，断言失败。
+- **归因**：实际求解确认uniform为确定tie，高size也选择g1；测试预期不能从“权重改变”自动推出“这个输入割必改变”。这不是已经证明实现错误或方法无效。
+- **修复**：以高size与默认配置（g2）检验代码具备改变割的能力，同时保留uniform确定tie与根退化场景；不删零差异例，不为了pilot好看换真实实验臂。
+- **验证**：主线TDD先失败后通过，candidate十二项与批运行器共15passed/0.21s，无EDA。静态可辨识能力不等于实际电路时序贡献，正式C′按预锁正负判据报告。
+
+## 2026-10-14 r22 历史来源恢复：JSON缺字段可用独有报告交叉验证
+
+- **现象**：r21仅依旧JSON判断b17新STA数量不可识别；该判断不能证明仓库其他档案也没有来源。r22先查既往/原始报告，而非重跑或补造schema。
+- **恢复**：b17的104条trial按iteration与组内序号精确对应104独有STA日志/Tcl，所有日志有限WNS与trial相同，候选mapped输入路径一一绑定；当前可报告104个有独有来源的候选STA结果，结合另18实例2890得到2994。它不含基线/刷新/重试/SEC的所有工具执行。
+- **验证**：只读历史审计300s超时包装、51s/exit0，输入清单及两个结果JSON哈希回验；证据为r22_historical_audit_20261014包。主线确认B/D计数可闭合；没有改原始档案、没有新EDA。
+- **边界**：C的输出目录跨pass覆盖，缺base hash与实际revision；重复candidate描述不等于缓存，现存报告数不等于历史总调用。flags恢复分recovered/launcher_recovered/inferred/missing，launcher模板不能当实际argv证书。s382 v3的数值/输入匹配不证明发布身份，不自动借入主表。
+- **复用**：先用独有报告/Tcl/输入哈希寻找可审计来源；无法恢复的身份/执行数明确保留，不猜参数、不套其他族缓存规则，也不把档案审计拖成无期限等待。
+
+## 2026-10-14 STA 台账：来源字段不证明新执行，缺失 schema 不等于零
+
+- **现象**：D 的归档 B(k) 含 `skipped_duplicate`，缓存字典保留旧 STA provenance；旧 runtime 把全部评估记录当测量。B 的 3363/664/104 也恰等于全部 trials，含前置拒绝/缓存，不能称新增 OpenSTA 次数。
+- **根因**：逻辑评估记录、带来源记录、新 STA 执行、预算计数是不同事件；字段名 `n_candidate_sta_runs` 和有 provenance 不足以证明新测量。
+- **修复**：D 从原始 trials 筛有效来源/WNS 并剔缓存，逐运行与唯一报告路径和 sta_used 对齐；实际图轴/表列使用重建数，旧记录列与墙钟保持。B 的指标名改为评估记录；18 实例可确认新 STA 2890，b17 缺来源/缓存 schema，保留未知，不能补 0 或把 104 全当新执行。
+- **验证**：独立 `methodology_verification.md`、`sta_count_followup.md` 与当前主稿一致；D Fixed/EMA 新 STA 1947/2003，随机均值 2480.7；本轮全稿质量门零错误/溢出/未引用。只做已有台账重算，没有新 EDA。其它族审计继续留 OI-034。
+- **复用规则**：计数单位先落到真实事件、原始记录和独有报告路径；同族缓存标记规则不能套给缺字段的历史 schema。曲线按各臂停止位置结束，不在停止后外推收益。
+
+## 2026-10-14 双栏末页 balance 的微小 vbox 溢出
+
+- **现象**：r21 内容与配图集成后仍有末页 0.8534 pt Overfull vbox，hbox 和引用已全通过。
+- **归因与修复**：主线单独禁用旧 balance 后溢出归零，定位为末页平衡算法；enlargethispage 引入 Infinite glue shrinkage，已回退。使用本机 `flushend[noshrink,nospread]` 平衡双栏，未缩字体/行距/砍内容。
+- **验证**：当前 `.tex` 已使用 flushend，`build_qa.json` 为 12 页、hbox/vbox 全零。该解决只适用于本稿/当前安装的包版本；后续版式变动仍要重编译并看末页，不照搬通过结论。
+
+## 2026-10-14 配图数据读取：零候选 schema 与符号字形
+
+- **现象**：r21 配图首跑读取 s641 的 S 统计时缺少 `tier2`，报 KeyError；部分数学下标/对号未被导出字体覆盖。
+- **归因**：原始 `summarize_s_l1.json` 的 s641 确实是零抽窗、零候选、零测量，不提供候选测量汇总层。把每电路都当成非空候选 schema 是读取实现错误，不能据此认定数据丢失；字体中没有对应字形是另一个导出问题。
+- **处理**：`paper/zh/figures/data/scripts/review_r21_figures.py` 仅在 `n_candidate == 0` 且 `n_measured == n_extracted == 0` 的断言成立后生成全零分类；其他电路继续直接读取 `tier2`，保留分类总和与总候选数断言。缺字标记改为覆盖可用的字形/字体。
+- **验证**：实读零候选原始记录与当前分支，首版图件已导出；最终六新图和整稿逐页视觉/字形审计通过，详见r21 qa_notes。此为既有证据的绘图读取/导出修复，不是新 EDA 实验。
+- **复用规则**：零候选可补零分类必须基于明确 schema 与零抽窗/测量断言；对未知缺项直接补零会掩盖证据缺失，不可采用。导出成功后仍要目检字形，不能只看进程 exit code。
+
+## 2026-10-14 预算曲线读取：配置字段层级不能从参数名猜测
+
+- **现象与归因**：新增既有族 D 的 B(k) 备选图时，首次读取把 `sta_budget` 当 `run_config.json` 顶层字段；真实配置保存在 `resolved_args` 中，这是绘图读取实现问题。
+- **修复与验证**：改为 `config['resolved_args']['sta_budget']` 并断言为 500；同族全部电路、全部配置分别加载自身数据，按各自自然终止点截断。最终入稿文件为 `fig5_budget_curves_r21`（前期备选名figD），实际轴又按原始台账剔缓存重建，详见上方计数修复；不将族 C 数字接入曲线。
+- **复用规则**：先实读原始 JSON 的 schema，再绑定图中计数单位。预约额度不是实际 STA 测量次数，配置字段正确读取也不能将两种计数自动等同。此为既有数据后处理，不是新 EDA 实验。
+
+## 工具链
+
+1. **Windows Yosys 0.9（32 位）映射大电路 OOM**
+   - 现象：b18/b19（原型约 7.0 万/23.1 万门；**2026-09-28 更正**：原记「37.6 万/75.5 万门」在任何证据文件中均无法定位，映射后为 7.57 万/15.10 万个 SKY130 单元，见 `project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md` §6）read_verilog bad_alloc；$shr 技术映射 OOM。
+   - 解决：WSL2 64 位 Yosys 0.33（`run_yosys_mapping` 增加 `yosys_cmd` 参数）。
+   - 验证：b18/b19 映射成功（峰值 4.7 GB）。
+
+2. **SKY130 `clkinv_1` 不在 Liberty → CEC unavailable**
+   - 解决：从 Liberty boolean function 提取 assign-style `sky130_cells_v2.v` + Yosys `miter -equiv` + `sat -prove-asserts`；8/8 等价证明通过（20260803）。
+
+3. **b19（7.5 万单元）WSL2 STA 输出截断**
+   - 解决：`run_opensta()` 3 次重试 + 手工复测校验（WNS=-17.42 一致）。
+
+## 形式验证
+
+4. **顺序 SEC `find_same_wires` 局限（b17 剩 1 个未证明点）**
+   - 现象：nor4b_1→nor4b_2 同函数尺寸替换因两侧 wire 命名不一致未匹配。
+   - 结论：Liberty function 等价即 effective_pass；论文如实单独报告（12812/12813）。
+
+## 流程 / 工程
+
+5. **多轮 ablation 被 early-stop 截断（假阴性）**
+   - 原因：flow.py 接受分支无条件 return True。
+   - 解决：仅 `early_stop` 开启时提前返回（flow.py:471）；264 测试全绿；备份 `project_docs/archive/superpowers_backup/T19_20260908/`。
+
+6. **论文数字与实验产物混源（2026-09-11 审计）**
+   - 教训：同一小节混用两轮运行数字（1012 次 STA、b21 +2.16、JOINT-12 均无产物支持）。
+   - 规则：先更新聚合 summary 再动论文；审计记录 `project_docs/review_history/paper_audit/consistency_audit_20260911.md`。
+
+7. **仓库迁移（2026-09-12）**
+   - 目录 rename 被 BaiduSync 客户端句柄阻塞（Device or resource busy）→ robocopy 复制（316,765 文件/117.7 GB，0 失败）+ 源目录留作归档。
+   - `.venv` 可编辑安装路径失效 → 重新 `pip install -e .`；硬编码绝对路径脚本改为 `__file__` 锚定。
+
+8. **LaTeX 双栏 `figure*` 独占整页造成版面塌陷（2026-09-28）**
+   - 现象：第 5 页仅 7 行、约 80% 空白；且 §3.3 正文在上一页末被截断，跨过图页才续上，阅读流断裂。
+   - 根因三重叠加：① 图为 1254×1254 正方形、宽度 `0.85\textwidth`（14.4×14.4 cm）过高；② 位置参数 `[!htbp]` 含 `p`，允许 LaTeX 生成"只含浮动体"的浮动页；③ 图前 `\FloatBarrier`（`placeins` 包）强制立即输出，与图后屏障形成夹逼。
+   - 解决：改 `[!tb]` 禁用浮动页 + 宽度降到 `0.55\textwidth` + 删除图前屏障 + 合并相邻重复 `\FloatBarrier`（全文 20 处，其中 2 组为连续重复，功能等价无意义）。
+   - 结果：10 页 → **9 页**；第 5 页 7→43 行（图 + 正文 + 表 3 同页共存），末页结论与参考文献同页、不再孤立成页；0 Error / 0 Overfull / 0 Underfull。
+   - 规则：双栏文档慎用 `figure*` + `p` 位置 + `\FloatBarrier` 三者叠加；`\FloatBarrier` 只在节边界保留 1 个，禁止连续重复（重复调用无额外作用，却让版面僵硬）。
+
+9. **PDF SHA256 不能作为"内容一致"的判据（2026-09-28）**
+   - 现象：同一 `.tex` 一字未改，重编译后 PDF SHA256 由 `5c98b77d…` 变为 `611741c5…`，看似"内容变了"。
+   - 根因：PDF 内嵌编译时间戳（CreationDate / ModDate）元数据，每次编译字节必变。
+   - 解决：判定内容是否真一致改用 **`pdftotext -layout` 全文的 SHA256**（本次 `856fac5b…`），并配合页数与质量门；实测两次编译文本指纹完全相同、`diff` 无差异，确认仅元数据变化。
+   - 规则：冻结记录须同时给出「PDF 字节 SHA256」（标识该文件副本）与「文本指纹」（标识内容）；不可只用前者断言内容一致，也不可因前者变化就判内容被改。
+
+10. **`\FloatBarrier` 在双栏下退化为 `\clearpage` → 孤儿参考文献页（2026-09-29）**
+   - 现象：论文改完正文后编译多出 1 页，第 10 页仅 8 条参考文献、约 80% 空白；上一页左栏亦有约 28% 留白。
+   - 根因：`placeins` 的 `\FloatBarrier` 在**双栏模式下遇到待排浮动体会退化为 `\clearpage`**（须把两栏都清空）。§3.4 表 `tab:failures` 之后、§3.5 之前那处屏障前方有表未排出，于是强制结束该页 → 正文整体后移 → 参考文献被挤成独立末页。
+   - 解决：**只删掉那一处多余 `\FloatBarrier`**（除该行外 `.tex` 与上一版逐字节相同，`diff` 输出仅 `311d310`）。10 页 → **9 页**；第 5 页 = 图 2 + §3.3 正文 + 表 3 + §3.5 开头，第 9 页 = §5 结论 + 参考文献 [1]–[19]（约 95% 满）。
+   - 规则：**页数异常 / 末页孤儿 / 大面积留白，第一优先是逐个试删（或下移）`\FloatBarrier`，而不是缩字体、行距或砍内容。** 排查方法：数出全文所有 `\FloatBarrier` 位置（`grep -n '\\FloatBarrier'`），每次只删一处后重编译，看页数与每页有效行数（`pdftotext` + 按 `\f` 切页统计）。
+
+11. **内容指纹依赖 pdftotext 实现：Git Bash 的 `pdftotext` ≠ poppler（2026-09-29）**
+   - 现象：冻结记录的内容指纹 `7adf0279…` 用"同一条命令"复算得到 `443c5c3a…`，看似内容被改；但 git 工作区干净、PDF 字节 SHA256 与冻结记录一致。
+   - 根因：`pdftotext` 在本机有**两个实现**——Git 自带 `C:\Program Files\Git\mingw64\bin\pdftotext.exe`（**xpdf 4.00**，Git Bash 默认解析到它）与 WinGet poppler `…\poppler-25.07.0\Library\bin\pdftotext.exe`。两者对同一 PDF 提取的文本不同（布局/空格处理差异）→ 指纹不同。用 poppler 25.07.0 复算**精确复现** `7adf0279…`，证实内容未变、指纹 oracle 是工具相关的。
+   - 规则：**文本指纹必须连同工具版本一起冻结**——记录指纹时注明工具（本仓钉定 poppler 25.07.0：`"$LOCALAPPDATA\Microsoft\WinGet\Packages\oschwartz10612.Poppler_Microsoft.Winget.Source_8wekyb3d8bbwe\poppler-25.07.0\Library\bin\pdftotext.exe"`）；复算不一致时**先用 git 干净度 + 字节 SHA 排除文件被改，再换 pdftotext 实现逐一对算**，不得直接判"内容被改"。
+
+12. **双栏稿压页：删掉正文全部 `\FloatBarrier`（2026-10-09）**
+   - 现象：文字收敛后末页出现孤儿参考文献页（[13][14] 独占第 9 页、约 93% 空白）。
+   - 排查：① 先证"参考文献本身无压缩余地"——`itemsep≈0`、`\linespread{0.95}` 下仍 9 页；② 删约 5 行正文 → 仍 9 页（省下的空间被栏底松动吸收）；③ 按经验 10 的思路**逐处删除 `\FloatBarrier`**（正文原有 11 处，均为节边界）→ 配合 7 处去重编辑。
+   - 解决：**只保留图 2（全宽 `figure*`）之后那 1 处**，其余 10 处全删。9 页 → **8 页**，且**图/表的页面分布逐项不变**（先在与主稿逐字节一致的实验副本 `_exp8.tex` 上验证，再落到主稿）。
+   - 规则：双栏稿正文**不应放** `\FloatBarrier`；它只在"约束某个全宽浮动体的落点"时才值得保留。压页次序恒为 **调浮动体参数 → 删屏障 → （最后）才考虑改版式**；禁缩字体/行距/砍内容。并在导言区留维护注记，防止后人回插。
+
+13. **Word 转排管线硬编码摘要，只改 OUT 路径会产出旧摘要（2026-10-09）**
+   - 现象：v5 轮重建 Word 稿时只改了 `postprocess.py` 的 `OUT` 路径，结果 `…20261009b.docx` 的摘要**实为 v4 文本**（v5 摘要从未进入 Word 稿），而文档却声称"随 v5 重建"。
+   - 根因：`scratch/word_convert/postprocess.py` 内 `zh_abs` / `en_abs` / 中英关键词 / 标题 / 作者均为**硬编码字符串**，**不从 `.tex` 读取**；管线各步（preprocess → pandoc → postprocess → Word 导出）对摘要文本无一致性校验。
+   - 解决：以 `.tex` 为准重写硬编码块（并核对字数），重跑整条管线产出 `…20261009c.docx`；缺陷归档 `word/superseded/README.md`。
+   - 规则：**改摘要/标题/关键词后，必须同步 Word 管线的硬编码块并重跑整条管线**；验收时须从产出的 Word/PDF 反读摘要文本与 `.tex` 逐字比对，`preprocess.py` 的 `N_BIB` 计数守卫也要随参考文献条数变化同步。
+
+14. **内容指纹值会跨文档传播并被误记——必须回验（2026-10-09）**
+   - 现象：v6 冻结记录的内容指纹 `91034fee…` 被写入 11 个文件；但用**任何**提取口径都复现不出它。
+   - 排查：以 v5 的 PDF（从 git 取回）反推口径——`pdftotext -layout <pdf> - | sha256sum`（**原始输出，不去空白**）精确复现 v5 记录值 `0a2b0723…`；据此口径，规范脚本对 v6 稳定给出 `88b03403…`（连跑两次一致）。
+   - 结论：`91034fee…` 为误值（字节 SHA `09197e5f…` 与页数均正常，说明 PDF 未变）。已更正全部 11 处。
+   - 规则：**内容指纹必须由脚本按固定命令现算**，不手抄、不跨文档复制粘贴；跨文档引用指纹时回验一次。判内容一致用**指纹**，判文件副本用**字节 SHA**，两者不可混用。
+
+
+## 2026-10-16 C′v3 pilot：无提交先查预算，不改协议求正结果（LOG-41）
+
+首W0/s27实际候选WNS从-.27改善到-.26，但TNS从-.49退到-.50，eval_trials明确setup_tns hard_gate拒。finalSEC pass但提交0/WNS不变符合当前接受协议；应区分严格WNS接受目标、TNS等硬预算和tns-aware平局选择。不能用“唯WNS无约束”描述，也不为得到改善调整已注册参数。候选9/8字段有legacy计数语义，最终审计必须分别核理想候选、baseline/refresh/physical调用与提交，不能把候选台账字段当全体STA总数。mapping/static准备receipt明确not_run/STAfalse，不把静态门当RTL→mapped证明。
+
+
+## 2026-10-16 只读审计须依据实际序列化schema（LOG-42）
+
+C′v3首次独立audit误期待as_dict未序列化的epoch字段，KeyError且未形成结果receipt；不能记为生产或实验失败。修正审计schema假设，保留实际完整网表commit哈希链，并交叉核argv、source、mapped/log、candidate_ideal launch与finalSEC非零proven/0unproven，前5/18已通过。最终脚本另按receipt SHA归档，旧失败不伪装成实验返回值。
+
+
+## 2026-10-16 权重接通与增益归因分开核验（LOG-45）
+
+两pilot的W0/U0、W1/U1首round candidate_pool_trace显示configured node_costs非均匀且uniform全部1，但pool/dispatch cut hash相同。不能由臂结果相同断言权重未接通，也不能将当前改善直接归因给权重。先记录实现接通与实际cut相同的观察，等待全矩阵比较；不为得到正结论调整已注册参数。
+
+
+## 2026-10-16 跨机器恢复运行pin须保存确切输入字节（LOG-49）
+
+Git换行属性并不包含所有ignored本机输入，也不能保证未来检出的字节等同runtime。C′v3另建source_snapshot将44runtime source/Lib/8RTL/8mapped/preparer共62件原字节入ZIP，用manifest逐项SHA与ZIP SHA双核；记录员独立62/62匹配。保留工具登记版本且明确不含二进制，不能称完整工具环境可搬运。运行pin不变，受ignore的ZIP在72全部验收后归档阶段须force-add，不为快照提前commit。
+
+
+## 2026-10-16 机制比较先按相同网表状态对齐（LOG-64）
+
+同一轮编号可能对应不同累计ECO状态，不能直接把候选差异归因权重。C′v3先按base_netlist_hash匹配四已完成电路的W0/U0、W1/U1八配对，再核nodecost、cut列表、ordered pool、dispatch和最终全文SHA。当前各对20条同状态轮记录均为非均匀weighted代价但行为与终点相同；这是partial诊断，不能由“权重接通”推断“权重有增益”。重复同状态轮不作独立样本，未完成电路排除，不以调参追求预设正结论。
+
+
+## 2026-10-16 输入不可变门须覆盖末次工具调用和提交前（OI042/LOG65）
+
+C适配器原finally只核mapped，末candidate调用期间TCL Lib路径漂移仍1commit/qa_complete；应把TCL/Lib等完整冻结输入在调用finally与提交前核验，末次调用也不能漏。保留原probe原字节，修后独立重放PinDrift/exit1、0commit/无completion，再审注册38控制和60来源前后SHA后仅关闭实现门。作者84联合QA不替独立38接口QA/精确probe；C未正式EDA。plainSHA anchor检测可信本地写入下漂移，不是签名或抗任意整目录重写的授权。
+
+
+## 2026-10-16 并发实验审计的N不能推断具体对象集合（LOG74）
+
+C′v3审计期间运行继续完成。MATRIX_AUDIT_36实际为三电路各9、s420八臂加s713W0；实时后来四电路各9完成，不能倒推旧36快照也覆盖那四电路。原stdout/receipt及单对象验收一致，属于审计集合时点与记录推断问题，不是生产/科学失败。先按receipt明确对象范围并保留原件，再用新auditor在开始冻结eligible pair+completion SHA、结束重核以形成有定义的快照；新N另存，不重写旧报告“凑齐”。
+
+
+## 2026-10-16 双栏PDF回读先区分提取顺序与版式缺陷（OI043/LOG80）
+
+中文page7整页pdftotext-layout把左右栏交错，拼接空白不能恢复周期设置句；这是提取方法问题，不能据此判断句子丢失、版式失败或科学结果错误。保留首READBACK_PROCEDURAL_FAILURE/原全页文本，改用实际左栏crop回读并对照渲染页。时钟元数据修正同时核beforeafter完整14表块/7图引用不变、两遍编译/38页视觉与各PDF副本SHA，才关闭说明门；不能连带关闭历史科学缺口。新命名build路径此前不存在时保留路径说明，从仍完整canonical preview保旧PDF字节后再同步。
+
+
+## 2026-10-16 历史QA源码须在后续修改前按字节备份（OI044）
+
+证据内适配器也属于被测源码。B3旧24/44阶段保留QA日志但未备份对应adapter/tests；2277文件与3ZIP负查找无四目标SHA，不能把当前51QA源码反向重构成旧原件或声称历史可重放。当前51 source/receipt身份独立成立。C修前六原件按before manifest、旧review及旧QA SHA保真快照后才修，可避免同类身份缺口；新区域census首失败与v2也各自exact source归档。负查找与缺失限制须持续保留，不伪造恢复。
+
+
+## 2026-10-18 最终矩阵验收：计数集合与源码身份以实际收据为准
+
+- **现象**：旧current文档停在51运行中，恢复时已有72 completion；另有54快照尚未入记录。仅看完成文件数不能替代最终逐对象审计。主线首次手填完整期望SHA错误导致预飞assert拒绝，实际脚本无变化。
+- **归因与处理**：将期望SHA来源改为实际打开既有MATRIX_AUDIT_54.audit_sha256逐字比较，而非手抄；重新实际启动冻结开始对象集合的v2审计器，不重跑已完成EDA。旧51/54与失败原件保留，不回写扩大范围。
+- **验证**：MATRIX_AUDIT_72 SHAa34da9c3…为72/72、source_stable和all_matrix_verified true；8458评估、6858candidate+72baseline=6930过程、other0、192提交；72completion当前SHA全匹配，endpoint SEC均非零proven/0unproven。stage72五原件SHA独立保真。仅当前已登记支持域闭合，B3/C/D及四态/历史S/SPEF仍各守独立证据门。
+
+
+## 2026-10-18 审计器也须反证：合法!与信号B1不能报模型错误
+
+旧S审计把258 filtered模型标defect，根因Python evaluator不能解析合法Verilog !，不是模型被证伪；独立新parser首版又把B1信号误滤为常量造成314unknown。明确真值表正/负控及B1与1'b1区分后，V2对258文件1032组合条目全match/0mismatch/unknown（V2_REVIEW ed32cbe1…），旧失败原件保留。此结论仅二值组合输出函数，不扩大到顺序/XZ或整机。真正S非法接受链/CEC pre-post覆盖与SPEF驱动/双侧连接/报告顺序另待修，不以审计器错误掩盖。
+
+## 2026-10-18 图件人工无碰撞结论须接受自动几何反例
+
+完整矩阵v1人工与独立视觉均未发现标签问题，但自动COLLISION_AUDIT给出6处旋转tick bbox overlap/FIX BEFORE DELIVERY。原人工报告保留，不回写为未通过；当前交付门改为未过。数据CSV/图源重现一致、面板对齐通过，问题归因到标签几何而非数据/EDA；另出v2、重跑字形/碰撞/对齐/视觉与数据验收后才能闭合，当前尚待。
+
+几何修复后验追加（LOG12）：最新v3源d9ef05b…/FINAL_REVIEW32ff889a…保存最终14文件SHA；raw/paired CSV逐字节不变、collision0/对齐PASS/最小6.8pt、root实际视觉与partial51提前拒绝都过。仅此几何门关闭，独立v3视觉追加和正式稿整合另验，原v1/先前错误判断继续保留。
+
+
+## 2026-10-18 物理测量边界：输入漂移和双流诊断必须独立留证
+
+确定性native控制重现Tcl调用中变化/SPEF生成后跨阶段变化（red3 2F17P）和stdout无末换行掩盖stderr锚定Error（red4 2F19P）。修复按实际两侧网表各自SPEF、同RC与逐侧输入/Tcl前后绑定；两个输出流分别检查诊断，失败/缺pin/无法解析不记有效float。限定green4 71pass/6.43s、221原件SHA-size全符。仅local QA完成snapshot未采source-before，整体回归必须另做前后锁；不是实际OpenSTA/科学效果验证。首green1 synthetic CELL_A句法不符现有quoted extractor属于夹具问题，保独立Y→Z意图改句法，不能把夹具失败计成新的生产bug。
+
+
+## 2026-10-18 SPEF连接必须区分词法身份与物理端点
+
+独立四类反例揭示escaped scalar和vector bit合网、纯port alias没有D_NET、module外未知文本漏覆盖、cell输出literal丢pin；不能因作者51/53限定测试通过跳过独立最小输入。红5case保真后修复，v5 58pass，POST_REVIEW46d9972e…原输入SHA相同/四source前后一致，身份与RC feedthrough/拒绝行为静态闭合。8实际mapped仅静态parsed，12无pin常量alias显式记录，不把无tie源的connected constant当可注入。真实escaped SPEF工具注入尚须新pin实际OpenSTA验证，静态通过不能推广物理收益。
+
+
+## 2026-10-18 已完成agent续工必须触发新turn
+
+OI045修复指令仅用send_message发给completed agent时只入队，未实际执行。根list_agents实查状态后改followup_task才启动；之前是协作调度空等，不是模型/代码技术卡死。续工需先查状态，idle/completed用followup_task，执行中才用send_message补充；派发后看实际消息/工具/产出，不把已发消息当已执行。原反例与全v1原件不受影响，后续红绿须凭实际收据再登记。
+
+
+## 2026-10-18 native正控通过不能替代真实top反例（OI047/048）
+
+primitive-only c17缺少used SKY时返回整库使无关$mul模型污染归一化（正确error）；精确used模型/显式空model修后native26pass仍不能证明完整CEC对象正确。更强ztop Y=A/Y=B反例实际不同，ABC却选first库buf而假pass，故必须绑定真实source top/唯一root并hierarchy-check-top。保真bca40修前源、原两个Verilog、native日志；修后原字节输入正确fail/NOT EQUIVALENT，三文件28pass。整体v3唯一旧assign-only测试仍要求wholeLib返回，属已被真实工具风险证伪的旧测试契约；仅更新该测试保原Lib字节/无无关module/缺model报错，再做v4。正控、原负控、整体回归、历史影响边界分别验收，不用限定绿声称全部旧证明有效/无效。
+
+
+## 2026-10-18 Windows子进程编码与Git文本checkout必须实测
+
+全v4三CLI失败伴stdout None/UnicodeDecodeError，-X utf8只约束当前Python，不能替子进程继承的PYTHONUTF8=1。相同CLI/参数两次rc0的原始stdout显示unset非UTF8/set1UTF8，两个文件显式env13pass，不改生产来掩环境；原v4失败保留，下一整套显式记录env。native测试改写5个tracked c17产物须先保generated/HEAD；Git restore自动CRLF可文本等同而exactSHA不同，保首assert失败后核归一文本再恢复HEAD精确字节，最终逐SHA5/5，而非猜同步软件或覆盖科学结果。
+
+
+## 2026-10-18 SPEF静态身份分离须用有约束真实路径反证注入
+
+无约束单buf组合网即便工具给数也不足以证明RC注入；微型控制改为两DFXTP夹buf真实reg→reg、同actualLib/CK/5ns，普通与busbit+escaped literal两条不同D_NET在40/4000um对RC正响应且四report_parasitic_annotation均零未/部分注入，两个错误pin底层仍有有限slack但API全null/error。根与独立56bdc6b1…核43manifest/47原件，关闭该tiny注入边界，仍不代RC几何标定、b18双向或benchmark收益；tool身份独立review仅核原收据，不能冒称复测Linuxbinary或stderr空。
+
+
+## 2026-10-18 完整CEC须绑定两侧真实对象、状态优先级和选择前源窗口（OI048）
+
+修Verilog原top后仍须用mapped右侧反例：同ztop inverter前插dummy identity可令ABC选firstdummy误pass。mapped/generated BLIF统一走共享normalizer，按引用图唯一root或显式有效模型、hierarchy/flatten；独立多root不猜，保raw与normalized各自SHA。实际ABC缺输入可rc0，错误/多root/非零优先于equivalence字样，保benign abc.rc查找区别。selector运行后原source新增wrapper仍能选旧top的普通/BOM2fail说明绑定要早于prepare/top推断，launch前与after也核原始source，不能仅核派生BOM副本。176原件/20normalization收据和原三输入根重放、独立263原件9cbabd66…闭合当前反例；全v5显式UTF8/native环境1056pass/174来源稳定。此实现门不自动关闭历史省top证明对象影响或静态timeout bytes异常OI049，历史旧报告继续保留/按实际调用与top逐对象界定。
+
+
+## 2026-10-18 只读最终审计也必须保存实际执行脚本/输入原字节（P08）
+
+P08首v1把旧SEC模板按新hierarchy/assert字面筛查，按实际prep-top-equiv及日志数量适配后结果成立；但最终适配通过PowerShell here-string管道送python stdin，未落脚本/原stdin/本地stdout。只能保留实际产物/会话文本及unknown，不能事后重建脚本称原件。原inventory2268B与splitlines/join后的discovery2290B也不可互代；补件恢复精确原inventory/v1源与log、旧receipt不改。后续派生审计先保存将执行的实际文件/输入SHA、命令与原双流，再运行。当前104来源/具体proof检查可逐对象复核，不等最终原流程byte replay已恢复。
+
+
+## 2026-10-18 反馈后call_log只见初始权重须先查调用是否发生（D两例）
+
+s27/s382 fixed-adaptive终点和actualSTA序列相同，不能直接判漏传weights。真实trace证明EMA开启/更新并传入cut，s382第7–20轮排序变化印证参数到生成器；pool/dispatch set与全部same-base跨对无新身份，flow在RealWnsEvaluator前去重，所以更新后没有新调用、call_log自然只记初始权重。两例63来源/45源/四completion绑定，candidate字段与87/124actualSTAevent同序；cut级8/11调用不是STA次数，326/292trace交叉对不是独立样本。先归因为本次beam/搜索新颖性及去重状态的限定现象，保方法目标/负结果，不改去重制造效果，不外推其它六例或反馈普遍无效。
+
+
+## 2026-10-18 审计/归档harness统一绝对ROOT路径再枚举
+
+外部adapter snapshot和D archive root-post两次在同类relative_to错误停于预飞：ROOT为绝对，而Path(root_name).rglob返回相对路径。入口先明确ROOT.resolve；配置中的相对路径用ROOT/root_name变绝对，枚举/relative_to双方同坐标系，必要时对传入Path显式resolve。root-post首300s wrapper5exit1原码/原log保，v2只改绝对枚举且新log，不把harness失败当archive/生产/EDA失败；外wrapper0与每case ROOT_POST接受分别核。仅文档经验，不在D源冻结期间修改code。
+
+
+## 2026-10-18 同一exact对象的equiv点数可随证明构造改变（A8/s820）
+
+旧B复用s820为137/0，新统一A8为139/0，旧稿138。独立核raw输入/top一致后，发现旧先flatten再equiv_make、新先equiv_make再flatten，保留dfxtp模型旧直接Q状态/新IQ后assignQ，待证日志集合也不同；不能把新旧equiv cell数视为同一集合或据此比较证明强弱。无最终RTLIL时两额外cell精确身份保unknown，不新EDA凑归因。稿表取新同批实log139及原runtime，旧证明与点数不覆盖。原raw/snapshot与prover raw因通用换行序列化可不同SHA，须分别绑定解码全文，不能把prover raw SHA回写原字节身份。
+
+
+### 2026-10-18 PDF占用与构建身份（LOG103）
+
+EN float v2首LuaLaTeX输出FAECO.pdf不可写，rc1且既有PDF SHA不变；改独占attempt02/build后两遍成功，说明输出IO失败不能当内容/算法失败。保首失败源/日志/收据，不终止用户进程；可独占输出并有界同步，持续锁定时明确交付新路径及旧canonical未同步。编译成功仍需检查目标版式：本例新PDF仍表16，未解决页位退步，不以产物存在宣称修好。
+
+
+### 2026-10-18 进程并发门与整机计时协议分开（LOG110）
+
+运行环境口径（LOG110）：D期同时存在mock adapter QA、只读7z压缩/恢复、A8串行SEC及LuaLaTeX/Poppler；科学STA≤2电路，但整机非独占benchmark。observed walltime不得直接作独占或跨方法速度因果；输入/结果/实际STA计数不变，不据此判D失效或重跑。严格速度主张另登记受控同硬件计时协议。 记录运行环境无需据此无证推翻科学正确性；若另做性能优越性测试，预登记硬件/后台负载/缓存/计时区间，结果与当前矩阵分族，不回改原walltime。
+
+
+### 2026-10-18 浮动布局修订以实际字形和分节读序验收（LOG102–120）
+
+A表新脚注令EN表旧15移16、B正文先开始；只加!或缩重复note未解决，FloatBarrier单独令28页/多留白，不能以编译0直接交付。先测原Fig3所有label/tick/legend最小8.184960pt，.78→.70投影7.345477pt后才限定include缩放，保图向量/数据；最终实际7.345520pt、图+A表15/B16/26页，作者及独立38页实际视觉与根回读后接受。区分字号投影/新PDF实际字形、固定HEAD图像字节绑定/编辑前filesystem快照。锁PDF用独占构建+有界同步，实际sync成功才更新canonical身份；保所有失败版/日志。
+
+
+### 2026-10-18 skipped_duplicate标志不等STA缓存复用（LOG116/124）
+
+D28独立checker_v2假定每个skipped_duplicate都有cached_from_seq，在s641失败。实读当前real_wns：_sta_cache命中有原launch身份，tested_candidate_hashes另有只查identity并返回baseline的无重放分支，且前置拒绝也可缓存。冻结ROOT28只读581来源诊断得5821实际STA重放+29hash无重放=旧宽cache5850，另76未缓存preSTA拒绝；分类必须结合launch身份/同base/hash/config/cache公式/原STA结果，不能只看bool或把缺字段补成想象STA。保旧字段口径，新增派生分类与实际启动成本分别报告，检查器适配先审核且不得改实验对象/结果。诊断当轮v3尚待完整独立重验，不以诊断代验收。后续LOG130实际v3 RESULT79ad2ce4…/16407来源稳定及根f14c3306…已正式接受固定28，wrapper185s/0；保全部rawSTA/SEC/45pin门与分型数，不把归因脚本当最终审计，未来全56继续同v3另预登记timeout。
+
+
+### 2026-10-18 合取断言失败不能反推流类型或是否收到输出（LOG125）
+
+OI049 redv1的isinstance(stdout,bytes) and stdout失败，只能知合取为false，不能推断一定在partial stdout到达之前；实际type/value未采且v2亦unknown。原SETUP_FAILURE过强句不改旧原件，新增CLARIFICATION9140b292…明确更正。合成bytes真红仅证public direct-CEC193→215→_tail902异常呈现，不替_run_abc_cec/mapped helper路径实证，也不说明真实OS/EDA timeout流类型；未覆盖路径仍静态风险，保至后续源修/回归。
+
+
+OI049归因续验（LOG126）：不同owner只读FINAL1d89a8a7…核72原件稳定/45源pin、7final件，确认仅direct公共CEC注入路径三控制及v1合取断言边界，不重probe或EDA；归因接受不替代码修复/其它helper实证，D后修门仍open。
+
+## 2026-10-18 r23审稿恢复经验（LOG145–149）
+
+- 审稿卡先commit后看作者证据；A8真实日志归纳前已全证，不能仅因工具含equiv_induct推断实际证明依赖弱归纳；b17证明已做先绑定端点再改文，不重复实验。
+- Windows CRLF可同时破坏固定raw pin与os.O_RDONLY/stat字节比较：先实测归因，保原件；隔离恢复固定LF、验证JSON语义/工具字节不变，不能改验证器条件求绿。详r23/qa。
+- 生产完成/独立验收/全量归档是三门；C′不能替历史C/D，320匹配轮也不是独立样本。
+- 专职记录应动作后立即落盘。收尾多次监测无输出时先问阻塞，仍未写则中断并主线最小同步；避免扩读和等待。
+
+### 2026-10-18 后续授权要更新当前入口，历史审稿边界保留（LOG150–151）
+
+r23只读审稿完成后，用户明确授权按审稿修改中文稿和配图：r24当前入口须切为修订in_progress，旧只读范围保留在dated历史交接，不得反过来阻止已授权编辑。论文/图件写权限与D固定runtime源/HEAD冻结分开登记；生产完成、正式验收、raw归档根post三门分别记录，不能因编辑授权提前提交或修源。专职记录先落最小启动日志再扩展交接，避免读完所有材料后才写。
+
+### 2026-10-18 证明域分层与原数据再分析不能混成新实验（LOG153–162）
+
+b17已有新模型证明且accepted raw端点与summary绑定，不足以把ITC正文18/19直接改19/19：旧模型审计中b09/b20/b21使用三态不完整模型，三对象须unsupported。保全19时序观察并单列支持域16与三态3，使用户同时看到历史改善与功能保证边界，不删除高改善/不利对象。先注册库、16网表与其余原输入SHA，再静态复核C′成本/面积/ITC分层/端点，不重跑已验SEC或STA；输入稳定证明只支持本次再分析，不恢复旧runtime hash。L与W1改变候选空间不作纯排序因果；W1/U1无差异须保留。
+
+### 2026-10-18 annotation进程rc0不等端点完整（LOG171–172/OI051）
+
+fresh C′W1/s382同网表u40反驳控制中，ideal及SPEF两侧delta0均成立，annotation重放rc0仍报告43 partially unannotated。必须执行预注册0partial/0unannotated门，5新STA后即停止并保原件，不能取物理WNS解释效果。模块端口DFF_N:D与叶端点DFF_N/_0_/D属于层级注入域，不能混作三态/inout或删合法网求绿。先完整规范化flat输入并重新证明的下一版须单独设计/新SHA/再注册，不改旧失败输入，也不归咎旧OpenROAD物理族。
+
+### 2026-10-18 caption替换须绑定环境与label（LOG179）
+
+r24 EDIT03将图件描述误放tab:overview的表caption，引入unsupported样式说明及表自引。此为编辑实现错误，独立检查发现后由EDIT06恢复汇总表标题，数据/脚注保持；不能以编译无错判语义正确。caption目标须连同table/figure环境、准确label和前后文匹配，修改后审查具体环境与整稿阅读/图表语义，再用最新源重构验证。保原receipt，不把错误归咎科学设计或工具QA误报。
+
+### 2026-10-18 冻结清单必须在最后append事件之后形成（LOG180）
+
+v2阶段12的FROZEN清单登记了仍会追加完成事件的PROGRESS.jsonl，根复核发生post-freeze仅该日志SHA-size漂移，门按约停住。完成动作应先写最后事件，再冻结或把可变进度日志与immutable最终收据分开；发生后不得改旧清单求符，应保旧清单/原日志、出POST_FREEZE_AUDIT与新最终清单重审。合同未过与科学数据/源/SEC漂移必须分层归因，不能以其它全符跳过唯一不符，也不能无证否定flat科学对象。
+
+### 2026-10-18 记录脚本应实查写回，读句柄要关闭（LOG188–194）
+
+ReadLines后只取首行可留下未释放枚举器，随后的WriteAllText同路径报文件占用。本轮首合并脚本末尾仍打印成功且记录完成句，实际写入失败；LOG189立即纠正，改ReadAllText取标题并每文件写后整串回读，LOG194才确认成功。脚本采用ErrorActionPreference=Stop，不能以末尾提示当动作成功；保旧记录/备份和失败日志，不将内部读句柄问题误判外部锁或科学数据漂移。
+
+### 2026-10-18 内外迭代索引不能混比（r25/LOG217）
+
+trial.iteration是evaluator内调用序号，history.iteration是外轮；不能据二者数值比较计“首个未提交外轮后新STA”。OUTER_LOOP_STOP_EVIDENCE已明确撤回33对象及8/144/56后续量，既有MATRIX72/曲线依sta_launch_seq和commit哈希链而不受该错误影响。必须先核字段语义/关联键再做反事实早停计数。C′无feedback时refined只是空actions历史标签，不证明权重/窗口变化；无提交不立即外停与是否真正追加STA是两个不同结论。
+
+### 2026-10-18 r25压缩稿规则对齐与核查界限（LOG218–223）
+
+现象：压缩时漏完整硬门、误加“无提交即停”，既有运行器记录中的refined又易被当作本批真实权重变化。原因是用摘要直觉替代固定runtime/caller和配置取证。解决：按3ea冻结ZIP核完整Accept=H且Timing，C′TNS硬门容差0；固定初始目标、仅提交后刷新P和锥，feedback关闭时不更新权重。EDIT03双源及FINAL_EVIDENCE_CHECK对8最低条件/负面保留通过，双稿构建/根视觉亦实录；后续主文小幅去重仍绑定新源构建，不借旧验收。
+
+临时取证还曾把trial.iteration内层调用号与history.iteration外轮号混比，得出33对象“后续新STA”说法，现已明确撤回，不能作为实验事实或成本反事实。正式曲线按sta_launch_seq与commit hash链，不受该临时索引错误影响。文稿一致性修正不等于生产修复/实验失败，也不关闭固定池因果等科学partial。
+
+### 2026-10-18 r26完整论文恢复与生成示意图核查（LOG229–241）
+
+用户将r25的5页主稿判为压缩过头。修订应先识别必须由主文自行解释的方法、各实验角色和反例，再删重复；页数不作削减实质内容的硬门。r26复用已纠正TNS硬门、固定目标/提交刷新及无反馈语义，不能恢复旧完整稿时把旧公式/流程误写带回。
+
+图像模型总览首版出现候选直达提交、reject进入提交、B画INV；根拒绝，保原件后定向编辑。v2按箭头和图注/正文组合核查，不把缺失刷新标签说成仍在像素中。六门例按全部连线/双c引脚/区域边界与代价核验；光栅稿原像素复制、prompt/未知模型身份/拒绝版本留存，不把矢量审计或投稿资格附会为已通过。
+
+补充移除旧总览后，TeX进程rc0仍遗留本地fig:method_flow引用，源引用静态QA拒绝，修显式主文图1并重编。S证据复核曾错取wns_history[-1]形成4例表面差异，改按顶层wns、state.current_wns及已提交网表后8对终点一致；这是审计提取归因，不是新科学失败，原件不改。
+
+## 2026-10-19 r27量化图统一色系与渲染同一性（LOG249）
+
+现象：只改颜色复用绘图源，PDF字符/位图矩形字节级比较仍出现false。归因：r24导出舍入及ISCAS旧tight_layout重算导致亚点级文字/页面裁切差异，不能把CSV一致写成全部几何字节一致。实际数据逐SHA一致，科学绘图函数去颜色后AST相同；明确记下字符最大0.09034/0.42676/0.82237/1.47052pt与ISCAS裁切1.23312pt。三图辅助网格及ISCAS零参考线改无色防穿数字，旧iteration01保留；源码/5pt字形/碰撞工具rc0，5个fill-edge WARN以实际图形逐项解释。解决范围为工作稿颜色/可读性，不新增科学结果或关闭旧科学OI；根整体视觉另门。
+
+### 2026-10-19 r27样式转向须保旧合同并重验新输出（LOG251–252）
+
+用户将低饱和蓝灰进一步收敛为纯黑白灰。已验证旧数据/绘图逻辑可以复用，但旧蓝灰输出及视觉结论不能冒充新灰度输出已验；应先保存旧合同为superseded，登记新合同/提示词/原件SHA，再逐图核实际像素/分支可读性与双稿整体版面。本地旧exec不存在不能推断服务器任务已取消，记录仅限可观察事实。
+
+### 2026-10-19 r27原图保全核查须按资产类型过滤（LOG254）
+
+安装新图前的保护脚本将figures/CHANGE_LOG.md也当旧图核同，触发assert；此时未发生TeX修改。应先按.pdf/.png过滤9个实际输入图，再逐SHA与before核对。过滤修正后9原图均同，不能把记录文档更新误判为图被改，也不能据此跳过原图检查。
+
+纯灰PDF在默认MuPDF ICC转换下可出现1/255通道舍入差；应同时检查实际PDF paint色值、嵌入栅格、原生PNG与ICC-off RGB，区分渲染转换与资产残留色。AI原生RGB的spread11/12不同于此类舍入，原件失败仍明记，文档DeviceGray输出另验。
+
+### 2026-10-19 r27 TeX bundled Ghostscript环境与文档灰度输出（LOG256）
+
+模型PNG外观中性仍可含微量RGB残差，保留原生图片后，可通过最终PDF文档DeviceGray输出统一交付色彩空间。首次MSYS将/DeviceGray转换成Git路径，第二次缺gs_init；定位bundled Resource/Init、Font、kanji与ICC资源并关闭MSYS参数转换后attempt03成功，失败原件保留，不能归为科学/输入错误。重导前先看已有rc0产物，复用后验而不盲重跑。
+
+导出不能只测灰度：同时核原生嵌图尺寸、链接数、文字/字形序列与页面/字形几何。main p9提取空白改变，非空白字形序列全同，glyph原点最大0.0287552pt/页框舍入0.0040283pt；应实记PDFserialization微差，不能笼统称exactgeometry。后续仅LuaLaTeX重编会恢复原生RGB，交付必须再执行记录的DeviceGray及整体QA。
+
+### 2026-10-19 r27完整稿黑白灰交付应绑定最终文档与复现链（LOG257）
+
+原生AI PNG微量RGB残留保持原件和失败原始门，最终PDF经DeviceGray通过19页实际灰度；交付必须绑定最终PDF SHA、全部页实际视觉和六副本，并永久保存编译/导出/QA快照。若只保TeX重新编译，原生RGB会恢复；交接须明确compile→DeviceGray→QA。数据图线型/标记/灰度层级可读性须实际逐图逐面板看，不能只读通道统计。完整稿内容通过逆替换核字与旧源一致，样式完成不关闭科学证据门。

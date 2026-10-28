@@ -1,0 +1,52 @@
+{
+  "utc": "2026-10-18T11:01:51.918921+00:00",
+  "commands": [
+    {
+      "name": "git_diff_check_default",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "returncode": 2,
+      "runtime_s": 0.3600000000005821
+    },
+    {
+      "name": "git_diff_check_crlf",
+      "argv": [
+        "git",
+        "-c",
+        "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "runtime_s": 0.34299999999348074
+    },
+    {
+      "name": "record_check",
+      "argv": [
+        "C:/Program Files/Git/bin/bash.exe",
+        "code/scripts/run_with_timeout.sh",
+        "30",
+        "bash",
+        "code/scripts/check_record.sh"
+      ],
+      "returncode": 0,
+      "runtime_s": 5.610000000000582
+    }
+  ],
+  "authored_reports": [
+    {
+      "path": "REVIEW_REPORT.md",
+      "trailing_space_lines": [],
+      "sha256": "bc3fbe475f2d9414d389d8f02ff01a02d844984c0513daf5f655d9597ed2b104"
+    },
+    {
+      "path": "REVISION_ROADMAP.md",
+      "trailing_space_lines": [],
+      "sha256": "d11097d82c8ff74c7b3bd4f0433e59f61246d313b19b02bfa5728149ab42c9c7"
+    }
+  ],
+  "scope": "Default diff --check retains existing CRLF-as-whitespace warnings in pre-review source/English diagnostics; no source changes to erase them. cr-at-eol-aware check evaluates actual whitespace without mutating files. Record checker is daily-entry presence only, not semantic audit."
+}

@@ -1,0 +1,1517 @@
+{
+  "scope": "Read-only exact scientific runtime ZIP and72 accepted raw run inspection; no EDA",
+  "zip_sha256": "620a0eb9809dd08720fd4fdf4bdb85781668ff161a9b061936e7447ade442d7f",
+  "matrix_audit_sha256": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738",
+  "runtime_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "members": {
+    "code/scripts/run_outerloop_real_wns.py": {
+      "sha256": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+      "snippets": [
+        {
+          "lines": [
+            156,
+            181
+          ],
+          "text": "156:     # --- early-stop surface (0a merge of two divergent meanings) -------------\n157:     # In the unified-loop architecture ``early_stop`` is a RealWnsEvaluator\n158:     # field that short-circuits the INNER candidate loop (``_eval_one``: stop at\n159:     # the first WNS-improving change).  The OUTER loop's accept budget is\n160:     # governed by ``--max-patches`` (default == ``--max-iterations``).\n161:     #\n162:     # The pre-2026-09-12 trunk used ``--no-early-stop`` to mean \"do not return\n163:     # from the OUTER loop at the first accept\".  That outer-level stop no longer\n164:     # exists -- the state-driven loop keeps iterating until a stop reason is set\n165:     # -- so main's old semantics now read as ``--max-patches 1``.\n166:     # ``--no-early-stop`` is kept as an accepted alias (it forces the inner loop\n167:     # open) so 20260908 run scripts keep working.\n168:     #\n169:     # NOTE: main's trunk defaulted ``early_stop=True`` \"for the 20260826 batch\";\n170:     # the codex lineage that actually produced those artifacts defaults to\n171:     # False.  The default stays at True here (trunk contract, no silent flip)\n172:     # and must be settled against the recorded artifacts in the 0a E1-E6 gate.\n173:     p.add_argument(\"--early-stop\", action=\"store_true\", dest=\"early_stop\",\n174:                    help=\"Stop the inner candidate loop at the first WNS improvement \"\n175:                         \"(serial only).  For the pre-2026-09-12 outer-loop \"\n176:                         \"'stop at first accept' behaviour use --max-patches 1.\")\n177:     p.add_argument(\"--no-early-stop\", action=\"store_false\", dest=\"early_stop\",\n178:                    help=\"Keep evaluating every candidate of an iteration even after a \"\n179:                         \"WNS improvement (the default anyway; retained as an explicit \"\n180:                         \"alias for 20260908 run scripts).\")\n181:     p.set_defaults(early_stop=True)"
+        },
+        {
+          "lines": [
+            275,
+            283
+          ],
+          "text": "275:     if args.no_feedback:\n276:         if args.feedback_config_name is not None:\n277:             print(\"--no-feedback is mutually exclusive with the \"\n278:                   \"--feedback-legacy/--feedback-ema selectors\", file=sys.stderr)\n279:             return 2\n280:         enable_feedback = False\n281:         feedback_config: FeedbackConfig | None = None\n282:     else:\n283:         feedback_config = {"
+        },
+        {
+          "lines": [
+            319,
+            332
+          ],
+          "text": "319:     if args.hold_mode and baseline_min_slack is None:\n320:         print(f\"{args.circuit}: hold mode needs worst slack min from OpenSTA \"\n321:               \"(got None)\", file=sys.stderr)\n322:         return 1\n323:     sta_text = (out / \"sta.log\").read_text(encoding=\"utf-8\", errors=\"replace\")\n324:     critical = parse_critical_instances(sta_text)\n325:     endpoint = parse_worst_endpoint(sta_text)\n326:     target_net = dff_d_input_net(single, endpoint) if endpoint else None\n327:     if not critical or target_net is None:\n328:         print(f\"{args.circuit}: no critical instances / endpoint D net \"\n329:               f\"(endpoint={endpoint})\", file=sys.stderr)\n330:         return 1\n331:     print(f\"baseline: wns={baseline_wns} min_slack={baseline_min_slack} \"\n332:           f\"endpoint={endpoint} D={target_net}\")"
+        },
+        {
+          "lines": [
+            416,
+            438
+          ],
+          "text": "416:     result = run_multi_iteration_case(\n417:         case_dir,\n418:         max_iterations=args.max_iterations,\n419:         enable_feedback=enable_feedback,\n420:         wns_evaluator=evaluator,\n421:         candidates_per_iteration=args.candidates_per_iteration,\n422:         critical_instances=critical,\n423:         r_available=r_available,\n424:         init_weights={\n425:             \"boundary_penalty\": args.init_boundary_penalty,\n426:             \"size_penalty\": args.init_size_penalty,\n427:             \"critical_coverage_reward\": args.init_critical_coverage_reward,\n428:             \"verification_cost_penalty\": args.init_verification_cost_penalty,\n429:             \"equivalence_stability_reward\": args.init_equivalence_stability_reward,\n430:         },\n431:         epsilon=args.epsilon,\n432:         max_patches=args.max_patches,\n433:         sta_budget=args.sta_budget,\n434:         formal_budget=args.formal_budget,\n435:         wall_timeout_s=args.wall_timeout_s,\n436:         feedback_config=feedback_config,\n437:         random_order=args.random_order,\n438:         seed=args.seed,"
+        }
+      ]
+    },
+    "code/src/rseco/refinement_loop.py": {
+      "sha256": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+      "snippets": [
+        {
+          "lines": [
+            248,
+            268
+          ],
+          "text": "248:     evaluator(failures, weights) returns (success, patch_id).  On failure the\n249:     loop classifies the failure set and (if enable_feedback) calls\n250:     refine_weights, then re-invokes the evaluator with updated weights.\n251:     enable_feedback=False is the ablation control: weights stay fixed.\n252: \n253:     ``feedback_config`` selects *which* feedback mechanism advances the weights\n254:     (r2 §3.4):\n255: \n256:     * ``None`` (default) — the legacy per-round ``refine_weights`` ``+=1.0``\n257:       update.  This is the exact behaviour the 0a equivalence gate pinned, so\n258:       the default must stay bit-identical.\n259:     * ``LEGACY_CONFIG`` — the EMA formulation at ``(rho=0, eta=1, clip off)``.\n260:       By r2 §3.3 property 2 it is bit-identical to the default path; the two\n261:       exist so a run can *prove* the equivalence on the same CLI rather than\n262:       only in a unit test.\n263:     * ``ADAPTIVE_CONFIG`` — ``rho=0.5, eta_add=0.5, eta_c=0.25, clip on``: the\n264:       L2 experiment arm.\n265: \n266:     ``enable_feedback=False`` still wins: the failure set is recorded (so the\n267:     failure history stays comparable across arms) but neither mechanism runs\n268:     and the EMA does not advance (contract §2.3 ruling 1 / ruling 3)."
+        },
+        {
+          "lines": [
+            270,
+            280
+          ],
+          "text": "270:     config = config or RefinementConfig()\n271:     weights = RefinementWeights()\n272:     if init_weights:\n273:         weights = RefinementWeights(\n274:             boundary_penalty=float(init_weights.get(\"boundary_penalty\", weights.boundary_penalty)),\n275:             size_penalty=float(init_weights.get(\"size_penalty\", weights.size_penalty)),\n276:             critical_coverage_reward=float(init_weights.get(\"critical_coverage_reward\", weights.critical_coverage_reward)),\n277:             verification_cost_penalty=float(init_weights.get(\"verification_cost_penalty\", weights.verification_cost_penalty)),\n278:             equivalence_stability_reward=float(init_weights.get(\"equivalence_stability_reward\", weights.equivalence_stability_reward)),\n279:             max_cone_gates=int(init_weights.get(\"max_cone_gates\", weights.max_cone_gates)),\n280:             physical_penalty=float(init_weights.get(\"physical_penalty\", weights.physical_penalty)),"
+        },
+        {
+          "lines": [
+            317,
+            322
+          ],
+          "text": "317:     for iteration in range(1, config.max_iterations + 1):\n318:         # r2 §3.6: record the parameter state *in force for this round* —\n319:         # this is what the round's candidate ordering was computed from.\n320:         _snapshot(iteration)\n321:         failures: set[FailureType] = set()\n322:         evaluated = evaluator(failures, weights)"
+        },
+        {
+          "lines": [
+            331,
+            367
+          ],
+          "text": "331:         if success:\n332:             accepted_any = True\n333:             stop_after_success = should_stop is not None and should_stop()\n334:             history.append(\n335:                 {\n336:                     \"iteration\": iteration,\n337:                     \"status\": \"accepted\" if (continue_after_success or stop_after_success) else \"success\",\n338:                     \"patch_id\": patch_id,\n339:                     \"wns\": extra.get(\"wns\") if extra else None,\n340:                     \"actions\": [],\n341:                 }\n342:             )\n343:             if stop_after_success:\n344:                 history.append({\n345:                     \"iteration\": iteration, \"status\": \"stopped\",\n346:                     \"patch_id\": patch_id, \"wns\": extra.get(\"wns\") if extra else None,\n347:                     \"actions\": [], \"failures\": sorted(f.value for f in failures),\n348:                 })\n349:                 return {\n350:                     \"success\": True,\n351:                     \"iterations\": iteration,\n352:                     \"final_patch_id\": patch_id,\n353:                     \"history\": history,\n354:                     \"actions_history\": actions_history,\n355:                     \"weights\": weights,\n356:                     **_extras(),\n357:                 }\n358:             if not continue_after_success:\n359:                 return {\n360:                     \"success\": True,\n361:                     \"iterations\": iteration,\n362:                     \"final_patch_id\": patch_id,\n363:                     \"history\": history,\n364:                     \"weights\": weights,\n365:                     **_extras(),\n366:                 }\n367:             continue"
+        },
+        {
+          "lines": [
+            368,
+            427
+          ],
+          "text": "368:         if should_stop is not None and should_stop():\n369:             history.append({\n370:                 \"iteration\": iteration, \"status\": \"stopped\",\n371:                 \"patch_id\": patch_id, \"wns\": extra.get(\"wns\") if extra else None,\n372:                 \"actions\": [], \"failures\": sorted(f.value for f in failures),\n373:             })\n374:             return {\n375:                 \"success\": accepted_any,\n376:                 \"iterations\": iteration,\n377:                 \"final_patch_id\": patch_id if accepted_any else None,\n378:                 \"history\": history,\n379:                 \"actions_history\": actions_history,\n380:                 \"weights\": weights,\n381:                 **_extras(),\n382:             }\n383:         if enable_feedback and feedback_config is not None:\n384:             # L2 arm (r2 §3.2): additive EMA-smoothed feedback.  An accepted\n385:             # round never reaches this line (the success branches return or\n386:             # `continue` above), which is contract §2.3 ruling 3 — accept does\n387:             # not advance the EMA.\n388:             cone_limit = int(getattr(weights, \"max_cone_gates\", 1000))\n389:             # describe_actions reads the same private plan as update_feedback,\n390:             # so the recorded action list can never disagree with the mutation.\n391:             actions = describe_actions(failures, feedback_config,\n392:                                        feedback_state, iteration)\n393:             feedback_state, weights, cone_limit = update_feedback(\n394:                 feedback_state, weights, failures, cone_limit,\n395:                 feedback_config, iteration,\n396:             )\n397:         elif enable_feedback:\n398:             decision = refine_weights(weights, failures)\n399:             if decision is not None:\n400:                 weights = decision.weights\n401:                 actions = decision.actions\n402:             else:\n403:                 actions = []\n404:         else:\n405:             actions = []\n406:         if on_refine is not None and enable_feedback:\n407:             on_refine(actions)\n408:         actions_history.append(actions)\n409:         history.append(\n410:             {\n411:                 \"iteration\": iteration,\n412:                 \"status\": \"refined\",\n413:                 \"actions\": actions,\n414:                 \"failures\": sorted(f.value for f in failures),\n415:                 \"wns\": extra.get(\"wns\") if extra else None,\n416:             }\n417:         )\n418: \n419:     return {\n420:         \"success\": accepted_any,\n421:         \"iterations\": config.max_iterations,\n422:         \"final_patch_id\": None,\n423:         \"history\": history,\n424:         \"actions_history\": actions_history,\n425:         \"weights\": weights,\n426:         **_extras(),\n427:     }"
+        }
+      ]
+    },
+    "code/src/rseco/refinement.py": {
+      "sha256": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+      "snippets": [
+        {
+          "lines": [
+            8,
+            18
+          ],
+          "text": "8: @dataclass(frozen=True)\n9: class RefinementWeights:\n10:     \"\"\"Search priorities consumed by a future weighted cut implementation.\"\"\"\n11: \n12:     boundary_penalty: float = 1.0\n13:     size_penalty: float = 1.0\n14:     critical_coverage_reward: float = 1.0\n15:     verification_cost_penalty: float = 1.0\n16:     equivalence_stability_reward: float = 1.0\n17:     max_cone_gates: int = 1000\n18:     physical_penalty: float = 1.0"
+        },
+        {
+          "lines": [
+            43,
+            69
+          ],
+          "text": "43:     if FailureType.EQUIVALENCE in failures:\n44:         boundary_penalty += 1.0\n45:         equivalence_stability_reward += 1.0\n46:         actions.extend(\n47:             [\"increase_boundary_penalty\", \"increase_equivalence_stability_reward\"]\n48:         )\n49:     if FailureType.BOUNDARY_INVALID in failures:\n50:         boundary_penalty += 1.0\n51:         actions.append(\"increase_boundary_penalty\")\n52:     if FailureType.PATCH_TOO_LARGE in failures:\n53:         size_penalty += 1.0\n54:         actions.append(\"increase_size_penalty\")\n55:     if FailureType.TIMING_GAIN_INSUFFICIENT in failures:\n56:         critical_coverage_reward += 1.0\n57:         actions.append(\"increase_critical_coverage_reward\")\n58:     if FailureType.VERIFICATION_TOO_EXPENSIVE in failures:\n59:         verification_cost_penalty += 1.0\n60:         max_cone_gates = max(1, max_cone_gates // 2)\n61:         actions.extend([\"increase_verification_cost_penalty\", \"reduce_max_cone_gates\"])\n62:     if FailureType.PHYSICAL_LOAD_FAILURE in failures:\n63:         # Physical-load feedback (review shortboard): an ideal-net gain that\n64:         # vanishes under parasitic RC means the repair touched a high-load\n65:         # path; push the cut boundary inward so the next iteration targets\n66:         # gates closer to the endpoint (lower effective wire load).\n67:         boundary_penalty += 1.0\n68:         physical_penalty += 1.0\n69:         actions.extend([\"increase_boundary_penalty_physical\", \"increase_physical_penalty\"])"
+        }
+      ]
+    },
+    "code/src/rseco/flow.py": {
+      "sha256": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "snippets": [
+        {
+          "lines": [
+            64,
+            69
+          ],
+          "text": "64: def _refreshed_candidate_cone(text, evaluator, target_output):\n65:     from .verilog_modules import target_module_text\n66:     top = getattr(evaluator, \"top_module\", None)\n67:     scoped = target_module_text(text, top) if top else text\n68:     netlist = parse_verilog_netlist_from_text(scoped, **_analysis_cell_options(evaluator))\n69:     return extract_fanin_cone(netlist, roots=[target_output])"
+        },
+        {
+          "lines": [
+            363,
+            377
+          ],
+          "text": "363:     # Divide-and-conquer cut (review shortboard defect 4): a cone larger than\n364:     # weights.max_cone_gates is split into depth-bounded subcones; each\n365:     # subcone is cut independently so the global s-t graph stays bounded.\n366:     max_gates = max(1, int(getattr(weights, 'max_cone_gates', 1000)))\n367:     cones = split_cone_by_depth(cone, max_gates) if len(cone.gates) > max_gates else [cone]\n368:     out: list = []\n369:     for sub in cones:\n370:         if cut_search_policy == 'weighted_st':\n371:             rows, trace = generate_candidate_boundaries(\n372:                 sub, weights, critical_instances, r_available,\n373:                 sources=cut_sources, cost_mode=node_cost_mode)\n374:             if pool_trace is not None:\n375:                 pool_trace.append(trace)\n376:             out.extend(rows)\n377:             continue"
+        },
+        {
+          "lines": [
+            611,
+            627
+          ],
+          "text": "611:     def evaluator(failures, weights):\n612:         nonlocal cone, _round_seq, _s_tools\n613:         _round_seq += 1\n614:         if max_patches == 0 or (stateful_evaluator and len(state.accepted_patches) >= max_patches):\n615:             state.set_stop_reason(\"max_patches\")\n616:             return False, None\n617:         if state.deadline_expired():\n618:             state.set_stop_reason(\"wall_timeout\")\n619:             return False, None\n620:         trial_count = state.budget_used(\"sta\")\n621:         if sta_budget is not None and trial_count >= sta_budget:\n622:             state.set_stop_reason(\"sta_budget\")\n623:             return False, None\n624:         formal_count = state.budget_used(\"formal\")\n625:         if formal_budget is not None and formal_count >= formal_budget:\n626:             state.set_stop_reason(\"formal_budget\")\n627:             return False, None"
+        },
+        {
+          "lines": [
+            637,
+            660
+          ],
+          "text": "637:         active_critical = list(state.critical_instances or\n638:                                getattr(wns_evaluator, \"critical_instances\", []) or\n639:                                critical_instances or [])\n640:         active_r_available = r_available\n641:         recompute_r = getattr(wns_evaluator, \"r_available_for\", None)\n642:         if callable(recompute_r):\n643:             r_scope = (list(cone.gates)\n644:                        if getattr(wns_evaluator, 'cut_search_policy', 'legacy') == 'weighted_st'\n645:                        else active_critical)\n646:             active_r_available = recompute_r(r_scope)\n647:         subcone_trace = []\n648:         candidates = _cone_candidates(\n649:             cone, weights, active_critical, active_r_available,\n650:             constrained=bool(getattr(wns_evaluator, \"use_constrained_cuts\", False)),\n651:             k=max_candidates_per_iteration,\n652:             allow_singleton=bool(getattr(wns_evaluator, \"allow_singleton\", False)),\n653:             cut_search_policy=getattr(wns_evaluator, 'cut_search_policy', 'legacy'),\n654:             cut_sources=getattr(wns_evaluator, 'cut_sources', 'full'),\n655:             node_cost_mode=getattr(wns_evaluator, 'node_cost_mode', 'configured'),\n656:             pool_trace=subcone_trace,\n657:             wall_timeout_s=(\n658:                 max(0.0, wall_timeout_s - (time.perf_counter() - started_at))\n659:                 if wall_timeout_s is not None else None\n660:             ),"
+        },
+        {
+          "lines": [
+            668,
+            688
+          ],
+          "text": "668:         # Mixed-Random arm (r2 §6.1): same candidate space, order shuffled.\n669:         # The permutation is seeded by (seed, round, epoch) so a run is\n670:         # reproducible from run_config.json alone and two candidates accepted\n671:         # at different epochs never share an ordering.  Uses the live-state\n672:         # accepted-patch count as the epoch (the pre-L2 refinement_loop\n673:         # SearchState has no dedicated round/epoch fields).\n674:         round_candidates = list(candidates[:max_candidates_per_iteration])\n675:         if random_order:\n676:             import random as _random\n677: \n678:             # str seed: random.seed() rejects tuples since Python 3.11, and a\n679:             # string key is equally deterministic for replay from run_config.\n680:             _random.Random(f\"{int(seed)}|{_round_seq}|{len(state.accepted_patches)}\").shuffle(round_candidates)\n681:         candidate_pool_trace.append({\n682:             'round': _round_seq, 'base_netlist_hash': state.current_netlist_hash,\n683:             'critical_instances': active_critical,\n684:             'r_available': sorted(active_r_available) if active_r_available is not None else None,\n685:             'subcones': subcone_trace,\n686:             'pool_hashes': [canonical_cut_hash(c) for c in candidates],\n687:             'dispatch_hashes': [canonical_cut_hash(c) for c in round_candidates],\n688:         })"
+        },
+        {
+          "lines": [
+            709,
+            718
+          ],
+          "text": "709:             candidate_identity = state.hash_text(state.current_netlist_hash + state.candidate_hash(\n710:                 gates=patch.gates,\n711:                 boundary_inputs=patch.boundary_inputs,\n712:                 boundary_outputs=patch.boundary_outputs,\n713:                 action_hash=patch.patch_id,\n714:             ))\n715:             if stateful_evaluator and not state.mark_candidate_tested(candidate_identity):\n716:                 failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)\n717:                 state.record_failure({\"type\": \"no_new_candidate\", \"candidate_hash\": candidate_identity})\n718:                 continue"
+        },
+        {
+          "lines": [
+            830,
+            860
+          ],
+          "text": "830:                 if wns_info[\"improved\"] and not hard_failure:\n831:                     candidate_text = wns_info.get(\"candidate_netlist_text\")\n832:                     if candidate_text is not None:\n833:                         refreshed_cone = None\n834:                         if getattr(wns_evaluator, \"refresh_cone\", False):\n835:                             try:\n836:                                 refreshed_cone = _refreshed_candidate_cone(\n837:                                     candidate_text, wns_evaluator, case.target_output)\n838:                             except Exception as exc:\n839:                                 failure = {\n840:                                     \"type\": \"F2_boundary_invalid\",\n841:                                     \"candidate_hash\": wns_info.get(\"candidate_hash\", candidate_identity),\n842:                                     \"cut_hash\": candidate_identity,\n843:                                     \"severity\": \"hard\",\n844:                                     \"threshold\": \"cone_refresh\",\n845:                                     \"observed_value\": \"unavailable\",\n846:                                     \"evidence\": {\"reason\": \"cone_refresh_failed\", \"error\": str(exc)},\n847:                                 }\n848:                                 state.record_failure(failure)\n849:                                 failures.add(FailureType.BOUNDARY_INVALID)\n850:                                 continue\n851:                         state.accept_patch(\n852:                             patch.patch_id, candidate_text, wns=wns,\n853:                             tns=wns_info.get(\"tns\"),\n854:                             min_slack=wns_info.get(\"min_slack\"),\n855:                             candidate_hash=wns_info.get(\"candidate_hash\", candidate_identity),\n856:                             critical_endpoints=wns_info.get(\"critical_endpoints\"),\n857:                             critical_instances=wns_info.get(\"critical_instances\"),\n858:                             cone_gates=(list(refreshed_cone.gates)\n859:                                        if refreshed_cone is not None\n860:                                        else state.current_cone_gates),"
+        },
+        {
+          "lines": [
+            878,
+            921
+          ],
+          "text": "878:                         # Inner best selection is not an outer commit: cone\n879:                         # refresh or another hard gate may still reject it.\n880:                         committed_seq = wns_info.get('sta_launch_seq')\n881:                         for trial in getattr(wns_evaluator, 'trials', []):\n882:                             if (committed_seq is not None\n883:                                     and trial.get('sta_launch_seq') == committed_seq\n884:                                     and not trial.get('skipped_duplicate')):\n885:                                 trial['committed'] = True\n886:                         accept = getattr(wns_evaluator, \"accept_candidate\", None)\n887:                         if callable(accept):\n888:                             accept(wns_info, state=state)\n889:                         if refreshed_cone is not None:\n890:                             cone = refreshed_cone\n891:                             state.current_cone_gates = list(cone.gates)\n892:                             state.accepted_patches[-1][\"metadata\"][\"refreshed_cone_gates\"] = list(cone.gates)\n893:                         timing_met = (\n894:                             state.current_wns is not None\n895:                             and state.current_wns >= -float(epsilon)\n896:                             and (\n897:                                 not getattr(wns_evaluator, \"hold_mode\", False)\n898:                                 or (\n899:                                     state.current_min_slack is not None\n900:                                     and state.current_min_slack >= -float(epsilon)\n901:                                 )\n902:                             )\n903:                         )\n904:                         if timing_met:\n905:                             state.set_stop_reason(\"timing_met\")\n906:                             return True, patch.patch_id, {\n907:                                 \"wns\": wns, \"tns\": wns_info.get(\"tns\"),\n908:                                 \"min_slack\": wns_info.get(\"min_slack\"),\n909:                             }, False\n910:                         if len(state.accepted_patches) >= max_patches:\n911:                             state.set_stop_reason(\"max_patches\")\n912:                             return True, patch.patch_id, {\n913:                                 \"wns\": wns, \"tns\": wns_info.get(\"tns\"),\n914:                                 \"min_slack\": wns_info.get(\"min_slack\"),\n915:                             }, False\n916:                         # A committed candidate is a new G_r; continue the\n917:                         # closure search instead of terminating at first gain.\n918:                         return True, patch.patch_id, {\n919:                             \"wns\": wns, \"tns\": wns_info.get(\"tns\"),\n920:                             \"min_slack\": wns_info.get(\"min_slack\"),\n921:                         }, True"
+        },
+        {
+          "lines": [
+            1181,
+            1195
+          ],
+          "text": "1181:         if state.stop_reason is not None:\n1182:             return False, None\n1183:         if wns_evaluator is not None:\n1184:             failures.add(FailureType.TIMING_GAIN_INSUFFICIENT)\n1185:             return False, None\n1186:         return False, None\n1187: \n1188:     result = simulate_refinement_loop(\n1189:         evaluator,\n1190:         RefinementConfig(max_iterations=max_iterations),\n1191:         enable_feedback=enable_feedback,\n1192:         init_weights=init_weights,\n1193:         should_stop=lambda: state.stop_reason is not None,\n1194:         feedback_config=feedback_config,\n1195:     )"
+        },
+        {
+          "lines": [
+            1217,
+            1236
+          ],
+          "text": "1217:     if state.stop_reason is None:\n1218:         if stateful_evaluator and len(state.accepted_patches) >= max_patches:\n1219:             state.set_stop_reason(\"max_patches\")\n1220:         elif (stateful_evaluator and result.get(\"success\")\n1221:               and state.current_wns is not None\n1222:               and state.current_wns >= -float(epsilon)\n1223:               and (not getattr(wns_evaluator, \"hold_mode\", False)\n1224:                    or (state.current_min_slack is not None\n1225:                        and state.current_min_slack >= -float(epsilon)))):\n1226:             state.set_stop_reason(\"timing_met\")\n1227:         elif (stateful_evaluator and state.accepted_patches\n1228:               and result.get(\"iterations\", 0) >= max_iterations):\n1229:             state.set_stop_reason(\"max_iterations\")\n1230:         elif not stateful_evaluator and result.get(\"success\") and state.accepted_patches:\n1231:             state.set_stop_reason(\"timing_met\")\n1232:         elif state.tested_candidate_hashes:\n1233:             state.set_stop_reason(\"stagnation\")\n1234:         else:\n1235:             state.set_stop_reason(\"no_new_candidate\")\n1236:     result[\"stop_reason\"] = state.stop_reason"
+        }
+      ]
+    },
+    "code/src/rseco/real_wns.py": {
+      "sha256": "812bafab38f44c889ecb32b5503509b5a0d8e5ed78052507ffcf4a326a92918e",
+      "snippets": [
+        {
+          "lines": [
+            1268,
+            1295
+          ],
+          "text": "1268:     def accept_candidate(self, result: dict, *, state=None) -> None:\n1269:         \"\"\"Commit an accepted candidate as the next STA baseline.\n1270: \n1271:         The outer loop calls this only after :class:`SearchState` has recorded\n1272:         the candidate.  Consequently every subsequent candidate is generated\n1273:         from the committed ``G_r`` rather than the original netlist.\n1274:         \"\"\"\n1275:         text = result.get(\"candidate_netlist_text\")\n1276:         if not text:\n1277:             raise ValueError(\"accepted candidate has no netlist text\")\n1278:         self.mapped_text = str(text)\n1279:         if result.get(\"wns\") is not None:\n1280:             self.baseline_wns = float(result[\"wns\"])\n1281:         if \"tns\" in result:\n1282:             self.baseline_tns = (float(result[\"tns\"])\n1283:                                  if result[\"tns\"] is not None else None)\n1284:         if \"min_slack\" in result:\n1285:             self.baseline_min_slack = (float(result[\"min_slack\"])\n1286:                                        if result[\"min_slack\"] is not None else None)\n1287:         if result.get(\"critical_instances\") is not None:\n1288:             self.critical_instances = list(result[\"critical_instances\"])\n1289:         if state is not None:\n1290:             self.critical_instances = list(getattr(state, \"critical_instances\", self.critical_instances))\n1291: \n1292:     def r_available_for(self, instances: list[str]) -> set[str]:\n1293:         \"\"\"Recompute R-action availability against the current committed G_r.\"\"\"\n1294:         return build_r_available(self.liberty_text, list(instances),\n1295:                                  target_module_text(self.mapped_text,self.top_module))"
+        }
+      ]
+    }
+  },
+  "actual72_summary": {
+    "all_iterations": [
+      20
+    ],
+    "stop_reasons": {
+      "stagnation": 16,
+      "max_iterations": 56
+    },
+    "all_no_feedback": true,
+    "all_refined_actions_empty": true,
+    "same_base_trace_comparisons": {
+      "transitions": 1176,
+      "critical_instances_changed": 0,
+      "region_pool_changed": 0,
+      "R_availability_changed": 0,
+      "dispatch_order_changed": 171
+    }
+  },
+  "runs": [
+    {
+      "circuit": "s27",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "d7f3161b177dfd750f07f6d484d9443ff35c605d32b72233d33067913e861dd8",
+      "ledger_sha256": "09cf97e0c6fa28a381e5e2ca139375a966aa5444108d4ba2da8de37a6200926e",
+      "config_sha256": "da68637504f5714ecba58edb237bb760b3d008a56098bc27a01db18ef3ceeb97"
+    },
+    {
+      "circuit": "s27",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "9fe4b3580c87de58e6a8eb4d0656701a740da3766101b354e890c2481f4ba76e",
+      "ledger_sha256": "38d5a0d4aae335d5d10001b93a1f497664b81f4be61ad3f2f18aed5cee9af247",
+      "config_sha256": "5a9b0fb700806c2ffd06de48a1a1d8b1effb559eeb4692e73a6ad28e60bcf48b"
+    },
+    {
+      "circuit": "s27",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "44208cc4f37b8622b4474139f178a4c54b36e736138d47988d55e22de33500c9",
+      "ledger_sha256": "c9aab458cf6059e4702ea87d7171227669306bb5e746e848847307cd45e55ebb",
+      "config_sha256": "1b78d49eaf5f180888d914e03d98289fe8c234f407fdf4423fd017db7a14600f"
+    },
+    {
+      "circuit": "s27",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "b262ddd18007ebca754f8ba22f045e91d22e4ce04832386ce2d81ec08e23f46b",
+      "ledger_sha256": "b79287c0b5b6ef9b291f2e5769d95ddc2c3570dd2224e719df8b8c02127a0fcc",
+      "config_sha256": "2d2ef74e20df1ac2f39ab382d82ea86c87725d07c10f75166f80b70a0f598ca1"
+    },
+    {
+      "circuit": "s27",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "0242ba48eca24ff21c7c8435334a2de5089b792f04709f27709ab0522d69f906",
+      "ledger_sha256": "215aeab0adecfb34922e3190a243717194a1571385b89f0b0036421e19a2c32d",
+      "config_sha256": "d2c783916c564aba18a05e6a18a5c8360dd315ac4f611c990d4092d7b329504d"
+    },
+    {
+      "circuit": "s27",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "53ac40459c06545dc778bd002feece4198169951aeaf00755ecd32f09794925c",
+      "ledger_sha256": "e7f8d0c1bb12bf975a35e68a6e391b7f2a9cbb1202a99c48a47ed439d3ec4e07",
+      "config_sha256": "0c025674eb244c9e9835e794f1fbea5811b3e76b4b4a4fb20c74ec68aa6909bc"
+    },
+    {
+      "circuit": "s27",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "44414316b4c7f98e6160c7ec5e05bdeea2f73aae3165aab33689cbe8e1a712e7",
+      "ledger_sha256": "057d6c7c720629a2e4cac231bb42ddb7a88549e17e72553e5214941bc99fe13a",
+      "config_sha256": "9b3203f590acce060c9b6c74459c331bbe114c6db4600765e7fa45d7f8a1b517"
+    },
+    {
+      "circuit": "s27",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "93f943775aa3eb6229677925136227893850eac172f5dddea0185027b13e67fc",
+      "ledger_sha256": "441b48630974d86a16bbe709aaaa4dd54aced9637e86eeffc5d01b9359dbaba2",
+      "config_sha256": "3fa756a62c7d9441a76e0fd26b204d94fe60f6c0fd41a849d38b787372077a7c"
+    },
+    {
+      "circuit": "s27",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G10",
+      "initial_endpoint": "DFF_0",
+      "outer_result_sha256": "d726dabb2467540ef20568699b87f6c317eafb798c5b32536d4df72bc64cb795",
+      "ledger_sha256": "21a27c5942778a1f05819a92fe4e8d4f282e5f1b52ed1d23cc3d44376d31c93b",
+      "config_sha256": "58e44905da2558576039c5728e324fdabe010ee43f30fd6bee45a666d3034a25"
+    },
+    {
+      "circuit": "s382",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "4820449881563150c81bcec6b164d9cf51b3caf35047dee54ace6d2a9140aab6",
+      "ledger_sha256": "cf9eb988bf87a415afd9a6446bec8e571b8231281ad57864117a98d71f711713",
+      "config_sha256": "910a70691d82d1df68d43ef08cb369ae98501fbc4be81c1fbfbacd5860978a70"
+    },
+    {
+      "circuit": "s382",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "eaea153313af160ff17617a933d5970150522d02bca51efd83a09fc890c322d2",
+      "ledger_sha256": "b876eae57add8fc0d49ef6be80c7c783043084b56bbf3ff8699f750ff1596b35",
+      "config_sha256": "a55109546f88fb560403bb87276a981c7fe0ccd31990d153d3c8a172bbae6c56"
+    },
+    {
+      "circuit": "s382",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "ff8a05a953feff432bd14aa80fafc9dc5807a0d3fd27c96c1b06552b7b65b64f",
+      "ledger_sha256": "96862fd622d634d89753b82e75280c512703c6b103f05ff87a62cd049293b97b",
+      "config_sha256": "d03c1811a9c3901f2872e030031652f5f3d5aed329006f2ba80647cfb497500a"
+    },
+    {
+      "circuit": "s382",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "4d3ba71a8622aa26e0e48f8e85545c9153f77d69ed4745674a386c80f2d1a88f",
+      "ledger_sha256": "e426de4699903e95ac03287caadc85be8a5a2a85fe80fbc1ec6c52a898c6b674",
+      "config_sha256": "8636b8bca01df8cd9a5d40c05462ad7737ec332fe40b7d20086d57030df928ff"
+    },
+    {
+      "circuit": "s382",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "916947fc4d4601c3990162660e861eb60e950a76d6c66641e4b23a599373071b",
+      "ledger_sha256": "b4a574926fdac26d934f4a1ead2b9eecb8688772b73323e363b2d30d09099157",
+      "config_sha256": "dc021da53eb6bfeb2dee5622ac4ab7e63e51be0ab2cad0ddc5704301ff40372f"
+    },
+    {
+      "circuit": "s382",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "8269169f7edbc181af5636ac095b5833a1c9a2aa779faf8e64b2e35a4ab0aade",
+      "ledger_sha256": "7785fb0164c2a115f5ab8289e2f1abae9b51938047942591f52ec1ae85d00db3",
+      "config_sha256": "a7f97a39024b5b38a91548cf262632f53dda6a86aeaee9122e81c45969c005dc"
+    },
+    {
+      "circuit": "s382",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "296e6e4d14e560da7014f25876bc8842f3f8bca7875b63e85fc14da900439a68",
+      "ledger_sha256": "61065e0c8ea5383a911fd3a8c60b23fecebd74c18a06419e3b753187800866af",
+      "config_sha256": "1f140e6b770a26a568d164360d1c39ced9b8ddd073ef0e32f63dbe9e6c1e809e"
+    },
+    {
+      "circuit": "s382",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "f2f1cd1d73530570823051f5f0e64c4325a577e3c13918f86d0a67ad3a67221d",
+      "ledger_sha256": "9b9458de4f55700d79cfc9d278d446cdeab8a3a35cec80e7afc64505705d56f2",
+      "config_sha256": "fde96d198561b413c3f1e51b569e0cd03d3363645e91e293060eece8e8babfb1"
+    },
+    {
+      "circuit": "s382",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "C3_Q3VD",
+      "initial_endpoint": "DFF_9",
+      "outer_result_sha256": "8f5f5998f56cd41ade7891cb2dadb22bfcf55027016fa6fa5a7a55c52a48a530",
+      "ledger_sha256": "27950f9f3f2c3dcf2bf65839fcf44cd72e94621dca98af88332c24df0874444a",
+      "config_sha256": "8e2ddd91d36731b901fbcd561202802af9579c0b04b74683cc027e3cc87febcc"
+    },
+    {
+      "circuit": "s420",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "7555e9e952a24a0457f45849d67ef55ec50ef59210187550bfa213397d52b8f6",
+      "ledger_sha256": "7e9cd2c694da6a299e7ae59fc58ec15bbbceaf4bb2f64a97473d1a7c745b102a",
+      "config_sha256": "e4b082ab093b88828602c7476596b5edaf2e0799ee3a01c2f927a174842e7a17"
+    },
+    {
+      "circuit": "s420",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 7,
+      "subsequent_outer_history_entries": 13,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "7c0f87851d0051201423ec1b54d36917fb7b4ec5a2322eaf541c4cefab0bb39b",
+      "ledger_sha256": "d67d53408ae8b3661b66ce934a308e2f2361ea2a6e86ee13c035a71ddd6e3016",
+      "config_sha256": "c9e5b7b93e6342eff4cd9d6b5fbe00e83f579983cfc740aefdc8144579c7f641"
+    },
+    {
+      "circuit": "s420",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "a6793566556f7d9afebe578bd78bdb2d08e38f800402ec2384b1674989ff3cb3",
+      "ledger_sha256": "9643b503abcbc284b09d9db26369b1cff827fffa4260ee20a8c80d7582e9d062",
+      "config_sha256": "a8d0acbb7963b316ceb1532a91837542fc2c1376245558de4cf82019b1d90bd3"
+    },
+    {
+      "circuit": "s420",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 7,
+      "subsequent_outer_history_entries": 13,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "9df19d4fb7fee5a61418789760e5e1ce2daafbcffc2a7f146c8fbdaea966a19f",
+      "ledger_sha256": "4947d331d02643b836a53e9045f952306e917e8306f2b3d11ceef96caaf6fdfb",
+      "config_sha256": "319d99d150d739dbe45a69fba442e40f4757ac10220ca1e51ccccaab8c27605e"
+    },
+    {
+      "circuit": "s420",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 7,
+      "subsequent_outer_history_entries": 13,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "47830b254a64c513b93e84939f215a0b36f8dfe983f8ca593931ebd5d01b7ed6",
+      "ledger_sha256": "570260eff494e03c3d753646b5e186608535180464df09d766ed69f23d4a32e7",
+      "config_sha256": "ef11ca5ef7ccff4f90397d7c5c74a6f4442d028a0858011e3173173fb9c497ca"
+    },
+    {
+      "circuit": "s420",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 8,
+      "subsequent_outer_history_entries": 12,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "de494913b066446a967daabc79b82584dac1bb2baf6ffa2906fb8372e7b3a42b",
+      "ledger_sha256": "57a101253e2e320122675682ec35f8a9ba1b96b126d66fb5f481a4eb25f5d984",
+      "config_sha256": "cd0ed30e127ac733e115c1fe2411662aaf524ea0c17f05a84267e8fd2f44de7e"
+    },
+    {
+      "circuit": "s420",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 8,
+      "subsequent_outer_history_entries": 12,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "50126773083a523e0c0fe88f410644d17d8e8321d22e1f2f3d0542be808d20ce",
+      "ledger_sha256": "c0337183b2dcc532349b63f2d1922c178cc94d16704d4dd26bcd87ffb60d0e5b",
+      "config_sha256": "ef99c6f47a5b8eb9f5b9766741f7ed7ed5395fb1372d4e5b3acb16de551cefca"
+    },
+    {
+      "circuit": "s420",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 8,
+      "subsequent_outer_history_entries": 12,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "ad6e4f6880de37637bfa6fd446a3f4599e2493cc9fb515adec2edb19a4b42aab",
+      "ledger_sha256": "02075f0933d014e81a5427c154efb7ace005bc18ce5dddba3de896c8667c8f8d",
+      "config_sha256": "9a80a96046ff89d1558683a5bfcb8ec0415aa077937a4d57dac7cae314a9ed2b"
+    },
+    {
+      "circuit": "s420",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 7,
+      "subsequent_outer_history_entries": 13,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "I307",
+      "initial_endpoint": "DFF_13",
+      "outer_result_sha256": "d0e1ac833840219273e314f29a7a392d150e7b22558ab0f8e89206f34bd678da",
+      "ledger_sha256": "38736f742135a91ef36b7341a19a6a376ae942b7f0846fff33b9f35d33aa875d",
+      "config_sha256": "a4bfbe48777c4ba8e4acf7a9e73b8f5815dcbd218d89db0a54272767cd156884"
+    },
+    {
+      "circuit": "s641",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "3a08bede7e08a4f5a6d450417579f9940fd574bd710da9239bd0a316d4841be1",
+      "ledger_sha256": "4bf526c15f5789ef5ec389794a888494f283385be8e8886b989755446d69b0d3",
+      "config_sha256": "7a18205c3123c87089d1f2ff2a8dbc796880a3241894d4bd178f369ea99a60dc"
+    },
+    {
+      "circuit": "s641",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "74e518d265a0ea6ffc6cea36c84588826876bac3801f680b09e43361213d92c6",
+      "ledger_sha256": "8ddf6600b676048c3eca9ebc34c3922d65ad81a87fb67b7cc08f549ac3f7fc2c",
+      "config_sha256": "5a6a0601ebac406e6046c8733d3c72808ce64713c0ac3a98da1dde4f4057b285"
+    },
+    {
+      "circuit": "s641",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "c9ed624d27afad0bb14187868984e5bf05eeabc1c385bd213659f0e26c9a578b",
+      "ledger_sha256": "807b2da91bbcb1d5045238a8d3dc464607752d6939df70d13bea014ca1db18d6",
+      "config_sha256": "668e96cf2e606f7135d3bdc4995a5559c8a1b024c02c4e6f9810f0e263d71683"
+    },
+    {
+      "circuit": "s641",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "c7cae749b0aa2da07b1fd73f18604348d1bfd8a4e24a24cde5093f0861747c1e",
+      "ledger_sha256": "829662582a9c5cd52919c15845cf35dd7917dff43a5aaebf7bf4d497a9563e80",
+      "config_sha256": "61d5440091fa54d09ae3254c5086760c69fd17a4a99cf12265673cafe5783345"
+    },
+    {
+      "circuit": "s641",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "d9374f14203e8bcc837daf84ef9e4e1bdc07a6a918540f71257d6c3b10f78416",
+      "ledger_sha256": "d364140b649ac0a7ba3223417f75f076fe7bebb89da26a943fb5d378b19ec4c0",
+      "config_sha256": "1bfe0a6e37d6f1a6ef958eb9f41b17643d899eceff7e2ef09484c82edeae7ec0"
+    },
+    {
+      "circuit": "s641",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "15c64bbc568ad0675d2ac21112ffd332aba5cac2dd921f66fd7d63c49c1d5fba",
+      "ledger_sha256": "5913e0a579d3845794f1f2c5f0654e882eb9ff37fef6c542d0c6dec4fe02f49c",
+      "config_sha256": "9a58d98cc4d571fa57aa285fc4185ba3de27ea2c1393906d880298353c5473e8"
+    },
+    {
+      "circuit": "s641",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "0a4a2840fcee3a4fd9be3e00f3bcc4a470d3ef0356637936cf3f5d07ebb8224a",
+      "ledger_sha256": "7be77df0f07455053a03c9e564f64bb9f220cdcd18c267cb89acae87228b4502",
+      "config_sha256": "83a9b27d38b8347882189171af8b17ae3e9e497cb95bbb1828da0298e54c6249"
+    },
+    {
+      "circuit": "s641",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "1cf7ecbb88e85e1f759d56f3c61e2988e9f2432f8255044ca8215a91e499a6aa",
+      "ledger_sha256": "46a717ecb469220c5c8d5a29201ca307743dda7516b6359d4e7bf682fa588054",
+      "config_sha256": "59e18998a132725bb76d57819d346a73b7be76468ad02084c33a0a34325fd7e8"
+    },
+    {
+      "circuit": "s641",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 6,
+      "subsequent_outer_history_entries": 14,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G125",
+      "initial_endpoint": "DFF_11",
+      "outer_result_sha256": "1c4f06a97cca18c6abbca0a6f0e54ce2159c5725e8ab4fd634041d1e6baef6d4",
+      "ledger_sha256": "8d6b294ff9365df6fdae1b9235ab0287e7fbec91a7e4c1037453943afd9f0086",
+      "config_sha256": "d69f1b1b5718286859a6cd605b09e22749270d4415ae5ac7e0575240170ce73d"
+    },
+    {
+      "circuit": "s713",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "c1537d282f90081ad30cafb543ce9e14740cd1b8c0d7e35e1d6705a5f88fca9f",
+      "ledger_sha256": "0c607c18c568d55e86ea1db880a67637ae3133d8646c64f6e03d781b403fc570",
+      "config_sha256": "a34d65f283c2c240a240f153705f520e8efb5a0bbadede7c92fe86bd9de4b01d"
+    },
+    {
+      "circuit": "s713",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "977adae6ecce6b740636197c416876addd26c2660809c7f3ccae81375a225642",
+      "ledger_sha256": "9c7b25bb9199eac9da95ebb6220b489b000e1d672c5cbb189877b8affe252aa3",
+      "config_sha256": "67b5ef3484461fef7deb3ffcbef52dc2941849c52e04187aab6189c05d925864"
+    },
+    {
+      "circuit": "s713",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "3ac12f1eabe914381e7a99b385167ae35e124abfbabf68ff8a7df7b603d7dabe",
+      "ledger_sha256": "9788fed7ae9fa99c807e08be653d3228a4e2174693b6110c6f913ad2770075a8",
+      "config_sha256": "d9d38eb09f2023db383ab07d91ac7cbbf682277cc36270d3e63d4f35ae3cab67"
+    },
+    {
+      "circuit": "s713",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "7ef8712c75dbdf16573b8cee894124132063facafbc5100076a55b4e8d213953",
+      "ledger_sha256": "94bb544e289ba0f1dbb9b4abbc728880e802a714f7ade50a420f7f8d6dacc6ca",
+      "config_sha256": "9a4b48d0fbf756789bbd8d940870c47dd5b6167181f7b5e936895d4ccbd54772"
+    },
+    {
+      "circuit": "s713",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "05963cb15be952023f4747fdcd7c158e18da06c7ba75e21773d4040e17d73609",
+      "ledger_sha256": "88bb211a6c760d9ec66d1362095518c422ff6786425746481b3258b5acb7a2ba",
+      "config_sha256": "0576fcd4faa2bff2ceaa18fd1c118d9ffbe2698e6b79e0db3acb29456ea0e689"
+    },
+    {
+      "circuit": "s713",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "60ae0351c6f950382d3c10c13ac230a4bf0d28ddf5e4f83b4e4124adf2fd4bc4",
+      "ledger_sha256": "647119346376f9b0c392ac2a3acdd102ac18d3764818044c1b0cf11cd4a2679d",
+      "config_sha256": "f27b3af7e7fdf70ef2648b1114d15ba7340f9600dbe8b0b806f289a71177051a"
+    },
+    {
+      "circuit": "s713",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "c872bb599434da5aa0ff616cd5a27f781facb0003980c2c5f6967a5dc30c945a",
+      "ledger_sha256": "1bfc8036ab61ee5668b1d5255b12ee7e8ab52940e1ce5c7f747f7bc2d5f75d57",
+      "config_sha256": "bb30f3f54ed391633cdf6f1e0e9724d36142b4beddb74db2bcc99275cb7840ee"
+    },
+    {
+      "circuit": "s713",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "76524f017f67846592d3908db6f00e2a6a635749e1bdd29fb31b266badbfa69a",
+      "ledger_sha256": "fc54831f914472223095941d3b49f5ceea75831fb43189a03bcd7a6c5cc595f3",
+      "config_sha256": "0a7ef381138fc5c4b2876c08c9da65dd4ab12761f601840359c3178d282c2d4e"
+    },
+    {
+      "circuit": "s713",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G126",
+      "initial_endpoint": "DFF_12",
+      "outer_result_sha256": "c181fd502b9ee4ce4455c241655763b8428138eae2f3733ddf61dd1af15c3682",
+      "ledger_sha256": "4255787371d872ffae960bdb9318291a901a2f0a3239584b138cd92de4e45b99",
+      "config_sha256": "75fa79d6d750256cc978683ba5e7a3d609375ce1c98c235fcb650e5737728fe9"
+    },
+    {
+      "circuit": "s820",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "0dcec4ca26ebaf5fdab76d7caca30615e578465dbff7f8cf37096dfb8c545833",
+      "ledger_sha256": "3b330dd235648afdc92875299c0dddc0c7d8e5caa5d9e2e54419aa99e0fdcc1a",
+      "config_sha256": "3fae09a08282f46d368f47156235fee717c27c90da7db6929badbc34b5d506a2"
+    },
+    {
+      "circuit": "s820",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "4a4c370baccb7aa7d28d7e45a320399a65b281299ad35d5045a78d72ec019b77",
+      "ledger_sha256": "e6631bc243ef97be30d46a510d7495ff51ea0a2763c2b4745fc761d81b522dbe",
+      "config_sha256": "5f658138c4d45852019cc258ce36d279d18b05532497aa29f975da8e633a5e93"
+    },
+    {
+      "circuit": "s820",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "53309dae4b09a00ab130306ad5108ae7fb3531ce3deae98b608783c2612e5ae4",
+      "ledger_sha256": "f88f843ca3332d9e55ea235c5b140e1a5ba68c39fb854daa470576057e58e842",
+      "config_sha256": "8141a0e45b3bd208ca25cc4038f5a6214b32a8df0c4b676b8b7694b1c966b70f"
+    },
+    {
+      "circuit": "s820",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "4e10273f5047b0e52e9fdb85ffbb503010ef179ddf881cc8e52ec6a9828d9bcf",
+      "ledger_sha256": "ef74375e18c7d59329b0d7a12064dc817a815e5d7bed4cf235fb1d43e29b1e68",
+      "config_sha256": "a68c09420c237b5ef1d78db053acab62a904935d30d547512dd221cb9283fe4a"
+    },
+    {
+      "circuit": "s820",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "f5223311b532dff5ea24371cb5163e1e9c2f44683752200294c6bb440ad15b56",
+      "ledger_sha256": "040b49974bf4eab3f6afd6a6a306a8f1c6ee7236a08c2ec5aa995fa262602352",
+      "config_sha256": "d6ce5180b1b1b561f855003c61677a1616465d978e38544ff3409f60672e5ae8"
+    },
+    {
+      "circuit": "s820",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "1eaddab118285f8edf50b807230ac5c98f4f738a0db1e98d476abcefc9e3ea7a",
+      "ledger_sha256": "f71f373a76b69d4bc354e388ea866e2d287e2228cd8acca32bb57fee83ec8e08",
+      "config_sha256": "7e40c5f3de3b6dfc91458fb9f12abc153750f988a5635579d8cd461475d2e374"
+    },
+    {
+      "circuit": "s820",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "26fded5bad418e3a20d154dfb10c9403f0059f0bb03758d458f9818873021c11",
+      "ledger_sha256": "85dab631993eb369a4f4849d6c5c5585fa80a8b1c224942e85273c4a7c02419d",
+      "config_sha256": "9de8bf8114430d839aced280a007ae97fa7e3a35f2256b36b26034a449a39e03"
+    },
+    {
+      "circuit": "s820",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "5c02e04179c8d84c9bf8912734456d6d326f7df3a81c08d9717b2407edf0271e",
+      "ledger_sha256": "ca56261c859e9e837befd4d105939e2179e776b533f90528aad1d1bd4c5e05bb",
+      "config_sha256": "2beee8b890a4edf960483aef823d0c145574c1d10647ba85148c99073945cf10"
+    },
+    {
+      "circuit": "s820",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 3,
+      "subsequent_outer_history_entries": 17,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G99",
+      "initial_endpoint": "DFF_3",
+      "outer_result_sha256": "e85c1ab13305a5eceee16957aed4056db55836d6011c064197a69abbb4b63195",
+      "ledger_sha256": "31a1e9e3cf4dae7483738d2366af86d79db26e83c1b61b4dbd2d1e9f2e6eacbc",
+      "config_sha256": "47627cb7af528dcb7f57d792c7949be36bfb10fe1002faeff0f9c3499d593232"
+    },
+    {
+      "circuit": "s832",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "71ee04f1e2e84185ecec9e6518c68736e185619f2222dbe904e84510739ac669",
+      "ledger_sha256": "3f59356cb29de9d08361a3fa9e02e59992e55020ce8c855e16df7d0a600c2cea",
+      "config_sha256": "d8258dd563151c0ee92471e8a54aa6bf8a78f5b57b60b5047358465d0898ee17"
+    },
+    {
+      "circuit": "s832",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "c2aebec6b8ede4bf8277180b9e7f1d7a8b584351a50738f969423d80d7c6227c",
+      "ledger_sha256": "67339fdd48008079a6b419986ae42fc4a29f23151a0b1d392e4ab282d4742d88",
+      "config_sha256": "12374a762b2347789ade5e70484798df6ed3d5120bdf44bbc93a2b8e789715b6"
+    },
+    {
+      "circuit": "s832",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "bbe0d8435076fc226d5cf1db4964b69c4981daf5b6f535685a21ada99e9fa8dc",
+      "ledger_sha256": "81c84d7d307b789638c9aa6eb106e0c656af1ff7fe9b0f3c342c4625531ebba6",
+      "config_sha256": "0a08553f78b2ad17d5cecd417cbfe8b29d3b7fba1e05fec4574836cb8ff01b8d"
+    },
+    {
+      "circuit": "s832",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "82190f3121fec76e726276ac2f81152fe00fc4279f2beeb2665e3eadb8e29c12",
+      "ledger_sha256": "b7868acce504daffceff705c971a53dc0d92f30c0fb86c0bc7ea52e044013db3",
+      "config_sha256": "eb1cc9bba6a290995b83b31b3a6c8228324a83fc324367b7160a066918bdeeab"
+    },
+    {
+      "circuit": "s832",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "e5b2f584840310bc088b50f41f9c60512785b156949761e6caa9b6a344d3d496",
+      "ledger_sha256": "348c0a3ff21f86fde2302f1f6d65c382f3fd595184baa251e82f7f9fdf25d780",
+      "config_sha256": "7ff8c8dbc986c57cd4eb0b38fd5e04013d710acb72dbc60eadefdb8f02a1d65d"
+    },
+    {
+      "circuit": "s832",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "2197ee0bbda8048c0cf88a6d721fc2e51861fcda09b44da8fbd4b703ab30d93e",
+      "ledger_sha256": "e19a6a0c868aa32f342f03390a6486f60351aa18e1bee9cc022fce6719d4e48c",
+      "config_sha256": "ac66453adabbcb13938cfc3706902802d3905ba3221cafea06fd8984f148b7a6"
+    },
+    {
+      "circuit": "s832",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "41c7e2fa8e78d185a9fd146983bed5331e86bd211c80d2305aebb59dc5c01e67",
+      "ledger_sha256": "f98eb4a4714e586d6861a348a41702a4216864ea81c3629adfb3da81e3ac920a",
+      "config_sha256": "38240cc3a365db5a442605a99b19b719a4a1d84f9da4afe5da0d6573f74cd2d8"
+    },
+    {
+      "circuit": "s832",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "ed0ddf001be7d164cec30b930e9a71bc78d13b1d00b43fa487a9b070316440fa",
+      "ledger_sha256": "4b5af2d371a685f4287838bdeb15cf7bfd8d768439abe1e8de8e23b7dcb01a22",
+      "config_sha256": "33eca75107780a0eedb7d696e0ea3bbb07a72b4381f864d1b8a790603a981588"
+    },
+    {
+      "circuit": "s832",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 5,
+      "subsequent_outer_history_entries": 15,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "G96",
+      "initial_endpoint": "DFF_2",
+      "outer_result_sha256": "64610821508ee8f188d1d7d57b3ec1d21f08d19239bad9cc5fe6b9e2b5239087",
+      "ledger_sha256": "139ac7a800efe6f35a772be1826f534dac46592fd2fc61c494344c2312a8f215",
+      "config_sha256": "1858653e2da4ce4fba1cdadb6f9199799f0634f5973edd57984c4964cf67fa50"
+    },
+    {
+      "circuit": "s953",
+      "arm": "W0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "7391f0a57c5a0ccaca6357e31856f99f8a93b11e6e0c8caca95e3a0f3e7869b4",
+      "ledger_sha256": "56e1f5b891f8c1fd3391633dc7ea76046cda794f9efe2fbb99c2eea2312c1c4c",
+      "config_sha256": "afe49a1f2bd0a23e1af549d41783d8d47a057baa2762ac10a37fb4674825fc4d"
+    },
+    {
+      "circuit": "s953",
+      "arm": "W1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "5bc55ff160753a7578d7072c830f8a845da0eca35396eb5c8729cbe88a164c12",
+      "ledger_sha256": "9a85437b9021b92de1c4f50a38533a742cb690ab7a0a8f006331dd5e3397a52f",
+      "config_sha256": "8fb5092fd871c81ea33546793e957dafb6ae78f51c8fb90b70db5378fa8515bc"
+    },
+    {
+      "circuit": "s953",
+      "arm": "U0",
+      "iterations": 20,
+      "stop_reason": "stagnation",
+      "first_outer_nonsubmitted_round": 1,
+      "subsequent_outer_history_entries": 19,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "cb2685ac2200c474c03ac09d2ce2499322eaf33d25bce1dfb8be274c7e5b0eb8",
+      "ledger_sha256": "935d1cdecfa477d476d7b3cb0aad1b2d8b2b1325a566207fdacd587fba3bc830",
+      "config_sha256": "8a240c4fba427a5e144edf689b9901d16add156b636c0560465d18979a580ce1"
+    },
+    {
+      "circuit": "s953",
+      "arm": "U1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "02ebc9e2a35aef7465a1faf7568e3934d72eb1021451840d2026101d3ebbe057",
+      "ledger_sha256": "f7ca021a2b619a1de09673965be793e002cc58681e6e4fe9410c8f81a81e83a9",
+      "config_sha256": "e3e7cb6dc0b3b69b91f27b4797c48343bdfeaf0d2f84ef181d665c4e5e6fffbc"
+    },
+    {
+      "circuit": "s953",
+      "arm": "C",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "72ca183349055eab22499cc59de449eabd9d3baf9568a982572a9c03b068dc8d",
+      "ledger_sha256": "fd04ce040289cbb06e1e516dc20a83dcf74e2677770f03e86e060dd15ef55426",
+      "config_sha256": "8eadf5ccb1bffbd1d66e878939a1bb51508d39b8a06e0da9313c57d54315beb1"
+    },
+    {
+      "circuit": "s953",
+      "arm": "UR1",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "5c8e3183d6cb114357e2942101e80791aa44309801ed251f3c88b70fdd2e72bd",
+      "ledger_sha256": "e6ff6d7de1648f7d01ff1d74b25df4df17ad75a9d8bf665ccd51175de4d82b0d",
+      "config_sha256": "d91b3c16b248aa86abb99c8d01ad86da28e0d4f605fab2dcce5a74c52ec9a379"
+    },
+    {
+      "circuit": "s953",
+      "arm": "UR2",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "997ffc210136d75871669fe8e5e54eb9aa85fc2eaf2c76a5ed327926ad0b0be1",
+      "ledger_sha256": "5bbc06ffa332a0db31febbdcfcfd07e8ed198946d819707935d755d26bd8ea68",
+      "config_sha256": "a128ee8d8117953c7ad73c8a9ae9d9e878f477a6f2c6729d2359a4bb7db30951"
+    },
+    {
+      "circuit": "s953",
+      "arm": "UR3",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "333e979068e927da809f1b2ab6915789cd78a026652d54ea5f30e0a9cb5e6d17",
+      "ledger_sha256": "020d6db4a0e87142d84037eb76043cc21fef8dd068d09a8b67a9a2004c0e395d",
+      "config_sha256": "654c4f22c8cb7d47b7f1740ac505ca790234a2e46dd23deb17d8a89b787f4344"
+    },
+    {
+      "circuit": "s953",
+      "arm": "L",
+      "iterations": 20,
+      "stop_reason": "max_iterations",
+      "first_outer_nonsubmitted_round": 4,
+      "subsequent_outer_history_entries": 16,
+      "refined_actions_all_empty": true,
+      "weights_unchanged": true,
+      "max_cone_gates_all_rounds": [
+        1000
+      ],
+      "target_net": "II23",
+      "initial_endpoint": "DFF_21",
+      "outer_result_sha256": "dabc9068b149b49c77e32529f8b52a9af1c097d0bfadb598097e05d433915955",
+      "ledger_sha256": "7a30d6509d18ecf62cce67188407d93053803255dcc8758afe566c788d38484c",
+      "config_sha256": "3180e5aa081b86e5610e3a34be51f84615126f2baa38b4b814b548d5aeaea30d"
+    }
+  ],
+  "index_erratum": {
+    "retracted_claim": "33 objects have newSTA after first non-submitted outer round",
+    "cause": "trial.iteration is inner evaluator-call ordinal; it was incorrectly compared to history.iteration outer round",
+    "effect": "The33 count and examples of8/144/56 post-round measurements must not be used. They do not establish changed totalSTA under a hypothetical early-stop rule.",
+    "unaffected": "MATRIX72 counts, 6930 curve points, explicit commit chain and curve endpoints use sta_launch_seq and hashes, not this index comparison."
+  },
+  "conclusions": [
+    "An unsuccessful round reaches feedback/refine bookkeeping, not an immediate outer stop.",
+    "Cprime72 has feedback disabled: no weights, max-cone limit or feedback window change on an unsuccessful round; refined is a history label with empty actions.",
+    "P/netlist/cone refresh occurs only at explicit commit. The cone root remains the originally registered case.target_output; it does not switch to a new worst endpoint.",
+    "Every round regenerates/splits current cone under unchanged1000 limit and recomputes R availability; same-base pool/P/R remain identical in observed traces. UR dispatch can change via seed,round,commit_count.",
+    "Inner early_stop=True only stops concrete candidates at first accepted improvement; it is not outer no-improvement termination.",
+    "This actual batch uses20 rounds; final16 zero-improvement jobs label stagnation, other56 label max_iterations after loop completion. Those labels are not evidence of first-empty-round early termination."
+  ]
+}

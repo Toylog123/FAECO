@@ -1,0 +1,140 @@
+{
+  "status": "PASS scientific content; caption requirements retained",
+  "image_binding": {
+    "original_image": "C:\\Users\\佟亚龙\\.codex\\generated_images\\01a137d2-44cd-70d1-b5c0-b5d876d2f488\\exec-3d814c2d-635f-4980-a7d7-3cf09d104081.png",
+    "original_sha256": "f852a69f076484c2d4377e852b9813cae3596444c04d02a26477d5259d21d010",
+    "copied_image": "paper/zh/figures/manual/figures/r26_ai_regions/r26_ai_regions.png",
+    "copied_sha256": "f852a69f076484c2d4377e852b9813cae3596444c04d02a26477d5259d21d010",
+    "exact_copy": true,
+    "pixel_edits": false,
+    "prompt_source": "paper/zh/review_rounds/r26_20261018/FIG2_PROMPT.txt",
+    "prompt_sha256": "052b0542fda20c6683001a09bd47a1286a7ae1602724d062489da765681620cf",
+    "reference_image": "paper/zh/figures/manual/figures/r24_toy_mechanism/r24_toy_mechanism.png",
+    "reference_image_sha256": "0e569e3a8565fd856553cff07bac1d23580586740f10493d8fb7023616b113cb",
+    "toy_source": "paper/zh/figures/manual/figures/r24_toy_mechanism/TOY_INPUT.json",
+    "toy_sha256": "73ddffe8493b43d2fe3fe77fe4ae4433e5f7e45a18c9033be0f4f79f614b225b",
+    "method_evidence_sha256": "b0eff5f45bf8d6ef91798e37cbbbdf5f92f9aa6ed509d4eafeaa9858471967b2",
+    "invariants_sha256": "2eb35230bb5231ac7236efa3406be8a118ad4fdd8dc6d783389fe6c7577dad3b"
+  },
+  "image_size_px": [
+    1536,
+    1024
+  ],
+  "review_method": "Independent actual view_image of original PNG, then item-by-item comparison with TOY_INPUT.json and exact prompt",
+  "reviewer_role": "r24_figures subagent; independent of root generation, not an independent human reviewer",
+  "checks": [
+    {
+      "item": "Six gate identities/types",
+      "status": "PASS",
+      "visually_observed": "g1/g2 inverter with output bubble; g3/g6 NOR2 with output bubble; g4 AND2; g5 OR2; no extra gate"
+    },
+    {
+      "item": "Primary inputs/output",
+      "status": "PASS",
+      "visually_observed": "a,b,c correctly enter g1,g2,g3; only g6 drives named final output n6"
+    },
+    {
+      "item": "Both g3 pins",
+      "status": "PASS",
+      "visually_observed": "c branches at filled dot into two separately drawn g3 input arrows; g3 remains NOR2"
+    },
+    {
+      "item": "n1",
+      "status": "PASS",
+      "visually_observed": "g1 output n1 drives g4 upper input only"
+    },
+    {
+      "item": "n2",
+      "status": "PASS",
+      "visually_observed": "g2 output n2 branches at filled dot to g4 lower and g5 upper inputs"
+    },
+    {
+      "item": "n3",
+      "status": "PASS",
+      "visually_observed": "g3 output n3 drives g5 lower input only"
+    },
+    {
+      "item": "n4/n5",
+      "status": "PASS",
+      "visually_observed": "g4 output n4 drives g6 upper; g5 output n5 drives g6 lower"
+    },
+    {
+      "item": "Signal/junction completeness",
+      "status": "PASS",
+      "visually_observed": "a,b,c,n1,n2,n3,n4,n5,n6 readable; branch dots appear at actual n2/c branches; no accidental crossings/junctions"
+    },
+    {
+      "item": "P membership",
+      "status": "PASS",
+      "visually_observed": "Legend P=(g1,g4,g6); exactly those three gate symbols/tags highlighted in teal; others neutral"
+    },
+    {
+      "item": "R availability",
+      "status": "PASS",
+      "visually_observed": "g1,g2,g4,g5 R+; g3,g6 R−; legend explicitly 有/无R候选"
+    },
+    {
+      "item": "Cc gates/order",
+      "status": "PASS",
+      "visually_observed": "Card1 gates{g1,g4,g6}; instance strip g1→g4→g6"
+    },
+    {
+      "item": "Cc boundary",
+      "status": "PASS",
+      "visually_observed": "Inputs{a,n2,n5}; output{n6}; internal{n1,n4}"
+    },
+    {
+      "item": "Cc sum",
+      "status": "PASS",
+      "visually_observed": "Σcost=4.190474, rounds exact source4.190473684210526"
+    },
+    {
+      "item": "Cw gates/order",
+      "status": "PASS",
+      "visually_observed": "Card2 gates{g6}; instance strip g6"
+    },
+    {
+      "item": "Cw boundary",
+      "status": "PASS",
+      "visually_observed": "Inputs{n4,n5}; output{n6}; internal无"
+    },
+    {
+      "item": "Cw sum",
+      "status": "PASS",
+      "visually_observed": "Σcost=1.941579, rounds exact source1.941578947368421"
+    },
+    {
+      "item": "Region schedule",
+      "status": "PASS",
+      "visually_observed": "Heading先Cc，后Cw and badges1/2; no arrow implies serial signal flow between region cards"
+    },
+    {
+      "item": "No invented outcome",
+      "status": "PASS",
+      "visually_observed": "No timing gain, measurement, STA/SEC pass mark, accepted patch or additional gate is shown"
+    },
+    {
+      "item": "Purposeful omissions",
+      "status": "PASS",
+      "visually_observed": "Per-gate costs omitted per exact prompt; no altered node-cost value is introduced"
+    },
+    {
+      "item": "Visual readability",
+      "status": "PASS",
+      "visually_observed": "Actual full image inspected using view_image; Chinese/Latin labels and decimals readable, no clipped/overlapping circuit or region text"
+    }
+  ],
+  "caption_requirements": [
+    "人工六门静态例",
+    "全五权重为1",
+    "不代表STA测量结果；没有新增STA/SEC实验"
+  ],
+  "limitations": [
+    "Raster only: no editable-vector or PDF text/font/collision audit is claimed",
+    "Print-resolution/submission eligibility not assessed in this scientific QA",
+    "Per-gate costs omitted intentionally; source arithmetic retained in r24 evidence"
+  ],
+  "fig1_status": "Not reviewed/accepted by this QA; root reports v1 scientific issues and active repair",
+  "no_eda": true,
+  "no_tex_edit": true
+}

@@ -1,0 +1,89 @@
+{
+  "UTC": "2026-10-18T14:46:19.576667+00:00",
+  "basis": [
+    "TNS_HARD_GATE_EVIDENCE.json",
+    "OUTER_LOOP_STOP_EVIDENCE.json"
+  ],
+  "files": [
+    {
+      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+      "before_sha256": "965cfe91ca74cf1cdf166cf91dd8cbe225a84e2a0a1a3982cb3a459d81863c57",
+      "after_sha256": "ed21d5a238202e2d48d7a8a1aa3b0d5e5177970b56dec61fff32e386f6d754be",
+      "edits": [
+        {
+          "old": "从最差违例端点反向提取组合扇入锥$C$",
+          "new": "从初始选定的违例端点$t$反向提取组合扇入锥$C$"
+        },
+        {
+          "old": "遇到首次可接受候选即提交，并从新网表重建下一轮区域。",
+          "new": "遇到首次可接受候选即提交，更新$P$并在原目标端点$t$重提锥。无提交轮保留网表、$P$和锥上限，继续至登记的停止条件。"
+        },
+        {
+          "old": "\\Require 基准网表$N$、库与约束、测量预算",
+          "new": "\\Require 基准网表$N$、固定目标端点$t$、库与约束、预算"
+        },
+        {
+          "old": "\\While{轮数、提交及测量预算允许}",
+          "new": "\\State 在$t$提取违例锥和报告序列$P$\n\\While{时序、轮数、提交、测量及墙钟停止条件均未触发}"
+        },
+        {
+          "old": "  \\State 提取违例锥和报告序列$P$\n",
+          "new": ""
+        },
+        {
+          "old": "\\State 提交$p$为新基准；\\textbf{break}并开始下一轮",
+          "new": "\\State 提交$p$，刷新$P$及$t$的锥；\\textbf{break}"
+        },
+        {
+          "old": "  \\State 若本轮无提交则停止\n",
+          "new": ""
+        }
+      ]
+    },
+    {
+      "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+      "before_sha256": "6e4b97c1272a1c970962a38a5394e5c5698333df8841e922ba5822685909a649",
+      "after_sha256": "eb9c81cbc0d01ab7718da63267f3d50ea358e26661ae3e132f46097a5cdd8443",
+      "edits": [
+        {
+          "old": "\\State 从\\textbf{当前网表 $N$} 的最差违例端点提取扇入锥，必要时按深度分治",
+          "new": "\\State 从当前网表$N$的固定目标端点$t$提取扇入锥，必要时按深度分治"
+        },
+        {
+          "old": "下一轮从提交后的网表重新提取违例端点与扇入锥并重新生成候选",
+          "new": "提交后更新报告序列$P$，在原目标端点$t$重提扇入锥并重新生成候选"
+        },
+        {
+          "old": "失效反馈在每轮候选评估结束后按失效类型更新搜索权重，并作用于下一轮的候选构造，不改变当前轮已生成候选的评估顺序；若一轮内候选耗尽且无候选被接受、且尚未达到停止条件，流程更新权重后进入下一轮重新搜索。",
+          "new": "启用反馈时，无提交轮按失效类型更新权重；C′关闭反馈，保留网表、$P$、权重及锥上限，继续至登记的停止条件。只有提交后才更新$P$并在原目标端点重提锥。"
+        },
+        {
+          "old": "对当前网表最差违例端点的 D 输入反向广度优先搜索",
+          "new": "对初始选定违例端点$t$的D输入反向广度优先搜索"
+        },
+        {
+          "old": "不同实验的接受配置见S3。候选$p$在相同约束和分析角下，先通过局部与已登记硬门$H(p)$；C′运行器固定启用TNS不退化检查（容差0），再采用以下时序分支：",
+          "new": "不同实验的接受配置见S3。在相同约束和分析角下，候选$p$须通过局部与已登记硬门$H(p)$及以下时序分支。C′的$H$包含TNS不退化检查（容差0）："
+        },
+        {
+          "old": "\\operatorname{Timing}(p)={}&[\\Delta_{\\mathrm{WNS}}(p)>0]\\\\\n&\\lor[\\mathrm{tns\\_aware}\\land\\Delta_{\\mathrm{WNS}}(p)=0\\\\\n&\\qquad\\land\\Delta_{\\mathrm{TNS}}(p)>0].",
+          "new": "\\operatorname{Accept}(p)={}&H(p)\\land\\bigl([\\Delta_{\\mathrm{WNS}}(p)>0]\\\\\n&\\lor[\\mathrm{tns\\_aware}\\land\\Delta_{\\mathrm{WNS}}(p)=0\\\\\n&\\qquad\\land\\Delta_{\\mathrm{TNS}}(p)>0]\\bigr)."
+        },
+        {
+          "old": "完整接受条件为$H(p)\\land\\operatorname{Timing}(p)$，其中C′还要求$\\Delta_{\\mathrm{TNS}}\\ge0$。启用物理门控时，通过上述条件且满足式~\\eqref{eq:accept} 且理想线网增益超过 10\\,ps 的候选进一步接受简化 SPEF 复测；",
+          "new": "启用物理门控时，满足式~\\eqref{eq:accept}且理想线网增益超过10\\,ps的候选进一步接受简化SPEF复测；"
+        },
+        {
+          "old": "TNS 用于可选的辅助接受判据。",
+          "new": "C′将TNS不退化固定为硬门；部分归档配置另启用TNS-aware持平分支。"
+        },
+        {
+          "old": "直接以式~\\eqref{eq:accept} 的 $\\Delta_{\\mathrm{WNS}}>0$ 为接受准则",
+          "new": "局部与硬门通过后的时序接受分支为$\\Delta_{\\mathrm{WNS}}>0$"
+        }
+      ]
+    }
+  ],
+  "production_code_edited": false,
+  "new_EDA": false
+}

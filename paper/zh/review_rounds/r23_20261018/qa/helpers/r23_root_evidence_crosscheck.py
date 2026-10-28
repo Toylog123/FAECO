@@ -1,0 +1,19 @@
+from pathlib import Path
+import json,hashlib,datetime
+root=Path.cwd();r=root/'paper/zh/review_rounds/r23_20261018';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def load(rel):
+ p=root/rel;return {'path':rel,'sha256':sha(p),'content':json.loads(p.read_text(encoding='utf-8'))}
+a=load('project_docs/evidence/r22_a_sec_unified_20261018/ROOT_ACCEPTANCE.json')
+rows=[]
+for p in sorted((root/'project_docs/evidence/r22_a_sec_unified_20261018/proofs').glob('*/sec.log')):
+ t=p.read_text(encoding='utf-8');lines=[l for l in t.splitlines() if 'Proved ' in l or 'No selected unproven' in l or 'EQUIV_SIMPLE' in l or 'EQUIV_INDUCT' in l or ' are proven and ' in l]
+ rows.append({'circuit':p.parent.name,'path':str(p.relative_to(root)).replace('\\','/'),'sha256':sha(p),'actual_excerpt':lines,'induct_found_no_unproven': 'No selected unproven $equiv cells found in equiv.' in t})
+b=load('project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/final_sec/result.json')
+bp=load('project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/POST_RUN_VERIFICATION.json')
+c=load('project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json');j=c['content']['jobs']
+matched=load('project_docs/evidence/r22_cprime_v3_20261016/mechanism_audits/MATCHED_STATE_PAIRS_16.json');pairs=matched['content']['pairs']
+cs={'path':c['path'],'sha256':c['sha256'],'head':c['content']['head'],'all_matrix_verified':c['content']['all_matrix_verified'],'jobs':len(j),'evaluation_records':sum(x['candidate_evaluation_records'] for x in j),'candidate_sta_launches':sum(x['candidate_ideal_sta_launches'] for x in j),'baseline_sta_attempts':sum(x['baseline_sta_process_attempts'] for x in j),'retained_commits':sum(x['retained_commits'] for x in j),'all_zero_unproven':all(x['sec_unproven_points']==0 for x in j)}
+ms={'path':matched['path'],'sha256':matched['sha256'],'original_status':matched['content']['status'],'pairs':len(pairs),'same_endpoint_pairs':sum(x['same_endpoint_hash'] for x in pairs),'matched_state_rounds':sum(len(x['matched_state_rounds']) for x in pairs),'every_match_same_pool_and_dispatch':all(x['same_ordered_pool'] and x['same_dispatch_order'] for p in pairs for x in p['matched_state_rounds']),'scope':'Diagnostic observations, not acceptance receipt nor independent statistical replicates; matrix acceptance separately in MATRIX_AUDIT_72.'}
+data={'utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'Root post-card inventory. NOT shown to blind seats; does not rewrite committed votes, does not enter mechanical verdict. No EDA executed.','A_acceptance':a,'A_log_crosscheck':rows,'A_adjudication':'All8 logs have zero remaining points before induct. Therefore do NOT infer actual A results depend on conditional induction or demand eight duplicate proofs. Domain W2 remains a manuscript disclosure/guarantee-domain question; verify state matching/model assumptions and expose actual phase counts.','B17_result':b,'B17_rootpost':bp,'B17_adjudication':'New proof completed for recorded candidate; old paper metadata stale. Bind its exact timing endpoint before changing results/means; no duplicate SEC requested.','Cprime_summary':cs,'matched_weighted_uniform':ms,'Cprime_adjudication':'Same endpoint/pool/dispatch observed in all16 weighted/uniform pairs. No standalone weight benefit in these observed controls. Cannot use Cprime as historical C/D recovery or claim weight efficiency improvement.','D_state':'Producer all56 completed rc0; accepted28, full raw archives root-accepted3/8. No new D acceptance performed in this review.'}
+(r/'ROOT_EVIDENCE_CROSSCHECK.json').write_bytes((json.dumps(data,ensure_ascii=False,indent=2)+'\n').encode('utf-8'))
+print(json.dumps({'A_logs':len(rows),'A_induct_no_remaining':sum(x['induct_found_no_unproven'] for x in rows),'Cprime':cs,'matched':ms},ensure_ascii=False))

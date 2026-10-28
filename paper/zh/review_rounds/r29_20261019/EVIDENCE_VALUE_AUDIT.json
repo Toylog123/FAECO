@@ -1,0 +1,226 @@
+{
+  "date_local": "2026-10-19 Asia/Shanghai",
+  "mode": "bounded read-only evidence/value assessment; not new five-seat review or new EDA",
+  "current_science_family": "Cprime v3 source_head 3ea0f75; 8 circuits x9 configurations, not 72 independent circuit samples",
+  "classification": "Method engineering prototype with mechanism-focused empirical study; a superior new optimization algorithm is not yet established.",
+  "verdict": "There is reproducible engineering and empirical value, but measured additional benefit of weighted cuts/feedback is absent. The issue is unproven contribution beyond a simple critical-instance search, not merely unpolished presentation.",
+  "computed_from_csv": {
+    "runs": 72,
+    "circuits": 8,
+    "candidate_sta": 6858,
+    "same_C_W1_all8": true,
+    "C_STA_saving_vs_W1": 8,
+    "W1_savings_vs_random_percent": {
+      "UR1": 19.024856596558315,
+      "UR2": 7.8346028291621295,
+      "UR3": 10.27542372881356
+    },
+    "arms": {
+      "C": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 839,
+        "commits": 27,
+        "negative_final_wns": 8
+      },
+      "L": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 1274,
+        "commits": 27,
+        "negative_final_wns": 8
+      },
+      "U0": {
+        "circuits": 8,
+        "mean_gain_ns": 0.0,
+        "candidate_sta": 71,
+        "commits": 0,
+        "negative_final_wns": 8
+      },
+      "U1": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 847,
+        "commits": 27,
+        "negative_final_wns": 8
+      },
+      "UR1": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 1046,
+        "commits": 28,
+        "negative_final_wns": 8
+      },
+      "UR2": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 919,
+        "commits": 28,
+        "negative_final_wns": 8
+      },
+      "UR3": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 944,
+        "commits": 28,
+        "negative_final_wns": 8
+      },
+      "W0": {
+        "circuits": 8,
+        "mean_gain_ns": 0.0,
+        "candidate_sta": 71,
+        "commits": 0,
+        "negative_final_wns": 8
+      },
+      "W1": {
+        "circuits": 8,
+        "mean_gain_ns": 0.16125000000000003,
+        "candidate_sta": 847,
+        "commits": 27,
+        "negative_final_wns": 8
+      }
+    },
+    "common_budget_counterexamples": [
+      {
+        "circuit": "s27",
+        "control": "UR3",
+        "compared_common_budget_k_max": "36",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "2",
+        "max_control_advantage_ns": "0.01",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR1",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "10",
+        "max_control_advantage_ns": "0.17",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR2",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "63",
+        "max_control_advantage_ns": "0.01",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR3",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "5",
+        "max_control_advantage_ns": "0.17",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      }
+    ],
+    "committed_curve_rows": 6930
+  },
+  "supported_contributions": [
+    "Concrete and auditable construction of critical-instance cover regions, local candidate instantiation, state-dependent search, actual new-STA accounting and final SEC separation.",
+    "Within the controlled 8-circuit family, covering report-critical instances enables the observed gains where cut-only arms fail; cover-first policy reaches equal final WNS with fewer total new candidate STA than each of three randomized schedules.",
+    "Paired ablations expose limits of structural proxy costs, feedback and ideal-net-to-physical transfer; useful empirical findings if replicated on a stronger broader protocol."
+  ],
+  "unsupported_contributions": [
+    "Weighted node-cut mechanism as source of the observed gain; weighted/uniform pairs coincide and cover-only matches W1 while using 8 fewer STA.",
+    "An adaptive/feedback algorithm advantage: Fixed and EMA have equal endpoint/first-improvement/max-gain in their own archived family.",
+    "Pure ranking causal advantage, arbitrary-budget dominance, industrial PPA/signoff advantage or superiority to external strong optimization methods.",
+    "Historical mixed-action 1.07375 ns versus G-only .16125 ns as effect of the cut or ranking: action spaces, TNS branch and measurement consumption differ."
+  ],
+  "strongest_alternative_explanation": "A simple report-critical-instance greedy local search already provides the gains. The graph cut and extra cost terms add complexity without demonstrated benefit; comparing only with random schedules does not test this strongest alternative.",
+  "minimum_decisive_experiments": [
+    {
+      "priority": 1,
+      "test": "One unified same-input/library/constraints/acceptance/budget comparison containing cover-only C, full W1, a conventional timing-critical greedy candidate search and a compatible strong external optimizer; include equal candidate generators where testing order specifically.",
+      "falsifier": "C or conventional greedy matches/dominates W1 across gain-versus-real-STA and area, or the external optimizer dominates at matched budget.",
+      "why": "Tests whether the design adds anything beyond existing simple practice, rather than accumulating more internal configurations."
+    },
+    {
+      "priority": 2,
+      "test": "On a modest but structurally diverse larger mapped test set, retain paired endpoints and parasitics-aware physical estimates with TNS/hold/electrical constraints and area. Predefine budgets and report all failures.",
+      "falsifier": "The cost saving disappears at scale, or timing benefit is lost after physical estimation or is paid for by new hold/electrical violations.",
+      "why": "Tests whether the prototype solves a practically relevant ECO problem; new evidence must use explicit identities, not repair historical identities by substitution."
+    },
+    {
+      "priority": 3,
+      "test": "Frozen-base same-candidate-set replay with stored measurements, deterministic schedule and more random seeds; optionally budget-normalized regret. Keep distinct from live state-changing trajectories.",
+      "falsifier": "Observed aggregate saving is seed/candidate-pool composition rather than candidate order.",
+      "why": "Closes partial REV-01 attribution; useful after the simple-baseline survival gate, not as substitute for it."
+    }
+  ],
+  "existing_pending_gates": [
+    "REV-01 frozen pool attribution",
+    "REV-02 compatible external baseline",
+    "REV-05 historical identities; D accepted28/56 and raw3/8",
+    "REV-21 original hierarchical SPEF/OI051"
+  ],
+  "interpretation_note": "Absolute 0.16125 ns cannot be declared universally small without the reference timing problem. The more decisive weakness is missing incremental novelty and demonstrated practical advantage. All 8 W1 endpoints remain negative WNS under the tested constraint, per source CSV; improvement is not timing closure.",
+  "source_bindings": [
+    {
+      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+      "sha256": "f0f4d5e003076e5bb8123f39655ec99e6afa4520823609000e0ade652cf9d57b",
+      "bytes": 46137
+    },
+    {
+      "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+      "sha256": "79dfad6754a5a3c6f74c57b2ab1aff9948638df07014e70b753bf738c8dc74eb",
+      "bytes": 51353
+    },
+    {
+      "path": "paper/zh/figures/data/final/r24_cp_gain_cost/r24_cp_gain_cost_source.csv",
+      "sha256": "d13d11ff1a3a6286f56d5e5c1934f81e98a13a4a99142801320efeefd6ba5e7b",
+      "bytes": 16190
+    },
+    {
+      "path": "paper/zh/figures/data/final/r24_cp_gain_cost/r24_cp_gain_cost_arm_summary.csv",
+      "sha256": "5fe662a8477d9dcab2b7044fb9b1dbd68b2734f7236db47397b1be05c443b08f",
+      "bytes": 451
+    },
+    {
+      "path": "paper/zh/figures/data/final/r24_cp_gain_cost/r24_cp_gain_cost_paired.csv",
+      "sha256": "a68bb7c9c0ae8b32d21dcb74ece02bd00a2a104009a4e180fd469875878ad7c4",
+      "bytes": 9657
+    },
+    {
+      "path": "paper/zh/figures/data/final/r24_cp_budget_curves/COMMON_BUDGET_COUNTERCHECK.csv",
+      "sha256": "589a7af5b6c1d452a9fff657346f504b7aec62fd6179c61117022c04c9962507",
+      "bytes": 3914
+    },
+    {
+      "path": "paper/zh/figures/data/final/r24_cp_budget_curves/CANDIDATE_STA_COMMITTED_CURVES.csv",
+      "sha256": "e42b330ab31f610f866ec66b152965776c9ec6d3ef0113382b131c6f395a98a7",
+      "bytes": 1077718
+    },
+    {
+      "path": "paper/zh/review_rounds/r24_20261018/RESPONSE_TO_REVIEW.md",
+      "sha256": "b2f5c749bf569083efe27c2390ff3c13e81865286a8cc474adac2273dd2fb2d0",
+      "bytes": 8525
+    },
+    {
+      "path": "paper/zh/review_rounds/r26_20261018/FULL_PAPER_EVIDENCE_CHECK.md",
+      "sha256": "82950f58625cda8de769809e81c90da715316f1394eb100068236bfbd457f5e4",
+      "bytes": 3974
+    },
+    {
+      "path": "paper/zh/review_rounds/r26_20261018/FULL_PAPER_EVIDENCE_CHECK.json",
+      "sha256": "0029f6f0d5cbad8b5530b13c702071851ab947be89e65048e64089ffa381e5eb",
+      "bytes": 156254
+    },
+    {
+      "path": "paper/zh/review_rounds/r28_20261019/FINAL_DELIVERY.json",
+      "sha256": "1a1aa1b24e169fe297023fd3f4493da2779c47d412d898b0c4dc512191ca0e2b",
+      "bytes": 12986
+    }
+  ],
+  "unchanged": [
+    "manuscripts",
+    "figures",
+    "production code",
+    "HEAD",
+    "scientific experiment evidence"
+  ]
+}

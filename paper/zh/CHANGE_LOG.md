@@ -80,3 +80,204 @@
 中英主稿的实验设置及图4图注明确区分：ISCAS89/ITC-99为0.5 ns；PicoRV32主核、乘法器、寄存器模块依次为5/2/0.5 ns。比较条件改为同一电路的基线与修复网表采用相同约束。依据187份Pico保留STA Tcl与27份canonical B基线Tcl的实际逐SHA审计，修复原“全部0.5 ns”误述，不改收益、证明点数、实验族或数值表。
 
 原稿/改后字节、编辑收据及编译/版式QA保存于 `review_rounds/r22_20261016/metadata_correction_01/`；中稿CRLF、英稿LF保持。英文初替换的多余TeX重音转义已在编译前去除，v1/v2收据均保留。整体科学证据仍按CLAIM_REPLACEMENT_MAP逐族恢复。
+
+
+## 2026-10-18 D两例反馈机制诊断预览（仅预览，未改正文）
+
+新增独立图预览`figures/data/previews/r22_D_feedback_mechanism_v1/iteration02/`及中英caption/contract/CSV，来源为当前pin四个已完成D/fixed-adaptive s27/s382对象。作者QA与根独立原数据CSV/实际PNG-PDF四panel视觉已接受（ROOT_FIGURE_ACCEPTANCE3067eb58…）；详细图件改动见figures/CHANGE_LOG。正文/原D图表/实验族/效果数字未因此替换，完整D56与其它科学门验收后再决定正式回填，未进行新稿编译或投稿验收。
+
+
+## 2026-10-18 A八对统一SEC元数据修订进入执行（OI050，完成收据待）
+
+统一原A八pair在f761/实际Lib/固定Yosys下的新SEC已获不同owner独立87b3b721…及根a6caf8a1…接受；点数/同批prover runtime将按实际8行替换，s820使用新批139/0、s832146/0，旧A6/A2及旧脚本记录保留。新旧equiv构造的点集合不同，不比较证明强弱；同批runtime不含输入/模型准备且当时D STA并发，不作跨方法速度结论。根已授权双语句/表修订、两遍编译、38页视觉与副本同步，当前尚未收到完成收据，此项不宣称正文/构建/同步已完成或OI050已关闭。
+
+
+### 2026-10-18 A元数据实际编辑/编译完成（LOG100，视觉/副本同步待）
+
+中英各限定修改A功能说明一句和SEC表两位置，原14table/7includegraphics及其它WNS/结果/图保持。EDIT_RECEIPTc0001a6e…绑定两份当前Tex；表取新统一8行实际point/runtime（s820139、s832146），scope为原A exact pair/Boolean SEC/prover+log elapsed，不跨方法比较。两语言各两次LuaLaTeX均rc0/source稳定，新buildPDF173ae809…与d129dbe4…已核；38p视觉与canonical副本同步仍待，OI050未关闭，旧版本/证明来源不覆盖。
+
+
+### 2026-10-18 A表静态渲染通过后EN float v2版式修订（LOG101–102，尚未最终验收）
+
+首版新表静态/渲染12+26页通过，A8行、其余13表及7图引用保持；首QA对label的正则bad escape失败原脚本/log保留，修QA后产物齐。根实际页匹配发现EN首次引用仍14页而A表从旧15到新16、新15已进入ITC，属需要修的版面退步。已授权exclusive en_float_refinement_v2仅将A表float设[!htbp]，先保存v1 EN source/PDF/receipts，数据/其它图表不动，EN两遍重编与26页重渲染/视觉；ZH不重跑。当前OI050仍open，最终副本同步与验收另记。
+
+
+### 2026-10-18 EN float v2输出错误与替代构建（LOG103，未最终验收）
+
+EN float v2首编译遇PDF不可写（rc1，5.344s），原build PDF d129dbe4…未变；原source/log/receipt已保。改独占attempt02/build后两遍rc0（5.359/5.313s），PDF298764f7…、26页render0/表行保持，但A表仍EN16，未解决相对首次引用14页的布局退步。现发现仅表注精简的v3作者EDIT收据3f729146…，只记已落盘/最终授权与编译视觉接受待；canonical同步及OI050仍open，不以旧PDF冒新源。 原件在actual_correction_v1/en_float_refinement_v2/；首失败编译及attempt02收据分开，不覆盖。输出不可写不能归咎算法或正文内容，不杀用户进程；后续仅用独占输出与有界同步，构建旧副本保持独立身份。
+
+
+### 2026-10-18 EN表注v3限定最后一轮（LOG104，已授权/未验收）
+
+根已实际看v2新EN16且确认!未前移，明确给定表注精简文本；仅移除重复的complete-proof说明，保Yosys0.33、SKY130、四证明命令、同批prover walltime和mapping/candidateSTA/modelprep排除，字号与[!htbp]不变。v3 EDIT_RECEIPT3f729146…/after源e2f314c1…及旧v2源/PDF保，作者两遍受控编译中，不先称表前移/最终视觉与副本同步。
+
+
+### 2026-10-18 EN v3编译与v4分节屏障授权（LOG105）
+
+EN v3仅精简表注，两遍rc0/26p render0（build19ccd1e3…/QA d62d5eba…/PDFb4e6da09…），但A表仍16。根确认已有placeins，授权v4仅在A表后、Cross-dataset subsection前加FloatBarrier，保v3短note/[!htbp]/8行/字号，不新增依赖；不强制15或26页，允许A表16但下一实验正文须在其后。v4编译/视觉/独立与根验收及canonical同步仍待，OI050open，ZH不重编。
+
+
+### 2026-10-18 D诊断预览英文caption术语补件（LOG106）
+
+外部CAPTION_EN_v2仅ideal-wire STA→ideal-net STA，全文单替换与旧图包SHA均核符；不改正文或重绘，详细见figures/CHANGE_LOG，根文本验收待。
+
+
+2026-10-18续（LOG107）：ROOT_CAPTION_EN_V2_ACCEPTANCE8dcf657c…已实际文本接受CAPTION_EN_v2.md（86831fdb…）；后续主稿集成选此新图注，原图像/FINAL/data均不变，图像QA沿ROOT_FIGURE3067eb58…，无需重绘或重复glyph/collision门。正文当前未插该预览。
+
+
+2026-10-18 EN v4当前（LOG108）：EDIT8a918cf6…仅一FloatBarrier，build d65bd931…2pass0/5.375s各，PDF5d1be23c…；QA769da499…实际28页/render0/A8行与13表7图保持。A图15/表16先于B正文但浮动页留白增加，根暂缓sync/final并独立核Fig3字形/物理尺寸；OI050仍open/canonical与metadata未同步，ZH不重编，不把28页写26或局部绿写交付。
+
+
+### 2026-10-18 EN Fig3包含尺寸v5授权（LOG109，未通过）
+
+v4分节FloatBarrier令A图表先于B正文，但28页及15/21/23/24浮动留白被根列为不可最终交付，sync暂停。根实际测v4PDF5d1be23c…Fig3所有可见label/tick/legend最小8.184960pt；MEASUREMENT016641c0…记录.78→.70 linewidth投影7.345477pt≥6.8。只授权EN既有Fig3 include宽.70，原向量源/数据/中文图不变，保barrier/短note/8行；新PDF实际字形、读序、空页和完整contact验收待，不能把投影当v5实测或提前称通过/OI050闭合。
+
+
+2026-10-18 EN v5实际构建/字形（LOG111）：EN v5仅Fig3 include宽.70，当前source d89b207c…/PDFc2783046…实核匹配；两编译rc0/26页render0，图和A表同15、下一Cross-dataset标题16，实际图内label/tick/legend最小7.345520pt≥6.8。作者静态/实测门已过，visual字段仍pending，最终不同owner/根接受与canonical/metadata同步待，OI050open；ZH不重编，原图vector/data不动。 EDIT4a1c114b…/build825dd0eb…/STATIC128315a8…/actualglyph23f79ebf…；保v4投影为预估，v5为实际PDF测量，未提前最终接受。
+
+
+2026-10-18根局部视觉/向量绑定（LOG112）：根实看ENv5第15页图表、A8行和注清晰有序，作者继续既定sync。14 included vectorPDF currentSHA均等固定f761 Gitblob（root_vector_head_binding/VECTOR_HEAD_BINDINGc4ff6ad9…），记录员逐SHA核当前14件；此为固定Gitblob字节绑定，不冒称编辑前filesystem快照。作者final/完整视觉与不同owner/根最终接受/同步收据仍待，OI050不提前闭。
+
+
+2026-10-18作者最终v5/实际副本同步（LOG113）：FINAL_QA_v21902d011…作者38页视觉/限定inverse scope/A8行与EN实测字号通过；SYNC29a6ee35…ZH build-root-manuscript三PDF同173ae809…，ENv5与canonical build同c2783046…，4metadata已同步，记录员当前逐源/PDF/metadataSHA核符。Tex冻结/作者最终清单收尾；不同ownerchecker1291f4e9…仅syntax prepared未执行，独立与根最终接受待/OI050open，不再误写同步未执行。
+
+
+2026-10-18作者最终收据冻结（LOG115）：FINAL_RECEIPTbc951338…/397件清单4e9aaf1c…明确authorcompleted/selectedENv5，QA1902d011…/SYNC29a6ee35…/POST_SYNC2602df5a…链齐，当前源/PDF/metadata回读一致。全部构建和测试已停，Tex/PDF冻结；根已派发不同owner独立终验，但实际invocation/结果收据尚待，不提前闭OI050。D s420七臂归档仅获准备指令，须D28独立接受和根准入再执行，无新归档/EDA。
+
+
+2026-10-18独立静态/渲染完成（LOG118）：RESULT53f76dba…/runtime6.563s（wrapper11s/0）核562来源前后稳定、397作者清单及当前45源/proof/rawcompile/readback/copy/metadata；独立38页实际视觉仍进行，最终receipt/根接受待/OI050open。准备checker1291f4e9…未执行且未另存文件（消息/tool历史仅），最终397schema/v2-priorQA适配后实际首次运行41fd6997…；不伪称准备原件可恢复。
+
+
+2026-10-18不同owner最终38页接受（LOG119）：FINAL334a893b…/VISUALaf2c892e…/REPORTfd1aa6f2…已冻结，63final原件逐SHA-size核符/562来源视觉后仍稳定。独立实际12+26页/10contact+两表页高res，A8行/完整注/图3最小7.345520pt及A图表先于B正文，无新裁切碰撞或异常空白，限定接受A元数据/EN局部版式/同步。根最终接受待/OI050暂open，非整体科学或投稿接受。
+
+
+2026-10-18根最终接受（LOG120）：ROOT_MANUSCRIPT_ACCEPTANCE472b441b…实际accepted，重核独立63原件/562来源、作者finalsource/PDF/canonical与metadata、八实际表行和29图中文字min7.345520pt、45源与HEAD稳定。OI050仅A句表/EN Fig3包含布局与A-B读序/编译副本与metadata门关闭；非其它科学或投稿验收。ZH173ae809…/ENc2783046…为当前有效工作稿PDF，旧失败及v1-v4留档。
+
+## 2026-10-18 r24 — 相关工作与方法比较（首批）
+
+按r23 REV02/11–15修订：区分功能ECO修订规格与时序ECO功能保持；纠正Kravets、Pan、Dao与metal-only阶段归属；表2改为逐方法候选对象/决策信号比较，明确相容外部性能基线仍需直接评价。原始文献重查，无新增外部性能数字。原稿/图件已备份，精确diff和SHA见r24/EDIT_01_RELATED_WORK.json；尚未编译，不宣称完成整轮。
+
+## 2026-10-18 r24 — 算法定义与可复算例（第二批）
+
+依据固定C′源码ZIP与当前实现双核，按REV06–08/16–18重写区域提取、覆盖集合、节点割下界0.05、cover-first调度、缓存身份及R/G/B/单一两G联合枚举，补算法2与六门实际库静态例；λc不再误写控制C′覆盖顺序，代理项不冒称真实时序/验证代价。EDIT_02_METHOD.json绑定47fcf20d…与METHOD b0eff5f4…。例为静态演算非STA/SEC效果。另新增原数据再分析包r24_paper_revision_20261018，主稿尚待整合；未编译，不宣称整轮完成。
+
+## 2026-10-18 r24 — 受控证据、证明域与网表代价（第三批）
+
+按REV01/03/05/09/10/19/20加入C′72独立对照与图、9臂汇总、8对网表代价和实验族对应表；保留W1/U1零权重效应、C与W1持平、随机种子及L非纯排序。b17新12879/0与-16.15端点已绑定；ITC三态3例不再计二态完整证明，16支持域/3unsupported分层收益保留。A8补初态关系/实际simple与induct阶段，未重跑已完成证明。精确编辑见EDIT03；尚待整稿编译/视觉和摘要同步，未宣布投稿定稿。
+
+## 2026-10-18 r24 — 摘要/贡献、图2/4与物理口径（第四批）
+
+中英摘要与结论改用固定72对照的真实结果，不再把1.07历史策略数归因双割；新图2入稿完整六门例、新图4为三态对象加unsupported样式，全数值保留。补实际RC公式、PR利用率/角/未设约束；纠正共享SPEF、单位长度及50/6重复记录，未把新模型当旧运行恢复。引用按首次出现顺序重排，条目原文保留。EDIT04逐项留痕；fresh双侧SPEF首反驳控因43 partial未注入已停止，后续数据待补，整稿还未最终验收。
+
+## 2026-10-18 r24 第五批：图4证明域标记图注
+
+- 按独立交叉检查，在图注解释空心/虚线仅标记三态证明域不支持，保留全部时序值；与正文及图例一致。未改变数据，后续重新编译。
+- 精确改动及SHA：`review_rounds/r24_20261018/EDIT_05_FIG4_CAPTION.json`。
+
+## 2026-10-18 r24 第六批：汇总表标题定位纠错
+
+- 独立交叉检查发现第三批将图件说明误放到跨测试集汇总表标题，引入图专属符号描述及表自引。现改回整体时序/证明状态表标题；表内全部统计和证明域注释不变。
+- 精确前后文本/SHA：`review_rounds/r24_20261018/EDIT_06_OVERVIEW_TABLE_CAPTION.json`。最终构建待。
+
+## 2026-10-18 r24 第七批：真实双侧负载扫描
+
+- 原层级控制43partial失败后保持原件；以完整保端口/状态/90cell逐pin的helper展开派生族及两原→flat SEC建立输入，另注册24次真实STA完成control及10/40/160基础长度扫描。
+- 新表明确理想+0.15、u10+0.11、u40/u160均0；8次真实注释全0，保留零收益，结论同步。不恢复旧F6或原层级支持，生产源/HEAD不变。
+- 根重查194成员SHA-size、16receipt/log和8原annotation后接受数据；精确改动/证据见`review_rounds/r24_20261018/EDIT_07_FRESH_PAIRED_LOAD.json`。
+
+## 2026-10-18 r24 第八批：受控族逐测量已提交收益曲线
+
+- 新增C′本族8×9收益—成本曲线，6930点含72基线起点/6858真实候选STA；仅192明确提交更新收益。精确全程重合才合并46图线，保全部原值/自然停止，不用旧反馈曲线替新族。
+- 根独立重算72终点/计数/提交和40组共同预算反驳检查，实看图后晋级；正文保留s27UR3及s420随机臂部分预算领先，禁止“处处支配”。
+- 精确源链/图SHA见`review_rounds/r24_20261018/EDIT_08_CONTROL_CURVES.json`；无新增EDA。
+
+## 2026-10-18 r24 整稿验收与副本同步
+
+- 最终源`a290d707…`经build04两遍LuaLaTeX返回0，PDF`ce085898…`：15页、9图、18表、14参考文献；交叉引用/引文首用顺序及全部图文件通过，0溢出/缺字/悬空引用。字体回退警告保留。
+- 根实际查看覆盖15页的四张contact及重点全文页9/11/12/14/15，四张新/重制图另有原生PDF渲染QA。最终源与图未再更改；原7图字节保持。
+- 先备份两个旧PDF镜像，再同步build、zh根及manuscript三个PDF副本，SHA完全一致。8批精确修改链、总diff、22条回应及未决4项见`review_rounds/r24_20261018/FINAL_PACKAGE.json`与`RESPONSE_TO_REVIEW.md`。
+- 本轮为可审阅工作稿；历史身份、外部强基线、固定候选池纯排序、原层级SPEF/三态证明等科学门持续保留。生产源/HEAD锁定，不在D56及全部8归档验收前提交。
+
+## 2026-10-18 r24 第九批：跨测试集证明段落归属
+
+- 最后通读发现b17/三态/统一模型域段落从属于PicoRV32小节，现增4.3.3跨测试集功能验证，避免误读。所有数值、证据和保证域不变。
+- EDIT09保存准确前后及SHA；build04源/PDF/交付报告另存`interim_build04_delivery/`，待build05重新整稿验收/绑定。
+
+## 2026-10-18 r24 build05最终重验
+
+- EDIT09后的当前源a2349e07…经build05两遍0，PDF142ddba6…，仍15页9图18表14参考文献；根重新实际查看15页contacts与重点9/11/12/14/15，无布局缺陷。
+- 三PDF镜像再次同步为142ddba6…，上一ce085898…源/PDF/响应/包清单完整留在interim_build04_delivery及before/pdf_mirrors_after_build04。FINAL_PACKAGE已绑定9批编辑链和当前源/构建/视觉。
+- 18条限定落实、4partial不变，所有科学缺口和生产源锁保持。
+
+## 2026-10-18 r25：突出主线与正文压缩
+
+- 用户要求内容过多、重点不突出。正文重构为区域来源—候选调度—同源收益/测量成本；中英文标题/摘要和结论同步，重复背景/分类表/验证台账移除正文。
+- 正文保3图2表，独立补充材料承接完整算法/证明/跨族/策略反馈/网表和物理/结构负结果。权重零收益、随机臂局部领先、面积增加与线载增益消失仍正文。
+- 复核实际C′固定源及拒绝trial后补回TNS不退化硬门（epsilon0），不改实验/源或用删条件求短。全部原图字节保持；精确身份与统计见r25 EDIT01，原完整稿和三PDF已备份。
+
+### r25 EDIT02 编译前自检
+
+- 主文六门图R标记限定为R候选，伪代码明确提交即break，补明派生输入不修原层级支持。补充材料移除空封面分页并将跨文档表引用改为主文表2。两份源SHA见EDIT_02_PREFLIGHT.json；编译正在进行。
+
+### r25 EDIT03：算法与固定运行器对齐
+- 删除压缩稿误加的“无提交即停止”；固定初始目标端点，仅提交后更新P与锥，关闭反馈时无提交轮不改权重。
+- 补充材料将局部/硬门H直接纳入Accept公式，说明C′的TNS不退化硬门与可选TNS-aware分支。
+- 依据固定3ea0f75运行ZIP及原件，不运行新EDA；逐项修改见r25/EDIT_03_MODEL_ALIGNMENT.json。
+
+### r25 交付与检查
+- 主文5页/3图2表，独立补充10页/6图12表；双文档编译、交叉引用与全页视觉核查通过。补充首次双轮仍需重跑的记录保留，追加编译已稳定。字体替代提示仍保留。
+- 3份主文PDF与3份补充PDF分别一致；9图PDF字节未改。两术语表同步题名与固定目标/接受口径；迁移、备份和结果见r25/MIGRATION_AND_RESULT.md及FINAL_DELIVERY.json。无新EDA、production修改或HEAD变动；原未决门保留。
+
+### r25 EDIT04：删除配置复述
+- 删除设置段与表1重复的逐臂说明及其中W0/U0含糊句，保留完整配置表；补充S6证据入口明确转引。精确修改/备份见EDIT_04_DEDUP.json及before_edit04/，随后主文重编。
+
+### r25 交付与检查
+- 主文5页/3图2表，独立补充10页/6图12表；双文档编译、交叉引用与全页视觉核查通过。补充首次双轮仍需重跑的记录保留，追加编译已稳定。字体替代提示仍保留。
+- 3份主文PDF与3份补充PDF分别一致；9图PDF字节未改。两术语表同步题名与固定目标/接受口径；迁移、备份和结果见r25/MIGRATION_AND_RESULT.md及FINAL_DELIVERY.json。无新EDA、production修改或HEAD变动；原未决门保留。
+
+## 2026-10-18 r26：完整论文与清楚主线
+
+- 用户纠正r25压缩过度。以完整论文恢复方法定义、节点代价、动作与状态/接受/功能模型及主要实验；删重复解释而不按页数砍实质内容。
+- 正文按区域构造—调度—收益/成本—适用边界组织，恢复A8/ITC/Pico、策略/反馈、S、网表面积、OpenROAD和双侧线载；继承TNS硬门、固定t/仅提交刷新、no-feedback和全部已知负面。
+- 图1/图2预留内置图像模型新图路径，待生成与科学核图后才能编译交付；统计图不改。主文编辑身份见r26/EDIT_01_FULL_PAPER.json，无新EDA或源码改动。
+
+### r26 EDIT02：主补配对与示意图身份
+- 新六门图注补齐全权重1、人工静态/非STA测量身份；补充移除含旧融合排序措辞的总流程图，转引主文新图1，按完整主文同步六门/热图/曲线/负载表的跨文档编号。
+- 保留补充详细算法与台账，全部统计图数据/字节未改；实际输入身份见EDIT_02_PREFLIGHT.json。
+
+### r26 EDIT03：术语与证明阶段
+- 有界证据核对纠正spare cells为“备用单元”，明确A8在equiv_simple后已无未证明点、induct非新增证明来源；沿用实际八份日志，无新证明运行。
+
+### r26 EDIT04：补充交叉引用
+- 静态引用检查发现去旧总览后仍有一处本地引用，改为主文图1；保留首次构建/检查失败，补充按新源重编，正文未改。
+
+### r26 完整论文交付
+- 主文实际10页7图6表，补充9页5图12表。全部19页渲染实看、引用/编译检查通过；新图1/2在页3/4全尺寸核查，统计图未改。
+- 两稿各3份PDF分别同SHA；新图片、prompt/provenance、失败图1历史与有界证据复核均保留，见r26/FINAL_DELIVERY.json、RESTORATION_AND_RESULT.md、AI_FIGURES.md。字体替代提示及图片投稿资格未核验如实保留。原科学门和HEAD锁不变。
+
+## 2026-10-19 r27：黑白灰配色统一
+
+- 按用户进一步指示，所有图改用中性黑白灰；两示意图由内置图片模型定向编辑，七数据图沿用既有数据/生成逻辑，旧图和先前蓝灰中间稿均保留。
+- 主文/补充仅替换图像路径及“浅蓝→浅灰”“橙色→负值”的图注识别词，逆替换核查与r26正文逐字相同。完整论文、实验数字、方法和科学未决均保持。实际编译/全页视觉/副本同步以r27交付回执为准。
+
+### r27 交付验收
+- 主文10页7图6表、补充9页5图12表；双遍编译/静态引用/全部19页contact与关键整页已实际检查，均无溢出、缺字或未定义引用。
+- 最终PDF经Ghostscript文档层DeviceGray输出，全页无ICC色彩变换的RGB渲染通道差0；AI原生PNG微小RGB残留按实保留。六份canonical同步，源/图/数据SHA及序列化微差见r27/FINAL_DELIVERY.json与MONOCHROME_EXPORT.json。
+
+## 2026-10-19 r28：论文图文比例调整
+
+- 按用户反馈，仅调整TeX includegraphics宽度：图1/2为正文宽82%，数据图为原栏宽/正文宽92%；补充ISCAS89配对图已有约6.12pt最小字，保原栏宽。所有图保持纵横比。
+- 九个唯一图像原字节、数据、黑白灰与全部正文/图注不变；逆替换核r27源逐字同，19文件before完整保留。后续整稿构建/DeviceGray/字号/全页视觉与副本身份以r28最终回执为准，不把计划当已验。
+
+### r28 排版回归与交付
+- 原图占幅调整后，main01出现浮动图表堆页；main02仅改单图造成106.74588pt溢出，均保原件未采用。最终图4/5一致使用普通t约束，main03与Sup01零溢出/欠满/缺字/未定义引用，主10页7图6表、补9页5图12表，完整内容未删。
+- 实际数据图最小字主6.39716bp/补6.11806bp，两示意图139.3952×92.9301mm、纵横比1.5；根19页contact及关键页实看、独立主6–8页限定核查，DeviceGray全页通过，六canonical逐SHA同步。实际身份见r28/FINAL_DELIVERY.json。
+
+## 2026-10-28 r94：口径限定（六处审计项，零新图零新实验）
+
+- 依据 `scratch/r88_paper_audit/PAPER_DECISION.md` 的 F-1~F-6 审计，只加限定句：不改任何数字、不加新图、不加新实验、不动方法。
+- 主稿八处：F-1 跨测试集增益标注为理想线网档并给出判定带口径（带内增量不记为可确认改善）；F-2 §5.6 物理后验标注为单一物理实现点并降格为「实现轴敏感观察」（正文与图注同步）；F-3 结构代理与候选级物理标签对象区分（正文与结论各一处）；F-4 接受判据未按档位拆报兑现构成；F-6 较大两点由「消失」改为「降至 0.01 ns 报告粒度以下，记为零读数」；F-5 RC 标注为估算、非签核级提取。CJK 8554→8855（+301），字节 46137→47149。
+- 补充材料五处同口径同步：ITC-99 汇总表注档位与判定带、物理后验单实现点（正文与图注）、零读数表述、RC 层级。CJK 9632→9807（+175），字节 51353→51954。
+- 验收：main03 与 Sup01 均 0 Errors / 0 Overfull / 0 Underfull / 0 个未定义引用标记；主稿 10 页、补充 9 页（与 r28 相同）；13 个浮动体全部被正文引用；三份 canonical PDF 逐 SHA256 相同（主 b203c42a…、补 ab339fe5…）；`latex_quality_gate.py` 输出 GATE: PASS。
+- 第 10 页参考文献孤儿页为 r28 既有形态，本轮不改排版：改前仅 4 条文献占约 1/8 页，改后 10 条占约 1/4 页，实际更紧凑。正文已无 `\FloatBarrier`，成因是正文排满 9 页后参考文献自然溢出。
+- 行尾：两份 `.tex` 改前实测均为纯 LF（CRLF=0），本轮保持 LF 并各留 `.bak_20261028_caliber` 备份。

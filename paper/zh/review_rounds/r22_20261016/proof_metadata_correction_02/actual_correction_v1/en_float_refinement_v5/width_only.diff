@@ -1,0 +1,11 @@
+--- v4
++++ v5
+@@ -267,7 +267,7 @@
+ The single-round study evaluates repair quality and efficiency. Figure~\ref{fig:iscas_main} compares baseline and repaired ISCAS89 netlists; all eight improve strictly under ideal-net OpenSTA. R/G/B/JOINT constructions preserve flip-flops, clock and reset logic. Independent SEC fully proves all eight baseline/final repaired pairs; Table~\ref{tab:sec_iscas8} reports the proof counts and wall time. Accepted candidate types are JOINT for s27/s382/s420/s953, G for s641/s713/s832, and R for s820; no standalone B candidate is accepted. This is the efficiency-first configuration\label{sec:eff_prio}, with the 10\,ps physical gate disabled. Thus s420's +0.01\,ns candidate is accepted under $\Delta\mathrm{WNS}>0$. The stopping condition differs from the subsequent multi-round study, so results are reported separately. JOINT combines local implementation and drive changes; G changes drive strength; R depends on equivalent Boolean implementations available in the library.
+ 
+ \begin{figure}[htbp]\centering
+-\includegraphics[width=0.78\linewidth]{fig3_single_round_r21.pdf}
++\includegraphics[width=0.70\linewidth]{fig3_single_round_r21.pdf}
+ \caption{Baseline and FAECO WNS on ISCAS89 sequential circuits at 0.5\,ns. Labels report gain relative to baseline.}\label{fig:iscas_main}
+ \end{figure}
+ \begin{table}[!htbp]\centering\small

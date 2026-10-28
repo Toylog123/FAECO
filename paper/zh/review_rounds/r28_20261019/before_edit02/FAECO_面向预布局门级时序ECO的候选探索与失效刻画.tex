@@ -1,0 +1,485 @@
+% =============================================================================
+% FAECO 中文期刊版式（计算机辅助设计与图形学学报模板近似）
+% 字体说明：模板要求方正书宋_GBK/方正仿宋_GBK/黑体/Times New Roman。
+% 方正 GBK 字库为商业字体，需作者自行购买安装；当前以系统宋体/黑体/仿宋近似。
+% 安装方正字库后，将下方 FZ 字体变量替换为对应方正字体名即可。
+% =============================================================================
+\documentclass[twocolumn,10pt,fontset=windows]{ctexart}
+
+% -----------------------------------------------------------------------------
+% 字体（方正 GBK 安装后替换此处）
+%   正文:    \setCJKmainfont{方正书宋_GBK}
+%   标题:    \setCJKsansfont{方正黑体_GBK}
+%   仿宋:    \setCJKfamilyfont{fzfs}{方正仿宋_GBK}
+% 当前用系统字体近似（fontset=windows: 宋体/黑体/楷体/仿宋）
+% -----------------------------------------------------------------------------
+\setmainfont[Path=./fonts/,Extension=.ttf,UprightFont=times,BoldFont=timesbd,ItalicFont=timesi,BoldItalicFont=timesbi]{Times New Roman}
+\setCJKmainfont[Path=./fonts/,Extension=.ttf]{FZShuSong-Z01}
+\setCJKsansfont[Path=./fonts/,Extension=.ttf]{SimHei}
+\newCJKfontfamily\songfamily[Path=./fonts/,Extension=.ttf]{FZShuSong-Z01}
+\newCJKfontfamily\fangfamily[Path=./fonts/,Extension=.ttf]{FZFangSong-Z02}
+\newCJKfontfamily\heifamily[Path=./fonts/,Extension=.ttf]{SimHei}
+\usepackage{amsmath,amssymb}
+\usepackage{newtxmath}
+\let\songti\songfamily\let\heiti\heifamily\let\fangsong\fangfamily
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{array}
+\usepackage[nocompress]{cite}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multirow}
+\usepackage{geometry}
+\usepackage{placeins}
+% 注意：双栏模式下 \FloatBarrier 遇到待排浮动体会退化为 \clearpage，造成栏底留白、
+% 正文后移、参考文献被挤成孤儿末页。本稿正文已不再插入 \FloatBarrier（正文仅保留
+% 图 2 之后一处用于约束全宽浮动体）；压页请优先调整浮动体参数，勿缩字体/行距/砍内容。
+\usepackage{dblfloatfix}
+\usepackage[noshrink,nospread]{flushend}
+
+% 版面：A4 双栏，栏宽 21.59 字符、栏间距 3 字符（以 3zw 近似）
+\geometry{a4paper,left=2.0cm,right=2.0cm,top=2.1cm,bottom=2.1cm,columnsep=31.5pt}
+
+\renewcommand{\eqref}[1]{\textup{（\ref{#1}）}}
+\graphicspath{{../figures/}}
+\setlength{\emergencystretch}{3em}
+\Urlmuskip=0mu plus 3mu\relax
+\raggedbottom
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+
+% -----------------------------------------------------------------------------
+% 标题层级（模板：1级11.5pt黑体 / 2级五号黑体 / 3级10pt书宋）
+% -----------------------------------------------------------------------------
+\ctexset{
+  section = {format=\heiti\fontsize{11.5}{15}\selectfont, beforeskip=6pt, afterskip=4pt},
+  subsection = {format=\heiti\fontsize{10.5}{14}\selectfont, beforeskip=5pt, afterskip=3pt},
+  subsubsection = {format=\songti\fontsize{10}{13}\selectfont, beforeskip=4pt, afterskip=2pt}
+}
+
+% 图题（书宋9pt）、表题（黑体9pt）、表注/分图题（书宋8pt）
+\usepackage{caption}
+\DeclareCaptionFont{songti}{\songti}
+\DeclareCaptionFont{heiti}{\heiti}
+\captionsetup[figure]{font={songti,small},labelfont={bf},skip=3pt}
+\captionsetup[table]{font={heiti,small},labelfont={bf},skip=3pt}
+% subfig is not used in this manuscript; do not configure an unused subfloat caption.
+\captionsetup{labelsep=space}
+
+\begin{document}
+
+\pagestyle{plain}
+
+% -----------------------------------------------------------------------------
+% 中文首部：标题/作者/单位/摘要/关键词/中图法分类号/DOI
+\twocolumn[
+\vspace*{-0.25cm}
+\begin{center}
+{\heiti\zihao{3} FAECO：面向预布局门级时序 ECO 的候选区域构造与调度}\par
+\vspace{6pt}
+{\fangsong\zihao{4} 佟亚龙、刘畅}\par
+\vspace{4pt}
+{\songti\fontsize{8}{12}\selectfont（国防科技大学计算机学院，长沙 410073）}\par\vspace{2pt}
+{\songti\fontsize{8}{12}\selectfont E-mail：chancews@qq.com（通信作者）}\par
+\vspace{6pt}
+\end{center}
+\begin{flushleft}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont 预布局门级时序工程变更（engineering change order，ECO）需要在有限的时序评估预算下选择局部修改候选。FAECO以报告关键实例的覆盖区域和加权节点割确定修改范围，按区域与实例顺序枚举逻辑等价替换、门尺寸调整、缓冲器插入及联合动作。候选依次接受局部检查和静态时序分析（static timing analysis，STA），首次满足条件即提交，并在搜索结束后独立检查最终网表的顺序等价性。在8电路$\times$9配置的受控实验中，覆盖优先配置的理想线网最差负松弛（worst negative slack，WNS）平均改善0.161\,ns，八电路合计候选STA次数比三个随机顺序配置少7.8\%--19.0\%；加权与统一容量未观察到差异，同库单元面积和增加0.27\%--4.92\%。}
+\par
+\vspace{4pt}
+{\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序 ECO；候选区域；关键实例覆盖；候选调度；时序评估预算}\par
+\vspace{2pt}
+{\songti\fontsize{8.5}{13}\selectfont 中图法分类号：TP391.41}\par
+\vspace{3pt}
+\end{flushleft}
+\vspace{2pt}
+% 英文题录
+\begin{center}
+{\bfseries\fontsize{12.5}{16}\selectfont FAECO: Candidate Region Construction and Scheduling for Pre-Placement Gate-Level Timing ECO}\par
+\vspace{3pt}
+{\normalsize Tong Yalong, Liu Chang\par}
+\vspace{3pt}
+{\small \itshape (College of Computer Science, National University of Defense Technology, Changsha 410073, China)}\par
+\vspace{4pt}
+\end{center}
+\begin{flushleft}
+  {\bfseries Abstract:} {\small Pre-placement gate-level engineering change order (ECO) must select local modifications under a limited timing-evaluation budget. FAECO forms candidate regions from instances reported by static timing analysis (STA) and weighted node cuts, then enumerates equivalent replacements, gate sizing, buffer insertion and joint actions in a defined order. Local checks precede candidate STA, the first acceptable candidate is committed, and final sequential equivalence is checked independently after the search. In a controlled experiment with eight circuits and nine configurations, cover-first scheduling improves ideal-net worst negative slack (WNS) by 0.161 ns on average with 7.8\%--19.0\% fewer total candidate STA measurements than three random-order configurations; weighted and uniform capacities show no observed difference, while same-library cell area increases by 0.27\%--4.92\%.}\par
+\vspace{3pt}
+{\bfseries Key words:} {\small timing ECO; candidate region; critical-instance coverage; candidate scheduling; timing-evaluation budget}\par
+\end{flushleft}
+]%
+
+
+% =============================================================================
+% I. 引言
+% =============================================================================
+
+
+\section{引言}
+
+门级时序工程变更（engineering change order，ECO）在保留设计功能的前提下，对已映射网表作局部修改，以修复时序违例。设计后期的修改范围受到验证成本和实现扰动约束，重新综合整个设计往往难以保留已有实现。预布局阶段尚无完整几何寄生，却已能利用工艺库、逻辑连接与时序报告比较修改方向，因此适合提前筛选候选，减少后续实现阶段需要处理的违例。
+
+困难在于决定在哪里修改，以及先尝试哪个动作。同一违例端点的扇入锥可能包含多个逻辑层、分叉与汇合；尺寸调整、等价单元替换和缓冲插入又会生成不同的候选组合。局部结构指标不能直接给出全网表时序收益，候选通常仍需调用静态时序分析（static timing analysis，STA）。当测量预算有限时，区域选得过窄可能遗漏有效动作，枚举过广则会把预算消耗在收益不足的候选上。
+
+已有研究利用重映射、尺寸选择、缓冲和学习策略改善时序\cite{ho2010eco,liu2021rlsizer,chen2024aito}。这些方法说明动作本身具有优化能力，但动作的可执行性不等于候选组织方式的有效性。对于一个由时序报告驱动的局部搜索器，需要进一步分清：收益来自报告关键实例的覆盖、节点代价形成的区域，还是区域的访问次序。若同时改变区域和顺序，仅比较最终WNS便难以解释差异。
+
+FAECO围绕这两个决策组织搜索。它从固定违例端点提取扇入锥，以报告实例交集形成覆盖区域，以加权节点割形成另一候选区域；随后按区域、实例和动作逐层枚举。候选从同一当前基准构造，依次通过局部检查和STA，首次满足接受条件即提交。最终网表的顺序等价性在搜索结束后独立检查。图~\ref{fig:overview}给出区域生成、评估与提交之间的关系。
+
+本文的工作包括三个相互衔接的部分。首先，给出从报告实例与逻辑锥到候选动作的明确构造规则，保留输入/输出边界、缓存身份和提交时机，使搜索行为可以复核。其次，在同一输入、工艺库、运行器与接受规则下完成8电路$\times$9配置对照，分别检查覆盖、节点容量和调度顺序，按实际新STA次数评价测量成本。最后，以单轮及跨测试集网表验证、策略/反馈对照、面积与物理后验检验适用范围。受控结果表明，本组收益主要来自关键实例覆盖；节点加权未显示额外收益，覆盖优先的价值体现在总测量成本，同时存在随机顺序的局部优势。
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.82\textwidth]{manual/figures/r27_mono_overview/r27_mono_overview.png}
+\caption{FAECO的区域构造、候选评估与迭代提交。覆盖优先配置先访问$C_c$再访问$C_w$；仅提交后刷新报告与原目标端点的扇入锥。搜索结束后的全网表SEC独立于候选接受。}
+\label{fig:overview}
+\end{figure*}
+
+\section{相关工作}
+
+\textbf{时序ECO与局部优化。}Ho等\cite{ho2010eco}利用备用单元和技术重映射改善时序，侧重局部实现的重新选择。RL-Sizer\cite{liu2021rlsizer}学习尺寸决策，AiTO\cite{chen2024aito}联合尺寸与缓冲动作。物理感知尺寸优化\cite{huang2025phys}和缓冲树生成\cite{zhang2025buffalo}进一步使用物理信息或学习策略。本文复用等价替换、尺寸和缓冲这些局部动作，研究报告实例如何形成候选范围、有限STA预算如何分配；没有把动作类型本身作为新的优化原语。
+
+\textbf{功能ECO与补丁生成。}Wu等\cite{jiang2010fraig}通过证明最小化和插值构造功能补丁，Kravets等\cite{kravets2019symbolic}以符号采样搜索修正点。Cheng等\cite{jiang2016resource}研究资源受限的功能ECO生成，Dao等\cite{zhuo2018patch}分别处理可修复性、支持集和补丁计算。这类工作通常以功能差异为输入，并以逻辑一致性约束补丁；FAECO从功能已满足的映射网表出发，以时序违例决定修改范围和访问顺序，局部变化仍须保持功能。
+
+\textbf{验证与评估成本。}Pan等\cite{zhong2024stp}采用半张量积仿真进行等价节点识别，体现了先识别可复用结构、再分配验证资源的思路。本文将局部构造检查、候选STA与最终顺序等价检查分开计数。候选记录数、实际STA启动数和最终证明点数对应不同工作，不能相互替代。
+
+上述研究与本文共享局部修改或成本控制目标，但输入、决策信号及分析条件并不完全相同。本文以内部受控对照回答候选组织的机制问题；相容外部方法在同库、同预算下的直接性能比较仍待完成，因而不据不同工具或约束下的结果宣称性能领先。
+
+\section{候选区域构造与调度}
+
+\subsection{问题定义与搜索状态}
+
+给定已映射网表$N_0$、工艺库$\mathcal L$和时序约束，目标是在候选STA预算内获得功能保持且时序改善的网表。定义
+\begin{equation}\label{eq:gain}
+\Delta_{\mathrm{WNS}}(p)=\mathrm{WNS}(N+p)-\mathrm{WNS}(N),
+\end{equation}
+正值表示候选$p$相对当前基准$N$改善最差负松弛（worst negative slack，WNS）。总负松弛（total negative slack，TNS）的变化采用同一方向定义。每次比较使用同一库、时钟和分析角，不把不同约束下的WNS作差。
+
+搜索状态由当前网表、固定目标端点$t$、报告实例序列$P$及已消耗预算组成。$t$在初始违例报告中选定；后续提交仍在该端点重提组合扇入锥$C(N,t)$，不转向新报告中的另一最差端点。反向遍历遇主输入或顺序单元输出停止，较大锥按逻辑深度分为受门数上限约束的子锥。区域输出还保留向锥外消费者暴露的信号，以维持接口。
+
+$P$为STA最大延迟报告中的实例按首次出现去重后的有序序列。报告包含最差路径及负松弛端点路径，所以$P$可以覆盖多条报告路径的实例；它不是完整关键路径集合。该表示使区域和实例的访问顺序直接对应工具提供的时序信息，而不需要在局部图中重新估计每条路径的松弛量。
+
+\subsection{报告覆盖区域与加权节点割}\label{sec:regions}
+
+对每个子锥$C_i$，覆盖区域定义为
+\begin{equation}\label{eq:cover_region}
+C_c=\langle v\in P\mid v\in C_i\rangle.
+\end{equation}
+非空交集整体形成一个区域，保留$P$中的实例顺序。其输入为来自区域外部的驱动网，输出为目标输出或具有区域外消费者的信号。这里的“覆盖”指把报告关键实例纳入修改范围，不求解逐路径集合覆盖，也不保证覆盖所有违例路径。门缺少等价替换时仍保留在区域内，因为它仍可能参与尺寸或缓冲动作。
+
+另一来源$C_w$由节点分裂图上的一次最小割得到。每个门$v$分为$v_{\mathrm{in}}$和$v_{\mathrm{out}}$，以节点代价连接；扇入依赖、源连接与汇连接使用足够大的容量，具体实现取$10^9$。源连接从锥外取得输入的门，汇连接目标输出的驱动门。割选中的门及其输入/输出边界构成候选区域。
+
+令$d(v)$为从锥输入起算的最长逻辑层数，$s(v)$为含自身的传递扇入门数，$f_C(v)$为锥内消费输入连接数，$V_R$为存在R等价单元的门集合，节点代价为
+{\small
+\begin{equation}\label{eq:cost}
+\begin{aligned}
+\widetilde c(v)={}&\Big(1+\frac{\lambda_b}{1+d(v)}
++\lambda_s\frac{s(v)^2}{S_2}+0.01\lambda_v n_C\\
+&+0.1\lambda_f\mathbb{1}[v\in V_R]f_C(v)\Big)\\
+&\Big/\Big(1+\lambda_c\mathbb{1}[v\in V_R]\frac{d(v)}{d_{\max}}\Big),\\
+\mathrm{cost}(v)={}&\max\{0.05,\widetilde c(v)\},
+\end{aligned}
+\end{equation}
+}
+
+其中$n_C=|C_i|$，$S_2=\sum_u s(u)^2$，$d_{\max}=\max_u d(u)$。边界项随深度衰减，规模项使用归一化扇入平方，验证项以锥规模构造，分母对具有R候选的深层门给予折扣。固定配置的五个权重均为1，系数0.01和0.1不随电路改变。
+
+这些特征是结构代理：$d(v)$不含实际到达时间，$f_C(v)$不含引脚电容及锥外负载，锥规模项也不是测得的验证时间。缺少R候选只关闭相应折扣及扇出项，不禁止该门进入割。节点容量决定$C_w$，不决定覆盖区域的访问优先级。分裂图有$2n_C+2$个节点及$O(n_C+f)$条边，采用Edmonds--Karp求解时单次复杂度为$O(VE^2)$；整体成本还包括动作构造、局部检查和STA。
+
+\subsection{区域合并与局部动作}\label{sec:schedule}
+
+覆盖优先配置按$C_c$、$C_w$顺序拼接各子锥产生的区域，以规范化门集合及输入/输出集合计算身份，合并重复项并保留首次出现位置。区域池最多保留8项。该调度按层次确定次序，没有把割代价、覆盖和动作优先级融合为一个连续分数。
+
+每个区域先按$P$取实例，再按区域顺序补齐，最多保留8个实例。R枚举不同单元族但所有输出布尔函数与引脚角色相容的替换；G枚举同族更大驱动尺寸；B在合格接收引脚前分别插入buf\_1或buf\_2，只重接该引脚。B前置条件采用关联引脚计数，该计数包含驱动端。动作先R/G、后B，同类替换按目标单元名排序。联合动作取前两个可执行G的实例，各选首个G组成一个JOINT；不足两个则不追加，不枚举所有两门子集。
+
+图~\ref{fig:regions}用人工六门例说明区域与顺序的区别。指定$P=\langle g_1,g_4,g_6\rangle$，$g_3$为两输入同接$c$的NOR2，R候选集合为$\{g_1,g_2,g_4,g_5\}$。全1权重下六门代价依次为1.258158、1.333158、1.577544、0.990737、0.990737和1.941579，$S_2=57$。覆盖区域包含$g_1,g_4,g_6$，边界输入为$a,n_2,n_5$，内部网为$n_1,n_4$；节点割仅含$g_6$，输入为$n_4,n_5$。两区域均输出$n_6$。前者代价和4.190474高于后者1.941579，却仍先访问，说明覆盖优先与节点代价升序是不同策略。
+
+该例可构造$g_1$的等价替换、$g_4$的尺寸增大、$g_6$输入前的缓冲及两门G联合动作。它只展示合法候选的形成过程，未给出这些动作的STA或接受结果。
+
+\begin{figure*}[!t]
+\centering
+\includegraphics[width=0.82\textwidth]{manual/figures/r27_mono_regions/r27_mono_regions.png}
+\caption{人工六门静态例中的逻辑依赖与候选区域，全权重为1，不代表STA测量结果。浅灰标记指定的$P$成员，R+/R−表示有/无R候选；$g_3$两个引脚同接$c$。$C_c$与$C_w$是重叠的备选区域，调度先$C_c$后$C_w$，不表示两个电路串接。}
+\label{fig:regions}
+\end{figure*}
+
+\subsection{评估、提交与停止}
+
+每个动作从同一当前基准构造，避免把尚未接受的修改叠加。动作缓存由基准全文、候选全文与分析配置共同绑定；不同区域产生相同候选时可复用测量。区域上限、实例上限、候选记录数和实际STA次数分别统计。缓存命中及前置拒绝不消耗新的候选STA预算。
+
+设$H(p)$表示局部函数、结构及已登记硬门均通过。受控配置固定采用
+\begin{equation}\label{eq:accept}
+\operatorname{Accept}(p)=H(p)\land[\Delta_{\mathrm{WNS}}>0],
+\end{equation}
+其中$H$含setup TNS不退化，即$\Delta_{\mathrm{TNS}}\ge0$，数值容差为0。候选WNS虽改善但TNS退化时仍被拒绝。部分独立实验启用TNS-aware分支，允许WNS持平且TNS改善；该分支在受控对照中关闭，各族配置见表~\ref{tab:families}。
+
+算法~\ref{alg:search}给出提交过程。首次可接受候选成为新基准，旧基准的剩余候选作废；仅提交后刷新$P$并在原端点$t$重提锥。无提交轮保留网表、$P$和锥上限，按登记的停止条件继续。本组关闭反馈，因此不会因失败自动调权或扩窗。实际停止由时序目标、轮数、提交数、STA和墙钟预算控制，不采用“首次无提交即停止”。
+
+\begin{algorithm}[htbp]
+\footnotesize
+\caption{覆盖优先候选搜索}\label{alg:search}
+\begin{algorithmic}[1]
+\Require 初始网表$N$、固定端点$t$、库与约束、预算
+\State 在$t$提取锥$C$，由初始STA取得报告实例序列$P$
+\While{登记的时序与各项预算停止条件均未触发}
+  \State 按$C_c,C_w$生成区域池，合并重复项并保留前8项
+  \For{按区域、实例及动作顺序构造的候选$p$}
+    \State 执行局部检查；查询绑定当前基准的候选缓存
+    \State 未命中且预算允许时启动STA，登记实际测量
+    \If{$p$满足式~\eqref{eq:accept}}
+      \State 提交$p$为新基准，刷新$P$及$t$的锥；\textbf{break}
+    \EndIf
+  \EndFor
+\EndWhile
+\State 独立检查初始与最终网表的顺序等价性
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{功能模型与失效分析}\label{sec:validation}
+
+映射准备采用Yosys与ABC\cite{abc}组合回验，R/G/B/JOINT不改写触发器、时钟或复位。候选局部检查用于筛除不满足库函数或接口约束的修改；搜索结束后另对初始及最终网表执行全网表顺序等价检查（sequential equivalence checking，SEC）。前者决定候选是否值得评估，后者检查最终网表的整体功能，二者对象和时机不同。
+
+顺序证明采用库布尔函数与上升沿触发器的二态模型。对应寄存器保持同名、同输入/输出和同一时钟，初态关系为对应状态相等，允许共同初值任意；在同一输入和时钟序列下检查输出及状态转移的一致性。它不假设两侧独立任意初态自行同步，也不依赖未声明的复位。真实三态、显式Z和开关对象不在支持域内，不能由该二态SEC认证；孤立常量X的结构身份核验另行报告。
+
+框架记录六类候选失效：局部功能/结构失败、接口边界失效、候选尺寸超限、时序收益不足、验证超时及可选线载复测失败。记录用于定位搜索代价和失效来源；启用反馈时才调整相应权重，固定配置只记录。指数滑动平均（exponential moving average，EMA）更新作为独立消融对象，其效果由实验判断。完整分类、更新规则和证明阶段见补充材料S1--S2。
+
+\section{实验设计}
+
+\subsection{实验分组与运行条件}
+
+实验在WSL2 Ubuntu 24.04.4环境完成，主机为AMD Ryzen 7 7435H，WSL可见16逻辑核与15\,GB内存。主流程使用Yosys 0.67+146、OpenSTA 3.1.0及SKY130 HD库；独立SEC使用Yosys 0.33。ISCAS89\cite{iscas89}与ITC-99\cite{itc99}采用0.5\,ns周期，PicoRV32主核、乘法器及寄存器子模块分别采用5、2和0.5\,ns周期。基线与候选始终使用相同分析约束。
+
+表~\ref{tab:families}按研究问题区分实验。受控机制实验固定运行器快照、8个已映射输入及TT25℃/1.8\,V工艺库，不重新综合输入；最多20轮、20次提交、500次新候选STA预约，墙钟上限3600\,s，单worker。关闭反馈、物理门控及结构重综合，所有臂使用相同局部动作和接受规则。其余实验保留各自输入、预算和接受配置，不把跨族的结果差值归因为割机制。
+
+\begin{table*}[!t]
+\centering\caption{实验组、研究问题与主要配置}\label{tab:families}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{2.1cm}p{4.2cm}p{9.1cm}}
+\toprule
+实验组 & 研究问题 & 配置与结果用途\\
+\midrule
+区域与调度受控对照 & 覆盖、节点容量、区域顺序各有何作用 & 8电路$\times$9臂；固定快照/输入/库；20轮、20提交、500新STA；TNS硬门，关闭反馈和物理门控\\
+单轮及跨测试集 & 首个改善候选的质量与功能保持范围 & 单轮首改进；跨集最多8轮，可启用反馈及b06 TNS辅助接受，b17验证时限180\,s；证明按模型域分层\\
+策略枚举与反馈 & 动作组合和失效调参是否带来收益 & 独立20轮实验；策略混合含JOINT/TNS辅助，随机仅R/G/B；Fixed/EMA同族对照保留实际STA台账\\
+网表与物理后验 & 面积代价及寄生条件下收益保持 & W1同库面积；A8单轮网表的OpenROAD后验；W1/s382同端点派生输入的双侧简化线载\\
+结构扩展 & 增加候选、降低深度能否改善WNS & 独立窗口重综合/映射，S开关对照与扩大候选池；同批深度及WNS分别分类\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{受控配置与评价口径}\label{sec:controlled}
+
+表~\ref{tab:arms}定义9个臂，共72次运行。W0/U0检查仅节点割的表现；W1/U1引入报告覆盖，分别使用加权或统一节点容量；C仅保留覆盖区域；UR1--3随机置换W1的区域访问次序；L使用另一种区域搜索与调度。首次提交后网表会改变，因此随机访问可导致后续搜索状态分叉，这些对照评价完整策略的运行效果。
+
+\begin{table}[htbp]
+\centering\caption{区域与调度对照配置}\label{tab:arms}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{1.6cm}p{5.9cm}}
+\toprule 配置 & 区域来源与顺序\\\midrule
+W0 / U0 & 仅节点割；分别用加权/统一容量\\
+W1 / U1 & 覆盖区域优先，再节点割；分别用加权/统一容量\\
+C & 仅覆盖区域\\
+UR1--3 & W1区域池，分别按种子1--3随机置换\\
+L & 受限连通区域搜索并在队首补覆盖区域\\
+\bottomrule\end{tabular}
+\end{table}
+
+评价包括终点WNS改善、实际候选STA次数、提交收益随预算的变化，以及同库单元面积和后验WNS。候选记录、缓存复用与前置拒绝分别登记，不作为新STA。受控矩阵共保留8458条评估记录、6858次候选新STA及192次提交；另有72次基线STA。每次运行保留候选全文、实际测量事件、提交链与最终SEC，72个终点均有非空已证明点且0个未证明点。
+
+定义$B(k)$为完成第$k$次新候选STA时，已明确提交的最佳WNS相对初始网表的改善。它仅在提交时更新；测得改善但未提交的候选不更新曲线。$k=0$为初始点，基线、缓存与前置拒绝不计入横轴，曲线停在各运行的实际终止处。保留全部电路和随机种子，避免平均曲线掩盖有限预算反例。数据与复核入口见补充材料S6。
+
+\section{实验结果与分析}
+
+\subsection{覆盖区域与节点容量的作用}\label{sec:gain}
+
+图~\ref{fig:gain_cost}展示全部72个终点及实际候选STA次数。仅节点割W0/U0均未取得改善；增加覆盖区域后，W1在8个电路上均改善，平均为0.16125\,ns。仅覆盖的C到达相同终点，在s641少用8次STA，其余实例与W1相同。该结果支持本组收益主要来自把报告关键实例纳入候选范围，而非最小割容量本身。
+
+W0与U0、W1与U1的终点、候选池和访问次序分别一致。节点加权在这组输入及参数下没有显示额外作用。全1权重只是节点容量的设定，不能因式~\eqref{eq:cost}包含多种结构特征就将观察到的收益归因于加权。C能够达到相同终点还说明，组合两个区域来源未在本组增加终点收益；它为后续简化区域生成提供了直接依据。
+
+\begin{figure*}[!t]
+\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_cp_gain_cost/r24_cp_gain_cost.pdf}
+\caption{8电路$\times$9配置的WNS改善（左，ps）与新候选STA次数（右）。基线另计，缓存及前置拒绝不计入测量次数；配置见表~\ref{tab:arms}。全部72个终点与成本均展示。}
+\label{fig:gain_cost}
+\end{figure*}
+
+\subsection{调度顺序与有限预算收益}\label{sec:budget}
+
+在具有相同改善终点的配置中，W1合计使用847次候选STA，UR1、UR2、UR3分别使用1046、919和944次，测量成本分别降低19.0\%、7.8\%和10.3\%。L使用1274次；由于L同时改变区域生成和访问顺序，不能把它与W1的差异单独解释为排序收益。仅节点割消耗较少STA但没有改善，不属于相同收益下的效率优势。
+
+图~\ref{fig:curves}进一步展示到达终点的过程。W1的总成本较低，但并非在每个实例或预算下占优：s27的UR3只需36次STA，少于W1的41次；s420的随机臂在部分共同预算处更早取得收益，最大领先0.17\,ns。因此，总测量节省、首次收益位置和任意预算下的收益支配是不同结论。
+
+同一终点也可以对应不同提交次数和轨迹。覆盖优先规定的是候选访问顺序，不预知候选的真实STA收益；后续状态又受此前提交影响。这里的随机对照衡量策略层面的成本与结果，而全程固定同一候选全集的纯排序因果重放仍未取得。实际STA次数可用于比较测量资源，未直接换算为独占环境下的墙钟加速。
+
+\begin{figure*}[!t]
+\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_cp_budget_curves/r24_cp_budget_curves.pdf}
+\caption{同族72次运行的已提交收益$B(k)$与候选STA序号$k$。端点为实际停止处；仅逐$k$及停止点全等者合并。W0/U0、W1/U1全部重合，C除s641外、UR2在s27/s713/s820与W1重合；全部配置及局部交叉保留。}
+\label{fig:curves}
+\end{figure*}
+
+\subsection{单轮修复与跨测试集功能保持}\label{sec:generalization}
+
+单轮实验考察首个改善候选及其最终网表，不与受控20轮结果混合。8个ISCAS89网表均取得严格WNS改善，接受类型为4个JOINT、3个G和1个R，没有单独B。对应8对初始/最终网表已在共同任意二值初态模型下完成独立证明；各例证明点数与耗时见补充材料S2。证明中结构归并与\texttt{equiv\_simple}已完成全部目标点，进入归纳步骤前未证明点为空；有限展开深度不是该组完整证明的依据。
+
+统一跨测试集实验增加19个ITC-99电路及PicoRV32主核、乘法器与寄存器子模块。图~\ref{fig:unified_gain}按电路展示WNS变化，并把模型不支持对象单独标记。19个ITC-99中18个严格改善，b06的WNS持平但TNS改善。b17在180\,s验证时限下取得0.38\,ns改善，对保留的精确初末网表以完整模型证明12879个等价点、0个未证明点。
+
+b09、b20、b21含真实三态单元，仍保留时序观察，但不能计入二态SEC通过。在16个支持域内ITC-99电路中，15个严格改善，平均改善0.208\,ns、中位数0.18\,ns；含三态的3例平均时序改善为1.61\,ns。全部19例的平均值约0.43\,ns，因此不能用未分层总均值代替功能已证明子集的效果。
+
+PicoRV32主核与乘法器分别改善1.13和0.07\,ns，两对网表按其二态模型完成独立证明，并另保留孤立常量X的结构身份核查。寄存器子模块没有可评估的setup路径，改善与SEC统计不适用。表~\ref{tab:overview}集中给出各组观察与证明状态。单轮及跨集归档仍存在运行版本或模型身份未完整恢复的条目；这些结果描述相应保留运行，机制归因由固定快照72次对照承担。
+
+\begin{table}[!htb]
+\centering
+\caption{统一跨测试集配置的整体时序观察与功能证明状态}
+\label{tab:overview}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{测试集} & \textbf{实例数} & \textbf{严格 WNS 改善} & \textbf{$\Delta_{\mathrm{WNS}}$ 均值\,/\,中位 (ns)} & \textbf{SEC 通过} \\
+\midrule
+ISCAS89  & 8  & 8/8   & 0.16\,/\,0.10 & 8/8 \\
+ITC-99   & 19 & 18/19 & 0.43\,/\,0.18 & 16/19 \\
+PicoRV32 & 3  & 2/2   & 0.60\,/\,0.60 & 2/2 \\
+\bottomrule
+\multicolumn{5}{p{0.95\columnwidth}}{\footnotesize 本表为统一跨测试集配置的时序观察，均值与中位数在可评估实例上统计。SEC列按保留模型的支持域核查；b17已用完整模型证明12879/0，b09/b20/b21含实际三态，二态流程不支持，不能计为功能证明通过。PicoRV32的两对另保留孤立常量X身份核验；\texttt{picorv32\_regs}无setup路径，改善及SEC均不适用。运行模型身份限制见本节正文。} \\
+\end{tabular}
+\end{table}
+\begin{figure*}[!t]
+\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_unified_status/fig4_r24.pdf}
+\caption{统一跨测试集的WNS改善及功能支持状态。ISCAS89、ITC-99、PicoRV32分别保留全部可评估对象；b09/b20/b21为空心点，仅为时序观察，不能计入二态SEC通过；寄存器子模块无setup路径。各族周期与模型条件见实验设计。}
+\label{fig:unified_gain}
+\end{figure*}
+
+\subsection{策略组合、反馈与结构扩展}\label{sec:ablation}
+
+为检验更多动作及失效调参能否解释收益，另保留策略枚举、Fixed/EMA与结构S三组独立对照。策略枚举运行器按关键实例生成局部修改，未使用本文两类区域；混合臂包含R/G/B/JOINT并保留TNS辅助接受，随机臂只包含R/G/B。表~\ref{tab:ablation}显示混合配置平均改善1.07\,ns，高于纯G、纯B与随机配置，但这是动作空间与顺序的联合效果，不能作为节点割或纯排序机制的增益。
+
+首次严格改善的台账在7个有记录的电路中，6个混合臂少于随机三种子均值，s713相反；s382混合臂缺失逐候选台账，不补造启动次数。该组各臂完整命令未全部归档，实际STA消耗也不同。逐实例启动位置见补充材料S3。
+
+\begin{table}[H]
+\centering
+\caption{ISCAS89 局部修改策略配置的 WNS 改善对比（周期 0.5\,ns）}
+\label{tab:ablation}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{电路} & \textbf{纯 G} & \textbf{纯 B} & \textbf{随机} & \textbf{混合 20 轮} \\
+\midrule
+s27  & +0.09 & +0.28 & +0.28 & \textbf{+0.28} \\
+s382 & +0.17 & +0.19 & +0.19 & \textbf{+1.00} \\
+s420 & +0.35 & +1.00 & +1.15 & \textbf{+1.54} \\
+s641 & +0.45 & +1.27 & +0.57 & \textbf{+1.63} \\
+s713 & +0.05 & +0.99 & +0.64 & \textbf{+1.33} \\
+s820 & +0.02 & +0.26 & +0.15 & \textbf{+0.99} \\
+s832 & +0.07 & +0.06 & +0.08 & \textbf{+0.57} \\
+s953 & +0.09 & +0.24 & +0.12 & \textbf{+1.25} \\
+\midrule
+\textbf{均值} & 0.16 & 0.54 & 0.40 & \textbf{1.07} \\
+\bottomrule
+\multicolumn{5}{p{0.92\columnwidth}}{\footnotesize 数字为 WNS 改善量 (ns)，正值代表修复后 WNS 较基线提高。纯 G / 纯 B 列为单策略配置；随机列包含 R/G/B，随机化实例内候选顺序并取种子 1、2、3 的均值；混合列另含 JOINT。四列均不启用 F1--F6 权重重整，采用同一 20 轮上限，实际 STA 消耗不同；混合配置保留 WNS 持平时的 TNS 辅助接受。该组为独立策略枚举实验，不用于区域机制归因；完整命令未全部归档。} \\
+\end{tabular}
+\end{table}
+Fixed/EMA对照保持其同族候选空间、初始权重、20轮和500次STA预约上限。8电路的最终WNS改善、首次改善位置和最大累计收益均相同，未观察到EMA带来的额外终点收益。Fixed和EMA分别使用1947、2003次新STA，对应4146、4883条评估记录；随机三种子的STA合计均值为2480.7次。前置拒绝和缓存使评估记录数大于新STA，进一步说明应按实际测量计费。该组累计最优候选收益与受控对照的明确提交曲线分别定义，不跨族拼接。
+
+结构扩展S采用独立的窗口重综合与映射流程。扩大候选池后，候选由37增至126，其中76个降低映射后的逻辑深度，但没有严格WNS改善，36个WNS持平、90个下降（图~\ref{fig:s_candidate_outcomes}）。深度变化和WNS变化是同一批候选的两个分类维度，不能相加成样本数。s641未成功抽取窗口，候选为0；同预算开关S的8电路终点WNS均不变，且非S候选序列一致，预算未触上限。这排除了“仅增加本实现的结构候选即可改善终点”的解释，而不推出结构ECO普遍无效。
+
+\begin{figure}[!t]
+\centering\includegraphics[width=0.92\columnwidth]{data/final/r27_monochrome/fig7_s_boundary_r21/fig7_s_boundary_r21.pdf}
+\caption{同批126个结构S候选的深度与WNS分类。76个降低映射深度，但WNS严格改善为0；8电路完整展示，s641窗口未抽取。}
+\label{fig:s_candidate_outcomes}
+\end{figure}
+
+\subsection{网表面积与物理收益保持}\label{sec:cost_boundary}
+
+受控W1的8对端点网表展开触发器封装后，标准单元数及独立缓冲单元数均不变，同库单元面积和增加0.27\%--4.92\%，来自具体单元替换（表~\ref{tab:netlist_cost}）。这给出了时序收益的面积代价，但不是布局核心面积或功耗估计。功耗、hold、最大电容及转换时间未作为本组验收项，仍需后续物理与电气检查。
+
+\begin{table}[htbp]
+\centering\caption{W1端点的网表代价}\label{tab:netlist_cost}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{电路} & \textbf{单元数前/后} & \textbf{缓冲前/后} & \textbf{库面积变化(\%)}\\
+\midrule
+s27 & 11/11 & 0/0 & 4.76 \\
+s382 & 90/90 & 0/0 & 1.55 \\
+s420 & 79/79 & 0/0 & 4.92 \\
+s641 & 122/122 & 0/0 & 2.07 \\
+s713 & 124/124 & 0/0 & 0.27 \\
+s820 & 138/138 & 0/0 & 0.29 \\
+s832 & 145/145 & 0/0 & 0.71 \\
+s953 & 228/228 & 0/0 & 0.80 \\
+\bottomrule
+\multicolumn{4}{p{0.93\columnwidth}}{\footnotesize 单元数包含逐实例展开的DFF，缓冲数统计独立buf/clkbuf单元；面积为同一Liberty库的单元面积属性之和的相对变化，不是布局核心面积或功耗估计。各行与W1的初始/最终原始网表摘要绑定。}\\
+\end{tabular}
+\end{table}
+OpenROAD\cite{openroad}后验考察单轮实验的相同8对初末网表，在布局及全局布线寄生估计下能否保留收益。两侧采用字节相同脚本，TT25℃/1.8\,V、CK周期0.5\,ns；s27利用率10\%，其余30\%，布局密度0.7。寄生由\texttt{estimate\_parasitics -global\_routing}给出。全部8例中5个改善、1个持平、2个退化，退化分别为0.02及0.01\,ns（图~\ref{fig:physical_transfer}）。预布局候选的改善方向并非在物理估计下全部保持。
+
+脚本未显式设置I/O延迟、额外输出负载、输入转换或额外时钟不确定度，运行平台全文件及种子身份未完整归档。这些条件集中限定该后验的可复验范围；它属于单轮候选族的物理相关性观察，不是受控72次运行的部署性能或最终签核。
+
+\begin{figure}[!t]
+\centering\includegraphics[width=0.92\columnwidth]{data/final/r27_monochrome/fig6_physical_transfer_r21/fig6_physical_transfer_r21.pdf}
+\caption{单轮候选在理想线网与全局布线寄生估计下的WNS改善。每组使用同一网表对及各自条件下的基线；全部8例保留，5改善、1持平、2退化。}
+\label{fig:physical_transfer}
+\end{figure}
+
+\subsection{同一端点对的简化线载检验}\label{sec:load}
+
+另对受控W1/s382的同一初末网表作双侧简化线载后验，以隔离候选变化与负载设定。输入仅展开用户DFF辅助层级，逐端口核对90个标准单元和21个寄存器的连接，不重新综合或改变单元；两份原网表到各自展开网表的SEC均为129/0。原层级网表的同网表控制出现43组部分未注释驱动，该失败输入的时序未纳入结论；派生展开输入不恢复原层级注释支持。
+
+对网$e$使用扇出代理长度$L(e)=\ell\max\{1,\sqrt{F(e)}\}$，电阻$R(e)=0.09L(e)\,\Omega$，电容$C(e)=0.00021L(e)\,\mathrm{pF}$，$\ell$以$\mu$m计。全局乘数取1；线电容集中到驱动端，电阻按星形支路分配，引脚电容由Liberty提供。这里的长度来自扇出代理，不由几何坐标提取，单位RC也不是实测标定值。
+
+两侧分别从各自网表生成标准寄生交换格式（standard parasitic exchange format，SPEF）文件，以相同库和约束复测。同网表控制差值为0，全部8次注释回放均无未注释或部分未注释驱动。表~\ref{tab:load}显示理想线网的0.15\,ns改善在最小线载下保留0.11\,ns，在较大两点消失。16次测量及8次注释回放共24次STA，与原层级失败的5次分开。该后验直接说明同一候选对的负载敏感性，不用旧共享基线SPEF扫描估计失效率或认证物理门控。
+
+\begin{table}[htbp]
+\centering\caption{W1/s382同一端点对的简化线载后验}\label{tab:load}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{rrrr}
+\toprule 基础长度($\mu$m) & 基线WNS & 候选WNS & 改善(ns)\\\midrule
+10 & $-1.23$ & $-1.12$ & $+0.11$\\
+40 & $-2.10$ & $-2.10$ & $0.00$\\
+160 & $-6.00$ & $-6.00$ & $0.00$\\
+\bottomrule
+\multicolumn{4}{p{0.94\columnwidth}}{\footnotesize WNS单位为ns；各点重新测得理想线网WNS为$-0.98\to-0.83$\,ns。TT25℃/1.8\,V、CK周期0.5\,ns，两侧各自生成SPEF，全部注释检查完整。}\\
+\end{tabular}\end{table}
+
+\section{讨论与结论}
+
+\subsection{设计含义与适用边界}
+
+结果形成一条一致的证据链：报告关键实例覆盖决定本组能否找到有效动作，区域顺序影响到达相同终点的总测量成本，而结构代理与候选数量并不自动带来更高WNS。仅覆盖配置已达到完整配置终点，节点加权和EMA在相应对照中均未增加终点收益，结构S的深度改善也未转化为时序改善。因此，后续设计应优先检查实际候选覆盖、提交路径及预算分配，而非仅增加代价项或候选规模。
+
+该结论对应本文保留的输入、动作与分析条件。核心受控对照只有8个电路，3个随机种子分别报告，尚不能给出更广电路总体的统计保证。随机臂的局部预算优势、面积增加和物理估计后的收益损失均说明，预布局搜索应与后续实现检验结合。固定候选全集的纯排序重放、同库同预算外部强基线以及原始层级寄生支持仍是需要补足的工作；历史实验的程序与模型身份缺项也不能由新族结果替代。
+
+功能证明同样依赖明确模型。共同任意二值初态下的SEC支撑相应网表对的功能保持，真实三态和一般四态解析仍超出能力范围。全部效果与成本均按实验族报告，避免把受控机制、跨集观察和物理后验合成一个未经检验的通用性能主张。补充材料保留完整枚举、逐例证明、扩展对照及复核入口，正文中的方法和主要结果可以独立阅读。
+
+\subsection{结论}
+
+FAECO以报告关键实例覆盖、加权节点割和有界局部动作调度组织预布局门级时序ECO，并将候选接受与最终网表证明分开。在8电路$\times$9配置的同源实验中，覆盖优先取得0.161\,ns平均理想线网WNS改善，合计候选STA次数比3个随机顺序配置少7.8\%--19.0\%；节点加权未显示额外收益。跨测试集、反馈/结构对照及面积和物理后验进一步揭示了功能支持域与收益保持边界。区域覆盖和测量预算应共同设计，时序改善还需结合面积代价及物理条件检验。
+
+\renewcommand{\refname}{参考文献}
+\ctexset{section = {format=\heiti\fontsize{10.5}{14}\selectfont}}
+\footnotesize\linespread{0.95}\selectfont
+\begin{thebibliography}{99}
+\bibitem{ho2010eco} Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare cells and technology remapping[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2010, 29(5): 697-710. DOI: 10.1109/TCAD.2010.2043573.
+\bibitem{liu2021rlsizer} Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning[C] //Proceedings of the 58th ACM/IEEE Design Automation Conference. Piscataway: IEEE, 2021: 733-738. DOI: 10.1109/DAC18074.2021.9586138.
+\bibitem{chen2024aito} Wu H, Huang Z, Li X, et al. AiTO: Simultaneous gate sizing and buffer insertion for timing optimization with GNNs and RL[J]. Integration, the VLSI Journal, 2024, 98: 102211. DOI: 10.1016/j.vlsi.2024.102211.
+\bibitem{huang2025phys} Ye Y, Xu P, Ren L, et al. Learning-driven physically aware large-scale circuit gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2025, 44(5): 1901-1914. DOI: 10.1109/TCAD.2024.3488577.
+\bibitem{zhang2025buffalo} Hsiao H H, Lu Y C, Lim S K, et al. BUFFALO: PPA-configurable, LLM-based buffer tree generation via group relative policy optimization[C] //Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2025: 1-9. DOI: 10.1109/ICCAD66269.2025.11240744.
+\bibitem{jiang2010fraig} Wu B H, Yang C J, Huang C Y, et al. A robust functional ECO engine by SAT proof minimization and interpolation techniques[C] //Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2010: 729-734. DOI: 10.5555/2133429.2133584.
+\bibitem{kravets2019symbolic} Kravets V N, Lee N Z, Jiang J H R. Comprehensive search for ECO rectification using symbolic sampling[C] //Proceedings of the 56th Annual Design Automation Conference. New York: ACM, 2019: 71:1-71:6. DOI: 10.1145/3316781.3317790.
+\bibitem{jiang2016resource} Cheng A C, Jiang I H R, Jou J Y. Resource-aware functional ECO patch generation[C] //Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition. Piscataway: IEEE, 2016: 1036-1041. DOI: 10.5555/2971808.2972050.
+\bibitem{zhuo2018patch} Dao A Q, Lee N Z, Chen L C, et al. Efficient computation of ECO patch functions[C] //Proceedings of the 55th Annual Design Automation Conference. New York: ACM, 2018: 1-6. DOI: 10.1145/3195970.3196039.
+\bibitem{zhong2024stp} Pan H, Zhang R, Xia Y, et al. A semi-tensor product based circuit simulation for SAT-sweeping[C] //Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition. Piscataway: IEEE, 2024: 1-6. DOI: 10.23919/DATE58400.2024.10546678.
+\bibitem{abc} Brayton R, Mishchenko A. ABC: An academic industrial-strength verification tool[C] //Proceedings of the 22nd International Conference on Computer Aided Verification. Berlin: Springer, 2010: 24-40. DOI: 10.1007/978-3-642-14295-6\_5.
+\bibitem{iscas89} Brglez F, Bryan D, Kozminski K. Combinational profiles of sequential benchmark circuits[C] //Proceedings of IEEE International Symposium on Circuits and Systems. Piscataway: IEEE, 1989: 1929-1934. DOI: 10.1109/ISCAS.1989.100747.
+\bibitem{itc99} Davidson S. ITC'99 benchmark circuits - preliminary results[C] //Proceedings of IEEE International Test Conference. Piscataway: IEEE, 1999: 1125. DOI: 10.1109/TEST.1999.805857.
+\bibitem{openroad} Ajayi T, Chhabria V A, Fogaça M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C] //Proceedings of the 56th ACM/IEEE Design Automation Conference. New York: ACM, 2019: 1-4. DOI: 10.1145/3316781.3326334.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,14 @@
+{
+  "UTC": "2026-10-18T13:21:20.165665+00:00",
+  "before_sha256": "f27153a8e33ab7d0515bbddeda3aee8492521ee532839bd40e18f62a2ebef839",
+  "after_sha256": "a290d707665101d3e691387855a16a3b491c4813f3138ef927b434e135ed65ed",
+  "items": [
+    "REV-01",
+    "REV-03"
+  ],
+  "old": "时序收益还需结合网表代价解释。",
+  "new": "图~\\ref{fig:cut_control_curve}进一步按真实测量顺序重建已提交收益$B(k)$。72条曲线共包含6858次新候选STA和192次提交，收益仅在明确提交时更新。覆盖优先的汇总测量消耗较小，不代表其在每个预算下均优于所有随机臂：s27的UR3和s420的三个随机臂在部分共同预算位置更早获得收益，其中s420的UR1和UR3最多领先0.17\\,ns。该交叉揭示调度的预算依赖性，不能仅由最终成本推断全程支配。\n\n\\begin{figure*}[!t]\n\\centering\n\\includegraphics[width=1.0\\textwidth]{data/final/r24_cp_budget_curves/r24_cp_budget_curves.pdf}\n\\caption{C′同族8电路$\\times$9臂的已提交收益—成本曲线。$k$仅计新候选STA，排除基线、缓存与前置拒绝；$B(k)$仅随明确提交更新。端点为实际停止处，停止后不外推。仅逐$k$及停止点全等者合并：W0/U0、W1/U1在全部8例重合；C除s641外、UR2在s27/s713/s820与W1重合。全部72条原曲线保留于数据，形成46条不同完整曲线。三随机种子分别呈现，局部交叉保留。}\n\\label{fig:cut_control_curve}\n\\end{figure*}\n\n时序收益还需结合网表代价解释。",
+  "curve_pdf_sha256": "c944599ae71c0c488c68e16e998b5fe0d839affa0cac7ef58236e89e4565beb1",
+  "root_curve_acceptance_sha256": "06e90680e001704a9db858fed6b3080415ba1004af7d0d77cb3b29539894a473",
+  "new_EDA": false
+}

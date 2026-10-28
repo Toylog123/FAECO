@@ -1,0 +1,55 @@
+{
+  "UTC": "2026-10-18T13:31:27.519668+00:00",
+  "status": "PASS current revision final readback",
+  "commands": {
+    "record_check": {
+      "argv": [
+        "C:/Program Files/Git/bin/bash.exe",
+        "code/scripts/check_record.sh"
+      ],
+      "returncode": 0,
+      "stdout_utf8": "[记录] OK 今日已记录：WORK_PROGRESS.md CURRENT_STATUS.md\n",
+      "stderr_utf8": ""
+    },
+    "whitespace_check_CR_aware": {
+      "argv": [
+        "git",
+        "-c",
+        "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol",
+        "diff",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout_utf8": "",
+      "stderr_utf8": "warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'AGENTS.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'docs/EXPERIENCE.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'paper/zh/CHANGE_LOG.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'project_docs/LOGS.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'project_docs/OPEN_ISSUES.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'project_docs/README.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'project_docs/agent_handoff/README.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'project_docs/evidence/EXPERIMENT_REGISTRY.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'project_docs/reports/weekly/2026-W42.md', LF will be replaced by CRLF the next time Git touches it\n"
+    },
+    "HEAD": {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout_utf8": "f761ee1996a83fc4f0f3de0999b74d85a8237858\n",
+      "stderr_utf8": ""
+    },
+    "production_code_status": {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain",
+        "--",
+        "code"
+      ],
+      "returncode": 0,
+      "stdout_utf8": "",
+      "stderr_utf8": ""
+    }
+  },
+  "source_sha256": "a290d707665101d3e691387855a16a3b491c4813f3138ef927b434e135ed65ed",
+  "pdf_sha256": "ce085898f1d1ef1162546bd9e8b70cc1bf5cfa508e8dcc10c628609102bcb04e",
+  "all_stable_artifact_hashes_and_three_PDF_copies_match": true,
+  "head_locked": true,
+  "no_commit_or_push": true,
+  "scope": "Paper+figure revision verification only. Record check verifies date markers, whitespace check permits CRLF. Font fallback warnings and four partial scientific revision items remain."
+}

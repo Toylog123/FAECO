@@ -1,0 +1,65 @@
+--- r27
++++ r28
+@@ -136,7 +136,7 @@
+ 
+ \begin{figure*}[!t]
+ \centering
+-\includegraphics[width=\textwidth]{manual/figures/r27_mono_overview/r27_mono_overview.png}
++\includegraphics[width=0.82\textwidth]{manual/figures/r27_mono_overview/r27_mono_overview.png}
+ \caption{FAECO的区域构造、候选评估与迭代提交。覆盖优先配置先访问$C_c$再访问$C_w$；仅提交后刷新报告与原目标端点的扇入锥。搜索结束后的全网表SEC独立于候选接受。}
+ \label{fig:overview}
+ \end{figure*}
+@@ -204,7 +204,7 @@
+ 
+ \begin{figure*}[!t]
+ \centering
+-\includegraphics[width=\textwidth]{manual/figures/r27_mono_regions/r27_mono_regions.png}
++\includegraphics[width=0.82\textwidth]{manual/figures/r27_mono_regions/r27_mono_regions.png}
+ \caption{人工六门静态例中的逻辑依赖与候选区域，全权重为1，不代表STA测量结果。浅灰标记指定的$P$成员，R+/R−表示有/无R候选；$g_3$两个引脚同接$c$。$C_c$与$C_w$是重叠的备选区域，调度先$C_c$后$C_w$，不表示两个电路串接。}
+ \label{fig:regions}
+ \end{figure*}
+@@ -303,7 +303,7 @@
+ W0与U0、W1与U1的终点、候选池和访问次序分别一致。节点加权在这组输入及参数下没有显示额外作用。全1权重只是节点容量的设定，不能因式~\eqref{eq:cost}包含多种结构特征就将观察到的收益归因于加权。C能够达到相同终点还说明，组合两个区域来源未在本组增加终点收益；它为后续简化区域生成提供了直接依据。
+ 
+ \begin{figure*}[!t]
+-\centering\includegraphics[width=\textwidth]{data/final/r27_monochrome/r24_cp_gain_cost/r24_cp_gain_cost.pdf}
++\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_cp_gain_cost/r24_cp_gain_cost.pdf}
+ \caption{8电路$\times$9配置的WNS改善（左，ps）与新候选STA次数（右）。基线另计，缓存及前置拒绝不计入测量次数；配置见表~\ref{tab:arms}。全部72个终点与成本均展示。}
+ \label{fig:gain_cost}
+ \end{figure*}
+@@ -317,7 +317,7 @@
+ 同一终点也可以对应不同提交次数和轨迹。覆盖优先规定的是候选访问顺序，不预知候选的真实STA收益；后续状态又受此前提交影响。这里的随机对照衡量策略层面的成本与结果，而全程固定同一候选全集的纯排序因果重放仍未取得。实际STA次数可用于比较测量资源，未直接换算为独占环境下的墙钟加速。
+ 
+ \begin{figure*}[!t]
+-\centering\includegraphics[width=\textwidth]{data/final/r27_monochrome/r24_cp_budget_curves/r24_cp_budget_curves.pdf}
++\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_cp_budget_curves/r24_cp_budget_curves.pdf}
+ \caption{同族72次运行的已提交收益$B(k)$与候选STA序号$k$。端点为实际停止处；仅逐$k$及停止点全等者合并。W0/U0、W1/U1全部重合，C除s641外、UR2在s27/s713/s820与W1重合；全部配置及局部交叉保留。}
+ \label{fig:curves}
+ \end{figure*}
+@@ -350,7 +350,7 @@
+ \end{tabular}
+ \end{table}
+ \begin{figure*}[!t]
+-\centering\includegraphics[width=\textwidth]{data/final/r27_monochrome/r24_unified_status/fig4_r24.pdf}
++\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_unified_status/fig4_r24.pdf}
+ \caption{统一跨测试集的WNS改善及功能支持状态。ISCAS89、ITC-99、PicoRV32分别保留全部可评估对象；b09/b20/b21为空心点，仅为时序观察，不能计入二态SEC通过；寄存器子模块无setup路径。各族周期与模型条件见实验设计。}
+ \label{fig:unified_gain}
+ \end{figure*}
+@@ -390,7 +390,7 @@
+ 结构扩展S采用独立的窗口重综合与映射流程。扩大候选池后，候选由37增至126，其中76个降低映射后的逻辑深度，但没有严格WNS改善，36个WNS持平、90个下降（图~\ref{fig:s_candidate_outcomes}）。深度变化和WNS变化是同一批候选的两个分类维度，不能相加成样本数。s641未成功抽取窗口，候选为0；同预算开关S的8电路终点WNS均不变，且非S候选序列一致，预算未触上限。这排除了“仅增加本实现的结构候选即可改善终点”的解释，而不推出结构ECO普遍无效。
+ 
+ \begin{figure}[!t]
+-\centering\includegraphics[width=\columnwidth]{data/final/r27_monochrome/fig7_s_boundary_r21/fig7_s_boundary_r21.pdf}
++\centering\includegraphics[width=0.92\columnwidth]{data/final/r27_monochrome/fig7_s_boundary_r21/fig7_s_boundary_r21.pdf}
+ \caption{同批126个结构S候选的深度与WNS分类。76个降低映射深度，但WNS严格改善为0；8电路完整展示，s641窗口未抽取。}
+ \label{fig:s_candidate_outcomes}
+ \end{figure}
+@@ -423,7 +423,7 @@
+ 脚本未显式设置I/O延迟、额外输出负载、输入转换或额外时钟不确定度，运行平台全文件及种子身份未完整归档。这些条件集中限定该后验的可复验范围；它属于单轮候选族的物理相关性观察，不是受控72次运行的部署性能或最终签核。
+ 
+ \begin{figure}[!t]
+-\centering\includegraphics[width=\columnwidth]{data/final/r27_monochrome/fig6_physical_transfer_r21/fig6_physical_transfer_r21.pdf}
++\centering\includegraphics[width=0.92\columnwidth]{data/final/r27_monochrome/fig6_physical_transfer_r21/fig6_physical_transfer_r21.pdf}
+ \caption{单轮候选在理想线网与全局布线寄生估计下的WNS改善。每组使用同一网表对及各自条件下的基线；全部8例保留，5改善、1持平、2退化。}
+ \label{fig:physical_transfer}
+ \end{figure}

@@ -1,0 +1,128 @@
+{
+  "utc": "2026-10-18T11:00:48.374099+00:00",
+  "checks": {
+    "inputs/manuscript.pdf": true,
+    "inputs/manuscript.tex": true,
+    "inputs/manuscript_numbered.txt": true,
+    "inputs/manuscript_pdf_text.txt": true,
+    "inputs/rendered/A_SEC_full_page_250dpi.png": true,
+    "inputs/rendered/contact_01.png": true,
+    "inputs/rendered/contact_02.png": true,
+    "inputs/rendered/contact_03.png": true,
+    "inputs/rendered/page-01.png": true,
+    "inputs/rendered/page-02.png": true,
+    "inputs/rendered/page-03.png": true,
+    "inputs/rendered/page-04.png": true,
+    "inputs/rendered/page-05.png": true,
+    "inputs/rendered/page-06.png": true,
+    "inputs/rendered/page-07.png": true,
+    "inputs/rendered/page-08.png": true,
+    "inputs/rendered/page-09.png": true,
+    "inputs/rendered/page-10.png": true,
+    "inputs/rendered/page-11.png": true,
+    "inputs/rendered/page-12.png": true,
+    "live_tex": true,
+    "live_pdf": true,
+    "head": true,
+    "code_status_clean": true,
+    "all_seat_commits_unchanged": true
+  },
+  "all_pass": true,
+  "source_head": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "code_status": "",
+  "review_verdict": "major_revision",
+  "findings": 20,
+  "roadmap_items": 22,
+  "must_fix": 8,
+  "should_fix": 14,
+  "report_before_advisory_sha256": "7f8c8412aa236b2de80629dce1d32bfb0f3ec99cd5210954f6474141125261ef",
+  "report_final_sha256": "bc3fbe475f2d9414d389d8f02ff01a02d844984c0513daf5f655d9597ed2b104",
+  "advisory_status": "did_not_run_unsupported_tex_input; exact printed advisory appended unchanged after decision and roadmap validation; excluded from findings and decision",
+  "decision_gate": {
+    "utc": "2026-10-18T11:00:09.728307+00:00",
+    "argv": [
+      "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "C:\\Users\\佟亚龙\\.codex\\skills\\academic-research-skills\\scripts\\check_panel_synthesis.py",
+      "--contract",
+      "paper/zh/review_rounds/r23_20261018/contract.json",
+      "--report",
+      "paper/zh/review_rounds/r23_20261018/seats/eic_phase2.md",
+      "--report",
+      "paper/zh/review_rounds/r23_20261018/seats/methodology_phase2.md",
+      "--report",
+      "paper/zh/review_rounds/r23_20261018/seats/domain_phase2.md",
+      "--report",
+      "paper/zh/review_rounds/r23_20261018/seats/perspective_phase2.md",
+      "--report",
+      "paper/zh/review_rounds/r23_20261018/seats/da_phase2.md",
+      "--roles",
+      "eic,methodology,domain,perspective,da",
+      "--synthesis",
+      "paper/zh/review_rounds/r23_20261018/REVIEW_REPORT.md"
+    ],
+    "cwd": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO",
+    "timeout_s": 60,
+    "script_sha256": "6fbe28e8ebea3d4ec510d53bf4948c030a01be9e56e23a665e7acb00c0f51e37",
+    "returncode": 0,
+    "runtime_s": 0.75
+  },
+  "saved_helpers": [
+    {
+      "path": "qa/helpers/r23_build_synthesis.py",
+      "sha256": "4f1d4e17e80db0b74e9ad422f317baf6619e205f0b892c8b52ca7c992e6fc7a2"
+    },
+    {
+      "path": "qa/helpers/r23_canonical_contract.py",
+      "sha256": "c9222568dd98ba68910df78c94fec13d82ba9ffe4846bd3112a31f1298c70229"
+    },
+    {
+      "path": "qa/helpers/r23_finalize_review.py",
+      "sha256": "53b4cf59553c3872e52116b38f3f35df6c6e68ae5b5c745cd5128de02998825a"
+    },
+    {
+      "path": "qa/helpers/r23_gate.py",
+      "sha256": "c63797563e9099bec5ec42a0085e6626748859fedde86d5022208d1478032e5b"
+    },
+    {
+      "path": "qa/helpers/r23_lf_recovery.py",
+      "sha256": "aae46f76d00a8d9d0417e15922404dd9d8e1e107b48eda26c32ef234db797454"
+    },
+    {
+      "path": "qa/helpers/r23_make_payload.py",
+      "sha256": "a650e4f2a44af25abe922c6c65d3dc7d07c21aeea8f7c65ea294c757bf8709da"
+    },
+    {
+      "path": "qa/helpers/r23_projection.py",
+      "sha256": "4d0d7bf03db24ae269d1a3369a83ba885f01386912e7e69982ccbeab7fc71155"
+    },
+    {
+      "path": "qa/helpers/r23_projection_lf_recovery.py",
+      "sha256": "72768bd65a214aa5c88080f68dd391ba2e736d51a858053f27381f148ddbe017"
+    },
+    {
+      "path": "qa/helpers/r23_provenance_input.py",
+      "sha256": "4403a1d1e99cc1c3ef423148ad3609e6f45c70cb49139351eb0f58209c27bbae"
+    },
+    {
+      "path": "qa/helpers/r23_root_evidence_crosscheck.py",
+      "sha256": "4efc020193020edcb169af4d1a6cf7f5e4386b2705d0428d18d14d2925561dd8"
+    },
+    {
+      "path": "qa/helpers/r23_tools.py",
+      "sha256": "5da8818bf6ceaa8031071231ff5c6e98615c6b2f8005c5f3b69079a110e62530"
+    }
+  ],
+  "output_hashes": {
+    "REVISION_ROADMAP.json": "69caffaf26aaca0a3569e06963b3466aaf078517ed7b701c11df7375a27239c3",
+    "REVISION_ROADMAP.md": "d11097d82c8ff74c7b3bd4f0433e59f61246d313b19b02bfa5728149ab42c9c7",
+    "REVIEW_PACKAGE.json": "e1de4c17821e968dfd82eb6ebc3ee7a02fad61d77c38a79ef6521950e5d75ad2",
+    "FINDING_INVENTORY.json": "85bdab1dc04ebd137715bc7e5928d3b8ded30bb9a200539d1ded54dfc6e4a87f",
+    "ROOT_EVIDENCE_CROSSCHECK.json": "047f9dc00a3f2293d12957a529e7a28e2dea0bbf9f902f12ffd579e19c9e22cb",
+    "PANEL_PROVENANCE.json": "620b35417357c7c3dfda00b317347850a42525e01962e93829169778cdac3423",
+    "PANEL_CARRIER.json": "321de5196d7898eb51f6375358b1f7e987e0f490f776ff0cee7123c63f8d58b4"
+  },
+  "no_eda_or_source_mutation": true,
+  "commit_push_performed": false
+}

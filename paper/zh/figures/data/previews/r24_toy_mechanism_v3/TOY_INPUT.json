@@ -1,0 +1,718 @@
+{
+  "scope": "Artificial input and report_instances; static algorithm arithmetic and actual Liberty action instantiation only. No STA, SEC, external EDA, timing gain, acceptance, F3/F5 pass or new science experiment.",
+  "liberty": {
+    "path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "bytes": 12800135
+  },
+  "netlist_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_1 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_1 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+  "netlist_sha256": "4ee5de31828ca35a4addc0b0ddeb9fa57d8eeffabf6c7a96552f37cfa5d9ee60",
+  "input": {
+    "roots": [
+      "n6"
+    ],
+    "boundary_inputs": [
+      "a",
+      "b",
+      "c"
+    ],
+    "boundary_outputs": [
+      "n6"
+    ],
+    "internal_nets": [
+      "n1",
+      "n2",
+      "n3",
+      "n4",
+      "n5"
+    ],
+    "gates": [
+      "g1",
+      "g2",
+      "g3",
+      "g4",
+      "g5",
+      "g6"
+    ],
+    "gate_outputs": {
+      "g1": "n1",
+      "g2": "n2",
+      "g3": "n3",
+      "g4": "n4",
+      "g5": "n5",
+      "g6": "n6"
+    },
+    "gate_inputs": {
+      "g1": [
+        "a"
+      ],
+      "g2": [
+        "b"
+      ],
+      "g3": [
+        "c",
+        "c"
+      ],
+      "g4": [
+        "n1",
+        "n2"
+      ],
+      "g5": [
+        "n2",
+        "n3"
+      ],
+      "g6": [
+        "n4",
+        "n5"
+      ]
+    }
+  },
+  "critical_instances": [
+    "g1",
+    "g4",
+    "g6"
+  ],
+  "r_available": [
+    "g1",
+    "g2",
+    "g4",
+    "g5"
+  ],
+  "depth": {
+    "g3": 1,
+    "g2": 1,
+    "g5": 2,
+    "g1": 1,
+    "g4": 2,
+    "g6": 3
+  },
+  "fanin_size": {
+    "g1": 1,
+    "g2": 1,
+    "g3": 1,
+    "g4": 3,
+    "g5": 3,
+    "g6": 6
+  },
+  "sum_squares": 57,
+  "fanout": {
+    "g1": 1,
+    "g2": 2,
+    "g3": 1,
+    "g4": 1,
+    "g5": 1,
+    "g6": 0
+  },
+  "trace": {
+    "policy": "weighted_st",
+    "sources": "full",
+    "cost_mode": "configured",
+    "configured_weights": {
+      "boundary_penalty": 1.0,
+      "size_penalty": 1.0,
+      "critical_coverage_reward": 1.0,
+      "verification_cost_penalty": 1.0,
+      "equivalence_stability_reward": 1.0
+    },
+    "effective_weights": {
+      "boundary_penalty": 1.0,
+      "size_penalty": 1.0,
+      "critical_coverage_reward": 1.0,
+      "verification_cost_penalty": 1.0,
+      "equivalence_stability_reward": 1.0
+    },
+    "node_costs": {
+      "g1": 1.2581578947368424,
+      "g2": 1.3331578947368423,
+      "g3": 1.577543859649123,
+      "g4": 0.9907368421052634,
+      "g5": 0.9907368421052634,
+      "g6": 1.941578947368421
+    },
+    "candidates": [
+      {
+        "cut_hash": "f942a2624a3b872a0ab6961015371c433c8ffdd3b6ec50f0a2b2d0b8fb230019",
+        "origins": [
+          "cover"
+        ],
+        "method": "critical_path_cover",
+        "boundary_inputs": [
+          "a",
+          "n2",
+          "n5"
+        ],
+        "boundary_outputs": [
+          "n6"
+        ],
+        "internal_nets": [
+          "n1",
+          "n4"
+        ],
+        "gates": [
+          "g1",
+          "g4",
+          "g6"
+        ],
+        "patch_size": 3,
+        "node_cost_sum": 4.190473684210526
+      },
+      {
+        "cut_hash": "60d94a354504b1ca828908869128b78fefa0ecdc7dd582a504617b52da70e308",
+        "origins": [
+          "weighted"
+        ],
+        "method": "weighted_st",
+        "boundary_inputs": [
+          "n4",
+          "n5"
+        ],
+        "boundary_outputs": [
+          "n6"
+        ],
+        "internal_nets": [],
+        "gates": [
+          "g6"
+        ],
+        "patch_size": 1,
+        "node_cost_sum": 1.941578947368421
+      }
+    ],
+    "weighted_cut_cost": 1.941578947368421
+  },
+  "weighted_solution": {
+    "method": "weighted_st_min_cut_v1",
+    "source": "source",
+    "sink": "n6",
+    "selected_gate": "g6",
+    "selected_gates": [
+      "g6"
+    ],
+    "cut_cost": 1.941578947368421,
+    "cut_edges": [
+      [
+        "g6:in",
+        "g6:out"
+      ]
+    ],
+    "boundary_inputs": [
+      "n4",
+      "n5"
+    ],
+    "boundary_outputs": [
+      "n6"
+    ],
+    "gates": [
+      "g6"
+    ]
+  },
+  "actual_action_menus": {
+    "g1": [
+      [
+        "sky130_fd_sc_hd__bufinv_16",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__bufinv_8",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinvlp_2",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinvlp_4",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_1",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_12",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_16",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_2",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_4",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_6",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_8",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_1",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_16",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_2",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_4",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_8",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_16",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_2",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_4",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_8",
+        {},
+        "G"
+      ]
+    ],
+    "g2": [
+      [
+        "sky130_fd_sc_hd__bufinv_16",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__bufinv_8",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinvlp_2",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinvlp_4",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_1",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_12",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_16",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_2",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_4",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_6",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__inv_8",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_1",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_16",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_2",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_4",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__lpflow_clkinvkapwr_8",
+        {
+          "A": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_16",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_2",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_4",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__clkinv_8",
+        {},
+        "G"
+      ]
+    ],
+    "g3": [
+      [
+        "sky130_fd_sc_hd__nor2_2",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__nor2_4",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__nor2_8",
+        {},
+        "G"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:A:c__buf_g3_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:B:c__buf_g3_B",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:A:c__buf_g3_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:B:c__buf_g3_B",
+        {},
+        "B"
+      ]
+    ],
+    "g4": [
+      [
+        "sky130_fd_sc_hd__lpflow_inputiso0n_1",
+        {
+          "A": "SLEEP_B",
+          "B": "A"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__and2_2",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__and2_4",
+        {},
+        "G"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:A:n1__buf_g4_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:B:n2__buf_g4_B",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:A:n1__buf_g4_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:B:n2__buf_g4_B",
+        {},
+        "B"
+      ]
+    ],
+    "g5": [
+      [
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+        {
+          "A": "A",
+          "B": "SLEEP"
+        },
+        "R"
+      ],
+      [
+        "sky130_fd_sc_hd__or2_2",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__or2_4",
+        {},
+        "G"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:A:n2__buf_g5_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:B:n3__buf_g5_B",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:A:n2__buf_g5_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:B:n3__buf_g5_B",
+        {},
+        "B"
+      ]
+    ],
+    "g6": [
+      [
+        "sky130_fd_sc_hd__nor2_2",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__nor2_4",
+        {},
+        "G"
+      ],
+      [
+        "sky130_fd_sc_hd__nor2_8",
+        {},
+        "G"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:A:n4__buf_g6_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_1:B:n5__buf_g6_B",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:A:n4__buf_g6_A",
+        {},
+        "B"
+      ],
+      [
+        "buf:sky130_fd_sc_hd__buf_2:B:n5__buf_g6_B",
+        {},
+        "B"
+      ]
+    ]
+  },
+  "menu_counts": {
+    "g1": {
+      "R": 16,
+      "G": 4
+    },
+    "g2": {
+      "R": 16,
+      "G": 4
+    },
+    "g3": {
+      "G": 3,
+      "B": 4
+    },
+    "g4": {
+      "R": 1,
+      "G": 2,
+      "B": 4
+    },
+    "g5": {
+      "R": 1,
+      "G": 2,
+      "B": 4
+    },
+    "g6": {
+      "G": 3,
+      "B": 4
+    }
+  },
+  "witnesses": [
+    {
+      "instance": "g1",
+      "kind": "R",
+      "target": "sky130_fd_sc_hd__bufinv_16",
+      "pin_map": {
+        "A": "A"
+      },
+      "candidate_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__bufinv_16 g1 (\n    .A(a),\n    .Y(n1)\n  );\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_1 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+      "candidate_sha256": "2eb97a1b3f612225da22759ad4df1ed3aad6d7d196bb77838855c31ca9ddbc66"
+    },
+    {
+      "instance": "g4",
+      "kind": "G",
+      "target": "sky130_fd_sc_hd__and2_2",
+      "pin_map": {},
+      "candidate_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_1 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_2 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+      "candidate_sha256": "49dca4a6d03da5701813878a1c9be28c8edd9237202d3e4a56161f15f3bf5cb9"
+    },
+    {
+      "instance": "g6",
+      "kind": "B",
+      "target": "buf:sky130_fd_sc_hd__buf_1:A:n4__buf_g6_A",
+      "pin_map": {},
+      "candidate_fulltext": "module toy(a,b,c,n6);\n  wire n4__buf_g6_A;\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_1 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_1 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4__buf_g6_A), .B(n5), .Y(n6));\n  sky130_fd_sc_hd__buf_1 _bufb_g6_A (\n    .A(n4),\n    .X(n4__buf_g6_A)\n  );\nendmodule\n",
+      "candidate_sha256": "75d0c2589cc1c2f549c3c0ed2a2c00d73ab7ae7bc955dd041c9ffcf458f1a252"
+    },
+    {
+      "kind": "JOINT",
+      "mode": "joint_k=2,joint_mix=False",
+      "changes": {
+        "g1": [
+          "sky130_fd_sc_hd__clkinv_16",
+          {},
+          "G"
+        ],
+        "g4": [
+          "sky130_fd_sc_hd__and2_2",
+          {},
+          "G"
+        ]
+      },
+      "candidate_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_16 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_2 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+      "candidate_sha256": "3bd5bdfeffed7c126148818d4dda3f13da19fa0f8332810b36ebbe8cad0fa879"
+    }
+  ],
+  "boundary_dispatch_order": [
+    "critical_path_cover",
+    "weighted_st"
+  ],
+  "cover_instance_order": [
+    "g1",
+    "g4",
+    "g6"
+  ],
+  "weighted_instance_order": [
+    "g6"
+  ]
+}

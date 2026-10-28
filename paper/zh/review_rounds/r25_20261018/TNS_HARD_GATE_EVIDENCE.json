@@ -1,0 +1,539 @@
+{
+  "status": "READ_ONLY_EXISTING_EVIDENCE_CONFIRMED",
+  "scope": "Cprime-v3 exact scientific runtime and observed rejected trial; no new EDA/source/manuscript changes",
+  "runtime_git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "runtime_zip": {
+    "path": "project_docs/evidence/r22_cprime_v3_20261016/source_snapshot/runtime_inputs.zip",
+    "sha256": "620a0eb9809dd08720fd4fdf4bdb85781668ff161a9b061936e7447ade442d7f",
+    "size_bytes": 2400670
+  },
+  "runtime_members": {
+    "code/src/rseco/real_wns.py": {
+      "sha256": "812bafab38f44c889ecb32b5503509b5a0d8e5ed78052507ffcf4a326a92918e",
+      "snippets": [
+        {
+          "first_line": 2259,
+          "last_line": 2272,
+          "text": "        metric_references = {\n            \"setup_wns\": res.get(\"physical_baseline\") if paired else self.baseline_wns,\n            \"setup_tns\": res.get(\"physical_baseline_tns\") if paired else self.baseline_tns,\n            \"hold_min_slack\": (res.get(\"physical_baseline_min_slack\")\n                               if paired else self.baseline_min_slack),\n        }\n        unavailable_metrics = [metric for metric in self.required_metrics\n                               if metric_values.get(metric) is None]\n        unavailable = tuple(unavailable_metrics)\n        violations: list[str] = []\n        if (self.strict_budgets and metric_references[\"setup_tns\"] is not None\n                and metric_values[\"setup_tns\"] is not None\n                and metric_values[\"setup_tns\"] < metric_references[\"setup_tns\"] - self.epsilon):\n            violations.append(\"setup_tns\")"
+        },
+        {
+          "first_line": 2335,
+          "last_line": 2343,
+          "text": "            evidence_payload = evidence.to_dict()\n            evidence_payload[\"metric_budgets\"] = metric_budgets\n            failure_events.append({\n                \"type\": \"acceptance_budget_unavailable\" if evidence.unavailable else \"acceptance_budget_violation\",\n                \"candidate_hash\": candidate_hash, \"cut_hash\": candidate_hash,\n                \"severity\": \"hard\", \"hard_gate\": True, \"runtime_s\": time.perf_counter() - started_at,\n                \"threshold\": {\"unavailable\": list(evidence.unavailable), \"violations\": list(evidence.violations)},\n                \"observed_value\": evidence_payload, \"evidence\": evidence_payload,\n            })"
+        },
+        {
+          "first_line": 2670,
+          "last_line": 2677,
+          "text": "        def _accept_result(r: dict) -> bool:\n            nonlocal best_wns, best_tns, best_min, best_physical_wns, best_physical_hold, best\n            wns = r[\"wns\"]\n            if any(e.get(\"severity\") == \"hard\" or e.get(\"type\") in {\n                \"F1_equivalence_failure\", \"F2_boundary_invalid\",\n                \"F3_patch_too_large\", \"F5_verification_too_expensive\",\n            } for e in r.get(\"failure_events\", [])):\n                return False"
+        },
+        {
+          "first_line": 2747,
+          "last_line": 2753,
+          "text": "            if wns > best_wns + self.epsilon or (\n                self.tns_aware\n                and abs(wns - best_wns) <= self.epsilon\n                and tns is not None\n                and best_tns is not None\n                and tns > best_tns + self.epsilon\n            ):"
+        }
+      ]
+    },
+    "code/scripts/run_outerloop_real_wns.py": {
+      "sha256": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+      "snippets": [
+        {
+          "first_line": 392,
+          "last_line": 395,
+          "text": "        strict_gates=True,\n        strict_budgets=True,\n        required_metrics=tuple(m.strip() for m in args.required_metrics.split(\",\") if m.strip()),\n        epsilon=args.epsilon,"
+        }
+      ]
+    }
+  },
+  "caller_values": {
+    "strict_gates": true,
+    "strict_budgets": true,
+    "provenance": "hardcoded runner ZIP lines392-393; not serialized run_config fields"
+  },
+  "W1_configs": [
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s27/run_config.json",
+      "sha256": "5a9b0fb700806c2ffd06de48a1a1d8b1effb559eeb4692e73a6ad28e60bcf48b",
+      "size_bytes": 3897,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s382/run_config.json",
+      "sha256": "a55109546f88fb560403bb87276a981c7fe0ccd31990d153d3c8a172bbae6c56",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s420/run_config.json",
+      "sha256": "c9e5b7b93e6342eff4cd9d6b5fbe00e83f579983cfc740aefdc8144579c7f641",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s641/run_config.json",
+      "sha256": "5a6a0601ebac406e6046c8733d3c72808ce64713c0ac3a98da1dde4f4057b285",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s713/run_config.json",
+      "sha256": "67b5ef3484461fef7deb3ffcbef52dc2941849c52e04187aab6189c05d925864",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s820/run_config.json",
+      "sha256": "5f658138c4d45852019cc258ce36d279d18b05532497aa29f975da8e633a5e93",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s832/run_config.json",
+      "sha256": "12374a762b2347789ade5e70484798df6ed3d5120bdf44bbc93a2b8e789715b6",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    },
+    {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W1/s953/run_config.json",
+      "sha256": "8fb5092fd871c81ea33546793e957dafb6ae78f51c8fb90b70db5378fa8515bc",
+      "size_bytes": 3900,
+      "git_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+      "resolved_args": {
+        "required_metrics": "setup_wns,setup_tns",
+        "epsilon": 0.0,
+        "tns_aware": false,
+        "hold_mode": false,
+        "physical_gate": false,
+        "no_feedback": true,
+        "cut_search_policy": "weighted_st",
+        "cut_sources": "full",
+        "node_cost_mode": "configured",
+        "period": 0.5,
+        "clock_port": "CK",
+        "workers": 1,
+        "max_iterations": 20,
+        "max_patches": 20,
+        "sta_budget": 500
+      },
+      "strict_gates_serialized": false,
+      "strict_budgets_serialized": false
+    }
+  ],
+  "rejected_trial": {
+    "file": {
+      "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/eval_trials.json",
+      "sha256": "09cf97e0c6fa28a381e5e2ca139375a966aa5444108d4ba2da8de37a6200926e",
+      "size_bytes": 66471
+    },
+    "json_pointer": "/trials/0",
+    "trial": {
+      "instance": "_11_",
+      "kind": "G",
+      "from_type": "sky130_fd_sc_hd__a21boi_0",
+      "to_type": "sky130_fd_sc_hd__a21boi_1",
+      "topology_metrics": null,
+      "wns": -0.26,
+      "tns": -0.5,
+      "min_slack": 0.43,
+      "area": null,
+      "max_transition": null,
+      "max_capacitance": null,
+      "max_fanout": null,
+      "min_slack_status": "MET",
+      "slack": -0.26,
+      "slack_status": "VIOLATED",
+      "physical_failure": false,
+      "physical_wns": null,
+      "physical_tns": null,
+      "physical_min_slack": null,
+      "physical_gate_error": null,
+      "physical_baseline": null,
+      "physical_candidate": null,
+      "physical_baseline_tns": null,
+      "physical_candidate_tns": null,
+      "physical_baseline_min_slack": null,
+      "physical_candidate_min_slack": null,
+      "physical_baseline_provenance": null,
+      "physical_candidate_provenance": null,
+      "physical_config": null,
+      "physical_delta": null,
+      "physical_status": null,
+      "rc_config_hash": null,
+      "failure_events": [
+        {
+          "type": "acceptance_budget_violation",
+          "candidate_hash": "92085689c92eed9168da24e1c3a2416d025631d6e042cdc6713ae369164b6a14",
+          "cut_hash": "92085689c92eed9168da24e1c3a2416d025631d6e042cdc6713ae369164b6a14",
+          "severity": "hard",
+          "hard_gate": true,
+          "runtime_s": 0.660892200001399,
+          "threshold": {
+            "unavailable": [],
+            "violations": [
+              "setup_tns"
+            ]
+          },
+          "observed_value": {
+            "setup_wns": -0.26,
+            "setup_tns": -0.5,
+            "hold_min_slack": 0.43,
+            "area": null,
+            "max_transition": null,
+            "max_capacitance": null,
+            "max_fanout": null,
+            "backend_provenance": {
+              "tool": "OpenSTA",
+              "status": "unknown"
+            },
+            "unavailable": [],
+            "violations": [
+              "setup_tns"
+            ],
+            "epsilon": 0.0,
+            "epsilon_by_metric": {
+              "patch_ratio": 0.0,
+              "area": 0.0,
+              "max_transition": 0.0,
+              "max_capacitance": 0.0,
+              "max_fanout": 0.0
+            },
+            "metric_budgets": {
+              "setup_tns": {
+                "value": -0.5,
+                "reference": -0.49,
+                "epsilon": 0.0,
+                "unit": "ns",
+                "backend": "OpenSTA"
+              }
+            }
+          },
+          "evidence": {
+            "setup_wns": -0.26,
+            "setup_tns": -0.5,
+            "hold_min_slack": 0.43,
+            "area": null,
+            "max_transition": null,
+            "max_capacitance": null,
+            "max_fanout": null,
+            "backend_provenance": {
+              "tool": "OpenSTA",
+              "status": "unknown"
+            },
+            "unavailable": [],
+            "violations": [
+              "setup_tns"
+            ],
+            "epsilon": 0.0,
+            "epsilon_by_metric": {
+              "patch_ratio": 0.0,
+              "area": 0.0,
+              "max_transition": 0.0,
+              "max_capacitance": 0.0,
+              "max_fanout": 0.0
+            },
+            "metric_budgets": {
+              "setup_tns": {
+                "value": -0.5,
+                "reference": -0.49,
+                "epsilon": 0.0,
+                "unit": "ns",
+                "backend": "OpenSTA"
+              }
+            }
+          },
+          "endpoint": null,
+          "path": [],
+          "net": null,
+          "action_scope": [],
+          "event_id": "0a286268849b20b7c09d7a232fa882b9996788256da820cfba980dd881444172"
+        }
+      ],
+      "acceptance_evidence": {
+        "setup_wns": -0.26,
+        "setup_tns": -0.5,
+        "hold_min_slack": 0.43,
+        "area": null,
+        "max_transition": null,
+        "max_capacitance": null,
+        "max_fanout": null,
+        "backend_provenance": {
+          "tool": "OpenSTA",
+          "status": "unknown"
+        },
+        "unavailable": [],
+        "violations": [
+          "setup_tns"
+        ],
+        "epsilon": 0.0,
+        "epsilon_by_metric": {
+          "patch_ratio": 0.0,
+          "area": 0.0,
+          "max_transition": 0.0,
+          "max_capacitance": 0.0,
+          "max_fanout": 0.0
+        },
+        "metric_references": {
+          "setup_wns": -0.27,
+          "setup_tns": -0.49,
+          "hold_min_slack": 0.44
+        }
+      },
+      "critical_instances": [
+        "_08_",
+        "_11_",
+        "_09_",
+        "_07_",
+        "_04_",
+        "_05_",
+        "_06_"
+      ],
+      "critical_endpoints": [
+        "DFF_0"
+      ],
+      "sta_provenance": {
+        "tool": "OpenSTA",
+        "output_dir": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W0\\s27\\eval\\iter001_cand001\\000__11__G",
+        "report_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W0\\s27\\eval\\iter001_cand001\\000__11__G\\sta.log"
+      },
+      "candidate_hash": "92085689c92eed9168da24e1c3a2416d025631d6e042cdc6713ae369164b6a14",
+      "base_netlist_hash": "3010c393dc085a30b359dbe09b5e15eefd9c814056a9fa4b0f09d44974ca1495",
+      "cache_key": "ec36893983fe7547450649f87070c4662134e5faaa3c9bb8432ac36fed90c01d",
+      "config_hash": "840313fc7241e7d5821e5eb8768cf9a625b5862e881d4dbbd324679c90c60000",
+      "runtime_s": 0.6611338000075193,
+      "proxy_rank": 1,
+      "proxy_score": -3.267857142857143,
+      "proxy_features": {
+        "timing_gain": 0.0,
+        "patch_size": 1.0,
+        "boundary_complexity": 4.0,
+        "verification_cost": 0.25,
+        "equivalence_confidence": 1.0,
+        "critical_path_coverage": 0.8571428571428571,
+        "strategy_priority": 0.5
+      },
+      "sta_executed": true,
+      "sta_launch_seq": 1,
+      "trial_failure_events": [],
+      "patch_id": "patch_G10_weighted_st",
+      "iteration": 1,
+      "accepted": false,
+      "committed": false
+    },
+    "bindings": [
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/eval_trials.json",
+        "sha256": "09cf97e0c6fa28a381e5e2ca139375a966aa5444108d4ba2da8de37a6200926e",
+        "size_bytes": 66471
+      },
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/run_config.json",
+        "sha256": "da68637504f5714ecba58edb237bb760b3d008a56098bc27a01db18ef3ceeb97",
+        "size_bytes": 3905
+      },
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/mapped.v",
+        "sha256": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+        "size_bytes": 1547
+      },
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/sta.log",
+        "sha256": "0820046fed3eddd9d77cfc9e00bf4642e7748991ac894031c36eafb9dc56e2ff",
+        "size_bytes": 13495
+      },
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/eval/iter001_cand001/000__11__G/mapped.v",
+        "sha256": "7e14ecb5636a9dd94d0b1135f9f1537d1dacc996f143674f9ed8664a6b9ffb48",
+        "size_bytes": 1547
+      },
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/eval/iter001_cand001/000__11__G/sta.log",
+        "sha256": "721922869db8d77f7addeac3293ba77ffb12a6b550ae8dfc053a4382247da6ca",
+        "size_bytes": 12311
+      },
+      {
+        "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/eval/iter001_cand001/000__11__G/sta.tcl",
+        "sha256": "afd02c383e6855a6831bdb51cd16ad6900a0801675dae7fc1a9a1c1fb87c02dc",
+        "size_bytes": 593
+      }
+    ],
+    "normalized_netlist_hash_checks": {
+      "baseline_matches_trial_base": true,
+      "candidate_matches_trial_identity": true,
+      "normalization": "Python read_text utf-8-sig universal newline then UTF-8 bytes"
+    },
+    "native_sta_log_metrics": [
+      {
+        "file": {
+          "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/sta.log",
+          "sha256": "0820046fed3eddd9d77cfc9e00bf4642e7748991ac894031c36eafb9dc56e2ff",
+          "size_bytes": 13495
+        },
+        "lines": [
+          {
+            "line": 322,
+            "text": "tns max -0.49"
+          },
+          {
+            "line": 324,
+            "text": "worst slack max -0.27"
+          }
+        ]
+      },
+      {
+        "file": {
+          "path": "experiments/20261016_r22_cut_ablation_v3/W0/s27/eval/iter001_cand001/000__11__G/sta.log",
+          "sha256": "721922869db8d77f7addeac3293ba77ffb12a6b550ae8dfc053a4382247da6ca",
+          "size_bytes": 12311
+        },
+        "lines": [
+          {
+            "line": 293,
+            "text": "tns max -0.50"
+          },
+          {
+            "line": 295,
+            "text": "worst slack max -0.26"
+          }
+        ]
+      }
+    ]
+  },
+  "interpretation": {
+    "W1_rule": "With tns_aware=false, hold_mode=false, physical_gate=false, a commit requires no hard failure, setup TNS >= current-baseline TNS (epsilon0), and strict WNS improvement. This is not a claim that hold/electrical constraints were accepted.",
+    "observed_counterexample": "W0/s27 trial0 improves WNS -0.27 to -0.26 ns but worsens TNS -0.49 to -0.50 ns. Only setup_tns hard violation; accepted=false and committed=false. Same runtime hard-budget policy as W1.",
+    "W1_caution": "W1/s27 has observed TNS violation trials but the checked first violation also worsens WNS; W0 trial0 isolates the TNS hard rejection better.",
+    "manuscript_new_finding": "Earlier r24 acceptance expression mentioning only WNS strict gain / optional TNS-aware tie does not express this preceding hard gate. Must explicitly retain hard gates and TNS nondegradation in concise manuscript; do not silently treat old formula as complete."
+  }
+}

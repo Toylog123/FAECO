@@ -1,0 +1,96 @@
+--- zh_before.tex
++++ zh_after.tex
+@@ -442,7 +442,7 @@
+ 
+ \subsection{单轮 ECO 修复质量与效率}\label{sec:iscas}
+ 
+-本实验验证候选探索框架在单轮配置下的修复质量与效率。图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。8 个修复网表均通过独立顺序 SEC（通过率 8/8），证明单元数和时间见表~\ref{tab:sec_iscas8}。接受的候选类型分布为 JOINT 4 个（s27/s382/s420/s953）、G 3 个（s641/s713/s832）、R 1 个（s820）；本组未出现单独接受的 B 候选。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，该配置\textbf{不启用 \S\ref{sec:validation} 的 10\,ps 物理门控阈值}，直接以式~\eqref{eq:accept} 的 $\Delta_{\mathrm{WNS}}>0$ 为接受准则；s420 的 +0.01\,ns（10\,ps）接受候选即在该准则下产生。
++本实验验证候选探索框架在单轮配置下的修复质量与效率。图~\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。独立顺序等价检查完全证明了这8对基线与最终修复网表，证明点数与耗时见表~\ref{tab:sec_iscas8}。接受的候选类型分布为 JOINT 4 个（s27/s382/s420/s953）、G 3 个（s641/s713/s832）、R 1 个（s820）；本组未出现单独接受的 B 候选。\textbf{图~\ref{fig:iscas_main} 对应效率优先配置}\label{sec:eff_prio}，该配置\textbf{不启用 \S\ref{sec:validation} 的 10\,ps 物理门控阈值}，直接以式~\eqref{eq:accept} 的 $\Delta_{\mathrm{WNS}}>0$ 为接受准则；s420 的 +0.01\,ns（10\,ps）接受候选即在该准则下产生。
+ 
+ 本节与后续多轮实验采用不同的停止条件，结果分别统计。
+ 
+@@ -455,26 +455,26 @@
+ \label{fig:iscas_main}
+ \end{figure}
+ 
+-\begin{table}[!htb]
+-\centering
+-\caption{ISCAS89 顺序门级 SEC 结果}
++\begin{table}[htbp]
++\centering
++\caption{效率优先修复网表对的顺序等价证明}
+ \label{tab:sec_iscas8}
+ \setlength{\tabcolsep}{4pt}
+ \footnotesize
+ \begin{tabular}{lrrr}
+ \toprule
+-\textbf{电路} & \textbf{$\mathrm{equiv}$ 单元} & \textbf{SEC} & \textbf{时间 (s)} \\
+-\midrule
+-s27  & 11  & 通过 & 0.303 \\
+-s382 & 90  & 通过 & 0.382 \\
+-s420 & 79  & 通过 & 0.368 \\
+-s641 & 124 & 通过 & 0.381 \\
+-s713 & 126 & 通过 & 0.410 \\
+-s820 & 138 & 通过 & 0.454 \\
+-s832 & 145 & 通过 & 0.437 \\
+-s953 & 228 & 通过 & 0.537 \\
+-\bottomrule
+-\multicolumn{4}{p{0.92\columnwidth}}{\footnotesize 使用 \texttt{equiv\_make} + \texttt{equiv\_simple} + \texttt{equiv\_induct} 进行证明；8 个电路共 8/8 通过。该结果对应 SKY130 行为单元模型下的逻辑门级顺序等价证明。}\\
++\textbf{电路} & \textbf{已证明/未证明} & \textbf{SEC} & \textbf{耗时 (s)} \\
++\midrule
++s27 & 11/0 & 通过 & 0.281 \\
++s382 & 90/0 & 通过 & 0.281 \\
++s420 & 79/0 & 通过 & 0.250 \\
++s641 & 124/0 & 通过 & 0.313 \\
++s713 & 126/0 & 通过 & 0.328 \\
++s820 & 139/0 & 通过 & 0.344 \\
++s832 & 146/0 & 通过 & 0.391 \\
++s953 & 228/0 & 通过 & 0.407 \\
++\bottomrule
++\multicolumn{4}{p{0.92\columnwidth}}{\footnotesize 八对网表在同一验证批次中使用Yosys 0.33和SKY130行为单元模型，以\texttt{equiv\_make}、\texttt{equiv\_simple}和\texttt{equiv\_induct -seq 10}证明，并由\texttt{equiv\_status -assert}检查全部等价点。耗时为每次独立证明调用的墙钟时间，不含映射、候选STA和模型准备。}\\
+ \end{tabular}
+ \end{table}
+ 
+--- en_before.tex
++++ en_after.tex
+@@ -264,26 +264,27 @@
+ \end{table}
+ 
+ \subsection{Single-round repair quality and efficiency}\label{sec:iscas}
+-The single-round study evaluates repair quality and efficiency. Figure~\ref{fig:iscas_main} compares baseline and repaired ISCAS89 netlists; all eight improve strictly under ideal-net OpenSTA. R/G/B/JOINT constructions preserve flip-flops, clock and reset logic. All final pairs pass independent SEC (Table~\ref{tab:sec_iscas8}). Accepted candidate types are JOINT for s27/s382/s420/s953, G for s641/s713/s832, and R for s820; no standalone B candidate is accepted. This is the efficiency-first configuration\label{sec:eff_prio}, with the 10\,ps physical gate disabled. Thus s420's +0.01\,ns candidate is accepted under $\Delta\mathrm{WNS}>0$. The stopping condition differs from the subsequent multi-round study, so results are reported separately. JOINT combines local implementation and drive changes; G changes drive strength; R depends on equivalent Boolean implementations available in the library.
++The single-round study evaluates repair quality and efficiency. Figure~\ref{fig:iscas_main} compares baseline and repaired ISCAS89 netlists; all eight improve strictly under ideal-net OpenSTA. R/G/B/JOINT constructions preserve flip-flops, clock and reset logic. Independent SEC fully proves all eight baseline/final repaired pairs; Table~\ref{tab:sec_iscas8} reports the proof counts and wall time. Accepted candidate types are JOINT for s27/s382/s420/s953, G for s641/s713/s832, and R for s820; no standalone B candidate is accepted. This is the efficiency-first configuration\label{sec:eff_prio}, with the 10\,ps physical gate disabled. Thus s420's +0.01\,ns candidate is accepted under $\Delta\mathrm{WNS}>0$. The stopping condition differs from the subsequent multi-round study, so results are reported separately. JOINT combines local implementation and drive changes; G changes drive strength; R depends on equivalent Boolean implementations available in the library.
+ 
+ \begin{figure}[htbp]\centering
+ \includegraphics[width=0.78\linewidth]{fig3_single_round_r21.pdf}
+ \caption{Baseline and FAECO WNS on ISCAS89 sequential circuits at 0.5\,ns. Labels report gain relative to baseline.}\label{fig:iscas_main}
+ \end{figure}
+ \begin{table}[htbp]\centering\small
+-\caption{Gate-level sequential equivalence checks on ISCAS89.}\label{tab:sec_iscas8}
++\caption{Sequential equivalence of the efficiency-first repaired pairs.}\label{tab:sec_iscas8}
+ \begin{tabular}{lrrr}\toprule
+-Circuit & Equivalence cells & SEC & Time (s)\\\midrule
+-s27 & 11 & Proven & 0.303\\
+-s382 & 90 & Proven & 0.382\\
+-s420 & 79 & Proven & 0.368\\
+-s641 & 124 & Proven & 0.381\\
+-s713 & 126 & Proven & 0.410\\
+-s820 & 138 & Proven & 0.454\\
+-s832 & 145 & Proven & 0.437\\
+-s953 & 228 & Proven & 0.537\\\bottomrule
+-\end{tabular}
+-\par\smallskip\footnotesize Yosys \texttt{equiv\_make}, \texttt{equiv\_simple} and \texttt{equiv\_induct}; all eight pass under SKY130 behavioral cell models.
++Circuit & Proven/unproven & SEC & Wall time (s)\\\midrule
++s27 & 11/0 & Proven & 0.281\\
++s382 & 90/0 & Proven & 0.281\\
++s420 & 79/0 & Proven & 0.250\\
++s641 & 124/0 & Proven & 0.313\\
++s713 & 126/0 & Proven & 0.328\\
++s820 & 139/0 & Proven & 0.344\\
++s832 & 146/0 & Proven & 0.391\\
++s953 & 228/0 & Proven & 0.407\\
++\bottomrule
++\end{tabular}
++\par\smallskip\footnotesize All eight pairs are checked in one verification batch with Yosys 0.33 under SKY130 behavioral cell models using \texttt{equiv\_make}, \texttt{equiv\_simple} and \texttt{equiv\_induct -seq 10}, with \texttt{equiv\_status -assert} requiring complete proof. Wall time covers each independent prover invocation and excludes mapping, candidate STA and model preparation.
+ \end{table}
+ 
+ \subsection{Cross-dataset evaluation}\label{sec:ood}

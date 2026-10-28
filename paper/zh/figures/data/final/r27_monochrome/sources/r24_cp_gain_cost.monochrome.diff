@@ -1,0 +1,13 @@
+--- 
++++ 
+@@ -149,8 +149,8 @@
+     })
+     gain = np.array([[by[c, a]['wns_gain_ps'] for a in ARMS] for c in CIRCUITS])
+     cost = np.array([[by[c, a]['candidate_ideal_sta'] for a in ARMS] for c in CIRCUITS])
+-    blue = LinearSegmentedColormap.from_list('gain', ['#FFFFFF', '#516779'])
+-    grey = LinearSegmentedColormap.from_list('cost', ['#FFFFFF', '#87949F'])
++    blue = LinearSegmentedColormap.from_list('gain', ['#FFFFFF', '#3B3B3B'])
++    grey = LinearSegmentedColormap.from_list('cost', ['#FFFFFF', '#727272'])
+     # Fixed 170 x 70 mm manuscript width; no tight-crop resizing.
+     fig = plt.figure(figsize=(6.6929133858, 2.7559055118))
+     axes = []

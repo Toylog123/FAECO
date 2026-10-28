@@ -1,0 +1,15 @@
+{
+  "question": "C′各区域政策在逐次真实候选STA预算下何时提交收益并停止？",
+  "claim": "收益轨迹必须结合实际测量成本和自然停止点解释；weighted/uniform全程重合，局部不利比较保留。",
+  "archetype": "quantitative grid",
+  "backend": "Python/matplotlib",
+  "physical_size_mm": [
+    170,
+    108
+  ],
+  "observations": "8circuits×9arms; all6858 actualSTA and192 explicit commits",
+  "curve_definition": "k counts every candidate_ideal launch (failed too), excludes baseline/cache/pre-reject; B(k) changes only on explicit outer committed trial bound in the accepted state commit chain",
+  "overlap": "merge only identical complete(k,B)arrays including stop; list all72 membership",
+  "uncertainty": "individual runs/seeds only, no aggregation/error bars/significance",
+  "new_eda": false
+}

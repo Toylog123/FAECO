@@ -1,0 +1,765 @@
+{
+  "status": "PASS bounded numeric/scientific checks; current-caption/render version caveat retained",
+  "scope": "Read-only data/scientific wording crosscheck, not new peer review or EDA; figure author self-check with independent arithmetic/raw source inspection.",
+  "source": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+  "checks": [
+    {
+      "name": "All72 CSV values and current completion bytes match accepted matrix",
+      "status": "PASS",
+      "evidence": "MATRIX_AUDIT_72, all72 source CSV rows and completion SHA"
+    },
+    {
+      "name": "TeX arm row W0",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.0",
+        "expected_sta": 71,
+        "expected_commits": 0,
+        "tex": "W0 & 0.000 & 71 & 0 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary W0",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row W1",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 847,
+        "expected_commits": 27,
+        "tex": "W1 & 0.161 & 847 & 27 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary W1",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row U0",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.0",
+        "expected_sta": 71,
+        "expected_commits": 0,
+        "tex": "U0 & 0.000 & 71 & 0 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary U0",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row U1",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 847,
+        "expected_commits": 27,
+        "tex": "U1 & 0.161 & 847 & 27 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary U1",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row C",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 839,
+        "expected_commits": 27,
+        "tex": "C & 0.161 & 839 & 27 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary C",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row UR1",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 1046,
+        "expected_commits": 28,
+        "tex": "UR1 & 0.161 & 1046 & 28 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary UR1",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row UR2",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 919,
+        "expected_commits": 28,
+        "tex": "UR2 & 0.161 & 919 & 28 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary UR2",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row UR3",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 944,
+        "expected_commits": 28,
+        "tex": "UR3 & 0.161 & 944 & 28 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary UR3",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX arm row L",
+      "status": "PASS",
+      "evidence": {
+        "expected_mean_gain_ns": "0.16125",
+        "expected_sta": 1274,
+        "expected_commits": 27,
+        "tex": "L & 0.161 & 1274 & 27 \\\\"
+      }
+    },
+    {
+      "name": "Reanalysis arm summary L",
+      "status": "PASS",
+      "evidence": "Independent sum from72 CSV"
+    },
+    {
+      "name": "TeX full matrix counts",
+      "status": "PASS",
+      "evidence": {
+        "records": 8458,
+        "candidate_sta": 6858,
+        "baseline_sta": 72,
+        "commits": 192
+      }
+    },
+    {
+      "name": "Random-control savings percentages and denominator",
+      "status": "PASS",
+      "evidence": {
+        "UR1": 19.02485659655832,
+        "UR2": 7.834602829162133,
+        "UR3": 10.275423728813559
+      }
+    },
+    {
+      "name": "L-W1 paired savings and interpretation",
+      "status": "PASS",
+      "evidence": {
+        "s27": 46,
+        "s382": 35,
+        "s420": 47,
+        "s641": 63,
+        "s713": 50,
+        "s820": 74,
+        "s832": 75,
+        "s953": 37
+      }
+    },
+    {
+      "name": "Weighted/uniform zero effects retained",
+      "status": "PASS",
+      "evidence": "Both8-pair contrasts, endpoints/candidateSTA exactly equal"
+    },
+    {
+      "name": "16pair/320round diagnostic remains diagnostic",
+      "status": "PASS",
+      "evidence": "32 current raw outerloop result SHA checked; repeated state rounds not independent samples"
+    },
+    {
+      "name": "UR trajectory claim bounded",
+      "status": "PASS",
+      "evidence": {
+        "24_comparisons": [
+          {
+            "circuit": "s27",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s27",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s27",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s382",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s382",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s382",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s420",
+            "arm": "UR1",
+            "same_base_sequence": false,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s420",
+            "arm": "UR2",
+            "same_base_sequence": false,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s420",
+            "arm": "UR3",
+            "same_base_sequence": false,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s641",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s641",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s641",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s713",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s713",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s713",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s820",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s820",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s820",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s832",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s832",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s832",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          },
+          {
+            "circuit": "s953",
+            "arm": "UR1",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 1
+          },
+          {
+            "circuit": "s953",
+            "arm": "UR2",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 2
+          },
+          {
+            "circuit": "s953",
+            "arm": "UR3",
+            "same_base_sequence": true,
+            "same_pool_and_dispatch_trace": false,
+            "random_order": true,
+            "seed": 3
+          }
+        ],
+        "diverged_base_sequences": 3
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s27",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s27 & 11/11 & 0/0 & 4.76",
+        "recomputed_area_pct": "4.761904761904761904761904800"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s382",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s382 & 90/90 & 0/0 & 1.55",
+        "recomputed_area_pct": "1.545595054095826893353941300"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s420",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s420 & 79/79 & 0/0 & 4.92",
+        "recomputed_area_pct": "4.920913884007029876977152900"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s641",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s641 & 122/122 & 0/0 & 2.07",
+        "recomputed_area_pct": "2.074688796680497925311203300"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s713",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s713 & 124/124 & 0/0 & 0.27",
+        "recomputed_area_pct": "0.273597811217510259917920700"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s820",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s820 & 138/138 & 0/0 & 0.29",
+        "recomputed_area_pct": "0.294550810014727540500736400"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s832",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s832 & 145/145 & 0/0 & 0.71",
+        "recomputed_area_pct": "0.706214689265536723163841800"
+      }
+    },
+    {
+      "name": "TeX W1 netlist row s953",
+      "status": "PASS",
+      "evidence": {
+        "expected_line": "s953 & 228/228 & 0/0 & 0.80",
+        "recomputed_area_pct": "0.795947901591895803183791600"
+      }
+    },
+    {
+      "name": "Area range and engineering scope",
+      "status": "PASS",
+      "evidence": [
+        {
+          "circuit": "s27",
+          "area_pct": 4.761904761904762,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s382",
+          "area_pct": 1.545595054095827,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s420",
+          "area_pct": 4.92091388400703,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s641",
+          "area_pct": 2.074688796680498,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s713",
+          "area_pct": 0.27359781121751026,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s820",
+          "area_pct": 0.29455081001472755,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s832",
+          "area_pct": 0.7062146892655368,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        },
+        {
+          "circuit": "s953",
+          "area_pct": 0.7959479015918958,
+          "raw_sha_checked": true,
+          "leaf_type_counts_checked": true
+        }
+      ]
+    },
+    {
+      "name": "Static R availability/cost/boundaries/caption",
+      "status": "PASS",
+      "evidence": {
+        "costs": [
+          {
+            "gate": "g1",
+            "inputs": "a",
+            "output": "n1",
+            "depth": 1,
+            "fanin_size": 1,
+            "cone_internal_fanout": 1,
+            "R_available": true,
+            "cost": 1.2581578947368424
+          },
+          {
+            "gate": "g2",
+            "inputs": "b",
+            "output": "n2",
+            "depth": 1,
+            "fanin_size": 1,
+            "cone_internal_fanout": 2,
+            "R_available": true,
+            "cost": 1.3331578947368423
+          },
+          {
+            "gate": "g3",
+            "inputs": "c,c",
+            "output": "n3",
+            "depth": 1,
+            "fanin_size": 1,
+            "cone_internal_fanout": 1,
+            "R_available": false,
+            "cost": 1.577543859649123
+          },
+          {
+            "gate": "g4",
+            "inputs": "n1,n2",
+            "output": "n4",
+            "depth": 2,
+            "fanin_size": 3,
+            "cone_internal_fanout": 1,
+            "R_available": true,
+            "cost": 0.9907368421052634
+          },
+          {
+            "gate": "g5",
+            "inputs": "n2,n3",
+            "output": "n5",
+            "depth": 2,
+            "fanin_size": 3,
+            "cone_internal_fanout": 1,
+            "R_available": true,
+            "cost": 0.9907368421052634
+          },
+          {
+            "gate": "g6",
+            "inputs": "n4,n5",
+            "output": "n6",
+            "depth": 3,
+            "fanin_size": 6,
+            "cone_internal_fanout": 0,
+            "R_available": false,
+            "cost": 1.941578947368421
+          }
+        ],
+        "weighted_gates": [
+          "g6"
+        ],
+        "dispatch": [
+          "critical_path_cover",
+          "weighted_st"
+        ]
+      }
+    },
+    {
+      "name": "Unified figure all30 observations and three unsupported cases",
+      "status": "PASS",
+      "evidence": {
+        "flagged": [
+          "b09",
+          "b20",
+          "b21"
+        ],
+        "original_fields_identical": true
+      }
+    },
+    {
+      "name": "Overview table caption matches a summary table",
+      "status": "PASS",
+      "evidence": "统一跨测试集配置的整体时序观察与功能证明状态"
+    }
+  ],
+  "details": {
+    "arm_summary": [
+      {
+        "arm": "W0",
+        "gain_mean_ns": 0.0,
+        "candidate_sta": 71,
+        "commits": 0
+      },
+      {
+        "arm": "W1",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 847,
+        "commits": 27
+      },
+      {
+        "arm": "U0",
+        "gain_mean_ns": 0.0,
+        "candidate_sta": 71,
+        "commits": 0
+      },
+      {
+        "arm": "U1",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 847,
+        "commits": 27
+      },
+      {
+        "arm": "C",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 839,
+        "commits": 27
+      },
+      {
+        "arm": "UR1",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 1046,
+        "commits": 28
+      },
+      {
+        "arm": "UR2",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 919,
+        "commits": 28
+      },
+      {
+        "arm": "UR3",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 944,
+        "commits": 28
+      },
+      {
+        "arm": "L",
+        "gain_mean_ns": 0.16125,
+        "candidate_sta": 1274,
+        "commits": 27
+      }
+    ],
+    "full_counts": {
+      "records": 8458,
+      "candidate_sta": 6858,
+      "baseline_sta": 72,
+      "commits": 192
+    },
+    "area_rows": [
+      {
+        "circuit": "s27",
+        "area_pct": 4.761904761904762,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s382",
+        "area_pct": 1.545595054095827,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s420",
+        "area_pct": 4.92091388400703,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s641",
+        "area_pct": 2.074688796680498,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s713",
+        "area_pct": 0.27359781121751026,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s820",
+        "area_pct": 0.29455081001472755,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s832",
+        "area_pct": 0.7062146892655368,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      },
+      {
+        "circuit": "s953",
+        "area_pct": 0.7959479015918958,
+        "raw_sha_checked": true,
+        "leaf_type_counts_checked": true
+      }
+    ],
+    "percent_recomputed": {
+      "UR1": 19.02485659655832,
+      "UR2": 7.834602829162133,
+      "UR3": 10.275423728813559
+    },
+    "source_tex_sha256": "f1dbe07c8b86661af5e95709bd45c0d1aa73641a3ba66df455765a2595787ffa",
+    "source_tex_stable_at_end": true,
+    "build02_pdf": {
+      "sha256": "697bf288cc62942584724c6a8a5a89db7f7235e0fe0473dfb5ae7c46f1ddc75d",
+      "pages": 14,
+      "build_tex_sha256": "e5cd95b7c1872fab83a4a1a025d0b1c9e12189062a4ae3c24032861a7a06b5a4",
+      "source_matches_build02": false,
+      "figure_pages_rendered": [
+        5,
+        10,
+        11
+      ],
+      "note": "build02 predates caption-only EDIT05/06; this PDF is not asserted to represent current caption source."
+    }
+  },
+  "inputs_sha256": {
+    "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738",
+    "paper/zh/figures/data/final/r24_cp_gain_cost/r24_cp_gain_cost_source.csv": "d13d11ff1a3a6286f56d5e5c1934f81e98a13a4a99142801320efeefd6ba5e7b",
+    "paper/zh/figures/data/final/r24_cp_gain_cost/r24_cp_gain_cost_arm_summary.csv": "5fe662a8477d9dcab2b7044fb9b1dbd68b2734f7236db47397b1be05c443b08f",
+    "project_docs/evidence/r24_paper_revision_20261018/QUANTITATIVE_REUSE.json": "4eb77b2417b3a7008564b960d30306f850e822f5bb1d7444dfaa5cf2d61fcf81",
+    "project_docs/evidence/r24_paper_revision_20261018/netlist_cost_W1.csv": "7d0b17e5256341e5c43c5c04dc803c337c9358da208c9bf999eb55a87c3f05e3",
+    "paper/zh/review_rounds/r24_20261018/METHOD_EVIDENCE.json": "b0eff5f45bf8d6ef91798e37cbbbdf5f92f9aa6ed509d4eafeaa9858471967b2",
+    "project_docs/evidence/r22_cprime_v3_20261016/mechanism_audits/MATCHED_STATE_PAIRS_16.json": "ef78ed8acc3dcf7425bf0b0dee0f0ff81f96bd563cd00eb58cd2e5f9101bd0e9",
+    "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+  },
+  "remaining": [
+    "Final compiled PDF must bind the current caption source after EDIT05/06.",
+    "REV01 endpoint/STA evidence is supplied, but this is not a new current-family trajectory plot or a statistical generalization from three UR seeds.",
+    "REV02 compatible strongest external-method benchmark remains outside this figure crosscheck.",
+    "REV05 historical runtime identity and REV21 historical RC recipe are not recovered by these new figures.",
+    "REV20 unmeasured power/hold/electrical limits remain unassessed as explicitly stated."
+  ],
+  "actual_visual_review": {
+    "pages": [
+      5,
+      10,
+      11
+    ],
+    "source": "build02 exact PDF",
+    "result": "three inserted figures actually viewed, data/legend/readability intact",
+    "caption_scope": "build02 predates latest caption fixes"
+  },
+  "detected_then_root_closed": [
+    "Figure4 caption explanation added",
+    "overview table caption corrected from figure text/self-reference"
+  ]
+}

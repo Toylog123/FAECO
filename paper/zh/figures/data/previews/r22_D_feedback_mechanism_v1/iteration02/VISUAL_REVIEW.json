@@ -1,0 +1,77 @@
+{
+  "status": "PASS as two-circuit diagnostic preview; main-manuscript placement not performed",
+  "inspected_exports": [
+    "iteration02/r22_D_feedback_mechanism.png",
+    "iteration02/PDF_RENDER_200dpi.png",
+    "iteration02/PDF_PANEL_a_full.png",
+    "iteration02/PDF_PANEL_b_full.png",
+    "iteration02/PDF_PANEL_c.png",
+    "iteration02/PDF_PANEL_d.png"
+  ],
+  "physical_size_mm": [
+    170,
+    135
+  ],
+  "panel_review": [
+    {
+      "panel": "a",
+      "claim": "s27 actual in-force EMA weights change beginning round4",
+      "statistic": "raw per-round parameters",
+      "uncertainty": "none; one deterministic run",
+      "visual": "Step semantics clear; boundary baseline and size/critical separated; coincident initial traces explicitly retained",
+      "pass": true
+    },
+    {
+      "panel": "b",
+      "claim": "s382 critical weight changes beginning round5 while boundary and size stay1",
+      "statistic": "raw per-round parameters",
+      "uncertainty": "none; one deterministic run",
+      "visual": "Shared y range supports a/b comparison; alternating markers/styles reveal coincident value1 paths",
+      "pass": true
+    },
+    {
+      "panel": "c",
+      "claim": "s27 dispatch identity/set/order diagnosis and actual record/STA identity counts",
+      "statistic": "20 raw matched round booleans, no aggregation",
+      "uncertainty": "none; deterministic trace",
+      "visual": "Rows read separately; candidate records correctly distinguished from new candidate STA; no resampling",
+      "pass": true
+    },
+    {
+      "panel": "d",
+      "claim": "s382 dispatch order differs at rounds7-20, set unchanged, new dispatch only rounds1-4",
+      "statistic": "20 raw matched round booleans, no aggregation",
+      "uncertainty": "none; deterministic trace",
+      "visual": "First ordering change aligns with round7 cell; legend and exact count labels clear",
+      "pass": true
+    }
+  ],
+  "whole_figure": "Clear row hierarchy; shared weight legend and yes/no encoding consistent; no clipping in actual full PNG/PDF; 7pt glyph floor; no claim for other six circuits/full56. Blue also encoded by row position, markers and line styles for weight trajectories.",
+  "automated": {
+    "source_counts": {
+      "PASS": 19,
+      "WARN": 2,
+      "FAIL": 0
+    },
+    "alignment": "PASS, 0 fail/0 warn, 1.5pt tolerance, no exemptions",
+    "glyph_min_pt": 7,
+    "glyph_below5_count": 0,
+    "collision": "PASS, 0 fail/0 warn"
+  },
+  "source_warnings_review": [
+    {
+      "check_id": "EXPORT-RASTER",
+      "level": "WARN",
+      "message": "PNG preview is present but no TIFF submission raster was found",
+      "evidence": []
+    },
+    {
+      "check_id": "FINAL-WIDTH",
+      "level": "WARN",
+      "message": "Detected width 170.0 mm is not near the common 89/183 mm defaults; verify the target journal",
+      "evidence": []
+    }
+  ],
+  "warnings_disposition": "170mm is the established project preview width, not journal-specific production clearance. PNG is explicitly preview; editable PDF/SVG are authoritative. No TIFF requested.",
+  "history": "iteration01 autoQA already passed, but label Actual candidates could imply unique candidates; iteration02 replaces it with Candidate records. Old iteration and plotter snapshot kept. Initial PDF QA crop rectangles cut the top-panel x-axis label in the crop only; *_full crops added without altering authoritative PDF/PNG."
+}

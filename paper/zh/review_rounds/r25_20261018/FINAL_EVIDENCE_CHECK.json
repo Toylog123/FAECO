@@ -1,0 +1,543 @@
+{
+  "status": "PASS_BOUNDED_EVIDENCE_PRESERVATION_CHECK",
+  "scope": "EDIT03 only: verify previous two Accept ambiguities resolved and preserve the previously defined eight minimum scientific conditions. No new broad review, EDA, TeX/source edits, or frozen evidence changes.",
+  "manuscripts": {
+    "main": {
+      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+      "sha256": "ed21d5a238202e2d48d7a8a1aa3b0d5e5177970b56dec61fff32e386f6d754be",
+      "size_bytes": 24435
+    },
+    "supplement": {
+      "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+      "sha256": "eb9c81cbc0d01ab7718da63267f3d50ea358e26661ae3e132f46097a5cdd8443",
+      "size_bytes": 51497
+    }
+  },
+  "prior_check": {
+    "path": "paper/zh/review_rounds/r25_20261018/EVIDENCE_PRESERVATION_CHECK.json",
+    "sha256": "5a3764b5b1ad79e7ed6172d19901eaf212f32dc1d7b0d0efb45d7bb8fa68cb92",
+    "size_bytes": 10586
+  },
+  "previous_issues": [
+    {
+      "prior_id": "R1",
+      "status": "RESOLVED",
+      "supplement_lines": [
+        121,
+        176,
+        233,
+        237,
+        238,
+        239,
+        272
+      ],
+      "explanation": "eq:accept改为Accept(p)=H(p)∧(WNS严格改善或TNS-aware持平分支)，算法引用该公式包含硬门；单轮段明确是局部与硬门通过后的时序接受分支。",
+      "exact_excerpts": [
+        {
+          "line": 121,
+          "text": "  \\State 若候选满足式~\\eqref{eq:accept} 并在启用物理门控时通过简化 SPEF 复测，则将其加入 $\\mathcal{A}$，并将该候选应用于当前网表、提交为下一轮评估基准（$N\\gets N+\\Delta$），同时更新最优网表 $G^*$。同一轮内多个候选共享同一基准 $N$ 且互不叠加；该轮一旦提交，基于旧基准的其余候选即作废，提交后更新报告序列$P$，在原目标端点$t$重提扇入锥并重新生成候选"
+        },
+        {
+          "line": 176,
+          "text": "    \\If{$p$ 满足式~\\eqref{eq:accept}及启用的物理门控}"
+        },
+        {
+          "line": 233,
+          "text": "不同实验的接受配置见S3。在相同约束和分析角下，候选$p$须通过局部与已登记硬门$H(p)$及以下时序分支。C′的$H$包含TNS不退化检查（容差0）："
+        },
+        {
+          "line": 237,
+          "text": "\\operatorname{Accept}(p)={}&H(p)\\land\\bigl([\\Delta_{\\mathrm{WNS}}(p)>0]\\\\"
+        },
+        {
+          "line": 238,
+          "text": "&\\lor[\\mathrm{tns\\_aware}\\land\\Delta_{\\mathrm{WNS}}(p)=0\\\\"
+        },
+        {
+          "line": 239,
+          "text": "&\\qquad\\land\\Delta_{\\mathrm{TNS}}(p)>0]\\bigr)."
+        },
+        {
+          "line": 272,
+          "text": "本实验验证候选探索框架在单轮配置下的修复质量与效率。图~\\ref{fig:iscas_main} 所示的 8 个 ISCAS89 基线网表与修复网表的对比结果，在预布局理想线网模式下经 OpenSTA 测量均实现严格改善；修复候选来自不改写 D 触发器、时钟和复位的 R/G/B/JOINT 构造级保持变换。在对应寄存器初态相等的二态模型下，八对网表的全部目标等价点均已证明，点数与耗时见表~\\ref{tab:sec_iscas8}。接受的候选类型分布为 JOINT 4 个（s27/s382/s420/s953）、G 3 个（s641/s713/s832）、R 1 个（s820）；本组未出现单独接受的 B 候选。\\textbf{图~\\ref{fig:iscas_main} 对应效率优先配置}\\label{sec:eff_prio}，该配置\\textbf{不启用 \\S\\ref{sec:validation} 的 10\\,ps 物理门控阈值}，局部与硬门通过后的时序接受分支为$\\Delta_{\\mathrm{WNS}}>0$；s420 的 +0.01\\,ns（10\\,ps）接受候选即在该准则下产生。"
+        }
+      ]
+    },
+    {
+      "prior_id": "R2",
+      "status": "RESOLVED",
+      "supplement_lines": [
+        246
+      ],
+      "explanation": "明确C′将TNS不退化固定为硬门；部分归档配置另启用TNS-aware持平分支，不再将固定硬门泛称可选。",
+      "exact_excerpts": [
+        {
+          "line": 246,
+          "text": "\\textbf{环境与数据集}：实验在 WSL2 环境（Ubuntu 24.04.4 LTS，内核 6.6.87.2-microsoft-standard-WSL2）中完成，主机 CPU 为 AMD Ryzen 7 7435H，WSL 可见 16 个逻辑核与 15\\,GB 内存；主流程采用 OSS-CAD Suite（Yosys 0.67+146、OpenSTA 3.1.0），顺序 SEC 采用 WSL 环境中的 Yosys 0.33。测试集包含 8 个 ISCAS89、19 个 ITC-99 和 3 个 PicoRV32 子模块。ISCAS89 与 ITC-99 电路采用 0.5\\,ns 时钟周期；PicoRV32 主核、乘法器与寄存器模块的时钟周期分别为 5、2 和 0.5\\,ns。\\textbf{本文以 WNS 改善为主要评价指标，同一电路的基线与修复结果采用相同约束。}主要评价指标为 WNS、全局布线寄生估计后的 WNS 和候选级 STA 次数；C′将TNS不退化固定为硬门；部分归档配置另启用TNS-aware持平分支。本文以 WNS 严格改善作为主要效果统计口径。跨测试集实验中，b06 保留 WNS 持平且 TNS 改善时的辅助接受条件；该类补丁不计入“严格 WNS 改善”统计。其余按轮提交实验以 WNS 严格改善为主要接受条件；候选空间对照中的历史策略枚举配置另见 \\S\\ref{sec:ablation}。TNS-aware 不与本文物理门控实验联合启用。"
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "C1",
+      "condition": "核心构造与人工示例身份",
+      "main_lines": [
+        146,
+        150,
+        152,
+        157,
+        163,
+        165
+      ],
+      "supplement_lines": [
+        134,
+        138,
+        153,
+        156,
+        158,
+        190
+      ],
+      "status": "PRESERVED",
+      "finding": "覆盖区域先于节点割；容量是结构代理；人工六门不是实测。没有将代价统一排序或R不可用错误等同删门。",
+      "main_exact_excerpts": [
+        {
+          "line": 146,
+          "text": "令$P$为STA最大延迟报告中实例按首次出现去重后的序列。每个子锥的覆盖区域定义为"
+        },
+        {
+          "line": 150,
+          "text": "非空交集整体形成一个区域，边界由区域外输入及对外输出组成。这里的覆盖对象是报告实例，不是求解逐路径集合覆盖。另一来源$C_w$由一次节点分裂图最小割得到，其容量依据逻辑深度、传递扇入规模及锥内扇出构造，完整公式见补充材料S1。这些量是结构代理，不是实际电容或STA关键度。"
+        },
+        {
+          "line": 152,
+          "text": "覆盖优先先访问$C_c$，再访问$C_w$；相同门集与输入/输出边界合并，保留首次出现位置。图~\\ref{fig:regions}中，覆盖区域的节点代价和约为4.190，高于节点割的1.942，仍被优先访问。这说明区域次序由调度策略决定，不按节点代价统一排序。"
+        },
+        {
+          "line": 157,
+          "text": "\\caption{人工六门例的区域构造与调度。浅蓝为指定$P$成员，R+/R−表示有/无R候选，$c$同接$g_3$两输入；全权重为1，先$C_c$后$C_w$。该例演示算法构造，不代表时序测量结果。}"
+        },
+        {
+          "line": 163,
+          "text": "区域池最多保留8项。每个区域先取$P$中的实例，再按区域顺序补齐，最多8个实例；没有逻辑等价替换的门仍可参与尺寸和缓冲动作。动作包括跨等价单元族替换R、同族尺寸增大G、单接收引脚缓冲插入B，以及前两个可执行G的实例各取首个动作组成的一个联合候选。实例和区域上限均不等于STA次数。"
+        },
+        {
+          "line": 165,
+          "text": "候选按实例顺序枚举R/G后B，同类替换按目标单元名排序。每个动作从同一当前基准构造；缓存键包含基准全文、候选全文与分析配置。遇到首次可接受候选即提交，更新$P$并在原目标端点$t$重提锥。无提交轮保留网表、$P$和锥上限，继续至登记的停止条件。算法~\\ref{alg:search}概括该流程；完整枚举和去重规则见补充材料S1。"
+        }
+      ]
+    },
+    {
+      "id": "C2",
+      "condition": "TNS硬门、局部/终点证明分层及模型域",
+      "main_lines": [
+        177,
+        188,
+        190
+      ],
+      "supplement_lines": [
+        231,
+        233,
+        237,
+        242
+      ],
+      "status": "PRESERVED",
+      "finding": "正文保留WNS严格改善、TNS不退化、容差0，以及共同任意二值初态和真实三态不支持；补充公式现在完整包含H，旧交叉引用歧义消除。",
+      "main_exact_excerpts": [
+        {
+          "line": 177,
+          "text": "    \\If{硬门通过、WNS改善且TNS不退化}"
+        },
+        {
+          "line": 188,
+          "text": "受控实验在局部函数、结构和已登记硬门通过后，要求WNS严格改善，且总负松弛（total negative slack，TNS）不退化。每次比较使用同一库、时钟与分析约束，数值容差为0；缓存及前置拒绝不消耗新STA次数。"
+        },
+        {
+          "line": 190,
+          "text": "映射准备采用Yosys与ABC\\cite{abc}组合回验。候选不修改触发器、时钟或复位，搜索结束后另行进行全网表顺序等价检查（sequential equivalence checking，SEC）。证明采用对应寄存器具有共同任意二值初态的状态关系；真实三态、显式Z和开关对象超出该模型。候选局部检查不能替代最终SEC，模型和证明阶段细节见补充材料S2。"
+        }
+      ]
+    },
+    {
+      "id": "C3",
+      "condition": "受控族、臂、约束与预算身份",
+      "main_lines": [
+        196,
+        198,
+        209,
+        210,
+        211,
+        212,
+        213,
+        235
+      ],
+      "supplement_lines": [
+        250,
+        350,
+        597
+      ],
+      "status": "PRESERVED",
+      "finding": "同映射输入/TT角/.5ns、8×9、20轮/20提交/500新STA预约、单worker和物理/反馈关闭均保留；L同时变生成与顺序，不能作为纯排序归因。ZIP源码3ea在补充明示。",
+      "main_exact_excerpts": [
+        {
+          "line": 196,
+          "text": "实验直接使用已映射到SKY130 HD的8个ISCAS89电路\\cite{iscas89}，不重新综合。冻结同一运行器、输入与库，采用OpenSTA 3.1.0、TT25℃/1.8\\,V、0.5\\,ns周期；每次运行最多20轮、20次提交、500次新候选STA预约，墙钟上限3600\\,s，单worker。关闭反馈、物理门控及结构重综合，所有配置使用相同局部动作和接受规则。"
+        },
+        {
+          "line": 198,
+          "text": "表~\\ref{tab:arms}定义9种配置，共72次运行。W0/U0控制是否只有节点割，W1/U1控制节点容量，C检验仅覆盖区域，UR1--3改变访问顺序，L作为另一种区域构造与调度对照。各运行保留候选全文、实际STA事件、提交链和最终SEC；72个终点均有非空已证明点且0个未证明点。"
+        },
+        {
+          "line": 209,
+          "text": "W0 / U0 & 仅节点割；分别用加权/统一容量 \\\\"
+        },
+        {
+          "line": 210,
+          "text": "W1 / U1 & 覆盖区域优先，再节点割；分别用加权/统一容量 \\\\"
+        },
+        {
+          "line": 211,
+          "text": "C & 仅覆盖区域 \\\\"
+        },
+        {
+          "line": 212,
+          "text": "UR1--3 & W1的区域池，分别按种子1--3随机置换 \\\\"
+        },
+        {
+          "line": 213,
+          "text": "L & 受限连通区域搜索并在队首补覆盖区域 \\\\"
+        },
+        {
+          "line": 235,
+          "text": "在具有相同改善终点的配置中，W1共用847次候选STA，三个随机顺序配置分别用1046、919和944次，合计成本降低19.0\\%、7.8\\%和10.3\\%。L用1274次；它同时改变区域生成与顺序，差异不能单独归因于排序。"
+        }
+      ]
+    },
+    {
+      "id": "C4",
+      "condition": "终点收益与实际新STA计数口径",
+      "main_lines": [
+        218,
+        222,
+        229,
+        235
+      ],
+      "supplement_lines": [
+        597
+      ],
+      "status": "PRESERVED",
+      "finding": "847对1046/919/944合计成本和相同终点保留；未称walltime加速或独立随机统计推断。基线、缓存、前置拒绝不计新STA。",
+      "main_exact_excerpts": [
+        {
+          "line": 218,
+          "text": "代价以实际新候选STA次数计，排除初始基线测量、缓存和前置拒绝。累计收益$B(k)$只在第$k$次测量后发生明确提交时更新；仅测得更优但未提交的候选不计收益。三个随机种子分别呈现，后续状态可随提交分叉，因而该对照评价调度策略的整体效果。"
+        },
+        {
+          "line": 222,
+          "text": "图~\\ref{fig:gain_cost}给出全部72个终点及测量次数。仅节点割的W0/U0均无改善；加入覆盖区域后，W1在8个电路上均取得改善，平均为0.161\\,ns。仅覆盖区域的C达到相同终点，且在s641少用8次STA，其余实例与W1相同。"
+        },
+        {
+          "line": 229,
+          "text": "\\caption{8电路$\\times$9配置的终点WNS改善（左，ps）与新候选STA次数（右）。基线另计，缓存及前置拒绝不计入测量次数；配置定义见表~\\ref{tab:arms}。}"
+        },
+        {
+          "line": 235,
+          "text": "在具有相同改善终点的配置中，W1共用847次候选STA，三个随机顺序配置分别用1046、919和944次，合计成本降低19.0\\%、7.8\\%和10.3\\%。L用1274次；它同时改变区域生成与顺序，差异不能单独归因于排序。"
+        }
+      ]
+    },
+    {
+      "id": "C5",
+      "condition": "节点权重零额外差异与cover-only更省",
+      "main_lines": [
+        222,
+        224,
+        273,
+        279
+      ],
+      "supplement_lines": [
+        156
+      ],
+      "status": "PRESERVED",
+      "finding": "W0/U0、W1/U1零差异与C相同终点但s641少8次明确保留，未把节点权重写成收益来源。",
+      "main_exact_excerpts": [
+        {
+          "line": 222,
+          "text": "图~\\ref{fig:gain_cost}给出全部72个终点及测量次数。仅节点割的W0/U0均无改善；加入覆盖区域后，W1在8个电路上均取得改善，平均为0.161\\,ns。仅覆盖区域的C达到相同终点，且在s641少用8次STA，其余实例与W1相同。"
+        },
+        {
+          "line": 224,
+          "text": "W0与U0、W1与U1的终点、候选池和调度序列分别一致。该实验中，收益主要来自报告关键实例的覆盖，节点加权未显示额外作用。"
+        },
+        {
+          "line": 273,
+          "text": "受控结果支持将报告关键实例覆盖与访问顺序作为候选组织的重点。在本组输入上，仅覆盖区域已能达到完整配置的终点，节点加权未增加收益；调度的价值体现为总测量成本，仍存在随机臂的局部优势。固定同一候选全集的纯排序重放及强外部基线比较有待补充。"
+        },
+        {
+          "line": 279,
+          "text": "FAECO以报告关键实例覆盖和有界动作调度组织预布局门级时序ECO。72次同源对照中，覆盖优先达到0.161\\,ns平均理想线网改善，合计测量成本比三个随机顺序配置低7.8\\%--19.0\\%，节点加权未显示额外收益。后续设计应优先改进实际候选覆盖与预算分配，并结合面积和物理后验检验收益保持。"
+        }
+      ]
+    },
+    {
+      "id": "C6",
+      "condition": "提交曲线定义、真实停止与UR局部反例",
+      "main_lines": [
+        218,
+        237,
+        242,
+        273
+      ],
+      "supplement_lines": [
+        390
+      ],
+      "status": "PRESERVED",
+      "finding": "B(k)仅明确提交更新，真实停止；s27 UR3少5次与s420最大局部领先0.17ns保留。未升级为所有实例/预算支配。S3旧反馈曲线另族定义不替代主文提交曲线。",
+      "main_exact_excerpts": [
+        {
+          "line": 218,
+          "text": "代价以实际新候选STA次数计，排除初始基线测量、缓存和前置拒绝。累计收益$B(k)$只在第$k$次测量后发生明确提交时更新；仅测得更优但未提交的候选不计收益。三个随机种子分别呈现，后续状态可随提交分叉，因而该对照评价调度策略的整体效果。"
+        },
+        {
+          "line": 237,
+          "text": "图~\\ref{fig:curves}显示到达收益的过程。W1的合计成本较小，但不在每个实例或预算下占优：s27的UR3少用5次STA；s420的随机臂在部分共同预算处更早取得收益，最多领先0.17\\,ns。曲线保留各臂实际停止点，终点相同不代表搜索轨迹相同。"
+        },
+        {
+          "line": 242,
+          "text": "\\caption{同族72次运行的已提交收益$B(k)$与新候选STA序号$k$，末端为实际停止处。仅逐$k$及停止点全等者合并：W0/U0、W1/U1全8例，C除s641外、UR2在s27/s713/s820与W1重合；全部9配置及局部交叉均保留。}"
+        },
+        {
+          "line": 273,
+          "text": "受控结果支持将报告关键实例覆盖与访问顺序作为候选组织的重点。在本组输入上，仅覆盖区域已能达到完整配置的终点，节点加权未增加收益；调度的价值体现为总测量成本，仍存在随机臂的局部优势。固定同一候选全集的纯排序重放及强外部基线比较有待补充。"
+        }
+      ]
+    },
+    {
+      "id": "C7",
+      "condition": "网表面积代价与未验收PPA项",
+      "main_lines": [
+        94,
+        248
+      ],
+      "supplement_lines": [
+        481,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        494,
+        496
+      ],
+      "status": "PRESERVED",
+      "finding": "同库单元面积+0.27%–4.92%保留且不等同核心面积；单元数不变未冒充无代价；功耗/hold/最大电容/转换时间未验收明确留正文。",
+      "main_exact_excerpts": [
+        {
+          "line": 94,
+          "text": "  {\\heiti\\fontsize{8.5}{13}\\selectfont 摘\\quad 要：}{\\songti\\fontsize{8.5}{13}\\selectfont 预布局门级时序工程变更（engineering change order，ECO）需要在有限的时序评估预算下选择局部修改候选。FAECO以报告关键实例的覆盖区域和加权节点割确定修改范围，按区域与实例顺序枚举逻辑等价替换、门尺寸调整、缓冲器插入及联合动作。候选依次接受局部检查和静态时序分析（static timing analysis，STA），首次满足条件即提交，并在搜索结束后独立检查最终网表的顺序等价性。在8电路$\\times$9配置的受控实验中，覆盖优先配置的理想线网最差负松弛（worst negative slack，WNS）平均改善0.161\\,ns，八电路合计候选STA次数比三个随机顺序配置少7.8\\%--19.0\\%；加权与统一容量未观察到差异，同库单元面积和增加0.27\\%--4.92\\%。}"
+        },
+        {
+          "line": 248,
+          "text": "W1的8对端点网表展开触发器封装后，标准单元数和独立缓冲单元数不变，同库单元面积和增加0.27\\%--4.92\\%，来自具体单元替换。逐实例数值见补充材料S4。功耗、hold、最大电容及转换时间未作为本实验验收项，仍需后续物理与电气检查。"
+        }
+      ]
+    },
+    {
+      "id": "C8",
+      "condition": "flatpair负载数值、模型语义、新输入域与旧失败隔离",
+      "main_lines": [
+        250,
+        252,
+        263,
+        264,
+        265,
+        267
+      ],
+      "supplement_lines": [
+        511,
+        514,
+        515,
+        516,
+        519,
+        521,
+        523,
+        525,
+        527,
+        599
+      ],
+      "status": "PRESERVED",
+      "finding": "理想+.15→简化负载+.11/0/0、单一同源s382派生pair、两原→flat SEC129/0、同网表delta0、双侧各自SPEF、8次注释完整保留。补充给R/C/单位与16+8=24新STA及原失败5次，明确不恢复原层级或旧共享SPEF。",
+      "main_exact_excerpts": [
+        {
+          "line": 250,
+          "text": "另对W1/s382的同一初末端点作简化线载后验。输入仅展开触发器辅助层级，保留所有标准单元连接与状态，两份原网表到展开网表的SEC均为129/0；该派生输入不恢复原层级的注释支持。两侧分别生成标准寄生交换格式（standard parasitic exchange format，SPEF）文件，以相同库和约束复测；同网表控制差值为0，全部8次注释检查无漏注释。"
+        },
+        {
+          "line": 252,
+          "text": "表~\\ref{tab:load}表明理想线网的0.15\\,ns改善在较小线载下保留0.11\\,ns，在较大两点消失。该试验仅评价同一端点对的负载敏感性，基础长度由扇出代理模型使用，不是实际布线长度；完整RC与输入准备见补充材料S4。"
+        },
+        {
+          "line": 263,
+          "text": "10 & $-1.23$ & $-1.12$ & $+0.11$ \\\\"
+        },
+        {
+          "line": 264,
+          "text": "40 & $-2.10$ & $-2.10$ & $0.00$ \\\\"
+        },
+        {
+          "line": 265,
+          "text": "160 & $-6.00$ & $-6.00$ & $0.00$ \\\\"
+        },
+        {
+          "line": 267,
+          "text": "\\multicolumn{4}{p{0.94\\columnwidth}}{\\footnotesize WNS单位为ns；各点重新测得理想线网WNS为$-0.98\\to-0.83$\\,ns。使用TT25℃/1.8\\,V、CK周期0.5\\,ns，两侧各自生成SPEF，所有注释完整。}\\\\"
+        }
+      ]
+    }
+  ],
+  "existing_evidence_SHA_size_rechecked_unchanged": [
+    {
+      "path": "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json",
+      "sha256": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738",
+      "size_bytes": 3025552
+    },
+    {
+      "path": "paper/zh/figures/data/previews/r24_cp_budget_curves_v2/COMMON_BUDGET_COUNTERCHECK.csv",
+      "sha256": "589a7af5b6c1d452a9fff657346f504b7aec62fd6179c61117022c04c9962507",
+      "size_bytes": 3914
+    },
+    {
+      "path": "project_docs/evidence/r24_paper_revision_20261018/netlist_cost_W1.csv",
+      "sha256": "7d0b17e5256341e5c43c5c04dc803c337c9358da208c9bf999eb55a87c3f05e3",
+      "size_bytes": 1650
+    },
+    {
+      "path": "project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2_STA_runs/RESULT.json",
+      "sha256": "eebc53982adeccb789022ebdc50252b65e8fa7196d1724f803afed0f172c358f",
+      "size_bytes": 73102
+    },
+    {
+      "path": "project_docs/evidence/r24_paper_revision_20261018/PAIRED_SPEF_FLAT_V2_STA_ROOT_ACCEPTANCE.json",
+      "sha256": "43ccd357209d5890fb0a2e700b04260778bc3036b362185660361d1ed2636489",
+      "size_bytes": 1745
+    },
+    {
+      "path": "paper/zh/review_rounds/r25_20261018/TNS_HARD_GATE_EVIDENCE.json",
+      "sha256": "0bdad71a9796af30db948c5fbe3b5c73136eaf534b3ff971242fe7fd0db03e43",
+      "size_bytes": 21410
+    }
+  ],
+  "existing_computed_values_reused": {
+    "matrix_verified": 72,
+    "all_matrix_verified": true,
+    "new_candidate_STA_by_arm": {
+      "W0": 71,
+      "U0": 71,
+      "W1": 847,
+      "U1": 847,
+      "C": 839,
+      "UR1": 1046,
+      "UR2": 919,
+      "UR3": 944,
+      "L": 1274
+    },
+    "W1_mean_ideal_gain_ns": 0.16125000000000003,
+    "W1_area_min_max_pct": [
+      0.27359781121751026,
+      4.92091388400703
+    ],
+    "UR_common_budget_counterexamples": [
+      {
+        "circuit": "s27",
+        "control": "UR3",
+        "compared_common_budget_k_max": "36",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "2",
+        "max_control_advantage_ns": "0.01",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR1",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "10",
+        "max_control_advantage_ns": "0.17",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR2",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "63",
+        "max_control_advantage_ns": "0.01",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      },
+      {
+        "circuit": "s420",
+        "control": "UR3",
+        "compared_common_budget_k_max": "177",
+        "control_ever_ahead_of_W1": "True",
+        "first_control_advantage_k": "5",
+        "max_control_advantage_ns": "0.17",
+        "rule": "compare only integer k where both runs still defined; no extrapolation"
+      }
+    ],
+    "load_actual_API_launches": 16,
+    "load_actual_annotation_launches": 8,
+    "load_actual_total_launches": 24,
+    "load_values": [
+      {
+        "case": "control_same_u40",
+        "length_um": 40,
+        "ideal_delta": 0.0,
+        "spef_delta": 0.0,
+        "baseline_spef": -2.1,
+        "final_spef": -2.1
+      },
+      {
+        "case": "pair_u10",
+        "length_um": 10,
+        "ideal_delta": 0.15,
+        "spef_delta": 0.11,
+        "baseline_spef": -1.23,
+        "final_spef": -1.12
+      },
+      {
+        "case": "pair_u40",
+        "length_um": 40,
+        "ideal_delta": 0.15,
+        "spef_delta": 0.0,
+        "baseline_spef": -2.1,
+        "final_spef": -2.1
+      },
+      {
+        "case": "pair_u160",
+        "length_um": 160,
+        "ideal_delta": 0.15,
+        "spef_delta": 0.0,
+        "baseline_spef": -6.0,
+        "final_spef": -6.0
+      }
+    ],
+    "TNS_witness": {
+      "candidate_hash": "92085689c92eed9168da24e1c3a2416d025631d6e042cdc6713ae369164b6a14",
+      "wns": -0.26,
+      "tns": -0.5,
+      "reference": {
+        "setup_wns": -0.27,
+        "setup_tns": -0.49,
+        "hold_min_slack": 0.44
+      },
+      "only_violation": [
+        "setup_tns"
+      ]
+    }
+  },
+  "new_issues_within_requested_scope": [],
+  "manuscript_SHA_stable_after_check": true,
+  "limitations": "This accepts only the specified evidence-preservation and Accept-condition text checks; not full scientific peer review, bibliography review, compilation or visual QA."
+}

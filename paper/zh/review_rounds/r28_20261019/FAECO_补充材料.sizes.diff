@@ -1,0 +1,38 @@
+--- r27
++++ r28
+@@ -328,7 +328,7 @@
+ 
+ \begin{figure*}[!tb]
+ \centering
+-\includegraphics[width=1.0\textwidth]{data/final/r27_monochrome/r24_unified_status/fig4_r24.pdf}
++\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_unified_status/fig4_r24.pdf}
+ \caption{统一迭代配置的逐实例预布局 WNS 改善。三个面板分别展示 ISCAS89、ITC-99 和 PicoRV32 的全部可评估实例，各面板横轴量程不同。改善量以各电路的基线为参照；b17 使用 180\,s 单候选时限，其余默认 60\,s。PicoRV32 主核、乘法器与 regs 的周期分别为 5、2 和 0.5\,ns；regs 无 setup 路径，不计入改善分母。空心端点和虚线标记b09、b20、b21的真实三态超出归档二态证明模型支持域；时序观察保留，不计为功能证明通过。图为归档单次运行的描述性结果。}
+ \label{fig:unified_gain}
+ \end{figure*}
+@@ -381,7 +381,7 @@
+ 
+ \begin{figure*}[!tb]
+ \centering
+-\includegraphics[width=1.0\textwidth]{data/final/r27_monochrome/fig5_budget_curves_r21/fig5_budget_curves_r21.pdf}
++\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/fig5_budget_curves_r21/fig5_budget_curves_r21.pdf}
+ \caption{同一运行器配置下的收益积累曲线。横轴 $k$ 为从逐候选台账重建的新 STA 测量次数，保留具有 STA 来源且非缓存复用的记录，排除前置拒绝与缓存命中，纵轴为相对基线的累计最优 WNS 改善；圆点表示该臂实际停止位置，曲线不延伸至停止之后。全部 8 个电路与 3 个随机种子均展示，未作跨电路平均或插值。各臂逐电路的 STA 预约上限为 500；基线测量与最终 SEC 不计入横轴。该反馈对照族与表~\ref{tab:ablation} 的历史策略枚举对照分开统计。}
+ \label{fig:budget_curves}
+ \end{figure*}
+@@ -498,7 +498,7 @@
+ 
+ \begin{figure}[!htb]
+ \centering
+-\includegraphics[width=1.0\columnwidth]{data/final/r27_monochrome/fig6_physical_transfer_r21/fig6_physical_transfer_r21.pdf}
++\includegraphics[width=0.92\columnwidth]{data/final/r27_monochrome/fig6_physical_transfer_r21/fig6_physical_transfer_r21.pdf}
+ \caption{效率优先候选的收益保持情况。每组柱对应同一电路、同一接受候选，分别以预布局理想线网与全局布线寄生估计条件下的基线为参照。八电路全部纳入，物理估计后 5 个改善、1 个持平、2 个退化；负值柱表示退化，菱形表示持平。该单轮候选族与图~\ref{fig:unified_gain} 的迭代主结果分开统计。}
+ \label{fig:physical_transfer}
+ \end{figure}
+@@ -557,7 +557,7 @@
+ 
+ \begin{figure}[!htb]
+ \centering
+-\includegraphics[width=1.0\columnwidth]{data/final/r27_monochrome/fig7_s_boundary_r21/fig7_s_boundary_r21.pdf}
++\includegraphics[width=0.92\columnwidth]{data/final/r27_monochrome/fig7_s_boundary_r21/fig7_s_boundary_r21.pdf}
+ \caption{扩大候选池后的 S 候选结果。上图比较候选数与 SKY130 映射后逻辑深度降低的候选数；下图按 WNS 不变或下降分类，两图为同一批 126 个候选的不同分类维度。8 个电路全部展示，其中 s641 未成功抽取窗口，候选数为零。76 个候选降低深度，WNS 改善为 0/126；同预算 S 开关对照的 8 个电路终点 WNS 均不变。}
+ \label{fig:s_candidate_outcomes}
+ \end{figure}

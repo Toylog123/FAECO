@@ -1,0 +1,346 @@
+{
+  "schema": "r24-physical-manuscript-crosscheck-v1",
+  "decision": "PASS",
+  "material_mismatches": [],
+  "checked_scope": "CurrentZH TeX section4.6 pairedflat paragraph, tab:paired_load, RC modelparagraph, linked conclusion only; no wholepaper orPDFvisual claim",
+  "new_EDA_processes": 0,
+  "TeX_modified": false,
+  "build_modified": false,
+  "manuscript_before": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\manuscript\\FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+    "sha256": "a290d707665101d3e691387855a16a3b491c4813f3138ef927b434e135ed65ed",
+    "bytes": 81716
+  },
+  "manuscript_after": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\paper\\zh\\manuscript\\FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+    "sha256": "a290d707665101d3e691387855a16a3b491c4813f3138ef927b434e135ed65ed",
+    "bytes": 81716
+  },
+  "manuscript_stable": true,
+  "checks": [
+    {
+      "id": "P01",
+      "decision": "PASS",
+      "manuscript_lines": [
+        758,
+        760,
+        772,
+        773,
+        774,
+        776
+      ],
+      "claim": "CprimeW1/s382 endpoint-derived same-pair fresh ideal+.15 and10/40/160SPEF+.11/0/0",
+      "evidence": "producer RESULT plus root STA acceptance exact table values",
+      "values": [
+        {
+          "unit_um": 10,
+          "baseline_SPEF_WNS_ns": -1.23,
+          "final_SPEF_WNS_ns": -1.12,
+          "SPEF_delta_ns": 0.11,
+          "fresh_ideal_baseline": -0.98,
+          "fresh_ideal_final": -0.83,
+          "fresh_ideal_delta": 0.15
+        },
+        {
+          "unit_um": 40,
+          "baseline_SPEF_WNS_ns": -2.1,
+          "final_SPEF_WNS_ns": -2.1,
+          "SPEF_delta_ns": 0.0,
+          "fresh_ideal_baseline": -0.98,
+          "fresh_ideal_final": -0.83,
+          "fresh_ideal_delta": 0.15
+        },
+        {
+          "unit_um": 160,
+          "baseline_SPEF_WNS_ns": -6.0,
+          "final_SPEF_WNS_ns": -6.0,
+          "SPEF_delta_ns": 0.0,
+          "fresh_ideal_baseline": -0.98,
+          "fresh_ideal_final": -0.83,
+          "fresh_ideal_delta": 0.15
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "decision": "PASS",
+      "manuscript_lines": [
+        760
+      ],
+      "claim": "Same-flat u40 control deltaideal=deltaSPEF=0, equal SPEF bytes, two complete real annotations",
+      "evidence": "control_same_u40 CASE_ACCEPTANCE/RESULT/root acceptance"
+    },
+    {
+      "id": "P03",
+      "decision": "PASS",
+      "manuscript_lines": [
+        758,
+        760,
+        776
+      ],
+      "claim": "16API measurements+8annotation replays=24new scientificSTA, exclude first5failedraw-controlSTA",
+      "evidence": "RESULT actualAPI16/annotation8; raw-control FAILURE4API+1annotation; root STA acceptance scope"
+    },
+    {
+      "id": "P04",
+      "decision": "PASS",
+      "manuscript_lines": [
+        758
+      ],
+      "claim": "90mappedcells21register state/connections preserved; two original-to-flat SEC129/0 identities correctly separated from originalpair proof",
+      "evidence": "root derived input acceptance per-side nativeJSON/SEC; not original-pair90/0 or A8 status"
+    },
+    {
+      "id": "P05",
+      "decision": "PASS",
+      "manuscript_lines": [
+        758,
+        776
+      ],
+      "claim": "Raw Cprime input scientific runtime3ea0f75; helper-expanded derivative; posterior generatorcurrentf761ee1; separate family",
+      "evidence": "flat bindings/derived root acceptance/design head; no raw-hierarchy-support restoration claim"
+    },
+    {
+      "id": "P06",
+      "decision": "PASS",
+      "manuscript_lines": [
+        746,
+        747,
+        748,
+        749,
+        750,
+        751,
+        752,
+        753,
+        754,
+        776
+      ],
+      "claim": "L=ell*max(1,sqrt(F))*pf*pd;R=.09Lohm;C=.00021LpF;pf=pd1;driverlumpedC/starR;Liberty pin C; TT25C1.8VCK.5ns",
+      "evidence": "spef.py estimate/build functions; actual pair_u10 baseline Tcl/receipt and designRCfields"
+    },
+    {
+      "id": "P07",
+      "decision": "PASS",
+      "manuscript_lines": [
+        756,
+        758,
+        776
+      ],
+      "claim": "Historical scan/F6 not recovered: shared baseline SPEF old warning;50/6records=5/1unique;b18unit1match;s382RCunknown; no previousfailure WNS admitted",
+      "evidence": "old independent SPEF review; raw v1control failure; rootSTAacceptancescope"
+    },
+    {
+      "id": "P08",
+      "decision": "PASS",
+      "manuscript_lines": [
+        760,
+        849
+      ],
+      "claim": "Conclusion preserves single same-origin s382 pair and simplified-load scope; no actual route length/PPA/universal efficiency inference",
+      "evidence": "root STA acceptance one exact helper-expandedpair scope and observed3points"
+    }
+  ],
+  "source_anchors": [
+    {
+      "line": 746,
+      "text": "简化线载试验与OpenROAD几何寄生估计分开。对网$e$，估计器采用"
+    },
+    {
+      "line": 747,
+      "text": "\\begin{equation}\\label{eq:estimated_rc}"
+    },
+    {
+      "line": 748,
+      "text": "\\begin{aligned}"
+    },
+    {
+      "line": 749,
+      "text": "L(e)&=\\ell\\max\\{1,\\sqrt{F(e)}\\}\\,p_f p_d,\\\\"
+    },
+    {
+      "line": 750,
+      "text": "R(e)&=0.09\\,L(e)\\ [\\Omega],\\\\"
+    },
+    {
+      "line": 751,
+      "text": "C(e)&=0.00021\\,L(e)\\ [\\mathrm{pF}],"
+    },
+    {
+      "line": 752,
+      "text": "\\end{aligned}"
+    },
+    {
+      "line": 753,
+      "text": "\\end{equation}"
+    },
+    {
+      "line": 754,
+      "text": "其中$\\ell$以$\\mu$m计，$F(e)$为生成器记录的扇出数，$p_f,p_d$均为全局乘数，设为1；它不从坐标或曼哈顿距离提取线长，$p_d$也不是逐网深度。单位电阻0.09\\,$\\Omega/\\mu$m、单位电容0.21\\,fF/$\\mu$m作为敏感性模型的设定，不宣称经过物理提取标定。寄生文件仅含估计线电容，引脚电容仍由Liberty提供；线电容集中到驱动端，电阻按星形支路分配。"
+    },
+    {
+      "line": 755,
+      "text": ""
+    },
+    {
+      "line": 756,
+      "text": "归档线载扫描曾对基线与候选共用基线SPEF，s382候选还出现缺引脚告警，因此不能据其曲线认定收益衰减或门控有效。门控记录中的s382与b18分别有50条和6条评估，但仅对应5个和1个不同候选全文；b18保留SPEF与1\\,$\\mu$m单位长度匹配，s382的原始RC配方未恢复，不能将它们统一记作40\\,$\\mu$m、56个独有候选。本文保留这些记录用于来源与计数审计，不用其估计物理失败率。有效的双侧后验须由各自网表生成寄生文件，核对所有层级引脚的实际注入；仅返回码为0或同网表时序差值为0不足以通过这项验收。"
+    },
+    {
+      "line": 757,
+      "text": ""
+    },
+    {
+      "line": 758,
+      "text": "为检验负载敏感性，另对C′覆盖优先臂的s382初末网表实施配对后验。原层级网表的首个同网表控制出现43组部分未注释驱动，故停止而不采其时序值。后续仅展开用户DFF辅助层级，逐端口、单元与引脚核对90个标准单元和21个寄存器的连接，未重新综合或改变单元；原初始和最终网表到各自展开网表的独立二态SEC均为129/0。这个派生输入族与原层级输入分开登记。"
+    },
+    {
+      "line": 759,
+      "text": ""
+    },
+    {
+      "line": 760,
+      "text": "在展开后的同一初始网表上，$\\ell=40\\,\\mu$m双侧控制的理想线网及SPEF时序差均为0；两个SPEF字节相同，两侧真实注释报告均无未注释或部分未注释驱动。随后以各自网表生成寄生，在$\\ell=10,40,160\\,\\mu$m下重新测量同一候选对，结果见表~\\ref{tab:paired_load}。全部8次注释回放均无注释缺口，并与对应STA结果一致。理想线网改善0.15\\,ns，在最小基础长度下保留0.11\\,ns，较大两点的改善均为0。因此，即使单元功能与连接保持，理想线网增益也可能随简化线载消失；本试验不把该设定下的长度解释为实际布线长度。"
+    },
+    {
+      "line": 761,
+      "text": ""
+    },
+    {
+      "line": 762,
+      "text": "\\begin{table}[!htb]"
+    },
+    {
+      "line": 763,
+      "text": "\\centering"
+    },
+    {
+      "line": 764,
+      "text": "\\caption{同一s382候选对在简化线载下的配对后验}"
+    },
+    {
+      "line": 765,
+      "text": "\\label{tab:paired_load}"
+    },
+    {
+      "line": 766,
+      "text": "\\footnotesize"
+    },
+    {
+      "line": 767,
+      "text": "\\setlength{\\tabcolsep}{4pt}"
+    },
+    {
+      "line": 768,
+      "text": "\\begin{tabular}{rrrr}"
+    },
+    {
+      "line": 769,
+      "text": "\\toprule"
+    },
+    {
+      "line": 770,
+      "text": "$\\ell$ ($\\mu$m) & 基线WNS (ns) & 候选WNS (ns) & $\\Delta_{\\mathrm{WNS}}$ (ns) \\\\"
+    },
+    {
+      "line": 771,
+      "text": "\\midrule"
+    },
+    {
+      "line": 772,
+      "text": "10 & $-1.23$ & $-1.12$ & $+0.11$ \\\\"
+    },
+    {
+      "line": 773,
+      "text": "40 & $-2.10$ & $-2.10$ & $0.00$ \\\\"
+    },
+    {
+      "line": 774,
+      "text": "160 & $-6.00$ & $-6.00$ & $0.00$ \\\\"
+    },
+    {
+      "line": 775,
+      "text": "\\bottomrule"
+    },
+    {
+      "line": 776,
+      "text": "\\multicolumn{4}{p{0.95\\columnwidth}}{\\footnotesize 各点均重新测得理想线网WNS为$-0.98\\to-0.83$\\,ns。输入来自固定代码\\texttt{3ea0f75}的C′W1/s382端点，经保标准单元的层级展开；后验生成器固定为\\texttt{f761ee1}。TT25℃、1.8\\,V、CK周期0.5\\,ns，采用式~\\eqref{eq:estimated_rc}、$p_f=p_d=1$，两侧设置相同。控制及三点共16次时序测量、8次注释回放，不含最初失败的5次STA。此表不替代旧族门控恢复或布局后PPA评价。}\\\\"
+    },
+    {
+      "line": 777,
+      "text": "\\end{tabular}"
+    },
+    {
+      "line": 778,
+      "text": "\\end{table}"
+    },
+    {
+      "line": 849,
+      "text": "EMA反馈和结构候选扩展均未带来额外终点收益；单轮候选的OpenROAD后验保留5例改善、1例持平和2例退化。另一个同源s382候选对在理想线网下改善0.15\\,ns，简化线载基础长度由10增至40和160\\,$\\mu$m时，改善由0.11\\,ns降至0；理想线网收益不能直接代替后续物理判断。ITC-99含实际三态的三例仅保留时序观察，功能证据需保留输出使能与Z语义后重新建立；有模型与原始端点绑定的子集另行统计。上述分离使候选搜索的有效部分、零收益设计和未闭合验证具有可核查的边界。"
+    }
+  ],
+  "references": [
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2_STA_runs\\RESULT.json",
+      "sha256": "eebc53982adeccb789022ebdc50252b65e8fa7196d1724f803afed0f172c358f",
+      "bytes": 73102
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_FLAT_V2_STA_ROOT_ACCEPTANCE.json",
+      "sha256": "43ccd357209d5890fb0a2e700b04260778bc3036b362185660361d1ed2636489",
+      "bytes": 1745
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_FLAT_V2_ROOT_ACCEPTANCE.json",
+      "sha256": "76225a8aec4644fbde853fdf1b45e937e5996cfb934f10c879223f5447798ac0",
+      "bytes": 1188
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_FLAT_V2_STA_POST_AUDIT.json",
+      "sha256": "8d2d23e9cabf9eba07b8078dfb8aee466e4c65780607c32f56da23e8149b8827",
+      "bytes": 76693
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_FLAT_V2_STA_DESIGN.json",
+      "sha256": "887ccacc4fd57a9c87009544cc3e37a0314ea052cd9944e0610d2a335e17bd19",
+      "bytes": 42539
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_runs\\FAILURE.json",
+      "sha256": "2c6fe9a9e628e4981d4c8c2b2cfc519faeca4d82638f5bfd0d3199cd87069903",
+      "bytes": 207
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2_STA_runs\\control_same_u40\\CASE_ACCEPTANCE.json",
+      "sha256": "cf5a0edda84d4f6868d1633688efcbbe738cfd0a91af563981e488b395f30922",
+      "bytes": 2997
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2_STA_runs\\pair_u10\\baseline_spef\\sta.tcl",
+      "sha256": "b6a583bb2547d34bf50637d5666a81c7457b95291638b1e2662e85b90cd73e95",
+      "bytes": 639
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2_STA_runs\\pair_u10\\baseline_spef\\measurement_receipt.json",
+      "sha256": "bf0418f1e6eb7b35ae35306c8fd7bd53bc4ec3fd4bbdfa7f570f71d1d5ecb858",
+      "bytes": 3541
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\spef.py",
+      "sha256": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+      "bytes": 17179
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_spef_audit_20261016\\review_20261018\\REPORT.md",
+      "sha256": "ce2978eeead95aff285d75fd9a14d6263f40021049307bbc7e11fbd9c4dd9921",
+      "bytes": 4903
+    }
+  ],
+  "counts": {
+    "new_scientific_STA": 24,
+    "newAPI": 16,
+    "newannotation": 8,
+    "previous_failed_rawSTA_separate": 5
+  },
+  "derived_proofs": "129/0 each rawside-to-correspondingflatside; not originalpair proofcount",
+  "rootacceptance_scope": "One exact Cprime-W1/s382 helper-expanded pair. Ideal +0.15, u10 +0.11, u40/u160 zero. Not original hierarchical SPEF support, routed geometry, old F6 recovery, or universal PPA. v1 failed 5 STA separately retained."
+}

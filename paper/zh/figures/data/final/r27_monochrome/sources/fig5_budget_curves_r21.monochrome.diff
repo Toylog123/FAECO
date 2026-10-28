@@ -1,0 +1,101 @@
+--- 
++++ 
+@@ -29,11 +29,11 @@
+     'figure.facecolor': 'white', 'savefig.facecolor': 'white',
+     'savefig.dpi': 600,
+ })
+-BLUE = '#516779'
+-GREY = '#87949F'
+-ORANGE = '#9A8674'
+-INK = '#252D33'
+-PALE = '#F1F3F5'
++BLUE = '#3B3B3B'
++GREY = '#727272'
++ORANGE = '#626262'
++INK = '#202020'
++PALE = '#F3F3F3'
+ sources = {}
+ 
+ 
+@@ -107,7 +107,7 @@
+     arrow(ax,(.65,.25),(.45,.25))
+     arrow(ax,(.45,.25),(.45,.57))
+     ax.text(.47,.39,'下一轮\n重新提锥',ha='left',va='center',color=BLUE,fontsize=7)
+-    box(ax,(.018,.15),(.257,.23),'F1–F6 记录 / 搜索分析\n权重更新（可选）',color=GREY,fill='#F7F8FA',dashed=True)
++    box(ax,(.018,.15),(.257,.23),'F1–F6 记录 / 搜索分析\n权重更新（可选）',color=GREY,fill='#F3F3F3',dashed=True)
+     ax.plot([.815,.815,.145,.145],[.58,.47,.47,.39],ls='--',lw=.8,color=GREY)
+     arrow(ax,(.145,.415),(.145,.39),GREY,True)
+     arrow(ax,(.27,.27),(.36,.575),GREY,True,rad=.1)
+@@ -210,7 +210,7 @@
+         ax.set_title(f'{title} · {sum(v>0 for v in gains)}/{len(gains)}',loc='left',fontsize=8,pad=7)
+         ax.text(-.15,1.05,panel,transform=ax.transAxes,weight='bold',fontsize=8)
+         ax.axvline(0,color=GREY,lw=.5)
+-        ax.grid(axis='x',color='#E0E4E7',lw=.5,ls=':')
++        ax.grid(axis='x',color='#F3F3F3',lw=.5,ls=':')
+         if title=='PicoRV32':
+             ax.text(.03,.10,'regs：无 setup 路径\nN/A，不计入分母',transform=ax.transAxes,fontsize=7,color=GREY)
+     csv_out('fig4_unified_gain_r21',rows)
+@@ -231,7 +231,7 @@
+     fig,ax=plt.subplots(figsize=(80/25.4,68/25.4))
+     fig.subplots_adjust(left=.20,right=.965,bottom=.18,top=.81)
+     y=np.arange(8)
+-    ax.barh(y-.17,[r['pre_gain_ns'] for r in rows],height=.28,color='#C5CCD1',label='预布局理想线网')
++    ax.barh(y-.17,[r['pre_gain_ns'] for r in rows],height=.28,color='#B6B6B6',label='预布局理想线网')
+     ax.barh(y+.17,[r['route_gain_ns'] for r in rows],height=.28,
+             color=[ORANGE if r['route_gain_ns']<0 else BLUE for r in rows],label='全局布线寄生估计')
+     for yy,r in zip(y,rows):
+@@ -240,7 +240,7 @@
+         if v==0: ax.plot(0,yy+.17,'D',ms=3,color=GREY)
+     ax.set(yticks=y,yticklabels=[r['circuit'] for r in rows],xlim=(-.06,.185),ylim=(7.7,-.8),xlabel='修复网表相对基线的 ΔWNS (ns)')
+     ax.axvline(0,color=INK,lw=.6)
+-    ax.grid(axis='x',ls=':',color='#E0E4E7',lw=.5)
++    ax.grid(axis='x',ls=':',color='#F3F3F3',lw=.5)
+     ax.legend(loc='lower left',bbox_to_anchor=(-.2,1.015),frameon=False)
+     csv_out('fig6_physical_transfer_r21',rows)
+     export(fig,'fig6_physical_transfer_r21')
+@@ -270,7 +270,7 @@
+     x=np.arange(8)
+     n=np.array([r['n_candidates'] for r in rows])
+     dep=np.array([r['depth_reduced'] for r in rows])
+-    axes[0].bar(x-.17,n,.30,color='#C5CCD1',label='实测候选数')
++    axes[0].bar(x-.17,n,.30,color='#B6B6B6',label='实测候选数')
+     axes[0].bar(x+.17,dep,.30,color=BLUE,label='映射后逻辑深度降低')
+     for xx,nn,dd in zip(x,n,dep):
+         axes[0].text(xx-.17,nn+.7,str(nn),ha='center',fontsize=7)
+@@ -278,14 +278,14 @@
+     zero=np.array([r['wns_zero'] for r in rows])
+     neg=np.array([r['wns_negative'] for r in rows])
+     axes[1].bar(x,neg,.55,color=ORANGE,label='WNS 下降（90）')
+-    axes[1].bar(x,zero,.55,bottom=neg,color='#C5CCD1',label='WNS 不变（36）')
++    axes[1].bar(x,zero,.55,bottom=neg,color='#B6B6B6',label='WNS 不变（36）')
+     for xx,nn in zip(x,n): axes[1].text(xx,nn+.7,str(nn),ha='center',fontsize=7)
+     for ax,label in zip(axes,'ab'):
+         ax.set_xticks(x,[r['circuit'] for r in rows],rotation=40,ha='right',rotation_mode='anchor')
+         ax.set_ylim(0,39)
+         ax.set_ylabel('候选数')
+         ax.set_yticks([0,10,20,30])
+-        ax.grid(axis='y',color='#E0E4E7',lw=.5,ls=':')
++        ax.grid(axis='y',color='#F3F3F3',lw=.5,ls=':')
+         ax.set_axisbelow(True)
+         ax.legend(loc='lower left',bbox_to_anchor=(-.02,1.05),frameon=False,ncol=1,fontsize=7)
+         ax.text(-.12,1.10,label,transform=ax.transAxes,weight='bold',fontsize=8)
+@@ -302,8 +302,8 @@
+     audit_rows=[]
+     fig,axes=plt.subplots(2,4,figsize=(170/25.4,94/25.4))
+     fig.subplots_adjust(left=.08,right=.975,bottom=.14,top=.82,wspace=.43,hspace=.60)
+-    styles={'fixed':(BLUE,'-',1.5),'adaptive':('#87949F','--',.8),
+-            'random_s1':('#CEC4BB','-',.7),'random_s2':('#B0A397','-',.7),'random_s3':(ORANGE,':',.9)}
++    styles={'fixed':(BLUE,'-',1.5),'adaptive':('#727272','--',.8),
++            'random_s1':('#A5A5A5','-',.7),'random_s2':('#8A8A8A','-',.7),'random_s3':(ORANGE,':',.9)}
+     labels=['固定权重','EMA 自适应','随机种子 1','随机种子 2','随机种子 3']
+     handles=[]
+     for ax,c in zip(axes.flat,circuits):
+@@ -355,7 +355,7 @@
+         assert abs(ends[0][1]-ends[1][1])<1e-8
+         ax.set_title(c,loc='left',fontsize=8,pad=4)
+         ax.set_ylim(bottom=0)
+-        ax.grid(color='#E0E4E7',lw=.45,ls=':')
++        ax.grid(color='#F3F3F3',lw=.45,ls=':')
+         ax.tick_params(labelsize=7)
+     for ax in axes[:,0]: ax.set_ylabel('B(k) (ns)')
+     for ax in axes[-1,:]: ax.set_xlabel('STA 测量序号 k')

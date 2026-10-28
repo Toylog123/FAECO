@@ -1,0 +1,52 @@
+--- 
++++ 
+@@ -264,28 +264,30 @@
+ \end{table}
+ 
+ \subsection{Single-round repair quality and efficiency}\label{sec:iscas}
+-The single-round study evaluates repair quality and efficiency. Figure~\ref{fig:iscas_main} compares baseline and repaired ISCAS89 netlists; all eight improve strictly under ideal-net OpenSTA. R/G/B/JOINT constructions preserve flip-flops, clock and reset logic. All final pairs pass independent SEC (Table~\ref{tab:sec_iscas8}). Accepted candidate types are JOINT for s27/s382/s420/s953, G for s641/s713/s832, and R for s820; no standalone B candidate is accepted. This is the efficiency-first configuration\label{sec:eff_prio}, with the 10\,ps physical gate disabled. Thus s420's +0.01\,ns candidate is accepted under $\Delta\mathrm{WNS}>0$. The stopping condition differs from the subsequent multi-round study, so results are reported separately. JOINT combines local implementation and drive changes; G changes drive strength; R depends on equivalent Boolean implementations available in the library.
+-
+-\begin{figure}[htbp]\centering
+-\includegraphics[width=0.78\linewidth]{fig3_single_round_r21.pdf}
++The single-round study evaluates repair quality and efficiency. Figure~\ref{fig:iscas_main} compares baseline and repaired ISCAS89 netlists; all eight improve strictly under ideal-net OpenSTA. R/G/B/JOINT constructions preserve flip-flops, clock and reset logic. Independent SEC fully proves all eight baseline/final repaired pairs; Table~\ref{tab:sec_iscas8} reports the proof counts and wall time. Accepted candidate types are JOINT for s27/s382/s420/s953, G for s641/s713/s832, and R for s820; no standalone B candidate is accepted. This is the efficiency-first configuration\label{sec:eff_prio}, with the 10\,ps physical gate disabled. Thus s420's +0.01\,ns candidate is accepted under $\Delta\mathrm{WNS}>0$. The stopping condition differs from the subsequent multi-round study, so results are reported separately. JOINT combines local implementation and drive changes; G changes drive strength; R depends on equivalent Boolean implementations available in the library.
++
++\begin{figure}[htbp]\centering
++\includegraphics[width=0.70\linewidth]{fig3_single_round_r21.pdf}
+ \caption{Baseline and FAECO WNS on ISCAS89 sequential circuits at 0.5\,ns. Labels report gain relative to baseline.}\label{fig:iscas_main}
+ \end{figure}
+-\begin{table}[htbp]\centering\small
+-\caption{Gate-level sequential equivalence checks on ISCAS89.}\label{tab:sec_iscas8}
++\begin{table}[!htbp]\centering\small
++\caption{Sequential equivalence of the efficiency-first repaired pairs.}\label{tab:sec_iscas8}
+ \begin{tabular}{lrrr}\toprule
+-Circuit & Equivalence cells & SEC & Time (s)\\\midrule
+-s27 & 11 & Proven & 0.303\\
+-s382 & 90 & Proven & 0.382\\
+-s420 & 79 & Proven & 0.368\\
+-s641 & 124 & Proven & 0.381\\
+-s713 & 126 & Proven & 0.410\\
+-s820 & 138 & Proven & 0.454\\
+-s832 & 145 & Proven & 0.437\\
+-s953 & 228 & Proven & 0.537\\\bottomrule
+-\end{tabular}
+-\par\smallskip\footnotesize Yosys \texttt{equiv\_make}, \texttt{equiv\_simple} and \texttt{equiv\_induct}; all eight pass under SKY130 behavioral cell models.
+-\end{table}
+-
++Circuit & Proven/unproven & SEC & Wall time (s)\\\midrule
++s27 & 11/0 & Proven & 0.281\\
++s382 & 90/0 & Proven & 0.281\\
++s420 & 79/0 & Proven & 0.250\\
++s641 & 124/0 & Proven & 0.313\\
++s713 & 126/0 & Proven & 0.328\\
++s820 & 139/0 & Proven & 0.344\\
++s832 & 146/0 & Proven & 0.391\\
++s953 & 228/0 & Proven & 0.407\\
++\bottomrule
++\end{tabular}
++\par\smallskip\footnotesize Yosys 0.33 and SKY130 behavioral models: \texttt{equiv\_make}, \texttt{equiv\_simple}, \texttt{equiv\_induct -seq 10} and \texttt{equiv\_status -assert}. Wall time covers each prover call in one batch; mapping, candidate STA and model preparation are excluded.
++\end{table}
++
++\FloatBarrier
+ \subsection{Cross-dataset evaluation}\label{sec:ood}
+ \subsubsection{ITC-99}\label{sec:itc99}
+ Eighteen of the 19 unified ITC-99 circuits obtain strict WNS gain, while b06 remains unchanged; none regresses. At the default 60\,s per-candidate limit, b17 candidates time out as F5. Increasing only b17's limit to 180\,s yields +0.38\,ns within 104 candidate evaluation records, accepting a G replacement from \texttt{nor4b\_1} to \texttt{nor4b\_2}. The larger included circuits b14/b15/b17/b20/b21/b22 all improve. b06 has baseline WNS=-0.56\,ns and several adjacent \texttt{or4b\_1} gates on its critical path. In this R/G/B/JOINT search, G replacements are constrained by input-capacitance changes, and B/R do not yield an effective gain. No strict WNS improvement is observed in 664 candidate evaluation records.

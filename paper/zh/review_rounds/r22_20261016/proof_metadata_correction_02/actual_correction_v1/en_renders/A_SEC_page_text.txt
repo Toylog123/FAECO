@@ -1,0 +1,63 @@
+Table 8: Sequential equivalence of the efficiency-first repaired pairs.
+Circuit
+Proven/unproven
+SEC
+Wall time (s)
+s27
+11/0
+Proven
+0.281
+s382
+90/0
+Proven
+0.281
+s420
+79/0
+Proven
+0.250
+s641
+124/0
+Proven
+0.313
+s713
+126/0
+Proven
+0.328
+s820
+139/0
+Proven
+0.344
+s832
+146/0
+Proven
+0.391
+s953
+228/0
+Proven
+0.407
+All eight pairs are checked in one verification batch with Yosys 0.33 under SKY130 behavioral cell
+models using equiv_make, equiv_simple and equiv_induct -seq 10, with equiv_status
+-assert requiring complete proof. Wall time covers each independent prover invocation and
+excludes mapping, candidate STA and model preparation.
++1.98 and +2.75 ns, mainly from G with additional R modifications. The 19-circuit
+set contains 3363 candidate evaluation records, of which 2994 STA results can be
+independently traced to unique candidate reports (2890 in the 18-circuit archive and
+104 recovered for b17). This is an identifiable result count; the historical archives
+do not record all timeout launches, baseline analyses or cone refreshes. Median
+and mean gain are +0.18 and +0.43 ns; b20/b21, whose baseline WNS is at most
+-13 ns, account for much of the difference. Table 12 reports failure triggers and
+provides search-diagnostic evidence.
+Two separate large examples are outside these 19-circuit statistics. Mapped b18
+has 75,700 cells approximately, with WNS changing from -13.34 to -13.27 ns at
+0.5 ns in 24 candidate-level STA measurements. b19 has approximately 151,000
+cells, changing from -17.44 to -16.00 ns in 59 measurements.
+4.3.2. PicoRV32 modules
+Three structurally different modules from one RTL source reuse the ISCAS89
+flow. The core and picorv32_pcpi_mul have valid setup paths and improve by
++1.13 and +0.07 ns through accumulated R/G/B modifications. The storage-bank
+module has no assessable setup path and is not repaired or included in improvement
+counts.
+Unified strict-WNS improvement fractions are 8/8, 18/19 and 2/2. SEC consid-
+ers 30 instances: 29 have actual netlist modifications, and 28/29 modified pairs are
+completely proven. b06’s buffer/delay patches leave WNS unchanged and pass SEC.
+16

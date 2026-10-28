@@ -1,0 +1,3879 @@
+{
+  "schema": "r24-method-evidence-static-v1",
+  "date": "2026-10-18",
+  "head": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "Cprime_runtime_head": "3ea0f757f5e9bab4a2df75c458b0c665eabcb258",
+  "external_tools_or_EDA_started": false,
+  "source_changed": false,
+  "code_source_before": {
+    "code/src/rseco/abc_baseline.py": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+    "code/src/rseco/adaptive_selector.py": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+    "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+    "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+    "code/src/rseco/case_loader.py": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+    "code/src/rseco/cut.py": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+    "code/src/rseco/electrical.py": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+    "code/src/rseco/equivalence.py": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+    "code/src/rseco/failures.py": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+    "code/src/rseco/feedback.py": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/src/rseco/gate_sizing.py": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/hold_repair.py": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+    "code/src/rseco/logic_rewrite.py": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+    "code/src/rseco/metrics.py": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+    "code/src/rseco/netlist_audit.py": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+    "code/src/rseco/netlist_io.py": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+    "code/src/rseco/opensta.py": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+    "code/src/rseco/patch.py": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+    "code/src/rseco/proxy_ranking.py": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+    "code/src/rseco/ranking.py": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+    "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+    "code/src/rseco/refinement.py": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+    "code/src/rseco/refinement_loop.py": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+    "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+    "code/src/rseco/sdc.py": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+    "code/src/rseco/search_state.py": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+    "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code/src/rseco/sta_ledger.py": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+    "code/src/rseco/strategy_selector.py": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270",
+    "code/src/rseco/technology_mapping.py": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+    "code/src/rseco/toolchain.py": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+    "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+    "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+    "code/src/rseco/yosys_json.py": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+    "code/src/rseco/z3_formal.py": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+    "code/src/rseco/__init__.py": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd"
+  },
+  "code_source_after": {
+    "code/src/rseco/abc_baseline.py": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+    "code/src/rseco/adaptive_selector.py": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+    "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+    "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+    "code/src/rseco/case_loader.py": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+    "code/src/rseco/cut.py": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+    "code/src/rseco/electrical.py": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+    "code/src/rseco/equivalence.py": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+    "code/src/rseco/failures.py": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+    "code/src/rseco/feedback.py": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+    "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+    "code/src/rseco/gate_sizing.py": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+    "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+    "code/src/rseco/hold_repair.py": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+    "code/src/rseco/logic_rewrite.py": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+    "code/src/rseco/metrics.py": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+    "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+    "code/src/rseco/netlist_audit.py": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+    "code/src/rseco/netlist_io.py": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+    "code/src/rseco/opensta.py": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+    "code/src/rseco/patch.py": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+    "code/src/rseco/proxy_ranking.py": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+    "code/src/rseco/ranking.py": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+    "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+    "code/src/rseco/refinement.py": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+    "code/src/rseco/refinement_loop.py": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+    "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+    "code/src/rseco/sdc.py": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+    "code/src/rseco/search_state.py": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+    "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+    "code/src/rseco/sta_ledger.py": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+    "code/src/rseco/strategy_selector.py": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+    "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270",
+    "code/src/rseco/technology_mapping.py": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+    "code/src/rseco/toolchain.py": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+    "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+    "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+    "code/src/rseco/yosys_json.py": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+    "code/src/rseco/z3_formal.py": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+    "code/src/rseco/__init__.py": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd"
+  },
+  "Cprime_archive": {
+    "path": "project_docs/evidence/r22_cprime_v3_20261016/source_snapshot/runtime_inputs.zip",
+    "sha256": "620a0eb9809dd08720fd4fdf4bdb85781668ff161a9b061936e7447ade442d7f",
+    "bytes": 2400670
+  },
+  "Cprime_archive_entries": {
+    "code/scripts/run_outerloop_real_wns.py": {
+      "sha256": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+      "bytes": 30603,
+      "lines": 555,
+      "current_bytes_match": true
+    },
+    "code/scripts/run_r22_cut_ablation.py": {
+      "sha256": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+      "bytes": 17181,
+      "lines": 329,
+      "current_bytes_match": true
+    },
+    "code/scripts/run_sequential_timing_check.py": {
+      "sha256": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+      "bytes": 13696,
+      "lines": 330,
+      "current_bytes_match": true
+    },
+    "code/scripts/run_with_timeout.sh": {
+      "sha256": "6f22e8a0291afbe26b0f00fbc1ee410b4de8ae999995395b2e034aef2f1338f6",
+      "bytes": 849,
+      "lines": 31,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/__init__.py": {
+      "sha256": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd",
+      "bytes": 63,
+      "lines": 3,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/abc_baseline.py": {
+      "sha256": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+      "bytes": 3878,
+      "lines": 116,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/adaptive_selector.py": {
+      "sha256": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+      "bytes": 4187,
+      "lines": 116,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/buffer_insertion.py": {
+      "sha256": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+      "bytes": 5724,
+      "lines": 142,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/candidate_policy.py": {
+      "sha256": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+      "bytes": 3256,
+      "lines": 64,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/case_loader.py": {
+      "sha256": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+      "bytes": 3943,
+      "lines": 121,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/cut.py": {
+      "sha256": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+      "bytes": 36302,
+      "lines": 874,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/electrical.py": {
+      "sha256": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+      "bytes": 11630,
+      "lines": 306,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/equivalence.py": {
+      "sha256": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+      "bytes": 8632,
+      "lines": 245,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/failures.py": {
+      "sha256": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+      "bytes": 5234,
+      "lines": 136,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/feedback.py": {
+      "sha256": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+      "bytes": 12718,
+      "lines": 308,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/flow.py": {
+      "sha256": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "bytes": 66128,
+      "lines": 1272,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/gate_sizing.py": {
+      "sha256": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+      "bytes": 6369,
+      "lines": 186,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/graph.py": {
+      "sha256": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+      "bytes": 5492,
+      "lines": 131,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/hold_repair.py": {
+      "sha256": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+      "bytes": 11402,
+      "lines": 320,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/logic_rewrite.py": {
+      "sha256": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+      "bytes": 12752,
+      "lines": 299,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/metrics.py": {
+      "sha256": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+      "bytes": 568,
+      "lines": 15,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/netlist.py": {
+      "sha256": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+      "bytes": 11851,
+      "lines": 292,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/netlist_audit.py": {
+      "sha256": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+      "bytes": 2703,
+      "lines": 67,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/netlist_io.py": {
+      "sha256": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+      "bytes": 744,
+      "lines": 19,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/opensta.py": {
+      "sha256": "95825d962349c11a16be6f69e1b11fcf1184dcf48474e466337be7db3f13d41c",
+      "bytes": 17227,
+      "lines": 471,
+      "current_bytes_match": false
+    },
+    "code/src/rseco/patch.py": {
+      "sha256": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+      "bytes": 1759,
+      "lines": 59,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/proxy_ranking.py": {
+      "sha256": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+      "bytes": 4134,
+      "lines": 122,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/ranking.py": {
+      "sha256": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+      "bytes": 3710,
+      "lines": 126,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/real_wns.py": {
+      "sha256": "812bafab38f44c889ecb32b5503509b5a0d8e5ed78052507ffcf4a326a92918e",
+      "bytes": 156486,
+      "lines": 2932,
+      "current_bytes_match": false
+    },
+    "code/src/rseco/refinement.py": {
+      "sha256": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+      "bytes": 3275,
+      "lines": 82,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/refinement_loop.py": {
+      "sha256": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+      "bytes": 19520,
+      "lines": 427,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/replacement.py": {
+      "sha256": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+      "bytes": 16147,
+      "lines": 374,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/sdc.py": {
+      "sha256": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+      "bytes": 7080,
+      "lines": 221,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/search_state.py": {
+      "sha256": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+      "bytes": 29097,
+      "lines": 653,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/spef.py": {
+      "sha256": "5992fea68f71009fbc9fbf9e498d4ca4dc3e1d7225ae6fb2ec109a1240d95db5",
+      "bytes": 7429,
+      "lines": 217,
+      "current_bytes_match": false
+    },
+    "code/src/rseco/sta_ledger.py": {
+      "sha256": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+      "bytes": 8320,
+      "lines": 181,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/strategy_selector.py": {
+      "sha256": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+      "bytes": 4149,
+      "lines": 109,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/structure_resynthesis.py": {
+      "sha256": "e3dd0a4792bc805479bb7398875bec4b3b1211158305dbd9a18046214ed5e82f",
+      "bytes": 46096,
+      "lines": 1105,
+      "current_bytes_match": false
+    },
+    "code/src/rseco/technology_mapping.py": {
+      "sha256": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+      "bytes": 9927,
+      "lines": 288,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/toolchain.py": {
+      "sha256": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+      "bytes": 2220,
+      "lines": 81,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/verilog_modules.py": {
+      "sha256": "050ca00681728125badc0ff8cd31f65ae871d9d9fa8e3a29f55dd64158cd8ee9",
+      "bytes": 2209,
+      "lines": 61,
+      "current_bytes_match": false
+    },
+    "code/src/rseco/yosys_abc.py": {
+      "sha256": "26bb65d7c002a7fb32f50c16a4a70f33cfe6d753c4712e1d250c559317cdc2a5",
+      "bytes": 29460,
+      "lines": 774,
+      "current_bytes_match": false
+    },
+    "code/src/rseco/yosys_json.py": {
+      "sha256": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+      "bytes": 9721,
+      "lines": 290,
+      "current_bytes_match": true
+    },
+    "code/src/rseco/z3_formal.py": {
+      "sha256": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+      "bytes": 18574,
+      "lines": 534,
+      "current_bytes_match": true
+    }
+  },
+  "references": [
+    {
+      "path": "paper/zh/review_rounds/r23_20261018/REVISION_ROADMAP.md",
+      "sha256": "d11097d82c8ff74c7b3bd4f0433e59f61246d313b19b02bfa5728149ab42c9c7",
+      "bytes": 19462
+    },
+    {
+      "path": "paper/zh/review_rounds/r23_20261018/ROOT_EVIDENCE_CROSSCHECK.json",
+      "sha256": "047f9dc00a3f2293d12957a529e7a28e2dea0bbf9f902f12ffd579e19c9e22cb",
+      "bytes": 10816
+    },
+    {
+      "path": "project_docs/evidence/r22_spef_audit_20261016/review_20261018/REPORT.md",
+      "sha256": "ce2978eeead95aff285d75fd9a14d6263f40021049307bbc7e11fbd9c4dd9921",
+      "bytes": 4903
+    },
+    {
+      "path": "project_docs/evidence/r22_spef_audit_20261016/review_20261018/REVIEW.json",
+      "sha256": "ebc9bc5e707c9dfeef065f88a2411d30b84269e241865758c79f2a1987a7da27",
+      "bytes": 15103
+    },
+    {
+      "path": "project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json",
+      "sha256": "a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738",
+      "bytes": 3025552
+    },
+    {
+      "path": "project_docs/evidence/r22_a_sec_unified_20261018/ROOT_ACCEPTANCE.json",
+      "sha256": "a6caf8a19333b343533f0063d2898b4dbed17b2ed3efc0c22d65b0ea0bc421b2",
+      "bytes": 1767
+    },
+    {
+      "path": "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ROOT_ACCEPTANCE.json",
+      "sha256": "79f5725cfdc64de8b1c9a1a7aacffa3650a9741ce6c54c73be4eb0cc2635e09b",
+      "bytes": 1793
+    }
+  ],
+  "toy": {
+    "scope": "Artificial input and report_instances; static algorithm arithmetic and actual Liberty action instantiation only. No STA, SEC, external EDA, timing gain, acceptance, F3/F5 pass or new science experiment.",
+    "liberty": {
+      "path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135
+    },
+    "netlist_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_1 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_1 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+    "netlist_sha256": "4ee5de31828ca35a4addc0b0ddeb9fa57d8eeffabf6c7a96552f37cfa5d9ee60",
+    "input": {
+      "roots": [
+        "n6"
+      ],
+      "boundary_inputs": [
+        "a",
+        "b",
+        "c"
+      ],
+      "boundary_outputs": [
+        "n6"
+      ],
+      "internal_nets": [
+        "n1",
+        "n2",
+        "n3",
+        "n4",
+        "n5"
+      ],
+      "gates": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5",
+        "g6"
+      ],
+      "gate_outputs": {
+        "g1": "n1",
+        "g2": "n2",
+        "g3": "n3",
+        "g4": "n4",
+        "g5": "n5",
+        "g6": "n6"
+      },
+      "gate_inputs": {
+        "g1": [
+          "a"
+        ],
+        "g2": [
+          "b"
+        ],
+        "g3": [
+          "c",
+          "c"
+        ],
+        "g4": [
+          "n1",
+          "n2"
+        ],
+        "g5": [
+          "n2",
+          "n3"
+        ],
+        "g6": [
+          "n4",
+          "n5"
+        ]
+      }
+    },
+    "critical_instances": [
+      "g1",
+      "g4",
+      "g6"
+    ],
+    "r_available": [
+      "g1",
+      "g2",
+      "g4",
+      "g5"
+    ],
+    "depth": {
+      "g3": 1,
+      "g2": 1,
+      "g5": 2,
+      "g1": 1,
+      "g4": 2,
+      "g6": 3
+    },
+    "fanin_size": {
+      "g1": 1,
+      "g2": 1,
+      "g3": 1,
+      "g4": 3,
+      "g5": 3,
+      "g6": 6
+    },
+    "sum_squares": 57,
+    "fanout": {
+      "g1": 1,
+      "g2": 2,
+      "g3": 1,
+      "g4": 1,
+      "g5": 1,
+      "g6": 0
+    },
+    "trace": {
+      "policy": "weighted_st",
+      "sources": "full",
+      "cost_mode": "configured",
+      "configured_weights": {
+        "boundary_penalty": 1.0,
+        "size_penalty": 1.0,
+        "critical_coverage_reward": 1.0,
+        "verification_cost_penalty": 1.0,
+        "equivalence_stability_reward": 1.0
+      },
+      "effective_weights": {
+        "boundary_penalty": 1.0,
+        "size_penalty": 1.0,
+        "critical_coverage_reward": 1.0,
+        "verification_cost_penalty": 1.0,
+        "equivalence_stability_reward": 1.0
+      },
+      "node_costs": {
+        "g1": 1.2581578947368424,
+        "g2": 1.3331578947368423,
+        "g3": 1.577543859649123,
+        "g4": 0.9907368421052634,
+        "g5": 0.9907368421052634,
+        "g6": 1.941578947368421
+      },
+      "candidates": [
+        {
+          "cut_hash": "f942a2624a3b872a0ab6961015371c433c8ffdd3b6ec50f0a2b2d0b8fb230019",
+          "origins": [
+            "cover"
+          ],
+          "method": "critical_path_cover",
+          "boundary_inputs": [
+            "a",
+            "n2",
+            "n5"
+          ],
+          "boundary_outputs": [
+            "n6"
+          ],
+          "internal_nets": [
+            "n1",
+            "n4"
+          ],
+          "gates": [
+            "g1",
+            "g4",
+            "g6"
+          ],
+          "patch_size": 3,
+          "node_cost_sum": 4.190473684210526
+        },
+        {
+          "cut_hash": "60d94a354504b1ca828908869128b78fefa0ecdc7dd582a504617b52da70e308",
+          "origins": [
+            "weighted"
+          ],
+          "method": "weighted_st",
+          "boundary_inputs": [
+            "n4",
+            "n5"
+          ],
+          "boundary_outputs": [
+            "n6"
+          ],
+          "internal_nets": [],
+          "gates": [
+            "g6"
+          ],
+          "patch_size": 1,
+          "node_cost_sum": 1.941578947368421
+        }
+      ],
+      "weighted_cut_cost": 1.941578947368421
+    },
+    "weighted_solution": {
+      "method": "weighted_st_min_cut_v1",
+      "source": "source",
+      "sink": "n6",
+      "selected_gate": "g6",
+      "selected_gates": [
+        "g6"
+      ],
+      "cut_cost": 1.941578947368421,
+      "cut_edges": [
+        [
+          "g6:in",
+          "g6:out"
+        ]
+      ],
+      "boundary_inputs": [
+        "n4",
+        "n5"
+      ],
+      "boundary_outputs": [
+        "n6"
+      ],
+      "gates": [
+        "g6"
+      ]
+    },
+    "actual_action_menus": {
+      "g1": [
+        [
+          "sky130_fd_sc_hd__bufinv_16",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__bufinv_8",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinvlp_2",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinvlp_4",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_1",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_12",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_16",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_2",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_4",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_6",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_8",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_1",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_16",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_2",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_4",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_8",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_16",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_2",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_4",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_8",
+          {},
+          "G"
+        ]
+      ],
+      "g2": [
+        [
+          "sky130_fd_sc_hd__bufinv_16",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__bufinv_8",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinvlp_2",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinvlp_4",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_1",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_12",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_16",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_2",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_4",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_6",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__inv_8",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_1",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_16",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_2",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_4",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__lpflow_clkinvkapwr_8",
+          {
+            "A": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_16",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_2",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_4",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__clkinv_8",
+          {},
+          "G"
+        ]
+      ],
+      "g3": [
+        [
+          "sky130_fd_sc_hd__nor2_2",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__nor2_4",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__nor2_8",
+          {},
+          "G"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:A:c__buf_g3_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:B:c__buf_g3_B",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:A:c__buf_g3_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:B:c__buf_g3_B",
+          {},
+          "B"
+        ]
+      ],
+      "g4": [
+        [
+          "sky130_fd_sc_hd__lpflow_inputiso0n_1",
+          {
+            "A": "SLEEP_B",
+            "B": "A"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__and2_2",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__and2_4",
+          {},
+          "G"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:A:n1__buf_g4_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:B:n2__buf_g4_B",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:A:n1__buf_g4_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:B:n2__buf_g4_B",
+          {},
+          "B"
+        ]
+      ],
+      "g5": [
+        [
+          "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+          {
+            "A": "A",
+            "B": "SLEEP"
+          },
+          "R"
+        ],
+        [
+          "sky130_fd_sc_hd__or2_2",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__or2_4",
+          {},
+          "G"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:A:n2__buf_g5_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:B:n3__buf_g5_B",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:A:n2__buf_g5_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:B:n3__buf_g5_B",
+          {},
+          "B"
+        ]
+      ],
+      "g6": [
+        [
+          "sky130_fd_sc_hd__nor2_2",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__nor2_4",
+          {},
+          "G"
+        ],
+        [
+          "sky130_fd_sc_hd__nor2_8",
+          {},
+          "G"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:A:n4__buf_g6_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_1:B:n5__buf_g6_B",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:A:n4__buf_g6_A",
+          {},
+          "B"
+        ],
+        [
+          "buf:sky130_fd_sc_hd__buf_2:B:n5__buf_g6_B",
+          {},
+          "B"
+        ]
+      ]
+    },
+    "menu_counts": {
+      "g1": {
+        "R": 16,
+        "G": 4
+      },
+      "g2": {
+        "R": 16,
+        "G": 4
+      },
+      "g3": {
+        "G": 3,
+        "B": 4
+      },
+      "g4": {
+        "R": 1,
+        "G": 2,
+        "B": 4
+      },
+      "g5": {
+        "R": 1,
+        "G": 2,
+        "B": 4
+      },
+      "g6": {
+        "G": 3,
+        "B": 4
+      }
+    },
+    "witnesses": [
+      {
+        "instance": "g1",
+        "kind": "R",
+        "target": "sky130_fd_sc_hd__bufinv_16",
+        "pin_map": {
+          "A": "A"
+        },
+        "candidate_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__bufinv_16 g1 (\n    .A(a),\n    .Y(n1)\n  );\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_1 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+        "candidate_sha256": "2eb97a1b3f612225da22759ad4df1ed3aad6d7d196bb77838855c31ca9ddbc66"
+      },
+      {
+        "instance": "g4",
+        "kind": "G",
+        "target": "sky130_fd_sc_hd__and2_2",
+        "pin_map": {},
+        "candidate_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_1 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_2 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+        "candidate_sha256": "49dca4a6d03da5701813878a1c9be28c8edd9237202d3e4a56161f15f3bf5cb9"
+      },
+      {
+        "instance": "g6",
+        "kind": "B",
+        "target": "buf:sky130_fd_sc_hd__buf_1:A:n4__buf_g6_A",
+        "pin_map": {},
+        "candidate_fulltext": "module toy(a,b,c,n6);\n  wire n4__buf_g6_A;\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_1 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_1 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4__buf_g6_A), .B(n5), .Y(n6));\n  sky130_fd_sc_hd__buf_1 _bufb_g6_A (\n    .A(n4),\n    .X(n4__buf_g6_A)\n  );\nendmodule\n",
+        "candidate_sha256": "75d0c2589cc1c2f549c3c0ed2a2c00d73ab7ae7bc955dd041c9ffcf458f1a252"
+      },
+      {
+        "kind": "JOINT",
+        "mode": "joint_k=2,joint_mix=False",
+        "changes": {
+          "g1": [
+            "sky130_fd_sc_hd__clkinv_16",
+            {},
+            "G"
+          ],
+          "g4": [
+            "sky130_fd_sc_hd__and2_2",
+            {},
+            "G"
+          ]
+        },
+        "candidate_fulltext": "module toy(a,b,c,n6);\ninput a,b,c;\noutput n6;\nwire n1,n2,n3,n4,n5;\nsky130_fd_sc_hd__clkinv_16 g1 (.A(a), .Y(n1));\nsky130_fd_sc_hd__clkinv_1 g2 (.A(b), .Y(n2));\nsky130_fd_sc_hd__nor2_1 g3 (.A(c), .B(c), .Y(n3));\nsky130_fd_sc_hd__and2_2 g4 (.A(n1), .B(n2), .X(n4));\nsky130_fd_sc_hd__or2_1 g5 (.A(n2), .B(n3), .X(n5));\nsky130_fd_sc_hd__nor2_1 g6 (.A(n4), .B(n5), .Y(n6));\nendmodule\n",
+        "candidate_sha256": "3bd5bdfeffed7c126148818d4dda3f13da19fa0f8332810b36ebbe8cad0fa879"
+      }
+    ],
+    "boundary_dispatch_order": [
+      "critical_path_cover",
+      "weighted_st"
+    ],
+    "cover_instance_order": [
+      "g1",
+      "g4",
+      "g6"
+    ],
+    "weighted_instance_order": [
+      "g6"
+    ]
+  },
+  "A8": [
+    {
+      "case": "s27",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/gold.v",
+          "sha256": "251378ff2834b41479e955e5cb422f3ebdada833fca1f8362eab4bc8fbfc5494",
+          "bytes": 1242
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/gate.v",
+          "sha256": "4c18bf417100bf8633df312dbddbd932f1b0a5a20c7799a814f5ecb090cfc409",
+          "bytes": 1242
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/helpers.v",
+          "sha256": "d479c9d42f4ce6f5de74aa1d7fc96fae237d49c16f6cd77959201e2ee7705b19",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/cells.v",
+          "sha256": "72f42ef200f98a173bfab0c41c0c1cc55b96ea856e47d3dfc8d9e51a88239522",
+          "bytes": 1330
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/sec.ys",
+          "sha256": "d6885b88c72c00857e6a3ae700a5411f6803d011a5f93e03d0e8db79fc287e6d",
+          "bytes": 672
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/sec.log",
+          "sha256": "6a0caef6de9c301f6f806ad3cf5e3e0660a9ff877ee3c61cc92d893c343b40b8",
+          "bytes": 16769
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/result.json",
+          "sha256": "36faa2a085569e68f377982cb135e10442db3054c5d3b88bf7456f2bf3efd758",
+          "bytes": 637
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27/completion.json",
+          "sha256": "c28f93070d439f0555a5ceb500485ff67693298bae8bb5048124e71702fa83c9",
+          "bytes": 1130
+        }
+      },
+      "matched_dff_count": 3,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "G10",
+          "Q": "G5"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "G11",
+          "Q": "G6"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "G13",
+          "Q": "G7"
+        }
+      },
+      "simple_newly_proved": 2,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        11,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 273,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 277,
+          "text": "Proved 2 previously unproven $equiv cells."
+        },
+        {
+          "line": 279,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 280,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 281,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 285,
+          "text": "  Of those cells 11 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s382",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/gold.v",
+          "sha256": "f3c982919b4279845c6c0021075b093f600643c066bda4c67a81bd1f668d55c3",
+          "bytes": 10732
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/gate.v",
+          "sha256": "c558f30e05f99a6e8b63af66a4eb0d0d899d8d668a1ec15beeb31f7839714bcc",
+          "bytes": 10732
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/helpers.v",
+          "sha256": "d479c9d42f4ce6f5de74aa1d7fc96fae237d49c16f6cd77959201e2ee7705b19",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/cells.v",
+          "sha256": "0d72f4988eff5374542b4468777173802727b57554109a3ffa41c610b8209e49",
+          "bytes": 3672
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/sec.ys",
+          "sha256": "009c2b2e34d213b0c48a3da17612d67a8096412811229f3ae1713bb0b45a504f",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/sec.log",
+          "sha256": "f0703d9cd20bd635f5594f6b83594caa85ce62894cdc401eb0541b6c1e8c870c",
+          "bytes": 69205
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/result.json",
+          "sha256": "bfc15312855e23e13e9dfaa3cc22d0148b792ffa28b654c46ef451ff2a8e7d50",
+          "bytes": 637
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382/completion.json",
+          "sha256": "aa86748c338544f9c287a4dbcfcd05a55c16e70d4a47c193fe01211dddd19d60",
+          "bytes": 1130
+        }
+      },
+      "matched_dff_count": 21,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "TESTLVIINLATCHVCDAD",
+          "Q": "TESTL"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "FMLVIINLATCHVCDAD",
+          "Q": "FML"
+        },
+        "DFF_10": {
+          "CK": "CK",
+          "D": "C3_Q2VD",
+          "Q": "C3_Q2"
+        },
+        "DFF_11": {
+          "CK": "CK",
+          "D": "C3_Q1VD",
+          "Q": "C3_Q1"
+        },
+        "DFF_12": {
+          "CK": "CK",
+          "D": "C3_Q0VD",
+          "Q": "C3_Q0"
+        },
+        "DFF_13": {
+          "CK": "CK",
+          "D": "UC_16VD",
+          "Q": "UC_16"
+        },
+        "DFF_14": {
+          "CK": "CK",
+          "D": "UC_17VD",
+          "Q": "UC_17"
+        },
+        "DFF_15": {
+          "CK": "CK",
+          "D": "UC_18VD",
+          "Q": "UC_18"
+        },
+        "DFF_16": {
+          "CK": "CK",
+          "D": "UC_19VD",
+          "Q": "UC_19"
+        },
+        "DFF_17": {
+          "CK": "CK",
+          "D": "UC_8VD",
+          "Q": "UC_8"
+        },
+        "DFF_18": {
+          "CK": "CK",
+          "D": "UC_9VD",
+          "Q": "UC_9"
+        },
+        "DFF_19": {
+          "CK": "CK",
+          "D": "UC_10VD",
+          "Q": "UC_10"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "TCOMB_YA2",
+          "Q": "OLATCH_Y2L"
+        },
+        "DFF_20": {
+          "CK": "CK",
+          "D": "UC_11VD",
+          "Q": "C1VCO0"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "Y1C",
+          "Q": "OLATCHVUC_6"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "R2C",
+          "Q": "OLATCHVUC_5"
+        },
+        "DFF_5": {
+          "CK": "CK",
+          "D": "TCOMB_RA1",
+          "Q": "OLATCH_R1L"
+        },
+        "DFF_6": {
+          "CK": "CK",
+          "D": "TCOMB_GA2",
+          "Q": "OLATCH_G2L"
+        },
+        "DFF_7": {
+          "CK": "CK",
+          "D": "TCOMB_GA1",
+          "Q": "OLATCH_G1L"
+        },
+        "DFF_8": {
+          "CK": "CK",
+          "D": "TCOMB_FE",
+          "Q": "OLATCH_FEL"
+        },
+        "DFF_9": {
+          "CK": "CK",
+          "D": "C3_Q3VD",
+          "Q": "C3_Q3"
+        }
+      },
+      "simple_newly_proved": 2,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        90,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 912,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 916,
+          "text": "Proved 2 previously unproven $equiv cells."
+        },
+        {
+          "line": 918,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 919,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 920,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 924,
+          "text": "  Of those cells 90 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s420",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/gold.v",
+          "sha256": "364cd38f3f4480cfe85fa77061870f5b382efa2bcd7107e22d74be9784a86524",
+          "bytes": 9063
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/gate.v",
+          "sha256": "e4f382cc6964af0e3ddc9d10ad3e9a4a257377b00a3eda0684238322ae6e81db",
+          "bytes": 9063
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/helpers.v",
+          "sha256": "d479c9d42f4ce6f5de74aa1d7fc96fae237d49c16f6cd77959201e2ee7705b19",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/cells.v",
+          "sha256": "4a8ed3db13449956b388aad94a2eea022557fc9962783dc7a8f97232bbd60dd5",
+          "bytes": 3084
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/sec.ys",
+          "sha256": "e976f04aa67ecef0947aed9647e7d5081be85196211f9b0e88f878e8e88e5665",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/sec.log",
+          "sha256": "aecb80ed6ce8e31a7969f2ce20c8993c4f2e3561d6dfe540e5adde9e2eba5c5b",
+          "bytes": 59209
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/result.json",
+          "sha256": "9647b93e1477993bd32e26fcd454e428d83372a35e840ee07301d3365fce8f26",
+          "bytes": 623
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420/completion.json",
+          "sha256": "8e65dd29ae9ceda9a214c328ce616c6c7bcf8ac50df2bbb2274b3ca939b155c0",
+          "bytes": 1116
+        }
+      },
+      "matched_dff_count": 16,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "I12",
+          "Q": "X_4"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "I13",
+          "Q": "X_3"
+        },
+        "DFF_10": {
+          "CK": "CK",
+          "D": "I210",
+          "Q": "X_10"
+        },
+        "DFF_11": {
+          "CK": "CK",
+          "D": "I211",
+          "Q": "X_9"
+        },
+        "DFF_12": {
+          "CK": "CK",
+          "D": "I306",
+          "Q": "X_16"
+        },
+        "DFF_13": {
+          "CK": "CK",
+          "D": "I307",
+          "Q": "X_15"
+        },
+        "DFF_14": {
+          "CK": "CK",
+          "D": "I308",
+          "Q": "X_14"
+        },
+        "DFF_15": {
+          "CK": "CK",
+          "D": "I309",
+          "Q": "X_13"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "I14",
+          "Q": "X_2"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "I15",
+          "Q": "X_1"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "I110",
+          "Q": "X_8"
+        },
+        "DFF_5": {
+          "CK": "CK",
+          "D": "I111",
+          "Q": "X_7"
+        },
+        "DFF_6": {
+          "CK": "CK",
+          "D": "I112",
+          "Q": "X_6"
+        },
+        "DFF_7": {
+          "CK": "CK",
+          "D": "I113",
+          "Q": "X_5"
+        },
+        "DFF_8": {
+          "CK": "CK",
+          "D": "I208",
+          "Q": "X_12"
+        },
+        "DFF_9": {
+          "CK": "CK",
+          "D": "I209",
+          "Q": "X_11"
+        }
+      },
+      "simple_newly_proved": 2,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        79,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 802,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 806,
+          "text": "Proved 2 previously unproven $equiv cells."
+        },
+        {
+          "line": 808,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 809,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 810,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 814,
+          "text": "  Of those cells 79 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s641",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/gold.v",
+          "sha256": "903902508e3fbaac8e607da0e17bdd88c6dbb8745dc7b7a4d41479411efa434f",
+          "bytes": 16566
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/gate.v",
+          "sha256": "677d11eca68c8d8c5854edf62d4b528db9a954541ec29a3c00af9f0b975f84c3",
+          "bytes": 16566
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/helpers.v",
+          "sha256": "d479c9d42f4ce6f5de74aa1d7fc96fae237d49c16f6cd77959201e2ee7705b19",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/cells.v",
+          "sha256": "55a91e8745379a255f3e4345b55e88c2a2ff11bd77cccd5a6467646ebdfab1f7",
+          "bytes": 3395
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/sec.ys",
+          "sha256": "79c28dd057c72ca6670de6b46f35bbc735d842624c4e678cf12c8743e9df8665",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/sec.log",
+          "sha256": "ebc6876b4f9c0f3065a6444b0ba783ea99adcc1479c78fd5da2c3aae9db022dd",
+          "bytes": 80427
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/result.json",
+          "sha256": "601ea412f24ef58cf2cd9e053a47eda334f8e7cff6db79501a84bf0548813340",
+          "bytes": 637
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641/completion.json",
+          "sha256": "375a130015ff5065cfbb9f7a42a7a07059d07fb7c90f4adfe890f755c0493e60",
+          "bytes": 1131
+        }
+      },
+      "matched_dff_count": 19,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "G150",
+          "Q": "G64"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "G130",
+          "Q": "G65"
+        },
+        "DFF_10": {
+          "CK": "CK",
+          "D": "G142",
+          "Q": "G121"
+        },
+        "DFF_11": {
+          "CK": "CK",
+          "D": "G125",
+          "Q": "G209"
+        },
+        "DFF_12": {
+          "CK": "CK",
+          "D": "G126",
+          "Q": "G211"
+        },
+        "DFF_13": {
+          "CK": "CK",
+          "D": "G127",
+          "Q": "G213"
+        },
+        "DFF_14": {
+          "CK": "CK",
+          "D": "G128",
+          "Q": "G215"
+        },
+        "DFF_15": {
+          "CK": "CK",
+          "D": "G129",
+          "Q": "G217"
+        },
+        "DFF_16": {
+          "CK": "CK",
+          "D": "G130",
+          "Q": "G219"
+        },
+        "DFF_17": {
+          "CK": "CK",
+          "D": "G131",
+          "Q": "G221"
+        },
+        "DFF_18": {
+          "CK": "CK",
+          "D": "G132",
+          "Q": "G223"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "G158",
+          "Q": "G66"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "G132",
+          "Q": "G67"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "G122",
+          "Q": "G109"
+        },
+        "DFF_5": {
+          "CK": "CK",
+          "D": "G133",
+          "Q": "G111"
+        },
+        "DFF_6": {
+          "CK": "CK",
+          "D": "G138",
+          "Q": "G113"
+        },
+        "DFF_7": {
+          "CK": "CK",
+          "D": "G139",
+          "Q": "G115"
+        },
+        "DFF_8": {
+          "CK": "CK",
+          "D": "G140",
+          "Q": "G117"
+        },
+        "DFF_9": {
+          "CK": "CK",
+          "D": "G141",
+          "Q": "G119"
+        }
+      },
+      "simple_newly_proved": 1,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        124,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 1050,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 1053,
+          "text": "Proved 1 previously unproven $equiv cells."
+        },
+        {
+          "line": 1055,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 1056,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 1057,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 1061,
+          "text": "  Of those cells 124 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s713",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/gold.v",
+          "sha256": "e34d96f8711d8b07e6bd00e9cdfce569012e298ae146ccdc7a0b6a0094e78964",
+          "bytes": 16966
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/gate.v",
+          "sha256": "fcf3ee28d955cb8ae98f43c98cbbead5a02bbd6987ab8050b42b368794c8e6f8",
+          "bytes": 17280
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/helpers.v",
+          "sha256": "d479c9d42f4ce6f5de74aa1d7fc96fae237d49c16f6cd77959201e2ee7705b19",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/cells.v",
+          "sha256": "d9a332a5bcf1dff5eaa358fe23ebd1b9a72e3f7b37b2eab89dcc72f5deeafdcb",
+          "bytes": 3991
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/sec.ys",
+          "sha256": "7c99e765effba86165b29e779c87823b7dd676203346aa1ccf4e5cabc96ca8bb",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/sec.log",
+          "sha256": "ea28fe9ce243c8d7ca67fb7022101de2b5f649d7a64c3c4106be77e6cfc0e7d4",
+          "bytes": 82255
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/result.json",
+          "sha256": "43850fed04715264e44d2fa3d0f84c64ba5c2ff10b528acdf0a86a3782e8fc2b",
+          "bytes": 637
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713/completion.json",
+          "sha256": "7cdc4544adaa208b8d5b8f825241030a336bcfa9cd6a5f7d23c67223be08699b",
+          "bytes": 1131
+        }
+      },
+      "matched_dff_count": 19,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "G150",
+          "Q": "G64"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "G130",
+          "Q": "G65"
+        },
+        "DFF_10": {
+          "CK": "CK",
+          "D": "G142",
+          "Q": "G121"
+        },
+        "DFF_11": {
+          "CK": "CK",
+          "D": "G125",
+          "Q": "G209"
+        },
+        "DFF_12": {
+          "CK": "CK",
+          "D": "G126",
+          "Q": "G211"
+        },
+        "DFF_13": {
+          "CK": "CK",
+          "D": "G127",
+          "Q": "G213"
+        },
+        "DFF_14": {
+          "CK": "CK",
+          "D": "G128",
+          "Q": "G215"
+        },
+        "DFF_15": {
+          "CK": "CK",
+          "D": "G129",
+          "Q": "G217"
+        },
+        "DFF_16": {
+          "CK": "CK",
+          "D": "G130",
+          "Q": "G219"
+        },
+        "DFF_17": {
+          "CK": "CK",
+          "D": "G131",
+          "Q": "G221"
+        },
+        "DFF_18": {
+          "CK": "CK",
+          "D": "G132",
+          "Q": "G223"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "G158",
+          "Q": "G66"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "G132",
+          "Q": "G67"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "G122",
+          "Q": "G109"
+        },
+        "DFF_5": {
+          "CK": "CK",
+          "D": "G133",
+          "Q": "G111"
+        },
+        "DFF_6": {
+          "CK": "CK",
+          "D": "G138",
+          "Q": "G113"
+        },
+        "DFF_7": {
+          "CK": "CK",
+          "D": "G139",
+          "Q": "G115"
+        },
+        "DFF_8": {
+          "CK": "CK",
+          "D": "G140",
+          "Q": "G117"
+        },
+        "DFF_9": {
+          "CK": "CK",
+          "D": "G141",
+          "Q": "G119"
+        }
+      },
+      "simple_newly_proved": 1,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        126,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 1083,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 1086,
+          "text": "Proved 1 previously unproven $equiv cells."
+        },
+        {
+          "line": 1088,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 1089,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 1090,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 1094,
+          "text": "  Of those cells 126 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s820",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/gold.v",
+          "sha256": "fe4151f53bff972186549fb22543a62d8c05337830ddc580e795f5e84f468174",
+          "bytes": 17224
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/gate.v",
+          "sha256": "7366be113e0a91aaf22053762499e97b0630a4cd2b4ee525fb0c92cd8ef1de7d",
+          "bytes": 17222
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/helpers.v",
+          "sha256": "2a266c1512a406a9c62fc7ce0a8365af8f6bfb3ae1dffc0c42ea9bf9d6cea4e4",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/cells.v",
+          "sha256": "ea57da5abe70a0410a392a6a1c5e587d78edeed481a23a49dd2774a0b32c5e05",
+          "bytes": 4886
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/sec.ys",
+          "sha256": "a8b924335753e7bb43f6f1ed7786ddc7291739820020109dfba64a043a81fe6c",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/sec.log",
+          "sha256": "442f85e2508448dc5e47b7f9189f3911b1ccb92b54fb89314f8bb96a704c2a99",
+          "bytes": 103431
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/result.json",
+          "sha256": "bb8c37e56589b19b4e0059af415800ab1313b037dc4089a01d069fce9b1dfcc6",
+          "bytes": 637
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/completion.json",
+          "sha256": "a6b9a8c3530b9853dd4e43f9d0adc888f3a5783fafa6cd473278eb2c5237ed3d",
+          "bytes": 1131
+        }
+      },
+      "matched_dff_count": 5,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "G90",
+          "Q": "G228"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "G93",
+          "Q": "G39"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "G96",
+          "Q": "G40"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "G99",
+          "Q": "G41"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "G102",
+          "Q": "G42"
+        }
+      },
+      "simple_newly_proved": 1,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        139,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 1333,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 1336,
+          "text": "Proved 1 previously unproven $equiv cells."
+        },
+        {
+          "line": 1338,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 1339,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 1340,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 1344,
+          "text": "  Of those cells 139 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s832",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/gold.v",
+          "sha256": "1c4a2348ef106899cc51680f90dbc7fc2514ad23be09070c523389a80f1eb540",
+          "bytes": 17685
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/gate.v",
+          "sha256": "098f0b52dc97005d8b8da9fabe05f66fe2f461366d77f93ca1a896aa922eeb0c",
+          "bytes": 17685
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/helpers.v",
+          "sha256": "2a266c1512a406a9c62fc7ce0a8365af8f6bfb3ae1dffc0c42ea9bf9d6cea4e4",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/cells.v",
+          "sha256": "f713b2bf83bada4ad64af993a5d2ea3d20615433a35f5d85154b29535ba1760a",
+          "bytes": 4943
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/sec.ys",
+          "sha256": "78b6aef4e2c39d273006fb035914503808d8b5823fbee2213da7b3efe0ac52c0",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/sec.log",
+          "sha256": "e131eb7bdbb1734731fdb1f3685d21ac472014ec7684b6040979703cbdd3ebd0",
+          "bytes": 106049
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/result.json",
+          "sha256": "7bb48aa04bff170760508bcbee2cbed59fdbe00ab40959c9fa4f4f62150bd3ec",
+          "bytes": 638
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832/completion.json",
+          "sha256": "664df943fe8d24bedc0cfd18640d2509458a8d9e8a2c36e1fec317db951f51af",
+          "bytes": 1132
+        }
+      },
+      "matched_dff_count": 5,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "G90",
+          "Q": "G38"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "G93",
+          "Q": "G39"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "G96",
+          "Q": "G40"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "G99",
+          "Q": "G41"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "G102",
+          "Q": "G42"
+        }
+      },
+      "simple_newly_proved": 1,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        146,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 1370,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 1373,
+          "text": "Proved 1 previously unproven $equiv cells."
+        },
+        {
+          "line": 1375,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 1376,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 1377,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 1381,
+          "text": "  Of those cells 146 are proven and 0 are unproven."
+        }
+      ]
+    },
+    {
+      "case": "s953",
+      "files": {
+        "gold.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/gold.v",
+          "sha256": "81f3288016e8e093d06968c6e8fed80ccb290c33486cba8c4ab92192571b3508",
+          "bytes": 28499
+        },
+        "gate.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/gate.v",
+          "sha256": "6b99526a7ffabcc86a06714802c8deac919548302401eab6f685ece696e26260",
+          "bytes": 28499
+        },
+        "helpers.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/helpers.v",
+          "sha256": "2a266c1512a406a9c62fc7ce0a8365af8f6bfb3ae1dffc0c42ea9bf9d6cea4e4",
+          "bytes": 182
+        },
+        "cells.v": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/cells.v",
+          "sha256": "02d46e6b1632a656d37f0b8ecc236491a91d976f4e78708f53930983d7bd319e",
+          "bytes": 6536
+        },
+        "sec.ys": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/sec.ys",
+          "sha256": "f20207c3476911c2e1d0c16e47b9f648614b4765065a5c7a89cdedf7135b0ed1",
+          "bytes": 678
+        },
+        "sec.log": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/sec.log",
+          "sha256": "a0f8aa84e1b51c729b206052871de4a113693b7ac5fa0f66a987be9c5fa129ce",
+          "bytes": 149515
+        },
+        "result.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/result.json",
+          "sha256": "fb7ec9c6b21b1c1461f3775f1aaab2ca2c899b5c2872f0d7a1b49458e769fa09",
+          "bytes": 637
+        },
+        "completion.json": {
+          "path": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953/completion.json",
+          "sha256": "74ff483ccdce7e9aa018fb60f4f45f8d2a69ffbbac851745246bb3814f8a1f6b",
+          "bytes": 1131
+        }
+      },
+      "matched_dff_count": 29,
+      "CK_D_Q_mapping_same": true,
+      "identity_state_map": {
+        "DFF_0": {
+          "CK": "CK",
+          "D": "II2",
+          "Q": "State_5"
+        },
+        "DFF_1": {
+          "CK": "CK",
+          "D": "II3",
+          "Q": "State_4"
+        },
+        "DFF_10": {
+          "CK": "CK",
+          "D": "II12",
+          "Q": "NewTrHS1"
+        },
+        "DFF_11": {
+          "CK": "CK",
+          "D": "II13",
+          "Q": "ReRtTSHS1"
+        },
+        "DFF_12": {
+          "CK": "CK",
+          "D": "II14",
+          "Q": "Mode0HS1"
+        },
+        "DFF_13": {
+          "CK": "CK",
+          "D": "II15",
+          "Q": "Mode1HS1"
+        },
+        "DFF_14": {
+          "CK": "CK",
+          "D": "II16",
+          "Q": "Mode2HS1"
+        },
+        "DFF_15": {
+          "CK": "CK",
+          "D": "II17",
+          "Q": "NewLineHS1"
+        },
+        "DFF_16": {
+          "CK": "CK",
+          "D": "II18",
+          "Q": "ShftORHS1"
+        },
+        "DFF_17": {
+          "CK": "CK",
+          "D": "II19",
+          "Q": "ShftIIRHS1"
+        },
+        "DFF_18": {
+          "CK": "CK",
+          "D": "II20",
+          "Q": "LxHIInHS1"
+        },
+        "DFF_19": {
+          "CK": "CK",
+          "D": "II21",
+          "Q": "TxHIInHS1"
+        },
+        "DFF_2": {
+          "CK": "CK",
+          "D": "II4",
+          "Q": "State_3"
+        },
+        "DFF_20": {
+          "CK": "CK",
+          "D": "II22",
+          "Q": "LoadOHHS1"
+        },
+        "DFF_21": {
+          "CK": "CK",
+          "D": "II23",
+          "Q": "LoadIIHHS1"
+        },
+        "DFF_22": {
+          "CK": "CK",
+          "D": "II24",
+          "Q": "SeOutAvHS1"
+        },
+        "DFF_23": {
+          "CK": "CK",
+          "D": "II25",
+          "Q": "SeFullOHS1"
+        },
+        "DFF_24": {
+          "CK": "CK",
+          "D": "II26",
+          "Q": "SeFullIIHS1"
+        },
+        "DFF_25": {
+          "CK": "CK",
+          "D": "II27",
+          "Q": "TgWhBufHS1"
+        },
+        "DFF_26": {
+          "CK": "CK",
+          "D": "II28",
+          "Q": "ReWhBufHS1"
+        },
+        "DFF_27": {
+          "CK": "CK",
+          "D": "II29",
+          "Q": "LdProgHS1"
+        },
+        "DFF_28": {
+          "CK": "CK",
+          "D": "II30",
+          "Q": "DumpIIHS1"
+        },
+        "DFF_3": {
+          "CK": "CK",
+          "D": "II5",
+          "Q": "State_2"
+        },
+        "DFF_4": {
+          "CK": "CK",
+          "D": "II6",
+          "Q": "State_1"
+        },
+        "DFF_5": {
+          "CK": "CK",
+          "D": "II7",
+          "Q": "State_0"
+        },
+        "DFF_6": {
+          "CK": "CK",
+          "D": "II8",
+          "Q": "ActRtHS1"
+        },
+        "DFF_7": {
+          "CK": "CK",
+          "D": "II9",
+          "Q": "ActBmHS1"
+        },
+        "DFF_8": {
+          "CK": "CK",
+          "D": "II10",
+          "Q": "GoRtHS1"
+        },
+        "DFF_9": {
+          "CK": "CK",
+          "D": "II11",
+          "Q": "GoBmHS1"
+        }
+      },
+      "simple_newly_proved": 2,
+      "induct_newly_proved": 0,
+      "zero_unproven_before_induct": true,
+      "final_counts": [
+        228,
+        0
+      ],
+      "log_anchors": [
+        {
+          "line": 1872,
+          "text": "11. Executing EQUIV_SIMPLE pass."
+        },
+        {
+          "line": 1876,
+          "text": "Proved 2 previously unproven $equiv cells."
+        },
+        {
+          "line": 1878,
+          "text": "12. Executing EQUIV_INDUCT pass."
+        },
+        {
+          "line": 1879,
+          "text": "No selected unproven $equiv cells found in equiv."
+        },
+        {
+          "line": 1880,
+          "text": "Proved 0 previously unproven $equiv cells."
+        },
+        {
+          "line": 1884,
+          "text": "  Of those cells 228 are proven and 0 are unproven."
+        }
+      ]
+    }
+  ],
+  "physical_PR": [
+    {
+      "case": "s27",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s27/baseline/pr.tcl",
+        "sha256": "65c4b8e29da0716915953e40eed9feaa502efc5c91b6bc9c757bcca7267e8dc7",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s27/fixed/pr.tcl",
+        "sha256": "65c4b8e29da0716915953e40eed9feaa502efc5c91b6bc9c757bcca7267e8dc7",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 10,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 10 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s382",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s382/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s382/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s420",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s420/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s420/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s641",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s641/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s641/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s713",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s713/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s713/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s820",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s820/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s820/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s832",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s832/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s832/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    },
+    {
+      "case": "s953",
+      "baseline": {
+        "path": "experiments/20260807_real_pr_iscas8/s953/baseline/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "fixed": {
+        "path": "experiments/20260807_real_pr_iscas8/s953/fixed/pr.tcl",
+        "sha256": "ddc4d9db7572b76ce67fbfa0b752d9a0b847f188181434e1e1d3da4e0def7784",
+        "bytes": 1122
+      },
+      "same_script_bytes": true,
+      "utilization_percent": 30,
+      "corner": "tt_025C_1v80",
+      "clock_period_ns": 0.5,
+      "clock_port": "CK",
+      "input_delay_explicit": false,
+      "output_delay_explicit": false,
+      "source_lines": [
+        {
+          "line": 1,
+          "text": "set PLATFORM /home/toylog/OpenROAD-flow-scripts/flow/platforms/sky130hd"
+        },
+        {
+          "line": 2,
+          "text": "set NETLIST $env(NETLIST)"
+        },
+        {
+          "line": 3,
+          "text": "set OUTDIR $env(OUTDIR)"
+        },
+        {
+          "line": 4,
+          "text": "set TOP $env(TOP)"
+        },
+        {
+          "line": 6,
+          "text": "read_liberty $PLATFORM/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+        },
+        {
+          "line": 7,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd.tlef"
+        },
+        {
+          "line": 8,
+          "text": "read_lef $PLATFORM/lef/sky130_fd_sc_hd_merged.lef"
+        },
+        {
+          "line": 9,
+          "text": "read_verilog $NETLIST"
+        },
+        {
+          "line": 10,
+          "text": "link_design $TOP"
+        },
+        {
+          "line": 12,
+          "text": "create_clock -name clk -period 0.5 [get_ports CK]"
+        },
+        {
+          "line": 14,
+          "text": "initialize_floorplan -utilization 30 -aspect_ratio 1.0 -core_space 2 -site unithd"
+        },
+        {
+          "line": 15,
+          "text": "make_tracks"
+        },
+        {
+          "line": 16,
+          "text": "place_pins -hor_layers met3 -ver_layers met2"
+        },
+        {
+          "line": 17,
+          "text": "source $PLATFORM/pdn.tcl"
+        },
+        {
+          "line": 18,
+          "text": "tapcell -distance 14 -tapcell_master sky130_fd_sc_hd__tapvpwrvgnd_1"
+        },
+        {
+          "line": 19,
+          "text": "global_placement -density 0.7"
+        },
+        {
+          "line": 20,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 21,
+          "text": "check_placement -verbose"
+        },
+        {
+          "line": 22,
+          "text": "clock_tree_synthesis -sink_clustering_enable"
+        },
+        {
+          "line": 23,
+          "text": "detailed_placement"
+        },
+        {
+          "line": 24,
+          "text": "set_global_routing_layer_adjustment met1-met5 0.2"
+        },
+        {
+          "line": 25,
+          "text": "set_routing_layers -signal met1-met5 -clock met3-met5"
+        },
+        {
+          "line": 26,
+          "text": "global_route"
+        },
+        {
+          "line": 27,
+          "text": "detailed_route"
+        },
+        {
+          "line": 28,
+          "text": "estimate_parasitics -global_routing"
+        },
+        {
+          "line": 29,
+          "text": "report_checks -path_delay max -slack_max 0 -endpoint_count 100000 -format full"
+        },
+        {
+          "line": 30,
+          "text": "puts \"TNS_BEGIN\""
+        },
+        {
+          "line": 31,
+          "text": "report_tns"
+        },
+        {
+          "line": 32,
+          "text": "puts \"TNS_END\""
+        },
+        {
+          "line": 33,
+          "text": "report_worst_slack -max"
+        },
+        {
+          "line": 34,
+          "text": "report_worst_slack -min"
+        },
+        {
+          "line": 35,
+          "text": "write_db $OUTDIR/final.odb"
+        }
+      ]
+    }
+  ],
+  "SPEF_scans": {
+    "s382": [
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u0/summary.json",
+          "sha256": "359953493fbebcb6dbb5ebe6a51f0457679ef7e45ac13896642c6ac075ac7ea9",
+          "bytes": 616
+        },
+        "unit_len_um": 0.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u5/summary.json",
+          "sha256": "c27dada3e918a503ed54c4390e343600dc14940ff6f4d93a035aa8ac2d435e33",
+          "bytes": 616
+        },
+        "unit_len_um": 5.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u10/summary.json",
+          "sha256": "aaf3c3f0ccebd4d432ee6878625a56b02b61c415bee725e550614d8f85f2ef8a",
+          "bytes": 616
+        },
+        "unit_len_um": 10.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u20/summary.json",
+          "sha256": "012546939de48f20c15d665dc6d929a9f65965c5ef47dbe7100f95a9b0f9eabc",
+          "bytes": 616
+        },
+        "unit_len_um": 20.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u40/summary.json",
+          "sha256": "630bd54873e4a69aad99efba7f3d73ac1f8df4f6ea605b6414de092fce3bf92e",
+          "bytes": 616
+        },
+        "unit_len_um": 40.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u80/summary.json",
+          "sha256": "2b471ce33043a7b6a3cee602067617ea107eedbbb4d33842fce1ab5154f56ae3",
+          "bytes": 616
+        },
+        "unit_len_um": 80.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u120/summary.json",
+          "sha256": "4432f9671f87dcb28bd6a34718720406a018e466394e038afde168f0398473aa",
+          "bytes": 617
+        },
+        "unit_len_um": 120.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u160/summary.json",
+          "sha256": "5e75c8163afd4870c1c9bc6197942191a58ea49950de8e3a6e42e47a15b667a7",
+          "bytes": 617
+        },
+        "unit_len_um": 160.0,
+        "period_ns": 0.5
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_s382_scan/u200/summary.json",
+          "sha256": "b67884ef00506613d9aba549fb590f3018dee8b42a8c0fb3915c8206f57560c7",
+          "bytes": 617
+        },
+        "unit_len_um": 200.0,
+        "period_ns": 0.5
+      }
+    ],
+    "b18": [
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u0/summary.json",
+          "sha256": "268bfcb690b47e9004437998f8bc55288ac2e41403774b4a5587f472759545a4",
+          "bytes": 617
+        },
+        "unit_len_um": 0.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u2/summary.json",
+          "sha256": "d5d2a8c4b5086c3654ab3f193ea1687d3659d6e508a4b1c438f4f883a08b1d89",
+          "bytes": 617
+        },
+        "unit_len_um": 2.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u5/summary.json",
+          "sha256": "5e68765b8599cf3f4c6c8da6cd73aa2b671f2849d58c3bcb27b1de46e9ff6eda",
+          "bytes": 617
+        },
+        "unit_len_um": 5.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u10/summary.json",
+          "sha256": "9fdad5cf5251dcf5fc3c000dcba84b7e9d49fd638cfdd31736ba99b5a49fb4d4",
+          "bytes": 616
+        },
+        "unit_len_um": 10.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u20/summary.json",
+          "sha256": "04af5a6a8b04a4201fc71a2d178e72fc03d7a985cd240cef37374cd51af99def",
+          "bytes": 617
+        },
+        "unit_len_um": 20.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u40/summary.json",
+          "sha256": "9e10e2d291053c2150eadb432f5da1d35523cb5a3bf6ae5124f7692ddf35c16d",
+          "bytes": 617
+        },
+        "unit_len_um": 40.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u80/summary.json",
+          "sha256": "8e75feb1df937a41f436243242e6660dd777ed0179ef2bd2a6f9c7b0923e5a64",
+          "bytes": 621
+        },
+        "unit_len_um": 80.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u120/summary.json",
+          "sha256": "29da43ca2c99a938966864ef223f8dd2cd7b68eb699105c3c39ca1fa8c95951a",
+          "bytes": 622
+        },
+        "unit_len_um": 120.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u160/summary.json",
+          "sha256": "2b6eb729d709b6fad09bff5c6e25e9c97f08b0e31fa51a949ca8b964c7076bf8",
+          "bytes": 618
+        },
+        "unit_len_um": 160.0,
+        "period_ns": 13.15
+      },
+      {
+        "summary": {
+          "path": "experiments/20260805_parasitic_b18_scan/u200/summary.json",
+          "sha256": "73c11cfb2ba0252cc999e2b90f7bcbbce8580929ac84fcccfadd407caadd811c",
+          "bytes": 622
+        },
+        "unit_len_um": 200.0,
+        "period_ns": 13.15
+      }
+    ]
+  },
+  "known_boundaries": [
+    "L versus W1 changes boundary-generation policy and truncation inputs, not pure order; do not attribute 427 candidate-STA difference solely to ranking",
+    "W1 versus UR1-3 preserves generation rule but may diverge state trajectory after early acceptance; pure initial order control does not imply same per-round pool across diverged bases",
+    "Current SPEF formula is not historical s382_big recipe identity",
+    "b18_light retained SPEF matches current unit=1 not40; 6 records/1 unique candidate",
+    "s382_big50 records/5 unique candidates, historical RC unknown",
+    "A8 identical-state initialization is relation assumption, not independently initialized arbitrary unequal states or reset synchronization proof"
+  ],
+  "manuscript_report": {
+    "path": "paper/zh/review_rounds/r24_20261018/METHOD_EVIDENCE.md",
+    "sha256": "947787edd414156248b23e8982ca39c07f816fe216c96b1727a13fb0bbec056b",
+    "bytes": 19185
+  },
+  "arm_configurations": {
+    "common": {
+      "max_iterations": 20,
+      "max_patches": 20,
+      "candidate_sta_budget": 500,
+      "wall_timeout_s": 3600,
+      "candidate_regions_per_iteration": 8,
+      "max_instances": 8,
+      "workers": 1,
+      "strategies": [
+        "R",
+        "G",
+        "B"
+      ],
+      "enable_buffer": true,
+      "early_stop": true,
+      "feedback": false,
+      "proxy_ranking": false,
+      "topology": false,
+      "skip_mapping": true,
+      "joint_k": 2,
+      "joint_mix": false,
+      "joint_enumerate_depth": 0,
+      "period_ns": 0.5
+    },
+    "arms": {
+      "W0": [
+        "weighted_st",
+        "weighted",
+        "configured"
+      ],
+      "W1": [
+        "weighted_st",
+        "full",
+        "configured"
+      ],
+      "U0": [
+        "weighted_st",
+        "weighted",
+        "uniform"
+      ],
+      "U1": [
+        "weighted_st",
+        "full",
+        "uniform"
+      ],
+      "C": [
+        "weighted_st",
+        "cover",
+        "configured"
+      ],
+      "UR1": [
+        "weighted_st",
+        "full",
+        "configured",
+        "random_order_seed1"
+      ],
+      "UR2": [
+        "weighted_st",
+        "full",
+        "configured",
+        "random_order_seed2"
+      ],
+      "UR3": [
+        "weighted_st",
+        "full",
+        "configured",
+        "random_order_seed3"
+      ],
+      "L": [
+        "legacy",
+        "full",
+        "configured",
+        "constrained_connected_beam_then_cover_prepend"
+      ]
+    },
+    "L_vs_W1_scope": "boundary generation, pool and truncation can change; not pure order or pure ranking",
+    "W1_vs_UR_scope": "same generation rule and source/cost; shuffle region dispatch only; post-acceptance bases and pools may diverge"
+  },
+  "reusable_real_tool_pilot": {
+    "directory": "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding",
+    "scope": "tiny ordinary/escaped injection/missing-pin controls only, not s382/b18 science paired pilot",
+    "files": [
+      {
+        "path": "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/probe_actual_spef_binding_20261018.py",
+        "sha256": "3e124efda99aba0461e0acb23119b5c8c0fb031b3e646e5d86f70f9261815e5d",
+        "bytes": 3835
+      },
+      {
+        "path": "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/RESULT.json",
+        "sha256": "f95890645e6358c47127c3b5225eedd5e947948e5b3137b7156090791ca61843",
+        "bytes": 9855
+      },
+      {
+        "path": "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/ROOT_ACCEPTANCE.json",
+        "sha256": "79f5725cfdc64de8b1c9a1a7aacffa3650a9741ce6c54c73be4eb0cc2635e09b",
+        "bytes": 1793
+      },
+      {
+        "path": "project_docs/evidence/r22_spef_topology_repair_20261018/actual_tool_binding/independent_review/REVIEW.md",
+        "sha256": "74e3aee5c13828105071568a49168cd9855bd2212b5c4bb73588bfb9a449a684",
+        "bytes": 2198
+      }
+    ]
+  },
+  "future_s382_pair_not_run": {
+    "run": false,
+    "current_runner": {
+      "path": "code/scripts/run_parasitic_aware_check.py",
+      "sha256": "4e6ae6b76fb6d1e3a39609cc6b4cd9d28b571f511a08768395f85546d4f7dad1",
+      "bytes": 9829
+    },
+    "baseline": {
+      "path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/mapped.v",
+      "sha256": "2a1dea38357e7b635a4b7e42965e93c0c50314a723da45fa23432f1adc8be552",
+      "bytes": 10256
+    },
+    "repaired": {
+      "path": "experiments/20260804_outerloop_decision/s382_beam1_early/s382/eval/iter002_cand002/005__071__R/mapped.v",
+      "sha256": "4776382aa9e208c0ee14405073ee58e975873857ba3ce43c8228cb8126d5eb54",
+      "bytes": 10238
+    },
+    "period_ns": 0.5,
+    "unit_len_um": 40,
+    "note": "Fresh current-source paired revalidation with four STA processes, not historic RC recovery; preregister and verify inputs/domain/SEC and annotation coverage first"
+  }
+}

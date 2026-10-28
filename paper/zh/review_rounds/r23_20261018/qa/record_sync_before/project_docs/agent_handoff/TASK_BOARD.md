@@ -1,0 +1,162 @@
+# 任务看板 — r23中文只读审稿（2026-10-18，LOG144）
+
+用户2026-10-18新指令“审稿中文稿”。当前进入r23中文全稿只读审稿；只评审，不改正文/图/生产源，不新增EDA，不启动D全56验收或归档。主线将先冻结中文Tex/PDF并建立五视角审稿，先形成不见论文的标准，再看稿；本轮不把旧r22审稿意见提前提供给新审稿者。
+
+唯一工作区`D:/BaiduSyncdisk/01_Papers/03_FAECO`，HEAD/main仍`f761ee1996a83fc4f0f3de0999b74d85a8237858`，实查code树clean；工作稿/图/证据与记录dirty保留不提前commit。中文当前Tex SHA`c750ff9cad382ff3fdf3c067980016a0ebcc7be7c2fff2a198c5f5396767918b`（69276B），当前build PDF SHA`173ae809eb7b2d3d142880681cdac31e4fc35f7bccc40de9bab19f384d38070b`（794106B、既定12页）；r23快照/注册已实际生成并核SHA；评审仍进行，无最终报告。
+
+D当前仅producer已全部完成：REMAINING_RUN_RECEIPT SHA`106a62340c31297da39311243fc82a34148469aa414e40a2d741d581a9ffa08f`实读余42 finished/returncode0/runtime5898.406s，head_after=f761、manifestfd336745…；04:01监测`20261018T040121_652887.json` SHA`3009853008e56b5dec28c9a3ea43396c11d4924632ffd1bbd3fc6a6108d5bbfc`实际56/56 completion、active[]/failed[]/completion_writing[]、sourcepintrue。lifetime FINAL_MONITOR_RECEIPT SHA`68c282bec843183efc868a3013c1874f988fb7c1a390b07946208d32b77a7f19`已因观察到batch receipt自动收束（93次检查，5521.047s），不再写96821/99002仍运行。正式独立+根科学接受仍固定28（f14c3306…），完整raw归档根接受仍3/8=s27/s382/s420（s420 ecc44332…）。
+
+HEAD/code继续冻结：D全56独立+根验收以及全部8case archive+rootpost两门均齐后才解锁/阶段收口，不因56个producer完成提前commit或修OI049。本轮只审中文稿，不执行这些待办；随后另按明确授权续做D终验/归档，再OI049源修→整体回归/独立门→新cleanpin B3/C。
+
+r23审稿包已实际建立：`paper/zh/review_rounds/r23_20261018/INPUT_RECEIPT.json`（2d76968c…）绑定f761/中文Tex c750ff9c…/12页PDF173ae809…及20份快照/文本/同SHA复用PNG；当前母稿/输入SHA均核符。FIELD_AND_PANEL fcd0e2e2…明确五same-family新fork-none角色，先盲标准后paper可见，两call且提交前不看其它席结果；NOT_CALIBRATED、相关错误未知/不能称独立误差。contract9e8eb029…actualSchema13.2 valid（QA1a3651b0…/.703s0），SC12保D1-D2-D6单评者mandatory门警告。目标期刊/栏目未确认/criteria_binding_unavailable，只作领域通用评审不作具体期刊fit判断。完整报告与主线最终汇总仍待，不把r23当已收束。
+
+审稿进展（LOG143–144）：EIC/Methodology/Perspective三席Phase2 conformance实际PASS（receipt5fd9ab9e…/52ce0f48…/fd90c1f6…），短trigger word-count warnings随原stdout保；这是产物契约门，不是稿件accept。Domain/DA与最终主线报告仍待。根另做隔离crosswalk：B17新proof b5a0d5d4…/POST9d12b8fc…为13.375s/12879proven0、仅NOR4B尺寸改/bytes与gold-gate绑定真，而冻结稿L497仍旧12812+1；归类稿件旧状态可复用新证据，不重复证明或此轮改稿。Cprime全72验收与partial机制诊断分开，新族不替旧C/D，重复同base轮非独立样本。
+
+| ID | 任务 | 状态 | 后续边界 |
+|---|---|---|---|
+| R23 | 中文全稿五视角只读审稿 | in_progress | 固定输入/contract已核；三席Phase2契约门过，Domain/DA及最终报告待 |
+| P04 | D56正式终验与其余5case归档 | pending | producer56已完、accepted28/raw3；本轮不启动，56+8包前HEAD/code锁 |
+| P02 | C′/D新预览正式稿整合 | pending | 当前只审稿，不改图/正文 |
+| P09 | OI049 timeout bytes源修 | pending | direct注入已复现，D两冻结门后修/整体回归；非真实EDA超时 |
+| P07 | OI046 b18 inout窄域恢复 | pending | 不改接口/不按LOGIC0名字钉0 |
+| P08 | OI048历史proof对象影响 | pending | 已覆盖对象与缺失同期身份分界保留 |
+| P05 | 四态及B3/C/S/SPEF科学恢复、投稿材料 | pending | 当前实现/限定稿件门不替其它科学或投稿门 |
+
+上一r22轮完整交接保持`handoff_20261018_r22.md`原件；当前入口改写前13件字节备份在`scratch/records_r23_current_before_20261018/`。
+
+## 历史任务记录（原状态只作历史）
+
+# 任务看板
+
+> r21 Git收口：实现提交 `e592bfd`、SVG导出规范化提交 `483b5e9` 已成功推送 `origin/main`（2026-10-14）。本轮审稿/配图/计数修复已完成，后续只处理保留的未决项；下文Git待办措辞为推送前记录。
+
+更新时间：2026-10-14（r22_20261014 恢复机制证据与投稿推进，进行中）
+
+| ID | 任务 | 状态 | 说明 |
+|---|---|---|---|
+| R22 | 配置/计数审计→同运行器双割消融→英文与投稿推进 | **in_progress（首pilot实现修复）** | 源码28c3c2b已push，旧production644全门+后加39组合门分别有据；真实pilot两W0最终SEC拦截、batch58s/exit1，无有效C′结果；OI-035/036修复后新pin/v2完整重跑，原失败目录保留。中文12页/全0/e27PDF已验收，英文27页draft待QA/事实 |
+| R22-OI035 | B插入跨模块错误 | **open（TDD修复中）** | domain负责buffer定位/多模块TDD；旧helperendmodule误插，不计中间WNS收益，须当前版整体门与新pin重跑 |
+| R22-OI036 | 局部F1/F2 namespace伪pass与历史影响 | **open（实现修复/历史报告待裁定）** | 独立审计已到：B28完整绑定保留、A6缺确切证、D与C代表结构缺陷分层，不外推全集；root复核与论文/复验范围裁定待完成 |
+| R21 | 当前母稿审稿 + 配图修改/增加 | **done** | 五视角审稿+复核、图1/2重画、图4～7新增与口径修订已交付；12页、7图/14表、21引用、质量项全零，逐页视觉/字形/40账本审计通过，三PDF副本一致，记录完成；仅阶段commit+push待主线，不新EDA、不冻结v19 |
+| R21-OI030 | 族 C 机制归因与排序混杂 | **open（r22恢复证据推进）** | r21错误纯排序归因已修；双割/cost独立证据在r22按新授权恢复设计与实施，旧暂缓不再阻塞 |
+| R21-OI031 | 族 C 接受/提交与逐臂配置 | **open** | 混合 tns-aware/多提交已披露；对照臂 flags/argv 与历史 revision 档案待恢复 |
+| R21-OI032 | b17 主结果与失效统计批次 | **done（披露）** | 主结果3363条记录含重跑104；失效分母4044含默认785；表注明确，不称同一批次 |
+| R21-OI033 | 族 D 实际 STA 计数修复 | **done** | 原始台账剔缓存/前置拒绝重建 B(k)，新STA1947/2003/2480.7 与旧评估记录并列 |
+| R21-OI034 | 历史族计数与来源审计 | **B/D closed；C历史限制保留** | r22报告级恢复b17独有结果104，ITC-99有独有来源结果2994；C精确新增执行数/完整身份不可识别，不猜缓存或调用数 |
+| D-01 | versions/v1 冻结方案 | **done（A）** | 用户 2026-09-29 拍板轻量冻结：tag `v2026-09-29-submission-ready`（`d84061a`）+ `versions/v1/MANIFEST.sha256`（117 条全 OK）+ BASELINE_INDEX.csv active 行；已 push。附带发现 3 个证据汇总文件未被 git 跟踪（OI-022） |
+| D-02 | 机制图处置 | **done（A）** | 维持 3 图现状，无动作；投稿后视审稿意见再定（OI-006 结案） |
+| D-03 | DOI / DRC 投稿处置 | **done（A）** | DOI 投稿时按期刊系统生成；DRC 维持如实声明、Magic/KLayout 留作 rebuttal 备选（OI-001/OI-002 结案） |
+| T20 | 投稿件打包（Integration, the VLSI Journal） | **pending（后续投稿阶段）** | 当前中文稿为r21工作修订，12页，未冻结v19；v18保持不可变参考。五视角审稿/新图已交付，但综合Major Revision，OI-030/031/034待办保留。英文全文、elsarticle、投稿材料与Elsevier披露（OI-028/021）未完成；Word仍v6、缺r8～r21（OI-024），继续暂缓；最终投稿版式留OI-027 |
+| 1-C | 技术设计 §12（增量 ECO 形式化） | blocked（待用户） | 代码侧已实现并过 0a 等价门；§12.2 论文文本已备、§12.4 前置 gate 全清；剩余动作 = 插入 `.tex`（属内容修改，与冻结令冲突）→ OI-018 |
+| ALIGN-01 | `experiments/RESULTS.md` 对齐论文口径 | **done** | rev. 2026-09-29：实查修正 3 处 headline（ISCAS89 中位 +0.10 / ITC-99 中位 +0.18 与 18/19 严格 / PicoRV32 中位 +0.60）+ b06 TNS 辅助接受事实；§2b 族 A/A\* 原已对齐 |
+
+> 历史任务表（U26/M/P/E/G/X/L/N31/PM 系列）与 2026-09-12 刷新节保留在下方，作历史记录。
+
+| ID | 任务 | 状态 | 优先级 | 完成标准 | 下一步动作 |
+|---|---|---|---|---|---|
+| U26-01 | 20260826 unified-loop 主实验 | done | P0 | ISCAS89 8/8 改善、ITC-99 18/19（b17 重跑后 19/19）、PicoRV32 2 改善 + 1 N/A；汇总表 summary.md/json | b17 已重跑为 Y / -16.15 / 104 STA，summary.md/json 已更新 |
+| U26-02 | 20260826 SEC 等价性验证 | done | P0 | 28/28 PASS + 1 N/A（0 unproven）+ b17 重跑 SEC 12812/12813 proven (1 Yosys find_same_wires 假阴性)；README + summary.csv + b17 sec_result.json | 已补 b17 SEC，等价证明通过；未证明的 1 个 wire 是 nor4b_1/nor4b_2 输出，Liberty function 等价 |
+| U26-03 | 20260826 消融实验 | done | P0 | pureG/pureB/random s1-3/hold 六链路 × 8 电路全齐；ablation_summary.md | 论文消融表回填时引用 |
+| U26-04 | 历史对比 + b15/b17 分析 | done | P0 | b15 结案（early-stop 设计非回归）；b17 根因 60s 预算（F5 拒 785/785，最佳 +0.43） | 决策记录已入 decision_log |
+| U26-05 | b17 方案 A 重跑 | done | P0 | 预算 180s 单 iter 仅重跑 b17 → SEC → 更新 summary/对比表 | **2026-09-08 完成**:baseline WNS -16.53 → final -16.15 (+0.38 ns);接受 patch `patch_P2_U2983_random_cut`(G: nor4b_1→nor4b_2 on `_184320_`);104 STA runs;SEC 12812/12813 proven。详见 `experiments/20260908_phase2_b17_resume/` 与 `docs/project_management/work_log.md` LOG-20260908-01..06 |
+| U26-06 | 论文实验表格回填 | in_progress | P0 | 主结果/消融/SEC/对比表使用 20260826 数据(b17 已更新) | b17 结果已落定(Y/-16.15/104 STA + SEC pass),等用户确认表格口径后落 paper/zh 实验段 |
+| U26-07 | 磁盘瘦身收尾 | pending | P1 | 删除 b17_pre_reboot_2340（5.6GB）与 4 个 failed 残留（约 1.4GB），释放约 7GB | 用户确认后删除；实验证据文件严禁删;用户当前已声明不删,阻塞 |
+| U26-08 | 推送 codex/faeco-unified-loop | pending | P1 | 分支领先 origin 16 commit 推送到远程 | 用户确认后 push |
+| M01 | 固定研究主线 | done | P0 | 主线写入 `docs/mainline.md` | 后续围绕 FAECO 推进 |
+| M02 | 完成工程目录重构 | done | P0 | README 和各目录入口文档齐全 | 新增派生产物继续按 `engineering_structure.md` 分类，并保持 raw/derived 分离 |
+| M03 | 原始材料归纳索引 | done | P0 | 论文、课题构想、文献库均有归纳入口 | 维持 25A/1B 证据链；DAC 2018 合法全文只作定期复核，不阻塞 Related Work 初稿 |
+| M04 | 建立长期项目管理 | done | P0 | roadmap、milestones、长期任务表、风险表、决策日志齐全 | 当前按 Phase 4 的 X18/X19/X21/X22 依赖顺序维护状态 |
+| P01 | 旧稿 claim-evidence matrix | done | P0 | 核心 claim 均有证据或标记缺口 | 已完成 16 页 PDF/DOCX 页级校订；后续随 FAECO 新实验持续更新当前证据列 |
+| P02 | 旧稿预投稿审计 | done | P0 | 输出 P0/P1/P2 问题清单 | 审计结论转入 N05 方法修订，并由 formal/STA/公开 benchmark 补证据 |
+| P03 | 公式与图表审计 | done | P0 | 缺失公式、符号不一致、表格问题明确 | Word 字段更新证明原式(16)-(20)应改为(15)-(19)；已定位图6误引、表2四套统计冲突，并补齐图9/表5 |
+| P04 | 论文修订路线 | done | P0 | 旧稿硬伤、工程补证据和写作阶段有明确依赖与完成标准 | 按 RR02-RR10 顺序推进，优先 formal/ABC 与多轮 refinement 证据 |
+| P05 | 方法重写就绪审计 | done | P0 | 方法要素逐项映射到代码、实验字段和旧稿处置策略，并标记 ready/partial/blocked | 当前完整 Method 仍为 pending；先完成 X18/X19/X21/X22，再按获批结构编写符号表和伪代码 |
+| E01 | 公开 benchmark flow 设计 | done | P0 | 明确 benchmark、case 构造、指标 | 由 X21 按固定 EPFL blob SHA 落实第一波导入 |
+| E02 | Failure-aware cut refinement 设计 | done | P1 | 明确失败类型、权重调整规则、消融实验 | 后续转成算法伪代码和测试用例 |
+| E03 | Timing-aware patch ranking 设计 | done | P1 | 明确 score、features、baseline | 后续固定参数和消融实验 |
+| E04 | 第一批 benchmark 选择 | done | P0 | ISCAS/EPFL/ITC 用途和取舍明确 | EPFL `v2025.1` 已固定；由 X21 导入 ctrl/int2float/router |
+| E05 | ECO case schema | done | P0 | original/resynthesized/cone/patch/metrics 字段明确 | 用 X21 的 EPFL cases 继续验证 schema 跨电路适用性 |
+| E06 | baseline protocol | done | P0 | fixed/random/size/critical-path/ABC baseline 明确 | X18 刷新真实 ABC baseline，X19 生成 failure-feedback ablation |
+| E07 | metrics and tables | done | P0 | 指标公式和结果表模板明确 | 补真实 formal/ABC/OpenSTA runtime、WNS/TNS 与多轮 recovery 数据 |
+| E08 | FAECO 算法伪代码 | done | P0 | 输入、输出、循环、失败反馈、停止条件明确 | X19 按获批成功口径实现真正多轮循环并反校伪代码 |
+| G01 | 初始化 Git 仓库 | done | P0 | `.git` 存在，分支为 `main` | N08 上一版 A-only 副本在 OpenSTA/工具链修复前通过；当前主工作区已到 62 项测试，首次提交前需刷新 A-only 副本并确认 Git 身份和发布属性 |
+| G02 | Python 最小工程骨架 | done | P0 | `pyproject.toml`、`src/`、`tests/` 可运行 | 继续以 TDD 承载 X19/X21/X22，当前回归基线为 62 项测试 |
+| G03 | 最小 ISCAS85 case | done | P0 | `iscas85_c17_case01` 有 metadata、网表、cone、patch 和 metrics 占位 | 已扩展为 5-case smoke；论文主集由 X21 迁移到 EPFL |
+| G04 | case loader 与 Verilog parser | done | P0 | 程序能读取 c17 case 并计算 gate count/logic level | EPFL assign-style Verilog 统一经 X18/X21 的 Yosys 规范化处理 |
+| G05 | 最小 metrics 输出 | done | P0 | `metrics.json` 由程序生成，包含 failure types 和 Python flow runtime | 后续接外部 EDA runtime |
+| G06 | fanin cone extraction | done | P0 | c17 N22 cone 可由程序自动生成 | 用 X21 扩展跨 benchmark fanin 验证；fanout/reg-to-reg 留给 PM23 |
+| G07 | 最小结构等价接口 | done | P0 | original/resynthesized c17 N22 cone 等价结果为 pass | 已补 Yosys-normalized full-netlist ABC CEC；当前 5-case local smoke formal 为 5/5 pass |
+| G08 | fixed min-cut baseline 最小接口 | done | P0 | c17 cone 能生成 fixed boundary | weighted s-t cut 已由 G16 完成；下一步进入 X19 多轮反馈对比 |
+| G09 | patch candidate 表示 | done | P0 | patch boundary、size、equivalence result 可统一记录 | 已接入 replacement 草案，后续扩展 Verilog patch 写回 |
+| G10 | 工具链策略文档 | done | P0 | Python/Yosys/ABC/OpenSTA/Z3 接入策略明确 | Yosys/`yosys-abc` 已进入正式 runner；X22 已完成 WSL2 OpenSTA 本体安装和 smoke，仍需 Stage B 路径桥与 WNS/TNS 写回；Z3 未安装 |
+| G11 | Failure-aware refinement 最小接口 | done | P0 | F1-F5 可生成确定性权重调整和动作日志，c17 已写回 F3/F4 反馈 | weighted cut 已完成；由 X19 升级为重新分类 residual failures 的多轮循环 |
+| G12 | 工具链检测脚本 | done | P0 | 可输出机器可读 JSON，首份环境快照已归档，runner 已能归档 per-experiment snapshot，并记录工具版本字段 | 已修复 `wsl.exe -d Ubuntu -- /usr/local/bin/sta` 这类带参数命令和 WSL warning 下的 OpenSTA 版本检测；后续补外部 EDA runtime |
+| G13 | deterministic patch ranking | done | P1 | 可计算 timing/size/boundary/verification/equivalence 综合 score，c17 selected patch 已写回 rank/score/features | 已覆盖 5-case 多候选；下一步配合 X19 做权重/反馈消融 |
+| G14 | refinement-aware cut candidates | done | P0 | F3 反馈后的 size penalty 可生成更小的 `size_refined_cut`，并与 fixed baseline 一起进入 ranking | weighted cut 已完成；由 X19 检验每轮候选与 residual failure 的闭环 |
+| G15 | weighted cut graph 最小接口 | done | P0 | cone gates 可构造成带 node cost 的 cut graph，c17 metrics 已写回 `cut_graph.nodes` 和 `cut_graph.node_costs` | 全局 min-cut 已由 G16 完成；由 X21 检验更大 EPFL cone 的扩展性 |
+| G16 | weighted s-t min-cut 初版 | done | P0 | `weighted_st_min_cut_v1` 已由 Edmonds-Karp/residual reachable-set 求解，支持多个 cut edges，c17 metrics 已写回 `selected_gates` | replacement 和 5-case smoke 已完成；下一步是 X19 多轮反馈和 X21 规模扩展 |
+| G17 | 周报记录修复与 7/18 补记 | done | P0 | `docs/reports/2026-07-17_weekly_report.md` 为可读 UTF-8 中文，并补入 weighted s-t cut 进展 | 后续按执行批次继续维护周报和 work log |
+| G18 | patch replacement 草案 | done | P0 | `src/rseco/replacement.py` 可将 selected patch 应用到 cone-level 内部表示，metrics 和 `patches/replacement.json` 已写回 | 后续扩展为可综合 Verilog patch 或多 case replacement 输出 |
+| G19 | ABC formal equivalence wrapper | done | P0 | `src/rseco/equivalence.py` 提供旧 direct-ABC wrapper，`src/rseco/yosys_abc.py` 提供正式 Yosys-BLIF-ABC CEC，metrics 写回 `formal_equivalence` 和 `formal_equivalence_result` | 当前 5-case local smoke 的 Yosys-normalized full-netlist formal 为 5/5 pass；candidate/boundary formal 留作后续增强 |
+| X01 | 最小 combinational demo runner | done | P0 | `scripts/run_minimal_combinational_demo.py` 可生成独立实验目录 | batch 与 5-case smoke 已完成；由 X18/X21 接入真实工具和许可明确主数据 |
+| X02 | 配置驱动 batch runner 骨架 | done | P0 | `experiments/configs/minimal_combinational.json` 可驱动 batch demo，输出 per-run metrics 和 `tables/case_summary.json` | 表结构已覆盖多 baseline/runtime/recovery；下一步刷新 X18 formal 与 X21 EPFL 主表 |
+| X03 | c17 第二目标 case | done | P0 | `data/cases/minimal/iscas85_c17_case02` 指向 target output `N23`，metrics、selected patch 和 replacement 已生成 | 已完成独立 ISCAS85 扩展；后续不再扩 c17，转向 X21 EPFL |
+| X04 | raw Verilog 到最小 case 导入脚本 | done | P0 | `scripts/make_minimal_case_from_raw.py` 可从本地 raw Verilog 生成完整最小 ECO case，并由 flow 直接生成 metrics | 已导入 c432/c499/c880；由 X21 复用规范化输入生成 EPFL cases |
+| X05 | BENCH 到最小 case 导入脚本 | done | P0 | `scripts/make_minimal_case_from_bench.py` 可从本地 ISCAS-style `.bench` 文件生成完整最小 ECO case，支持 NAND/AND/OR/NOR/NOT/BUF/XOR/XNOR | 当前作为 BENCH 兼容入口保留；论文主数据优先走 X21 Verilog/Yosys 链路 |
+| X06 | Genus 风格多行 Verilog parser 支持 | done | P0 | parser 可读取 Cadence Genus generic-gate Verilog 的多行 input/output/wire 声明，且 37 项测试通过 | 后续如遇 named-port 或 assign 语法再按 TDD 扩展 |
+| X07 | 独立 ISCAS85 raw Verilog 导入 | done | P0 | `benchmarks/raw/iscas85/` 纳入 c432/c499/c880，来源和 blob SHA 写入文档，并生成对应 minimal cases | X20 已确认许可边界；这些文件仅作本地 smoke，论文主集转由 X21 导入 EPFL 数据 |
+| X08 | 最小多电路 combinational batch | done | P0 | batch summary 覆盖 c17 N22/N23 和 c432/c499/c880，`case_count=5`，所有 run replacement 为 applied | 已刷新真实 Yosys/ABC formal/baseline；c432/c499/c880 仍仅作 license 未完备的本地 smoke |
+| X09 | fixed vs FAECO 原型对比表 | done | P0 | batch runner 输出 `tables/baseline_comparison.json` 和 `.md`，覆盖 5 个 run 的 fixed patch size、FAECO patch size、score、change ratio 和 runtime 对比 | 已扩展为 fixed/random/size-only/critical-path-only/ABC/FAECO 多 baseline 对比；ABC baseline 输出 BLIF/stats/logs 已写回 |
+| X10 | Python flow runtime 实测 | done | P0 | `metrics.runtime_total`、`runtime_breakdown` 和结构化 `metrics.runtime` 写入 per-case metrics，并透传到 batch summary/comparison | Yosys/ABC external runtime 已写入同一 schema；其后扩展 OpenSTA 阶段 |
+| X11 | size-only 与 critical-path-only baseline | done | P0 | `patch_ranking` 和 `baseline_comparison` 覆盖 `size_only_cut`、`critical_path_only_cut`，selected FAECO 仍为 `size_refined_cut` | 已补 random cut 和真实 Yosys/ABC baseline 状态字段；后续迁移到 EPFL 主表 |
+| X12 | deterministic random cut baseline | done | P0 | `patch_ranking` 和 `baseline_comparison` 覆盖固定 seed/trials 的 `random_cut`，并记录 `random_seed=20260714`、`random_trials=5` | 后续将 random 从 Stage A aggregate baseline 扩展为多 seed 均值/方差统计 |
+| X13 | ABC rewrite/refactor/resyn baseline wrapper | done | P0 | `src/rseco/yosys_abc.py` 提供 Yosys-BLIF-ABC rewrite/refactor/resyn baseline，metrics 和 summary/comparison 写回 `abc_baseline_status`、reason、stats 与 BLIF 路径 | 当前 5-case local smoke 均为 `success`，optimized BLIF、ABC logs 和 `print_stats` 已归档 |
+| X14 | 实验工具链快照归档 | done | P0 | single-case 和 batch runner 均生成 `environment/toolchain_snapshot.json`，`config.json` 与 batch `case_summary.json` 记录 snapshot 路径和工具可用性 map，snapshot 含 `version` 字段 | 当前 batch snapshot 记录 Python 3.11.9、Yosys 0.9、`yosys-abc` ABC 1.01、OpenSTA 3.1.0、NetworkX 3.4.2；Z3 不可用 |
+| X15 | batch runtime breakdown 表 | done | P0 | batch runner 输出 `tables/runtime_breakdown.json` 和 `.md`，覆盖 5 个 case 的 runtime stage 耗时、状态、类别和工具 | 真实 Yosys/ABC stages 已写入同一表；下一步扩展 OpenSTA |
+| X16 | failure recovery proxy 表 | done | P0 | batch runner 输出 `tables/failure_recovery.json` 和 `.md`，按 failure type 聚合 initial fail、proxy recovered、recovery rate、avg iterations 和 run ids | 后续实现真正多轮 refinement loop 后升级为 multi-iteration recovery table，并接入 ablation |
+| X17 | runner 实验产物隔离 | done | P0 | single/batch runner 只向实验 `raw_results` 写 metrics 和 ABC 产物，不修改输入 case；回归测试覆盖 fake ABC 场景 | 继续保持 case 数据与实验运行产物分离 |
+| X18 | Yosys/ABC 规范化接入 | done | P0 | 自动识别 `yosys-abc`，Yosys 规范化后的门级 full-netlist 可驱动 5-case ABC `cec` 和 baseline，并记录 scope、版本、命令、中间产物、`print_stats` 与 runtime | 5-case local smoke 已刷新为 formal 5/5 pass、ABC baseline 5/5 success；BOM 输入自动生成 sanitized artifact；后续由 X21 迁移到 EPFL MIT 主数据 |
+| X19 | 多轮 refinement 与真实 recovery 口径 | done | P0 | 每轮候选重新分类，记录 residual failures、停止原因和首次恢复轮次；batch recovery 不再按 replacement applied 代理 | **已实现（2026-08-04）**：src/rseco/refinement_loop.py simulate_refinement_loop（cut->classify->refine_weights->re-cut，支持 enable_feedback 消融开关 + WNS 驱动成功标准）+ flow.py run_multi_iteration_case；**两处缺陷已修复**：(1) F1 结构等价与 F4 reduction>=1 判据互斥致成功路径不可达——注入 functional equivalence checker 打通（合成 case 验证）；(2) F1/F2/F4 权重未进排序 cost 的反馈惰性——build_weighted_cut_graph 重写为 F1-F5 全权重进入节点成本，weighted_cut_candidates 真正求解加权 s-t min-cut（tests/test_weighted_cut_feedback.py 6 项）；177 测试全绿；真实重综合网表已落地（Yosys abc -liberty SKY130，5 case reduction 1~9，c432/c499/c880 首轮成功）；SKY130 CEC 解锁（从网表提取最小 cells 模型，c17 original vs resynthesized 真 pass）；反馈精确化诚实结论（权重能改变解：c17 size_penalty 翻到 2-gate cut，但 evaluator 用全局 reduction 判定、与 cut 位置解耦致 ON/OFF 消融无差异，小网表 F3 阈值过严） |
+| X20 | 公开 benchmark 来源与许可审计 | done | P0 | 固定论文主来源版本、license、文件哈希和当前 ISCAS85 使用边界 | 已固定 EPFL `v2025.1`/commit、8 个 Verilog/官方 BLIF blob 和 MIT；c432/c499/c880 降级为本地 smoke |
+| X21 | EPFL 许可明确 benchmark 导入 | done | P0 | 8 个固定版本电路完成 license notice、Yosys JSON 权威格式规范化、case 构造、formal 和 batch 配置 | Yosys JSON importer/wrapper 已实现；EPFL `v2025.1` wave 1+2 8 个电路（ctrl/int2float/router/cavlc/dec/priority/adder/max）已规范化、license 与 blob SHA 已归档；Stage B 已用此 8 个电路完成端到端 mapping→SDC→STA 全链路 8/8 success |
+| X22 | OpenSTA 安装与 Stage B 接入 | done | P0 | 固定 OpenSTA/CUDD 版本与哈希，`sta -version` 和最小 Liberty/Verilog/SDC smoke 通过，runner 可追溯记录 WNS/TNS、critical path、runtime 和输入输出路径 | OpenSTA 本体已在 WSL2 构建完成：CUDD 3.0.0 SHA256 `b8e966...eb69`，OpenSTA `parallaxsw` commit `dc5ccd2...`，`sta -version=3.1.0`；Stage B runner 已 TDD 实现（`src/rseco/opensta.py` + `tests/test_opensta.py` 7 项测试），脚本 `scripts/run_stage_b_pre_layout_sta.py` 跑通 8/8 case，所有产物写回 `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` 和 `stage_b_runtime.{json,md}` |
+| L01 | Related work 矩阵 | done | P1 | 核心文献有书目、方法、证据边界和可追溯来源记录 | 已核验 25 篇 A 级全文和 1 条 B 级官方证据；DAC 2018 经 OA API、NTU、作者站点和归档资产复核仍无合法公开全文，按 25A/1B 形成 Related Work 初稿；writing 阶段可独立启动 |
+| G20 | technology mapping wrapper (Stage B) | done | P0 | `src/rseco/technology_mapping.py` 通过 TDD 实现并跑通真实 EPFL ctrl case | 已 commit `9081b9a`；使用 `synth -noabc + abc -liberty` 流程避免 Yosys 0.9 techmap 生成 Liberty 中不存在的 `clkinv_1`；输入 Verilog 不被修改；6 项 TDD 测试 + 真实 ctrl 27 cells mapping 0.84s 跑通 |
+| G21 | pre-layout SDC generator (Stage B) | done | P0 | `src/rseco/sdc.py` 从 Liberty 读 time_unit/capacitive_load_unit，生成确定性 virtual-clock SDC，端口匹配检查禁止静默 | 已 commit `0bf06f6`；`experiments/configs/stage_b_pre_layout.json` 固定 8 个 case 的统一约束；11 项 TDD 测试覆盖 |
+| G22 | OpenSTA Stage B runner | done | P0 | `src/rseco/opensta.py` 在 Windows 上调用 WSL2 OpenSTA，Tcl 脚本路径转换 `/mnt/d/...`，parser 支持 INF 与 "No paths found" | 已 commit `de7dc9a`；7 项 TDD 测试；OpenSTA 3.1.0 + SKY130 Liberty + mapped Verilog + SDC 全链路在 8-case batch 全部 success；纯组合电路 slack_status=MET（INF）属正确结果 |
+| X23 | Stage B 8-case 端到端批处理 | done | P0 | 8 个 EPFL case 全部 mapping→SDC→OpenSTA success，产物 `tables/stage_b_case_summary.{json,md}` 和 `stage_b_runtime.{json,md}` 落盘 | 已 commit `e3c735a`（runner 脚本）和 `05ada8b`（summary builder）；`experiments/20260731_epfl_8case_stage_b/` 包含 8 case 全 success，mapping+STA 全部 0 错误；CEC 形式回验因 SKY130 Liberty 不含 `clkinv_1` 仍 unavailable，记录于 batch summary `notes` 字段 |
+| PM25 | 写 Introduction | done | P1 | `paper/draft/introduction.md` 背景-缺口-方法-证据-组织 5 段 | 已 commit `2417be3`；基于 mainline.md + L01 Related Work + N05 method_symbol_table；明确 limitation L31-01/L31-02 透明声明；待用户审定 |
+| PM26 | 写 Related Work | done | P1 | `paper/draft/related_work.md` 6 大主题分组覆盖 25A/1B | 已 commit `a4bede4`；按 Timing ECO / Functional ECO / Equivalence / B&G / ML Timing / 工具链 6 主题分组；严格区分 evidence-level A/B；[F08-B] [B06] 禁止引用算法细节与数字；待用户审定后迁入 `paper/submission/related_work.md` |
+| PM27 | 写 Method | done | P1 | `paper/draft/method.md` 含 10 段 + 7 个算法骨架 | 已 commit `8a43207`；基于 `paper/draft/method_symbol_table.md`（N05 符号表）扩为正文段落；含 FAECO 三阶段流水线、resynthesis + tech mapping、fanin cone、weighted s-t min-cut、F1-F5 failure-aware refinement、形式回验、pre-layout STA；待用户审定 |
+| PM28 | 写 Experiments | done | P1 | `paper/draft/experiments.md` 含 7 段 + Stage A 5-case + Stage B 8-case 完整表格 | 已 commit `b2eb459`；基于 `experiments/20260718_minimal_combinational_batch_demo/tables/*.json` + `experiments/20260731_epfl_8case_stage_b/tables/stage_b_case_summary.{json,md}` + `stage_b_runtime.{json,md}` 真实表格；含 limitation 与 [F08-B]/[B06] 边界声明 |
+| PM29 | 写 Conclusion | done | P1 | `paper/draft/conclusion.md` 含 5 段 + 未来工作 | 已 commit `f337199`；基于 Introduction + Experiments + method_symbol_table + related_work；含 4 项 limitation 透明声明、5 项未来工作 (X19/ORFS techmap/SKY130 sequential/Z3/N08 push)、公开性边界 |
+| PM29-a | round1 自审稿报告 | done | P1 | `paper/reviews/round1_self_audit.md` 5 大维度评估 | 已 commit `bb1f515`；1 P0（METH-08 CEC unavailable）+ 4 P1（METH-01/09/10/12）+ 5 P2；处置建议：N31-03 优先，X19 第二，ISCS85 与 sequential 并行；自审结论："FAECO 当前阶段在 P0 CEC limitation 未解决前可作为受限方法+流程工作产出论文" |
+| PM30 | round1 修订说明 + round2 推进 | in_progress | P1 | `paper/reviews/round1_revision_notes.md` 7 段 P0/P1/P2 处置 + round2 必改清单 | 修订说明 commit `66b9ef6`；round2 必改推进（2026-08-03）：method §6 done、论文主图 fig1-3 done、method.md §7 Z3 路径 done、conclusion/experiments 部分更新；剩余 P0（N31-03 cells.v）决策后收尾 |
+| N31-04 | N08 push to remote 设计 + 实施 | done | P2 | `docs/engineering/n08_push_to_remote.md` + GitHub `Toylog123/FAECO` | **push 完成（2026-08-03）**：`git push -u origin main` 推送 107+ commits 到 `https://github.com/Toylog123/FAECO.git`；未执行用户原命令的 `git init/add/commit`（仓库已有历史，会破坏）；A-only 范围外未推送 |
+| N31-06 | Z3 candidate/boundary wrapper 设计与实施 | done | P2 | `src/rseco/z3_formal.py` + `tests/test_z3_formal.py`(7) + `tests/test_z3_formal_multi.py`(5) + `scripts/run_z3_candidate_boundary_check.py` + `docs/engineering/z3_candidate_boundary_formal.md` | 设计 commit `bf16d30`；实施 commit `c859bfa` + `4eaaa2a`（递归下降 parser + wire DAG + escaped-identifier + xor/constant，102 项测试全绿）；runner commit `534be02`；等价验证主路径已由 Yosys miter+SAT 解决（`verify_epfl_mapping_sat.py` 8/8 pass）；Z3 wrapper 保留用于 patch 局部验证（单元测试层面完整） |
+| N31-03 | CEC 等价验证修复（Yosys miter+SAT） | done | P0 | `scripts/make_liberty_cells_v.py` + `scripts/verify_epfl_mapping_sat.py` + 下载 skywater cells 模型 | **8/8 EPFL case 等价证明 SUCCESS（2026-08-03）**：用户选路径 A 下载模型后，发现 ABC read_lib/下载 Verilog(UDP)/Yosys read_liberty(blackbox) 均有障碍，改用从 Liberty boolean function 提取 assign-style cells.v + Yosys `miter -equiv` + `sat -prove-asserts`；commit `4df9d54`；R31-01 mitigated；P0-1 关闭 |
+| N31-03 | ORFS techmap library 修复路径设计 | done | P0 | `docs/engineering/n31_03_orfs_techmap_library.md` 设计文档 | 已 commit `0c6e681`；10 段；路径 A（cells.v 配套，需用户授权 ORFS ~150 KB 下载）/ 路径 B（LUT mapping 兜底，不下载 ORFS）；按 handoff 禁止下载完整 Sky130 PDK；待用户决定路径 A 或 B 启动 |
+| N31-05 | failure-aware 混合修复（G/R/B 自适应切换）实现与验证 | done | P1 | src/rseco/{gate_sizing,logic_rewrite,buffer_insertion,strategy_selector,real_wns}.py + scripts/run_{hybrid_repair,outerloop_real_wns,outerloop_batch}.py + 8 电路内环 + 8 电路外环真实 WNS | **8/8 内环完成 + 外环真实 WNS 闭环 8/8（2026-08-04）**：内环 8 电路全改善（s27 -0.01、s382 MET、s420 -0.01、s641 -0.02、s713 -0.01、s820 -0.20、s832 -0.47、s953 -0.09）；外环接真实 OpenSTA（run_opensta_sequential + RealWnsEvaluator + flow 每轮多候选探索 + 决策层 + early-stop）8 电路全改善（s27 -0.21、s382 -0.93、s420 -1.75、s641/s713 -1.85、s820 -1.36、s832 -1.12、s953 -1.38，STA 合计 110→27 -75%）；决策层 12205 trials 决策表 + leave-one-out top-2 94-98%；buf_8/16 负面结论；外环反馈消融 6/8 需学习 + beam×反馈网格 8 电路：反馈把所需 beam 从 ≥4-8 压到 ≤2，STA -44%~-89%；批量并行 driver（4 电路并行 24s 零偏差）；199 测试全绿；ITC-99 跨基准泛化：blif→v 转换器（techmap 修复 $shr OOM）+ bench→blif（b18/b19 截断源恢复）+ batch --iscas89-dir；19 可跑电路 17/19 真实改善（b03-b17/b20-b22，b01/b02 诚实失败），大电路 b14/b15/b17/b20/b21/b22 全成功（含 2 个 R 修复），b18/b19 初版因 Yosys 0.9 32 位内存限制排除，当晚 WSL2 64 位 Yosys 0.33 打通：0.5ns 协议 b18 -13.34→-13.27、b19 -17.44→-16.0（R clkinv_1→bufinv_8 为主力）；现实 period（95% CP）协议 b18 -0.69→-0.62（G）、b19 **-0.90→+0.54（MET）**，b19 达成 TNS 清零；b18 改善小为 XOR/MAJ 链无 R 候选的结构边界（诚实记录）；214 测试全绿 |；**2026-08-05 新增**：JOINT 联合修复（b18 -0.69→-0.56 优于单门 G，b19 R 仍最优 +0.54，commit 1dab727）+ 在线自适应决策层 v2（UCB1+衰减，无先验 8/8 成功且 s820 -1.28 超越静态表，STA 88 vs 27 诚实记录，commit 5529c8b/5e623e8）+ SPEF 寄生参数感知（s382/b18 ideal 改善在寄生 RC 下归零，量化物理感知边界，commit 0b44eb0）；232 测试全绿；论文 tex 补 adaptive_vs_static 表 + sec:parasitic + limitation，PDF 已编译  + Hold 时间修复（synthetic hold 场景，s382 min_slack -0.36→-0.33 且 WNS -0.94→-0.93，s27 诚实无改善；commit 4a7f226，241 测试全绿）；**2026-08-05 评审缺陷完善（in_progress→done）**：① 双目标联合割（F1/F4 硬约束合并：无 R 候选门 critical_reward 置零 + critical_path_cover 首轮默认，21 项相关测试）；② 物理感知内环（ideal 改善>10ps→SPEF 复测门控 + F6 物理负载失败→boundary_penalty+1）；③ 异构 PicoRV32 OOD（统一 0.67：picorv32 控制密集 -9.96→-8.83 R clkinv→bufinv_16，pcpi_mul/regs 复跑）；④ 工具链统一 OSS-CAD 0.67+146（弃 Yosys 0.9；修复 Windows CreateProcess 父 PATH 回退 bug；s382 -0.98→-0.85；b18/b19 0.67 映射成功 227s/510s；超大锥分治切割 split_cone_by_depth）；252 测试全绿；论文 tex 重定位为候选生成引擎 + 方法章（双目标联合割/物理内环/分治切割）+ OOD 表 + 0.67 复验节，latexmk 编译通过 ；**2026-08-05 迭代式物理感知闭环初探（F6 实证）**：0.67 网表物理门控外环 s382 50/50、b18 6/6 ideal 改善候选 SPEF 复测全拒（boundary_penalty 1.0→6.0/1.0→7.0），0.33 对照 b18 JOINT 2µm +0.11 保持；论文新增 \S IV-G + tab:phys_closure，252 测试全绿|**2026-08-05 TCAD Sprint 1-3（完成）**：0.67 8 电路统一复验（修复 dff 黑盒预处理 bug，s27 -0.27→-0.18、s382 -0.98→-0.89、s420 -1.56→-1.55、s641 -1.63→-1.59、s713 -1.33→-1.31、s820 -1.19→-1.17、s832 -1.23→-1.17、s953 -1.31→-1.27，JOINT 自动枚举深度 3，commit f8bf00b）；纯 R/G/B 消融（s382/b15/picorv32，B 零改善，混合小电路必需）+ λ 敏感性（s382 8 组全 -0.83平坦）；论文 \S IV-H 消融表 + 摘要 Logic Filter 定位 + 75% STA + limitation/hold 精修，13 页 PDF 编译通过；旧表格标注“基于旧 0.9/0.33 工具链”；**skill 流程完成（2026-08-05）**：完整性审计（删 2 虚构引用 + 修 5 venue，commit 4aa3591）+ 多视角评审（Major Revision）+ R1/R2 修订（commit 2fad9cd），13 页 PDF 编译通过；**2026-08-05 ITC-99 19 电路 0.67 统一复验（本地未提交）**：18/19 改善（94.7%，旧 17/19），b06 诚实失败，b01/b02 转改善，b20/b21 JOINT +1.98/+2.16 最大收益，1693 次候选 STA，3 并发 12.5 分钟；论文 tab:itc99 换 0.67 数据 + 摘要/贡献/结论/limitation/未来工作同步，；b18 0.67 敏感性 λ_b{0.5,1,2} 三点全平（JOINT nor4_2+a211oi_2，-2.24→-2.09，93 STA），phys_closure 表/敏感性段/工具链复验节/limitation(4)/未来工作同步|
+| N31-05-extra | **审稿承诺实验完成（2026-08-06）**：ITC-99 19 电路纯 B 消融（11/19 有 0.01~0.06 ns 严格改善，修正原“B 无收益”错误结论）+ s382 热启动（13 vs 24 次 STA）+ b06 G 失效场景对照（纯 G 148 次与混合 156 次均 0 接受）+ 34 电路统一 0.67 附录数据表 | done | P1 | 论文 §ablation/§gfail_warm/tab:appendix34 + 回复信缺陷4/P0-2 同步 + work_log LOG-18/19 | 待用户决定提交；PDF 16 页编译通过 |
+| N31-05-extra2 | **多轮收敛实验补齐（2026-08-07）**：混合（R+G+B+JOINT、每轮刷新关键路径、tns-aware、20 轮收敛）8/8 超纯 G/随机、7/8 超纯 B（s27 打平），4/8 收敛至 setup MET；平均改善混合 1.07 ns vs 纯 G 0.16 ns（约 6.7 倍）vs 纯 B 0.54 ns；纯 G 20 轮与 3 轮相同证明候选空间天花板而非预算不足 | done | P1 | experiments/20260807_multiround_8c_067/（混合收敛）+ 20260807_pureG_20round_067/（纯 G 20 轮）+ 20260807_pureB_20round_067/（纯 B 20 轮补齐 8 电路）+ 论文 sec:baseline 表格/图/正文 + convergence_summary.json |
+| N31-05-extra3 | **第二轮复审（Minor Revision）4 项意见落地（2026-08-08）**：§IV.F 分 (A) 独立 SPEF 负载扫描 / (B) 迭代式 SPEF 门控闭环并说明候选在流程内被过滤；SPEF 门控定位为概念验证（10 ps/40 µm 未校准，结论未来工作 (4)）；留一法“STA 合计 27”澄清为 8 电路合计（平均约 3.4 次/电路）、WNS 数值逐电路一致；决策层 12205 条注明离线决策表生成并前置留一法实验 | done | P1 | paper/zh/manuscript/faeco_paper.tex（11 页编译 0 Error）+ paper/zh/faeco_paper.pdf + docs/paper_audit/response_reviewers_round3_20260808.md | 待用户审阅后提交 git |
+| N31-05-extra4 | **中文语言/结构审稿意见（第一轮）落地（2026-08-08）**：摘要四层重构；引言补动机链；方法重排为问题形式化/方法总览/核心机制(4子节)/工程实现要点；实验重排为设置/主结果/泛化(合并)/消融/对比/物理/补充；全文'把/将''兜底''三者'等语言清理；F1/F4 失败统计补充（开 6 vs 关 56，F1 均 0）；结论重写为判断+3 条方向性局限 | done | P1 | paper/zh/manuscript/faeco_paper.tex（11 页编译 0 Error）+ paper/zh/faeco_paper.pdf + docs/paper_audit/response_reviewers_round1_zh_20260808.md | 待用户审阅后提交 git |
+| N31-05-extra5 | **终审 6 处精细化修改（2026-08-08）**：摘要 X/Y 统一、引言重复删除、术语约定迁移至 3.2、双 label 拆分修复、结论 27 vs 447 数据修正、“0.67”语病修正 | done | P1 | paper/zh/manuscript/faeco_paper.tex（11 页编译 0 Error）+ paper/zh/faeco_paper.pdf + docs/paper_audit/response_reviewers_round1_zh_20260808.md（终审补充表） | 待用户终审后提交 git |
+| N31-05-extra6 | **第二轮中文审稿（小修）7 项意见落地（2026-08-08）**：贡献列表 2→3 项；ITC-99 独立 label 与精确引用；割解定义引导至 3.3；F4 统计对比注；µm 单位统一；447 次配置说明；参考文献格式与 2012 引用区分 | done | P1 | paper/zh/manuscript/faeco_paper.tex（11 页编译 0 Error）+ paper/zh/faeco_paper.pdf + docs/paper_audit/response_reviewers_round2_zh_20260808.md | 待用户终审后提交 git |
+
+| N31-05-extra7 | **多技能严格复审 + 迭代（academic/nature/用户写作风格，2026-08-11~13）**：实验证据盘点与口径核实、图表重画与排版重排、摘要压缩、ITC-99 19/19 口径、算法1/表1 简化、术语定义补齐、机制图重绘、结论三问、保护性描述清理、Nature 预检 18/18 | done | P0 | paper/zh/manuscript/faeco_paper_jcad.tex（12 页编译 0 Error）+ paper/zh/faeco_paper.pdf | 待用户决定机制图拆分方案 + 提交 git |
+| N31-05-extra8 | **交接收尾 + git 推送（2026-08-13）**：核实 P&R/SPEF 日志已就位、整理 .gitignore、论文/文档/代码分语义提交并 push origin/main（c545612） | done | P0 | .codex-handoff.json + handoff_20260813.md + 6 commits pushed | 待机制图拆分 + 投稿前替换真实 DOI |
+
+## 状态刷新（2026-09-12，框架迁移 + 审计后）
+
+> 本节覆盖上表中的过期状态；上表保留为历史记录。
+
+| ID | 任务 | 状态 | 说明 |
+|---|---|---|---|
+| U26-06 | 论文实验表格回填 | **done** | 18 轮审稿修订 + 全文一致性审计闭环（d329f19），论文数字全部与聚合产物对账 |
+| U26-07 | 磁盘瘦身收尾 | 部分完成 | 旧仓库目录全删（释放约 117 GB 中旧副本部分）；experiments/ 内 cleanup-candidates 档位仍待用户逐项确认（OI-004） |
+| U26-08 | 推送 codex/faeco-unified-loop | **done** | 2026-09-12 推送（f909a31..9435846）；另两条 codex 分支一并推送固化后删除本地 worktree |
+| D-01 | versions/v1 冻结方案 | **待用户决策** | 选项与建议见 DECISION_BRIEF_20260912.md（推荐轻量 tag+manifest） |
+| D-02 | 机制图处置 | **待用户确认** | 当前 9 页稿仅 3 图，原拆分问题已消失；推荐维持现状 |
+| D-03 | DOI / DRC 投稿处置 | **待投稿流程** | 主稿无 DOI 占位符；DRC 建议维持如实声明、被要求再补 |
+| T20 | 投稿件打包 | pending | 用户决策 D-01~D-03 后：按目标期刊模板整理投稿包（含 cover letter 与补充材料清单） |

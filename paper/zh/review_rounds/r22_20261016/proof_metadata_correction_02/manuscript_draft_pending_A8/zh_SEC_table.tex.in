@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\caption{效率优先修复网表对的顺序等价证明}
+\label{tab:sec_iscas8}
+\setlength{\tabcolsep}{4pt}
+\footnotesize
+\begin{tabular}{lrrr}
+\toprule
+\textbf{电路} & \textbf{已证明/未证明} & \textbf{SEC} & \textbf{耗时 (s)} \\
+\midrule
+s27 & @S27_PROVEN@/@S27_UNPROVEN@ & 通过 & @S27_WALLTIME_3DP@ \\
+s382 & @S382_PROVEN@/@S382_UNPROVEN@ & 通过 & @S382_WALLTIME_3DP@ \\
+s420 & @S420_PROVEN@/@S420_UNPROVEN@ & 通过 & @S420_WALLTIME_3DP@ \\
+s641 & @S641_PROVEN@/@S641_UNPROVEN@ & 通过 & @S641_WALLTIME_3DP@ \\
+s713 & @S713_PROVEN@/@S713_UNPROVEN@ & 通过 & @S713_WALLTIME_3DP@ \\
+s820 & @S820_PROVEN@/@S820_UNPROVEN@ & 通过 & @S820_WALLTIME_3DP@ \\
+s832 & @S832_PROVEN@/@S832_UNPROVEN@ & 通过 & @S832_WALLTIME_3DP@ \\
+s953 & @S953_PROVEN@/@S953_UNPROVEN@ & 通过 & @S953_WALLTIME_3DP@ \\
+\bottomrule
+\multicolumn{4}{p{0.92\columnwidth}}{\footnotesize 八对网表采用同一验证批次和SKY130行为单元模型，以\texttt{equiv\_make}、\texttt{equiv\_simple}和\texttt{equiv\_induct -seq 10}证明，并由\texttt{equiv\_status -assert}检查全部等价点。耗时为每次独立证明调用的墙钟时间，不含映射、候选STA和模型准备。}\\
+\end{tabular}
+\end{table}

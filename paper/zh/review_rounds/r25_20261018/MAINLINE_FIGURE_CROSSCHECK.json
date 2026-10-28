@@ -1,0 +1,262 @@
+{
+  "scope": "Bounded read-only r25 mainline/figure/supplement consistency review; no figure/TeX/production edits or EDA",
+  "status": "PASS bounded mainline checks",
+  "main_source_sha256": "ed21d5a238202e2d48d7a8a1aa3b0d5e5177970b56dec61fff32e386f6d754be",
+  "supp_source_sha256": "eb9c81cbc0d01ab7718da63267f3d50ea358e26661ae3e132f46097a5cdd8443",
+  "checks": [
+    {
+      "name": "Three main figures and two main tables",
+      "status": "PASS",
+      "evidence": {
+        "figures": [
+          "manual/figures/r24_toy_mechanism/r24_toy_mechanism.pdf",
+          "data/final/r24_cp_gain_cost/r24_cp_gain_cost.pdf",
+          "data/final/r24_cp_budget_curves/r24_cp_budget_curves.pdf"
+        ],
+        "tables": 2
+      }
+    },
+    {
+      "name": "Six supplementary figures and12 tables",
+      "status": "PASS",
+      "evidence": {
+        "figures": [
+          "manual/figures/fig1_iterative_flow_r21.pdf",
+          "fig_iscas89.pdf",
+          "data/final/r24_unified_status/fig4_r24.pdf",
+          "data/final/fig5_budget_curves_r21.pdf",
+          "data/final/fig6_physical_transfer_r21.pdf",
+          "data/final/fig7_s_boundary_r21.pdf"
+        ],
+        "tables": 12
+      }
+    },
+    {
+      "name": "Supplement independent S numbering",
+      "status": "PASS",
+      "evidence": "sections/figures/tables independently reset in standalone supplement"
+    },
+    {
+      "name": "All nine included figure source bytes unchanged",
+      "status": "PASS",
+      "evidence": [
+        {
+          "path": "paper/zh/figures/manual/figures/r24_toy_mechanism/r24_toy_mechanism.pdf",
+          "sha256": "e87b7049edd02c494ff1e38ceab6323e69d3abee85c460fcf3dcf9535bcf8f7c",
+          "before_sha256": "e87b7049edd02c494ff1e38ceab6323e69d3abee85c460fcf3dcf9535bcf8f7c"
+        },
+        {
+          "path": "paper/zh/figures/data/final/r24_cp_gain_cost/r24_cp_gain_cost.pdf",
+          "sha256": "4650d401a4a22a4363fab2771b403db26d3a204e644b637666609ad4f694fa0b",
+          "before_sha256": "4650d401a4a22a4363fab2771b403db26d3a204e644b637666609ad4f694fa0b"
+        },
+        {
+          "path": "paper/zh/figures/data/final/r24_cp_budget_curves/r24_cp_budget_curves.pdf",
+          "sha256": "c944599ae71c0c488c68e16e998b5fe0d839affa0cac7ef58236e89e4565beb1",
+          "before_sha256": "c944599ae71c0c488c68e16e998b5fe0d839affa0cac7ef58236e89e4565beb1"
+        },
+        {
+          "path": "paper/zh/figures/manual/figures/fig1_iterative_flow_r21.pdf",
+          "sha256": "4fad7bfd54ab14be8593b2e10ac4d574ae8074dc355dda4692cde59b5faa9e18",
+          "before_sha256": "4fad7bfd54ab14be8593b2e10ac4d574ae8074dc355dda4692cde59b5faa9e18"
+        },
+        {
+          "path": "paper/zh/figures/fig_iscas89.pdf",
+          "sha256": "1170eca068bf04cfa820c52fee0d8115ea4a5e09bd7510bc64dfa05747549a3b",
+          "before_sha256": "1170eca068bf04cfa820c52fee0d8115ea4a5e09bd7510bc64dfa05747549a3b"
+        },
+        {
+          "path": "paper/zh/figures/data/final/r24_unified_status/fig4_r24.pdf",
+          "sha256": "33487a8e6a4645bedbd0184d50aa13b2ba391bd0c9b9cdb7f61118298dafab46",
+          "before_sha256": "33487a8e6a4645bedbd0184d50aa13b2ba391bd0c9b9cdb7f61118298dafab46"
+        },
+        {
+          "path": "paper/zh/figures/data/final/fig5_budget_curves_r21.pdf",
+          "sha256": "f2e69bb98fb4c3792e3001628ffa354c0a459b58e127117ea657fef5371f2495",
+          "before_sha256": "f2e69bb98fb4c3792e3001628ffa354c0a459b58e127117ea657fef5371f2495"
+        },
+        {
+          "path": "paper/zh/figures/data/final/fig6_physical_transfer_r21.pdf",
+          "sha256": "856b72b10530db0ea7bd3976b47e29a15dc5c6f7a9016eba8b7e3ae3dd032e19",
+          "before_sha256": "856b72b10530db0ea7bd3976b47e29a15dc5c6f7a9016eba8b7e3ae3dd032e19"
+        },
+        {
+          "path": "paper/zh/figures/data/final/fig7_s_boundary_r21.pdf",
+          "sha256": "630f9ba2bbe824a711f8be238a7139048bde20e1ddeb5ec3118d8a00b94efa2f",
+          "before_sha256": "630f9ba2bbe824a711f8be238a7139048bde20e1ddeb5ec3118d8a00b94efa2f"
+        }
+      ]
+    },
+    {
+      "name": "main local figure/table references",
+      "status": "PASS",
+      "evidence": {
+        "missing": [],
+        "labels": 14
+      }
+    },
+    {
+      "name": "supplement local figure/table references",
+      "status": "PASS",
+      "evidence": {
+        "missing": [],
+        "labels": 40
+      }
+    },
+    {
+      "name": "All9 controls defined in five explicit rows",
+      "status": "PASS",
+      "evidence": [
+        "W0 / U0 & 仅节点割；分别用加权/统一容量",
+        "W1 / U1 & 覆盖区域优先，再节点割；分别用加权/统一容量",
+        "C & 仅覆盖区域",
+        "UR1--3 & W1的区域池",
+        "L & 受限连通区域搜索并在队首补覆盖区域"
+      ]
+    },
+    {
+      "name": "Same endpoint scope excludes zero-gain arms",
+      "status": "PASS",
+      "evidence": "Body first excludes W0/U0 then compares847 with UR/L"
+    },
+    {
+      "name": "Mean WNS gain rounding",
+      "status": "PASS",
+      "evidence": {
+        "exact_ns": "0.16125",
+        "shown_ns": "0.161"
+      }
+    },
+    {
+      "name": "All main totalSTA values",
+      "status": "PASS",
+      "evidence": {
+        "W1": 847,
+        "UR1": 1046,
+        "UR2": 919,
+        "UR3": 944,
+        "L": 1274
+      }
+    },
+    {
+      "name": "Percent comparisons and proper denominators",
+      "status": "PASS",
+      "evidence": {
+        "UR1": 19.02485659655832,
+        "UR2": 7.834602829162133,
+        "UR3": 10.275423728813559
+      }
+    },
+    {
+      "name": "Only-cover C counterexample",
+      "status": "PASS",
+      "evidence": "C/W1 final gain equal in all8; s641 cost143 vs151"
+    },
+    {
+      "name": "s27 UR3 and s420 finite-budget counterexamples",
+      "status": "PASS",
+      "evidence": {
+        "s27_UR3_saving": 5,
+        "countercheck_csv": "paper/zh/figures/data/final/r24_cp_budget_curves/COMMON_BUDGET_COUNTERCHECK.csv"
+      }
+    },
+    {
+      "name": "Weighted zero and L confounding retained",
+      "status": "PASS",
+      "evidence": "No invented weighting gain or pureorder L/W1 claim"
+    },
+    {
+      "name": "Curves preserve full9arms/exact merges/stops",
+      "status": "PASS",
+      "evidence": "Matches72 original curves→46 exact complete curves"
+    },
+    {
+      "name": "ActualSTA and committed-only definitions",
+      "status": "PASS",
+      "evidence": "Definitions preserved near setup and curve"
+    },
+    {
+      "name": "Static example R availability and artificial scope",
+      "status": "PASS",
+      "evidence": "Matches unchanged exact static figure"
+    },
+    {
+      "name": "Two-stage candidate/final equivalence scope",
+      "status": "PASS",
+      "evidence": "Local check not substituted for final SEC"
+    },
+    {
+      "name": "TNS hard gate stated",
+      "status": "PASS",
+      "evidence": "r25 TNS_HARD_GATE_EVIDENCE exact scientific ZIP and rejected W0/s27 positiveWNS negativeTNS candidate"
+    },
+    {
+      "name": "Area cost and unassessed engineering scope",
+      "status": "PASS",
+      "evidence": "All8 cells/buffers unchanged; library area is a real cost"
+    },
+    {
+      "name": "Load table all3 rows match accepted new raw result",
+      "status": "PASS",
+      "evidence": [
+        "10 & $-1.23$ & $-1.12$ & $+0.11$",
+        "40 & $-2.10$ & $-2.10$ & $0.00$",
+        "160 & $-6.00$ & $-6.00$ & $0.00$"
+      ]
+    },
+    {
+      "name": "Flat-derived identity and annotation boundary",
+      "status": "PASS",
+      "evidence": "129/0 proof pairs and same-net control0 retained"
+    },
+    {
+      "name": "Negative auxiliary evidence has explicit supplement pointers",
+      "status": "PASS",
+      "evidence": "No concealment or mixing of tristate unsupported/EMA/S/PR negatives into Cprime"
+    },
+    {
+      "name": "Outer-loop stopping matches actual runtime",
+      "status": "PASS",
+      "evidence": {
+        "detected_phrase": false,
+        "exact_evidence": "OUTER_LOOP_STOP_EVIDENCE.json",
+        "all72_actual_outer_rounds": 20,
+        "refinement_disabled_in_this_family": true,
+        "prior33_count_retracted": true
+      }
+    }
+  ],
+  "optional_edits": [
+    {
+      "type": "clarity",
+      "location": "设置与对照第二段",
+      "note": "“W0/U0控制是否只有节点割”不够准确：两者都仅节点割；表1正确，可直接删这段逐臂复述，保“表1定义9配置/72运行及完整记录”。"
+    },
+    {
+      "type": "reproducibility pointer",
+      "location": "设置与对照",
+      "note": "建议加一次“源码、输入与逐次台账入口见补充S6”；S6存在但主文尚未显式指向。"
+    },
+    {
+      "type": "optional compression",
+      "location": "讨论首段",
+      "note": "再次逐项复述仅覆盖同终点、加权零收益、随机局部优势，可压成一句综合解释；保强外部基线与固定池重放尚缺。"
+    },
+    {
+      "type": "optional compression",
+      "location": "区域如何变成候选/接受与功能检查",
+      "note": "局部→STA→最终SEC已在摘要、方法、伪代码多处出现；方法里保规则，段末“候选局部检查不能替代最终SEC”可删而不丢对象时机。"
+    }
+  ],
+  "mainline_assessment": "One clear sequence: region construction and cover-first order → endpoint gain/candidateSTA → committed cost trajectory → area and load boundary; three figures perform distinct roles.",
+  "cross_reference_map": {
+    "S1": "formula and enumeration",
+    "S2": "model/proofs and historical cross-set scope",
+    "S3": "independent strategies and feedback",
+    "S4": "netlist area and physical posterior",
+    "S5": "structure-candidate negative results",
+    "S6": "data/runtime identity entry"
+  },
+  "index_erratum": "33-object post-outer-failureSTA count withdrawn: inner evaluator-call index was incorrectly compared to outer round. Curve data unaffected.",
+  "source_stable_at_end": true
+}

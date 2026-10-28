@@ -1,0 +1,49 @@
+{
+  "utc": "2026-10-18T12:35:58.449111+00:00",
+  "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+  "before_sha256": "c750ff9cad382ff3fdf3c067980016a0ebcc7be7c2fff2a198c5f5396767918b",
+  "after_sha256": "0bc3dd3e5c4f8675f35fc79fbca2fc45d5528e064a7bf0eb18feff4ede819f71",
+  "items": [
+    "REV-02",
+    "REV-11",
+    "REV-12",
+    "REV-13",
+    "REV-14",
+    "REV-15"
+  ],
+  "edits": [
+    {
+      "old": "结构重映射通过替换局部单元及调整逻辑实现改善时序，部分方法结合缓冲器插入和门尺寸调整\\cite{ho2010eco}，或以符号采样搜索修正点\\cite{kravets2019symbolic}。FAECO 在候选生成阶段利用 Liberty 函数匹配筛选可替换单元，再进行时序评估；全局顺序等价性检查（sequential equivalence checking，SEC）作为独立验证环节。例如，\\cite{ho2010eco}的备用单元分配以布线后负载为输入，FAECO 则在预布局阶段完成候选构造；\\cite{kravets2019symbolic}的符号采样扩大搜索范围，并通过验证结果筛选修正点。",
+      "new": "时序 ECO 的局部变换包括单元重映射、门尺寸调整和缓冲器插入。Ho 等\\cite{ho2010eco}研究利用备用单元与技术重映射进行时序优化，其决策依赖可用备用单元和物理负载。FAECO 在布局前从已映射网表提取违例扇入锥，以逻辑等价单元替换扩展候选，并用理想线网时序测量决定接受；顺序等价性检查（sequential equivalence checking，SEC）在最终网表上独立执行。"
+    },
+    {
+      "old": "逻辑补丁构造通常先围绕目标修正点提取局部逻辑窗口；随后利用功能约简与反相器图（functionally reduced and-inverter graph，FRAIG）表示候选逻辑，再通过 SAT 证明筛选与原逻辑功能等价的补丁，以修复功能错误\\cite{jiang2010fraig,jiang2016resource}。",
+      "new": "功能 ECO 的目标是使修补后的实现符合修订后的规格，而非保持原有错误实现的功能。Wu 等\\cite{jiang2010fraig}利用功能约简与反相器图（functionally reduced and-inverter graph，FRAIG）识别原网表与目标网表的共享逻辑，再结合 SAT 证明最小化和插值构造修正差异的补丁。Kravets 等\\cite{kravets2019symbolic}以符号采样扩大功能修正点搜索；其优化对象是规格变更后的修正点和补丁。上述功能修改目标与本文保持基线功能、改善时序的目标不同。"
+    },
+    {
+      "old": "后续工作进一步将资源代价纳入补丁生成，并采用 SAT 或组合等价性检查（combinational equivalence checking，CEC）进行复核\\cite{jiang2016resource,zhong2024stp}。FAECO 将可计算的局部功能保持信息提前用于候选排序，并把理想线网时序测量作为独立接受信号。",
+      "new": "功能补丁也可显式考虑物理资源。Cheng 等\\cite{jiang2016resource}针对布局冻结后的 metal-only ECO，根据附近备用单元位置及估计门数评价补丁连线代价；候选选择并非只最小化补丁尺寸。Dao 等\\cite{zhuo2018patch}分别处理修正点集合的可修复性、支持集优化和补丁计算，超时与不可修复对应不同分支，不能统一视为等价检查失败后扩大窗口。与这些方法相比，FAECO 的候选以功能保持为前提，并将每次新时序测量的资源消耗作为搜索预算。"
+    },
+    {
+      "old": "当等价性验证失败时，代表性流程通常需要扩大搜索窗口或增加补丁规模重新枚举\\cite{zhuo2018patch}；窗口扩展与补丁重新枚举会增加候选生成及验证开销。",
+      "new": "验证算法与 ECO 候选生成也需区分。Pan 等\\cite{zhong2024stp}提出基于半张量积的电路仿真方法，用于 SAT-sweeping 中等价节点识别的加速；该工作不以资源感知功能补丁生成为研究目标。本文采用局部函数与结构检查减少进入时序测量的候选，并将独立全网表 SEC 与候选接受分开统计。"
+    },
+    {
+      "old": "B/G 物理优化近年来主要沿门尺寸调整、联合 B/G 和物理感知方向发展\\cite{liu2021rlsizer,huang2025phys,chen2024aito,zhang2025buffalo}，学习驱动方法\\cite{chen2024aito,zhang2025buffalo}进一步提升了其效率。这类方法主要通过调整单元驱动能力和网络负载改善时序，通常不涉及布尔功能重构；FAECO 则在已映射网表的违例扇入锥上构造多类局部候选，并利用关键路径信息对候选进行排序。",
+      "new": "B/G 优化研究门尺寸与缓冲器对驱动和负载的联合影响。RL-Sizer\\cite{liu2021rlsizer}研究强化学习门尺寸调整，AiTO\\cite{chen2024aito}将图神经网络与强化学习用于联合门尺寸调整和缓冲器插入，物理感知尺寸优化\\cite{huang2025phys}及缓冲树生成\\cite{zhang2025buffalo}进一步利用物理信息或学习策略。FAECO 不以学习优化策略为新增部件，而研究多源局部候选的组织：边界构造决定允许修改的区域，候选实例化决定动作空间，调度顺序决定有限时序预算分配给哪些候选。"
+    },
+    {
+      "old": "从应用阶段看，结构重映射与 B/G 物理优化通常用于布局后或布线阶段的物理微调，逻辑补丁构造则多在综合后、布局前执行功能修复。FAECO 面向已映射网表，将局部候选搜索与预布局时序评估结合：在已映射网表上进行局部门级修改，同时用理想线网 STA 和简化线载模型进行预布局筛选。",
+      "new": "设计阶段由问题设定和可用资源共同决定，不能仅从“逻辑补丁”或“B/G”类别推断。备用单元重映射和 metal-only 功能补丁可发生在布局冻结后；B/G 也可用于不同阶段的时序优化。本文使用预布局已映射网表，以违例扇入锥和库模型构造候选，并分别观察理想线网时序和后验物理估计结果。"
+    },
+    {
+      "old": "由于不同方法依赖不同的输入阶段与评价目标，本文基于公开工具链建立统一实验环境，在统一的映射与约束条件下评估，重点比较候选空间扩展、候选排序与评估开销；各方法的主要差异见表~\\ref{tab:baseline_cmp}。",
+      "new": "表~\\ref{tab:baseline_cmp}从候选对象和决策信号比较最相关路线。本文的内部控制分别固定接受谓词与时序预算，比较单一边界、多源边界、覆盖优先、均匀代价和随机顺序，区分候选空间与调度的作用。物理备用单元方法需要相应布局资源，功能补丁方法需要修订规格；联合 B/G 学习方法则有额外策略与训练状态。本文不把这些设定差异当作优越性的证据，外部方法的性能次序仍需在兼容接口和相同资源预算下直接评价。"
+    },
+    {
+      "old": "\\caption{与相关工作直接定量比较的主要障碍}\n\\label{tab:baseline_cmp}\n\\footnotesize\n\\setlength{\\tabcolsep}{3pt}\n\\begin{tabular}{>{\\raggedright\\arraybackslash}p{2.3cm}>{\\raggedright\\arraybackslash}p{5.0cm}}\n\\toprule\n\\textbf{方法类别} & \\textbf{直接定量比较的主要障碍} \\\\\n\\midrule\n结构重映射 & 备用单元分配以布线后负载与备用单元布局为输入，收益依赖实际布局信息 \\\\\n逻辑补丁构造 & 以功能等价性（SAT/CEC）而非 WNS 改善为接受判据，评价目标不同 \\\\\nB/G 物理优化 & 学习驱动方法需训练环境与训练数据，物理流程多依赖商用引擎或内部流程 \\\\\nFAECO（本文） & 采用公开工具链与公开工艺库，流程与参数随补充材料发布 \\\\\n\\bottomrule\n\\end{tabular}\n",
+      "new": "\\caption{相关路线的候选对象与决策信号}\n\\label{tab:baseline_cmp}\n\\footnotesize\n\\setlength{\\tabcolsep}{2pt}\n\\begin{tabular}{>{\\raggedright\\arraybackslash}p{1.6cm}>{\\raggedright\\arraybackslash}p{2.7cm}>{\\raggedright\\arraybackslash}p{2.9cm}}\n\\toprule\n\\textbf{代表路线} & \\textbf{候选对象与生成依据} & \\textbf{筛选信号及与本文的差别} \\\\\n\\midrule\nHo 等\\cite{ho2010eco} & 备用单元分配与局部技术重映射 & 物理负载及备用资源；需保持布局资源约束 \\\\\nWu 等\\cite{jiang2010fraig} & 共享逻辑识别、修正点及插值补丁 & 与修订规格一致；目标是修正功能差异 \\\\\nCheng 等\\cite{jiang2016resource} & 多个功能补丁及备用单元映射估计 & 估计门数与连线代价；明确使用备用单元位置 \\\\\nAiTO\\cite{chen2024aito} & GNN/RL 联合尺寸与缓冲动作 & 学习优化策略；动作组织与策略状态不同 \\\\\nFAECO & 加权/覆盖边界上的 R/G/B/JOINT & 独立 STA 接受及最终 SEC；同预算比较边界与顺序 \\\\\n\\bottomrule\n\\end{tabular}\n"
+    }
+  ],
+  "scope": "Primary-source correction and algorithm-level comparison; no fabricated external baseline performance"
+}

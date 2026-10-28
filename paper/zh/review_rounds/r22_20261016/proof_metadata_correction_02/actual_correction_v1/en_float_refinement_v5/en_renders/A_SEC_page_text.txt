@@ -1,0 +1,74 @@
+changes drive strength; R depends on equivalent Boolean implementations available
+in the library.
+-1.75
+-1.50
+-1.25
+-1.00
+-0.75
+-0.50
+-0.25
+0.00
+WNS (ns)
+s27
+s382
+s420
+s641
+s713
+s820
+s832
+s953
++0.09
++0.09
++0.01
++0.04
++0.02
++0.02
++0.06
++0.04
+ISCAS89: paired ideal-net WNS
+Pre-placement screening
+Baseline
+FAECO
+Figure 3: Baseline and FAECO WNS on ISCAS89 sequential circuits at 0.5 ns. Labels report gain
+relative to baseline.
+Table 8: Sequential equivalence of the efficiency-first repaired pairs.
+Circuit
+Proven/unproven
+SEC
+Wall time (s)
+s27
+11/0
+Proven
+0.281
+s382
+90/0
+Proven
+0.281
+s420
+79/0
+Proven
+0.250
+s641
+124/0
+Proven
+0.313
+s713
+126/0
+Proven
+0.328
+s820
+139/0
+Proven
+0.344
+s832
+146/0
+Proven
+0.391
+s953
+228/0
+Proven
+0.407
+Yosys 0.33 and SKY130 behavioral models: equiv_make, equiv_simple, equiv_induct
+-seq 10 and equiv_status -assert. Wall time covers each prover call in one batch; mapping,
+candidate STA and model preparation are excluded.
+15
