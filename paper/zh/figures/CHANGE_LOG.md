@@ -172,3 +172,13 @@ v2仅加CSV严格SHA门和逐panel内容框，v1历史保留。作者实看8pane
 ### r28 图幅验收
 - 无新图生成/像素编辑/绘图源或数据变动，九唯一图字节逐SHA保持r27。仅TeX放置宽度改变，保持纵横比；两PNG实际139.3952×92.9301mm，定量图最小字6.39716/6.11806bp。
 - 完整19页与关键图页已实看，图4/5的普通浮动约束防止堆页/裁底；中间失败保历史，最终双稿仍严格黑白灰。见r28/ACTUAL_FIGURE_SIZE_QA及FINAL_DELIVERY。
+
+## r95 2026-10-28 — 臂名显示标签 CO 与改善量单位 ns（另存 r95_monolabel）
+
+- 起因：r95 审稿面板 R1/R2 指出臂名 `C`（仅覆盖区域）与子锥 $C_i$、区域族 $C_c/C_w$ 同字母，图例与表内易误读；图 3(a) 色标与格内标注用 ps，正文用 ns。
+- 处置：**只改显示层，不改数据**。两张量化图（`r24_cp_gain_cost`、`r24_cp_budget_curves`）另存 `data/final/r95_monolabel/`，源脚本置其 `sources/`，`r27_monochrome/` 原产物整目录保留不动。
+- 脚本改动（`sources/r24_cp_gain_cost.py`）：新增 `ARM_LABELS`，数据键仍为 `'C'`（审计作业集与 STYLES 查找不受影响），仅 `set_xticks` 用显示标签；改善矩阵改用 `wns_gain_ns`，格内两位小数（全部接受改善均为 10 ps 整数倍，0.02–0.46 ns，两位小数无损），色标 0–0.4 ns；两个面板分别用 `ns_label`/`count_label`，STA 面板仍为整数。`sources/r24_cp_budget_curves.py` 仅把图例 `('C','C')` 改为 `('C','CO')`。
+- 数据一致性：`r24_cp_gain_cost_source.csv`、`r24_cp_gain_cost_paired.csv`、`r24_cp_gain_cost_arm_summary.csv`、`PAIRED_SUMMARY.json`、`PANEL_ALIGNMENT.json`，以及曲线图的 `CANDIDATE_STA_COMMITTED_CURVES.csv`、`COMMIT_EVENTS.csv`、`CURVE_RECONSTRUCTION_AUDIT.json`、`RECONSTRUCTION_SOURCE_BINDING.json`、`PANEL_CONTENT_BOXES.json`，与 `r27_monochrome/` 同名文件**逐字节相同**。仅 `FIGURE_CONTRACT.json`（措辞：ps→ns、C→CO、reuse 追加 relabel 说明）与 `SOURCE_BINDING.json`（渲染件 SHA 与数据字段说明）随新产物更新。
+- 运行守卫照旧生效：审计文件 SHA `a34da9c3…`、`head 3ea0f75`、72 作业、逐 `completion.json` SHA、SEC 与 STA 台账范围；输出 72 对象、候选 STA 6858、曲线 6930 点、46 个全等组，与 r27 一致。
+- 两处一次成型的坑已修：初版把两位小数格式套到 STA 面板，四位数挤成 `177.00177.00`；改为按面板传格式化函数后重绘。首版产物未入库，存 `scratch/r95_qa/old_gain_cost_try1/`。
+- 版面：两图物理尺寸仍 170×70 mm 与 170×108 mm，正文占幅 92% 未动，主稿页数不变。
