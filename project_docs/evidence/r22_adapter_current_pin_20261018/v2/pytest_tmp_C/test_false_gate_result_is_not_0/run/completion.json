@@ -1,0 +1,162 @@
+{
+  "schema": "r22-C-reconstruction-run-v1",
+  "simulated": true,
+  "status": "qa_complete",
+  "stop_reason": "no_improvement",
+  "initial_sha256": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+  "final_sha256": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+  "final_text": "{\"x\": \"0\", \"y\": \"0\"}",
+  "baseline": {
+    "wns": 0.0,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "final_metrics": {
+    "wns": 0.0,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "counts": {
+    "candidate_proposals": 1,
+    "candidate_evaluations": 1,
+    "precheck_rejects": 1,
+    "budget_rejects": 0,
+    "sta_reservations": 3,
+    "sta_launches": 3,
+    "failed_launch_attempts": 0,
+    "candidate_sta_launches": 0,
+    "joint_sta_launches": 0,
+    "baseline_sta_launches": 1,
+    "refresh_sta_launches": 1,
+    "final_sta_launches": 1,
+    "candidate_reservations": 0,
+    "cache_hits": 0,
+    "commits": 0,
+    "sec_calls": 1
+  },
+  "trials": [
+    {
+      "trial_id": 0,
+      "round": 1,
+      "stage": "SINGLE",
+      "action": {
+        "instance": "x",
+        "kind": "G",
+        "target": "1",
+        "pin_map": {},
+        "pin": "",
+        "new_net": ""
+      },
+      "actions": [
+        {
+          "instance": "x",
+          "kind": "G",
+          "target": "1",
+          "pin_map": {},
+          "pin": "",
+          "new_net": ""
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_false_gate_result_is_not_0\\run\\trial_000000",
+      "base_sha256": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+      "candidate_sha256": "7538e68bad4c19fadb4fd0b55a5c722de369a33a1d09bc53cf2d299679fde11a",
+      "same_bytes_as_base": false,
+      "status": "precheck_reject",
+      "reason": "Candidate F1/F2/domain rejected: {'status': 'fail', 'reason': 'F2 false'}"
+    }
+  ],
+  "commits": [],
+  "passes": [
+    {
+      "round": 1,
+      "critical_order": [
+        "x",
+        "y"
+      ],
+      "improved": false,
+      "refresh_metrics": {
+        "wns": 0.0,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      },
+      "current_metrics": {
+        "wns": 0.0,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    }
+  ],
+  "sec_status": "pass",
+  "sec_bound": true,
+  "sec_nonempty_supported_proof": true,
+  "sec_proof_points": [
+    [
+      "1",
+      "0"
+    ]
+  ],
+  "evidence_receipt": {
+    "baseline/attempt_001/command.json": "3d332fcf2106101bac7790dd4be24edc2afae676cc48a1c50dea195332367fbf",
+    "baseline/attempt_001/input_snapshot.json": "e1734be738f0e33e566d3fa1ee8716c60104472a88f4a078651cfdb5e549506f",
+    "baseline/attempt_001/invocation.json": "c6bce37443679c828aae4be69aceb7ae8a0572e26485071bad6614baad5d6f46",
+    "baseline/attempt_001/read_verilog_input.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "baseline/attempt_001/sta.tcl": "7d93437a8a2a0588187989859834a1058392810ec77e7e09f49235b25a62d6e4",
+    "baseline/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "baseline/mapped.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "baseline/measurement.json": "297ceb50cf4282eb9543cd3dde64f24016ab9d2a61d4c7137a334d9adac7ba14",
+    "baseline/sta.tcl": "7d93437a8a2a0588187989859834a1058392810ec77e7e09f49235b25a62d6e4",
+    "config.json": "eb985b303f9e0e57bf006e428780af140bb577be5354902f1d3bc826581fc502",
+    "events.jsonl": "4d7acc5652abb918032167b1070603a5136cccd45610c6e8f3f060e5778546b1",
+    "final.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/cells.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sec/final_raw.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/gate.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/gold.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/helpers.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sec/initial_raw.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/result.json": "21a73e75dc8b50303f781662530b15ec6e9a585e888d0d867e17e486a2dff036",
+    "final_sec/sec.log": "432d8c451d60043c7802fca8e7f9514a899f3ca0ce070f3c920d9bdfa876c986",
+    "final_sec/sec.ys": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sta/attempt_001/command.json": "10a42ff4f1e58e345b0f06c2a0ef3ab6e0e1d2f3b26b1030247581f4a3ecd285",
+    "final_sta/attempt_001/input_snapshot.json": "cdb482f245642f0ee30949d1d7d8214eeb76c93e7e898b8276f38e8851d83a73",
+    "final_sta/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "final_sta/attempt_001/read_verilog_input.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sta/attempt_001/sta.tcl": "86ed7477c17af9ea76e64677d1a7b7098b753b5a832f9b3e6d7c254c027b677e",
+    "final_sta/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final_sta/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "final_sta/mapped.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sta/measurement.json": "297ceb50cf4282eb9543cd3dde64f24016ab9d2a61d4c7137a334d9adac7ba14",
+    "final_sta/sta.tcl": "86ed7477c17af9ea76e64677d1a7b7098b753b5a832f9b3e6d7c254c027b677e",
+    "initial.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "pass_001_refresh/attempt_001/command.json": "c3520082dbd2e5d7968794bd488dd4766ac735a7ebd03fb7fd37a357b03092e3",
+    "pass_001_refresh/attempt_001/input_snapshot.json": "6b2fffdb42eac8c2e11a3518646cb8728d5db561c7f63bedaad44064bc8ae6aa",
+    "pass_001_refresh/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "pass_001_refresh/attempt_001/read_verilog_input.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "pass_001_refresh/attempt_001/sta.tcl": "e63f223173173be006d598fa11f7d90bac4a96bd9a04babcc071c629c8aca152",
+    "pass_001_refresh/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pass_001_refresh/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "pass_001_refresh/mapped.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "pass_001_refresh/measurement.json": "297ceb50cf4282eb9543cd3dde64f24016ab9d2a61d4c7137a334d9adac7ba14",
+    "pass_001_refresh/sta.tcl": "e63f223173173be006d598fa11f7d90bac4a96bd9a04babcc071c629c8aca152",
+    "run_result.json": "67d9cd4a0c2c6da4e46b334db7949ef8548cfdac4438c50cb75537d6042c5690",
+    "sec_preflight/binding.json": "09b6c5eb710f6f9e811db35d72868ae74848189e1e2882d26ff2d35894160e60",
+    "sec_preflight/model_preflight.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "trial_000000/base.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "trial_000000/candidate.v": "7538e68bad4c19fadb4fd0b55a5c722de369a33a1d09bc53cf2d299679fde11a",
+    "trial_000000/decision.json": "a1bd549cb555be3879c6e6c3d684b9b3c6f355c0c7fc9cd091a570b12690db55",
+    "trial_000000/proposal.json": "a1bd549cb555be3879c6e6c3d684b9b3c6f355c0c7fc9cd091a570b12690db55"
+  }
+}

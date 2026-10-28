@@ -1,0 +1,65 @@
+# ── 行尾策略（FAECO）───────────────────────────────────────
+# versions/vN/MANIFEST.sha256 必须保持 LF-only。
+# 原因：本仓库 core.autocrlf=true，若不强制，检出到 Windows 工作副本时
+# 会被写成 CRLF，`sha256sum -c` 会把 \r 当作文件名的一部分而全行报错
+# （'…'$'\r': No such file or directory）。
+# 教训条见 versions/v9/README.md 与 project_docs/OPEN_ISSUES.md（OI-026 取证）。
+versions/*/MANIFEST.sha256 text eol=lf
+
+# New r22 byte-pinned receipts/archives must survive checkout without conversion.
+project_docs/evidence/r22_correctness_20261016/sequential_tdd/** -text
+project_docs/evidence/r22_correctness_20261016/sequential_integration_qa/** -text
+project_docs/evidence/r22_correctness_20261016/f1_scope_qa/** -text
+project_docs/evidence/r22_correctness_20261016/proof_model_preservation/** -text
+project_docs/evidence/r22_correctness_20261016/SEQUENTIAL*.json -text
+project_docs/evidence/r22_correctness_20261016/full_regression_v[678].* -text
+project_docs/evidence/r22_correctness_20261016/V8_POST_RUN_VERIFICATION.json -text
+project_docs/evidence/r22_b_model_audit_20261016/B17_new_model_proofs/** -text
+project_docs/evidence/r22_b_model_audit_20261016/B17_PROOF_RECOVERY_DESIGN.* -text
+project_docs/evidence/r22_b_model_audit_20261016/B3_RERUN_DESIGN.* -text
+project_docs/evidence/r22_cprime_v3_20261016/** -text
+experiments/20261016_r22_cut_ablation_v3/** -text
+
+# Reviewed adapters, raw audit snapshots and rendered QA retain exact bytes.
+project_docs/evidence/r22_b_model_audit_20261016/B3_RECONSTRUCTION_ADAPTER/** -text
+project_docs/evidence/r22_rerun_design_20261016/C_ADAPTER_REVIEW/** -text
+project_docs/evidence/r22_rerun_design_20261016/C_RECONSTRUCTION_ADAPTER/** -text
+project_docs/evidence/r22_rerun_design_20261016/C_RECONSTRUCTION_REVIEW_PLANS/** -text
+project_docs/evidence/r22_rerun_design_20261016/C_TRANSACTION_ADAPTER_REVIEW/** -text
+project_docs/evidence/r22_s_model_audit_20261016/** -text
+project_docs/evidence/r22_spef_audit_20261016/** -text
+paper/zh/review_rounds/r22_20261016/** -text
+paper/zh/review_rounds/r22_20261018/** -text
+paper/zh/figures/data/previews/** -text
+paper/zh/figures/data/scripts/review_r22_*.py -text
+paper/zh/figures/data/plot_specs/r22_*.json -text
+paper/en/manuscript/FAECO.tex -text
+paper/en/submission/source_binding.json -text
+paper/en/submission/build_metrics.json -text
+paper/en/submission/draft_checks.json -text
+paper/en/submission/BUILD_DIAGNOSTICS.md -text
+paper/zh/manuscript/*.tex -text
+project_docs/evidence/r22_stage_closure_20261018/** -text
+project_docs/evidence/r22_s_cec_repair_20261018/** -text
+project_docs/evidence/r22_parasitic_repair_20261018/** -text
+project_docs/evidence/r22_spef_topology_repair_20261018/** -text
+project_docs/evidence/r22_s_spef_integrated_20261018/** -text
+code/src/rseco/spef.py -text
+code/src/rseco/real_wns.py -text
+code/src/rseco/opensta.py -text
+code/src/rseco/structure_resynthesis.py -text
+code/src/rseco/yosys_abc.py -text
+code/scripts/run_parasitic_aware_check.py -text
+code/tests/test_spef_pin_topology.py -text
+code/tests/test_real_wns.py -text
+code/tests/test_s_cec_evidence.py -text
+code/tests/test_r22_parasitic_measurement.py -text
+code/tests/test_sol_review_residuals.py -text
+project_docs/evidence/r22_b18_domain_20261018/** -text
+code/src/rseco/verilog_modules.py -text
+code/tests/test_yosys_abc_flow.py -text
+code/tests/test_cells_extract.py -text
+code/tests/test_cec_blif_scope.py -text
+project_docs/evidence/r22_cec_top_scope_audit_20261018/** -text
+experiments/20261018_r22_D_revalidate_v1/** -text
+project_docs/evidence/r22_D_revalidation_20261018/** -text

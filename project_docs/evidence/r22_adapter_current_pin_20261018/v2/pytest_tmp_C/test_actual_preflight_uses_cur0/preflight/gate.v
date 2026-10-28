@@ -1,0 +1,1 @@
+module top(A,Y,Z); input A; output Y,Z; sky130_fd_sc_hd__buf_2 x (.A(A),.X(Y)); sky130_fd_sc_hd__buf_1 y(.A(A),.X(Z)); endmodule

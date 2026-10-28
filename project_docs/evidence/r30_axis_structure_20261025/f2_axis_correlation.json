@@ -1,0 +1,343 @@
+{
+  "question": "is the candidate-level implementation effect ONE degree of freedom (rho = +1), candidate-specific independent noise (rho = 0), or a negatively correlated two-dimensional structure (rho < 0)?",
+  "definitions": {
+    "imp01": "wns_F1 - wns_F0   (F0 -> F1: both physical axes change)",
+    "imp12": "wns_F2 - wns_F1   (F1 -> F2: HORIZONTAL pin layer only)",
+    "imp02": "wns_F2 - wns_F0   (F0 -> F2: VERTICAL pin layer only)",
+    "identity": "imp02 = imp01 + imp12 per candidate",
+    "axis_mapping": "F0 = pins met3(hor)/met2(ver) util 10; F1 = met5/met4 util 30; F2 = met3/met4 util 30; die_area and core_area identical in all three (the floorplan is frozen and the utilisation target is inert -- the run logs echo Util 11.850% in all three)"
+  },
+  "identity_max_abs_error": 6.938893903907228e-18,
+  "degeneracy_per_circuit": {
+    "b01": {
+      "F0_vs_F2_identical_for_all": false,
+      "F1_vs_F2_identical_for_all": false,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 571,
+      "n_F0_eq_F2": 87,
+      "n_F1_eq_F2": 103
+    },
+    "b02": {
+      "F0_vs_F2_identical_for_all": true,
+      "F1_vs_F2_identical_for_all": false,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 55,
+      "n_F0_eq_F2": 55,
+      "n_F1_eq_F2": 15
+    },
+    "b03": {
+      "F0_vs_F2_identical_for_all": false,
+      "F1_vs_F2_identical_for_all": false,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 71,
+      "n_F0_eq_F2": 11,
+      "n_F1_eq_F2": 5
+    },
+    "b08": {
+      "F0_vs_F2_identical_for_all": true,
+      "F1_vs_F2_identical_for_all": false,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 127,
+      "n_F0_eq_F2": 127,
+      "n_F1_eq_F2": 11
+    },
+    "b09": {
+      "F0_vs_F2_identical_for_all": true,
+      "F1_vs_F2_identical_for_all": false,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 92,
+      "n_F0_eq_F2": 92,
+      "n_F1_eq_F2": 11
+    },
+    "b10": {
+      "F0_vs_F2_identical_for_all": false,
+      "F1_vs_F2_identical_for_all": true,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 216,
+      "n_F0_eq_F2": 32,
+      "n_F1_eq_F2": 216
+    },
+    "b13": {
+      "F0_vs_F2_identical_for_all": true,
+      "F1_vs_F2_identical_for_all": false,
+      "F0_vs_F1_identical_for_all": false,
+      "n_candidates": 75,
+      "n_F0_eq_F2": 75,
+      "n_F1_eq_F2": 19
+    }
+  },
+  "non_degenerate_circuits": [
+    "b01",
+    "b03"
+  ],
+  "groups": {
+    "full_family": {
+      "tag": "all 7 circuits (the family as published)",
+      "n": 1207,
+      "n_pools": 54,
+      "pearson_r": -0.7640672147276872,
+      "spearman_rho": -0.6464830330899702,
+      "var_imp01": 0.0007078810586668945,
+      "var_imp12": 0.0007096571821917753,
+      "var_imp02": 0.00033444459558050813,
+      "sd_imp01": 0.02660603425290764,
+      "sd_imp12": 0.026639391550705042,
+      "sd_imp02": 0.018287826431276848,
+      "var_independent_prediction": 0.0014175382408586697,
+      "var_ratio_observed_over_independent": 0.235933,
+      "covariance": -0.001083094,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      },
+      "bootstrap_pearson_r": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "n_effective": 5000,
+        "ci95": [
+          -0.877397,
+          -0.596337
+        ],
+        "median": -0.76194,
+        "frac_negative": 1.0,
+        "frac_below_minus_0_5": 0.9986,
+        "frac_above_0": 0.0,
+        "unit": "the POOL is resampled (the unit of independence)"
+      }
+    },
+    "non_degenerate": {
+      "tag": "circuits where all three realisations differ: b01／b03",
+      "n": 642,
+      "n_pools": 18,
+      "pearson_r": -0.6524346024906311,
+      "spearman_rho": -0.5844982854887422,
+      "var_imp01": 0.0004254209981483369,
+      "var_imp12": 0.0004871098021490942,
+      "var_imp02": 0.000318526105530203,
+      "sd_imp01": 0.02062573630560463,
+      "sd_imp12": 0.022070564155659778,
+      "sd_imp02": 0.017847299670544083,
+      "var_independent_prediction": 0.0009125308002974311,
+      "var_ratio_observed_over_independent": 0.349058,
+      "covariance": -0.000594005,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      },
+      "bootstrap_pearson_r": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "n_effective": 5000,
+        "ci95": [
+          -0.766748,
+          -0.534117
+        ],
+        "median": -0.653378,
+        "frac_negative": 1.0,
+        "frac_below_minus_0_5": 0.9924,
+        "frac_above_0": 0.0,
+        "unit": "the POOL is resampled (the unit of independence)"
+      }
+    },
+    "degenerate": {
+      "tag": "circuits with at least one degenerate pair",
+      "n": 565,
+      "n_pools": 36,
+      "pearson_r": -0.863255522385568,
+      "spearman_rho": -0.7806677115068975,
+      "var_imp01": 0.0010245007217724211,
+      "var_imp12": 0.0008217743049017812,
+      "var_imp02": 0.00026210506495951894,
+      "sd_imp01": 0.0320078228214982,
+      "sd_imp12": 0.028666606093184124,
+      "sd_imp02": 0.01618965919837471,
+      "var_independent_prediction": 0.0018462750266742024,
+      "var_ratio_observed_over_independent": 0.141964,
+      "covariance": -0.00158417,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      },
+      "bootstrap_pearson_r": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "n_effective": 5000,
+        "ci95": [
+          -0.956172,
+          -0.643711
+        ],
+        "median": -0.859902,
+        "frac_negative": 1.0,
+        "frac_below_minus_0_5": 0.9994,
+        "frac_above_0": 0.0,
+        "unit": "the POOL is resampled (the unit of independence)"
+      }
+    },
+    "circuit_b01": {
+      "tag": "b01",
+      "n": 571,
+      "n_pools": 9,
+      "pearson_r": -0.5976756456504049,
+      "spearman_rho": -0.5647215034718785,
+      "var_imp01": 0.0002923698036685404,
+      "var_imp12": 0.0003598574369373537,
+      "var_imp02": 0.00026449933941684344,
+      "sd_imp01": 0.017098824628276072,
+      "sd_imp12": 0.018969908722430734,
+      "sd_imp02": 0.016263435658459238,
+      "var_independent_prediction": 0.0006522272406058942,
+      "var_ratio_observed_over_independent": 0.405532,
+      "covariance": -0.000387728,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    },
+    "circuit_b02": {
+      "tag": "b02",
+      "n": 55,
+      "n_pools": 3,
+      "pearson_r": -1.0,
+      "spearman_rho": -1.0,
+      "var_imp01": 0.00020525252525252526,
+      "var_imp12": 0.00020525252525252526,
+      "var_imp02": 0.0,
+      "sd_imp01": 0.01432663691354413,
+      "sd_imp12": 0.01432663691354413,
+      "sd_imp02": null,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    },
+    "circuit_b03": {
+      "tag": "b03",
+      "n": 71,
+      "n_pools": 9,
+      "pearson_r": -0.6966827918072972,
+      "spearman_rho": -0.6642249192252409,
+      "var_imp01": 0.0012824949698189154,
+      "var_imp12": 0.0010178269617706227,
+      "var_imp02": 0.0007083702213279682,
+      "sd_imp01": 0.03581193892850421,
+      "sd_imp12": 0.03190340047347026,
+      "sd_imp02": 0.02661522536684535,
+      "var_independent_prediction": 0.0023003219315895383,
+      "var_ratio_observed_over_independent": 0.307944,
+      "covariance": -0.001591952,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    },
+    "circuit_b08": {
+      "tag": "b08",
+      "n": 127,
+      "n_pools": 6,
+      "pearson_r": -1.0,
+      "spearman_rho": -1.0,
+      "var_imp01": 0.0005927634045744284,
+      "var_imp12": 0.0005927634045744284,
+      "var_imp02": 0.0,
+      "sd_imp01": 0.024346732934306163,
+      "sd_imp12": 0.024346732934306163,
+      "sd_imp02": null,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    },
+    "circuit_b09": {
+      "tag": "b09",
+      "n": 92,
+      "n_pools": 9,
+      "pearson_r": -1.0,
+      "spearman_rho": -1.0,
+      "var_imp01": 0.002592785475394171,
+      "var_imp12": 0.002592785475394171,
+      "var_imp02": 0.0,
+      "sd_imp01": 0.05091940175801529,
+      "sd_imp12": 0.05091940175801529,
+      "sd_imp02": null,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    },
+    "circuit_b10": {
+      "tag": "b10",
+      "n": 216,
+      "n_pools": 9,
+      "pearson_r": null,
+      "spearman_rho": null,
+      "var_imp01": 0.0006592161929371241,
+      "var_imp12": 0.0,
+      "var_imp02": 0.0006592161929371241,
+      "sd_imp01": 0.02567520580126134,
+      "sd_imp12": null,
+      "sd_imp02": 0.02567520580126134,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    },
+    "circuit_b13": {
+      "tag": "b13",
+      "n": 75,
+      "n_pools": 9,
+      "pearson_r": -1.0,
+      "spearman_rho": -1.0,
+      "var_imp01": 0.0003483603603603604,
+      "var_imp12": 0.0003483603603603604,
+      "var_imp02": 0.0,
+      "sd_imp01": 0.01866441427852373,
+      "sd_imp12": 0.01866441427852373,
+      "sd_imp02": null,
+      "hypothesis_one_degree_of_freedom": {
+        "predicted_r": 1.0,
+        "meaning": "all realisations share one per-candidate bias"
+      },
+      "hypothesis_independent_candidate_specific": {
+        "predicted_r": 0.0,
+        "meaning": "each realisation perturbs each candidate independently"
+      }
+    }
+  },
+  "boundary": "PROBE level, NOT paper evidence.  The candidate-level correlation is a descriptive statistic, not an independent test of the two hypotheses: on the DEGENERATE circuits the correlation is forced to -1 by the degeneracy itself (imp02 == 0 forces imp01 = -imp12), so only the non-degenerate subset carries information.  The non-degenerate subset has 2 circuits.  The post-route WNS is quantised to 0.01 ns.  Parasitics come from estimate_parasitics, not signoff RCX."
+}

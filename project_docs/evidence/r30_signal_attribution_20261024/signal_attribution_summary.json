@@ -1,0 +1,1977 @@
+{
+  "question": "with the FINAL band (full_family, 2 sigma = 0.049752 ns), does the gate-level graph-feature signal survive? and is it a CANDIDATE-level signal a generator can use, or a POOL-level one it cannot?",
+  "family": "itc99",
+  "band_final_ns": 0.049752,
+  "band_preview_ns": 0.050419,
+  "band_pilot_ns": 0.087496,
+  "band_scope": "full_family",
+  "control_faithfulness": {
+    "n_checks": 20,
+    "n_mismatches": 0,
+    "max_absolute_deviation": 0.0,
+    "note": "the control pass runs at the band in force and reproduces the artefacts the finalisation chain just wrote -- so these numbers are the finalised ones, not a re-derivation"
+  },
+  "preview_to_final": {
+    "resolvable": {
+      "n_positive_preview": 389,
+      "n_positive_final": 434,
+      "structural_preview": {
+        "pooled_auc": 0.445175,
+        "ci95": [
+          0.3725928870281248,
+          0.5301298220836234
+        ]
+      },
+      "structural_final": {
+        "pooled_auc": 0.432507,
+        "ci95": [
+          0.36709890969945436,
+          0.512156074517505
+        ],
+        "recall_at_25pct": 0.350318,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "kind_only_final": {
+        "pooled_auc": 0.538238,
+        "ci95": [
+          0.4926098515544199,
+          0.5984763439716498
+        ],
+        "recall_at_25pct": 0.422226,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": true
+      },
+      "proxy_plus_ideal_final": {
+        "pooled_auc": 0.791982,
+        "ci95": [
+          0.6830970251585216,
+          0.8673266725363898
+        ],
+        "recall_at_25pct": 0.657619,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      }
+    },
+    "gain": {
+      "n_positive_preview": 37,
+      "n_positive_final": 48,
+      "structural_preview": {
+        "pooled_auc": 0.661449,
+        "ci95": [
+          0.4559604452017027,
+          0.8176322187974577
+        ]
+      },
+      "structural_final": {
+        "pooled_auc": 0.698248,
+        "ci95": [
+          0.5189502519007898,
+          0.8327556285276992
+        ],
+        "recall_at_25pct": 0.451724,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "kind_only_final": {
+        "pooled_auc": 0.168879,
+        "ci95": [
+          0.09928343865814897,
+          0.4051500839171032
+        ],
+        "recall_at_25pct": 0.5341,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "proxy_plus_ideal_final": {
+        "pooled_auc": 0.685415,
+        "ci95": [
+          0.4688150859557109,
+          0.9077360961627681
+        ],
+        "recall_at_25pct": 0.716092,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      }
+    },
+    "harm": {
+      "n_positive_preview": 352,
+      "n_positive_final": 386,
+      "structural_preview": {
+        "pooled_auc": 0.503017,
+        "ci95": [
+          0.3987147057828029,
+          0.6111839549679736
+        ]
+      },
+      "structural_final": {
+        "pooled_auc": 0.499071,
+        "ci95": [
+          0.3983427005726286,
+          0.6017911015737856
+        ],
+        "recall_at_25pct": 0.341608,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "kind_only_final": {
+        "pooled_auc": 0.578254,
+        "ci95": [
+          0.538647259186992,
+          0.6267427449835533
+        ],
+        "recall_at_25pct": 0.405405,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      },
+      "proxy_plus_ideal_final": {
+        "pooled_auc": 0.900424,
+        "ci95": [
+          0.8698134164810927,
+          0.9289568161818882
+        ],
+        "recall_at_25pct": 0.732644,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      }
+    }
+  },
+  "ablation_resolvable_final": {
+    "ideal_only": {
+      "pooled_auc": 0.85939,
+      "pooled_auc_ci95": [
+        0.7574756735720121,
+        0.9302711623755617
+      ],
+      "n_features": [
+        "ideal_gain"
+      ]
+    },
+    "placed_only": {
+      "pooled_auc": 0.896779,
+      "pooled_auc_ci95": [
+        0.8007080855579918,
+        0.9530237411065559
+      ],
+      "n_features": [
+        "placed_gain"
+      ]
+    },
+    "proxy_plus_ideal": {
+      "pooled_auc": 0.791982,
+      "pooled_auc_ci95": [
+        0.6797981672392468,
+        0.8688164840362668
+      ],
+      "n_features": [
+        "timing_gain",
+        "patch_size",
+        "boundary_complexity",
+        "verification_cost",
+        "equivalence_confidence",
+        "critical_path_coverage",
+        "strategy_priority",
+        "proxy_score",
+        "proxy_rank",
+        "ideal_gain",
+        "kind_B",
+        "kind_G",
+        "kind_JOINT",
+        "kind_R",
+        "iteration"
+      ]
+    },
+    "structural": {
+      "pooled_auc": 0.432507,
+      "pooled_auc_ci95": [
+        0.3669290649565981,
+        0.5094429904584922
+      ],
+      "n_features": [
+        "mod_found",
+        "mod_fanin",
+        "mod_fanout",
+        "mod_level",
+        "mod_cone_down",
+        "mod_cone_up",
+        "mod_on_longest_path",
+        "mod_is_ff",
+        "mod_cone_down_frac",
+        "depth",
+        "n_cells",
+        "n_ff",
+        "max_fanout",
+        "n_primary_inputs",
+        "n_primary_outputs",
+        "d_depth",
+        "d_n_cells",
+        "d_max_fanout",
+        "kind_B",
+        "kind_G",
+        "kind_JOINT",
+        "kind_R",
+        "iteration"
+      ]
+    },
+    "ideal_plus_placed": {
+      "pooled_auc": 0.849537,
+      "pooled_auc_ci95": [
+        0.7558382641103849,
+        0.9062998407233804
+      ],
+      "n_features": [
+        "ideal_gain",
+        "placed_gain",
+        "kind_B",
+        "kind_G",
+        "kind_JOINT",
+        "kind_R",
+        "iteration"
+      ]
+    },
+    "proxy_plus_placed": {
+      "pooled_auc": 0.799853,
+      "pooled_auc_ci95": [
+        0.6971029556763111,
+        0.8671823453570221
+      ],
+      "n_features": [
+        "timing_gain",
+        "patch_size",
+        "boundary_complexity",
+        "verification_cost",
+        "equivalence_confidence",
+        "critical_path_coverage",
+        "strategy_priority",
+        "proxy_score",
+        "proxy_rank",
+        "placed_gain",
+        "kind_B",
+        "kind_G",
+        "kind_JOINT",
+        "kind_R",
+        "iteration"
+      ]
+    }
+  },
+  "classifier_final": {
+    "resolvable": {
+      "kind_only": {
+        "pooled_auc": 0.538238,
+        "ci95": [
+          0.4926098515544199,
+          0.5984763439716498
+        ],
+        "recall_at_25pct": 0.422226,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": true
+      },
+      "structural": {
+        "pooled_auc": 0.432507,
+        "ci95": [
+          0.36709890969945436,
+          0.512156074517505
+        ],
+        "recall_at_25pct": 0.350318,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "structural_plus_ideal": {
+        "pooled_auc": 0.709976,
+        "ci95": [
+          0.5708979403921661,
+          0.8214222737205084
+        ],
+        "recall_at_25pct": 0.664242,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": true
+      },
+      "proxy_only": {
+        "pooled_auc": 0.582875,
+        "ci95": [
+          0.5103610611521427,
+          0.6478123205227542
+        ],
+        "recall_at_25pct": 0.397585,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "proxy_plus_ideal": {
+        "pooled_auc": 0.791982,
+        "ci95": [
+          0.6830970251585216,
+          0.8673266725363898
+        ],
+        "recall_at_25pct": 0.657619,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      },
+      "structural_cp_plus_ideal": {
+        "pooled_auc": 0.763057,
+        "ci95": [
+          0.6519756829467412,
+          0.8416117917934753
+        ],
+        "recall_at_25pct": 0.665555,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      }
+    },
+    "gain": {
+      "kind_only": {
+        "pooled_auc": 0.168879,
+        "ci95": [
+          0.09928343865814897,
+          0.4051500839171032
+        ],
+        "recall_at_25pct": 0.5341,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "structural": {
+        "pooled_auc": 0.698248,
+        "ci95": [
+          0.5189502519007898,
+          0.8327556285276992
+        ],
+        "recall_at_25pct": 0.451724,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "structural_plus_ideal": {
+        "pooled_auc": 0.713654,
+        "ci95": [
+          0.5474113944627327,
+          0.8384399020072058
+        ],
+        "recall_at_25pct": 0.649425,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "proxy_only": {
+        "pooled_auc": 0.647256,
+        "ci95": [
+          0.4231763551962135,
+          0.8472232073030614
+        ],
+        "recall_at_25pct": 0.485057,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "proxy_plus_ideal": {
+        "pooled_auc": 0.685415,
+        "ci95": [
+          0.4688150859557109,
+          0.9077360961627681
+        ],
+        "recall_at_25pct": 0.716092,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "structural_cp_plus_ideal": {
+        "pooled_auc": 0.713381,
+        "ci95": [
+          0.5542574839003085,
+          0.8345232903808649
+        ],
+        "recall_at_25pct": 0.649425,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      }
+    },
+    "harm": {
+      "kind_only": {
+        "pooled_auc": 0.578254,
+        "ci95": [
+          0.538647259186992,
+          0.6267427449835533
+        ],
+        "recall_at_25pct": 0.405405,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      },
+      "structural": {
+        "pooled_auc": 0.499071,
+        "ci95": [
+          0.3983427005726286,
+          0.6017911015737856
+        ],
+        "recall_at_25pct": 0.341608,
+        "G1_ci_excludes_0.5": false,
+        "G2_above_kind_only": false,
+        "G3_sweep_stable": false,
+        "G4_budget_recall": false
+      },
+      "structural_plus_ideal": {
+        "pooled_auc": 0.870392,
+        "ci95": [
+          0.7987740978096111,
+          0.9218740545807053
+        ],
+        "recall_at_25pct": 0.762735,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      },
+      "proxy_only": {
+        "pooled_auc": 0.675064,
+        "ci95": [
+          0.6060601222309381,
+          0.7490534725265586
+        ],
+        "recall_at_25pct": 0.332655,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": false
+      },
+      "proxy_plus_ideal": {
+        "pooled_auc": 0.900424,
+        "ci95": [
+          0.8698134164810927,
+          0.9289568161818882
+        ],
+        "recall_at_25pct": 0.732644,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      },
+      "structural_cp_plus_ideal": {
+        "pooled_auc": 0.918197,
+        "ci95": [
+          0.8768728180000431,
+          0.9429254941312349
+        ],
+        "recall_at_25pct": 0.756954,
+        "G1_ci_excludes_0.5": true,
+        "G2_above_kind_only": true,
+        "G3_sweep_stable": true,
+        "G4_budget_recall": true
+      }
+    }
+  },
+  "acceptance_final": {
+    "band_ns": 0.049752,
+    "n_accepted": 44,
+    "n_rejected": 1149,
+    "accepted": {
+      "n": 44,
+      "real_gain": 11,
+      "real_harm": 3,
+      "inert": 30,
+      "real_gain_rate": 0.25,
+      "real_harm_rate": 0.068182,
+      "inert_rate": 0.681818
+    },
+    "rejected": {
+      "n": 1149,
+      "real_gain": 38,
+      "real_harm": 403,
+      "inert": 708,
+      "real_gain_rate": 0.033072,
+      "real_harm_rate": 0.35074,
+      "inert_rate": 0.616188
+    },
+    "gain_enrichment": 7.5593,
+    "harm_ratio": 0.1944,
+    "p_gain_circuit_matched": 0.0,
+    "p_harm_circuit_matched": 0.0,
+    "p_gain_pool_matched": 0.0,
+    "p_harm_pool_matched": 0.0,
+    "per_circuit_gain": "5W/0L/2T p=0.0625",
+    "per_circuit_harm": "1W/6L/0T p=0.125"
+  },
+  "attribution_itc99": {
+    "resolvable": {
+      "band_ns": 0.049752,
+      "n_positive": 434,
+      "powered": true,
+      "cells": {
+        "kind_only": {
+          "pooled_auc": 0.538238,
+          "ci95": [
+            0.4926098515544199,
+            0.5984763439716498
+          ],
+          "mean_per_circuit_auc": 0.529102,
+          "mean_per_circuit_auc_ci95": [
+            0.45857866421216376,
+            0.6120048211592329
+          ]
+        },
+        "structural": {
+          "pooled_auc": 0.432507,
+          "ci95": [
+            0.36709890969945436,
+            0.512156074517505
+          ],
+          "mean_per_circuit_auc": 0.462496,
+          "mean_per_circuit_auc_ci95": [
+            0.42640220561908976,
+            0.5064279730220004
+          ]
+        },
+        "struct_local_only": {
+          "pooled_auc": 0.446149,
+          "ci95": [
+            0.4006407838081925,
+            0.4938986729198166
+          ],
+          "mean_per_circuit_auc": 0.445375,
+          "mean_per_circuit_auc_ci95": [
+            0.3929876207239653,
+            0.509658982848249
+          ]
+        },
+        "struct_global_only": {
+          "pooled_auc": 0.483604,
+          "ci95": [
+            0.4314597390453998,
+            0.5415628220985365
+          ],
+          "mean_per_circuit_auc": 0.540782,
+          "mean_per_circuit_auc_ci95": [
+            0.45284788563312656,
+            0.6367168146847146
+          ]
+        },
+        "struct_delta_only": {
+          "pooled_auc": 0.56023,
+          "ci95": [
+            0.5085145760459425,
+            0.6232715825083001
+          ],
+          "mean_per_circuit_auc": 0.530819,
+          "mean_per_circuit_auc_ci95": [
+            0.4500259094248028,
+            0.6217748978129712
+          ]
+        },
+        "struct_topo_no_delta": {
+          "pooled_auc": 0.471384,
+          "ci95": [
+            0.3975130803446209,
+            0.5358095567354703
+          ],
+          "mean_per_circuit_auc": 0.453577,
+          "mean_per_circuit_auc_ci95": [
+            0.418839335485261,
+            0.4929477168259864
+          ]
+        },
+        "one_n_cells": {
+          "pooled_auc": 0.531071,
+          "ci95": [
+            0.47889208034847003,
+            0.5911057449669381
+          ],
+          "mean_per_circuit_auc": 0.532995,
+          "mean_per_circuit_auc_ci95": [
+            0.46193036428436834,
+            0.6149751264942597
+          ]
+        },
+        "one_depth": {
+          "pooled_auc": 0.591712,
+          "ci95": [
+            0.5271755932778309,
+            0.6748379950354256
+          ],
+          "mean_per_circuit_auc": 0.545425,
+          "mean_per_circuit_auc_ci95": [
+            0.4698949172307615,
+            0.6295454755846
+          ]
+        },
+        "one_max_fanout": {
+          "pooled_auc": 0.533817,
+          "ci95": [
+            0.48694074858317415,
+            0.5965948290940817
+          ],
+          "mean_per_circuit_auc": 0.531039,
+          "mean_per_circuit_auc_ci95": [
+            0.457885013954473,
+            0.6178294009911657
+          ]
+        },
+        "one_n_ff": {
+          "pooled_auc": 0.540436,
+          "ci95": [
+            0.5019446741929944,
+            0.597646747189379
+          ],
+          "mean_per_circuit_auc": 0.531636,
+          "mean_per_circuit_auc_ci95": [
+            0.46126863918655303,
+            0.6129466345223535
+          ]
+        }
+      }
+    },
+    "gain": {
+      "band_ns": 0.049752,
+      "n_positive": 48,
+      "powered": true,
+      "cells": {
+        "kind_only": {
+          "pooled_auc": 0.168879,
+          "ci95": [
+            0.09928343865814897,
+            0.4051500839171032
+          ],
+          "mean_per_circuit_auc": 0.359995,
+          "mean_per_circuit_auc_ci95": [
+            0.22448573866726398,
+            0.4954656205817859
+          ]
+        },
+        "structural": {
+          "pooled_auc": 0.698248,
+          "ci95": [
+            0.5189502519007898,
+            0.8327556285276992
+          ],
+          "mean_per_circuit_auc": 0.383628,
+          "mean_per_circuit_auc_ci95": [
+            0.22407051738037653,
+            0.602995827064976
+          ]
+        },
+        "struct_local_only": {
+          "pooled_auc": 0.338137,
+          "ci95": [
+            0.24510005460278722,
+            0.5119100013019289
+          ],
+          "mean_per_circuit_auc": 0.329387,
+          "mean_per_circuit_auc_ci95": [
+            0.22957165975651891,
+            0.42918462566481647
+          ]
+        },
+        "struct_global_only": {
+          "pooled_auc": 0.758858,
+          "ci95": [
+            0.5803966683814656,
+            0.8585594599747652
+          ],
+          "mean_per_circuit_auc": 0.464302,
+          "mean_per_circuit_auc_ci95": [
+            0.2861629570760217,
+            0.63273131164914
+          ]
+        },
+        "struct_delta_only": {
+          "pooled_auc": 0.597901,
+          "ci95": [
+            0.39022282120395324,
+            0.8028822358338433
+          ],
+          "mean_per_circuit_auc": 0.366977,
+          "mean_per_circuit_auc_ci95": [
+            0.22782356977111712,
+            0.5051895164245372
+          ]
+        },
+        "struct_topo_no_delta": {
+          "pooled_auc": 0.624854,
+          "ci95": [
+            0.49399992547870364,
+            0.729910040146236
+          ],
+          "mean_per_circuit_auc": 0.448483,
+          "mean_per_circuit_auc_ci95": [
+            0.25848233018218447,
+            0.6402800074679756
+          ]
+        },
+        "one_n_cells": {
+          "pooled_auc": 0.129521,
+          "ci95": [
+            0.059798717976756635,
+            0.3524348858646226
+          ],
+          "mean_per_circuit_auc": 0.36158,
+          "mean_per_circuit_auc_ci95": [
+            0.22204020983363706,
+            0.49839387187271755
+          ]
+        },
+        "one_depth": {
+          "pooled_auc": 0.184966,
+          "ci95": [
+            0.10459385550601867,
+            0.44968100143544637
+          ],
+          "mean_per_circuit_auc": 0.335891,
+          "mean_per_circuit_auc_ci95": [
+            0.21761500540843265,
+            0.4541675168576612
+          ]
+        },
+        "one_max_fanout": {
+          "pooled_auc": 0.706638,
+          "ci95": [
+            0.5480018677744501,
+            0.851370446573083
+          ],
+          "mean_per_circuit_auc": 0.448989,
+          "mean_per_circuit_auc_ci95": [
+            0.27363552809562197,
+            0.6243434184630077
+          ]
+        },
+        "one_n_ff": {
+          "pooled_auc": 0.286346,
+          "ci95": [
+            0.1730916984111198,
+            0.657897996862188
+          ],
+          "mean_per_circuit_auc": 0.369293,
+          "mean_per_circuit_auc_ci95": [
+            0.22204020983363706,
+            0.5165450090700763
+          ]
+        }
+      }
+    },
+    "harm": {
+      "band_ns": 0.049752,
+      "n_positive": 386,
+      "powered": true,
+      "cells": {
+        "kind_only": {
+          "pooled_auc": 0.578254,
+          "ci95": [
+            0.538647259186992,
+            0.6267427449835533
+          ],
+          "mean_per_circuit_auc": 0.623406,
+          "mean_per_circuit_auc_ci95": [
+            0.5349008898615438,
+            0.7183131875044051
+          ]
+        },
+        "structural": {
+          "pooled_auc": 0.499071,
+          "ci95": [
+            0.3983427005726286,
+            0.6017911015737856
+          ],
+          "mean_per_circuit_auc": 0.525358,
+          "mean_per_circuit_auc_ci95": [
+            0.46068343074646395,
+            0.6011413780671802
+          ]
+        },
+        "struct_local_only": {
+          "pooled_auc": 0.566184,
+          "ci95": [
+            0.49344478880667114,
+            0.638308437350988
+          ],
+          "mean_per_circuit_auc": 0.55467,
+          "mean_per_circuit_auc_ci95": [
+            0.43704015389842793,
+            0.6555514343271872
+          ]
+        },
+        "struct_global_only": {
+          "pooled_auc": 0.577247,
+          "ci95": [
+            0.4873931939226782,
+            0.6575500175696931
+          ],
+          "mean_per_circuit_auc": 0.620613,
+          "mean_per_circuit_auc_ci95": [
+            0.5091591869693343,
+            0.740614663903762
+          ]
+        },
+        "struct_delta_only": {
+          "pooled_auc": 0.532582,
+          "ci95": [
+            0.45499247059012227,
+            0.5908405697432333
+          ],
+          "mean_per_circuit_auc": 0.594045,
+          "mean_per_circuit_auc_ci95": [
+            0.4887767646484482,
+            0.7028889473196404
+          ]
+        },
+        "struct_topo_no_delta": {
+          "pooled_auc": 0.5416,
+          "ci95": [
+            0.44195417748776167,
+            0.6276480207091033
+          ],
+          "mean_per_circuit_auc": 0.521928,
+          "mean_per_circuit_auc_ci95": [
+            0.45382110272409937,
+            0.5967111382708296
+          ]
+        },
+        "one_n_cells": {
+          "pooled_auc": 0.550103,
+          "ci95": [
+            0.4647685565806832,
+            0.6097969027607097
+          ],
+          "mean_per_circuit_auc": 0.622263,
+          "mean_per_circuit_auc_ci95": [
+            0.5335221138679422,
+            0.7168447813267881
+          ]
+        },
+        "one_depth": {
+          "pooled_auc": 0.641897,
+          "ci95": [
+            0.5726008837416615,
+            0.7139294418553745
+          ],
+          "mean_per_circuit_auc": 0.609394,
+          "mean_per_circuit_auc_ci95": [
+            0.5144455650477245,
+            0.7117862553191869
+          ]
+        },
+        "one_max_fanout": {
+          "pooled_auc": 0.628593,
+          "ci95": [
+            0.5692917147297852,
+            0.6960531535624311
+          ],
+          "mean_per_circuit_auc": 0.6358,
+          "mean_per_circuit_auc_ci95": [
+            0.5518804181365381,
+            0.7272380386432127
+          ]
+        },
+        "one_n_ff": {
+          "pooled_auc": 0.532018,
+          "ci95": [
+            0.43415146112521674,
+            0.5966329660749781
+          ],
+          "mean_per_circuit_auc": 0.622003,
+          "mean_per_circuit_auc_ci95": [
+            0.5333505391626693,
+            0.7164537198264235
+          ]
+        }
+      }
+    },
+    "mechanism": {
+      "gain_preview": {
+        "n": 1117,
+        "n_positive": 48,
+        "d_depth": {
+          "corr_with_label": -0.194702,
+          "mean_when_positive": 0.354167,
+          "mean_when_negative": 0.828812
+        },
+        "d_n_cells": {
+          "corr_with_label": -0.24407,
+          "mean_when_positive": 0.8125,
+          "mean_when_negative": 3.128157
+        }
+      },
+      "gain_control": {
+        "n": 1117,
+        "n_positive": 48,
+        "d_depth": {
+          "corr_with_label": -0.194702,
+          "mean_when_positive": 0.354167,
+          "mean_when_negative": 0.828812
+        },
+        "d_n_cells": {
+          "corr_with_label": -0.24407,
+          "mean_when_positive": 0.8125,
+          "mean_when_negative": 3.128157
+        }
+      },
+      "resolvable_preview": {
+        "n": 1117,
+        "n_positive": 434,
+        "d_depth": {
+          "corr_with_label": -0.073756,
+          "mean_when_positive": 0.762673,
+          "mean_when_negative": 0.837482
+        },
+        "d_n_cells": {
+          "corr_with_label": -0.023324,
+          "mean_when_positive": 2.97235,
+          "mean_when_negative": 3.064422
+        }
+      }
+    }
+  },
+  "attribution_iscas89": {
+    "resolvable": {
+      "band_ns": 0.055542,
+      "n_positive": 79,
+      "powered": true,
+      "cells": {
+        "kind_only": {
+          "pooled_auc": 0.422018,
+          "ci95": [
+            0.29719274241902355,
+            0.5817967964470216
+          ],
+          "mean_per_circuit_auc": 0.57016,
+          "mean_per_circuit_auc_ci95": [
+            0.48912099981086904,
+            0.6593017647735234
+          ]
+        },
+        "structural": {
+          "pooled_auc": 0.43676,
+          "ci95": [
+            0.34318032210466626,
+            0.5697406228311592
+          ],
+          "mean_per_circuit_auc": 0.500438,
+          "mean_per_circuit_auc_ci95": [
+            0.3350062154048222,
+            0.6308020023779692
+          ]
+        },
+        "struct_local_only": {
+          "pooled_auc": 0.482917,
+          "ci95": [
+            0.364369449992369,
+            0.6198681265916515
+          ],
+          "mean_per_circuit_auc": 0.569942,
+          "mean_per_circuit_auc_ci95": [
+            0.37871179675566785,
+            0.7311956619644068
+          ]
+        },
+        "struct_global_only": {
+          "pooled_auc": 0.553489,
+          "ci95": [
+            0.45226875835921354,
+            0.6731834015043164
+          ],
+          "mean_per_circuit_auc": 0.571076,
+          "mean_per_circuit_auc_ci95": [
+            0.5049042824439556,
+            0.6485535349585873
+          ]
+        },
+        "struct_delta_only": {
+          "pooled_auc": 0.422018,
+          "ci95": [
+            0.29719274241902355,
+            0.5817967964470216
+          ],
+          "mean_per_circuit_auc": 0.57016,
+          "mean_per_circuit_auc_ci95": [
+            0.48912099981086904,
+            0.6593017647735234
+          ]
+        },
+        "struct_topo_no_delta": {
+          "pooled_auc": 0.43676,
+          "ci95": [
+            0.34318032210466626,
+            0.5697406228311592
+          ],
+          "mean_per_circuit_auc": 0.500438,
+          "mean_per_circuit_auc_ci95": [
+            0.3350062154048222,
+            0.6308020023779692
+          ]
+        },
+        "one_n_cells": {
+          "pooled_auc": 0.468303,
+          "ci95": [
+            0.32596248878886175,
+            0.6241522754462894
+          ],
+          "mean_per_circuit_auc": 0.484306,
+          "mean_per_circuit_auc_ci95": [
+            0.4094246893871102,
+            0.5481200481041313
+          ]
+        },
+        "one_depth": {
+          "pooled_auc": 0.445045,
+          "ci95": [
+            0.32701113325438347,
+            0.5886345735027788
+          ],
+          "mean_per_circuit_auc": 0.578836,
+          "mean_per_circuit_auc_ci95": [
+            0.5140537014333548,
+            0.6552706637718682
+          ]
+        },
+        "one_max_fanout": {
+          "pooled_auc": 0.348899,
+          "ci95": [
+            0.25764125797537024,
+            0.47789047547515634
+          ],
+          "mean_per_circuit_auc": 0.57253,
+          "mean_per_circuit_auc_ci95": [
+            0.4949230983917351,
+            0.6563583141091365
+          ]
+        },
+        "one_n_ff": {
+          "pooled_auc": 0.46326,
+          "ci95": [
+            0.35169063743313606,
+            0.6185044532134898
+          ],
+          "mean_per_circuit_auc": 0.5676,
+          "mean_per_circuit_auc_ci95": [
+            0.5062511930149314,
+            0.6453704359116695
+          ]
+        },
+        "one_n_primary_inputs": {
+          "pooled_auc": 0.487393,
+          "ci95": [
+            0.3874249176512123,
+            0.6093007703218553
+          ],
+          "mean_per_circuit_auc": 0.588418,
+          "mean_per_circuit_auc_ci95": [
+            0.5295032714196908,
+            0.6587829099063912
+          ]
+        }
+      }
+    },
+    "gain": {
+      "band_ns": 0.055542,
+      "n_positive": 16,
+      "powered": false,
+      "cells": {
+        "kind_only": {
+          "pooled_auc": 0.72947,
+          "ci95": [
+            0.5595337058156659,
+            0.8418725762849194
+          ],
+          "mean_per_circuit_auc": 0.781229,
+          "mean_per_circuit_auc_ci95": [
+            0.6088201005691108,
+            0.9303650031441147
+          ]
+        },
+        "structural": {
+          "pooled_auc": 0.563208,
+          "ci95": [
+            0.33721262493712384,
+            0.7753653554472636
+          ],
+          "mean_per_circuit_auc": 0.687425,
+          "mean_per_circuit_auc_ci95": [
+            0.49727720035382567,
+            0.8516032022565123
+          ]
+        },
+        "struct_local_only": {
+          "pooled_auc": 0.685983,
+          "ci95": [
+            0.49415501753374647,
+            0.8104797253482826
+          ],
+          "mean_per_circuit_auc": 0.717821,
+          "mean_per_circuit_auc_ci95": [
+            0.5594805591409496,
+            0.8464114217115415
+          ]
+        },
+        "struct_global_only": {
+          "pooled_auc": 0.485943,
+          "ci95": [
+            0.30510900520221373,
+            0.6881076899353855
+          ],
+          "mean_per_circuit_auc": 0.777556,
+          "mean_per_circuit_auc_ci95": [
+            0.6079744333548567,
+            0.9258337481333997
+          ]
+        },
+        "struct_delta_only": {
+          "pooled_auc": 0.72947,
+          "ci95": [
+            0.5595337058156659,
+            0.8418725762849194
+          ],
+          "mean_per_circuit_auc": 0.781229,
+          "mean_per_circuit_auc_ci95": [
+            0.6088201005691108,
+            0.9303650031441147
+          ]
+        },
+        "struct_topo_no_delta": {
+          "pooled_auc": 0.563208,
+          "ci95": [
+            0.33721262493712384,
+            0.7753653554472636
+          ],
+          "mean_per_circuit_auc": 0.687425,
+          "mean_per_circuit_auc_ci95": [
+            0.49727720035382567,
+            0.8516032022565123
+          ]
+        },
+        "one_n_cells": {
+          "pooled_auc": 0.720166,
+          "ci95": [
+            0.5575022088017981,
+            0.8387669255673504
+          ],
+          "mean_per_circuit_auc": 0.781929,
+          "mean_per_circuit_auc_ci95": [
+            0.6095203806811557,
+            0.9310652832561596
+          ]
+        },
+        "one_depth": {
+          "pooled_auc": 0.710255,
+          "ci95": [
+            0.5364629201402583,
+            0.8287313715164281
+          ],
+          "mean_per_circuit_auc": 0.776216,
+          "mean_per_circuit_auc_ci95": [
+            0.6038075692407902,
+            0.9303650031441147
+          ]
+        },
+        "one_max_fanout": {
+          "pooled_auc": 0.711468,
+          "ci95": [
+            0.5471855184703158,
+            0.8292178503869059
+          ],
+          "mean_per_circuit_auc": 0.786302,
+          "mean_per_circuit_auc_ci95": [
+            0.6095203806811557,
+            0.9398116389412908
+          ]
+        },
+        "one_n_ff": {
+          "pooled_auc": 0.708232,
+          "ci95": [
+            0.5354056461352658,
+            0.824580814012352
+          ],
+          "mean_per_circuit_auc": 0.770024,
+          "mean_per_circuit_auc_ci95": [
+            0.6026719205929209,
+            0.9215003074400493
+          ]
+        },
+        "one_n_primary_inputs": {
+          "pooled_auc": 0.704591,
+          "ci95": [
+            0.53473722467746,
+            0.8206453796067766
+          ],
+          "mean_per_circuit_auc": 0.781929,
+          "mean_per_circuit_auc_ci95": [
+            0.6095203806811557,
+            0.9310652832561596
+          ]
+        }
+      }
+    },
+    "harm": {
+      "band_ns": 0.055542,
+      "n_positive": 63,
+      "powered": true,
+      "cells": {
+        "kind_only": {
+          "pooled_auc": 0.264025,
+          "ci95": [
+            0.1944693191707021,
+            0.3678366698077372
+          ],
+          "mean_per_circuit_auc": 0.479676,
+          "mean_per_circuit_auc_ci95": [
+            0.3994870061825783,
+            0.5731456934873084
+          ]
+        },
+        "structural": {
+          "pooled_auc": 0.659457,
+          "ci95": [
+            0.5405691161591083,
+            0.7455108640789343
+          ],
+          "mean_per_circuit_auc": 0.567715,
+          "mean_per_circuit_auc_ci95": [
+            0.4357693233972006,
+            0.7113010633546345
+          ]
+        },
+        "struct_local_only": {
+          "pooled_auc": 0.613141,
+          "ci95": [
+            0.5106415308737624,
+            0.706767631416797
+          ],
+          "mean_per_circuit_auc": 0.629663,
+          "mean_per_circuit_auc_ci95": [
+            0.5246066575380435,
+            0.7621418956530106
+          ]
+        },
+        "struct_global_only": {
+          "pooled_auc": 0.683751,
+          "ci95": [
+            0.5564380853128887,
+            0.7795753517679938
+          ],
+          "mean_per_circuit_auc": 0.450098,
+          "mean_per_circuit_auc_ci95": [
+            0.3637934022556784,
+            0.5507767094540934
+          ]
+        },
+        "struct_delta_only": {
+          "pooled_auc": 0.264025,
+          "ci95": [
+            0.1944693191707021,
+            0.3678366698077372
+          ],
+          "mean_per_circuit_auc": 0.479676,
+          "mean_per_circuit_auc_ci95": [
+            0.3994870061825783,
+            0.5731456934873084
+          ]
+        },
+        "struct_topo_no_delta": {
+          "pooled_auc": 0.659457,
+          "ci95": [
+            0.5405691161591083,
+            0.7455108640789343
+          ],
+          "mean_per_circuit_auc": 0.567715,
+          "mean_per_circuit_auc_ci95": [
+            0.4357693233972006,
+            0.7113010633546345
+          ]
+        },
+        "one_n_cells": {
+          "pooled_auc": 0.403702,
+          "ci95": [
+            0.2760210479119184,
+            0.5618563612354978
+          ],
+          "mean_per_circuit_auc": 0.47221,
+          "mean_per_circuit_auc_ci95": [
+            0.38738318402041233,
+            0.5707528002795974
+          ]
+        },
+        "one_depth": {
+          "pooled_auc": 0.373622,
+          "ci95": [
+            0.25438855113975667,
+            0.5304898962001924
+          ],
+          "mean_per_circuit_auc": 0.539879,
+          "mean_per_circuit_auc_ci95": [
+            0.43497912058745086,
+            0.6569744411870256
+          ]
+        },
+        "one_max_fanout": {
+          "pooled_auc": 0.256482,
+          "ci95": [
+            0.184805299789926,
+            0.3533839141594559
+          ],
+          "mean_per_circuit_auc": 0.45526,
+          "mean_per_circuit_auc_ci95": [
+            0.4003882428078057,
+            0.5083457625474432
+          ]
+        },
+        "one_n_ff": {
+          "pooled_auc": 0.429844,
+          "ci95": [
+            0.30934157915727917,
+            0.5682892519740553
+          ],
+          "mean_per_circuit_auc": 0.47187,
+          "mean_per_circuit_auc_ci95": [
+            0.38607016917438913,
+            0.5707680755360697
+          ]
+        },
+        "one_n_primary_inputs": {
+          "pooled_auc": 0.46165,
+          "ci95": [
+            0.3362885073886014,
+            0.6138249313473304
+          ],
+          "mean_per_circuit_auc": 0.520259,
+          "mean_per_circuit_auc_ci95": [
+            0.434674553152814,
+            0.5994936066867014
+          ]
+        }
+      }
+    }
+  },
+  "pool_level_decomposition": {
+    "itc99": {
+      "resolvable": {
+        "n_positive": 434,
+        "n_pools": 47,
+        "n_pools_with_both_classes": 39,
+        "cells": {
+          "one_depth": {
+            "pooled_auc": 0.5917121536188272,
+            "pooled_auc_pool_mean_only": 0.5602350702714374,
+            "mean_within_pool_auc": 0.5481398039195426,
+            "mean_within_pool_auc_ci95": [
+              0.4996316284326375,
+              0.6006355023983949
+            ],
+            "n_pools_used": 39
+          },
+          "one_n_cells": {
+            "pooled_auc": 0.5310705683113939,
+            "pooled_auc_pool_mean_only": 0.505843021098299,
+            "mean_within_pool_auc": 0.5612968377906002,
+            "mean_within_pool_auc_ci95": [
+              0.5082286445284485,
+              0.6188091713229903
+            ],
+            "n_pools_used": 39
+          },
+          "one_max_fanout": {
+            "pooled_auc": 0.533816653284844,
+            "pooled_auc_pool_mean_only": 0.5172962870502189,
+            "mean_within_pool_auc": 0.5551525738080019,
+            "mean_within_pool_auc_ci95": [
+              0.5036995549660643,
+              0.609488435792199
+            ],
+            "n_pools_used": 39
+          },
+          "one_n_ff": {
+            "pooled_auc": 0.540435595198737,
+            "pooled_auc_pool_mean_only": 0.520079481280067,
+            "mean_within_pool_auc": 0.5559473677096723,
+            "mean_within_pool_auc_ci95": [
+              0.5042893784017265,
+              0.6101098575488413
+            ],
+            "n_pools_used": 39
+          },
+          "struct_global_only": {
+            "pooled_auc": 0.48360445580962275,
+            "pooled_auc_pool_mean_only": 0.45207845571516286,
+            "mean_within_pool_auc": 0.5554656460708595,
+            "mean_within_pool_auc_ci95": [
+              0.5031192456144912,
+              0.6115688437565041
+            ],
+            "n_pools_used": 39
+          },
+          "struct_local_only": {
+            "pooled_auc": 0.44614940861339575,
+            "pooled_auc_pool_mean_only": 0.4716653959557658,
+            "mean_within_pool_auc": 0.5343224613279001,
+            "mean_within_pool_auc_ci95": [
+              0.4808443449697064,
+              0.5929583994427983
+            ],
+            "n_pools_used": 39
+          },
+          "struct_delta_only": {
+            "pooled_auc": 0.5602300099182922,
+            "pooled_auc_pool_mean_only": 0.4700359622430184,
+            "mean_within_pool_auc": 0.5502605021639396,
+            "mean_within_pool_auc_ci95": [
+              0.5007174946738071,
+              0.6038906605343526
+            ],
+            "n_pools_used": 39
+          },
+          "structural": {
+            "pooled_auc": 0.4325066965339954,
+            "pooled_auc_pool_mean_only": 0.4339961271430596,
+            "mean_within_pool_auc": 0.5401144876346554,
+            "mean_within_pool_auc_ci95": [
+              0.4938877523473447,
+              0.591735538552818
+            ],
+            "n_pools_used": 39
+          },
+          "kind_only": {
+            "pooled_auc": 0.5382377151493479,
+            "pooled_auc_pool_mean_only": 0.540010525534542,
+            "mean_within_pool_auc": 0.555062288506449,
+            "mean_within_pool_auc_ci95": [
+              0.5036445248019263,
+              0.6092891013011328
+            ],
+            "n_pools_used": 39
+          }
+        }
+      },
+      "gain": {
+        "n_positive": 48,
+        "n_pools": 47,
+        "n_pools_with_both_classes": 13,
+        "cells": {
+          "one_depth": {
+            "pooled_auc": 0.18496647957592766,
+            "pooled_auc_pool_mean_only": 0.16408442469597756,
+            "mean_within_pool_auc": 0.5562109399670685,
+            "mean_within_pool_auc_ci95": [
+              0.43762728307756454,
+              0.6776807624504723
+            ],
+            "n_pools_used": 13
+          },
+          "one_n_cells": {
+            "pooled_auc": 0.1295213595260368,
+            "pooled_auc_pool_mean_only": 0.11355043654505768,
+            "mean_within_pool_auc": 0.6568342947857647,
+            "mean_within_pool_auc_ci95": [
+              0.5712312959445004,
+              0.7489060137091216
+            ],
+            "n_pools_used": 13
+          },
+          "one_max_fanout": {
+            "pooled_auc": 0.7066378235110695,
+            "pooled_auc_pool_mean_only": 0.7342824290614282,
+            "mean_within_pool_auc": 0.6724690665180973,
+            "mean_within_pool_auc_ci95": [
+              0.5776595720027587,
+              0.7717912598373861
+            ],
+            "n_pools_used": 13
+          },
+          "one_n_ff": {
+            "pooled_auc": 0.28634627377611477,
+            "pooled_auc_pool_mean_only": 0.22709112878079202,
+            "mean_within_pool_auc": 0.6568342947857647,
+            "mean_within_pool_auc_ci95": [
+              0.5712312959445004,
+              0.7489060137091216
+            ],
+            "n_pools_used": 13
+          },
+          "struct_global_only": {
+            "pooled_auc": 0.7588575771749299,
+            "pooled_auc_pool_mean_only": 0.7365041315871531,
+            "mean_within_pool_auc": 0.6637232688557824,
+            "mean_within_pool_auc_ci95": [
+              0.5568818632428626,
+              0.7642644697789893
+            ],
+            "n_pools_used": 13
+          },
+          "struct_local_only": {
+            "pooled_auc": 0.33813727782974745,
+            "pooled_auc_pool_mean_only": 0.30262901465544123,
+            "mean_within_pool_auc": 0.4788495791551956,
+            "mean_within_pool_auc_ci95": [
+              0.3203419123771447,
+              0.6445200107047068
+            ],
+            "n_pools_used": 13
+          },
+          "struct_delta_only": {
+            "pooled_auc": 0.5979010757717493,
+            "pooled_auc_pool_mean_only": 0.5879229030246336,
+            "mean_within_pool_auc": 0.6513798861381356,
+            "mean_within_pool_auc_ci95": [
+              0.5482434263637412,
+              0.7503941378278965
+            ],
+            "n_pools_used": 13
+          },
+          "structural": {
+            "pooled_auc": 0.6982479731836607,
+            "pooled_auc_pool_mean_only": 0.6774146398503275,
+            "mean_within_pool_auc": 0.613866582258362,
+            "mean_within_pool_auc_ci95": [
+              0.4847860619515417,
+              0.7414427384209992
+            ],
+            "n_pools_used": 13
+          },
+          "kind_only": {
+            "pooled_auc": 0.1688786248830683,
+            "pooled_auc_pool_mean_only": 0.09410079513564079,
+            "mean_within_pool_auc": 0.6553355132196997,
+            "mean_within_pool_auc_ci95": [
+              0.5697827561040392,
+              0.7467611033625438
+            ],
+            "n_pools_used": 13
+          }
+        }
+      },
+      "harm": {
+        "n_positive": 386,
+        "n_pools": 47,
+        "n_pools_with_both_classes": 40,
+        "cells": {
+          "one_depth": {
+            "pooled_auc": 0.6418969684511954,
+            "pooled_auc_pool_mean_only": 0.6135271435963228,
+            "mean_within_pool_auc": 0.5871184600444469,
+            "mean_within_pool_auc_ci95": [
+              0.5332918171506681,
+              0.6415266389529842
+            ],
+            "n_pools_used": 40
+          },
+          "one_n_cells": {
+            "pooled_auc": 0.5501034851824812,
+            "pooled_auc_pool_mean_only": 0.57322462663822,
+            "mean_within_pool_auc": 0.5721296609867569,
+            "mean_within_pool_auc_ci95": [
+              0.514917013575102,
+              0.6303287779036347
+            ],
+            "n_pools_used": 40
+          },
+          "one_max_fanout": {
+            "pooled_auc": 0.6285927432787791,
+            "pooled_auc_pool_mean_only": 0.5998507970485459,
+            "mean_within_pool_auc": 0.5728202148684872,
+            "mean_within_pool_auc_ci95": [
+              0.5153938559362626,
+              0.6311190114496352
+            ],
+            "n_pools_used": 40
+          },
+          "one_n_ff": {
+            "pooled_auc": 0.5320183863399559,
+            "pooled_auc_pool_mean_only": 0.5712966835125423,
+            "mean_within_pool_auc": 0.5722582768065492,
+            "mean_within_pool_auc_ci95": [
+              0.5149467307568265,
+              0.6305381957545027
+            ],
+            "n_pools_used": 40
+          },
+          "struct_global_only": {
+            "pooled_auc": 0.5772470815052132,
+            "pooled_auc_pool_mean_only": 0.5898247839924017,
+            "mean_within_pool_auc": 0.5771446597507405,
+            "mean_within_pool_auc_ci95": [
+              0.5182282360009577,
+              0.6374275052209677
+            ],
+            "n_pools_used": 40
+          },
+          "struct_local_only": {
+            "pooled_auc": 0.5661844446177073,
+            "pooled_auc_pool_mean_only": 0.5790013679890561,
+            "mean_within_pool_auc": 0.5437183920315114,
+            "mean_within_pool_auc_ci95": [
+              0.49436850459110965,
+              0.6003267241192831
+            ],
+            "n_pools_used": 40
+          },
+          "struct_delta_only": {
+            "pooled_auc": 0.5325818844226449,
+            "pooled_auc_pool_mean_only": 0.5343149068278956,
+            "mean_within_pool_auc": 0.5511949861589099,
+            "mean_within_pool_auc_ci95": [
+              0.4909941067885902,
+              0.6122330339783386
+            ],
+            "n_pools_used": 40
+          },
+          "structural": {
+            "pooled_auc": 0.4990714685681478,
+            "pooled_auc_pool_mean_only": 0.5025499174244948,
+            "mean_within_pool_auc": 0.5478007180077737,
+            "mean_within_pool_auc_ci95": [
+              0.49790865906736054,
+              0.6015646453459699
+            ],
+            "n_pools_used": 40
+          },
+          "kind_only": {
+            "pooled_auc": 0.5782535812252362,
+            "pooled_auc_pool_mean_only": 0.6044509260506227,
+            "mean_within_pool_auc": 0.57206846105791,
+            "mean_within_pool_auc_ci95": [
+              0.5146578936380738,
+              0.6303715313309907
+            ],
+            "n_pools_used": 40
+          }
+        }
+      }
+    },
+    "iscas89": {
+      "resolvable": {
+        "n_positive": 79,
+        "n_pools": 34,
+        "n_pools_with_both_classes": 18,
+        "cells": {
+          "one_depth": {
+            "pooled_auc": 0.44504476690336525,
+            "pooled_auc_pool_mean_only": 0.42474529175671505,
+            "mean_within_pool_auc": 0.5176376104049385,
+            "mean_within_pool_auc_ci95": [
+              0.4828776472710296,
+              0.5593724798420096
+            ],
+            "n_pools_used": 18
+          },
+          "one_n_cells": {
+            "pooled_auc": 0.4683029741689822,
+            "pooled_auc_pool_mean_only": 0.4718791808171246,
+            "mean_within_pool_auc": 0.4921311358853061,
+            "mean_within_pool_auc_ci95": [
+              0.4486139995687935,
+              0.5395760387909562
+            ],
+            "n_pools_used": 18
+          },
+          "one_max_fanout": {
+            "pooled_auc": 0.3488988370896367,
+            "pooled_auc_pool_mean_only": 0.33454255428630236,
+            "mean_within_pool_auc": 0.5185727133137257,
+            "mean_within_pool_auc_ci95": [
+              0.4819793279153767,
+              0.562328016632715
+            ],
+            "n_pools_used": 18
+          },
+          "one_n_ff": {
+            "pooled_auc": 0.46326026551404753,
+            "pooled_auc_pool_mean_only": 0.4589122157044355,
+            "mean_within_pool_auc": 0.5273058782968907,
+            "mean_within_pool_auc_ci95": [
+              0.48802689987976844,
+              0.5708864692644184
+            ],
+            "n_pools_used": 18
+          },
+          "struct_global_only": {
+            "pooled_auc": 0.5534887310898425,
+            "pooled_auc_pool_mean_only": 0.5320314912009879,
+            "mean_within_pool_auc": 0.5131349690488489,
+            "mean_within_pool_auc_ci95": [
+              0.4738645165539657,
+              0.5605443892308224
+            ],
+            "n_pools_used": 18
+          },
+          "struct_local_only": {
+            "pooled_auc": 0.48291653802613976,
+            "pooled_auc_pool_mean_only": 0.43827827518781515,
+            "mean_within_pool_auc": 0.5429606979549597,
+            "mean_within_pool_auc_ci95": [
+              0.4125472348356793,
+              0.6705875579725098
+            ],
+            "n_pools_used": 18
+          },
+          "struct_delta_only": {
+            "pooled_auc": 0.42201811258618915,
+            "pooled_auc_pool_mean_only": 0.3829113924050633,
+            "mean_within_pool_auc": 0.5172982202629168,
+            "mean_within_pool_auc_ci95": [
+              0.47914729733433775,
+              0.5635479767951768
+            ],
+            "n_pools_used": 18
+          },
+          "structural": {
+            "pooled_auc": 0.4367603169702583,
+            "pooled_auc_pool_mean_only": 0.44651126891015747,
+            "mean_within_pool_auc": 0.5006236532358823,
+            "mean_within_pool_auc_ci95": [
+              0.37953129944495073,
+              0.6235211727234753
+            ],
+            "n_pools_used": 18
+          },
+          "kind_only": {
+            "pooled_auc": 0.42201811258618915,
+            "pooled_auc_pool_mean_only": 0.3829113924050633,
+            "mean_within_pool_auc": 0.5172982202629168,
+            "mean_within_pool_auc_ci95": [
+              0.47914729733433775,
+              0.5635479767951768
+            ],
+            "n_pools_used": 18
+          }
+        }
+      },
+      "gain": {
+        "n_positive": 16,
+        "n_pools": 34,
+        "n_pools_with_both_classes": 6,
+        "cells": {
+          "one_depth": {
+            "pooled_auc": 0.710254854368932,
+            "pooled_auc_pool_mean_only": 0.6875,
+            "mean_within_pool_auc": 0.6003828095078804,
+            "mean_within_pool_auc_ci95": [
+              0.4925213675213675,
+              0.7197303547275187
+            ],
+            "n_pools_used": 6
+          },
+          "one_n_cells": {
+            "pooled_auc": 0.720165857605178,
+            "pooled_auc_pool_mean_only": 0.6743527508090615,
+            "mean_within_pool_auc": 0.6183367390471758,
+            "mean_within_pool_auc_ci95": [
+              0.5133547008547008,
+              0.731216457960644
+            ],
+            "n_pools_used": 6
+          },
+          "one_max_fanout": {
+            "pooled_auc": 0.7114684466019418,
+            "pooled_auc_pool_mean_only": 0.7182443365695793,
+            "mean_within_pool_auc": 0.6241506925355478,
+            "mean_within_pool_auc_ci95": [
+              0.5133547008547008,
+              0.7487158883216738
+            ],
+            "n_pools_used": 6
+          },
+          "one_n_ff": {
+            "pooled_auc": 0.7082322006472492,
+            "pooled_auc_pool_mean_only": 0.7113673139158576,
+            "mean_within_pool_auc": 0.6183367390471758,
+            "mean_within_pool_auc_ci95": [
+              0.5133547008547008,
+              0.731216457960644
+            ],
+            "n_pools_used": 6
+          },
+          "struct_global_only": {
+            "pooled_auc": 0.4859425566343042,
+            "pooled_auc_pool_mean_only": 0.4534789644012945,
+            "mean_within_pool_auc": 0.6125227855588037,
+            "mean_within_pool_auc_ci95": [
+              0.5133547008547008,
+              0.7122385266227439
+            ],
+            "n_pools_used": 6
+          },
+          "struct_local_only": {
+            "pooled_auc": 0.6859830097087378,
+            "pooled_auc_pool_mean_only": 0.6365291262135923,
+            "mean_within_pool_auc": 0.4941345366047578,
+            "mean_within_pool_auc_ci95": [
+              0.20562330623306233,
+              0.778272878882635
+            ],
+            "n_pools_used": 6
+          },
+          "struct_delta_only": {
+            "pooled_auc": 0.729470064724919,
+            "pooled_auc_pool_mean_only": 0.7299757281553398,
+            "mean_within_pool_auc": 0.6142716983967692,
+            "mean_within_pool_auc_ci95": [
+              0.5133547008547008,
+              0.7272089872061511
+            ],
+            "n_pools_used": 6
+          },
+          "structural": {
+            "pooled_auc": 0.563207928802589,
+            "pooled_auc_pool_mean_only": 0.5078883495145631,
+            "mean_within_pool_auc": 0.6579217994773866,
+            "mean_within_pool_auc_ci95": [
+              0.3480927396483267,
+              0.9052508593064462
+            ],
+            "n_pools_used": 6
+          },
+          "kind_only": {
+            "pooled_auc": 0.729470064724919,
+            "pooled_auc_pool_mean_only": 0.7299757281553398,
+            "mean_within_pool_auc": 0.6142716983967692,
+            "mean_within_pool_auc_ci95": [
+              0.5133547008547008,
+              0.7272089872061511
+            ],
+            "n_pools_used": 6
+          }
+        }
+      },
+      "harm": {
+        "n_positive": 63,
+        "n_pools": 34,
+        "n_pools_with_both_classes": 15,
+        "cells": {
+          "one_depth": {
+            "pooled_auc": 0.3736217133163698,
+            "pooled_auc_pool_mean_only": 0.3732885011510966,
+            "mean_within_pool_auc": 0.49853387053184217,
+            "mean_within_pool_auc_ci95": [
+              0.45071101243527717,
+              0.5544459900731453
+            ],
+            "n_pools_used": 15
+          },
+          "one_n_cells": {
+            "pooled_auc": 0.40370168423603536,
+            "pooled_auc_pool_mean_only": 0.41981703622925,
+            "mean_within_pool_auc": 0.46022927283069276,
+            "mean_within_pool_auc_ci95": [
+              0.4156987475327993,
+              0.5048924221203633
+            ],
+            "n_pools_used": 15
+          },
+          "one_max_fanout": {
+            "pooled_auc": 0.25648249121531563,
+            "pooled_auc_pool_mean_only": 0.2729613473888283,
+            "mean_within_pool_auc": 0.44584543444685426,
+            "mean_within_pool_auc_ci95": [
+              0.4049167608666594,
+              0.4817887634677695
+            ],
+            "n_pools_used": 15
+          },
+          "one_n_ff": {
+            "pooled_auc": 0.42984369320247184,
+            "pooled_auc_pool_mean_only": 0.5336544286925966,
+            "mean_within_pool_auc": 0.4621650026781873,
+            "mean_within_pool_auc_ci95": [
+              0.4189818758067491,
+              0.505910664417282
+            ],
+            "n_pools_used": 15
+          },
+          "struct_global_only": {
+            "pooled_auc": 0.6837513631406761,
+            "pooled_auc_pool_mean_only": 0.6919604992124077,
+            "mean_within_pool_auc": 0.45131059654791905,
+            "mean_within_pool_auc_ci95": [
+              0.40192929120969184,
+              0.49761657541804605
+            ],
+            "n_pools_used": 15
+          },
+          "struct_local_only": {
+            "pooled_auc": 0.6131406761177753,
+            "pooled_auc_pool_mean_only": 0.6587604507451835,
+            "mean_within_pool_auc": 0.6065529376153108,
+            "mean_within_pool_auc_ci95": [
+              0.5085619342695281,
+              0.7055417605434718
+            ],
+            "n_pools_used": 15
+          },
+          "struct_delta_only": {
+            "pooled_auc": 0.26402520295650067,
+            "pooled_auc_pool_mean_only": 0.2744153641100206,
+            "mean_within_pool_auc": 0.46050705060847047,
+            "mean_within_pool_auc_ci95": [
+              0.4162206561046571,
+              0.5026380007332086
+            ],
+            "n_pools_used": 15
+          },
+          "structural": {
+            "pooled_auc": 0.6594571670907549,
+            "pooled_auc_pool_mean_only": 0.690567066521265,
+            "mean_within_pool_auc": 0.5832284876681428,
+            "mean_within_pool_auc_ci95": [
+              0.4870426761091062,
+              0.6915614270786684
+            ],
+            "n_pools_used": 15
+          },
+          "kind_only": {
+            "pooled_auc": 0.26402520295650067,
+            "pooled_auc_pool_mean_only": 0.2744153641100206,
+            "mean_within_pool_auc": 0.46050705060847047,
+            "mean_within_pool_auc_ci95": [
+              0.4162206561046571,
+              0.5026380007332086
+            ],
+            "n_pools_used": 15
+          }
+        }
+      }
+    }
+  },
+  "verdicts": {
+    "the_preview_held": "the LOG-23 preview predicted the final band to within 1.3% and every qualitative conclusion held: the graph features stay at/below random on resolvable and harm, the gain label stays the one exception, the cheap placed stage stays the strongest single feature, and the acceptance criterion keeps its physical selectivity with a STRONGER harm ratio",
+    "candidate_level_verdict": "on the reading a candidate generator can use -- within one pool -- every graph feature set is level with the trivial kind-only baseline in BOTH families and on ALL THREE labels; the apparently large pooled numbers are reproduced by a predictor that only knows the pool mean, so they are between-pool effects",
+    "magnitude_not_topology": "the features that do carry signal (depth, max_fanout) predict harm as strongly as they predict resolvable, i.e. they predict how FAR the WNS moves, not WHICH WAY",
+    "what_it_means_for_the_gnn_idea": "in this family, with scalar summaries of the gate-level graph, there is no candidate-level information a GNN could exploit beyond the candidate kind and the iteration; the usable levers are the cheap placed-stage label and a pool-level prior (some pools are worth measuring first)"
+  },
+  "boundaries": [
+    "PROBE level, not paper evidence.",
+    "post-hoc: the split sets and the single features were chosen by looking at the data (9-11 sets x 3 labels x 2 families); no nested selection was run, so the CIs are not multiplicity-corrected.",
+    "the graph features are scalar summaries of the gate-level graph, NOT a GNN encoder -- \"no signal in the summaries\" does not prove \"no signal in a GNN\".",
+    "the pooled reading mixes a strong between-circuit component (per-circuit positive rate 0.207-0.616 on ITC-99); the within-pool reading is the one a candidate generator can use.",
+    "the parasitics come from estimate_parasitics, not from a signoff RC extraction; the placed and routed tiers use different estimation models, so \"routed - placed\" mixes a stage change with a model change."
+  ]
+}

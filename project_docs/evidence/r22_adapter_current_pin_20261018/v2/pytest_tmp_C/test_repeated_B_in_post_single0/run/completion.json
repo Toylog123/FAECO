@@ -1,0 +1,298 @@
+{
+  "schema": "r22-C-reconstruction-run-v1",
+  "simulated": true,
+  "status": "qa_complete",
+  "stop_reason": "round_cap",
+  "initial_sha256": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+  "final_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+  "final_text": "module helper(A,Y);\n input A;\n output Y;\n sky130_fd_sc_hd__buf_1 x(.A(A),.X(Y));\n endmodule\nmodule top(A,Y,Z);\n  wire n_x;\n  wire n_y;\n input A;\n output Y,Z;\n sky130_fd_sc_hd__buf_1 x (.A(n_x),.X(Y));\n sky130_fd_sc_hd__buf_1 y (.A(n_y),.X(Z));\n   sky130_fd_sc_hd__buf_1 _bufb_x_A (\n    .A(A),\n    .X(n_x)\n  );\n  sky130_fd_sc_hd__buf_1 _bufb_y_A (\n    .A(A),\n    .X(n_y)\n  );\nendmodule",
+  "baseline": {
+    "wns": 0,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "final_metrics": {
+    "wns": 2,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "counts": {
+    "candidate_proposals": 3,
+    "candidate_evaluations": 3,
+    "precheck_rejects": 1,
+    "budget_rejects": 0,
+    "sta_reservations": 5,
+    "sta_launches": 5,
+    "failed_launch_attempts": 0,
+    "candidate_sta_launches": 2,
+    "joint_sta_launches": 0,
+    "baseline_sta_launches": 1,
+    "refresh_sta_launches": 1,
+    "final_sta_launches": 1,
+    "candidate_reservations": 2,
+    "cache_hits": 0,
+    "commits": 2,
+    "sec_calls": 1
+  },
+  "trials": [
+    {
+      "trial_id": 0,
+      "round": 1,
+      "stage": "SINGLE",
+      "action": {
+        "instance": "x",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_x"
+      },
+      "actions": [
+        {
+          "instance": "x",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_x"
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000000",
+      "base_sha256": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+      "candidate_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+      "same_bytes_as_base": false,
+      "status": "measured",
+      "metrics": {
+        "wns": 1,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "trial_id": 1,
+      "round": 1,
+      "stage": "SINGLE",
+      "action": {
+        "instance": "y",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_y"
+      },
+      "actions": [
+        {
+          "instance": "y",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_y"
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000001",
+      "base_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+      "candidate_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+      "same_bytes_as_base": false,
+      "status": "measured",
+      "metrics": {
+        "wns": 2,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "trial_id": 2,
+      "round": 1,
+      "stage": "JOINT",
+      "action": {
+        "instance": "x+y",
+        "kind": "JOINT",
+        "target": "sky130_fd_sc_hd__buf_1+sky130_fd_sc_hd__buf_1"
+      },
+      "actions": [
+        {
+          "instance": "x",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_x"
+        },
+        {
+          "instance": "y",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_y"
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000002",
+      "base_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+      "candidate_sha256": "0ce93dac02373ee89b79386f81c41b0bfd337af99db4247c057c0271dc8e6909",
+      "same_bytes_as_base": false,
+      "status": "precheck_reject",
+      "reason": "Candidate F1/F2/domain rejected: {'status': 'fail', 'checks': {'F1': {'status': 'fail', 'method': 'liberty_local_function', 'reason': 'checker failed closed: Duplicate instance in target module: _bufb_x_A, _bufb_y_A'}, 'F2': {'status': 'fail', 'method': 'boundary_closure', 'reason': 'Duplicate instance in target module: _bufb_x_A, _bufb_y_A'}}}"
+    }
+  ],
+  "commits": [
+    {
+      "commit_id": 0,
+      "trial_id": 0,
+      "action": {
+        "instance": "x",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_x"
+      },
+      "base_sha256": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+      "candidate_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c"
+    },
+    {
+      "commit_id": 1,
+      "trial_id": 1,
+      "action": {
+        "instance": "y",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_y"
+      },
+      "base_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+      "candidate_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032"
+    }
+  ],
+  "passes": [
+    {
+      "round": 1,
+      "critical_order": [
+        "x",
+        "y"
+      ],
+      "improved": true,
+      "refresh_metrics": {
+        "wns": 0,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      },
+      "current_metrics": {
+        "wns": 2,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    }
+  ],
+  "sec_status": "pass",
+  "sec_bound": true,
+  "sec_nonempty_supported_proof": true,
+  "sec_proof_points": [
+    [
+      "1",
+      "0"
+    ]
+  ],
+  "evidence_receipt": {
+    "baseline/attempt_001/command.json": "10d9552ec3de212093399d62e14de9e6044efe528c5beb096c08c9c1407ae1d6",
+    "baseline/attempt_001/input_snapshot.json": "44d8ed077df6f3ad3317946ed3beb2d1074f0173861d4e175dc51dca9d9943ec",
+    "baseline/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "baseline/attempt_001/read_verilog_input.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "baseline/attempt_001/sta.tcl": "5f7ce65c9c1dc11bf7f4f5f333badc5d3e3f5cfd1390e31ffddeff66bedcbab8",
+    "baseline/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "baseline/mapped.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "baseline/measurement.json": "40d68958cbeee404ce38f20475c443a09827e9fa8dce819707abdd5e2050467f",
+    "baseline/sta.tcl": "5f7ce65c9c1dc11bf7f4f5f333badc5d3e3f5cfd1390e31ffddeff66bedcbab8",
+    "commit_000000.json": "df7775c57096cfd4603ba9fb6204f39ee85d9d3ba6b8e5c483fdccc126b4d7a6",
+    "commit_000001.json": "6854d13ee120c6bcafdd177ef1285b4db94b1e823d5199a1f8ddc296744d41f5",
+    "config.json": "9d32509449f1860eeff5961edd69efd0a6c8dc31fcee816eaef98bdb690c8d93",
+    "events.jsonl": "492979a73d1759af938f8abf45d13a620c8e92308d33e7c65e712ae88283d41e",
+    "final.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "final_sec/cells.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sec/final_raw.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "final_sec/gate.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "final_sec/gold.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "final_sec/helpers.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sec/initial_raw.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "final_sec/result.json": "29d469ebece18e22f65fe4640923a2b44063815804ed46a83cebd51b585e19be",
+    "final_sec/sec.log": "432d8c451d60043c7802fca8e7f9514a899f3ca0ce070f3c920d9bdfa876c986",
+    "final_sec/sec.ys": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sta/attempt_001/command.json": "7edbb2b5968749aa97d90bb297bd26d66c01497f35094c63b72fb9340b3a1bae",
+    "final_sta/attempt_001/input_snapshot.json": "6c6ad3c521cf3c9cfe775d27359f6ea50426a760257c9ba7e69662db051eb753",
+    "final_sta/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "final_sta/attempt_001/read_verilog_input.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "final_sta/attempt_001/sta.tcl": "f87d09126606c02e4b13c47c22a680bb23619485e2cf12d398b0e035b58d56dc",
+    "final_sta/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final_sta/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "final_sta/mapped.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "final_sta/measurement.json": "4e819e85d54425745e25fb521894ad40cb105994d33bddf797c200ee18a3478b",
+    "final_sta/sta.tcl": "f87d09126606c02e4b13c47c22a680bb23619485e2cf12d398b0e035b58d56dc",
+    "initial.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "pass_001_refresh/attempt_001/command.json": "50d3114fde6dcdea39ed3b5bea84d7149520ef79b20c37d5452be7a832b1315e",
+    "pass_001_refresh/attempt_001/input_snapshot.json": "661d333a3a346699395bcff092e21df91fcd1eeaa29438feb3661e4edab69e94",
+    "pass_001_refresh/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "pass_001_refresh/attempt_001/read_verilog_input.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "pass_001_refresh/attempt_001/sta.tcl": "34bd548da8be8638eee182e992e4742557384c70b47bf66ff1b582a11672dc6d",
+    "pass_001_refresh/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pass_001_refresh/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "pass_001_refresh/mapped.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "pass_001_refresh/measurement.json": "40d68958cbeee404ce38f20475c443a09827e9fa8dce819707abdd5e2050467f",
+    "pass_001_refresh/sta.tcl": "34bd548da8be8638eee182e992e4742557384c70b47bf66ff1b582a11672dc6d",
+    "run_result.json": "d3f47f7a9b2410e9df4cccb5aec04a102c46e7cdbfed1054a1f9cb0338e0cdd3",
+    "sec_preflight/binding.json": "4becdea9d1e298f7dfd4da2e38fe9d40b50ce187a849cecd70dd5efccba2c47e",
+    "sec_preflight/model_preflight.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "trial_000000/base.v": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+    "trial_000000/candidate.v": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+    "trial_000000/decision.json": "409b6e95e7588b17844c9735ef03a13e9ca93ef11142b61f3d13cab23ed30495",
+    "trial_000000/proposal.json": "5cfc231da6335511e7a7685f30f7a09ba9b4c8ec6a72adf06f546c2cbf3e79c5",
+    "trial_000000/sta/attempt_001/command.json": "ee7db34e5fd92c603961cdbc335761af5dfce6e280c0ccbfeaa8bb3a90181906",
+    "trial_000000/sta/attempt_001/input_snapshot.json": "1ff0af9b4774424922d1895c30188fb62af349ad9ab4e23b631d1c0a18a90520",
+    "trial_000000/sta/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "trial_000000/sta/attempt_001/read_verilog_input.v": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+    "trial_000000/sta/attempt_001/sta.tcl": "5ae02ac1a727ed4e8d070439ed8740a93d13639a4ce50441494c41f85664799e",
+    "trial_000000/sta/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trial_000000/sta/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "trial_000000/sta/mapped.v": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+    "trial_000000/sta/measurement.json": "97b92e2d0bf30d060bb223be90f0eece5070c71f81c448ab76439060dd9da998",
+    "trial_000000/sta/sta.tcl": "5ae02ac1a727ed4e8d070439ed8740a93d13639a4ce50441494c41f85664799e",
+    "trial_000001/base.v": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+    "trial_000001/candidate.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "trial_000001/decision.json": "31f61b944d77fea3f43d040e207c95d8304c85fa87c253a16641d3327f8a13df",
+    "trial_000001/proposal.json": "a9cb92c7a2a490c58591968f19cacd0e1702c87aac27952ee35cf3c9cb44e865",
+    "trial_000001/sta/attempt_001/command.json": "8d1423299331a1ef3ec7ba7e765942fdc412f83bfa9bdcc68acae84ecce600ae",
+    "trial_000001/sta/attempt_001/input_snapshot.json": "44a1d8cd6037c7837d1cb4fa4825f4881ddae6cfe1a48ff7664a3ef132c1c034",
+    "trial_000001/sta/attempt_001/invocation.json": "27a3d710ea8cf17df94352f5f28b43d9c0b1d053cd95f79bc903a590cd4d60ad",
+    "trial_000001/sta/attempt_001/read_verilog_input.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "trial_000001/sta/attempt_001/sta.tcl": "4e9c1abbf5f8fcecf22227c5a4d93c674a71f5530d54f865fb7d175c2ba7a90d",
+    "trial_000001/sta/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trial_000001/sta/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "trial_000001/sta/mapped.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "trial_000001/sta/measurement.json": "4e819e85d54425745e25fb521894ad40cb105994d33bddf797c200ee18a3478b",
+    "trial_000001/sta/sta.tcl": "4e9c1abbf5f8fcecf22227c5a4d93c674a71f5530d54f865fb7d175c2ba7a90d",
+    "trial_000002/base.v": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+    "trial_000002/candidate.v": "0ce93dac02373ee89b79386f81c41b0bfd337af99db4247c057c0271dc8e6909",
+    "trial_000002/decision.json": "db6327d00dc074de08d5435b213f9f1ae21eeda5a9a3c5b098f5500e88401bea",
+    "trial_000002/proposal.json": "db6327d00dc074de08d5435b213f9f1ae21eeda5a9a3c5b098f5500e88401bea"
+  }
+}

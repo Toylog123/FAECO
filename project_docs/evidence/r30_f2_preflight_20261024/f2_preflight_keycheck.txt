@@ -1,0 +1,31 @@
+F0 (I0): 1207 rows
+F1 (I1): 1207 rows
+F2 (I2): 1207 rows
+
+key sets:
+  |F0|=1207 |F1|=1207 |F2|=1207
+  F0 == F1 : True
+  F0 == F2 : True
+  F1 == F2 : True
+  F0 - F2  : 0   F2 - F0 : 0
+
+common keys across the three tables: 1207
+  netlist mismatches vs F2 : 0
+  candidate_hash mismatches : 0
+  kind mismatches           : 0
+
+  F0 (I0) physical axis: [('met3', 'met2', '2', '0.000 0.000 104.110 104.110', '10'), ('met3', 'met2', '2', '0.000 0.000 107.005 107.005', '10'), ('met3', 'met2', '2', '0.000 0.000 141.770 141.770', '10'), ('met3', 'met2', '2', '0.000 0.000 41.765 41.765', '10'), ('met3', 'met2', '2', '0.000 0.000 51.850 51.850', '10'), ('met3', 'met2', '2', '0.000 0.000 98.980 98.980', '10'), ('met3', 'met2', '2', '0.000 0.000 99.960 99.960', '10')]
+  F1 (I1) physical axis: [('met5', 'met4', '2', '0.000 0.000 104.110 104.110', '30'), ('met5', 'met4', '2', '0.000 0.000 107.005 107.005', '30'), ('met5', 'met4', '2', '0.000 0.000 141.770 141.770', '30'), ('met5', 'met4', '2', '0.000 0.000 41.765 41.765', '30'), ('met5', 'met4', '2', '0.000 0.000 51.850 51.850', '30'), ('met5', 'met4', '2', '0.000 0.000 98.980 98.980', '30'), ('met5', 'met4', '2', '0.000 0.000 99.960 99.960', '30')]
+  F2 (I2) physical axis: [('met3', 'met4', '2', '0.000 0.000 104.110 104.110', '30'), ('met3', 'met4', '2', '0.000 0.000 107.005 107.005', '30'), ('met3', 'met4', '2', '0.000 0.000 141.770 141.770', '30'), ('met3', 'met4', '2', '0.000 0.000 41.765 41.765', '30'), ('met3', 'met4', '2', '0.000 0.000 51.850 51.850', '30'), ('met3', 'met4', '2', '0.000 0.000 98.980 98.980', '30'), ('met3', 'met4', '2', '0.000 0.000 99.960 99.960', '30')]
+
+  dataset rows batch I0: 1207 keys
+  dataset rows batch I0P0: 58 keys
+  dataset rows batch I1: 1207 keys
+  dataset rows batch I1P0: 58 keys
+  I0 & I1 dataset keys: 1207
+  of which present in the F2 job table: 1207
+
+  f2_labels.jsonl: 1 records
+    key=b01__t000__d1057865 batch=I2 status=ok wns=-0.79 base=None marginal=None
+  f2 keys that are in the F2 job table: 1 / 1
+  f2 keys that are also in the I0 dataset rows: 1

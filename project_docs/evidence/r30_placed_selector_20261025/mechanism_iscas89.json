@@ -1,0 +1,1823 @@
+{
+  "family": "iscas89",
+  "D1_rank_agreement": {
+    "n_decisions": 14,
+    "n_with_spearman": 9,
+    "median_spearman": 0.866025,
+    "mean_spearman": 0.498116,
+    "min_spearman": -1.0,
+    "n_spearman_ge_0_9": 4,
+    "n_spearman_lt_0_5": 3,
+    "note": "Spearman between the ideal and the placed marginal delta inside the gate-eligible set of one ECO decision"
+  },
+  "D1_per_decision": [
+    {
+      "circuit": "s27",
+      "iteration": "3",
+      "n_eligible": 4,
+      "spearman_ideal_placed": -0.5443310539518174
+    },
+    {
+      "circuit": "s382",
+      "iteration": "1",
+      "n_eligible": 2,
+      "spearman_ideal_placed": 0.9999999999999998
+    },
+    {
+      "circuit": "s382",
+      "iteration": "2",
+      "n_eligible": 2,
+      "spearman_ideal_placed": -0.9999999999999998
+    },
+    {
+      "circuit": "s382",
+      "iteration": "3",
+      "n_eligible": 2,
+      "spearman_ideal_placed": null
+    },
+    {
+      "circuit": "s382",
+      "iteration": "4",
+      "n_eligible": 6,
+      "spearman_ideal_placed": null
+    },
+    {
+      "circuit": "s420",
+      "iteration": "1",
+      "n_eligible": 2,
+      "spearman_ideal_placed": 0.9999999999999998
+    },
+    {
+      "circuit": "s420",
+      "iteration": "7",
+      "n_eligible": 25,
+      "spearman_ideal_placed": null
+    },
+    {
+      "circuit": "s641",
+      "iteration": "4",
+      "n_eligible": 3,
+      "spearman_ideal_placed": 0.8660254037844387
+    },
+    {
+      "circuit": "s641",
+      "iteration": "7",
+      "n_eligible": 8,
+      "spearman_ideal_placed": null
+    },
+    {
+      "circuit": "s713",
+      "iteration": "2",
+      "n_eligible": 3,
+      "spearman_ideal_placed": 0.9999999999999998
+    },
+    {
+      "circuit": "s713",
+      "iteration": "3",
+      "n_eligible": 6,
+      "spearman_ideal_placed": 0.7071067811865475
+    },
+    {
+      "circuit": "s820",
+      "iteration": "2",
+      "n_eligible": 2,
+      "spearman_ideal_placed": null
+    },
+    {
+      "circuit": "s820",
+      "iteration": "3",
+      "n_eligible": 31,
+      "spearman_ideal_placed": 0.45424072243957136
+    },
+    {
+      "circuit": "s832",
+      "iteration": "2",
+      "n_eligible": 2,
+      "spearman_ideal_placed": 0.9999999999999998
+    }
+  ],
+  "D2_disagreement": {
+    "n_decisions": 14,
+    "n_disagree": 5,
+    "frac_disagree": 0.357143,
+    "routed_diff_histogram": {
+      "-0.02": 1,
+      "+0": 2,
+      "-0.03": 1,
+      "+0.06": 1
+    },
+    "n_disagree_with_zero_routed_diff": 2,
+    "n_disagree_with_routed_diff_ge_0_01": 3,
+    "sum_routed_diff_on_disagreement": 0.01,
+    "max_abs_routed_diff_on_disagreement": 0.06,
+    "mean_abs_ideal_delta_gap_on_disagreement": 0.014,
+    "note": "on the decisions where the ideal criterion and the placed criterion pick different candidates: what does the post-route gain difference look like?"
+  },
+  "D3_random_control": {
+    "n_seeds": 200,
+    "seed0": 20261025,
+    "n_seeds_with_p": 200,
+    "median_p": 0.109375,
+    "frac_p_below_0_05": 0.32,
+    "frac_p_above_0_05": 0.68,
+    "mean_diff_median": -0.013571,
+    "mean_diff_min": -0.024286,
+    "mean_diff_max": -0.002857,
+    "note": "random eligible candidate vs the ideal-criterion choice, paired sign test per seed; if the ideal criterion cannot beat chance either, the null is about the CRITERION, not about the placed stage"
+  },
+  "D3b_random_vs_oracle_control": {
+    "n_seeds": 200,
+    "n_seeds_with_p": 200,
+    "median_p": 0.001953125,
+    "min_p": 0.000244140625,
+    "max_p": 0.015625,
+    "frac_p_below_0_05": 1.0,
+    "mean_diff_median": -0.026429,
+    "note": "POSITIVE CONTROL: random eligible candidate vs the routed oracle over the same seeds.  This is the resolution check of the decision-level instrument itself."
+  },
+  "D6_oracle_vs_ideal": {
+    "n": 14,
+    "statistic": "routed gain of the oracle minus that of the ideal criterion, per decision",
+    "wins_oracle": 7,
+    "losses_oracle": 0,
+    "sign_test_p": 0.015625,
+    "mean_diff": 0.012857,
+    "n_zero": 7,
+    "note": "if the oracle is NOT significantly better than the ideal criterion, then this dataset has no decision-level signal to redistribute, and moving the criterion cannot pay off"
+  },
+  "D7_within_pool_ranker_quality": {
+    "n_decisions": 14,
+    "n_with_spearman_both": 8,
+    "n_spearman_undefined": 6,
+    "undefined_reason": "the Spearman is undefined when the eligible set has a constant ideal or a constant routed delta -- such a decision carries no rank information at all",
+    "median_spearman_ideal_vs_routed": 1.0,
+    "median_spearman_placed_vs_routed": 0.833333,
+    "mean_spearman_ideal_vs_routed": 0.756544,
+    "mean_spearman_placed_vs_routed": 0.668319,
+    "paired_diff_placed_minus_ideal": {
+      "wins": 3,
+      "losses": 1,
+      "sign_test_p": 0.625,
+      "mean_diff": 0.084925,
+      "n": 8
+    },
+    "n_placed_better": 3,
+    "n_ideal_better": 1,
+    "per_decision": [
+      {
+        "circuit": "s27",
+        "iteration": "3",
+        "n_eligible": 4,
+        "spearman_ideal_vs_routed": 0.0,
+        "spearman_placed_vs_routed": 0.8333333333333335,
+        "spearman_placed_minus_ideal": 0.833333
+      },
+      {
+        "circuit": "s382",
+        "iteration": "1",
+        "n_eligible": 2,
+        "spearman_ideal_vs_routed": 0.9999999999999998,
+        "spearman_placed_vs_routed": 0.9999999999999998,
+        "spearman_placed_minus_ideal": 0.0
+      },
+      {
+        "circuit": "s382",
+        "iteration": "2",
+        "n_eligible": 2,
+        "spearman_ideal_vs_routed": null,
+        "spearman_placed_vs_routed": null,
+        "spearman_placed_minus_ideal": null
+      },
+      {
+        "circuit": "s382",
+        "iteration": "3",
+        "n_eligible": 2,
+        "spearman_ideal_vs_routed": null,
+        "spearman_placed_vs_routed": null,
+        "spearman_placed_minus_ideal": null
+      },
+      {
+        "circuit": "s382",
+        "iteration": "4",
+        "n_eligible": 6,
+        "spearman_ideal_vs_routed": null,
+        "spearman_placed_vs_routed": 0.4244373438135827,
+        "spearman_placed_minus_ideal": null
+      },
+      {
+        "circuit": "s420",
+        "iteration": "1",
+        "n_eligible": 2,
+        "spearman_ideal_vs_routed": 0.9999999999999998,
+        "spearman_placed_vs_routed": 0.9999999999999998,
+        "spearman_placed_minus_ideal": 0.0
+      },
+      {
+        "circuit": "s420",
+        "iteration": "7",
+        "n_eligible": 25,
+        "spearman_ideal_vs_routed": null,
+        "spearman_placed_vs_routed": 0.0587445337490968,
+        "spearman_placed_minus_ideal": null
+      },
+      {
+        "circuit": "s641",
+        "iteration": "4",
+        "n_eligible": 3,
+        "spearman_ideal_vs_routed": 0.8660254037844387,
+        "spearman_placed_vs_routed": 0.9999999999999998,
+        "spearman_placed_minus_ideal": 0.133975
+      },
+      {
+        "circuit": "s641",
+        "iteration": "7",
+        "n_eligible": 8,
+        "spearman_ideal_vs_routed": null,
+        "spearman_placed_vs_routed": 0.38002094395360503,
+        "spearman_placed_minus_ideal": null
+      },
+      {
+        "circuit": "s713",
+        "iteration": "2",
+        "n_eligible": 3,
+        "spearman_ideal_vs_routed": 0.9999999999999998,
+        "spearman_placed_vs_routed": 0.9999999999999998,
+        "spearman_placed_minus_ideal": 0.0
+      },
+      {
+        "circuit": "s713",
+        "iteration": "3",
+        "n_eligible": 6,
+        "spearman_ideal_vs_routed": 0.5393598899705937,
+        "spearman_placed_vs_routed": 0.09534625892455922,
+        "spearman_placed_minus_ideal": -0.444014
+      },
+      {
+        "circuit": "s820",
+        "iteration": "2",
+        "n_eligible": 2,
+        "spearman_ideal_vs_routed": 0.9999999999999998,
+        "spearman_placed_vs_routed": null,
+        "spearman_placed_minus_ideal": null
+      },
+      {
+        "circuit": "s820",
+        "iteration": "3",
+        "n_eligible": 31,
+        "spearman_ideal_vs_routed": 0.4035146111172113,
+        "spearman_placed_vs_routed": 0.5596232614361177,
+        "spearman_placed_minus_ideal": 0.156109
+      },
+      {
+        "circuit": "s832",
+        "iteration": "2",
+        "n_eligible": 2,
+        "spearman_ideal_vs_routed": 0.9999999999999998,
+        "spearman_placed_vs_routed": 0.9999999999999998,
+        "spearman_placed_minus_ideal": 0.0
+      }
+    ],
+    "note": "within the gate-eligible set, the rank correlation of each cheap criterion with the ROUTED delta -- i.e. how good a within-decision ranker each criterion actually is"
+  },
+  "D8_sparsity": {
+    "n_decisions": 14,
+    "n_eligible_total": 98,
+    "n_routed_zero": 6,
+    "frac_routed_zero": 0.061224,
+    "n_routed_positive": 76,
+    "n_routed_negative": 16,
+    "n_decisions_with_exactly_one_positive": 3,
+    "n_decisions_with_zero_positive": 3,
+    "n_decisions_with_2plus_positive": 10,
+    "median_n_eligible": 3,
+    "note": "the eligible set of one decision: how many candidates carry a non-zero post-route effect.  A better ranker can only pay off if there is something to rank."
+  },
+  "D3_per_seed": [
+    {
+      "seed": 20261025,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261026,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.019286
+    },
+    {
+      "seed": 20261027,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.019286
+    },
+    {
+      "seed": 20261028,
+      "sign_test_p": 0.01171875,
+      "wins_random": 1,
+      "losses_random": 10,
+      "mean_diff": -0.021429
+    },
+    {
+      "seed": 20261029,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261030,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261031,
+      "sign_test_p": 0.14599609375,
+      "wins_random": 3,
+      "losses_random": 9,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261032,
+      "sign_test_p": 0.021484375,
+      "wins_random": 1,
+      "losses_random": 9,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261033,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.005714
+    },
+    {
+      "seed": 20261034,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261035,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261036,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261037,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261038,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261039,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261040,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.01
+    },
+    {
+      "seed": 20261041,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261042,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261043,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261044,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261045,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261046,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261047,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261048,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261049,
+      "sign_test_p": 1.0,
+      "wins_random": 3,
+      "losses_random": 4,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261050,
+      "sign_test_p": 0.0078125,
+      "wins_random": 0,
+      "losses_random": 8,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261051,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.01
+    },
+    {
+      "seed": 20261052,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261053,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.008571
+    },
+    {
+      "seed": 20261054,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.02
+    },
+    {
+      "seed": 20261055,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261056,
+      "sign_test_p": 0.0078125,
+      "wins_random": 0,
+      "losses_random": 8,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261057,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261058,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261059,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261060,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261061,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.011429
+    },
+    {
+      "seed": 20261062,
+      "sign_test_p": 0.34375,
+      "wins_random": 3,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261063,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261064,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261065,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261066,
+      "sign_test_p": 0.6875,
+      "wins_random": 2,
+      "losses_random": 4,
+      "mean_diff": -0.005714
+    },
+    {
+      "seed": 20261067,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261068,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261069,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261070,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261071,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261072,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261073,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261074,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261075,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.006429
+    },
+    {
+      "seed": 20261076,
+      "sign_test_p": 0.2265625,
+      "wins_random": 3,
+      "losses_random": 8,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261077,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261078,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261079,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261080,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261081,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261082,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261083,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261084,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261085,
+      "sign_test_p": 0.34375,
+      "wins_random": 3,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261086,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261087,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261088,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261089,
+      "sign_test_p": 0.021484375,
+      "wins_random": 1,
+      "losses_random": 9,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261090,
+      "sign_test_p": 0.01171875,
+      "wins_random": 1,
+      "losses_random": 10,
+      "mean_diff": -0.023571
+    },
+    {
+      "seed": 20261091,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.008571
+    },
+    {
+      "seed": 20261092,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261093,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261094,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261095,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261096,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.011429
+    },
+    {
+      "seed": 20261097,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261098,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261099,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261100,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.019286
+    },
+    {
+      "seed": 20261101,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261102,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261103,
+      "sign_test_p": 0.5078125,
+      "wins_random": 3,
+      "losses_random": 6,
+      "mean_diff": -0.006429
+    },
+    {
+      "seed": 20261104,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261105,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261106,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261107,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261108,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261109,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.02
+    },
+    {
+      "seed": 20261110,
+      "sign_test_p": 0.01171875,
+      "wins_random": 1,
+      "losses_random": 10,
+      "mean_diff": -0.022143
+    },
+    {
+      "seed": 20261111,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261112,
+      "sign_test_p": 0.001953125,
+      "wins_random": 0,
+      "losses_random": 10,
+      "mean_diff": -0.024286
+    },
+    {
+      "seed": 20261113,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261114,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261115,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.020714
+    },
+    {
+      "seed": 20261116,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261117,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261118,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261119,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261120,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261121,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261122,
+      "sign_test_p": 0.6875,
+      "wins_random": 2,
+      "losses_random": 4,
+      "mean_diff": -0.01
+    },
+    {
+      "seed": 20261123,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261124,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.02
+    },
+    {
+      "seed": 20261125,
+      "sign_test_p": 0.0625,
+      "wins_random": 0,
+      "losses_random": 5,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261126,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261127,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261128,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261129,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261130,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261131,
+      "sign_test_p": 0.34375,
+      "wins_random": 3,
+      "losses_random": 7,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261132,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261133,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261134,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261135,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261136,
+      "sign_test_p": 0.125,
+      "wins_random": 0,
+      "losses_random": 4,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261137,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261138,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261139,
+      "sign_test_p": 0.5078125,
+      "wins_random": 3,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261140,
+      "sign_test_p": 0.0078125,
+      "wins_random": 0,
+      "losses_random": 8,
+      "mean_diff": -0.020714
+    },
+    {
+      "seed": 20261141,
+      "sign_test_p": 0.021484375,
+      "wins_random": 1,
+      "losses_random": 9,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261142,
+      "sign_test_p": 0.0625,
+      "wins_random": 0,
+      "losses_random": 5,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261143,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261144,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261145,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261146,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.022143
+    },
+    {
+      "seed": 20261147,
+      "sign_test_p": 0.125,
+      "wins_random": 0,
+      "losses_random": 4,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261148,
+      "sign_test_p": 0.7265625,
+      "wins_random": 3,
+      "losses_random": 5,
+      "mean_diff": -0.008571
+    },
+    {
+      "seed": 20261149,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261150,
+      "sign_test_p": 0.021484375,
+      "wins_random": 1,
+      "losses_random": 9,
+      "mean_diff": -0.021429
+    },
+    {
+      "seed": 20261151,
+      "sign_test_p": 0.0009765625,
+      "wins_random": 0,
+      "losses_random": 11,
+      "mean_diff": -0.024286
+    },
+    {
+      "seed": 20261152,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261153,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261154,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.005714
+    },
+    {
+      "seed": 20261155,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261156,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261157,
+      "sign_test_p": 0.0625,
+      "wins_random": 0,
+      "losses_random": 5,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261158,
+      "sign_test_p": 0.7265625,
+      "wins_random": 3,
+      "losses_random": 5,
+      "mean_diff": -0.008571
+    },
+    {
+      "seed": 20261159,
+      "sign_test_p": 0.0625,
+      "wins_random": 0,
+      "losses_random": 5,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261160,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261161,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261162,
+      "sign_test_p": 0.6875,
+      "wins_random": 2,
+      "losses_random": 4,
+      "mean_diff": -0.002857
+    },
+    {
+      "seed": 20261163,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261164,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261165,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261166,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261167,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.017143
+    },
+    {
+      "seed": 20261168,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261169,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261170,
+      "sign_test_p": 0.0390625,
+      "wins_random": 1,
+      "losses_random": 8,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261171,
+      "sign_test_p": 0.0625,
+      "wins_random": 0,
+      "losses_random": 5,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261172,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261173,
+      "sign_test_p": 0.0625,
+      "wins_random": 0,
+      "losses_random": 5,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261174,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261175,
+      "sign_test_p": 0.5078125,
+      "wins_random": 3,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261176,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.011429
+    },
+    {
+      "seed": 20261177,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.012143
+    },
+    {
+      "seed": 20261178,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261179,
+      "sign_test_p": 0.2890625,
+      "wins_random": 2,
+      "losses_random": 6,
+      "mean_diff": -0.008571
+    },
+    {
+      "seed": 20261180,
+      "sign_test_p": 0.375,
+      "wins_random": 1,
+      "losses_random": 4,
+      "mean_diff": -0.007857
+    },
+    {
+      "seed": 20261181,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261182,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261183,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.01
+    },
+    {
+      "seed": 20261184,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261185,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261186,
+      "sign_test_p": 0.021484375,
+      "wins_random": 1,
+      "losses_random": 9,
+      "mean_diff": -0.02
+    },
+    {
+      "seed": 20261187,
+      "sign_test_p": 0.0078125,
+      "wins_random": 0,
+      "losses_random": 8,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261188,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261189,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261190,
+      "sign_test_p": 0.0654296875,
+      "wins_random": 2,
+      "losses_random": 9,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261191,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261192,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.020714
+    },
+    {
+      "seed": 20261193,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261194,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261195,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.011429
+    },
+    {
+      "seed": 20261196,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.011429
+    },
+    {
+      "seed": 20261197,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261198,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261199,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261200,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.005714
+    },
+    {
+      "seed": 20261201,
+      "sign_test_p": 0.0078125,
+      "wins_random": 0,
+      "losses_random": 8,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261202,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261203,
+      "sign_test_p": 0.125,
+      "wins_random": 0,
+      "losses_random": 4,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261204,
+      "sign_test_p": 0.021484375,
+      "wins_random": 1,
+      "losses_random": 9,
+      "mean_diff": -0.018571
+    },
+    {
+      "seed": 20261205,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261206,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.009286
+    },
+    {
+      "seed": 20261207,
+      "sign_test_p": 0.03125,
+      "wins_random": 0,
+      "losses_random": 6,
+      "mean_diff": -0.012857
+    },
+    {
+      "seed": 20261208,
+      "sign_test_p": 0.625,
+      "wins_random": 1,
+      "losses_random": 3,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261209,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.014286
+    },
+    {
+      "seed": 20261210,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261211,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.02
+    },
+    {
+      "seed": 20261212,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.007143
+    },
+    {
+      "seed": 20261213,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.015714
+    },
+    {
+      "seed": 20261214,
+      "sign_test_p": 0.015625,
+      "wins_random": 0,
+      "losses_random": 7,
+      "mean_diff": -0.01
+    },
+    {
+      "seed": 20261215,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261216,
+      "sign_test_p": 0.453125,
+      "wins_random": 2,
+      "losses_random": 5,
+      "mean_diff": -0.005714
+    },
+    {
+      "seed": 20261217,
+      "sign_test_p": 0.125,
+      "wins_random": 0,
+      "losses_random": 4,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261218,
+      "sign_test_p": 0.21875,
+      "wins_random": 1,
+      "losses_random": 5,
+      "mean_diff": -0.010714
+    },
+    {
+      "seed": 20261219,
+      "sign_test_p": 0.109375,
+      "wins_random": 2,
+      "losses_random": 8,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261220,
+      "sign_test_p": 0.0703125,
+      "wins_random": 1,
+      "losses_random": 7,
+      "mean_diff": -0.017857
+    },
+    {
+      "seed": 20261221,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.016429
+    },
+    {
+      "seed": 20261222,
+      "sign_test_p": 0.00390625,
+      "wins_random": 0,
+      "losses_random": 9,
+      "mean_diff": -0.013571
+    },
+    {
+      "seed": 20261223,
+      "sign_test_p": 0.1796875,
+      "wins_random": 2,
+      "losses_random": 7,
+      "mean_diff": -0.015
+    },
+    {
+      "seed": 20261224,
+      "sign_test_p": 0.125,
+      "wins_random": 1,
+      "losses_random": 6,
+      "mean_diff": -0.010714
+    }
+  ],
+  "D4_headroom": {
+    "n_decisions": 14,
+    "sum_gain_ideal": 0.37,
+    "sum_gain_placed": 0.38,
+    "sum_gain_oracle": 0.55,
+    "headroom_oracle_minus_ideal": 0.18,
+    "headroom_per_decision": 0.012857,
+    "placed_captured_fraction": 0.055556,
+    "ideal_share_of_oracle_gain": 0.672727,
+    "n_oracle_below_ideal": 0,
+    "note": "the oracle is the routed-delta maximum over the SAME eligible set, so headroom is the prize the ideal criterion leaves on the table"
+  },
+  "D5_quantum": {
+    "n_values": 215,
+    "n_routed_multiple_of_0_01": 215,
+    "n_ideal_multiple_of_0_01": 215,
+    "n_placed_multiple_of_0_01": 215,
+    "min_abs_nonzero_routed": 0.01,
+    "distinct_abs_routed_diff_values": [
+      0.0,
+      0.02,
+      0.03,
+      0.06
+    ],
+    "note": "the routed stage is quantised; the decision-level effect must be read against that grid"
+  },
+  "D4_per_decision": [
+    {
+      "circuit": "s27",
+      "iteration": "3",
+      "gain_ideal": 0.0,
+      "gain_placed": -0.02,
+      "gain_oracle": 0.01
+    },
+    {
+      "circuit": "s382",
+      "iteration": "1",
+      "gain_ideal": 0.1,
+      "gain_placed": 0.1,
+      "gain_oracle": 0.1
+    },
+    {
+      "circuit": "s382",
+      "iteration": "2",
+      "gain_ideal": 0.01,
+      "gain_placed": 0.01,
+      "gain_oracle": 0.04
+    },
+    {
+      "circuit": "s382",
+      "iteration": "3",
+      "gain_ideal": 0.02,
+      "gain_placed": 0.02,
+      "gain_oracle": 0.02
+    },
+    {
+      "circuit": "s382",
+      "iteration": "4",
+      "gain_ideal": 0.04,
+      "gain_placed": 0.04,
+      "gain_oracle": 0.06
+    },
+    {
+      "circuit": "s420",
+      "iteration": "1",
+      "gain_ideal": 0.0,
+      "gain_placed": 0.0,
+      "gain_oracle": 0.0
+    },
+    {
+      "circuit": "s420",
+      "iteration": "7",
+      "gain_ideal": 0.01,
+      "gain_placed": 0.01,
+      "gain_oracle": 0.03
+    },
+    {
+      "circuit": "s641",
+      "iteration": "4",
+      "gain_ideal": 0.04,
+      "gain_placed": 0.04,
+      "gain_oracle": 0.04
+    },
+    {
+      "circuit": "s641",
+      "iteration": "7",
+      "gain_ideal": 0.07,
+      "gain_placed": 0.07,
+      "gain_oracle": 0.07
+    },
+    {
+      "circuit": "s713",
+      "iteration": "2",
+      "gain_ideal": -0.02,
+      "gain_placed": -0.02,
+      "gain_oracle": 0.0
+    },
+    {
+      "circuit": "s713",
+      "iteration": "3",
+      "gain_ideal": 0.03,
+      "gain_placed": 0.03,
+      "gain_oracle": 0.04
+    },
+    {
+      "circuit": "s820",
+      "iteration": "2",
+      "gain_ideal": 0.03,
+      "gain_placed": 0.0,
+      "gain_oracle": 0.03
+    },
+    {
+      "circuit": "s820",
+      "iteration": "3",
+      "gain_ideal": 0.01,
+      "gain_placed": 0.07,
+      "gain_oracle": 0.08
+    },
+    {
+      "circuit": "s832",
+      "iteration": "2",
+      "gain_ideal": 0.03,
+      "gain_placed": 0.03,
+      "gain_oracle": 0.03
+    }
+  ]
+}

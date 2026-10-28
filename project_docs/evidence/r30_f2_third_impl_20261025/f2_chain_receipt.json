@@ -1,0 +1,163 @@
+{
+  "source": {
+    "f2_labels_summary": {
+      "n_jobs": 1207,
+      "n_records": 1207,
+      "n_parsed_ok": 1207,
+      "n_parse_failed": 0,
+      "n_no_log": 0,
+      "n_with_marginal_delta": 1193,
+      "marginal_coverage": 0.988401,
+      "missing_reason": {
+        "no_base_hash_in_ledger": 14
+      },
+      "digest_convention_check": {
+        "n_distinct_ledger_base_hashes": 47,
+        "matched_by_byte_digest": 41,
+        "matched_by_text_digest": 47,
+        "matched_by_either": 47,
+        "unmatched": [],
+        "n_unmatched": 0,
+        "convention_note": "the ledger uses the TEXT-mode digest (read_text -> universal newline translation -> encode); the byte digest is indexed as well so the lookup succeeds under either convention"
+      },
+      "candidate_self_check": {
+        "n_candidate_runs_ok": 1193,
+        "n_candidates_with_marginal_delta": 1193,
+        "candidate_marginal_coverage": 1.0,
+        "batch_complete": true,
+        "n_runs_ok": 1207,
+        "passed": true
+      }
+    },
+    "impl_stability": {
+      "third_realisation_complete": true,
+      "coverage_I2": {
+        "job_table": "jobs_itc99_f2.tsv",
+        "promised_keys": 1207,
+        "ok_labels": 1207,
+        "distinct_keys_seen": 1207,
+        "coverage": 1.0,
+        "complete": true
+      },
+      "bands_by_pair": {
+        "F0_vs_F1": {
+          "scope": "family",
+          "two_sigma_ns": 0.049753,
+          "df": 1193,
+          "n_candidate_netlists": 1200,
+          "n_circuits": 7,
+          "ci95": [
+            0.023271,
+            0.026301
+          ],
+          "completeness": {
+            "promised_common_keys": 1207,
+            "ok_pairs": 1207,
+            "pair_coverage": 1.0,
+            "side_a_ok_over_common": 1207,
+            "side_b_ok_over_common": 1207,
+            "side_a_whole_table_complete": false,
+            "side_b_whole_table_complete": false,
+            "complete": true
+          }
+        },
+        "F0_vs_F2": {
+          "scope": "family",
+          "two_sigma_ns": 0.033706,
+          "df": 1193,
+          "n_candidate_netlists": 1200,
+          "n_circuits": 7,
+          "ci95": [
+            0.015764,
+            0.017855
+          ],
+          "completeness": {
+            "promised_common_keys": 1207,
+            "ok_pairs": 1207,
+            "pair_coverage": 1.0,
+            "side_a_ok_over_common": 1207,
+            "side_b_ok_over_common": 1207,
+            "side_a_whole_table_complete": false,
+            "side_b_whole_table_complete": true,
+            "complete": true
+          }
+        },
+        "F1_vs_F2": {
+          "scope": "family",
+          "two_sigma_ns": 0.04554,
+          "df": 1193,
+          "n_candidate_netlists": 1200,
+          "n_circuits": 7,
+          "ci95": [
+            0.021133,
+            0.024237
+          ],
+          "completeness": {
+            "promised_common_keys": 1207,
+            "ok_pairs": 1207,
+            "pair_coverage": 1.0,
+            "side_a_ok_over_common": 1207,
+            "side_b_ok_over_common": 1207,
+            "side_a_whole_table_complete": false,
+            "side_b_whole_table_complete": true,
+            "complete": true
+          }
+        }
+      },
+      "band_stability": {
+        "two_sigma_by_pair": {
+          "F0_vs_F1": 0.049753,
+          "F0_vs_F2": 0.033706,
+          "F1_vs_F2": 0.04554
+        },
+        "max_over_min_ratio": 1.476087,
+        "interpretation": "if the three pairwise spreads agree, the band is a well-defined property of the measurement; a large max/min ratio means the band DEPENDS ON WHICH PAIR of realisations was used, and every band-thresholded verdict inherits that arbitrariness",
+        "note": "the three pairwise differences are algebraically dependent (d_F0F2 = d_F0F1 + d_F1F2 per candidate), so the three estimates are NOT independent; a formal homogeneity test would be invalid and the numbers are reported as a consistency check instead"
+      },
+      "three_way_per_direction": {
+        "F0": {
+          "n_pools": 48,
+          "regret_single_measurement_ns": 0.011458,
+          "regret_averaged_label_ns": 0.01,
+          "averaged_better_pools": 10,
+          "single_better_pools": 10,
+          "ties": 28,
+          "exact_binomial_p": 1.0,
+          "n_pools_where_the_pick_changed": 23,
+          "pick_change_rate": 0.479167
+        },
+        "F1": {
+          "n_pools": 48,
+          "regret_single_measurement_ns": 0.016563,
+          "regret_averaged_label_ns": 0.015625,
+          "averaged_better_pools": 7,
+          "single_better_pools": 4,
+          "ties": 37,
+          "exact_binomial_p": 0.5488,
+          "n_pools_where_the_pick_changed": 14,
+          "pick_change_rate": 0.291667
+        },
+        "F2": {
+          "n_pools": 48,
+          "regret_single_measurement_ns": 0.009688,
+          "regret_averaged_label_ns": 0.007708,
+          "averaged_better_pools": 10,
+          "single_better_pools": 11,
+          "ties": 27,
+          "exact_binomial_p": 1.0,
+          "n_pools_where_the_pick_changed": 27,
+          "pick_change_rate": 0.5625
+        }
+      },
+      "three_way_overall": {
+        "n_pool_direction_pairs": 144,
+        "averaged_better": 27,
+        "single_better": 25,
+        "ties": 92,
+        "exact_binomial_p": 0.8899
+      },
+      "three_way_note": null
+    }
+  },
+  "missing": []
+}

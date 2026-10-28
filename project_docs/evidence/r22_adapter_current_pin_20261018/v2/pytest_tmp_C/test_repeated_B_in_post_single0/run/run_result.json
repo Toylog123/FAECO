@@ -1,0 +1,216 @@
+{
+  "schema": "r22-C-reconstruction-run-v1",
+  "simulated": true,
+  "status": "qa_complete",
+  "stop_reason": "round_cap",
+  "initial_sha256": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+  "final_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+  "final_text": "module helper(A,Y);\n input A;\n output Y;\n sky130_fd_sc_hd__buf_1 x(.A(A),.X(Y));\n endmodule\nmodule top(A,Y,Z);\n  wire n_x;\n  wire n_y;\n input A;\n output Y,Z;\n sky130_fd_sc_hd__buf_1 x (.A(n_x),.X(Y));\n sky130_fd_sc_hd__buf_1 y (.A(n_y),.X(Z));\n   sky130_fd_sc_hd__buf_1 _bufb_x_A (\n    .A(A),\n    .X(n_x)\n  );\n  sky130_fd_sc_hd__buf_1 _bufb_y_A (\n    .A(A),\n    .X(n_y)\n  );\nendmodule",
+  "baseline": {
+    "wns": 0,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "final_metrics": {
+    "wns": 2,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "counts": {
+    "candidate_proposals": 3,
+    "candidate_evaluations": 3,
+    "precheck_rejects": 1,
+    "budget_rejects": 0,
+    "sta_reservations": 5,
+    "sta_launches": 5,
+    "failed_launch_attempts": 0,
+    "candidate_sta_launches": 2,
+    "joint_sta_launches": 0,
+    "baseline_sta_launches": 1,
+    "refresh_sta_launches": 1,
+    "final_sta_launches": 1,
+    "candidate_reservations": 2,
+    "cache_hits": 0,
+    "commits": 2,
+    "sec_calls": 1
+  },
+  "trials": [
+    {
+      "trial_id": 0,
+      "round": 1,
+      "stage": "SINGLE",
+      "action": {
+        "instance": "x",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_x"
+      },
+      "actions": [
+        {
+          "instance": "x",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_x"
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000000",
+      "base_sha256": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+      "candidate_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+      "same_bytes_as_base": false,
+      "status": "measured",
+      "metrics": {
+        "wns": 1,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "trial_id": 1,
+      "round": 1,
+      "stage": "SINGLE",
+      "action": {
+        "instance": "y",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_y"
+      },
+      "actions": [
+        {
+          "instance": "y",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_y"
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000001",
+      "base_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+      "candidate_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+      "same_bytes_as_base": false,
+      "status": "measured",
+      "metrics": {
+        "wns": 2,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    },
+    {
+      "trial_id": 2,
+      "round": 1,
+      "stage": "JOINT",
+      "action": {
+        "instance": "x+y",
+        "kind": "JOINT",
+        "target": "sky130_fd_sc_hd__buf_1+sky130_fd_sc_hd__buf_1"
+      },
+      "actions": [
+        {
+          "instance": "x",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_x"
+        },
+        {
+          "instance": "y",
+          "kind": "B",
+          "target": "sky130_fd_sc_hd__buf_1",
+          "pin_map": {},
+          "pin": "A",
+          "new_net": "n_y"
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000002",
+      "base_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+      "candidate_sha256": "0ce93dac02373ee89b79386f81c41b0bfd337af99db4247c057c0271dc8e6909",
+      "same_bytes_as_base": false,
+      "status": "precheck_reject",
+      "reason": "Candidate F1/F2/domain rejected: {'status': 'fail', 'checks': {'F1': {'status': 'fail', 'method': 'liberty_local_function', 'reason': 'checker failed closed: Duplicate instance in target module: _bufb_x_A, _bufb_y_A'}, 'F2': {'status': 'fail', 'method': 'boundary_closure', 'reason': 'Duplicate instance in target module: _bufb_x_A, _bufb_y_A'}}}"
+    }
+  ],
+  "commits": [
+    {
+      "commit_id": 0,
+      "trial_id": 0,
+      "action": {
+        "instance": "x",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_x"
+      },
+      "base_sha256": "d9b88ccd388d25913edb77240114c28364d3c738a24549e6ff3cb6fecd3c55c2",
+      "candidate_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c"
+    },
+    {
+      "commit_id": 1,
+      "trial_id": 1,
+      "action": {
+        "instance": "y",
+        "kind": "B",
+        "target": "sky130_fd_sc_hd__buf_1",
+        "pin_map": {},
+        "pin": "A",
+        "new_net": "n_y"
+      },
+      "base_sha256": "d15a4adda71bd8c95d124ae213a47d86cc859d7f697e1c2706998ad665cb0b6c",
+      "candidate_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032"
+    }
+  ],
+  "passes": [
+    {
+      "round": 1,
+      "critical_order": [
+        "x",
+        "y"
+      ],
+      "improved": true,
+      "refresh_metrics": {
+        "wns": 0,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      },
+      "current_metrics": {
+        "wns": 2,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    }
+  ],
+  "sec_status": "pass",
+  "sec_bound": true,
+  "sec_nonempty_supported_proof": true,
+  "sec_proof_points": [
+    [
+      "1",
+      "0"
+    ]
+  ]
+}

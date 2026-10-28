@@ -1,0 +1,129 @@
+{
+  "old_proven_unproven": [
+    137,
+    0
+  ],
+  "new_proven_unproven": [
+    139,
+    0
+  ],
+  "actual_old_and_new_s820_top_modules_same_ignoring_blank_lines": true,
+  "old_scope_commands": [
+    "read_verilog /mnt/d/BaiduSyncdisk/03_FAECO/benchmarks/raw/skywater_cells_models/sky130_cells_v2.v",
+    "read_verilog /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260826_iscas89_main/s820/s820/case/original/original.v",
+    "rename s820 gold",
+    "read_verilog /mnt/d/BaiduSyncdisk/03_FAECO/experiments/20260826_sec/s820/final.v",
+    "rename s820 gate",
+    "proc",
+    "memory",
+    "flatten gold",
+    "flatten gate",
+    "equiv_make gold gate equiv",
+    "prep -top equiv",
+    "equiv_simple",
+    "equiv_induct",
+    "equiv_status"
+  ],
+  "new_scope_commands": [
+    "read_verilog \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/cells.v\"",
+    "read_verilog \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/helpers.v\"",
+    "read_verilog \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/gold.v\"",
+    "rename s820 gold",
+    "read_verilog \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820/gate.v\"",
+    "rename s820 gate",
+    "proc",
+    "memory",
+    "equiv_make gold gate equiv",
+    "hierarchy -top equiv",
+    "flatten",
+    "opt_clean",
+    "equiv_simple",
+    "equiv_induct -seq 10",
+    "equiv_status -assert"
+  ],
+  "old_actual_log_lines": [
+    {
+      "line": 1669,
+      "text": "6. Executing FLATTEN pass (flatten design)."
+    },
+    {
+      "line": 1672,
+      "text": "7. Executing FLATTEN pass (flatten design)."
+    },
+    {
+      "line": 1675,
+      "text": "8. Executing EQUIV_MAKE pass (creating equiv checking module)."
+    },
+    {
+      "line": 3626,
+      "text": "Found 5 unproven $equiv cells (5 groups) in equiv:"
+    },
+    {
+      "line": 3627,
+      "text": "  Trying to prove $equiv for \\DFF_4._0_.Q: success!"
+    },
+    {
+      "line": 3628,
+      "text": "  Trying to prove $equiv for \\DFF_3._0_.Q: success!"
+    },
+    {
+      "line": 3629,
+      "text": "  Trying to prove $equiv for \\DFF_2._0_.Q: success!"
+    },
+    {
+      "line": 3630,
+      "text": "  Trying to prove $equiv for \\DFF_1._0_.Q: success!"
+    },
+    {
+      "line": 3631,
+      "text": "  Trying to prove $equiv for \\DFF_0._0_.Q: success!"
+    },
+    {
+      "line": 3638,
+      "text": "12. Executing EQUIV_STATUS pass."
+    },
+    {
+      "line": 3639,
+      "text": "Found 137 $equiv cells in equiv:"
+    },
+    {
+      "line": 3640,
+      "text": "  Of those cells 137 are proven and 0 are unproven."
+    }
+  ],
+  "new_actual_log_lines": [
+    {
+      "line": 266,
+      "text": "7. Executing EQUIV_MAKE pass (creating equiv checking module)."
+    },
+    {
+      "line": 1288,
+      "text": "9. Executing FLATTEN pass (flatten design)."
+    },
+    {
+      "line": 1334,
+      "text": "Found 1 unproven $equiv cells (1 groups) in equiv:"
+    },
+    {
+      "line": 1335,
+      "text": "  Trying to prove $equiv for \\_122_.B: success!"
+    },
+    {
+      "line": 1342,
+      "text": "13. Executing EQUIV_STATUS pass."
+    },
+    {
+      "line": 1343,
+      "text": "Found 139 $equiv cells in equiv:"
+    },
+    {
+      "line": 1344,
+      "text": "  Of those cells 139 are proven and 0 are unproven."
+    }
+  ],
+  "old_current_retained_model_path": "data\\raw\\benchmarks\\raw\\skywater_cells_models\\sky130_cells_v2.v",
+  "old_current_retained_dfxtp_module": "module sky130_fd_sc_hd__dfxtp_1 (CLK, D, Q);\n  input CLK;\n  input D;\n  output reg Q;\n  always @(posedge CLK)\n    Q <= D;\nendmodule",
+  "new_actual_dfxtp_module": "module sky130_fd_sc_hd__dfxtp_1 (CLK, D, Q);\n  input CLK, D;\n  output Q;\n  reg IQ;\n  always @(posedge CLK) IQ <= D;\n  assign Q = IQ;\nendmodule",
+  "explanation": "Different equivalence-cell construction: old flattens both sides before equiv_make; new matches hierarchy before flattening. Old retained FF model drives output Q state directly; new pinned Liberty FF has internal IQ then Q assignment. Actual unproven cell identities and structural matches differ. $equiv totals are properties of these proof constructions, not a shared set of comparison points or evidence of proof strength.",
+  "limits": "Exact identities of the two additional final cells cannot be recovered without retained RTLIL or a new EDA run; no such run is performed. Current retained old model bytes are not certified contemporaneous old model receipt. Input top comparison does not prove identical whole helper/model setup."
+}

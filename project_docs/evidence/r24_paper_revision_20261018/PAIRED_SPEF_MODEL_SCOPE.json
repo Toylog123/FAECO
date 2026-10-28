@@ -1,0 +1,687 @@
+{
+  "purpose": "Actual TT Liberty metadata consumed by current parser; not a new SEC proof model",
+  "liberty": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "relative_path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+    "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "bytes": 12800135
+  },
+  "models": {
+    "sky130_fd_sc_hd__a21oi_1": {
+      "name": "sky130_fd_sc_hd__a21oi_1",
+      "family": "a21oi",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A1&!B1) | (!A2&!B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!B1) | (!A2&!B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__a31oi_1": {
+      "name": "sky130_fd_sc_hd__a31oi_1",
+      "family": "a31oi",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A1&!B1) | (!A2&!B1) | (!A3&!B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "A3",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!B1) | (!A2&!B1) | (!A3&!B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__and3_1": {
+      "name": "sky130_fd_sc_hd__and3_1",
+      "family": "and3",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A&B&C)",
+      "input_pins": [
+        "A",
+        "B",
+        "C"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A&B&C)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__clkinv_1": {
+      "name": "sky130_fd_sc_hd__clkinv_1",
+      "family": "clkinv",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A)",
+      "input_pins": [
+        "A"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__dfxtp_1": {
+      "name": "sky130_fd_sc_hd__dfxtp_1",
+      "family": "dfxtp",
+      "size": 1,
+      "output_pin": "Q",
+      "function": "IQ",
+      "input_pins": [
+        "CLK",
+        "D"
+      ],
+      "next_state": "D",
+      "clocked_on": "CLK",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "IQ",
+      "state_inv_var": "IQ_N",
+      "output_functions": {
+        "Q": "IQ"
+      },
+      "sequential_kind": "ff",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__lpflow_inputiso1p_1": {
+      "name": "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+      "family": "lpflow_inputiso1p",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A) | (SLEEP)",
+      "input_pins": [
+        "A",
+        "SLEEP"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A) | (SLEEP)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__lpflow_isobufsrc_1": {
+      "name": "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+      "family": "lpflow_isobufsrc",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A&!SLEEP)",
+      "input_pins": [
+        "A",
+        "SLEEP"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A&!SLEEP)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nand2_1": {
+      "name": "sky130_fd_sc_hd__nand2_1",
+      "family": "nand2",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A) | (!B)",
+      "input_pins": [
+        "A",
+        "B"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A) | (!B)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nand2b_1": {
+      "name": "sky130_fd_sc_hd__nand2b_1",
+      "family": "nand2b",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(A_N) | (!B)",
+      "input_pins": [
+        "A_N",
+        "B"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(A_N) | (!B)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nor2_1": {
+      "name": "sky130_fd_sc_hd__nor2_1",
+      "family": "nor2",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&!B)",
+      "input_pins": [
+        "A",
+        "B"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&!B)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nor2b_1": {
+      "name": "sky130_fd_sc_hd__nor2b_1",
+      "family": "nor2b",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&B_N)",
+      "input_pins": [
+        "A",
+        "B_N"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&B_N)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nor3_1": {
+      "name": "sky130_fd_sc_hd__nor3_1",
+      "family": "nor3",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&!B&!C)",
+      "input_pins": [
+        "A",
+        "B",
+        "C"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&!B&!C)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nor3b_1": {
+      "name": "sky130_fd_sc_hd__nor3b_1",
+      "family": "nor3b",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&!B&C_N)",
+      "input_pins": [
+        "A",
+        "B",
+        "C_N"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&!B&C_N)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nor4_1": {
+      "name": "sky130_fd_sc_hd__nor4_1",
+      "family": "nor4",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&!B&!C&!D)",
+      "input_pins": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&!B&!C&!D)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__nor4b_1": {
+      "name": "sky130_fd_sc_hd__nor4b_1",
+      "family": "nor4b",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&!B&!C&D_N)",
+      "input_pins": [
+        "A",
+        "B",
+        "C",
+        "D_N"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&!B&!C&D_N)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o2111ai_1": {
+      "name": "sky130_fd_sc_hd__o2111ai_1",
+      "family": "o2111ai",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A1&!A2) | (!B1) | (!C1) | (!D1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1",
+        "C1",
+        "D1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!A2) | (!B1) | (!C1) | (!D1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o211ai_1": {
+      "name": "sky130_fd_sc_hd__o211ai_1",
+      "family": "o211ai",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A1&!A2) | (!B1) | (!C1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1",
+        "C1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!A2) | (!B1) | (!C1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o21a_1": {
+      "name": "sky130_fd_sc_hd__o21a_1",
+      "family": "o21a",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A1&B1) | (A2&B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A1&B1) | (A2&B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o21ai_0": {
+      "name": "sky130_fd_sc_hd__o21ai_0",
+      "family": "o21ai",
+      "size": 0,
+      "output_pin": "Y",
+      "function": "(!A1&!A2) | (!B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!A2) | (!B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o21ai_2": {
+      "name": "sky130_fd_sc_hd__o21ai_2",
+      "family": "o21ai",
+      "size": 2,
+      "output_pin": "Y",
+      "function": "(!A1&!A2) | (!B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!A2) | (!B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o21ba_1": {
+      "name": "sky130_fd_sc_hd__o21ba_1",
+      "family": "o21ba",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A1&!B1_N) | (A2&!B1_N)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "B1_N"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A1&!B1_N) | (A2&!B1_N)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o31a_1": {
+      "name": "sky130_fd_sc_hd__o31a_1",
+      "family": "o31a",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A1&B1) | (A2&B1) | (A3&B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "A3",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A1&B1) | (A2&B1) | (A3&B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o31a_4": {
+      "name": "sky130_fd_sc_hd__o31a_4",
+      "family": "o31a",
+      "size": 4,
+      "output_pin": "X",
+      "function": "(A1&B1) | (A2&B1) | (A3&B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "A3",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A1&B1) | (A2&B1) | (A3&B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__o31ai_1": {
+      "name": "sky130_fd_sc_hd__o31ai_1",
+      "family": "o31ai",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A1&!A2&!A3) | (!B1)",
+      "input_pins": [
+        "A1",
+        "A2",
+        "A3",
+        "B1"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A1&!A2&!A3) | (!B1)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__or3_1": {
+      "name": "sky130_fd_sc_hd__or3_1",
+      "family": "or3",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A) | (B) | (C)",
+      "input_pins": [
+        "A",
+        "B",
+        "C"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A) | (B) | (C)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__or3b_1": {
+      "name": "sky130_fd_sc_hd__or3b_1",
+      "family": "or3b",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A) | (B) | (!C_N)",
+      "input_pins": [
+        "A",
+        "B",
+        "C_N"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A) | (B) | (!C_N)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__xnor2_1": {
+      "name": "sky130_fd_sc_hd__xnor2_1",
+      "family": "xnor2",
+      "size": 1,
+      "output_pin": "Y",
+      "function": "(!A&!B) | (A&B)",
+      "input_pins": [
+        "A",
+        "B"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "Y": "(!A&!B) | (A&B)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    },
+    "sky130_fd_sc_hd__xor2_1": {
+      "name": "sky130_fd_sc_hd__xor2_1",
+      "family": "xor2",
+      "size": 1,
+      "output_pin": "X",
+      "function": "(A&!B) | (!A&B)",
+      "input_pins": [
+        "A",
+        "B"
+      ],
+      "next_state": "",
+      "clocked_on": "",
+      "latch_enable": "",
+      "clear": "",
+      "preset": "",
+      "state_var": "",
+      "state_inv_var": "",
+      "output_functions": {
+        "X": "(A&!B) | (!A&B)"
+      },
+      "sequential_kind": "",
+      "three_state_functions": {}
+    }
+  },
+  "retained_Cprime_SEC_model": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W1\\s382\\final_sec\\cells.v",
+    "relative_path": "experiments/20261016_r22_cut_ablation_v3/W1/s382/final_sec/cells.v",
+    "sha256": "8aa7a2e05a238f7c4b5f0764356d8460db1f90a34490ae519e158920a1e9de24",
+    "bytes": 3672
+  }
+}

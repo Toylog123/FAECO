@@ -1,0 +1,9 @@
+{
+  "splits": {
+    "gold.v": "module helper(A,Y);\n input A;\n output Y;\n sky130_fd_sc_hd__buf_1 x(.A(A),.X(Y));\n endmodule\nmodule top(A,Y,Z);\n input A;\n output Y,Z;\n sky130_fd_sc_hd__buf_1 x(.A(A),.X(Y));\n sky130_fd_sc_hd__buf_1 y(.A(A),.X(Z));\n endmodule",
+    "gate.v": "module helper(A,Y);\n input A;\n output Y;\n sky130_fd_sc_hd__buf_1 x(.A(A),.X(Y));\n endmodule\nmodule top(A,Y,Z);\n  wire n_x;\n  wire n_y;\n input A;\n output Y,Z;\n sky130_fd_sc_hd__buf_1 x (.A(n_x),.X(Y));\n sky130_fd_sc_hd__buf_1 y (.A(n_y),.X(Z));\n   sky130_fd_sc_hd__buf_1 _bufb_x_A (\n    .A(A),\n    .X(n_x)\n  );\n  sky130_fd_sc_hd__buf_1 _bufb_y_A (\n    .A(A),\n    .X(n_y)\n  );\nendmodule",
+    "helpers.v": "mock"
+  },
+  "model_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\sec_preflight\\model_preflight.v",
+  "model_sha256": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5"
+}

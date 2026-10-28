@@ -1,0 +1,724 @@
+{
+  "family": "iscas89",
+  "label_mode": "resolvable",
+  "band_ns": 0.055542,
+  "n_rows": 325,
+  "n_circuits": 8,
+  "grid": [
+    {
+      "name": "pub",
+      "readout": "mod",
+      "propagation": true,
+      "types": true,
+      "epochs": 120,
+      "wd": 0.001
+    },
+    {
+      "name": "reg",
+      "readout": "mod",
+      "propagation": true,
+      "types": true,
+      "epochs": 120,
+      "wd": 0.01
+    },
+    {
+      "name": "noprop",
+      "readout": "mod",
+      "propagation": false,
+      "types": true,
+      "epochs": 120,
+      "wd": 0.001
+    },
+    {
+      "name": "notypes",
+      "readout": "mod",
+      "propagation": true,
+      "types": false,
+      "epochs": 120,
+      "wd": 0.001
+    },
+    {
+      "name": "global",
+      "readout": "global",
+      "propagation": true,
+      "types": true,
+      "epochs": 120,
+      "wd": 0.001
+    }
+  ],
+  "grid_kind": "extended",
+  "selection_rules": {
+    "pre": [
+      "pub",
+      "reg",
+      "noprop",
+      "notypes"
+    ],
+    "extended": [
+      "pub",
+      "reg",
+      "noprop",
+      "notypes",
+      "global"
+    ]
+  },
+  "protocol": "outer = leave-one-circuit-out; inner = leave-one-circuit-out over the TRAINING circuits only; inner score = mean within-pool AUC (the headline readout); the outer test circuit is asserted to be absent from the inner selection; the inner scores are computed once and shared by every selection rule",
+  "null_grid": "full",
+  "pre_registration": "scratch/round32_preregistration.json",
+  "pre_registration_note": "the pre-registered grid's scope sentence claims coverage of the readout dimension, but its four configurations all fix readout='mod'; the 'pre' selection below is the pre-registered verdict unchanged, and the 'extended' selection adds the 'global' arm as an ADVERSARIAL arm (post-hoc informed, bias fixed: it can only make the negative conclusion harder to sustain)",
+  "selected_per_outer_fold": {
+    "pre": {
+      "s27": {
+        "config": "pub",
+        "inner_score": 0.5933036510058568,
+        "inner_scores": {
+          "pub": 0.5933036510058568,
+          "reg": 0.5871169945250828,
+          "noprop": 0.55741458704694,
+          "notypes": 0.5739563439011969,
+          "global": 0.6137378246753248
+        }
+      },
+      "s382": {
+        "config": "reg",
+        "inner_score": 0.6984382161955692,
+        "inner_scores": {
+          "pub": 0.6110458046855105,
+          "reg": 0.6984382161955692,
+          "noprop": 0.4408131207028266,
+          "notypes": 0.5968581296154827,
+          "global": 0.5363588617265089
+        }
+      },
+      "s420": {
+        "config": "noprop",
+        "inner_score": 0.567984593837535,
+        "inner_scores": {
+          "pub": 0.4010355233002292,
+          "reg": 0.31320218996689586,
+          "noprop": 0.567984593837535,
+          "notypes": 0.5472585625159155,
+          "global": 0.6222213203463204
+        }
+      },
+      "s641": {
+        "config": "pub",
+        "inner_score": 0.5593668831168832,
+        "inner_scores": {
+          "pub": 0.5593668831168832,
+          "reg": 0.4813906926406927,
+          "noprop": 0.35482142857142857,
+          "notypes": 0.510814393939394,
+          "global": 0.7033549783549784
+        }
+      },
+      "s713": {
+        "config": "pub",
+        "inner_score": 0.5818835943468296,
+        "inner_scores": {
+          "pub": 0.5818835943468296,
+          "reg": 0.5192930672268907,
+          "noprop": 0.4873190094219506,
+          "notypes": 0.5064035841609371,
+          "global": 0.7504651133180544
+        }
+      },
+      "s820": {
+        "config": "noprop",
+        "inner_score": 0.5259125392581275,
+        "inner_scores": {
+          "pub": 0.4680948667345726,
+          "reg": 0.4276521517697988,
+          "noprop": 0.5259125392581275,
+          "notypes": 0.4807184237331297,
+          "global": 0.5466676215940921
+        }
+      },
+      "s832": {
+        "config": "noprop",
+        "inner_score": 0.5476925770308123,
+        "inner_scores": {
+          "pub": 0.43865380697733636,
+          "reg": 0.5452556022408964,
+          "noprop": 0.5476925770308123,
+          "notypes": 0.5417238031576267,
+          "global": 0.5332881334351922
+        }
+      },
+      "s953": {
+        "config": "reg",
+        "inner_score": 0.6791195887445888,
+        "inner_scores": {
+          "pub": 0.6674044435956201,
+          "reg": 0.6791195887445888,
+          "noprop": 0.4697401960784314,
+          "notypes": 0.5758474980901451,
+          "global": 0.681396294881589
+        }
+      }
+    },
+    "extended": {
+      "s27": {
+        "config": "global",
+        "inner_score": 0.6137378246753248,
+        "inner_scores": {
+          "pub": 0.5933036510058568,
+          "reg": 0.5871169945250828,
+          "noprop": 0.55741458704694,
+          "notypes": 0.5739563439011969,
+          "global": 0.6137378246753248
+        }
+      },
+      "s382": {
+        "config": "reg",
+        "inner_score": 0.6984382161955692,
+        "inner_scores": {
+          "pub": 0.6110458046855105,
+          "reg": 0.6984382161955692,
+          "noprop": 0.4408131207028266,
+          "notypes": 0.5968581296154827,
+          "global": 0.5363588617265089
+        }
+      },
+      "s420": {
+        "config": "global",
+        "inner_score": 0.6222213203463204,
+        "inner_scores": {
+          "pub": 0.4010355233002292,
+          "reg": 0.31320218996689586,
+          "noprop": 0.567984593837535,
+          "notypes": 0.5472585625159155,
+          "global": 0.6222213203463204
+        }
+      },
+      "s641": {
+        "config": "global",
+        "inner_score": 0.7033549783549784,
+        "inner_scores": {
+          "pub": 0.5593668831168832,
+          "reg": 0.4813906926406927,
+          "noprop": 0.35482142857142857,
+          "notypes": 0.510814393939394,
+          "global": 0.7033549783549784
+        }
+      },
+      "s713": {
+        "config": "global",
+        "inner_score": 0.7504651133180544,
+        "inner_scores": {
+          "pub": 0.5818835943468296,
+          "reg": 0.5192930672268907,
+          "noprop": 0.4873190094219506,
+          "notypes": 0.5064035841609371,
+          "global": 0.7504651133180544
+        }
+      },
+      "s820": {
+        "config": "global",
+        "inner_score": 0.5466676215940921,
+        "inner_scores": {
+          "pub": 0.4680948667345726,
+          "reg": 0.4276521517697988,
+          "noprop": 0.5259125392581275,
+          "notypes": 0.4807184237331297,
+          "global": 0.5466676215940921
+        }
+      },
+      "s832": {
+        "config": "noprop",
+        "inner_score": 0.5476925770308123,
+        "inner_scores": {
+          "pub": 0.43865380697733636,
+          "reg": 0.5452556022408964,
+          "noprop": 0.5476925770308123,
+          "notypes": 0.5417238031576267,
+          "global": 0.5332881334351922
+        }
+      },
+      "s953": {
+        "config": "global",
+        "inner_score": 0.681396294881589,
+        "inner_scores": {
+          "pub": 0.6674044435956201,
+          "reg": 0.6791195887445888,
+          "noprop": 0.4697401960784314,
+          "notypes": 0.5758474980901451,
+          "global": 0.681396294881589
+        }
+      }
+    }
+  },
+  "inner_scores": {
+    "s27": {
+      "pub": 0.5933036510058568,
+      "reg": 0.5871169945250828,
+      "noprop": 0.55741458704694,
+      "notypes": 0.5739563439011969,
+      "global": 0.6137378246753248
+    },
+    "s382": {
+      "pub": 0.6110458046855105,
+      "reg": 0.6984382161955692,
+      "noprop": 0.4408131207028266,
+      "notypes": 0.5968581296154827,
+      "global": 0.5363588617265089
+    },
+    "s420": {
+      "pub": 0.4010355233002292,
+      "reg": 0.31320218996689586,
+      "noprop": 0.567984593837535,
+      "notypes": 0.5472585625159155,
+      "global": 0.6222213203463204
+    },
+    "s641": {
+      "pub": 0.5593668831168832,
+      "reg": 0.4813906926406927,
+      "noprop": 0.35482142857142857,
+      "notypes": 0.510814393939394,
+      "global": 0.7033549783549784
+    },
+    "s713": {
+      "pub": 0.5818835943468296,
+      "reg": 0.5192930672268907,
+      "noprop": 0.4873190094219506,
+      "notypes": 0.5064035841609371,
+      "global": 0.7504651133180544
+    },
+    "s820": {
+      "pub": 0.4680948667345726,
+      "reg": 0.4276521517697988,
+      "noprop": 0.5259125392581275,
+      "notypes": 0.4807184237331297,
+      "global": 0.5466676215940921
+    },
+    "s832": {
+      "pub": 0.43865380697733636,
+      "reg": 0.5452556022408964,
+      "noprop": 0.5476925770308123,
+      "notypes": 0.5417238031576267,
+      "global": 0.5332881334351922
+    },
+    "s953": {
+      "pub": 0.6674044435956201,
+      "reg": 0.6791195887445888,
+      "noprop": 0.4697401960784314,
+      "notypes": 0.5758474980901451,
+      "global": 0.681396294881589
+    }
+  },
+  "metrics": {
+    "pre": {
+      "pooled_auc": 0.38795410105999795,
+      "pooled_auc_pool_mean_only": 0.3668055984357312,
+      "mean_within_pool_auc": 0.49770978096916235,
+      "mean_within_pool_auc_ci95": [
+        0.3745777652862782,
+        0.6209680880145508
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.5287356321839081,
+        1.0,
+        0.20833333333333334,
+        0.0,
+        0.3333333333333333,
+        0.2,
+        0.7142857142857143,
+        0.39285714285714285,
+        0.5042016806722689,
+        0.5198863636363636,
+        0.2,
+        0.625,
+        0.7857142857142857,
+        0.5,
+        0.5625,
+        0.5,
+        1.0,
+        0.38392857142857145
+      ]
+    },
+    "extended": {
+      "pooled_auc": 0.63908613769682,
+      "pooled_auc_pool_mean_only": 0.6767263558711536,
+      "mean_within_pool_auc": 0.6403144913256875,
+      "mean_within_pool_auc_ci95": [
+        0.5242946773253885,
+        0.754993768644417
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.896551724137931,
+        1.0,
+        0.20833333333333334,
+        1.0,
+        0.8787878787878788,
+        1.0,
+        0.8571428571428571,
+        0.5535714285714286,
+        0.5756302521008403,
+        0.4630681818181818,
+        0.5,
+        0.5625,
+        0.8515037593984962,
+        0.5,
+        0.5625,
+        0.25,
+        0.5,
+        0.36607142857142855
+      ]
+    }
+  },
+  "baselines": {
+    "kind_only": {
+      "pooled_auc": 0.42201811258618915,
+      "pooled_auc_pool_mean_only": 0.3829113924050633,
+      "mean_within_pool_auc": 0.5172982202629168,
+      "mean_within_pool_auc_ci95": [
+        0.47914729733433775,
+        0.5635479767951768
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.7471264367816092,
+        0.5,
+        0.5416666666666666,
+        0.5,
+        0.3787878787878788,
+        0.5,
+        0.5,
+        0.4017857142857143,
+        0.47478991596638653,
+        0.4474431818181818,
+        0.6,
+        0.5,
+        0.7406015037593985,
+        0.5,
+        0.5416666666666666,
+        0.5,
+        0.5,
+        0.4375
+      ]
+    },
+    "structural": {
+      "pooled_auc": 0.4367603169702583,
+      "pooled_auc_pool_mean_only": 0.44651126891015747,
+      "mean_within_pool_auc": 0.5006236532358823,
+      "mean_within_pool_auc_ci95": [
+        0.37953129944495073,
+        0.6235211727234753
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.375,
+        0.4726890756302521,
+        0.32954545454545453,
+        0.8,
+        0.3854166666666667,
+        0.5488721804511278,
+        1.0,
+        0.5729166666666666,
+        0.75,
+        0.5,
+        0.2767857142857143
+      ]
+    }
+  },
+  "paired_pool_tests": [
+    {
+      "name_a": "kind_only",
+      "name_b": "pre",
+      "n_pools": 18,
+      "mean_diff": -0.01958843929375448,
+      "b_wins": 8,
+      "b_losses": 8,
+      "b_ties": 2,
+      "sign_test_p": 1.0
+    },
+    {
+      "name_a": "structural",
+      "name_b": "pre",
+      "n_pools": 18,
+      "mean_diff": -0.002913872266720028,
+      "b_wins": 10,
+      "b_losses": 6,
+      "b_ties": 2,
+      "sign_test_p": 0.454498291015625
+    },
+    {
+      "name_a": "kind_only",
+      "name_b": "extended",
+      "n_pools": 18,
+      "mean_diff": 0.12301627106277074,
+      "b_wins": 12,
+      "b_losses": 4,
+      "b_ties": 2,
+      "sign_test_p": 0.076812744140625
+    },
+    {
+      "name_a": "structural",
+      "name_b": "extended",
+      "n_pools": 18,
+      "mean_diff": 0.1396908380898052,
+      "b_wins": 11,
+      "b_losses": 5,
+      "b_ties": 2,
+      "sign_test_p": 0.210113525390625
+    }
+  ],
+  "C2_null_labels": {
+    "pre": {
+      "pooled_auc": 0.4539209632602655,
+      "pooled_auc_pool_mean_only": 0.4858495420397242,
+      "mean_within_pool_auc": 0.4742541003917379,
+      "mean_within_pool_auc_ci95": [
+        0.37479680894154577,
+        0.5794420026822761
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.4827586206896552,
+        0.75,
+        0.3333333333333333,
+        1.0,
+        0.5757575757575758,
+        0.4,
+        0.07142857142857142,
+        0.6964285714285714,
+        0.4369747899159664,
+        0.4119318181818182,
+        0.6,
+        0.3854166666666667,
+        0.4342105263157895,
+        0.5,
+        0.5833333333333334,
+        0.5,
+        0.0,
+        0.375
+      ]
+    },
+    "extended": {
+      "pooled_auc": 0.5355047854276012,
+      "pooled_auc_pool_mean_only": 0.530745085931872,
+      "mean_within_pool_auc": 0.5032289858004467,
+      "mean_within_pool_auc_ci95": [
+        0.39156174304895375,
+        0.6063335271848203
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.4827586206896552,
+        0.75,
+        0.5,
+        1.0,
+        0.5757575757575758,
+        0.6,
+        0.0,
+        0.6428571428571429,
+        0.5,
+        0.45170454545454547,
+        0.6,
+        0.3854166666666667,
+        0.4342105263157895,
+        0.75,
+        0.5104166666666666,
+        0.5,
+        0.0,
+        0.375
+      ]
+    }
+  },
+  "C2_null_selected_per_outer_fold": {
+    "pre": {
+      "s27": {
+        "config": "notypes",
+        "inner_score": 0.5118731962481963,
+        "inner_scores": {
+          "pub": 0.4758618220015278,
+          "reg": 0.45665998217468795,
+          "noprop": 0.44723330999066296,
+          "notypes": 0.5118731962481963,
+          "global": 0.48350105572532037
+        }
+      },
+      "s382": {
+        "config": "notypes",
+        "inner_score": 0.5763852813852814,
+        "inner_scores": {
+          "pub": 0.4593594983447925,
+          "reg": 0.47877667430608606,
+          "noprop": 0.4640816781257957,
+          "notypes": 0.5763852813852814,
+          "global": 0.640916730328495
+        }
+      },
+      "s420": {
+        "config": "reg",
+        "inner_score": 0.5745789088362618,
+        "inner_scores": {
+          "pub": 0.49847437611408196,
+          "reg": 0.5745789088362618,
+          "noprop": 0.5204343646549529,
+          "notypes": 0.5049891774891775,
+          "global": 0.4215415711739241
+        }
+      },
+      "s641": {
+        "config": "noprop",
+        "inner_score": 0.5115746753246754,
+        "inner_scores": {
+          "pub": 0.4884199134199134,
+          "reg": 0.4769778138528139,
+          "noprop": 0.5115746753246754,
+          "notypes": 0.4963609307359308,
+          "global": 0.5847402597402598
+        }
+      },
+      "s713": {
+        "config": "notypes",
+        "inner_score": 0.6707034632034632,
+        "inner_scores": {
+          "pub": 0.4430983575248281,
+          "reg": 0.5856797810033104,
+          "noprop": 0.4431581359816653,
+          "notypes": 0.6707034632034632,
+          "global": 0.3589470651897122
+        }
+      },
+      "s820": {
+        "config": "notypes",
+        "inner_score": 0.6125834235209234,
+        "inner_scores": {
+          "pub": 0.3922691728206435,
+          "reg": 0.4443433547661489,
+          "noprop": 0.5269417918682624,
+          "notypes": 0.6125834235209234,
+          "global": 0.5992849715643834
+        }
+      },
+      "s832": {
+        "config": "noprop",
+        "inner_score": 0.5010248917748918,
+        "inner_scores": {
+          "pub": 0.4189947797300738,
+          "reg": 0.4745371148459384,
+          "noprop": 0.5010248917748918,
+          "notypes": 0.4712391774891775,
+          "global": 0.6550664947797301
+        }
+      },
+      "s953": {
+        "config": "noprop",
+        "inner_score": 0.549261077158136,
+        "inner_scores": {
+          "pub": 0.44942306468041765,
+          "reg": 0.5295995670995671,
+          "noprop": 0.549261077158136,
+          "notypes": 0.5007548701298702,
+          "global": 0.5087803348612172
+        }
+      }
+    },
+    "extended": {
+      "s27": {
+        "config": "notypes",
+        "inner_score": 0.5118731962481963,
+        "inner_scores": {
+          "pub": 0.4758618220015278,
+          "reg": 0.45665998217468795,
+          "noprop": 0.44723330999066296,
+          "notypes": 0.5118731962481963,
+          "global": 0.48350105572532037
+        }
+      },
+      "s382": {
+        "config": "global",
+        "inner_score": 0.640916730328495,
+        "inner_scores": {
+          "pub": 0.4593594983447925,
+          "reg": 0.47877667430608606,
+          "noprop": 0.4640816781257957,
+          "notypes": 0.5763852813852814,
+          "global": 0.640916730328495
+        }
+      },
+      "s420": {
+        "config": "reg",
+        "inner_score": 0.5745789088362618,
+        "inner_scores": {
+          "pub": 0.49847437611408196,
+          "reg": 0.5745789088362618,
+          "noprop": 0.5204343646549529,
+          "notypes": 0.5049891774891775,
+          "global": 0.4215415711739241
+        }
+      },
+      "s641": {
+        "config": "global",
+        "inner_score": 0.5847402597402598,
+        "inner_scores": {
+          "pub": 0.4884199134199134,
+          "reg": 0.4769778138528139,
+          "noprop": 0.5115746753246754,
+          "notypes": 0.4963609307359308,
+          "global": 0.5847402597402598
+        }
+      },
+      "s713": {
+        "config": "notypes",
+        "inner_score": 0.6707034632034632,
+        "inner_scores": {
+          "pub": 0.4430983575248281,
+          "reg": 0.5856797810033104,
+          "noprop": 0.4431581359816653,
+          "notypes": 0.6707034632034632,
+          "global": 0.3589470651897122
+        }
+      },
+      "s820": {
+        "config": "notypes",
+        "inner_score": 0.6125834235209234,
+        "inner_scores": {
+          "pub": 0.3922691728206435,
+          "reg": 0.4443433547661489,
+          "noprop": 0.5269417918682624,
+          "notypes": 0.6125834235209234,
+          "global": 0.5992849715643834
+        }
+      },
+      "s832": {
+        "config": "global",
+        "inner_score": 0.6550664947797301,
+        "inner_scores": {
+          "pub": 0.4189947797300738,
+          "reg": 0.4745371148459384,
+          "noprop": 0.5010248917748918,
+          "notypes": 0.4712391774891775,
+          "global": 0.6550664947797301
+        }
+      },
+      "s953": {
+        "config": "noprop",
+        "inner_score": 0.549261077158136,
+        "inner_scores": {
+          "pub": 0.44942306468041765,
+          "reg": 0.5295995670995671,
+          "noprop": 0.549261077158136,
+          "notypes": 0.5007548701298702,
+          "global": 0.5087803348612172
+        }
+      }
+    }
+  },
+  "n_outer_folds_main": 8,
+  "n_outer_folds_null": 8,
+  "folds_done_main": 8,
+  "folds_done_null": 8,
+  "complete": true
+}

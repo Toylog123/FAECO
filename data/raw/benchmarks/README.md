@@ -26,10 +26,14 @@
 
 | 来源 | 固定版本 | 许可状态 | 当前用途 |
 |---|---|---|---|
+| **ITC'99**（`cad-polito-it/I99T`） | commit `8a2c3b500ee7ff20e7031de92592b737bedc6d8c`，21 个电路（b16 不存在） | **EUPL-1.2**，允许再分发 | **论文 ITC-99 实验与物理标签族的底层网表**；`source_manifests/itc99.json` |
+| **ISCAS89**（`ispras/hdl-benchmarks`） | commit `10c3fb51d0810ce862659211862660dcc270a6af`，17 个电路 | **Apache-2.0**，随附许可声明 | **论文 ISCAS89 实验的底层网表**；`source_manifests/iscas89.json` |
+| **SKY130 HD 标准单元库**（OpenROAD-flow-scripts + skywater-pdk-libs-sky130_fd_sc_hd） | `da8f092a02a8e75658cc3100691aabff05f35629` / `ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1` | **BSD-3-Clause** / **Apache-2.0** | 映射用标准单元库与时序模型；`source_manifests/sky130hd_openroad.json`（**已入库**） |
+| **PicoRV32**（`YosysHQ/picorv32`） | commit `a473fc8fca393771d83b0ffcf0b14db3393339d8`，3 个模块 | **ISC**，随附许可声明 | OOD 实例；`source_manifests/picorv32.json`（**已入库**） |
 | EPFL Combinational Benchmark Suite | tag `v2025.1`，commit `8c832d5d07d822d28ba84dc6e95295367702401f` | MIT，发布时保留版权和许可声明 | 已选为论文级 Stage A 主来源；8 个 Verilog/官方 BLIF 已固定并通过隔离 CEC，尚待正式导入 |
 | 当前 c432/c499/c880 | commit `b4c6b6203b95b5314d47365f4a8196c08145519b` | 上游未声明 license | 仅用于本地 parser/flow/batch smoke，不进入论文主实验或可再分发数据包 |
 
-详细审计和候选电路见 `docs/experiment_design/benchmark_source_and_license_audit.md`；机器可读锁定信息见 `source_manifests/epfl_v2025.1.json` 和 `source_manifests/iscas85_jpsety_b4c6b620.json`。
+详细审计和候选电路见 `experiments/design/benchmark_source_and_license_audit.md`（**注意**：该文档 2026-07-20 定稿，**早于** ITC'99 / ISCAS89 的获取，当时**未收录**这两个来源；本次已补表）。机器可读锁定信息见 `source_manifests/` 下的清单：`itc99.json`、`iscas89.json`、`sky130hd_openroad.json`、`picorv32.json`（**已入库**），以及 `epfl_v2025.1.json`、`iscas85_jpsety_b4c6b620.json`（**在盘上、未入库**，原因见 `.gitignore` 第 76–77 行）。
 
 ## 导入工具
 

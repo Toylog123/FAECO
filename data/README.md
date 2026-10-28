@@ -20,7 +20,7 @@
 | `cases/minimal/iscas85_c499_case01/` | ISCAS85 c499 / target `N755`，从 raw generic-gate Verilog 导入 |
 | `cases/minimal/iscas85_c880_case01/` | ISCAS85 c880 / target `N880`，从 raw generic-gate Verilog 导入 |
 
-c432/c499/c880 当前只用于本地 Stage A smoke。其第三方上游未声明 license，不进入论文主实验或可再分发数据包；固定来源与替代方案见 `benchmarks/source_manifests/` 和 `docs/experiment_design/benchmark_source_and_license_audit.md`。
+c432/c499/c880 当前只用于本地 Stage A smoke。其第三方上游未声明 license，不进入论文主实验或可再分发数据包；固定来源与替代方案见 `benchmarks/source_manifests/` 和 `experiments/design/benchmark_source_and_license_audit.md`。
 
 ## 生成工具
 

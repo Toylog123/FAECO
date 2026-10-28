@@ -1,0 +1,50 @@
+{
+  "utc": "2026-10-18T03:29:48.935328+00:00",
+  "scope": "Records and semantic whitespace QA only; no EDA/tests, no stage/commit/source or HEAD mutation",
+  "script_sha256": "28087e982bdc70ac8371203b52ddacbc612b54218c6394a2d12261e965c1a05e",
+  "cwd": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO",
+  "HEAD_before": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "HEAD_after": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "HEAD_stable": true,
+  "commands": {
+    "check_record": {
+      "argv": [
+        "C:/Program Files/Git/bin/bash.exe",
+        "code/scripts/run_with_timeout.sh",
+        "30",
+        "C:/Program Files/Git/bin/bash.exe",
+        "code/scripts/check_record.sh"
+      ],
+      "returncode": 0,
+      "runtime_s": 5.438000000001921,
+      "stdout_sha256": "b7b334f65cd9e1f9e36fe5735e4155ae5ef1c5ddce88816e1afa8d2f06ceeee1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_text": "[run] 启动（超时 30s）：C:/Program Files/Git/bin/bash.exe code/scripts/check_record.sh\n[记录] OK 今日已记录：WORK_PROGRESS.md CURRENT_STATUS.md\n[run] 完成（5s），退出码 0\n",
+      "stderr_text": ""
+    },
+    "semantic_whitespace": {
+      "argv": [
+        "C:/Program Files/Git/bin/bash.exe",
+        "code/scripts/run_with_timeout.sh",
+        "30",
+        "git",
+        "-c",
+        "core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol",
+        "diff",
+        "--ignore-space-at-eol",
+        "--check",
+        "--",
+        ".",
+        ":(exclude)project_docs/evidence/**",
+        ":(exclude)data/**"
+      ],
+      "returncode": 0,
+      "runtime_s": 5.438000000001921,
+      "stdout_sha256": "f8f3a8083b7982999b7a47c95483a8767653dde9f20dfe343cd385fd2e04248a",
+      "stderr_sha256": "3c954413b7aa2ee62f7ab89259d9e93cea11e4122b2212f5c94cc51adf81550f",
+      "stdout_text": "[run] 启动（超时 30s）：git -c core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol diff --ignore-space-at-eol --check -- . :(exclude)project_docs/evidence/** :(exclude)data/**\n[run] 完成（5s），退出码 0\n",
+      "stderr_text": "warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it\n"
+    }
+  },
+  "all_returncodes_zero": true
+}

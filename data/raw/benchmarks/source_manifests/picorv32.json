@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "asset_id": "picorv32_hetero_modules",
+  "status": "acquired",
+  "acquired_on": "2026-08-05",
+  "manifest_created_on": "2026-09-29",
+  "intended_use": "heterogeneous OOD case construction (picorv32 / picorv32_pcpi_mul / picorv32_regs, unified cross-benchmark evaluation)",
+  "source_root": "data/raw/benchmarks/raw/picorv32",
+  "repository": {
+    "id": "yosyshq_picorv32",
+    "url": "https://github.com/YosysHQ/picorv32.git",
+    "branch": "master",
+    "commit": "a473fc8fca393771d83b0ffcf0b14db3393339d8",
+    "local_clone_status": "clean (untracked modules/ copies added 2026-08-05)",
+    "license_path": "COPYING",
+    "license_spdx": "ISC",
+    "license_sha256": "1af118ec363343443d840f62ac025f2fee9d8240efc5dfa944c8e9f7e9b39906"
+  },
+  "notes": "Upstream picorv32.v is a single file defining all three modules (picorv32, picorv32_pcpi_mul, picorv32_regs). The three files under modules/ are byte-identical copies of that upstream file; per-case entry module is selected as top module at case construction.",
+  "files": [
+    {
+      "benchmark_id": "picorv32",
+      "path": "data/raw/benchmarks/raw/picorv32/modules/picorv32.v",
+      "upstream_path": "picorv32.v",
+      "sha256": "fd142889e8178ef67f1cff17cb2d18b3adae56fcae2badf7cbcc4c4f5ac7960e"
+    },
+    {
+      "benchmark_id": "picorv32_pcpi_mul",
+      "path": "data/raw/benchmarks/raw/picorv32/modules/picorv32_pcpi_mul.v",
+      "upstream_path": "picorv32.v",
+      "sha256": "fd142889e8178ef67f1cff17cb2d18b3adae56fcae2badf7cbcc4c4f5ac7960e"
+    },
+    {
+      "benchmark_id": "picorv32_regs",
+      "path": "data/raw/benchmarks/raw/picorv32/modules/picorv32_regs.v",
+      "upstream_path": "picorv32.v",
+      "sha256": "fd142889e8178ef67f1cff17cb2d18b3adae56fcae2badf7cbcc4c4f5ac7960e"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+read_verilog D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_adapter_current_pin_20261018/v2/pytest_tmp_C/test_Liberty_binding_is_saved_0/run/pass_001_refresh/mapped.v
+# mock only
+read_liberty D:/BaiduSyncdisk/01_Papers/03_FAECO/data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib

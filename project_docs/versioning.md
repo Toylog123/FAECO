@@ -1,6 +1,6 @@
 # 版本管理
 
-2026-10-18执行注：main/origin阶段7231e02已实际commit/push（941files），C′原运行source pin仍3ea0f75；此后按R22_S_SPEF_REPAIR_PLAN_20261018先红后绿修源码；当前完整v5=1056pass/174来源稳定，最终独立接受67da65a4…过、阶段stage字节QA/sourcecommit+push待，之后新clean pin才注册D56先14pilot及其余同族EDA。新记录/修复仍会dirty，未产生新具名科学基线/tag，v18历史冻结不变。
+2026-10-18执行注（LOG135）：main/origin固定f761ee1996a83fc4f0f3de0999b74d85a8237858是已push的source checkpoint，非新科学baseline。D最新37producer/56、冻结28已根+独立接受；完整raw3/8根post接受。必须D56独立+根全验收且8case archive/rootpost全部接受后才解锁HEAD/code并阶段收口；当前稿图/新证据dirty保留、不提前commit。之后OI049源修/整体回归/独立门与新cleanpin再登记B3/C。A8限定稿件门已根472b441b接受/当前ZH12-EN26副本同步，C′原runtime3ea及7231归档历史保留，v18不改/无新tag。
 
 ## 一个版本 = 什么
 

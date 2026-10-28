@@ -1,0 +1,188 @@
+--- checker_v2.py
++++ checker_v3.py
+@@ -69,6 +69,111 @@
+     evidence = t.get('acceptance_evidence')
+     return isinstance(evidence, dict) and evidence.get('passed') is not False and not evidence.get('violations') and not evidence.get('unavailable')
+ 
++def classify_trials(trials, by_seq, initial_text, final_hash, call_log):
++    """Separate measured reuse, identity dedup and rejected construction records.
++
++    Missing base identity is reconstructed only for the exact tested-hash
++    branch signature, from the explicit commit chain AND the cache-key digest.
++    The raw trial is never changed. Every ambiguity raises an assertion.
++    """
++    counts = collections.Counter({name: 0 for name in (
++        'actual_STA_cache_reuse_from_launch', 'tested_hash_dedup_without_replay',
++        'cached_pre_STA_rejection', 'uncached_pre_STA_rejection')})
++    linked = {}
++    for index, trial in enumerate(trials):
++        if trial.get('sta_executed') is True:
++            seq = trial['sta_launch_seq']
++            assert not trial.get('skipped_duplicate') and trial.get('cached_from_seq') is None
++            assert isinstance(seq, int) and not isinstance(seq, bool) and seq in by_seq and seq not in linked
++            linked[seq] = trial
++    assert set(linked) == set(by_seq)
++    call_by_iteration = {item['iteration']: item for item in call_log}
++    assert len(call_by_iteration) == len(call_log)
++    groups = collections.OrderedDict()
++    for index, trial in enumerate(trials): groups.setdefault(trial['iteration'], []).append((index, trial))
++    assert list(groups) == sorted(groups)
++    base_by_index = {}; current = sha(initial_text.encode())
++    for iteration, group in groups.items():
++        assert iteration in call_by_iteration
++        for index, trial in group:
++            if 'base_netlist_hash' in trial: assert trial['base_netlist_hash'] == current
++            base_by_index[index] = current
++        commits = [trial for index, trial in group if trial.get('committed') is True]
++        assert len(commits) <= 1
++        if commits:
++            assert commits[0].get('accepted') is True and commits[0].get('sta_executed') is True
++            current = commits[0]['candidate_hash']
++    assert current == final_hash
++    prior_keys = collections.defaultdict(list); prior_measured = []; inferred = []
++    def rejected(trial):
++        assert trial.get('sta_executed') is False and trial.get('sta_launch_seq') is None
++        assert trial.get('accepted') is False and trial.get('committed') is False
++        events = trial.get('failure_events')
++        assert isinstance(events, list) and events and all(isinstance(e, dict) for e in events)
++        assert any(e.get('hard_gate') is True or e.get('severity') == 'hard' for e in events)
++        assert not trial.get('sta_provenance')
++        for event in events:
++            if event.get('type') == 'sta_budget_exhausted':
++                assert event.get('hard_gate') is True and event['observed_value'] == event['threshold']
++                assert event['evidence']['stage'] == 'sta' and event['evidence']['reason'] == 'reserved before tool'
++    for index, trial in enumerate(trials):
++        candidate = trial['candidate_hash']; base = base_by_index[index]
++        assert sha(trial['candidate_netlist_text'].encode()) == candidate
++        assert re.fullmatch('[0-9a-f]{64}', trial['config_hash'])
++        assert sha((base + candidate + trial['config_hash']).encode()) == trial['cache_key']
++        skipped = trial.get('skipped_duplicate') is True
++        cached_from = trial.get('cached_from_seq')
++        if cached_from is not None:
++            assert isinstance(cached_from, int) and not isinstance(cached_from, bool) and cached_from > 0
++            assert trial.get('sta_executed') is False and trial.get('sta_launch_seq') is None
++            assert cached_from in by_seq and cached_from in linked
++            event = by_seq[cached_from]; origin = linked[cached_from]
++            assert any(old is origin for old_index, old in prior_measured)
++            assert event['candidate_hash'] == candidate and event['base_netlist_hash'] == trial['base_netlist_hash'] == base
++            assert origin['cache_key'] == trial['cache_key'] and origin['config_hash'] == trial['config_hash']
++            assert origin['wns'] == trial['wns'] and origin['tns'] == trial['tns']
++            assert origin.get('sta_provenance') == trial.get('sta_provenance')
++            counts['actual_STA_cache_reuse_from_launch'] += 1
++        elif skipped and 'cached_from_seq' in trial:
++            rejected(trial)
++            origins = [(i, t) for i, t in prior_keys[trial['cache_key']]
++                       if t.get('sta_executed') is False and not t.get('skipped_duplicate')]
++            assert origins
++            origin_index, origin = origins[0]; rejected(origin)
++            assert origin['failure_events'] == trial['failure_events']
++            assert origin['base_netlist_hash'] == trial['base_netlist_hash'] == base
++            assert origin['candidate_hash'] == candidate and origin['config_hash'] == trial['config_hash']
++            assert origin['wns'] == trial['wns'] and origin['tns'] == trial['tns']
++            counts['cached_pre_STA_rejection'] += 1
++        elif skipped:
++            assert trial.get('sta_executed') is False and trial.get('sta_launch_seq') is None
++            assert 'base_netlist_hash' not in trial and trial['runtime_s'] == 0.0
++            assert trial.get('accepted') is False and trial.get('committed') is False
++            assert not trial.get('failure_events') and not trial.get('trial_failure_events') and not trial.get('sta_provenance')
++            near(trial['wns'], call_by_iteration[trial['iteration']]['baseline_wns'])
++            origins = [(i, t) for i, t in prior_measured
++                       if t['candidate_hash'] == candidate and t['config_hash'] == trial['config_hash']]
++            assert origins
++            # ROOT28's observed identity-dedup class is a previously measured
++            # absolute netlist re-created under a later base, not same-key reuse.
++            assert all(t['base_netlist_hash'] != base and t['cache_key'] != trial['cache_key'] for i, t in origins)
++            inferred.append({'trial_index_0based': index, 'candidate_hash': candidate,
++                             'base_hash_inferred_not_raw': base, 'cache_key': trial['cache_key'],
++                             'base_binding': 'initial mapped text + ordered explicit committed trial chain + exact SHA256(base+candidate+config)',
++                             'origin_measured_trial_indices': [i for i, t in origins],
++                             'origin_STA_launch_sequences': [t['sta_launch_seq'] for i, t in origins]})
++            counts['tested_hash_dedup_without_replay'] += 1
++        elif trial.get('sta_executed') is True:
++            prior_measured.append((index, trial))
++        else:
++            rejected(trial); counts['uncached_pre_STA_rejection'] += 1
++        prior_keys[trial['cache_key']].append((index, trial))
++    compatibility_cache_count = (counts['actual_STA_cache_reuse_from_launch']
++                                 + counts['tested_hash_dedup_without_replay']
++                                 + counts['cached_pre_STA_rejection'])
++    assert len(linked) + compatibility_cache_count + counts['uncached_pre_STA_rejection'] == len(trials)
++    return linked, compatibility_cache_count, counts['uncached_pre_STA_rejection'], dict(counts), inferred
++
+ def main():
+     begin = time.monotonic()
+     parser = argparse.ArgumentParser(description=__doc__); parser.add_argument('--output', required=True); parser.add_argument('--audit', required=True); args = parser.parse_args()
+@@ -83,8 +188,13 @@
+     assert selected_audit['source_pin'] == manifest['source_pin']
+     selected_keys = set(selected_audit['completion_set_frozen_at_start'])
+     actual_completed_at_start = {j['key'] for j in manifest['jobs'] if (Path(j['output_dir']) / 'completion.json').is_file()}
+-    assert actual_completed_at_start == selected_keys, 'Need a fresh root audit for the exact completed set at start'
+-    assert len(manifest['jobs']) == 56 and 0 < len(selected_keys) <= 56
++    manifest_keys = {j['key'] for j in manifest['jobs']}
++    assert len(manifest_keys) == len(manifest['jobs']) == 56
++    assert 0 < len(selected_keys) <= 56 and selected_keys <= manifest_keys
++    assert selected_keys <= actual_completed_at_start, 'A selected immutable completion is missing'
++    assert len(selected_audit['jobs']) == len({j['key'] for j in selected_audit['jobs']}) == len(selected_keys)
++    assert {j['key'] for j in selected_audit['jobs']} == selected_keys
++    extra_completed_at_start_not_reviewed = sorted(actual_completed_at_start - selected_keys)
+     jobs = [j for j in manifest['jobs'] if j['key'] in selected_keys]
+     assert len(jobs) == len(selected_keys) == selected_audit['verified_completed']
+     out = Path(args.output); out.mkdir(exist_ok=False)
+@@ -151,17 +261,8 @@
+         bw, bt = sta(p, c, period, lib, p / 'mapped.v'); near(bw, result['baseline_wns'])
+         trials = ledger['trials']; events = ledger['sta_launch_events']; assert all(e['kind'] == 'candidate_ideal' for e in events)
+         by_seq = {e['seq']: e for e in events}; assert len(by_seq) == len(events) and sorted(by_seq) == list(range(1, len(events) + 1))
+-        linked = {}; cache = 0; rejected = 0
+-        for t in trials:
+-            is_cache = t.get('skipped_duplicate') is True or (t.get('sta_executed') is False and t.get('cached_from_seq') is not None)
+-            if is_cache:
+-                cache += 1; assert t['sta_executed'] is False and t.get('sta_launch_seq') is None
+-                origin = by_seq[t['cached_from_seq']]; assert origin['candidate_hash'] == t['candidate_hash'] and origin['base_netlist_hash'] == t['base_netlist_hash']
+-            elif t.get('sta_executed') is True:
+-                seq = t['sta_launch_seq']; assert seq not in linked and seq in by_seq; linked[seq] = t
+-            else:
+-                rejected += 1; assert not t.get('sta_launch_seq')
+-        assert len(linked) == len(events)
++        linked, cache, rejected, classification, inferred_dedup = classify_trials(
++            trials, by_seq, text(p / 'mapped.v'), state['current_netlist_hash'], ledger['call_log'])
+         observed = []; valid = []; best = best_valid = 0.0
+         for seq in sorted(by_seq):
+             event = by_seq[seq]; t = linked[seq]
+@@ -191,10 +292,13 @@
+             assert frozen[job['key']] == root_jobs[job['key']]['completion_sha256']
+             for root_name, value in [('n_candidate_evaluation_records', len(trials)), ('n_new_candidate_sta_runs', len(events)), ('n_cache_replays', cache)]: assert root_jobs[job['key']][root_name] == value
+         row = {'key':job['key'], **recomputed, 'baseline_actual_STA_runs':1, 'pre_STA_rejected_trial_records':rejected,
++               'nonlaunch_record_classification':classification, 'tested_hash_dedup_inference':inferred_dedup,
++               'legacy_n_cache_replays_is_compatibility_sum_not_pure_STA_reuse':True,
+                'sec_proven':counts[0][0], 'sec_unproven':0, 'baseline_wns':bw, 'final_wns':result['wns'],
+                'final_state_sha256':state['current_netlist_hash'], 'completion_sha256':frozen[job['key']],
+                'accepted_commits':len(state['accepted_patches'])}
+         rows.append(row); totals.update({'jobs':1,'candidate_evaluation_records':len(trials),'candidate_ideal_STA_launches':len(events),'baseline_STA_runs':1,'cache_replays':cache,'pre_STA_rejected_trial_records':rejected,'SEC_passes':1})
++        totals.update(classification)
+         print('VERIFIED', job['key'], 'candidate STA',len(events),'cache',cache,'pre-reject',rejected,'SEC',counts[0],flush=True)
+     assert head() == EXPECTED_HEAD
+     before = dict(READ); after = {}
+@@ -202,16 +306,19 @@
+         data = Path(name).read_bytes(); after[name] = {'sha256':sha(data),'bytes':len(data)}
+         assert value == after[name], ('source/artifact drift',name)
+     write(out / 'SOURCE_BEFORE.json', before); write(out / 'SOURCE_AFTER.json', after)
+-    receipt = {'schema':'r22-D-frozen-completed-independent-raw-review-v2','client_date':'2026-10-18','actual_utc':datetime.now(timezone.utc).isoformat(),
++    receipt = {'schema':'r22-D-frozen-subset-independent-raw-review-v3','client_date':'2026-10-18','actual_utc':datetime.now(timezone.utc).isoformat(),
+                'argv':sys.argv,'checker_sha256':sha(Path(__file__).read_bytes()),'runtime_s':time.monotonic()-begin,
+                'source_HEAD':EXPECTED_HEAD,'source_files_current_matched':45,'manifest_sha256':EXPECTED_MANIFEST,
+                'all_read_artifacts_stable':True,'read_artifact_count':len(before),'completion_set_frozen_at_start':frozen,
+                'totals':dict(totals),'rows':rows,'root_cross_receipt_available_at_start':True,'audit_path':str(audit_path),'audit_sha256':READ[key(audit_path)]['sha256'],
+-               'new_completions_after_review_start_not_reviewed': sorted({j['key'] for j in manifest['jobs'] if (Path(j['output_dir']) / 'completion.json').is_file()} - selected_keys),
+-               'full_56_registered_keys_reviewed':len(jobs)==56,
++               'extra_completed_at_start_not_reviewed':extra_completed_at_start_not_reviewed,
++               'extra_completed_at_end_not_reviewed': sorted({j['key'] for j in manifest['jobs'] if (Path(j['output_dir']) / 'completion.json').is_file()} - selected_keys),
++               'full_56_registered_keys_reviewed':selected_keys==manifest_keys,
++               'subset_contract':'Exact registered keys from immutable supplied root receipt; every selected completion SHA must match, later/extra completions are explicitly excluded.',
++               'cache_accounting_contract':'n_cache_replays is preserved legacy compatibility sum: actual STA cache reuse + tested-hash dedup without replay + cached pre-STA rejection. The separated counters are authoritative for interpretation.',
+                'decision':'Accepted only the supplied root-audit frozen completed set',
+                'limitations':['Only the root-audit frozen completed set at review start is covered; full D56 only when all 56 registered keys are present.',
+-                              'Candidate k excludes baseline STA, cache reuse and pre-STA rejects; baseline 1 per job checked separately.',
++                              'Candidate k excludes baseline STA, measured cache reuse, tested-hash dedup and pre-STA rejects; baseline 1 per job checked separately. Legacy cache count is not pure STA reuse.',
+                               'Ideal-net STA timing only; no physical RC calibration claim.',
+                               'No new EDA, source mutation, test run or Git command; HEAD read directly from Git metadata.',
+                               'No independent semantic reconstruction of Liberty-to-Boolean cell models; frozen source and retained SEC models are hash bound.',

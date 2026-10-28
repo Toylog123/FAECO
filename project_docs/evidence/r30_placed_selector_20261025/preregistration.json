@@ -1,0 +1,74 @@
+{
+  "round": "33",
+  "title": "接受判据从理想线网搬到布局后档：逐决策的反事实收益比较",
+  "written_before_running": true,
+  "question": "如果把 ECO 循环的接受判据从『理想线网边际 Δ』换成『布局后边际 Δ』（比布线后便宜约两个数量级），在同样一批已生成候选上，按布线后收益衡量，能挽回多少物理收益？",
+  "why_now": [
+    "LOG-20261025-33 已经证明：候选级的物理信号很大（oracle 池内 AUC 0.85–0.93），但它不在图拓扑里，而在网表派生的『测量』里（理想 / 布局后 Δ）。",
+    "LOG-20261024-21/24 已经证明：布局后 Δ 作为布线后标签的预测器最强（候选级 AUC 0.9266），而理想 Δ 只是弱代理。",
+    "但既有分析都停在候选级与『理想选择 vs 布线最优』两层（counterfactual_acceptance.py），**没有任何分析把布局后档当作选择器**。",
+    "工程上这一步正是用户痛点一/二的交点：不用理想线网之后，判据应该落在哪一档？"
+  ],
+  "population": {
+    "families": ["iscas89", "itc99"],
+    "realisation": "只用主实现（ISCAS89: F0 + S713R；ITC-99: I0），与 counterfactual_acceptance.py 的 LABEL_BATCHES 同口径",
+    "row_source": "每族的 training_table.jsonl（该表已按主实现取行，ideal/placed/routed 三档边际 Δ 同源同口径）",
+    "candidates": "池 = 同一 (circuit, iteration) 且三档标签齐备的候选",
+    "decision_unit": "(circuit, iteration) = 一个 ECO 轮次的接受决策"
+  },
+  "sign_convention": {
+    "marginal_delta": "Δ = 候选 WNS − 该候选派生自的迭代基线 WNS（与 ideal_delta_wns = ideal_wns − ideal_baseline_wns 逐位一致，已核）",
+    "gain": "gain = −Δ，因此 gain > 0 = 改善；选择器取 Δ 最小者（gain 最大者）",
+    "note": "既有 counterfactual_acceptance.py 用的是数据集的 post_marginal_delta_wns 字段，符号与之相同但它按正=收益叙述；本轮一律用 gain = −Δ，并在记录里写明，不得混用"
+  },
+  "selectors": {
+    "S_ideal_accepted": "FAECO 实际接受的那个候选（记录在案，接受判据用理想线网）",
+    "S_ideal_pool": "在同一池内取 Δ_ideal 最小者（与 S_placed / S_routed 同池同口径的严格对照）",
+    "S_placed": "在同一池内取 Δ_placed 最小者",
+    "S_routed": "在同一池内取 Δ_routed 最小者（oracle 上界参照点，不是可达建议）"
+  },
+  "outcome": "每个选择器选中的候选的 routed 边际 Δ 折算的 gain（越���好）",
+  "primary_readout": {
+    "paired_difference": "逐决策 gain(S_placed) − gain(S_ideal_pool)",
+    "test": "逐决策配对符号检验（双侧，精确二项，含并列修正）",
+    "effect": "差值的中位数与均值；以及挽回比例",
+    "recovery_fraction": "Σ(gain(S_placed) − gain(S_ideal_pool)) / Σ(gain(S_routed) − gain(S_ideal_pool))，只在分母为正的决策上求和，并报出该决策数"
+  },
+  "secondary_readouts": [
+    "S_placed 与 S_routed 选中同一候选的重合率，对比 S_ideal_pool 与 S_routed 的重合率（方向一致性）",
+    "S_ideal_accepted 与 S_ideal_pool 是否同一个候选（理想选择器在池内是否已是最优）",
+    "S_placed 与 S_ideal_pool 选中同一候选的比例（若恒等则本轮无分辨力，必须写明）",
+    "逐电路的差值（方向是否逐电路一致）",
+    "池大小分布与可评估决策数"
+  ],
+  "hypotheses": {
+    "H1": "搬到布局后档是有收益的：① 逐决策配对符号检验 p < 0.05；② 挽回比例 ≥ 0.25；③ S_placed 与 oracle 的重合率高于 S_ideal_pool 与 oracle 的重合率（方向一致）。三条同时成立才判 H1 触发。",
+    "H0": "任一条不成立 → 判 H1 未触发；**不得**事后改阈值、改池定义或改选择器重试。"
+  },
+  "decisions_to_avoid": [
+    "看到结果后调整 p 门或 0.25 这个挽回门槛",
+    "把候选级统计当决策级结论",
+    "两族合并成一句结论（若方向不一致必须写族特异）",
+    "把『placed 选得好』说成『placed Δ 就是 routed Δ』——两者寄生模型不同（布局 vs 全局布线）",
+    "把反事实说成不同轨迹的结论",
+    "扰动 D 正式矩阵 / OI-051 / 四态能力等 pending 门",
+    "修改 code/ 或提交"
+  ],
+  "boundaries_to_state_with_the_numbers": [
+    "池 = 已有三档标签的候选，属反事实分析，不声称任何不同轨迹的结果",
+    "placed 与 routed 的寄生模型不同（布局 vs 全局布线），故 placed − routed 不是纯布线惩罚",
+    "ISCAS89 仅 8 个极小电路，决策数少 → 功效有限，可证伪、不能确立",
+    "候选级标签量化到 0.01 ns，多数候选级 Δ 落在分辨率带内",
+    "判定带按族分带（LOG-20261024-20/21），不跨族合并",
+    "Δ 一律取边际量（LOG-27 口径）"
+  ],
+  "stop_conditions": [
+    "若可评估决策数 < 10（任一族），该族只报描述性读数，不做显著性判决"
+  ],
+  "artefacts": {
+    "tool": "scratch/round33_placed_selector.py",
+    "output": "scratch/round33_placed_selector.json",
+    "evidence_package": "project_docs/evidence/r30_placed_selector_20261025/",
+    "record": "LOG-20261025-34"
+  }
+}

@@ -1,0 +1,25 @@
+band-pair sensitivity (family itc99, 1117 rows)
+reference pair (the family band definition): F0_vs_F1 = 0.049753 ns
+
+pair     band       | labels(res/gain/harm)        | classifier(kind_only/struct) | acceptance(acc gain/inert)  
+F0_vs_F1 0.049753 | 434/48/386                   | 0.5382/0.4325                | 0.2500/0.6818                 within-pool(struct)=0.540114
+F1_vs_F2 0.045540 | 434/48/386                   | 0.5382/0.4325                | 0.2500/0.6818                 within-pool(struct)=0.540114
+F0_vs_F2 0.033706 | 500/65/435                   | 0.5348/0.4267                | 0.2727/0.6591                 within-pool(struct)=0.516203
+
+flip table (vs the family band pair):
+  label_count    resolvable_positives                       ref=434 other=434 flips=False
+  classifier     kind_only_pooled_auc(resolvable)           ref=0.5382377151493479 other=0.5382377151493479 flips=False
+  classifier     structural_within_pool_auc(resolvable)     ref=0.5401144876346554 other=0.5401144876346554 flips=False
+  classifier     structural_pooled_auc(resolvable)          ref=0.4325066965339954 other=0.4325066965339954 flips=False
+  acceptance     accepted_real_gain_rate                    ref=0.25 other=0.25 flips=False
+  acceptance     accepted_inert_rate                        ref=0.681818 other=0.681818 flips=False
+  acceptance     gain_enrichment                            ref=7.5593 other=7.5593 flips=False
+  acceptance     harm_ratio                                 ref=0.1944 other=0.1944 flips=False
+  label_count    resolvable_positives                       ref=434 other=500 flips=True
+  classifier     kind_only_pooled_auc(resolvable)           ref=0.5382377151493479 other=0.5347941653160454 flips=False
+  classifier     structural_within_pool_auc(resolvable)     ref=0.5401144876346554 other=0.5162030872248986 flips=False
+  classifier     structural_pooled_auc(resolvable)          ref=0.4325066965339954 other=0.42674068071312804 flips=False
+  acceptance     accepted_real_gain_rate                    ref=0.25 other=0.272727 flips=True
+  acceptance     accepted_inert_rate                        ref=0.681818 other=0.659091 flips=True
+  acceptance     gain_enrichment                            ref=7.5593 other=5.6975 flips=False
+  acceptance     harm_ratio                                 ref=0.1944 other=0.1729 flips=True

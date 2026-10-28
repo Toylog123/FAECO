@@ -5,6 +5,8 @@
   "acquired_on": "2026-08-03",
   "intended_use": "larger-scale sequential timing ECO experiments (b01-b22)",
   "source_root": "benchmarks/raw/itc99",
+  "local_root": "data/raw/benchmarks/raw/itc99",
+  "local_root_note": "the files live here now; `source_root` records where they were acquired",
   "repository": {
     "id": "cad_polito_it_I99T",
     "url": "https://github.com/cad-polito-it/I99T.git",
@@ -31,8 +33,8 @@
     {"id": "b14", "file": "b14.blif", "sha256": "be4131c0b4331fa5409a5f72019aeff79da7628684bcbf2e613307792124a975"},
     {"id": "b15", "file": "b15.blif", "sha256": "53e950935c2906bcf0df43e4ae7daddd897eac4ad97c7f31b575d99faf397022"},
     {"id": "b17", "file": "b17.blif", "sha256": "02cf8e1898e23b47a4cc57d83f34cb77fb808a9751f1cb81c08d5cd0c24105fd"},
-    {"id": "b18", "file": "b18.blif", "sha256": "2fe31b6930c7b9f2c7ac6fb43ac4a3a962d7e72433d11fd69ffebd5d3b2bcaa6"},
-    {"id": "b19", "file": "b19.blif", "sha256": "64ed6e8e44c457a68c8aa75c5de84ed9935af65899b1191b0b43e030e48c2c95"},
+    {"id": "b18", "file": "b18.blif", "sha256": "2fe31b6930c7b9f2c7ac6fb43ac4a3a962d7e72433d11fd69ffebd5d3b2bcaa6", "local_sha256": "0be72f0146d850f9795a9c34ceed37c6fb943a660abfbaf9d45af2e88948c528", "local_size_bytes": 6946788},
+    {"id": "b19", "file": "b19.blif", "sha256": "64ed6e8e44c457a68c8aa75c5de84ed9935af65899b1191b0b43e030e48c2c95", "local_sha256": "1f13b641762d616fcab5311bff58a100e406299441a5274b24f4615756f7429b", "local_size_bytes": 16010495},
     {"id": "b20", "file": "b20.blif", "sha256": "8132950f6ab0e5732929e6f50e9f63b8af4c2abbdc1cc44e3c56ee83de964356"},
     {"id": "b21", "file": "b21.blif", "sha256": "8c04c32769fdb5681b177878a91e83be81245886464bb0e2b3385252a402a696"},
     {"id": "b22", "file": "b22.blif", "sha256": "2893b482534539bd8ed6280bcd8f7c96f2a1fac8df98d68b2d35712f6154e685"}
@@ -46,6 +48,9 @@
     "All 21 available circuits (b01-b15, b17-b22) acquired as gate-level BLIF (6.5 MB).",
     "BLIF .latch rows lack explicit clock control (I99T README: single-phase global clock GCLK implicit). Yosys reads them as transparent level-latches and optimizes them away.",
     "Clock handling: need to inject GCLK as edge-triggered clock (or convert $dlatch->$dff) for timing ECO experiments. Deferred; ISCAS89 (8 gate-level circuits with real CK) already sufficient for method validation.",
-    "EUPL-1.2 licensed."
-  ]
+    "EUPL-1.2 licensed.",
+    "The tree moved to data/raw/benchmarks/raw/itc99 after the acquisition; `source_root` is kept as the acquisition-time location and `local_root` gives the current one.  Verify with scratch/verify_benchmark_integrity.py.",
+    "b18/b19 are special: the acquisition path now holds a PROJECT-DERIVED re-export (a clock-injected full expansion produced by the 2026-08-04 b18/b19 repair), not the upstream file.  The upstream pin above is VALID (verified byte for byte against the upstream content at the pinned commit); the pristine upstream copies are preserved at experiments/20260804_itc99_probe/bNN_truncated.blif -- the name \"truncated\" is the project's own misnomer, those files ARE the upstream originals (b18 141,045 B, b19 322,813 B).  `local_sha256` below is the digest of the derived file that sits at the acquisition path today."
+  ],
+  "selection": {"label_family_circuits": {"total": 13, "base_family_7": ["b01", "b02", "b03", "b08", "b09", "b10", "b13"], "extension_family_6": ["b04", "b05", "b06", "b07", "b11", "b12"], "why_the_13": "The physical-label family needs a FROZEN FLOORPLAN whose geometry is transferred from the noise-floor family, so a circuit qualifies only if it has BOTH a ledger in the main family AND a baseline run in the noise-floor family.  Those 7 (base family) qualified.  The extension family adds the 6 that the base family explicitly does not cover and that are physically reachable.  The selection reads the LEDGER ONLY -- no physical outcome can leak into it (see itc99_ext_manifest.json: pool_rule / selection_reads).", "source": "experiments/20261024_physical_labels_itc99/README.md lines 18-20; experiments/20261025_physical_labels_itc99_ext/README.md lines 4-6"}, "excluded_from_the_label_family": {"b14": "unproven -- the routing finished (38493 path reports in the archived log) but the 3600 s cap killed the STA report stage; it needs a separate serial re-test and must be counted as neither reachable nor unreachable until then (LOG-20261025-38)", "b15": "genuinely unreachable -- it dies in detailed routing (no path report at all)", "b17": "genuinely unreachable -- it dies in detailed routing", "b20": "genuinely unreachable -- it dies in detailed routing", "b21": "genuinely unreachable -- it dies in detailed routing", "b22": "genuinely unreachable -- it dies in detailed routing", "b16": "does not exist in the upstream I99T repository (verified by clone)", "source": "project_docs/LOGS.md LOG-20261025-38 (the reachability reclassification)"}, "derived_circuits": {"note": "b18 and b19 are NOT the upstream files at the acquisition path: they are project-derived re-exports.  The upstream originals are preserved byte-identical at experiments/20260804_itc99_probe/bNN_truncated.blif (\"truncated\" is the project's own misnomer).  Both digests are recorded per circuit above (sha256 = upstream, local_sha256 = the derived file now at the path).", "derivation_recipe": {"step_0_upstream": "the upstream I99T file at the pinned commit (bench / blif / edf / vhd)", "step_1_project_tool": "the project expands the upstream netlist into data/raw/benchmarks/raw/itc99/{v/bNN.v, bench/bNN.bench, bNN.blif} and injects the implicit single-phase global clock as an edge-triggered clock (the upstream .latch rows carry no explicit clock, so Yosys would optimise the latches away -- see the manifest notes)", "step_2_synthesis": "experiments/20260804_itc99_b18b19_wsl/map_bNN.ys: read_verilog benchmarks/raw/itc99/v/bNN.v -> synth -top bNN -> dfflibmap -liberty <sky130hd .lib> -> abc -liberty <sky130hd .lib> -> clean -> write_verilog -noattr bNN_mapped.v", "step_3_used_by": "experiments/20260804_itc99_b18b19_wsl/, experiments/20260804_itc99_outerloop_large/", "why_it_matters": "b18/b19 appear in the paper only as separately reported large examples; they are NOT part of the r30 physical-label family (which uses b01--b13), so this derivation does not touch any published physical number"}}}
 }

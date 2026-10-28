@@ -1,0 +1,1921 @@
+{
+  "schema": "r24-helper-flat-v2-design-v1",
+  "status": "prepared_pending_root_confirmation_no_Yosys_or_STA_started",
+  "family": "Fresh helper-expanded Cprime-W1/s382 endpoints on frozen current f761; not raw hierarchical-SPEF support recovery",
+  "root_scope": "Generate2flat+staticfullconnectivity+2original-to-flatSEC only; no STA until derived input bytes frozen and root accepts",
+  "head": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "parent_design": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_DESIGN.json",
+    "sha256": "f212e78473fc99dcca843aa9ce009b433eb557a8af2f60c858867763b8591465",
+    "bytes": 32611
+  },
+  "failure_audit": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_STOP_AUDIT.json",
+    "sha256": "03b306f5fbe9269d6435bdc86c9ed8ffc9d6f675985b7d16afe0a88356a84287",
+    "bytes": 50335
+  },
+  "model_scope": {
+    "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\PAIRED_SPEF_MODEL_SCOPE.json",
+    "relative_path": "project_docs/evidence/r24_paper_revision_20261018/PAIRED_SPEF_MODEL_SCOPE.json",
+    "sha256": "b98dc3f40db144a061d265d55231df03e8149fb661d8515f8800fc1fcbeefe8a",
+    "bytes": 17190
+  },
+  "sources": [
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\__init__.py",
+      "relative_path": "code/src/rseco/__init__.py",
+      "sha256": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd",
+      "bytes": 63
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\abc_baseline.py",
+      "relative_path": "code/src/rseco/abc_baseline.py",
+      "sha256": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+      "bytes": 3878
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\adaptive_selector.py",
+      "relative_path": "code/src/rseco/adaptive_selector.py",
+      "sha256": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+      "bytes": 4187
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\buffer_insertion.py",
+      "relative_path": "code/src/rseco/buffer_insertion.py",
+      "sha256": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+      "bytes": 5724
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\candidate_policy.py",
+      "relative_path": "code/src/rseco/candidate_policy.py",
+      "sha256": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+      "bytes": 3256
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\case_loader.py",
+      "relative_path": "code/src/rseco/case_loader.py",
+      "sha256": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+      "bytes": 3943
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\cut.py",
+      "relative_path": "code/src/rseco/cut.py",
+      "sha256": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+      "bytes": 36302
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\electrical.py",
+      "relative_path": "code/src/rseco/electrical.py",
+      "sha256": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+      "bytes": 11630
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\equivalence.py",
+      "relative_path": "code/src/rseco/equivalence.py",
+      "sha256": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+      "bytes": 8632
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\failures.py",
+      "relative_path": "code/src/rseco/failures.py",
+      "sha256": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+      "bytes": 5234
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\feedback.py",
+      "relative_path": "code/src/rseco/feedback.py",
+      "sha256": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+      "bytes": 12718
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\flow.py",
+      "relative_path": "code/src/rseco/flow.py",
+      "sha256": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "bytes": 66128
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\gate_sizing.py",
+      "relative_path": "code/src/rseco/gate_sizing.py",
+      "sha256": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+      "bytes": 6369
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\graph.py",
+      "relative_path": "code/src/rseco/graph.py",
+      "sha256": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+      "bytes": 5492
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\hold_repair.py",
+      "relative_path": "code/src/rseco/hold_repair.py",
+      "sha256": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+      "bytes": 11402
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\logic_rewrite.py",
+      "relative_path": "code/src/rseco/logic_rewrite.py",
+      "sha256": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+      "bytes": 12752
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\metrics.py",
+      "relative_path": "code/src/rseco/metrics.py",
+      "sha256": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+      "bytes": 568
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\netlist.py",
+      "relative_path": "code/src/rseco/netlist.py",
+      "sha256": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+      "bytes": 11851
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\netlist_audit.py",
+      "relative_path": "code/src/rseco/netlist_audit.py",
+      "sha256": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+      "bytes": 2703
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\netlist_io.py",
+      "relative_path": "code/src/rseco/netlist_io.py",
+      "sha256": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+      "bytes": 744
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\opensta.py",
+      "relative_path": "code/src/rseco/opensta.py",
+      "sha256": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+      "bytes": 20364
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\patch.py",
+      "relative_path": "code/src/rseco/patch.py",
+      "sha256": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+      "bytes": 1759
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\proxy_ranking.py",
+      "relative_path": "code/src/rseco/proxy_ranking.py",
+      "sha256": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+      "bytes": 4134
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\ranking.py",
+      "relative_path": "code/src/rseco/ranking.py",
+      "sha256": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+      "bytes": 3710
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\real_wns.py",
+      "relative_path": "code/src/rseco/real_wns.py",
+      "sha256": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+      "bytes": 156670
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\refinement.py",
+      "relative_path": "code/src/rseco/refinement.py",
+      "sha256": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+      "bytes": 3275
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\refinement_loop.py",
+      "relative_path": "code/src/rseco/refinement_loop.py",
+      "sha256": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+      "bytes": 19520
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\replacement.py",
+      "relative_path": "code/src/rseco/replacement.py",
+      "sha256": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+      "bytes": 16147
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\sdc.py",
+      "relative_path": "code/src/rseco/sdc.py",
+      "sha256": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+      "bytes": 7080
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\search_state.py",
+      "relative_path": "code/src/rseco/search_state.py",
+      "sha256": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+      "bytes": 29097
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\spef.py",
+      "relative_path": "code/src/rseco/spef.py",
+      "sha256": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+      "bytes": 17179
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\sta_ledger.py",
+      "relative_path": "code/src/rseco/sta_ledger.py",
+      "sha256": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+      "bytes": 8320
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\strategy_selector.py",
+      "relative_path": "code/src/rseco/strategy_selector.py",
+      "sha256": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+      "bytes": 4149
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\structure_resynthesis.py",
+      "relative_path": "code/src/rseco/structure_resynthesis.py",
+      "sha256": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270",
+      "bytes": 50463
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\technology_mapping.py",
+      "relative_path": "code/src/rseco/technology_mapping.py",
+      "sha256": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+      "bytes": 9927
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\toolchain.py",
+      "relative_path": "code/src/rseco/toolchain.py",
+      "sha256": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+      "bytes": 2220
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\verilog_modules.py",
+      "relative_path": "code/src/rseco/verilog_modules.py",
+      "sha256": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+      "bytes": 5371
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\yosys_abc.py",
+      "relative_path": "code/src/rseco/yosys_abc.py",
+      "sha256": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+      "bytes": 37542
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\yosys_json.py",
+      "relative_path": "code/src/rseco/yosys_json.py",
+      "sha256": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+      "bytes": 9721
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\src\\rseco\\z3_formal.py",
+      "relative_path": "code/src/rseco/z3_formal.py",
+      "sha256": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+      "bytes": 18574
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\scripts\\run_parasitic_aware_check.py",
+      "relative_path": "code/scripts/run_parasitic_aware_check.py",
+      "sha256": "4e6ae6b76fb6d1e3a39609cc6b4cd9d28b571f511a08768395f85546d4f7dad1",
+      "bytes": 9829
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\scripts\\run_with_timeout.sh",
+      "relative_path": "code/scripts/run_with_timeout.sh",
+      "sha256": "6f22e8a0291afbe26b0f00fbc1ee410b4de8ae999995395b2e034aef2f1338f6",
+      "bytes": 849
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "relative_path": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+      "bytes": 12800135
+    },
+    {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\code\\scripts\\run_r22_cut_ablation.py",
+      "sha256": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+      "bytes": 17181
+    }
+  ],
+  "canonicalization_builtin": "Yosys0.33 read_liberty -lib;read_verilog;hierarchy-check;write_json;flatten;write_json;write_verilog -noattr -norename -noexpr",
+  "prohibited_passes": [
+    "proc",
+    "opt",
+    "clean",
+    "synth",
+    "techmap",
+    "ABC",
+    "dfflibmap",
+    "setundef",
+    "z deletion",
+    "direction rewriting"
+  ],
+  "existing_non_equivalent_entries": [
+    {
+      "path": "code/src/rseco/yosys_abc.py:_normalize_to_blif",
+      "reason": "behavioralizes standard cells and proc/opt_clean/simplemap/clean; BLIF is not same mapped cell object"
+    },
+    {
+      "path": "code/src/rseco/technology_mapping.py",
+      "reason": "synth/ABC technology mapping changes cells"
+    }
+  ],
+  "official_primary_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/yosys-0.33/frontends/liberty/liberty.cc",
+      "anchors": "426-427,541-542: -lib creates empty blackboxes"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/yosys-0.33/passes/techmap/flatten.cc",
+      "anchors": "206-233: blackboxes not flattened; keeps user-module semantics"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/YosysHQ/yosys/yosys-0.33/backends/verilog/verilog_backend.cc",
+      "anchors": "2202-2204 norename,2218-2220 noexpr,2281-2292 default excludes blackboxes; clean_zerowidth must be no-op for verified nonzero-width input"
+    }
+  ],
+  "jobs": [
+    {
+      "side": "baseline",
+      "raw": {
+        "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W1\\s382\\final_sec\\initial_raw.v",
+        "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "bytes": 11037
+      },
+      "helper_utf8_sha256": "6399a4ebeaed3c70409de42b25cf458ac04687808139cb6603c5a3da4e4b36fe",
+      "helper_text": "module dff(CK, Q, D);\n  input CK;\n  wire CK;\n  output Q;\n  wire Q;\n  input D;\n  wire D;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(D),\n    .Q(Q)\n  );\nendmodule",
+      "ys": {
+        "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\prepared\\baseline.flatten.ys",
+        "sha256": "27b39eb5edd0998f4b2501c0cde323a8120d79f2562ba5ae83ad5afe74950b01",
+        "bytes": 855
+      },
+      "ys_text": "read_liberty -lib \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\nread_verilog \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/W1/s382/final_sec/initial_raw.v\"\nhierarchy -check -top s382\nwrite_json \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/baseline.pre_flat.json\"\nflatten\nwrite_json \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/baseline.post_flat.json\"\nwrite_verilog -noattr -norename -noexpr \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/baseline.flat.v\"\n",
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/bin/yosys",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/prepared/baseline.flatten.ys"
+      ],
+      "flatten_timeout_s": 60,
+      "flat_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\baseline.flat.v",
+      "pre_flat_json": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\baseline.pre_flat.json",
+      "post_flat_json": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\baseline.post_flat.json",
+      "expected_comb_cells": {
+        "_046_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "OLATCHVUC_6",
+            "Y": "YLW1"
+          }
+        },
+        "_047_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "OLATCHVUC_5",
+            "Y": "RED2"
+          }
+        },
+        "_048_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "CLR",
+            "Y": "_007_"
+          }
+        },
+        "_049_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "C3_Q1",
+            "Y": "_008_"
+          }
+        },
+        "_050_": {
+          "type": "sky130_fd_sc_hd__nand2b_1",
+          "pins": {
+            "A_N": "CLR",
+            "B": "OLATCH_FEL",
+            "Y": "_009_"
+          }
+        },
+        "_051_": {
+          "type": "sky130_fd_sc_hd__nor4b_1",
+          "pins": {
+            "A": "C3_Q1",
+            "B": "FML",
+            "C": "C3_Q3",
+            "D_N": "C3_Q0",
+            "Y": "_010_"
+          }
+        },
+        "_052_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "C3_Q2",
+            "A2": "_010_",
+            "B1": "_009_",
+            "Y": "_011_"
+          }
+        },
+        "_053_": {
+          "type": "sky130_fd_sc_hd__nand2b_1",
+          "pins": {
+            "A_N": "CLR",
+            "B": "C3_Q2",
+            "Y": "_012_"
+          }
+        },
+        "_054_": {
+          "type": "sky130_fd_sc_hd__or3b_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "C3_Q1",
+            "C_N": "FML",
+            "X": "_013_"
+          }
+        },
+        "_055_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_012_",
+            "B": "_013_",
+            "Y": "_014_"
+          }
+        },
+        "_056_": {
+          "type": "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+          "pins": {
+            "A": "_011_",
+            "SLEEP": "_014_",
+            "X": "TCOMB_FE"
+          }
+        },
+        "_057_": {
+          "type": "sky130_fd_sc_hd__o31a_1",
+          "pins": {
+            "A1": "C1VCO0",
+            "A2": "UC_10",
+            "A3": "UC_9",
+            "B1": "UC_8",
+            "X": "_015_"
+          }
+        },
+        "_058_": {
+          "type": "sky130_fd_sc_hd__o31a_1",
+          "pins": {
+            "A1": "UC_19",
+            "A2": "UC_18",
+            "A3": "UC_17",
+            "B1": "UC_16",
+            "X": "_016_"
+          }
+        },
+        "_059_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "_016_",
+            "Y": "_017_"
+          }
+        },
+        "_060_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "_007_",
+            "B": "_017_",
+            "Y": "_018_"
+          }
+        },
+        "_061_": {
+          "type": "sky130_fd_sc_hd__or3_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "C3_Q1",
+            "C": "C3_Q2",
+            "X": "_019_"
+          }
+        },
+        "_062_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "C3_Q3",
+            "B": "_019_",
+            "Y": "_020_"
+          }
+        },
+        "_063_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_017_",
+            "A2": "_020_",
+            "B1": "_007_",
+            "Y": "_021_"
+          }
+        },
+        "_064_": {
+          "type": "sky130_fd_sc_hd__o211ai_1",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "_016_",
+            "C1": "C3_Q0",
+            "Y": "_022_"
+          }
+        },
+        "_065_": {
+          "type": "sky130_fd_sc_hd__xor2_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "_017_",
+            "X": "_023_"
+          }
+        },
+        "_066_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_021_",
+            "B": "_023_",
+            "Y": "C3_Q0VD"
+          }
+        },
+        "_067_": {
+          "type": "sky130_fd_sc_hd__o2111ai_1",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "_016_",
+            "C1": "C3_Q1",
+            "D1": "C3_Q0",
+            "Y": "_024_"
+          }
+        },
+        "_068_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "_008_",
+            "B": "_022_",
+            "Y": "_025_"
+          }
+        },
+        "_069_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_021_",
+            "B": "_025_",
+            "Y": "C3_Q1VD"
+          }
+        },
+        "_070_": {
+          "type": "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+          "pins": {
+            "A": "C3_Q2",
+            "SLEEP": "_024_",
+            "X": "_026_"
+          }
+        },
+        "_071_": {
+          "type": "sky130_fd_sc_hd__nor2b_1",
+          "pins": {
+            "A": "C3_Q2",
+            "B_N": "_024_",
+            "Y": "_027_"
+          }
+        },
+        "_072_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_021_",
+            "B": "_026_",
+            "C": "_027_",
+            "Y": "C3_Q2VD"
+          }
+        },
+        "_073_": {
+          "type": "sky130_fd_sc_hd__o21ba_1",
+          "pins": {
+            "A1": "C3_Q3",
+            "A2": "_026_",
+            "B1_N": "_021_",
+            "X": "C3_Q3VD"
+          }
+        },
+        "_074_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_011_",
+            "A2": "_014_",
+            "B1": "UC_17",
+            "Y": "_028_"
+          }
+        },
+        "_075_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "_007_",
+            "B": "C3_Q3",
+            "Y": "_029_"
+          }
+        },
+        "_076_": {
+          "type": "sky130_fd_sc_hd__o31ai_1",
+          "pins": {
+            "A1": "C3_Q0",
+            "A2": "C3_Q1",
+            "A3": "_029_",
+            "B1": "_012_",
+            "Y": "_030_"
+          }
+        },
+        "_077_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_011_",
+            "A2": "_030_",
+            "B1": "_028_",
+            "Y": "R2C"
+          }
+        },
+        "_078_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "C3_Q3",
+            "B": "C3_Q2",
+            "Y": "_031_"
+          }
+        },
+        "_079_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "_013_",
+            "A2": "_019_",
+            "B1": "_031_",
+            "Y": "_032_"
+          }
+        },
+        "_080_": {
+          "type": "sky130_fd_sc_hd__and3_1",
+          "pins": {
+            "A": "_007_",
+            "B": "_020_",
+            "C": "_032_",
+            "X": "_033_"
+          }
+        },
+        "_081_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_011_",
+            "A2": "_033_",
+            "B1": "_028_",
+            "Y": "Y1C"
+          }
+        },
+        "_082_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "TESTL",
+            "B": "UC_19",
+            "C": "_015_",
+            "Y": "_034_"
+          }
+        },
+        "_083_": {
+          "type": "sky130_fd_sc_hd__o21a_1",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "UC_19",
+            "X": "_035_"
+          }
+        },
+        "_084_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_034_",
+            "C": "_035_",
+            "Y": "UC_19VD"
+          }
+        },
+        "_085_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "UC_18",
+            "B": "_035_",
+            "Y": "_036_"
+          }
+        },
+        "_086_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_036_",
+            "Y": "UC_18VD"
+          }
+        },
+        "_087_": {
+          "type": "sky130_fd_sc_hd__and3_1",
+          "pins": {
+            "A": "UC_18",
+            "B": "UC_17",
+            "C": "_035_",
+            "X": "_037_"
+          }
+        },
+        "_088_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "UC_18",
+            "A2": "_035_",
+            "B1": "UC_17",
+            "Y": "_038_"
+          }
+        },
+        "_089_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_037_",
+            "C": "_038_",
+            "Y": "UC_17VD"
+          }
+        },
+        "_090_": {
+          "type": "sky130_fd_sc_hd__a31oi_1",
+          "pins": {
+            "A1": "UC_18",
+            "A2": "UC_17",
+            "A3": "_035_",
+            "B1": "UC_16",
+            "Y": "_039_"
+          }
+        },
+        "_091_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_039_",
+            "Y": "UC_16VD"
+          }
+        },
+        "_092_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "C1VCO0",
+            "B": "UC_10",
+            "Y": "_040_"
+          }
+        },
+        "_093_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_015_",
+            "C": "_040_",
+            "Y": "UC_10VD"
+          }
+        },
+        "_094_": {
+          "type": "sky130_fd_sc_hd__and3_1",
+          "pins": {
+            "A": "C1VCO0",
+            "B": "UC_10",
+            "C": "UC_9",
+            "X": "_041_"
+          }
+        },
+        "_095_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "C1VCO0",
+            "A2": "UC_10",
+            "B1": "UC_9",
+            "Y": "_042_"
+          }
+        },
+        "_096_": {
+          "type": "sky130_fd_sc_hd__nor4_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_015_",
+            "C": "_041_",
+            "D": "_042_",
+            "Y": "UC_9VD"
+          }
+        },
+        "_097_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "UC_8",
+            "B": "_041_",
+            "Y": "_043_"
+          }
+        },
+        "_098_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_015_",
+            "C": "_043_",
+            "Y": "UC_8VD"
+          }
+        },
+        "_099_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "FML",
+            "A2": "C3_Q3",
+            "B1": "OLATCH_FEL",
+            "Y": "_044_"
+          }
+        },
+        "_100_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_010_",
+            "B": "_044_",
+            "Y": "_045_"
+          }
+        },
+        "_101_": {
+          "type": "sky130_fd_sc_hd__nor3b_1",
+          "pins": {
+            "A": "_045_",
+            "B": "_012_",
+            "C_N": "_013_",
+            "Y": "TCOMB_GA1"
+          }
+        },
+        "_102_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "C3_Q1",
+            "Y": "_000_"
+          }
+        },
+        "_103_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_000_",
+            "Y": "_001_"
+          }
+        },
+        "_104_": {
+          "type": "sky130_fd_sc_hd__nor4_1",
+          "pins": {
+            "A": "CLR",
+            "B": "OLATCH_FEL",
+            "C": "C3_Q2",
+            "D": "_000_",
+            "Y": "TCOMB_YA2"
+          }
+        },
+        "_105_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "_029_",
+            "Y": "_002_"
+          }
+        },
+        "_106_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "_009_",
+            "B": "_012_",
+            "Y": "_003_"
+          }
+        },
+        "_107_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_001_",
+            "B": "_002_",
+            "C": "_003_",
+            "Y": "TCOMB_GA2"
+          }
+        },
+        "_108_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "CLR",
+            "B": "C1VCO0",
+            "C": "_015_",
+            "Y": "UC_11VD"
+          }
+        },
+        "_109_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "C3_Q0",
+            "A2": "_008_",
+            "B1": "_029_",
+            "Y": "_004_"
+          }
+        },
+        "_110_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_003_",
+            "B": "_004_",
+            "Y": "TCOMB_RA1"
+          }
+        },
+        "_111_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "TESTL",
+            "B": "TEST",
+            "Y": "_005_"
+          }
+        },
+        "_112_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_005_",
+            "Y": "TESTLVIINLATCHVCDAD"
+          }
+        },
+        "_113_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "FML",
+            "B": "FM",
+            "Y": "_006_"
+          }
+        },
+        "_114_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_006_",
+            "Y": "FMLVIINLATCHVCDAD"
+          }
+        }
+      },
+      "expected_state_map": {
+        "DFF_0": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_0._0_",
+          "CLK": "CK",
+          "D": "TESTLVIINLATCHVCDAD",
+          "Q": "TESTL"
+        },
+        "DFF_1": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_1._0_",
+          "CLK": "CK",
+          "D": "FMLVIINLATCHVCDAD",
+          "Q": "FML"
+        },
+        "DFF_10": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_10._0_",
+          "CLK": "CK",
+          "D": "C3_Q2VD",
+          "Q": "C3_Q2"
+        },
+        "DFF_11": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_11._0_",
+          "CLK": "CK",
+          "D": "C3_Q1VD",
+          "Q": "C3_Q1"
+        },
+        "DFF_12": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_12._0_",
+          "CLK": "CK",
+          "D": "C3_Q0VD",
+          "Q": "C3_Q0"
+        },
+        "DFF_13": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_13._0_",
+          "CLK": "CK",
+          "D": "UC_16VD",
+          "Q": "UC_16"
+        },
+        "DFF_14": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_14._0_",
+          "CLK": "CK",
+          "D": "UC_17VD",
+          "Q": "UC_17"
+        },
+        "DFF_15": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_15._0_",
+          "CLK": "CK",
+          "D": "UC_18VD",
+          "Q": "UC_18"
+        },
+        "DFF_16": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_16._0_",
+          "CLK": "CK",
+          "D": "UC_19VD",
+          "Q": "UC_19"
+        },
+        "DFF_17": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_17._0_",
+          "CLK": "CK",
+          "D": "UC_8VD",
+          "Q": "UC_8"
+        },
+        "DFF_18": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_18._0_",
+          "CLK": "CK",
+          "D": "UC_9VD",
+          "Q": "UC_9"
+        },
+        "DFF_19": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_19._0_",
+          "CLK": "CK",
+          "D": "UC_10VD",
+          "Q": "UC_10"
+        },
+        "DFF_2": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_2._0_",
+          "CLK": "CK",
+          "D": "TCOMB_YA2",
+          "Q": "OLATCH_Y2L"
+        },
+        "DFF_20": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_20._0_",
+          "CLK": "CK",
+          "D": "UC_11VD",
+          "Q": "C1VCO0"
+        },
+        "DFF_3": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_3._0_",
+          "CLK": "CK",
+          "D": "Y1C",
+          "Q": "OLATCHVUC_6"
+        },
+        "DFF_4": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_4._0_",
+          "CLK": "CK",
+          "D": "R2C",
+          "Q": "OLATCHVUC_5"
+        },
+        "DFF_5": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_5._0_",
+          "CLK": "CK",
+          "D": "TCOMB_RA1",
+          "Q": "OLATCH_R1L"
+        },
+        "DFF_6": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_6._0_",
+          "CLK": "CK",
+          "D": "TCOMB_GA2",
+          "Q": "OLATCH_G2L"
+        },
+        "DFF_7": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_7._0_",
+          "CLK": "CK",
+          "D": "TCOMB_GA1",
+          "Q": "OLATCH_G1L"
+        },
+        "DFF_8": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_8._0_",
+          "CLK": "CK",
+          "D": "TCOMB_FE",
+          "Q": "OLATCH_FEL"
+        },
+        "DFF_9": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_9._0_",
+          "CLK": "CK",
+          "D": "C3_Q3VD",
+          "Q": "C3_Q3"
+        }
+      },
+      "expected_standard_cell_count": 90,
+      "sec": {
+        "callable": "run_r22_cut_ablation.final_sec",
+        "original_input": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W1\\s382\\final_sec\\initial_raw.v",
+        "flat_top_input": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\baseline.flat.v",
+        "flat_sec_compat_copy": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\sec_inputs\\baseline.flat_with_identical_unused_helper.v",
+        "compatibility_rule": "flat top identical plus original byte-identical user helper definition unused by flat top",
+        "output_dir": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\SEC\\baseline",
+        "timeout_s": 180,
+        "required_log_status": "nonzero proven, zero unproven, success, rc0; actual equiv top and all actual Liberty models"
+      }
+    },
+    {
+      "side": "final",
+      "raw": {
+        "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W1\\s382\\final_sec\\final_raw.v",
+        "sha256": "5745c7fb0fdcf5654658f41d3e2347f45c1121e694cb1f17d967280f3dce589e",
+        "bytes": 11037
+      },
+      "helper_utf8_sha256": "6399a4ebeaed3c70409de42b25cf458ac04687808139cb6603c5a3da4e4b36fe",
+      "helper_text": "module dff(CK, Q, D);\n  input CK;\n  wire CK;\n  output Q;\n  wire Q;\n  input D;\n  wire D;\n  sky130_fd_sc_hd__dfxtp_1 _0_ (\n    .CLK(CK),\n    .D(D),\n    .Q(Q)\n  );\nendmodule",
+      "ys": {
+        "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\prepared\\final.flatten.ys",
+        "sha256": "3a4e0597876d960175a1f2569c85af8011129993cef703bb1b981e80bf9b9692",
+        "bytes": 844
+      },
+      "ys_text": "read_liberty -lib \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\"\nread_verilog \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/W1/s382/final_sec/final_raw.v\"\nhierarchy -check -top s382\nwrite_json \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/final.pre_flat.json\"\nflatten\nwrite_json \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/final.post_flat.json\"\nwrite_verilog -noattr -norename -noexpr \"/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/final.flat.v\"\n",
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/bin/yosys",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/prepared/final.flatten.ys"
+      ],
+      "flatten_timeout_s": 60,
+      "flat_output": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\final.flat.v",
+      "pre_flat_json": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\final.pre_flat.json",
+      "post_flat_json": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\final.post_flat.json",
+      "expected_comb_cells": {
+        "_046_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "OLATCHVUC_6",
+            "Y": "YLW1"
+          }
+        },
+        "_047_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "OLATCHVUC_5",
+            "Y": "RED2"
+          }
+        },
+        "_048_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "CLR",
+            "Y": "_007_"
+          }
+        },
+        "_049_": {
+          "type": "sky130_fd_sc_hd__clkinv_1",
+          "pins": {
+            "A": "C3_Q1",
+            "Y": "_008_"
+          }
+        },
+        "_050_": {
+          "type": "sky130_fd_sc_hd__nand2b_1",
+          "pins": {
+            "A_N": "CLR",
+            "B": "OLATCH_FEL",
+            "Y": "_009_"
+          }
+        },
+        "_051_": {
+          "type": "sky130_fd_sc_hd__nor4b_1",
+          "pins": {
+            "A": "C3_Q1",
+            "B": "FML",
+            "C": "C3_Q3",
+            "D_N": "C3_Q0",
+            "Y": "_010_"
+          }
+        },
+        "_052_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "C3_Q2",
+            "A2": "_010_",
+            "B1": "_009_",
+            "Y": "_011_"
+          }
+        },
+        "_053_": {
+          "type": "sky130_fd_sc_hd__nand2b_1",
+          "pins": {
+            "A_N": "CLR",
+            "B": "C3_Q2",
+            "Y": "_012_"
+          }
+        },
+        "_054_": {
+          "type": "sky130_fd_sc_hd__or3b_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "C3_Q1",
+            "C_N": "FML",
+            "X": "_013_"
+          }
+        },
+        "_055_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_012_",
+            "B": "_013_",
+            "Y": "_014_"
+          }
+        },
+        "_056_": {
+          "type": "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+          "pins": {
+            "A": "_011_",
+            "SLEEP": "_014_",
+            "X": "TCOMB_FE"
+          }
+        },
+        "_057_": {
+          "type": "sky130_fd_sc_hd__o31a_4",
+          "pins": {
+            "A1": "C1VCO0",
+            "A2": "UC_10",
+            "A3": "UC_9",
+            "B1": "UC_8",
+            "X": "_015_"
+          }
+        },
+        "_058_": {
+          "type": "sky130_fd_sc_hd__o31a_1",
+          "pins": {
+            "A1": "UC_19",
+            "A2": "UC_18",
+            "A3": "UC_17",
+            "B1": "UC_16",
+            "X": "_016_"
+          }
+        },
+        "_059_": {
+          "type": "sky130_fd_sc_hd__o21ai_2",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "_016_",
+            "Y": "_017_"
+          }
+        },
+        "_060_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "_007_",
+            "B": "_017_",
+            "Y": "_018_"
+          }
+        },
+        "_061_": {
+          "type": "sky130_fd_sc_hd__or3_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "C3_Q1",
+            "C": "C3_Q2",
+            "X": "_019_"
+          }
+        },
+        "_062_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "C3_Q3",
+            "B": "_019_",
+            "Y": "_020_"
+          }
+        },
+        "_063_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_017_",
+            "A2": "_020_",
+            "B1": "_007_",
+            "Y": "_021_"
+          }
+        },
+        "_064_": {
+          "type": "sky130_fd_sc_hd__o211ai_1",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "_016_",
+            "C1": "C3_Q0",
+            "Y": "_022_"
+          }
+        },
+        "_065_": {
+          "type": "sky130_fd_sc_hd__xor2_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "_017_",
+            "X": "_023_"
+          }
+        },
+        "_066_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_021_",
+            "B": "_023_",
+            "Y": "C3_Q0VD"
+          }
+        },
+        "_067_": {
+          "type": "sky130_fd_sc_hd__o2111ai_1",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "_016_",
+            "C1": "C3_Q1",
+            "D1": "C3_Q0",
+            "Y": "_024_"
+          }
+        },
+        "_068_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "_008_",
+            "B": "_022_",
+            "Y": "_025_"
+          }
+        },
+        "_069_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_021_",
+            "B": "_025_",
+            "Y": "C3_Q1VD"
+          }
+        },
+        "_070_": {
+          "type": "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+          "pins": {
+            "A": "C3_Q2",
+            "SLEEP": "_024_",
+            "X": "_026_"
+          }
+        },
+        "_071_": {
+          "type": "sky130_fd_sc_hd__nor2b_1",
+          "pins": {
+            "A": "C3_Q2",
+            "B_N": "_024_",
+            "Y": "_027_"
+          }
+        },
+        "_072_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_021_",
+            "B": "_026_",
+            "C": "_027_",
+            "Y": "C3_Q2VD"
+          }
+        },
+        "_073_": {
+          "type": "sky130_fd_sc_hd__o21ba_1",
+          "pins": {
+            "A1": "C3_Q3",
+            "A2": "_026_",
+            "B1_N": "_021_",
+            "X": "C3_Q3VD"
+          }
+        },
+        "_074_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_011_",
+            "A2": "_014_",
+            "B1": "UC_17",
+            "Y": "_028_"
+          }
+        },
+        "_075_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "_007_",
+            "B": "C3_Q3",
+            "Y": "_029_"
+          }
+        },
+        "_076_": {
+          "type": "sky130_fd_sc_hd__o31ai_1",
+          "pins": {
+            "A1": "C3_Q0",
+            "A2": "C3_Q1",
+            "A3": "_029_",
+            "B1": "_012_",
+            "Y": "_030_"
+          }
+        },
+        "_077_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_011_",
+            "A2": "_030_",
+            "B1": "_028_",
+            "Y": "R2C"
+          }
+        },
+        "_078_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "C3_Q3",
+            "B": "C3_Q2",
+            "Y": "_031_"
+          }
+        },
+        "_079_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "_013_",
+            "A2": "_019_",
+            "B1": "_031_",
+            "Y": "_032_"
+          }
+        },
+        "_080_": {
+          "type": "sky130_fd_sc_hd__and3_1",
+          "pins": {
+            "A": "_007_",
+            "B": "_020_",
+            "C": "_032_",
+            "X": "_033_"
+          }
+        },
+        "_081_": {
+          "type": "sky130_fd_sc_hd__o21ai_0",
+          "pins": {
+            "A1": "_011_",
+            "A2": "_033_",
+            "B1": "_028_",
+            "Y": "Y1C"
+          }
+        },
+        "_082_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "TESTL",
+            "B": "UC_19",
+            "C": "_015_",
+            "Y": "_034_"
+          }
+        },
+        "_083_": {
+          "type": "sky130_fd_sc_hd__o21a_1",
+          "pins": {
+            "A1": "TESTL",
+            "A2": "_015_",
+            "B1": "UC_19",
+            "X": "_035_"
+          }
+        },
+        "_084_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_034_",
+            "C": "_035_",
+            "Y": "UC_19VD"
+          }
+        },
+        "_085_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "UC_18",
+            "B": "_035_",
+            "Y": "_036_"
+          }
+        },
+        "_086_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_036_",
+            "Y": "UC_18VD"
+          }
+        },
+        "_087_": {
+          "type": "sky130_fd_sc_hd__and3_1",
+          "pins": {
+            "A": "UC_18",
+            "B": "UC_17",
+            "C": "_035_",
+            "X": "_037_"
+          }
+        },
+        "_088_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "UC_18",
+            "A2": "_035_",
+            "B1": "UC_17",
+            "Y": "_038_"
+          }
+        },
+        "_089_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_037_",
+            "C": "_038_",
+            "Y": "UC_17VD"
+          }
+        },
+        "_090_": {
+          "type": "sky130_fd_sc_hd__a31oi_1",
+          "pins": {
+            "A1": "UC_18",
+            "A2": "UC_17",
+            "A3": "_035_",
+            "B1": "UC_16",
+            "Y": "_039_"
+          }
+        },
+        "_091_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_018_",
+            "B": "_039_",
+            "Y": "UC_16VD"
+          }
+        },
+        "_092_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "C1VCO0",
+            "B": "UC_10",
+            "Y": "_040_"
+          }
+        },
+        "_093_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_015_",
+            "C": "_040_",
+            "Y": "UC_10VD"
+          }
+        },
+        "_094_": {
+          "type": "sky130_fd_sc_hd__and3_1",
+          "pins": {
+            "A": "C1VCO0",
+            "B": "UC_10",
+            "C": "UC_9",
+            "X": "_041_"
+          }
+        },
+        "_095_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "C1VCO0",
+            "A2": "UC_10",
+            "B1": "UC_9",
+            "Y": "_042_"
+          }
+        },
+        "_096_": {
+          "type": "sky130_fd_sc_hd__nor4_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_015_",
+            "C": "_041_",
+            "D": "_042_",
+            "Y": "UC_9VD"
+          }
+        },
+        "_097_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "UC_8",
+            "B": "_041_",
+            "Y": "_043_"
+          }
+        },
+        "_098_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_015_",
+            "C": "_043_",
+            "Y": "UC_8VD"
+          }
+        },
+        "_099_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "FML",
+            "A2": "C3_Q3",
+            "B1": "OLATCH_FEL",
+            "Y": "_044_"
+          }
+        },
+        "_100_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_010_",
+            "B": "_044_",
+            "Y": "_045_"
+          }
+        },
+        "_101_": {
+          "type": "sky130_fd_sc_hd__nor3b_1",
+          "pins": {
+            "A": "_045_",
+            "B": "_012_",
+            "C_N": "_013_",
+            "Y": "TCOMB_GA1"
+          }
+        },
+        "_102_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "C3_Q1",
+            "Y": "_000_"
+          }
+        },
+        "_103_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_000_",
+            "Y": "_001_"
+          }
+        },
+        "_104_": {
+          "type": "sky130_fd_sc_hd__nor4_1",
+          "pins": {
+            "A": "CLR",
+            "B": "OLATCH_FEL",
+            "C": "C3_Q2",
+            "D": "_000_",
+            "Y": "TCOMB_YA2"
+          }
+        },
+        "_105_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "C3_Q0",
+            "B": "_029_",
+            "Y": "_002_"
+          }
+        },
+        "_106_": {
+          "type": "sky130_fd_sc_hd__nand2_1",
+          "pins": {
+            "A": "_009_",
+            "B": "_012_",
+            "Y": "_003_"
+          }
+        },
+        "_107_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "_001_",
+            "B": "_002_",
+            "C": "_003_",
+            "Y": "TCOMB_GA2"
+          }
+        },
+        "_108_": {
+          "type": "sky130_fd_sc_hd__nor3_1",
+          "pins": {
+            "A": "CLR",
+            "B": "C1VCO0",
+            "C": "_015_",
+            "Y": "UC_11VD"
+          }
+        },
+        "_109_": {
+          "type": "sky130_fd_sc_hd__a21oi_1",
+          "pins": {
+            "A1": "C3_Q0",
+            "A2": "_008_",
+            "B1": "_029_",
+            "Y": "_004_"
+          }
+        },
+        "_110_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "_003_",
+            "B": "_004_",
+            "Y": "TCOMB_RA1"
+          }
+        },
+        "_111_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "TESTL",
+            "B": "TEST",
+            "Y": "_005_"
+          }
+        },
+        "_112_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_005_",
+            "Y": "TESTLVIINLATCHVCDAD"
+          }
+        },
+        "_113_": {
+          "type": "sky130_fd_sc_hd__xnor2_1",
+          "pins": {
+            "A": "FML",
+            "B": "FM",
+            "Y": "_006_"
+          }
+        },
+        "_114_": {
+          "type": "sky130_fd_sc_hd__nor2_1",
+          "pins": {
+            "A": "CLR",
+            "B": "_006_",
+            "Y": "FMLVIINLATCHVCDAD"
+          }
+        }
+      },
+      "expected_state_map": {
+        "DFF_0": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_0._0_",
+          "CLK": "CK",
+          "D": "TESTLVIINLATCHVCDAD",
+          "Q": "TESTL"
+        },
+        "DFF_1": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_1._0_",
+          "CLK": "CK",
+          "D": "FMLVIINLATCHVCDAD",
+          "Q": "FML"
+        },
+        "DFF_10": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_10._0_",
+          "CLK": "CK",
+          "D": "C3_Q2VD",
+          "Q": "C3_Q2"
+        },
+        "DFF_11": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_11._0_",
+          "CLK": "CK",
+          "D": "C3_Q1VD",
+          "Q": "C3_Q1"
+        },
+        "DFF_12": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_12._0_",
+          "CLK": "CK",
+          "D": "C3_Q0VD",
+          "Q": "C3_Q0"
+        },
+        "DFF_13": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_13._0_",
+          "CLK": "CK",
+          "D": "UC_16VD",
+          "Q": "UC_16"
+        },
+        "DFF_14": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_14._0_",
+          "CLK": "CK",
+          "D": "UC_17VD",
+          "Q": "UC_17"
+        },
+        "DFF_15": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_15._0_",
+          "CLK": "CK",
+          "D": "UC_18VD",
+          "Q": "UC_18"
+        },
+        "DFF_16": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_16._0_",
+          "CLK": "CK",
+          "D": "UC_19VD",
+          "Q": "UC_19"
+        },
+        "DFF_17": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_17._0_",
+          "CLK": "CK",
+          "D": "UC_8VD",
+          "Q": "UC_8"
+        },
+        "DFF_18": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_18._0_",
+          "CLK": "CK",
+          "D": "UC_9VD",
+          "Q": "UC_9"
+        },
+        "DFF_19": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_19._0_",
+          "CLK": "CK",
+          "D": "UC_10VD",
+          "Q": "UC_10"
+        },
+        "DFF_2": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_2._0_",
+          "CLK": "CK",
+          "D": "TCOMB_YA2",
+          "Q": "OLATCH_Y2L"
+        },
+        "DFF_20": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_20._0_",
+          "CLK": "CK",
+          "D": "UC_11VD",
+          "Q": "C1VCO0"
+        },
+        "DFF_3": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_3._0_",
+          "CLK": "CK",
+          "D": "Y1C",
+          "Q": "OLATCHVUC_6"
+        },
+        "DFF_4": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_4._0_",
+          "CLK": "CK",
+          "D": "R2C",
+          "Q": "OLATCHVUC_5"
+        },
+        "DFF_5": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_5._0_",
+          "CLK": "CK",
+          "D": "TCOMB_RA1",
+          "Q": "OLATCH_R1L"
+        },
+        "DFF_6": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_6._0_",
+          "CLK": "CK",
+          "D": "TCOMB_GA2",
+          "Q": "OLATCH_G2L"
+        },
+        "DFF_7": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_7._0_",
+          "CLK": "CK",
+          "D": "TCOMB_GA1",
+          "Q": "OLATCH_G1L"
+        },
+        "DFF_8": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_8._0_",
+          "CLK": "CK",
+          "D": "TCOMB_FE",
+          "Q": "OLATCH_FEL"
+        },
+        "DFF_9": {
+          "type": "sky130_fd_sc_hd__dfxtp_1",
+          "expected_flat_instance": "DFF_9._0_",
+          "CLK": "CK",
+          "D": "C3_Q3VD",
+          "Q": "C3_Q3"
+        }
+      },
+      "expected_standard_cell_count": 90,
+      "sec": {
+        "callable": "run_r22_cut_ablation.final_sec",
+        "original_input": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261016_r22_cut_ablation_v3\\W1\\s382\\final_sec\\final_raw.v",
+        "flat_top_input": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\generated\\final.flat.v",
+        "flat_sec_compat_copy": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\sec_inputs\\final.flat_with_identical_unused_helper.v",
+        "compatibility_rule": "flat top identical plus original byte-identical user helper definition unused by flat top",
+        "output_dir": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r24_paper_revision_20261018\\paired_spef_flat_v2\\SEC\\final",
+        "timeout_s": 180,
+        "required_log_status": "nonzero proven, zero unproven, success, rc0; actual equiv top and all actual Liberty models"
+      }
+    }
+  ],
+  "global_deadline_s": 600,
+  "flatten_launch_upper_bound": 2,
+  "SEC_launch_upper_bound": 2,
+  "STA_launches_authorized_by_this_design": 0,
+  "expected_tool": {
+    "path": "/usr/bin/yosys",
+    "version": "0.33",
+    "git": "2584903a060",
+    "sha256": "88c0a12bb814a1a8716b1ae10b482e35d3005ed558e1f5f626b3dc983ea3abd0",
+    "must_fresh_query": true,
+    "prior_identity_receipt": {
+      "path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_a_sec_unified_20261018\\TOOLS_AFTER.json",
+      "sha256": "44d9dda7619da7af1d0a8f4218231a931cb0c1a8e9af6270ac80b93345734c6e",
+      "bytes": 1473
+    }
+  },
+  "static_acceptance": [
+    "Every original top port name/direction/width/bitorder preserved, CK and all outputs included",
+    "Every original standard-cell instance type and named-pin connectivity identical modulo explicit net aliases",
+    "Exactly21 old helper->flat dfxtp state witnesses; CLK,D,Q and initial/control semantics identical; no new/missing state",
+    "All original top nets preserved in same alias classes; complete endpoint incidence preserved; no multiple-driver/dangling output/unknown cell",
+    "No user helper instances remain in flat top; standardcell blackboxes retained for canonicalization, behavioral actual models used only forSEC",
+    "Both original-to-flat SEC individually nonzero proven/0unproven; exact raw and derived input/model/tool/source SHA retained",
+    "Freeze generated flat bytes then return to root; do not auto-start physical scan",
+    "Stop on first issue; keep v1 diagnostics; do not modify old artifacts or source"
+  ]
+}

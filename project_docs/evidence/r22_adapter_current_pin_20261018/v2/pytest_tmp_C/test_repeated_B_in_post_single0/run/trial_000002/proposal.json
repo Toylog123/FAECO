@@ -1,0 +1,34 @@
+{
+  "trial_id": 2,
+  "round": 1,
+  "stage": "JOINT",
+  "action": {
+    "instance": "x+y",
+    "kind": "JOINT",
+    "target": "sky130_fd_sc_hd__buf_1+sky130_fd_sc_hd__buf_1"
+  },
+  "actions": [
+    {
+      "instance": "x",
+      "kind": "B",
+      "target": "sky130_fd_sc_hd__buf_1",
+      "pin_map": {},
+      "pin": "A",
+      "new_net": "n_x"
+    },
+    {
+      "instance": "y",
+      "kind": "B",
+      "target": "sky130_fd_sc_hd__buf_1",
+      "pin_map": {},
+      "pin": "A",
+      "new_net": "n_y"
+    }
+  ],
+  "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_repeated_B_in_post_single0\\run\\trial_000002",
+  "base_sha256": "00c45f0ac9e2def879ff64ebf7e2a047e1f983520ab064acf5b5d30d2a1c7032",
+  "candidate_sha256": "0ce93dac02373ee89b79386f81c41b0bfd337af99db4247c057c0271dc8e6909",
+  "same_bytes_as_base": false,
+  "status": "precheck_reject",
+  "reason": "Candidate F1/F2/domain rejected: {'status': 'fail', 'checks': {'F1': {'status': 'fail', 'method': 'liberty_local_function', 'reason': 'checker failed closed: Duplicate instance in target module: _bufb_x_A, _bufb_y_A'}, 'F2': {'status': 'fail', 'method': 'boundary_closure', 'reason': 'Duplicate instance in target module: _bufb_x_A, _bufb_y_A'}}}"
+}

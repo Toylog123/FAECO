@@ -1,0 +1,106 @@
+{
+  "schema": "oi049-independent-readonly-review-v1",
+  "client_date": "2026-10-18",
+  "actual_utc": "2026-10-18T03:14:16.578035+00:00",
+  "argv": [
+    "project_docs/evidence/r22_oi049_timeout_bytes_20261018/independent_readonly_review/checker.py",
+    "--output",
+    "project_docs/evidence/r22_oi049_timeout_bytes_20261018/independent_readonly_review/attempt1"
+  ],
+  "checker_sha256": "436f401c4dc63dc8579157f9f3358151dd45b81fb049be71c46bdb9b6488b619",
+  "runtime_s": 0.17199999999866122,
+  "all_read_sources_stable": true,
+  "read_source_count": 72,
+  "source_pin_45_files_current_match": true,
+  "source_HEAD": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "current_yosys_abc_sha256": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+  "observed_rows": [
+    {
+      "case": "str_control",
+      "returned": {
+        "status": "timeout",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "MOCK_NO_EDA -s -c cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_oi049_timeout_bytes_20261018/red_v3/str_control/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_oi049_timeout_bytes_20261018/red_v3/str_control/revised.normalized.blif",
+        "outputs": [
+          "y"
+        ],
+        "runtime_s": 0.0034961000055773184,
+        "reason": "Yosys/ABC full-netlist cec timed out after 0.5 seconds",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_oi049_timeout_bytes_20261018\\red_v3\\str_control\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_oi049_timeout_bytes_20261018\\red_v3\\str_control\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_oi049_timeout_bytes_20261018\\red_v3\\str_control\\abc_cec.log",
+        "returncode": null,
+        "stdout_tail": "partial output",
+        "stderr_tail": "partial error"
+      },
+      "exception": null,
+      "mocked_CEC_calls": 1
+    },
+    {
+      "case": "synthetic_bytes_partial",
+      "returned": null,
+      "exception": "TypeError",
+      "exception_message": "sequence item 0: expected str instance, bytes found",
+      "mocked_CEC_calls": 1
+    },
+    {
+      "case": "empty_control",
+      "returned": {
+        "status": "timeout",
+        "method": "yosys_blif_abc_cec",
+        "tool": "yosys+abc",
+        "command": "MOCK_NO_EDA -s -c cec D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_oi049_timeout_bytes_20261018/red_v3/empty_control/original.normalized.blif D:/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r22_oi049_timeout_bytes_20261018/red_v3/empty_control/revised.normalized.blif",
+        "outputs": [
+          "y"
+        ],
+        "runtime_s": 0.0034354000017629005,
+        "reason": "Yosys/ABC full-netlist cec timed out after 0.5 seconds",
+        "scope": "gate_level_full_netlist_all_primary_outputs",
+        "normalized_original": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_oi049_timeout_bytes_20261018\\red_v3\\empty_control\\original.normalized.blif",
+        "normalized_revised": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_oi049_timeout_bytes_20261018\\red_v3\\empty_control\\revised.normalized.blif",
+        "log_path": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_oi049_timeout_bytes_20261018\\red_v3\\empty_control\\abc_cec.log",
+        "returncode": null,
+        "stdout_tail": "",
+        "stderr_tail": ""
+      },
+      "exception": null,
+      "mocked_CEC_calls": 1
+    }
+  ],
+  "source_snippets": {
+    "check_yosys_abc_equivalence": {
+      "lineno": 105,
+      "end_lineno": 236,
+      "source": "def check_yosys_abc_equivalence(\n    original_netlist_path: str | Path,\n    revised_netlist_path: str | Path,\n    *,\n    outputs: list[str],\n    artifact_dir: str | Path,\n    yosys_command: str = \"yosys\",\n    abc_command: str = \"yosys-abc\",\n    timeout_s: float = 60.0,\n    liberty_cells_v: str | Path | None = None,\n    top_module: str | None = None,\n) -> YosysAbcEquivalenceResult:\n    \"\"\"Normalize Verilog to BLIF with Yosys, then run full-netlist ABC CEC.\"\"\"\n    started_at = time.perf_counter()\n    artifact_dir = Path(artifact_dir)\n    artifact_dir.mkdir(parents=True, exist_ok=True)\n    original_blif = artifact_dir / \"original.normalized.blif\"\n    revised_blif = artifact_dir / \"revised.normalized.blif\"\n    log_path = artifact_dir / \"abc_cec.log\"\n\n    tools = _resolve_yosys_and_abc(yosys_command=yosys_command, abc_command=abc_command)\n    if isinstance(tools, _UnavailableTools):\n        _write_text_log(\n            log_path,\n            [tools.requested_command],\n            \"\",\n            tools.reason,\n        )\n        return YosysAbcEquivalenceResult(\n            status=\"unavailable\",\n            method=\"yosys_blif_abc_cec\",\n            tool=\"yosys+abc\",\n            command=tools.requested_command,\n            outputs=list(outputs),\n            runtime_s=time.perf_counter() - started_at,\n            reason=tools.reason,\n            log_path=str(log_path),\n        )\n\n    normalize_original = _normalize_to_blif(\n        Path(original_netlist_path),\n        original_blif,\n        yosys_argv=tools.yosys_argv,\n        timeout_s=timeout_s,\n        liberty_cells_v=Path(liberty_cells_v) if liberty_cells_v else None,\n        top_module=top_module,\n    )\n    if normalize_original.returncode != 0 or not original_blif.exists():\n        return _formal_error(\n            started_at,\n            outputs,\n            normalize_original,\n            reason=\"Yosys failed to normalize original netlist to BLIF\",\n            normalized_original=str(original_blif) if original_blif.exists() else None,\n            normalized_revised=str(revised_blif) if revised_blif.exists() else None,\n        )\n    normalize_revised = _normalize_to_blif(\n        Path(revised_netlist_path),\n        revised_blif,\n        yosys_argv=tools.yosys_argv,\n        timeout_s=timeout_s,\n        liberty_cells_v=Path(liberty_cells_v) if liberty_cells_v else None,\n        top_module=top_module,\n    )\n    if normalize_revised.returncode != 0 or not revised_blif.exists():\n        return _formal_error(\n            started_at,\n            outputs,\n            normalize_revised,\n            reason=\"Yosys failed to normalize revised netlist to BLIF\",\n            normalized_original=str(original_blif),\n            normalized_revised=str(revised_blif) if revised_blif.exists() else None,\n        )\n\n    if top_module is not None:\n        for label, blif in ((\"original\", original_blif), (\"revised\", revised_blif)):\n            model = _blif_model_name(blif)\n            if model != top_module:\n                return _formal_error(\n                    started_at, outputs, _CommandOutput([], 1, \"\", \"\"),\n                    reason=f\"{label} BLIF model {model!r} is not requested top {top_module!r}\",\n                    normalized_original=str(original_blif),\n                    normalized_revised=str(revised_blif), status=\"fail\",\n                )\n\n    script = f\"cec {_abc_path(original_blif, wsl=_is_wsl_argv(tools.abc_argv))} {_abc_path(revised_blif, wsl=_is_wsl_argv(tools.abc_argv))}\"\n    command = [*tools.abc_argv, \"-s\", \"-c\", script]\n    try:\n        completed = subprocess.run(\n            command,\n            check=False,\n            capture_output=True,\n            text=True,\n            encoding=\"utf-8\",\n            errors=\"replace\",\n            timeout=timeout_s,\n        )\n    except subprocess.TimeoutExpired as exc:\n        _write_text_log(log_path, command, exc.stdout or \"\", exc.stderr or \"\")\n        return YosysAbcEquivalenceResult(\n            status=\"timeout\",\n            method=\"yosys_blif_abc_cec\",\n            tool=\"yosys+abc\",\n            command=\" \".join(command),\n            outputs=list(outputs),\n            runtime_s=time.perf_counter() - started_at,\n            reason=f\"Yosys/ABC full-netlist cec timed out after {timeout_s} seconds\",\n            normalized_original=str(original_blif),\n            normalized_revised=str(revised_blif),\n            log_path=str(log_path),\n            stdout_tail=_tail(exc.stdout or \"\"),\n            stderr_tail=_tail(exc.stderr or \"\"),\n        )\n\n    _write_log(log_path, completed)\n    combined_output = f\"{completed.stdout}\\n{completed.stderr}\".lower()\n    status = _abc_status_from_output(combined_output, completed.returncode)\n    return YosysAbcEquivalenceResult(\n        status=status,\n        method=\"yosys_blif_abc_cec\",\n        tool=\"yosys+abc\",\n        command=\" \".join(command),\n        outputs=list(outputs),\n        runtime_s=time.perf_counter() - started_at,\n        reason=_formal_reason(status, completed.returncode),\n        normalized_original=str(original_blif),\n        normalized_revised=str(revised_blif),\n        log_path=str(log_path),\n        returncode=completed.returncode,\n        stdout_tail=_tail(completed.stdout),\n        stderr_tail=_tail(completed.stderr),\n    )"
+    },
+    "_tail": {
+      "lineno": 901,
+      "end_lineno": 902,
+      "source": "def _tail(text: str, *, max_lines: int = 20) -> str:\n    return \"\\n\".join(text.splitlines()[-max_lines:])"
+    },
+    "_write_text_log": {
+      "lineno": 860,
+      "end_lineno": 870,
+      "source": "def _write_text_log(path: Path, command: list[str], stdout: str | bytes | None,\n                    stderr: str | bytes | None) -> None:\n    path.parent.mkdir(parents=True, exist_ok=True)\n    for name, value in ((\"stdout\", stdout), (\"stderr\", stderr)):\n        if isinstance(value, bytes):\n            path.with_name(path.name + \".\" + name + \".bin\").write_bytes(value)\n    path.write_text(\n        \"command: \" + \" \".join(command) + \"\\n\\nstdout:\\n\" + _log_stream_text(stdout)\n        + \"\\n\\nstderr:\\n\" + _log_stream_text(stderr) + \"\\n\",\n        encoding=\"utf-8\",\n    )"
+    },
+    "_run_abc_cec": {
+      "lineno": 635,
+      "end_lineno": 660,
+      "source": "def _run_abc_cec(\n    left_blif: Path,\n    right_blif: Path,\n    *,\n    abc_argv: list[str],\n    log_path: Path,\n    timeout_s: float,\n) -> _CecOutput:\n    script = f\"cec {_abc_path(left_blif, wsl=_is_wsl_argv(abc_argv))} {_abc_path(right_blif, wsl=_is_wsl_argv(abc_argv))}\"\n    command = [*abc_argv, \"-s\", \"-c\", script]\n    try:\n        completed = subprocess.run(\n            command,\n            check=False,\n            capture_output=True,\n            text=True,\n            encoding=\"utf-8\",\n            errors=\"replace\",\n            timeout=timeout_s,\n        )\n    except subprocess.TimeoutExpired as exc:\n        _write_text_log(log_path, command, exc.stdout or \"\", exc.stderr or \"\")\n        return _CecOutput(status=\"timeout\", returncode=None, stdout=exc.stdout or \"\", stderr=exc.stderr or \"\")\n    _write_log(log_path, completed)\n    status = _abc_status_from_output(f\"{completed.stdout}\\n{completed.stderr}\".lower(), completed.returncode)\n    return _CecOutput(status=status, returncode=completed.returncode, stdout=completed.stdout, stderr=completed.stderr)"
+    }
+  },
+  "actual_reproduced_API": "check_yosys_abc_equivalence direct subprocess timeout presentation; shared _tail TypeError",
+  "evidence_binding": "Three explicit mock CEC calls; str/empty return timeout, nonempty bytes raises TypeError after readable/raw logs are written; wrapper expects this reproduction and exits 0.",
+  "old_attempts": "v1/v2 fail setup type/nonempty assumption before public API; v2 has raw redirected wrapper, v1 only transcribed tooltrace. Neither reports actual OS timeout stream type/value.",
+  "wording_limit": "v1 SETUP_FAILURE says no partial stdout arrived, but the retained conjunction assertion failure alone cannot distinguish absent/empty bytes from another type; actual type/value remains unknown.",
+  "limits": [
+    "No probe, pytest, simulation, EDA, tool timeout or Git command was rerun in this review.",
+    "No true OS/EDA timeout type or incidence is established.",
+    "Mapped _run_abc_cec path shares _tail-related static risk but was not invoked by this three-case probe.",
+    "No proof false-pass: controls return timeout and bytes raises an exception, with no successful equivalence verdict.",
+    "OI049 is injected-reproduced and remains open/unfixed until source freeze is lifted after D; no production change."
+  ],
+  "decision": "Accept narrowly scoped failure-injection attribution; OI049 remains open"
+}

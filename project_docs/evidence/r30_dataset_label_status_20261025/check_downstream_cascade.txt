@@ -1,0 +1,331 @@
+==============================================================================
+ROUND 34 -- THE DOWNSTREAM CASCADE (what moved, and by how much)
+==============================================================================
+snapshot: 47 artefact(s)
+
+=== itc99 : run_analysis_itc99.sh
+    exit=0   (2188 stdout lines)
+    | B vs R                 0.6875     0.6875     0.6875     1.0        1.0        False
+    | B vs G                 1.0        0.125      0.453125   0.019211   0.143463   False
+    | G vs R                 0.03125    0.21875    0.21875    0.726562   0.375      False
+    | JOINT vs R             1.0        1.0        1.0        1.0        1.0        False
+    | pool concentration of the sign flips (tool convention):
+    |   B      pools=32   top=b09 iter 8     rate=0.6666666666666666 n=42    share_of_flips=0.20438
+    |   G      pools=34   top=b10 iter 7     rate=0.45       n=20    share_of_flips=0.264706
+    |   JOINT  pools=3    top=b08 iter 5     rate=0.15789473684210525 n=19    share_of_flips=1.0
+    |   R      pools=30   top=b01 iter 6     rate=0.13095238095238096 n=84    share_of_flips=0.305556
+    | wrote D:\BaiduSyncdisk\01_Papers\03_FAECO\experiments\20261024_physical_labels_itc99\stage_quant_floor.json
+    |   resid/floor 3.594–17.1198  floor_var 0.003412–0.077419  spread/floor 12.6081–25.928  R2 0.310792–0.971591
+    | === 5. report ===
+    | wrote D:\BaiduSyncdisk\01_Papers\03_FAECO\experiments\20261024_physical_labels_itc99\RESULTS.md (144 lines)
+    | === done ===
+
+=== iscas89 : run_analysis.sh
+    exit=0   (1063 stdout lines)
+    | util_fixedfinal.odb0     0      1        
+    | util_fixedpr_run.log0     0      1        
+    | runs that completed detail route: 420
+    | runs that never completed routing: 0
+    | completed runs ending with >0 violations: 0
+    | => every run that completed detail routing finished with 0 violations; the peak counts during optimisation do not affect the delivered routing.
+    | wrote D:\BaiduSyncdisk\01_Papers\03_FAECO\experiments\20261024_physical_labels\violation_census.json
+    | === 6. report + preview figure ===
+    | wrote D:\BaiduSyncdisk\01_Papers\03_FAECO\experiments\20261024_physical_labels\RESULTS.md (482 lines)
+    | wrote D:\BaiduSyncdisk\01_Papers\03_FAECO\experiments\20261024_physical_labels\preview_calibration_curve.png
+    |   fit: post = 0.8513 * ideal + +0.0100   residual sd = 0.033873
+    |   2 sigma = 0.046644
+    |   NOTE: preview only -- not inserted into the manuscript.
+    | === done ===
+
+==============================================================================
+THE CASCADE -- per artefact, per field
+==============================================================================
+
+### itc99
+  band_scope.json                            changed: 1, added: 0, removed: 0
+      sections.band_ratio.stored_ratio_in_three_point_curve          2.933548 -> 1.668075
+  candidate_level_noise.json                 UNCHANGED
+  calibration_three_stage.json               UNCHANGED
+  resolvable_positive.json                   UNCHANGED
+  acceptance_selectivity.json                changed: 41, added: 0, removed: 0
+      stages.placed.enrichment.real_gain_absolute_difference         0.286135 -> 0.286752
+      stages.placed.enrichment.real_gain_ratio_accepted_over_rejected 31.7012 -> 33.9486
+      stages.placed.enrichment.real_harm_absolute_difference         -0.420741 -> -0.411267
+      stages.placed.enrichment.real_harm_ratio_accepted_over_rejected 0.1777 -> 0.181
+      stages.placed.null_circuit_matched.mean_null_real_gain_rate    0.0192 -> 0.018175
+      stages.placed.null_circuit_matched.mean_null_real_harm_rate    0.557636 -> 0.559464
+      stages.placed.null_pool_matched.mean_null_real_gain_rate       0.065261 -> 0.064418
+      stages.placed.null_pool_matched.mean_null_real_harm_rate       0.492753 -> 0.492266
+      stages.placed.paired_per_circuit.real_gain_rate_difference     '[0.0, 0.0, 0.324153, 0.215812, 0.212025, 0.25, 0.625]' -> '[0.0, 0.0, 0.32582, 0.216942, 0.213415, 0.25, 0.625]'
+      stages.placed.paired_per_circuit.real_harm_rate_difference     '[-0.520309, -0.5, -0.258475, -0.358974, -0.382911, -0.440217, -0.784615]' -> '[-0.501779, -0.5, -0.27459, -0.347107, -0.396341, -0.441748, -0.784615]'
+      stages.placed.per_circuit.b01.rejected.inert                   248 -> 280
+      stages.placed.per_circuit.b01.rejected.inert_rate              0.479691 -> 0.498221
+      stages.placed.per_circuit.b01.rejected.n                       517 -> 562
+      stages.placed.per_circuit.b01.rejected.real_harm               269 -> 282
+      stages.placed.per_circuit.b01.rejected.real_harm_rate          0.520309 -> 0.501779
+      stages.placed.per_circuit.b03.rejected.inert_rate              0.440678 -> 0.42623
+      stages.placed.per_circuit.b03.rejected.n                       59 -> 61
+      stages.placed.per_circuit.b03.rejected.real_gain_rate          0.050847 -> 0.04918
+      stages.placed.per_circuit.b03.rejected.real_harm               30 -> 32
+      stages.placed.per_circuit.b03.rejected.real_harm_rate          0.508475 -> 0.52459
+      stages.placed.per_circuit.b08.rejected.inert                   71 -> 75
+      stages.placed.per_circuit.b08.rejected.inert_rate              0.606838 -> 0.619835
+      stages.placed.per_circuit.b08.rejected.n                       117 -> 121
+      stages.placed.per_circuit.b08.rejected.real_gain_rate          0.034188 -> 0.033058
+      stages.placed.per_circuit.b08.rejected.real_harm_rate          0.358974 -> 0.347107
+      stages.placed.per_circuit.b09.rejected.inert_rate              0.329114 -> 0.317073
+      stages.placed.per_circuit.b09.rejected.n                       79 -> 82
+      stages.placed.per_circuit.b09.rejected.real_gain_rate          0.037975 -> 0.036585
+      stages.placed.per_circuit.b09.rejected.real_harm               50 -> 53
+      stages.placed.per_circuit.b09.rejected.real_harm_rate          0.632911 -> 0.646341
+      stages.placed.per_circuit.b10.rejected.inert                   103 -> 115
+      stages.placed.per_circuit.b10.rejected.inert_rate              0.559783 -> 0.558252
+      stages.placed.per_circuit.b10.rejected.n                       184 -> 206
+      stages.placed.per_circuit.b10.rejected.real_harm               81 -> 91
+      stages.placed.per_circuit.b10.rejected.real_harm_rate          0.440217 -> 0.441748
+      stages.placed.rejected.inert                                   514 -> 562
+      stages.placed.rejected.inert_rate                              0.479031 -> 0.489121
+      stages.placed.rejected.n                                       1073 -> 1149
+      stages.placed.rejected.real_gain_rate                          0.00932 -> 0.008703
+      stages.placed.rejected.real_harm                               549 -> 577
+      ... and 1 more
+  topology_effect.json                       UNCHANGED
+  stage_verdict_transfer.json                changed: 208, added: 1, removed: 0
+      cascade.own_band.missed_gain_rate_of_rejected                  0.023508 -> 0.022375
+      cascade.own_band.n_rejected_by_placed                          553 -> 581
+      cascade.own_band.rejected_then_routed_REGRESSION_confirmed     385 -> 405
+      cascade.same_band_placed.missed_gain_rate_of_rejected          0.036166 -> 0.037866
+      cascade.same_band_placed.n_rejected_by_placed                  553 -> 581
+      cascade.same_band_placed.rejected_then_routed_GAIN_MISSED      20 -> 22
+      cascade.same_band_placed.rejected_then_routed_REGRESSION_confirmed 455 -> 475
+      cascade.same_band_routed.missed_gain_rate_of_rejected          0.004673 -> 0.004425
+      cascade.same_band_routed.n_rejected_by_placed                  428 -> 452
+      cascade.same_band_routed.rejected_then_routed_REGRESSION_confirmed 361 -> 381
+      cascade.sign_only.acceptance_falsification_rate                0.126126 -> 0.130435
+      cascade.sign_only.acceptance_survival_rate                     0.711712 -> 0.713043
+      cascade.sign_only.accepted_then_killed_routed_REGRESSION       14 -> 15
+      cascade.sign_only.accepted_then_survived_routed_GAIN           79 -> 82
+      cascade.sign_only.by_kind_accepted_by_placed.B                 58 -> 62
+      cascade.sign_only.by_kind_falsified.B                          11 -> 12
+      cascade.sign_only.by_kind_missed_gain.B                        68 -> 72
+      cascade.sign_only.by_kind_missed_gain.R                        11 -> 14
+      cascade.sign_only.missed_gain_rate_of_rejected                 0.1275 -> 0.127934
+      cascade.sign_only.n_accepted_by_placed                         111 -> 115
+      cascade.sign_only.n_rejected_by_placed                         800 -> 852
+      cascade.sign_only.rejected_then_routed_GAIN_MISSED             102 -> 109
+      cascade.sign_only.rejected_then_routed_REGRESSION_confirmed    620 -> 663
+      conventions.own_band.conditional_given_placed.INCONCLUSIVE.n   541 -> 589
+      conventions.own_band.conditional_given_placed.INCONCLUSIVE.p.GAIN 0.033272 -> 0.032258
+      conventions.own_band.conditional_given_placed.INCONCLUSIVE.p.INCONCLUSIVE 0.96488 -> 0.966044
+      conventions.own_band.conditional_given_placed.INCONCLUSIVE.p.REGRESSION 0.001848 -> 0.001698
+      conventions.own_band.conditional_given_placed.REGRESSION.n     553 -> 581
+      conventions.own_band.conditional_given_placed.REGRESSION.p.GAIN 0.023508 -> 0.022375
+      conventions.own_band.conditional_given_placed.REGRESSION.p.INCONCLUSIVE 0.280289 -> 0.280551
+      conventions.own_band.conditional_given_placed.REGRESSION.p.REGRESSION 0.696203 -> 0.697074
+      conventions.own_band.conditional_given_routed.GAIN.n           48 -> 49
+      conventions.own_band.conditional_given_routed.GAIN.p.GAIN      0.354167 -> 0.346939
+      conventions.own_band.conditional_given_routed.GAIN.p.INCONCLUSIVE 0.375 -> 0.387755
+      conventions.own_band.conditional_given_routed.GAIN.p.REGRESSION 0.270833 -> 0.265306
+      conventions.own_band.conditional_given_routed.INCONCLUSIVE.n   683 -> 738
+      conventions.own_band.conditional_given_routed.INCONCLUSIVE.p.GAIN 0.008785 -> 0.00813
+      conventions.own_band.conditional_given_routed.INCONCLUSIVE.p.INCONCLUSIVE 0.764275 -> 0.771003
+      conventions.own_band.conditional_given_routed.INCONCLUSIVE.p.REGRESSION 0.22694 -> 0.220867
+      conventions.own_band.conditional_given_routed.REGRESSION.n     386 -> 406
+      ... and 168 more
+      + cascade.same_band_placed.by_kind_missed_gain.R                = 2
+  stage_kind_effect.json                     changed: 351, added: 0, removed: 0
+      by_circuit.b01.frac_positive_placed                            0.030534 -> 0.029877
+      by_circuit.b01.frac_positive_routed                            0.093511 -> 0.096661
+      by_circuit.b01.mean_shift_ns                                   -0.001336 -> -0.001582
+      by_circuit.b01.n                                               524 -> 569
+      by_circuit.b01.n_sign_flip                                     51 -> 58
+      by_circuit.b01.n_sign_flip_within_one_quantum                  51 -> 58
+      by_circuit.b01.placed_mean_ns                                  -0.057481 -> -0.055026
+      by_circuit.b01.placed_sd_ns                                    0.076791 -> 0.074848
+      by_circuit.b01.routed_mean_ns                                  -0.058817 -> -0.056608
+      by_circuit.b01.routed_sd_ns                                    0.079058 -> 0.076967
+      by_circuit.b01.sign_flip_rate                                  0.097328 -> 0.101933
+      by_circuit.b03.frac_positive_placed                            0.268657 -> 0.26087
+      by_circuit.b03.frac_positive_routed                            0.283582 -> 0.275362
+      by_circuit.b03.mean_shift_ns                                   0.008209 -> 0.007246
+      by_circuit.b03.n                                               67 -> 69
+      by_circuit.b03.placed_mean_ns                                  -0.013134 -> -0.014348
+      by_circuit.b03.placed_sd_ns                                    0.068162 -> 0.067529
+      by_circuit.b03.routed_mean_ns                                  -0.004925 -> -0.007101
+      by_circuit.b03.routed_sd_ns                                    0.072975 -> 0.073025
+      by_circuit.b03.sign_flip_rate                                  0.164179 -> 0.15942
+      by_circuit.b03.sign_flip_rate_excluding_quantum_edge           0.014925 -> 0.014493
+      by_circuit.b08.frac_positive_placed                            0.338843 -> 0.352
+      by_circuit.b08.frac_positive_routed                            0.355372 -> 0.376
+      by_circuit.b08.mean_shift_ns                                   0.009008 -> 0.00888
+      by_circuit.b08.n                                               121 -> 125
+      by_circuit.b08.n_sign_flip                                     22 -> 23
+      by_circuit.b08.n_sign_flip_within_one_quantum                  21 -> 22
+      by_circuit.b08.placed_mean_ns                                  -0.025455 -> -0.02432
+      by_circuit.b08.placed_sd_ns                                    0.055752 -> 0.055217
+      by_circuit.b08.routed_mean_ns                                  -0.016446 -> -0.01544
+      by_circuit.b08.routed_sd_ns                                    0.049394 -> 0.048916
+      by_circuit.b08.sign_flip_rate                                  0.181818 -> 0.184
+      by_circuit.b08.sign_flip_rate_excluding_quantum_edge           0.008264 -> 0.008
+      by_circuit.b09.frac_positive_placed                            0.149425 -> 0.144444
+      by_circuit.b09.frac_positive_routed                            0.597701 -> 0.611111
+      by_circuit.b09.mean_shift_ns                                   0.042759 -> 0.043667
+      by_circuit.b09.n                                               87 -> 90
+      by_circuit.b09.n_sign_flip                                     41 -> 44
+      by_circuit.b09.placed_mean_ns                                  -0.027471 -> -0.027889
+      by_circuit.b09.placed_sd_ns                                    0.036923 -> 0.036397
+      ... and 311 more
+  stage_quant_floor.json                     changed: 52, added: 0, removed: 0
+      meta.n_with_both_stages                                        1117 -> 1193
+      per_circuit.b01.floor_share_of_residual_variance               0.049233 -> 0.049518
+      per_circuit.b01.n                                              524 -> 569
+      per_circuit.b01.placed_sd_ns                                   0.076791 -> 0.074848
+      per_circuit.b01.placed_spread_over_floor                       26.6013 -> 25.928
+      per_circuit.b01.r2                                             0.972919 -> 0.971591
+      per_circuit.b01.residual_sd_ns                                 0.01301 -> 0.012973
+      per_circuit.b01.residual_sd_over_quantisation_floor            4.5069 -> 4.4938
+      per_circuit.b01.routed_sd_ns                                   0.079058 -> 0.076967
+      per_circuit.b01.slope                                          1.015487 -> 1.0136
+      per_circuit.b03.floor_share_of_residual_variance               0.01808 -> 0.017456
+      per_circuit.b03.n                                              67 -> 69
+      per_circuit.b03.placed_sd_ns                                   0.068162 -> 0.067529
+      per_circuit.b03.placed_spread_over_floor                       23.6121 -> 23.3929
+      per_circuit.b03.r2                                             0.913452 -> 0.910478
+      per_circuit.b03.residual_sd_ns                                 0.021469 -> 0.021849
+      per_circuit.b03.residual_sd_over_quantisation_floor            7.437 -> 7.5688
+      per_circuit.b03.routed_sd_ns                                   0.072975 -> 0.073025
+      per_circuit.b03.slope                                          1.023232 -> 1.031842
+      per_circuit.b08.floor_share_of_residual_variance               0.031693 -> 0.032662
+      per_circuit.b08.n                                              121 -> 125
+      per_circuit.b08.placed_sd_ns                                   0.055752 -> 0.055217
+      per_circuit.b08.placed_spread_over_floor                       19.3132 -> 19.1278
+      per_circuit.b08.r2                                             0.892228 -> 0.893369
+      per_circuit.b08.residual_sd_ns                                 0.016215 -> 0.015973
+      per_circuit.b08.residual_sd_over_quantisation_floor            5.6172 -> 5.5333
+      per_circuit.b08.routed_sd_ns                                   0.049394 -> 0.048916
+      per_circuit.b08.slope                                          0.836851 -> 0.837318
+      per_circuit.b09.floor_share_of_residual_variance               0.00333 -> 0.003412
+      per_circuit.b09.n                                              87 -> 90
+      per_circuit.b09.placed_sd_ns                                   0.036923 -> 0.036397
+      per_circuit.b09.placed_spread_over_floor                       12.7905 -> 12.6081
+      per_circuit.b09.r2                                             0.31589 -> 0.310792
+      per_circuit.b09.residual_sd_ns                                 0.050023 -> 0.049421
+      per_circuit.b09.residual_sd_over_quantisation_floor            17.3285 -> 17.1198
+      per_circuit.b09.routed_sd_ns                                   0.060479 -> 0.05953
+      per_circuit.b09.slope                                          0.920619 -> 0.911817
+      per_circuit.b10.floor_share_of_residual_variance               0.016423 -> 0.015628
+      per_circuit.b10.n                                              192 -> 214
+      per_circuit.b10.placed_sd_ns                                   0.064571 -> 0.061805
+      ... and 12 more
+  two_impl_choice.json                       UNCHANGED
+  decision_floor.json                        UNCHANGED
+  failure_signal_diagnostic.json             UNCHANGED
+  surrogate_cross_stage.json                 changed: 1, added: 0, removed: 0
+      meta.stage_coverage.placed                                     1117 -> 1193
+  kind_g_vs_r_probe.json                     changed: 198, added: 28, removed: 0
+      gate1_per_circuit.B vs G [strict].per_group.b01.B_rate         0.075862 -> 0.063158
+      gate1_per_circuit.B vs G [strict].per_group.b01.n_B            145 -> 190
+      gate1_per_circuit.B vs G [strict].per_group.b01.n_sign_flip_B  11 -> 12
+      gate1_per_circuit.B vs G [strict].per_group.b03.B_rate         0.113208 -> 0.109091
+      gate1_per_circuit.B vs G [strict].per_group.b03.n_B            53 -> 55
+      gate1_per_circuit.B vs G [strict].per_group.b08.B_rate         0.072464 -> 0.068493
+      gate1_per_circuit.B vs G [strict].per_group.b08.n_B            69 -> 73
+      gate1_per_circuit.B vs G [strict].per_group.b10.B_rate         0.266667 -> 0.251969
+      gate1_per_circuit.B vs G [strict].per_group.b10.n_B            105 -> 127
+      gate1_per_circuit.B vs G [strict].per_group.b10.n_sign_flip_B  28 -> 32
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b01.B_rate 0.129412 -> 0.105263
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b01.n_B 85 -> 114
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b01.n_sign_flip_B 11 -> 12
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b03.B_rate 0.139535 -> 0.133333
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b03.n_B 43 -> 45
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b08.B_rate 0.121951 -> 0.113636
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b08.n_B 41 -> 44
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b10.B_rate 0.388889 -> 0.359551
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b10.n_B 72 -> 89
+      gate1_per_circuit.B vs G [tool, excl quantum edge].per_group.b10.n_sign_flip_B 28 -> 32
+      gate1_per_circuit.B vs G [tool].per_group.b01.B_rate           0.17931 -> 0.173684
+      gate1_per_circuit.B vs G [tool].per_group.b01.n_B              145 -> 190
+      gate1_per_circuit.B vs G [tool].per_group.b01.n_sign_flip_B    26 -> 33
+      gate1_per_circuit.B vs G [tool].per_group.b03.B_rate           0.150943 -> 0.145455
+      gate1_per_circuit.B vs G [tool].per_group.b03.n_B              53 -> 55
+      gate1_per_circuit.B vs G [tool].per_group.b08.B_rate           0.217391 -> 0.219178
+      gate1_per_circuit.B vs G [tool].per_group.b08.n_B              69 -> 73
+      gate1_per_circuit.B vs G [tool].per_group.b08.n_sign_flip_B    15 -> 16
+      gate1_per_circuit.B vs G [tool].per_group.b10.B_rate           0.4 -> 0.393701
+      gate1_per_circuit.B vs G [tool].per_group.b10.n_B              105 -> 127
+      gate1_per_circuit.B vs G [tool].per_group.b10.n_sign_flip_B    42 -> 50
+      gate1_per_circuit.B vs R [strict].per_group.b01.B_rate         0.075862 -> 0.063158
+      gate1_per_circuit.B vs R [strict].per_group.b01.n_B            145 -> 190
+      gate1_per_circuit.B vs R [strict].per_group.b01.n_sign_flip_B  11 -> 12
+      gate1_per_circuit.B vs R [strict].per_group.b03.B_rate         0.113208 -> 0.109091
+      gate1_per_circuit.B vs R [strict].per_group.b03.n_B            53 -> 55
+      gate1_per_circuit.B vs R [strict].per_group.b08.B_rate         0.072464 -> 0.068493
+      gate1_per_circuit.B vs R [strict].per_group.b08.n_B            69 -> 73
+      gate1_per_circuit.B vs R [strict].per_group.b09.R_rate         0.16 -> 0.25
+      gate1_per_circuit.B vs R [strict].per_group.b09.n_R            25 -> 28
+      ... and 158 more
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.B_rate  = 0.666667
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.R_rate  = 1.0
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.n_B     = 42
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.n_R     = 4
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.lower_flip_rate = 'B'
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.n_sign_flip_B = 28
+      + gate3b_within_pool.B vs R [tool].per_group.b09 iter 8.n_sign_flip_R = 4
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.B_rate = 0.666667
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.R_rate = 1.0
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.n_B   = 42
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.n_R   = 4
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.lower_flip_rate = 'B'
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.n_sign_flip_B = 28
+      + gate3b_within_pool.B vs R [strict].per_group.b09 iter 8.n_sign_flip_R = 4
+      + gate3b_within_pool.G vs R [tool].per_group.b09 iter 8.G_rate  = 0.8
+  training_table_summary.json                UNCHANGED
+  counterfactual_acceptance_summary.json     UNCHANGED
+  ideal_vs_post.json                         UNCHANGED
+  impl_stability.json                        UNCHANGED
+  cross_impl_check.json                      UNCHANGED
+  resolution_analysis.json                   UNCHANGED
+  rejected_side.json                         UNCHANGED
+  band_sensitivity.json                      UNCHANGED
+  structural_features_summary.json           changed: 0, added: 0, removed: 1
+      - counters.graphs_written                                       (was 1207)
+
+### iscas89
+  candidate_level_noise.json                 UNCHANGED
+  calibration_three_stage.json               UNCHANGED
+  resolvable_positive.json                   UNCHANGED
+  acceptance_selectivity.json                UNCHANGED
+  topology_effect.json                       UNCHANGED
+  stage_verdict_transfer.json                UNCHANGED
+  stage_kind_effect.json                     UNCHANGED
+  stage_quant_floor.json                     UNCHANGED
+  two_impl_choice.json                       UNCHANGED
+  decision_floor.json                        UNCHANGED
+  failure_signal_diagnostic.json             UNCHANGED
+  surrogate_cross_stage.json                 UNCHANGED
+  training_table_summary.json                UNCHANGED
+  dataset_v1_summary.json                    UNCHANGED
+  cross_impl_check.json                      UNCHANGED
+  impl_stability.json                        UNCHANGED
+  resolution_analysis.json                   UNCHANGED
+  rejected_side.json                         UNCHANGED
+  band_sensitivity.json                      UNCHANGED
+  violation_census.json                      UNCHANGED
+  archfrozen_compare.json                    UNCHANGED
+  calibration.json                           UNCHANGED
+  calibration_fixed_effects.json             UNCHANGED
+  placed_repair_effect.json                  UNCHANGED
+
+==============================================================================
+SUMMARY -- the artefacts that moved
+==============================================================================
+  itc99: 8 of 8 artefact(s) moved
+      band_scope.json                            changed=1 added=0 removed=0
+      acceptance_selectivity.json                changed=41 added=0 removed=0
+      stage_verdict_transfer.json                changed=208 added=1 removed=0
+      stage_kind_effect.json                     changed=351 added=0 removed=0
+      stage_quant_floor.json                     changed=52 added=0 removed=0
+      surrogate_cross_stage.json                 changed=1 added=0 removed=0
+      kind_g_vs_r_probe.json                     changed=198 added=28 removed=0
+      structural_features_summary.json           changed=0 added=0 removed=1
+  iscas89: 0 of 0 artefact(s) moved

@@ -1,0 +1,57 @@
+{
+  "round": "34",
+  "title": "ITC-99 物理标签扩面：12 个未标注电路的可达性探测",
+  "written_before_running": true,
+  "question": "19 个 ITC-99 电路里只有 7 个有物理标签，决策级奖池因此只有 27 个可评估决策。剩下 12 个电路是否**可达**（能在有界时间内跑完一次完整的 PR 基准），据此能否把物理标签扩到它们身上？",
+  "why_now": [
+    "LOG-20261025-34 的判决：决策级奖池太小（每决策约 1.5 个 0.01 ns 量子、可评估决策仅 14/27 个），任何判据改进都显不出形；OI-052 第 41 条的待办就是『先把决策级奖池做大』。",
+    "本轮实测的覆盖度诊断（scratch/round34_coverage_survey.txt）：漏在**电路范围**——143 个 ITC-99 ledger 轮次里有 96 个属于 12 个**从未被物理标注**的电路；**不是**键匹配 bug，**不是**失效门效应，**不是**三档标签在电路内的缺失（7 个已标注电路的 35/35 轮次都有池）。",
+    "噪声族当初排除这 12 个电路有明确记录（experiments/20261024_physical_transfer_noise/gen_itc99_jobs.py:8-10）：b05/b12 每次跑 7-15 分钟，b14/b15/b17/b20 在归档里 rc=124 超时 → 排除原因是**耗时**，不是原理障碍，所以值得重新实测。"
+  ],
+  "already_verified_gates": {
+    "netlist_identity": "12 个新电路的跨基准 mapped.v 与主族 mapped.v **逐位相同**（SHA-256，12/12）；已标注的 7 个电路同样为 True。版图几何可转移的前提成立。",
+    "netlist_source": "experiments/20260821_real_pr_crossbench/jobs.tsv 给出 19 个 b 电路的 baseline 网表、top、util（util=10：b01-b13 段；util=30：b14/b15/b17/b20/b21/b22）。",
+    "script_reuse": "探针使用噪声族**同一脚本** pr_var.tcl、**同一 realization** R0（core_space=2、pin met3/met2、sig met1-met5、clk met3-met5）、**同一网表** → 产物落在 experiments/20261024_physical_transfer_noise/runs/<ckt>_baseline_R0/，正是标签族读几何的那个路径（gen_itc99_jobs.py 的 read_geometry）。",
+    "measured_cost_of_the_existing_batch": "I0（布线后）1207 作业全部 rc=0，中位 57 s、p90 171 s、max 778 s、合计 23.8 h 串行；IPLACED（布局后）1207 作业全部 rc=0，中位 4 s、合计 5.3 h。"
+  },
+  "probe": {
+    "unit": "一个电路的一次完整 PR 基准跑（布线后档流程：版图 → 布局 → CTS → 全局布线 → 详细布线 → estimate_parasitics -global_routing）",
+    "netlist": "该电路的 baseline mapped.v（跨基准族，与主族逐位相同）",
+    "realisation": "R0（core_space=2、pin met3/met2、sig met1-met5、clk met3-met5），与噪声族 R0 及标签族 F0 同口径",
+    "per_job_timeout_s": 1800,
+    "note_on_timeout": "归档里 b14/b15/b17/b20 是在 1200 s 上限下 rc=124；本探针把上限放宽到 1800 s，用来把『慢但可达』与『不可达』分开。1800 s 是标签族 run_all.sh 的默认上限，保持同一口径。"
+  },
+  "decision_rules_written_before_running": {
+    "fast_reachable": "rc=0 且秒数 ≤ 900",
+    "slow_reachable": "rc=0 且 900 < 秒数 ≤ 1800",
+    "unreachable": "rc=124（超时）",
+    "failed": "其他非零 rc → 必须归因，不得静默计入『不可达』",
+    "extension_candidate": "判为 fast_reachable 或 slow_reachable 的电路；且其**扩展后的候选级标注总预算**（候选数 × 实测每候选秒数 × 2 档）可被接受。预算的数值在探测结果出来后才定，但**判据形式在跑之前写死**。",
+    "no_retuning": "超时上限、rc 判据、电路清单在跑之前写死；不得看到结果后调整阈值重跑。"
+  },
+  "what_is_NOT_changed": [
+    "现有 7 个电路的任何标签（扩展只增不改：既有 I0/IPLACED 目录一个字节都不动）",
+    "判定带、任何阈值、任何已有分析的结论",
+    "code/、提交状态、论文、图件",
+    "D 正式矩阵 / OI-051 等 pending 门",
+    "第 32 轮组件 F 的嵌套批检查点（只暂停，不动检查点）"
+  ],
+  "boundaries_to_state_with_the_numbers": [
+    "探针级、非论文证据",
+    "探针测的是**基准网表**的一次成本；候选网表（门尺寸/缓冲改动）与基准网表的成本可能不同 → 扩展预算只能按**量级**外推",
+    "实测秒数受机器负载影响 → 探测期间**串行**执行（已暂停第 32 轮的嵌套批），避免把测速读成硬件上限",
+    "几何是从噪声族的基准日志里取的；候选级标注用**冻结版图**模式（die/core 固定），这一点由标签族的 pr_label.tcl / pr_placed.tcl 实现",
+    "12 个电路里有 6 个是 util=30（规模更大），其可达性与成本必须**分别**报，不得合并成一句"
+  ],
+  "stop_conditions": [
+    "若探针显示某电路的 rc 非 0 且非 124 → 停下归因，不继续开批",
+    "在探测结果与扩展预算出来之前，**不得**启动任何候选级标注批"
+  ],
+  "deliverables": {
+    "probe_jobs": "scratch/round34_probe_jobs.tsv",
+    "probe_runner": "scratch/run_round34_probe.sh",
+    "probe_result": "experiments/20261024_physical_transfer_noise/runs/<ckt>_baseline_R0/rc.tsv + pr_run.log",
+    "readback": "scratch/round34_probe_readback.py → scratch/round34_probe.json",
+    "record": "LOG-20261025-35"
+  }
+}

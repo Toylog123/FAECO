@@ -1,0 +1,47 @@
+==============================================================================
+ROUND 34 -- THE DECISION-LEVEL READING (corrected chain)
+==============================================================================
+
+1) the rows that gained their placed label : 76
+
+2) do they carry all three stages now?
+   with an ideal delta   : 0  (missing: 76)
+   with a placed delta   : 76  (missing: 0)
+   with a routed delta   : 76  (missing: 0)
+   with ALL THREE stages: 0
+   => the round-33 tool keeps a candidate only when all three stages are
+      present, so these rows are still EXCLUDED from the decision pools.
+      That is correct: a decision compares the IDEAL criterion with the
+      PLACED criterion, so a candidate whose ideal stage was never
+      measured cannot take part in that comparison.
+
+3) the ideal stage of those rows, as the dataset records it
+   ideal_label_status of the newly placed-labelled rows: {None: 76}
+   (the training table does not carry the status column, so the count
+    comes from the physical dataset:)
+   {'not_measured_pre_sta': 76}
+
+4) the round-33 artefact (kept in the evidence package) vs the fresh one
+   n_rows_training_table                                1207 -> 1207
+   n_rows_three_stage                                   1117 -> 1117
+   n_ledger_iterations_without_a_labelled_pool          102 -> 102
+   n_ledger_iterations_without_two_eligible_candidates  14 -> 14
+   n_decisions_evaluable                                27 -> 27
+   primary_comparison identical : True
+   recovery_fraction   identical : True
+   overlap             identical : True
+   the verdicts        identical : True
+   decisions old / new : 27 / 27
+   decisions with ANY difference: 0
+
+5) THE CONTRAST: the rolled-back first patch DID move the reference
+   (that is how the fabrication was caught)
+   the first patch filled the ideal label with the ledger's placeholder,
+   which made the rows pass the three-stage filter and entered the pools.
+   Its effect was recorded in the round-34 decision-delta trace: 15 of the
+   27 decisions changed, and b01/2's reference reading moved from
+   gain_impl 0.01 to -0.01 with impl_key from t022 to t021 -- i.e. the
+   fabricated label made a DIFFERENT candidate look like the loop's own
+   choice.  That movement was an artefact of the fabrication, not physics.
+   The corrected patch produces no such movement, which is the intended
+   behaviour.

@@ -1,0 +1,72 @@
+==============================================================================
+FAMILY itc99
+==============================================================================
+affected (no acceptance_evidence): 310   control: 3734
+
+CHECK 1 -- do the affected trials carry any real STA reading?
+   AFFECTED
+      slack_status         {None: 310}
+      min_slack_status     {None: 310}
+      tns not None            : 310
+      min_slack not None      : 0
+      area not None           : 0
+      sta_provenance present  : 0
+      wns is None             : 0
+      min_slack == base min_slack: 0   differs: 0
+      proxy_score present     : 310
+   CONTROL
+      slack_status         {'VIOLATED': 3734}
+      min_slack_status     {'MET': 3734}
+      tns not None            : 3734
+      min_slack not None      : 3734
+      area not None           : 0
+      sta_provenance present  : 3734
+      wns is None             : 0
+      min_slack == base min_slack: 3671   differs: 63
+      proxy_score present     : 3734
+
+CHECK 2 -- the accepted candidate of each iteration
+   affected trials matching the accepted candidate BY HASH   : 0
+   affected trials matching the accepted candidate BY inst+kind only: 73
+   not the accepted candidate at all                       : 237
+
+   does the ledger's accepted entry carry its own acceptance_evidence?
+      accepted entries WITH acceptance_evidence : 2671
+      accepted entries WITHOUT                  : 0
+
+==============================================================================
+FAMILY iscas89
+==============================================================================
+affected (no acceptance_evidence): 25   control: 332
+
+CHECK 1 -- do the affected trials carry any real STA reading?
+   AFFECTED
+      slack_status         {None: 25}
+      min_slack_status     {None: 25}
+      tns not None            : 25
+      min_slack not None      : 0
+      area not None           : 0
+      sta_provenance present  : 0
+      wns is None             : 0
+      min_slack == base min_slack: 0   differs: 0
+      proxy_score present     : 25
+   CONTROL
+      slack_status         {'VIOLATED': 332}
+      min_slack_status     {'MET': 332}
+      tns not None            : 332
+      min_slack not None      : 332
+      area not None           : 0
+      sta_provenance present  : 332
+      wns is None             : 0
+      min_slack == base min_slack: 280   differs: 52
+      proxy_score present     : 332
+
+CHECK 2 -- the accepted candidate of each iteration
+   affected trials matching the accepted candidate BY HASH   : 0
+   affected trials matching the accepted candidate BY inst+kind only: 6
+   not the accepted candidate at all                       : 19
+
+   does the ledger's accepted entry carry its own acceptance_evidence?
+      accepted entries WITH acceptance_evidence : 137
+      accepted entries WITHOUT                  : 0
+

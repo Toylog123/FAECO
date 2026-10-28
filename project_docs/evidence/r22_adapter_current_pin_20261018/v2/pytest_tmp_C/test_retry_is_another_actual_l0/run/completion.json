@@ -1,0 +1,177 @@
+{
+  "schema": "r22-C-reconstruction-run-v1",
+  "simulated": true,
+  "status": "qa_complete",
+  "stop_reason": "no_improvement",
+  "initial_sha256": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+  "final_sha256": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+  "final_text": "{\"x\": \"0\", \"y\": \"0\"}",
+  "baseline": {
+    "wns": 0.0,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "final_metrics": {
+    "wns": 0.0,
+    "tns": -1,
+    "critical": [
+      "x",
+      "y"
+    ]
+  },
+  "counts": {
+    "candidate_proposals": 1,
+    "candidate_evaluations": 1,
+    "precheck_rejects": 0,
+    "budget_rejects": 0,
+    "sta_reservations": 4,
+    "sta_launches": 4,
+    "failed_launch_attempts": 0,
+    "candidate_sta_launches": 1,
+    "joint_sta_launches": 0,
+    "baseline_sta_launches": 1,
+    "refresh_sta_launches": 1,
+    "final_sta_launches": 1,
+    "candidate_reservations": 1,
+    "cache_hits": 0,
+    "commits": 0,
+    "sec_calls": 1
+  },
+  "trials": [
+    {
+      "trial_id": 0,
+      "round": 1,
+      "stage": "SINGLE",
+      "action": {
+        "instance": "x",
+        "kind": "G",
+        "target": "1",
+        "pin_map": {},
+        "pin": "",
+        "new_net": ""
+      },
+      "actions": [
+        {
+          "instance": "x",
+          "kind": "G",
+          "target": "1",
+          "pin_map": {},
+          "pin": "",
+          "new_net": ""
+        }
+      ],
+      "directory": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_adapter_current_pin_20261018\\v2\\pytest_tmp_C\\test_retry_is_another_actual_l0\\run\\trial_000000",
+      "base_sha256": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+      "candidate_sha256": "7538e68bad4c19fadb4fd0b55a5c722de369a33a1d09bc53cf2d299679fde11a",
+      "same_bytes_as_base": false,
+      "status": "sta_failed",
+      "metrics": {
+        "wns": null,
+        "tns": null,
+        "error": "Actual candidate STA launch budget exhausted",
+        "critical": []
+      }
+    }
+  ],
+  "commits": [],
+  "passes": [
+    {
+      "round": 1,
+      "critical_order": [
+        "x",
+        "y"
+      ],
+      "improved": false,
+      "refresh_metrics": {
+        "wns": 0.0,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      },
+      "current_metrics": {
+        "wns": 0.0,
+        "tns": -1,
+        "critical": [
+          "x",
+          "y"
+        ]
+      }
+    }
+  ],
+  "sec_status": "pass",
+  "sec_bound": true,
+  "sec_nonempty_supported_proof": true,
+  "sec_proof_points": [
+    [
+      "1",
+      "0"
+    ]
+  ],
+  "evidence_receipt": {
+    "baseline/attempt_001/command.json": "7d83dabfba8499605fc35e5d1394953509a37a2130fb1e3481923ea5380bc1ab",
+    "baseline/attempt_001/input_snapshot.json": "bb24e6f2162975f2862d15144c1a0f55e05863c9a87fd3b30cbfb8880c04d783",
+    "baseline/attempt_001/invocation.json": "27a3d710ea8cf17df94352f5f28b43d9c0b1d053cd95f79bc903a590cd4d60ad",
+    "baseline/attempt_001/read_verilog_input.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "baseline/attempt_001/sta.tcl": "bf5b21e5ccc3afe9529bbcb299c3d5cc18b942d500eba8eb49d4e84367261202",
+    "baseline/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baseline/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "baseline/mapped.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "baseline/measurement.json": "297ceb50cf4282eb9543cd3dde64f24016ab9d2a61d4c7137a334d9adac7ba14",
+    "baseline/sta.tcl": "bf5b21e5ccc3afe9529bbcb299c3d5cc18b942d500eba8eb49d4e84367261202",
+    "config.json": "3549ec3c7c93c64bded5ac4344f6e45d996c7de772902ef22fc7698ec367ef60",
+    "events.jsonl": "7c17183195af7dd32c10c36d54a875ad310ba9f23ed9969f702069d88878f690",
+    "final.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/cells.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sec/final_raw.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/gate.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/gold.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/helpers.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sec/initial_raw.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sec/result.json": "21a73e75dc8b50303f781662530b15ec6e9a585e888d0d867e17e486a2dff036",
+    "final_sec/sec.log": "432d8c451d60043c7802fca8e7f9514a899f3ca0ce070f3c920d9bdfa876c986",
+    "final_sec/sec.ys": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "final_sta/attempt_001/command.json": "741b35e0aaba707bfda9afcacd6d688f9f3293973ba23a4cb11ac16defb13edd",
+    "final_sta/attempt_001/input_snapshot.json": "0bb5cdaf866ef20733de71727a00ae254d7999ec3993685235cf45ccd2270de2",
+    "final_sta/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "final_sta/attempt_001/read_verilog_input.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sta/attempt_001/sta.tcl": "972c00b9755735da1cbaee1636f283e174d334e6946e3fbe0f10d69a3c319145",
+    "final_sta/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final_sta/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "final_sta/mapped.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "final_sta/measurement.json": "297ceb50cf4282eb9543cd3dde64f24016ab9d2a61d4c7137a334d9adac7ba14",
+    "final_sta/sta.tcl": "972c00b9755735da1cbaee1636f283e174d334e6946e3fbe0f10d69a3c319145",
+    "initial.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "pass_001_refresh/attempt_001/command.json": "7768bfad0661bd39f47c13a2c80546694330d6101b8597707867df1c13a1759c",
+    "pass_001_refresh/attempt_001/input_snapshot.json": "d20fff7059a23de1b8c1e5eb7645767ad723808b99b61f47210d319f5fd42618",
+    "pass_001_refresh/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "pass_001_refresh/attempt_001/read_verilog_input.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "pass_001_refresh/attempt_001/sta.tcl": "ef75209cf57ddae06cce30b365572c689d6c432ba5cd7846da7437f11f855293",
+    "pass_001_refresh/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pass_001_refresh/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "pass_001_refresh/mapped.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "pass_001_refresh/measurement.json": "297ceb50cf4282eb9543cd3dde64f24016ab9d2a61d4c7137a334d9adac7ba14",
+    "pass_001_refresh/sta.tcl": "ef75209cf57ddae06cce30b365572c689d6c432ba5cd7846da7437f11f855293",
+    "run_result.json": "f83a7847918a7f325e5815e257a3e8349fb125e40489dc0941780d03243d49d0",
+    "sec_preflight/binding.json": "80cff839670653467bf277ed5b68c14e1a22887d0bc4458ea1017f0058506911",
+    "sec_preflight/model_preflight.v": "ec864fe99b539704b8872ac591067ef22d836a8d942087f2dba274b301ebe6e5",
+    "trial_000000/base.v": "3ef264cd9dc27dfca4c47cef7aab2c37150d5e650a9654b74b769be73b8dc1d6",
+    "trial_000000/candidate.v": "7538e68bad4c19fadb4fd0b55a5c722de369a33a1d09bc53cf2d299679fde11a",
+    "trial_000000/decision.json": "f7b26cc2691fae18ecc1143d43db1633b3dc9162ea8108130cee3de86a159025",
+    "trial_000000/proposal.json": "c8fc0c6b905259d377fbc88a916c32197dd4ec76095b9dd48ede3c34383b2e3f",
+    "trial_000000/sta/attempt_001/command.json": "119f4531592d4a3cc5de91fe6253a162db4a05f66866447e74597b96f8c30862",
+    "trial_000000/sta/attempt_001/input_snapshot.json": "24eace3a0e3dddc4eda223614028bb786abe8db9a8a2b09f704c7f04e87783c3",
+    "trial_000000/sta/attempt_001/invocation.json": "66bc3e15107bf7628cff61f4b8d3b7bd3090556649cf3f883d850a94750b23a4",
+    "trial_000000/sta/attempt_001/read_verilog_input.v": "7538e68bad4c19fadb4fd0b55a5c722de369a33a1d09bc53cf2d299679fde11a",
+    "trial_000000/sta/attempt_001/sta.tcl": "4f6fedcff15e15ea9cd9e3c6960b8d5f2c462045482b90ad1036994d4261fe4c",
+    "trial_000000/sta/attempt_001/stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "trial_000000/sta/attempt_001/stdout.log": "32593c57f24bd4a66d92be985b5c79dcb1eee1e867480fce7c50115a034c1960",
+    "trial_000000/sta/mapped.v": "7538e68bad4c19fadb4fd0b55a5c722de369a33a1d09bc53cf2d299679fde11a",
+    "trial_000000/sta/measurement.json": "1c10a95e2f773b45db5f0733318dc1c13842b378a1523cacf467ee4f29af8f79",
+    "trial_000000/sta/sta.tcl": "4f6fedcff15e15ea9cd9e3c6960b8d5f2c462045482b90ad1036994d4261fe4c"
+  }
+}

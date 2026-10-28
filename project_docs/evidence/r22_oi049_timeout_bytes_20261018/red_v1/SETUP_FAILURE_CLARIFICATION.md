@@ -1,0 +1,3 @@
+The original SETUP_FAILURE.md states that the timeout stopped before partial stdout arrived. That inference is too strong: the retained trace only proves that `isinstance(actual.stdout, bytes) and actual.stdout` was false. It does not distinguish an unexpected type from an empty value, because neither was captured. The actual stream type/value for red_v1 remains unknown, as does red_v2's stream type/value.
+
+Both runs stopped before the public CEC API call, so neither reproduced or refuted OI049. The original file and script remain unchanged to retain the history. Only red_v3's explicit synthetic bytes/str/empty boundary injection supports the public direct-CEC branch result; no statement about real operating-system or EDA timeout stream types follows.

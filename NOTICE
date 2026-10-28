@@ -1,0 +1,58 @@
+FAECO — third-party notices
+=========================
+
+This file states where the project's external inputs come from and what each
+upstream requires.  It does NOT license the FAECO repository itself: no
+top-level LICENSE has been chosen yet, so the repository must not be
+described as a "publicly redistributable project" until that is settled
+(registered as an open issue in project_docs/OPEN_ISSUES.md).
+
+Every input below was acquired at a pinned revision, and the machine-readable
+record -- upstream URL, commit, SPDX licence and the per-file SHA-256 -- is
+in data/raw/benchmarks/source_manifests/.
+
+1. ITC'99 benchmark circuits  (the timing-ECO benchmark family)
+   Upstream        : https://github.com/cad-polito-it/I99T
+   Pinned commit  : 8a2c3b500ee7ff20e7031de92592b737bedc6d8c
+   Licence (of the acquired snapshot) : EUPL-1.2
+   Contents used  : b01-b15, b17-b22 (b16 does not exist upstream)
+   Manifest       : data/raw/benchmarks/source_manifests/itc99.json
+   Note           : the upstream files are gate-level; the project's netlists
+                    are derived from them (BLIF -> Verilog -> mapped netlist).
+
+2. ISCAS89 sequential benchmark circuits
+   Upstream        : https://github.com/ispras/hdl-benchmarks
+   Pinned commit  : 10c3fb51d0810ce862659211862660dcc270a6af
+   Licence        : Apache-2.0
+   Contents used  : 17 circuits (s27 ... s953)
+   Manifest       : data/raw/benchmarks/source_manifests/iscas89.json
+
+3. SKY130 HD standard-cell library and timing models
+   Upstreams       : https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts
+                     (commit da8f092a02a8e75658cc3100691aabff05f35629,
+                      licence BSD-3-Clause)
+                     https://github.com/google/skywater-pdk-libs-sky130_fd_sc_hd
+                     (commit ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1,
+                      licence Apache-2.0)
+   Contents used  : the liberty timing model and the platform config
+   Manifest       : data/raw/benchmarks/source_manifests/sky130hd_openroad.json
+   Obligation     : Apache-2.0 and BSD-3-Clause require the licence and
+                    copyright notices to be reproduced with any redistribution.
+
+4. PicoRV32
+   Upstream        : https://github.com/YosysHQ/picorv32
+   Pinned commit  : a473fc8fca393771d83b0ffcf0b14db3393339d8
+   Licence        : ISC
+   Contents used  : picorv32, picorv32_pcpi_mul, picorv32_regs
+   Manifest       : data/raw/benchmarks/source_manifests/picorv32.json
+   Obligation     : ISC requires the licence text to be included.
+
+NOT redistributed here
+---------------------
+The upstream benchmark files and the cell libraries themselves are NOT
+distributed in this repository (see .gitignore: "experiments/2026*/" and
+"data/raw/*").  What is redistributed is the project's own derived artefacts:
+mapped netlists, physical labels, decision-level readings and the analysis
+scripts.  The licences above govern the upstream inputs; the derived
+artefacts inherit the obligations of the inputs they were made from, which
+is why this notice exists.

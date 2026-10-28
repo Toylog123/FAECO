@@ -1,0 +1,84 @@
+==============================================================================
+FAMILY itc99
+==============================================================================
+  circuits=19  trials=4044  call_log entries=143
+
+  A  candidate-side fallback: trial["wns"] vs acceptance_evidence.setup_wns
+     both present      : 3734
+     exactly equal     : 3734
+     DIFFERENT         : 0
+
+  B  base-side fallback: call_log[it].baseline_wns vs metric_references.setup_wns
+     both present      : 3734
+     exactly equal     : 3734
+     DIFFERENT/missing : 0
+     trials with iteration=None (excluded from B): 0
+
+  C  trials WITHOUT acceptance_evidence
+     total             : 310
+     carry trial["wns"]: 310
+     iteration covered by call_log: 310
+     FULLY RECOVERABLE (both)      : 310
+     missing wns  (first 5)         : []
+     missing base (first 5)         : []
+
+  D  jobs TSV "iteration" vs ledger trial "iteration" (same trial index)
+     comparable        : 2474
+     agree             : 2474
+     DISAGREE          : 0
+     one side None     : 0
+
+  D2 the patch lookup, on the jobs rows of the evidence-less trials
+     rows without acceptance_evidence : 152
+     call_log hit by the jobs iteration: 152
+     miss (first 5)                    : []
+
+  E  SIMULATED patched builder vs the current physical_dataset.jsonl
+     rows in the dataset            : 2530
+     label triple UNCHANGED         : 2378
+     label RECOVERED (was null)     : 152
+     CONFLICT (would change a value): 0
+     rows still without a delta     : 56
+
+==============================================================================
+FAMILY iscas89
+==============================================================================
+  circuits=8  trials=357  call_log entries=35
+
+  A  candidate-side fallback: trial["wns"] vs acceptance_evidence.setup_wns
+     both present      : 332
+     exactly equal     : 332
+     DIFFERENT         : 0
+
+  B  base-side fallback: call_log[it].baseline_wns vs metric_references.setup_wns
+     both present      : 332
+     exactly equal     : 332
+     DIFFERENT/missing : 0
+     trials with iteration=None (excluded from B): 0
+
+  C  trials WITHOUT acceptance_evidence
+     total             : 25
+     carry trial["wns"]: 25
+     iteration covered by call_log: 25
+     FULLY RECOVERABLE (both)      : 25
+     missing wns  (first 5)         : []
+     missing base (first 5)         : []
+
+  D  jobs TSV "iteration" vs ledger trial "iteration" (same trial index)
+     comparable        : 412
+     agree             : 412
+     DISAGREE          : 0
+     one side None     : 0
+
+  D2 the patch lookup, on the jobs rows of the evidence-less trials
+     rows without acceptance_evidence : 0
+     call_log hit by the jobs iteration: 0
+     miss (first 5)                    : []
+
+  E  SIMULATED patched builder vs the current physical_dataset.jsonl
+     rows in the dataset            : 439
+     label triple UNCHANGED         : 439
+     label RECOVERED (was null)     : 0
+     CONFLICT (would change a value): 0
+     rows still without a delta     : 27
+

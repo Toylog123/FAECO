@@ -63,13 +63,20 @@ experiments/tmp_*/
 # ===== 原始基准数据（不提交；README 与部分 source_manifests 例外）=====
 data/raw/*
 !data/raw/.gitkeep
-data/derived/*
-!data/derived/.gitkeep
+# git cannot re-include a file that lives inside an excluded DIRECTORY, so
+# `data/raw/*` above (which excludes data/raw/benchmarks/) has to be undone
+# for this directory FIRST -- otherwise the exceptions below never fire.
+!data/raw/benchmarks/
+# ... and the heavy subtrees are excluded again right away.
+data/raw/benchmarks/raw/
+data/raw/benchmarks/normalized/
+data/raw/benchmarks/generated_cases/
 !data/raw/benchmarks/README.md
 !data/raw/benchmarks/source_manifests/
 data/raw/benchmarks/source_manifests/epfl_v2025.1.json
 data/raw/benchmarks/source_manifests/iscas85_jpsety_b4c6b620.json
-data/raw/benchmarks/source_manifests/sky130hd_openroad.json
+data/derived/*
+!data/derived/.gitkeep
 
 # ===== 论文 scratch / 备份 / 审稿中间产物 =====
 paper/zh/backups/
@@ -90,6 +97,19 @@ paper/zh/manuscript/*.fls
 paper/zh/manuscript/*.fdb_latexmk
 paper/zh/manuscript/*.xdv
 paper/zh/manuscript/*.synctex.gz
+
+# 英文稿同款规则（此前只覆盖了 zh 侧，en 侧的 .aux/.out/.spl/.bak 会裸奔）
+paper/en/manuscript/*.aux
+paper/en/manuscript/*.out
+paper/en/manuscript/*.spl
+paper/en/manuscript/*.fls
+paper/en/manuscript/*.fdb_latexmk
+paper/en/manuscript/*.xdv
+paper/en/manuscript/*.synctex.gz
+paper/en/manuscript/_*
+paper/en/manuscript/*.bak_*
+# en 侧的入库 PDF 是 paper/en/build/FAECO.pdf，manuscript 下的那份是编译副本
+paper/en/manuscript/FAECO.pdf
 
 # XeLaTeX 编译所需但不再分发的字体
 paper/zh/manuscript/fonts/

@@ -1,0 +1,105 @@
+==============================================================================
+ROUND 34 -- FILLED vs CONFLICT (the precise form)
+==============================================================================
+
+### itc99
+  training table: FILLED cells (null -> a value)  : {'placed_delta_wns': 76, 'placed_cumulative_wns': 76, 'placed_verdict_candlevel_pooled': 76}
+  training table: CONFLICTS (a value -> another value) : 0
+  physical dataset: FILLED cells : {}
+  physical dataset: CONFLICTS     : 0
+
+  three-point curve, the stage statistics, block by block:
+    stages_marginal / ideal                  UNCHANGED
+    stages_marginal / placed                 UNCHANGED
+    stages_marginal / placed_to_routed :
+        mean_placed                      -0.043557 -> -0.042555
+        mean_routed                      -0.036296 -> -0.035457
+        n                                1161 -> 1237
+        slope_routed_on_placed           1.0068 -> 1.0061
+        spearman                         0.8244 -> 0.8169
+    stages_marginal / routed                 UNCHANGED
+    stages_cumulative / ideal                  UNCHANGED
+    stages_cumulative / placed                 UNCHANGED
+    stages_cumulative / placed_to_routed :
+        mean_placed                      0.027054 -> 0.027195
+        mean_routed                      0.04304 -> 0.042749
+        n                                1161 -> 1237
+        slope_routed_on_placed           1.0597 -> 1.0577
+        spearman                         0.95 -> 0.9482
+    stages_cumulative / routed                 UNCHANGED
+    stages_marginal_common_subset / ideal                  UNCHANGED
+    stages_marginal_common_subset / placed                 UNCHANGED
+    stages_marginal_common_subset / placed_to_routed       UNCHANGED
+    stages_marginal_common_subset / routed                 UNCHANGED
+    stages_marginal / ideal  n: 1161 -> 1161   (must be equal)
+    stages_cumulative / ideal  n: 1161 -> 1161   (must be equal)
+
+  bands identical : True
+  decisions identical : True
+
+### iscas89
+  training table: FILLED cells (null -> a value)  : {}
+  training table: CONFLICTS (a value -> another value) : 0
+  physical dataset: FILLED cells : {}
+  physical dataset: CONFLICTS     : 0
+
+  three-point curve, the stage statistics, block by block:
+    stages_marginal / ideal                  UNCHANGED
+    stages_marginal / placed                 UNCHANGED
+    stages_marginal / placed_to_routed       UNCHANGED
+    stages_marginal / routed                 UNCHANGED
+    stages_cumulative / ideal                  UNCHANGED
+    stages_cumulative / placed                 UNCHANGED
+    stages_cumulative / placed_to_routed       UNCHANGED
+    stages_cumulative / routed                 UNCHANGED
+    stages_marginal_common_subset / ideal                  UNCHANGED
+    stages_marginal_common_subset / placed                 UNCHANGED
+    stages_marginal_common_subset / placed_to_routed       UNCHANGED
+    stages_marginal_common_subset / routed                 UNCHANGED
+    stages_marginal / ideal  n: 325 -> 325   (must be equal)
+    stages_cumulative / ideal  n: 325 -> 325   (must be equal)
+
+  bands identical : True
+  decisions identical : True
+
+==============================================================================
+SUMMARY
+==============================================================================
+{
+  "itc99": {
+    "table_filled": {
+      "placed_delta_wns": 76,
+      "placed_cumulative_wns": 76,
+      "placed_verdict_candlevel_pooled": 76
+    },
+    "table_conflicts": 0,
+    "dataset_filled": {},
+    "dataset_conflicts": 0,
+    "ideal_stage_n_baseline": {
+      "stages_marginal": 1161,
+      "stages_cumulative": 1161
+    },
+    "ideal_stage_n_patched": {
+      "stages_marginal": 1161,
+      "stages_cumulative": 1161
+    },
+    "bands_identical": true,
+    "decisions_identical": true
+  },
+  "iscas89": {
+    "table_filled": {},
+    "table_conflicts": 0,
+    "dataset_filled": {},
+    "dataset_conflicts": 0,
+    "ideal_stage_n_baseline": {
+      "stages_marginal": 325,
+      "stages_cumulative": 325
+    },
+    "ideal_stage_n_patched": {
+      "stages_marginal": 325,
+      "stages_cumulative": 325
+    },
+    "bands_identical": true,
+    "decisions_identical": true
+  }
+}

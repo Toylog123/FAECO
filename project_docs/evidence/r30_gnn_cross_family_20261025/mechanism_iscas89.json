@@ -1,0 +1,344 @@
+{
+  "family": "iscas89",
+  "label_mode": "resolvable",
+  "band_ns": 0.055542,
+  "n_rows": 325,
+  "n_circuits": 8,
+  "n_pools_total": 34,
+  "threshold": 0.53,
+  "pre_registration": "scratch/round32_preregistration_addendum_A.json",
+  "note": "the threshold 0.53 and the p<0.05 gate are the ones written before the run; this tool does not re-tune them",
+  "recovered": {
+    "kind_only": {
+      "pooled_auc": 0.42201811258618915,
+      "mean_within_pool_auc": 0.5172982202629168
+    },
+    "structural": {
+      "pooled_auc": 0.4367603169702583,
+      "mean_within_pool_auc": 0.5006236532358823
+    },
+    "gnn_global": {
+      "pooled_auc": 0.6529021302871256,
+      "mean_within_pool_auc": 0.6536246765108727
+    }
+  },
+  "harness_check": {
+    "published": 0.6536246765108727,
+    "recomputed": 0.6536246765108727,
+    "identical": true
+  },
+  "controls": {
+    "C2_global": {
+      "pooled_auc": 0.5871410929299167,
+      "mean_within_pool_auc": 0.5039737378846751,
+      "ci95": [
+        0.3727327301660733,
+        0.6350735312892687
+      ],
+      "below_threshold": true
+    },
+    "C4_global": {
+      "pooled_auc": 0.4936194298651847,
+      "mean_within_pool_auc": 0.5657435605271091,
+      "ci95": [
+        0.43334154294428734,
+        0.7030159915954959
+      ],
+      "below_threshold": false
+    },
+    "C2_mod_from_artefact": {
+      "mean_within_pool_auc": 0.5327138369234291,
+      "note": "readout='mod' -- this is the control that was actually run"
+    },
+    "C4_mod_from_artefact": {
+      "mean_within_pool_auc": 0.5314316104817333,
+      "note": "readout='mod' -- this is the control that was actually run"
+    }
+  },
+  "per_pool": [
+    {
+      "circuit": "s27",
+      "iteration": "3",
+      "n": 32,
+      "positives": 3,
+      "negatives": 29,
+      "auc_kind_only": 0.7471264367816092,
+      "auc_gnn_global": 0.896551724137931,
+      "diff": 0.14942528735632188
+    },
+    {
+      "circuit": "s382",
+      "iteration": "1",
+      "n": 3,
+      "positives": 1,
+      "negatives": 2,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 0.0,
+      "diff": -0.5
+    },
+    {
+      "circuit": "s382",
+      "iteration": "4",
+      "n": 14,
+      "positives": 2,
+      "negatives": 12,
+      "auc_kind_only": 0.5416666666666666,
+      "auc_gnn_global": 0.7916666666666666,
+      "diff": 0.25
+    },
+    {
+      "circuit": "s420",
+      "iteration": "4",
+      "n": 2,
+      "positives": 1,
+      "negatives": 1,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 1.0,
+      "diff": 0.5
+    },
+    {
+      "circuit": "s420",
+      "iteration": "7",
+      "n": 34,
+      "positives": 1,
+      "negatives": 33,
+      "auc_kind_only": 0.3787878787878788,
+      "auc_gnn_global": 0.8787878787878788,
+      "diff": 0.5
+    },
+    {
+      "circuit": "s641",
+      "iteration": "3",
+      "n": 6,
+      "positives": 1,
+      "negatives": 5,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 1.0,
+      "diff": 0.5
+    },
+    {
+      "circuit": "s641",
+      "iteration": "4",
+      "n": 9,
+      "positives": 2,
+      "negatives": 7,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 0.8571428571428571,
+      "diff": 0.3571428571428571
+    },
+    {
+      "circuit": "s641",
+      "iteration": "5",
+      "n": 15,
+      "positives": 8,
+      "negatives": 7,
+      "auc_kind_only": 0.4017857142857143,
+      "auc_gnn_global": 0.5535714285714286,
+      "diff": 0.1517857142857143
+    },
+    {
+      "circuit": "s641",
+      "iteration": "6",
+      "n": 31,
+      "positives": 17,
+      "negatives": 14,
+      "auc_kind_only": 0.47478991596638653,
+      "auc_gnn_global": 0.5756302521008403,
+      "diff": 0.10084033613445376
+    },
+    {
+      "circuit": "s641",
+      "iteration": "7",
+      "n": 43,
+      "positives": 11,
+      "negatives": 32,
+      "auc_kind_only": 0.4474431818181818,
+      "auc_gnn_global": 0.4630681818181818,
+      "diff": 0.015625
+    },
+    {
+      "circuit": "s713",
+      "iteration": "2",
+      "n": 7,
+      "positives": 2,
+      "negatives": 5,
+      "auc_kind_only": 0.6,
+      "auc_gnn_global": 0.5,
+      "diff": -0.09999999999999998
+    },
+    {
+      "circuit": "s713",
+      "iteration": "3",
+      "n": 16,
+      "positives": 4,
+      "negatives": 12,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 0.5625,
+      "diff": 0.0625
+    },
+    {
+      "circuit": "s820",
+      "iteration": "3",
+      "n": 45,
+      "positives": 7,
+      "negatives": 38,
+      "auc_kind_only": 0.7406015037593985,
+      "auc_gnn_global": 0.8515037593984962,
+      "diff": 0.11090225563909772
+    },
+    {
+      "circuit": "s832",
+      "iteration": "3",
+      "n": 5,
+      "positives": 1,
+      "negatives": 4,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 1.0,
+      "diff": 0.5
+    },
+    {
+      "circuit": "s832",
+      "iteration": "4",
+      "n": 16,
+      "positives": 4,
+      "negatives": 12,
+      "auc_kind_only": 0.5416666666666666,
+      "auc_gnn_global": 0.71875,
+      "diff": 0.17708333333333337
+    },
+    {
+      "circuit": "s953",
+      "iteration": "2",
+      "n": 3,
+      "positives": 1,
+      "negatives": 2,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 0.25,
+      "diff": -0.25
+    },
+    {
+      "circuit": "s953",
+      "iteration": "3",
+      "n": 2,
+      "positives": 1,
+      "negatives": 1,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 0.5,
+      "diff": 0.0
+    },
+    {
+      "circuit": "s953",
+      "iteration": "4",
+      "n": 15,
+      "positives": 7,
+      "negatives": 8,
+      "auc_kind_only": 0.4375,
+      "auc_gnn_global": 0.36607142857142855,
+      "diff": -0.07142857142857145
+    }
+  ],
+  "mean_diff": 0.13632645624795592,
+  "D1_size_confound": {
+    "spearman_diff_vs_n": 0.07224567354299273,
+    "spearman_diff_vs_positives": -0.21551778271575575,
+    "spearman_n_vs_positives": 0.7252413402247355
+  },
+  "D2_leave_one_pool_out": {
+    "min_mean_diff": 0.11493389485077687,
+    "max_mean_diff": 0.17375742426254157,
+    "n_removals_flip_sign": 0,
+    "worst_removed_pool": {
+      "circuit": "s420",
+      "iteration": "4",
+      "n": 2,
+      "positives": 1,
+      "negatives": 1,
+      "auc_kind_only": 0.5,
+      "auc_gnn_global": 1.0,
+      "diff": 0.5
+    }
+  },
+  "D3_leave_one_circuit_out": {
+    "s27": 0.1355559367709932,
+    "s382": 0.16899226327895042,
+    "s420": 0.09086726327895042,
+    "s641": 0.10219094653078319,
+    "s713": 0.15571101327895043,
+    "s820": 0.1378219974602417,
+    "s832": 0.11104955494561708,
+    "s953": 0.18502031892611856
+  },
+  "D3_leave_one_circuit_out_summary": {
+    "min": 0.09086726327895042,
+    "max": 0.18502031892611856,
+    "n_negative": 0
+  },
+  "D4_permutation_null": {
+    "B": 2000,
+    "null_mean_within_pool_auc": {
+      "kind_only": {
+        "mean": 0.5000572466740884,
+        "sd": 0.021879896350149898,
+        "p2_5": 0.45835100255167877,
+        "p97_5": 0.5443150153555115,
+        "observed": 0.5172982202629168,
+        "emp_p_two_sided": 0.4272863568215892
+      },
+      "gnn_global": {
+        "mean": 0.5011687091040311,
+        "sd": 0.061147412811701427,
+        "p2_5": 0.3853600963314252,
+        "p97_5": 0.621006558529111,
+        "observed": 0.6536246765108727,
+        "emp_p_two_sided": 0.01199400299850075
+      }
+    },
+    "null_paired_mean_diff": {
+      "mean": 0.0011114624299428,
+      "sd": 0.06312730599996075,
+      "p2_5": -0.11700260606463059,
+      "p97_5": 0.12899013108028565,
+      "observed": 0.13632645624795592,
+      "emp_p_two_sided": 0.03398300849575212
+    },
+    "caveat": "the permutation keeps each pool's positive count but scrambles WHICH candidates are positive; both predictors were fitted on the REAL labels, so this null is conservative in the direction of significance for whichever predictor retains more label information.  It is reported as a supplement and does NOT replace the pre-registered sign test."
+  },
+  "D5_degeneracy": {
+    "spearman_score_vs_graph_nodes_global": 0.25810648865966357,
+    "spearman_score_vs_graph_nodes_kind": -0.04074603007539199,
+    "spearman_score_vs_iteration_global": 0.16088083860214547,
+    "spearman_score_vs_iteration_kind": -0.014714250800115021,
+    "mean_within_pool_sd_global": 0.007705625446366159,
+    "mean_within_pool_sd_kind": 0.039208740613339406,
+    "min_within_pool_sd_global": 0.0,
+    "n_pools_with_degenerate_global": 3
+  },
+  "D6_positive_rate_vs_size": {
+    "spearman_rate_vs_n": -0.3987571741333382,
+    "spearman_rate_vs_positives": 0.20939382229116357,
+    "mean_rate": 0.29261363081394376
+  },
+  "D7_stable_pools": {
+    "n_pools": 8,
+    "mean_diff": 0.0870916694150437,
+    "wins": 7,
+    "losses": 1,
+    "ties": 0,
+    "sign_test_p": 0.0703125,
+    "note": "the same statistic on the pools where the per-pool AUC is not discretised to {0, 0.5, 1}"
+  },
+  "verdict_both_calibres": {
+    "pre_registered_as_implemented": {
+      "C2_used": "mod",
+      "C4_used": "mod",
+      "condition3_ok": false,
+      "condition4_ok": false
+    },
+    "matched_calibre": {
+      "C2_used": "global",
+      "C4_used": "global",
+      "condition3_ok": true,
+      "condition4_ok": false
+    }
+  }
+}

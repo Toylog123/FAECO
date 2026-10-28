@@ -1,0 +1,69 @@
+{
+  "schema": "historical-objects-reproducibility-supplement-v1",
+  "scope": "Recover retained original bytes only; no re-audit, EDA, source/Git or old receipt modification",
+  "old_final_receipt_sha256": "29aa4f191afa2adcab13cf78ee4779f780fd81aafad9bb69ad8cd0d67f7437c7",
+  "old_manifest_sha256": "14217aad9f0c3e2c62fdde68a40ae06d31187b1dc044bd560b2ac29232dd3ec2",
+  "original_inventory_comparison": {
+    "manifest_key": "scratch/historical_cec_log_inventory_1018.txt",
+    "expected": {
+      "sha256": "7bb319f273bc4dc7a9a5cc48c31e8455fb46bc91e862143d204c15aa216bf652",
+      "bytes": 2268
+    },
+    "actual": {
+      "bytes": 2268,
+      "sha256": "7bb319f273bc4dc7a9a5cc48c31e8455fb46bc91e862143d204c15aa216bf652"
+    },
+    "exact_match": true
+  },
+  "normalized_discovery_comparison": {
+    "path": "LOG_PATH_DISCOVERY.txt",
+    "bytes": 2290,
+    "sha256": "3f498342dc957106fcc8025a6930e8f9dcc14f7905298981afcff90f93873dd2",
+    "same_bytes_as_original_inventory": false,
+    "reason": "V1 script read splitlines then joined with newline, changing the serialized bytes; original inventory is now separately retained without rewriting discovery."
+  },
+  "recovered_original_files": [
+    {
+      "source_path": "scratch/historical_cec_log_inventory_1018.txt",
+      "saved_as": "original_inventory.txt",
+      "bytes": 2268,
+      "sha256": "7bb319f273bc4dc7a9a5cc48c31e8455fb46bc91e862143d204c15aa216bf652",
+      "source_and_copy_identical": true
+    },
+    {
+      "source_path": "scratch/historical_cec_objects_followup_1018.py",
+      "saved_as": "original_audit_script_v1.py",
+      "bytes": 8072,
+      "sha256": "2f927c5fe7f2274ea9bbc78abdb1eb9ba9a3be4918ba48bf09682919ae4bf763",
+      "source_and_copy_identical": true
+    },
+    {
+      "source_path": "scratch/historical_cec_followup_run_1018.log",
+      "saved_as": "original_audit_run_v1.log",
+      "bytes": 1593,
+      "sha256": "2ed168f6cd20d937ba0858940da017121fe16cdf00aedcad065933ac8987bbce",
+      "source_and_copy_identical": true
+    }
+  ],
+  "final_adaptation_execution": {
+    "original_script_file": "unavailable: no such file was created at execution time",
+    "execution_form": "PowerShell here-string piped to .venv/Scripts/python.exe -",
+    "stdin_original_bytes": "unknown: not archived at execution time and no byte-preserving stdin capture recovered",
+    "original_stdout_log": "unknown: final adaptation stdout was returned by the tool, not saved to a local file",
+    "code_transcript_available_in_conversation": true,
+    "claim": "The final script bytes cannot be certified or provided as an original artifact. No reconstructed script is presented as an original."
+  },
+  "v1_invocation": {
+    "form": "Git bash timeout wrapper",
+    "argv": [
+      "C:/Program Files/Git/bin/bash.exe",
+      "code/scripts/run_with_timeout.sh",
+      "120",
+      ".venv/Scripts/python.exe",
+      "scratch/historical_cec_objects_followup_1018.py"
+    ],
+    "stdout_stderr_redirect": "scratch/historical_cec_followup_run_1018.log",
+    "original_retained_log": "original_audit_run_v1.log"
+  },
+  "remaining_gap": "Original stdin bytes and local invocation/stdout log for the final prep-top-equiv adaptation are unrecovered; full original final-script reproducibility remains unknown."
+}

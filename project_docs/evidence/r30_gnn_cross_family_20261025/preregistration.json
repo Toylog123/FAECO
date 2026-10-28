@@ -1,0 +1,70 @@
+{
+  "round": 32,
+  "date": "2026-10-25",
+  "written_before": "any round-32 run (the ISCAS89 replication, the ITC-99 control re-run and the nested selection)",
+  "title": "GNN 裁决的加强：跨族复现 + 嵌套超参选择 + 理想线网 oracle 上限",
+  "why": [
+    "LOG-20261025-29 正面关掉了 LOG-24 自陈的边界（标量摘要 != GNN 编码器），但它自己留下两个未决：(1) 超参事先固定、未做嵌套选择，因此『更重的调参下 GNN 仍无空间』尚未被证明；(2) 只在 ITC-99 做过，ISCAS89 的 339 张图已就绪但未跑。",
+    "本轮要把这两个未决都变成可判决的，并补一个此前从未测过的对照：理想线网 oracle（即『任何网表派生信号所能携带的候选级信息上限』）。"
+  ],
+  "what_is_being_tested": "LOG-29 的结论：GNN（numpy 手写 2 层消息传递）在候选级统计上与平凡基线 kind_only 不可区分，因此『图结构无候选级物理信号』不因『也许 GNN 行』而需要改述。",
+  "protocol": {
+    "outer": "leave-one-circuit-out，与项目工具 resolvable_positive_classifier 的协议相同",
+    "primary_readout": "mean within-pool AUC（候选生成器必须能在同一个池内排序；池化 AUC 只作次要读数，不作头条，因为池内候选共享迭代基线，全局 mean-pool 在池内近似常数）",
+    "primary_baseline": "kind_only（项目自己工具算出的平凡基线），不是自己重写的基线",
+    "nested_selection": {
+      "inner": "对每个外层留出的电路，只在训练电路上做留一（内层 LOCO），内层指标与头条读数相同（mean within-pool AUC）",
+      "leakage_rule": "外层测试电路在任何情况下都不得进入内层选择；这一条由构造保证，并由空标签对照在同一协议下复核",
+      "tie_break": "内层分数相同则取配置表中靠前者（确定性）",
+      "grid": [
+        {"name": "pub", "readout": "mod", "propagation": true, "types": true, "epochs": 120, "wd": 0.001},
+        {"name": "reg", "readout": "mod", "propagation": true, "types": true, "epochs": 120, "wd": 0.01},
+        {"name": "noprop", "readout": "mod", "propagation": false, "types": true, "epochs": 120, "wd": 0.001},
+        {"name": "notypes", "readout": "mod", "propagation": true, "types": false, "epochs": 120, "wd": 0.001}
+      ],
+      "scope_limit": "epoch 数与隐藏维度 D_H 固定（120 / 16），本轮的『嵌套选择』覆盖 readout、传播、类型嵌入与权重衰减四个维度；D_H=32 与 epoch=240 未纳入（算力预算），这是本轮明确不覆盖的部分。"
+    },
+    "controls": [
+      "C2 空标签（池内置换）必须在同一协议下复核，读数必须落在随机附近",
+      "C4 随机初始化编码器 + ridge 探针必须在同一协议下复核",
+      "C1 数值梯度校验必须先过（反传错了，后面所有 AUC 都是假的）"
+    ]
+  },
+  "falsification": {
+    "H1_overturn": {
+      "statement": "若在任一族内存在某个 GNN 变体 V 同时满足下面四条，则『GNN 与平凡基线不可区分』这一结论必须降级为族特异的，论文表述必须收窄。",
+      "conditions": [
+        "V 的 mean within-pool AUC 严格高于同族 kind_only 的 mean within-pool AUC",
+        "V 与 kind_only 的逐池配对符号检验（项目工具的 paired_pool_test，双侧精确二项）p < 0.05",
+        "同一协议下的空标签对照 mean within-pool AUC < 0.53（空标签仍在随机附近，故该信号不是伪影）",
+        "同一协议下的随机初始化编码器探针 mean within-pool AUC < 0.53"
+      ],
+      "note": "逐池配对检验是显著性门；池自助 CI95 重叠与否不作为判决依据（LOG-31 已确立『判决必须带显著性门』）。"
+    },
+    "H0_confirm": {
+      "statement": "若两族内都没有任何变体同时满足上述四条，则 LOG-29 的负面结论在『嵌套选择 + 第二族』之后仍然成立，并可从『单族、固定超参』升级为『两族、嵌套选择』。",
+      "caveat": "结论仍然只对本族的候选级标签成立，不得外推为『神经网络不可行』或『GNN 普遍无用』；干净子集与电路数有限，功效有限。"
+    }
+  },
+  "new_comparison_ideal_oracle": {
+    "question": "候选级究竟还剩多少可学的空间？",
+    "method": "把**理想线网 Δ**（以及布局后 Δ）直接当作预测器去预测布线后标签，算它的 mean within-pool AUC。它是网表派生信号里 FAECO 手头最强的那个，因此给出『任何网表派生特征所能携带的候选级信息』的实测参照点。",
+    "interpretation": "若 oracle 的 within-pool AUC 也只在 kind_only 附近，则候选级信号的上限本身就低，负面结论就不是 GNN 的失败而是标签/信号的内在上限；若 oracle 明显更高，则确实存在 GNN 没抓住的空间，负面结论必须收窄。",
+    "status": "预注册，读法在跑之前写定：oracle 高于 kind_only 且显著 ⇒ 存在未抓住的空间；oracle 与 kind_only 持平 ⇒ 候选级上限本身就低。"
+  },
+  "must_not_do": [
+    "不得在看到结果后再改判据或改阈值",
+    "不得用『池化 AUC 更高』替代池内读数作头条（LOG-29 的设计点）",
+    "不得把探针级结果写成论文证据",
+    "不得扰动 D 正式矩阵、raw 3/8、四 partial 等 pending 门",
+    "不得修改 code/、不得提交、不得改论文"
+  ],
+  "boundary": [
+    "探针级、非论文证据",
+    "寄生来自 estimate_parasitics，非签核 RCX",
+    "布线后 WNS 量化到 0.01 ns；Δ 为边际量（LOG-27 口径）",
+    "ISCAS89 只有 8 个极小电路、325 行、34 池 → 功效有限，可证伪、不能确立",
+    "ITC-99 7 个电路、1117 行、47 池",
+    "理想线网 oracle 是网表派生信号的参照点，不是『可达上限』的严格上界"
+  ]
+}

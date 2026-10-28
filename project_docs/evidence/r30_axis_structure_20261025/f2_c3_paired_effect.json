@@ -1,0 +1,316 @@
+{
+  "question": "how large is the two-implementation averaging effect, measured with a PAIRED statistic instead of the pre-registered sign test on the net score?",
+  "key": "the sign test can only see the SIGN of the per-pool change, and the degeneracy structure forces the sign in 20 of the 42 cells -- so the family-level wash hides an effect that is present in the MEAN",
+  "quantum_ns": 0.01,
+  "n_comparisons": 288,
+  "n_pools": 48,
+  "circuits": [
+    "b01",
+    "b02",
+    "b03",
+    "b08",
+    "b09",
+    "b10",
+    "b13"
+  ],
+  "non_degenerate_circuits": [
+    "b01",
+    "b03"
+  ],
+  "groups": {
+    "full_family": {
+      "tag": "all comparisons (as published)",
+      "n_comparisons": 288,
+      "n_pools": 48,
+      "mean_regret_single_ns": 0.012569,
+      "mean_regret_averaged_ns": 0.011111,
+      "mean_paired_improvement_ns": 0.001458,
+      "mean_paired_improvement_in_quantum": 0.1458,
+      "sign_test": {
+        "averaging_better": 37,
+        "single_better": 34,
+        "ties": 217,
+        "exact_binomial_p": 0.8126
+      },
+      "wilcoxon": {
+        "n_nonzero": 71,
+        "W_plus": 1492.0,
+        "z": 1.2439,
+        "p_two_sided": 0.2135
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.000903,
+          0.004028
+        ],
+        "median": 0.001424,
+        "frac_above_zero": 0.8804
+      },
+      "pick_change_rate": 0.274306
+    },
+    "non_degenerate_circuits": {
+      "tag": "circuits where all three realisations differ: b01／b03",
+      "n_comparisons": 96,
+      "n_pools": 16,
+      "mean_regret_single_ns": 0.016042,
+      "mean_regret_averaged_ns": 0.01375,
+      "mean_paired_improvement_ns": 0.002292,
+      "mean_paired_improvement_in_quantum": 0.2292,
+      "sign_test": {
+        "averaging_better": 21,
+        "single_better": 18,
+        "ties": 57,
+        "exact_binomial_p": 0.7493
+      },
+      "wilcoxon": {
+        "n_nonzero": 39,
+        "W_plus": 461.0,
+        "z": 1.0253,
+        "p_two_sided": 0.3052
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.001563,
+          0.006875
+        ],
+        "median": 0.002187,
+        "frac_above_zero": 0.8552
+      },
+      "pick_change_rate": 0.46875
+    },
+    "degenerate_circuits": {
+      "tag": "circuits with at least one degenerate pair",
+      "n_comparisons": 192,
+      "n_pools": 32,
+      "mean_regret_single_ns": 0.010833,
+      "mean_regret_averaged_ns": 0.009792,
+      "mean_paired_improvement_ns": 0.001042,
+      "mean_paired_improvement_in_quantum": 0.1042,
+      "sign_test": {
+        "averaging_better": 16,
+        "single_better": 16,
+        "ties": 160,
+        "exact_binomial_p": 1.0
+      },
+      "wilcoxon": {
+        "n_nonzero": 32,
+        "W_plus": 306.0,
+        "z": 0.7891,
+        "p_two_sided": 0.4301
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.001875,
+          0.004167
+        ],
+        "median": 0.001042,
+        "frac_above_zero": 0.7642
+      },
+      "pick_change_rate": 0.177083
+    },
+    "label_truth_equals_single_picker": {
+      "tag": "truth_equals_single_picker",
+      "n_comparisons": 64,
+      "n_pools": 32,
+      "mean_regret_single_ns": 0.0,
+      "mean_regret_averaged_ns": 0.00625,
+      "mean_paired_improvement_ns": -0.00625,
+      "mean_paired_improvement_in_quantum": -0.625,
+      "sign_test": {
+        "averaging_better": 0,
+        "single_better": 16,
+        "ties": 48,
+        "exact_binomial_p": 3.0517578125e-05
+      },
+      "wilcoxon": {
+        "n_nonzero": 16,
+        "W_plus": 0,
+        "z": -3.5496,
+        "p_two_sided": 0.0004
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.01125,
+          -0.002188
+        ],
+        "median": -0.005938,
+        "frac_above_zero": 0.0
+      },
+      "pick_change_rate": 0.28125
+    },
+    "label_truth_equals_second_averaged": {
+      "tag": "truth_equals_second_averaged",
+      "n_comparisons": 64,
+      "n_pools": 32,
+      "mean_regret_single_ns": 0.015625,
+      "mean_regret_averaged_ns": 0.00625,
+      "mean_paired_improvement_ns": 0.009375,
+      "mean_paired_improvement_in_quantum": 0.9375,
+      "sign_test": {
+        "averaging_better": 16,
+        "single_better": 0,
+        "ties": 48,
+        "exact_binomial_p": 3.0517578125e-05
+      },
+      "wilcoxon": {
+        "n_nonzero": 16,
+        "W_plus": 136.0,
+        "z": 3.5304,
+        "p_two_sided": 0.0004
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          0.003437,
+          0.017188
+        ],
+        "median": 0.009063,
+        "frac_above_zero": 0.9998
+      },
+      "pick_change_rate": 0.25
+    },
+    "label_all_three_differ": {
+      "tag": "all_three_differ",
+      "n_comparisons": 160,
+      "n_pools": 48,
+      "mean_regret_single_ns": 0.016375,
+      "mean_regret_averaged_ns": 0.015,
+      "mean_paired_improvement_ns": 0.001375,
+      "mean_paired_improvement_in_quantum": 0.1375,
+      "sign_test": {
+        "averaging_better": 21,
+        "single_better": 18,
+        "ties": 121,
+        "exact_binomial_p": 0.7493
+      },
+      "wilcoxon": {
+        "n_nonzero": 39,
+        "W_plus": 461.0,
+        "z": 1.0253,
+        "p_two_sided": 0.3052
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.000938,
+          0.004167
+        ],
+        "median": 0.00125,
+        "frac_above_zero": 0.8426
+      },
+      "pick_change_rate": 0.28125
+    },
+    "hold_out_F0": {
+      "tag": "held-out realisation F0",
+      "n_comparisons": 96,
+      "n_pools": 48,
+      "mean_regret_single_ns": 0.011458,
+      "mean_regret_averaged_ns": 0.01,
+      "mean_paired_improvement_ns": 0.001458,
+      "mean_paired_improvement_in_quantum": 0.1458,
+      "sign_test": {
+        "averaging_better": 13,
+        "single_better": 12,
+        "ties": 71,
+        "exact_binomial_p": 1.0
+      },
+      "wilcoxon": {
+        "n_nonzero": 25,
+        "W_plus": 178.5,
+        "z": 0.4342,
+        "p_two_sided": 0.6641
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.002187,
+          0.005417
+        ],
+        "median": 0.001458,
+        "frac_above_zero": 0.7754
+      },
+      "pick_change_rate": 0.28125
+    },
+    "hold_out_F1": {
+      "tag": "held-out realisation F1",
+      "n_comparisons": 96,
+      "n_pools": 48,
+      "mean_regret_single_ns": 0.016563,
+      "mean_regret_averaged_ns": 0.015625,
+      "mean_paired_improvement_ns": 0.000938,
+      "mean_paired_improvement_in_quantum": 0.0938,
+      "sign_test": {
+        "averaging_better": 10,
+        "single_better": 8,
+        "ties": 78,
+        "exact_binomial_p": 0.8145
+      },
+      "wilcoxon": {
+        "n_nonzero": 18,
+        "W_plus": 111.0,
+        "z": 1.1378,
+        "p_two_sided": 0.2552
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.000521,
+          0.0025
+        ],
+        "median": 0.000938,
+        "frac_above_zero": 0.885
+      },
+      "pick_change_rate": 0.197917
+    },
+    "hold_out_F2": {
+      "tag": "held-out realisation F2",
+      "n_comparisons": 96,
+      "n_pools": 48,
+      "mean_regret_single_ns": 0.009688,
+      "mean_regret_averaged_ns": 0.007708,
+      "mean_paired_improvement_ns": 0.001979,
+      "mean_paired_improvement_in_quantum": 0.1979,
+      "sign_test": {
+        "averaging_better": 14,
+        "single_better": 14,
+        "ties": 68,
+        "exact_binomial_p": 1.0
+      },
+      "wilcoxon": {
+        "n_nonzero": 28,
+        "W_plus": 236.5,
+        "z": 0.7748,
+        "p_two_sided": 0.4385
+      },
+      "bootstrap_mean_ci": {
+        "n_resamples": 5000,
+        "seed": 20261025,
+        "ci95": [
+          -0.00125,
+          0.005625
+        ],
+        "median": 0.001979,
+        "frac_above_zero": 0.882
+      },
+      "pick_change_rate": 0.34375
+    }
+  },
+  "interpretation_rules": {
+    "positive_mean_paired_improvement": "averaging reduced the regret",
+    "the_effect_must_be_read_in_quanta": "the post-route WNS is quantised to 0.01 ns, so an improvement below one quantum cannot change a discrete decision \"which candidate to pick\"",
+    "bootstrap_unit": "the POOL (the unit of independence); comparisons inside a pool are not independent"
+  },
+  "boundary": "PROBE level, NOT paper evidence.  The three realisation differences are algebraically dependent (d_F0F2 = d_F0F1 + d_F1F2). The non-degenerate subset has only 2 circuits, so any verdict there has very low power.  The Wilcoxon statistic is a normal approximation with a tie correction, not an exact test."
+}

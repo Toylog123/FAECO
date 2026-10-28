@@ -1,0 +1,132 @@
+==============================================================================
+ROUND 34 -- BASELINE (original tools) vs PATCHED (corrected tools)
+==============================================================================
+
+STEP 1 -- rebuild with the ORIGINAL tools
+    itc99: build_dataset ok
+    itc99: three_point_curve ok
+    itc99: build_training_table ok
+    iscas89: build_dataset ok
+    iscas89: three_point_curve ok
+    iscas89: build_training_table ok
+
+STEP 2 -- rebuild with the PATCHED tools
+    itc99: build_dataset ok
+    itc99: three_point_curve ok
+    itc99: build_training_table ok
+    iscas89: build_dataset ok
+    iscas89: three_point_curve ok
+    iscas89: build_training_table ok
+
+VERIFY -- the live tools are the patched ones:
+   build_dataset_itc99.py             patched copy == live tool : True
+   three_point_curve_itc99.py         patched copy == live tool : True
+   build_dataset.py                   patched copy == live tool : True
+   three_point_curve.py               patched copy == live tool : True
+
+==============================================================================
+DIFF -- baseline vs patched
+==============================================================================
+
+### itc99
+
+  A) physical_dataset.jsonl   baseline 2530 rows / patched 2530 rows
+     keys only in baseline / only in patched : 0 / 0
+     changed fields: {'ideal_label_status': 1207, 'ideal_wns_placeholder': 76}
+     newly present fields: ['ideal_label_status', 'ideal_wns_placeholder']
+     IDEAL-VALUE conflicts (must be 0) : 0
+     ideal_label_status distribution (patched): {'measured': 2322, 'not_measured_pre_sta': 208}
+     not-measured rows whose placeholder == its own iteration base: 0
+     not-measured rows whose placeholder differs            : 152
+  B) three_point_curve.json  candidates baseline 1117 / patched 1193
+     only in baseline / only in patched : 0 / 76
+     shared candidates with a changed field: {'ideal_label_status': 1117}
+     stages_marginal CHANGED
+        placed_to_routed: {"baseline": {"n": 1161, "spearman": 0.8244, "slope_routed_on_placed": 1.0068, "mean_placed": -0.043557, "mean_routed": -0.036296}, "patched": {"n": 1237, "spearman": 0.8169, "slope_routed_on_placed": 1.0061, "mean_placed": -0.042555, "mean_routed": -0.035457}}
+     stages_cumulative CHANGED
+        placed_to_routed: {"baseline": {"n": 1161, "spearman": 0.95, "slope_routed_on_placed": 1.0597, "mean_placed": 0.027054, "mean_routed": 0.04304}, "patched": {"n": 1237, "spearman": 0.9482, "slope_routed_on_placed": 1.0577, "mean_placed": 0.027195, "mean_routed": 0.042749}}
+     coverage CHANGED
+        labelled_candidates_total: {"baseline": 1161, "patched": 1237}
+        with_placed_marginal: {"baseline": 1161, "patched": 1237}
+        with_routed_marginal: {"baseline": 1161, "patched": 1237}
+  C) drop census (NEW): {"n_candidates": 1237, "dropped": {"other_batch": 1265, "post_failed": 0, "missing_routed_label": 28}, "n_without_an_ideal_measurement": 76, "note": "a candidate whose ideal stage was never measured (it failed a pre-STA hard gate) still carries real placed and routed measurements, so it stays in the curve; the stage statistics are computed on the subset that carries the stage"}
+  D) training_table.jsonl   baseline 1207 rows / patched 1207 rows
+     keys only in baseline / only in patched : 0 / 0
+     changed fields: {'placed_delta_wns': 76, 'placed_cumulative_wns': 76, 'placed_verdict_candlevel_pooled': 76}
+     VALUE changes on the measured stages (must be 0) : 152
+  E) training_table_summary.json : differing top-level keys = ['n_with_placed', 'verdict_counts']
+        n_with_placed: 1117 -> 1193
+        verdict_counts: (structure differs)
+  E) dataset_summary.json : differing top-level keys = ['ideal_label_coverage', 'ideal_label_coverage_note']
+        ideal_label_coverage: (structure differs)
+        ideal_label_coverage_note: None -> "the ideal-netlist stage of a candidate is only a MEASUREMENT when the ECO loop produced an acceptance decision for it.  A candidate that failed a pre-STA hard gate (equivalence / boundary) never reached the ideal netlist STA: the ledger carries no acceptance_evidence for it and its `wns` field is the ITERATION BASE's value (exactly equal in 310/310 ITC-99 and 25/25 ISCAS89 trials) with no STA provenance, no slack_status and no min_slack, while every measured trial carries all of them.  Such a candidate therefore has NO ideal-stage measurement; its label stays empty and `ideal_label_status` records why.  Reading the placeholder as a zero delta would assert a measurement the ledger never made."
+
+### iscas89
+
+  A) physical_dataset.jsonl   baseline 439 rows / patched 439 rows
+     keys only in baseline / only in patched : 0 / 0
+     changed fields: {'ideal_label_status': 346}
+     newly present fields: ['ideal_label_status', 'ideal_wns_placeholder']
+     IDEAL-VALUE conflicts (must be 0) : 0
+     ideal_label_status distribution (patched): {'not_measured_pre_sta': 27, 'measured': 412}
+     not-measured rows whose placeholder == its own iteration base: 0
+     not-measured rows whose placeholder differs            : 0
+  B) three_point_curve.json  candidates baseline 325 / patched 325
+     only in baseline / only in patched : 0 / 0
+     shared candidates with a changed field: {'ideal_label_status': 325}
+  C) drop census (NEW): {"n_candidates": 325, "dropped": {"other_batch": 71, "post_failed": 29, "missing_routed_label": 14}, "n_without_an_ideal_measurement": 0, "note": "a candidate whose ideal stage was never measured (it failed a pre-STA hard gate) still carries real placed and routed measurements, so it stays in the curve; the stage statistics are computed on the subset that carries the stage"}
+  D) training_table.jsonl   baseline 339 rows / patched 339 rows
+     keys only in baseline / only in patched : 0 / 0
+     changed fields: {}
+     VALUE changes on the measured stages (must be 0) : 0
+  E) training_table_summary.json : differing top-level keys = []
+  E) dataset_v1_summary.json : differing top-level keys = ['ideal_label_coverage', 'ideal_label_coverage_note']
+        ideal_label_coverage: (structure differs)
+        ideal_label_coverage_note: None -> "the ideal-netlist stage of a candidate is only a MEASUREMENT when the ECO loop produced an acceptance decision for it.  A candidate that failed a pre-STA hard gate (equivalence / boundary) never reached the ideal netlist STA: the ledger carries no acceptance_evidence for it and its `wns` field is the ITERATION BASE's value (exactly equal in 310/310 ITC-99 and 25/25 ISCAS89 trials) with no STA provenance, no slack_status and no min_slack, while every measured trial carries all of them.  Such a candidate therefore has NO ideal-stage measurement; its label stays empty and `ideal_label_status` records why.  Reading the placeholder as a zero delta would assert a measurement the ledger never made."
+
+==============================================================================
+SUMMARY
+==============================================================================
+{
+  "itc99": {
+    "dataset_rows_baseline": 2530,
+    "dataset_rows_patched": 2530,
+    "dataset_changed_fields": {
+      "ideal_label_status": 1207,
+      "ideal_wns_placeholder": 76
+    },
+    "ideal_value_conflicts": 0,
+    "curve_cands_baseline": 1117,
+    "curve_cands_patched": 1193,
+    "curve_new": 76,
+    "curve_shared_changed_fields": {
+      "ideal_label_status": 1117
+    },
+    "table_rows_baseline": 1207,
+    "table_rows_patched": 1207,
+    "table_changed_fields": {
+      "placed_delta_wns": 76,
+      "placed_cumulative_wns": 76,
+      "placed_verdict_candlevel_pooled": 76
+    },
+    "table_measured_value_changes": 152
+  },
+  "iscas89": {
+    "dataset_rows_baseline": 439,
+    "dataset_rows_patched": 439,
+    "dataset_changed_fields": {
+      "ideal_label_status": 346
+    },
+    "ideal_value_conflicts": 0,
+    "curve_cands_baseline": 325,
+    "curve_cands_patched": 325,
+    "curve_new": 0,
+    "curve_shared_changed_fields": {
+      "ideal_label_status": 325
+    },
+    "table_rows_baseline": 339,
+    "table_rows_patched": 339,
+    "table_changed_fields": {},
+    "table_measured_value_changes": 0
+  }
+}

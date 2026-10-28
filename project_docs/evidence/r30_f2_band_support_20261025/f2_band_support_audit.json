@@ -1,0 +1,856 @@
+{
+  "question": "are the three pairwise implementation bands measured on the SAME data?  the F2 realisation is degenerate against F0 or F1 on some circuits, and a circuit with an identically-zero difference still counts in the df while contributing no variance -- so the max/min = 1.476087 comparison may be confounded by DIFFERENT DILUTION, not by a real difference between the bands",
+  "family": "itc99",
+  "n_rows_loaded": 3737,
+  "row_loader": "impl_stability_probe.load_rows + load_f2_rows (the published probe's own loader, not a re-implementation)",
+  "band_recipe": "candidate_level_noise.compute_band() imported from the project; 2*pooled_sd, rounded to 6 decimals, exactly as impl_stability_probe reports it",
+  "fixtures": {
+    "exchangeable": 1.028124,
+    "correlated": 1.718223,
+    "exchangeable_threshold": 1.1
+  },
+  "full_family": {
+    "F0_vs_F1": {
+      "two_sigma_ns": 0.049753,
+      "pooled_sd_ns": 0.02487634309549658,
+      "ci95": [
+        0.023271,
+        0.026301
+      ],
+      "df": 1193,
+      "n_candidate_netlists": 1200,
+      "n_circuits_in_join": 7,
+      "circuits_carrying_variance": [
+        "b01",
+        "b02",
+        "b03",
+        "b08",
+        "b09",
+        "b10",
+        "b13"
+      ],
+      "circuits_with_identically_zero_difference": [],
+      "per_circuit_sd": {
+        "b01": 0.017113793887758917,
+        "b02": 0.014460964589381505,
+        "b03": 0.03602420396374542,
+        "b08": 0.02392435167720545,
+        "b09": 0.05107680538992283,
+        "b10": 0.025475269383095345,
+        "b13": 0.018786294010551156
+      },
+      "per_circuit_n": {
+        "b01": 570,
+        "b02": 54,
+        "b03": 70,
+        "b08": 126,
+        "b09": 91,
+        "b10": 215,
+        "b13": 74
+      },
+      "per_circuit_degeneracy": {
+        "b01": {
+          "n_pairs": 571,
+          "n_zero": 106,
+          "n_nonzero": 465,
+          "max_abs_diff": 0.06
+        },
+        "b02": {
+          "n_pairs": 55,
+          "n_zero": 15,
+          "n_nonzero": 40,
+          "max_abs_diff": 0.04
+        },
+        "b03": {
+          "n_pairs": 71,
+          "n_zero": 6,
+          "n_nonzero": 65,
+          "max_abs_diff": 0.11
+        },
+        "b08": {
+          "n_pairs": 127,
+          "n_zero": 11,
+          "n_nonzero": 116,
+          "max_abs_diff": 0.1
+        },
+        "b09": {
+          "n_pairs": 92,
+          "n_zero": 11,
+          "n_nonzero": 81,
+          "max_abs_diff": 0.17
+        },
+        "b10": {
+          "n_pairs": 216,
+          "n_zero": 32,
+          "n_nonzero": 184,
+          "max_abs_diff": 0.1
+        },
+        "b13": {
+          "n_pairs": 75,
+          "n_zero": 19,
+          "n_nonzero": 56,
+          "max_abs_diff": 0.05
+        }
+      }
+    },
+    "F0_vs_F2": {
+      "two_sigma_ns": 0.033706,
+      "pooled_sd_ns": 0.016852803580209325,
+      "ci95": [
+        0.015764,
+        0.017855
+      ],
+      "df": 1193,
+      "n_candidate_netlists": 1200,
+      "n_circuits_in_join": 7,
+      "circuits_carrying_variance": [
+        "b01",
+        "b03",
+        "b10"
+      ],
+      "circuits_with_identically_zero_difference": [
+        "b02",
+        "b08",
+        "b09",
+        "b13"
+      ],
+      "per_circuit_sd": {
+        "b01": 0.0162629644652024,
+        "b02": 0.0,
+        "b03": 0.026772564059787087,
+        "b08": 0.0,
+        "b09": 0.0,
+        "b10": 0.025475269383095345,
+        "b13": 0.0
+      },
+      "per_circuit_n": {
+        "b01": 570,
+        "b02": 54,
+        "b03": 70,
+        "b08": 126,
+        "b09": 91,
+        "b10": 215,
+        "b13": 74
+      },
+      "per_circuit_degeneracy": {
+        "b01": {
+          "n_pairs": 571,
+          "n_zero": 87,
+          "n_nonzero": 484,
+          "max_abs_diff": 0.07
+        },
+        "b02": {
+          "n_pairs": 55,
+          "n_zero": 55,
+          "n_nonzero": 0,
+          "max_abs_diff": 0.0
+        },
+        "b03": {
+          "n_pairs": 71,
+          "n_zero": 11,
+          "n_nonzero": 60,
+          "max_abs_diff": 0.06
+        },
+        "b08": {
+          "n_pairs": 127,
+          "n_zero": 127,
+          "n_nonzero": 0,
+          "max_abs_diff": 0.0
+        },
+        "b09": {
+          "n_pairs": 92,
+          "n_zero": 92,
+          "n_nonzero": 0,
+          "max_abs_diff": 0.0
+        },
+        "b10": {
+          "n_pairs": 216,
+          "n_zero": 32,
+          "n_nonzero": 184,
+          "max_abs_diff": 0.1
+        },
+        "b13": {
+          "n_pairs": 75,
+          "n_zero": 75,
+          "n_nonzero": 0,
+          "max_abs_diff": 0.0
+        }
+      }
+    },
+    "F1_vs_F2": {
+      "two_sigma_ns": 0.04554,
+      "pooled_sd_ns": 0.02277013800849704,
+      "ci95": [
+        0.021133,
+        0.024237
+      ],
+      "df": 1193,
+      "n_candidate_netlists": 1200,
+      "n_circuits_in_join": 7,
+      "circuits_carrying_variance": [
+        "b01",
+        "b02",
+        "b03",
+        "b08",
+        "b09",
+        "b13"
+      ],
+      "circuits_with_identically_zero_difference": [
+        "b10"
+      ],
+      "per_circuit_sd": {
+        "b01": 0.01897237401744761,
+        "b02": 0.014460964589381505,
+        "b03": 0.03197469237351554,
+        "b08": 0.02392435167720545,
+        "b09": 0.05107680538992283,
+        "b10": 0.0,
+        "b13": 0.018786294010551156
+      },
+      "per_circuit_n": {
+        "b01": 570,
+        "b02": 54,
+        "b03": 70,
+        "b08": 126,
+        "b09": 91,
+        "b10": 215,
+        "b13": 74
+      },
+      "per_circuit_degeneracy": {
+        "b01": {
+          "n_pairs": 571,
+          "n_zero": 103,
+          "n_nonzero": 468,
+          "max_abs_diff": 0.06
+        },
+        "b02": {
+          "n_pairs": 55,
+          "n_zero": 15,
+          "n_nonzero": 40,
+          "max_abs_diff": 0.04
+        },
+        "b03": {
+          "n_pairs": 71,
+          "n_zero": 5,
+          "n_nonzero": 66,
+          "max_abs_diff": 0.09
+        },
+        "b08": {
+          "n_pairs": 127,
+          "n_zero": 11,
+          "n_nonzero": 116,
+          "max_abs_diff": 0.1
+        },
+        "b09": {
+          "n_pairs": 92,
+          "n_zero": 11,
+          "n_nonzero": 81,
+          "max_abs_diff": 0.17
+        },
+        "b10": {
+          "n_pairs": 216,
+          "n_zero": 216,
+          "n_nonzero": 0,
+          "max_abs_diff": 0.0
+        },
+        "b13": {
+          "n_pairs": 75,
+          "n_zero": 19,
+          "n_nonzero": 56,
+          "max_abs_diff": 0.05
+        }
+      }
+    },
+    "bands": {
+      "F0_vs_F1": 0.049753,
+      "F0_vs_F2": 0.033706,
+      "F1_vs_F2": 0.04554
+    },
+    "max_over_min_ratio": 1.476087,
+    "verdict": "NOT EXCHANGEABLE (C2 holds): max/min = 1.476087 is far above the exchangeable fixture (1.028124) and in the range of the correlated fixture (1.718223)"
+  },
+  "closed_form_cross_check": {
+    "F0_vs_F1": {
+      "closed_form_pooled_sd": 0.02487634309549658,
+      "tool_pooled_sd": 0.02487634309549658,
+      "abs_diff": 0.0,
+      "df_closed_form": 1193,
+      "df_tool": 1193
+    },
+    "F0_vs_F2": {
+      "closed_form_pooled_sd": 0.016852803580209325,
+      "tool_pooled_sd": 0.016852803580209325,
+      "abs_diff": 0.0,
+      "df_closed_form": 1193,
+      "df_tool": 1193
+    },
+    "F1_vs_F2": {
+      "closed_form_pooled_sd": 0.02277013800849704,
+      "tool_pooled_sd": 0.02277013800849704,
+      "abs_diff": 0.0,
+      "df_closed_form": 1193,
+      "df_tool": 1193
+    }
+  },
+  "closed_form_cross_check_pass": true,
+  "control_pass": {
+    "published_artefact": "project_docs\\evidence\\r30_f2_third_impl_20261025\\impl_stability.json",
+    "published_bands": {
+      "F0_vs_F1": 0.049753,
+      "F0_vs_F2": 0.033706,
+      "F1_vs_F2": 0.04554
+    },
+    "published_max_over_min_ratio": 1.476087,
+    "recomputed_bands": {
+      "F0_vs_F1": 0.049753,
+      "F0_vs_F2": 0.033706,
+      "F1_vs_F2": 0.04554
+    },
+    "band_match": {
+      "F0_vs_F1": true,
+      "F0_vs_F2": true,
+      "F1_vs_F2": true
+    },
+    "ratio_match": true,
+    "published_ratio": 1.476087,
+    "recomputed_ratio": 1.476087,
+    "published_verdict_text": "NOT EXCHANGEABLE (C2 holds): max/min = 1.476087 is far above the exchangeable fixture (1.028124) and in the range of the deliberately-correlated fixture (1.718223) -> F2's noise level differs from F0/F1 and the implementation sensitivity is driven by the PHYSICAL AXIS (F2 shares the horizontal pin axis with F0 and the vertical one with F1)",
+    "recomputed_verdict_text": "NOT EXCHANGEABLE (C2 holds): max/min = 1.476087 is far above the exchangeable fixture (1.028124) and in the range of the correlated fixture (1.718223)",
+    "verdict_classification_matches": true,
+    "verdict_thresholds_used": {
+      "exchangeable_below": 1.1,
+      "correlated_at_or_above": 1.35,
+      "source": "scratch/interpret_f2_result.py (criteria fixed in LOG-20261024-25 before the batch was launched)"
+    }
+  },
+  "common_subset_circuits": [
+    "b01",
+    "b03"
+  ],
+  "common_subset": {
+    "F0_vs_F1": {
+      "two_sigma_ns": 0.040078,
+      "pooled_sd_ns": 0.020038916302442974,
+      "ci95": [
+        0.018697,
+        0.021177
+      ],
+      "df": 638,
+      "n_candidate_netlists": 640,
+      "per_circuit_sd": {
+        "b01": 0.017113793887758917,
+        "b03": 0.03602420396374542
+      },
+      "per_circuit_n": {
+        "b01": 570,
+        "b03": 70
+      }
+    },
+    "F0_vs_F2": {
+      "two_sigma_ns": 0.035406,
+      "pooled_sd_ns": 0.01770307813616503,
+      "ci95": [
+        0.016583,
+        0.018777
+      ],
+      "df": 638,
+      "n_candidate_netlists": 640,
+      "per_circuit_sd": {
+        "b01": 0.0162629644652024,
+        "b03": 0.026772564059787087
+      },
+      "per_circuit_n": {
+        "b01": 570,
+        "b03": 70
+      }
+    },
+    "F1_vs_F2": {
+      "two_sigma_ns": 0.04155,
+      "pooled_sd_ns": 0.020774818634739914,
+      "ci95": [
+        0.019388,
+        0.021936
+      ],
+      "df": 638,
+      "n_candidate_netlists": 640,
+      "per_circuit_sd": {
+        "b01": 0.01897237401744761,
+        "b03": 0.03197469237351554
+      },
+      "per_circuit_n": {
+        "b01": 570,
+        "b03": 70
+      }
+    },
+    "bands": {
+      "F0_vs_F1": 0.040078,
+      "F0_vs_F2": 0.035406,
+      "F1_vs_F2": 0.04155
+    },
+    "max_over_min_ratio": 1.17353,
+    "verdict": "INCONCLUSIVE: max/min = 1.173530 sits between the exchangeable fixture (1.028124) and the correlated fixture (1.718223)"
+  },
+  "each_pair_on_its_own_support": {
+    "F0_vs_F1": {
+      "two_sigma_ns": 0.049753,
+      "df": 1193,
+      "n_circuits": 7,
+      "circuits": [
+        "b01",
+        "b02",
+        "b03",
+        "b08",
+        "b09",
+        "b10",
+        "b13"
+      ]
+    },
+    "F0_vs_F2": {
+      "two_sigma_ns": 0.039884,
+      "df": 852,
+      "n_circuits": 3,
+      "circuits": [
+        "b01",
+        "b03",
+        "b10"
+      ]
+    },
+    "F1_vs_F2": {
+      "two_sigma_ns": 0.050272,
+      "df": 979,
+      "n_circuits": 6,
+      "circuits": [
+        "b01",
+        "b02",
+        "b03",
+        "b08",
+        "b09",
+        "b13"
+      ]
+    },
+    "bands": {
+      "F0_vs_F1": 0.049753,
+      "F0_vs_F2": 0.039884,
+      "F1_vs_F2": 0.050272
+    },
+    "max_over_min_ratio": 1.260455,
+    "verdict": "INCONCLUSIVE: max/min = 1.260455 sits between the exchangeable fixture (1.028124) and the correlated fixture (1.718223)"
+  },
+  "resampling_over_circuit_sets": {
+    "n_circuits": 7,
+    "unit": "circuit set",
+    "reading": "max/min over three differently-diluted bands is only a well-posed quantity when all three pairs carry variance on the same circuits; the resampling below measures how much it moves with the circuit set and how often it is undefined",
+    "full_set_ratio": 1.476095,
+    "full_set_undefined_reason": null,
+    "leave_one_circuit_out": {
+      "without_b01": {
+        "ratio": 1.742129,
+        "undefined_reason": null,
+        "circuits": [
+          "b02",
+          "b03",
+          "b08",
+          "b09",
+          "b10",
+          "b13"
+        ]
+      },
+      "without_b02": {
+        "ratio": 1.464973,
+        "undefined_reason": null,
+        "circuits": [
+          "b01",
+          "b03",
+          "b08",
+          "b09",
+          "b10",
+          "b13"
+        ]
+      },
+      "without_b03": {
+        "ratio": 1.497266,
+        "undefined_reason": null,
+        "circuits": [
+          "b01",
+          "b02",
+          "b08",
+          "b09",
+          "b10",
+          "b13"
+        ]
+      },
+      "without_b08": {
+        "ratio": 1.402747,
+        "undefined_reason": null,
+        "circuits": [
+          "b01",
+          "b02",
+          "b03",
+          "b09",
+          "b10",
+          "b13"
+        ]
+      },
+      "without_b09": {
+        "ratio": 1.218976,
+        "undefined_reason": null,
+        "circuits": [
+          "b01",
+          "b02",
+          "b03",
+          "b08",
+          "b10",
+          "b13"
+        ]
+      },
+      "without_b10": {
+        "ratio": 1.758842,
+        "undefined_reason": null,
+        "circuits": [
+          "b01",
+          "b02",
+          "b03",
+          "b08",
+          "b09",
+          "b13"
+        ]
+      },
+      "without_b13": {
+        "ratio": 1.450111,
+        "undefined_reason": null,
+        "circuits": [
+          "b01",
+          "b02",
+          "b03",
+          "b08",
+          "b09",
+          "b10"
+        ]
+      }
+    },
+    "loco_ratio_min": 1.218976,
+    "loco_ratio_max": 1.758842,
+    "loco_n_undefined": 0,
+    "bootstrap": {
+      "n_resamples": 2000,
+      "seed": 20261025,
+      "n_defined": 1954,
+      "n_undefined": 46,
+      "frac_undefined": 0.023,
+      "undefined_reasons": {
+        "no_variance_carrying_circuit:F0_vs_F2": 46
+      },
+      "ratio_ci95": [
+        1.145302,
+        3.273719
+      ],
+      "ratio_min": 1.066974,
+      "ratio_max": 4.673566,
+      "ratio_median": 1.508452,
+      "frac_below_exchangeable_threshold": 0.005118,
+      "frac_above_correlated_fixture": 0.301945
+    }
+  },
+  "per_circuit": {
+    "b01": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.034228,
+        "sd": 0.017113793887758917,
+        "n": 570,
+        "n_pairs_exactly_equal": 106,
+        "n_pairs_total": 571
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": 0.032526,
+        "sd": 0.0162629644652024,
+        "n": 570,
+        "n_pairs_exactly_equal": 87,
+        "n_pairs_total": 571
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": 0.037945,
+        "sd": 0.01897237401744761,
+        "n": 570,
+        "n_pairs_exactly_equal": 103,
+        "n_pairs_total": 571
+      },
+      "max_over_min_ratio": 1.166605
+    },
+    "b02": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.028922,
+        "sd": 0.014460964589381505,
+        "n": 54,
+        "n_pairs_exactly_equal": 15,
+        "n_pairs_total": 55
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": null,
+        "sd": 0.0,
+        "n": 54,
+        "n_pairs_exactly_equal": 55,
+        "n_pairs_total": 55
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": 0.028922,
+        "sd": 0.014460964589381505,
+        "n": 54,
+        "n_pairs_exactly_equal": 15,
+        "n_pairs_total": 55
+      },
+      "max_over_min_ratio": 1.0
+    },
+    "b03": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.072048,
+        "sd": 0.03602420396374542,
+        "n": 70,
+        "n_pairs_exactly_equal": 6,
+        "n_pairs_total": 71
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": 0.053545,
+        "sd": 0.026772564059787087,
+        "n": 70,
+        "n_pairs_exactly_equal": 11,
+        "n_pairs_total": 71
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": 0.063949,
+        "sd": 0.03197469237351554,
+        "n": 70,
+        "n_pairs_exactly_equal": 5,
+        "n_pairs_total": 71
+      },
+      "max_over_min_ratio": 1.34556
+    },
+    "b08": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.047849,
+        "sd": 0.02392435167720545,
+        "n": 126,
+        "n_pairs_exactly_equal": 11,
+        "n_pairs_total": 127
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": null,
+        "sd": 0.0,
+        "n": 126,
+        "n_pairs_exactly_equal": 127,
+        "n_pairs_total": 127
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": 0.047849,
+        "sd": 0.02392435167720545,
+        "n": 126,
+        "n_pairs_exactly_equal": 11,
+        "n_pairs_total": 127
+      },
+      "max_over_min_ratio": 1.0
+    },
+    "b09": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.102154,
+        "sd": 0.05107680538992283,
+        "n": 91,
+        "n_pairs_exactly_equal": 11,
+        "n_pairs_total": 92
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": null,
+        "sd": 0.0,
+        "n": 91,
+        "n_pairs_exactly_equal": 92,
+        "n_pairs_total": 92
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": 0.102154,
+        "sd": 0.05107680538992283,
+        "n": 91,
+        "n_pairs_exactly_equal": 11,
+        "n_pairs_total": 92
+      },
+      "max_over_min_ratio": 1.0
+    },
+    "b10": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.050951,
+        "sd": 0.025475269383095345,
+        "n": 215,
+        "n_pairs_exactly_equal": 32,
+        "n_pairs_total": 216
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": 0.050951,
+        "sd": 0.025475269383095345,
+        "n": 215,
+        "n_pairs_exactly_equal": 32,
+        "n_pairs_total": 216
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": null,
+        "sd": 0.0,
+        "n": 215,
+        "n_pairs_exactly_equal": 216,
+        "n_pairs_total": 216
+      },
+      "max_over_min_ratio": 1.0
+    },
+    "b13": {
+      "F0_vs_F1": {
+        "two_sigma_ns": 0.037573,
+        "sd": 0.018786294010551156,
+        "n": 74,
+        "n_pairs_exactly_equal": 19,
+        "n_pairs_total": 75
+      },
+      "F0_vs_F2": {
+        "two_sigma_ns": null,
+        "sd": 0.0,
+        "n": 74,
+        "n_pairs_exactly_equal": 75,
+        "n_pairs_total": 75
+      },
+      "F1_vs_F2": {
+        "two_sigma_ns": 0.037573,
+        "sd": 0.018786294010551156,
+        "n": 74,
+        "n_pairs_exactly_equal": 19,
+        "n_pairs_total": 75
+      },
+      "max_over_min_ratio": 1.0
+    }
+  },
+  "identity_fingerprint": {
+    "rule": "d_F0F2 = d_F0F1 + d_F1F2 per candidate; if one pair is identically zero on a circuit the other two pairs have equal SD there -- an identity, so a mismatch would mean the degeneracy is a bookkeeping artefact",
+    "per_circuit": {
+      "b02": {
+        "F0_vs_F2": {
+          "degenerate_pair": "F0_vs_F2",
+          "n_pairs": 55,
+          "sd_of_F0_vs_F1": 0.014460964589381505,
+          "sd_of_F1_vs_F2": 0.014460964589381505,
+          "sd_identical": true,
+          "expected": "F0 == F2 on this circuit -> the other two pairs must have the same within-circuit sd"
+        }
+      },
+      "b08": {
+        "F0_vs_F2": {
+          "degenerate_pair": "F0_vs_F2",
+          "n_pairs": 127,
+          "sd_of_F0_vs_F1": 0.02392435167720545,
+          "sd_of_F1_vs_F2": 0.02392435167720545,
+          "sd_identical": true,
+          "expected": "F0 == F2 on this circuit -> the other two pairs must have the same within-circuit sd"
+        }
+      },
+      "b09": {
+        "F0_vs_F2": {
+          "degenerate_pair": "F0_vs_F2",
+          "n_pairs": 92,
+          "sd_of_F0_vs_F1": 0.05107680538992283,
+          "sd_of_F1_vs_F2": 0.05107680538992283,
+          "sd_identical": true,
+          "expected": "F0 == F2 on this circuit -> the other two pairs must have the same within-circuit sd"
+        }
+      },
+      "b10": {
+        "F1_vs_F2": {
+          "degenerate_pair": "F1_vs_F2",
+          "n_pairs": 216,
+          "sd_of_F0_vs_F1": 0.025475269383095345,
+          "sd_of_F0_vs_F2": 0.025475269383095345,
+          "sd_identical": true,
+          "expected": "F0 == F2 on this circuit -> the other two pairs must have the same within-circuit sd"
+        }
+      },
+      "b13": {
+        "F0_vs_F2": {
+          "degenerate_pair": "F0_vs_F2",
+          "n_pairs": 75,
+          "sd_of_F0_vs_F1": 0.018786294010551156,
+          "sd_of_F1_vs_F2": 0.018786294010551156,
+          "sd_identical": true,
+          "expected": "F0 == F2 on this circuit -> the other two pairs must have the same within-circuit sd"
+        }
+      }
+    },
+    "all_hold": true
+  },
+  "confound_assessment": {
+    "are_the_three_pairs_degenerate_on_different_circuits": true,
+    "variance_carrying_supports": {
+      "F0_vs_F1": [
+        "b01",
+        "b02",
+        "b03",
+        "b08",
+        "b09",
+        "b10",
+        "b13"
+      ],
+      "F0_vs_F2": [
+        "b01",
+        "b03",
+        "b10"
+      ],
+      "F1_vs_F2": [
+        "b01",
+        "b02",
+        "b03",
+        "b08",
+        "b09",
+        "b13"
+      ]
+    },
+    "identically_zero_supports": {
+      "F0_vs_F1": [],
+      "F0_vs_F2": [
+        "b02",
+        "b08",
+        "b09",
+        "b13"
+      ],
+      "F1_vs_F2": [
+        "b10"
+      ]
+    },
+    "df_full_family": {
+      "F0_vs_F1": 1193,
+      "F0_vs_F2": 1193,
+      "F1_vs_F2": 1193
+    },
+    "df_common_subset": {
+      "F0_vs_F1": 638,
+      "F0_vs_F2": 638,
+      "F1_vs_F2": 638
+    },
+    "df_inflation_by_degenerate_circuits": {
+      "F0_vs_F1": 555,
+      "F0_vs_F2": 555,
+      "F1_vs_F2": 555
+    },
+    "mechanism": "compute_band() pools as sqrt( sum (n_c-1) sd_c^2 / sum (n_c-1) ); a circuit whose pairwise difference is identically zero has sd_c = 0, so it adds 0 to the numerator but (n_c-1) to the denominator -- it INFLATES df and DILUTES the pooled sd.  Each pair is degenerate on a different set of circuits, so the three bands are diluted by different amounts and their max/min is not a comparison of three estimates of one quantity",
+    "why_the_degeneracy_happens": "the floorplan is frozen (die_area / core_area pinned to the baseline), so the utilisation part of the realisation axis has no effect; only the pin layers differ -- F0 vs F2 on the vertical pin layer (met2 -> met4), F1 vs F2 on the horizontal pin layer (met5 -> met3) -- and on some circuits a pin layer change left every candidate's post-route WNS untouched",
+    "consequence_for_log_20261025_28": "the C1/C2 verdict in LOG-20261025-28 (max/min = 1.476087 -> C1 fails, C2 holds) was computed on three bands with DIFFERENT circuit supports, so it is confounded and must be restated.  The band itself is NOT affected: the family band definition stays F0 vs F1, and the published band value is unchanged."
+  },
+  "corrected_verdict": {
+    "SURVIVES": {
+      "C1_fails": "the three pairwise bands are NOT exchangeable, and this holds in every comparison: full family 1.476087, common non-degenerate subset 1.17353, each pair on its own support 1.260455, leave-one-circuit-out 1.218976..1.758842, and per circuit b01 1.166605 / b03 1.34556 -- all above the pre-registered exchangeable threshold 1.10",
+      "band_value": "the published family band (F0 vs F1, 0.049753 ns) is unchanged: the F0/F1 pair has NO degenerate circuit, so it is neither diluted nor support-confounded",
+      "published_verdicts": "LOG-20261025-28 established that no published verdict flips under the other two bands; that conclusion is untouched, because it is a threshold-sensitivity statement, not a between-band comparison"
+    },
+    "WITHDRAWN": {
+      "C2_holds": "C2 does NOT survive the unconfounded comparison: on the common non-degenerate subset the ratio is 1.17353 and on each pair's own variance-carrying support it is 1.260455 -- both inside the INCONCLUSIVE band [1.10, 1.35).  The full-family value 1.476087 crossed the C2 threshold only because the dilution pushed the F0/F2 band down and because b09's sd is outsized",
+      "physical_axis_mechanism": "the claim \"the implementation sensitivity is driven by the physical axis (F0/F1 differs on both axes -> largest band; F2 vs F0 differs on one axis -> smallest band)\" is not supported: on the common subset the ordering is F1/F2 0.04155 > F0/F1 0.040078 > F0/F2 0.035406, i.e. the ONE-axis pair F1/F2 carries the LARGEST band.  The full-family ordering was a dilution artefact.",
+      "C2_is_not_disproved": "the withdrawal means the data no longer SUPPORTS C2, not that C2 was disproved: the bootstrap over circuit sets has a CI95 that straddles the pre-registered C2 threshold of 1.35, so C2 is neither established nor refuted -- it is simply no longer a conclusion this family can carry",
+      "f0f1_is_the_largest": "the statement \"the published F0/F1 band is the largest of the three, i.e. the most conservative\" holds only under the full-family pooling; on the common subset F1/F2 (0.04155) exceeds F0/F1 (0.040078).  The safe statement is that F1/F2 and F0/F1 are EQUIVALENT at the 0.01 ns quantisation of the measured deltas, so every verdict computed with either one is identical."
+    },
+    "NEW_FINDING": {
+      "partial_degeneracy": "the third realisation is PARTIALLY degenerate: on b02/b08/b09/b13 the vertical pin-layer change (met2 -> met4) left the routed database (final.odb) BYTE-IDENTICAL to F0 for every candidate, and on b10 the horizontal pin-layer change (met5 -> met3) left it byte-identical to F1.  The runs really executed (the logs differ in the place_pins slot count and in the timing lines; the placement lines are identical), so this is a property of the designs and the realisation axis, not a skipped job.",
+      "single_axis_is_inert_here": "the family band is measured on the pair that differs on BOTH axes, so 0.049752 ns is an UPPER bound on the sensitivity to a single physical axis, not an unbiased estimate of it",
+      "identity_fingerprint_holds": "the per-circuit identity (if one pair is identically zero, the other two pairs must have the same within-circuit sd) holds on every degenerate circuit: True"
+    }
+  },
+  "boundary": "PROBE level, NOT paper evidence.  The post-route WNS is quantised to 0.01 ns, so \"identical\" means identical at that quantum.  The floorplan is frozen, so the utilisation part of the realisation axis has no effect and only the pin layers differ.  The three pairwise differences are algebraically dependent (d_F0F2 = d_F0F1 + d_F1F2 per candidate), so their correlations carry no independent information.  Parasitics come from estimate_parasitics, not from signoff RCX."
+}

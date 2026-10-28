@@ -1,0 +1,11 @@
+# v2冻结顺序缺陷的保真更正
+
+根实查发现原 `paired_spef_flat_v2/FROZEN_DERIVED_INPUTS.json`（2a9c6ef5…）登记的PROGRESS.jsonl与最终文件不符。原因已复核：执行器先建立inventory，后追加最终complete事件，属于冻结顺序实现错误。
+
+旧manifest与当前日志都完整保留，没有改写旧登记。PROGRESS原登记1239B/SHA `a1b039d86cb6240e30d54ad13e20160f814b5b2822346cc46eeb2c92d8f6fcce`；现1392B/SHA `91812adb7d9c305afe44b764f56efbef4e8ac5e450a81e652c4893d176f9cb05`。现文件前1239B的SHA精确等于原登记；剩余153B恰是一条原执行器追加的 `complete_pending_root_review` 事件，记录flatten2/SEC2/STA0。其余59个原inventory成员逐件SHA/size一致，flat/原→flat证明/模型/原流均未漂移。
+
+机器审计：`PAIRED_SPEF_FLAT_V2_POST_FREEZE_AUDIT.json`，SHA `a80e9b0937d09b4c3baa6cfd48037a969406d8c1243de1e84cbd5518f20a0541`。
+
+新最终全量manifest：`PAIRED_SPEF_FLAT_V2_FINAL_MANIFEST.json`，SHA `360ab10f848dc2bce275dac004ef13c315b5225c0dc91a560ed2b50aae27f4ae`。它明确登记旧inventory失效原因，绑定原manifest、差异审计、最终日志、两flat、两个SEC、脚本和全部阶段产物；生成前后逐件复核，之后不再向这些成员追加。HEAD/生产源/Lib/模型/原raw输入仍与设计pin相同。本次审计没有新增EDA过程。
+
+后续阶段使用独立目录，先写完完成/失败事件并关闭journal，再生成最终inventory；不再把活动journal当成已冻结文件，也不以覆盖旧manifest掩盖变化。

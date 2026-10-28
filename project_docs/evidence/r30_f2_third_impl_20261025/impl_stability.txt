@@ -1,0 +1,50 @@
+Three-implementation stability probe -- family itc99
+========================================================================
+realisations: F0=['I0'], F1=['I1'], F2=['I2']
+third realisation present: True   complete: True
+
+COVERAGE (ok labels vs the job table that promised them)
+------------------------------------------------------------------------
+batch   table                     promised  ok        cov     complete
+I0      jobs_itc99.tsv            1207      0         0.0     False
+I1      jobs_itc99_f1.tsv         1207      0         0.0     False
+I2      jobs_itc99_f2.tsv         1207      1207      1.0     True
+
+BAND BY PAIR (the family definition stays F0 vs F1)
+------------------------------------------------------------------------
+pair        scope     2sigma      df        pairs     circuits
+F0_vs_F1    family    0.049753    1193      1200      7  ci=[0.023271, 0.026301]
+F0_vs_F2    family    0.033706    1193      1200      7  ci=[0.015764, 0.017855]
+F1_vs_F2    family    0.04554     1193      1200      7  ci=[0.021133, 0.024237]
+
+BAND STABILITY: max/min ratio of the three 2sigma values = 1.476087
+  if the three pairwise spreads agree, the band is a well-defined property of the measurement; a large max/min ratio means the band DEPENDS ON WHICH PAIR of realisations was used, and every band-thresholded verdict inherits that arbitrariness
+
+THREE-WAY LEAVE-ONE-OUT (picker on 1 vs on the mean of 2, scored on the third)
+------------------------------------------------------------------------
+  hold out F0   : 48 pools
+    regret single-measurement picker : 0.01146 ns
+    regret averaged-label picker     : 0.01000 ns
+    averaged better 10 / ties 28 / single better 10   exact binomial p=1.0
+    the pick CHANGED in 23/48 pools (rate 0.479167)
+  hold out F1   : 48 pools
+    regret single-measurement picker : 0.01656 ns
+    regret averaged-label picker     : 0.01562 ns
+    averaged better 7 / ties 37 / single better 4   exact binomial p=0.5488
+    the pick CHANGED in 14/48 pools (rate 0.291667)
+  hold out F2   : 48 pools
+    regret single-measurement picker : 0.00969 ns
+    regret averaged-label picker     : 0.00771 ns
+    averaged better 10 / ties 27 / single better 11   exact binomial p=1.0
+    the pick CHANGED in 27/48 pools (rate 0.5625)
+
+  OVERALL: 144 pool-direction pairs -- averaged better 27 / ties 92 / single better 25   exact binomial p=0.8899
+
+CAVEATS
+------------------------------------------------------------------------
+  * PROBE on a partially labelled family -- NOT paper evidence.
+  * the family band DEFINITION stays F0 vs F1: the other pairs are diagnostics and do not change any verdict
+  * the three-way comparison is about the CHOICE, measured by the regret of the pick against the best candidate in the pool under the held-out labelling
+  * the deltas are quantised to 0.01 ns, so a regret of 0.0000 ns means "the two pickers landed on candidates that are indistinguishable at the quantum", not "the choice does not matter"
+  * a band measured on a subset of circuits is not a band for the family: the per-circuit spread differs several-fold across circuits, so a partially finished batch gives a biased band of unknown direction
+  * ROUNDING CONVENTION: this tool reports 2*pooled_sd of the UNROUNDED pooled sd, while candidate_level_noise.json stores the pooled sd already rounded to 6 decimals and the band is derived from that. The two can differ by 1e-6 ns (ISCAS89: 0.055543 here vs 0.055542 stored). That is a rounding artefact, not a disagreement about the measurement.

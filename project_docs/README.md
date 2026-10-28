@@ -1,39 +1,64 @@
-# 项目过程文档
+# project_docs 入口
 
-当前源修复门（2026-10-18）：当前实现及全v5已最终独立67da65a4…接受/FINAL_CLOSURE9928cd3b…绑定，1056pass156subtests208.27s无skip-warnings，174before=after=current/ZIP全符；当前S证据/inputbinding、OI047模型子集及OI048复现scope/status/window实现层限定闭合。HEAD/origin仍7231e02，正准备stage字节QA/source-evidence阶段commit+push；之后新clean pin登记D56先s27-s382共14pilot，未执行新D。OI048历史省top对象影响/P08、OI049timeout静态待证、OI046/b18/四态/B3-C-D科学及稿件门继续open。
+> **本目录只有 5 个现行文件，其余全为历史。** 历史不是删掉了，是归档了——见 `ARCHIVE_INDEX.md`。
 
-本目录存放项目过程与治理文档，而非源码。
+## 必读（按序，读完这三个就够）
 
-当前r21论文审稿与配图入口为 `../paper/zh/review_rounds/r21_20261014/editorial_decision.md`；计数与图件交叉表见 `evidence/R21_FIGURE_EVIDENCE.md`。当前稿为12页、7图14表的工作修订，历史v18基线保留。
+1. **`CANON.md`** —— 唯一现行口径：论文定版、8 条声称的强度裁决、冻结数字、待决项、已否决路线。
+2. **`PROJECT_MAP.md`** —— 目录职责、版本三层对应、数据资产归属、6 条结构性坑。
+3. **`LOGS.md`**（事实流水，只追加）/ **`OPEN_ISSUES.md`**（未决容器）。
 
-用户于2026-10-18明确“继续推进 做好记录”，当前授权为继续执行。唯一工作区 `D:/BaiduSyncdisk/01_Papers/03_FAECO`，当前main阶段提交为 `7231e0296da357df435414f75b0a41fe78265837`（941files），origin/main已实际push到7231e02（session60883 exit0）；C′原始source pin仍3ea0f75不回写。归档/图件审查已齐，当前进入S/SPEF修复计划先红后绿，生产可按明确文件归属改动，整体回归/独立review/源码新commit后才注册正式EDA；不恢复已结束的session9345。
+`ARCHIVE_INDEX.md` 记录所有归档去向，含「这份为什么不见了」。
 
-**C′v3全72已独立验收。** `project_docs/evidence/r22_cprime_v3_20261016/MATRIX_AUDIT_72.json`（SHA `a34da9c3e9854343b976f6eea31eb29c23314fd5149de2796567572288abc738`）实核8电路×9臂、all_matrix_verified/source_stable/completion_set_frozen_at_start均true，72个当前completion SHA匹配。8458候选评估记录、6858 candidate_ideal STA+72初始baseline=6930实际STA过程，other0，192保留提交；每终点独立SEC均非零proven/0unproven。physical/electrical/S均false，不能称物理STA。最终审计exit0/runtime46.546s；剩54原运行wrapper3728s/exit0。stage72五件script/log/invocation/receipt/原运行log保真归档；旧51/54/v1失败/v2仅注册原件不覆盖。
+## 一句话现状
 
-当前接受协议是严格WNS改善并满足TNS不退化等既有硬约束；--tns-aware改变平局选择，不关闭setup_tns预算。零收益与不利结果保留，不调参制造正结果。完整16个weighted/uniform配对已按所有重复同base轮独立核查，5454次交叉比较cut/pool/dispatch全同、16终点全文同（FIGURE_CPRIME_REVIEW269205b9…）；本矩阵未观察到独立权重收益，重复轮不是独立统计样本。新C′不替代旧B3/C/D。
+论文 **r28（2026-10-19）交付后一字未动**：主稿 **10 页**、补充 **9 页**、CJK **8554**、`\bibitem` **14**、**7 图 6 表**。
+`.tex` SHA256 前缀 `f0f4d5e0`、主稿 PDF `e71feb3d`（双副本一致）。
+扩面族 1393 候选 × 三档物理标签**尚未进论文**（三份 `.tex` 里 0 命中）。
+最大问题：判据门槛 `Δ_WNS > 0` **低于自己的判定带 0.049752 ns 约 5 倍**。
 
-完整v8历史收据为969pass/4skip/156subtests、170源码SHA稳定，OI040/041实现门closed；A6/B2/B17实际对象新证明已各自绑定原pin，B3主线51QA及C作者84/独立注册38QA、原OI042反例拒绝仅关闭工具实现门，尚未新clean pin正式登记同族EDA。四态支持仍open，实际三态/显式Z/switch须unsupported非pass。中英稿时钟元数据OI043已两遍编译/38p视觉/副本验收，仅设置说明门closed；科学回填和投稿声明仍待。
+## 论文入口
 
+- 主稿：`../paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
+- 补充：`../paper/zh/manuscript/FAECO_补充材料.tex`
+- PDF：`../paper/zh/build/`（两处副本 SHA 须一致）
+- 编译：`cd paper/zh/manuscript/`，**显式选目标** `lualatex -interaction=nonstopmode <n>.tex` ×2，再 `cp` 到 `paper/zh/`
+- 质量门：`paper/zh/scripts/checks/latex_quality_gate.py` —— Errors / Overfull / Underfull 全 0
+- **`.tex` 必须纯 CRLF**，并断言 `count(b"\r\r\n")==0`（r13 事故：`\r\r\n` ⇒ 83 Errors）
 
-当前接受协议为严格WNS改善并满足TNS不退化等既有硬约束；--tns-aware改变平局选择，不意味着关闭setup_tns预算。W0/s27首候选WNS -.27→-.26但TNS -.49→-.50，被setup_tns硬门拒。零提交/零WNS收益如实保留，不为正结果调参。最终审计分开理想候选、baseline/refresh/physical STA与提交。
+## 目录
 
-| 子目录 / 文件 | 角色 |
-|---------------|------|
-| `WORK_PROGRESS.md` | 工作进度（倒序，最新在上） |
-| `LOGS.md` | 总工作日志（按时间正序追加，便于回溯查询） |
-| `OPEN_ISSUES.md` | 未决问题追踪（未解决持续保留，必须告知用户） |
-| `RECORDS.md` | 记录体系总览（所有记录点 + 默认强制更新要求） |
-| `agent_handoff/` | 交接入口与状态（README → START_HERE → CURRENT_STATUS → TASK_BOARD → CURRENT_RUN_HANDOFF） |
-| `reports/weekly/` | 周期性总结（周报） |
-| `baselines/` | 具名基线：绑定论文、源码、测试与证据 |
-| `versioning.md` | 版本管理策略（代码 / 测试多版本、基线绑定） |
-| `ARCHIVE_POLICY.md` | 归档与版本迭代规范（各对象何时/如何归档） |
-| `FILE_ORGANIZATION.md` | 文件分类与命名规范（按实验/版本/类型分，防混块） |
-| `evidence/` | 不可变实验证据与结论交叉表（含 CROSSWALK_TEMPLATE 论文-证据交叉表模板） |
-| `design_specs/` | 项目立项评估（创新性评估）与专项设计规范 |
-| `review_history/` | 评审历史：论文审稿轮次（REVIEW_ROUND_TEMPLATE）+ 工程审查报告（代码/设计/实验，ENGINEERING_REVIEW_TEMPLATE） |
-| `archive/` | 退役版本与迁移历史 |
-| `migration/` | 迁移记录 |
-| `worktrees/` | 临时工作树注册表 |
+| 目录 / 文件 | 角色 | 状态 |
+|---|---|---|
+| `CANON.md` | 唯一口径 | **现行** |
+| `PROJECT_MAP.md` | 目录 / 版本 / 数据地图 | **现行** |
+| `ARCHIVE_INDEX.md` | 归档去向 | **现行** |
+| `LOGS.md` | 事实流水（只追加） | **现行** |
+| `OPEN_ISSUES.md` | 未决容器 | **现行** |
+| `WORK_PROGRESS.md` | 进度（倒序） | 活跃 |
+| `agent_handoff/` | 逐轮交接（41 份） | **只读最近一份** + 其 README |
+| `evidence/` | 论文数字唯一来源（426 MB） | **禁动** |
+| `reports/` | 实验报告 | 历史（CANON §5 引用其结论） |
+| `review_history/` | 审稿历史 | 历史 |
+| `design_specs/` | 设计规格 | 约束 `code/` |
+| `planning/` | 仅存 V2 三份 + README | 半活 |
+| `baselines/` | 具名基线 | 活跃（但 `active` 指向已过期的 v18） |
+| `archive/` | 退役 | 历史 |
+| `migration/`、`worktrees/` | 迁移记录、工作树 | 历史 |
 
-分工：技术文档（面向实现）见根 `docs/`；这里只放过程与治理内容。
+## 已停用（头部有横幅，打开即见）
+
+`mainline.md`、`roadmap.md`、`milestones.md`、`long_term_task_plan.md`、`risk_register.md`、`RECORDS.md`、`decision_log.md`、`future_task_backlog.md`、`ARCHIVE_POLICY.md`、`FILE_ORGANIZATION.md`
+
+## 历史去哪了
+
+| 内容 | 位置 |
+|---|---|
+| 逐轮事实 | `LOGS.md` |
+| 已完结轮次方案（13 份 + 7 月旧方案 2 份） | `archive/2026-10-28_superseded/planning_done/` |
+| 被取代的状态/存储报告（4 份） | `archive/2026-10-28_superseded/reports/` |
+| 互斥方案（2 份） | `archive/2026-10-28_superseded/plans/` |
+
+---
+
+分工：面向实现的技术文档在根 `docs/`；这里只放过程与治理。

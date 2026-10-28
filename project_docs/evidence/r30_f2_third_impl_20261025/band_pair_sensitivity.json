@@ -1,0 +1,451 @@
+{
+  "family": "itc99",
+  "bands_ns": {
+    "F0_vs_F1": 0.049753,
+    "F1_vs_F2": 0.04554,
+    "F0_vs_F2": 0.033706
+  },
+  "family_band_pair": "F0_vs_F1",
+  "note": "the family band DEFINITION stays F0 vs F1 -- the other pairs are diagnostics and do not change any published verdict; this tool only asks whether the published verdicts would SURVIVE the other two bands",
+  "n_rows": 1117,
+  "cells": {
+    "F0_vs_F1": {
+      "band_ns": 0.049753,
+      "labels": {
+        "resolvable": {
+          "n_positive": 434,
+          "positive_rate": 0.388541,
+          "powered": true
+        },
+        "gain": {
+          "n_positive": 48,
+          "positive_rate": 0.042972,
+          "powered": true
+        },
+        "harm": {
+          "n_positive": 386,
+          "positive_rate": 0.345568,
+          "powered": true
+        }
+      },
+      "classifier": {
+        "kind_only": {
+          "resolvable": {
+            "pooled_auc": 0.5382377151493479,
+            "mean_within_pool_auc": 0.555062288506449,
+            "mean_within_pool_auc_ci95": [
+              0.5036445248019263,
+              0.6092891013011328
+            ],
+            "n_pools_used": 39,
+            "n_positive": 434
+          },
+          "gain": {
+            "pooled_auc": 0.1688786248830683,
+            "mean_within_pool_auc": 0.6553355132196997,
+            "mean_within_pool_auc_ci95": [
+              0.5697827561040392,
+              0.7467611033625438
+            ],
+            "n_pools_used": 13,
+            "n_positive": 48
+          },
+          "harm": {
+            "pooled_auc": 0.5782535812252362,
+            "mean_within_pool_auc": 0.57206846105791,
+            "mean_within_pool_auc_ci95": [
+              0.5146578936380738,
+              0.6303715313309907
+            ],
+            "n_pools_used": 40,
+            "n_positive": 386
+          }
+        },
+        "structural": {
+          "resolvable": {
+            "pooled_auc": 0.4325066965339954,
+            "mean_within_pool_auc": 0.5401144876346554,
+            "mean_within_pool_auc_ci95": [
+              0.4938877523473447,
+              0.591735538552818
+            ],
+            "n_pools_used": 39,
+            "n_positive": 434
+          },
+          "gain": {
+            "pooled_auc": 0.6982479731836607,
+            "mean_within_pool_auc": 0.613866582258362,
+            "mean_within_pool_auc_ci95": [
+              0.4847860619515417,
+              0.7414427384209992
+            ],
+            "n_pools_used": 13,
+            "n_positive": 48
+          },
+          "harm": {
+            "pooled_auc": 0.4990714685681478,
+            "mean_within_pool_auc": 0.5478007180077737,
+            "mean_within_pool_auc_ci95": [
+              0.49790865906736054,
+              0.6015646453459699
+            ],
+            "n_pools_used": 40,
+            "n_positive": 386
+          }
+        }
+      },
+      "acceptance": {
+        "n_accepted": 44,
+        "n_rejected": 1149,
+        "accepted": {
+          "real_gain_rate": 0.25,
+          "real_harm_rate": 0.068182,
+          "inert_rate": 0.681818,
+          "real_gain": 11,
+          "real_harm": 3,
+          "inert": 30
+        },
+        "rejected": {
+          "real_gain_rate": 0.033072,
+          "real_harm_rate": 0.35074,
+          "inert_rate": 0.616188,
+          "real_gain": 38,
+          "real_harm": 403,
+          "inert": 708
+        },
+        "gain_enrichment": 7.5593,
+        "harm_ratio": 0.1944
+      }
+    },
+    "F1_vs_F2": {
+      "band_ns": 0.04554,
+      "labels": {
+        "resolvable": {
+          "n_positive": 434,
+          "positive_rate": 0.388541,
+          "powered": true
+        },
+        "gain": {
+          "n_positive": 48,
+          "positive_rate": 0.042972,
+          "powered": true
+        },
+        "harm": {
+          "n_positive": 386,
+          "positive_rate": 0.345568,
+          "powered": true
+        }
+      },
+      "classifier": {
+        "kind_only": {
+          "resolvable": {
+            "pooled_auc": 0.5382377151493479,
+            "mean_within_pool_auc": 0.555062288506449,
+            "mean_within_pool_auc_ci95": [
+              0.5036445248019263,
+              0.6092891013011328
+            ],
+            "n_pools_used": 39,
+            "n_positive": 434
+          },
+          "gain": {
+            "pooled_auc": 0.1688786248830683,
+            "mean_within_pool_auc": 0.6553355132196997,
+            "mean_within_pool_auc_ci95": [
+              0.5697827561040392,
+              0.7467611033625438
+            ],
+            "n_pools_used": 13,
+            "n_positive": 48
+          },
+          "harm": {
+            "pooled_auc": 0.5782535812252362,
+            "mean_within_pool_auc": 0.57206846105791,
+            "mean_within_pool_auc_ci95": [
+              0.5146578936380738,
+              0.6303715313309907
+            ],
+            "n_pools_used": 40,
+            "n_positive": 386
+          }
+        },
+        "structural": {
+          "resolvable": {
+            "pooled_auc": 0.4325066965339954,
+            "mean_within_pool_auc": 0.5401144876346554,
+            "mean_within_pool_auc_ci95": [
+              0.4938877523473447,
+              0.591735538552818
+            ],
+            "n_pools_used": 39,
+            "n_positive": 434
+          },
+          "gain": {
+            "pooled_auc": 0.6982479731836607,
+            "mean_within_pool_auc": 0.613866582258362,
+            "mean_within_pool_auc_ci95": [
+              0.4847860619515417,
+              0.7414427384209992
+            ],
+            "n_pools_used": 13,
+            "n_positive": 48
+          },
+          "harm": {
+            "pooled_auc": 0.4990714685681478,
+            "mean_within_pool_auc": 0.5478007180077737,
+            "mean_within_pool_auc_ci95": [
+              0.49790865906736054,
+              0.6015646453459699
+            ],
+            "n_pools_used": 40,
+            "n_positive": 386
+          }
+        }
+      },
+      "acceptance": {
+        "n_accepted": 44,
+        "n_rejected": 1149,
+        "accepted": {
+          "real_gain_rate": 0.25,
+          "real_harm_rate": 0.068182,
+          "inert_rate": 0.681818,
+          "real_gain": 11,
+          "real_harm": 3,
+          "inert": 30
+        },
+        "rejected": {
+          "real_gain_rate": 0.033072,
+          "real_harm_rate": 0.35074,
+          "inert_rate": 0.616188,
+          "real_gain": 38,
+          "real_harm": 403,
+          "inert": 708
+        },
+        "gain_enrichment": 7.5593,
+        "harm_ratio": 0.1944
+      }
+    },
+    "F0_vs_F2": {
+      "band_ns": 0.033706,
+      "labels": {
+        "resolvable": {
+          "n_positive": 500,
+          "positive_rate": 0.447628,
+          "powered": true
+        },
+        "gain": {
+          "n_positive": 65,
+          "positive_rate": 0.058192,
+          "powered": true
+        },
+        "harm": {
+          "n_positive": 435,
+          "positive_rate": 0.389436,
+          "powered": true
+        }
+      },
+      "classifier": {
+        "kind_only": {
+          "resolvable": {
+            "pooled_auc": 0.5347941653160454,
+            "mean_within_pool_auc": 0.5382228489459454,
+            "mean_within_pool_auc_ci95": [
+              0.49005203204095593,
+              0.5906154359508005
+            ],
+            "n_pools_used": 40,
+            "n_positive": 500
+          },
+          "gain": {
+            "pooled_auc": 0.29273910500146244,
+            "mean_within_pool_auc": 0.5673437077424146,
+            "mean_within_pool_auc_ci95": [
+              0.4681182702051263,
+              0.6657635865763052
+            ],
+            "n_pools_used": 15,
+            "n_positive": 65
+          },
+          "harm": {
+            "pooled_auc": 0.5713452657835305,
+            "mean_within_pool_auc": 0.5292383384428417,
+            "mean_within_pool_auc_ci95": [
+              0.47651346566931024,
+              0.5840187051015355
+            ],
+            "n_pools_used": 40,
+            "n_positive": 435
+          }
+        },
+        "structural": {
+          "resolvable": {
+            "pooled_auc": 0.42674068071312804,
+            "mean_within_pool_auc": 0.5162030872248986,
+            "mean_within_pool_auc_ci95": [
+              0.46372273228380884,
+              0.5673096791949466
+            ],
+            "n_pools_used": 40,
+            "n_positive": 500
+          },
+          "gain": {
+            "pooled_auc": 0.700241298625329,
+            "mean_within_pool_auc": 0.658938670603821,
+            "mean_within_pool_auc_ci95": [
+              0.5449371864830634,
+              0.7703007221117368
+            ],
+            "n_pools_used": 15,
+            "n_positive": 65
+          },
+          "harm": {
+            "pooled_auc": 0.48787204638150133,
+            "mean_within_pool_auc": 0.5237725783401979,
+            "mean_within_pool_auc_ci95": [
+              0.47394584474273704,
+              0.574052435713785
+            ],
+            "n_pools_used": 40,
+            "n_positive": 435
+          }
+        }
+      },
+      "acceptance": {
+        "n_accepted": 44,
+        "n_rejected": 1149,
+        "accepted": {
+          "real_gain_rate": 0.272727,
+          "real_harm_rate": 0.068182,
+          "inert_rate": 0.659091,
+          "real_gain": 12,
+          "real_harm": 3,
+          "inert": 29
+        },
+        "rejected": {
+          "real_gain_rate": 0.047868,
+          "real_harm_rate": 0.394256,
+          "inert_rate": 0.557876,
+          "real_gain": 55,
+          "real_harm": 453,
+          "inert": 641
+        },
+        "gain_enrichment": 5.6975,
+        "harm_ratio": 0.1729
+      }
+    }
+  },
+  "flip_table": [
+    {
+      "kind": "label_count",
+      "name": "resolvable_positives",
+      "reference": 434,
+      "other": 434,
+      "flips": false
+    },
+    {
+      "kind": "classifier",
+      "name": "kind_only_pooled_auc(resolvable)",
+      "reference": 0.5382377151493479,
+      "other": 0.5382377151493479,
+      "flips": false
+    },
+    {
+      "kind": "classifier",
+      "name": "structural_within_pool_auc(resolvable)",
+      "reference": 0.5401144876346554,
+      "other": 0.5401144876346554,
+      "flips": false
+    },
+    {
+      "kind": "classifier",
+      "name": "structural_pooled_auc(resolvable)",
+      "reference": 0.4325066965339954,
+      "other": 0.4325066965339954,
+      "flips": false
+    },
+    {
+      "kind": "acceptance",
+      "name": "accepted_real_gain_rate",
+      "reference": 0.25,
+      "other": 0.25,
+      "flips": false
+    },
+    {
+      "kind": "acceptance",
+      "name": "accepted_inert_rate",
+      "reference": 0.681818,
+      "other": 0.681818,
+      "flips": false
+    },
+    {
+      "kind": "acceptance",
+      "name": "gain_enrichment",
+      "reference": 7.5593,
+      "other": 7.5593,
+      "flips": false
+    },
+    {
+      "kind": "acceptance",
+      "name": "harm_ratio",
+      "reference": 0.1944,
+      "other": 0.1944,
+      "flips": false
+    },
+    {
+      "kind": "label_count",
+      "name": "resolvable_positives",
+      "reference": 434,
+      "other": 500,
+      "flips": true
+    },
+    {
+      "kind": "classifier",
+      "name": "kind_only_pooled_auc(resolvable)",
+      "reference": 0.5382377151493479,
+      "other": 0.5347941653160454,
+      "flips": false
+    },
+    {
+      "kind": "classifier",
+      "name": "structural_within_pool_auc(resolvable)",
+      "reference": 0.5401144876346554,
+      "other": 0.5162030872248986,
+      "flips": false
+    },
+    {
+      "kind": "classifier",
+      "name": "structural_pooled_auc(resolvable)",
+      "reference": 0.4325066965339954,
+      "other": 0.42674068071312804,
+      "flips": false
+    },
+    {
+      "kind": "acceptance",
+      "name": "accepted_real_gain_rate",
+      "reference": 0.25,
+      "other": 0.272727,
+      "flips": true
+    },
+    {
+      "kind": "acceptance",
+      "name": "accepted_inert_rate",
+      "reference": 0.681818,
+      "other": 0.659091,
+      "flips": true
+    },
+    {
+      "kind": "acceptance",
+      "name": "gain_enrichment",
+      "reference": 7.5593,
+      "other": 5.6975,
+      "flips": false
+    },
+    {
+      "kind": "acceptance",
+      "name": "harm_ratio",
+      "reference": 0.1944,
+      "other": 0.1729,
+      "flips": true
+    }
+  ]
+}

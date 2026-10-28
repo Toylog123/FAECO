@@ -1,0 +1,188 @@
+{
+  "family": "iscas89",
+  "label_mode": "resolvable",
+  "band_ns": 0.055542,
+  "n_rows": 325,
+  "n_positive": 79,
+  "n_circuits": 8,
+  "marginal_columns_used": {
+    "ideal": "ideal_delta_wns",
+    "placed": "placed_delta_wns"
+  },
+  "question": "how much candidate-level signal is there at all?  the ideal-netlist delta is FAECO's own strongest netlist-derived signal, so it is the reference point for \"is there room left for any learner?\"",
+  "baselines_from_project_tool": {
+    "kind_only": {
+      "pooled_auc": 0.42201811258618915,
+      "pooled_auc_pool_mean_only": 0.3829113924050633,
+      "mean_within_pool_auc": 0.5172982202629168,
+      "mean_within_pool_auc_ci95": [
+        0.47914729733433775,
+        0.5635479767951768
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.7471264367816092,
+        0.5,
+        0.5416666666666666,
+        0.5,
+        0.3787878787878788,
+        0.5,
+        0.5,
+        0.4017857142857143,
+        0.47478991596638653,
+        0.4474431818181818,
+        0.6,
+        0.5,
+        0.7406015037593985,
+        0.5,
+        0.5416666666666666,
+        0.5,
+        0.5,
+        0.4375
+      ]
+    },
+    "structural": {
+      "pooled_auc": 0.4367603169702583,
+      "pooled_auc_pool_mean_only": 0.44651126891015747,
+      "mean_within_pool_auc": 0.5006236532358823,
+      "mean_within_pool_auc_ci95": [
+        0.37953129944495073,
+        0.6235211727234753
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        0.5,
+        1.0,
+        0.5,
+        0.0,
+        0.0,
+        0.5,
+        0.5,
+        0.375,
+        0.4726890756302521,
+        0.32954545454545453,
+        0.8,
+        0.3854166666666667,
+        0.5488721804511278,
+        1.0,
+        0.5729166666666666,
+        0.75,
+        0.5,
+        0.2767857142857143
+      ]
+    }
+  },
+  "oracles": {
+    "oracle_ideal": {
+      "pooled_auc": 0.8501080580426057,
+      "pooled_auc_pool_mean_only": 0.7436708860759493,
+      "mean_within_pool_auc": 0.8522031320502683,
+      "mean_within_pool_auc_ci95": [
+        0.751011696046042,
+        0.9443660957205848
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        1.0,
+        1.0,
+        0.5625,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.8928571428571429,
+        0.9663865546218487,
+        0.8323863636363636,
+        1.0,
+        0.9375,
+        0.7819548872180451,
+        0.375,
+        0.5,
+        1.0,
+        1.0,
+        0.49107142857142855
+      ]
+    },
+    "oracle_placed": {
+      "pooled_auc": 0.9318719769476176,
+      "pooled_auc_pool_mean_only": 0.72360296387774,
+      "mean_within_pool_auc": 0.927565871843155,
+      "mean_within_pool_auc_ci95": [
+        0.8616697686101952,
+        0.984341783754637
+      ],
+      "n_pools_used": 18,
+      "per_pool_auc": [
+        1.0,
+        1.0,
+        0.6666666666666666,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.9107142857142857,
+        0.9852941176470589,
+        0.9360795454545454,
+        0.6,
+        0.9583333333333334,
+        0.9962406015037594,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.6428571428571429
+      ]
+    }
+  },
+  "paired_pool_tests": [
+    {
+      "name_a": "kind_only",
+      "name_b": "oracle_ideal",
+      "n_pools": 18,
+      "mean_diff": 0.3349049117873515,
+      "b_wins": 16,
+      "b_losses": 2,
+      "b_ties": 0,
+      "sign_test_p": 0.001312255859375
+    },
+    {
+      "name_a": "structural",
+      "name_b": "oracle_ideal",
+      "n_pools": 18,
+      "mean_diff": 0.35157947881438595,
+      "b_wins": 15,
+      "b_losses": 2,
+      "b_ties": 1,
+      "sign_test_p": 0.002349853515625
+    },
+    {
+      "name_a": "kind_only",
+      "name_b": "oracle_placed",
+      "n_pools": 18,
+      "mean_diff": 0.41026765158023837,
+      "b_wins": 17,
+      "b_losses": 0,
+      "b_ties": 1,
+      "sign_test_p": 1.52587890625e-05
+    },
+    {
+      "name_a": "structural",
+      "name_b": "oracle_placed",
+      "n_pools": 18,
+      "mean_diff": 0.4269422186072728,
+      "b_wins": 15,
+      "b_losses": 1,
+      "b_ties": 2,
+      "sign_test_p": 0.000518798828125
+    }
+  ],
+  "pool_vs_candidate_decomposition": {
+    "note": "pooled_auc_pool_mean_only is the AUC of a predictor that knows each pool's MEAN score and nothing about the individual candidates; the difference between it and the pooled AUC is the pool-level component (LOG-24)",
+    "kind_only": 0.3829113924050633,
+    "structural": 0.44651126891015747,
+    "oracles": {
+      "oracle_ideal": 0.7436708860759493,
+      "oracle_placed": 0.72360296387774
+    }
+  }
+}

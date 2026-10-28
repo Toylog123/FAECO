@@ -1,0 +1,7 @@
+read_liberty -lib "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+read_verilog "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/experiments/20261016_r22_cut_ablation_v3/W1/s382/final_sec/initial_raw.v"
+hierarchy -check -top s382
+write_json "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/baseline.pre_flat.json"
+flatten
+write_json "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/baseline.post_flat.json"
+write_verilog -noattr -norename -noexpr "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/r24_paper_revision_20261018/paired_spef_flat_v2/generated/baseline.flat.v"

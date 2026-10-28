@@ -1,0 +1,53 @@
+﻿{
+  "routed_cumulative_recheck": {
+    "n_comparable": 1207,
+    "n_matching": 1207,
+    "n_mismatching": 0,
+    "mismatch_samples": [],
+    "note": "the shipped routed_cumulative_wns equals post_wns(candidate) minus post_wns(BASE row of the same batch) -> it IS a circuit-baseline reading"
+  },
+  "routed_marginal_recheck": {
+    "n_comparable": 1193,
+    "n_matching": 1193,
+    "n_mismatching": 0,
+    "mismatch_samples": [],
+    "note": "the shipped routed_delta_wns equals post_wns(cand) - post_wns(iteration base)"
+  },
+  "ideal_ledger_vs_training_table": {
+    "n_circuits_checked": 19,
+    "n_circuits_all_matched": 2,
+    "mismatch_samples": [
+      {
+        "circuit": "b01",
+        "trial_index": null,
+        "setup_wns": -0.75
+      },
+      {
+        "circuit": "b02",
+        "trial_index": null,
+        "setup_wns": -0.28
+      },
+      {
+        "circuit": "b04",
+        "trial_index": null,
+        "setup_wns": -2.56
+      },
+      {
+        "circuit": "b05",
+        "trial_index": null,
+        "setup_wns": -3.76
+      },
+      {
+        "circuit": "b06",
+        "trial_index": null,
+        "setup_wns": -0.71
+      },
+      {
+        "circuit": "b07",
+        "trial_index": null,
+        "setup_wns": -2.07
+      }
+    ],
+    "note": "for every circuit the ledger setup_wns of each trial matches the training table ideal_wns of the row with the same trial_index"
+  }
+}

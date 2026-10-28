@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\code\src\rseco\yosys_abc.py", line 193, in check_yosys_abc_equivalence
+    completed = subprocess.run(
+                ^^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1124, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1128, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\佟亚龙\AppData\Local\Programs\Python\Python311\Lib\unittest\mock.py", line 1183, in _execute_mock_call
+    raise effect
+subprocess.TimeoutExpired: Command '['MOCK_NO_EDA']' timed out after 0.5 seconds
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\scratch\probe_oi049_timeout_bytes_20261018.py", line 30, in <module>
+    result=module.check_yosys_abc_equivalence(source,source,outputs=['y'],artifact_dir=case,top_module='top',timeout_s=.5)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\code\src\rseco\yosys_abc.py", line 215, in check_yosys_abc_equivalence
+    stdout_tail=_tail(exc.stdout or ""),
+                ^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\code\src\rseco\yosys_abc.py", line 902, in _tail
+    return "\n".join(text.splitlines()[-max_lines:])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: sequence item 0: expected str instance, bytes found

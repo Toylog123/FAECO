@@ -1,0 +1,34 @@
+{
+  "batch": "I2",
+  "job_table": "experiments\\20261024_physical_labels_itc99\\jobs_itc99_f2.tsv",
+  "n_jobs": 1207,
+  "n_records": 1207,
+  "n_parsed_ok": 1207,
+  "n_parse_failed": 0,
+  "n_no_log": 0,
+  "n_with_marginal_delta": 1193,
+  "marginal_coverage": 0.988401,
+  "digest_convention_check": {
+    "n_distinct_ledger_base_hashes": 47,
+    "matched_by_byte_digest": 41,
+    "matched_by_text_digest": 47,
+    "matched_by_either": 47,
+    "unmatched": [],
+    "n_unmatched": 0,
+    "convention_note": "the ledger uses the TEXT-mode digest (read_text -> universal newline translation -> encode); the byte digest is indexed as well so the lookup succeeds under either convention"
+  },
+  "candidate_self_check": {
+    "n_candidate_runs_ok": 1193,
+    "n_candidates_with_marginal_delta": 1193,
+    "candidate_marginal_coverage": 1.0,
+    "batch_complete": true,
+    "n_runs_ok": 1207,
+    "passed": true
+  },
+  "missing_reason": {
+    "no_base_hash_in_ledger": 14
+  },
+  "recipe": "post_marginal_delta_wns = WNS_F2(candidate) - WNS_F2(iteration base of the candidate), the iteration base being the ledger base_netlist_hash looked up INSIDE batch I2; the parsing and the ledger helpers are imported from build_dataset_itc99.py, not copied",
+  "digest_convention": "BOTH the byte digest and the text-mode digest (read_text -> universal newline translation -> encode) of every netlist are indexed, because the ledger stores base_netlist_hash under the text-mode convention; indexing only one of them would leave the marginal-delta column empty",
+  "dataset_registration": "F2 is NOT in build_dataset_itc99.py BATCHES: the main dataset and the band definition are untouched"
+}

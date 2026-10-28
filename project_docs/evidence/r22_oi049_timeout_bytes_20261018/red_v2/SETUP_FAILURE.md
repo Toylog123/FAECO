@@ -1,0 +1,3 @@
+The readiness handshake completed, but the second harness again assumed TimeoutExpired.stdout was nonempty bytes on this Windows runtime and failed before invoking the public CEC API. The actual type/value was not captured, so it remains unknown; it must not be claimed to have been bytes or an implementation defect. The complete redirected wrapper log is ../RED_V2_WRAPPER.log, and the exact script is retained here. No EDA or production change occurred.
+
+The next version removes this unnecessary OS behavior assumption. It performs explicit synthetic TimeoutExpired bytes/str/empty failure injection at the public API boundary. This tests the reported bytes handling defect only and will not claim a real EDA timeout reproduction.

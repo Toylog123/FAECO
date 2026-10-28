@@ -1,0 +1,28 @@
+{
+  "utc": "2026-10-18T13:31:40.7899706Z",
+  "scope": "r24 records only; no science/source/TeX/figure mutation",
+  "check_record": {
+    "argv": [
+      "C:/Program Files/Git/bin/bash.exe",
+      "code/scripts/run_with_timeout.sh",
+      "30",
+      "bash",
+      "code/scripts/check_record.sh"
+    ],
+    "returncode": 0,
+    "elapsed_s": 5.4624606,
+    "combined_text_log": "scratch/records_r24_final_checkpoint/check_record.log",
+    "log_sha256": "6037136d54f08877fe67c029da508cfd308c71121075cadaf4091f10e0cee796"
+  },
+  "semantic_diff": {
+    "command": "git -c core.whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol diff --ignore-space-at-eol --check -- owned tracked records paths",
+    "returncode": 0,
+    "elapsed_s": 0.216395,
+    "combined_text_log": "scratch/records_r24_final_checkpoint/semantic_diff.log",
+    "log_sha256": "b69cd1a53579842881ccd93d1c150454b4a1de8469ccb2f8900eb7e93bae685e"
+  },
+  "code_status": "",
+  "head_before": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "head_after": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+  "passed": true
+}

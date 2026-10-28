@@ -1,6 +1,13 @@
 # Benchmark 来源与许可审计
 
-更新时间：2026-07-20
+更新时间：2026-07-20（**2026-10-25 补表**：补入 ITC'99 / ISCAS89 / SKY130 HD / PicoRV32 四条——本文档初稿时**尚未获取**这四个来源，故原文未收录；下表第 1 节已补）
+
+> 补表依据（机器可读锁定记录，全部实测自盘上文件）：
+> `data/raw/benchmarks/source_manifests/itc99.json`（I99T @ `8a2c3b50`，**EUPL-1.2**，21 个电路，b16 不存在）、
+> `data/raw/benchmarks/source_manifests/iscas89.json`（ISPRAS hdl-benchmarks @ `10c3fb51`，**Apache-2.0**，17 个电路）、
+> `data/raw/benchmarks/source_manifests/sky130hd_openroad.json`（OpenROAD-flow-scripts @ `da8f092a`，**BSD-3-Clause**；skywater-pdk-libs-sky130_fd_sc_hd @ `ac7fb61f`，**Apache-2.0**）、
+> `data/raw/benchmarks/source_manifests/picorv32.json`（YosysHQ/picorv32 @ `a473fc8f`，**ISC**，3 个模块）。
+> 每份清单含上游 URL、commit、SPDX 许可与**逐文件 SHA-256**。
 
 本文档固定 FAECO 公开 benchmark 的来源、版本、许可和使用边界。它是工程侧来源审计，不替代正式法律意见。
 
@@ -8,6 +15,10 @@
 
 | 数据源 | 当前用途 | 论文主实验 | 可再分发状态 | 决策 |
 |---|---|---|---|---|
+| **ITC'99**（`cad-polito-it/I99T` @ `8a2c3b50`） | 论文 ITC-99 实验；物理标签族（b01–b13）的底层网表 | **是**（21 个电路，b16 经核实不存在） | **EUPL-1.2，允许再分发** | **已采用**（`source_manifests/itc99.json`） |
+| **ISCAS89**（`ispras/hdl-benchmarks` @ `10c3fb51`） | 论文 ISCAS89 实验；物理标签族的另一底层网表 | **是**（17 个电路） | **Apache-2.0，随附许可声明后可分发** | **已采用**（`source_manifests/iscas89.json`） |
+| **SKY130 HD**（OpenROAD-flow-scripts @ `da8f092a`；skywater-pdk-libs-sky130_fd_sc_hd @ `ac7fb61f`） | 映射用标准单元库与时序模型 | **是** | **BSD-3-Clause / Apache-2.0**，随附许可声明后可分发 | **已采用**（清单在盘上、未入库） |
+| **PicoRV32**（`YosysHQ/picorv32` @ `a473fc8f`） | OOD 实例（core / mul / regs） | **是**（3 个模块） | **ISC**，随附许可声明后可分发 | **已采用**（清单在盘上、未入库） |
 | EPFL Combinational Benchmark Suite `v2025.1` | Stage A 公开组合逻辑主数据源 | 待导入、构造 case 和 formal 验证后可用 | MIT，保留版权与许可声明后可分发 | 选为论文级主来源 |
 | 当前 `c432/c499/c880` 第三方 Genus Verilog | parser、flow 和 batch smoke | 否 | 上游仓库未声明 license | 仅保留为本地 smoke 数据 |
 | Berkeley ABC ISCAS 下载索引 | 可获得性线索 | 否 | 索引页未展示明确 license | 不据此升级当前文件许可状态 |

@@ -1,0 +1,38 @@
+{
+  "correction_id": "round33-prereg-correction-01",
+  "round": "33",
+  "written_before_the_corrected_run": true,
+  "affects": "scratch/round33_preregistration.json",
+  "what_is_wrong": "预注册的符号段写的是『gain = −Δ，因此 gain > 0 = 改善』，并且选择器取 Δ 最小者。这一条是**错的**：Δ = 候选 WNS − 基线 WNS，而 WNS 为负时**数值越大 = 违规越小 = 改善**，所以 Δ > 0 才是改善，选择器应取 Δ **最大**者。",
+  "how_it_was_found": "做决策级反事实时，把 ledger 的逐 trial 记录与训练表逐行对齐，发现循环接受的候选并不是池内 Δ 最小者，而是 Δ 最大的那个；追查 ledger 后发现被硬门拒掉的正是 Δ<0 的那条。",
+  "independent_evidence": {
+    "source": "experiments/20260826_iscas89_main/*/eval_trials.json 与 experiments/20260826_itc99_main/*/eval_trials.json 的 call_log",
+    "test": "逐决策比较 (accepted.wns − baseline_wns > 0) 与 ledger 自己记录的 improved 标志",
+    "iscas89": "27 个决策全部一致，0 个相反（Δ 恰为 0 的决策：0）",
+    "itc99": "74 个非零 Δ 的决策全部一致，0 个相反；另有 56 个决策 Δ 恰为 0（accepted_wns == baseline_wns 而 improved=True），零值不携带符号，不构成反例",
+    "corroboration": [
+      "ledger 的硬门 acceptance_budget_violation（setup_tns）恰好拒掉 Δ<0 的 trial",
+      "项目自有工具 counterfactual_acceptance.py 用 max(post_marginal_delta_wns) 取『最优』，与 Δ>0=改善一致",
+      "数据集字段 post_marginal_delta_wns = post_wns − post_iter_base_wns（ISCAS89 284/296 逐位相等）"
+    ]
+  },
+  "corrected_definition": {
+    "marginal_delta": "Δ = 候选 WNS − 该候选派生自的迭代基线 WNS（未改）",
+    "gain": "gain = +Δ，因此 gain > 0 = 改善（WNS 变得更不负 = 违规变小）",
+    "selector": "在给定资格集合内取 Δ **最大**者",
+    "outcome": "所选候选的布线后边际 Δ（未改口径，只是符号读法改对）"
+  },
+  "what_is_NOT_changed": [
+    "H1 的三条判据（配对符号检验 p < 0.05；挽回比例 ≥ 0.25；与 oracle 的重合率方向）",
+    "p 门 0.05 与挽回门槛 0.25 的数值",
+    "决策单位（circuit, iteration）、池的定义（三档标签齐备、同一实现）",
+    "停止条件（可评估决策数 < 10 只报描述性读数）",
+    "两族分别记录、不合并；不扰动 D 门 / OI-051 等 pending 项；不改 code/、不提交",
+    "预注册原文 scratch/round33_preregistration.json **保持原样不改**，作为『跑之前写了什么』的原始凭证；本件是它的更正附记"
+  ],
+  "additional_change_needed_by_the_same_investigation": {
+    "what": "选择器必须在**与循环相同的失效门资格集合**内挑选：ledger 里 acceptance_evidence.violations 非空的 trial 被硬门拒掉（ISCAS89 的 357 个 trial 中 201 个因 setup_tns 被拒），这些候选不能成为任何选择器的选项。",
+    "why": "否则比较的不是『理想判据 vs 布局后判据』，而是『忽略失效门的理想最优 vs 忽略失效门的布局后最优』——前者不是循环真实用的判据。",
+    "note": "这不改任何阈值，只把选择器的可选集合对齐到循环真实用的集合。"
+  }
+}

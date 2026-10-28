@@ -1,0 +1,627 @@
+{
+  "schema": "r22-A8-unified-exact-object-SEC-v1",
+  "registered_utc": "2026-10-18T02:31:19.440009+00:00",
+  "family": "A exact retained baseline-to-accepted pairs, fresh uniform SEC only",
+  "source_pin": {
+    "head": "f761ee1996a83fc4f0f3de0999b74d85a8237858",
+    "source_tree_clean": true,
+    "files": {
+      "code/src/rseco/__init__.py": "d136b9ef20001b833861499e798208399786284e218905a6b9bcd433a72bc1cd",
+      "code/src/rseco/abc_baseline.py": "bbd515272947569174317fcfcc6f036566c791d98e66d2644f97d403e6b48952",
+      "code/src/rseco/adaptive_selector.py": "3753f31e21eee4c20370d760a53e4294406b57c0891dce2f9414c52adaff037d",
+      "code/src/rseco/buffer_insertion.py": "409ffb30d856b9716d632e87d141b1b08e0559f6d02b5625031deb5ec3e60a5b",
+      "code/src/rseco/candidate_policy.py": "e84072c25ba2b98dcdb0f842443e472227809c9662a73d698d18d3732af4d718",
+      "code/src/rseco/case_loader.py": "5e24d496645796eeda05182acc1a5d4f71751cb37e8f23b30ccdde5070105891",
+      "code/src/rseco/cut.py": "44f6af84c6c6b7cf7943d3a02481addf2105d6017062ab63c8e2a2d8639dc755",
+      "code/src/rseco/electrical.py": "0dd0e9319ab1275a037a626223d84a23c99203fd96cf65883710c5e4cf8f07e4",
+      "code/src/rseco/equivalence.py": "89f20fc61fa2d5d1e98f87177fae68c89b9d29fc9ed8fae7a1059b4493ae678f",
+      "code/src/rseco/failures.py": "f9fccd0e07913666abc67a5482fad2bd020cd79bf35a7e3a22c87e505d3f5baa",
+      "code/src/rseco/feedback.py": "850f6b2f7ae103b0350019c4d368c97dc249278945a9fb4373928cb5b04f5537",
+      "code/src/rseco/flow.py": "2ebe04c3eb70d53090663b99b09ee2a8da5fa51607c6f53ba7a5417e8220054d",
+      "code/src/rseco/gate_sizing.py": "7d80c50f66e4fae9b0a8ef60eb5948e347b5a07647c02775a80575996f8d5a2b",
+      "code/src/rseco/graph.py": "cfd1b324537afc69cee24631e684e6b5f263a1ee8b283f41422eb02fc7b7a707",
+      "code/src/rseco/hold_repair.py": "ecd549526b375a1c5b1d6f5ee9a5222a0321ac769ec148ec3af6bfdc450b63de",
+      "code/src/rseco/logic_rewrite.py": "836e9025f5812d417d70471faddcc82f1f6a20976e650feeb76877c49eb36a54",
+      "code/src/rseco/metrics.py": "e8c0e6e822c67da1a18ddd4954970822e5d6237074243bdb4e4b8efd4de2a15e",
+      "code/src/rseco/netlist.py": "72c8e0d15e14b550974e2a30c7930b19b42a2e3ab082faed373798ebf55d32c4",
+      "code/src/rseco/netlist_audit.py": "419e5d902ad2eb23551db4b6c0ffa4d8037930566a57141684c565056d9c7262",
+      "code/src/rseco/netlist_io.py": "3895af9af3b448b38b38a13c483b467538518d7560f942dca11538ef743fbdca",
+      "code/src/rseco/opensta.py": "4a59e0f1ea1c1747001ab316e745efcd9c894ae08f85e88cb3cac2795d386d90",
+      "code/src/rseco/patch.py": "09579a3457ba20343eb0436b2731e7e6abbfa627d54bc8131fce24bc65175182",
+      "code/src/rseco/proxy_ranking.py": "0cb0d647787b92f5c30dd394422dca2d7007c5065f49b8034d494ffc9e24784d",
+      "code/src/rseco/ranking.py": "a556457cea1c3a0920ff7e1fa0beff1b6062f71eef4724088c4de06cd5125d21",
+      "code/src/rseco/real_wns.py": "572e0301bd25df85c63359bc7cd0ffa6b004493cf149035607efe3b31b3aaeac",
+      "code/src/rseco/refinement.py": "c10e230fa8759d96195887828b1d1b9e530f24df8679549f7289e5ad73d53b90",
+      "code/src/rseco/refinement_loop.py": "aa5b9a92c87a9eb502613daa49e808c512ab831f38ddd68f42ebd98597b024bd",
+      "code/src/rseco/replacement.py": "0f353c7d6cda7d42b76d991425c83b184c10a77b24a41ffdeaa41256b66b2684",
+      "code/src/rseco/sdc.py": "2b679ed93e2db85ce211d6161943d91db9d59b8a3b168cfa2f86d796f6f158cd",
+      "code/src/rseco/search_state.py": "6e2c84f29bbbdb14e54f9d136c4aacb184f535d60dd68502b7abd0cb0f9d2f64",
+      "code/src/rseco/spef.py": "5a9d6075141780993ba02354defc4f60703b2e3758502cd134719dd45ffba722",
+      "code/src/rseco/sta_ledger.py": "da08eb316be037ec46e914cbe39c58adf57a372f10e8ec9dfcc3bd70629eebb7",
+      "code/src/rseco/strategy_selector.py": "b15005f332534f806d3d277a35e7e08efb3fe5292c7e3a0de7b5985eea9da6a3",
+      "code/src/rseco/structure_resynthesis.py": "a6f02c8f77f584ccd9b50cd2383625fc9367406319950fde2c8e7af0ac3c1270",
+      "code/src/rseco/technology_mapping.py": "092b5030587e816eae470afa1c43970740809e75ef8d0424d388064c4f0f0ae8",
+      "code/src/rseco/toolchain.py": "ad6ac07d3710523313d701b1ad8231ea30f141c0fae6a256b209c10d270f833a",
+      "code/src/rseco/verilog_modules.py": "e8aa320b89fcb7a99f441ad5cd9c062c1e368b4b9d8095b0a0090164d07712f7",
+      "code/src/rseco/yosys_abc.py": "0ba8bb70b356df9323cc4578ee2e73b5d518698846e7c58910b9ec42ca539e85",
+      "code/src/rseco/yosys_json.py": "f975326f2394336f059014f90c3f22f1f5b5af618aec6f6221e52f17ca6e89e1",
+      "code/src/rseco/z3_formal.py": "50a56b4e63dc952f081d9165aa39fe0fb282426e9325c7ae98955a7c8b10d12c",
+      "code/scripts/run_outerloop_real_wns.py": "3d1c11bb9c6b1d061a960f879e009d55464d9c0b52a551bd6a64bf47adaabe0b",
+      "code/scripts/run_r22_cut_ablation.py": "b8b6d79d877466edb7bfdd502bdf8be35a5868dd3ffbb4a0fa8475f6755a84b5",
+      "code/scripts/run_sequential_timing_check.py": "154feb0949f1bfd866f926396d96851b5078eb5ec960187da1db4981e20b6eb6",
+      "code/scripts/run_with_timeout.sh": "6f22e8a0291afbe26b0f00fbc1ee410b4de8ae999995395b2e034aef2f1338f6",
+      "code/scripts/run_r22_d_revalidation.py": "268f637da72249e69d1b75ec7be0a14a38e2f1df6754dcf80b509ebb00a16ee5"
+    }
+  },
+  "proposal_sha256": "0e367085aff0e83524733895fccf8bb531d21b866309be3b0ca24f6cf968004d",
+  "runner_sha256": "098404a3f252936836a80b2cd605906efb590bb3acaf70b22df2f869120f38de",
+  "liberty": "data\\raw\\benchmarks\\raw\\openroad_flow_scripts_sky130hd\\da8f092a02a8e75658cc3100691aabff05f35629\\lib\\sky130_fd_sc_hd__tt_025C_1v80.lib",
+  "liberty_sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+  "cases": [
+    {
+      "circuit": "s27",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s27/s27/mapped.v",
+        "sha256": "b80c931d0ca423c26c6600f2ad442b0f9f3a36f696878eafeea195cda88cadeb",
+        "bytes": 1547
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s27/fixed/mapped.v",
+        "sha256": "b7d74dc321b08907d523f671d4cd10f63ac223cae605c7db95dc5812cb325976",
+        "bytes": 1547
+      },
+      "baseline_decoded_utf8_sha256": "3010c393dc085a30b359dbe09b5e15eefd9c814056a9fa4b0f09d44974ca1495",
+      "final_decoded_utf8_sha256": "a3d508bb183fe69504c127eeade94d20bbe28eaf11f73f97818bef7a83dc74ee",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s27"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a21boi_0",
+        "sky130_fd_sc_hd__a21boi_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor3b_1",
+        "sky130_fd_sc_hd__nor3b_2",
+        "sky130_fd_sc_hd__o21a_1",
+        "sky130_fd_sc_hd__o21ai_0"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "to_type": "_08_:sky130_fd_sc_hd__nor3b_2,_11_:sky130_fd_sc_hd__a21boi_1"
+        }
+      ],
+      "historical_proof_batch": "P2",
+      "historical_proven_unproven": [
+        11,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s27",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s382",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s382/s382/mapped.v",
+        "sha256": "608cf28c7da49b245ec5cb44207552cd112a638275741c3eab74c13be0a06221",
+        "bytes": 11037
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s382/fixed/mapped.v",
+        "sha256": "cdbb670f39933e94d5023e0a29cfab3d1bf1dac5cedf2e50ec704ec01dc8925f",
+        "bytes": 11037
+      },
+      "baseline_decoded_utf8_sha256": "53f8a1a92516bf5e84012d4a37a8fd6771194bcf4972ed5036c027e09e431e36",
+      "final_decoded_utf8_sha256": "024ceedd17637ed5b287feed7099d42724d2fb0dd0760f81f1e76a6b8f78d40e",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s382"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__a31oi_1",
+        "sky130_fd_sc_hd__and3_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand2b_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor2b_1",
+        "sky130_fd_sc_hd__nor3_1",
+        "sky130_fd_sc_hd__nor3b_1",
+        "sky130_fd_sc_hd__nor4_1",
+        "sky130_fd_sc_hd__nor4b_1",
+        "sky130_fd_sc_hd__o2111ai_1",
+        "sky130_fd_sc_hd__o211ai_1",
+        "sky130_fd_sc_hd__o21a_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o21ai_1",
+        "sky130_fd_sc_hd__o21ba_1",
+        "sky130_fd_sc_hd__o31a_1",
+        "sky130_fd_sc_hd__o31a_2",
+        "sky130_fd_sc_hd__o31ai_1",
+        "sky130_fd_sc_hd__or3_1",
+        "sky130_fd_sc_hd__or3b_1",
+        "sky130_fd_sc_hd__xnor2_1",
+        "sky130_fd_sc_hd__xor2_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "to_type": "_057_:sky130_fd_sc_hd__o31a_2,_059_:sky130_fd_sc_hd__o21ai_1"
+        }
+      ],
+      "historical_proof_batch": "P1",
+      "historical_proven_unproven": [
+        90,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s382",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s420",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s420/s420/mapped.v",
+        "sha256": "19e5679c4356a8aad2f956919501854a367c58620ef47c71606e0cc302fc7ed3",
+        "bytes": 9368
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s420/fixed/mapped.v",
+        "sha256": "c6471a72e9ddd5b7995c5519bdeca2fa6473418ce3789d60267a77e4033bc219",
+        "bytes": 9368
+      },
+      "baseline_decoded_utf8_sha256": "582b76f3772ce5f0eaa3befbcaf534bfa35b912b334f8bf7fcc7d6d2ec7f9c04",
+      "final_decoded_utf8_sha256": "69f5b780be99b84cf898a4b3c815eb03d10a4c6e1e5e324fdb265b7c2388e50d",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s420"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a2111oi_0",
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__a221oi_1",
+        "sky130_fd_sc_hd__a31oi_1",
+        "sky130_fd_sc_hd__and2_0",
+        "sky130_fd_sc_hd__and3b_1",
+        "sky130_fd_sc_hd__and4_1",
+        "sky130_fd_sc_hd__and4_2",
+        "sky130_fd_sc_hd__and4b_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand3_1",
+        "sky130_fd_sc_hd__nand4_1",
+        "sky130_fd_sc_hd__nand4_2",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor4_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o31ai_1",
+        "sky130_fd_sc_hd__o41ai_1",
+        "sky130_fd_sc_hd__xnor2_1",
+        "sky130_fd_sc_hd__xor2_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "to_type": "_051_:sky130_fd_sc_hd__and4_2,_056_:sky130_fd_sc_hd__nand4_2"
+        }
+      ],
+      "historical_proof_batch": "P1",
+      "historical_proven_unproven": [
+        79,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s420",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s641",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s641/s641/mapped.v",
+        "sha256": "3665ba3076114eff30e701dd57d8d0f5d296f7ebc677fbdf4fdcfbdd79f3855e",
+        "bytes": 16871
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s641/fixed/mapped.v",
+        "sha256": "b3a53ed8a2a6aec8764fadfd98cc89106b13fed599539816b53af7aed86958b1",
+        "bytes": 16871
+      },
+      "baseline_decoded_utf8_sha256": "9ec2fdc75f71818e2dbff73bbb3c2c61130584ffa14a61697c502efe76d813b0",
+      "final_decoded_utf8_sha256": "a5304106150e17d2710a3952c26db69d2790d7310e3fe969ab598012337910c8",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s641"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a2111oi_0",
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__a41oi_1",
+        "sky130_fd_sc_hd__and2_0",
+        "sky130_fd_sc_hd__and2_1",
+        "sky130_fd_sc_hd__and4_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand2b_1",
+        "sky130_fd_sc_hd__nand3_1",
+        "sky130_fd_sc_hd__nand4_1",
+        "sky130_fd_sc_hd__nand4bb_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor3_1",
+        "sky130_fd_sc_hd__nor4bb_1",
+        "sky130_fd_sc_hd__o2111ai_1",
+        "sky130_fd_sc_hd__o211a_1",
+        "sky130_fd_sc_hd__o211ai_1",
+        "sky130_fd_sc_hd__o21a_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o22a_1",
+        "sky130_fd_sc_hd__o31ai_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "_101_",
+          "kind": "G",
+          "to_type": "sky130_fd_sc_hd__and2_1"
+        }
+      ],
+      "historical_proof_batch": "P1",
+      "historical_proven_unproven": [
+        124,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s641",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s713",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s713/s713/mapped.v",
+        "sha256": "a17cf08d47e8d14861f69b96595e380690b471c3044002f22f9c4bb006afb6fd",
+        "bytes": 17271
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s713/fixed/mapped.v",
+        "sha256": "3c982ac08503110ad5d6c64ed76197da7d4c1fc6acc0cc032a8825d6db43a695",
+        "bytes": 16561
+      },
+      "baseline_decoded_utf8_sha256": "97eec25dec61f8bd794e06642e0239dc06ff8e5d4e1955af223bc29b55f6a704",
+      "final_decoded_utf8_sha256": "3c982ac08503110ad5d6c64ed76197da7d4c1fc6acc0cc032a8825d6db43a695",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s713"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a211o_1",
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__and2_0",
+        "sky130_fd_sc_hd__and2_1",
+        "sky130_fd_sc_hd__and4_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__conb_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand2b_1",
+        "sky130_fd_sc_hd__nand3_1",
+        "sky130_fd_sc_hd__nand3b_1",
+        "sky130_fd_sc_hd__nand4_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor3_1",
+        "sky130_fd_sc_hd__nor4_1",
+        "sky130_fd_sc_hd__nor4b_1",
+        "sky130_fd_sc_hd__nor4bb_1",
+        "sky130_fd_sc_hd__o2111ai_1",
+        "sky130_fd_sc_hd__o211a_1",
+        "sky130_fd_sc_hd__o211ai_1",
+        "sky130_fd_sc_hd__o21a_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o21bai_1",
+        "sky130_fd_sc_hd__o22a_1",
+        "sky130_fd_sc_hd__o31ai_1",
+        "sky130_fd_sc_hd__o32ai_1",
+        "sky130_fd_sc_hd__o41ai_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "_085_",
+          "kind": "G",
+          "to_type": "sky130_fd_sc_hd__and2_1"
+        }
+      ],
+      "historical_proof_batch": "P1",
+      "historical_proven_unproven": [
+        126,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s713",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s820",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s820/s820/mapped.v",
+        "sha256": "12a3bc4d0d9bcdd9071250654a9484b80716f94e1eff454e232e2ab7e76d49e8",
+        "bytes": 17529
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s820/fixed/mapped.v",
+        "sha256": "2d4217b27555d6142c77bf5d707764ce7e6685d0f160f2d8373ce433365f06a6",
+        "bytes": 17527
+      },
+      "baseline_decoded_utf8_sha256": "07aab864fbd92b67956b75b63d6852c55cc3620ee0ce4936e2f4785a7be9328c",
+      "final_decoded_utf8_sha256": "4abfd6241ba27b44d514debdf5b7821d2010bc7620218688c69685915841e1ab",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s820"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a2111oi_0",
+        "sky130_fd_sc_hd__a211o_1",
+        "sky130_fd_sc_hd__a21boi_0",
+        "sky130_fd_sc_hd__a21o_1",
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__a22o_1",
+        "sky130_fd_sc_hd__a22oi_1",
+        "sky130_fd_sc_hd__a311oi_1",
+        "sky130_fd_sc_hd__a31o_1",
+        "sky130_fd_sc_hd__a31oi_1",
+        "sky130_fd_sc_hd__a41o_1",
+        "sky130_fd_sc_hd__and2_0",
+        "sky130_fd_sc_hd__and3_1",
+        "sky130_fd_sc_hd__and3b_1",
+        "sky130_fd_sc_hd__and4_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand2b_1",
+        "sky130_fd_sc_hd__nand3_1",
+        "sky130_fd_sc_hd__nand3b_1",
+        "sky130_fd_sc_hd__nand4_1",
+        "sky130_fd_sc_hd__nand4b_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor3_1",
+        "sky130_fd_sc_hd__nor4b_1",
+        "sky130_fd_sc_hd__o2111a_1",
+        "sky130_fd_sc_hd__o211ai_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o21bai_1",
+        "sky130_fd_sc_hd__o22ai_1",
+        "sky130_fd_sc_hd__o31ai_1",
+        "sky130_fd_sc_hd__or2b_2",
+        "sky130_fd_sc_hd__or4_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "_121_",
+          "kind": "R",
+          "to_type": "sky130_fd_sc_hd__or2b_2"
+        }
+      ],
+      "historical_proof_batch": "P2",
+      "historical_proven_unproven": [
+        137,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s820",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s832",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s832/s832/mapped.v",
+        "sha256": "5966dcf411817b457f366951b713ce4579b4bbd8fee38004d621a6eca1675d96",
+        "bytes": 17990
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s832/fixed/mapped.v",
+        "sha256": "11acbbf2bf61512dc800689e15336d804472c8a009917475da2fc948b7e98a99",
+        "bytes": 17990
+      },
+      "baseline_decoded_utf8_sha256": "9919d5cc7f0f82009e34b277c2a2f9f11d87a6afb640e4bff92bbd7d420c91d2",
+      "final_decoded_utf8_sha256": "ceb8abc5869455c6df842ccbff899d71c0542e482af3d7703eae5f6d4ae2fa4c",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s832"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a211oi_1",
+        "sky130_fd_sc_hd__a21o_1",
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__a22o_1",
+        "sky130_fd_sc_hd__a22oi_1",
+        "sky130_fd_sc_hd__a311oi_1",
+        "sky130_fd_sc_hd__a31oi_1",
+        "sky130_fd_sc_hd__a32oi_1",
+        "sky130_fd_sc_hd__and2_0",
+        "sky130_fd_sc_hd__and2_2",
+        "sky130_fd_sc_hd__and3_1",
+        "sky130_fd_sc_hd__and4_1",
+        "sky130_fd_sc_hd__and4b_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__mux2i_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand2b_1",
+        "sky130_fd_sc_hd__nand3_1",
+        "sky130_fd_sc_hd__nand3b_1",
+        "sky130_fd_sc_hd__nand4_1",
+        "sky130_fd_sc_hd__nand4b_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor3_1",
+        "sky130_fd_sc_hd__nor3b_1",
+        "sky130_fd_sc_hd__nor4_1",
+        "sky130_fd_sc_hd__nor4b_1",
+        "sky130_fd_sc_hd__o21a_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o22ai_1",
+        "sky130_fd_sc_hd__o31ai_1",
+        "sky130_fd_sc_hd__o41ai_1",
+        "sky130_fd_sc_hd__or3_1",
+        "sky130_fd_sc_hd__or3b_1",
+        "sky130_fd_sc_hd__or4_1",
+        "sky130_fd_sc_hd__xnor2_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "_140_",
+          "kind": "G",
+          "to_type": "sky130_fd_sc_hd__and2_2"
+        }
+      ],
+      "historical_proof_batch": "P1",
+      "historical_proven_unproven": [
+        146,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s832",
+      "status": "proposed; not registered or executed"
+    },
+    {
+      "circuit": "s953",
+      "baseline": {
+        "path": "experiments/20260805_tcad_sprint1_iscas89/s953/s953/mapped.v",
+        "sha256": "ff5f6a2fdbf03098f8b4fb33c3a6dd9c90d761ddc052b1e9ad4a6b319b83c6bf",
+        "bytes": 28804
+      },
+      "accepted_final": {
+        "path": "experiments/20260807_real_pr_iscas8/s953/fixed/mapped.v",
+        "sha256": "84d5e6ec40ac37c27a67834f676026eb7e4ebb8d12a83707eceb212775e128c6",
+        "bytes": 28804
+      },
+      "baseline_decoded_utf8_sha256": "ea661cd20aba00b58ee9c10eb9a5def5d63022331594f415fc43e1c9a5aa8fde",
+      "final_decoded_utf8_sha256": "ceec8fdead5bea60104c8ac769d73585cef6cc41a4016483f78a1d70a4134cfc",
+      "shared_helpers_equal_after_utf8_bom_and_universal_newline_decode": true,
+      "declared_modules": [
+        "dff",
+        "s953"
+      ],
+      "used_sky_models": [
+        "sky130_fd_sc_hd__a2111oi_0",
+        "sky130_fd_sc_hd__a211o_1",
+        "sky130_fd_sc_hd__a21o_1",
+        "sky130_fd_sc_hd__a21oi_1",
+        "sky130_fd_sc_hd__a221oi_1",
+        "sky130_fd_sc_hd__a22oi_1",
+        "sky130_fd_sc_hd__a311oi_1",
+        "sky130_fd_sc_hd__a31o_1",
+        "sky130_fd_sc_hd__a31oi_1",
+        "sky130_fd_sc_hd__a32oi_1",
+        "sky130_fd_sc_hd__a41o_1",
+        "sky130_fd_sc_hd__a41oi_1",
+        "sky130_fd_sc_hd__and2_0",
+        "sky130_fd_sc_hd__and3_1",
+        "sky130_fd_sc_hd__and3b_1",
+        "sky130_fd_sc_hd__clkinv_1",
+        "sky130_fd_sc_hd__dfxtp_1",
+        "sky130_fd_sc_hd__lpflow_inputiso1p_1",
+        "sky130_fd_sc_hd__lpflow_isobufsrc_1",
+        "sky130_fd_sc_hd__nand2_1",
+        "sky130_fd_sc_hd__nand2b_1",
+        "sky130_fd_sc_hd__nand3_1",
+        "sky130_fd_sc_hd__nand3_2",
+        "sky130_fd_sc_hd__nand3b_1",
+        "sky130_fd_sc_hd__nand4_1",
+        "sky130_fd_sc_hd__nand4b_1",
+        "sky130_fd_sc_hd__nor2_1",
+        "sky130_fd_sc_hd__nor3_1",
+        "sky130_fd_sc_hd__nor3b_1",
+        "sky130_fd_sc_hd__nor3b_2",
+        "sky130_fd_sc_hd__nor4_1",
+        "sky130_fd_sc_hd__nor4b_1",
+        "sky130_fd_sc_hd__nor4bb_1",
+        "sky130_fd_sc_hd__o211a_1",
+        "sky130_fd_sc_hd__o211ai_1",
+        "sky130_fd_sc_hd__o21a_1",
+        "sky130_fd_sc_hd__o21ai_0",
+        "sky130_fd_sc_hd__o21bai_1",
+        "sky130_fd_sc_hd__o221a_1",
+        "sky130_fd_sc_hd__o221ai_1",
+        "sky130_fd_sc_hd__o22ai_1",
+        "sky130_fd_sc_hd__o311ai_0",
+        "sky130_fd_sc_hd__or3_1",
+        "sky130_fd_sc_hd__or3b_1",
+        "sky130_fd_sc_hd__or4_1",
+        "sky130_fd_sc_hd__or4b_1",
+        "sky130_fd_sc_hd__xor2_1"
+      ],
+      "accepted_actions": [
+        {
+          "instance": "JOINT",
+          "kind": "JOINT",
+          "to_type": "_180_:sky130_fd_sc_hd__nor3b_2,_199_:sky130_fd_sc_hd__nand3_2"
+        }
+      ],
+      "historical_proof_batch": "P1",
+      "historical_proven_unproven": [
+        228,
+        0
+      ],
+      "new_output_proposal": "project_docs/evidence/r22_a_sec_unified_20261018/proofs/s953",
+      "status": "proposed; not registered or executed"
+    }
+  ],
+  "tool_pin": [
+    {
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/bin/yosys",
+        "-V"
+      ],
+      "returncode": 0,
+      "stdout": "Yosys 0.33 (git sha1 2584903a060)\n",
+      "stderr": "wsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\nwsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Antigravity\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\n",
+      "stdout_sha256": "14022961a7564dcc908f30f8b52cc1289449e8f25a95ed5c2d2afb88c4bde4fa",
+      "stderr_sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1"
+    },
+    {
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "sha256sum",
+        "/usr/bin/yosys"
+      ],
+      "returncode": 0,
+      "stdout": "88c0a12bb814a1a8716b1ae10b482e35d3005ed558e1f5f626b3dc983ea3abd0  /usr/bin/yosys\n",
+      "stderr": "wsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\nwsl: Failed to translate 'E:\\APP\\cursor\\resources\\app\\bin'\nwsl: Failed to translate 'E:\\APP\\Antigravity\\bin'\nwsl: Failed to translate 'E:\\APP\\Texlive\\bin\\windows'\n",
+      "stdout_sha256": "fc44bfdfa8dd0c46846a1284f2fc3442878fa49e1db0ef1f8e41a4eabbd1db94",
+      "stderr_sha256": "9f22f83dc677e0203550a1b6a9c661efb448bbbe6a560b861a3909e7d73aeba1"
+    }
+  ],
+  "parallelism": 1,
+  "per_proof_timeout_s": 180,
+  "batch_timeout_s": 1800,
+  "sta_runs": 0,
+  "mapping_runs": 0,
+  "candidate_search_runs": 0,
+  "external_prover_started_at_registration": false,
+  "timing_scope": "common.final_sec runtime_s: elapsed external prover invocation and log emission; excludes model/input preparation; D STA runs concurrently; no cross-method performance inference",
+  "pass_gate": "Exact inputs/source/lib/tools stable; explicit correct top; statuspass/rc0; actual SEC log nonzero proven/zero unproven; no unsupported; stop on failure; independent audit pending"
+}

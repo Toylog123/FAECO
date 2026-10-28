@@ -1,0 +1,35 @@
+{
+  "argv": [
+    "C:/Program Files/Git/bin/bash.exe",
+    "code/scripts/run_with_timeout.sh",
+    "1800",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\.venv\\Scripts\\python.exe",
+    "-X",
+    "utf8",
+    "-u",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_D_revalidation_20261018\\ledger_duplicate_diagnosis_20261018\\checker_v3.py",
+    "--audit",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_D_revalidation_20261018\\ROOT_COMPLETION_AUDIT_56.json",
+    "--output",
+    "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\r22_D_revalidation_20261018\\independent_completed_review\\run_56_v1\\review"
+  ],
+  "cwd": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO",
+  "checker_sha256": "f6b053dfa6552aca43817f0dc1c1bdefca295c32bdf7ddc4b01cf1b12ab71daf",
+  "parent_root_audit_sha256": "e0fa1d2a2c7475bd704d4f2e7fbb6bde13ad7751b29be25719b61fa20b7e279d",
+  "utc": "2026-10-25T01:27:41.630847+00:00",
+  "root_preexecution_review": {
+    "design_sha256": "fd3f0dba26d486ff014a9dd5d5e21915f82e5c4807900b7061ccb9f1359117ea",
+    "minimal_diff_sha256": "e3c6cf653121e2b41b8cecf0ff6037ab9de20a0f26f748d563afb95eb498a54f",
+    "diagnosis_sha256": "6772089b9a57aa30a4d59a408e344f1b618a6ca5a232236e3dbfb1e310d5e65c",
+    "approved_contract": "The full registered 56-key completion set, taken from the immutable ROOT_COMPLETION_AUDIT_56.json; every selected completion SHA must match. Original raw STA/SEC/source checks retained; strict actual cache / identity dedup / cached rejection separation. Legacy broad cache field preserved as compatibility sum."
+  },
+  "checker_independently_authored": true,
+  "timeout_registration": {
+    "basis": "the 28-key run measured 184.8 s for 16407 read artefacts; the 56-key run has twice the jobs and roughly twice the artefacts",
+    "wrapper_timeout_s": 1800,
+    "parent_timeout_s": 1830,
+    "measured_28key_runtime_s": 184.8,
+    "note": "the 28-run limits (900/930) were NOT reused as-is"
+  },
+  "scope": "Read-only independent raw review of the full registered D56 completion set; no new EDA/source/HEAD or original record changes."
+}

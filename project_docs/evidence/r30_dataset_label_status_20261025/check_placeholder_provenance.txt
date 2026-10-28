@@ -1,0 +1,59 @@
+==============================================================================
+ROUND 34 -- ARE THE RECOVERED LABELS MEASUREMENTS OR COPIED BASELINES?
+==============================================================================
+
+trials WITHOUT acceptance_evidence (the affected set): 310
+trials WITH    acceptance_evidence (the control set) : 3734
+
+--- AFFECTED (no acceptance_evidence) (n=310)
+   wns is None                     : 0
+   wns == the iteration base WNS   : 310
+   wns != the iteration base WNS   : 0
+   no base available               : 0
+   carry an sta_provenance         : 0
+   carry an STA report path        : 0
+   carry a runtime_s               : 310
+   carry failure_events            : 141 (hard gate: 141)
+   carry trial_failure_events      : 0
+   by kind                         : {'B': 138, 'R': 168, 'G': 4}
+   flagged accepted                : 0
+
+--- CONTROL (has acceptance_evidence) (n=3734)
+   wns is None                     : 0
+   wns == the iteration base WNS   : 1659
+   wns != the iteration base WNS   : 2075
+   no base available               : 0
+   carry an sta_provenance         : 3734
+   carry an STA report path        : 3734
+   carry a runtime_s               : 3734
+   carry failure_events            : 2956 (hard gate: 2436)
+   carry trial_failure_events      : 0
+   by kind                         : {'G': 596, 'B': 1903, 'R': 976, 'JOINT': 259}
+   flagged accepted                : 130
+
+==============================================================================
+READING
+==============================================================================
+
+If the affected trials were really evaluated, their STA provenance and
+report path would be present and their WNS would NOT all equal the
+iteration base.  If they were never evaluated, the WNS is a copy of the
+base and the recovered label is a PLACEHOLDER.
+
+affected: wns == base for 310 of 310 (the rest differ: 0)
+control : wns == base for 1659 of 3734 (the rest differ: 2075)
+affected: with an STA report path 0 ; control: 3734
+
+the failure_events of the affected trials (first 12 distinct):
+   F1_equivalence_failure (hard_gate=True)
+      full: {"type": "F1_equivalence_failure", "candidate_hash": "edb027bad166f73d2bfc562cd070824a9471de3545280eea4cf4cd505e70eb35", "cut_hash": "edb027bad166f73d2bfc562cd070824a9471de3545280eea4cf4cd505e70eb35", "severity": "hard", "hard_gate": true, "runtime_s": 0.0, "evidence": {"stage": "equivalence", "result": "EquivalenceResult(status='fail', method='liberty_local_function', reason=\"pin-to-net connecti
+   F2_boundary_invalid (hard_gate=True)
+      full: {"type": "F2_boundary_invalid", "candidate_hash": "8a569d5c493e7eb306a8794ad19ee955587064055413d69b68044ae39f1b056b", "cut_hash": "8a569d5c493e7eb306a8794ad19ee955587064055413d69b68044ae39f1b056b", "severity": "hard", "hard_gate": true, "runtime_s": 0.0, "evidence": {"stage": "boundary_closure", "status": "fail", "method": "boundary_closure", "reason": "boundary parse failed closed: cannot determi
+
+the failure_events of the CONTROL trials (first 6 distinct):
+   acceptance_budget_violation (hard_gate=True)
+   F3_patch_too_large (hard_gate=True)
+   F5_verification_too_expensive (hard_gate=False)
+
+--- the affected trials whose WNS differs from the base (if any)
+   total: 0

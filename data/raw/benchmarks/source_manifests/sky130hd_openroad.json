@@ -1,0 +1,112 @@
+{
+    "schema_version":  1,
+    "asset_id":  "sky130hd_openroad_stage_b_minimal",
+    "status":  "acquired_minimal_assets",
+    "acquired_on":  "2026-07-30T10:20:59+08:00",
+    "intended_use":  "technology-mapped pre-layout STA",
+    "disk_budget_bytes":  104857600,
+    "source_root":  "benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629",
+    "local_root": "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd/da8f092a02a8e75658cc3100691aabff05f35629",
+    "local_root_note": "the files live here now; `source_root` records where they were acquired",
+    "repositories":  [
+                         {
+                             "id":  "openroad_flow_scripts",
+                             "url":  "https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git",
+                             "branch":  "master",
+                             "commit":  "da8f092a02a8e75658cc3100691aabff05f35629",
+                             "license_path":  "LICENSE_BUILD_RUN_SCRIPTS",
+                             "license_spdx":  "BSD-3-Clause"
+                         },
+                         {
+                             "id":  "skywater_pdk_libs_sky130_fd_sc_hd",
+                             "url":  "https://github.com/google/skywater-pdk-libs-sky130_fd_sc_hd.git",
+                             "branch":  "main",
+                             "commit":  "ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1",
+                             "license_path":  "LICENSE",
+                             "license_spdx":  "Apache-2.0",
+                             "repository_status":  "archived_read_only"
+                         },
+                         {
+                             "id":  "skywater_pdk",
+                             "url":  "https://github.com/google/skywater-pdk.git",
+                             "branch":  "main",
+                             "commit":  "7198cf647113f56041e02abf3eb623692820c5e1",
+                             "role":  "provenance_context_only"
+                         }
+                     ],
+    "files":  [
+                  {
+                      "relative_path":  "lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+                      "role":  "liberty_timing_model",
+                      "source_repository":  "https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git",
+                      "source_commit":  "da8f092a02a8e75658cc3100691aabff05f35629",
+                      "source_path":  "flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+                      "raw_url":  "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD-flow-scripts/da8f092a02a8e75658cc3100691aabff05f35629/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+                      "sha256":  "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+                      "size_bytes":  12800135
+                  },
+                  {
+                      "relative_path":  "config.mk",
+                      "role":  "platform_config_reference",
+                      "source_repository":  "https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git",
+                      "source_commit":  "da8f092a02a8e75658cc3100691aabff05f35629",
+                      "source_path":  "flow/platforms/sky130hd/config.mk",
+                      "raw_url":  "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD-flow-scripts/da8f092a02a8e75658cc3100691aabff05f35629/flow/platforms/sky130hd/config.mk",
+                      "sha256":  "1a36b8fbd58ee4b6b961bc14f3ca44e7b44a4ea47faf6f116f827eb5177509d5",
+                      "size_bytes":  5405
+                  },
+                  {
+                      "relative_path":  "ORFS_LICENSE",
+                      "role":  "license_text",
+                      "source_repository":  "https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts.git",
+                      "source_commit":  "da8f092a02a8e75658cc3100691aabff05f35629",
+                      "source_path":  "LICENSE_BUILD_RUN_SCRIPTS",
+                      "raw_url":  "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD-flow-scripts/da8f092a02a8e75658cc3100691aabff05f35629/LICENSE_BUILD_RUN_SCRIPTS",
+                      "sha256":  "fae0db7a4c00c3125f037e5818e8cd0c8aa5c67fff2e8c558312068e9f2d1592",
+                      "size_bytes":  2030
+                  },
+                  {
+                      "relative_path":  "SKYWATER_LICENSE",
+                      "role":  "license_text",
+                      "source_repository":  "https://github.com/google/skywater-pdk-libs-sky130_fd_sc_hd.git",
+                      "source_commit":  "ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1",
+                      "source_path":  "LICENSE",
+                      "raw_url":  "https://raw.githubusercontent.com/google/skywater-pdk-libs-sky130_fd_sc_hd/ac7fb61f06e6470b94e8afdf7c25268f62fbd7b1/LICENSE",
+                      "sha256":  "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+                      "size_bytes":  11358
+                  },
+                  {
+                      "relative_path":  "SOURCE_NOTICE.md",
+                      "role":  "source_notice",
+                      "source_repository":  "local",
+                      "source_commit":  "local",
+                      "source_path":  "SOURCE_NOTICE.md",
+                      "raw_url":  null,
+                      "sha256":  "2c62a7dc9dcc4105804a63d83540492b39b56b055af6c3f0ca3ec1d20dc60591",
+                      "size_bytes":  1771
+                  }
+              ],
+    "integrity_checks":  {
+                             "liberty_contains_library":  true,
+                             "liberty_contains_cell":  true,
+                             "liberty_contains_time_unit":  true,
+                             "liberty_contains_capacitive_load_unit":  true,
+                             "full_pdk_downloaded":  false,
+                             "gds_downloaded":  false,
+                             "lef_downloaded":  false,
+                             "spice_downloaded":  false,
+                             "spef_available":  false
+                         },
+    "license_boundary":  {
+                             "orfs_license_file":  "ORFS_LICENSE",
+                             "skywater_license_file":  "SKYWATER_LICENSE",
+                             "source_notice":  "SOURCE_NOTICE.md",
+                             "redistribution_notice_required":  true,
+                             "public_release_requires_license_review":  true
+                         },
+    "notes":  [
+                  "Only fixed raw URLs at exact commits were used.",
+                  "OpenROAD-flow-scripts root LICENSE was absent at the fixed commit; LICENSE_BUILD_RUN_SCRIPTS is the recorded build/run scripts license file.",
+                  "The Liberty file is an ORFS platform timing asset and is used only for FAECO technology-mapped pre-layout STA."
+              ]
+}

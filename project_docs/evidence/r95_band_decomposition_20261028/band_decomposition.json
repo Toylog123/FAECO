@@ -1,0 +1,213 @@
+{
+  "tool": "R95 band decomposition, W1 controlled arm, read-only, zero new EDA",
+  "source": {
+    "w1_ledger": "experiments/20261016_r22_cut_ablation_v3/W1/",
+    "band": "experiments/20261024_physical_labels/physical_dataset.jsonl cand_threshold",
+    "registered_mean": 0.16125,
+    "registered_in": "project_docs/evidence/r24_paper_revision_20261018/QUANTITATIVE_REUSE.json arm_summaries[W1].mean_delta_wns_ns"
+  },
+  "selfcheck": {
+    "mean_delta_wns": 0.16125,
+    "expected": 0.16125,
+    "ok": true
+  },
+  "circuit_level": {
+    "n_circuits": 8,
+    "n_exceed_band": 5,
+    "sum_delta_wns": 1.29,
+    "mean_delta_wns": 0.16125,
+    "sum_over_band_circuits_wns": 1.15,
+    "share_from_over_band_circuits": 0.891473,
+    "sum_net_of_band_wns": 0.969568,
+    "mean_net_of_band_wns": 0.121196,
+    "share_net_of_band": 0.751603,
+    "rows": [
+      {
+        "circuit": "s27",
+        "baseline_wns": -0.27,
+        "final_wns": -0.18,
+        "delta_wns": 0.09,
+        "band_ns": 0.02892,
+        "ratio_to_band": 3.112,
+        "exceeds_band": true,
+        "n_candidate_sta": 49
+      },
+      {
+        "circuit": "s382",
+        "baseline_wns": -0.98,
+        "final_wns": -0.83,
+        "delta_wns": 0.15,
+        "band_ns": 0.03976,
+        "ratio_to_band": 3.7726,
+        "exceeds_band": true,
+        "n_candidate_sta": 97
+      },
+      {
+        "circuit": "s420",
+        "baseline_wns": -1.56,
+        "final_wns": -1.21,
+        "delta_wns": 0.35,
+        "band_ns": 0.042068,
+        "ratio_to_band": 8.3199,
+        "exceeds_band": true,
+        "n_candidate_sta": 182
+      },
+      {
+        "circuit": "s641",
+        "baseline_wns": -1.63,
+        "final_wns": -1.17,
+        "delta_wns": 0.46,
+        "band_ns": 0.024558,
+        "ratio_to_band": 18.7312,
+        "exceeds_band": true,
+        "n_candidate_sta": 155
+      },
+      {
+        "circuit": "s713",
+        "baseline_wns": -1.33,
+        "final_wns": -1.28,
+        "delta_wns": 0.05,
+        "band_ns": 0.074406,
+        "ratio_to_band": 0.672,
+        "exceeds_band": false,
+        "n_candidate_sta": 137
+      },
+      {
+        "circuit": "s820",
+        "baseline_wns": -1.19,
+        "final_wns": -1.17,
+        "delta_wns": 0.02,
+        "band_ns": 0.071668,
+        "ratio_to_band": 0.2791,
+        "exceeds_band": false,
+        "n_candidate_sta": 107
+      },
+      {
+        "circuit": "s832",
+        "baseline_wns": -1.23,
+        "final_wns": -1.16,
+        "delta_wns": 0.07,
+        "band_ns": 0.08474,
+        "ratio_to_band": 0.8261,
+        "exceeds_band": false,
+        "n_candidate_sta": 99
+      },
+      {
+        "circuit": "s953",
+        "baseline_wns": -1.31,
+        "final_wns": -1.21,
+        "delta_wns": 0.1,
+        "band_ns": 0.045126,
+        "ratio_to_band": 2.216,
+        "exceeds_band": true,
+        "n_candidate_sta": 93
+      }
+    ]
+  },
+  "commit_level": {
+    "n_commits": 27,
+    "n_rounds": 43,
+    "n_exceed_band": 8,
+    "pct_exceed_band": 0.296296,
+    "median_delta_wns": 0.02,
+    "sum_delta_wns": 1.29,
+    "share_delta_from_over_band": 0.705426,
+    "by_kind_all": {
+      "G": {
+        "n": 22,
+        "sum_delta_wns": 1.19,
+        "n_exceeds_band": 7
+      },
+      "R": {
+        "n": 5,
+        "sum_delta_wns": 0.1,
+        "n_exceeds_band": 1
+      }
+    },
+    "by_kind_over_band": {
+      "G": {
+        "n": 7,
+        "sum_delta_wns": 0.88,
+        "n_exceeds_band": 7
+      },
+      "R": {
+        "n": 1,
+        "sum_delta_wns": 0.03,
+        "n_exceeds_band": 1
+      }
+    },
+    "over_band_list": [
+      {
+        "circuit": "s641",
+        "iteration": 1,
+        "delta_wns": 0.21,
+        "band_ns": 0.024558,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s420",
+        "iteration": 4,
+        "delta_wns": 0.19,
+        "band_ns": 0.042068,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s641",
+        "iteration": 2,
+        "delta_wns": 0.17,
+        "band_ns": 0.024558,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s382",
+        "iteration": 1,
+        "delta_wns": 0.1,
+        "band_ns": 0.03976,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s420",
+        "iteration": 6,
+        "delta_wns": 0.09,
+        "band_ns": 0.042068,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s27",
+        "iteration": 1,
+        "delta_wns": 0.08,
+        "band_ns": 0.02892,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s641",
+        "iteration": 4,
+        "delta_wns": 0.04,
+        "band_ns": 0.024558,
+        "exceeds_band": true,
+        "kind": "G"
+      },
+      {
+        "circuit": "s641",
+        "iteration": 3,
+        "delta_wns": 0.03,
+        "band_ns": 0.024558,
+        "exceeds_band": true,
+        "kind": "R"
+      }
+    ]
+  },
+  "caveats": [
+    "判定带取自 ISCAS89 基族的逐电路 cand_threshold（2 sigma），不是 ITC-99 扩面族的 0.049752；跨族不可互换。",
+    "电路级 delta 是 20 轮链式累积后的终点差，不是单次提交的和。",
+    "提交级 delta 是该轮相对本轮起点的边际差；跳过带内提交后终点会变，因此不能把超带提交的 delta 相加当作反事实终点，反事实需重放。",
+    "W1 的提交只含 G 与 R，不含 B 与 JOINT；本族结论不适用于含 B 的配置。",
+    "本分解只说'是否超过该电路的噪声带'，不说明超带部分为何产生。"
+  ]
+}

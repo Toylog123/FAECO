@@ -1,0 +1,56 @@
+F2 pre-flight v2 -- three-implementation code path on fixtures
+measured F0-F1 pooled within-circuit sd = 0.024876 ns
+per-realisation sigma_r = 0.017589988288796553 ns
+
+CASE A -- real F0/F1, no F2 file (the guard)
+--- A ---
+  third present=True complete=False f2 rows=0
+    F0_vs_F1   scope=family   2sigma=0.049753   df=1193   pairs=1200   circuits=7
+    F0_vs_F2   scope=partial  2sigma=None       df=0      pairs=0      circuits=0
+    F1_vs_F2   scope=partial  2sigma=None       df=0      pairs=0      circuits=0
+    band stability max/min = None
+    THREE-WAY: NOT COMPUTED: the third realisation is not complete (0 rows present, complete=False); a partly labelled F2 file is not an available third realisation
+
+CASE B -- FULLY SYNTHETIC exchangeable triple (sigma_r = 0.017590 ns)
+  ground truth: the three pairwise bands must AGREE, and the averaged-label
+  picker must beat the single-measurement picker (averaging halves the noise)
+--- B ---
+  third present=True complete=True f2 rows=1207
+    F0_vs_F1   scope=family   2sigma=0.050648   df=1193   pairs=1200   circuits=7
+    F0_vs_F2   scope=family   2sigma=0.051984   df=1193   pairs=1200   circuits=7
+    F1_vs_F2   scope=family   2sigma=0.050562   df=1193   pairs=1200   circuits=7
+    band stability max/min = 1.028124
+    hold out F0  : 48 pools | regret single 0.01604 | regret avg 0.01229 | avg better 11 / ties 30 / single better 7 | p=0.4807
+    hold out F1  : 48 pools | regret single 0.00917 | regret avg 0.00708 | avg better 12 / ties 30 / single better 6 | p=0.2379
+    hold out F2  : 48 pools | regret single 0.01406 | regret avg 0.01104 | avg better 15 / ties 25 / single better 8 | p=0.21
+    OVERALL: 144 pool-direction pairs | avg better 38 / ties 85 / single better 21 | p=0.0363
+
+CASE C -- real F0/F1 + CORRELATED mock F2 (F2 = I1 + noise; NOT exchangeable)
+  expected: the F1-F2 band comes out too tight and the F0-F2 band too wide,
+  so the max/min ratio is far from 1 -- the machinery can SEE a special pair
+--- C ---
+  third present=True complete=True f2 rows=1207
+    F0_vs_F1   scope=family   2sigma=0.049753   df=1193   pairs=1200   circuits=7
+    F0_vs_F2   scope=family   2sigma=0.060966   df=1193   pairs=1200   circuits=7
+    F1_vs_F2   scope=family   2sigma=0.035482   df=1193   pairs=1200   circuits=7
+    band stability max/min = 1.718223
+    hold out F0  : 48 pools | regret single 0.01667 | regret avg 0.01500 | avg better 6 / ties 38 / single better 4 | p=0.7539
+    hold out F1  : 48 pools | regret single 0.01177 | regret avg 0.00833 | avg better 15 / ties 27 / single better 6 | p=0.0784
+    hold out F2  : 48 pools | regret single 0.01500 | regret avg 0.01167 | avg better 14 / ties 25 / single better 9 | p=0.4049
+    OVERALL: 144 pool-direction pairs | avg better 35 / ties 90 / single better 19 | p=0.0402
+
+VERDICT
+  A: F0-F1 band from the probe = 0.049753 ns (the finalised band stores 0.049752 ns;
+     the 1e-6 difference is the tool's documented rounding convention)
+  B: exchangeable fixture -> max/min = 1.028124 (expected ~1.0), pools = 144,
+     averaged better 38 / ties 85 / single better 21, p=0.0363
+  C: correlated fixture -> max/min = 1.718223 (expected far from 1.0)
+
+  [PASS] A reproduces the finalised band
+  [PASS] A refuses the three-way path without F2
+  [PASS] B three-way path runs (pools > 0)
+  [PASS] B exchangeable bands agree (max/min < 1.15)
+  [PASS] B averaging beats single measurement
+  [PASS] C a correlated third side is visible (max/min > 1.3)
+
+  PRE-FLIGHT PASSED
