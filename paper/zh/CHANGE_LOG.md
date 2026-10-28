@@ -340,3 +340,4 @@ v4分节FloatBarrier令A图表先于B正文，但28页及15/21/23/24浮动留白
 - 过程问题：表 2 首次扩表后列宽溢出（`1046/919/944` 超 8.88 pt，gate FAIL），缩列后 PASS；表 2 仍在第 6 页而正文引用在第 5 页，经比对 HEAD 版亦如此，非本轮引入，未改浮动参数。
 - 字数与页数：主稿 47,080 → **48,071 B**（+991），485 → **491 行**，纯 LF；页数 **10** 不变。
 - 验收：两遍 lualatex，0 Errors / 0 Overfull / 0 Underfull；`latex_quality_gate.py` PASS；`check_env_refs.py` 无未被引用的表/图。新指纹：tex `b5e0c008…`、PDF `009949e0…`（10 页 / 3,007,431 B）。
+- **英文摘要同步**（补记）：B1 改述后同页中文摘要已无「limited budget」口径，英文 Abstract 仍写 `under a limited timing-evaluation budget`，两半自相矛盾。已同步为 `must allocate timing measurements across candidates and decide which range to modify and in which order to visit candidates`，并在 WNS 句补 `0.121 ns after subtracting each circuit's discrimination band`。tex 48,071 → **48,186 B**（491 行、纯 LF），页数 10 不变；0/0/0，gate PASS。新指纹：tex `6d16cb4a…`、PDF `37b4e81a…`（10 页 / 3,007,456 B）。
