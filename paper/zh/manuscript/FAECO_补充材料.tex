@@ -553,7 +553,7 @@ s953 & $-1.31$ & $-1.27$ & $-1.60$ & $-1.61$ & $-0.01$ \\
 
 除 R/G/B/JOINT 构造级变换外，本文还实现了一类窗口局部结构重综合候选（记为 S），用于评估其是否带来额外的 WNS 改善。为考察候选数量的影响，本文扩大 S 的候选池并做开关对照：关闭 S 后，8 个电路的结果均与原配置一致，两臂的非 S 候选序列一致，候选级 STA 预算未触及上限。结构候选（S）的能力边界见表~\ref{tab:s_boundary}。
 
-候选级深度变化与 WNS 变化的逐电路分布见图~\ref{fig:s_candidate_outcomes}，两类指标分别统计，避免将逻辑深度下降解释为时序收益。
+候选级深度变化与 WNS 变化的逐电路分布见图~\ref{fig:s_candidate_outcomes}，两类指标分别统计；逻辑深度下降不构成时序收益。
 
 \begin{figure}[!htb]
 \centering
@@ -593,6 +593,6 @@ $\Delta_{\mathrm{WNS}}<0$ & — & 90/126 \\
 
 主文线载后验生成器固定为\texttt{f761ee1}，保单元/状态展开输入、两份原到展开网表证明、原层级失败及新24次STA按对象分别归档于\nolinkurl{project_docs/evidence/r24_paper_revision_20261018/}。新结果不恢复原层级SPEF支持或旧共享SPEF扫描。
 
-跨族归档结果尚有运行版本、模型与输入身份缺项；保留文件审核不补造旧运行身份。当前证据和未解决条目分别见\nolinkurl{project_docs/evidence/}与\nolinkurl{project_docs/OPEN_ISSUES.md}。
+跨族归档结果尚有运行版本、模型与输入身份缺项；当前证据和未解决条目分别见\nolinkurl{project_docs/evidence/}与\nolinkurl{project_docs/OPEN_ISSUES.md}。
 
 \end{document}
