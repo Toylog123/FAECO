@@ -128,7 +128,7 @@
 
 困难在于决定在哪里修改，以及先尝试哪个动作。同一违例端点的扇入锥可能包含多个逻辑层、分叉与汇合；尺寸调整、等价单元替换和缓冲插入又会生成不同的候选组合。局部结构指标不能直接给出全网表时序收益，候选通常仍需调用静态时序分析（static timing analysis，STA）。区域选得过窄可能遗漏有效动作，枚举过广则把测量花在收益不足的候选上；单次搜索的代价由实际执行的STA次数决定。
 
-已有研究利用重映射、尺寸选择、缓冲和学习策略改善时序\cite{ho2010eco,liu2021rlsizer,chen2024aito}。这些方法说明动作本身具有优化能力，但动作的可执行性不等于候选组织方式的有效性。对于一个由时序报告驱动的局部搜索器，需要进一步分清：收益来自报告关键实例的覆盖、节点代价形成的区域，还是区域的访问次序。若同时改变区域和顺序，仅比较最终WNS便难以解释差异。
+已有研究利用重映射、尺寸选择、缓冲和学习策略改善时序\cite{ho2010eco,liu2021rlsizer,chen2024aito,ji2018buffer}。这些方法说明动作本身具有优化能力，但动作的可执行性不等于候选组织方式的有效性。对于一个由时序报告驱动的局部搜索器，需要进一步分清：收益来自报告关键实例的覆盖、节点代价形成的区域，还是区域的访问次序。若同时改变区域和顺序，仅比较最终WNS便难以解释差异。
 
 FAECO围绕这两个决策组织搜索。它从固定违例端点提取扇入锥，以报告实例交集形成覆盖区域，以加权节点割形成另一候选区域；随后按区域、实例和动作逐层枚举。候选从同一当前基准构造，依次通过局部检查和STA，首次满足接受条件即提交。最终网表的顺序等价性在搜索结束后独立检查。图~\ref{fig:overview}给出区域生成、评估与提交之间的关系。
 
@@ -143,7 +143,7 @@ FAECO围绕这两个决策组织搜索。它从固定违例端点提取扇入锥
 
 \section{相关工作}
 
-\textbf{时序ECO与局部优化。}Ho等\cite{ho2010eco}利用备用单元和技术重映射改善时序，侧重局部实现的重新选择。RL-Sizer\cite{liu2021rlsizer}学习尺寸决策，AiTO\cite{chen2024aito}联合尺寸与缓冲动作。物理感知尺寸优化\cite{huang2025phys}和缓冲树生成\cite{zhang2025buffalo}进一步使用物理信息或学习策略。本文复用等价替换、尺寸和缓冲这些局部动作，研究报告实例如何形成候选范围、STA测量次数如何分配；没有把动作类型本身作为新的优化原语。
+\textbf{时序ECO与局部优化。}Ho等\cite{ho2010eco}利用备用单元和技术重映射改善时序，侧重局部实现的重新选择。RL-Sizer\cite{liu2021rlsizer}学习尺寸决策，AiTO\cite{chen2024aito}联合尺寸与缓冲动作。物理感知尺寸优化\cite{huang2025phys}和缓冲树生成\cite{zhang2025buffalo}进一步使用物理信息或学习策略。预布局阶段的时序与线长估计\cite{he2023sta}以及基于图学习的EDA方法\cite{tian2023gnn}已有系统梳理，其共同前提是存在与签核时序一致的可学信号。本文复用等价替换、尺寸和缓冲这些局部动作，研究报告实例如何形成候选范围、STA测量次数如何分配；没有把动作类型本身作为新的优化原语。
 
 \textbf{功能ECO与补丁生成。}Wu等\cite{jiang2010fraig}通过证明最小化和插值构造功能补丁，Kravets等\cite{kravets2019symbolic}以符号采样搜索修正点。Cheng等\cite{jiang2016resource}研究资源受限的功能ECO生成，Dao等\cite{zhuo2018patch}分别处理可修复性、支持集和补丁计算。这类工作通常以功能差异为输入，并以逻辑一致性约束补丁；FAECO从功能已满足的映射网表出发，以时序违例决定修改范围和访问顺序，局部变化仍须保持功能。
 
@@ -275,7 +275,7 @@ C_c=\langle v\in P\mid v\in C_i\rangle.
 
 \subsection{受控配置与评价口径}\label{sec:controlled}
 
-表~\ref{tab:arms}定义9个臂，共72次运行。W0/U0检查仅节点割的表现；W1/U1引入报告覆盖，分别使用加权或统一节点容量；C仅保留覆盖区域；UR1--3随机置换W1的区域访问次序；L使用另一种区域搜索与调度。首次提交后网表会改变，因此随机访问可导致后续搜索状态分叉，这些对照评价完整策略的运行效果。
+表~\ref{tab:arms}定义9个臂，共72次运行。W0/U0检查仅节点割的表现；W1/U1引入报告覆盖，分别使用加权或统一节点容量；CO仅保留覆盖区域；UR1--3随机置换W1的区域访问次序；L使用另一种区域搜索与调度。首次提交后网表会改变，因此随机访问可导致后续搜索状态分叉，这些对照评价完整策略的运行效果。
 
 \begin{table}[htbp]
 \centering\caption{区域与调度对照配置及其8电路汇总}\label{tab:arms}
@@ -284,7 +284,7 @@ C_c=\langle v\in P\mid v\in C_i\rangle.
 \toprule 配置 & 区域来源与顺序 & $\Delta_{\mathrm{WNS}}$均值 & 候选STA\\\midrule
 W0 / U0 & 仅节点割；分别用加权/统一容量 & 0 & 71\\
 W1 / U1 & 覆盖区域优先，再节点割；分别用加权/统一容量 & 0.16125 & 847\\
-C & 仅覆盖区域 & 0.16125 & 839\\
+CO & 仅覆盖区域 & 0.16125 & 839\\
 UR1--3 & W1区域池，分别按种子1--3随机置换 & 0.16125 & 1046/919/944\\
 L & 受限连通区域搜索并在队首补覆盖区域 & 0.16125 & 1274\\
 \midrule
@@ -302,13 +302,13 @@ L & 受限连通区域搜索并在队首补覆盖区域 & 0.16125 & 1274\\
 
 \subsection{覆盖区域与节点容量的作用}\label{sec:gain}
 
-图~\ref{fig:gain_cost}展示全部72个终点及实际候选STA次数。仅节点割W0/U0均未取得改善；增加覆盖区域后，W1在8个电路上$\Delta$WNS均为正，平均为0.16125\,ns。该带取$2\sigma$，$\sigma$为同一网表对在多次物理实现之间WNS差值的标准差，逐电路取值为0.024558--0.08474\,ns；按此衡量，5个电路的改善超过各自判定带，合计贡献总改善量的89.1\%，扣带净额0.12120\,ns；余下3个低于本电路噪声分辨率。8个电路的改善方向一致（双尾符号检验$p=0.008$）。仅覆盖的C到达相同终点，在s641少用8次STA，其余实例与W1相同。该结果支持本组收益主要来自把报告关键实例纳入候选范围，而非最小割容量本身。
+图~\ref{fig:gain_cost}展示全部72个终点及实际候选STA次数。仅节点割W0/U0均未取得改善；增加覆盖区域后，W1在8个电路上$\Delta$WNS均为正，平均为0.16125\,ns。该带取$2\sigma$，$\sigma$为同一网表对在多次物理实现之间WNS差值的标准差，逐电路取值为0.024558--0.08474\,ns；按此衡量，5个电路的改善超过各自判定带，合计贡献总改善量的89.1\%，扣带净额0.12120\,ns；余下3个低于本电路噪声分辨率。8个电路的改善方向一致（双尾符号检验$p=0.008$）。仅覆盖的CO到达相同终点，在s641少用8次STA，其余实例与W1相同。该结果支持本组收益主要来自把报告关键实例纳入候选范围，而非最小割容量本身。
 
 W0与U0、W1与U1的终点、候选池和访问次序分别一致：加权容量在这组输入上未改变任何被观察对象，其作用未被激活。全1权重只是节点容量的设定，本组收益不来自式~\eqref{eq:cost}中的结构特征。C能够达到相同终点还说明，组合两个区域来源未在本组增加终点收益；它为后续简化区域生成提供了直接依据。
 
 \begin{figure*}[!t]
-\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_cp_gain_cost/r24_cp_gain_cost.pdf}
-\caption{8电路$\times$9配置的WNS改善（左，ps）与新候选STA次数（右）。基线另计，缓存及前置拒绝不计入测量次数；配置见表~\ref{tab:arms}。全部72个终点与成本均展示。}
+\centering\includegraphics[width=0.92\textwidth]{data/final/r95_monolabel/r24_cp_gain_cost/r24_cp_gain_cost.pdf}
+\caption{8电路$\times$9配置的WNS改善（左，ns）与新候选STA次数（右）。基线另计，缓存及前置拒绝不计入测量次数；配置见表~\ref{tab:arms}。全部72个终点与成本均展示。}
 \label{fig:gain_cost}
 \end{figure*}
 
@@ -321,8 +321,8 @@ W0与U0、W1与U1的终点、候选池和访问次序分别一致：加权容量
 同一终点也可以对应不同提交次数和轨迹。覆盖优先规定的是候选访问顺序，不预知候选的真实STA收益；后续状态又受此前提交影响。这里的随机对照衡量策略层面的成本与结果，而全程固定同一候选全集的纯排序因果重放仍未取得。实际STA次数可用于比较测量资源，未直接换算为独占环境下的墙钟加速。
 
 \begin{figure*}[t]
-\centering\includegraphics[width=0.92\textwidth]{data/final/r27_monochrome/r24_cp_budget_curves/r24_cp_budget_curves.pdf}
-\caption{同族72次运行的已提交收益$B(k)$与候选STA序号$k$。端点为实际停止处；仅逐$k$及停止点全等者合并。W0/U0、W1/U1全部重合，C除s641外、UR2在s27/s713/s820与W1重合；全部配置及局部交叉保留。}
+\centering\includegraphics[width=0.92\textwidth]{data/final/r95_monolabel/r24_cp_budget_curves/r24_cp_budget_curves.pdf}
+\caption{同族72次运行的已提交收益$B(k)$与候选STA序号$k$。端点为实际停止处；仅逐$k$及停止点全等者合并。W0/U0、W1/U1全部重合，CO除s641外、UR2在s27/s713/s820与W1重合；全部配置及局部交叉保留。}
 \label{fig:curves}
 \end{figure*}
 
@@ -475,8 +475,11 @@ FAECO以报告关键实例覆盖、加权节点割和有界局部动作调度组
 \bibitem{ho2010eco} Ho K H, Chen Y P, Fang J W, et al. ECO timing optimization using spare cells and technology remapping[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2010, 29(5): 697-710. DOI: 10.1109/TCAD.2010.2043573.
 \bibitem{liu2021rlsizer} Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning[C] //Proceedings of the 58th ACM/IEEE Design Automation Conference. Piscataway: IEEE, 2021: 733-738. DOI: 10.1109/DAC18074.2021.9586138.
 \bibitem{chen2024aito} Wu H, Huang Z, Li X, et al. AiTO: Simultaneous gate sizing and buffer insertion for timing optimization with GNNs and RL[J]. Integration, the VLSI Journal, 2024, 98: 102211. DOI: 10.1016/j.vlsi.2024.102211.
+\bibitem{ji2018buffer} 戢小亮, 佟星元, 吴睿振, 等. 一种提高芯片良率的时序电路缓冲器插入算法[J]. 电子学报, 2018, 46(12): 2964-2969. DOI: 10.3969/j.issn.0372-2112.2018.12.020.
 \bibitem{huang2025phys} Ye Y, Xu P, Ren L, et al. Learning-driven physically aware large-scale circuit gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2025, 44(5): 1901-1914. DOI: 10.1109/TCAD.2024.3488577.
 \bibitem{zhang2025buffalo} Hsiao H H, Lu Y C, Lim S K, et al. BUFFALO: PPA-configurable, LLM-based buffer tree generation via group relative policy optimization[C] //Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2025: 1-9. DOI: 10.1109/ICCAD66269.2025.11240744.
+\bibitem{he2023sta} 贺旭, 王耀, 傅智勇, 等. 敏捷设计中基于机器学习的静态时序分析方法综述[J]. 计算机辅助设计与图形学学报, 2023, 35(4): 640-652. DOI: 10.3724/SP.J.1089.2023.19557.
+\bibitem{tian2023gnn} 田春生, 陈雷, 王源, 等. 基于图神经网络的电子设计自动化技术研究进展[J]. 电子与信息学报, 2023, 45(9): 3069-3082. DOI: 10.11999/JEIT230266.
 \bibitem{jiang2010fraig} Wu B H, Yang C J, Huang C Y, et al. A robust functional ECO engine by SAT proof minimization and interpolation techniques[C] //Proceedings of IEEE/ACM International Conference on Computer-Aided Design. Piscataway: IEEE, 2010: 729-734. DOI: 10.5555/2133429.2133584.
 \bibitem{kravets2019symbolic} Kravets V N, Lee N Z, Jiang J H R. Comprehensive search for ECO rectification using symbolic sampling[C] //Proceedings of the 56th Annual Design Automation Conference. New York: ACM, 2019: 71:1-71:6. DOI: 10.1145/3316781.3317790.
 \bibitem{jiang2016resource} Cheng A C, Jiang I H R, Jou J Y. Resource-aware functional ECO patch generation[C] //Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition. Piscataway: IEEE, 2016: 1036-1041. DOI: 10.5555/2971808.2972050.
