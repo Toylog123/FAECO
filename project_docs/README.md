@@ -42,7 +42,7 @@
 | `review_history/` | 审稿历史 | 历史 |
 | `design_specs/` | 设计规格 | 约束 `code/` |
 | `planning/` | 仅存 V2 三份 + README | 半活 |
-| `baselines/` | 具名基线 | 活跃（但 `active` 指向已过期的 v18） |
+| `baselines/` | 具名基线 | 活跃（`active` = v19 / r28） |
 | `archive/` | 退役 | 历史 |
 | `migration/`、`worktrees/` | 迁移记录、工作树 | 历史 |
 

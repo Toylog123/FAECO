@@ -38,7 +38,7 @@
 
 **前版（r28 原样，仅存档参考）**：`.tex` `f0f4d5e0`（46,137 B）、PDF `e71feb3d`、CJK 8554。
 
-**基线缺口（已知）**：`BASELINE_INDEX.csv` 的 `active` 仍指 **v18 / r20（10-13）**，**r21–r28 共 8 轮未冻结**。当前 `.tex` SHA 与 v18 MANIFEST 记录的 `f65929ca` 不同，`sha256sum -c` 会大面积 FAIL。补 v19 见 §8 P4。
+**基线已收口（2026-10-28）**：`active` = **v19 / r28**，`versions/v19/MANIFEST.sha256` 148 条、`sha256sum -c` 全 OK。**但 r21–r27 共 7 轮仍无基线**，只能从 `review_rounds/` 取中间稿。校验 v18 须先 `git checkout 73dc0e7`（v18 MANIFEST 记 `.tex` = `f65929ca`，与当前 `a40530b8` 不同，直接在 HEAD 上跑 `sha256sum -c` 必 FAIL）。编号偏差：v19 对应 r28，打破旧约定 `vN↔r(N+2)`。
 
 ---
 

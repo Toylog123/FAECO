@@ -90,7 +90,7 @@ D56 producer已全部完成：剩42项REMAINING_RUN_RECEIPT106a6234…finished/r
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 历史冻结版本集合（v18为最近冻结基线，r21/r22是未冻结工作修订；冻结不代表已通过r22科学审计；见 `project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
+| `versions/` | 历史冻结版本集合（**v19 是当前冻结基线 = r28 + r94 口径修订**，三份稿同口径；r21–r27 未单独冻结。见 `versions/v19/README.md`、`project_docs/versioning.md` 与 `project_docs/OPEN_ISSUES.md`） |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 
