@@ -230,7 +230,7 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
 |---|---|---|
 | **P1** | 论文档位：直接投 JCAD，还是先把英文稿拉回同口径 | 中文两篇已定版（11 / 14 页，质量门 PASS）；**英文稿自 r96 起未同口径**，不统一不宜投英文刊 |
 | **P2** | ITC-99 表是否改双档陈述 | 补充 S4.3/S4.4 已给四数 A/B/C/D，主稿不引；**保持现状**即可，零新数据 |
-| **P3** | ~~git 提交~~ | **已做**：`d2d92c9`，10 条 commit、工作区干净。**未 push**，origin 已配置（github.com/Toylog123/FAECO.git） |
+| **P3** | ~~git 提交~~ | **已做**：`7677b21` 之后全部改动已拆成 14 条 commit，工作区干净。**未 push**，origin 已配置（github.com/Toylog123/FAECO.git） |
 | **P4** | v19 基线清单 | `versions/v19/MANIFEST.sha256` 自 r95 后未重建（当前 142 OK / 6 FAILED 属预期差异）；定稿后建 v20 |
 | **P5** | 落空率入文 + OI-069/070/072/073 | 均未入文，逐条在 `OPEN_ISSUES.md` |
 | **P7** | 预算结论（64 次候选 STA 保留 97.7%）是否入文 | 未定；不加也不动摇主结论 |
@@ -276,7 +276,7 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
 - Python 用 **`.venv/Scripts/python.exe`**（numpy 2.4.6）；**WSL 的 `python3` 没有 numpy**，换解释器 = 换口径。
 - **行尾纪律**：`.tex` 与 `OPEN_ISSUES.md` 为**纯 LF**；`LOGS.md` 为 **CRLF**；`*.sh` 由 `.gitattributes` 强制 LF（否则 WSL 下 shebang 带 \r 会直接失败）；`versions/*/MANIFEST.sha256` 必须 LF-only。改完用字节计数复核，`write_text` 会静默翻成 CRLF。
 - **编译引擎 = lualatex**：xelatex 能出同页数 PDF，但字节数差 ~0.7 MB，两者不可混当同一版。
-- **禁 `git add -A`**（行尾假象会混进提交），按路径逐条 add。HEAD 以 `git log -1` 为准；2026-11-04 收尾提交为 `15e6f36`。
+- **禁 `git add -A`**（行尾假象会混进提交），按路径逐条 add。HEAD 一律以 `git log -1` 为准，本文件不记哈希（记了就必过期）。
 - **本目录下 `os.remove` 会重定向进 Windows 回收站** ⇒ 删完须清 `D:\$Recycle.Bin`，否则磁盘不释放；被其它进程占用的目录连 `mv` 都会 Permission denied。
 - **长任务**：`sta` 必须带 `-no_splash -exit`，否则挂住等 stdin；物理流程 `detailed_route` 必须给 `-droute_end_iter`。
 - 冻结纪律：论文一旦冻结，任何内容改动（含摘要）须先取得用户明确同意（r96 起历轮均已授权）。
