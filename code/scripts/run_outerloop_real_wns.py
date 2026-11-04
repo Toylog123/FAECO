@@ -173,14 +173,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--clock-port", default="CK",
                    help="Clock port name in the mapped netlist (CK for ISCAS89/ITC-99, clk for PicoRV32)")
     p.add_argument("--yosys-wsl", action="store_true",
-                   help="Map with the WSL2 Ubuntu Yosys instead of the native "
-                        "OSS-CAD Suite nightly 0.67+146, which is the unified "
-                        "FAECO toolchain and the mapper of the s* main family. "
-                        "The WSL entry point /usr/local/bin/yosys resolves to "
-                        "OSS CAD Suite 0.70+255, i.e. the *ITC-99* family "
-                        "mapper: netlists produced in this mode are NOT the "
-                        "0.67+146 s* family and must not be pooled with it. "
-                        "Emergency fallback only.")
+                   help="Emergency fallback: map with the WSL2 *system* Yosys "
+                        "0.33 instead of the native OSS-CAD Suite 0.67+146, "
+                        "which is the paper's main family. Netlists produced "
+                        "this way belong to neither published family, so treat "
+                        "them as exploratory only. Do NOT repoint this at the "
+                        "WSL 0.70+255 build: its netlists give candidate_pool 0 "
+                        "on this runner (cut/patch construction fails; "
+                        "measured 2026-11-04, OI-078).")
     # --- early-stop surface (0a merge of two divergent meanings) -------------
     # In the unified-loop architecture ``early_stop`` is a RealWnsEvaluator
     # field that short-circuits the INNER candidate loop (``_eval_one``: stop at
@@ -326,11 +326,13 @@ def main() -> int:
     if args.skip_mapping and mapped.exists():
         print(f"{args.circuit}: reusing existing mapped.v (skip mapping)")
     else:
-        # ``yosys`` (bare, not ``/usr/bin/yosys``) on purpose.  ``/usr/bin/yosys``
-        # is the pinned SEC prover 0.33 (LOGS.md LOG-20261018-91) and must never
-        # drive mapping; ``yosys`` resolves through the /usr/local/bin shim to
-        # OSS CAD Suite 0.70+255, the ITC-99 family mapper.  See --yosys-wsl.
-        yosys_cmd = (["wsl.exe", "-d", "Ubuntu", "--", "yosys"]
+        # Pinned to the WSL *system* Yosys 0.33 on purpose, and NOT to the WSL
+        # 0.70+255 build: the latter is newer but unusable on this runner --
+        # its netlists give candidate_pool 0 because cut/patch construction
+        # finds nothing (measured 2026-11-04, OI-078).  0.33 is the same binary
+        # that serves as the SEC prover (LOGS.md LOG-20261018-91); same binary,
+        # different role, hence the absolute path here and in the SEC scripts.
+        yosys_cmd = (["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"]
                      if args.yosys_wsl else None)
         errors = run_yosys_mapping(circuit_path, out, yosys_cmd=yosys_cmd)
     if errors or not mapped.exists():
