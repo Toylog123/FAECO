@@ -259,9 +259,10 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
 
 ## 9 历史文档索引
 
-见 **`project_docs/ARCHIVE_INDEX.md`**。本文件之外的一切「主线 / 路线图 / 最新进展 / 里程碑」类文档**均已失效**；`mainline.md`、`roadmap.md`、`milestones.md`、`long_term_task_plan.md`、`risk_register.md`、`RECORDS.md`、`decision_log.md`、`future_task_backlog.md`、`ARCHIVE_POLICY.md`、`FILE_ORGANIZATION.md` 十份已在头部加失效横幅。
+见 **`project_docs/ARCHIVE_INDEX.md`**。本文件之外的一切「主线 / 路线图 / 最新进展 / 里程碑」类文档**均已失效**；`mainline.md`、`roadmap.md`、`milestones.md`、`long_term_task_plan.md`、`risk_register.md`、`RECORDS.md`、`decision_log.md`、`future_task_backlog.md`、`ARCHIVE_POLICY.md`、`FILE_ORGANIZATION.md` 十份已在头部加失效横幅；`project_docs/agent_handoff/` 下的 README / CURRENT_RUN_HANDOFF / START_HERE 亦已在 2026-11-04 加横幅（停在 r30）。
 
-**仍然活跃、可直接读的三份**：
+**仍然活跃、可直接读的四份**：
+- **`project_docs/HANDOFF_2026-11-04.md`** —— 交接入口（三十秒现状 + 复现入口 + 自检命令），**新接手先读它**
 - `project_docs/CANON.md`（本文件）—— 口径
 - `project_docs/LOGS.md` —— 逐轮事实流水（只追加）
 - `project_docs/OPEN_ISSUES.md` —— 未决问题容器
