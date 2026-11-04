@@ -62,6 +62,131 @@ _INSTANCE_LINE_RE = re.compile(
     re.M,
 )
 _ENDPOINT_RE = re.compile(r"^Endpoint:\s+([\w\\]+)", re.M)
+# 宽松版端点正则：接受含点号的实例名（DFF_3._0_）。默认关闭时用上面的版本。
+_ENDPOINT_RE_RELAXED = re.compile(r"^Endpoint:\s+([^\s(]+)", re.M)
+# 时序单元（触发器/锁存器/扫描触发器）。它们的实例名形如 DFF_1._0_（含点号），
+# 既不匹配 _INSTANCE_LINE_RE 的 (\w+)/\w+，也不在 cut 的组合锥里 —— 见 OI-077。
+_SEQUENTIAL_CELL_RE = re.compile(r"^sky130_fd_sc_hd__(?:s?df|dl)[a-z0-9]*_\d+$")
+# 宽松版：(\w+) 换为 [^\s(]+?，使含点号的实例名（DFF_0._0_，Yosys 0.70 族）
+# 也能匹配。仅在 relaxed_instance_parse 开启时使用，默认关闭以保持既有族
+# 的 critical_instances 逐字节不变 —— 见 OI-077 / OI-078。
+_INSTANCE_LINE_RE_RELAXED = re.compile(
+    r"^\s+\d+\.\d+\s+\d+\.\d+\s+[v^]\s+([^\s(]+?)/\w+\s+\((sky130_fd_sc_hd__\w+)\)",
+    re.M,
+)
+# ---------------------------------------------------------------------------
+# 触发器"壳"子模块的就地展开（OI-077）。
+#
+# 0.67 映射族把触发器包装成 ``module dff(CK, Q, D)``，体内只有一个
+# ``sky130_fd_sc_hd__dfxtp_1``，被顶层多次实例引用。直接改这个子模块会被
+# ``_scoped_module_pair`` 判为 ``Non-target helper module changed``（安全设计：
+# helper 是"共同定义"，改它就超出顶层等价证明的覆盖范围）。
+#
+# 正确做法是**在顶层就地展开**：把 ``dff DFF_k (.CK(c), .D(d), .Q(q));`` 换成
+# ``sky130_fd_sc_hd__dfxtp_4 DFF_k (.CLK(c), .D(d), .Q(q));``。helper 一字不动，
+# 修改仍落在被证明覆盖的顶层模块内，连接除引脚名 CK->CLK 外逐位相同。
+_HELPER_INST_TMPL = r"(?m)^([ \t]*)%s[ \t]+([A-Za-z_$][\w$]*)[ \t]*\((.*?)\)[ \t]*;"
+_PIN_ASSIGN_RE = re.compile(r"\.([A-Za-z_]\w*)\s*\(\s*([^)]*?)\s*\)")
+_HELPER_PORT_TO_PIN = {"CK": "CLK", "D": "D", "Q": "Q"}
+_FF_UNFOLD_TARGET = "sky130_fd_sc_hd__dfxtp_4"
+
+
+def _inspect_ff_helper(text: str, top_module: str):
+    """识别"只包了一个 sky130 时序原语"的壳子模块。
+
+    返回 ``(helper_name, inner_cell)``；形状不唯一或含额外逻辑时返回
+    ``(None, reason)``——调用方据此 **fail closed**，不做任何猜测。
+    """
+    try:
+        spans = module_spans(text)
+    except Exception:
+        return None, "module_spans_failed"
+    for span in spans:
+        if span.name == top_module:
+            continue
+        body = span.text
+        if re.search(r"\bassign\b|\balways\b|\bgenerate\b", body):
+            return None, "helper_has_logic"
+        found = re.findall(r"(sky130_fd_sc_hd__[a-z0-9_]+)\s+\S+\s*\((.*?)\)\s*;", body, re.S)
+        if len(found) != 1:
+            continue
+        inner_cell, conns = found[0]
+        if not _SEQUENTIAL_CELL_RE.match(inner_cell):
+            continue
+        pins = {k.upper(): v.strip() for k, v in _PIN_ASSIGN_RE.findall(conns)}
+        if set(pins) != {"CLK", "D", "Q"}:
+            return None, "helper_pin_set:" + ",".join(sorted(pins))
+        if pins["CLK"] != "CK" or pins["D"] != "D" or pins["Q"] != "Q":
+            return None, "helper_port_map"
+        return span.name, inner_cell
+    return None, "no_sequential_helper"
+
+
+def _fold_unfold_instances(original: str, candidate: str, top_module, lib, seq_groups):
+    """把"就地展开"的实例折回 helper 形式；不是纯展开则返回 None。
+
+    这是给 ``build_real_equivalence_checker`` 用的**规范化**，不是放宽规则：
+    只有当候选相对原文的时序单元差异**恰好**可以解释为
+    ``helper inst (CK,D,Q)`` -> ``同族库单元 inst (CLK,D,Q)``（实例名、三个网、
+    族与时序指纹全部相同）时，才把候选折回原形，让后续既有检查照常跑。
+    任何解释不了的差异一律返回 None，回到原来的 fail-closed 行为。
+    """
+    helper, inner_cell = _inspect_ff_helper(original, top_module)
+    if helper is None:
+        return None
+    try:
+        original_top = target_module_text(original, top_module)
+        candidate_top = target_module_text(candidate, top_module)
+    except Exception:
+        return None
+    helper_re = re.compile(_HELPER_INST_TMPL % re.escape(helper), re.S)
+    orig_pins: dict[str, dict] = {}
+    for match in helper_re.finditer(original_top):
+        _indent, inst, body = match.groups()
+        pins = {k.upper(): v.strip() for k, v in _PIN_ASSIGN_RE.findall(body)}
+        if set(pins) != {"CK", "D", "Q"}:
+            return None
+        orig_pins[inst] = pins
+    if not orig_pins:
+        return None
+    inner_family = getattr(lib.get(inner_cell), "family", None)
+    if inner_family is None:
+        return None
+
+    cell_re = re.compile(
+        r"(?m)^([ \t]*)(sky130_fd_sc_hd__[a-z0-9_]+)[ \t]+(\S+)[ \t]*\((.*?)\)[ \t]*;", re.S)
+    folded: dict[str, tuple[str, str]] = {}          # inst -> (indent, replaced statement)
+    seen: set[str] = set()
+    for match in cell_re.finditer(candidate_top):
+        indent, cell_type, inst, body = match.groups()
+        if inst not in orig_pins:
+            continue
+        cell = lib.get(cell_type)
+        if cell is None or getattr(cell, "family", None) != inner_family:
+            return None                                   # 换了族 -> 不解
+        if seq_groups and seq_groups.get(inner_cell) != seq_groups.get(cell_type):
+            return None                                   # 时序语义变了 -> 不解
+        pins = {k.upper(): v.strip() for k, v in _PIN_ASSIGN_RE.findall(body)}
+        if set(pins) != {"CLK", "D", "Q"}:
+            return None
+        want = orig_pins[inst]
+        if pins["CLK"] != want["CK"] or pins["D"] != want["D"] or pins["Q"] != want["Q"]:
+            return None                                   # 连接变了 -> 不解
+        seen.add(inst)
+        back = "%s%s %s (.CK(%s), .D(%s), .Q(%s));" % (
+            indent, helper, inst, pins["CLK"], pins["D"], pins["Q"])
+        folded[inst] = (match.group(0), back)
+    if not folded:
+        return None
+    # 原文里有、候选里却找不到的时序实例：视为"事件消失"，交给后续检查判死。
+    if not seen.issubset(orig_pins):
+        return None
+    out = candidate_top
+    for original_stmt, back in folded.values():
+        out = out.replace(original_stmt, back, 1)
+    return replace_target_module(candidate, top_module, out)
+
+
 
 
 def _checker_passed(value) -> bool:
@@ -419,6 +544,13 @@ def build_real_equivalence_checker(liberty_text: str, *, top_module=None):
         try:
             validate_cell_input_connections(original_text, lib)
             validate_cell_input_connections(candidate_text, lib)
+            # 触发器壳展开（OI-077）：若候选的时序单元差异**恰好**可解释为
+            # "helper 实例 -> 同族库单元"，先折回原形再走既有检查；解释不了就
+            # 保持原样（fail closed）。这不是放宽规则，而是多识别一类精确改写。
+            folded = _fold_unfold_instances(
+                original_text, candidate_text, top_module, lib, sequential_groups)
+            if folded is not None:
+                candidate_text = folded
             original_text,candidate_text=_scoped_module_pair(original_text,candidate_text,top_module)
             original_physical = _assert_unique_physical_instances(original_text, include_connections=True)
             candidate_physical = _assert_unique_physical_instances(candidate_text, include_connections=True)
@@ -926,10 +1058,16 @@ def build_boundary_closure_checker(*, top_module=None, liberty_text=None):
     return check
 
 
-def parse_critical_instances(sta_text: str) -> list[str]:
-    """Instance names on the worst timing path, in path order (deduped)."""
+def parse_critical_instances(sta_text: str, *, relaxed: bool = False) -> list[str]:
+    """Instance names on the worst timing path, in path order (deduped).
+
+    ``relaxed`` additionally accepts names containing dots (``DFF_0._0_``),
+    which the default pattern drops silently.  Default False keeps the
+    historical parsing byte-identical for the existing families.
+    """
     insts: list[str] = []
-    for m in _INSTANCE_LINE_RE.finditer(sta_text):
+    pattern = _INSTANCE_LINE_RE_RELAXED if relaxed else _INSTANCE_LINE_RE
+    for m in pattern.finditer(sta_text):
         inst = m.group(1)
         if "/" in inst:
             continue
@@ -938,9 +1076,14 @@ def parse_critical_instances(sta_text: str) -> list[str]:
     return insts
 
 
-def parse_worst_endpoint(sta_text: str) -> str | None:
-    """Endpoint DFF instance name (e.g. ``DFF_11`` from ``DFF_11/_0_``)."""
-    m = _ENDPOINT_RE.search(sta_text)
+def parse_worst_endpoint(sta_text: str, *, relaxed: bool = False) -> str | None:
+    """Endpoint DFF instance name (e.g. ``DFF_11`` from ``DFF_11/_0_``).
+
+    ``relaxed`` also accepts dotted names (``DFF_11._0_``); the default
+    pattern truncates them at the first dot. Default False keeps the
+    historical behaviour of the existing families unchanged.
+    """
+    m = (_ENDPOINT_RE_RELAXED if relaxed else _ENDPOINT_RE).search(sta_text)
     return (m.group(1).split("/")[0].strip("\\")) if m else None
 
 
@@ -1032,6 +1175,10 @@ class RealWnsEvaluator:
         ),
         tns_aware: bool = False,
         max_instances: int = 8,
+        max_cand_per_instance: int = 0,
+        enable_ff_resize: bool = False,
+        ff_scope: str = "cone",
+        relaxed_instance_parse: bool = False,
         priority_table: dict | None = None,
         proxy_ranking: bool = False,
         proxy_weights: ProxyWeights | None = None,
@@ -1096,6 +1243,24 @@ class RealWnsEvaluator:
         self.buf_types = buf_types
         self.tns_aware = tns_aware
         self.max_instances = max_instances
+        # 每实例累计候选测量上限（0 = 不限）。用于测"浅扫 vs 深挖"：
+        # 某实例测够后跳过，候选自然滑向后续实例，从而在同预算下铺开覆盖面。
+        self.max_cand_per_instance = max(0, int(max_cand_per_instance))
+        self._inst_trial_count: dict[str, int] = {}
+        # 时序单元（触发器/锁存器）驱动升级开关。默认关闭以保持既有族可复现：
+        # 关键路径的起点与终点都是触发器，而 critical_instances 的解析只覆盖
+        # 组合门（见 OI-077），因此 DFF 从未进入过候选集。开启后把它们追加到
+        # actionable 尾部（不挤占组合门名额），使对照满足 W1 ⊆ FF 臂。
+        self.enable_ff_resize = bool(enable_ff_resize)
+        # 触发器展开的作用域（OI-077）：cone = 只在割边界上的触发器
+        # （Q 网在 boundary_inputs 或 D 网在 boundary_outputs，典型 2--6 个）；
+        # all = 顶层所有触发器实例（只有小例用）。默认 cone。
+        self.ff_scope = "all" if str(ff_scope).lower() == "all" else "cone"
+        self.ff_unfold_log: list[dict] = []
+        # 宽松实例名解析（默认关）。用于 Yosys 0.70 族的网表：其触发器实例名
+        # 形如 DFF_0._0_，默认的 (\w+) 会静默丢掉整类实例，导致
+        # "no critical instances"。开启后仅影响本实例的解析结果。
+        self.relaxed_instance_parse = bool(relaxed_instance_parse)
         self.priority_table = priority_table or {}
         self.proxy_ranking = bool(proxy_ranking)
         self.proxy_weights = proxy_weights or ProxyWeights()
@@ -1372,7 +1537,9 @@ class RealWnsEvaluator:
         if report.exists():
             report_text = report.read_text(encoding="utf-8", errors="replace")
             critical_instances = parse_critical_instances(report_text)
-            endpoint = parse_worst_endpoint(report_text)
+            endpoint = parse_worst_endpoint(
+                report_text, relaxed=self.relaxed_instance_parse
+            )
             critical_endpoints = [endpoint] if endpoint else None
 
         wns = res.get("wns")
@@ -1508,6 +1675,73 @@ class RealWnsEvaluator:
                 out = apply_sizing(out, {inst: new_type})
         return replace_target_module(text,self.top_module,out)
 
+    # -- 触发器壳展开（OI-077） -------------------------------------------
+
+    def _ff_unfold_targets(self, scoped: str, patch):
+        """挑出本轮要原地展开的触发器实例。
+
+        返回 ``(helper, targets, helper_cell, target_cell, reason)``；
+        ``reason`` 非空表示按 fail-closed 规则放弃该动作（不生成候选）。
+        """
+        helper, info = _inspect_ff_helper(self.mapped_text, self.top_module)
+        if helper is None:
+            return "", [], "", "", info
+        target = _FF_UNFOLD_TARGET
+        if info == target:
+            return helper, [], info, target, "already_max"
+        if self.lib.get(target) is None:
+            return helper, [], info, target, "target_cell_unavailable"
+        pattern = re.compile(_HELPER_INST_TMPL % re.escape(helper), re.S)
+        insts: list[tuple[str, dict]] = []
+        for match in pattern.finditer(scoped):
+            _indent, inst, body = match.groups()
+            pins = {k.upper(): v.strip() for k, v in _PIN_ASSIGN_RE.findall(body)}
+            if set(pins) != {"CK", "D", "Q"}:
+                # 只展开命名连接且恰好三脚的写法；位置连接无法安全映射。
+                return helper, [], info, target, "instance_port_shape"
+            insts.append((inst, pins))
+        if not insts:
+            return helper, [], info, target, "no_helper_instances"
+        if self.ff_scope == "all":
+            return helper, [i for i, _ in insts], info, target, ""
+        boundary = set(getattr(patch, "boundary_inputs", []) or [])
+        boundary |= set(getattr(patch, "boundary_outputs", []) or [])
+        if not boundary:
+            # patch 没有边界信息时退回全展开，并在日志里记明（语义变化可见）。
+            return helper, [i for i, _ in insts], info, target, "cone_boundary_missing"
+        targets = [i for i, pins in insts if {pins["D"], pins["Q"]} & boundary]
+        if not targets:
+            return helper, [], info, target, "cone_has_no_ff"
+        return helper, targets, info, target, ""
+
+    def _apply_unfold(self, text: str, helper: str, targets, target_cell: str) -> str:
+        """把 ``helper`` 的指定实例就地展开成库单元（helper 定义不动）。"""
+        wanted = set(targets)
+        out = target_module_text(text, self.top_module)
+        _assert_unique_physical_instances(out)
+        pattern = re.compile(_HELPER_INST_TMPL % re.escape(helper), re.S)
+        seen: list[str] = []
+
+        def _replace(match):
+            indent, inst, body = match.group(1), match.group(2), match.group(3)
+            if inst not in wanted:
+                return match.group(0)
+            pins = {k.upper(): v.strip() for k, v in _PIN_ASSIGN_RE.findall(body)}
+            if set(pins) != {"CK", "D", "Q"}:
+                raise ValueError("unfold port shape: %s" % inst)
+            mapped = {_HELPER_PORT_TO_PIN[k]: v for k, v in pins.items()}
+            if set(mapped) != {"CLK", "D", "Q"}:
+                raise ValueError("unfold pin map: %s" % inst)
+            seen.append(inst)
+            inner = ", ".join(".%s(%s)" % (p, mapped[p]) for p in ("CLK", "D", "Q"))
+            return "%s%s %s (%s);" % (indent, target_cell, inst, inner)
+
+        unfolded = pattern.sub(_replace, out)
+        if sorted(seen) != sorted(wanted):
+            raise ValueError("unfold coverage: %d of %d" % (len(seen), len(wanted)))
+        return replace_target_module(text, self.top_module, unfolded)
+
+
     def _joint_enumerate_combos(self, cells, allowed_instances=None) -> list[tuple[dict, str]]:
         """Joint repair de-humanization (TCAD sprint): enumerate multi-gate
         upsize/rewrite combinations along the critical path.
@@ -1615,6 +1849,24 @@ class RealWnsEvaluator:
                 stitch_topology_replacement(target_module_text(text,self.top_module),topology_replacement))
         elif kind == "JOINT":
             candidate_text = self._apply_joint(text, pin_map)
+        elif kind == "FF":
+            if isinstance(pin_map, dict) and pin_map.get("__mode__") == "unfold":
+                # 0.67 映射族：把顶层 dff 实例就地展开成库单元。helper 子模块
+                # 一字不动，故仍落在顶层等价的证明域内（见 OI-077 方案）。
+                candidate_text = self._apply_unfold(
+                    text,
+                    pin_map["helper"],
+                    pin_map["targets"],
+                    pin_map["cell"],
+                )
+            elif isinstance(pin_map, dict) and pin_map.get("__mode__") == "submodule":
+                # 旧写法：直接升 helper 子模块内的单元。保留作负面对照——它会
+                # 被 _scoped_module_pair 判为 Non-target helper module changed。
+                candidate_text = text.replace(
+                    "sky130_fd_sc_hd__dfxtp_1", "sky130_fd_sc_hd__dfxtp_4"
+                )
+            else:
+                candidate_text = self._apply_joint(text, pin_map)
         else:
             candidate_text = self._apply(text, inst, kind, new_type, pin_map)
         sub = cand_dir / ("%03d_" % index + inst + "_" + kind)
@@ -1956,7 +2208,9 @@ class RealWnsEvaluator:
         if report.exists():
             report_text = report.read_text(encoding="utf-8", errors="replace")
             critical_refresh = parse_critical_instances(report_text)
-            critical_endpoint_refresh = parse_worst_endpoint(report_text)
+            critical_endpoint_refresh = parse_worst_endpoint(
+                report_text, relaxed=self.relaxed_instance_parse
+            )
         # Physical mode is evaluated exclusively against a paired physical
         # baseline/candidate under one RC model.  Ideal STA is retained only
         # as an independent diagnostic, never as an acceptance prefilter.
@@ -2168,7 +2422,9 @@ class RealWnsEvaluator:
                     encoding="utf-8", errors="replace"
                 )
                 critical_refresh = parse_critical_instances(physical_report_text)
-                critical_endpoint_refresh = parse_worst_endpoint(physical_report_text)
+                critical_endpoint_refresh = parse_worst_endpoint(
+                    physical_report_text, relaxed=self.relaxed_instance_parse
+                )
         failure_events = []
         if res.get("physical_budget_event"):
             failure_events.append(res["physical_budget_event"])
@@ -2213,6 +2469,13 @@ class RealWnsEvaluator:
             changed = len(topology_window.gates)
         elif kind == "JOINT":
             changed = len(pin_map)
+        elif kind == "FF":
+            # 触发器壳展开是一个多实例原子动作，改动实例数按 targets 计；
+            # 旧的子模块写法只有一个改动点。
+            if isinstance(pin_map, dict) and pin_map.get("__mode__") == "unfold":
+                changed = max(1, len(pin_map.get("targets") or ()))
+            else:
+                changed = len(pin_map)
         else:
             changed = 1
         gate_count = max(1, parse_verilog_netlist_from_text(
@@ -2455,9 +2718,50 @@ class RealWnsEvaluator:
         by_inst = {c.instance: c for c in cells}
         in_patch = [g for g in gates if g in by_inst]
         # order: critical-path instances first, then remaining cut gates
-        ordered = [i for i in self.critical_instances if i in in_patch]
+        if self.relaxed_instance_parse:
+            # 0.70 族网表的实例名带转义反斜杠（\DFF_0._0_），STA 报告里是
+            # DFF_0._0_，故按去反斜杠的名字对齐后再转回网表名。
+            _by_norm: dict[str, str] = {}
+            for _g in in_patch:
+                _by_norm.setdefault(_g.lstrip("\\"), _g)
+            _hits: list[str] = []
+            for _i in self.critical_instances:
+                _g = _by_norm.get(_i.lstrip("\\"))
+                if _g is not None and _g not in _hits:
+                    _hits.append(_g)
+        else:
+            _hits = [i for i in self.critical_instances if i in in_patch]
+        ordered = _hits
         ordered += [g for g in in_patch if g not in ordered]
         actionable = ordered[: self.max_instances]
+        ff_plan = None
+        if self.enable_ff_resize:
+            # 追加顶层时序单元（OI-077）。追加而非插入头部，使组合门的
+            # 名额不受影响，对照满足 W1 ⊆ FF 臂。
+            for c in cells:
+                if _SEQUENTIAL_CELL_RE.match(c.cell_type) and c.instance not in actionable:
+                    actionable.append(c.instance)
+            # 0.67 族没有可直接寻址的时序单元（触发器藏在 helper 子模块里），
+            # 改为"就地展开"单个原子候选；两个来源互斥。
+            helper, ff_targets, helper_cell, target_cell, ff_reason = \
+                self._ff_unfold_targets(scoped, patch)
+            self.ff_unfold_log.append({
+                "iteration": iteration,
+                "patch_id": str(patch_id),
+                "scope": self.ff_scope,
+                "helper": helper,
+                "helper_cell": helper_cell,
+                "target_cell": target_cell,
+                "n_targets": len(ff_targets),
+                "reason": ff_reason,
+            })
+            try:
+                with open(self.output_dir / "ff_unfold.jsonl", "a", encoding="utf-8") as _fh:
+                    _fh.write(json.dumps(self.ff_unfold_log[-1], ensure_ascii=False) + "\n")
+            except OSError:
+                pass
+            if ff_targets:
+                ff_plan = (helper, list(ff_targets), helper_cell, target_cell)
         if not actionable:
             no_action_hash = hashlib.sha256(
                 json.dumps({"gates": sorted(gates), "patch_id": patch_id}, sort_keys=True).encode()
@@ -2485,7 +2789,50 @@ class RealWnsEvaluator:
             + len(getattr(patch, "boundary_outputs", []) or [])
         )
         critical_count = max(1, len(self.critical_instances))
+        # 触发器壳展开放 job_index 0：它是本轮唯一的时序单元动作，必须被实测，
+        # 否则会因排在尾部撞上候选 STA 预算上限而永远测不到（r110 的教训）。
+        # 代价是每轮少测一个组合门候选，这一点在对照里明写。
+        if ff_plan is not None:
+            helper, ff_targets, helper_cell, target_cell = ff_plan
+            ff_job = (
+                "FF_UNFOLD",
+                "ff",
+                helper_cell,
+                {
+                    "__mode__": "unfold",
+                    "helper": helper,
+                    "targets": list(ff_targets),
+                    "cell": target_cell,
+                },
+                "FF",
+                self.mapped_text,
+                cand_dir,
+                self.top_module,
+                job_index,
+            )
+            candidate_rows.append(
+                self._proxy_row(
+                    instance="FF_UNFOLD",
+                    kind="FF",
+                    from_type=helper_cell,
+                    to_type=target_cell,
+                    critical_rank=0,
+                    critical_count=critical_count,
+                    strategy_rank=0,
+                    patch_size=len(ff_targets),
+                    boundary_complexity=boundary_complexity,
+                    job=ff_job,
+                )
+            )
+            job_index += 1
         for inst in actionable:
+            room = None
+            if self.max_cand_per_instance > 0:
+                already = self._inst_trial_count.get(inst, 0)
+                if already >= self.max_cand_per_instance:
+                    # 该实例已测够：跳过，让候选预算滑向后续实例（浅扫语义）
+                    continue
+                room = self.max_cand_per_instance - already
             critical_rank = (
                 self.critical_instances.index(inst)
                 if inst in self.critical_instances
@@ -2494,6 +2841,10 @@ class RealWnsEvaluator:
             order = self._strategy_order(by_inst[inst].cell_type)
             strategy_ranks = {kind: rank for rank, kind in enumerate(order)}
             for new_type, pin_map, kind in self._candidates_for(cells, inst):
+                if room is not None:
+                    if room <= 0:
+                        break
+                    room -= 1
                 job = (
                     inst,
                     by_inst[inst].cell_type,
@@ -2602,6 +2953,48 @@ class RealWnsEvaluator:
                         patch_size=len(joint_change),
                         boundary_complexity=boundary_complexity,
                         job=job,
+                    )
+                )
+                job_index += 1
+
+        # 时序单元联合升级（OI-077）。关键路径的起点与终点都是触发器，而
+        # critical_instances 的解析只覆盖组合门，因此它们从来不是候选。实测
+        # 表明"全升"是唯一有效形式（4/8 例超判定带），单点贪心只有其 1/1.67，
+        # 所以这里作为一个多实例联合动作提交，而不是逐实例枚举（后者会被
+        # candidates_per_iteration 的 beam 截断掉）。
+        if self.enable_ff_resize:
+            ff_change: dict[str, tuple[str, dict, str]] = {}
+            for inst in actionable:
+                cell = by_inst.get(inst)
+                if cell is None or not _SEQUENTIAL_CELL_RE.match(cell.cell_type):
+                    continue
+                gcs = [c for c in self._candidates_for(cells, inst) if c[2] == "G"]
+                if gcs:
+                    ff_change[inst] = gcs[-1]  # larger_size_candidates 升序，取最大档
+            if ff_change:
+                ff_job = (
+                    "FF_JOINT",
+                    "ff",
+                    "ff",
+                    ff_change,
+                    "FF",
+                    self.mapped_text,
+                    cand_dir,
+                    self.top_module,
+                    job_index,
+                )
+                candidate_rows.append(
+                    self._proxy_row(
+                        instance="FF_JOINT",
+                        kind="FF",
+                        from_type="ff",
+                        to_type="ff",
+                        critical_rank=0,
+                        critical_count=critical_count,
+                        strategy_rank=0,
+                        patch_size=len(ff_change),
+                        boundary_complexity=boundary_complexity,
+                        job=ff_job,
                     )
                 )
                 job_index += 1
@@ -2813,6 +3206,10 @@ class RealWnsEvaluator:
             trial["accepted"] = False
             trial["committed"] = False
             self.trials.append(trial)
+            if self.max_cand_per_instance > 0:
+                _i = trial.get("instance")
+                if _i and _i != "JOINT":
+                    self._inst_trial_count[_i] = self._inst_trial_count.get(_i, 0) + 1
         if best is not None:
             self.trials[-len(results) + results.index(best)]["accepted"] = True
         # online decision layer v2: feed every measured trial back so the
@@ -2821,7 +3218,7 @@ class RealWnsEvaluator:
             from_type = ""
             for r in results:
                 kind = r.get("kind", "")
-                if not kind or kind == "JOINT":
+                if not kind or kind in ("JOINT", "FF"):
                     continue
                 if from_type == "":
                     inst = r.get("instance", "")

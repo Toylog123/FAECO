@@ -66,8 +66,8 @@ def test_cli_initial_endpoint_ignores_same_named_helper_instance(tmp_path,monkey
         assert 'output: top_d' in config
         raise ReachedEvaluator
     monkeypatch.setattr(runner,'run_opensta',baseline)
-    monkeypatch.setattr(runner,'parse_critical_instances',lambda _: ['shared'])
-    monkeypatch.setattr(runner,'parse_worst_endpoint',lambda _: 'shared')
+    monkeypatch.setattr(runner,'parse_critical_instances',lambda _, relaxed=False: ['shared'])
+    monkeypatch.setattr(runner,'parse_worst_endpoint',lambda _, relaxed=False: 'shared')
     monkeypatch.setattr(runner,'RealWnsEvaluator',evaluator)
     monkeypatch.setattr('sys.argv',['runner','--circuit','top','--source-file',str(source),
                                   '--output-dir',str(output),'--skip-mapping'])

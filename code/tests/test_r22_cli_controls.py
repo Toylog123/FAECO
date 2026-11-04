@@ -128,8 +128,10 @@ def test_main_transmits_and_archives_effective_controls_without_eda(
     monkeypatch.setattr(runner, "run_opensta", baseline)
     monkeypatch.setattr(runner, "run_yosys_mapping",
                         lambda *_a, **_k: pytest.fail("mapping must not run"))
-    monkeypatch.setattr(runner, "parse_critical_instances", lambda _text: ["g1"])
-    monkeypatch.setattr(runner, "parse_worst_endpoint", lambda _text: "ff/D")
+    monkeypatch.setattr(runner, "parse_critical_instances",
+                        lambda _text, relaxed=False: ["g1"])
+    monkeypatch.setattr(runner, "parse_worst_endpoint",
+                        lambda _text, relaxed=False: "ff/D")
     monkeypatch.setattr(runner, "dff_d_input_net", lambda *_a: "target")
     monkeypatch.setattr(runner, "build_r_available", lambda *_a: {"g1"})
     for checker in ("build_real_equivalence_checker", "build_full_netlist_sec_checker",

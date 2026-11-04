@@ -84,6 +84,27 @@ def parse_args() -> argparse.Namespace:
                    help="Hard wall-clock budget for the outer loop")
     p.add_argument("--candidates-per-iteration", type=int, default=8,
                    help="Cut candidates explored per iteration (beam width; 1 isolates feedback)")
+    p.add_argument("--max-cand-per-instance", type=int, default=0,
+                   help="Cap cumulative candidate measurements per instance (0 = unlimited). "
+                        "A small cap turns the search from deep-diving a few gates into shallow "
+                        "sweeping across many gates at the same STA budget.")
+    p.add_argument("--enable-ff-resize", action="store_true",
+                   help="Append sequential cells (flip-flops/latches) to the candidate "
+                        "instance set so their drive strength can be up-sized. The timing "
+                        "path start/end points are flip-flops but they are excluded from "
+                        "critical_instances by _INSTANCE_LINE_RE (OI-077). Default off keeps "
+                        "existing families bit-identical.")
+    p.add_argument("--ff-scope", choices=("cone", "all"), default="cone",
+                   help="Scope of the sequential-cell up-size action (OI-077): "
+                        "'cone' only touches flip-flops on the cut boundary "
+                        "(Q net in boundary_inputs or D net in boundary_outputs), "
+                        "'all' unfolds every flip-flop in the top module. "
+                        "In the 0.67 family the action is a per-instance unfold of the "
+                        "`dff` helper, so the helper module itself stays byte-identical.")
+    p.add_argument("--relaxed-instance-parse", action="store_true",
+                   help="Parse critical-path instance lines with a pattern that also "
+                        "accepts dotted names (DFF_0._0_, Yosys 0.70 family). Default off "
+                        "keeps existing families bit-identical (OI-078).")
     p.add_argument("--cut-search-policy", choices=("legacy", "weighted_st"), default="legacy",
                    help="Candidate-boundary search: preserve legacy behavior or use canonical weighted s-t cuts")
     p.add_argument("--cut-sources", choices=("full", "weighted", "cover"), default="full",
@@ -152,7 +173,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--clock-port", default="CK",
                    help="Clock port name in the mapped netlist (CK for ISCAS89/ITC-99, clk for PicoRV32)")
     p.add_argument("--yosys-wsl", action="store_true",
-                   help="Fall back to WSL2 Ubuntu Yosys 0.33 (default is the native\n                   OSS-CAD Suite nightly Yosys 0.67, unified FAECO toolchain)")
+                   help="Map with the WSL2 Ubuntu Yosys instead of the native "
+                        "OSS-CAD Suite nightly 0.67+146, which is the unified "
+                        "FAECO toolchain and the mapper of the s* main family. "
+                        "The WSL entry point /usr/local/bin/yosys resolves to "
+                        "OSS CAD Suite 0.70+255, i.e. the *ITC-99* family "
+                        "mapper: netlists produced in this mode are NOT the "
+                        "0.67+146 s* family and must not be pooled with it. "
+                        "Emergency fallback only.")
     # --- early-stop surface (0a merge of two divergent meanings) -------------
     # In the unified-loop architecture ``early_stop`` is a RealWnsEvaluator
     # field that short-circuits the INNER candidate loop (``_eval_one``: stop at
@@ -298,7 +326,11 @@ def main() -> int:
     if args.skip_mapping and mapped.exists():
         print(f"{args.circuit}: reusing existing mapped.v (skip mapping)")
     else:
-        yosys_cmd = (["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"]
+        # ``yosys`` (bare, not ``/usr/bin/yosys``) on purpose.  ``/usr/bin/yosys``
+        # is the pinned SEC prover 0.33 (LOGS.md LOG-20261018-91) and must never
+        # drive mapping; ``yosys`` resolves through the /usr/local/bin shim to
+        # OSS CAD Suite 0.70+255, the ITC-99 family mapper.  See --yosys-wsl.
+        yosys_cmd = (["wsl.exe", "-d", "Ubuntu", "--", "yosys"]
                      if args.yosys_wsl else None)
         errors = run_yosys_mapping(circuit_path, out, yosys_cmd=yosys_cmd)
     if errors or not mapped.exists():
@@ -321,9 +353,16 @@ def main() -> int:
               "(got None)", file=sys.stderr)
         return 1
     sta_text = (out / "sta.log").read_text(encoding="utf-8", errors="replace")
-    critical = parse_critical_instances(sta_text)
-    endpoint = parse_worst_endpoint(sta_text)
+    critical = parse_critical_instances(
+        sta_text, relaxed=args.relaxed_instance_parse
+    )
+    endpoint = parse_worst_endpoint(
+        sta_text, relaxed=args.relaxed_instance_parse
+    )
     target_net = dff_d_input_net(single, endpoint) if endpoint else None
+    if target_net is None and endpoint and not endpoint.startswith("\\"):
+        # 0.70 族网表里的实例名是转义标识符（\DFF_3._0_），而报告里没有反斜杠
+        target_net = dff_d_input_net(single, "\\" + endpoint)
     if not critical or target_net is None:
         print(f"{args.circuit}: no critical instances / endpoint D net "
               f"(endpoint={endpoint})", file=sys.stderr)
@@ -364,6 +403,10 @@ def main() -> int:
         enable_buffer=args.enable_buffer,
         tns_aware=args.tns_aware,
         max_instances=args.max_instances,
+        max_cand_per_instance=args.max_cand_per_instance,
+        enable_ff_resize=args.enable_ff_resize,
+        ff_scope=args.ff_scope,
+        relaxed_instance_parse=args.relaxed_instance_parse,
         priority_table=priority_table,
         proxy_ranking=args.proxy_ranking,
         adaptive=args.adaptive,
