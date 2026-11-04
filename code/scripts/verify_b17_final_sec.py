@@ -139,6 +139,10 @@ def main() -> int:
 
     log = out / "sec.log"
     t0 = time.time()
+    # SEC prover = the *system* WSL Yosys 0.33 (git 2584903a060), pinned by
+    # LOGS.md LOG-20261018-91 together with its binary hash.  Do not retarget
+    # this at /usr/local/bin/yosys (OSS CAD 0.70+255): the equivalence results
+    # were proven with 0.33 and the proof chain must stay reproducible.
     proc = subprocess.run(
         ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys", _to_wsl(script)],
         capture_output=True, text=True,

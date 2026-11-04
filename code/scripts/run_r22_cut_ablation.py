@@ -71,6 +71,12 @@ def tool_versions():
     cad = _find_oss_cad_root()
     if cad is None:
         raise RuntimeError('Pinned native Yosys unavailable')
+    # Two different Yosys roles on purpose, do not swap them:
+    #   mapping_yosys -- native OSS CAD Suite 0.67+146, the s* main-family mapper;
+    #   sec_yosys     -- WSL *system* Yosys 0.33 (git 2584903a060, binary
+    #                    88c0a12b..., LOGS.md LOG-20261018-91).  The SEC chain is
+    #                    pinned to it because the proven netlists were checked
+    #                    with this exact binary.  It is NOT a mapper.
     queries = {'mapping_yosys':[str(cad/'bin/yosys.exe'),'-V'],
                'sta':['wsl.exe','-d','Ubuntu','--','/usr/local/bin/sta','-version'],
                'sec_yosys':['wsl.exe','-d','Ubuntu','--','/usr/bin/yosys','-V']}
@@ -138,6 +144,7 @@ def final_sec(initial, final, circuit, out):
         'equiv_status -assert',''])
     (out/'sec.ys').write_text(script,encoding='utf-8')
     started = time.monotonic()
+    # SEC prover = pinned system Yosys 0.33 under WSL (see tool_versions()).
     cmd = ['wsl.exe','-d','Ubuntu','--','/usr/bin/yosys',_to_wsl(out/'sec.ys')]
     try:
         p = subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8',errors='replace',timeout=180)

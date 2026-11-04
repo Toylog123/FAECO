@@ -106,19 +106,30 @@ def run_yosys_mapping(circuit: Path, output: Path,
     """Yosys: synth + dfflibmap + abc -liberty -> pure SKY130 cell netlist.
 
     ``yosys_cmd`` selects the Yosys executable. Default is the native
-    OSS-CAD Suite Yosys 0.67+146 when its absolute path is available. Pass
-    ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"] to select the
-    WSL2 Ubuntu Yosys 0.33 package explicitly. The removed Windows Scoop
-    Yosys 0.9 package is never used. WSL mode translates map.ys paths via
-    _to_wsl.
+    OSS-CAD Suite Yosys 0.67+146 when its absolute path is available; that
+    binary is the mapper of the **s* main family** and the source of every
+    published ISCAS89 netlist.
+
+    If the native suite is absent, the fallback runs the WSL ``yosys`` entry
+    point, which /usr/local/bin resolves to OSS CAD Suite 0.70+255 -- the
+    **ITC-99 family** mapper.  Netlists from that path are therefore *not*
+    the 0.67+146 family and must not be pooled with it: treat this fallback
+    as an emergency path, not a substitute.
+
+    Pass ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"] only when you
+    mean the pinned SEC prover (system Yosys 0.33), never for mapping. The
+    removed Windows Scoop Yosys 0.9 package is never used. WSL mode
+    translates map.ys paths via _to_wsl.
     """
     # Resolve the command *before* the WSL path translation check. Never
     # fall back to a bare Windows ``yosys`` name: the Scoop 0.9 package was
     # removed to prevent an older PATH shim from silently taking precedence.
+    # The WSL fallback is spelled ``yosys`` (not /usr/bin/yosys) so it picks
+    # up the 0.70+255 shim instead of the 0.33 SEC prover.
     if yosys_cmd is None:
         root = _find_oss_cad_root()
         yosys_cmd = ([str(root / "bin" / "yosys.exe")] if root else
-                     ["wsl.exe", "-d", "Ubuntu", "--", "/usr/bin/yosys"])
+                     ["wsl.exe", "-d", "Ubuntu", "--", "yosys"])
     script = output / "map.ys"
     lib_posix = LIB.resolve().as_posix()
     script_posix = script.as_posix()
