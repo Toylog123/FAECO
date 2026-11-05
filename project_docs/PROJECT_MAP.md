@@ -2,7 +2,7 @@
 
 > **用途**：回答「哪个目录有用 / 哪个版本对应哪一节 / 哪份数据是现行的」。
 > **口径**：本文件只管**位置与归属**，不承载任何科学结论。结论一律见 [CANON.md](CANON.md)。
-> **核验**：2026-10-28 10:35，以下体积与行数均为当日实测。
+> **核验**：体积与行数为 2026-10-28 实测；**环境段与 WSL 结论 2026-11-04 复核**。
 
 ---
 
@@ -132,6 +132,7 @@
 
 ## 7 环境
 
-- **`wsl.exe` 被本机安全策略拉黑** ⇒ WSL/STA 侧工作当前不可执行。
+- **WSL 可用**（2026-11-04 实测，推翻本文件旧称「被安全策略拉黑」）：`wsl.exe -l -v` → `Ubuntu`（Running / v2 / 默认）。内含 `openroad` v2.0、`sta` 3.1.0、`/usr/bin/yosys` 0.33（SEC 证明链 pin）、`/usr/local/bin/yosys` → 0.70+255（转发 shim，服务 ITC-99 映射）。
+- **Windows 侧跑 yosys 必须把 `C:\oss-cad-suite-build\oss-cad-suite\{bin,lib}` 放在 PATH 最前**（`lib` 放的是 yosys.exe 的 DLL）。被 `/ucrt64/bin` 之类抢先时会 `yosys -V` 无输出、退出码 `0xC0000139`，`pytest` 里 5 个依赖真实 yosys 的用例假红——**这是环境，不是代码回归**（2026-11-04 实测：修 PATH 后该 5 例 24 passed）。
 - Python 一律用 **`.venv/Scripts/python.exe`**（numpy 2.4.6）；WSL 的 `python3` 没有 numpy，**换解释器 = 换口径**。
 - 长任务用后台运行；优先 Bash（PowerShell stdout 常被吞）。

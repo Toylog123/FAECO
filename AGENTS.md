@@ -53,12 +53,12 @@
 
 **专职记录（多智能体时）**：分配一个智能体专门负责实时记录与文档同步，其他智能体专注执行。
 
-**文档更新清单**（按触发时机更新对应文档，完整见 `project_docs/RECORDS.md`）：
+**文档更新清单**（按触发时机更新对应文档；`RECORDS.md` 已停用，下表即完整清单）：
 
 | 触发时机 | 要更新的文档 |
 |----------|--------------|
 | 每个关键动作 | `project_docs/LOGS.md`（总日志） |
-| 每轮结束 | `project_docs/WORK_PROGRESS.md`、`agent_handoff/status_logs/CURRENT_STATUS.md`、`agent_handoff/TASK_BOARD.md`、`agent_handoff/CURRENT_RUN_HANDOFF.md`、`agent_handoff/NEXT_AGENT_PROMPT.md` |
+| 每轮结束 | `project_docs/LOGS.md` 收尾一条 + `project_docs/CANON.md`（口径有变时）；**`WORK_PROGRESS.md` 与 `agent_handoff/{CURRENT_STATUS,TASK_BOARD,CURRENT_RUN_HANDOFF,NEXT_AGENT_PROMPT}` 自 2026-11-04 起停用**（分别停在 2026-10-28 / r30，只作溯源，不再更新） |
 | 发现问题 | `project_docs/OPEN_ISSUES.md` |
 | 解决问题 | `docs/EXPERIENCE.md`（经验库） |
 | 每次实验 | `project_docs/evidence/EXPERIMENT_REGISTRY.md`（登记，防重复做） |

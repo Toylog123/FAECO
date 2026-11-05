@@ -70,7 +70,7 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
 
 **前版（r28 原样，仅存档参考）**：`.tex` `f0f4d5e0`（46,137 B）、PDF `e71feb3d`、CJK 8554。
 
-**基线已收口（2026-10-28）**：`active` = **v19 / r28**（tag `25a1796`），`versions/v19/MANIFEST.sha256` 148 条，**在该提交检出时** `sha256sum -c` 为 148/148 OK。此后 r95、r95b 两轮文本改动未重建清单：**工作区当前校验为 142 OK / 6 FAILED**（主/补两份 tex + 四个 PDF 副本），属预期差异而非损坏。**r21–r27 共 7 轮仍无基线**，只能从 `review_rounds/` 取中间稿。校验 v18 须先 `git checkout 73dc0e7`（v18 MANIFEST 记 `.tex` = `f65929ca`）。编号偏差：v19 对应 r28，打破旧约定 `vN↔r(N+2)`；定稿后统一建 v20 收录 r95 + r95b。
+**基线已收口（2026-10-28）**：`active` = **v19 / r28**（tag `25a1796`），`versions/v19/MANIFEST.sha256` 148 条，**在该提交检出时** `sha256sum -c` 为 148/148 OK。此后 r95/r95b 的文本改动与 r108/r113 的代码改动均未重建清单：**2026-11-04 实测 139 OK / 9 FAILED**——主/补两份 `.tex` + 四个 PDF 副本（r95/r95b），加 `code/src/rseco/real_wns.py`、`code/tests/test_r22_cli_controls.py`、`code/tests/test_r22_scope_integration.py`（r108/r113），**全为预期漂移、非损坏**。**r21–r27 共 7 轮仍无基线**，只能从 `review_rounds/` 取中间稿。校验 v18 须先 `git checkout 73dc0e7`（v18 MANIFEST 记 `.tex` = `f65929ca`）。编号偏差：v19 对应 r28，打破旧约定 `vN↔r(N+2)`；定稿后统一建 v20 收录 r95–r115。
 
 ---
 

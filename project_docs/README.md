@@ -1,21 +1,31 @@
 # project_docs 入口
 
-> **本目录只有 5 个现行文件，其余全为历史。** 历史不是删掉了，是归档了——见 `ARCHIVE_INDEX.md`。
+> **本目录只有 6 个现行文件，其余全为历史。** 历史不是删掉了，是归档了——见 `ARCHIVE_INDEX.md`。
 
-## 必读（按序，读完这三个就够）
+## 必读（按序）
 
+0. **`HANDOFF_2026-11-04.md`** —— 三十秒现状 + 复现入口 + 自检命令 + 五个坑。**接手先读这一份。**
 1. **`CANON.md`** —— 唯一现行口径：论文定版、8 条声称的强度裁决、冻结数字、待决项、已否决路线。
 2. **`PROJECT_MAP.md`** —— 目录职责、版本三层对应、数据资产归属、6 条结构性坑。
 3. **`LOGS.md`**（事实流水，只追加）/ **`OPEN_ISSUES.md`**（未决容器）。
 
 `ARCHIVE_INDEX.md` 记录所有归档去向，含「这份为什么不见了」。
 
-## 一句话现状
+## 一句话现状（2026-11-04 实测，r115）
 
-论文 **r28（2026-10-19）交付后一字未动**：主稿 **10 页**、补充 **9 页**、CJK **8554**、`\bibitem` **14**、**7 图 6 表**。
-`.tex` SHA256 前缀 `f0f4d5e0`、主稿 PDF `e71feb3d`（双副本一致）。
-扩面族 1393 候选 × 三档物理标签**尚未进论文**（三份 `.tex` 里 0 命中）。
-最大问题：判据门槛 `Δ_WNS > 0` **低于自己的判定带 0.049752 ns 约 5 倍**。
+论文已到 **r115**：主稿 **11 页 / 17 `\bibitem` / 7 图 / 5 表**（`.tex` SHA 前缀 `9ad874ed`、PDF `a44e21fe`），
+补充 **14 页 / 22 表 / 5 图**（`f19476e4`、`f4952670`），英文 **26 页**（`327987d2`，**自 r96 起未同口径**，见 CANON §8 P12）。
+主稿与补充 `.tex` 均**纯 LF**、三副本逐字节一致、两篇质量门 GATE PASS（`Undefined: 5` 是字体替身，非缺失引用）。
+
+判据门槛 `Δ_WNS > 0` **不是**"低于判定带 5 倍"的缺陷：r102 反事实已证它只是候选集 argmax 的实现细节，
+把判定带塞进接受规则反而把累积从 8/8 打到 4/8（CANON §5）。
+
+git：HEAD `98d663b`、工作区 clean、**27 条提交未 push**。基线 `active` 仍是 v19 / r28，
+`versions/v19/MANIFEST.sha256` 当前实测 **139 OK / 9 FAILED**（r95 起的文本改动 + r108/r113 代码改动造成的预期漂移），
+**r95–r115 尚未冻结成 v20**。
+
+测试：全量 `pytest code/tests` 需把 OSS-CAD 的 `bin` 与 `lib` 放在 PATH 最前（原因见 `PROJECT_MAP.md` §7），
+否则 5 个依赖真实 yosys 的用例会因 DLL 串位假红。
 
 ## 论文入口
 
@@ -24,25 +34,28 @@
 - PDF：`../paper/zh/build/`（两处副本 SHA 须一致）
 - 编译：`cd paper/zh/manuscript/`，**显式选目标** `lualatex -interaction=nonstopmode <n>.tex` ×2，再 `cp` 到 `paper/zh/`
 - 质量门：`paper/zh/scripts/checks/latex_quality_gate.py` —— Errors / Overfull / Underfull 全 0
-- **`.tex` 必须纯 CRLF**，并断言 `count(b"\r\r\n")==0`（r13 事故：`\r\r\n` ⇒ 83 Errors）
+- **行尾**：`.tex` 与 `OPEN_ISSUES.md` **纯 LF**、`LOGS.md` **纯 CRLF**、`.sh` 由 `.gitattributes` 强制 LF；
+  任何被跟踪文本文件都**不得含 `\r\r\n`**（`code/scripts/fix_crcrlf.py` 自查；r13 事故即 `\r\r\n` ⇒ 83 Errors）
+- 英文稿：`../paper/en/manuscript/FAECO.tex`，**未随中文同口径**，不得据它反推中文数字
 
 ## 目录
 
 | 目录 / 文件 | 角色 | 状态 |
 |---|---|---|
+| `HANDOFF_2026-11-04.md` | 交接入口（现状 / 复现 / 自检） | **现行** |
 | `CANON.md` | 唯一口径 | **现行** |
 | `PROJECT_MAP.md` | 目录 / 版本 / 数据地图 | **现行** |
 | `ARCHIVE_INDEX.md` | 归档去向 | **现行** |
 | `LOGS.md` | 事实流水（只追加） | **现行** |
 | `OPEN_ISSUES.md` | 未决容器 | **现行** |
-| `WORK_PROGRESS.md` | 进度（倒序） | 活跃 |
-| `agent_handoff/` | 逐轮交接（41 份） | **只读最近一份** + 其 README |
+| `WORK_PROGRESS.md` | 进度（倒序） | **停用**（停在 r93 / 2026-10-28，头有横幅） |
+| `agent_handoff/` | 逐轮交接（41 份） | **停用**（全部止于 r30，只作溯源） |
 | `evidence/` | 论文数字唯一来源（426 MB） | **禁动** |
 | `reports/` | 实验报告 | 历史（CANON §5 引用其结论） |
 | `review_history/` | 审稿历史 | 历史 |
 | `design_specs/` | 设计规格 | 约束 `code/` |
 | `planning/` | 仅存 V2 三份 + README | 半活 |
-| `baselines/` | 具名基线 | 活跃（`active` = v19 / r28） |
+| `baselines/` | 具名基线 | 活跃（`active` = v19 / r28；v20 待建） |
 | `archive/` | 退役 | 历史 |
 | `migration/`、`worktrees/` | 迁移记录、工作树 | 历史 |
 

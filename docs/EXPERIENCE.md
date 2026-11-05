@@ -3087,3 +3087,19 @@ B 路线（硬做方法论文）的三条技术抓手今天全部跑完，结论
 - 判据：**换工具版本是"重做"，不是"升级"**——只要它改变输入网表，既有数字全部失效。
   版本新旧本身不是质量指标，可复现性与口径一致才是。
 - 做法：两族分工写进口径（0.67 = 论文主族；0.70 = ITC-99 与物理后验），并在补充材料明写"不跨族比较"。
+
+## r116：全量测试 6 红，先分层再归因（环境 / 编码 / 误读）
+
+- 现象：`pytest code/tests` 报 `6 failed, 1050 passed`，摘要像"代码回归"。
+- 分层结果（2026-11-04 实测）：
+  1. **5 例是环境**：`yosys -V` 无输出，PowerShell 里 `$LASTEXITCODE = -1073741511`（`0xC0000139`
+     `STATUS_ENTRYPOINT_NOT_FOUND`）。原因是 PATH 中 `/ucrt64/bin` 的 DLL 抢在
+     `C:\oss-cad-suite-build\oss-cad-suite\lib` 之前。把 OSS-CAD 的 `bin` + `lib` 提前后，同一批用例 **24 passed**。
+     `docs/environment.md` §5.2 本就写明"`bin` 与 `lib` 同时入 PATH，否则 `yosys -V` 无输出"——**文档对、环境漂了**。
+  2. **1 例是真实编码缺陷**：`test_fix_crcrlf.py::test_real_repository_is_clean` **不是**"工作区洁净"断言，
+     而是扫被跟踪文本里的 `
+`（测试体第 69–71 行 `scan_and_fix(REPO_ROOT, apply=False)`）。
+     命中 `paper/zh/review_rounds/r22_20261016/proof_metadata_correction_02/actual_correction_v1/zh_applied_table.tex` 21 处。
+     **LOG-20261104-05 把它读成"dirty 必然红、提交后转绿"，与代码不符**——以代码为准。
+  3. 修法：`python code/scripts/fix_crcrlf.py --apply`（仓库自带），行数 21→21、内容不变，测试转绿。
+- 判据：**红门先问"是代码、环境，还是断言读法"**；测试名不能替代测试体，日志里的归因也要回读代码复核。
