@@ -1,22 +1,22 @@
-\begin{table}[htbp]
-\centering
-\caption{效率优先修复网表对的顺序等价证明}
-\label{tab:sec_iscas8}
-\setlength{\tabcolsep}{4pt}
-\footnotesize
-\begin{tabular}{lrrr}
-\toprule
-\textbf{电路} & \textbf{已证明/未证明} & \textbf{SEC} & \textbf{耗时 (s)} \\
-\midrule
-s27 & 11/0 & 通过 & 0.281 \\
-s382 & 90/0 & 通过 & 0.281 \\
-s420 & 79/0 & 通过 & 0.250 \\
-s641 & 124/0 & 通过 & 0.313 \\
-s713 & 126/0 & 通过 & 0.328 \\
-s820 & 139/0 & 通过 & 0.344 \\
-s832 & 146/0 & 通过 & 0.391 \\
-s953 & 228/0 & 通过 & 0.407 \\
-\bottomrule
-\multicolumn{4}{p{0.92\columnwidth}}{\footnotesize 八对网表在同一验证批次中使用Yosys 0.33和SKY130行为单元模型，以\texttt{equiv\_make}、\texttt{equiv\_simple}和\texttt{equiv\_induct -seq 10}证明，并由\texttt{equiv\_status -assert}检查全部等价点。耗时为每次独立证明调用的墙钟时间，不含映射、候选STA和模型准备。}\\
-\end{tabular}
+\begin{table}[htbp]
+\centering
+\caption{效率优先修复网表对的顺序等价证明}
+\label{tab:sec_iscas8}
+\setlength{\tabcolsep}{4pt}
+\footnotesize
+\begin{tabular}{lrrr}
+\toprule
+\textbf{电路} & \textbf{已证明/未证明} & \textbf{SEC} & \textbf{耗时 (s)} \\
+\midrule
+s27 & 11/0 & 通过 & 0.281 \\
+s382 & 90/0 & 通过 & 0.281 \\
+s420 & 79/0 & 通过 & 0.250 \\
+s641 & 124/0 & 通过 & 0.313 \\
+s713 & 126/0 & 通过 & 0.328 \\
+s820 & 139/0 & 通过 & 0.344 \\
+s832 & 146/0 & 通过 & 0.391 \\
+s953 & 228/0 & 通过 & 0.407 \\
+\bottomrule
+\multicolumn{4}{p{0.92\columnwidth}}{\footnotesize 八对网表在同一验证批次中使用Yosys 0.33和SKY130行为单元模型，以\texttt{equiv\_make}、\texttt{equiv\_simple}和\texttt{equiv\_induct -seq 10}证明，并由\texttt{equiv\_status -assert}检查全部等价点。耗时为每次独立证明调用的墙钟时间，不含映射、候选STA和模型准备。}\\
+\end{tabular}
 \end{table}
