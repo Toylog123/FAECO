@@ -242,6 +242,26 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--physical-unit-len", type=float, default=40.0,
                    help="SPEF unit wire length (um); lower = lighter physical load "
                         "(2um approximates post-placement Manhattan distance)")
+    # Physical backend for the inner-loop gate.  "spef" is the legacy
+    # synthesised fanout-wireload model, which is FALSIFIED as physics: its
+    # per-net wire-length floor makes buffer insertion always add wire, so
+    # 110/110 buffer candidates were rejected on s382.  "placed" runs a real
+    # OpenROAD placement + CTS + estimate_parasitics -placement per candidate
+    # (~8 s instead of ~0.05 s) and is the tier the r30 label family validated.
+    p.add_argument("--physical-backend", choices=("spef", "placed"), default="spef",
+                   help="Inner-loop physical model: 'spef' = legacy fanout "
+                        "wireload (falsified for buffers), 'placed' = OpenROAD "
+                        "placement-derived parasitics")
+    p.add_argument("--placement-util", type=float, default=0.35,
+                   help="Floorplan utilization for the placed backend")
+    p.add_argument("--placement-density", type=float, default=0.55,
+                   help="global_placement density for the placed backend")
+    p.add_argument("--placement-platform", default=None,
+                   help="OpenROAD platform dir inside WSL (default: sky130hd "
+                        "under /home/toylog/OpenROAD-flow-scripts/flow/platforms)")
+    p.add_argument("--openroad-cmd", default=None,
+                   help="OpenROAD argv for the placed backend (default: "
+                        "wsl.exe -d Ubuntu -- /home/toylog/faeco_eda/or26Q3/bin/openroad)")
 
     # L3 S (r2 §4.9): window-local structure resynthesis as an independent
     # candidate type.  Off by default so every earlier arm stays bit-identical.
@@ -434,6 +454,11 @@ def main() -> int:
         physical_fanout_penalty=args.physical_fanout_penalty,
         physical_depth_penalty=args.physical_depth_penalty,
         physical_unit_len_um=args.physical_unit_len,
+        physical_backend=args.physical_backend,
+        placement_util=args.placement_util,
+        placement_density=args.placement_density,
+        placement_platform=args.placement_platform,
+        openroad_command=args.openroad_cmd,
         strict_gates=True,
         strict_budgets=True,
         required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),

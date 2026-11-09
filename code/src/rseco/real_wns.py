@@ -222,6 +222,11 @@ def _physical_sta_provenance(output_dir: str | Path, metrics: dict | None,
                              rc_config: dict, rc_config_hash: str) -> dict:
     directory = Path(output_dir)
     report = directory / "sta.log"
+    if not report.exists():
+        # placed-tier backend writes its transcript here instead
+        placed_log = directory / "placed.log"
+        if placed_log.exists():
+            report = placed_log
     text = report.read_text(encoding="utf-8", errors="replace") if report.exists() else ""
     path = parse_critical_instances(text) if text else []
     endpoint = parse_worst_endpoint(text) if text else None
@@ -1205,6 +1210,21 @@ class RealWnsEvaluator:
         physical_fanout_penalty: float = 1.0,
         physical_depth_penalty: float = 1.0,
         physical_unit_len_um: float = 40.0,
+        # Physical backend for the inner-loop gate:
+        #   "spef"   -- synthesised fanout-wireload SPEF (:mod:`rseco.spef`).
+        #               FALSIFIED as a physics model: it prices wire length as a
+        #               monotone function of fanout with a per-net floor, so
+        #               inserting a buffer always adds wire (measured on s382:
+        #               110/110 buffer candidates rejected).  Kept only so
+        #               archived runs stay reproducible.
+        #   "placed" -- real OpenROAD placement + CTS + estimate_parasitics
+        #               -placement (:mod:`rseco.placed_sta`).  ~8 s/candidate
+        #               instead of ~0.05 s.
+        physical_backend: str = "spef",
+        placement_util: float = 0.35,
+        placement_density: float = 0.55,
+        placement_platform: str | None = None,
+        openroad_command: str | None = None,
          equivalence_checker=None,
          topology_sec_checker=None,
          boundary_checker=None,
@@ -1293,6 +1313,22 @@ class RealWnsEvaluator:
         self.physical_fanout_penalty = physical_fanout_penalty
         self.physical_depth_penalty = physical_depth_penalty
         self.physical_unit_len_um = physical_unit_len_um
+        if str(physical_backend) not in {"spef", "placed"}:
+            raise ValueError(
+                "physical_backend must be 'spef' or 'placed', got "
+                + repr(physical_backend)
+            )
+        self.physical_backend = str(physical_backend)
+        if self.physical_backend == "placed" and bool(hold_mode):
+            # The placed-tier flow does not implement hold uncertainty, so a
+            # hold-repair run must not silently fall back to the setup reading.
+            raise ValueError(
+                "physical_backend='placed' does not implement hold_mode"
+            )
+        self.placement_util = float(placement_util)
+        self.placement_density = float(placement_density)
+        self.placement_platform = placement_platform
+        self.openroad_command = openroad_command
         self.equivalence_checker = equivalence_checker
         self.topology_sec_checker = topology_sec_checker
         self.boundary_checker = boundary_checker
@@ -1825,6 +1861,64 @@ class RealWnsEvaluator:
             "proxy_features": dict(row["proxy_features"]),
         }
 
+    def _physical_measure(self, *, netlist_path, out_dir, top_module,
+                          rc_config, state, candidate_hash=None,
+                          action_scope=None) -> dict:
+        """One paired physical timing measurement under the configured backend.
+
+        Both the baseline and every candidate go through this same function, so
+        ``baseline - candidate`` is always paired: same backend, same parameters,
+        same tool version.  Returns the same dict shape in both backends
+        (``wns``/``tns``/``min_slack``/``budget_event``).  The STA budget is
+        reserved here, before either backend launches a tool.
+        """
+        budget_event = self._deadline_or_budget_event(
+            state, "sta", candidate_hash=candidate_hash,
+            cut_hash=candidate_hash, action_scope=action_scope,
+        ) if state is not None else None
+        if budget_event:
+            return {"wns": None, "tns": None, "min_slack": None,
+                    "budget_event": budget_event}
+
+        if self.physical_backend == "placed":
+            from .placed_sta import DEFAULT_PLATFORM, run_placed_sta
+
+            sta = run_placed_sta(
+                netlist_path=netlist_path,
+                output_dir=out_dir,
+                top_module=top_module,
+                period=self.period,
+                clock_port=self.clock_port,
+                util=self.placement_util,
+                density=self.placement_density,
+                platform=self.placement_platform or DEFAULT_PLATFORM,
+                openroad_command=self.openroad_command,
+                timeout_s=self._remaining_tool_timeout(state),
+            )
+            sta.setdefault("budget_event", None)
+            return sta
+
+        from .spef import parse_mapped_verilog, write_spef
+
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+        nl = parse_mapped_verilog(
+            netlist_path, liberty_text=self.liberty_text, top_module=top_module
+        )
+        spef = write_spef(Path(out_dir) / "physical.spef", nl, **rc_config)
+        sta = run_opensta_sequential(
+            netlist_path=netlist_path,
+            period=self.period,
+            output_dir=out_dir,
+            top_module=top_module,
+            clock_port=self.clock_port,
+            spef_path=spef,
+            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
+            min_path=self.hold_mode,
+            timeout_s=self._remaining_tool_timeout(state),
+        )
+        sta.setdefault("budget_event", None)
+        return sta
+
     def _eval_one(self, job: tuple) -> dict:
         (
             inst,
@@ -2221,12 +2315,18 @@ class RealWnsEvaluator:
                 "depth_penalty": self.physical_depth_penalty,
             }
             physical_config = {**rc_config,
+                               "backend": self.physical_backend,
                                "min_physical_gain_ns": self.min_physical_gain_ns}
+            if self.physical_backend == "placed":
+                physical_config.update({
+                    "placement_util": self.placement_util,
+                    "placement_density": self.placement_density,
+                    "placement_platform": self.placement_platform,
+                })
             rc_config_hash = hashlib.sha256(
                 json.dumps(physical_config, sort_keys=True).encode()
             ).hexdigest()
             try:
-                    from .spef import build_spef, parse_mapped_verilog, write_spef
                     import hashlib as _hashlib
                     rc_config_hash = _hashlib.sha256(
                         json.dumps(physical_config, sort_keys=True).encode()
@@ -2240,21 +2340,16 @@ class RealWnsEvaluator:
                         base_dir = cand_dir / "physical_baseline"
                         base_dir.mkdir(parents=True, exist_ok=True)
                         (base_dir / "mapped.v").write_text(self.mapped_text, encoding="utf-8")
-                        base_nl = parse_mapped_verilog(base_dir / "mapped.v",
-                            liberty_text=self.liberty_text, top_module=top_module)
-                        base_spef = write_spef(base_dir / "physical.spef", base_nl, **rc_config)
-                        budget_event = self._deadline_or_budget_event(
-                            state, "sta", candidate_hash=candidate_hash,
-                            cut_hash=candidate_hash, action_scope=[inst])
-                        base_sta = None if budget_event else run_opensta_sequential(
+                        base_sta = self._physical_measure(
                             netlist_path=base_dir / "mapped.v",
-                            period=self.period, output_dir=base_dir,
-                            top_module=top_module, clock_port=self.clock_port,
-                            spef_path=base_spef,
-                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
-                            min_path=self.hold_mode,
-                            timeout_s=self._remaining_tool_timeout(state),
+                            out_dir=base_dir,
+                            top_module=top_module,
+                            rc_config=rc_config,
+                            state=state,
+                            candidate_hash=candidate_hash,
+                            action_scope=[inst],
                         )
+                        budget_event = base_sta.get("budget_event")
                         # Keep a physical baseline artifact alongside the
                         # candidate, and fail closed if it is incomplete.
                         baseline = {"wns": base_sta.get("wns") if base_sta else None,
@@ -2271,24 +2366,16 @@ class RealWnsEvaluator:
                         phys = {"wns": None, "tns": None, "min_slack": None,
                                 "budget_event": baseline["budget_event"]}
                     else:
-                        nl = parse_mapped_verilog(sub / "mapped.v",
-                            liberty_text=self.liberty_text, top_module=top_module)
-                        spef = write_spef(sub / "physical.spef", nl, **rc_config)
-                        budget_event = self._deadline_or_budget_event(
-                            state, "sta", candidate_hash=candidate_hash,
-                            cut_hash=candidate_hash, action_scope=[inst])
-                        phys = {"wns": None, "tns": None, "min_slack": None,
-                                "budget_event": budget_event} if budget_event else run_opensta_sequential(
+                        phys = self._physical_measure(
                             netlist_path=sub / "mapped.v",
-                            period=self.period,
-                            output_dir=sub / "physical",
+                            out_dir=sub / "physical",
                             top_module=top_module,
-                            clock_port=self.clock_port,
-                            spef_path=spef,
-                            hold_uncertainty=self.hold_uncertainty if self.hold_mode else 0.0,
-                            min_path=self.hold_mode,
-                            timeout_s=self._remaining_tool_timeout(state),
+                            rc_config=rc_config,
+                            state=state,
+                            candidate_hash=candidate_hash,
+                            action_scope=[inst],
                         )
+                        budget_event = phys.get("budget_event")
                     phys_wns = phys.get("wns")
                     phys_tns = phys.get("tns")
                     phys_min_slack = phys.get("min_slack")
@@ -2410,12 +2497,19 @@ class RealWnsEvaluator:
                        "physical_delta": None}
             if self.physical_gate:
                 res["physical_config"] = {
+                    "backend": self.physical_backend,
                     "unit_len_um": self.physical_unit_len_um,
                     "fanout_penalty": self.physical_fanout_penalty,
                     "depth_penalty": self.physical_depth_penalty,
                     "min_physical_gain_ns": self.min_physical_gain_ns,
                 }
-            physical_report = sub / "physical" / "sta.log"
+                if self.physical_backend == "placed":
+                    res["physical_config"].update({
+                        "placement_util": self.placement_util,
+                        "placement_density": self.placement_density,
+                        "placement_platform": self.placement_platform,
+                    })
+            physical_report = sub / "physical" / ("placed.log" if self.physical_backend == "placed" else "sta.log")
             if physical_report.exists():
                 critical_report = physical_report
                 physical_report_text = physical_report.read_text(
