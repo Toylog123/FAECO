@@ -1,13 +1,13 @@
 # FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画
 
-> **接手者第一站（2026-11-04 起）：`project_docs/HANDOFF_2026-11-04.md`**（三十秒现状 + 复现入口 + 自检命令）。本文档只做总览与目录索引；任何进度、口径、结论以 HANDOFF / CANON 为准，本文档不与它们冲突。
+> **接手者第一站（2026-11-09 起）：`project_docs/HANDOFF_2026-11-09.md`**（三十秒现状 + 复现入口 + 自检命令）。本文档只做总览与目录索引；任何进度、口径、结论以 HANDOFF / CANON 为准，本文档不与它们冲突。
 
-## 当前状态（2026-11-04 复核）
+## 当前状态（2026-11-09 复核）
 
-- **论文**：中文主稿 **11 页 / 7 图 / 5 表 / 17 参考文献**，补充 **14 页 / 22 表 / 5 图**；两份质量门均 GATE PASS（Errors/Overfull/Underfull 全 0，Undefined 5 = 字体替身警告）。英文 `paper/en/manuscript/FAECO.tex` 仍 26 页且**未同口径**（摘要仍写 1.07 / 0.16 ns，中文现行 1.29 / 1.68 ns）。
-- **git**：`main` 领先 `origin/main` **27 条未推送提交**，工作区 clean，HEAD = `98d663b`。`git describe --tags` = `faeco-paper-final-20261028-23-g98d663b`。
-- **基线**：`versions/v19/MANIFEST.sha256`（148 条）= **139 OK / 9 FAILED**，9 条漂移 = r95/r95b 文本改动 + r108/r113 代码改动的预期结果；**v20 待建**（收录 r95–r115）。
-- **测试**：`PATH` 前置 OSS-CAD `bin`+`lib` 后，`.venv/Scripts/python.exe -m pytest code/tests -q` → **1055 passed + 156 subtests**（唯一红 = `test_fix_crcrlf.py` 的 `\r\r\n` 扫描，已随编码缺陷一并修复）。
+- **论文**：中文主稿 **11 页 / 7 图 / 5 表 / 17 参考文献**，补充 **15 页 / 22 表 / 5 图**；两份质量门均 GATE PASS（Errors/Overfull/Underfull 全 0，Undefined 5 = 字体替身警告）。英文 `paper/en/manuscript/FAECO.tex` 仍 26 页且**未同口径**（摘要仍写 1.07 / 0.16 ns，中文现行 1.29 / 1.68 ns）。
+- **git**：`main` 领先 `origin/main` **30 条未推送提交**，工作区 clean，HEAD = `faa533a`。`git describe --tags` = `faeco-paper-final-20261028-26-gfaa533a`。
+- **基线**：`versions/v19/MANIFEST.sha256`（148 条）= **139 OK / 9 FAILED**，9 条漂移 = r95/r95b 文本改动 + r108/r113 代码改动的预期结果；**v20 待建**（收录 r95–r116）。
+- **测试**：`PATH` 前置 OSS-CAD `bin`+`lib` 后，`.venv/Scripts/python.exe -m pytest code/tests -q` → **1056 passed + 156 subtests**（唯一红 = `test_fix_crcrlf.py` 的 `\r\r\n` 扫描，已随编码缺陷一并修复）。
 - **环境**：WSL2 Ubuntu（默认 v2）可用：OpenROAD 2.0、OpenSTA 3.1.0、`/usr/bin/yosys` 0.33（shim 0.70+255）。Windows 侧 OSS-CAD 的 `yosys` 需 `bin` 与 `lib` **同时**入 PATH，否则 `yosys -V` 报 `0xC0000139`（DLL 导出缺失）的假红。
 
 ## 项目简介
@@ -29,7 +29,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 ## 现行权威状态入口
 
-1. **三十秒现状 + 复现入口 + 自检**：`project_docs/HANDOFF_2026-11-04.md`（接手者第一站）
+1. **三十秒现状 + 复现入口 + 自检 + 后续规划**：`project_docs/HANDOFF_2026-11-09.md`（接手者第一站）
 2. **唯一现行口径**：`project_docs/CANON.md`（任何文档与它冲突，以它为准）
 3. **目录 / 版本 / 数据资产 / 结构性坑**：`project_docs/PROJECT_MAP.md`
 4. **事实流水**：`project_docs/LOGS.md`（正序，可回溯）
@@ -44,7 +44,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 2. **测试**：`bash code/scripts/run_with_timeout.sh 300 .venv/Scripts/python.exe -m pytest code/tests -q`（须用 `.venv/Scripts/python.exe` 显式 Python，不能只写 `python`）。
 3. **实验**：`experiments/INVENTORY.md` 总索引、`experiments/RESULTS.md` 顶层汇总；复现入口脚本在 `code/scripts/`。
 4. **论文**：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`、补充 `paper/zh/manuscript/FAECO_补充材料.tex`；**必须 `cd` 入 `manuscript/` 后显式选目标、LuaLaTeX 连跑两遍**（不能自动猜主文件）。当前 PDF 在 `paper/zh/build/`。
-5. **交接**：读 `project_docs/HANDOFF_2026-11-04.md`。
+5. **交接**：读 `project_docs/HANDOFF_2026-11-09.md`。
 
 ## 目录角色
 
@@ -76,13 +76,13 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 |------|------|
 | `data/` | 数据治理：`cases/` 构造用例（跟踪）+ `raw/benchmarks/` 原始基准（raw 不跟踪，manifests 登记 SHA） |
 | `paper/` | 论文：`zh/` 中文主版；`en/` 英文工作初稿（`build/FAECO.pdf` 为已保存预览） |
-| `project_docs/` | 过程文档：交接（`HANDOFF_2026-11-04.md`）/ 基线（`baselines/`）/ 证据（`evidence/`）/ 日志（`LOGS.md`）/ 未决（`OPEN_ISSUES.md`）/ 现状（`CANON.md`、`PROJECT_MAP.md`）/ 设计规范 / 归档（`archive/`） |
+| `project_docs/` | 过程文档：交接（`HANDOFF_2026-11-09.md`）/ 基线（`baselines/`）/ 证据（`evidence/`）/ 日志（`LOGS.md`）/ 未决（`OPEN_ISSUES.md`）/ 现状（`CANON.md`、`PROJECT_MAP.md`）/ 设计规范 / 归档（`archive/`） |
 
 ### 版本与辅助
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 历史冻结版本集合（**v19 是最后一个冻结基线 = r28 + r94 口径修订**；v20 待建以收录 r95–r115。见 `project_docs/versioning.md`） |
+| `versions/` | 历史冻结版本集合（**v19 是最后一个冻结基线 = r28 + r94 口径修订**；v20 待建以收录 r95–r116。见 `project_docs/versioning.md`） |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 

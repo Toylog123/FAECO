@@ -4513,3 +4513,9 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 - 修 overfull：分析段 `$+0.09$/$+0.17$/...` 长序列改 `、` 分隔后可断行（原 7.43pt 溢出）。
 - 指纹：主稿 tex `d5bbc9bd` / PDF `47c5964c`；补充 tex `c9c73242` / PDF `04df3914`。三副本同步（manuscript/build/paper/zh），md5 一致。
 - 未改 code/、未改任何冻结读数与主结论；论文数字冻结纪律保持（B 只改措辞与表）。
+
+### LOG-20261109-05 交接文档 + 后续规划（用户 m01001）
+
+- 用户 m01001「做好交接吧 准备交接项目 写好后续规划」。新增 `project_docs/HANDOFF_2026-11-09.md`：三十秒现状（主稿 11 页 / 补充 15 页 / 两质量门 PASS / HEAD faa533a / 领先 origin 30 条未 push）+ 读什么 + 本轮 r116 与机制审查 A/B/C 结论 + 可复现入口 + 后续规划（P0 定档位/英文同口径/建 v20；P1 真实布局寄生与方向 C 大改，需用户授权；P2 P5/P7/P11 收尾）+ 禁重开清单（本轮新增 `--physical-gate` 与「换档位不改奖池」两条）+ 六个坑 + 三条自检命令。
+- 指针同步：`project_docs/README.md` 必读 0、根 `README.md` 接手第一站、`project_docs/CANON.md` §9、`.codex-handoff.json`（read_order/head/四件 SHA/页数/next_steps）。
+- 未改 `code/`、未改论文读数；提交保持未 push。
