@@ -1,55 +1,65 @@
 {
-  "timestamp": "2026-11-09",
-  "status": "r116 中文主稿/补充已交付；机制审查 A 证伪 / C 预证伪 / B 入文；英文未同口径；v20 待建",
-  "project": "FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画",
-  "read_order": [
-    "project_docs/HANDOFF_2026-11-09.md",
-    "project_docs/CANON.md",
-    "project_docs/PROJECT_MAP.md",
-    "project_docs/LOGS.md",
-    "project_docs/OPEN_ISSUES.md",
-    "AGENTS.md"
-  ],
-  "git": {
-    "branch": "main",
-    "ahead_of_origin": 30,
-    "head": "faa533a",
-    "describe": "faeco-paper-final-20261028-26-gfaa533a",
-    "pushed": false,
-    "worktree": "clean"
-  },
-  "paper_state": {
-    "main_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
-    "main_tex_sha256": "d5bbc9bd99e46ff0082816090c7e76ce21be564cc50be557bf9e3a004bc0fd66",
-    "main_pdf": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.pdf",
-    "main_pdf_sha256": "47c5964c74f94f14f21d3a25f1ea9a8d0b832f9e3fe6065313406ddee49d5295",
-    "main_pages": 11,
-    "supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
-    "supplement_tex_sha256": "c9c73242077693cabd60d775d9c94f2b2abb393448ef298fd8664ce24c951cfe",
-    "supplement_pdf": "paper/zh/manuscript/FAECO_补充材料.pdf",
-    "supplement_pdf_sha256": "04df39143bace0c061916a5eb65de093ac2b5ed10bc3f2819f24d09a3c72323d",
-    "supplement_pages": 15,
-    "quality_gate": "两份均 GATE PASS（Errors/Overfull/Underfull 0，Undefined 5 = 字体替身）",
-    "english": "paper/en/manuscript/FAECO.tex 仍 26 页，摘要仍写 1.07/0.16 ns（中文现行 1.29/1.68 ns），未同口径"
-  },
-  "versions": {
-    "last_frozen": "v19（= r28 + r94 口径修订）",
-    "manifest_check": "versions/v19/MANIFEST.sha256 148 条 = 139 OK / 9 FAILED（预期漂移）",
-    "pending": "v20（收录 r95–r116）"
-  },
-  "tests": {
-    "command": "PATH 前置 OSS-CAD bin+lib 后：.venv/Scripts/python.exe -m pytest code/tests -q",
-    "result": "1056 passed + 156 subtests（全绿）"
-  },
-  "environment": {
-    "wsl": "Ubuntu 默认 v2 可用：OpenROAD 2.0 / OpenSTA 3.1.0 / /usr/bin/yosys 0.33（shim 0.70+255）",
-    "windows_yosys": "OSS-CAD 的 bin 与 lib 必须同时入 PATH，否则 yosys -V 报 0xC0000139（DLL 导出缺失）假红"
-  },
-  "next_steps": [
-    "定档位（判定带作用域与口径）",
-    "英文同口径（同步 1.29/1.68 ns 等中文现行数字）",
-    "建 v20（收录 r95–r116，消 9 条漂移）",
-    "（需授权）接入真实布局寄生后再重做 A/C；当前 --physical-gate 为扇出线载，结构上救不了 B 类"
-  ],
-  "note": "旧的 r22/r28 逐轮回执已移出本文件；完整历史在 git 与 project_docs/LOGS.md、project_docs/evidence/ 中可溯源。"
+ "timestamp": "2026-11-10",
+ "status": "r116 中文主稿/补充已交付；机制审查 A 第一版证伪 / C 预证伪 / B 入文；2026-11-10 新增真实布局寄生后端与布线后端点仪器，预注册实验 H1 PASS / H2 FAIL / 不晋级（成本 -48% 可写）；英文未同口径；v20 待建",
+ "project": "FAECO — 面向预布局门级时序 ECO 的候选探索与失效刻画",
+ "read_order": [
+  "project_docs/HANDOFF_2026-11-09.md",
+  "project_docs/CANON.md",
+  "project_docs/PROJECT_MAP.md",
+  "project_docs/LOGS.md",
+  "project_docs/OPEN_ISSUES.md",
+  "AGENTS.md"
+ ],
+ "git": {
+  "branch": "main",
+  "ahead_of_origin": 32,
+  "head": "c2b90cc",
+  "describe": "faeco-paper-final-20261028-28-gc2b90cc",
+  "pushed": false,
+  "worktree": "clean"
+ },
+ "paper_state": {
+  "main_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+  "main_tex_sha256": "d5bbc9bd99e46ff0082816090c7e76ce21be564cc50be557bf9e3a004bc0fd66",
+  "main_pdf": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.pdf",
+  "main_pdf_sha256": "47c5964c74f94f14f21d3a25f1ea9a8d0b832f9e3fe6065313406ddee49d5295",
+  "main_pages": 11,
+  "supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
+  "supplement_tex_sha256": "c9c73242077693cabd60d775d9c94f2b2abb393448ef298fd8664ce24c951cfe",
+  "supplement_pdf": "paper/zh/manuscript/FAECO_补充材料.pdf",
+  "supplement_pdf_sha256": "04df39143bace0c061916a5eb65de093ac2b5ed10bc3f2819f24d09a3c72323d",
+  "supplement_pages": 15,
+  "quality_gate": "两份均 GATE PASS（Errors/Overfull/Underfull 0，Undefined 5 = 字体替身）",
+  "english": "paper/en/manuscript/FAECO.tex 仍 26 页，摘要仍写 1.07/0.16 ns（中文现行 1.29/1.68 ns），未同口径"
+ },
+ "versions": {
+  "last_frozen": "v19（= r28 + r94 口径修订）",
+  "manifest_check": "versions/v19/MANIFEST.sha256 148 条 = 139 OK / 9 FAILED（预期漂移）",
+  "pending": "v20（收录 r95–r116）"
+ },
+ "tests": {
+  "command": "PATH 前置 OSS-CAD bin+lib 后：.venv/Scripts/python.exe -m pytest code/tests -q",
+  "result": "1061 passed / 7 skipped（宿主 bash 能力探测）/ 156 subtests（全绿）"
+ },
+ "environment": {
+  "wsl": "Ubuntu 默认 v2 可用：OpenROAD 2.0 / OpenSTA 3.1.0 / /usr/bin/yosys 0.33（shim 0.70+255）",
+  "windows_yosys": "OSS-CAD 的 bin 与 lib 必须同时入 PATH，否则 yosys -V 报 0xC0000139（DLL 导出缺失）假红"
+ },
+ "next_steps": [
+  "（机制，需授权）加大动作粒度：让单次决策效应高于布局离散 0.055 ns",
+  "（机制，低成本候选）布局集成测量：同候选在多个利用率下平均，压低判决噪声再判接受",
+  "定档位（判定带作用域与口径）",
+  "英文同口径（同步 1.29/1.68 ns 等中文现行数字）",
+  "建 v20（收录 r95–r116，消 9 条漂移）"
+ ],
+ "note": "旧的 r22/r28 逐轮回执已移出本文件；完整历史在 git 与 project_docs/LOGS.md、project_docs/evidence/ 中可溯源。",
+ "mechanism_20261110": {
+  "experiment": "experiments/20261110_placed_gate/（git-ignored，本机留存）",
+  "backends": "code/src/rseco/placed_sta.py（布局档）、code/src/rseco/routed_sta.py（布线后端点）",
+  "h1_composition": "PASS——臂 P 在 s641/s832 各接受 1 个 B 类缓冲，臂 I 4 例 11 个接受 B=0",
+  "h2_transfer": "FAIL——布线后增益 I +1.1157 / P +1.2495 ns，P 更好仅 2/4，均值差 +0.0334 ns",
+  "promote": "NO（按预注册规则停止，不扩 8 例、不调参重跑）",
+  "cost": "gate 抬到该档位分辨率后候选评估 602 vs 1157（-48%）而端点不降",
+  "instrument_fix": "A3：_physical_measure 补齐 STA 预算预留与输出目录；按臂 P s382 重跑逐项一致"
+ }
 }
