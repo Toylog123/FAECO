@@ -1220,8 +1220,14 @@ class RealWnsEvaluator:
         #   "placed" -- real OpenROAD placement + CTS + estimate_parasitics
         #               -placement (:mod:`rseco.placed_sta`).  ~8 s/candidate
         #               instead of ~0.05 s.
+        #   "placed_ens" -- same flow at several utilisations, averaged.  The
+        #               judgement noise of one placement is the layout
+        #               dispersion (~0.055 ns, r103), i.e. the same order as
+        #               the effects being judged; averaging ``placement_utils``
+        #               layouts divides that noise by sqrt(k) at k * ~8 s.
         physical_backend: str = "spef",
         placement_util: float = 0.35,
+        placement_utils: tuple[float, ...] = (0.30, 0.35, 0.40),
         placement_density: float = 0.55,
         placement_platform: str | None = None,
         openroad_command: str | None = None,
@@ -1313,19 +1319,27 @@ class RealWnsEvaluator:
         self.physical_fanout_penalty = physical_fanout_penalty
         self.physical_depth_penalty = physical_depth_penalty
         self.physical_unit_len_um = physical_unit_len_um
-        if str(physical_backend) not in {"spef", "placed"}:
+        if str(physical_backend) not in {"spef", "placed", "placed_ens"}:
             raise ValueError(
-                "physical_backend must be 'spef' or 'placed', got "
+                "physical_backend must be 'spef', 'placed' or 'placed_ens', got "
                 + repr(physical_backend)
             )
         self.physical_backend = str(physical_backend)
-        if self.physical_backend == "placed" and bool(hold_mode):
+        if self.physical_backend in {"placed", "placed_ens"} and bool(hold_mode):
             # The placed-tier flow does not implement hold uncertainty, so a
             # hold-repair run must not silently fall back to the setup reading.
             raise ValueError(
-                "physical_backend='placed' does not implement hold_mode"
+                "physical_backend=" + repr(self.physical_backend)
+                + " does not implement hold_mode"
             )
         self.placement_util = float(placement_util)
+        utils = tuple(float(u) for u in placement_utils)
+        if self.physical_backend == "placed_ens":
+            if not utils:
+                raise ValueError("physical_backend='placed_ens' needs placement_utils")
+            if any(not 0.0 < u < 1.0 for u in utils):
+                raise ValueError("placement_utils must be utilisation fractions in (0, 1)")
+        self.placement_utils = utils
         self.placement_density = float(placement_density)
         self.placement_platform = placement_platform
         self.openroad_command = openroad_command
@@ -1861,6 +1875,59 @@ class RealWnsEvaluator:
             "proxy_features": dict(row["proxy_features"]),
         }
 
+    @staticmethod
+    def _combine_ensemble(out_dir, utils, readings) -> dict:
+        """Average a multi-layout physical measurement (:mod:`rseco.placed_sta`).
+
+        Fail-closed: if any layout failed, the whole measurement is an error.
+        A partially averaged ensemble would be a different quantity from the
+        one the paired baseline was measured with, and the paired difference
+        would silently mix two noise levels.
+        """
+        per_util = {}
+        for util, reading in zip(utils, readings):
+            per_util[f"{util:.2f}"] = {
+                "wns": reading.get("wns"),
+                "tns": reading.get("tns"),
+                "min_slack": reading.get("min_slack"),
+                "error": reading.get("error"),
+            }
+        failed = [
+            (u, per_util[f"{u:.2f}"]["error"])
+            for u in utils
+            if per_util[f"{u:.2f}"]["wns"] is None or per_util[f"{u:.2f}"]["error"]
+        ]
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
+        manifest = {"utils": list(utils), "per_util": per_util, "failed": failed}
+        try:
+            (Path(out_dir) / "ensemble.json").write_text(
+                json.dumps(manifest, indent=1), encoding="utf-8"
+            )
+        except OSError:
+            pass
+        if failed:
+            return {
+                "wns": None, "tns": None, "min_slack": None,
+                "wns_per_util": per_util,
+                "error": "ensemble incomplete: " + ", ".join(f"u{u:.2f}" for u, _ in failed),
+                "budget_event": None,
+            }
+        wns_values = [per_util[f"{u:.2f}"]["wns"] for u in utils]
+        tns_values = [per_util[f"{u:.2f}"]["tns"] for u in utils]
+        slack_values = [
+            per_util[f"{u:.2f}"]["min_slack"] for u in utils
+            if per_util[f"{u:.2f}"]["min_slack"] is not None
+        ]
+        return {
+            "wns": sum(wns_values) / len(wns_values),
+            "tns": (sum(tns_values) / len(tns_values)) if all(v is not None for v in tns_values) else None,
+            "min_slack": min(slack_values) if slack_values else None,
+            "wns_per_util": per_util,
+            "wns_spread": max(wns_values) - min(wns_values),
+            "error": None,
+            "budget_event": None,
+        }
+
     def _physical_measure(self, *, netlist_path, out_dir, top_module,
                           rc_config, state, candidate_hash=None,
                           action_scope=None) -> dict:
@@ -1880,23 +1947,42 @@ class RealWnsEvaluator:
             return {"wns": None, "tns": None, "min_slack": None,
                     "budget_event": budget_event}
 
-        if self.physical_backend == "placed":
+        if self.physical_backend in {"placed", "placed_ens"}:
             from .placed_sta import DEFAULT_PLATFORM, run_placed_sta
 
-            sta = run_placed_sta(
-                netlist_path=netlist_path,
-                output_dir=out_dir,
-                top_module=top_module,
-                period=self.period,
-                clock_port=self.clock_port,
-                util=self.placement_util,
-                density=self.placement_density,
-                platform=self.placement_platform or DEFAULT_PLATFORM,
-                openroad_command=self.openroad_command,
-                timeout_s=self._remaining_tool_timeout(state),
-            )
-            sta.setdefault("budget_event", None)
-            return sta
+            if self.physical_backend == "placed_ens":
+                # One decision, k placements.  The budget is reserved once at
+                # the top of this function (a measurement, not a tool launch);
+                # the extra launches are recorded in ``wns_per_util`` and cost
+                # k * ~8 s of wall clock.
+                utils = list(self.placement_utils)
+            else:
+                utils = [self.placement_util]
+            readings = []
+            for util in utils:
+                out = Path(out_dir)
+                if len(utils) > 1:
+                    out = out / f"u{util:.2f}"
+                out.mkdir(parents=True, exist_ok=True)
+                readings.append(
+                    run_placed_sta(
+                        netlist_path=netlist_path,
+                        output_dir=out,
+                        top_module=top_module,
+                        period=self.period,
+                        clock_port=self.clock_port,
+                        util=util,
+                        density=self.placement_density,
+                        platform=self.placement_platform or DEFAULT_PLATFORM,
+                        openroad_command=self.openroad_command,
+                        timeout_s=self._remaining_tool_timeout(state),
+                    )
+                )
+            if len(readings) == 1:
+                sta = readings[0]
+                sta.setdefault("budget_event", None)
+                return sta
+            return self._combine_ensemble(out_dir, utils, readings)
 
         from .spef import parse_mapped_verilog, write_spef
 
@@ -2323,6 +2409,12 @@ class RealWnsEvaluator:
                     "placement_density": self.placement_density,
                     "placement_platform": self.placement_platform,
                 })
+            elif self.physical_backend == "placed_ens":
+                physical_config.update({
+                    "placement_utils": list(self.placement_utils),
+                    "placement_density": self.placement_density,
+                    "placement_platform": self.placement_platform,
+                })
             rc_config_hash = hashlib.sha256(
                 json.dumps(physical_config, sort_keys=True).encode()
             ).hexdigest()
@@ -2355,6 +2447,7 @@ class RealWnsEvaluator:
                         baseline = {"wns": base_sta.get("wns") if base_sta else None,
                                     "tns": base_sta.get("tns") if base_sta else None,
                                     "min_slack": base_sta.get("min_slack") if base_sta else None,
+                                    "wns_per_util": (base_sta or {}).get("wns_per_util"),
                                     "budget_event": budget_event,
                                     "rc_config_hash": rc_config_hash,
                                     "provenance": _physical_sta_provenance(
@@ -2447,6 +2540,8 @@ class RealWnsEvaluator:
                                "physical_baseline_min_slack": base_phys_min_slack,
                                "physical_candidate_min_slack": phys_min_slack,
                                "physical_delta": phys_wns - base_phys_wns,
+                               "physical_wns_per_util": phys.get("wns_per_util"),
+                               "physical_baseline_wns_per_util": baseline.get("wns_per_util"),
                                "physical_baseline_provenance": baseline_provenance,
                                "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
@@ -2465,6 +2560,8 @@ class RealWnsEvaluator:
                                "physical_baseline_min_slack": base_phys_min_slack,
                                "physical_candidate_min_slack": phys_min_slack,
                                "physical_delta": phys_wns - base_phys_wns,
+                               "physical_wns_per_util": phys.get("wns_per_util"),
+                               "physical_baseline_wns_per_util": baseline.get("wns_per_util"),
                                "physical_baseline_provenance": baseline_provenance,
                                "physical_candidate_provenance": candidate_provenance,
                                "rc_config_hash": rc_config_hash}
@@ -2509,7 +2606,18 @@ class RealWnsEvaluator:
                         "placement_density": self.placement_density,
                         "placement_platform": self.placement_platform,
                     })
-            physical_report = sub / "physical" / ("placed.log" if self.physical_backend == "placed" else "sta.log")
+                elif self.physical_backend == "placed_ens":
+                    res["physical_config"].update({
+                        "placement_utils": list(self.placement_utils),
+                        "placement_density": self.placement_density,
+                        "placement_platform": self.placement_platform,
+                    })
+            if self.physical_backend == "placed_ens":
+                physical_report = sub / "physical" / "ensemble.json"
+            elif self.physical_backend == "placed":
+                physical_report = sub / "physical" / "placed.log"
+            else:
+                physical_report = sub / "physical" / "sta.log"
             if physical_report.exists():
                 critical_report = physical_report
                 physical_report_text = physical_report.read_text(
@@ -2736,6 +2844,10 @@ class RealWnsEvaluator:
             "physical_candidate_min_slack": res.get("physical_candidate_min_slack"),
             "physical_baseline_provenance": res.get("physical_baseline_provenance"),
             "physical_candidate_provenance": res.get("physical_candidate_provenance"),
+            # per-layout readings of an ensemble measurement, kept so a
+            # k-layout decision can be re-judged offline against one layout
+            "physical_wns_per_util": res.get("physical_wns_per_util"),
+            "physical_baseline_wns_per_util": res.get("physical_baseline_wns_per_util"),
             "physical_config": res.get("physical_config"),
             "physical_delta": res.get("physical_delta"),
             "physical_status": res.get("physical_status"),

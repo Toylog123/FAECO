@@ -138,3 +138,93 @@ class PlacedTierParseTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class PlacedEnsembleTest(unittest.TestCase):
+    """Averaging k placements is how the judgement noise is pushed below the
+    effects being judged; a partially averaged ensemble must not be reported as
+    a measurement (fail-closed)."""
+
+    @staticmethod
+    def _reading(wns, tns=-10.0, min_slack=0.5):
+        return {
+            "wns": wns,
+            "tns": tns,
+            "min_slack": min_slack,
+            "slack_status": None,
+            "error": None,
+        }
+
+    def test_averages_the_placements_and_records_the_manifest(self):
+        from rseco.real_wns import RealWnsEvaluator
+
+        utils = (0.30, 0.35, 0.40)
+        readings = [self._reading(-1.20), self._reading(-1.10), self._reading(-1.00)]
+        with TemporaryDirectory() as tmp:
+            out = Path(tmp) / "cand" / "physical"
+            result = RealWnsEvaluator._combine_ensemble(out, utils, readings)
+            self.assertAlmostEqual(result["wns"], -1.10)
+            self.assertAlmostEqual(result["wns_spread"], 0.20)
+            self.assertIsNone(result["error"])
+            self.assertIsNone(result["budget_event"])
+            manifest = (out / "ensemble.json").read_text(encoding="utf-8")
+            self.assertIn('"0.30"', manifest)
+            self.assertIn('"failed": []', manifest.replace("\n", " "))
+
+    def test_min_slack_is_the_worst_placement(self):
+        from rseco.real_wns import RealWnsEvaluator
+
+        utils = (0.30, 0.35, 0.40)
+        readings = [
+            self._reading(-1.20, min_slack=0.60),
+            self._reading(-1.10, min_slack=0.41),
+            self._reading(-1.00, min_slack=0.52),
+        ]
+        with TemporaryDirectory() as tmp:
+            result = RealWnsEvaluator._combine_ensemble(Path(tmp), utils, readings)
+        self.assertAlmostEqual(result["min_slack"], 0.41)
+
+    def test_incomplete_ensemble_is_fail_closed(self):
+        from rseco.real_wns import RealWnsEvaluator
+
+        broken = {"wns": None, "tns": None, "min_slack": None, "error": "boom"}
+        utils = (0.30, 0.35, 0.40)
+        readings = [self._reading(-1.20), broken, self._reading(-1.00)]
+        with TemporaryDirectory() as tmp:
+            result = RealWnsEvaluator._combine_ensemble(Path(tmp), utils, readings)
+        self.assertIsNone(result["wns"])
+        self.assertIn("u0.35", result["error"])
+
+    def test_backend_validation_rejects_hold_mode_and_empty_utils(self):
+        from rseco.real_wns import RealWnsEvaluator
+
+        kwargs = dict(
+            mapped_text="module m(input A, output Z); endmodule",
+            top_module="m",
+            period=0.5,
+            liberty_text="",
+            baseline_wns=0.0,
+        )
+        with TemporaryDirectory() as tmp:
+            with self.assertRaises(ValueError):
+                RealWnsEvaluator(
+                    output_dir=tmp,
+                    physical_gate=True,
+                    physical_backend="placed_ens",
+                    hold_mode=True,
+                    **kwargs,
+                )
+            with self.assertRaises(ValueError):
+                RealWnsEvaluator(
+                    output_dir=tmp,
+                    physical_gate=True,
+                    physical_backend="placed_ens",
+                    placement_utils=(),
+                    **kwargs,
+                )
+            with self.assertRaises(ValueError):
+                RealWnsEvaluator(
+                    output_dir=tmp,
+                    physical_gate=True,
+                    physical_backend="placed_ensemble",
+                    **kwargs,
+                )

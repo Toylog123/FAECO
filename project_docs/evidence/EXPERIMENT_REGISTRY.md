@@ -2152,3 +2152,12 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 **边界**：4 例 ISCAS89 子集（非论文 8 例矩阵）；布局档 = `estimate_parasitics -placement`、布线后档 = RCX 提取，**都不是签核 RC**；机制 gate 首轮仍是"布局档候选 vs 理想基线"混档；DRC 未进端点判据；成本读数受 `--workers` 影响（A1：同 workers 才可比，臂间可比、与 W1 归档不可比）；补丁链只覆盖 2 例。**未改论文、未改 CANON 冻结数字。**
 
 **产物**：`experiments/20261110_placed_gate/`（`PREREGISTRATION.md`、`REPORT.md`、`summary.json`、`patch_chain.json`、`arms/{I,P,P_g005,P_g003}/<c>/`、`endpoint/<c>/{base,arm*}/`、`endpoint_chain/`）。
+
+### 2026-11-11 PLACED-ENS-20261111 | 布局集成判据（k=3 布局均值判决）
+
+**状态**：完成（4 例 × 单臂 E；预注册判定 H1 PASS / H2 FAIL / H3 PASS ⇒ **不晋级**）
+**问题**：上一轮（`PLACED-GATE-20261110`）H2 FAIL 是「未分辨」还是「已证否」？——同一网表换布局端点摆动 0.044–0.057 ns，而待判效应只有 +0.0334 ns。
+**装置**：新增 `physical_backend="placed_ens"`，判决用 0.30/0.35/0.40 三个利用率布局档读数的均值（噪声 1/√k）；其余搜索 flag 与 W1 / arm I / arm P 逐字相同；端点用 `routed_sta` 同一流程测三布局并取均值。预注册 H1（分歧率 > 15%）/ H2（端点 E 优 ≥3/4 且均值差 ≥0.05 ns）/ H3（候选 STA ≤1.6×），运行前落地。
+**结果**：H1 **PASS**——单布局判决与三布局均值判决在接近门槛的候选上分歧 **89/190 = 46.8%** ⇒ 单布局档判决一半是布局抽签（OI-074 的机制侧定量形式）。H2 **FAIL**——三布局均值端点增益 E 对 P：s382 +0.1780 / +0.1757、s641 +0.9093 / +0.9606、s832 +0.0131 / +0.0189、s953 +0.1377 / +0.0379；E 优 2/4、均值差 **+0.0112 ns** < 0.05。H3 PASS，候选 STA 738 / 878 = **0.84×**。**PROMOTE = NO**：判决器不是瓶颈。s953 的 +0.0998 来自 arm E 接受了 1 个 JOINT 补丁（+0.0604），属**动作种类**差异而非判决精度差异。
+**读数边界**：12 个「电路 × 网表」格跨布局增益极差均值 **0.1042 ns**（范围 0.0011–0.2328）⇒ 三布局均值残余误差 ≈0.060 ns/例、4 例均值标准误 ≈0.030 ns，与 0.05 ns 门槛同阶 ⇒ **H2 记「未分辨 + 不晋级」，不是「已证否」**；4 例小规模 ISCAS89；RC 为 RCX 估计非签核；arm E 的 STA 计数不可与 I/P 横比（`--workers 4`，见 `PLACED-GATE-20261110` §7 A1）；s382 的 arm E 终态网表与 arm I 逐字节相同（`2927efa7fdfd58d7`）。
+**产物**：`experiments/20261111_placed_ens_gate/`（`PREREGISTRATION.md`、`REPORT.md`、`summary.json`、`arms/E/<c>/`、`endpoint{,_u0.30,_u0.40}/<c>/armE/`）；代码 `code/src/rseco/real_wns.py` 的 `physical_backend="placed_ens"`；测试 `code/tests/test_placed_sta.py::PlacedEnsembleTest`。

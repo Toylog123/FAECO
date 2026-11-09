@@ -248,12 +248,18 @@ def parse_args() -> argparse.Namespace:
     # 110/110 buffer candidates were rejected on s382.  "placed" runs a real
     # OpenROAD placement + CTS + estimate_parasitics -placement per candidate
     # (~8 s instead of ~0.05 s) and is the tier the r30 label family validated.
-    p.add_argument("--physical-backend", choices=("spef", "placed"), default="spef",
+    p.add_argument("--physical-backend",
+                   choices=("spef", "placed", "placed_ens"), default="spef",
                    help="Inner-loop physical model: 'spef' = legacy fanout "
                         "wireload (falsified for buffers), 'placed' = OpenROAD "
-                        "placement-derived parasitics")
+                        "placement-derived parasitics, 'placed_ens' = the same "
+                        "flow at --placement-utils, averaged to divide the "
+                        "layout-dispersion noise by sqrt(k)")
     p.add_argument("--placement-util", type=float, default=0.35,
                    help="Floorplan utilization for the placed backend")
+    p.add_argument("--placement-utils", default="0.30,0.35,0.40",
+                   help="Comma separated utilisations for --physical-backend "
+                        "placed_ens (k measurements per candidate, k x ~8 s)")
     p.add_argument("--placement-density", type=float, default=0.55,
                    help="global_placement density for the placed backend")
     p.add_argument("--placement-platform", default=None,
@@ -456,6 +462,9 @@ def main() -> int:
         physical_unit_len_um=args.physical_unit_len,
         physical_backend=args.physical_backend,
         placement_util=args.placement_util,
+        placement_utils=tuple(
+            float(u) for u in args.placement_utils.split(",") if u.strip()
+        ),
         placement_density=args.placement_density,
         placement_platform=args.placement_platform,
         openroad_command=args.openroad_cmd,
