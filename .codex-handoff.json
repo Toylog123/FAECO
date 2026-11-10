@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-11",
-  "status": "r116 论文侧定版（主稿 11 页 / 补充 15 页，两篇质量门 PASS）；机制侧本轮完成第二个预注册实验（布局集成判据 arm E），H1 PASS / H2 FAIL / H3 PASS，不晋级：判决器不是瓶颈，瓶颈是单次动作效应量。HEAD 70e59ee，未 push。",
+  "timestamp": "2026-11-12",
+  "status": "r116 论文侧定版（主稿 11 页 / 补充 15 页，两篇质量门 PASS）；机制侧已完成三个预注册实验：布局档判据（H2 FAIL）、布局集成判据 arm E（H1 PASS 46.8% / H2 FAIL +0.0112）、动作粒度 arm A6j（H1 1/8 FAIL / H2 FAIL −0.0023），全部不晋级 ⇒ 判据、判决噪声、动作宽度都不是瓶颈。新线索：补丁链显示最大布线后增量来自 B 类插缓冲；瓶颈疑为「贪心单步选择压掉大动作」。HEAD 69946c5，未 push。",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
@@ -11,9 +11,9 @@
     "AGENTS.md"
   ],
   "git": {
-    "head": "70e59ee",
-    "describe": "faeco-paper-final-20261028-31-g70e59ee",
-    "ahead_of_origin": 35,
+    "head": "69946c5",
+    "describe": "faeco-paper-final-20261028-32-g69946c5",
+    "ahead_of_origin": 36,
     "pushed": false,
     "worktree": "clean"
   },
@@ -43,30 +43,37 @@
     "compile": "cd paper/zh/manuscript && lualatex -interaction=nonstopmode <file>.tex  (twice; not from build/)",
     "english": "not aligned to r116 caliber (P12 open) - do not compile/publish as-is"
   },
-  "mechanism_20261111": {
-    "experiment": "experiments/20261111_placed_ens_gate/",
-    "backend": "physical_backend='placed_ens' (means over util 0.30/0.35/0.40 of the placement tier)",
-    "h1_judgement_noise": "PASS - single-layout vs 3-layout-mean judgement disagrees on 89/190 = 46.8% of near-gate candidates",
-    "h2_transfer": "FAIL - arm E better on 2/4; mean(E-P) = +0.0112 ns < 0.05",
-    "h3_cost": "PASS - candidate STA 738 vs 878 = 0.84x",
-    "promote": false,
-    "reading": "judge is not the bottleneck; next lever is action granularity or measurement resolution",
-    "previous_experiment": "experiments/20261110_placed_gate/ (H1 PASS / H2 FAIL / no promote)"
-  },
   "versions": {
     "last_frozen": "v19",
     "v19_manifest": "139 OK / 9 FAILED",
     "v20": "pending (covers r95-r116 + mechanism code)"
   },
-  "tests": "1065 passed / 7 skipped / 156 subtests (path: oss-cad bin+lib first, .venv/Scripts/python.exe)",
+  "tests": "1065 passed / 7 skipped / 156 subtests (PATH: oss-cad bin+lib first, .venv/Scripts/python.exe)",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139"
   },
   "next_steps": [
-    "动作粒度：每轮批量接受 k 个补丁，使单次决策效应高于布局离散 0.1042 ns（需新预注册）",
-    "测量分辨率：签核级 RC / 更大样本；不要再用接受判据当作收益杠杆",
-    "定论文档位（r28 + r94-r116），英文稿同口径（P12）",
-    "建 v20 基线收录 v19 之后的文本与代码漂移"
-  ]
+    "A（优先，需新预注册）：把 B 类插缓冲做成主搜索方向——现在 B 只是 R/G/B 一支且被排序压后、理想判据 0 接受，而布线后最值钱",
+    "B（需新预注册）：改选择结构（每轮多个联合候选 / 先接受后组合），因为贪心单步会压掉大动作",
+    "若 A/B 都不过：机制侧只剩测量分辨率（签核级 RC / 更大样本），不要再把接受判据当收益杠杆",
+    "定论文档位（r28 + r94-r116）；英文稿同口径（P12）仍暂停（用户要求先做机制与实验）",
+    "建 v20 基线收录 v19 之后的文本与代码漂移；PREREGISTRATION 目前不入 git，可考虑 force-add 关键预注册件"
+  ],
+  "mechanism_20261112": {
+    "experiments": [
+      "experiments/20261110_placed_gate/ (arm I ideal vs arm P placed; H1 PASS / H2 FAIL / no promote; cost -48%)",
+      "experiments/20261111_placed_ens_gate/ (arm E, k=3 layout mean; H1 PASS 46.8% / H2 FAIL +0.0112 / H3 0.84x; no promote)",
+      "experiments/20261112_action_granularity/ (arm A6j joint-k 6; H1 1/8 FAIL / H2 -0.0023 / H3 1.15x; no promote)"
+    ],
+    "instruments": {
+      "placed_sta.py": "placement tier via OpenROAD floorplan->place->CTS + set_wire_rc + estimate_parasitics -placement",
+      "routed_sta.py": "post-route endpoint: global+detailed route -> extract_parasitics (RCX) -> write_spef -> standalone sta read_spef",
+      "real_wns_backends": "physical_backend in {spef, placed, placed_ens}"
+    },
+    "closing_line": "not the accept criterion, not the judge resolution, not the action width",
+    "new_lead": "B-class buffer insertion is where the post-route gain is (+0.1001 / +0.1253 in patch chains); ideal-tier criterion accepts 0 B",
+    "next_hypothesis": "greedy single-step selection suppresses large/compound actions (s641: joint 6-gate +0.4767 lost to single-gate +0.609)",
+    "evidence_note": "experiments/2026*/ is gitignored by project convention; PREREGISTRATION/REPORT/summary live on this machine only, registry+LOGS entries are in git"
+  }
 }
