@@ -2174,3 +2174,15 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 **读数边界**：4 例 ISCAS89 小电路、period 0.5；端点仍是三布局均值，残余误差 ~0.06 ns/例、4 例标准误 ~0.03 ns，与 0.05 ns 门槛同阶 ⇒ **能判"无差别"，不能判"略有优劣"**；只动一个旋钮，JOINT 组合空间几乎未搜索，**不得**外推为"大动作原理无效"；判据是布局档、布线后端点非签核 RC。**未改论文、未改 CANON 冻结数字。**
 
 **产物**：`experiments/20261112_action_granularity/`（`PREREGISTRATION.md`、`REPORT.md`、`summary.json`、`patch_chain.json`、`run_arms.sh`、`run_endpoints.py`、`analyze.py`、`run_patch_chain.py`、`arms/{A6j,A6}/<c>/`、`endpoint{,_u0.30,_u0.40}/<c>/arm*/`、`endpoint_chain/`）。
+
+### 2026-11-13 BUFFER-CALIBRATION-20261113
+
+- **族**：机制（接受判据的排序规则）；臂 K vs 归档臂 E。
+- **预注册**：`experiments/20261113_buffer_calibration/PREREGISTRATION.md`（sha256 前 16 位 `f0cb9b1b8af432b9`，6117 B，写于运行之前）。
+- **装置**：`--physical-backend placed_ens --placement-utils 0.30,0.35,0.40`，`--max-instances 8 --joint-k 2`，`--sta-budget 500 --workers 4`；唯一差异 `--postroute-calibration "B=5.64,G=0.60,JOINT=0.53"`。
+- **主判据电路**：held-out s641/s832；in-sample s382/s953（不判）。
+- **读数**：s641 +0.9444（E +0.9093）、s832 +0.0131（E +0.0131）、s382 +0.1851（E +0.1780）、s953 +0.0401（E +0.1377）；候选 STA 1005 对 738（1.36×）。
+- **判定**：H1 FAIL（s832 无 B 过关）、H2 FAIL（held-out 均值差 +0.0175 < 0.05）、H3 FAIL（1.36× > 1.2）⇒ PROMOTE = NO，停线。
+- **结论**：按种类校准能改变判决但不能转移收益；故障点在常数抽样误差（4 个补丁步），不是排序机制。
+- **产物**：`experiments/20261113_buffer_calibration/{PREREGISTRATION.md,REPORT.md,summary.json,replay_selection.json,arms/K/,endpoint*/}`。
+- **勿重复**：不要再用 4 个补丁步的按种类常数重跑；要重开需先补逐补丁布线后配对（每例 5–10 步）再重新拟合。

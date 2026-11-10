@@ -4561,3 +4561,36 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
   `experiments/20261112_action_granularity/{PREREGISTRATION.md,REPORT.md,summary.json,patch_chain.json}`。
 - **未做**：未改论文（用户明确"不要着急改论文"）、未改 HEAD 论文数字、未扩 8 例（H2 未过按预注册停止）、
   未调参重跑。
+
+## 2026-11-13（机制实验第四轮：按种类校准判据 arm K，H1/H2/H3 全不过 → 停线）
+
+- **动机**：逐补丁布线后链（`experiments/20261112_action_granularity/patch_chain.json`）显示布局档对动作种类不忠实——
+  B 类插缓冲的布线后/布局档比值为 **5.91 / 5.44**（s382 patch03、s953 patch03），G 类为 −0.22 / 1.72 / −1.06，
+  JOINT 为 0.53；同时归档 trials 里 B 类并不缺（arm P s641 it2 有 12 个过门 B），只是被同轮更大的 G/N 压掉。
+  ⇒ 假设 A：按种类给「已过门的候选」重新排序（不改接受门），能否把 B 类送进接受集并转化为布线后收益。
+- **代码（已提交）**：`code/src/rseco/real_wns.py` 新增 `postroute_calibration`（默认空 = 与历史逐位等价）、
+  `_candidate_score()`（`physical_delta * k[kind]`）、`parse_postroute_calibration()`；接受门仍用**原始**
+  `physical_delta >= 0.010` 与 paired TNS/hold，故校准不能放进物理未过门的动作；CLI `--postroute-calibration`；
+  测试 `code/tests/test_postroute_calibration.py`（8 例）。
+- **预注册**：`experiments/20261113_buffer_calibration/PREREGISTRATION.md`（写于任何运行之前，sha256 前 16 位
+  `f0cb9b1b8af432b9`，6117 B）：k_B=5.64、k_G=0.60、k_JOINT=0.53（Σrouted/Σplaced，n=4 步，来自 s382+s953）；
+  arm K = arm E flag 逐字相同 + 仅加校准；**held-out = s641/s832**，in-sample = s382/s953（次要）。
+- **读数（布线后 WNS 三布局均值，base 复用 `20261110_placed_gate`）**：
+  s641 base −2.5673 → K −1.6229（**+0.9444**，E +0.9093 ⇒ K−E **+0.0351**，K 接受 B2/G1，STA 290）；
+  s832 base −1.6552 → K −1.6421（+0.0131，E +0.0131 ⇒ **±0.0000**，G1，STA 148）；
+  s382 base −1.1742 → K −0.9890（+0.1851，E +0.1780 ⇒ +0.0072，B1/G2，STA 280）；
+  s953 base −1.8305 → K −1.7905（+0.0401，E +0.1377 ⇒ **−0.0976**，B2/G1，STA 287）。
+- **判定**：**H1 FAIL**（held-out B 接受 {s641: 2, s832: 0}——s832 的 20 轮里只有第 1 轮有合格候选，且无 B 过关）；
+  **H2 FAIL**（held-out 胜 1/2，均值差 **+0.0175 ns** < 0.05）；**H3 FAIL**（候选 STA **1005 vs 738 = 1.36×** > 1.2，
+  因为接受的 B 打开新锥、三例 4 轮就吃满 500 预算）；**PROMOTE = NO**，按预注册停线。
+- **读法**：校准确实改变了判决（s641/s953 各接受 2 个 B、s382 1 个 B，arm E 一个都没有），但端点没跟上；
+  s953 在 util 0.35 的布线后读数 −1.8794 **比 base 的 −1.8769 还差**（接受 2 个 B 后该布局未改善），
+  与「B 类布线后值 5–6 倍」的假设直接冲突 ⇒ **故障点在常数**（4 个补丁步估出的 5.64 抽样误差过大），
+  不是排序机制。要判定「B 类是否系统被低估」需每个电路 5–10 个逐补丁布线后配对，而不是调常数。
+- **记录**：`experiments/20261113_buffer_calibration/{PREREGISTRATION.md,REPORT.md,summary.json,replay_selection.json}`
+  （REPORT sha256 前 16 位 `8c84033404bb12eb`，7752 B）；`docs/EXPERIENCE.md` r123；`project_docs/CANON.md` §1 裁定第 14 条；
+  `project_docs/evidence/EXPERIMENT_REGISTRY.md` 条目 `BUFFER-CALIBRATION-20261113`；`project_docs/HANDOFF_2026-11-09.md` §2e。
+  离线判决回放 `replay_selection.py`：在归档 trials 上 arm E 的 s382 1/2、s641 1/1、s953 2/2 轮选择会被改，
+  且被选中种类出现 B ⇒ 校准不是恒等变换（先于运行做的可行性检查）。
+- **未做**：未改论文（用户"不要着急改论文"仍有效）、未扩 8 例（H2 未过）、未调参重跑、未 push。
+

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-12",
-  "status": "r116 论文侧定版（主稿 11 页 / 补充 15 页，两篇质量门 PASS）；机制侧已完成三个预注册实验：布局档判据（H2 FAIL）、布局集成判据 arm E（H1 PASS 46.8% / H2 FAIL +0.0112）、动作粒度 arm A6j（H1 1/8 FAIL / H2 FAIL −0.0023），全部不晋级 ⇒ 判据、判决噪声、动作宽度都不是瓶颈。新线索：补丁链显示最大布线后增量来自 B 类插缓冲；瓶颈疑为「贪心单步选择压掉大动作」。HEAD 69946c5，未 push。",
+  "timestamp": "2026-11-13",
+  "status": "r116 论文侧定版（主稿 11 页 / 补充 15 页，两篇质量门 PASS）；机制侧已完成四个预注册实验：布局档判据（H2 FAIL）、布局集成判据 arm E（H1 46.8% / H2 +0.0112）、动作粒度 arm A6j（H1 1/8 / H2 −0.0023）、按种类校准 arm K（H1/H2/H3 全 FAIL，+0.0175 ns、成本 1.36×）——全部不晋级。结论：判据档位、判决噪声、动作宽度、按种类排序都不是瓶颈；同时把「B 类校准」这条线按预注册停掉。下一站是选择结构，但前提是先补逐补丁布线后配对（每例 5–10 步）。未 push。",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
@@ -48,17 +48,18 @@
     "v19_manifest": "139 OK / 9 FAILED",
     "v20": "pending (covers r95-r116 + mechanism code)"
   },
-  "tests": "1065 passed / 7 skipped / 156 subtests (PATH: oss-cad bin+lib first, .venv/Scripts/python.exe)",
+  "tests": "1073 passed / 7 skipped / 156 subtests (PATH: oss-cad bin+lib first, .venv/Scripts/python.exe)",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139"
   },
   "next_steps": [
-    "A（优先，需新预注册）：把 B 类插缓冲做成主搜索方向——现在 B 只是 R/G/B 一支且被排序压后、理想判据 0 接受，而布线后最值钱",
-    "B（需新预注册）：改选择结构（每轮多个联合候选 / 先接受后组合），因为贪心单步会压掉大动作",
-    "若 A/B 都不过：机制侧只剩测量分辨率（签核级 RC / 更大样本），不要再把接受判据当收益杠杆",
-    "定论文档位（r28 + r94-r116）；英文稿同口径（P12）仍暂停（用户要求先做机制与实验）",
-    "建 v20 基线收录 v19 之后的文本与代码漂移；PREREGISTRATION 目前不入 git，可考虑 force-add 关键预注册件"
+    "先补逐补丁布线后配对（每电路 5–10 个补丁步，端点为 routed WNS 三布局均值），再重新拟合任何按种类常数——四步估出的 5.64 已被 s953 反转证伪",
+    "A（需新预注册）：改选择结构（每轮多个联合候选 / 先接受后组合），检验「贪心单步压掉大动作」",
+    "B（需新预注册）：把 B 类插缓冲做成主搜索方向（提高 B 的候选数与动作宽度），但必须先有可转移的 B 收益估计",
+    "若都不过：机制侧只剩测量分辨率（签核级 RC / 更大样本），不要再把接受判据当收益杠杆",
+    "定论文档位（r28 + r94–r116）；英文稿同口径（P12）仍暂停（用户要求先做机制与实验）；建 v20 基线",
+    "PREREGISTRATION 仍不入 git（experiments/ 被 gitignore）；关键件已在 LOGS/registry 记 sha256 与边界"
   ],
   "mechanism_20261112": {
     "experiments": [
@@ -71,9 +72,20 @@
       "routed_sta.py": "post-route endpoint: global+detailed route -> extract_parasitics (RCX) -> write_spef -> standalone sta read_spef",
       "real_wns_backends": "physical_backend in {spef, placed, placed_ens}"
     },
-    "closing_line": "not the accept criterion, not the judge resolution, not the action width",
+    "closing_line": "not the accept criterion, not the judge resolution, not the action width, not the per-kind ranking",
     "new_lead": "B-class buffer insertion is where the post-route gain is (+0.1001 / +0.1253 in patch chains); ideal-tier criterion accepts 0 B",
     "next_hypothesis": "greedy single-step selection suppresses large/compound actions (s641: joint 6-gate +0.4767 lost to single-gate +0.609)",
     "evidence_note": "experiments/2026*/ is gitignored by project convention; PREREGISTRATION/REPORT/summary live on this machine only, registry+LOGS entries are in git"
+  },
+  "mechanism_20261113": {
+    "experiment": "experiments/20261113_buffer_calibration/ (arm K: per-kind post-route calibration, k_B 5.64 / k_G 0.60 / k_JOINT 0.53)",
+    "design": "only the within-round ranking of already-gated candidates changes (score = placed_delta * k[kind]); the acceptance gate still uses the raw placed delta >= 0.010 ns, so calibration cannot admit physically unsanctioned actions",
+    "h1_decision_changed": "FAIL - B accepts {s641: 2, s832: 0}; s832 had no B above the gate in any of its 20 rounds",
+    "h2_transfer_endpoints": "FAIL - held-out K better on 1/2, mean diff +0.0175 ns < 0.05 (s641 +0.0351, s832 +/-0.0000)",
+    "h3_cost": "FAIL - 1005 vs 738 candidate STA = 1.36x",
+    "promote": false,
+    "in_sample": "s382 +0.1851 vs E +0.1780; s953 +0.0401 vs E +0.1377 (reversed: util-0.35 routed -1.8794 worse than base -1.8769)",
+    "reading": "the calibration does change decisions but does not transfer; the fault is the constant (4 patch steps, huge sampling error), not the ranking mechanism. Do not conclude B-class buffers are worthless.",
+    "code": "real_wns.py postroute_calibration / _candidate_score() / parse_postroute_calibration(); CLI --postroute-calibration; tests code/tests/test_postroute_calibration.py (8 cases)"
   }
 }

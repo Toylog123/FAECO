@@ -45,6 +45,7 @@ from rseco.real_wns import (
     build_r_available,
     dff_d_input_net,
     parse_critical_instances,
+    parse_postroute_calibration,
     parse_worst_endpoint,
     strip_to_single_module,
 )
@@ -268,6 +269,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--openroad-cmd", default=None,
                    help="OpenROAD argv for the placed backend (default: "
                         "wsl.exe -d Ubuntu -- /home/toylog/faeco_eda/or26Q3/bin/openroad)")
+    p.add_argument("--postroute-calibration", default="",
+                   help="Per-kind scaling of the placement-tier gain used to "
+                        "pick the best gated candidate this round, e.g. "
+                        "'B=5.65,G=0.60,JOINT=0.53'.  The raw acceptance gate "
+                        "still runs on the uncalibrated delta; only the "
+                        "within-round comparison is scaled.  Empty = historical "
+                        "rule (max measured delta wins).")
 
     # L3 S (r2 §4.9): window-local structure resynthesis as an independent
     # candidate type.  Off by default so every earlier arm stays bit-identical.
@@ -468,6 +476,8 @@ def main() -> int:
         placement_density=args.placement_density,
         placement_platform=args.placement_platform,
         openroad_command=args.openroad_cmd,
+        postroute_calibration=parse_postroute_calibration(
+            getattr(args, "postroute_calibration", "")),
         strict_gates=True,
         strict_budgets=True,
         required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),

@@ -1153,6 +1153,36 @@ def strip_to_single_module(verilog_text: str, top_module: str) -> str:
     return target_module_text(verilog_text,top_module)+'\n'
 
 
+def parse_postroute_calibration(spec: str | None) -> dict[str, float]:
+    """Parse ``"B=5.65,G=0.60,JOINT=0.53"`` into ``{"B": 5.65, ...}``.
+
+    Empty/None yields ``{}`` (historical behaviour).  Malformed tokens raise
+    ``ValueError`` instead of being silently dropped: a typo here would make
+    the experiment silently run the old rule.
+    """
+    if not spec:
+        return {}
+    table: dict[str, float] = {}
+    for token in str(spec).split(","):
+        token = token.strip()
+        if not token:
+            continue
+        if "=" not in token:
+            raise ValueError(f"postroute calibration token lacks '=': {token!r}")
+        kind, _, value = token.partition("=")
+        kind = kind.strip()
+        if not kind:
+            raise ValueError(f"postroute calibration token lacks a kind: {token!r}")
+        try:
+            factor = float(value.strip())
+        except ValueError as exc:
+            raise ValueError(f"postroute calibration factor is not a number: {token!r}") from exc
+        if factor <= 0:
+            raise ValueError(f"postroute calibration factor must be positive: {token!r}")
+        table[kind] = factor
+    return table
+
+
 class RealWnsEvaluator:
     """Measure a patch candidate with real OpenSTA and report WNS.
 
@@ -1231,6 +1261,16 @@ class RealWnsEvaluator:
         placement_density: float = 0.55,
         placement_platform: str | None = None,
         openroad_command: str | None = None,
+        # Per-kind correction for the placement-tier estimator.  The greedy
+        # inner loop compares candidates by their measured placement-tier
+        # gain, but that estimator is not equally faithful across action
+        # kinds: measured post-route/placement gain ratios on the s382+s953
+        # patch chains are B 5.65x, G 0.60x, JOINT 0.53x (n=4 steps).  With a
+        # table here the selection uses ``delta * k[kind]`` while the raw
+        # acceptance gate (``min_physical_gain_ns``) still applies to the
+        # uncalibrated delta, so nothing is accepted that the physics did not
+        # sanction.  Empty (default) reproduces the historical rule exactly.
+        postroute_calibration: dict[str, float] | None = None,
          equivalence_checker=None,
          topology_sec_checker=None,
          boundary_checker=None,
@@ -1352,6 +1392,9 @@ class RealWnsEvaluator:
         self.max_patch_ratio = float(max_patch_ratio)
         self.max_verification_time_s = float(max_verification_time_s)
         self.epsilon = float(epsilon)
+        self.postroute_calibration = {
+            str(k): float(v) for k, v in (postroute_calibration or {}).items()
+        }
         self.metric_epsilons = {
             "patch_ratio": 0.0, "area": 0.0, "max_transition": 0.0,
             "max_capacitance": 0.0, "max_fanout": 0.0,
@@ -1474,6 +1517,25 @@ class RealWnsEvaluator:
         if deadline is None:
             return default
         return max(0.001, min(default, float(deadline) - time.perf_counter()))
+
+    def _candidate_score(self, r: dict) -> float:
+        """Comparable score used to pick the best gated candidate this round.
+
+        Without a calibration table this is exactly the historical rule: the
+        candidate with the largest measured placement-tier gain wins (the
+        physical baseline is shared by every candidate in a round, so
+        comparing absolute WNS and comparing deltas are the same thing).
+        With ``postroute_calibration`` the delta is scaled per action kind; the
+        acceptance *gate* still runs on the raw delta, so calibration can only
+        reorder candidates that already passed the physics threshold.
+        """
+        delta = r.get("physical_delta")
+        if delta is None:
+            return float("-inf")
+        if not self.postroute_calibration:
+            return float(delta)
+        kind = str(r.get("kind") or "")
+        return float(delta) * self.postroute_calibration.get(kind, 1.0)
 
     def _strategy_order(self, cell_type: str) -> tuple[str, ...]:
         if self.adaptive:
@@ -3266,10 +3328,12 @@ class RealWnsEvaluator:
         best_min = self.baseline_min_slack
         best_physical_wns: float | None = None
         best_physical_hold: float | None = None
+        best_score: float | None = None
         best: dict | None = None
 
         def _accept_result(r: dict) -> bool:
             nonlocal best_wns, best_tns, best_min, best_physical_wns, best_physical_hold, best
+            nonlocal best_score
             wns = r["wns"]
             if any(e.get("severity") == "hard" or e.get("type") in {
                 "F1_equivalence_failure", "F2_boundary_invalid",
@@ -3317,12 +3381,14 @@ class RealWnsEvaluator:
                         )
                     )
                 )
+                score = self._candidate_score(r)
                 setup_is_better = (
                     not self.hold_mode
-                    and (best_physical_wns is None
-                         or physical_candidate > best_physical_wns + self.epsilon)
+                    and (best_score is None
+                         or score > best_score + self.epsilon)
                 )
                 if hold_is_better or setup_is_better:
+                    best_score = score
                     best_physical_wns = physical_candidate
                     best_physical_hold = physical_candidate_min_slack
                     best_wns = wns
