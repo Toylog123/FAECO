@@ -4534,3 +4534,30 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 - **边界**：4 例小规模 ISCAS89；端点 RC 为 `rcx_patterns.rules` 估计非签核；12 个「电路×网表」格跨布局增益极差均值 **0.1042 ns**（范围 0.0011–0.2328）⇒ 三布局均值残余误差 ≈0.060 ns/例、4 例均值标准误 ≈0.030 ns，与 0.05 门槛同阶，**故 H2 FAIL 记「未分辨 + 不晋级」**；arm E 的 STA 计数与 I/P 不可横比（`--workers 4` 改变调度与缓存命中）。s382 的 arm E 终态网表与 arm I 逐字节相同（`2927efa7fdfd58d7`），两者读数因此完全一致。
 - **产物与入口**：`experiments/20261111_placed_ens_gate/{PREREGISTRATION.md,REPORT.md,run_arms.sh,run_endpoints.py,analyze.py,summary.json,arms/E/,endpoint*/}`；上一轮三布局端点事后分析在 `experiments/20261110_placed_gate/{analyze_ensemble.py,summary_ensemble.json}`。
 - **代码与文档**：本轮不改论文、不改冻结数字；`code/` 有新增后端与测试；HEAD 提交见同日日志。
+
+## 2026-11-12（机制实验第三轮：动作粒度 arm A6j/A6，H1 与 H2 双 FAIL，端点不动）
+
+- **实验**：`experiments/20261112_action_granularity/`（预注册先写，README/REPORT/summary 齐）。
+  动机承接 arm E 的 H2 FAIL：归档读数显示每个被接受补丁只改 1 个门、单次决策物理增益
+  0.01–0.12 ns，与跨布局离散 0.1042 ns 同阶 → 用机制已有的 `--joint-k` 把一次动作放大到 6 门。
+- **臂**：E（判据 placed_ens、max-instances 8、joint-k 2，归档）/ **A6j 主检验**（同 E，joint-k 6）
+  / A6 补充（max-instances 16 + joint-k 6）。四例 s382/s641/s832/s953，period 0.5。
+- **判定（预注册，门槛一字未改）**：H1 动作变大 **FAIL**（1/8，仅 s382 的 iter1 JOINT 是 6 门）；
+  H2 端点转移 **FAIL**（A6j 优 1/4，三布局均值差 **−0.0023 ns**）；H3 成本 **PASS**（850 vs 738 = 1.15×）；
+  **PROMOTE = NO**。A6 更差：H1 1/7、H2 0/4（−0.0236）、成本 1.58×，且四例全部 `stop_reason=sta_budget`。
+- **端点（布线后 WNS，三布局均值）**：base/E/A6j = s382 −1.1742/−0.9962/−1.0076、
+  s641 −2.5673/−1.6580/−1.6580、s832 −1.6552/−1.6421/−1.6421、s953 −1.8305/−1.6928/−1.6907。
+  **s641 与 s832 的 A6j 终态网表与 E 逐字节相同**（放大动作宽度后机制选到同样的补丁）。
+- **补丁链（布线后逐补丁，util 0.35）**：s382 +0.0727(JOINT6) / −0.0038(G) / **+0.1001(B)**；
+  s953 +0.1240(G) / −0.0428(G) / **+0.1253(B)** ⇒ **两个最大增量都来自 B 类插缓冲**。
+- **机制诊断（本轮最重要产出）**：瓶颈不是判据档位、不是判决噪声、也不是动作宽度，而是
+  **每轮只生成 1 个联合候选 + 贪心按单步增益取最大**的选择结构（s641：单门 +0.609 压掉 6 门 +0.4767）；
+  而**真正被低估的是 B 类插缓冲**（理想判据 0 接受、真实布局档才开始接受、且布线后最值钱）。
+- **运行期修订**：A1（`--max-instances 16` 把每轮候选从 ~10 抬到 65–155，500 次 STA 预算 2–4 轮烧光，
+  故主检验改 A6j；端点未测时写下）；A2（H1 度量由 diff 行数改为**改动门数**——行数会双计 JOINT、
+  把插缓冲 3 行算成 3 门；改后 H1 由 3/8 PASS 变 1/8 FAIL，结论更保守）。
+- **记录**：`docs/EXPERIENCE.md` r122；`project_docs/CANON.md` §1 裁定第 13 条；
+  `project_docs/evidence/EXPERIMENT_REGISTRY.md` 条目 `ACTION-GRANULARITY-20261112`；
+  `experiments/20261112_action_granularity/{PREREGISTRATION.md,REPORT.md,summary.json,patch_chain.json}`。
+- **未做**：未改论文（用户明确"不要着急改论文"）、未改 HEAD 论文数字、未扩 8 例（H2 未过按预注册停止）、
+  未调参重跑。
