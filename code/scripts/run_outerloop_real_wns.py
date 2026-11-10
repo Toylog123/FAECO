@@ -276,6 +276,10 @@ def parse_args() -> argparse.Namespace:
                         "still runs on the uncalibrated delta; only the "
                         "within-round comparison is scaled.  Empty = historical "
                         "rule (max measured delta wins).")
+    p.add_argument("--accept-all", action="store_true",
+                   help="Accept every candidate that passes the gate in a "
+                        "single round, instead of only the best.  The "
+                        "cumulative netlist applies all accepted changes.")
 
     # L3 S (r2 §4.9): window-local structure resynthesis as an independent
     # candidate type.  Off by default so every earlier arm stays bit-identical.
@@ -478,6 +482,7 @@ def main() -> int:
         openroad_command=args.openroad_cmd,
         postroute_calibration=parse_postroute_calibration(
             getattr(args, "postroute_calibration", "")),
+        accept_all=args.accept_all,
         strict_gates=True,
         strict_budgets=True,
         required_metrics=tuple(m.strip() for m in args.required_metrics.split(",") if m.strip()),

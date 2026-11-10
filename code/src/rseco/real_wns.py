@@ -1271,6 +1271,7 @@ class RealWnsEvaluator:
         # uncalibrated delta, so nothing is accepted that the physics did not
         # sanction.  Empty (default) reproduces the historical rule exactly.
         postroute_calibration: dict[str, float] | None = None,
+        accept_all: bool = False,
          equivalence_checker=None,
          topology_sec_checker=None,
          boundary_checker=None,
@@ -1395,6 +1396,8 @@ class RealWnsEvaluator:
         self.postroute_calibration = {
             str(k): float(v) for k, v in (postroute_calibration or {}).items()
         }
+        self.accept_all = bool(accept_all)
+        self._accepted_stack: list[dict] = []
         self.metric_epsilons = {
             "patch_ratio": 0.0, "area": 0.0, "max_transition": 0.0,
             "max_capacitance": 0.0, "max_fanout": 0.0,
@@ -1437,6 +1440,87 @@ class RealWnsEvaluator:
         self.capture_electrical = bool(capture_electrical)
         self.electrical_baseline: dict | None = None
         self._electrical_baseline_lock = threading.Lock()
+
+    @staticmethod
+    def _build_cumulative_netlist(
+        baseline_text: str,
+        top_module: str,
+        accepted_trials: list[dict],
+    ) -> str | None:
+        """Build the cumulative netlist by applying all accepted changes.
+
+        Each trial must store ``instance``, ``kind``, and ``to_type`` (or
+        ``candidate_netlist_text`` as a fallback for kinds that aren't
+        reconstructable from instance+to_type alone, like ``R``).
+        Changes to different instances compose cleanly; successive edits to
+        the same instance are idempotent (last writer wins).
+        Returns ``None`` when no netlist can be built.
+        """
+        if not accepted_trials:
+            return None
+        cumulative = baseline_text
+        for t in accepted_trials:
+            inst = t.get("instance")
+            kind = t.get("kind")
+            to_type = t.get("to_type")
+            if not inst or not kind or not to_type:
+                continue
+            if kind == "R":
+                # R needs pin_map which trial doesn't store; use
+                # candidate_netlist_text diff as fallback.
+                cand = t.get("candidate_netlist_text")
+                if not cand:
+                    continue
+                import difflib
+                bl = baseline_text.splitlines(keepends=True)
+                cl = cand.splitlines(keepends=True)
+                matcher = difflib.SequenceMatcher(None, bl, cl)
+                for tag, i1, i2, j1, j2 in reversed(list(matcher.get_opcodes())):
+                    lines = cumulative.splitlines(keepends=True)
+                    if tag == "replace":
+                        cumulative = "".join(lines[:i1] + cl[j1:j2] + lines[i2:])
+                    elif tag == "delete":
+                        cumulative = "".join(lines[:i1] + lines[i2:])
+                    elif tag == "insert":
+                        cumulative = "".join(lines[:i1] + cl[j1:j2] + lines[i1:])
+            elif kind == "B":
+                try:
+                    cumulative = RealWnsEvaluator._apply_static(
+                        cumulative, inst, "B", to_type, {}, top_module=top_module
+                    )
+                except Exception:
+                    continue
+            else:
+                # G (sizing) and other kinds: just replace the cell type.
+                try:
+                    cumulative = RealWnsEvaluator._apply_static(
+                        cumulative, inst, kind, to_type, {}, top_module=top_module
+                    )
+                except Exception:
+                    continue
+        return cumulative
+
+    @staticmethod
+    def _apply_static(
+        text: str, inst: str, kind: str, new_type: str, pin_map: dict,
+        top_module: str = "",
+    ) -> str:
+        """Static version of ``_apply`` suitable for post-hoc use."""
+        from rseco.verilog_modules import target_module_text, replace_target_module
+        from rseco.logic_rewrite import apply_rewrite
+        from rseco.gate_sizing import apply_sizing
+        from rseco.buffer_insertion import insert_buffer
+
+        scoped = target_module_text(text, top_module or "")
+        if kind == "R":
+            edited = apply_rewrite(scoped, inst, new_type, pin_map)
+        elif kind == "B":
+            _, buf_type, bpin, new_net = new_type.split(":")
+            edited = insert_buffer(scoped, inst, bpin, buf_type, new_net,
+                                   top_module=top_module or "")
+        else:
+            edited = apply_sizing(scoped, {inst: new_type})
+        return replace_target_module(text, top_module or "", edited)
 
     def _baseline_electrical(self) -> dict | None:
         """Capture the pre-patch netlist's electrical profile once, lazily.
@@ -3475,7 +3559,27 @@ class RealWnsEvaluator:
             trial = dict(r)
             trial["patch_id"] = patch_id
             trial["iteration"] = iteration
-            trial["accepted"] = False
+            # accept_all gate derivation: use _accept_result's pass/fail
+            # semantics per candidate, but without the "best-overall"
+            # filtering—every candidate that clears the gate is accepted.
+            if self.accept_all:
+                # Replay the gate for this single candidate in isolation.
+                # Reset the nonlocal comparison state so the candidate is
+                # judged against the baseline (or the gate's own thresholds),
+                # NOT against the iteration's already-accumulated best.
+                saved = best, best_wns, best_tns, best_min, best_physical_wns, best_physical_hold, best_score
+                best = best_physical_wns = best_physical_hold = None
+                best_wns = best_tns = float("-inf")
+                best_score = None
+                trial_pass = _accept_result(r)
+                best, best_wns, best_tns, best_min, best_physical_wns, best_physical_hold, best_score = saved
+                if trial_pass:
+                    self._accepted_stack.append(r)
+                    trial["accepted"] = True
+                else:
+                    trial["accepted"] = False
+            else:
+                trial["accepted"] = False
             trial["committed"] = False
             self.trials.append(trial)
             if self.max_cand_per_instance > 0:
@@ -3484,6 +3588,30 @@ class RealWnsEvaluator:
                     self._inst_trial_count[_i] = self._inst_trial_count.get(_i, 0) + 1
         if best is not None:
             self.trials[-len(results) + results.index(best)]["accepted"] = True
+        # accept_all: mark all passing candidates and optionally
+        # re-rank so the best is still "first" for flow.py to consume.
+        if self.accept_all and self._accepted_stack:
+            # Ensure the best (by score) is last so call_log.accepted
+            # points to the highest-scoring candidate for backward compat.
+            by_score = sorted(
+                self._accepted_stack,
+                key=lambda r: r.get("_score", float("-inf")),
+            )
+            best = by_score[-1] if by_score else best
+            # Mark the rest as accepted in trials.
+            for r in by_score:
+                try:
+                    idx = results.index(r)
+                    self.trials[-len(results) + idx]["accepted"] = True
+                except (ValueError, IndexError):
+                    pass
+            # Build cumulative netlist.
+            cum = self._build_cumulative_netlist(
+                self.mapped_text, self.top_module, self._accepted_stack,
+            )
+            if cum is not None:
+                best["candidate_netlist_text"] = cum
+            self._accepted_stack.clear()
         # online decision layer v2: feed every measured trial back so the
         # per-cell-type strategy ordering adapts to this circuit in real time.
         if self.adaptive:

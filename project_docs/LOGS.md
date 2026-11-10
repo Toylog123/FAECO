@@ -4614,3 +4614,26 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
   （`ceiling.json` sha256 前 16 = `9653f3103460dcea`，`ANALYSIS.md` 前 16 = `eabf4da79033e188`）。
 - 边界：4 个 ISCAS89 小例、可比的 (电路,轮次) 只有 7 个；只分析"过门之后"的池；布线后真值只有 10 个配对点。
 - 代码/论文/HEAD 未变；本轮产物在被 gitignore 的 `experiments/` 下，加分析记录于本文档。
+
+## 2026-11-14（机制实验第五轮：批接受 arm All，H1 PASS / H2 FAIL / 不晋级，动作空间触顶）
+
+**LOG-20261114-01**（实验目录 `experiments/20261114_accept_all/`，REPORT sha256@16=cd631f84a8a490c9，PREREGISTRATION sha256@16=8a5929d009b86ca4）
+
+问题：五轮判据侧实验（P/E/A6j/K/离线天花板）一致表明换判据改不动端点。本轮把判据降到最低——每轮接受所有 `paired_improved` 的候选（`--accept-all`），测量极端配置下的布线后端点。
+
+装置：arm All = arm E + `--accept-all`，s382/s641/s832/s953，`--physical-backend placed_ens` 三布局 0.30/0.35/0.40，累积叠加已通过候选。
+
+结果：
+- H1 接受数量 PASS：s382 27（G6/J2/B19）/ s641 63（G18/B43/R1/J1）/ s832 5（R1/G3/J1）/ s953 14（G4/B9/J1），vs arm E 的 2/1/1/2。
+- H2 端点转移 FAIL：s382 All=+0.1860 vs E=+0.1780（diff=+0.008）/ s641 All=+0.0000 vs E=+0.9093（diff=-0.909，stagnation 回退到基准）/ s832 All=+0.0224 vs E=+0.0131（diff=+0.009）/ s953 All=+0.0000 vs E=+0.1377（diff=-0.138，stagnation）。均值差 -0.2574 < 0.05。
+- H3 成本 PASS（530 vs 738）。
+- PROMOTE = NO。
+
+怎么读：
+1. s641/s953 的 All 增益=0 = stagnation 回退到基准，不是 `accept_all` 没收到候选（63/14 个候选都被收取但累积后理想 WNS 未越过 epsilon 门槛 → improved=False → 停滞退出）。
+2. s382/s832 的 <0.01 ns 改善远低于布局离散 ~0.10 ns，不可分辨。
+3. 六轮实验一致封口（P/E → K → A6j → All 全部不晋级），当前 R/G/B + joint_k=2 + 覆盖优先的动作空间，布线上限实测在 arm E 的 0.31 ns/4 例均值量级。
+
+仪器事后修复：`accept_all` 隔离回放缺陷（`_accept_result` 的 nonlocal 状态比较），修法见 PREREGISTRATION.md §7 A1（`real_wns.py` line 3568–3572）。
+
+代码落点：`code/src/rseco/real_wns.py`（`accept_all` / `_build_cumulative_netlist` / `_apply_static`）、`code/scripts/run_outerloop_real_wns.py`（`--accept-all`）、`code/tests/test_accept_all.py`（4 用例）。

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-14",
-  "status": "r116 论文定版 + 四轮机制实验（P/E/A6j/K）全不晋级 + 2026-11-14 离线分析：判据侧无选择空间，瓶颈在候选生成；不改论文冻结数字、未 push",
+  "timestamp": "2026-11-14T19:50:00+08:00",
+  "status": "r116 + 五轮机制实验全部不晋级（P→E→A6j→K→All），动作空间触顶。arm All：H1 PASS / H2 FAIL（均值差 -0.2574 ns）/ H3 PASS / PROMOTE=NO。",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
@@ -11,12 +11,11 @@
     "AGENTS.md"
   ],
   "git": {
-    "head_content": "6f199b8",
-    "note": "指针提交紧随其后，HEAD 以 `git log -1` 为准（本文件无法记录自身提交哈希）",
-    "ahead_of_origin": 40,
-    "describe_contents": "faeco-paper-final-20261028-33-g6f199b8",
+    "head": "fc6ae09",
+    "ahead_of_origin": 39,
+    "describe": "faeco-paper-final-20261028-35-gfc6ae09",
     "pushed": false,
-    "worktree": "clean"
+    "worktree": "dirty (uncommitted accept_all code + records)"
   },
   "paper_state": {
     "zh_main_tex": {
@@ -49,16 +48,16 @@
     "v19_manifest": "139 OK / 9 FAILED",
     "v20": "pending (covers r95-r116 + mechanism code)"
   },
-  "tests": "1073 passed / 7 skipped / 156 subtests (PATH: oss-cad bin+lib first, .venv/Scripts/python.exe)",
+  "tests": "109 passed (directional), expect ~1081 passed / 7 skipped / 156 subtests",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139"
   },
   "next_steps": [
-    "选项 1（推荐先做，零实验成本）：把机制结论写进论文的“设计与边界”一节，强化「动作粒度 < 测量分辨率」这条主张；同时补 P0 的三件一致性工作（定档位 / 英文同口径 / 建 v20）",
-    "选项 2（要新预注册，约 2–3 h）：改**候选生成**——放宽实例集（--max-instances 8→16）同时用 --max-candidates-per-instance 限每实例 2 个候选以保住预算；判据沿用 arm E",
-    "选项 3（研究级，成本高）：换有分辨力的物理判据（签核 RC / 更大样本），或改动作集（结构级重做）",
-    "禁止再开：换判据档位 / 修判决精度 / 按种类校准 / 只把动作做大 —— 四条已各有预注册负结果"
+    "停止机制实验；P0: 定档位 + 英文同口径 + 建 v20",
+    "唯一有产出的机制改动：gate=该档位分辨率 → 成本 -48%",
+    "如需重启：补齐逐补丁布线后配对（每例5-10步）再拟合常数",
+    "改选择结构（需新预注册）：多联合候选 / 先接受后组合"
   ],
   "mechanism_20261112": {
     "experiments": [
@@ -88,19 +87,30 @@
     "code": "real_wns.py postroute_calibration / _candidate_score() / parse_postroute_calibration(); CLI --postroute-calibration; tests code/tests/test_postroute_calibration.py (8 cases)"
   },
   "mechanism_20261114": {
-    "kind": "offline analysis（不跑 STA/布线）",
-    "artifact": "experiments/20261114_selection_ceiling/ANALYSIS.md",
-    "endpoint_mean_4circuits_3layout_ns": {
-      "I": 0.2727,
-      "P": 0.2983,
-      "E": 0.3095,
-      "K": 0.2957
+    "experiment": "experiments/20261114_accept_all",
+    "arms": "All (arm E + --accept-all) vs E (archived)",
+    "circuits": [
+      "s382",
+      "s641",
+      "s832",
+      "s953"
+    ],
+    "accepts": {
+      "s382": 27,
+      "s641": 63,
+      "s832": 5,
+      "s953": 14
     },
-    "endpoint_spread_ns": 0.0368,
-    "top3_same_instance_share_rounds_ge3": 0.15,
-    "cross_arm_top1_same_instance": "4/7",
-    "cross_arm_top1_same_kind": "6/7",
-    "patch_pair_spearman": 0.164,
-    "verdict": "判据自由度低于布局离散 0.1042 ns ⇒ 改判据期望收益≈0；瓶颈在候选生成（哪些实例进池、有哪些动作）"
+    "h1_composition": "PASS",
+    "h2_transfer": "FAIL (mean diff -0.2574 ns)",
+    "h3_cost": "PASS (530 vs 738)",
+    "promote": "NO — stagnation on s641/s953; action space ceiling ≈ arm E 0.31 ns/4例",
+    "report_sha256_16": "cd631f84a8a490c9",
+    "prereg_sha256_16": "8a5929d009b86ca4",
+    "code": {
+      "real_wns.py": "accept_all / _build_cumulative_netlist / _apply_static",
+      "run_outerloop_real_wns.py": "--accept-all flag",
+      "test_accept_all.py": "4 test cases"
+    }
   }
 }

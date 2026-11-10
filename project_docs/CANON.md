@@ -199,6 +199,15 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
 11. **族间矛盾已归因**：扩面族 `structural − kind_only` 为正、基族为负，主因 = **`kind_only` 基线在两族方向相反**，**不是**「图特征变强」。⇒ 不得声称「直接训 GBDT/GNN 打分器」。
 
 ---
+11. **2026-11-14 — 批接受 arm All（预注册，H1 PASS / H2 FAIL / 不晋级）**：
+    把判据降到最低（每轮接受全部 `paired_improved` 候选）后，4 例均值增益差 **-0.2574 ns**（arm All 0.0521 / arm E 0.3095），s382/s832 微弱改善 +0.008/+0.009 < 布局离散 1/10，s641/s953 因 stagnation 回退到基准。
+    **六轮实验全部封口**（P/E → K → A6j → All），当前 R/G/B + joint_k=2 + 覆盖优先的动作空间布线上限 ≈ 0.31 ns/4 例均值。
+    **不可写**：「批接受可以替换贪心单步选择」「当前动作种类还有额外物理收益」。
+    代码落点：`real_wns.py`（`accept_all`/`_build_cumulative_netlist`/`_apply_static`）、`run_outerloop_real_wns.py`（`--accept-all`）、`test_accept_all.py`（4 用例）。
+    实验：`experiments/20261114_accept_all/`，REPORT sha256@16=cd631f84a8a490c9。
+    重开需先：测 stagnation 回退前 63 个候选的独立布线后收益。
+
+
 
 ## 6 六处口径问题（F-1 ~ F-6）
 
