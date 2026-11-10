@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-13",
-  "status": "r116 论文侧定版（主稿 11 页 / 补充 15 页，两篇质量门 PASS）；机制侧已完成四个预注册实验：布局档判据（H2 FAIL）、布局集成判据 arm E（H1 46.8% / H2 +0.0112）、动作粒度 arm A6j（H1 1/8 / H2 −0.0023）、按种类校准 arm K（H1/H2/H3 全 FAIL，+0.0175 ns、成本 1.36×）——全部不晋级。结论：判据档位、判决噪声、动作宽度、按种类排序都不是瓶颈；同时把「B 类校准」这条线按预注册停掉。下一站是选择结构，但前提是先补逐补丁布线后配对（每例 5–10 步）。未 push。",
+  "timestamp": "2026-11-14",
+  "status": "r116 论文定版 + 四轮机制实验（P/E/A6j/K）全不晋级 + 2026-11-14 离线分析：判据侧无选择空间，瓶颈在候选生成；不改论文冻结数字、未 push",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
@@ -11,9 +11,10 @@
     "AGENTS.md"
   ],
   "git": {
-    "head": "69946c5",
-    "describe": "faeco-paper-final-20261028-32-g69946c5",
-    "ahead_of_origin": 36,
+    "head_content": "6f199b8",
+    "note": "指针提交紧随其后，HEAD 以 `git log -1` 为准（本文件无法记录自身提交哈希）",
+    "ahead_of_origin": 40,
+    "describe_contents": "faeco-paper-final-20261028-33-g6f199b8",
     "pushed": false,
     "worktree": "clean"
   },
@@ -54,12 +55,10 @@
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139"
   },
   "next_steps": [
-    "先补逐补丁布线后配对（每电路 5–10 个补丁步，端点为 routed WNS 三布局均值），再重新拟合任何按种类常数——四步估出的 5.64 已被 s953 反转证伪",
-    "A（需新预注册）：改选择结构（每轮多个联合候选 / 先接受后组合），检验「贪心单步压掉大动作」",
-    "B（需新预注册）：把 B 类插缓冲做成主搜索方向（提高 B 的候选数与动作宽度），但必须先有可转移的 B 收益估计",
-    "若都不过：机制侧只剩测量分辨率（签核级 RC / 更大样本），不要再把接受判据当收益杠杆",
-    "定论文档位（r28 + r94–r116）；英文稿同口径（P12）仍暂停（用户要求先做机制与实验）；建 v20 基线",
-    "PREREGISTRATION 仍不入 git（experiments/ 被 gitignore）；关键件已在 LOGS/registry 记 sha256 与边界"
+    "选项 1（推荐先做，零实验成本）：把机制结论写进论文的“设计与边界”一节，强化「动作粒度 < 测量分辨率」这条主张；同时补 P0 的三件一致性工作（定档位 / 英文同口径 / 建 v20）",
+    "选项 2（要新预注册，约 2–3 h）：改**候选生成**——放宽实例集（--max-instances 8→16）同时用 --max-candidates-per-instance 限每实例 2 个候选以保住预算；判据沿用 arm E",
+    "选项 3（研究级，成本高）：换有分辨力的物理判据（签核 RC / 更大样本），或改动作集（结构级重做）",
+    "禁止再开：换判据档位 / 修判决精度 / 按种类校准 / 只把动作做大 —— 四条已各有预注册负结果"
   ],
   "mechanism_20261112": {
     "experiments": [
@@ -87,5 +86,21 @@
     "in_sample": "s382 +0.1851 vs E +0.1780; s953 +0.0401 vs E +0.1377 (reversed: util-0.35 routed -1.8794 worse than base -1.8769)",
     "reading": "the calibration does change decisions but does not transfer; the fault is the constant (4 patch steps, huge sampling error), not the ranking mechanism. Do not conclude B-class buffers are worthless.",
     "code": "real_wns.py postroute_calibration / _candidate_score() / parse_postroute_calibration(); CLI --postroute-calibration; tests code/tests/test_postroute_calibration.py (8 cases)"
+  },
+  "mechanism_20261114": {
+    "kind": "offline analysis（不跑 STA/布线）",
+    "artifact": "experiments/20261114_selection_ceiling/ANALYSIS.md",
+    "endpoint_mean_4circuits_3layout_ns": {
+      "I": 0.2727,
+      "P": 0.2983,
+      "E": 0.3095,
+      "K": 0.2957
+    },
+    "endpoint_spread_ns": 0.0368,
+    "top3_same_instance_share_rounds_ge3": 0.15,
+    "cross_arm_top1_same_instance": "4/7",
+    "cross_arm_top1_same_kind": "6/7",
+    "patch_pair_spearman": 0.164,
+    "verdict": "判据自由度低于布局离散 0.1042 ns ⇒ 改判据期望收益≈0；瓶颈在候选生成（哪些实例进池、有哪些动作）"
   }
 }
