@@ -2186,3 +2186,12 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 - **结论**：按种类校准能改变判决但不能转移收益；故障点在常数抽样误差（4 个补丁步），不是排序机制。
 - **产物**：`experiments/20261113_buffer_calibration/{PREREGISTRATION.md,REPORT.md,summary.json,replay_selection.json,arms/K/,endpoint*/}`。
 - **勿重复**：不要再用 4 个补丁步的按种类常数重跑；要重开需先补逐补丁布线后配对（每例 5–10 步）再重新拟合。
+### 2026-11-14 SELECTION-CEILING-20261114
+- 类型：离线分析（不跑 STA、不跑布线）
+- 脚本：`experiments/20261114_selection_ceiling/analyze_ceiling.py`
+- 产物：`ceiling.json`（sha256 前 16 `9653f3103460dcea`）、`ANALYSIS.md`（`eabf4da79033e188`）
+- 输入：`20261110_placed_gate/arms/{I,P}`、`20261111_placed_ens_gate/arms/E`、
+  `20261113_buffer_calibration/arms/K` 的 `eval_trials.json`
+- 结论：四臂端点极差 0.0368 ns；top-3 同实例 15%；跨臂 top-1 同实例 4/7；逐补丁 Spearman 0.164（n=10）
+  ⇒ 判据侧无空间，瓶颈在候选生成
+- 勿重复：不要再开"换判据/改判决精度/按种类校准"的实验，除非先给出 top-1 跨判据不一致的证据
