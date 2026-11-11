@@ -91,8 +91,8 @@ P4: Multi-objective (Pareto 优化)
 > ⇒ P1 与组合臂一并封口；本路线续做只允许「把 resizer 当内层优化器、我们做预算调度」这类可量化问法，
 > 见 `experiments/20261115_p1_resizer_vs_faeco/REPORT.md` §4b、`project_docs/CANON.md` §1 裁定 17。
 >
-> **P1 之后允许的唯一问法**：可组合性——同一 resizer 流程、只换起始网表（Hybrid 臂），
-> 即"我们的 ECO 是否让 resizer 的终点更好"。若也不成立，则本路线需重定题（见 §7 风险表）。
+> **P1 之后允许的唯一问法（更新）**：可组合性（Hybrid 臂）也已在上面 FAIL ⇒ 仅剩
+> 「把 resizer 当内层优化器、我们做外层预算调度」这一个可量化问法；若它也不成立，本路线需整体重定题（见 §7 风险表）。
 
 
 **目标**：证明覆盖优先调度在布局后设定下，可以在 ≥5/8 例 ISCAS89 上取得优于 OpenROAD resizer 的 WNS 改善，且面积不增加。
