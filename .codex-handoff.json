@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-11T17:30:00+08:00",
-  "status": "direction pivoted to post-placement ECO SOTA (2026-11-11); P1 FAIL (FAECO-P 0/8 vs resizer), Hybrid FAIL (+0.0243), P1' pilot PASS (RF-Rprime mean +0.0786 ns on 3 circuits, PROMOTE=YES)",
+  "timestamp": "2026-11-11",
+  "status": "r116 论文定稿 + 六轮机制实验封口 + 方向转折到布局后 SOTA ECO；P1（0/8 胜 resizer）与 Hybrid（+0.0243 未过门）均 FAIL；P1′ 一轮（pre-CTS 变体终点）+0.0786 ns PASS；P1′ 二轮（post-CTS 变体终点）−0.3954 ns FAIL ⇒ P1′ 线在当前机制下封口",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
@@ -12,11 +12,12 @@
     "AGENTS.md"
   ],
   "git": {
-    "head": "84c1b8a",
-    "ahead_of_origin": 46,
-    "describe": "faeco-paper-final-20261028-42-g84c1b8a",
+    "head": "521c279",
+    "describe": "faeco-paper-final-20261028-47-g521c279",
+    "ahead_of_origin": 52,
     "pushed": false,
-    "worktree": "dirty"
+    "worktree_clean": true,
+    "note": "本轮提交（post-CTS 记录 + routed_sta skip_clock_tree + 实验件）在本记录之后，head 以 git log -1 为准"
   },
   "paper_state": {
     "note": "论文侧自 2026-11-09 (r116) 起冻结未动；用户 2026-11-11 起明确『不要着急改论文』。",
@@ -57,81 +58,42 @@
     "docs": "docs/environment.md §5.2"
   },
   "direction_pivot_20261111": {
-    "why": "六轮预注册机制实验（P/E/A6j/K/All/判据侧上限）全部封口；用户要求做新 SOTA、不要论述论文。",
-    "new_direction": "布局后 (post-placement) 覆盖优先 ECO，对标 OpenROAD resizer / E-Layout (ICCAD 2026) / GoalEvolve (arXiv 2608.16733)",
-    "roadmap": "project_docs/FAECO_ROADMAP.md (P1 调度 -> P2 +ML 排序 -> P3 跨设计 -> P4 Pareto)",
-    "p1": {
-      "experiment": "experiments/20261115_p1_resizer_vs_faeco/",
-      "setup": "8 例 ISCAS89，同 W1 mapped.v，period 0.5，util 0.30/0.35/0.40 三布局；读数 rseco.routed_sta（ideal clock + extracted SPEF STA）",
-      "result_ns": {
-        "base_to_resizer_mean": 0.5836,
-        "base_to_faecop_mean": 0.2473,
-        "faecop_minus_resizer_mean": -0.3362,
-        "wins": "0/8"
-      },
-      "verdict": "FAIL / PROMOTE=NO",
-      "root_cause": "动作量：布线后 DEF 逻辑单元净增 resizer 8/9/13/38 vs FAECO-P 0/0/0/1；FAECO-P 八例仅接受 16 个单实例补丁",
-      "hybrid": {
-        "experiment": "same resizer flow, starting netlist = FAECO-P endpoint",
-        "wins": "5/8",
-        "mean_diff_ns": 0.0243,
-        "verdict": "FAIL (mean diff < 0.05)"
-      },
-      "asymmetry": "resizer 臂读的是标准流程 + repair_timing + detailed_placement；base/FAECO-P 读标准流程（resizer 的扁平化 routed.v 塞回标准流程会 segfault 139）"
-    },
-    "only_remaining_question": "把 resizer 当内层优化器、我们做外层预算调度（预算-收益曲线，可预注册）",
-    "do_not_claim": [
-      "换更聪明的判据可超过 resizer",
-      "我们的 ECO 与 resizer 组合有收益",
-      "FAECO-P 无效（对 base 8/8 为正）"
-    ],
-    "p1p_pilot": {
-      "experiment": "experiments/20261116_resizer_then_faecop",
-      "design": "resizer first (pre-CTS repair_timing variant) -> FAECO-P -> routed endpoint (3 layouts)",
-      "delta_ns": {
-        "s382": 0.0,
-        "s641": 0.1202,
-        "s832": 0.1157
-      },
-      "mean_delta_ns": 0.0786,
-      "h1_feasibility": "PASS",
-      "h2_residual": "PASS",
-      "promote": "YES",
-      "per_patch_all_positive": true,
+    "p1p_postcts": {
+      "experiment": "experiments/20261117_postcts_residual",
+      "why": "P1′ 一轮只在 pre-CTS 变体终点上成立；P1 的真正对手是 post-CTS resizer",
+      "result": "0/3 为正，均值 -0.3954 ns ⇒ FAIL / PROMOTE=NO",
+      "conclusion": "当前机制在 post-CTS resizer 终点之上没有残余空间；P1′ 封口",
       "do_not_claim": [
-        "gain on top of P1's post-CTS resizer (R' is a weaker variant, re-entry gap 0.19/0.21 ns)",
-        "method superiority (3-circuit pilot, far higher cost than one resizer call)"
-      ],
-      "instrument_fix": {
-        "commit": "ef72abd",
-        "file": "code/src/rseco/netlist.py",
-        "what": "parse OpenROAD flat netlists whose instance header carries the first named connection"
-      },
-      "next": [
-        "scale to 8 circuits under a new preregistration",
-        "replace resizer segment with the post-CTS variant (needs flat-netlist re-entry fix)"
+        "post-CTS 终点没有残余空间（只测了本机制的动作空间与判断器）",
+        "resizer 已最优",
+        "pre-CTS pilot 结论作废"
       ]
     }
   },
   "next_steps": [
-    "等用户确认：是否做『resizer 当内层优化器 + 预算调度』这条唯一剩余问法",
-    "论文侧仍冻结（P12 英文同口径、建 v20 都排在方向确定之后）",
-    "若要复现 P1：experiments/20261115_p1_resizer_vs_faeco/REPORT.md §6 有完整命令"
+    "P1′ 线在当前机制下已封口；若续做，唯一前提是解决『判断器（布局档）与布线后端点的读数一致性』（须新预注册），不要继续换动作空间",
+    "不得写『post-CTS 终点没有残余空间』『resizer 已最优』『pre-CTS pilot 结论作废』",
+    "论文侧仍冻结（P12 英文同口径、建 v20 都排在机制方向确定之后）",
+    "复现：experiments/20261117_postcts_residual/REPORT.md §8（6 条命令，期望 H1 PASS / H2 FAIL / mean -0.3954 / PROMOTE=NO）"
   ],
   "records": {
-    "canon_rulings": "§1 裁定 15 (方向转折) / 16 (P1 FAIL) / 17 (Hybrid FAIL)",
-    "experience": "r124 (方向) / r125 (P1) / r126 (Hybrid)",
-    "logs": "LOG-20261111-01/-02/-03",
-    "registry": "P1-RESIZER-VS-FAECOP, HYBRID-RESIZER-FAECOP",
+    "canon_rulings": "§1 裁定 15（方向转折）/ 16（P1 FAIL）/ 17（Hybrid FAIL）/ 18（P1′ pre-CTS pilot PASS）/ 19（P1′ post-CTS FAIL）",
+    "experience": "r124（方向）/ r125（P1）/ r126（Hybrid）/ r127（工具产物形状是接口契约）/ r128（布局档判断在 post-CTS 终点不可迁移）",
+    "logs": "LOG-20261111-01 / -02 / -03 / -04（P1′ pilot）/ -05（P1′ post-CTS）",
+    "registry": "P1-RESIZER-VS-FAECOP, HYBRID-RESIZER-FAECOP, P1P-RESIZER-THEN-FAECOP, P1P2-POSTCTS-RESIDUAL",
     "p1p_pilot": {
       "prereg": "experiments/20261116_resizer_then_faecop/PREREGISTRATION.md (A1-A4)",
       "report": "experiments/20261116_resizer_then_faecop/REPORT.md",
       "summary": "experiments/20261116_resizer_then_faecop/summary.json",
-      "chain": "experiments/20261116_resizer_then_faecop/patch_chain_pilot1.json",
-      "canon": "project_docs/CANON.md §1 ruling 18",
-      "logs": "project_docs/LOGS.md LOG-20261111-04",
-      "experience": "docs/EXPERIENCE.md r127",
-      "registry": "project_docs/evidence/EXPERIMENT_REGISTRY.md P1P-RESIZER-THEN-FAECOP"
+      "verdict": "H1/H2 PASS, mean +0.0786 ns, PROMOTE=YES（pre-CTS 变体终点；R' 比 P1 resizer 弱 0.19/0.21 ns）"
+    },
+    "p1p_postcts": {
+      "prereg": "experiments/20261117_postcts_residual/PREREGISTRATION.md",
+      "report": "experiments/20261117_postcts_residual/REPORT.md",
+      "summary": "experiments/20261117_postcts_residual/summary.json",
+      "verdict": "H1 PASS, H2 FAIL (0/3, mean -0.3954 ns), PROMOTE=NO（对照端点忠实：|re-entry gap|<0.15）",
+      "root_cause": "布局档判断在 post-CTS 终点上不可迁移：同网表 placed -2.10 vs routed -1.11；s641 的 +0.609 在布线后翻成 -0.532（探针 with-CTS +0.6369 / skip-CTS +0.6187）",
+      "instrument": "code/src/rseco/routed_sta.py: render_flow_tcl_skip_clock_tree + run_routed_sta(skip_clock_tree=True)（默认行为不变，回归 PostCtsFlowTest）"
     }
   }
 }

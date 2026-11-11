@@ -133,6 +133,22 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
     证据：`experiments/20261116_resizer_then_faecop/{PREREGISTRATION,REPORT}.md`、`summary.json`、
     `patch_chain_pilot1.json`；`docs/EXPERIENCE.md` r127；`project_docs/LOGS.md` LOG-20261111-04。
 
+19. **P1′ 二轮：post-CTS resizer 终点之上没有残余空间（2026-11-11，`experiments/20261117_postcts_residual`）**。
+    把 P1′ 的 resizer 段换成 **post-CTS** 变体（与 P1 实际对手同形），其余装置不变，三例 pilot、三布局端点。
+    读数（WNS ns，三布局均值）：R′post **−0.8246 / −1.1135 / −1.1417**（s382/s641/s832），
+    RFpost **−0.9906 / −1.6460 / −1.6296** ⇒ RF−R′ **−0.1659 / −0.5325 / −0.4879**，均值 **−0.3954 ns**
+    ⇒ **H2 FAIL（0/3 为正）、PROMOTE=NO**；对照端点忠实（re-entry gap +0.0168/+0.0160/−0.0830，|gap|<0.15，未触发声明条款）。
+    **根因（可写）**：布局档（`estimate_parasitics -placement`）在 post-CTS 终点上**不是可迁移代理**——
+    同一网表 placed 判 −2.10、布线后 −1.11（差约 1 ns），且 +0.609 的布局档改善在布线后翻成 −0.532
+    （探针证明该 +0.62~+0.64 与双重建 CTS 无关：with-CTS +0.6369、skip-CTS +0.6187）。
+    ⇒ **可写**「在 post-CTS resizer 终点上，本文机制的接受补丁使布线后 WNS 3/3 变差（均值 −0.395 ns）；pre-CTS pilot 的正转移不迁移」；
+    **不得写**「post-CTS 终点没有残余空间」（只试了本机制的动作空间与判断器）、「resizer 已最优」、
+    「pre-CTS pilot 结论作废」（它回答的是另一个（较弱）变体终点）。
+    P1′ 线在当前机制下封口；继续必须先解决**判断器与布线后端点的读数一致性**，而不是换动作空间。
+    仪器：post-CTS 网表重入标准流程需 `skip_clock_tree=True`（`code/src/rseco/routed_sta.py`，默认渲染不变，回归 `PostCtsFlowTest`）。
+    证据：`experiments/20261117_postcts_residual/{PREREGISTRATION,REPORT}.md`、`summary.json`；
+    `docs/EXPERIENCE.md` r128；`project_docs/LOGS.md` LOG-20261111-05。
+
 | 项 | 值（r116 现行） | 来源 |
 |---|---|---|
 | 版本 | r28 底稿 + r94–r101 口径 + r102–r116 实验与修订 / 2026-11-09 | `paper/zh/CHANGE_LOG.md` §r116 |

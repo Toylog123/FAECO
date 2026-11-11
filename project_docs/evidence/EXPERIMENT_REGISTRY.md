@@ -2234,3 +2234,18 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
   三例 pilot，扩样须另立预注册；仅测 WNS，未测功耗/面积。
 - **可续做**：扩到 8 例（需新预注册）；把 resizer 段换成 post-CTS 变体（须先解决扁平网表重入 segfault）。
 - 前置缺陷修复：`code/src/rseco/netlist.py` 扁平网表多行实例解析（commit `ef72abd`）。
+
+### 2026-11-11 P1P2-POSTCTS-RESIDUAL
+
+- 问题：把 P1′ 的 resizer 段换成 post-CTS 变体（与 P1 实际对手同形）后，本文机制在它终点上还有没有残余空间。
+- 装置：`experiments/20261117_postcts_residual/`；导出点在 CTS 之后；我方段 = FAECO-P（单补丁接受、三布局 placed 判决）；
+  端点 = routed STA + `skip_clock_tree=True`，util 0.30/0.35/0.40 三布局均值。
+- 结果：H1 可行性 **PASS**（18 次布线 DRC=0）；**H2 残余空间 FAIL**——RF−R′ = −0.1659 / −0.5325 / −0.4879
+  （s382/s641/s832），均值 **−0.3954 ns**，0/3 为正；**PROMOTE=NO**。
+  re-entry gap +0.0168/+0.0160/−0.0830（|gap|<0.15，对照端点忠实）。
+- 诊断：布局档判断在 post-CTS 终点上不可迁移——同网表 placed −2.10 vs routed −1.11；+0.609 的 placed 改善
+  在布线后翻成 −0.532（探针 with-CTS +0.6369 / skip-CTS +0.6187，排除双重建树）。
+- 边界：3 例 pilot；只测 WNS；只检验本机制的动作空间与判断器 ⇒ 不得写「post-CTS 终点没有残余空间」。
+- 前置缺陷：post-CTS 网表重入需 `skip_clock_tree`（`code/src/rseco/routed_sta.py`）。
+- 结论：P1′ 线在当前机制下封口；继续必须先解决判断器与端点一致性。
+

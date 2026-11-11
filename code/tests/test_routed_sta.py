@@ -206,3 +206,64 @@ class RoutedParseTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class PostCtsFlowTest(unittest.TestCase):
+    """A post-CTS netlist already carries its clock tree.
+
+    Running clock_tree_synthesis on top of it segfaults OpenROAD (probe on
+    s641: returncode 139 with CTS, 0 without), so the flow needs an explicit
+    variant and the default rendering must not change.
+    """
+
+    @staticmethod
+    def _kw():
+        from rseco.routed_sta import DEFAULT_ORFS, DEFAULT_PLATFORM
+
+        return dict(
+            netlist_path="post.v",
+            output_dir="out",
+            top_module="s641",
+            period=0.5,
+            util=0.35,
+            density=0.55,
+            clock_port="CK",
+            platform=DEFAULT_PLATFORM,
+            orfs=DEFAULT_ORFS,
+        )
+
+    def test_default_flow_still_builds_the_clock_tree(self):
+        tcl = render_flow_tcl(**self._kw())
+        self.assertIn("clock_tree_synthesis", tcl)
+        self.assertIn("repair_clock_nets", tcl)
+
+    def test_skip_variant_drops_only_the_cts_lines(self):
+        from rseco.routed_sta import render_flow_tcl_skip_clock_tree
+
+        default = render_flow_tcl(**self._kw())
+        skip = render_flow_tcl_skip_clock_tree(**self._kw())
+        self.assertNotIn("clock_tree_synthesis", skip)
+        self.assertNotIn("repair_clock_nets", skip)
+        for token in (
+            "initialize_floorplan",
+            "global_placement",
+            "detailed_placement",
+            "set_propagated_clock",
+            "source $ORFS/setRC.tcl",
+            "global_route",
+            "detailed_route",
+            "extract_parasitics",
+            "write_spef",
+            "ROUTED_FLOW_OK",
+        ):
+            self.assertIn(token, skip)
+            self.assertIn(token, default)
+        self.assertGreater(len(default), len(skip))
+        self.assertIn("post-CTS export", skip)
+
+    def test_run_routed_sta_accepts_the_flag_without_touching_defaults(self):
+        import inspect
+
+        sig = inspect.signature(run_routed_sta)
+        self.assertIn("skip_clock_tree", sig.parameters)
+        self.assertIs(sig.parameters["skip_clock_tree"].default, False)

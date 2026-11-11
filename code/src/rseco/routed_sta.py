@@ -114,6 +114,32 @@ puts "ROUTED_FLOW_OK"
 """
 
 #: Endpoint STA convention of the r103 family: ideal clock + routed SPEF.
+
+def render_flow_tcl_skip_clock_tree(**kwargs) -> str:
+    """Render the routing flow for a netlist that ALREADY contains a clock tree.
+
+    Post-CTS exports carry the clock buffers as ordinary gates; running
+    ``clock_tree_synthesis`` on top of that crashes OpenROAD (probe on s641:
+    returncode 139 with CTS, 0 without).  This variant keeps everything else
+    byte-identical to :func:`render_flow_tcl`, so the only difference between a
+    pre-CTS and a post-CTS measurement is the input netlist.
+    """
+    tcl = render_flow_tcl(**kwargs)
+    cts = (
+        "clock_tree_synthesis -buf_list {sky130_fd_sc_hd__clkbuf_4 sky130_fd_sc_hd__clkbuf_8}"
+        " -root_buf sky130_fd_sc_hd__clkbuf_16\nrepair_clock_nets\ndetailed_placement\n"
+        "write_def $OUTDIR/cts.def\n"
+    )
+    if cts not in tcl:  # pragma: no cover - template drift guard
+        raise RuntimeError("CTS block drifted; update render_flow_tcl_skip_clock_tree")
+    return tcl.replace(
+        cts,
+        "# clock tree already present in the input netlist (post-CTS export)\n"
+        "detailed_placement\n"
+        "write_def $OUTDIR/cts.def\n",
+    )
+
+
 ROUTED_STA_TCL = """\\
 set PLATFORM "__PLATFORM__"
 set NETLIST  "__NETLIST__"
@@ -241,6 +267,7 @@ def run_routed_sta(
     openroad_command: str | None = None,
     sta_command: str | None = None,
     droute_end_iter: int = 15,
+    skip_clock_tree: bool = False,
     flow_timeout_s: float = 1800.0,
     sta_timeout_s: float = 300.0,
 ) -> dict:
@@ -256,8 +283,9 @@ def run_routed_sta(
     argv = _argv(openroad_command)
 
     flow_tcl = output_dir / "route_flow.tcl"
+    renderer = render_flow_tcl_skip_clock_tree if skip_clock_tree else render_flow_tcl
     flow_tcl.write_text(
-        render_flow_tcl(
+        renderer(
             netlist_path=netlist_path,
             output_dir=output_dir,
             top_module=top_module,

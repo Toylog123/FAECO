@@ -4741,3 +4741,36 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 - 证据：`experiments/20261116_resizer_then_faecop/summary.json`、`REPORT.md` §3.2/§4、
   `patch_chain_pilot1.json`；`docs/EXPERIENCE.md` r127；`project_docs/CANON.md` §1 裁定 18。
 
+## 2026-11-11（P1′ 二轮：post-CTS 变体终点，H2 FAIL / 不晋级）
+
+### LOG-20261111-05
+
+- 目的：把 P1′ pilot 的 resizer 段从 pre-CTS `repair_timing` 换到 **post-CTS**（与 P1 实际对手同形），回答
+  「真正的 resizer 终点之上还有没有本文机制的余量」。预注册 `experiments/20261117_postcts_residual/PREREGISTRATION.md` 读数前写定。
+- 装置：resizer 段 = 标准 place 流程 → CTS → setRC → `repair_timing -setup` → `detailed_placement` → `write_verilog`；
+  导出点在 CTS **之后**（网表含 4/3/4 个 clkbuf）；我方段 = FAECO-P（单补丁接受、三布局 placed 判决，flag 与 P1′ RF 臂逐字相同）；
+  端点 = `run_routed_sta(skip_clock_tree=True)`，三布局 util 0.30/0.35/0.40 均值。
+- **仪器（先在读数前做探针）**：post-CTS 网表重入标准流程会**稳定 segfault**（s641：a) 原样 rc=139；
+  b) 跳过 `clock_tree_synthesis`+`repair_clock_nets` rc=0，RCX 170 nets；c) b + 去掉 `assign` rc=0）
+  ⇒ 根因是**双重建时钟树**，`assign` 无关。据此新增 `render_flow_tcl_skip_clock_tree` + `run_routed_sta(skip_clock_tree=...)`
+  （`code/src/rseco/routed_sta.py`，默认渲染逐字不变，回归 `PostCtsFlowTest` 3 例）。网表归一化 `\DFF_x/_0_`→`DFF_x`：
+  s382/s641/s832 各 21/19/5 处、leftover 0；导出 10,664 / 13,907 / 16,477 B。
+- 读数（三布局均值，WNS ns）：R′post **−0.8246 / −1.1135 / −1.1417**；RFpost **−0.9906 / −1.6460 / −1.6296**；
+  RF−R′ = **−0.1659 / −0.5325 / −0.4879**，均值 **−0.3954 ns**。18 次布线 DRC 全 0。
+- **判定：H1_feasibility PASS（3/3 重入、DRC 0）；H2_residual FAIL（0/3 为正、均值 −0.3954 < +0.05）；PROMOTE = NO。**
+  re-entry gap（R′post − R_own）= +0.0168 / +0.0160 / −0.0830，均值 −0.0167，**全部 |gap| < 0.15 ⇒ 未触发声明条款**
+  （本轮对照端点忠实复现 P1 resizer 归档值，优于 pre-CTS 变体的 −0.19/−0.21）。
+- **诊断**：被接受的补丁只有 1–2 个单门改尺寸（s382 2 个 G：+0.1217/+0.0635；s641 1 个 G `a2111oi_0→4`：**+0.6090**；
+  s832 1 个 G：+0.0577），布局档判断认为大幅改善，布线后却全部变差。**不是双重建 CTS 的假象**：
+  `scratch/_probe_postcts_judge.py` 直接用 placed 流程测 s641 两份网表——原样流程 −2.10346 → −1.466617（**+0.6369**）、
+  跳过 CTS 流程 −2.072263 → −1.453602（**+0.6187**）⇒ 估算器确实认为该动作值 +0.62~+0.64 ns。
+  真正的冲突是**档位绝对水平**：同一份 post-CTS 网表 placed 判 −2.10、布线后只有 −1.11（差约 1 ns），
+  且 +0.6 的布局档改善在布线后翻成 −0.53 ⇒ **布局档判断在 post-CTS 终点上不是可迁移代理**。
+  这也解释了 pre-CTS pilot 的 +0.0786 为何不外推：pre-CTS 终点上两档较接近、单门小步能迁移；
+  post-CTS 终点上机制会挑「布局档增益极大」的单步动作，迁移性最差。
+- 影响：**P1′ 这条线在当前机制下封口**（pre-CTS 变体 +0.0786 PASS、post-CTS 变体 −0.3954 FAIL）。
+  若继续，必须先解决判断器与布线后端点的**一致性**（例如改用布线后档判断或限制动作幅度），而不是继续换动作空间。
+- 记录：`project_docs/CANON.md` 裁定 **19**；`docs/EXPERIENCE.md` **r128**；
+  `project_docs/evidence/EXPERIMENT_REGISTRY.md` 条目 `P1P2-POSTCTS-RESIDUAL`；
+  `project_docs/FAECO_ROADMAP.md` P1′ 段；`project_docs/HANDOFF_2026-11-09.md` §2i。
+
