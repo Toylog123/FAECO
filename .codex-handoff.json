@@ -1,9 +1,10 @@
 {
-  "timestamp": "2026-11-14T19:50:00+08:00",
-  "status": "r116 + 五轮机制实验全部不晋级（P→E→A6j→K→All），动作空间触顶。arm All：H1 PASS / H2 FAIL（均值差 -0.2574 ns）/ H3 PASS / PROMOTE=NO。",
+  "timestamp": "2026-11-11T13:20:00+08:00",
+  "status": "r116 + 六轮机制实验封口 + 方向转折（2026-11-11，用户指示做新 SOTA）。P1「FAECO-P vs OpenROAD resizer」FAIL：0/8 胜、均值差 -0.3362 ns；Hybrid 组合臂 5/8 胜但均值差 +0.0243 ns < 0.05，亦不晋级。",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
+    "project_docs/FAECO_ROADMAP.md",
     "project_docs/CANON.md",
     "project_docs/PROJECT_MAP.md",
     "project_docs/LOGS.md",
@@ -11,13 +12,14 @@
     "AGENTS.md"
   ],
   "git": {
-    "head": "fc6ae09",
-    "ahead_of_origin": 39,
-    "describe": "faeco-paper-final-20261028-35-gfc6ae09",
+    "head": "84c1b8a",
+    "ahead_of_origin": 46,
+    "describe": "faeco-paper-final-20261028-42-g84c1b8a",
     "pushed": false,
-    "worktree": "dirty (uncommitted accept_all code + records)"
+    "worktree": "dirty"
   },
   "paper_state": {
+    "note": "论文侧自 2026-11-09 (r116) 起冻结未动；用户 2026-11-11 起明确『不要着急改论文』。",
     "zh_main_tex": {
       "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
       "sha256": "d5bbc9bd99e46ff0082816090c7e76ce21be564cc50be557bf9e3a004bc0fd66",
@@ -46,71 +48,53 @@
   "versions": {
     "last_frozen": "v19",
     "v19_manifest": "139 OK / 9 FAILED",
-    "v20": "pending (covers r95-r116 + mechanism code)"
+    "v20": "pending (covers r95-r116 + mechanism code + P1 code)"
   },
-  "tests": "109 passed (directional), expect ~1081 passed / 7 skipped / 156 subtests",
+  "tests": "1095 passed / 7 skipped / 156 subtests (2026-11-11, needs oss-cad bin+lib on PATH + .venv python)",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
-    "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139"
+    "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139",
+    "docs": "docs/environment.md §5.2"
+  },
+  "direction_pivot_20261111": {
+    "why": "六轮预注册机制实验（P/E/A6j/K/All/判据侧上限）全部封口；用户要求做新 SOTA、不要论述论文。",
+    "new_direction": "布局后 (post-placement) 覆盖优先 ECO，对标 OpenROAD resizer / E-Layout (ICCAD 2026) / GoalEvolve (arXiv 2608.16733)",
+    "roadmap": "project_docs/FAECO_ROADMAP.md (P1 调度 -> P2 +ML 排序 -> P3 跨设计 -> P4 Pareto)",
+    "p1": {
+      "experiment": "experiments/20261115_p1_resizer_vs_faeco/",
+      "setup": "8 例 ISCAS89，同 W1 mapped.v，period 0.5，util 0.30/0.35/0.40 三布局；读数 rseco.routed_sta（ideal clock + extracted SPEF STA）",
+      "result_ns": {
+        "base_to_resizer_mean": 0.5836,
+        "base_to_faecop_mean": 0.2473,
+        "faecop_minus_resizer_mean": -0.3362,
+        "wins": "0/8"
+      },
+      "verdict": "FAIL / PROMOTE=NO",
+      "root_cause": "动作量：布线后 DEF 逻辑单元净增 resizer 8/9/13/38 vs FAECO-P 0/0/0/1；FAECO-P 八例仅接受 16 个单实例补丁",
+      "hybrid": {
+        "experiment": "same resizer flow, starting netlist = FAECO-P endpoint",
+        "wins": "5/8",
+        "mean_diff_ns": 0.0243,
+        "verdict": "FAIL (mean diff < 0.05)"
+      },
+      "asymmetry": "resizer 臂读的是标准流程 + repair_timing + detailed_placement；base/FAECO-P 读标准流程（resizer 的扁平化 routed.v 塞回标准流程会 segfault 139）"
+    },
+    "only_remaining_question": "把 resizer 当内层优化器、我们做外层预算调度（预算-收益曲线，可预注册）",
+    "do_not_claim": [
+      "换更聪明的判据可超过 resizer",
+      "我们的 ECO 与 resizer 组合有收益",
+      "FAECO-P 无效（对 base 8/8 为正）"
+    ]
   },
   "next_steps": [
-    "停止机制实验；P0: 定档位 + 英文同口径 + 建 v20",
-    "唯一有产出的机制改动：gate=该档位分辨率 → 成本 -48%",
-    "如需重启：补齐逐补丁布线后配对（每例5-10步）再拟合常数",
-    "改选择结构（需新预注册）：多联合候选 / 先接受后组合"
+    "等用户确认：是否做『resizer 当内层优化器 + 预算调度』这条唯一剩余问法",
+    "论文侧仍冻结（P12 英文同口径、建 v20 都排在方向确定之后）",
+    "若要复现 P1：experiments/20261115_p1_resizer_vs_faeco/REPORT.md §6 有完整命令"
   ],
-  "mechanism_20261112": {
-    "experiments": [
-      "experiments/20261110_placed_gate/ (arm I ideal vs arm P placed; H1 PASS / H2 FAIL / no promote; cost -48%)",
-      "experiments/20261111_placed_ens_gate/ (arm E, k=3 layout mean; H1 PASS 46.8% / H2 FAIL +0.0112 / H3 0.84x; no promote)",
-      "experiments/20261112_action_granularity/ (arm A6j joint-k 6; H1 1/8 FAIL / H2 -0.0023 / H3 1.15x; no promote)"
-    ],
-    "instruments": {
-      "placed_sta.py": "placement tier via OpenROAD floorplan->place->CTS + set_wire_rc + estimate_parasitics -placement",
-      "routed_sta.py": "post-route endpoint: global+detailed route -> extract_parasitics (RCX) -> write_spef -> standalone sta read_spef",
-      "real_wns_backends": "physical_backend in {spef, placed, placed_ens}"
-    },
-    "closing_line": "not the accept criterion, not the judge resolution, not the action width, not the per-kind ranking",
-    "new_lead": "B-class buffer insertion is where the post-route gain is (+0.1001 / +0.1253 in patch chains); ideal-tier criterion accepts 0 B",
-    "next_hypothesis": "greedy single-step selection suppresses large/compound actions (s641: joint 6-gate +0.4767 lost to single-gate +0.609)",
-    "evidence_note": "experiments/2026*/ is gitignored by project convention; PREREGISTRATION/REPORT/summary live on this machine only, registry+LOGS entries are in git"
-  },
-  "mechanism_20261113": {
-    "experiment": "experiments/20261113_buffer_calibration/ (arm K: per-kind post-route calibration, k_B 5.64 / k_G 0.60 / k_JOINT 0.53)",
-    "design": "only the within-round ranking of already-gated candidates changes (score = placed_delta * k[kind]); the acceptance gate still uses the raw placed delta >= 0.010 ns, so calibration cannot admit physically unsanctioned actions",
-    "h1_decision_changed": "FAIL - B accepts {s641: 2, s832: 0}; s832 had no B above the gate in any of its 20 rounds",
-    "h2_transfer_endpoints": "FAIL - held-out K better on 1/2, mean diff +0.0175 ns < 0.05 (s641 +0.0351, s832 +/-0.0000)",
-    "h3_cost": "FAIL - 1005 vs 738 candidate STA = 1.36x",
-    "promote": false,
-    "in_sample": "s382 +0.1851 vs E +0.1780; s953 +0.0401 vs E +0.1377 (reversed: util-0.35 routed -1.8794 worse than base -1.8769)",
-    "reading": "the calibration does change decisions but does not transfer; the fault is the constant (4 patch steps, huge sampling error), not the ranking mechanism. Do not conclude B-class buffers are worthless.",
-    "code": "real_wns.py postroute_calibration / _candidate_score() / parse_postroute_calibration(); CLI --postroute-calibration; tests code/tests/test_postroute_calibration.py (8 cases)"
-  },
-  "mechanism_20261114": {
-    "experiment": "experiments/20261114_accept_all",
-    "arms": "All (arm E + --accept-all) vs E (archived)",
-    "circuits": [
-      "s382",
-      "s641",
-      "s832",
-      "s953"
-    ],
-    "accepts": {
-      "s382": 27,
-      "s641": 63,
-      "s832": 5,
-      "s953": 14
-    },
-    "h1_composition": "PASS",
-    "h2_transfer": "FAIL (mean diff -0.2574 ns)",
-    "h3_cost": "PASS (530 vs 738)",
-    "promote": "NO — stagnation on s641/s953; action space ceiling ≈ arm E 0.31 ns/4例",
-    "report_sha256_16": "cd631f84a8a490c9",
-    "prereg_sha256_16": "8a5929d009b86ca4",
-    "code": {
-      "real_wns.py": "accept_all / _build_cumulative_netlist / _apply_static",
-      "run_outerloop_real_wns.py": "--accept-all flag",
-      "test_accept_all.py": "4 test cases"
-    }
+  "records": {
+    "canon_rulings": "§1 裁定 15 (方向转折) / 16 (P1 FAIL) / 17 (Hybrid FAIL)",
+    "experience": "r124 (方向) / r125 (P1) / r126 (Hybrid)",
+    "logs": "LOG-20261111-01/-02/-03",
+    "registry": "P1-RESIZER-VS-FAECOP, HYBRID-RESIZER-FAECOP"
   }
 }
