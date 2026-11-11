@@ -94,6 +94,17 @@ class RoutedRenderTest(unittest.TestCase):
         # the placed tier's estimate would make this a placement reading again
         self.assertNotIn("estimate_parasitics -placement", text)
 
+    def test_flow_tcl_demotes_tie_nets_before_pin_access(self):
+        """one_/zero_ tie nets are POWER in OpenDB; TritonRoute then refuses (DRT-0305).
+
+        Every arm must be measurable by the same signoff flow, so the tie nets are
+        demoted to SIGNAL *before* pin_access allocates routing access points.
+        """
+        text = self._flow()
+        self.assertIn("foreach nname {one_ zero_}", text)
+        self.assertIn("setSigType SIGNAL", text)
+        self.assertLess(text.index("setSigType SIGNAL"), text.index("pin_access"))
+
     def test_flow_tcl_placeholders_are_all_substituted(self):
         text = self._flow()
         for placeholder in (

@@ -93,6 +93,14 @@ set_propagated_clock [all_clocks]
 
 source $ORFS/setRC.tcl
 set_routing_layers -signal met1-met5 -clock met3-met5
+# Some mapped netlists carry tie nets (one_/zero_) that OpenDB classifies as
+# POWER; TritonRoute refuses those (DRT-0305). Demote them to SIGNAL so the same
+# signoff flow can measure every arm.
+set block [ord::get_db_block]
+foreach nname {one_ zero_} {
+  set net [$block findNet $nname]
+  if {$net ne "NULL"} { $net setSigType SIGNAL }
+}
 pin_access
 global_route
 detailed_route -output_drc $OUTDIR/drc.rpt -verbose 0 -droute_end_iter $DROUTE_ITER
