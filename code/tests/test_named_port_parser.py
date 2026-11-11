@@ -78,3 +78,36 @@ endmodule
     assert net.gate_count == 2
     assert net.gates[1].output == "Y"
     assert net.gates[1].inputs == ("n1",)
+
+
+def test_parses_openroad_style_instance_whose_header_holds_first_connection() -> None:
+    """OpenROAD's write_verilog puts the first named connection on the same
+    line as the instance header (``... DFF_14  (.D(net),``), so the "line ends
+    with (" heuristic does not fire.  Without an explicit multi-line instance
+    start the whole netlist parses to zero gates and downstream logic-level
+    analysis raises ``KeyError`` for the connected net.
+    """
+    v = """module top(CK, D, Q, Y);
+  input CK;
+  input D;
+  output Q;
+  output Y;
+  wire n1;
+  sky130_fd_sc_hd__dfxtp_1 DFF_0  (.D(n1),
+    .CLK(CK),
+    .Q(Q));
+  sky130_fd_sc_hd__inv_1 _000_ (.A(D),
+    .Y(n1));
+  sky130_fd_sc_hd__inv_1 _001_ (.A(n1),
+    .Y(Y));
+endmodule
+"""
+    net = _parse(v)
+    assert net.gate_count == 3
+    by_name = {gate.name: gate for gate in net.gates}
+    assert by_name["DFF_0"].gate_type == "sky130_fd_sc_hd__dfxtp_1"
+    assert by_name["DFF_0"].inputs == ("n1", "CK")
+    assert by_name["_000_"].output == "n1"
+    # logic_levels must resolve the net driven by _000_, which is what the
+    # analysis netlist path needs.
+    assert net.logic_level("n1") == 1

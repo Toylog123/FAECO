@@ -282,6 +282,24 @@ def _verilog_statements(text: str) -> list[str]:
                 instance_buffer.append(line)
                 break
 
+            # OpenROAD's write_verilog puts the first named connection on the
+            # same line as the instance header, e.g.
+            #     sky130_fd_sc_hd__dfxtp_1 DFF_14  (.D(UC_17VD),
+            #         .CLK(clk),
+            #         .Q(net));
+            # so "line ends with (" is not enough to detect the start of a
+            # multi-line instance.  Buffer any statement that begins with a
+            # cell type and an instance name followed by "(" as well.  Netlists
+            # that already ended their header with "(" are unaffected because
+            # the branch above fires first.
+            if (
+                not line.endswith(";")
+                and re.match(r"^\w+\s+\w+\s*\(", line)
+                and not re.match(r"^(module|endmodule|assign|input|output|wire)\b", line)
+            ):
+                instance_buffer.append(line)
+                break
+
             statements.append(line)
             break
 
