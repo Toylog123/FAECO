@@ -82,6 +82,19 @@ P4: Multi-objective (Pareto 优化)
 
 ### P1：FAECO-P —— 覆盖优先 vs OpenROAD resizer
 
+> **P1 结果（2026-11-11，已判定 FAIL）**：8 例 ISCAS89 三布局布线后均值，base→resizer **+0.5836 ns**、
+> base→FAECO-P **+0.2473 ns**、FAECO-P−resizer **−0.3362 ns**，**0/8 电路更优** ⇒ **不晋级**。
+> 主因是动作量（resizer 净增 8/9/13/38 个逻辑单元 vs FAECO-P 0/0/0/1），不是判据精度；
+> 详见 `experiments/20261115_p1_resizer_vs_faeco/REPORT.md`、`project_docs/CANON.md` §1 裁定 16。
+> **Hybrid 结果（2026-11-11 补记，同样 FAIL）**：同一 resizer 流程、只换起始网表（FAECO-P 终点），
+> 三布局均值胜 **5/8**、均值差 **+0.0243 ns**（门槛 +0.05）⇒ 不晋级。
+> ⇒ P1 与组合臂一并封口；本路线续做只允许「把 resizer 当内层优化器、我们做预算调度」这类可量化问法，
+> 见 `experiments/20261115_p1_resizer_vs_faeco/REPORT.md` §4b、`project_docs/CANON.md` §1 裁定 17。
+>
+> **P1 之后允许的唯一问法**：可组合性——同一 resizer 流程、只换起始网表（Hybrid 臂），
+> 即"我们的 ECO 是否让 resizer 的终点更好"。若也不成立，则本路线需重定题（见 §7 风险表）。
+
+
 **目标**：证明覆盖优先调度在布局后设定下，可以在 ≥5/8 例 ISCAS89 上取得优于 OpenROAD resizer 的 WNS 改善，且面积不增加。
 
 **设定**：

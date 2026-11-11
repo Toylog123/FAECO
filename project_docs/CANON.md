@@ -99,6 +99,27 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
     **不得**重启已被裁决的六条不可能门与路线文档 §4 新增十二条。
     交叉引用：`docs/EXPERIENCE.md` r124、`project_docs/LOGS.md` LOG-20261111-01。
 
+16. **P1 判定：FAECO-P 输给 OpenROAD resizer（2026-11-11，`experiments/20261115_p1_resizer_vs_faeco`）**。
+    8 例 ISCAS89、同 W1 网表、三布局（util 0.30/0.35/0.40）布线后均值：base→resizer **+0.5836 ns**、
+    base→FAECO-P **+0.2473 ns**、FAECO-P−resizer **−0.3362 ns**，**0/8 电路更优**（预注册门槛 ≥5/8 且 ≥0.05）
+    ⇒ **PROMOTE = NO**。
+    差距主因是**动作量**（布线后 DEF 逻辑单元净增：resizer 8/9/13/38 vs FAECO-P 0/0/0/1；FAECO-P 八例仅接受 16 个
+    单实例补丁），与本文"收益来自覆盖"一致；成本上 FAECO-P 每候选 3 次布局判决，也劣于 resizer 的单次全局 LR。
+    **不得**写「换更聪明的判据可超过 resizer」，**也不得**写「FAECO-P 无效」（对 base 8/8 为正）。
+    该路线（以判决精度取胜）至此封口；下一步只允许问**可组合性**——同一 resizer 流程、只把起始网表换成
+    FAECO-P 输出（Hybrid 臂，公平 A/B）。证据：`experiments/20261115_p1_resizer_vs_faeco/REPORT.md`、
+    `docs/EXPERIENCE.md` r125、`project_docs/LOGS.md` LOG-20261111-02。
+
+17. **Hybrid 组合臂同样不晋级（2026-11-11，`summary_hybrid.json`）**。同一 resizer 流程、只把起始网表换成
+    FAECO-P 终点网表，三布局均值：胜 **5/8**、均值差 **+0.0243 ns** ⇒ 胜场达标但幅度未达
+    +0.05 ns 门槛，**PROMOTE = NO**。增益集中在 s820（+0.1559）/ s953（+0.0680），s832（−0.0623）/s641（−0.0215）/
+    s27（−0.0125）反向，量级与布局离散同阶。
+    ⇒ **不得**写「我们的 ECO 与 resizer 组合有收益」；P1 及其组合臂一并封口，本路线续做必须换题
+    （只允许"把 resizer 当内层优化器、我们做预算调度"这类可量化的调度问题）。
+    该臂为**事后追加**（P1 判定后提出），判据在读数前写定，但结论强度不得等同预注册臂。
+    证据：`experiments/20261115_p1_resizer_vs_faeco/summary_hybrid.json`、`REPORT.md` §4b、
+    `docs/EXPERIENCE.md` r126、`project_docs/LOGS.md` LOG-20261111-03。
+
 | 项 | 值（r116 现行） | 来源 |
 |---|---|---|
 | 版本 | r28 底稿 + r94–r101 口径 + r102–r116 实验与修订 / 2026-11-09 | `paper/zh/CHANGE_LOG.md` §r116 |

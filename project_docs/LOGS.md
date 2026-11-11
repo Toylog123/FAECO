@@ -4650,3 +4650,59 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 - **约束**：不改论文冻结数字（r116）、不重开已裁决不可做门（CANON §8 + 路线文档 §4 新增十二条）、不 push、不写纯分析/论述论文。
 - **交叉引用**：`docs/EXPERIENCE.md` r124、`project_docs/CANON.md` §1 裁定第 15 条、`project_docs/FAECO_ROADMAP.md`。
 
+
+## 2026-11-11（P1 判定：FAECO-P vs OpenROAD resizer，0/8 胜、不晋级）
+
+**LOG-20261111-02**（机制/实验；论文数字未动；`code/` 仅新增实验脚本与一处签核仪器修正）
+
+- **问题**：路线图 P1 —— 同一份 W1 `mapped.v`、同 period 0.5、同 util（0.30/0.35/0.40）与 density 0.55 下，
+  FAECO-P（`--physical-gate --physical-backend placed_ens`，单补丁接受）的**布线后 WNS**是否优于
+  OpenROAD `repair_timing -setup`（默认参数）。
+- **装置**：`experiments/20261115_p1_resizer_vs_faeco/`；读数 = `rseco.routed_sta`（floorplan→place→CTS→
+  global+detailed route→`extract_parasitics`(rcx)→SPEF→独立 `sta`，理想时钟），每臂每 util 一条、取三布局均值。
+  预注册 `PREREGISTRATION.md` §3 判据（≥5/8 电路更优且均值差 ≥0.05 ns），运行期修订 A1（F 臂改单补丁接受，
+  accept-all 降为补充臂 F2）、A2（**每条臂用它自己的流程读数**：base/FAECO-P 走标准流程，resizer 走
+  「标准流程 + `repair_timing` + `detailed_placement`」，因 resizer 的扁平化 `routed.v` 塞回标准流程会稳定 segfault 139）。
+- **结果（三布局均值，ns）**：
+
+| 电路 | base | resizer | FAECO-P | F−base | F−R |
+|---|---|---|---|---|---|
+| s27 | -0.3460 | -0.2222 | -0.2573 | +0.0887 | -0.0351 |
+| s382 | -1.1742 | -0.8414 | -0.9962 | +0.1780 | -0.1548 |
+| s420 | -1.8939 | -1.1913 | -1.4295 | +0.4643 | -0.2383 |
+| s641 | -2.5673 | -1.1295 | -1.6580 | +0.9093 | -0.5285 |
+| s713 | -1.7285 | -1.2526 | -1.6865 | +0.0420 | -0.4339 |
+| s820 | -1.7219 | -1.2691 | -1.5786 | +0.1433 | -0.3095 |
+| s832 | -1.6552 | -1.0587 | -1.6421 | +0.0131 | -0.5834 |
+| s953 | -1.8305 | -1.2841 | -1.6907 | +0.1399 | -0.4065 |
+
+- **判定**：H1 双条件 FAIL —— **0/8 电路优于 resizer**、均值差 **-0.3362 ns**（门槛 +0.05）、符号检验单侧 p=1.0 ⇒
+  **PROMOTE = NO**。两个分段读数：FAECO-P 相对 base 均值 **+0.2473**（8/8 为正，机制本身有效）；
+  resizer 相对 base 均值 **+0.5836**，是它的 **2.36 倍**。
+- **归因（关键，不要再说"判据不行"）**：差距在**动作量**——布线后 DEF 逻辑单元数（剔除 tap/fill/decap）
+  resizer 在 s382/s641/s832/s953 分别净增 **8 / 9 / 13 / 38**，FAECO-P 净增 **0 / 0 / 0 / 1**；FAECO-P 全程 8 例共接受
+  **16** 个单实例补丁（候选 STA 合计 **1648** 次）。这与本文主线既有结论一致：**收益来自覆盖（动作数量），
+  不是权重/规模/判据精度**；resizer 正好是"覆盖"这一侧的上限演示。
+- **不可写**：「再换一个更聪明的判据就能超过 resizer」；「FAECO-P 无效」（它对 base 8/8 为正）。
+- **代价也不利**：FAECO-P 每个候选 3 次布局（placed_ens）才判一次，resizer 是单次全局 LR 求解 ⇒
+  这条"以更聪明判决赢过 resizer"的路线**同时输在质量与成本**，不是噪声、不是调参空间。
+- **仪器修正（对所有臂生效）**：部分映射网表含 `one_`/`zero_` tie 网，OpenDB 标成 POWER 导致 TritonRoute
+  `DRT-0305` 拒布（s713 基线复现）→ `rseco.routed_sta.ROUTED_FLOW_TCL` 的 `pin_access` 前把两类网复位为 SIGNAL。
+- 证据：`experiments/20261115_p1_resizer_vs_faeco/{REPORT.md,summary.json}`；`docs/EXPERIENCE.md` r125；
+  `project_docs/CANON.md` §1 裁定 16。
+
+### 2026-11-11 补记（Hybrid 组合臂：5/8 胜但均值差不足，仍不晋级）
+
+**LOG-20261111-03**（实验；论文数字未动；`code/` 仅加 `RESIZER_INPUT_DIR` 与 `run_hybrid_utils.sh`）
+
+- **问法**：同一 resizer 流程（标准 + `repair_timing` + `detailed_placement`），**只把起始网表换成 FAECO-P 的终点网表**
+  （`ends/<c>/FAECO-P.v`），看 resizer 的终点是否更好 —— 这是 P1 §4 证伪「判决精度取胜」之后唯一还剩的公平 A/B。
+- **读数**（三布局 util 0.30/0.35/0.40 均值，ns）：resizer vs Hybrid 逐例
+  s27 -0.0125、s382 +0.0510、s420 +0.0142、s641 -0.0214、s713 +0.0012、s820 +0.1559、s832 -0.0623、s953 +0.0680；**胜 5/8**、
+  均值差 **+0.0243 ns**。
+- **判定**：胜场达标（5/8）但均值差未达 +0.05 ns ⇒ **PROMOTE = NO**；增益集中在 s820 +0.1559 / s953 +0.0680，
+  而 s832 −0.0623 / s641 −0.0215 / s27 −0.0125 反向，量级与布局离散（0.05–0.10 ns）同阶。
+- **结论**：**可组合性也未兑现**。P1 与其组合臂一并封口；本路线若继续必须换题（调度/预算问题），
+  不得再以「换判据 / 换判决 / 组合一次」为卖点。
+- 证据：`experiments/20261115_p1_resizer_vs_faeco/summary_hybrid.json`、`REPORT.md` §4b；
+  `docs/EXPERIENCE.md` r126；`project_docs/CANON.md` §1 裁定 17。

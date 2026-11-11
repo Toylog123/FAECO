@@ -2204,3 +2204,21 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 - 目录：`experiments/20261114_accept_all/`
 - 预注册 sha256@16=8a5929d009b86ca4；报告 sha256@16=cd631f84a8a490c9
 - **勿重复**：动作空间天花板已被六轮实验（P/E→K→A6j→All）封口。
+
+### 2026-11-11 P1-RESIZER-VS-FAECOP
+
+- 问题：FAECO-P（布局后覆盖优先、placed_ens 判据、单补丁接受）的**布线后 WNS** 是否优于 OpenROAD
+  `repair_timing -setup`（默认参数）。
+- 输入：`experiments/20261016_r22_cut_ablation_v3/W1/<c>/mapped.v`（8 例 ISCAS89，period 0.5）。
+- 读数：`rseco.routed_sta`，每臂每 util 一条，三布局（0.30/0.35/0.40）均值。
+- 结果：base→resizer **+0.5836 ns**、base→FAECO-P **+0.2473 ns**、FAECO-P−resizer **−0.3362 ns**，
+  **0/8 胜**、p=1.0 ⇒ **PROMOTE = NO**。
+- 产物：`experiments/20261115_p1_resizer_vs_faeco/{REPORT.md,summary.json,arms/*,endpoint*}`。
+- **勿重复**：不要再以「改判据/改判决精度去赢 resizer」为题重跑；重开须先回答可组合性（Hybrid 臂）。
+
+### 2026-11-11 HYBRID-RESIZER-FAECOP
+
+- 问题：同一 resizer 流程、只把起始网表换成 FAECO-P 终点网表，终点是否更好（P1 的组合臂）。
+- 读数：三布局（0.30/0.35/0.40）均值，`summary_hybrid.json`。
+- 结果：胜 **5/8**、均值差 **+0.0243 ns**（门槛 +0.05）⇒ **PROMOTE = NO**；事后追加臂。
+- **勿重复**：不要再以"组合我们的 ECO + resizer"为题重跑；只允许调度/预算类问法。
