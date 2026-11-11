@@ -90,6 +90,15 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
   禁写"某个判据更优/更差能提高质量"；再开判据侧实验前必须先做离线回放并报告 top-1 跨判据一致性。
   见 `experiments/20261114_selection_ceiling/ANALYSIS.md`、`project_docs/LOGS.md` 2026-11-14 条。
 
+15. **方向转折：从预布局机制优化转布局后 SOTA ECO（2026-11-11）**。六轮预注册实验封口后，
+    用户明确「要做新 SOTA、要实证不要论述」→ 项目方向从「预布局门级 ECO 的判据优化」转为
+    「布局后（post-placement）覆盖优先 ECO 对标 OpenROAD resizer 与 E-Layout（ICCAD 2026）」。
+    **差异化**：覆盖优先调度（文献独一）+ 全开源 + 更宽动作空间（R+G+B+JOINT）。
+    **路线**：P1 FAECO-P vs resizer → P2 +ML 排序器 → P3 跨设计迁移 → P4 Pareto 多目标。
+    完整路线与判定门见 `project_docs/FAECO_ROADMAP.md`。
+    **不得**重启已被裁决的六条不可能门与路线文档 §4 新增十二条。
+    交叉引用：`docs/EXPERIENCE.md` r124、`project_docs/LOGS.md` LOG-20261111-01。
+
 | 项 | 值（r116 现行） | 来源 |
 |---|---|---|
 | 版本 | r28 底稿 + r94–r101 口径 + r102–r116 实验与修订 / 2026-11-09 | `paper/zh/CHANGE_LOG.md` §r116 |

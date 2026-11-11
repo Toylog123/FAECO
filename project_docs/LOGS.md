@@ -4637,3 +4637,16 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 仪器事后修复：`accept_all` 隔离回放缺陷（`_accept_result` 的 nonlocal 状态比较），修法见 PREREGISTRATION.md §7 A1（`real_wns.py` line 3568–3572）。
 
 代码落点：`code/src/rseco/real_wns.py`（`accept_all` / `_build_cumulative_netlist` / `_apply_static`）、`code/scripts/run_outerloop_real_wns.py`（`--accept-all`）、`code/tests/test_accept_all.py`（4 用例）。
+
+## 2026-11-11 —— 方向转折：从预布局机制优化转布局后 SOTA ECO
+
+**LOG-20261111-01 （方向转折）**
+
+- **前置**：六轮预注册机制实验（P/E/A6j/K/All/LLM回放）全部封口——判据档位、判决精度、动作宽度、按类校准、全盘接受均不动端点。
+- **转折触发**：①同迭代同基线口径下 placed→signoff Spearman 0.70–0.80（n=10），推翻此前跨迭代 0.164 的诊断；②存在可预测的系统性偏差（1×:0.40 / 4×:1.01 / B:5.5×），意味着布局后设定下覆盖优先有竞争空间；③用户明确要做新 SOTA、要实证、不要论述论文。
+- **方向**：从「预布局门级 ECO 的判据优化」转「布局后（post-placement）覆盖优先 ECO 对标 OpenROAD resizer 与 E-Layout（ICCAD 2026）」。
+- **竞争格局（2025–2026最新）**：E-Layout（ICCAD 2026，RL+e-graph+RAG，6% TNS/2% WNS 超商业工具）为布局后 SOTA；GoalEvolve（2026.08，LLM 进化 OpenROAD 全流程，TNS +30.67%）展示 OpenROAD 上限；OpenROAD resizer（LR）为开源基线。FAECO 差异化：覆盖优先调度（文献独一）+ 全开源（E-Layout/Jiang 均不开源）+ 更宽动作空间（R+G+B+JOINT）。
+- **路线**：P1 FAECO-P（vs resizer，3–4天）→ P2 +ML排序器（2–4周）→ P3 跨设计迁移（2–4周）→ P4 Pareto多目标（3–6周）。完整路线见 `project_docs/FAECO_ROADMAP.md`。
+- **约束**：不改论文冻结数字（r116）、不重开已裁决不可做门（CANON §8 + 路线文档 §4 新增十二条）、不 push、不写纯分析/论述论文。
+- **交叉引用**：`docs/EXPERIENCE.md` r124、`project_docs/CANON.md` §1 裁定第 15 条、`project_docs/FAECO_ROADMAP.md`。
+
