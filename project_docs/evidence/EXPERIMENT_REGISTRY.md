@@ -2222,3 +2222,15 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 - 读数：三布局（0.30/0.35/0.40）均值，`summary_hybrid.json`。
 - 结果：胜 **5/8**、均值差 **+0.0243 ns**（门槛 +0.05）⇒ **PROMOTE = NO**；事后追加臂。
 - **勿重复**：不要再以"组合我们的 ECO + resizer"为题重跑；只允许调度/预算类问法。
+
+### 2026-11-11 P1P-RESIZER-THEN-FAECOP
+
+- 问题：resizer 先做、我们的 ECO 在它终点上继续做，是否还有残余空间（P1 的镜像组合臂）。
+- 装置：`experiments/20261116_resizer_then_faecop/`；resizer 段 = pre-CTS `repair_timing` 变体导出网表；
+  我方段 = FAECO-P（单补丁接受、三布局 placed 判决）；端点 = routed STA，util 0.30/0.35/0.40 三布局均值。
+- 结果：H1 可行性 **PASS**（18 次布线 DRC=0）；**H2 残余空间 PASS**——RF−R′ = 0.0000 / +0.1202 / +0.1157
+  （s382/s641/s832），均值 **+0.0786 ns**；**PROMOTE=YES**。逐补丁布线后增量 5/5 为正。
+- 边界：R′ 是比 P1 post-CTS resizer 弱 0.19/0.21 ns 的变体（re-entry gap），结论只限 RF vs R′ 配对；
+  三例 pilot，扩样须另立预注册；仅测 WNS，未测功耗/面积。
+- **可续做**：扩到 8 例（需新预注册）；把 resizer 段换成 post-CTS 变体（须先解决扁平网表重入 segfault）。
+- 前置缺陷修复：`code/src/rseco/netlist.py` 扁平网表多行实例解析（commit `ef72abd`）。

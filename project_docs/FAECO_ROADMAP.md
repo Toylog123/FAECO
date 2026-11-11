@@ -124,7 +124,15 @@ P4: Multi-objective (Pareto 优化)
 
 ---
 
-### P2：FAECO-P+ML —— 签核标注训练排序器
+#### P1′（2026-11-11，pilot）：镜像组合——resizer 终点之后仍有残余空间
+
+- 装置：`experiments/20261116_resizer_then_faecop/`（resizer 先做 → 我方 ECO → 三布局布线后端点）。
+- 判定：**H2 PASS，PROMOTE=YES**——RF−R′ 均值 **+0.0786 ns**（s641 +0.1202、s832 +0.1157、s382 0.0000），
+  5 个被接受补丁的布线后增量全部为正。
+- 边界：R′ 是比 P1 post-CTS resizer 弱 0.19/0.21 ns 的 pre-CTS 变体 ⇒ 只证明「动作空间互补」，不证明「在 P1 resizer 之上仍有余量」。
+- **下一步（须新预注册）**：① 扩到 8 例；② 把 resizer 段换成 post-CTS 变体（先解决扁平网表重入 segfault）。
+
+## P2：FAECO-P+ML —— 签核标注训练排序器
 
 **前提**：P1 成功（≥5/8 优于 resizer）。
 

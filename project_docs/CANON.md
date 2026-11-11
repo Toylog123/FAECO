@@ -120,6 +120,19 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
     证据：`experiments/20261115_p1_resizer_vs_faeco/summary_hybrid.json`、`REPORT.md` §4b、
     `docs/EXPERIENCE.md` r126、`project_docs/LOGS.md` LOG-20261111-03。
 
+18. **P1′ pilot：resizer 终点之后仍有残余空间（2026-11-11，`experiments/20261116_resizer_then_faecop`）**。
+    镜像组合——resizer 先做（pre-CTS `repair_timing` 变体）、我们的 ECO 在其终点上继续做，对照臂用**同字节**网表重测。
+    3 例 pilot、三布局（util 0.30/0.35/0.40）布线后均值：RF−R′ = s382 **0.0000**、s641 **+0.1202**、s832 **+0.1157**，
+    均值 **+0.0786 ns**；预注册门（≥2/3 为正 且 均值 ≥+0.05）**PASS，PROMOTE=YES**。逐补丁归因（util 0.35）：
+    5 个被接受补丁的布线后增量**全部为正**且单调累积（+0.0520/+0.0444/+0.0353 与 +0.0538/+0.0508）。
+    ⇒ **可写**「在一个 pre-CTS resizer 变体终点上，我方单实例动作仍有 +0.12 ns 量级残余空间，两者动作空间互补」；
+    **不得写**「在 P1 的 resizer 之上还有 +0.12 ns」——该变体终点比 P1 post-CTS resizer 弱 0.19/0.21 ns（re-entry gap），
+    结论只限 RF vs R′ 配对；三例 pilot 不构成方法优越性证明（成本远高于 resizer 单次调用）。
+    同轮修掉一条仪器缺陷：OpenROAD 扁平网表的多行实例（首连接与实例头同行）使解析器切碎、门数 0 ⇒ `KeyError`
+    （`code/src/rseco/netlist.py`，commit `ef72abd`，回归用例 +18/+33 行），**修前所有扁平网表输入都不可用**。
+    证据：`experiments/20261116_resizer_then_faecop/{PREREGISTRATION,REPORT}.md`、`summary.json`、
+    `patch_chain_pilot1.json`；`docs/EXPERIENCE.md` r127；`project_docs/LOGS.md` LOG-20261111-04。
+
 | 项 | 值（r116 现行） | 来源 |
 |---|---|---|
 | 版本 | r28 底稿 + r94–r101 口径 + r102–r116 实验与修订 / 2026-11-09 | `paper/zh/CHANGE_LOG.md` §r116 |

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-11-11T13:20:00+08:00",
-  "status": "r116 + 六轮机制实验封口 + 方向转折（2026-11-11，用户指示做新 SOTA）。P1「FAECO-P vs OpenROAD resizer」FAIL：0/8 胜、均值差 -0.3362 ns；Hybrid 组合臂 5/8 胜但均值差 +0.0243 ns < 0.05，亦不晋级。",
+  "timestamp": "2026-11-11T17:30:00+08:00",
+  "status": "direction pivoted to post-placement ECO SOTA (2026-11-11); P1 FAIL (FAECO-P 0/8 vs resizer), Hybrid FAIL (+0.0243), P1' pilot PASS (RF-Rprime mean +0.0786 ns on 3 circuits, PROMOTE=YES)",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-09.md",
@@ -84,7 +84,34 @@
       "换更聪明的判据可超过 resizer",
       "我们的 ECO 与 resizer 组合有收益",
       "FAECO-P 无效（对 base 8/8 为正）"
-    ]
+    ],
+    "p1p_pilot": {
+      "experiment": "experiments/20261116_resizer_then_faecop",
+      "design": "resizer first (pre-CTS repair_timing variant) -> FAECO-P -> routed endpoint (3 layouts)",
+      "delta_ns": {
+        "s382": 0.0,
+        "s641": 0.1202,
+        "s832": 0.1157
+      },
+      "mean_delta_ns": 0.0786,
+      "h1_feasibility": "PASS",
+      "h2_residual": "PASS",
+      "promote": "YES",
+      "per_patch_all_positive": true,
+      "do_not_claim": [
+        "gain on top of P1's post-CTS resizer (R' is a weaker variant, re-entry gap 0.19/0.21 ns)",
+        "method superiority (3-circuit pilot, far higher cost than one resizer call)"
+      ],
+      "instrument_fix": {
+        "commit": "ef72abd",
+        "file": "code/src/rseco/netlist.py",
+        "what": "parse OpenROAD flat netlists whose instance header carries the first named connection"
+      },
+      "next": [
+        "scale to 8 circuits under a new preregistration",
+        "replace resizer segment with the post-CTS variant (needs flat-netlist re-entry fix)"
+      ]
+    }
   },
   "next_steps": [
     "等用户确认：是否做『resizer 当内层优化器 + 预算调度』这条唯一剩余问法",
@@ -95,6 +122,16 @@
     "canon_rulings": "§1 裁定 15 (方向转折) / 16 (P1 FAIL) / 17 (Hybrid FAIL)",
     "experience": "r124 (方向) / r125 (P1) / r126 (Hybrid)",
     "logs": "LOG-20261111-01/-02/-03",
-    "registry": "P1-RESIZER-VS-FAECOP, HYBRID-RESIZER-FAECOP"
+    "registry": "P1-RESIZER-VS-FAECOP, HYBRID-RESIZER-FAECOP",
+    "p1p_pilot": {
+      "prereg": "experiments/20261116_resizer_then_faecop/PREREGISTRATION.md (A1-A4)",
+      "report": "experiments/20261116_resizer_then_faecop/REPORT.md",
+      "summary": "experiments/20261116_resizer_then_faecop/summary.json",
+      "chain": "experiments/20261116_resizer_then_faecop/patch_chain_pilot1.json",
+      "canon": "project_docs/CANON.md §1 ruling 18",
+      "logs": "project_docs/LOGS.md LOG-20261111-04",
+      "experience": "docs/EXPERIENCE.md r127",
+      "registry": "project_docs/evidence/EXPERIMENT_REGISTRY.md P1P-RESIZER-THEN-FAECOP"
+    }
   }
 }

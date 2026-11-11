@@ -4710,3 +4710,34 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
   不得再以「换判据 / 换判决 / 组合一次」为卖点。
 - 证据：`experiments/20261115_p1_resizer_vs_faeco/summary_hybrid.json`、`REPORT.md` §4b；
   `docs/EXPERIENCE.md` r126；`project_docs/CANON.md` §1 裁定 17。
+## 2026-11-11（P1′ pilot：resizer 之后仍有残余空间，H1/H2 PASS，PROMOTE=YES）
+
+**LOG-20261111-04**（实验；论文数字未动；`code/` 新增一个解析器分支 `ef72abd`）
+
+- **问法**：P1（FAECO-P 0/8 胜 resizer）与 Hybrid（先我方后 resizer，+0.0243 ns 未过门）已封两个组合方向，
+  本实验测最后一个：**resizer 先做（当内层优化器），我们的 ECO 在它的终点上继续做** —— resizer 的布局后 LR
+  不做 R 等价改写、不做覆盖优先排序，若这些动作在它的终点上仍有效，说明两者动作空间**互补**。
+- **装置**：`experiments/20261116_resizer_then_faecop/`；resizer 段 = 标准 place 流程 + `setRC.tcl` +
+  `repair_timing -setup` + `detailed_placement`，**在 CTS 之前**导出网表（预注册 A1；post-CTS 导出喂回标准流程会
+  segfault，见 A2）；我方段 = FAECO-P（单补丁接受、`--physical-gate --physical-backend placed_ens`、三布局判决）；
+  端点 = `rseco.routed_sta`（route → RCX SPEF → 独立 `sta`），util 0.30/0.35/0.40 三布局均值。
+- **读数**（WNS，ns，三布局均值）：R′（对照，导出网表同字节重测）s382 −0.8413 / s641 −1.3190 / s832 −1.2712；
+  RF（resizer 终点 → 我方 ECO）−0.8413 / −1.1988 / −1.1555 ⇒ **RF−R′ = 0.0000 / +0.1202 / +0.1157**，
+  均值 **+0.0786 ns**。
+- **判定**：H1 可行性 **PASS**（18 次布线全 DRC=0）；**H2 残余空间 PASS**（2/3 为正、均值 +0.0786 ≥ 0.05）；
+  **PROMOTE = YES**。
+- **逐补丁布线后归因**（util 0.35）：s641 −1.3071 → +0.0520（nor2_1→2）→ +0.0444（a21oi_1→2）→ +0.0353
+  （o211ai_1→2）；s832 −1.2813 → +0.0538（dlymetal6s2s_1→buf_2）→ +0.0508（nand2b_1→4）。
+  **5 个被接受补丁的布线后增量全部为正、单调累积**；placed_delta 0.010–0.047，布线后/布局档比值 1.2–3.5。
+- **一条仪器缺陷（已修，`ef72abd`）**：OpenROAD `write_verilog` 的扁平网表把首个命名连接写在实例头同一行
+  （`sky130_fd_sc_hd__dfxtp_1 DFF_14 (.D(UC_17VD),`），旧 `_verilog_statements` 只在行尾是 `(` 时才开始缓冲
+  ⇒ 每个实例被切成碎片 ⇒ 门数 0 ⇒ `logic_levels()` 抛 `KeyError: 'UC_17VD'`。修后 W1 与扁平网表均解析出 91 gates，
+  新增回归用例；全量 1095 passed / 7 skipped。
+- **另一条方法学教训（预注册 A4）**：对照臂 R′ 必须用**与机制输入同字节**的归一化网表（`resized_gate_flat.v`）；
+  用原始转义名网表作对照会带进 0.0027 ns 的布局随机性，量级与被判效应同阶，首次那批读数已作废重测。
+- **能写 / 不能写**：能写「在一个 pre-CTS resizer 变体终点上，我方 ECO 用 2–3 个单实例动作再拿 +0.12 ns 量级，
+  两者动作空间存在互补」；**不能**写「在 P1 的 resizer 之上还有 +0.12 ns」——该 resizer 变体终点比 P1 的 post-CTS
+  resizer 弱 0.19/0.21 ns（re-entry gap），结论只限 RF vs R′ 配对；三例 pilot 不构成方法优越性证明。
+- 证据：`experiments/20261116_resizer_then_faecop/summary.json`、`REPORT.md` §3.2/§4、
+  `patch_chain_pilot1.json`；`docs/EXPERIENCE.md` r127；`project_docs/CANON.md` §1 裁定 18。
+
