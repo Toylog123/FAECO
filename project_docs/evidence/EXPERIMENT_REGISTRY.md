@@ -2282,3 +2282,100 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 - **工程门**：1113 passed/156 subtests，清理并发后 24 passed 重检；零值/导入修复与 packaged helper 已固化。代码提交 `a20f48c`，预注册/roadmap 提交 `e3c694c`。
 - **数据口径修正**：14 例只读审计总 mapped-cell 面积平均降 3.071500828%，旧 4.54223469% 分母漏项；绝对节省不变。新增面积回收约 14% 仍待层次 baseline 审计。
 - **后续门**：生产 escaped parser/SEC scanner、baseline 层次、完整 SDC/DRV、自定义 Liberty，以及最强等预算基线与新机制证据仍待解决。本轮无论文改动，非 ICCAD 研究任务全部完成；仅 s382 新物理 pilot，未重跑全部 14 例。
+
+
+### 2026-11-13 RECOVERY-REPAIR-S382
+
+- **状态**：PRE_REGISTERED，限定单电路最小补偿研究；记录端已在实际 EDA 前打开 `recovery_repair_20261113/PREREGISTRATION.md` 与 `PLAN.json`。
+- **输入/身份**：自包含 inputs 副本源于已验 recovery_qualification_20261112，13 文件/哈希、reentry OpenDB、原 SPEF、13-action recipe、结构 checker、既有 CONTROL/RECOVERY 终点；工具/Liberty/LEF/RCX 与原 flow 固定。不得修改原证据或生产 parser。
+- **先行测量**：CONTROL 与原 RECOVERY 各一次 standalone STA，TNS 9 位和详细 full-clock 路径；同终点 netlist/SPEF、不重路由。路径归因不用于过滤候选。
+- **Stage A**：全 13 单点 restore，分别恢复 `_052_/_054_/_055_/_074_/_077_/_079_/_081_/_093_/_096_/_098_/_102_/_111_/_113_` 之一为 Resizer cell，保留另外 12 个回退，不提前停止/删负例。
+- **统一物理流程**：period 0.5 ns，propagated-clock 终点，副本清 regular wires 后 full reroute 15 iterations，统一 legalization/RCX；routing 串行且 timeout 900 s，STA 300 s，计成本但不称独占 benchmark。
+- **固定门槛**：WNS 损失预算 0/0.002/0.005/0.010 ns 加 1e-6 ns 数值容差；TNS 非劣 1e-6 ns；hold >=0、supported-rule DRC=0、无报告 slew/cap violations。hold 是新的绝对可行性门，旧 hold 非劣差值另报；完整 SDC/DRV 覆盖仍未知，全部点仍有 setup violation，不称 timing closure。
+- **Stage B 条件**：仅全 singletons 中不存在零预算、正面积节省合格点时，才按组合结果产生前明确固定的规则扩展，最多 12 次新物理运行。组合精确规则尚待记录；预测不作接受依据。全恢复 CONTROL 零节省仅 fallback。
+- **验收**：完整实例/连接与 intended edits、完整 Liberty cell 模型下 SEC、原日志/error 核查、SHA封存；面积用 canonical 完整分母（含 escaped FF，只排明确无连接 tap）。四预算最大保留面积、所有失败与 candidate/route/STA 成本共同报告，限 s382 单实现，不主张新颖性或强基线优越。
+
+
+#### RECOVERY-REPAIR-S382 运行前用户收紧主门（2026-11-13）
+
+主线在全部新物理运行前写入预注册 steering，记录端已实际复读：主接受门改为 WNS/TNS/hold 全部相对 CONTROL 非劣（1e-6 ns 数值容差），同时 hold>=0；先前仅 hold 绝对可行的描述被此条覆盖。2/5/10 ps 仅诊断，不允许据此科学晋级或隐藏退化。用户要求按 ICCAD 标准发展独立机制，须形成明确选择/补偿算法并与等预算强基线比较；本轮单例搜索不直接构成创新性证明。
+
+
+#### RECOVERY-REPAIR-S382 启动记录与登记时序澄清
+
+主线报告批次 session74268 已启动，日志 `scratch/recovery_repair_singletons.log`，外层 timeout1200 s、每 routing900 s并持续监测。预注册/PLAN 与严格 WNS/TNS/hold steering 已在运行前固化（commit `facf9d3`）。记录端完成 registry 写入时与主线启动观测并发，主线启动前读尾部未见新条目；本登记按主线视为批次开始后补记，不回填为已证实的 registry-before-run。实验预注册先于执行的事实以提交和驱动身份绑定为准；两种文档时间不得混淆。
+
+
+#### RECOVERY-REPAIR-S382 Stage B 条件就绪（2026-11-13，组合未执行）
+
+Stage A 13 个物理臂已由主线实查全部结束：391 s/rc=0，日志 `scratch/recovery_repair_singletons.log`；独立审查当时完成 12 个失败，末项待审，故此刻不提前声称 13/13 strict 失败。
+
+记录端实际读取预注册 frozen combination rule：仅全部有效 singleton strict 失败时，取排名最好 3 个 singleton 做 beam，依次扩 cardinality2/3/4/5；每层只执行 3 个此前未测集合，最多12次。只加原13动作，按排序实例集去重。提案预测=原RECOVERY+单点相对RECOVERY差之和，仅排序；面积精确计算。排名为(无效/物理检查flag、最大规范化deficit、deficit和、负保留面积、实例名)，deficit=max(0,CONTROL-candidate-1e-6)，setup/TNS/hold 分母分别0.010/0.312647/0.001 ns，hold<0亦不可行。每层实测3点作为下一beam；失败/timeout计预算且先归因，不替换；一层出现strict正节省点即停。原 PLAN 保持冻结，组合另有 COMBINATION_PLAN。该 heuristic 尚无等预算强基线创新性证据，预测不可接受候选；主门未改变。
+
+
+#### RECOVERY-REPAIR-S382 Stage A 冻结结果
+
+SUMMARY.json `5ae335bc5e981842a41a912bbf1b4ccf213738106dba02d94b1a52495079c8a9` 独立验完13有效/13 strict失败，所有WNS/TNS退化，7例hold退化，四档均无合格点（TNS为硬门）。13route/26STA，逐job合386.312s、外层391s/rc0。无终点接受故无SEC；满足Stage B预设触发条件，不能改称单点补偿有效。
+
+
+#### RECOVERY-REPAIR-S382 Stage B 启动
+
+全13失败触发条件已独立与主线确认，主线review/drycheck通过。组合预注册/计划commit `2e8e590` 早于EDA；session49554 timeout1200 s正式运行最多12个组合，首层074+098、054+098、098+111，严格主门与失败预算规则不变。
+
+
+### 2026-11-13 RECOVERY-REPAIR-S382-FORWARD-STAGE-C
+
+- **状态**：CONFIG_PLANNED / NOT_RUN，等待实际 `FORWARD_PREREGISTRATION` / PLAN / driver 固化审阅提交，不表示预注册文件已核验。
+- **用途**：独立强简单baseline与可行域探针，不是Stage B额外预算，也不称新机制。
+- **配置**：同CONTROL起点，分别只实施原13中的1个回退（restored集合为其它12）；共13独立physical臂、全量无早停，不另增动作集。
+- **固定门**：WNS/TNS/hold相对CONTROL严格非劣1e-6ns、hold>=0、面积正节省、既有physical/log/DRV/SEC验收边界；继承原样driver/audit，未知失败先归因。
+- **前置**：主线完成独立预注册、plan、run_forward并审阅/commit后才执行；记录端收到具体文件后实读补充身份。
+
+
+#### Stage B 完成 / Stage C 实际预注册核验（2026-11-13）
+
+Stage B 12/12 有效且 strict 全失败，主线rc0并独立核验一致，COMBINATION_SUMMARY已冻结；预算耗尽，不暗增组合。记录端实际打开 `FORWARD_PREREGISTRATION.md` 与 `FORWARD_PLAN.json`：Stage C sorted-instance顺序全13，从CONTROL仅回退一项、禁止累积/有利早停；零面积 `_074_` 仍保诊断但不可晋级。最大13新增physical独立记账。物理driver仅plan文件名变化、full-structure auditor不变；route900s/STA300s/每subprocess1530s、失败停止归因不自动重试。全13后在面积正节省且strict合格点中选面积收益最大者（同值按arm名）做CONTROL完整二态SEC，独立证据审查后才接受。四文件drycheck已通过，尚待独立审核与主线commit再执行。原有完整约束/多corner/多电路限制保留。
+
+
+#### Stage C 启动与零面积动作修正
+
+独立review通过，commit `8e031f8`（前序 `7cb2bd4`）固化后才启动。零面积诊断动作实际为 `_074_/_077_/_081_` 三个，已在最终PLAN明确，不能沿用先前仅提074的口径。最终PLAN SHA `be04334ca8c8ffe5ffea951ded2ce8fe8f856fa2c7ea1cca01770fae2997eaa1`。session50740、timeout1200s、日志scratch/recovery_forward.log，独立13臂完整执行，无早停。
+
+
+### 2026-11-13 RECOVERY-REPAIR-S382-PATH-STAGE-D
+
+- **状态**：PREPARATION / NOT_RUN，预注册及runner准备中，未开始EDA。
+- **固定对象**：Stage B实测TNS亏损最小的 `COMBO_054_074_093_098_111`；从该同一base分别额外提升 `_057_`、`_083_`、`rebuffer1` 中一个，不累积，总3独立physical。依据为已实际读取Liberty的函数/端口与路径诊断，非新颖性证明。
+- **目标/门**：尝试以小面积代价补偿多端点损失，沿用WNS/TNS/hold全非劣、正面积节省及完整既定证据门，不改容差。
+- **前置**：Stage C全13完成；新预注册/plan/runner审阅和commit后才允许启动。当前不消耗Stage B/C预算，不把准备候选算成运行结果。
+
+
+#### Stage C 全矩阵完成与 SEC 启动
+
+主线确认全13完成、wrapper380s，独立审查通过，唯一strict候选FORWARD__096_。按预注册选定该终点启动SEC session91025 timeout240s，完整模型102功能实例（含21FF）；实际proof结果待回报。Stage D drycheck已满足all13_valid，但仍待独立review/commit，尚未运行。
+
+
+#### Stage D 预注册实查与正式启动
+
+记录端实际打开 JOINT_PREREGISTRATION：三臂JOINT_057/083/REBUFFER1，固定B诊断base目标，分别1个upsize，最终各8个原downsize+1个新upsize；每次仍从相同输入ODB构造全目标后重布线/提取，不复用B布线或旧寄生作为终点。原13配方保持，3额外编辑语义显式，严格门不变。主线与独立评审通过、五文件commit `8dd39bb` 后启动session33049 timeout600s，scratch/recovery_joint.log，独立预算3，全部valid臂运行完不早停。之后最大面积strict点须SEC/独立审查；这是额外预算探索，不能据此主张等预算超过Stage C。
+
+Stage C选定096已完成SEC：101proven/0unproven，receipt pass、sources unchanged、102实例含21FF；prover3.859s、wrapper10s。其局部严格物理/模型域等价通过不代表完整signoff或机制新颖性。
+
+
+#### Stage D producer结束 / 本轮计数（等待独立验收）
+
+三臂92s wrapper完成、主线实读JOINT_RECEIPT，均有效strict失败：057省2.378121%而三指标退化；083省2.378121%、WNS改善但TNS/hold退化；buf8省2.140309%而三指标退化。无SEC候选；D独立审核与路径归因待收齐。当前本轮总计A13+B12+C13+D3=41route、82终点STA，另2次路径STA。唯一C096可行且SEC通过，不能以D较大面积但不合门点代替它；阶段未最终封存。
+
+
+#### A–D独立验收完成（2026-11-13）
+
+JOINT_REVIEW确认D全3有效strict失败。FORWARD_ACCEPTANCE.json `e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd` 接受唯一096局部baseline；SEC39种cell模型/102功能含21FF/3026零pin tap投影，101proven0unproven、源不变。D3route6STA、job87.063s/wrapper92s；A–D41candidate route82endpointSTA，另2诊断STA及SEC分开记。独立验收完成不等同创新性或完整signoff。
+
+
+#### RECOVERY-REPAIR-S382 A–D 阶段结案（2026-11-13）
+
+**状态：STAGE_CLOSED / ACCEPTED_LOCAL_BASELINE_ONLY；研究目标未完成。** 记录端实际读取REPORT.md与FINAL_RESULTS.json；根summarize_study逐项重审41个冻结row全部一致，postcheck确认5个工具及RCX/setRC哈希未变。A13/B12/C13/D3均有效，strict通过计数0/0/1/0；总41route、82endpointSTA、2pathdiagSTA、1SEC。逐阶段job秒数386.312/344.641/373.592/87.063，共享主机不作独占benchmark。
+
+唯一接受FORWARD__096_：nor4_2→nor4_1，面积1052.2592→1046.0032（−6.256，−0.594530321046%），propagated WNS+0.0017147394615336ns、TNS+0.004840851ns、hold0；完整二态SEC101/0及独立接受回执齐。A/B/D的较高面积下降均未过严格门，不作有效收益。路径归因只读完成，未新增EDA。
+
+四阶段是逐步观察后分别登记的预算，不包装成事先单一算法；局部可行baseline不证明联合机制、等预算优越、跨设计泛化或完整signoff。结果/失败/成本与边界以RESULTS.csv、FINAL_RESULTS.json、REPORT及各冻结summary/review为准。OI-082/084/085/086等继续open，生产算法/冻结论文未改。主线继续封ARTIFACT_MANIFEST与提交/推送；本登记不预报其成功。

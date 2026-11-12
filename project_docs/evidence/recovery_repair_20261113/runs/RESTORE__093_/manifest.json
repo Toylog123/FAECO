@@ -1,0 +1,77 @@
+{
+  "arm": "RESTORE__093_",
+  "input_sha256": {
+    "project_docs\\evidence\\recovery_repair_20261113\\inputs\\reentry.odb": "bf09ed410f9d9a09689365e3429e1fc445a7de6b18f2b6abbbf7ee50ab1f3211",
+    "project_docs\\evidence\\recovery_repair_20261113\\inputs\\reentry_manifest.json": "ab9b8abd43d1461f11c3b4ff470c26abffe3d8c383b6408417b273f3ff30cc36",
+    "project_docs\\evidence\\recovery_repair_20261113\\inputs\\original.spef": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+    "project_docs\\evidence\\recovery_repair_20261113\\inputs\\recipe.json": "419249606cf6ba5fb96880fc957be8075e480c62f85dfbfa2cdd5d34334abb82",
+    "project_docs\\evidence\\recovery_repair_20261113\\physical_probe.py": "48606246da902e8b7a210940a9448c60661b1daeda87bb93737df2e86b94701e"
+  },
+  "native_parasitics": "original extracted SPEF at entry",
+  "clock": "propagated for native; ideal/propagated separate final measurements",
+  "route_iterations": 15,
+  "per_route_timeout_s": 900,
+  "per_sta_timeout_s": 300,
+  "restored_instances": [
+    "_093_"
+  ],
+  "tcl_sha256": "0b4175297ded946cabccc513e49b377344583193857e85e8b31e10b517a445fe",
+  "flow": {
+    "argv": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/home/toylog/faeco_eda/or26Q3/bin/openroad",
+      "-no_init",
+      "-exit",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_repair_20261113/runs/RESTORE__093_/flow.tcl"
+    ],
+    "returncode": 0,
+    "elapsed_s": 28.06199999999808
+  },
+  "drc_count": 0,
+  "ideal": {
+    "argv": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/usr/local/bin/sta",
+      "-no_splash",
+      "-exit",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_repair_20261113/runs/RESTORE__093_/ideal.tcl"
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.46899999999732245,
+    "setup_ns": -0.8474028145855073,
+    "hold_ns": 0.4559841948470478,
+    "tns_reports_ns": [
+      "-13.55",
+      "-13.550817490"
+    ],
+    "drv_status": "pending raw report review"
+  },
+  "propagated": {
+    "argv": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/usr/local/bin/sta",
+      "-no_splash",
+      "-exit",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_repair_20261113/runs/RESTORE__093_/propagated.tcl"
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.46899999999732245,
+    "setup_ns": -0.8587190958309066,
+    "hold_ns": 0.46361825489782404,
+    "tns_reports_ns": [
+      "-13.73",
+      "-13.725327492"
+    ],
+    "drv_status": "pending raw report review"
+  },
+  "functional_equivalence": "pending"
+}

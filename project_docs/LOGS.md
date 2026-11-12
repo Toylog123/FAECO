@@ -5012,3 +5012,123 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 
 
 **LOG-20261113-01 / 主线封存提交**：代码 a20f48c、证据与口径 13f5b2a 已本地提交。证据 MANIFEST 93/93 实际工作树与提交 blob SHA 一致；原生 SPEF/log 保留生成器尾空白，未为格式检查改写科学原件。文档 diff 空白检查通过。git push 无交互尝试 50 s 超时（scratch/recovery_qualification_push.log），远端回执未确认，不称已同步。后续门仍按 REPORT / OPEN_ISSUES 保留。
+
+
+## LOG-20261113-02 — s382 最小补偿验证启动（2026-11-13）
+
+**授权与问题**：用户授权继续验证 s382 最小补偿，目标是减少约 10 ps setup 损失并尽量保留面积节省；不预设补偿一定有效，也不将放宽门槛称为严格安全通过。
+
+**起点与边界**：本轮开始工作树实查 clean；主线报告 main 相对本地 origin ahead 1，远端推送状态由主线独立核验。新证据目录 `project_docs/evidence/recovery_repair_20261113`。生产 parser 本轮不改，避免扩大候选科学任务，面积使用完整 canonical 实例计数。论文不动。
+
+**计划先行**：主线将预注册全部 13 个 leave-one-reversion-out 物理臂，每臂把已归档 13 个回退之一恢复成 Resizer 原 cell；固定 0/2/5/10 ps WNS 档，配 TNS 非劣、hold 可行性与 DRC 门；完整计数及入围终点 SEC。任何自适应组合必须先写明选择规则后运行，不把后验组合伪装成预设。记录端等待实际预注册文件后登记实验；在此之前不视为 EDA 已获运行前登记。
+
+
+**LOG-20261113-02 / 路径诊断准备**：test_failures 受主线指派先只读 CONTROL/RECOVERY_V2 propagated STA 的 Tcl/log 并准备脚本；待主线预注册放行后才以 300 s 包装运行实际 STA，不重路由、不改生产。诊断拟输出 top10 full_clock_expanded 路径、端点/路径实例与 13 swaps 交叉，区分 data/clock slew/RC 的实测与假设，产物归 `recovery_repair_20261113/pathdiag`。当前只登记准备，未声称 STA 已运行。
+
+
+**LOG-20261113-02 / 运行前预注册实查完成**：记录端实际打开 `recovery_repair_20261113/PREREGISTRATION.md` 与 `PLAN.json`，已在 EXPERIMENT_REGISTRY 登记 RECOVERY-REPAIR-S382。13 单点、四预算、TNS 非劣与新 hold>=0 门逐项绑定，旧 hold 非劣另报；路径诊断先重测两终点 9 位 TNS，不过滤候选。Stage B 仅零预算无正节省 singleton 时启用，最多 12 次，精确组合规则须先登记。此时未收到任何新物理运行结果。
+
+
+**LOG-20261113-02 / 用户收紧主门已运行前登记**：已实际复读预注册新增 steering，在 registry 同步 WNS/TNS/hold 相对 CONTROL 全非劣 1e-6 ns 且 hold>=0；2/5/10 ps 仅诊断。该变更发生在全部 13 个新物理臂前，不以放宽时序隐藏失败。自包含驱动已生成，路径诊断提供 9 位 TNS 参考；记录端已完成运行前登记，后续按实际结果更新。
+
+
+**LOG-20261113-02 / 单点批次启动与记录时序澄清**：主线 session74268 已启动（scratch/recovery_repair_singletons.log；总1200 s、每 route900 s超时）。`facf9d3` 已在运行前固化 prereg/PLAN 与严格主门；主线启动前未在 registry 尾看到记录端追加。跨代理写入/读取存在并发观测差异，registry 按主线启动后补记表述，不将此前记录端「运行前登记完成」当作已独立验证的先后证明。科学预注册本身先于执行，不回写时间。后续继续监测实际完成/失败。
+
+
+**LOG-20261113-02 / 路径诊断完成**：产物 `recovery_repair_20261113/pathdiag/` 含 REPORT、两 Tcl/raw log、manifest、analysis.json、spef_pathnets.json 与 archive_sha256。两次 STA 各约 0.469 s/rc=0，外层 660 s 包装实际 5 s/rc=0，各取 10 setup+5 hold；无重路由或生产修改。9 位 TNS 为 CONTROL -13.422542572 ns、原 RECOVERY -13.735190392 ns。新 worst DFF16 路径与 13 swaps 无交集；该路径 slack 损失 17.792 ps 主要对应 launch 后 data delay +15.592 ps，clock 变化小于 0.6 ps。四条路径网的逻辑 pin/cell 未变而 SPEF wire C 均增，支持重布线寄生/负载解释；未做反事实隔离，不指认单一 swap 为根因，也不据路径交集过滤 13 臂。
+
+
+**LOG-20261113-02 / 候选 SEC 驱动准备**：test_failures 仅准备 `run_repair_sec.py`，复用已验 full-used-cell adapter，arm 从本轮 runs 读取、CONTROL 从 inputs/CONTROL/routed.v 读取，绑定复制的 structure_reader、原 adapter hash/model pin，保留零 pin tap 逐 ID 排除收据。当前不执行 proof；等待主线选出严格可行终点后再运行，不把准备好的证明脚本记成 SEC 通过。
+
+
+**LOG-20261113-02 / 6-of-13 进度独立核验**：`analyze_repair.py` 与 `SUMMARY.partial.json` 当前核验 6/13 已完成，全部证据有效、strict 主门均失败；尚余 7 例，不把部分结果当全矩阵。检查覆盖完整结构=recipe减restore项、输入 SHA、STA 终点路径、flow/STA rc/marker/error、DRV 专属段、DRC、完整库面积及输出 SHA；TNS 基准采用 pathdiag 的 -13.422542572 ns。当前 RESTORE__074_ 保留全部 4.399524% 面积节省，但 WNS/TNS 分别退化 0.003098077/0.231982231 ns，不可接受。仍按预设全跑13，不以阶段结果删候选。
+
+
+**LOG-20261113-02 / SEC 准备脚本交付**：`run_repair_sec.py` SHA256 `96e010459746cb684feadb8e70ad28efe9007ebb24e2159585648051bddfaab5`；仅 help/AST 静态检查，未执行 proof。project/complete_models 函数 AST 与已验 adapter 相同，绑定旧 adapter provenance 及 SEC 源码/reader/Liberty hash。计数为总共 102 功能实例（其中 21 FF），不是 102+21；实际候选 SEC 等待主线选择。
+
+
+**LOG-20261113-02 / 有限组合搜索准备（未执行）**：主线授权准备 `COMBINATION_PLAN.json`，枚举 13 动作 size2..5 共 2366 集合，但最多执行 12 个新物理臂；复制物理 driver 仅改计划文件名，`run_combinations.py` 按冻结 beam 规则。默认 drycheck，须全13有效且无 strict 可行 singleton 才允许执行；失败占预算并停止归因。worker 等主线源码审阅 GO，当前不启动组合 EDA；2366 是候选枚举空间，不是已执行实验数。
+
+
+**LOG-20261113-02 / 单点批次结束与组合规则实查**：主线实际确认13个物理臂391 s/rc=0，独立审查末项仍待完成。记录端已实读组合冻结规则并登记精确beam排名、cardinality2..5/每层3/最多12、失败占预算、出现strict正节省层即停。原PLAN与组合计划分离，尚未运行组合EDA；仅在全13独立验收且均strict失败后放行，不后验改变主门。
+
+
+**LOG-20261113-02 / Stage A 全13独立验收：无可接受点**：冻结 SUMMARY.json SHA `5ae335bc5e981842a41a912bbf1b4ccf213738106dba02d94b1a52495079c8a9`，analyzer SHA `40f8f1b27be6ee6115b6e3bfd439cd1fb38e734adb085640105820549b443bcc`。13 例证据均有效但 strict 全失败：全部 WNS/TNS 退化，7 例 hold 也退化，全部 hold>=0；2/5/10 ps 诊断亦因硬 TNS 门全失败。排名最佳 `_098_` 节省面积3.923900119%，ΔWNS=-0.000044020343 ns、ΔTNS=-0.221329689 ns、Δhold=-0.000018540725 ns；不能因 WNS 近零忽略 TNS/hold。`_074_` 节省全4.399524376%但ΔWNS=-0.003098077350、ΔTNS=-0.231982231 ns。成本13 route/26 STA，逐job时间合386.312 s、batch391 s/rc=0。无接受点故未做SEC；Stage B 已满足预设触发条件，尚待主线启动。
+
+
+**LOG-20261113-02 / 组合驱动 drycheck 交付**：help/drycheck 已通过且重审全13 singleton有效失败；初始beam `_098_/_074_/_111_`，首层预测排序为 `_074_+_098_`、`_054_+_098_`、`_098_+_111_`，均未执行。runner SHA `055e6b1a6f1591a4d38a44d1286c11b9ad6d27ed424463ce79aa308ab4d86380`，driver `b0df2275d9aa6426ca9d5e3a19c4fb84609e001d535f37a24fdc9bc64f7b2838`，plan `d62465e05ab4521bc4795d9cd4af8239c24c9846c4ec1d8f58ce6cd26b3e38c4`。默认只drycheck，须显式execute；此时无 COMBINATION_RECEIPT，等待主线审阅GO，不能把预测臂记为物理结果。
+
+
+**LOG-20261113-02 / Stage B 正式启动**：主线复核全13失败SUMMARY、源码及drycheck rc=0后，先提交预注册/组合计划 `2e8e590`，再启动 session49554，外层timeout1200 s、最多12次物理运行。首层三对为 `_074_+_098_`、`_054_+_098_`、`_098_+_111_`。严格主门不变，提案预测仅排序，不作接受依据；失败按预注册占预算并先归因。
+
+
+**LOG-20261113-02 / 组合阶段并行只读诊断**：test_failures 按主线授权从实际有效组合中选 TNS 最接近 CONTROL 的点，审已报告 top5 路径与 Liberty 同函数强驱动，仅提出最多3个原13之外的待检候选，写 `pathdiag/COMPENSATION_REVIEW.md`，不启动EDA；这些候选不自动加入当前冻结搜索。另准备 SEC arm 注册来源兼容 COMBINATION_PLAN，要求唯一匹配并固定 plan 身份，不改 proof 逻辑。
+
+
+**LOG-20261113-02 / 新目标同步 CANON**：按主线新增授权在 CANON 顶部记录自有机制/ICCAD 标准/面积下降且 propagated WNS-TNS-hold 全不降的目标，1e-6 ns 仅数值容差，完整约束与泛化尚未建立。保留旧证据不覆盖。Stage B 当前9例结束仍无strict点，待全12后按真实结果收尾；路径补偿或CONTROL前向安全选择仍属待评估，未启动新EDA。
+
+
+**LOG-20261113-02 / Stage C 强简单基线配置预告（未运行）**：主线决定另立 Stage C，而非扩张 Stage B 的12次预算：从CONTROL出发，每次只实施原13回退中的1个（等价restored为另外12），共13独立物理臂、全量无早停；继承同一 WNS/TNS/hold 严格门与driver/audit，未知/失败先归因。它是强简单baseline与可行域探针，不自称算法创新。主线将写独立 FORWARD_PREREGISTRATION/PLAN/run_forward，审阅并commit后才运行；当前配置预告，未有Stage C结果。
+
+
+**LOG-20261113-02 / Stage B 阴性收束与 Stage C 预注册实查**：Stage B 12/12有效、strict全失败，rc0且独立核验一致，COMBINATION_SUMMARY冻结，不延长原12预算。已实际读FORWARD_PREREGISTRATION/PLAN，登记sorted全13、禁止累积/早停、零面积074只诊断、最终最大面积strict点SEC与并列词序规则。drycheck通过，尚待独立审阅和主线commit，未记Stage C已运行。
+
+
+**LOG-20261113-02 / Stage B 独立规则与成本复核**：COMBINATION_REVIEW.md 确认全12有效且TNS全部退化，无strict候选；初始beam/4层提案排序采用独立重算、未调用作者rank，逐项吻合。成本12 route/24 STA，job elapsed合344.641 s。最小TNS亏损集合 `_054_/_074_/_093_/_098_/_111_` 的ΔTNS=-0.077928543 ns、Δhold=-0.000147548640 ns，虽然ΔWNS=+0.001715960707 ns且省面积2.497027348%，仍失败；4诊断预算均无合格点。Stage A冻结文件未动。不能只摘WNS改善宣称补偿成功。
+
+
+**LOG-20261113-02 / 旧路线图新颖性风险登记**：主线实际读ROADMAP旧§2发现「无竞品/唯一/Resizer缺JOINT」等未经当前核验的排他句；官方Resizer现文档已有多种变换及sequence/phases。登记OI-086，主线将给历史段标识并写具体机制路线，记录端不把旧排他句当创新性证据、不动冻结论文。后续须机制逐项与最强文献/工具等预算对照。
+
+
+**LOG-20261113-02 / 只读路径补偿候选交付**：COMPENSATION_REVIEW/EVIDENCE/RECEIPT_SNAPSHOT 已保存于 pathdiag，不改旧archive哈希。12组合中TNS最近集合054/074/093/098/111节省26.2752 μm²，TNS仍亏77.928543 ps、hold亏0.147549 ps。基于Liberty同函数/端口实查，提出最多3个未运行候选：`_057_` o31a1→2（+1.2512、覆盖5条top路径）、`_083_` o21a1→2（+1.2512、覆盖worst14）、`rebuffer1` buf6→8（+3.7536、覆盖11/18，但inputcap增51.7%）。候选只是假设，无EDA，Stage C优先，未纳入原冻结动作集合。SEC helper现唯一匹配PLAN/COMBINATION_PLAN并固定两文件SHA，proof/project/models AST未变，help通过，新SHA `52e8cbd54332090636f1e0c56f6368e814e53213f947abf4d6602b83ac9dd908`。
+
+
+**LOG-20261113-02 / Stage C 正式启动**：独立审阅通过，提交8e031f8（前序7cb2bd4）后启动session50740，timeout1200s，scratch/recovery_forward.log。最终PLAN SHA be04334ca8c8ffe5ffea951ded2ce8fe8f856fa2c7ea1cca01770fae2997eaa1；补齐零面积诊断三项074/077/081，不能只记074。13臂作为独立budget完整执行，保留零面积负例，不改strict门。
+
+
+**LOG-20261113-02 / Stage C SEC 注册来源就绪**：worker实读最终FORWARD_PLAN，验证13个互补恢复集合及source SHA；SEC helper纳入第三个注册来源，仍要求唯一plan匹配、固定SHA与restored manifest绑定。最终helper SHA `056e9394c2926450ea2cd2bd7676e401ba911e9a413b60de3d0735f7d05aae07`，help通过，未执行proof/EDA。
+
+
+**LOG-20261113-02 / Stage D 准备登记（未运行）**：主线委派准备新预注册与复用runner，固定base为B最小TNS亏损集合COMBO_054_074_093_098_111，分别新增057/083/rebuffer1一项，三臂不累积。只作为小代价补多端点损失检验，无novelty主张；待Stage C全13、审阅与commit后才开。registry标PREPARATION/NOT_RUN，未记成物理实验完成。
+
+
+**LOG-20261113-02 / Stage D 配方编码设计**：worker准备显式16动作JOINT_RECIPE，原13加3个额外upsize，额外项new_cell取CONTROL、old_cell取upsize目标用于复用driver，必须标为新增补偿而非历史回退。每臂restored=base5+另外2个extras，物理driver仅改plan/recipe路径。三独立臂全部运行不早停，Stage C全13完成有效为执行前置；完整结构与strict gate审计复用，新预注册/plan/recipe/driver/runner待主线审阅commit，此时无EDA。
+
+
+**LOG-20261113-02 / Stage C 首个严格数值候选（未最终接受）**：主线实际读取FORWARD_RECEIPT及096原始绑定：area1046.0032 μm²，节省6.256（0.594530321%），Δsetup=+0.0017147394615 ns、ΔTNS=+0.004840851 ns、Δhold=0；strict数值与已支持物理门通过。当前仍pending SEC及独立证据审查，不提前称有效终点或新机制成功。按预注册继续完成全部13，不因出现候选早停。
+
+
+**LOG-20261113-02 / 096候选独立阶段核验**：Stage C 10/13完成时，独立审查确认FORWARD__096_结构/输出SHA/实际endpoint/log/DRC/配置DRV均通过，省6.256 μm²（0.594530321046%），propagated ΔWNS=+0.001714739461534 ns、ΔTNS=+0.004840851 ns、Δhold=0。它是保守单动作baseline候选；全13及SEC仍待完成，未提前接受或主张创新。
+
+
+**LOG-20261113-02 / Stage D 准备产物完成**：JOINT_PREREGISTRATION/PLAN/RECIPE、physical_probe_joint.py、run_joint.py五文件已交主线；help/drycheck通过但Stage C final summary仍pending，无EDA/无JOINT_RECEIPT。plan SHA `eff0bac1e359148aaf228703395ae9d20613f6ad0db6959fcc96e63183182622`；driver仅两路径替换，原13+3目标保持显式、逐臂base5+unused extras2。面积算术预计节省25.024/25.024/22.5216 μm²，不构成时序预测或物理接受；待审核commit再执行。
+
+
+**LOG-20261113-02 / Stage C 全13完成及SEC启动**：批次wrapper380s，全13独立审核通过，唯一strict为096。主线按预注册启动FORWARD096 SEC session91025/timeout240s，模型完整102含21FF；尚未宣称证明通过。D三例drycheck已all13_valid，等独立review再commit启动。
+
+
+**LOG-20261113-02 / C终点SEC通过与D正式启动**：主线实际读096 sec.log与receipt，101proven/0unproven、pass、sources unchanged、102含21FF，proof3.859s/wrapper10s。D五文件8dd39bb预先commit且根/独立审核通过后，session33049/timeout600s正式启动，scratch/recovery_joint.log。记录端已实读JOINT_PREREGISTRATION，确认3固定独立补偿、重新构建完整目标/重布线、严格门及入围SEC不变；不是等预算创新证明。
+
+
+**LOG-20261113-02 / D终点SEC准备**：worker新增run_joint_sec.py，以已执行096的helper为源，仅限固定SHA的JOINT_PLAN注册来源；原run_repair_sec.py SHA056e9394...保持不变，复用proof逻辑。当前仅准备，尚未为任何D候选执行SEC。
+
+
+**LOG-20261113-02 / D SEC脚本身份**：run_joint_sec.py SHA `5fefe39d53e3fa7a3187efdaa6e2e2d14e1d42369a31335bc415727b13b41dcd`，固定JOINT_PLAN eff0bac1...、唯一匹配/restore集合绑定、copied_from_driver来源；project/models AST同源、help通过，尚未proof。
+
+
+**LOG-20261113-02 / D三臂结束与阶段口径同步（待独立复核）**：主线实际读JOINT_RECEIPT，三臂92s wrapper、均有效strict失败：057省2.378121%，ΔWNS/TNS/hold=-0.003183398/-0.120345116/-0.000147549 ns；083同面积，Δ=+0.000984213/-0.042348862/-0.000193845 ns；buf8省2.140309%，Δ=-0.010551726/-0.227338791/-0.000147549 ns。无D候选故不做SEC。全轮41route/82终点STA+2诊断STA；唯一严格点C096已SEC通过。CANON更新局部baseline通过与新机制未立，不把高面积却退化的D点替代baseline。等待D独立审查及实际路径归因后才冻结。
+
+
+**LOG-20261113-02 / A–D独立验收完成**：JOINT_REVIEW确认D三例全部有效strict失败；FORWARD_ACCEPTANCE.json SHA `e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd` 接受096为局部保守baseline，FORWARD_REVIEW已追加SEC回执。独立复核39种cell模型、102功能实例含21FF、只投影3026零pin tap、101proven/0unproven、原源未变，旧SEC driver SHA056e...保持。D成本3route/6STA、job87.063s/wrapper92s；A–D共41candidate route/82endpointSTA，另2诊断STA与SEC不混计。CANON已将D状态从待审更新为独立完成；路径归因仍待，记录端暂不冻结。
+
+
+**LOG-20261113-02 / Stage D失败归因实查完成**：记录端实际打开 `pathdiag/JOINT_ATTRIBUTION.md`。先排实现/输入：三JOINT相对固定B各且仅指定1cell变化，完整接口/连接/assign/声明一致，manifest和STA本臂新网表/SPEF绑定通过。057共享级实际报告增量+17.795473 ps，下游改善12–14.5 ps不足抵消，5个匹配端点均恶化；相对B TNS亏42.416573 ps，不混相对CONTROL亏120.345116 ps。A3fall弧共同说明性slew/load插值显示_2传播更慢但transition更快，否证驱动档后缀/maxcap保证延时单调；插值并非实际STA工作点，报告级含入网传播，不能给精确cell/net因果比例。上游输入C/线C略降且DFF20级变快，不支持粗归因升档上游增载；RC分布未隔离。归因仅说明三具体动作在该实现失败，不放宽门或外推补偿普遍无效。本次只读，无新增EDA。
+
+
+**LOG-20261113-02 / 最终阶段收尾与停写**：记录端实际读REPORT/FINAL_RESULTS确认A–D全部41有效、唯一C096接受，82endpointSTA+2pathdiagSTA+1SEC；root summarize_study重审41row一致、5tool/RCX/setRC postcheck哈希不变。D只读归因已沉淀EXPERIENCE，明确coverage不保证收益符号、较大驱动档不保证相关弧更快、未隔离RC不作唯一因果。registry状态结为STAGE_CLOSED / ACCEPTED_LOCAL_BASELINE_ONLY，非ICCAD研究目标完成。
+
+**仍未完成**：自有联合机制相对强简单/调优native的同预算优势、完整SDC/DRV与多角/收敛起点、跨设计/实现泛化，以及生产escaped解析/SEC scanner、层次baseline分母、customLib与旧排他性文献主张审计。保留OI-082/084/085/086等，不削弱零退化目标、不改论文。主线将同步handoff/index/README、封manifest并提交/尝试推送；记录端不声称尚未观测的成功。从本条起停止受托文档写入，供稳定封存。
+
+**LOG-20261113-02 / 根最终验证**：全部41端点重新审计与阶段冻结行逐项一致，FINAL_RESULTS/CSV已生成；不同agent最终报告/Liberty插值审查通过。5工具/库/LEF以及RCX/setRC结束哈希与StageB快照一致；所有实验Python语法有效；四个冻结中文论文源/PDF哈希未变。check_record.sh仍指向已停用记录，报告历史OI-081告警；实际LOGS/CANON/registry/EXPERIENCE/OPEN_ISSUES均同步，不据旧脚本回写停用文件。仅将本轮新增LOGS文本CRLF转LF以消除diff空白告警，历史日志字节前缀保持不变。准备封存全部成功/失败原件并提交，推送结果后记。
+
+**LOG-20261113-02 / 证据封存**：ARTIFACT_MANIFEST封624工件（158063779 bytes，SHA256 `1c0290adf666ece36ab98ccec8923b17fdfcc265ae8722b4456de66a50c44c12`），排除仅bytecode及manifest自身；包含41所有成功/失败raw与编排日志。再次verify通过，625个含manifest暂存Git blob均与工作区字节完全一致。生产code与paper无本轮diff。

@@ -1,8 +1,9 @@
 {
   "timestamp": "2026-11-13",
-  "status": "Recovery ICCAD qualification: NON_PROMOTION; full exported-cell area audit 14-design mean 3.071500828%; s382 physical pilot retains area gain but fails strict timing gate; see CANON and qualification REPORT.",
+  "status": "Strict timing area recovery: s382 FORWARD__096_ accepted local conservative baseline, area -0.594530321%, propagated WNS/TNS improve and hold unchanged; SEC101/0. 41 physical candidates audited. Joint mechanism superiority, cross-design and full constraints remain open; not ICCAD ready.",
   "project": "FAECO",
   "read_order": [
+    "project_docs/evidence/recovery_repair_20261113/REPORT.md",
     "project_docs/HANDOFF_2026-11-12.md",
     "project_docs/FAECO_ROADMAP.md",
     "project_docs/CANON.md",
@@ -98,5 +99,12 @@
       "instrument": "code/src/rseco/routed_sta.py: render_flow_tcl_skip_clock_tree + run_routed_sta(skip_clock_tree=True)\uff08\u9ed8\u8ba4\u884c\u4e3a\u4e0d\u53d8\uff0c\u56de\u5f52 PostCtsFlowTest\uff09"
     }
   },
-  "qualification_report": "project_docs/evidence/recovery_qualification_20261112/REPORT.md"
+  "qualification_report": "project_docs/evidence/recovery_qualification_20261112/REPORT.md",
+  "strict_area_recovery": {
+    "report": "project_docs/evidence/recovery_repair_20261113/REPORT.md",
+    "results": "project_docs/evidence/recovery_repair_20261113/FINAL_RESULTS.json",
+    "acceptance": "project_docs/evidence/recovery_repair_20261113/FORWARD_ACCEPTANCE.json",
+    "user_objective": "own mechanism; ICCAD evidence standards; area reduction with WNS/TNS/hold nondegradation",
+    "paper": "frozen; no changes this study"
+  }
 }

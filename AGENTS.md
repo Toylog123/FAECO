@@ -1,5 +1,7 @@
 # 行为准则
 
+> **2026-11-13 当前执行入口**：`project_docs/CANON.md`、`project_docs/evidence/recovery_repair_20261113/REPORT.md`、`project_docs/FAECO_ROADMAP.md`。目标为自有机制、ICCAD证据标准、面积下降且相对Resizer的WNS/TNS/hold全部不下降。s382单动作基线已接受；联合机制和跨设计/完整约束尚待建立。下方旧日期专项不覆盖此入口。
+
 ## 1. 质疑优先（Challenge-first）
 
 任何请求、方案、结论、数字在验证之前都是**待检验假设**，不因来源而自动采信。

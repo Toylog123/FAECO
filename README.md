@@ -1,6 +1,8 @@
 # FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画
 
-> **接手者第一站（2026-11-09 起）：`project_docs/HANDOFF_2026-11-09.md`**（三十秒现状 + 复现入口 + 自检命令）。本文档只做总览与目录索引；任何进度、口径、结论以 HANDOFF / CANON 为准，本文档不与它们冲突。
+> **2026-11-13 当前研究入口**：[严格时序面积研究](project_docs/evidence/recovery_repair_20261113/REPORT.md) + `project_docs/CANON.md`。s382已有面积下降0.594530321%、propagated WNS/TNS改善及hold不变、SEC通过的局部保守基线；自有机制优势与ICCAD资格尚未建立。下方2026-11-09状态只作历史，工具环境以 `docs/environment.md` 为准，Git状态实时查询。
+
+> **历史接手者第一站（2026-11-09 起）：`project_docs/HANDOFF_2026-11-09.md`**（三十秒现状 + 复现入口 + 自检命令）。本文档只做总览与目录索引；任何进度、口径、结论以 HANDOFF / CANON 为准，本文档不与它们冲突。
 
 ## 当前状态（2026-11-09 复核）
 

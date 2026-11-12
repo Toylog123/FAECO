@@ -1,0 +1,166 @@
+{
+  "scope": "s382 prior CONTROL vs RECOVERY_V2 final netlists/newSPEF; propagated clock; diagnostic only, no route",
+  "status": "two_sta_diagnostics_complete",
+  "sta_timeout_s": 300,
+  "recipe": {
+    "path": "experiments\\20261112_resizer_recovery\\arms\\RECOVERED_V2\\s382\\summary.json",
+    "sha256": "419249606cf6ba5fb96880fc957be8075e480c62f85dfbfa2cdd5d34334abb82"
+  },
+  "swaps": [
+    {
+      "instance": "_052_",
+      "old_cell": "sky130_fd_sc_hd__a21oi_1",
+      "new_cell": "sky130_fd_sc_hd__a21oi_2",
+      "delta_wns": 0.0,
+      "area_saved": 3.75
+    },
+    {
+      "instance": "_054_",
+      "old_cell": "sky130_fd_sc_hd__or3b_1",
+      "new_cell": "sky130_fd_sc_hd__or3b_4",
+      "delta_wns": 0.0,
+      "area_saved": 2.5
+    },
+    {
+      "instance": "_055_",
+      "old_cell": "sky130_fd_sc_hd__nor2_1",
+      "new_cell": "sky130_fd_sc_hd__nor2_2",
+      "delta_wns": 0.0,
+      "area_saved": 2.5
+    },
+    {
+      "instance": "_074_",
+      "old_cell": "sky130_fd_sc_hd__o21ai_0",
+      "new_cell": "sky130_fd_sc_hd__o21ai_1",
+      "delta_wns": 0.0,
+      "area_saved": 0.0
+    },
+    {
+      "instance": "_077_",
+      "old_cell": "sky130_fd_sc_hd__o21ai_0",
+      "new_cell": "sky130_fd_sc_hd__o21ai_1",
+      "delta_wns": 0.0,
+      "area_saved": 0.0
+    },
+    {
+      "instance": "_079_",
+      "old_cell": "sky130_fd_sc_hd__a21oi_1",
+      "new_cell": "sky130_fd_sc_hd__a21oi_2",
+      "delta_wns": 0.0,
+      "area_saved": 3.75
+    },
+    {
+      "instance": "_081_",
+      "old_cell": "sky130_fd_sc_hd__o21ai_0",
+      "new_cell": "sky130_fd_sc_hd__o21ai_1",
+      "delta_wns": 0.0,
+      "area_saved": 0.0
+    },
+    {
+      "instance": "_093_",
+      "old_cell": "sky130_fd_sc_hd__nor3_1",
+      "new_cell": "sky130_fd_sc_hd__nor3_2",
+      "delta_wns": 0.0,
+      "area_saved": 5.0
+    },
+    {
+      "instance": "_096_",
+      "old_cell": "sky130_fd_sc_hd__nor4_1",
+      "new_cell": "sky130_fd_sc_hd__nor4_2",
+      "delta_wns": 0.0,
+      "area_saved": 6.26
+    },
+    {
+      "instance": "_098_",
+      "old_cell": "sky130_fd_sc_hd__nor3_1",
+      "new_cell": "sky130_fd_sc_hd__nor3_2",
+      "delta_wns": 0.0,
+      "area_saved": 5.0
+    },
+    {
+      "instance": "_102_",
+      "old_cell": "sky130_fd_sc_hd__nand2_1",
+      "new_cell": "sky130_fd_sc_hd__nand2_2",
+      "delta_wns": 0.0,
+      "area_saved": 2.5
+    },
+    {
+      "instance": "_111_",
+      "old_cell": "sky130_fd_sc_hd__xnor2_1",
+      "new_cell": "sky130_fd_sc_hd__xnor2_2",
+      "delta_wns": 0.0,
+      "area_saved": 7.51
+    },
+    {
+      "instance": "_113_",
+      "old_cell": "sky130_fd_sc_hd__xnor2_1",
+      "new_cell": "sky130_fd_sc_hd__xnor2_2",
+      "delta_wns": 0.0,
+      "area_saved": 7.51
+    }
+  ],
+  "arms": {
+    "CONTROL": {
+      "inputs": {
+        "project_docs\\evidence\\recovery_repair_20261113\\inputs\\CONTROL\\routed.v": "3a2666be3cc4cf11c041c8be8793c16e30e617bb2e846468e2454ed5247aab8e",
+        "project_docs\\evidence\\recovery_repair_20261113\\inputs\\CONTROL\\routed.spef": "d56c2bc238d25e3659f4d6a65eeda7362acfeebd7c2159f24a18820adcd5afd8"
+      },
+      "script": "scratch\\recovery_repair_pathdiag\\CONTROL.tcl",
+      "script_sha256": "60d1c79f48aaded3a54539edfe0d63bf5b76f307500bf18c2821ece3bd510360",
+      "run": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/bin/timeout",
+          "--kill-after=10s",
+          "300s",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/scratch/recovery_repair_pathdiag/CONTROL.tcl"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 0.46899999999732245,
+        "log_sha256": "a1b542ecb71d293ccda8ac3ecf1f5a588243d4609ebac43b4cceb7a2add1daa7",
+        "sentinel": true,
+        "errors": []
+      }
+    },
+    "RECOVERY_V2": {
+      "inputs": {
+        "project_docs\\evidence\\recovery_repair_20261113\\inputs\\RECOVERY_V2\\routed.v": "a203adbd62283eaa7293940964f997f995c74055257d18619f56c2054ee91ab4",
+        "project_docs\\evidence\\recovery_repair_20261113\\inputs\\RECOVERY_V2\\routed.spef": "1bb1988953e705afa710ce28e9e3b207c7e1bea45a5ee7bcd08a59151ea7ef22"
+      },
+      "script": "scratch\\recovery_repair_pathdiag\\RECOVERY_V2.tcl",
+      "script_sha256": "8c8d0a729581bd089d217e27113e451c01c3f59436731780cf26da1e33769235",
+      "run": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/bin/timeout",
+          "--kill-after=10s",
+          "300s",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/scratch/recovery_repair_pathdiag/RECOVERY_V2.tcl"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 0.4690000000045984,
+        "log_sha256": "2d5cdd0ec0f22ab6d41f7c989bde9aa872de744a2d7e3f552d7414f78e356b08",
+        "sentinel": true,
+        "errors": []
+      }
+    }
+  },
+  "preregistration": {
+    "path": "project_docs\\evidence\\recovery_repair_20261113\\PREREGISTRATION.md",
+    "sha256": "ad563de6b6e4493c71d53c30a52d96e711429d196ce9b93f034ffdd6c2e4954c"
+  }
+}

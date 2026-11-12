@@ -8,6 +8,7 @@
 
 | 域 | 实验 / 日期 | 路径 | 基线 | 关键结论 | 状态 |
 |----|-------------|------|------|----------|------|
+| strict-area-recovery | 2026-11-13，A13/B12/C13/D3 | `recovery_repair_20261113/REPORT.md`、`FINAL_RESULTS.json`、`FORWARD_ACCEPTANCE.json` | 固定s382 Resizer CONTROL，TT、propagated | 41route/82STA+2只读STA；唯一严格接受点面积−0.594530321%、WNS/TNS改善、hold不变，SEC101/0；联合机制尚无优势 | pilot accepted，非论文证据晋级 |
 | iscas89-main | 20260826 统一批量（效率优先配置） | `experiments/20260826_iscas89_main/` + `experiments/20260826_aggregation/summary.json` | d329f19 前基线 | 8/8 严格 WNS 改善；SEC 8/8 | active |
 | itc99-main | 20260826 统一批量 + b17 phase-2（20260908） | `experiments/20260826_itc99_main/`、`experiments/20260908_phase2_b17_resume/` + 聚合 | 同上 | 18/19 严格改善（b06 持平）；b17 +0.38 ns @180 s | active |
 | picorv32 | 20260826 异构三子模块 | `experiments/20260826_picorv32_hetero/` + 聚合 | 同上 | +1.13 / +0.07 / regs N/A | active |

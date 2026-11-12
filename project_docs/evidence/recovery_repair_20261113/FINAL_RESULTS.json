@@ -1,0 +1,3554 @@
+{
+  "scope": "s382 exploratory study; four sequentially registered budgets, not one prospective algorithm benchmark",
+  "stages": [
+    {
+      "stage": "A",
+      "physical_runs": 13,
+      "standalone_sta_runs": 26,
+      "valid": 13,
+      "strict_numeric_pass": 0,
+      "observed_job_seconds": 386.3119999999981
+    },
+    {
+      "stage": "B",
+      "physical_runs": 12,
+      "standalone_sta_runs": 24,
+      "valid": 12,
+      "strict_numeric_pass": 0,
+      "observed_job_seconds": 344.64100000001054
+    },
+    {
+      "stage": "C",
+      "physical_runs": 13,
+      "standalone_sta_runs": 26,
+      "valid": 13,
+      "strict_numeric_pass": 1,
+      "observed_job_seconds": 373.59199999998964
+    },
+    {
+      "stage": "D",
+      "physical_runs": 3,
+      "standalone_sta_runs": 6,
+      "valid": 3,
+      "strict_numeric_pass": 0,
+      "observed_job_seconds": 87.06300000000192
+    }
+  ],
+  "physical_runs": 41,
+  "standalone_sta_runs": 82,
+  "extra_readonly_pathdiagnostic_sta_runs": 2,
+  "sec_runs": 1,
+  "accepted": {
+    "status": "accepted_local_conservative_baseline",
+    "date": "2026-11-13",
+    "arm": "FORWARD__096_",
+    "scope": "s382 current physical realization; strict relative propagated setup/TNS/hold nondegradation plus configured physical checks and two-state SEC",
+    "forward_summary_sha256": "b39a2424ef82b75923bc70570ff7ececf63ade6567c870f1a6bd7dbf1aaf5295",
+    "sec_receipt_sha256": "0b0d321503a86d3b7ced1dce064362303bdafb80e0c7e1e982d688ab26bfff06",
+    "sec_driver_path": "run_repair_sec.py",
+    "sec_driver_sha256": "056e9394c2926450ea2cd2bd7676e401ba911e9a413b60de3d0735f7d05aae07",
+    "checks": {
+      "independent_final_structure_metrics_and_hashes": true,
+      "all13_completed_selection_correct": true,
+      "original_sources_still_match": true,
+      "exact_no_pin_tap_projection": true,
+      "complete_cell_model_set": true,
+      "proof_artifact_hashes": true,
+      "equiv_proven": 101,
+      "equiv_unproven": 0
+    },
+    "area": 1046.0032,
+    "area_saved": 6.255999999999858,
+    "area_saved_pct": 0.5945303210463598,
+    "metrics": {
+      "setup_ns": -0.8467440637538459,
+      "hold_ns": 0.4636368511334865,
+      "tns_ns": -13.417701721
+    },
+    "deltas_ns": {
+      "setup_ns": 0.0017147394615335543,
+      "hold_ns": 0.0,
+      "tns_ns": 0.004840850999999091
+    },
+    "netlist_sha256": "761430cf748245572384ee04ae5942d310547a314bf8dafa5cf0cf2f78e184f3",
+    "spef_sha256": "e3960c9b650f0016191dc81838ea675fb312acd75a379f9681f44e14f3b72e46",
+    "limitations": [
+      "One design and implementation; no generality or novelty claim.",
+      "Existing negative setup slack remains; not timing closure.",
+      "Supported-rule DRC/configured DRV only; complete constraint coverage not established.",
+      "Two-state SEC excludes only enumerated no-pin physical taps, not a four-state or analog proof."
+    ]
+  },
+  "rows": [
+    {
+      "stage": "A",
+      "arm": "RESTORE__052_",
+      "restored": [
+        "_052_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__052_",
+        "returncode": 0,
+        "elapsed_s": 29.172000000005937
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1009.7184,
+      "area_saved": 42.54079999999999,
+      "area_saved_pct": 4.042806183115339,
+      "original_saving_retained_pct": 91.89189189189187,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8468839518549487,
+          "hold_ns": 0.456832432993437,
+          "tns_ns": -13.561525345
+        },
+        "propagated": {
+          "setup_ns": -0.8587305311280602,
+          "hold_ns": 0.4643168072249182,
+          "tns_ns": -13.73852253
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.010271727912680717,
+        "hold_ns": 0.0006799560914316771,
+        "tns_ns": -0.3159799579999998
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.010270727912680718,
+        "hold_ns": 0.0,
+        "tns_ns": 0.3159789579999998
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "84145f462523d4877a2d8a0ae6ed2821894eb46ba08242ed130f2ea840d3a36f",
+        "flow.tcl": "18138c9fb2c7a7d7f997f49bc6ff10598df4513435cd3d080e3f045bf32d6ed8",
+        "ideal.log": "684f25bf5b4b40d1543a70484889ff003167956012fde6a10d27ceed1ae48ed2",
+        "ideal.tcl": "5d877e85e400926705ab40eaa133008b323ea668cea7ca28bc257d687883c529",
+        "manifest.json": "a4fae16568d442171f25ded6b859f72fcfacf9ecd4df077fb07812d9027e18a1",
+        "propagated.log": "37096c431bc9105a5c4eaf9bf3d113e190b72fc3e3db66adda4b2147218e27d0",
+        "propagated.tcl": "3b863aae1f396596fdcaaf52a7a97b9a5b580fb1672d117eada67bd540cfbd77",
+        "routed.def": "9a2e1a885614751faea02693c9cb79341bf7f129fcc4b9672afa73d3aa916a61",
+        "routed.odb": "1579a717d22704e8272d8cadb0ad271e3c62be947c865d0b16e7a6b86a8bada1",
+        "routed.spef": "c64675eadc10478a7aefc670154ec4acaf716cc1c2092ba001b4833c1c6f1fd5",
+        "routed.v": "20719ce74c5fcd7878e8ceb29f6b80ce36e253b6183e50228107f5c9ad36d69a"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__054_",
+      "restored": [
+        "_054_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__054_",
+        "returncode": 0,
+        "elapsed_s": 30.764999999999418
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1008.4672,
+      "area_saved": 43.791999999999916,
+      "area_saved_pct": 4.161712247324606,
+      "original_saving_retained_pct": 94.59459459459441,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8463833522931452,
+          "hold_ns": 0.45612941201866875,
+          "tns_ns": -13.522758484
+        },
+        "propagated": {
+          "setup_ns": -0.8582294874770469,
+          "hold_ns": 0.4638311401627959,
+          "tns_ns": -13.69452858
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.009770684261667384,
+        "hold_ns": 0.0001942890293094024,
+        "tns_ns": -0.2719860080000007
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.009769684261667385,
+        "hold_ns": 0.0,
+        "tns_ns": 0.27198500800000075
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "800d87725eb4aae4991c4f7bf5a1bdd3bd9a083486573bd5418d06e53273505f",
+        "flow.tcl": "98c7b1433a11ad186d05b8bfe0672eb8354d09dad45a8351c4cdea334c673963",
+        "ideal.log": "fcc52e30e4eaaf38f974222fa8c026f2ae21fc6ce85ccf50353f78c8c080679a",
+        "ideal.tcl": "de05c47a7cf60ea7e58a1fac9ac613eff4e1e3b1fa3a2a9a40ced9fafaff842b",
+        "manifest.json": "f56364f2316851991a64f6ef001f0f93932a7a5e050f6d66bacc33667fe0ac0c",
+        "propagated.log": "4794753b1185a0edb569fe6892917c6894b6f71fce2fa8bf242960abdc2a4dc6",
+        "propagated.tcl": "c31795a2bf243cee40ccfb565b59a3630500e689050643aa5d3284111e890955",
+        "routed.def": "faef16a3912c4025ab2cf779e9741b230e6d81c32b1085ad2dcb70089ad890df",
+        "routed.odb": "3661a8a078e35fb99852ca467cbb6658a0b628b824cea565cdcdb3b1a957a136",
+        "routed.spef": "7dfbcc40158862576bf5aefe60833d97e576230d43e775e79c39526b2af05145",
+        "routed.v": "d6a281656534a3729e907669649df6e658490196a59cd5ee177f5689068e930c"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__055_",
+      "restored": [
+        "_055_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__055_",
+        "returncode": 0,
+        "elapsed_s": 33.03199999999924
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1008.4672,
+      "area_saved": 43.791999999999916,
+      "area_saved_pct": 4.161712247324606,
+      "original_saving_retained_pct": 94.59459459459441,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8449883570627037,
+          "hold_ns": 0.45769271705964343,
+          "tns_ns": -13.549372673
+        },
+        "propagated": {
+          "setup_ns": -0.8540240736820692,
+          "hold_ns": 0.465165655993971,
+          "tns_ns": -13.726833344
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0055652704666897534,
+        "hold_ns": 0.0015288048604844562,
+        "tns_ns": -0.3042907719999999
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.005564270466689753,
+        "hold_ns": 0.0,
+        "tns_ns": 0.3042897719999999
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "2e4641ac6ca7798e141274a113392f65fe7641cb98458f58825f498d0f8627d1",
+        "flow.tcl": "135634e6b15e18b4f23e67d2e6d3f0351bc9d7609ff920fca3f3e22b0b70bb5c",
+        "ideal.log": "bfc5d92a60d82b61cbf3f31ab5d6323f12096d6f1e221b3cb83d19a3bff99f44",
+        "ideal.tcl": "527d7d3e46e46acca5ce81f893218e16c70e91e5bceb781f02cdd14e6ad8b359",
+        "manifest.json": "0527754a8442b4e49663d5f5a432b840cd9ab5f28ae0b8b652b616d41fd6308a",
+        "propagated.log": "e1453ff3c23d701fda063633db691a409569285836d957a99e15aec98de93835",
+        "propagated.tcl": "bc57eab61f6df2d1cc97250881057f15e1244df009b72715999dc2657afac3c5",
+        "routed.def": "6b93ccceeed3a92ad6692e834a21914c8593e60286ff7febc297732e5e6a0edf",
+        "routed.odb": "3a5f9d6a94cff9195d7a19b14ef5be147754123ae49d82eca2710271724cee33",
+        "routed.spef": "2e2585e0c9519096b48b0fd485ce0857bce25cc3775a24224469bdb19a6488ed",
+        "routed.v": "48c9d6b57a90c4e8185c1c2ee82eda83f02836b5dad06e1625bf02afd140e3de"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__074_",
+      "restored": [
+        "_074_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__074_",
+        "returncode": 0,
+        "elapsed_s": 30.0309999999954
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1005.9648,
+      "area_saved": 46.294399999999996,
+      "area_saved_pct": 4.399524375743162,
+      "original_saving_retained_pct": 100.0,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8444496213400043,
+          "hold_ns": 0.4595963054576657,
+          "tns_ns": -13.482169151
+        },
+        "propagated": {
+          "setup_ns": -0.851556880565596,
+          "hold_ns": 0.46721415625228246,
+          "tns_ns": -13.654524803
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0030980773502164993,
+        "hold_ns": 0.003577305118795948,
+        "tns_ns": -0.23198223099999993
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.003097077350216499,
+        "hold_ns": 0.0,
+        "tns_ns": 0.23198123099999993
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+        "flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+        "ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+        "ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+        "manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+        "propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+        "propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+        "routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+        "routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+        "routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+        "routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__077_",
+      "restored": [
+        "_077_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__077_",
+        "returncode": 0,
+        "elapsed_s": 30.98399999999674
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1005.9648,
+      "area_saved": 46.294399999999996,
+      "area_saved_pct": 4.399524375743162,
+      "original_saving_retained_pct": 100.0,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.847116377045154,
+          "hold_ns": 0.45531159398315424,
+          "tns_ns": -13.553713799
+        },
+        "propagated": {
+          "setup_ns": -0.858430437844504,
+          "hold_ns": 0.46294842959149207,
+          "tns_ns": -13.72791481
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.009971634629124537,
+        "hold_ns": -0.0006884215419944439,
+        "tns_ns": -0.30537223800000035
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.009970634629124538,
+        "hold_ns": 0.0006874215419944439,
+        "tns_ns": 0.3053712380000004
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "c390fbc4bb6c8e45ed8e2393d12ef4b14acb8694f8fd51fa11210baf48b02dca",
+        "flow.tcl": "631c982497a8f228c4ad01fcf14461eb8cac7e96099019eb799d5e54be377875",
+        "ideal.log": "80b7ad677c14d41b02be623388ca182df527bf0bc23b1b1f76e9a5e69bfafbba",
+        "ideal.tcl": "b52014e9c5445b236fc3b368f4b335776afabf5738e6f5bd254814569be20e34",
+        "manifest.json": "66d8531fa1d034c6c7f9ea43e9be3e70d8f2ad5a1eaeacf7b4bd74d6af19fa1d",
+        "propagated.log": "a5e5a7e6fdf39cd4628f82ff66a72709078ce300a0e5420ffa510eaa62541859",
+        "propagated.tcl": "7cf5346faa1afb6079e4310f00bc1363d7799ab6e6730b91dfd0bfb9d776ccd9",
+        "routed.def": "4c4a1c0b8ff629443104c0f6e3063db86d42c6de8ec82e92d6b1c07be6c77de6",
+        "routed.odb": "dfa06046fcb0029ea117bacb5a051b79739dff6ac2a13b399d8c04ad706c35cd",
+        "routed.spef": "360c5854108bee30d97c6ed75b6d4b6c226df68f7e9a88775f258331de3db698",
+        "routed.v": "f0a390804e9ae67823d32183a065221bccc6539cbedb5005975474b56f677809"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__079_",
+      "restored": [
+        "_079_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__079_",
+        "returncode": 0,
+        "elapsed_s": 30.234000000004016
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1009.7184,
+      "area_saved": 42.54079999999999,
+      "area_saved_pct": 4.042806183115339,
+      "original_saving_retained_pct": 91.89189189189187,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8471382484387391,
+          "hold_ns": 0.4561025168658972,
+          "tns_ns": -13.556770325
+        },
+        "propagated": {
+          "setup_ns": -0.8583369570658306,
+          "hold_ns": 0.4637460415679584,
+          "tns_ns": -13.730895042
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.009878153850451099,
+        "hold_ns": 0.00010919043447188415,
+        "tns_ns": -0.3083524700000009
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0098771538504511,
+        "hold_ns": 0.0,
+        "tns_ns": 0.3083514700000009
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "7477a2a912a53b29698892440e494357ef5d957114653b70497439b1a020375e",
+        "flow.tcl": "c9a1cebfabc37f460c8cc4664b783e28edd49fb7ca00ae02a0a3daaa87775664",
+        "ideal.log": "19bab0c766038af7e21a92c53413fbb7a6efca1e2224ee2bfba622061c362c96",
+        "ideal.tcl": "fb00f1396a04d222993a8b1112a1b7127c4300ad508301b6e3db8f2df866bf1b",
+        "manifest.json": "d798f2b147e8a0bcff3f57ce0d3abf15da7d4453555f5a494093320101f66413",
+        "propagated.log": "a15ad515e799e7c59c96f3dc66b0b3ad9e4d7b4c248f2f693423544c65d0c261",
+        "propagated.tcl": "8201d6ace115ee081d9d2f98e340bb9706390fa53aea9d15b3685e901ba404fd",
+        "routed.def": "4ccc22c5158c9fb4080b330cc2fd7999e32f018e16001f8ed11369ce525dfd69",
+        "routed.odb": "4aef611938e7944b88ebe0873cfc83f3c7fac8285be295acbeb075d3c3ef6396",
+        "routed.spef": "20a28b5bb44ea23debeaed60288850a86f253c5dc616872e1afc1153924eec75",
+        "routed.v": "7d8cfc43677e296aefae248ec8aecf2f218b6132e7add6749abdb89e6f2cd976"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__081_",
+      "restored": [
+        "_081_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__081_",
+        "returncode": 0,
+        "elapsed_s": 30.906999999999243
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1005.9648,
+      "area_saved": 46.294399999999996,
+      "area_saved_pct": 4.399524375743162,
+      "original_saving_retained_pct": 100.0,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.847116377045154,
+          "hold_ns": 0.45542278281907045,
+          "tns_ns": -13.573760986
+        },
+        "propagated": {
+          "setup_ns": -0.8584307154002602,
+          "hold_ns": 0.4630573147146322,
+          "tns_ns": -13.74806881
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.009971912184880694,
+        "hold_ns": -0.0005795364188543317,
+        "tns_ns": -0.32552623800000013
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.009970912184880694,
+        "hold_ns": 0.0005785364188543317,
+        "tns_ns": 0.32552523800000016
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "585172196b005c5af226e99a7ffbbbb73c2b6e0b765fc69506986d64ed68b0c4",
+        "flow.tcl": "4173fdda8491e8032f3db67d66ecc7962911bdc09f170ad4ae138d5d49c25493",
+        "ideal.log": "b6fa0d121fad661659f917e5716d16048c1999b7dbf5c7db4e63a9158ddc3c95",
+        "ideal.tcl": "dfcd4c579a84f3509156680c9a9fec7c57b604d420545cc676a7187445a03b33",
+        "manifest.json": "a29f1a8afdf02e7398a91adce670acea6bcd897b21660be906bcc1dc6565565b",
+        "propagated.log": "233d5f7ac972be12fe317e476d4e146248a1bfa41dac4d091d75eb41081f7109",
+        "propagated.tcl": "8b458c2346a6b976f108f668fd819a6a1ed55dddad9f8ba6f456cbd9caa92bd6",
+        "routed.def": "2f7245f774126f3ff0dcc78286cd2d6286a53495ba54acaffae442f673d5fe96",
+        "routed.odb": "33f6a61aead815d85fb06dab1cf1c51dbfb4a93f77faf0ad3aaec0cdf8d98b0a",
+        "routed.spef": "ec2e9b47940a8b241111a2b482abda02711e26040e5e35d8dd33f9b8a9ba1b0e",
+        "routed.v": "c9bd0396bdf464cec07c33cf1841e4b6f94d5fda34b8c5ac26b6e28087123983"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__093_",
+      "restored": [
+        "_093_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__093_",
+        "returncode": 0,
+        "elapsed_s": 29.25
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1010.9696,
+      "area_saved": 41.28959999999995,
+      "area_saved_pct": 3.92390011890606,
+      "original_saving_retained_pct": 89.1891891891891,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8474028145855073,
+          "hold_ns": 0.4559841948470478,
+          "tns_ns": -13.55081749
+        },
+        "propagated": {
+          "setup_ns": -0.8587190958309066,
+          "hold_ns": 0.46361825489782404,
+          "tns_ns": -13.725327492
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.010260292615527078,
+        "hold_ns": -1.8596235662471372e-05,
+        "tns_ns": -0.30278492000000057
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.010259292615527079,
+        "hold_ns": 1.759623566247137e-05,
+        "tns_ns": 0.3027839200000006
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "63e2463582d41df1408284898ab8b42ce4de442627b9e4ba3e16a3ebbb4e48f4",
+        "flow.tcl": "0b4175297ded946cabccc513e49b377344583193857e85e8b31e10b517a445fe",
+        "ideal.log": "5d2fb781c1b8a497e3852f5b2059df0fd33f748241238c5ffa11f58e8740f381",
+        "ideal.tcl": "6f57251d8089359041e2fa53d287dfd6bb4e70781f33e457e0f8298c7634b640",
+        "manifest.json": "f1fc7a60ddbd47c01238f10fab2562adc08c4787e3f036bff21c432990b64a95",
+        "propagated.log": "ae8f8730aaee756a11b1efe91f635e992399be0de25935e8d4eae2bf217d661e",
+        "propagated.tcl": "8935b6aef60ea80236cb0aa6de7f3702652d2f015fe28bf2c0ad18fde81f8c43",
+        "routed.def": "ac0c0ac7713c744830cd2e9f20c2fb5cc25c79f21d3a2c88e1f806e1c1fa98eb",
+        "routed.odb": "57149d98a342daa6ff17f356262f4cfe40052fdcd33cacbf65447256e51240ef",
+        "routed.spef": "15d5e8ff5049ef2865c34a5ca3e48348666f68820858ec9db57d1da7445d7cda",
+        "routed.v": "655dd23a4897baea08e741721161d60a211b32d192b4e32b52d7f0fdc7139ffa"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__096_",
+      "restored": [
+        "_096_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__096_",
+        "returncode": 0,
+        "elapsed_s": 30.014999999999418
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1012.2208,
+      "area_saved": 40.03839999999991,
+      "area_saved_pct": 3.804994054696781,
+      "original_saving_retained_pct": 86.4864864864863,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8478878155138148,
+          "hold_ns": 0.4559842781137746,
+          "tns_ns": -13.538377762
+        },
+        "propagated": {
+          "setup_ns": -0.8595092415575323,
+          "hold_ns": 0.4633889383320877,
+          "tns_ns": -13.718025208
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.011050438342152802,
+        "hold_ns": -0.00024791280139879746,
+        "tns_ns": -0.2954826360000009
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.011049438342152803,
+        "hold_ns": 0.00024691280139879743,
+        "tns_ns": 0.29548163600000094
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "ebf7587556b4f08ca5cbff816ae955d017f9128f2846cf74426f4e1e2d120c75",
+        "flow.tcl": "67e97bf6f15d70c7ee3833f5591cdf496380711457b5c8e5c660ea9e632e1f75",
+        "ideal.log": "ba644714a2f5a0957894a54fc4c1a9a8e0f22e0eb1e903cc252d06e02e706390",
+        "ideal.tcl": "a54f899d6754c35283e1f17efef53f9b7d412bec05570d810ff18b283c2101aa",
+        "manifest.json": "d283588f4b1aebae9dc8c7f1de912036584180ac27831dc1a492f24735ecacc7",
+        "propagated.log": "61500b8e9ba87181605609f9b0c9c1e60784bc485b02b3858be670754f495173",
+        "propagated.tcl": "697c50757965c3af46b7b4c1ab90a3d6db7a2f9dc4e20cd1229a3128b6bb28a5",
+        "routed.def": "5e328151527f7e680938b3e9674e5f4a0b3bc1e4a4d7e3f1f63158047ac130dc",
+        "routed.odb": "b19559ccfd3440d3ac72843139237f72f36e18abc7780df67488302f9c121f69",
+        "routed.spef": "96fb402650e7d3ca1ffa9e47e08e3bc9e28cda583a5c6cce1d683eb793179dd7",
+        "routed.v": "f14eedf9cf5163b6bd785042e5231aa917a2d626943683f8f33cc4447d2c3381"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__098_",
+      "restored": [
+        "_098_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__098_",
+        "returncode": 0,
+        "elapsed_s": 28.68800000000192
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1010.9696,
+      "area_saved": 41.28959999999995,
+      "area_saved_pct": 3.92390011890606,
+      "original_saving_retained_pct": 89.1891891891891,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8425395936484392,
+          "hold_ns": 0.4559841948470478,
+          "tns_ns": -13.469804764
+        },
+        "propagated": {
+          "setup_ns": -0.8485028235583059,
+          "hold_ns": 0.4636183104089753,
+          "tns_ns": -13.643872261
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -4.402034292638746e-05,
+        "hold_ns": -1.8540724511240114e-05,
+        "tns_ns": -0.22132968900000094
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 4.302034292638746e-05,
+        "hold_ns": 1.7540724511240114e-05,
+        "tns_ns": 0.22132868900000094
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "d4c38e66e309069a7502efbf6d2ae0e130124d2257812dd0cfff15d012d985b2",
+        "flow.tcl": "0eb3b68e58506d811c4cf5dd93a7009d849740456c6cfbe3e692abe8c9e13d7d",
+        "ideal.log": "2593b8552587ef96710963b301d58106eedd2676a24ac836f5476c11cfc8aac4",
+        "ideal.tcl": "8600c9294a1b8a5ba592ec73a6b9702c72b2edbd45cf4e44717a7da0a820cd49",
+        "manifest.json": "e1bec938497b8ce5c99a7512204a593f1fc8180645d87b6baf439c9e0abd041d",
+        "propagated.log": "b75c0c6e7f98650a953a4fa46cbab11cacb33e05d1fb9e89cc2d9accc22409ca",
+        "propagated.tcl": "7d2e3388596f371d055130406ff6a7465ba7f0bab8d7dd277d27e0e308a4c69b",
+        "routed.def": "6c62a3e496ccc577bec1abdec1314d729103fd71254f5197528eb59c3146f132",
+        "routed.odb": "1f6ddc6a73b81b04f91002f8110b884a1429b55f9c686ce4d89756b30332d5a9",
+        "routed.spef": "a7c1502a9dc40aeb68b49b6a53427117a1b270dda573211be96ba69851fcfebb",
+        "routed.v": "8cc60f322bb59108a17aac7d7100334607b296ce33f0beef44d1e3f614745fdf"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__102_",
+      "restored": [
+        "_102_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__102_",
+        "returncode": 0,
+        "elapsed_s": 27.75
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1008.4672,
+      "area_saved": 43.791999999999916,
+      "area_saved_pct": 4.161712247324606,
+      "original_saving_retained_pct": 94.59459459459441,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.847116377045154,
+          "hold_ns": 0.4531658381878856,
+          "tns_ns": -13.55408287
+        },
+        "propagated": {
+          "setup_ns": -0.8587304201057577,
+          "hold_ns": 0.4608259329685893,
+          "tns_ns": -13.729708672
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.010271616890378255,
+        "hold_ns": -0.0028109181648972026,
+        "tns_ns": -0.3071660999999999
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.010270616890378255,
+        "hold_ns": 0.0028099181648972025,
+        "tns_ns": 0.3071650999999999
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "94c367c905ab5fd30806b98fbdd19b0bf7138888ccb933d853c71740ac066ddc",
+        "flow.tcl": "4bf8fd0d9af987623bf5dfc168853e5f03897db9b3b55e72f900b7d7af3019a1",
+        "ideal.log": "77b5c08af39f7cd2901efee4e16f7ae0d8d911a568e4090a1370a19ba74975aa",
+        "ideal.tcl": "d46c7a0ee8951587fa32cd27114ad99565fa443915108590ddfc515193f3973d",
+        "manifest.json": "0705725ae4d3ae623cfeddc86a5e1a8df637437d7b569e4166a853e509838456",
+        "propagated.log": "570a61fac94b315fc9ff28ca7967d32e0fe3f2983e9918ccce1a62136a05bb26",
+        "propagated.tcl": "16ac443aebab5491d184fd330787a54c5a9bb83f2f33290cad6500bcd741f8de",
+        "routed.def": "d6e8086cd3b2c02875e4cca538a1babfd0f76ebc523e72ed45a5b59a03595d11",
+        "routed.odb": "a10d9b2b02cd5bfeb40e2b5d568c52deae1a49c6336290dcc353cae19b306908",
+        "routed.spef": "57fb5feba43cebbaf9d725efeb7425ba5d33825a57a5f018bee8c2eede50471d",
+        "routed.v": "bb112e4c4e2694e4740b60d3d555028e9d76cc17076fa408db933cd4a9f4c78e"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__111_",
+      "restored": [
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__111_",
+        "returncode": 0,
+        "elapsed_s": 27.67199999999866
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1013.472,
+      "area_saved": 38.787199999999984,
+      "area_saved_pct": 3.686087990487513,
+      "original_saving_retained_pct": 83.78378378378376,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8456729205796876,
+          "hold_ns": 0.4562680511188688,
+          "tns_ns": -13.529666901
+        },
+        "propagated": {
+          "setup_ns": -0.8512928140191889,
+          "hold_ns": 0.4637524808615012,
+          "tns_ns": -13.696594238
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.002834010803809406,
+        "hold_ns": 0.00011562972801471005,
+        "tns_ns": -0.2740516660000001
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0028330108038094057,
+        "hold_ns": 0.0,
+        "tns_ns": 0.2740506660000001
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "ac76cc589d3ee2fd631aac044a72b4a3c1da8cff304e44f9a3625b6b92e63464",
+        "flow.tcl": "18f42860d12de79d673ac383d5f685dae701fc71eb55aed5c3a0dbf25bbeaec9",
+        "ideal.log": "26b8ada83229c023e095413275c2e5121ff296e5b4aedcda0874654f6ed25d8c",
+        "ideal.tcl": "f173f9c46e6e694c759de055aadefc862340cd0fdfd2e09108155c243ba74b2a",
+        "manifest.json": "29ffc7777dc3da44d135d30ef05af6b3f4d68758779b54adaeb684f624fea73e",
+        "propagated.log": "a4d12968f4154e48c7e6af6a59208a2d69ca4066be4b9fbdf0fbd30efcfd1c4c",
+        "propagated.tcl": "f5709f629c3ddcc6f2d8cc54b6975abd251f4dbe36f3cffd91f4f50f9e0cde44",
+        "routed.def": "083a1079fadacb0090c5fe8d136fd70b957738ae2f23160722186a7ab7af9fe7",
+        "routed.odb": "67504fb95f31bba320fabf7ee31f579d14aeb4690d33e19ded33de19c1ed231d",
+        "routed.spef": "ae523391e26dfcddd28cfbab1132aa1b06314af1eecb8b0cb5de6a96d7b9710f",
+        "routed.v": "ec00e6bdad40a08fb0d292fac2d785fdd843261729dd012df30c131cab5b61c3"
+      }
+    },
+    {
+      "stage": "A",
+      "arm": "RESTORE__113_",
+      "restored": [
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "RESTORE__113_",
+        "returncode": 0,
+        "elapsed_s": 27.81199999999808
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1013.472,
+      "area_saved": 38.787199999999984,
+      "area_saved_pct": 3.686087990487513,
+      "original_saving_retained_pct": 83.78378378378376,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8468331036404209,
+          "hold_ns": 0.45598413933589654,
+          "tns_ns": -13.549910545
+        },
+        "propagated": {
+          "setup_ns": -0.8584305488668065,
+          "hold_ns": 0.46338544112956015,
+          "tns_ns": -13.72881031
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.009971745651427,
+        "hold_ns": -0.0002514100039263667,
+        "tns_ns": -0.30626773800000073
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.009970745651427,
+        "hold_ns": 0.0002504100039263667,
+        "tns_ns": 0.30626673800000076
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "a7ea143eca9e1d7560e51bad84aa0b3ecca85c77d28adf76c185075d7b6cdc5c",
+        "flow.tcl": "14cda6151da3fa7d7dcfe6533c0d2c4d196307eaac4991d7dfd917cf8196d22b",
+        "ideal.log": "65441c6e0a2ef9566c44d44f72ec2d4ff98c10294f808891a9bdddb1459ea42f",
+        "ideal.tcl": "57aff67dee73270561f4f21af1782d44bba4f18445717f9ff194d8e8b8e71ace",
+        "manifest.json": "ea7ea165b56818c3554a40ea35ac10395a6e03217f9d957ea6c551a8950300b3",
+        "propagated.log": "0d5a2790f037b0abb8578f59e0f3e4ec7460c3b16341051eb439d730c320809f",
+        "propagated.tcl": "886d14a7e09aeec4bdd52eb6f0bfdc01ce02b68b4d67bec6fa41916917c24b83",
+        "routed.def": "60f3cfa779bf4680e265fc56c627d859ea0948764dd07bc9741bd6253582c1d0",
+        "routed.odb": "8b3459c1bdae90dd6b086a1b4d3ae321edebbeeb8e804ebf7d058680277c5973",
+        "routed.spef": "75992a9590f2141210bf72484dd25108a53837e085de9a76d644b9815ac0c715",
+        "routed.v": "b9b093a701b6c15e5be6e7c29c40c812c86c839dd5dad6bfae49d43fa6b015c4"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_074_098",
+      "restored": [
+        "_074_",
+        "_098_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_074_098",
+        "restored": [
+          "_074_",
+          "_098_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 37.375
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1010.9696,
+      "area_saved": 41.28959999999995,
+      "area_saved_pct": 3.92390011890606,
+      "original_saving_retained_pct": 89.1891891891891,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8422510466843391,
+          "hold_ns": 0.4595963054576657,
+          "tns_ns": -13.418789864
+        },
+        "propagated": {
+          "setup_ns": -0.8493337699810866,
+          "hold_ns": 0.46721415625228246,
+          "tns_ns": -13.589599609
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0008749667657070859,
+        "hold_ns": 0.003577305118795948,
+        "tns_ns": -0.16705703700000107
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0008739667657070858,
+        "hold_ns": 0.0,
+        "tns_ns": 0.16705603700000107
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "60336b922c16fbe86d49f6e695e89c3dfc819247860ff9b3ca1dba62850faa82",
+        "flow.tcl": "be076d2a029d40c826d9540e81aa6419fcb80887289f2f8b586d7f2dfc748bbb",
+        "ideal.log": "294c019b0b301bb5cbe508a3e8ce39f230af31b08f018fa8721b7f799825eb35",
+        "ideal.tcl": "af7366bc9385e407549b06d3f561cc1212267abe5bb66f9800fc9d7db47ac603",
+        "manifest.json": "6cb6fe1f4e01a94f09fb78f5587b808993ea172b361bec15748cfc94f7fc4ba2",
+        "propagated.log": "c1d907aff5d03dcfc7de6afcc9bf056282bdebdc6b1ca701612ab6d5bc839c59",
+        "propagated.tcl": "6ebc6b44e29cb5a13dd88d211239f4fdaacff61f5eba65982214dd826d8dc3e0",
+        "routed.def": "0ea89ae00d037e3d7035ce759184cfccdc3fbc2bbc2c5624823a92ba0f807a76",
+        "routed.odb": "0a9e35147cbc0d769595ceaf6dee79436084f47ea15e1830025d35dfc8bcf5ac",
+        "routed.spef": "4cee88d70eaa349d3619460748647908a000c83530dedc0ca324c57a3e80bba2",
+        "routed.v": "a9f41251eb8920b5d60dcccca0c520124c70be37f93d5bf61613f5cfc05d0d97"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_098",
+      "restored": [
+        "_054_",
+        "_098_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_098",
+        "restored": [
+          "_054_",
+          "_098_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.20300000000134
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1013.472,
+      "area_saved": 38.787199999999984,
+      "area_saved_pct": 3.686087990487513,
+      "original_saving_retained_pct": 83.78378378378376,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8402774587246142,
+          "hold_ns": 0.45612941201866875,
+          "tns_ns": -13.428738594
+        },
+        "propagated": {
+          "setup_ns": -0.8477937241124778,
+          "hold_ns": 0.46383105689606907,
+          "tns_ns": -13.600287437
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0006650791029017,
+        "hold_ns": 0.0001942057625825555,
+        "tns_ns": -0.17774486500000108
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.17774386500000108
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "05c1b7a83d3f86e6fdd1ef64883666e813631b620ffb6169c921b0d37ab66517",
+        "flow.tcl": "295e2c1ef9c1ab0ccc504a26738bb4d9bfcee2f6928b9267849c9431e40b8093",
+        "ideal.log": "58566a4b3900eb1fe93f1e3afb8e8f844e52dc672f0a96185616b519e1382565",
+        "ideal.tcl": "8833b9a9f70dc26f5a52a6ef0d6718ce65dc9456ef82abcd9e155593749ffa4f",
+        "manifest.json": "a67c501f8dbbda712ddf63c086902511446c48c76c542a42554092530eb12ea0",
+        "propagated.log": "7b8a94010069d5fcd5a86ccc371b8ee6271b7dce26d12647a38fa4a81b6ac94c",
+        "propagated.tcl": "62dbb6246fb2c4e1915a07f4221b24130d56328bf258608615d3cb379f117a67",
+        "routed.def": "bea0593f353a0edac20b12589bf6251370a4df2c5497d909a6f1fdaa504ebc92",
+        "routed.odb": "86ae91974364e03874c2eb1299e762fb95b738f5468a06d6a85d7c78a1e46ee4",
+        "routed.spef": "4a8da5b0862be0e1238950bfc261f5d307603b4af3a4cf2a18d637837c235dee",
+        "routed.v": "e71fefe6b03c487ad0311c38848206aeffe2c5adbf132ebb78efbeffd1862175"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_098_111",
+      "restored": [
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_098_111",
+        "restored": [
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.06300000000192
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1018.4768,
+      "area_saved": 33.78239999999994,
+      "area_saved_pct": 3.210463733650411,
+      "original_saving_retained_pct": 72.97297297297285,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8425534159250958,
+          "hold_ns": 0.4562680511188688,
+          "tns_ns": -13.455935478
+        },
+        "propagated": {
+          "setup_ns": -0.8481935709347965,
+          "hold_ns": 0.4637524808615012,
+          "tns_ns": -13.623829842
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0002652322805829499,
+        "hold_ns": 0.00011562972801471005,
+        "tns_ns": -0.2012872699999999
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.2012862699999999
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "0757fc545ed2c5dc70bf99aab9c8b956c6212c8798ed7cd3965e5ca9d4dda103",
+        "flow.tcl": "d0bde983a5005553753a188d5fb2ce5e86d98e40fd04eeafb7221378ad3c0893",
+        "ideal.log": "53f1c305adbbefc044d40dc48048d9da77cbc37f0bbef589e0e9e4fd4bd7c264",
+        "ideal.tcl": "0c5934def4071955923f95335be3e68c3e4b0a09d918dee0e204d5f0eaaa3972",
+        "manifest.json": "c61f2b76ebf8638b5ebc6c2a5e972f979c1b481a6729d305350200f111780141",
+        "propagated.log": "1d540ca7960b395f25483dfae228165f18d61fb0a6087a1f0c2b8568ed231fb5",
+        "propagated.tcl": "86bc4aaf4090b54dc031aa2db4fe9b4beda8ca3d9382c3c26aff80b6878650d0",
+        "routed.def": "441b0c2eb041d3c23bac49004752991d14ca92d754a73c625354c382fb6648c5",
+        "routed.odb": "8a69912f5daf3751af6634b8a8b8a46eb81e55b70a6a00ba6364a270954f0026",
+        "routed.spef": "d7c55bcca35a66ed4d17b2bc100bdac0d2e4686225ad3e3072c8b0c47555eb49",
+        "routed.v": "39793e4b98683787e7ffb03ef17809e9d3b2cdf89d2e27d9b1ce12edae192a7d"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_074_098",
+      "restored": [
+        "_054_",
+        "_074_",
+        "_098_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_074_098",
+        "restored": [
+          "_054_",
+          "_074_",
+          "_098_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 26.5940000000046
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1013.472,
+      "area_saved": 38.787199999999984,
+      "area_saved_pct": 3.686087990487513,
+      "original_saving_retained_pct": 83.78378378378376,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8385223626561356,
+          "hold_ns": 0.4577858647714095,
+          "tns_ns": -13.374419212
+        },
+        "propagated": {
+          "setup_ns": -0.8467980761039939,
+          "hold_ns": 0.46535419961912794,
+          "tns_ns": -13.547679901
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0016607271113855404,
+        "hold_ns": 0.0017173484856414234,
+        "tns_ns": -0.12513732900000107
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.12513632900000107
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "1c2136c0f7f39fd98ee113b74e91d845b151a237ec938e474c1f9ba6ae8384c4",
+        "flow.tcl": "f979393de990acd845743a83fba5bbe61ff0f8c782daf5f9b5595162e2bb71f9",
+        "ideal.log": "c1ff7129742344ba2782e0b011d3df30d77f438a6edebe5bb3b95df007a49ba6",
+        "ideal.tcl": "042a35c47fedc18f29f2f84ada6993a702424a656187413c4b94f2a70d109af1",
+        "manifest.json": "62a38fa24eadd63106969885df4b2b38d272c7b6166f08729135e025d91191e9",
+        "propagated.log": "aa173794065adbebc0b21a92970494f2d6145c63b07995b303c6e96f554c797f",
+        "propagated.tcl": "584f06a572adaf78ff8a37fd18c57e6bd451ae0ed22ae47526ca7fb29c88eeb9",
+        "routed.def": "6ec2cd38fbc5091aaf0cd684cff55395ddbcb8ad7310c768c4572e905d900fed",
+        "routed.odb": "ba11fa4a0aee780dd455b99d894bac8c3c8be4bc33f135a0278c04813110a2e2",
+        "routed.spef": "8435775587ed54b8c298b6e974bcbd08deeb8f29215f119a74ad6a662624e9d9",
+        "routed.v": "bbf0bf09c047f4d2686bf4da429670333236ef58def0a6cd17e6bd0d5bb1f78b"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_074_098_111",
+      "restored": [
+        "_074_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_074_098_111",
+        "restored": [
+          "_074_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.18699999999808
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1018.4768,
+      "area_saved": 33.78239999999994,
+      "area_saved_pct": 3.210463733650411,
+      "original_saving_retained_pct": 72.97297297297285,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.842567626779811,
+          "hold_ns": 0.456190196729267,
+          "tns_ns": -13.407043457
+        },
+        "propagated": {
+          "setup_ns": -0.8488673652884415,
+          "hold_ns": 0.4636794281864809,
+          "tns_ns": -13.579455376
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0004085620730620576,
+        "hold_ns": 4.257705299437475e-05,
+        "tns_ns": -0.15691280400000096
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0004075620730620576,
+        "hold_ns": 0.0,
+        "tns_ns": 0.15691180400000096
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "b9a883c67c2a15daaf657d9b67085e199e68bd9a02973067d36c44ea73d63c68",
+        "flow.tcl": "bec30ea95ab5e386bdc084785ec20f1f64a2fdc37db294eb4383c5d68fa7fc8e",
+        "ideal.log": "d9cfe851526084a7989f19c66b2deabbeb300fd8a59bae69a08e4dffb1018508",
+        "ideal.tcl": "47182ec5d50f563477846a2b30c6d2331e30b71b1a0ab2d0c4e3fd1c83e315ba",
+        "manifest.json": "f92feb8bf8f9cd7997cc87821aa47b63c51b90d411e59bf4b36f389ebe19243f",
+        "propagated.log": "04f538530990d2c5c1fd48a61b82a2ee8fd382e07494bd4563be128ae42be6ed",
+        "propagated.tcl": "05632d77cdf397df9b9f2c21a486f2e2040163dc601a9e244f661d57d26025af",
+        "routed.def": "db78eac501a96327ad2b1d5fd12fbb6bfc764b1a023b3557f22999c2d66564bb",
+        "routed.odb": "a9cfccded6195c34ce9c0161c3187494a7a85ef5d96c892489f15b5ba2687660",
+        "routed.spef": "191bc84ee630cf683bb38b85790a793b78be1bc2f97be22e73f0f3a72a718ab3",
+        "routed.v": "133eaceae7d37b00b64b7dec40cff5df8e1a47e4564315f8d112c2109c9c230e"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_074_096_098",
+      "restored": [
+        "_074_",
+        "_096_",
+        "_098_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_074_096_098",
+        "restored": [
+          "_074_",
+          "_096_",
+          "_098_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 26.3440000000046
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1017.2256,
+      "area_saved": 35.03359999999998,
+      "area_saved_pct": 3.329369797859689,
+      "original_saving_retained_pct": 75.67567567567563,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8480248725462047,
+          "hold_ns": 0.45777820423253957,
+          "tns_ns": -13.437141418
+        },
+        "propagated": {
+          "setup_ns": -0.8554735253518686,
+          "hold_ns": 0.4654583385388378,
+          "tns_ns": -13.599113464
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.007014722136489127,
+        "hold_ns": 0.001821487405351263,
+        "tns_ns": -0.17657089200000087
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0070137221364891264,
+        "hold_ns": 0.0,
+        "tns_ns": 0.17656989200000087
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "eb7c24b3e00ac9a52fb759142877a031245c34e5a584e93d2c11993f8bc6ed69",
+        "flow.tcl": "34c2756ff9c63cf53283d86200bb7f6f1bc3a8922a6eb369577ee0ec8bbc6a9a",
+        "ideal.log": "44066c09818391fc0208fe43f614b029633aec650f0140d0befb5a926e07a013",
+        "ideal.tcl": "d6a053d9d94d330b3c44f7cefc577717eb377e8bd4e75e80ebb3a50c4c42df65",
+        "manifest.json": "413b132bd07ec986eeae5eb738363b6c1847e878ac12c04d92bd85de91c0c541",
+        "propagated.log": "138fdeca76d821a51edb831ebe4d2873d3ea1db31535cef1a1c801d821f4c2fb",
+        "propagated.tcl": "28fe724f64821677c88ce8289293e80d235e5c707322cc39d2d1db5ff5973421",
+        "routed.def": "f89c18b98cfb829af806ba03d4c7b19843163dc8a9777c9d8d57a84a6d275bcb",
+        "routed.odb": "a6b9ccc44905aa5473ba5d3dc5f1dc8a49806a9891127b0a2ee5e791dc9ec193",
+        "routed.spef": "4d39970992377f019f2732c13c81f431cae55ebc57eb020bb1fbb17d48ec39d9",
+        "routed.v": "199559d9415e192c68d59fccf692362befadeeed9004e96ea3db8f6570e38ae1"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_074_098_111",
+      "restored": [
+        "_054_",
+        "_074_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_074_098_111",
+        "restored": [
+          "_054_",
+          "_074_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.95300000000134
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1020.9792,
+      "area_saved": 31.279999999999973,
+      "area_saved_pct": 2.9726516052318646,
+      "original_saving_retained_pct": 67.56756756756751,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8383553851132319,
+          "hold_ns": 0.45607365106725695,
+          "tns_ns": -13.345164299
+        },
+        "propagated": {
+          "setup_ns": -0.8463485468013232,
+          "hold_ns": 0.4634892469823626,
+          "tns_ns": -13.511292458
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0021102564140562663,
+        "hold_ns": -0.00014760415112391456,
+        "tns_ns": -0.08874988600000044
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.00014660415112391456,
+        "tns_ns": 0.08874888600000044
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "76a27500aa7c85d42f91da862a21b56d8de1812ff5c78de8378e26e3f3802581",
+        "flow.tcl": "5830a1fcc9c13f7fe2280defd6ba173bae25455a85b29980de44db6dd2d0de40",
+        "ideal.log": "e453ed62b4245058e83d2ea2e7436e0968e625acbcada95643c41f550470c57f",
+        "ideal.tcl": "bdcaa5da91ddbf24fd69c0204fc5e338636a9c75c5a6110d1545fcb6ef2b61e8",
+        "manifest.json": "544eef9921d46df78e0453559be4d39c840d6d5ee376ffb8c4b4589ec3662152",
+        "propagated.log": "9038572e7b8607315ceafc276b850d71deefae346c96f4c671802464e7412209",
+        "propagated.tcl": "e5ca2ebe599132535456dacaaf3e17730cabbd71a4df2b9d5ad096c233e51052",
+        "routed.def": "3efe95114624095bbf01600c9310e10916a977d365993600f5282e5045ea8b23",
+        "routed.odb": "b68a31d4771001fa953fa866762b849cfcbde846f6b2efaa94dd21148ad0a299",
+        "routed.spef": "b55da4425f5cf084e3e8db369113e380a1f84021ee20865230ad0552a3cd38ec",
+        "routed.v": "fbc4533f0a1f94d5818fbaffd0628ab04b15b5d948254535deb173adddff0946"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_074_096_098",
+      "restored": [
+        "_054_",
+        "_074_",
+        "_096_",
+        "_098_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_074_096_098",
+        "restored": [
+          "_054_",
+          "_074_",
+          "_096_",
+          "_098_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.0
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1019.728,
+      "area_saved": 32.53120000000001,
+      "area_saved_pct": 3.091557669441143,
+      "original_saving_retained_pct": 70.2702702702703,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8442806453956564,
+          "hold_ns": 0.45470513465595275,
+          "tns_ns": -13.400975227
+        },
+        "propagated": {
+          "setup_ns": -0.855687021239504,
+          "hold_ns": 0.46240267170816196,
+          "tns_ns": -13.563033104
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.007228218024124544,
+        "hold_ns": -0.0012341794253245553,
+        "tns_ns": -0.14049053200000117
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.007227218024124544,
+        "hold_ns": 0.0012331794253245554,
+        "tns_ns": 0.14048953200000117
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "b945af829ac598394a73c8072a4ea9589f1cdd1c7cf6d1363457638c04c170d3",
+        "flow.tcl": "f284771fc2d75b4f7a599d8078e1289d5696186ae84d0f79c274520dc27c84f4",
+        "ideal.log": "ca366e9977c8550f85bae6c7a0f2d9f8bb06dac87edcef8915f44c717c7784fd",
+        "ideal.tcl": "5417b8fc3e9d42cdcfbf75f772c9d678e4252b698d9f04a982b5582d013ea585",
+        "manifest.json": "c8d62fd0d807b5eed34ef92b783cb009de486f9ca8d8f1b52641a7345b9a76ea",
+        "propagated.log": "c4fc253be2db169e1dc35465fec44f06c40aae4f4078d6ec332fc8033782270e",
+        "propagated.tcl": "93c35f4b7e718bfd9984e0c3efe2dee41732e1cfc576892747e4b8bd22b53754",
+        "routed.def": "fc7e69e7f44328f4d554e21c6e05107a11b061472d503c86e0cd315cb60aec29",
+        "routed.odb": "4b59def01025211629d602f1486be3ea28305cecc6144d5e63862bacc7da3316",
+        "routed.spef": "a58b969d860c46cc480016003c438aae567c9019684c22b315744b366e72df9c",
+        "routed.v": "8efc1662c16393d2440f3dab992bd5183d40eee5960c3ceddc5cdfcf1bc62a07"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_074_096_098_111",
+      "restored": [
+        "_074_",
+        "_096_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_074_096_098_111",
+        "restored": [
+          "_074_",
+          "_096_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.125
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1024.7328,
+      "area_saved": 27.526399999999967,
+      "area_saved_pct": 2.6159334126040394,
+      "original_saving_retained_pct": 59.459459459459396,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8599548295684656,
+          "hold_ns": 0.4577782874992664,
+          "tns_ns": -13.439624786
+        },
+        "propagated": {
+          "setup_ns": -0.8641025117661627,
+          "hold_ns": 0.46533393804892853,
+          "tns_ns": -13.606880188
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.01564370855078323,
+        "hold_ns": 0.0016970869154420143,
+        "tns_ns": -0.18433761600000054
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.01564270855078323,
+        "hold_ns": 0.0,
+        "tns_ns": 0.18433661600000054
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "6a0a4dd4af388b6d71e3b2f1580857bd3b54607abc4bd7c2505c11fe9e25c9fa",
+        "flow.tcl": "af5a07b0bacfe1ad5c5eb677f61fcd0185736b3fe41dd5d7e196a66b4d113ee9",
+        "ideal.log": "1bd1fc505c6dca7f6ed18d358fdef58833932533240863755b0faead253b9dd1",
+        "ideal.tcl": "bd7c2235b41708a97dd053b82963445277b9cc0636007f25b512c5716af3cbed",
+        "manifest.json": "afb55aaa56d9730be3d63f021a4834442b4800b40aa6da1e80c05702b6c8f44c",
+        "propagated.log": "71ec48ef1da998189e54d70e37f70295addab0f08b66f610880977aa550ed620",
+        "propagated.tcl": "f42502ca130287a01d73f7c5974547f785ed150e9aab00d04e7546168d91bb48",
+        "routed.def": "36bdde6fe616de9c418f9fe5150378ae0bf1ed873f6894e8e12181588196909e",
+        "routed.odb": "2979558a8a13ec8a7124f3f995b6dec3c85e8b52ece2703f812f2fdba29abfa8",
+        "routed.spef": "09bec66f743a9ce9097856271081111e9b05d82c6dc74f1147b99f9faa69a5ad",
+        "routed.v": "fac3ad4b7603f0c4eca4320328917229ca96121e6727eb80dcb0ab1bb7240880"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_074_096_098_111",
+      "restored": [
+        "_054_",
+        "_074_",
+        "_096_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_074_096_098_111",
+        "restored": [
+          "_054_",
+          "_074_",
+          "_096_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 29.23399999999674
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1027.2352,
+      "area_saved": 25.023999999999887,
+      "area_saved_pct": 2.378121284185483,
+      "original_saving_retained_pct": 54.054054054053815,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8422842423527754,
+          "hold_ns": 0.45470510690037713,
+          "tns_ns": -13.371692657
+        },
+        "propagated": {
+          "setup_ns": -0.8506756410397998,
+          "hold_ns": 0.46212222937214165,
+          "tns_ns": -13.553248405
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0022168378244202813,
+        "hold_ns": -0.0015146217613448698,
+        "tns_ns": -0.13070583300000038
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.002215837824420281,
+        "hold_ns": 0.00151362176134487,
+        "tns_ns": 0.13070483300000038
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "cb8a9ae8d8afd9820c1fc4e8aaa5f8acc8340b84cdb52c3e880678bfa9201bb4",
+        "flow.tcl": "290ee2e1a836bdf09b7918540ef04f6f4f566d9228cf39aff13c4f9d60ebe37c",
+        "ideal.log": "0f71f4fd8ea509dadcfdb56f409e37dc0f82d4c09267dfb30a983a3253e1306f",
+        "ideal.tcl": "545ac2780aabf8fb1382fb731dcc13ec05d16c08323d781fe25b6c66bfc63c34",
+        "manifest.json": "f638a30192f318381269e47506c4d41214ea4c37ab06a22835390b6d7166853e",
+        "propagated.log": "e549cda067647b88b4dca542e04f04f5ddba961e6189886bb816de538ac11092",
+        "propagated.tcl": "3962e0f5620b767a930d3f9b0809636d26f8ada470c526f25a0ece2cb006decf",
+        "routed.def": "0bba8f11da0f1f65bf08f392826eb819ed01e00db8ab1f58f4a6263a2b2e04e4",
+        "routed.odb": "b592240d505b39225c5890b9028cdda93cd06bc761bd2e62711ff632c608c563",
+        "routed.spef": "f95c96e7a959b70c2c3959ec8a8199b0c3657369e4dcc38302fe163d3579bd1b",
+        "routed.v": "eba2cdf535d45082178224d157f0fbca17c7779ca4884d3540ce41a463c7c378"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_074_093_098_111",
+      "restored": [
+        "_054_",
+        "_074_",
+        "_093_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_074_093_098_111",
+        "restored": [
+          "_054_",
+          "_074_",
+          "_093_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.95300000000134
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1025.984,
+      "area_saved": 26.27520000000004,
+      "area_saved_pct": 2.497027348394772,
+      "original_saving_retained_pct": 56.75675675675686,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8387315286739749,
+          "hold_ns": 0.45607365106725695,
+          "tns_ns": -13.329034805
+        },
+        "propagated": {
+          "setup_ns": -0.8467428425085188,
+          "hold_ns": 0.46348930249351383,
+          "tns_ns": -13.500471115
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.001715960706860642,
+        "hold_ns": -0.0001475486399726833,
+        "tns_ns": -0.07792854300000052
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0001465486399726833,
+        "tns_ns": 0.07792754300000052
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "3eeab36645ae965bcbca20678fb7211bbacad9751d19759a3bf3578a870d815a",
+        "flow.tcl": "b3f8179cc98076419230aac2d400c0c8264a42d010297bc5e788b7c9982d4da8",
+        "ideal.log": "ee371dde8962f5c157d220dccd8699b129709659b121729f3679adb00a3bd893",
+        "ideal.tcl": "550e8ef441268c2163a10a1ddb6a8847b13b17bc0b09dbd28ff4bca972ed72e7",
+        "manifest.json": "12354ffeb6f8369526dab041443d938ce1d24e330c92c7f8b7d605f59144cdf8",
+        "propagated.log": "8a5294827b2c7cacc154e2d834799da4820a3b05d280fe9b4cdebbf4b4c20f43",
+        "propagated.tcl": "7f3ed1ba0a384e73323afa24d24f4cde0481525eebf9025a2c78611e43464c1a",
+        "routed.def": "bf62f7ebbc461e40059ebd930bd3b0af78825aa8c1916083d123c9218427e92e",
+        "routed.odb": "f63bf2ffc4c04ec92cc0728dbaa93b9b8f12f0ce1fe7b9530c854e08528a755b",
+        "routed.spef": "7ff88d7002701c4d47d7b71f103d787b21f767e0c6977bd15acec6ac3a347641",
+        "routed.v": "0433ccf650a0481e5e17ced046875991b7b4f7859c9e7f6b9b398ae056b026ca"
+      }
+    },
+    {
+      "stage": "B",
+      "arm": "COMBO_054_055_074_098_111",
+      "restored": [
+        "_054_",
+        "_055_",
+        "_074_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "COMBO_054_055_074_098_111",
+        "restored": [
+          "_054_",
+          "_055_",
+          "_074_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 29.610000000000582
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1023.4816,
+      "area_saved": 28.777600000000007,
+      "area_saved_pct": 2.734839476813318,
+      "original_saving_retained_pct": 62.16216216216218,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.841835490206222,
+          "hold_ns": 0.4577077605816271,
+          "tns_ns": -13.392116547
+        },
+        "propagated": {
+          "setup_ns": -0.8488925118399493,
+          "hold_ns": 0.4651179441594877,
+          "tns_ns": -13.560054779
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0004337086245698174,
+        "hold_ns": 0.00148109302600119,
+        "tns_ns": -0.13751220700000033
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0004327086245698174,
+        "hold_ns": 0.0,
+        "tns_ns": 0.13751120700000033
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "cd50638a1436e16a3c3b6995b31a5c29190334bce6d97787355729fc63c295e9",
+        "flow.tcl": "2d08280dc62383d7cd760858db06b2ac1dd02b590ecadd3e5be367b5b31a4a88",
+        "ideal.log": "c47fdd5a102f0e569cbee9785d8d66eb86e0582dd6eea843505298c3d249a3a8",
+        "ideal.tcl": "aed2a86aea70ab26adc38f8d1e1fa04a24452c47ef28b4d804c33ff2fcfad9db",
+        "manifest.json": "6109bf989e7f0febf1d3049c9019f222d671bd8c44fa28c9623aedd64a02db03",
+        "propagated.log": "e2a64485702eb605c2963f237302b3c1f5164b3b830514b0fa0c73d3066ab337",
+        "propagated.tcl": "2ab2bd88c09e458575441148d397cc1be1edfd02298d1c9727007ed93351847e",
+        "routed.def": "dbc6b4227f608ee62df62c05fd467c33bf098fe79410b548c51971aff0d2a273",
+        "routed.odb": "c6a8c71d9ec77e3b58d624cf735c0346496ce2b8208ccbe52401ab2dad4d5e05",
+        "routed.spef": "21d00bb473db2bd93fbb1e046e1e995d774e9a22c241dbee7306c16c963c6206",
+        "routed.v": "1683dd8faeada8d35babebffd7cab3caa89590714b58e1154e6f600fe5ff4315"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__052_",
+      "restored": [
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__052_",
+        "restored": [
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 32.10899999999674
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1048.5056,
+      "area_saved": 3.753600000000006,
+      "area_saved_pct": 0.3567181926278246,
+      "original_saving_retained_pct": 8.108108108108121,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8413467145196307,
+          "hold_ns": 0.45409936921814165,
+          "tns_ns": -13.30872345
+        },
+        "propagated": {
+          "setup_ns": -0.8495437131550432,
+          "hold_ns": 0.4617699556064281,
+          "tns_ns": -13.472779274
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.001084909939663703,
+        "hold_ns": -0.001866895527058432,
+        "tns_ns": -0.05023670200000119
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.001083909939663703,
+        "hold_ns": 0.001865895527058432,
+        "tns_ns": 0.05023570200000119
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "c779002c59e0e62bcd409859e0ca5db0559f7c4ccafdb704f7e089f71b6580e2",
+        "flow.tcl": "c538442b598753dbe26bb79006ff9ed60f058642da61d1128bd9411a6e699266",
+        "ideal.log": "c2e9a0c1fea239058c464c546b969f028f3d2eedc70fa74e4937894027caaf42",
+        "ideal.tcl": "88f029808311eb2399dd89262bf7b45d2c4b8a6c68d42c90710377e91cce2b47",
+        "manifest.json": "a1ab04011da1fd83b2916ef8ba7555a545f918969e475ac145ef5364b4144247",
+        "propagated.log": "344fef10b7ab0623d1c52b3d3006fb923b1855d50ca7ae037348d65f85ec910e",
+        "propagated.tcl": "277eeaccbabac7c906e8f38c560912125757e5ba3afbd85983763ca2a018876f",
+        "routed.def": "0180c248cf2b41582314095e9ff0c3f4e2eb8c085ba371129d403172c63c0f4c",
+        "routed.odb": "990accf36e9d04c5d280a8e1c6f912989dd69de2198cea2c717803178e9ac510",
+        "routed.spef": "57235b661f10dba1557beaf02cb92888d1130c93812a704a7eff19e9a4369049",
+        "routed.v": "b0193576475ce9f5c384e3d5d7466167da3191e72a2aa86a5292a12edfbbd6d6"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__054_",
+      "restored": [
+        "_052_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__054_",
+        "restored": [
+          "_052_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.077999999994063
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1049.7568,
+      "area_saved": 2.5023999999998523,
+      "area_saved_pct": 0.23781212841853533,
+      "original_saving_retained_pct": 5.405405405405086,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8458876932238013,
+          "hold_ns": 0.4547716092595522,
+          "tns_ns": -13.338835716
+        },
+        "propagated": {
+          "setup_ns": -0.8518277749836045,
+          "hold_ns": 0.46242662476991825,
+          "tns_ns": -13.511631966
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0033689717682250375,
+        "hold_ns": -0.0012102263635682675,
+        "tns_ns": -0.08908939400000015
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0033679717682250374,
+        "hold_ns": 0.0012092263635682676,
+        "tns_ns": 0.08908839400000015
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "159878f6ffce87f59bd2f9640f3368501f4e9f85528a396e37e13b0905596264",
+        "flow.tcl": "798238aa8c3f2aa32ce8cde4af8ba35248aa34f8ff962a649452d61704e20d2a",
+        "ideal.log": "b518f5516a4eab8e0e7cdea893540ad503d95673dfbf8fa16711937a6ba7495c",
+        "ideal.tcl": "0b94a05c1421cd3134714b603bb2c326a81c4f475b0e7ccd33c6a0948b29b856",
+        "manifest.json": "2e5d4e993c22ade63dce26f2fa0fb5f00bfa6933de85b57c4ef868b76e9596bf",
+        "propagated.log": "fdb42568e7423d602b6e097e4dd4a9cb73dbe39decaffb05384fbc22588d18a6",
+        "propagated.tcl": "7de5c4c172a1016841d6514ec7ba68e84e7347e91c01c67b654609eaabfe78e9",
+        "routed.def": "ae5c2cb4d790b2354101caffb4eeb0cc3409ce802a6483cc4312e3776a80ff7e",
+        "routed.odb": "b3b1297c60446752a52386dd2199dbcdc5e993866c62768c58ad72cb52bac653",
+        "routed.spef": "bc390a7defa47436e61966cc70b0aa3fc6dcb7c33dc749fb272c110e4ff38208",
+        "routed.v": "a939875b4cf7052dc3bcbed3c298eb783a0f62db81e3f9f33089c9ed3944d0de"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__055_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__055_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.639999999999418
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1049.7568,
+      "area_saved": 2.5023999999998523,
+      "area_saved_pct": 0.23781212841853533,
+      "original_saving_retained_pct": 5.405405405405086,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8423018393877157,
+          "hold_ns": 0.4547723309045182,
+          "tns_ns": -13.283219337
+        },
+        "propagated": {
+          "setup_ns": -0.8503792670033761,
+          "hold_ns": 0.4624986227330652,
+          "tns_ns": -13.458104134
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0019204637879965958,
+        "hold_ns": -0.0011382284004213261,
+        "tns_ns": -0.035561561999999824
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0019194637879965959,
+        "hold_ns": 0.0011372284004213262,
+        "tns_ns": 0.035560561999999823
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "f1d3852d38bc97cd151102d4b5099fe6d16ed1716571a0421fae46fce840f1bf",
+        "flow.tcl": "00bf6d9a4fee843da907b3104b40e34350ce4bff04dd9fed4571d594c38d1153",
+        "ideal.log": "35bed4a59daaefe1ed9299410bfd051094e7e9ff9bf37bfa51305b459d28af3f",
+        "ideal.tcl": "1feb1b0b91acb426147083f0f3633462377cc7e76e952abf1e12738318b44035",
+        "manifest.json": "c2373cded13ff909bc94cc771ea705c1a100eb28fdbd8bfa28dfa849203919b9",
+        "propagated.log": "522b71e65f5b81027dee3f86a408bc37759a85dade1b57a34cf9b0ac7d63da02",
+        "propagated.tcl": "d6e4a7e72d0f903a3225601bf21aceb7ad26f0eb74caba510c7d5b6d8f81e045",
+        "routed.def": "24ae1159202c11620294a9341715732b4cc50342ff5d6de8a2b086a304bd672e",
+        "routed.odb": "e9bd722360f86a2569bd9d950f24ea44357512a7f0a76935ee33b08773f9b7b2",
+        "routed.spef": "ceb77b6f9181d10eae8fb80cdb74353b2aa1bfee2e29e47041788b3244250525",
+        "routed.v": "4af64eb025f910c242c1a73902b532e0efb2e4e027ee8111ed11995924641824"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__074_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__074_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.56300000000192
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1052.2592,
+      "area_saved": 0.0,
+      "area_saved_pct": 0.0,
+      "original_saving_retained_pct": 0.0,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8413654772887469,
+          "hold_ns": 0.4559759236855143,
+          "tns_ns": -13.320767403
+        },
+        "propagated": {
+          "setup_ns": -0.8484383751117264,
+          "hold_ns": 0.4637041306487788,
+          "tns_ns": -13.485469818
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 2.042810365310288e-05,
+        "hold_ns": 6.727951529228449e-05,
+        "tns_ns": -0.06292724600000099
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.06292624600000099
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "db78bc7bf2a1f13904bb20ba342105a2d2afb7c8876f329c5f5a363645681648",
+        "flow.tcl": "c83370361510ce589106c5bfcec4ddec35f0fa35604ecf3561f9972af3153232",
+        "ideal.log": "00a65a59b0af0b222d6896d1397e6b907e542c431565ec5fb42dd20889c00a5d",
+        "ideal.tcl": "bdc04929e30bcdeb0b26f28c05fc2632345e2c55d956801081df94ce2f6b2a82",
+        "manifest.json": "9ff18e3b23a780281466f90997a16434112ac448d8ec2713b677d1fdb30d6400",
+        "propagated.log": "6e2d27302146762f120ad5b917601d54dbd4cb1eaf3cbbecf4a33fc978743073",
+        "propagated.tcl": "b3acab038509a252e46dc545a59f77d81ec53ac01bb5b21d78ae2d91ccd2d8e5",
+        "routed.def": "c50e393cd250db5cb97c7171f37215681a6458698b35d7ce998cb7d0d6a469d4",
+        "routed.odb": "e474531c424e9bed47eed96162d90539b4485ae3ca259e4a5bd7f201efb7d0c5",
+        "routed.spef": "27ed2aea8ec04f202fbc0b3f6f08279aa1b3bffeec0a5dfa072385d8c02771e9",
+        "routed.v": "4220c86c156f4f8b088f20112e58b9bb867f1a1eab6f4a7004fe8de9321f4cf0"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__077_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__077_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.093000000000757
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1052.2592,
+      "area_saved": 0.0,
+      "area_saved_pct": 0.0,
+      "original_saving_retained_pct": 0.0,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8413860164147025,
+          "hold_ns": 0.4559759236855143,
+          "tns_ns": -13.266016006
+        },
+        "propagated": {
+          "setup_ns": -0.8484588032153795,
+          "hold_ns": 0.4636368233779109,
+          "tns_ns": -13.432792664
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": -2.7755575615628914e-08,
+        "tns_ns": -0.010250092000001487
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.010249092000001488
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "3e139901c2d84df86a4ae8810b6777111a6bca8ba142ae6653e0972e0b12ae06",
+        "flow.tcl": "faa77fb00a465e3299e09befa00caf30dfe8bb00a6809489fe789a80baabd8d1",
+        "ideal.log": "a690ab00fdf81152007ecbd2b4b19b15f3d5b96076fea48e6407300c0e958ea7",
+        "ideal.tcl": "9788d06e17008b30944ed346fb347d0a553b00bf54e5f4f0d6875689b2dfbbbe",
+        "manifest.json": "4338d97b70c3336694ff6423ddfaf58f24b522e0d53e10230b3193c2a63a2669",
+        "propagated.log": "258cf6038c19e410062ef88267e0e734d95e221f5b712789ec2293a03aeaf3e8",
+        "propagated.tcl": "a83b44c2e3025f005a05d348a37d0dc99c09465562020277d15cc37b31e29a67",
+        "routed.def": "1a5e0ba41694a6e25e8c6e92f0a929f16b322d8957b60ee47b58f4d392c1a29d",
+        "routed.odb": "fa287ec7908438c767d30565e05e52afd22821a7aacbd1b98fb2362c95245a75",
+        "routed.spef": "3050b2911c2863ae861192496b1a5477e028dd916981a239c49f6454a1702483",
+        "routed.v": "fcf1abac8aa92e0a65bb1491d7fd6a13ebb96533c44b542ded314b3b729a04a3"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__079_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__079_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.82800000000134
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1048.5056,
+      "area_saved": 3.753600000000006,
+      "area_saved_pct": 0.3567181926278246,
+      "original_saving_retained_pct": 8.108108108108121,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8411113472384102,
+          "hold_ns": 0.4556600929905841,
+          "tns_ns": -13.268383026
+        },
+        "propagated": {
+          "setup_ns": -0.8481843560836921,
+          "hold_ns": 0.4632982886221271,
+          "tns_ns": -13.43669796
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0002744471316873387,
+        "hold_ns": -0.0003385625113594415,
+        "tns_ns": -0.014155388000000713
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.00033756251135944146,
+        "tns_ns": 0.014154388000000713
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "784c5b6caa9676fb7fed4a51bc823a2cae9e876f58d98dfb3679f85bfefd559e",
+        "flow.tcl": "edee15c833e9d749e6071501b543255395f2b1613eb61585277f687424128bb1",
+        "ideal.log": "d6ee7c4cf4c9cf15702be8b26feeaaed20269939622416645dbfada2bf932961",
+        "ideal.tcl": "c9935134a3a34655a9909c09f433a98afbced7fcb10f974a1a3168c143b6384c",
+        "manifest.json": "45bd2f44ea785a85c2b4adac25a8cba4a446f94daaabc050c92fbfa02b0e1d11",
+        "propagated.log": "f27f2e466f8298889cab950f1f4e8524e31235d150d08a6673d9caf4788ea02d",
+        "propagated.tcl": "8b063c21d28685a89e88a96e7e840e0733c62e6fd57e5d6b20424394fb6a35b1",
+        "routed.def": "61d9f3e2a5231a86d2ec0949db6192897286f01146c66fd1e48c96bb9814ad50",
+        "routed.odb": "03d3e159843418ba12d51a9b936874975c3e8dcc6dd418f0a25d166c99b9c43c",
+        "routed.spef": "464121ed35c166c2d9168a695a47011c3a99361d388553f0be4f2e22f7e0104a",
+        "routed.v": "30def7800fc3171562f531311ec4404721de805c5b4563a84b4a37dc38d305fa"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__081_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__081_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.218999999997322
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1052.2592,
+      "area_saved": 0.0,
+      "area_saved_pct": 0.0,
+      "original_saving_retained_pct": 0.0,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8413860164147025,
+          "hold_ns": 0.4559759236855143,
+          "tns_ns": -13.262676239
+        },
+        "propagated": {
+          "setup_ns": -0.8484588032153795,
+          "hold_ns": 0.4636368511334865,
+          "tns_ns": -13.429447174
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": -0.006904602000000537
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.006903602000000537
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "079c5a85e90e3984c3e5e059e950dd485f15292d6a7f724c4648ef24a51e5c1b",
+        "flow.tcl": "995db348fe63d0f85e51b25ca2b51046f255258565c7239bcbe8af7fd28422f7",
+        "ideal.log": "e1bee8836611ea1c7dc79d3bf8bd0679835bf0dc167207e7113c6960785887cb",
+        "ideal.tcl": "3a01ad7e0a9550116acee9ba4b792b7ec14ec4d8201498c368880e1555a290ef",
+        "manifest.json": "71d7a3b5f34e70140a526b6324864330a851f6c36edf3083eb4bd728f67a01f9",
+        "propagated.log": "613ae2c09c656933ad27f17e21202cff735c38d50a7ceb68bb2fcd0def50e95b",
+        "propagated.tcl": "cbcacc5e555d80dec6e209026127a6253a8c02bfdd74a4157fd45929522fbd67",
+        "routed.def": "271788ce2281575816a9c15e315f74c5ea7bb51d75386991e2d4f7cbe947e185",
+        "routed.odb": "47eac5289aa7f79089eb34c939a38e8de3d27c482ec1333c1f701ec0baed0f54",
+        "routed.spef": "cc8343e747f81fa9c03533a4c98a1a0b0c48165c27b3a12f024c6e7c36d2f946",
+        "routed.v": "b344e4e1b25df01e13ce96aec40505d33d21fc8d66555367146f3eada8b08916"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__093_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__093_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.359000000004016
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1047.2544,
+      "area_saved": 5.004799999999932,
+      "area_saved_pct": 0.47562425683709225,
+      "original_saving_retained_pct": 10.810810810810665,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8414147711910402,
+          "hold_ns": 0.4559759236855143,
+          "tns_ns": -13.27172184
+        },
+        "propagated": {
+          "setup_ns": -0.8484976610212414,
+          "hold_ns": 0.4636368511334865,
+          "tns_ns": -13.439139366
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -3.885780586188048e-05,
+        "hold_ns": 0.0,
+        "tns_ns": -0.016596793999999804
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 3.785780586188048e-05,
+        "hold_ns": 0.0,
+        "tns_ns": 0.016595793999999803
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "e1a3b5a0f939a49d9d6856a42aff552686e37bbd1214af2ca52f51ff93de6894",
+        "flow.tcl": "0747df889169535ebca8beec6cacfd3e447d32f60d0457974a6d9538e531c735",
+        "ideal.log": "06b4b8eaff64b80df64ce9f122ddd25f5db231a4b6f532a97407e97896871d68",
+        "ideal.tcl": "c922420fe2a4bf289bf411283d7f0c2ae5678b61612a67ff44b83b36811ae260",
+        "manifest.json": "085e131d277ea3ff36fccd90bbdf1991b3fc35e7a015f08beda21a053e6e10ef",
+        "propagated.log": "4aab7add812402d68ae8d04ce84caa3e54076740d0a44719c476a60b53b7ba57",
+        "propagated.tcl": "3a11b4609f79a54e23f929a5e39e689686b271419b8b53abd57cd7ca005b5239",
+        "routed.def": "25c8f88cbb0419b9e2e566b34a97a16c7f4764ef32f813b555cdb3df796d9c2b",
+        "routed.odb": "4636dc88f377e2dddb75352a2184db9c010451a40d347df6dc2d22a8d82ecb81",
+        "routed.spef": "bf982b9a8324b8b915db679d868d68f9e760317f25bebd0f930aff67245feb27",
+        "routed.v": "ce18193757f65ed262a0cdfcbc57878e3eeca154f22aebc1e85cae6c64fbe1ae"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__096_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_numeric_candidate_pending_SEC",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__096_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.218999999997322
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1046.0032,
+      "area_saved": 6.255999999999858,
+      "area_saved_pct": 0.5945303210463598,
+      "original_saving_retained_pct": 13.513513513513209,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8388679195725501,
+          "hold_ns": 0.4559759236855143,
+          "tns_ns": -13.253163338
+        },
+        "propagated": {
+          "setup_ns": -0.8467440637538459,
+          "hold_ns": 0.4636368511334865,
+          "tns_ns": -13.417701721
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0017147394615335543,
+        "hold_ns": 0.0,
+        "tns_ns": 0.004840850999999091
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.0,
+        "tns_ns": 0.0
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": true,
+      "diagnostic_budget_pass": {
+        "0": true,
+        "0.002": true,
+        "0.005": true,
+        "0.01": true
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "853ba523a532f6b2e12d213008972b51b443733f6472c3ce1d7bf687d751869e",
+        "flow.tcl": "988bf71b920fe1a2b3bffd0adca67784f0aff09e69eb54a2764e20bd2125a906",
+        "ideal.log": "67e4679f3bf756a025984074b6eff5c74572aab2ecd9800658f142d59b7564cd",
+        "ideal.tcl": "91dd9727d2058c65e37dd66aa00c71b9889b279a78c5f0514702181bf0640355",
+        "manifest.json": "5cc8a46090afd63ccc43ba79c03538d6d5c8cbd1b3c44065880f5388d49e8e76",
+        "propagated.log": "e62ab2d457bedb2c36a62e2fe97075e42e64c1ade19e03c2cacb14ca2a99b506",
+        "propagated.tcl": "6207a912f2b83c923176c6787c2afb8e43aefedb9afed9b74e41e7a6cb39b864",
+        "routed.def": "2cf8c76807a481d0d17e5687543fb2d1f0f4c61e653c2bc784f54cd965fc4318",
+        "routed.odb": "78c78b8fdebd473e7b2192b95f101d38dc615a87ef686d46e81c2cb21ab6e9df",
+        "routed.spef": "e3960c9b650f0016191dc81838ea675fb312acd75a379f9681f44e14f3b72e46",
+        "routed.v": "761430cf748245572384ee04ae5942d310547a314bf8dafa5cf0cf2f78e184f3"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__098_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__098_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.2809999999954
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1047.2544,
+      "area_saved": 5.004799999999932,
+      "area_saved_pct": 0.47562425683709225,
+      "original_saving_retained_pct": 10.810810810810665,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8438661436294126,
+          "hold_ns": 0.4559759236855143,
+          "tns_ns": -13.312049866
+        },
+        "propagated": {
+          "setup_ns": -0.8509697946301742,
+          "hold_ns": 0.46363674011118405,
+          "tns_ns": -13.481492996
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0025109914147947165,
+        "hold_ns": -1.1102230246251565e-07,
+        "tns_ns": -0.05895042400000072
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0025099914147947164,
+        "hold_ns": 0.0,
+        "tns_ns": 0.05894942400000072
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "c91546d796acd8fff67b5d1c599741df69e9bb4a25679bc0140d3568ce04623c",
+        "flow.tcl": "ff54ebf8393d8394fcf8acf0b6207fd9a4fbb9355ec3c5b04defb9fbc46ca36c",
+        "ideal.log": "0bf40668f4fb5839261622bbc6cb14274aa6d32cfb283634b8bc096989870de9",
+        "ideal.tcl": "1aae490571100e59157674323c339b8de9d1d23941ff8749ec4ad5c5cf526289",
+        "manifest.json": "f1853c6196d09c85dfa3a9d39d2171fd6bb9cf69d79766b06547ac5d536404e5",
+        "propagated.log": "4f2d4df12c5b861e33065f280efbe34a24181b8f8897dc57071cc9c0acffe057",
+        "propagated.tcl": "3d43b38381e0a1e6047c35ad13c9b3d9aad5fae20c10cbddbd02ac21308d9db7",
+        "routed.def": "18a65b38c1c727cb1c22fbc8376e7368272276f350ffec3624a2cf5048fcda93",
+        "routed.odb": "22afdbe85acdd8d8c6f7c74d11ea2cea1316bcad2f2ed20ea140980b53b91aff",
+        "routed.spef": "ecc7a823e5bcaf4686e1883c9bb07e94005d7d5532932dae4450337b32089e98",
+        "routed.v": "53b72a1353d099278859b456cabe8bc2357c44075fceed07d61e7f30185efd9d"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__102_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__102_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 29.70300000000134
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1049.7568,
+      "area_saved": 2.5023999999998523,
+      "area_saved_pct": 0.23781212841853533,
+      "original_saving_retained_pct": 5.405405405405086,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8418029606716004,
+          "hold_ns": 0.45811843207843594,
+          "tns_ns": -13.289240837
+        },
+        "propagated": {
+          "setup_ns": -0.8488750258273114,
+          "hold_ns": 0.4657814134390037,
+          "tns_ns": -13.452545166
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0004162226119319712,
+        "hold_ns": 0.0021445623055171836,
+        "tns_ns": -0.030002594000000826
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.00041522261193197116,
+        "hold_ns": 0.0,
+        "tns_ns": 0.030001594000000825
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "02bb462829d52a597ae35c69eab281c82bd255c3f2ff29b4f77ac4706a85329a",
+        "flow.tcl": "264607884eac2875338193d64f33c58048ad599cc2268fe8c6958d1feced968f",
+        "ideal.log": "5a10191a3cf3e0b1574795dd17e4207b4d842001d6ba50dadd51ffd7cc9f3cde",
+        "ideal.tcl": "ddde4aedbccd2efd08cde3bea7babbdeac104b51e2e92275bb6268e1b7d9c695",
+        "manifest.json": "63df3a19d8a58e4663c14108d12e74a40d425e69ee4f5be4af0c100da2688abe",
+        "propagated.log": "29d2a083ecd555810272171dda5027d66d55b55512c06a1878b90713d076ec41",
+        "propagated.tcl": "4c79808b2fe2bd40f111a49932c29ac11b706858a23ae5f0a6e183d6ae24b808",
+        "routed.def": "08fe46fbd5af99986b73a0ba3c48397ce1fbe15cbba725626b1d9a0d7456e0e8",
+        "routed.odb": "e751db24fc0f2c144fad38803abe63917080ffd9ce8a33c72caa550d05f8296e",
+        "routed.spef": "14e29f1497cdf33268fe1dc04c0df4b6c27c7ce3314a9cc57c8e560d605dc77e",
+        "routed.v": "1675c3e7b7a5c975f9df1533e98bd352ec47c42811627750c7220cc8cbedc4ef"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__111_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__111_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.625
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1044.752,
+      "area_saved": 7.507200000000012,
+      "area_saved_pct": 0.7134363852556492,
+      "original_saving_retained_pct": 16.216216216216242,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8440868004555568,
+          "hold_ns": 0.45558987138427653,
+          "tns_ns": -13.317000389
+        },
+        "propagated": {
+          "setup_ns": -0.8554970620799907,
+          "hold_ns": 0.4632500494317071,
+          "tns_ns": -13.483093262
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.00703825886461118,
+        "hold_ns": -0.00038680170177940454,
+        "tns_ns": -0.06055069000000124
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.00703725886461118,
+        "hold_ns": 0.0003858017017794045,
+        "tns_ns": 0.06054969000000124
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "e7b65fb2be43caa0ac0d81289dc7356365c7fc3a934882fec8cc9aaed5e07932",
+        "flow.tcl": "3564fd21f65cb070b0356c63db74d67c0de82fc4d4c327e72fc0899295663c27",
+        "ideal.log": "54c65bced32db9fc11c2574029a6cc2afb42af6dbe0e38eb1cbcc67ec7f685c3",
+        "ideal.tcl": "882e2d62b67d946e8b1676ca3b1edd864aa25c0f8971536e258c853e212805c0",
+        "manifest.json": "804d4f9878b9071467af6873c446eaaaef9b977fb2be8f5c22f9051c6854f3e1",
+        "propagated.log": "b7499e6c1bd70551b426a55453e7d235f3b6dd3a26c37f562d7fa27a93ce19cd",
+        "propagated.tcl": "b547d0b260239a15240f32221ee25df98724b09597204bbd3ebc3c6af6a4e9a1",
+        "routed.def": "536a46c251ff8124079a232c96f965f06573dba4b3d31f435e7c06bbc7b20079",
+        "routed.odb": "fd63d60c527a93d8d8df9c923e3c3ec0015a439cd38b4ddfad9442465ba5e0e6",
+        "routed.spef": "787947ff7e3b89789c415c8b2eb856e131b0dcae0e687c32ced9c708c0f6a2ea",
+        "routed.v": "839040d0e7c3852a1b175306dd7497d3228799d4545cb6584b53c9384d7a42d7"
+      }
+    },
+    {
+      "stage": "C",
+      "arm": "FORWARD__113_",
+      "restored": [
+        "_052_",
+        "_054_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "FORWARD__113_",
+        "restored": [
+          "_052_",
+          "_054_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 29.875
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1044.752,
+      "area_saved": 7.507200000000012,
+      "area_saved_pct": 0.7134363852556492,
+      "original_saving_retained_pct": 16.216216216216242,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8449551058831162,
+          "hold_ns": 0.45559025996233515,
+          "tns_ns": -13.314468384
+        },
+        "propagated": {
+          "setup_ns": -0.8561366615644772,
+          "hold_ns": 0.4632528249892687,
+          "tns_ns": -13.489134789
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.007677858349097733,
+        "hold_ns": -0.00038402614421784165,
+        "tns_ns": -0.06659221700000018
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0076768583490977324,
+        "hold_ns": 0.0003830261442178416,
+        "tns_ns": 0.06659121700000017
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "40fb85267dfb29d95b0f6828435037e24f6fd905db80ca461c623766da7d4cbe",
+        "flow.tcl": "8edb55594a0d29d3ebb48fa4461ae55db011b455534530629b483ecf35cb93b1",
+        "ideal.log": "cb6433816b781a7144e0eb00e3c15c1ab4093884f38f3ab27d697e77b6bc974e",
+        "ideal.tcl": "702fa8992452f15c41e2c8095d6f45ff1d871461f2e3d11e144ab62e59589c9d",
+        "manifest.json": "1d6d2c42edfe4b7aa97847f152df21d2e90c98ea4d08df6f509e1baca5bf6642",
+        "propagated.log": "641cceeba1612789ed88158d110ac0c95d7daf751b4ea63b8b0c72b5cfe3dc5f",
+        "propagated.tcl": "ed8ba98989240bf6908aae7c07188fcaf45372e23580875cbb88e6fb1a54b171",
+        "routed.def": "ff1738703c9aa380e9b24d4526a48bed0c938d1df3e84aec8c2569311a28ef1d",
+        "routed.odb": "aa7707cc381ab1b6d54bb7e1b2f2aead012da346ebd0e4248960ec715125c4e3",
+        "routed.spef": "1ba4da58d8279148bb2c495d700aeb44e932375486f35f202484709bac2e72cb",
+        "routed.v": "a6ff987ef1217b2d6254f8b9c6b24aa63eb5fb0749799ee82b592e2de4dbbdc1"
+      }
+    },
+    {
+      "stage": "D",
+      "arm": "JOINT_057",
+      "restored": [
+        "_054_",
+        "_074_",
+        "_083_",
+        "_093_",
+        "_098_",
+        "_111_",
+        "rebuffer1"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "JOINT_057",
+        "restored": [
+          "_054_",
+          "_074_",
+          "_083_",
+          "_093_",
+          "_098_",
+          "_111_",
+          "rebuffer1"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 31.20300000000134
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1027.2352,
+      "area_saved": 25.023999999999887,
+      "area_saved_pct": 2.378121284185483,
+      "original_saving_retained_pct": 54.054054054053815,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8414403618317579,
+          "hold_ns": 0.45607365106725695,
+          "tns_ns": -13.371557236
+        },
+        "propagated": {
+          "setup_ns": -0.8516422012050384,
+          "hold_ns": 0.46348930249351383,
+          "tns_ns": -13.542887688
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0031833979896589426,
+        "hold_ns": -0.0001475486399726833,
+        "tns_ns": -0.12034511600000108
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0031823979896589425,
+        "hold_ns": 0.0001465486399726833,
+        "tns_ns": 0.12034411600000108
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "79498e4930454738c98f05cf4342e6b7665a9b043b6eaaa92e6f788ee3626d7d",
+        "flow.tcl": "4d9f49e955f4d970c287937823dc61cb656fce884bb3919cb4a0414b3277d966",
+        "ideal.log": "fc5cfa7669bf33f21ebd43bfb25ffcf660e541e70e41516069b330cb33611fb6",
+        "ideal.tcl": "9150bf8369c068baa66cdbbc369bc96987c23c5ed6481acd0f92a25e620310e5",
+        "manifest.json": "1d58164ee8fb8cb64aca1abdf351dc124b690df62c1e5cf3b0f6cdb9ff30393c",
+        "propagated.log": "8c2a67bb6451f0934192905e8842b6661c8cb0f5c82172807e805a5aa248112a",
+        "propagated.tcl": "80ad7f6d05746bfd3281de36ee57e3dcca3ad8efc0fcc5c0d639771d33205d14",
+        "routed.def": "f218f752d83b317c996ce9b18f1c1342a24f35ca2c38c9238b33d6790bd8036b",
+        "routed.odb": "c7bf7a858de67a7e87a69b9de46fc4b54aa3d71a85b596936ccc608299bee739",
+        "routed.spef": "0c711023a8a9ce3aae3c088163b82bc9c6ce29a0c4641a5c363ab507c066e048",
+        "routed.v": "4faf79f4c862c9a7a4c3ccddfc49041dba426c4dafaac5bfc9b200cf33ace0a2"
+      }
+    },
+    {
+      "stage": "D",
+      "arm": "JOINT_083",
+      "restored": [
+        "_054_",
+        "_057_",
+        "_074_",
+        "_093_",
+        "_098_",
+        "_111_",
+        "rebuffer1"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "JOINT_083",
+        "restored": [
+          "_054_",
+          "_057_",
+          "_074_",
+          "_093_",
+          "_098_",
+          "_111_",
+          "rebuffer1"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.68800000000192
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1027.2352,
+      "area_saved": 25.023999999999887,
+      "area_saved_pct": 2.378121284185483,
+      "original_saving_retained_pct": 54.054054054053815,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.840407743396554,
+          "hold_ns": 0.45602358000884635,
+          "tns_ns": -13.293778419
+        },
+        "propagated": {
+          "setup_ns": -0.8474745905040493,
+          "hold_ns": 0.46344300619338696,
+          "tns_ns": -13.464891434
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": 0.0009842127113302013,
+        "hold_ns": -0.00019384494009955233,
+        "tns_ns": -0.042348862000000764
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0,
+        "hold_ns": 0.00019284494009955233,
+        "tns_ns": 0.04234786200000076
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "649ffbff250859e6cc9ea986aa4144a6b9d0992660da7e8e7ea0b32b819f04f2",
+        "flow.tcl": "5881f9905b11b888827a8bd5dd8ce363706b6881311a1c3259e67af8d0c9f0d5",
+        "ideal.log": "d7ab78c4c9e66bf45229007b44333c847ec5a26d7c65fe6964eef251868052da",
+        "ideal.tcl": "1f9c94b86985421c024b50d7a442af0fe10cd0c55152b980e831c268ab2d5b37",
+        "manifest.json": "56223c508f0a56fd67cccc06e23eb3e221c19d16764c2f6214f781fd0364e9ac",
+        "propagated.log": "754f5ffa7a4493faf9e5029ff850e2189f0c94953bfbd051c5b41abcfae3c5ac",
+        "propagated.tcl": "7cf774c2ea694330201130aa99b276a64a54f5b9cd4d082eedab82aa96fd4929",
+        "routed.def": "a069ebffd988afa0d25a0da4079d3008b0ff02b3982908473a503daca1db4a73",
+        "routed.odb": "bacfcb11d37d16a508f826b2e4bc2b2409c86e074c0cc42fec0cc9c330dcb5ab",
+        "routed.spef": "112fe01d84007ad87b476f1a17584ea4e3c49fd8ff9103ab1e98382c44a164fb",
+        "routed.v": "75a97207e75db517a3b8fe7267e6a3a2ad1096b31a30b8ee22b80b719eb518fc"
+      }
+    },
+    {
+      "stage": "D",
+      "arm": "JOINT_REBUFFER1",
+      "restored": [
+        "_054_",
+        "_057_",
+        "_074_",
+        "_083_",
+        "_093_",
+        "_098_",
+        "_111_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "JOINT_REBUFFER1",
+        "restored": [
+          "_054_",
+          "_057_",
+          "_074_",
+          "_083_",
+          "_093_",
+          "_098_",
+          "_111_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 28.17199999999866
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1029.7376,
+      "area_saved": 22.521600000000035,
+      "area_saved_pct": 2.1403091557669476,
+      "original_saving_retained_pct": 48.64864864864873,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8519269734108548,
+          "hold_ns": 0.45607365106725695,
+          "tns_ns": -13.478507042
+        },
+        "propagated": {
+          "setup_ns": -0.8590105293748707,
+          "hold_ns": 0.46348930249351383,
+          "tns_ns": -13.649881363
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.010551726159491182,
+        "hold_ns": -0.0001475486399726833,
+        "tns_ns": -0.2273387910000011
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.010550726159491182,
+        "hold_ns": 0.0001465486399726833,
+        "tns_ns": 0.2273377910000011
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "328352b4c0d335c0b83e059d0cd722424514d88e7d96cbc2a97278c997fd1f62",
+        "flow.tcl": "3d1fa19b8506fbc8d672a95ec8cacb2e07a5b4965c35a3fbc399e7cf31b5a129",
+        "ideal.log": "8e3966628605f897f9a840d7734ad11aea5e248e33a4d6e456e59060a76ad5b9",
+        "ideal.tcl": "68550584decd94d42f59d4e23cd16bd1a01f4f90eda53ef2b459d6f2fbda3b2d",
+        "manifest.json": "3caa18f69403b44108c83a0417523545a3e9e1c8b98a4eea44151340d2f6435f",
+        "propagated.log": "aa83c4aa8d7d6afe9e4999d9b05790f295f29007f8b9c82465f19c771f75c6e4",
+        "propagated.tcl": "986ba427a92a51f9e5c4d0d16fd2eae7f5e14d2f677dc03e4f4770c5497e2917",
+        "routed.def": "9e96d2885952f6d8dd8e34bd0a24e9c8f82d8394eaa75e503279402f6ce3a8fa",
+        "routed.odb": "48ccc28cbcbf1e18e82002d09268e2627fb4e782e3d34dd7184afe067d168780",
+        "routed.spef": "fddc77e0fa8d6cdaf3b2d642253213cf1a6fe0c224157408f8ad3585b82ca2b8",
+        "routed.v": "2f6193b9322630dba85f55a4d5bd88a0a8b57504ae13fd7a8b528f49c16eb21f"
+      }
+    }
+  ],
+  "source_sha256": {
+    "PLAN.json": "075c23ddc2422e9cfb17bd0ed04f254a41f33838493aa7503652aef5326009c9",
+    "BATCH_RECEIPT.json": "2602d3fc0a0ae2fe2c605a6117a824907232e2bfb5a5481906bc9a14ad5109bc",
+    "SUMMARY.json": "5ae335bc5e981842a41a912bbf1b4ccf213738106dba02d94b1a52495079c8a9",
+    "COMBINATION_PLAN.json": "d62465e05ab4521bc4795d9cd4af8239c24c9846c4ec1d8f58ce6cd26b3e38c4",
+    "COMBINATION_RECEIPT.json": "7937cb561e12c9b6a49d75da745359dc3c1beb811925885edaa09eb377457495",
+    "COMBINATION_SUMMARY.json": "b9371a560633f8efc4db7631f42869716793facc991ac9f9b3f278c3451d5204",
+    "FORWARD_PLAN.json": "be04334ca8c8ffe5ffea951ded2ce8fe8f856fa2c7ea1cca01770fae2997eaa1",
+    "FORWARD_RECEIPT.json": "b39a2424ef82b75923bc70570ff7ececf63ade6567c870f1a6bd7dbf1aaf5295",
+    "FORWARD_SUMMARY.json": "b39a2424ef82b75923bc70570ff7ececf63ade6567c870f1a6bd7dbf1aaf5295",
+    "JOINT_PLAN.json": "eff0bac1e359148aaf228703395ae9d20613f6ad0db6959fcc96e63183182622",
+    "JOINT_RECEIPT.json": "0ff6393a929c2d51dcf8f6315a10cfd6686c9ff9170978719170071eaad2ac50",
+    "JOINT_SUMMARY.json": "0ff6393a929c2d51dcf8f6315a10cfd6686c9ff9170978719170071eaad2ac50",
+    "FORWARD_ACCEPTANCE.json": "e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd",
+    "sec/CONTROL_vs_FORWARD__096__models_v2/receipt.json": "0b0d321503a86d3b7ced1dce064362303bdafb80e0c7e1e982d688ab26bfff06",
+    "summarize_study.py": "3d4d1569867600726250ac9ffba6206bbcef07b60a71960e1997e84ec7a216a5",
+    "analyze_repair.py": "40f8f1b27be6ee6115b6e3bfd439cd1fb38e734adb085640105820549b443bcc"
+  },
+  "limitations": [
+    "One design/implementation and TT library only.",
+    "Relative nondegradation at measured constraints is not absolute timing closure or signoff.",
+    "Independent mechanism superiority remains unproven; the accepted point is a conservative baseline.",
+    "Shared-host elapsed time is not an exclusive performance benchmark."
+  ]
+}

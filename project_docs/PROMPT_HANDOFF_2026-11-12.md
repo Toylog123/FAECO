@@ -1,6 +1,6 @@
 # FAECO 项目接手提示词
 
-> **2026-11-13 接手审计更正**：下文是旧摘要。当前须先读 CANON 顶部 Recovery 裁定及 `project_docs/evidence/recovery_qualification_20261112/`。136/202不是逐个零效应证明，面积分母漏 escaped DFF，s382完整重布线回退尚未过严格时序门；不得直接按本提示旧数字扩实验或改论文。当前1113 passed/156 subtests，桌面包环境用 `code/scripts/prepare_packaged_yosys.py` 准备同字节工具镜像。
+> **2026-11-13 最新接手裁定**：先读 `project_docs/evidence/recovery_repair_20261113/REPORT.md` 与CANON顶部。完整14例面积已核算，平均下降3.071500828%；旧“14%”分母不等于总面积，136/202也不是逐个零贡献证明。新41候选物理研究已封口：s382仅回收 `_096_` 得面积下降0.594530321%、propagated WNS/TNS改善及hold不变，SEC 101/0通过；这是局部简单基线，自有联合机制/跨设计/完整约束仍未建立。全回收4.399524%因时序失败不得晋级。旧摘要/HEAD/未push状态仅供溯源；当前Git以实查为准。论文冻结，上一生产全回归1113 passed/156 subtests；工具镜像见 `docs/environment.md`。
 
 你是 FAECO 项目的接手者。以下是需要知道的一切，按顺序执行。
 
