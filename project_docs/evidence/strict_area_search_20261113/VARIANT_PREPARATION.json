@@ -1,0 +1,20 @@
+{
+  "status": "prepared_not_executed",
+  "plan_sha256": "d8e4e5b0ce90d93d0209d0e0aec4bc444829d861650c2c96e0bfab3444c0c387",
+  "sources": {
+    "VARIANT_RECIPE.json": "34d27d66215df9ff04c63c7eabaf543c2a53e71802c9329fc43a2e073509389f",
+    "physical_probe_variant.py": "9bbd2713aa21b1f646d45ec13c3976b324c7d1e493cbdf590a2d11ff257bfa78",
+    "run_variants.py": "d5cbbe97219c6809a4560bd4bc6f6e1a0ebfba8857915df4da466b4386b60978",
+    "test_variants.py": "012a6a739d7ed4ea683d075061db443f9dffe1b9b03fa4ec5856224c70364c19"
+  },
+  "adaptation": "physical_probe text identical after reversing exactly PLAN and RECIPE filenames; full audit_arm reused unchanged with variant recipe; original thirteen-action recipe changes only _054_ old_cell or3b_1 to or3b_2",
+  "execution_prerequisite": "all9 finished valid, complete raw re-audit and frozen replay exact; original results never join variant budgets",
+  "validation": "5 variant TDD pass after RED; default preflight pass with all9_valid; help pass; integration47pass; no EDA",
+  "frozen_original_plan_sha256": "2efbac2bfaf603fd2814e1e1ba00e0c6254dc7e5aeaf1c314f3fe169b5fcf45e",
+  "selected_sec_driver_unchanged_sha256": "6c0e1f18b9c050ec8e8de6443441085d3e94eeeb9639986fa543d7a85e8b1131",
+  "qa_sha256": {
+    "variant_green.log": "d830dedd4d4d7cfb975513d47e70fb460a07fbf48e19c357ae770e523bac6fd9",
+    "variant_preflight.log": "e9778f5a46170dec8e2cf568de45d0a45e942ad3dee2d25f9c70fb7f43132149",
+    "variant_red.log": "50d9e6963d6b62c806a63f437bf20c131fd49866ea6bbbd8fc0e7e46949a2c8e"
+  }
+}

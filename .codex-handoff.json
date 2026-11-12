@@ -1,8 +1,9 @@
 {
   "timestamp": "2026-11-13",
-  "status": "Strict timing area recovery: s382 FORWARD__096_ accepted local conservative baseline, area -0.594530321%, propagated WNS/TNS improve and hold unchanged; SEC101/0. 41 physical candidates audited. Joint mechanism superiority, cross-design and full constraints remain open; not ICCAD ready.",
+  "status": "Strict area continuation: 9 fixed-seed pairs and 2 equal-area library variants all valid but none strictly feasible. Exact accepted s382096 seed retained (-0.594530321% area, setup/TNS improved, hold unchanged, prior SEC101/0). Static full-netlist/Liberty space has62 compatible smaller targets; old recipe covers10; compatibility is not physical feasibility. Own-mechanism superiority and complete constraints remain open.",
   "project": "FAECO",
   "read_order": [
+    "project_docs/evidence/strict_area_search_20261113/REPORT.md",
     "project_docs/evidence/recovery_repair_20261113/REPORT.md",
     "project_docs/HANDOFF_2026-11-12.md",
     "project_docs/FAECO_ROADMAP.md",
@@ -106,5 +107,15 @@
     "acceptance": "project_docs/evidence/recovery_repair_20261113/FORWARD_ACCEPTANCE.json",
     "user_objective": "own mechanism; ICCAD evidence standards; area reduction with WNS/TNS/hold nondegradation",
     "paper": "frozen; no changes this study"
+  },
+  "latest_strict_search": {
+    "report": "project_docs/evidence/strict_area_search_20261113/REPORT.md",
+    "search_summary": "project_docs/evidence/strict_area_search_20261113/SEARCH_SUMMARY.json",
+    "variant_summary": "project_docs/evidence/strict_area_search_20261113/VARIANT_SUMMARY.json",
+    "new_routes": 11,
+    "new_sta": 22,
+    "new_sec": 0,
+    "accepted_endpoint": "unchanged FORWARD__096_",
+    "next_focus": "complete candidate generation and constraint coverage before stronger search claims"
   }
 }

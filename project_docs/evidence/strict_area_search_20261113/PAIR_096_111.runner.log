@@ -1,0 +1,88 @@
+PAIR_096_111: start physical pipeline
+{
+  "arm": "PAIR_096_111",
+  "input_sha256": {
+    "project_docs\\evidence\\strict_area_search_20261113\\inputs\\reentry.odb": "bf09ed410f9d9a09689365e3429e1fc445a7de6b18f2b6abbbf7ee50ab1f3211",
+    "project_docs\\evidence\\strict_area_search_20261113\\inputs\\reentry_manifest.json": "ab9b8abd43d1461f11c3b4ff470c26abffe3d8c383b6408417b273f3ff30cc36",
+    "project_docs\\evidence\\strict_area_search_20261113\\inputs\\original.spef": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+    "project_docs\\evidence\\strict_area_search_20261113\\inputs\\recipe.json": "419249606cf6ba5fb96880fc957be8075e480c62f85dfbfa2cdd5d34334abb82",
+    "project_docs\\evidence\\strict_area_search_20261113\\physical_probe.py": "9566bfb0d4222a233c0bc57476e5ae9986584a3f4ec601fba645ca9d31ec9945"
+  },
+  "native_parasitics": "original extracted SPEF at entry",
+  "clock": "propagated for native; ideal/propagated separate final measurements",
+  "route_iterations": 15,
+  "per_route_timeout_s": 900,
+  "per_sta_timeout_s": 300,
+  "restored_instances": [
+    "_052_",
+    "_054_",
+    "_055_",
+    "_074_",
+    "_077_",
+    "_079_",
+    "_081_",
+    "_093_",
+    "_098_",
+    "_102_",
+    "_113_"
+  ],
+  "tcl_sha256": "9681490545a43b8c9261cd519753f4d24950ed069f009a6c0f8b2956f524bf56",
+  "flow": {
+    "argv": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/home/toylog/faeco_eda/or26Q3/bin/openroad",
+      "-no_init",
+      "-exit",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/strict_area_search_20261113/runs/PAIR_096_111/flow.tcl"
+    ],
+    "returncode": 0,
+    "elapsed_s": 39.0
+  },
+  "drc_count": 0,
+  "ideal": {
+    "argv": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/usr/local/bin/sta",
+      "-no_splash",
+      "-exit",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/strict_area_search_20261113/runs/PAIR_096_111/ideal.tcl"
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.46899999999732245,
+    "setup_ns": -0.8422355035619944,
+    "hold_ns": 0.45559009342888146,
+    "tns_reports_ns": [
+      "-13.31",
+      "-13.305242538"
+    ],
+    "drv_status": "pending raw report review"
+  },
+  "propagated": {
+    "argv": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu",
+      "--",
+      "/usr/local/bin/sta",
+      "-no_splash",
+      "-exit",
+      "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/strict_area_search_20261113/runs/PAIR_096_111/propagated.tcl"
+    ],
+    "returncode": 0,
+    "elapsed_s": 0.5,
+    "setup_ns": -0.8493222791727817,
+    "hold_ns": 0.4632502159651608,
+    "tns_reports_ns": [
+      "-13.47",
+      "-13.474537849"
+    ],
+    "drv_status": "pending raw report review"
+  },
+  "functional_equivalence": "pending"
+}

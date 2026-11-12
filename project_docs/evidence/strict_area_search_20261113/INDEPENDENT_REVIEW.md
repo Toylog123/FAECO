@@ -1,0 +1,13 @@
+# Independent nine-pair result review
+
+Accepted as a complete, negative result for the preregistered nine-pair neighborhood. All nine physical endpoints match CONTROL plus exactly `_096_` and their registered extra action, with the full 3,128-instance structure, escaped FF identities, all connected pins, ports and assignments preserved. The separate `independent_check.py` does not import the author's `selection.py`; it reads raw logs and complete netlists, computes Decimal area and actual strict gates, and independently replays every prefix. `INDEPENDENT_AUDIT.json` binds the checker, PLAN and final receipt by SHA-256.
+
+All nine source/endpoint hashes, the exact two `replace_cell` commands, regular-wire clearing and extraction commands, fresh SPEF files, endpoint paths in both STA scripts, successful flow/STA markers, error-marker absence, empty supported-rule DRC reports and configured slew/cap report segments passed inspection. Actual metrics agree with the recorded rows. Frozen PLAN and sources still match. The same installed-flow DRC and configured-DRV coverage limits apply; this is not signoff or absolute timing closure.
+
+**Strict acceptance is 0/9.** Every pair worsens TNS beyond 1e-6 ns. `PAIR_096_093` preserves hold and improves setup by 0.002046141034 ns, but loses 0.010656357 ns TNS. `PAIR_096_102` improves setup and hold but loses 0.024789810 ns TNS. `PAIR_096_113` has the smallest TNS loss, 0.004035950 ns, while hold declines by 0.000245192755 ns; its setup improvement does not make it acceptable.
+
+The independently computed area-first and timing-risk results are identical at **every prefix**, including primary k=3 and secondary k=1/6/9: return the exact existing `FORWARD__096_` endpoint, saving 6.2560 area units (0.594530321% of CONTROL). All five fallback endpoint hashes match the accepted seed; no reroute or new SEC is required. Thus this registered neighborhood shows neither incremental strict-feasible area improvement nor scheduling benefit. This does not establish that ordering is universally ineffective or that the much larger static candidate space is infeasible.
+
+Actual new cost is **9 routes + 18 STA**, not 18 routes. Summed job elapsed time is 372.829 s; runner elapsed time is 373.578 s on the shared host. Wrapper time is a separate quantity. Historical 13-route/26-STA labels are a subset of the broader 41-route seed-discovery study and are not added to 41 again. New two-arm intermediate-drive follow-ups are outside this nine-pair result.
+
+No new EDA or SEC was executed by this reviewer. The checker reads existing evidence and prints its receipt; it does not overwrite the author's receipt/summary, frozen PLAN or run artifacts.

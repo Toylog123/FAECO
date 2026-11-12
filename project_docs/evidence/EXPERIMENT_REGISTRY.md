@@ -2379,3 +2379,51 @@ JOINT_REVIEW确认D全3有效strict失败。FORWARD_ACCEPTANCE.json `e7d217e8976
 唯一接受FORWARD__096_：nor4_2→nor4_1，面积1052.2592→1046.0032（−6.256，−0.594530321046%），propagated WNS+0.0017147394615336ns、TNS+0.004840851ns、hold0；完整二态SEC101/0及独立接受回执齐。A/B/D的较高面积下降均未过严格门，不作有效收益。路径归因只读完成，未新增EDA。
 
 四阶段是逐步观察后分别登记的预算，不包装成事先单一算法；局部可行baseline不证明联合机制、等预算优越、跨设计泛化或完整signoff。结果/失败/成本与边界以RESULTS.csv、FINAL_RESULTS.json、REPORT及各冻结summary/review为准。OI-082/084/085/086等继续open，生产算法/冻结论文未改。主线继续封ARTIFACT_MANIFEST与提交/推送；本登记不预报其成功。
+
+
+### 2026-11-13 STRICT-AREA-SEARCH-S382
+
+- **状态**：PREPARING / NOT_RUN，等待主线设计与预注册独立审查。
+- **起点**：已接受 `_096_` 固定seed，另9个正面积动作分别构成双动作星形邻域；新证据包 `strict_area_search_20261113`，旧封存包只读。
+- **比较**：事前冻结面积优先与物理风险排序，同9候选、同验证预算；全9物理点无早停，以k=1/3/6/9前缀比较实际可接受面积。预测只排序不接受。
+- **门**：沿用相对Resizer CONTROL的propagated WNS/TNS/hold非劣1e-6ns数值容差、hold>=0、正面积、既有物理/证据与最终SEC门；不扩大容差。
+- **边界**：当前无EDA，seed为既有证据不重复计新实验；局部排序是否有效待检，不称创新或泛化已成立。
+
+
+#### STRICT-AREA-SEARCH-S382 运行启动（2026-11-13）
+
+**状态：RUNNING。** 主线根preflight及Path.open拒读旧包守卫通过，独立预审通过；协议/代码先commit `3e70243` 后启动session60904，外层1860s/内层batch1800s，日志scratch/strict_area_search.log，PLAN SHA `2efbac2bfaf603fd2814e1e1ba00e0c6254dc7e5aeaf1c314f3fe169b5fcf45e`。
+
+记录端实际打开PREREGISTRATION确认：9额外动作052/054/055/079/093/098/102/111/113分别与096同CONTROL ODB构造双动作，不以seed routed ODB累积；lexical测全9/18STA，两排序共享池。k3主比较，k1/6/9及完整前缀次要，k9同终点是自检而非优势。风险预测Mseed+Mj−Mcontrol只排序；actual gate固定CONTROL，允许既有slack margin被使用但不改参考到seed；严格三时序与完整证据门不变。每前缀最大实际saving单调、全失败exact seed fallback、只最优新增点最终SEC。历史13singleton与更广41route/seedproof成本单列，非端到端等成本或独立9电路统计。
+
+
+### 2026-11-13 STRICT-AREA-SEARCH-S382-VARIANT
+
+- **状态**：PREPARED / NOT_RUN；记录端实读VARIANT_PREREGISTRATION。独立2route/4STA预算，九点全valid+独立审阅+commit后才执行，不改九候选池/排名/预算。
+- **对象**：VARIANT_054_2仅054 or3b_4→or3b_2；VARIANT_096_054_2同时096 nor4_2→nor4_1及054→or3b_2，从同CONTROL ODB独立构造。与已登记054→1的单点/双点等面积比较（节省2.5024/8.7584），检验历史rollback遗漏等面积库目标。
+- **门/纪律**：沿用严格WNS/TNS/hold对CONTROL、面积/hold绝对可行/支持DRC及配置DRV/结构/SHA门；完整两臂、不有利早停，route900/STA300/child1530/batch1800秒，失败占预算停归因。recipe仅显式适配054 target，原历史recipe不改。全两例后新strict且优于seed者才SEC，不重生成端点。
+- **界限**：无FF/clock改动、不补SDC、不放宽时序，结果不进入九点排序重放；不是纯弧因果隔离或新优化器证明，失败不否定全部52遗漏目标。
+
+
+#### STRICT-AREA-SEARCH-S382 九点实测/独立验收结果
+
+9/9证据有效，strict0；9route/18STA，runner373.578s/jobs372.829s，外包装另计。INDEPENDENT_AUDIT.json/INDEPENDENT_REVIEW.md与independent_check.py逐项核验，两冻结排序所有prefix均exact seed6.256，无k3优势、无新增严格终点；未重做seedSEC。该结果限原9个正面积rollback动作的固定seed星形邻域，不代表已审计的52遗漏候选无效。
+
+variant独立实现预审通过但文字判据须先澄清：单点仅省2.5024<seed6.256，作为等面积target诊断；pair省8.7584才有严格超seed的可检验空间。尚未variant运行。
+
+
+#### STRICT-AREA-SEARCH-S382-VARIANT 正式启动
+
+执行前已修正预注册角色：single仅等面积target时序对照，only pair可能严格超seed。commit `37fc6e3` 与 `145146a` 均先于EDA，最终VARIANT_PLAN SHA `e600cd53f9899d179152d6c84c0cc84476a96998f7e4f117d7f1b4fc4772c7f7`；根drycheck与独立实现review通过后启动session62902，外1860/内1800s，scratch/strict_area_variants.log。两臂RUNNING，独立2route预算；旧plan/prereg版本Git+qa留存，未在旧版本执行EDA。
+
+
+#### STRICT-AREA-SEARCH-S382-VARIANT 独立验收结果
+
+2/2证据有效、strict0，独立checker/JSON/REVIEW已产出；2route/4STA，runner55.484s/jobs55.375s。相对CONTROL，两臂Δsetup均−0.034445057917ns、Δhold均−0.001212918654ns，TNS单点−0.286940575ns、双点−0.282325745ns。与各自同面积_1目标比较，setup/TNS/hold均更差。首条reported critical path转为DFF12→DFF3且经过054/X(or3b2)，只作路径观察，不称单弧因果。exactseed继续回退、无新增SEC，九例冻结summary未变；两中间档具体目标失败，不否定全部52遗漏候选。
+
+
+#### STRICT-AREA-SEARCH-S382 + VARIANT 阶段结案（2026-11-13）
+
+**状态：STAGE_CLOSED / NO_NEW_STRICT_ENDPOINT。** 记录端已实际打开最终REPORT：9+2全部证据有效、strict0；新增11route/22endpointSTA/0SEC，旧exact seed复制校验复用、不重路由。九点job372.829s/runner373.578s/wrapper383s，两variant job55.375s/runner55.484s/wrapper61s，共享主机不作独占性能比较。k3主比较及全部prefix两策略均seed6.256，无排序优势。
+
+九点固定seed邻域扩展假设被本矩阵否证；两等面积中间档均比_1目标三时序更差。静态62候选/33实例与旧覆盖10/62只说明生成范围缺口，不表示收益。下一阶段转完整候选生成/约束覆盖/强基线，不继续在已无改进九点池改排序叙事；旧13标签成本属前轮41route子集，不重复累计。47证据层测试通过，生产/论文未改，旧封存包只读。封manifest及commit/push由主线继续，登记不预告其成功。

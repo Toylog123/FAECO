@@ -1,0 +1,80 @@
+{
+  "receipt_status": "all2_finished",
+  "completed_independently_checked": 2,
+  "rows": [
+    {
+      "arm": "VARIANT_054_2",
+      "area": "1049.7568000000",
+      "area_saved": "2.5024000000",
+      "delta_ns": {
+        "setup_ns": -0.0344450579170541,
+        "hold_ns": -0.0012129186544029835,
+        "tns_ns": -0.2869405750000009
+      },
+      "strict": false,
+      "deficits_ns": {
+        "setup_ns": 0.0344440579170541,
+        "hold_ns": 0.0012119186544029836,
+        "tns_ns": 0.28693957500000095
+      },
+      "netlist_sha256": "0959a1857db0ecdc3499fd6cc9297fb87974d9d984ad32deffa358aabe8fab42",
+      "spef_sha256": "a895c383c5c7b3e30bf878cfd6ef8baed80011de7662f7fc7118e6f2a472d74b"
+    },
+    {
+      "arm": "VARIANT_096_054_2",
+      "area": "1043.5008000000",
+      "area_saved": "8.7584000000",
+      "delta_ns": {
+        "setup_ns": -0.0344450579170541,
+        "hold_ns": -0.0012129186544029835,
+        "tns_ns": -0.2823257450000014
+      },
+      "strict": false,
+      "deficits_ns": {
+        "setup_ns": 0.0344440579170541,
+        "hold_ns": 0.0012119186544029836,
+        "tns_ns": 0.28232474500000143
+      },
+      "netlist_sha256": "f5982fdf7869f90a4188f17608fbc61878f7a55f6930351126a37c320dc85c2d",
+      "spef_sha256": "508b99ddeda60a32b6902710556221e2407448115da665652c49736227fb1b34"
+    }
+  ],
+  "independent_checker_sha256": "2fa552fe391bd40c276e01dabf14240eb0b86c84ae2c8046e6d10cbe7aeccefa",
+  "plan_sha256": "2efbac2bfaf603fd2814e1e1ba00e0c6254dc7e5aeaf1c314f3fe169b5fcf45e",
+  "receipt_sha256": "cb946a9839ad51a46508abd654f002fba297d68097e1196eb07a6bd7cba6196b",
+  "variant_plan_sha256": "e600cd53f9899d179152d6c84c0cc84476a96998f7e4f117d7f1b4fc4772c7f7",
+  "all_frozen_sources_match": true,
+  "author_selection_imported": false,
+  "scope": "complete structural and raw endpoint evidence audit, independent strict gate and prefix replay; no new EDA or SEC",
+  "paired_comparisons": [
+    {
+      "variant": "VARIANT_054_2",
+      "historical_equal_area_comparator": "FORWARD__054_",
+      "area": "1049.7568000000",
+      "variant_minus_comparator_ns": {
+        "setup_ns": -0.031076086148829063,
+        "hold_ns": -2.6922908347160046e-06,
+        "tns_ns": -0.19785118100000076
+      },
+      "variant_strict": false,
+      "comparator_strict": false
+    },
+    {
+      "variant": "VARIANT_096_054_2",
+      "historical_equal_area_comparator": "PAIR_096_054",
+      "area": "1043.5008000000",
+      "variant_minus_comparator_ns": {
+        "setup_ns": -0.033145597377881586,
+        "hold_ns": -2.8560487308482152e-05,
+        "tns_ns": -0.20373153700000124
+      },
+      "variant_strict": false,
+      "comparator_strict": false
+    }
+  ],
+  "independent_selected": {
+    "candidate_id": "FORWARD__096_",
+    "saving": "6.2560"
+  },
+  "routes_sta": "2 routes / 4 STA; separate from nine-pair study"
+}

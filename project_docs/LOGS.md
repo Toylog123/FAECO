@@ -5134,3 +5134,82 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 **LOG-20261113-02 / 证据封存**：ARTIFACT_MANIFEST封624工件（158063779 bytes，SHA256 `1c0290adf666ece36ab98ccec8923b17fdfcc265ae8722b4456de66a50c44c12`），排除仅bytecode及manifest自身；包含41所有成功/失败raw与编排日志。再次verify通过，625个含manifest暂存Git blob均与工作区字节完全一致。生产code与paper无本轮diff。
 
 **LOG-20261113-02 / 科学包提交与远端确认**：`6955173`已实际commit并push到origin/main，远端输出`13f5b2a..6955173 main -> main`，15s/rc0；随后`git status -sb`显示main与origin/main一致且clean。再次manifest verify为624工件/SHA1c0290ad…不变。旧50s推送超时保作历史，机器交接push状态已更正；本条记录后作小型文档提交同步。阶段封口，研究未决与下一门见REPORT/ROADMAP/OPEN_ISSUES。
+
+
+## LOG-20261113-03 — 严格面积搜索的同预算排序比较准备（2026-11-13）
+
+**授权与起点**：用户授权持续推进，主线当前 HEAD `4b8a64d`，记录端实际 git status clean。本轮只写新包 `project_docs/evidence/strict_area_search_20261113`，禁止修改旧 sealed evidence 包；记录文档保留旧字节前缀，LOGS 新追加统一 LF。
+
+**阶段配置（PREPARING / 未EDA）**：将已接受安全单动作 `_096_` 固定为 seed，另外9个正面积动作分别与seed组成双动作星形邻域。拟在结果产生前冻结面积优先与物理风险排序两个策略，使用相同候选和相同验证预算；全9点实测不因好结果早停，以前缀 k=1/3/6/9 比较实际可接受面积。预测只决定排序，不授权接受；WNS/TNS/hold严格非劣与SEC门不变。
+
+**边界与下一步**：主线将写设计并提交独立review，预注册实际文件及通过审查前不记作已运行。该阶段检验固定局部邻域内的排序价值，不预设新机制成立或可跨设计泛化，也不把既有096结果重复算为新实验。
+
+
+**LOG-20261113-03 / 架构复用只读审查**：worker检查现有源码发现search_state.py虽标single owner，flow.py约508仍引用refinement_loop.SearchState；两实现并存且去重是否含base不同。本轮不复制第三状态。real_wns当前按timing gain/paired_improved推进baseline，与本轮fixed CONTROL下最大化面积目标不同；recover_area仍旧SPEF/WNS累加保护及escaped解析缺口，不复用其接受器。建议复用AcceptanceEvidence DTO、完整audit_arm/area、不可变endpoint收据，将纯排序与固定reference strict gate分离。相同完整9候选下budget9最优值必相同，策略信息来自冻结次序前缀；实测只计9物理测量，不能按两策略翻倍。只读，无文件/EDA变更。
+
+
+**LOG-20261113-03 / 设计预审通过（实现仍待审）**：独立审查通过固定seed+9双动作设计，尚未审实现或冻结PLAN，未EDA。k3为主比较；两个排序队列共享历史/实测池但实际物理调用仅9次。风险预测仅排序，严格实际WNS/TNS/hold全守门，全部失败返回绑定精确工件seed，不重路由fallback；候选/排序事前冻结。需自检k9同全集终点一致、前缀最佳不降、全失败回seed。新包哈希必须通过本地副本显式映射验证，不继续读取旧ROOT路径。主线另委派只读candidate-space审计，限定写newpkg/space_audit，不改PLAN/旧sealed包。
+
+
+**LOG-20261113-03 / 完整约束缺口实锚**：主线实际打开旧resizer_flow/resizer_sta和已接受096 propagated.tcl，确认仅create_clock、缺IO delay/load/transition；顶层CK+CLR/FM/TEST三data输入与六输出，OI-082追加具体证据，已接受点不外推IO完整域。并行space_audit将从全部102实例（含escapedFF）审计同库更小面积/中间档候选，仅读无EDA、不改变本轮固定9计划。
+
+
+**LOG-20261113-03 / 候选空间静态审计开始**：独立worker以新包本地完整CONTROL、固定Liberty和原13动作recipe，枚举同family、全部pins/functions与完整sequential state属性一致且面积更小的替换，FF/clock family单列。只写newpkg/space_audit并绑定来源SHA；无EDA，不改PLAN或旧sealed包。此处是候选覆盖审计，不表示替换物理可行。
+
+
+**LOG-20261113-03 / 候选空间审计关键结果**：独立全解析CONTROL为102功能实例/335pin；同family且全pin/完整状态签名兼容的正面积替换共62个pair、33实例。旧13动作中仅10个正面积，覆盖10/62；另3个零面积。遗漏52pair：23个新实例51pair，加原054额外4→2一pair。分类为FF21实例中8实例12pair、clock-family8中4实例14pair、其他组合73中21实例36pair。该集合只证明保守逻辑兼容候选，不等于物理/SEC资格；遗漏不一概归实现bug。静态审计无EDA、不改本轮9计划。后续自有生成器须脱离rollback log限定，触发器/clock扩展须先建立完整约束。
+
+
+**LOG-20261113-03 / 实现与冻结计划待审**：worker完成selection TDD，先ModuleNotFoundError红态，后34pass，最终34pass/0.15s；默认preflight通过，冻结PLAN SHA `2efbac2bfaf603fd2814e1e1ba00e0c6254dc7e5aeaf1c314f3fe169b5fcf45e`。197本地副本/210路径alias逐SHA、13历史singleton全结构/面积/raw metrics/输出SHA、accepted seed proof identity均自检通过；尚待主线与独立审查，无EDA。
+
+**空间审计落盘**：space_audit的audit_space.py/SPACE_AUDIT.json/REPORT已保存，62pair与现有Lib parser交叉62/62一致、来源SHA unchanged。054额外4→2与4→1同省2.5024；旧13覆盖10/62=16.129%。首版全库解析对未用类型fail-closed后限定完整CONTROL family范围，clkload0.X未连接输出显式记录，不因此扩展科学资格。
+
+**工程诊断**：WSL sha256sum rc=0且stdout为ASCII，stderr却含UTF16LE代理警告，text=True造成解码崩溃；改bytes捕获、只decode stdout后恢复校验。此为读取/编码问题，不是hash校验失败；方法沉淀EXPERIENCE。
+
+
+**LOG-20261113-03 / 九对研究独立预审接受**：PLAN2efbac2b...经独立重算9预测、归一化deficit、Decimal面积、两完整顺序与11恢复集合全一致，未调用作者selection复算；sourceSHA全同且runs尚不存在，audit_arm AST等同旧版。确认本地baseline映射/副本、seed102结构/actualmetrics/SEC身份、实际门不用预测、lexical9route/18STA共享重放及exact endpoint fallback。配置DRV仅slew/cap；复制analyze_repair.main仍专用旧13singleton，必须用runner或audit_arm入口。独立审查无EDA/未改PLAN，当前待主线正式放行。
+
+
+**LOG-20261113-03 / 九对物理批次正式启动**：根preflight/拒读旧包Path.open守卫与独立审查均通过，3e70243先固化代码协议，再启动session60904（外1860s/内1800s，scratch/strict_area_search.log）；PLAN2efbac2b...。记录端实际读PREREGISTRATION并将registry置RUNNING，确认9route18STA实际调用、k3主比较/同历史条件公平、固定CONTROL实际strict gate和exact seed fallback，历史调用成本另计。无结果先验接受。
+
+
+**LOG-20261113-03 / 运行独立监测开始**：首例052已reserved并出现run目录；独立审查用完整Reader和自写静态检查（不调用作者selection）验证recipe精确两动作、raw metrics/DRV/DRC、STA实际SPEF绑定与输出SHA，再重算两策略前缀。临时checker仅scratch，冻结PLAN/source不改，无新增EDA。reserved/目录存在不记作已完成。
+
+
+**LOG-20261113-03 / 新最优点SEC准备**：主线委派只新增run_selected_sec.py，复用本地已绑完整模型proof核心，入口要求frozen PLAN、全9完成、选中实际端点SHA审计；seed fallback拒绝重复SEC。当前不证明、不改正在运行的PLAN/source，仅为潜在新增最优点准备验证。
+
+
+**LOG-20261113-03 / 独立库中间档探针登记**：已实读VARIANT_PREREGISTRATION，登记054→2单点与096+054→2双点的独立2route预算，和历史→1同面积；仅准备，须九例全valid+review/commit后开，不改变冻结排序。主线确认当前九点前两例失败，不因此重排。
+
+**SEC admission准备交付**：run_selected_sec SHA `6c0e1f18b9c050ec8e8de6443441085d3e94eeeb9639986fa543d7a85e8b1131`，SELECTED_SEC_PREPARATION SHA `8b32a892bdedc99e80d0f099540b4ce4990dbc9e0060ebd54c0c7ecad938752f`。8个admission测试先RED后GREEN，要求all9/raw重审/frozen replay/选择SHA绑定，seed拒重复proof，原project/model AST不变；未执行SEC，PLAN/source未改。
+
+
+**LOG-20261113-03 / 7-of-9监测与工程失败归属澄清**：当前7例完成且证据有效，strict均失败；093虽ΔWNS=+0.002046141ns、hold0，ΔTNS=-0.010656357ns；102 WNS/hold改善但TNS=-0.024789810ns，不能WNS-only晋级。继续完整9点，不后验重排。
+
+准备期首次preflight失败源于WSL stderr UTF16代理提示，而sha256sum rc0/stdout五SHA正确；bytes捕获修复并保错误原件，初版PLAN放qa，最终PLAN冻结后才EDA。该失败属工程预检，不计科学run失败。主线old-readguard与worker audit-hook均证实preflight不读取旧sealed包。
+
+
+**LOG-20261113-03 / variant实现准备完成**：VARIANT_PLAN SHA `d8e4e5b0ce90d93d0209d0e0aec4bc444829d861650c2c96e0bfab3444c0c387`，VARIANT_PREPARATION SHA `4507819273a8ee2c7e87095936a4df802d99a96677c7638c7f6292e560a4f3fb`。两臂精确saving2.5024/8.7584，recipe仅054 old_cell→or3b2，driver仅PLAN/RECIPE两路径变化。5项variant TDD先RED后GREEN，selection+SEC admission+variant共47pass/0.18s；drycheck重审原9raw/replay已all9_valid。variant未EDA，原冻结source/PLAN/selected_sec未改；九点最终结果待主线/独立汇合。
+
+
+**LOG-20261113-03 / 九例独立结果完成**：INDEPENDENT_AUDIT/REVIEW及independent_check.py已产出，9/9证据有效、strict0；两策略所有prefix均返回exact seed、省6.256。runner373.578s、jobs372.829s，外wrapper另计；无前缀优势，不以k9恒等当发现。完整结果待主线封存，未新增SEC。
+
+**variant预审与可证伪目标修正**：独立确认driver仅两文件名变化、recipe仅054target，面积/恢复集合/SHA吻合。singleton saving2.5024不可能超过seed6.256，须定位为等面积target诊断；只有pair检验strict面积增益超seed。该文字问题已交主线在variant执行前澄清，不改九点冻结计划。
+
+
+**LOG-20261113-03 / 等面积库variant两臂启动**：root修正single/pair判题角色后，37fc6e3+145146a先commit，PLANe600cd53...冻结；drycheck与独立review通过，再启动session62902（外1860/内1800，scratch/strict_area_variants.log）。旧版留Git/qa且从未用于EDA，当前两臂独立计预算，主严格门未改。
+
+
+**LOG-20261113-03 / variant独立监测**：reviewer实读修订prereg与最终plane600cd53...，新建独立variant checker，不修改九例已有checker/回执、不调用作者selection、无EDA；分别按singleton等面积诊断和pair超seed问题审查实际结构/指标/证据。
+
+
+**LOG-20261113-03 / variant两臂独立完成**：2/2有效但strict0，runner55.484s/jobs55.375s，2route4STA。两臂setup/hold均相对CONTROL退化0.034445057917/0.001212918654ns，TNS单/双分别退化0.286940575/0.282325745ns；与同面积_1相比三指标皆更差。首reported关键路径DFF12→DFF3经过054/X，仅观察不作纯弧归因。无新SEC、exactseed保持，九例summary原样；等待主线最终汇总封存。
+
+
+**LOG-20261113-03 / 阶段收尾与停写**：记录端实际打开最终REPORT后同步CANON/registry/OPEN_ISSUES/EXPERIENCE。9+2共11新route22endpointSTA，均有效strict0，无新SEC；exact096 seed原工件复用，k3及全部prefix无排序优势。静态62候选只作覆盖证据，未测组合逻辑/FF/clock仍按完整约束门推进；不能将本轮阴性外推所有候选无效。已否证该固定九点邻域增益，后续不以重新排序掩盖无改进。
+
+本阶段STAGE_CLOSED / NO_NEW_STRICT_ENDPOINT，研究目标未完成；IO约束、候选/生产解析与baseline/customLib、机制强基线和泛化等未决保留。未改生产与冻结论文，未改旧sealed包。主线将同步入口、封hash、commit/push；记录端不预报未观测成功，从本条起停止受托文档写入，供稳定封存。
+
+**LOG-20261113-03 / 根最终验收**：本轮47项纯选择/证明准入/variant适配测试全部通过；根fresh重审9+2原始端点与冻结行逐项一致，两trace均exact seed，无新SEC。旧624工件seal仍1c0290ad…，安装5工具/库/LEF与RCX/setRC前后SHA一致，四个冻结中文源/PDF哈希未变，生产code/paper无diff。独立最终CSV/报告复核通过，限定其余51遗漏目标未测。最新入口/路线与机器交接已同步，准备封新证据包并提交推送；研究目标未完成。
+
+**LOG-20261113-03 / 新包字节封存**：strict_area_search包manifest封398工件/94441598 bytes，SHA `eb95ccfffcc6e1bcfebbae8d131803efd797d4f821dd15aeddf33ae50d143f9b`；再次verify通过，399个含manifest暂存Git blob与工作区字节完全相同。check_record.sh仍因停用入口产生OI-081历史告警，实际现行文档已同步；不回写停用文件。冻结旧包与paper不变，准备科学阶段提交。

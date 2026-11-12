@@ -1,0 +1,47 @@
+{
+  "stage": "same-state reentry",
+  "inputs": {
+    "experiments\\20261115_p1_resizer_vs_faeco\\arms\\Resizer\\s382\\routed.def": "6df6ea184f0597bd49536205ffa1637f51e4f55c52790ddd85b9787f8e4bf9ec",
+    "experiments\\20261115_p1_resizer_vs_faeco\\arms\\Resizer\\s382\\routed.v": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+    "experiments\\20261115_p1_resizer_vs_faeco\\arms\\Resizer\\s382\\routed.spef": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+    "experiments\\20261115_p1_resizer_vs_faeco\\arms\\Resizer\\s382\\result.json": "b165bdb7b2e57e9d57168ae2014323e1598da3dd6cf1cc2b28067d4cbfd492c6",
+    "scratch\\recovery_reentry_probe.py": "eac4379be372c65f0725ad429028c2f4c3d16087bc5574395ce0bc21d2d82b32"
+  },
+  "period_ns": 0.5,
+  "clock": "ideal",
+  "timeout_s": 300,
+  "tcl_sha256": "25e4a6cbc87727a1f4a95b2b438bf9e1aaa2aa333625188ae35b75eeb68c66c3",
+  "returncode": 0,
+  "elapsed_s": 1.0160000000032596,
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu",
+    "--",
+    "/home/toylog/faeco_eda/or26Q3/bin/openroad",
+    "-no_init",
+    "-exit",
+    "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase0/reentry.tcl"
+  ],
+  "sta": {
+    "wns": -0.8413860164147025,
+    "tns": -13.26,
+    "min_slack": 0.4559759236855143,
+    "slack": -0.8413860164147025,
+    "slack_status": "VIOLATED",
+    "drc_violations": null,
+    "routed_netlist": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\project_docs\\evidence\\recovery_qualification_20261112\\phase0\\reentry.v",
+    "spef": "D:\\BaiduSyncdisk\\01_Papers\\03_FAECO\\experiments\\20261115_p1_resizer_vs_faeco\\arms\\Resizer\\s382\\routed.spef",
+    "error": null
+  },
+  "original": {
+    "wns": -0.8413860164147025,
+    "tns": -13.26,
+    "min_slack": 0.4559759236855143,
+    "drc_violations": 0,
+    "error": null
+  },
+  "wns_delta_ns": 0.0,
+  "hold_delta_ns": 0.0,
+  "pass_sta_reentry": true
+}

@@ -1,5 +1,6 @@
 # 行为准则
 
+> **2026-11-13 最新续跑**：见 `project_docs/evidence/strict_area_search_20261113/REPORT.md`。新增9组合+2同面积variant全部未过严格门，两排序所有预算前缀均保留原096安全端点（面积−0.594530321%）。完整网表/Liberty另枚举62个静态兼容降面积替换，旧清单只覆盖10；剩余51个遗漏目标本轮未测。静态候选不是收益，自有机制优势/完整约束仍open。
 > **2026-11-13 当前执行入口**：`project_docs/CANON.md`、`project_docs/evidence/recovery_repair_20261113/REPORT.md`、`project_docs/FAECO_ROADMAP.md`。目标为自有机制、ICCAD证据标准、面积下降且相对Resizer的WNS/TNS/hold全部不下降。s382单动作基线已接受；联合机制和跨设计/完整约束尚待建立。下方旧日期专项不覆盖此入口。
 
 ## 1. 质疑优先（Challenge-first）

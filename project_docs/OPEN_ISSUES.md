@@ -1489,3 +1489,20 @@ s382 同状态重入/物理三臂/两组 SEC 已完成（`recovery_qualification
 ### OI-082 / OI-086 本轮阶段结案边界（2026-11-13）
 
 A–D完整审计41有效，局部唯一严格点096及SEC/独立接受已齐；阶段STAGE_CLOSED，不等于研究目标达成。联合机制与同预算强基线优势、完整约束与泛化仍未建立。D失败已排输入/目标错误并完成路径/Liberty只读归因，未将其判为补偿普遍无效。OI-082/086保持open；OI-084/085工程与口径缺口不因本轮endpoint接受而关闭。
+
+
+### OI-082 完整约束缺口定位（2026-11-13，严格搜索新轮静态审计）
+
+主线实读旧 `resizer_flow.tcl` / `resizer_sta.tcl`，只有create_clock，无set_input_delay/set_output_delay；已接受FORWARD096的propagated.tcl同样没有IO delays、loads、transition。顶层含CK及CLR/FM/TEST三个data inputs、六个outputs。已接受点仍只在当前约束域成立，不能外推IO时序/外部负载完整覆盖。后续须明确真实接口约束来源和测量对象后补齐，不能事后任意补约束再混用旧验收；本轮9点计划不因只读审计被静默改写。
+
+
+### OI-085 候选范围审计追加（2026-11-13，静态不改变九点计划）
+
+`strict_area_search_20261113/space_audit` 完整102实例/335pin静态审计得同family、全部pin/functions及sequential属性一致的正面积替换62pair/33实例。旧13回退只有10positive覆盖10pair，另3zero；遗漏52pair（23新实例51pair，原054额外4→2一pair）。其中FF12pair/8实例、clock-family14pair/4实例、其它组合36pair/21实例。
+
+旧rollback log并非完整候选生成器，不能称动作空间穷尽；但这些只是逻辑兼容候选，未EDA/未SEC，遗漏不能全归解析bug。未来生成器需独立枚举并绑定面积/逻辑/约束，先完善时钟与接口约束再扩FF/clock域。本轮已冻结9候选不变。
+
+
+### OI-082 / OI-085 / OI-086 严格搜索阶段结案（2026-11-13，保持 open）
+
+9+2新物理点全部有效strict失败，旧096 exact endpoint仍是接受基线；本轮无SEC新结果。OI-082的IO约束缺口具体为3data inputs/6outputs未设IO delays/loads/transition，不能外推完整IO保证。OI-085候选生成审计表明62静态兼容目标仅10被旧rollback覆盖；不是62有效收益，也非52全为bug，未来需独立生成并逐项物理验证。OI-086本轮风险排序在k3及全部prefix没有收益，不能包装机制创新；需转候选覆盖与强同预算基线，而非给已无改进九池换排序。三项及customLib等其它未决继续保留。

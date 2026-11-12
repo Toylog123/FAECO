@@ -1,0 +1,41 @@
+{
+  "status": "accepted_local_conservative_baseline",
+  "date": "2026-11-13",
+  "arm": "FORWARD__096_",
+  "scope": "s382 current physical realization; strict relative propagated setup/TNS/hold nondegradation plus configured physical checks and two-state SEC",
+  "forward_summary_sha256": "b39a2424ef82b75923bc70570ff7ececf63ade6567c870f1a6bd7dbf1aaf5295",
+  "sec_receipt_sha256": "0b0d321503a86d3b7ced1dce064362303bdafb80e0c7e1e982d688ab26bfff06",
+  "sec_driver_path": "run_repair_sec.py",
+  "sec_driver_sha256": "056e9394c2926450ea2cd2bd7676e401ba911e9a413b60de3d0735f7d05aae07",
+  "checks": {
+    "independent_final_structure_metrics_and_hashes": true,
+    "all13_completed_selection_correct": true,
+    "original_sources_still_match": true,
+    "exact_no_pin_tap_projection": true,
+    "complete_cell_model_set": true,
+    "proof_artifact_hashes": true,
+    "equiv_proven": 101,
+    "equiv_unproven": 0
+  },
+  "area": 1046.0032,
+  "area_saved": 6.255999999999858,
+  "area_saved_pct": 0.5945303210463598,
+  "metrics": {
+    "setup_ns": -0.8467440637538459,
+    "hold_ns": 0.4636368511334865,
+    "tns_ns": -13.417701721
+  },
+  "deltas_ns": {
+    "setup_ns": 0.0017147394615335543,
+    "hold_ns": 0.0,
+    "tns_ns": 0.004840850999999091
+  },
+  "netlist_sha256": "761430cf748245572384ee04ae5942d310547a314bf8dafa5cf0cf2f78e184f3",
+  "spef_sha256": "e3960c9b650f0016191dc81838ea675fb312acd75a379f9681f44e14f3b72e46",
+  "limitations": [
+    "One design and implementation; no generality or novelty claim.",
+    "Existing negative setup slack remains; not timing closure.",
+    "Supported-rule DRC/configured DRV only; complete constraint coverage not established.",
+    "Two-state SEC excludes only enumerated no-pin physical taps, not a four-state or analog proof."
+  ]
+}
