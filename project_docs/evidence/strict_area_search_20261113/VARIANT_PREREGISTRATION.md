@@ -1,0 +1,16 @@
+# Separate two-arm family-variant probe
+
+2026-11-13, registered before either variant is measured. This is a separate two-route budget after the frozen nine-pair study, not a change to either ranking or its candidate pool. The static full-instance/library audit found an omitted target on _054_: or3b_4 can downsize to or3b_2 or or3b_1, both of area8.7584 versus11.2608. The historical rollback only offers _1. The conservative library signature audit found equal logic/pin/state metadata; timing remains unknown.
+
+Test exactly these two targets, independently from the same CONTROL ODB and original SPEF:
+
+1. VARIANT_054_2: only _054_ or3b_4 -> or3b_2.
+2. VARIANT_096_054_2: _096_ nor4_2 -> nor4_1 and _054_ or3b_4 -> or3b_2.
+
+Compare to the already registered _054_ -> or3b_1 singleton and pair, respectively, at identical area savings (2.5024 and8.7584). This asks whether rollback-to-history misses a useful equal-area library target. Reject the specific improvement hypothesis if neither new target passes the strict gate with more saving than the accepted seed; do not interpret a failure as proof that all52 omitted targets are useless. It is not a timing-arc-only causality test because complete physical realization may also change.
+
+Keep the complete physical protocol and tolerance from PREREGISTRATION.md. All WNS/TNS/hold gates remain relative to CONTROL, positive saving and hold>=0, supported-rule DRC/configured DRV, exact intended complete structure and source/output SHA. Each target is evaluated once, full two-arm completion regardless of favorable result. No clock/FF modification, no broadened SDC or timing loss budget. Route900s/STA300s/child1530s/batch1800s; failures stop for attribution with budget consumed. Only execute after all9 valid pair measurements, independent pre-review and commit. Maximum2 new routes/4 STA, separately accounted; no new measurements enter the frozen pair ranking analysis.
+
+Adapt the existing driver only for the variant plan and recipe filenames. The variant recipe explicitly replaces _054_'s target old_cell by or3b_2 while preserving the CONTROL source new_cell=or3b_4; all other13-action semantics remain. Each arm restores every action except its intended one or two. Reuse unchanged complete audit_arm with the adapted recipe. This is an explicit target adapter, not a modification of the archived historical recipe.
+
+After both valid measurements, report every result and select any strict endpoint whose saving improves on the accepted seed for complete two-state SEC. Numerical qualification never implies proof. Endpoints remain exact measured netlist/ODB/SPEF objects; no re-generation. Production mechanism and paper stay unchanged. The new case study can support the importance of complete library-based candidate generation; it cannot establish a novel optimizer or end-to-end equal-budget superiority.

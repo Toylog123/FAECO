@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "scope": "Independent fixed two-arm equal-area library-target variant; not part of nine-pair selection pool",
+  "base_plan_sha256": "2efbac2bfaf603fd2814e1e1ba00e0c6254dc7e5aeaf1c314f3fe169b5fcf45e",
+  "targets": {
+    "VARIANT_054_2": [
+      "_054_"
+    ],
+    "VARIANT_096_054_2": [
+      "_054_",
+      "_096_"
+    ]
+  },
+  "singletons": {
+    "VARIANT_054_2": [
+      "_052_",
+      "_055_",
+      "_074_",
+      "_077_",
+      "_079_",
+      "_081_",
+      "_093_",
+      "_096_",
+      "_098_",
+      "_102_",
+      "_111_",
+      "_113_"
+    ],
+    "VARIANT_096_054_2": [
+      "_052_",
+      "_055_",
+      "_074_",
+      "_077_",
+      "_079_",
+      "_081_",
+      "_093_",
+      "_098_",
+      "_102_",
+      "_111_",
+      "_113_"
+    ]
+  },
+  "measurement_order": [
+    "VARIANT_054_2",
+    "VARIANT_096_054_2"
+  ],
+  "exact_area": {
+    "VARIANT_054_2": {
+      "area": 1049.7568,
+      "area_saved": 2.5024
+    },
+    "VARIANT_096_054_2": {
+      "area": 1043.5008,
+      "area_saved": 8.7584
+    }
+  },
+  "tolerance_ns": 1e-06,
+  "timeouts_s": {
+    "route": 900,
+    "sta": 300,
+    "child": 1530,
+    "batch": 1800
+  },
+  "max_new_routes": 2,
+  "max_new_sta": 4,
+  "source_sha256": {
+    "VARIANT_PREREGISTRATION.md": "3f66807af0ebc9b43c37da0d47ffb02c480346e3f3dca1f8414eb57f487fa273",
+    "VARIANT_RECIPE.json": "34d27d66215df9ff04c63c7eabaf543c2a53e71802c9329fc43a2e073509389f",
+    "physical_probe_variant.py": "9bbd2713aa21b1f646d45ec13c3976b324c7d1e493cbdf590a2d11ff257bfa78",
+    "run_variants.py": "d5cbbe97219c6809a4560bd4bc6f6e1a0ebfba8857915df4da466b4386b60978",
+    "test_variants.py": "012a6a739d7ed4ea683d075061db443f9dffe1b9b03fa4ec5856224c70364c19",
+    "space_audit/SPACE_AUDIT.json": "f7ae7eb64279ffe372c974c48074211ff238779aa845b79ab7394b4cab4a37e1",
+    "space_audit/audit_space.py": "4b6952ae882f8edef9e4d4d2460e59f406b5c8612a3db515a8e4b9b2616d885a"
+  },
+  "target_provenance": {
+    "instance": "_054_",
+    "source_cell": "sky130_fd_sc_hd__or3b_4",
+    "target_cell": "sky130_fd_sc_hd__or3b_2",
+    "category": "combinational_other",
+    "source_area": "11.260800000",
+    "target_area": "8.7584000000",
+    "area_saved": "2.5024000000",
+    "original_recipe_exact_pair": false,
+    "original_recipe_instance": true,
+    "signature_sha256": "c249ee4afbfdd0b640ce540e47194903b3945d080de3d04074df1c91c234ce3f"
+  },
+  "recipe_field_interpretation": "new_cell is CONTROL source; old_cell is explicit variant target, not historical _054_ rollback. Only _054_ old_cell changes; all other recipe fields/actions preserved.",
+  "compare_at_equal_area": {
+    "VARIANT_054_2": "labels/singletons/FORWARD__054_",
+    "VARIANT_096_054_2": "runs/PAIR_096_054"
+  },
+  "seed_acceptance": {
+    "path": "labels/provenance/FORWARD_ACCEPTANCE.json",
+    "sha256": "e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd"
+  }
+}
