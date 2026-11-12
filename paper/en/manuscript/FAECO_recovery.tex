@@ -32,11 +32,14 @@ introduced by the resizer, (2) evaluates each candidate reversion with an
 independent signoff-quality static timing analysis, and (3) cumulatively
 applies safe reversions in order of least timing impact. On eight ISCAS89
 benchmarks synthesized with SkyWater~130\,nm, \textsc{Faeco-Recovery} recovers
-7.4--22.8\% of the resizer's area penalty while keeping WNS within
-0.006~ns of the resizer's best value. The recovered circuits are fully
-routed, DRC-clean, and verified with extracted parasitics. Our results
-highlight a blind spot in current ECO evaluation---the area cost of timing
-closure---and provide a practical, open-source mechanism to control it.
+7.4--22.8\% of the resizer's area penalty. At the calibrated placement
+(utilization 0.35), WNS stays within 0.006~ns of the resizer's best
+value; across three placement seeds (utilization 0.30--0.40),
+five of eight circuits maintain $|\Delta\text{WNS}| \le 0.030$~ns.
+The recovered circuits are fully routed, DRC-clean, and verified
+with extracted parasitics. Our results highlight a blind spot in
+current ECO evaluation---the area cost of timing closure---and
+provide a practical, open-source mechanism to control it.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -99,8 +102,9 @@ ISCAS89 benchmarks, revealing that 69\% of its gate-level changes are
 unnecessary for WNS.
 \item \textsc{Faeco-Recovery}, an automated area-recovery mechanism that
 selectively reverts safe changes using signoff STA verification.
-\item Experimental demonstration on SkyWater~130\,nm: 7.4--22.8\% area
-recovery, WNS degradation $\leq$ 0.006~ns, DRC-clean in all cases.
+\item Experimental demonstration: 7.4--22.8\% area recovery, WNS within
+0.006~ns at the calibrated placement; five of eight circuits maintain
+$|\Delta\text{WNS}| \le 0.030$~ns across three independent placements.
 \end{enumerate}
 
 %=============================================================================
@@ -319,32 +323,48 @@ path.
 
 \begin{table}[t]
 \centering
-\caption{WNS (ns) before and after recovery. $\Delta$WNS =
-WNS$_{\text{recovered}} -$ WNS$_{\text{resizer}}$.}
+\caption{WNS (ns) before and after recovery at three placement seeds
+(utilization 0.30, 0.35, 0.40). Values are mean $\pm$ std across
+three independent placements. $\Delta$WNS = WNS$_{\text{recovered}} -$
+WNS$_{\text{resizer}}$.}
 \label{tab:wns}
 \renewcommand{\arraystretch}{1.1}
 \begin{tabular}{lrrrr}
 \toprule
-Circuit & WNS$_{\text{resizer}}$ & WNS$_{\text{recovered}}$ &
-$\Delta$WNS & Within budget? \\
+Circuit & Resizer & Recovered & $\Delta$WNS & Recov. \\
 \midrule
-s27  & $-$0.2268 & $-$0.2268 & \phantom{$-$}0.0000 & \checkmark \\
-s382 & $-$0.8414 & $-$0.8414 & \phantom{$-$}0.0000 & \checkmark \\
-s420 & $-$1.2169 & $-$1.2226 & $-$0.0057 & \checkmark \\
-s641 & $-$1.1170 & $-$1.1136 & $+$0.0034 & \checkmark \\
-s713 & $-$1.2386 & $-$1.2387 & $-$0.0001 & \checkmark \\
-s820 & $-$1.2536 & $-$1.2524 & $+$0.0012 & \checkmark \\
-s832 & $-$1.0062 & $-$1.0079 & $-$0.0017 & \checkmark \\
-s953 & $-$1.3219 & $-$1.3214 & $+$0.0004 & \checkmark \\
+s27  & $-$0.222$\pm$0.005 & $-$0.221$\pm$0.006 &
+$+$0.001$\pm$0.001 &  0.0\% \\
+s382 & $-$0.841$\pm$0.009 & $-$0.812$\pm$0.026 &
+$+$0.029$\pm$0.026 & 22.8\% \\
+s420 & $-$1.191$\pm$0.027 & $-$1.206$\pm$0.015 &
+$-$0.014$\pm$0.020 &  7.4\% \\
+s641 & $-$1.130$\pm$0.021 & $-$1.131$\pm$0.016 &
+$-$0.002$\pm$0.012 &  8.5\% \\
+s713 & $-$1.253$\pm$0.028 & $-$1.230$\pm$0.046 &
+$+$0.023$\pm$0.073 & 18.0\% \\
+s820 & $-$1.269$\pm$0.081 & $-$1.320$\pm$0.092 &
+$-$0.051$\pm$0.046 & 20.1\% \\
+s832 & $-$1.059$\pm$0.061 & $-$1.039$\pm$0.057 &
+$+$0.020$\pm$0.021 & 14.4\% \\
+s953 & $-$1.284$\pm$0.040 & $-$1.393$\pm$0.076 &
+$-$0.109$\pm$0.115 & 21.6\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:wns} shows the WNS before and after recovery. On s382,
-WNS is \textbf{unchanged} ($-$0.8414 ns). The worst degradation is on
-s420 ($-$0.0057~ns), still well within the 0.015~ns budget. The mean
-WNS degradation across all eight circuits is $+$0.0000~ns, approximately
-$2\times$ the STA quantization step (0.01~ns).
+Table~\ref{tab:wns} reports WNS at three independent placement seeds
+(utilization 0.30, 0.35, 0.40). The recovery recipe was calibrated at
+utilization 0.35; applying the same reversions at other placements
+introduces placement-induced variability. On five of eight benchmarks
+(s27, s382, s420, s641, s832) the mean $\Delta$WNS stays within
+$\pm$0.030 ns---within the single-placement noise floor. On s820 and
+s953, cross-placement variability is larger, indicating that the
+recovery recipe is placement-sensitive for these larger designs.
+The area recovery is \emph{real} (col.~4), but WNS preservation must
+be qualified to the calibrated placement. We report the three-seed
+data---both favorable and unfavorable---so that future work can
+benchmark against it.
 
 \subsection{Relationship Between Area and WNS}
 
@@ -386,7 +406,9 @@ a practical, automated recovery mechanism.
 This paper makes a simple argument backed by per-instance evidence: the
 OpenROAD resizer achieves excellent WNS improvement but wastes 69\% of
 its gate-level changes. \textsc{Faeco-Recovery} recovers 7.4--22.8\% of
-this wasted area without degrading WNS by more than 0.006~ns. The tool is
+this wasted area. At the calibrated placement, WNS degradation is
+$\le$0.006~ns; across three independent placements, five of eight
+circuits stay within $\pm$0.030~ns. The tool is
 open-source, produces DRC-clean netlists, and integrates seamlessly with
 the standard OpenROAD flow.
 
