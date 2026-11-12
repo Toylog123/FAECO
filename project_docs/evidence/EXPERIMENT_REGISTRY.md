@@ -2258,3 +2258,27 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 **记录**：project_docs/LOGS.md（LOG-20261112-01）、docs/EXPERIENCE.md（r129）。
 **判定**：面积效率比 >=2x on 7/8 PASS；Recovery >=20% on 4/8 PASS。
 **状态**：NON_PROMOTION（诊断性实验，不晋级，但结果强）。
+
+
+### 2026-11-12 RECOVERY-QUALIFICATION-PHASE0
+
+- **状态**：ENGINEERING_PILOT_COMPLETE / NON_PROMOTION（2026-11-13 完成限定工程验收；严格时序门失败，不作科学晋级）。
+- **预注册**：`project_docs/evidence/recovery_qualification_20261112/PREREGISTRATION.md`；parent source HEAD `51cebf5aa6a8946e81b7e2d6018ba8879660c749`，本轮修正后的 CLI 另绑定文件 SHA。
+- **问题与先行证伪**：s382 同状态 DEF 重入能否恢复原 netlist 功能单元/连接，且独立原 SPEF ideal-clock setup/hold slack 与历史终点相差不超过 1e-6 ns；任一失败则停止解释后续 recovery 差值。
+- **输入**：`experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/` 的 routed DEF/Verilog/SPEF；恢复配方 `experiments/20261112_resizer_recovery/arms/RECOVERED_V2/s382/{summary.json,recovered.v}`。交接中 `20261112.../arms/Resizer/s382` 路径不存在，不使用。
+- **环境**：sky130hd TT 025C 1v80 与既有 ORFS RCX；`/home/toylog/faeco_eda/or26Q3/bin/openroad`、`/usr/local/bin/sta`。主线已实查 installed help 支持 `repair_timing -recover_power 100`（`scratch/recovery_preflight.log`）。
+- **后续条件臂**：仅 phase 0 通过后运行同起点 CONTROL / RECOVERY_V2 / NATIVE，统一物理流程及终点约束，重新合法化、布线、提取寄生；propagated-clock 另表，不混历史 ideal-clock。
+- **门槛与边界**：严格非劣 slack 降幅 <=1e-6 ns；placement/DRC/setup/TNS/hold/slew/cap 检查缺项即 unknown；科学晋级还需 SEC。面积主口径为总 standard-cell 面积下降，不混新增面积回收。单例只能证明可行性。
+- **运行纪律**：STA/重入每子进程 300 s，routing 900 s，串行布线、持续日志/进度；输入/工具/驱动 SHA、argv、耗时、rc、输出与实际 pass/fail/unknown 必须留存。不得观测结果后改门槛，无论文修改。
+
+
+#### RECOVERY-QUALIFICATION-PHASE0 / Phase1_v2 收尾（2026-11-13）
+
+- **实际核验源**：`recovery_qualification_20261112/REPORT.md`、`PILOT_SUMMARY.json` 已由记录端实际打开；逐输入/输出、工具与驱动身份见该目录 manifest、SHA 收据和 SEC proof receipts。
+- **Phase0**：同状态结构全部 3128 实例/335 bindings/10 ports/109 声明/4 assigns 通过；ideal-clock setup/hold 精确复现。端口顺序差异只限 named 顶层接口。
+- **Phase1_v2**：s382 三臂同起点、合法化/重新布线/新 SPEF。CONTROL 面积 1052.2592 μm²，RECOVERY_V2 1005.9648 μm²，降 4.399524375743126%；NATIVE 0 resize，面积与时序同 CONTROL。
+- **严格门 FAIL**：propagated setup 退化 0.009971634629124537 ns、hold 退化 0.000018596235662471372 ns、TNS 退化 0.312647 ns，超过 1e-6 ns 严格非劣阈值。三臂均有负 setup slack，非 timing closure；ideal-clock 门也失败。
+- **物理/逻辑边界**：三臂 route DRC=0 仅限支持规则（LEF58_ENCLOSURE 缺 CUTCLASS 被跳过）；DRV raw 无 VIOLATED 不等于完整 SDC/约束覆盖已建立。两组 SEC 均 101 proven/0 unproven，含完整 102 功能 cell/21 FF，明确剔除同一 3026 零 pin tap；模型域内等价不覆盖物理时序。
+- **工程门**：1113 passed/156 subtests，清理并发后 24 passed 重检；零值/导入修复与 packaged helper 已固化。代码提交 `a20f48c`，预注册/roadmap 提交 `e3c694c`。
+- **数据口径修正**：14 例只读审计总 mapped-cell 面积平均降 3.071500828%，旧 4.54223469% 分母漏项；绝对节省不变。新增面积回收约 14% 仍待层次 baseline 审计。
+- **后续门**：生产 escaped parser/SEC scanner、baseline 层次、完整 SDC/DRV、自定义 Liberty，以及最强等预算基线与新机制证据仍待解决。本轮无论文改动，非 ICCAD 研究任务全部完成；仅 s382 新物理 pilot，未重跑全部 14 例。

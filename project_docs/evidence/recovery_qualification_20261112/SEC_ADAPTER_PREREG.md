@@ -1,0 +1,7 @@
+# SEC adapter amendment before prover execution
+
+2026-11-13. The first evidence driver stopped before launching Yosys because it detected 21 escaped DFF instance names (`DFF_N/_0_`) that the legacy `final_sec` used-cell regex would omit. Preserve `run_pilot_sec_v1.py` and empty failed `sec/CONTROL_vs_RECOVERY_V2/`; there was no proof result to reinterpret.
+
+Authorized correction: keep `final_sec` and the pinned prover/script unchanged, but use an evidence-local wrapper for its model-generation call. The replacement `used_cells` is the exact union from the complete fail-closed Reader over both normalized netlists. Require the legacy set to be a subset, all parsed cells to exist in the pinned Liberty, and each s382 side to retain 102 functional cells including 21 sequential cells. Record omitted legacy types, exact model types, all source/normalized/Liberty/model hashes and full removal IDs. No instance renaming. The only removed statements are the previously specified 3026 verified empty-pin tap instances on each side, with identical ID sets and canonical checks that no other structure changes.
+
+Run CONTROL versus final RECOVERY_V2, then CONTROL versus final NATIVE sequentially. Each prover has the existing 180-second timeout; each driver invocation is wrapped at 450 seconds. Output directories gain `_models_v2`. A pass requires explicit proof success, zero exit and unchanged physical input hashes. Do not alter physical outputs or production SEC code. This amendment precedes both corrected prover runs.

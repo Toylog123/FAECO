@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-11-12T23:30:00+08:00",
-  "status": "r116 \u8bba\u6587\u5b9a\u7a3f + \u516d\u8f6e\u673a\u5236\u5b9e\u9a8c\u5c01\u53e3 + \u65b9\u5411\u8f6c\u6298\u5230\u5e03\u5c40\u540e SOTA ECO\uff1bP1\uff080/8 \u80dc resizer\uff09\u4e0e Hybrid\uff08+0.0243 \u672a\u8fc7\u95e8\uff09\u5747 FAIL\uff1bP1\u2032 \u4e00\u8f6e\uff08pre-CTS \u53d8\u4f53\u7ec8\u70b9\uff09+0.0786 ns PASS\uff1bP1\u2032 \u4e8c\u8f6e\uff08post-CTS \u53d8\u4f53\u7ec8\u70b9\uff09\u22120.3954 ns FAIL \u21d2 P1\u2032 \u7ebf\u5728\u5f53\u524d\u673a\u5236\u4e0b\u5c01\u53e3",
+  "timestamp": "2026-11-13",
+  "status": "Recovery ICCAD qualification: NON_PROMOTION; full exported-cell area audit 14-design mean 3.071500828%; s382 physical pilot retains area gain but fails strict timing gate; see CANON and qualification REPORT.",
   "project": "FAECO",
   "read_order": [
-    "HANDOFF_2026-11-12.md",
+    "project_docs/HANDOFF_2026-11-12.md",
     "project_docs/FAECO_ROADMAP.md",
     "project_docs/CANON.md",
     "project_docs/PROJECT_MAP.md",
@@ -12,9 +12,9 @@
     "AGENTS.md"
   ],
   "git": {
-    "head": "94b75d9",
-    "ahead_of_origin": 55,
-    "pushed": false
+    "head_source": "git log -1 --format=%H",
+    "status_source": "git status -sb",
+    "push_status": "pending current phase push attempt; prior remote timeout historical"
   },
   "paper_state": {
     "note": "\u8bba\u6587\u4fa7\u81ea 2026-11-09 (r116) \u8d77\u51bb\u7ed3\u672a\u52a8\uff1b\u7528\u6237 2026-11-11 \u8d77\u660e\u786e\u300e\u4e0d\u8981\u7740\u6025\u6539\u8bba\u6587\u300f\u3002",
@@ -53,7 +53,7 @@
     "v19_manifest": "139 OK / 9 FAILED",
     "v20": "pending (covers r95-r116 + mechanism code + P1 code)"
   },
-  "tests": "1095 passed / 7 skipped / 156 subtests (2026-11-11, needs oss-cad bin+lib on PATH + .venv python)",
+  "tests": "1113 passed /156 subtests; 24 affected tests rechecked; packaged Windows helper required, see docs/environment.md",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139",
@@ -97,5 +97,6 @@
       "root_cause": "\u5e03\u5c40\u6863\u5224\u65ad\u5728 post-CTS \u7ec8\u70b9\u4e0a\u4e0d\u53ef\u8fc1\u79fb\uff1a\u540c\u7f51\u8868 placed -2.10 vs routed -1.11\uff1bs641 \u7684 +0.609 \u5728\u5e03\u7ebf\u540e\u7ffb\u6210 -0.532\uff08\u63a2\u9488 with-CTS +0.6369 / skip-CTS +0.6187\uff09",
       "instrument": "code/src/rseco/routed_sta.py: render_flow_tcl_skip_clock_tree + run_routed_sta(skip_clock_tree=True)\uff08\u9ed8\u8ba4\u884c\u4e3a\u4e0d\u53d8\uff0c\u56de\u5f52 PostCtsFlowTest\uff09"
     }
-  }
+  },
+  "qualification_report": "project_docs/evidence/recovery_qualification_20261112/REPORT.md"
 }

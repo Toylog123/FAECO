@@ -8,6 +8,7 @@ versions/*/MANIFEST.sha256 text eol=lf
 # 同一原因：物理流程脚本由 `wsl.exe bash /mnt/...` 调用，CRLF 会让 shebang 与
 # `set -e` 行带上 \r 而整脚本失效，故强制 LF-only。
 *.sh text eol=lf
+project_docs/evidence/recovery_qualification_20261112/** -text
 
 # New r22 byte-pinned receipts/archives must survive checkout without conversion.
 project_docs/evidence/r22_correctness_20261016/sequential_tdd/** -text

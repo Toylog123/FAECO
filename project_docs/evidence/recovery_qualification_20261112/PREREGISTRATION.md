@@ -25,4 +25,12 @@ User authorizes continued evaluation for ICCAD; no manuscript edits. Parent sour
 
 ## Completion records
 
+### Phase 1 implementation binding (before first physical run, 2026-11-13)
+
+Driver `physical_probe.py` loads phase0 OpenDB, original extracted SPEF, propagated clocks for native recovery; native option is supported by installed 26Q3 help. All arms use detailed placement, global routing and detailed routing (15 iterations), then new RCX extraction. This is a bounded full-rerouting feasibility comparison, not an incremental ECO routing efficiency claim. Independent endpoint reports use both ideal and propagated clocks separately. Only named pin connectivity equivalence permits phase0 transition. Raw DRV reports remain pending until inspected; do not treat return code alone as validation. Source scripts and toolchain hashes are saved before the run. This pilot can assess reconstruction/physical viability; native tuning and fair compute-budget comparison remain later gates.
+
+### Engineering correction before v2 runs
+
+CONTROL v1 failed with DRT-0626 (guide loading): routed database still had signal wires, and global_route produced no new routing guides. No scientific outcome was produced. Preserve `physical_probe_v1.py` and `phase1/CONTROL/`. Version 2 explicitly destroys regular signal/clock dbWire objects in the in-memory copy (installed `odb::dbWire_destroy` API verified), preserving power/ground special wiring, nets, connectivity and source files. All three arms use this same full-reroute preparation, output to `phase1_v2/`; original gates unchanged.
+
 Record input/tool/driver SHA256, argv, elapsed time, return codes, outputs and actual pass/fail/unknown states. Do not change gate after observing results. Amendments must precede dependent runs.

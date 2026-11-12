@@ -3345,3 +3345,21 @@ B. 改选择结构（多联合候选 / 先接受后组合）。若都不过，�
    机制按设计约束正确保护——属于 legitimate negative，非机制失效。
 
 **产物**：experiments/20261113_itc99_recovery/{inputs,arms,recovered,batch_results.json}
+
+
+## 2026-11-12 — Recovery 零值与独立 CLI 导入边界（OI-083，专用测试通过）
+
+WNS=0 与 delta=0 是合法物理量，不能用 `x or -inf` 或 `if x` 判断缺失。此处应显式比较 None；否则合法候选被拒、交互回滚排序改变、最终零值被写成 null。专用测试先得到 5 failed / 2 passed，四处最小修复后与 routed_sta 测试合跑 18 passed（1.75 s），整体回归由主线继续执行。
+
+直接 CLI 导入测试须防当前环境 editable install 意外兜底；本次用 `python -I -S` 运行 help 才稳定暴露 ROOT/src 与实际 ROOT/code/src 的不匹配。Windows 子进程输出用 bytes 捕获避免测试诊断被编码 warning 干扰。工程测试中的外部 STA 替身不构成新科学证据，亦不自动决定历史结果影响。
+
+
+## 2026-11-13 — packaged Windows 进程下 Yosys DLL 搜索与可复用镜像（OI-080）
+
+本次正确 PATH 仍有 0xC0000135 DLL_NOT_FOUND，不能沿用历史 0xC0000139 的归因。Codex package identity 下的 DLL 搜索规则与普通终端不同；将字节同一的 2 exe / 8 DLL 放同目录后可运行。`code/scripts/prepare_packaged_yosys.py` 固化临时镜像和 share/yosys，359 项 SHA 绑定，拒绝异哈希覆盖并验证重复调用收据不变，不改工具安装。
+
+镜像环境完整回归 1113 passed / 156 subtests，清理并发结束后受影响测试再次 24 passed。教训：测试运行时不得由另一智能体恢复/移动它正在写的产物；若发生，保留备份并在清理完成后重验受影响测试，不能只依总 rc 宣告无干扰。
+
+## 2026-11-13 — routed DEF 重入须先显式处理已有普通布线
+
+Phase 0 同状态结构/独立 STA 一致后，Phase 1 CONTROL 仍可能因已有 routed wires 导致 global_route 不产新 guides，触发 DRT-0626。此类装置失败先归因，不解释为恢复机制失效。此次在新预注册版本中只清副本 regular signal/clock dbWire、保留 PG/nets/连接，三臂一致，再进入重试；本条记录修正方法，物理通过状态另以运行收据为准。

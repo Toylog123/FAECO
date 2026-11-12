@@ -4886,3 +4886,126 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 
 跨基准族（ISCAS89 8 例 + ITC-99 6 例 = 14 例）结论：145/202 (72%) 的 Resizer 改动可安全回退，
 平均面积回收 15.2%，WNS 退化均值 ≈0.0。最强个案 b07 回收 33.3% 面积。
+
+
+## LOG-20261112-03 — 新主机接手核验开始（2026-11-12）
+
+**任务边界**：读取现行交接、事实口径与未决项，运行三项环境自检；不启动新科学实验，不改论文或生产代码，不更新已停用的 agent_handoff / WORK_PROGRESS。
+
+**起点**：主线初检报告当前分支 main，HEAD `51cebf5aa6a8946e81b7e2d6018ba8879660c749`，初始工作区 clean，相对本地 origin/main ahead 59；远端状态尚待核验。专职记录智能体同步维护本日志与 OPEN_ISSUES。
+
+**发现待核验漂移**：交接文档仍引用 `94b75d9` / `7776ccb` 等旧 HEAD；`.codex-handoff.json` 的 read_order 首项为根目录不存在的 `HANDOFF_2026-11-12.md`，实物在 `project_docs/`；部分状态仍停在 Recovery 之前。最新日志写 145/202，而交接提示写 136/202；这些科学计数暂不择一采信，待原始结果审计。登记 OI-079，保留既有未决项。
+
+**后续**：主线核验交接路径、工具状态与三项自检，结果到达即同步；本轮不能把环境检查通过当成 Recovery 科学有效性通过。
+
+
+## LOG-20261112-04 — 接手自检结果与任务转向机制规划（2026-11-12）
+
+**环境自检结果（主线执行回报）**：CLI `--help` rc=0；pdflatex 两遍输出位于 `scratch/takeover_20261112_build`，pass1/pass2 均 rc=0，PDF 4 页、225073 bytes。本轮未做页面视觉验收，不能称排版已验收。全套 pytest 日志 `scratch/takeover_20261112_pytest.log`：5 failed、1101 passed、156 subtests，耗时 199.89 s。失败分布：`test_convert_itc99_blif_to_v` 3 项、`test_demo_runner` 1 项、`test_yosys_abc_flow` 1 项；涉及 Yosys 转换/CEC，根因尚未归属，不把失败直接判为算法问题。登记 OI-080。
+
+**记录检查器漂移**：`code/scripts/check_record.sh` 仍检查已停用文档，登记 OI-081；不能为了让旧检查器通过而恢复更新 deprecated 文档。
+
+**证据审计阶段结论**：审计智能体回报当前对应合并计数为 136/202；约 14% 是「新增面积的回收比例」，不是「总面积降低比例」，平均总面积降低约 4.54%。精确版本、逐例值与原始路径由审计产物绑定；历史 145/202 保留，当前交接须区分诊断与最终算法结果。
+
+**用户新指令**：用户希望形成自己的机制，面向 ICCAD / 未来 DAC，并请求计划；确认未提交 DAC 2027 摘要。任务转为机制定位、既有工作检索与路线规划，主线将计划写入现有 `project_docs/FAECO_ROADMAP.md`。本轮不修上述测试、不修改论文或生产代码、不启动新科学实验；不得把环境检查或现有 Recovery 读数当作机制创新已经成立。
+
+
+## LOG-20261112-05 — ICCAD 适配性初评收尾（2026-11-12）
+
+**用户收窄任务**：先评估是否适合 ICCAD，不实施完整研究计划。主线仅在现有路线图增加现状评估横幅；本轮未实施新机制、未改论文、未跑新科学实验。
+
+**初评**：ECO / 时序与面积优化属于 ICCAD 主题范围；当前材料尚未达到可投稿状态，主要缺口是机制新颖性、最强基线比较与物理验证。官方 OpenROAD 已有 `recover_power`，已有 parallel recovery 工作，因此不能把逐门回退或并行恢复本身当作已建立的新方法贡献。参考：ICCAD 2026 CFP（https://iccad.com/2026/authors/call-for-papers）、OpenROAD resizer 文档（https://openroad.readthedocs.io/en/latest/main/src/rsz/README.html）、Taskflow / TCAD 2022 论文（https://gdimitrak.github.io/papers/taskflow-tcad22.pdf）。这是适配性与证据缺口判断，不是录用预测。
+
+**原始结果审计回报**：202 只覆盖同名 cell swap；136 是累积实际应用回退数，不等于逐个回退且时序影响为零的数量（例如 s953 `_351_` 个体读数 +0.0318）。现有测量沿用原 SPEF、ideal clock，未重新合法化/布线，DRC 字段 None，因此不构成完整物理闭环。跨布局按均值阈值为 6/8，在全部测点都过阈值的口径下为 2/8；不能沿用历史 5/8 而不说明判据。CANON 尚缺 22 项资产登记。科学证据缺口登记 OI-082，既有历史记录保留。
+
+**静态实现审计**：`code/scripts/recover_area.py` 中 `res['wns'] or -inf` 会把合法 WNS=0 当缺失；`delta_wns or -inf` 会把零增量排在负增量之后；`if final_wns` 会把零值变为 None；第 37 行 `sys.path` 的 `ROOT/src` 应为 `ROOT/code/src`。本轮未修复、未以执行测试确认，登记 OI-083。无单独审计文件，依据为该源码当前表达式，后续须复现 WNS/delta 零值边界与直接运行导入行为。
+
+**自检与交付边界**：`check_record.sh` 实跑 WARN，原因含 deprecated 文档检查（OI-081）。完整 pytest 的 5 项失败仍 open（OI-080）。测试生成的三个未跟踪 data/cases 产物由主线安全转移到 scratch，记录端未删除文件。交接漂移 OI-079 仍 open；本轮未 commit / push。
+
+
+**LOG-20261112-05 主线复核追加**：主线独立读取 14 份直接 summary，复算 136/202；新增面积回收比例均值 13.9642857%，总面积降低比例均值 4.54223469%，当前记录中的最大绝对 WNS 差 0.0057 ns（仅对应上述原 SPEF / ideal-clock 测量边界）。三个测试生成的未跟踪路径已安全移动到 `scratch/takeover_20261112_test_artifacts`，未删除产物。记录修改保持未提交，等待主线最终核验。
+
+
+## LOG-20261112-06 — 三道验证门持续推进开始（2026-11-12）
+
+**授权更新**：用户已授权持续推进三道验证门；前轮「仅评估、不实施」边界到此结束。本轮不改论文，以工程可用性、证据口径和物理闭环先行验证，不把既有 Recovery 效果预设为成立。
+
+**分工与顺序**：主线先固化前轮文档快照，再推进现有 ODB / 原生 `recover_power` 安装与输入契约预检，并在任何 EDA pilot 前完成限定范围的预注册；test_failures 智能体负责 OI-080 的 5 项失败归因与修复；evidence_audit 智能体负责 OI-083 的 WNS/delta 零值及导入路径测试与修复；专职记录只维护 LOGS、OPEN_ISSUES 与 EXPERIENCE，不提交。可并行的诊断并行，物理 pilot 依赖预检与预注册。
+
+**验收约束**：先复现再修复，测试对象、版本、输入和配置明确绑定；局部测试通过后仍须整体回归。科学 pilot 先定义推翻机制主张的结果，再运行，并设置超时和进度监测。未解决项保留，状态只按实际证据更新。
+
+
+**LOG-20261112-06 / OI-083 测试设计登记**：evidence_audit 已读取 debugging/TDD 与现有 `test_routed_sta` 模式，限定修改 `code/scripts/recover_area.py` 与 `code/tests/test_recover_area.py`。拟用真实恢复流程配外部 STA 替身覆盖：候选 WNS=0 合法、delta=0 在负 delta 前且后验证移除末项符合排序、最终 WNS=0 写入 JSON、`python -I` 直接 CLI help 无额外路径注入，以及 None/error 失败对照。先运行预期失败用例再修复；这些属于工程边界验证，不产生科学 STA 结论。
+
+
+**LOG-20261112-06 / OI-083 红阶段实测**：`run_with_timeout.sh 60 .venv/Scripts/python.exe -m pytest code/tests/test_recover_area.py -q --tb=short`，5 failed / 2 passed，pytest 0.90 s，wrapper rc=1，无 warning。独立 CLI import 失败；candidate WNS=0 在 baseline=-0.01 与 0 时均被误拒；交互回滚错误保留负 delta 的 b 而非零 delta 的 a；final WNS=0 输出 None。测试准备时发现 Windows 文本解码 warning 与 editable install 掩盖路径问题，已用 subprocess bytes 捕获及 `-I -S` 隔离后获得干净红态。此时尚未改生产代码，证实 OI-083 四类问题可复现。
+
+
+**LOG-20261112-06 / OI-083 绿阶段实测**：完成四处最小生产修复：导入路径改 `code/src`、revert WNS 使用 `is not None`、delta 排序显式判断 None、final WNS 使用 `is not None`。新增 7 个行为用例；`run_with_timeout.sh 60 .venv/Scripts/python.exe -m pytest code/tests/test_recover_area.py code/tests/test_routed_sta.py -q --tb=short` 得 18 passed / 1.75 s / rc=0，无测试 warning；`git diff --check` 无错误（Git 换行提示另计）。尚待主线整体回归，不据此提前关闭 OI-083；无新 EDA 或历史结果重算。
+
+**新增静态发现**：`recover_area.py` 的 `--liberty` 仅用于面积计算，三个 STA 调用未传该库，`routed_sta.py` 使用 DEFAULT_PLATFORM 固定 TT 库。自定义库参数可能导致面积库/时序库不一致，登记 OI-084；本次 worker 未扩修。
+
+
+**LOG-20261112-06 / 物理 pilot 运行前登记**：主线已完成 `recovery_qualification_20261112/PREREGISTRATION.md` 与 roadmap 计划更新；记录端实际读取预注册后，在 EXPERIMENT_REGISTRY 登记 RECOVERY-QUALIFICATION-PHASE0。先做 s382 同状态 DEF 重入与原 SPEF ideal-clock setup/hold 1e-6 ns 一致性门，后续物理/native 臂严格条件执行。已验证安装的 26Q3 help 支持 `recover_power 100`（scratch/recovery_preflight.log）。纠正输入路径为 `experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382`，交接所写 20261112 路径不存在。主线将先提交预注册/roadmap；此条不宣称提交已发生。
+
+
+**LOG-20261112-06 / OI-080 环境归因进展**：test_failures 复用 EXPERIENCE r116 排查；本轮退出码为 `3221225781 / 0xC0000135 DLL_NOT_FOUND`，并非历史 `0xC0000139`。正确 bin+lib PATH 在 Git Bash、PowerShell、净 PATH 与 cwd=lib 下仍失败；静态 DLL 却都能 ctypes 显式加载。将原 exe 字节相同复制到 scratch 并把 8 个 DLL 同目录后，`yosys -V` 恢复 `0.67+146 / 468ba27d9`。临时 `scratch/oi080_suite` 包含 10 个逐 SHA 匹配的 exe/DLL receipt 和 share/yosys 副本，不改安装/源码；三个失败相关测试文件现以 180 s 包装运行（`scratch/oi080_targeted.log`）。Windows 加载策略根因尚未钉死，不称 PATH-only 修复，也未称全套通过。
+
+
+## LOG-20261113-01 — 验证跨日继续，Phase 0 数值重入通过（2026-11-13）
+
+**日期与身份**：客户端日期更新为 2026-11-13，后续日志按新日期；既已预注册的实验 ID `RECOVERY-QUALIFICATION-PHASE0` / `recovery_qualification_20261112` 保持冻结，不因跨日重命名。
+
+**主线 Phase 0 实测回报**：运行 rc=0，历史原网表与 DEF 重载导出网表的 standalone STA 均为 setup WNS `-0.8413860164 ns`、hold `0.4559759237 ns`，两个差值均为 0；结果绑定 phase0 manifest。仅数值重入门通过，结构独立 checker 仍待完成，不提前宣布 Phase 0 全门验收或物理/native 臂结论。
+
+**整体回归监测**：主线已用临时 DLL 同目录镜像启动完整测试。期间子智能体清理测试产物（恢复六个受跟踪 demo 结果文件并移动未跟踪产物）与主线测试发生并发，停止清理消息送达时已发生。记录为工具/文件并发干扰；完整套件结束后仍须针对受影响 demo 在清理结束状态重检，不能仅凭总 rc 宣称无并发影响。
+
+
+**LOG-20261113-01 / OI-080 针对性回归与归因**：`scratch/oi080_diagnosis.md` 汇总：字节同一的临时镜像下 24 tests passed，pytest 29.73 s / wrapper 31 s / rc=0，无永久代码修改。worker 检查到进程 package identity 为 `OpenAI.Codex_26.1106.6628.0_x64__2p2nqsd0c76g0`；Microsoft packaged DLL search-order 文档列出的搜索规则不包含 PATH/cwd（https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-library-search-order），结合 DLL 同目录后恢复运行，支持本次 package 环境加载路径归因。仍需主线全套与受并发影响的 demo 复验。测试确实改过六个受跟踪 minimal-case result 文件及未跟踪 normalization 产物，worker 已先完整备份到 `scratch/oi080_generated_case_backup` 再恢复/移动；不记为「未发生受跟踪文件变更」。
+
+
+**LOG-20261113-01 / Phase 0 独立结构检查预登记**：evidence_audit 已实际读取预注册、manifest、原 routed.v、reentry.v 与 Tcl，准备证据目录专属 `check_phase0_structure.py` 与 `phase0/STRUCTURE_CHECK.json`，不调用 EDA。检查器计划消费全部文本，以完整词法和受限门级语法对比全部实例 cell/pin bindings、端口 direction/type、wire 声明及 assign，支持转义标识符，未知语法 fail-closed；顶层 named interface 的端口顺序差异单列，不直接判为功能变化。完成前不把数值相等代替结构验收。
+
+
+**LOG-20261113-01 / 整体回归结果与物理驱动就绪**：主线完整套件 `scratch/recovery_qualification_regression.log` 结束，1113 passed / 156 subtests / 144.22 s / rc=0；较前轮新增 7 个 CLI 行为测试。因前述清理并发，仍将重跑 demo 与 Yosys 三个相关测试文件后才关闭 OI-080。预注册与 roadmap 已由主线提交 `e3c694c`。物理驱动 `physical_probe.py` 已在运行前绑定预注册并保存 `toolchain.sha256`：native 使用原提取 SPEF 与 propagated clocks，各臂统一 full rerouting 15 iterations。须等独立 Phase 0 结构检查完成后再运行，不以驱动就绪代替物理验证结果。
+
+
+**LOG-20261113-01 / Phase 0 独立结构验收**：checker 与 `phase0/STRUCTURE_CHECK.json` 回报 PASS：全部 3128 实例、335 pin bindings、10 端口、109 声明、4 assign 一致，包含 3026 个无 pin 的 tapvpwrvgnd 及 102 个有 pin 的逻辑/clock 实例，并非仅 common-name 子集；manifest 原 routed.v SHA 绑定通过。端口顺序差异已记录，通过范围是 named 顶层接口，不保证 positional 父模块调用。独立读取原 result.json 与 raw STA 日志确认 setup/hold 原值完全复现、TNS=-13.26 ns。raw STA 存在 tapvpwrvgnd 缺 Liberty 而 blackbox 的警告，相关 3026 tap 实例均无 pin 连接；此测量边界保留，不将 Phase 0 工程入口验收等同完整 signoff。审查未调用 EDA、未重跑测试。
+
+
+**LOG-20261113-01 / 工程回归门闭合**：完整套件 1113 passed 后，清理结束状态下三个受影响测试文件再次 24 passed / 29.35 s / rc=0，解除清理并发对本次结果的未决影响。OI-080 限定以字节同一 DLL 同目录镜像环境 workaround 闭合；OI-083 四项 CLI 修复经专用与完整回归闭合，OI-084 自定义 Liberty 风险仍 open。
+
+**可复用环境工具**：新增 `code/scripts/prepare_packaged_yosys.py`，stdlib 固定已验证的 2 exe + 8 DLL，复制 share/yosys 并出 SHA 收据，已有异哈希拒绝覆盖，默认 scratch/packaged_yosys，不改安装。help 已验；60 s 包装 clean scratch/oi080_repro 构建 11 s/rc=0，90 s 包装验证 5 s/rc=0：Yosys 0.67+146/468ba27d9，重复收据不变，359 项源/目标 SHA 匹配，独立异哈希碰撞复制前拒绝且哨兵保留。证据 `scratch/oi080_repro_build.log`、`scratch/oi080_repro_verify.log`、`scratch/oi080_repro/receipt.json`。
+
+**Phase 1 首轮失败归因与预注册修订**：v1 CONTROL 遇 DRT-0626 guide loading，原因是既有 routed wires 使 global_route 未生成新 guides；原 `physical_probe_v1.py` 与 `phase1/CONTROL` 保留。这是物理重入装置失败，不能归为 Recovery 科学失败。主线在 v2 运行前修改预注册：仅在副本中以已验证 `odb::dbWire_destroy` 清除 regular signal/clock dbWire，保留 PG、nets 与连接，三臂同处理。`phase1_v2` CONTROL 已启动，未记录为通过。
+
+
+**LOG-20261113-01 / Phase 1 串行 SEC 运行前登记**：主线授权 evidence_audit 复用 `run_r22_cut_ablation.final_sec`，串行校验 CONTROL 对 RECOVERY_V2、CONTROL 对 NATIVE（后者须 final manifest/文件齐）。每对超时 180 s，外层 `run_with_timeout` 450 s。物理输出只读；只对全解析确认零 pin 且 exact `sky130_fd_sc_hd__tapvpwrvgnd_1` 的实例构造 proof 输入投影，两边删除 ID 必须完全相同，并留完整清单、原始/规范化网表 SHA、Liberty SHA、驱动 SHA 与前后 canonical 校验。该证明对象是本次物理 final 输出，不混历史 recovered 网表；实际 SEC 结果待回报。
+
+
+**LOG-20261113-01 / 新面积分母缺陷确认**：主线全解析发现生产 `parse_named_instances` 的 `\w+` 跳过 escaped DFF。s382 CONTROL 的全部 102 个已知 Liberty 单元面积为 1052.2592，而旧解析只统计 81 个、611.8368，漏 21 个 DFF；RECOVERY 全面积 1005.9648、旧解析 565.5424。绝对节省同为 46.2944，但总面积降幅为 4.399526%，旧口径为 7.56648%。因此前轮「14 例平均总面积降低 4.54%」只是原 summary 的解析受限计算，不能继续当完整总面积分母；旧数字保历史，不覆盖抹除。登记 OI-085，worker 正只读重算 14 例；主线待报告后同步 CANON，不改论文。
+
+**Phase 1 最新状态回报**：NATIVE 完成、0 个 resize、与 CONTROL 完全相同；RECOVERY 物理严格门失败。精确逐指标、归因与 SEC 仍待最终收据汇合，本条不推断机制整体无效，也不把工程完成等同科学晋级。
+
+
+**LOG-20261113-01 / SEC 前置门发现同类解析缺口**：首个 SEC 前置检查在启动 prover 前 fail-closed，完全解析发现 21 个转义 DFF 实例，而旧 `final_sec` 的 used_cells 正则同样只认 `\w+`，会漏 FF cell 模型。失败目录 `sec/CONTROL_vs_RECOVERY_V2` 保留，不能记为 SEC 算法不等价。worker 向主线报告后准备限定证据脚本 adapter：仅用全解析 cell 集生成模型，保留原 final_sec 后续证明及输入（除预注册零 pin tap 投影）；不修改生产 SEC 或物理输出。实际证明仍 pending。
+
+
+**LOG-20261113-01 / 14 对完整实例面积审计**：`project_docs/evidence/recovery_qualification_20261112/area_audit.py` 与 `.json` 已产出，60 s 包装运行 6 s / rc=0（`scratch/area_audit_run_v2.log`）。14 例均漏 escaped DFF，原/终遗漏集合不变，绝对面积节省逐例与 legacy 相同，完整总面积分母须更正。s382 1052.2592→1005.9648，节省 46.2944、降幅约 4.40%；b07 2851.4848→2628.7712，节省 222.7136、降幅约 7.81%。首版将无连接 tap 也按 unknown 拒绝，按主线指定 unknown-connected fail-closed 修订，只明确排除并登记无连接 tapvpwrvgnd_1 数量/结构 hash；初次脚本/拒绝原件保于 `scratch/area_audit_initial_rejection.{py,json}` 与 `area_audit_run.log`。本次未审计层次 baseline 与新增面积惩罚分母，不因此确认或改写 penalty 恢复率结论；无生产修改、无 EDA。
+
+
+**LOG-20261113-01 / SEC adapter 预注册与首个证明通过**：`SEC_ADAPTER_PREREG.md` 在修正版 prover 运行前保存，v1 脚本与空失败目录保留。`CONTROL_vs_RECOVERY_V2_models_v2` PASS，wrapper 11 s / rc=0；`CONTROL_vs_NATIVE_models_v2` prover 已显示 PASS，但 wrapper 尚收束，最终收据待审。每侧 102 个功能 cell / 21 个 FF 与 3026 零 pin tap 删除清单绑定；证据局部 model-scanner adapter 补全 escaped FF，生产 SEC 不变。receipt 保存原始/规范化网表、Liberty、模型、证明文件 SHA 与原物理文件未变标记；不以首次模型集失败替代此修正后证明对象。
+
+
+**LOG-20261113-01 / 完整面积分母主线复算与代码固化**：主线实际读取 area_audit 14 对结果，平均总 mapped-cell 面积降幅为 3.071500828%，s382 为 4.399524%，最大 b07 为 7.810443%。前轮 4.54223469% 是漏 escaped FF 后的 summary 分母结果，已被完整实例审计更正；14 例绝对节省量不变。新增面积回收约 14% 尚缺层次 baseline 审计，不能视为本轮验证通过。CLI 零值修复与 packaged helper 已提交 `a20f48c`。主线将同步 CANON/report；生产面积 scanner、生产 SEC cell scanner、层次 baseline、DRV 完整性与自定义 Liberty 仍待处理，不能因工程回归和局部证明通过宣布全部科学门关闭。
+
+
+**LOG-20261113-01 / 面积漏项归因细化**：area_audit 第三遍（`scratch/area_audit_run_v3.log`，6 s / rc=0）在 JSON 增加 omission_reasons/counts：14 例均漏 DFF；s713/s953 各另漏 1 个 escaped buf_4；s820 另少 1 个 probe_p_8，后者是 legacy 显式 skip policy，不是正则失效。完整口径为所有 Liberty-known 导出实例（含 probe）；14 对绝对面积节省仍不变。此前「漏 escaped DFF」是主要原因概括，不能用作全部漏项的唯一归因。
+
+
+**LOG-20261113-01 / SEC 与三臂日志最终独立审查**：`CONTROL_vs_RECOVERY_V2_models_v2` 和 `CONTROL_vs_NATIVE_models_v2` 均 PASS，每组 101 equiv proven / 0 unproven，prover 0.313 / 0.281 s，wrapper 11 / 10 s / rc=0，原物理源未修改。独立 REVIEW.md 覆盖三臂九份日志 marker/error 核查，六次 STA 均绑定本臂新 netlist + SPEF，DRV 未出现 VIOLATED 行。路由存在 `LEF58_ENCLOSURE` 无 CUTCLASS 而跳过的警告，不能称全面 foundry DRC 通过。RECOVERY strict timing gate 仍 FAIL，SEC 功能等价通过不覆盖时序安全门；驱动、生产源码和物理输出未被审查者修改。
+
+
+**LOG-20261113-01 / 限定阶段收尾**：记录端实际打开 `project_docs/evidence/recovery_qualification_20261112/REPORT.md` 与 `PILOT_SUMMARY.json` 后更新实验登记为 ENGINEERING_PILOT_COMPLETE / NON_PROMOTION。s382 CONTROL→RECOVERY 面积 1052.2592→1005.9648 μm²（-4.399524375743126%）；propagated setup/hold/TNS 分别退化 0.009971634629124537 / 0.000018596235662471372 / 0.312647 ns，严格门失败；NATIVE 零动作且终点时序同 CONTROL。三臂 route DRC=0 的规则范围、完整 SDC/DRV 未闭合和两组 SEC 各 101/0 的模型域边界均写回 registry。未将 pilot 完成写成科学全关或新机制成立。
+
+**现行口径与未决**：主线已更新 CANON 顶部、交接警示与 `.codex-handoff` 指针；OI-080/083 限定关闭，生产 escaped parser/SEC scanner 与 baseline（OI-085）、custom Liberty（OI-084）、严格物理时序/完整 SDC/DRV 及创新基线（OI-082）仍 open。既有其他未决未删。证据正在 byte-pin 封存；主线将提交并尝试 push，记录端此时未宣称提交/push 成功。从本条后记录端停止写入，供主线稳定核验与提交。

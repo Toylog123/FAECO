@@ -1,0 +1,246 @@
+{
+  "scope": "s382 feasibility only; known-liberty standard-cell area excluding unconnected physical tap cells",
+  "status": "NON_PROMOTION",
+  "timing_tolerance_ns": 1e-06,
+  "drv_coverage": "raw reports empty; constraints coverage not established",
+  "note": "All designs have negative setup slack; nonworsening is not timing closure. Native zero actions does not establish strongest-baseline superiority.",
+  "rows": [
+    {
+      "arm": "CONTROL",
+      "liberty_known_instances": 102,
+      "standard_cell_area_um2": 1052.259200000001,
+      "excluded_unconnected_tap_instances": 3026,
+      "drc_count": 0,
+      "flow_seconds": 32.890999999995984,
+      "ideal": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase1_v2/CONTROL/ideal.tcl"
+        ],
+        "returncode": 0,
+        "elapsed_s": 0.4690000000045984,
+        "setup_ns": -0.8413860164147025,
+        "hold_ns": 0.4559759236855143,
+        "tns_reports_ns": [
+          "-13.26",
+          "-13.255755"
+        ],
+        "drv_status": "pending raw report review"
+      },
+      "propagated": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase1_v2/CONTROL/propagated.tcl"
+        ],
+        "returncode": 0,
+        "elapsed_s": 0.4539999999979045,
+        "setup_ns": -0.8484588032153795,
+        "hold_ns": 0.4636368511334865,
+        "tns_reports_ns": [
+          "-13.42",
+          "-13.422543"
+        ],
+        "drv_status": "pending raw report review"
+      },
+      "output_sha256": {
+        "routed.v": "3a2666be3cc4cf11c041c8be8793c16e30e617bb2e846468e2454ed5247aab8e",
+        "routed.def": "5ecb2396409677293223236fbb27ff48106a0585086a7631193effacba01e231",
+        "routed.spef": "d56c2bc238d25e3659f4d6a65eeda7362acfeebd7c2159f24a18820adcd5afd8",
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "e51e1f7e6d51542971f84b4a35ba23997c389be3113cdafa1c9fed094d649471",
+        "ideal.log": "4b63bb946e931b45486ede6fdf01165601bb90637d872f6bae23cbe884e0f6cc",
+        "propagated.log": "2124ea014746a5f3e80cb4013c2d53dc55418b0a1bbe3479f2131e0001335305",
+        "manifest.json": "c156c9fad2e0384b4824cf4b7aa62ae1865320ce70cce882c11925a1614c942b"
+      },
+      "total_area_reduction_pct": 0.0,
+      "strict_timing_nonworsening": {
+        "ideal": {
+          "deltas": {
+            "setup_ns": 0.0,
+            "hold_ns": 0.0,
+            "tns_ns": 0.0
+          },
+          "pass": true
+        },
+        "propagated": {
+          "deltas": {
+            "setup_ns": 0.0,
+            "hold_ns": 0.0,
+            "tns_ns": 0.0
+          },
+          "pass": true
+        }
+      }
+    },
+    {
+      "arm": "RECOVERY_V2",
+      "liberty_known_instances": 102,
+      "standard_cell_area_um2": 1005.9648000000014,
+      "excluded_unconnected_tap_instances": 3026,
+      "drc_count": 0,
+      "flow_seconds": 29.375,
+      "ideal": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase1_v2/RECOVERY_V2/ideal.tcl"
+        ],
+        "returncode": 0,
+        "elapsed_s": 0.43800000000192085,
+        "setup_ns": -0.847116377045154,
+        "hold_ns": 0.4559841948470478,
+        "tns_reports_ns": [
+          "-13.56",
+          "-13.560900"
+        ],
+        "drv_status": "pending raw report review"
+      },
+      "propagated": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase1_v2/RECOVERY_V2/propagated.tcl"
+        ],
+        "returncode": 0,
+        "elapsed_s": 0.43699999999807915,
+        "setup_ns": -0.858430437844504,
+        "hold_ns": 0.46361825489782404,
+        "tns_reports_ns": [
+          "-13.74",
+          "-13.735190"
+        ],
+        "drv_status": "pending raw report review"
+      },
+      "output_sha256": {
+        "routed.v": "a203adbd62283eaa7293940964f997f995c74055257d18619f56c2054ee91ab4",
+        "routed.def": "f14de32ba7b451db3a3a5ea844e0e0cd8c30905a4d7628cad5a7d47d1d224fc9",
+        "routed.spef": "1bb1988953e705afa710ce28e9e3b207c7e1bea45a5ee7bcd08a59151ea7ef22",
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "6fdeaa3e1a6d9a3ffb2abaf69fe2dad3673a3891cf1010a1a192fcd9f3af5c03",
+        "ideal.log": "b87a539d05cc5fb7ff8e5673188de89c10f93a55d62e5fca8c4c1fec7a4f4e89",
+        "propagated.log": "03fdf3b29c6e141215e9891e016a842403583db5e93e5d5cfa4866a00e51202b",
+        "manifest.json": "28f38871d9fbed44d9bd8747906b9d9eec98710961ec35f2de9e953a3e305859"
+      },
+      "total_area_reduction_pct": 4.399524375743126,
+      "strict_timing_nonworsening": {
+        "ideal": {
+          "deltas": {
+            "setup_ns": -0.005730360630451514,
+            "hold_ns": 8.271161533457416e-06,
+            "tns_ns": -0.30514499999999956
+          },
+          "pass": false
+        },
+        "propagated": {
+          "deltas": {
+            "setup_ns": -0.009971634629124537,
+            "hold_ns": -1.8596235662471372e-05,
+            "tns_ns": -0.3126470000000001
+          },
+          "pass": false
+        }
+      }
+    },
+    {
+      "arm": "NATIVE",
+      "liberty_known_instances": 102,
+      "standard_cell_area_um2": 1052.259200000001,
+      "excluded_unconnected_tap_instances": 3026,
+      "drc_count": 0,
+      "flow_seconds": 32.09399999999732,
+      "ideal": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase1_v2/NATIVE/ideal.tcl"
+        ],
+        "returncode": 0,
+        "elapsed_s": 0.48399999999674037,
+        "setup_ns": -0.8413860164147025,
+        "hold_ns": 0.4559759236855143,
+        "tns_reports_ns": [
+          "-13.26",
+          "-13.255755"
+        ],
+        "drv_status": "pending raw report review"
+      },
+      "propagated": {
+        "argv": [
+          "wsl.exe",
+          "-d",
+          "Ubuntu",
+          "--",
+          "/usr/local/bin/sta",
+          "-no_splash",
+          "-exit",
+          "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/recovery_qualification_20261112/phase1_v2/NATIVE/propagated.tcl"
+        ],
+        "returncode": 0,
+        "elapsed_s": 0.48400000000401633,
+        "setup_ns": -0.8484588032153795,
+        "hold_ns": 0.4636368511334865,
+        "tns_reports_ns": [
+          "-13.42",
+          "-13.422543"
+        ],
+        "drv_status": "pending raw report review"
+      },
+      "output_sha256": {
+        "routed.v": "3a2666be3cc4cf11c041c8be8793c16e30e617bb2e846468e2454ed5247aab8e",
+        "routed.def": "5ecb2396409677293223236fbb27ff48106a0585086a7631193effacba01e231",
+        "routed.spef": "8d2237183da9b447fb4b4749079799f99533d6192855183e512c82182387e3e8",
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "aa889e65e638bb4333c7894af672fc351bacd57b909ac5adf2278da5cea7e25b",
+        "ideal.log": "2fb970b6d8482f82a7eab74202734c35cc89e4f64cc4021391cec601f53f2d0b",
+        "propagated.log": "6bff64e52328eb6fcccf5f4d83159fdfef1062dc795c099fabcaae7b55e5e7b2",
+        "manifest.json": "7515a6f57229f6ef2007f1f6d25ead95585f96ebbb86fe51117a16cc5376fa7d"
+      },
+      "total_area_reduction_pct": 0.0,
+      "strict_timing_nonworsening": {
+        "ideal": {
+          "deltas": {
+            "setup_ns": 0.0,
+            "hold_ns": 0.0,
+            "tns_ns": 0.0
+          },
+          "pass": true
+        },
+        "propagated": {
+          "deltas": {
+            "setup_ns": 0.0,
+            "hold_ns": 0.0,
+            "tns_ns": 0.0
+          },
+          "pass": true
+        }
+      }
+    }
+  ]
+}

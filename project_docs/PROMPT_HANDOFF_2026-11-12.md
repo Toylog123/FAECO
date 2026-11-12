@@ -1,5 +1,7 @@
 # FAECO 项目接手提示词
 
+> **2026-11-13 接手审计更正**：下文是旧摘要。当前须先读 CANON 顶部 Recovery 裁定及 `project_docs/evidence/recovery_qualification_20261112/`。136/202不是逐个零效应证明，面积分母漏 escaped DFF，s382完整重布线回退尚未过严格时序门；不得直接按本提示旧数字扩实验或改论文。当前1113 passed/156 subtests，桌面包环境用 `code/scripts/prepare_packaged_yosys.py` 准备同字节工具镜像。
+
 你是 FAECO 项目的接手者。以下是需要知道的一切，按顺序执行。
 
 ## 第一步：理解项目（5 分钟）
