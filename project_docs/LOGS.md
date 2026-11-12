@@ -5009,3 +5009,6 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 **LOG-20261113-01 / 限定阶段收尾**：记录端实际打开 `project_docs/evidence/recovery_qualification_20261112/REPORT.md` 与 `PILOT_SUMMARY.json` 后更新实验登记为 ENGINEERING_PILOT_COMPLETE / NON_PROMOTION。s382 CONTROL→RECOVERY 面积 1052.2592→1005.9648 μm²（-4.399524375743126%）；propagated setup/hold/TNS 分别退化 0.009971634629124537 / 0.000018596235662471372 / 0.312647 ns，严格门失败；NATIVE 零动作且终点时序同 CONTROL。三臂 route DRC=0 的规则范围、完整 SDC/DRV 未闭合和两组 SEC 各 101/0 的模型域边界均写回 registry。未将 pilot 完成写成科学全关或新机制成立。
 
 **现行口径与未决**：主线已更新 CANON 顶部、交接警示与 `.codex-handoff` 指针；OI-080/083 限定关闭，生产 escaped parser/SEC scanner 与 baseline（OI-085）、custom Liberty（OI-084）、严格物理时序/完整 SDC/DRV 及创新基线（OI-082）仍 open。既有其他未决未删。证据正在 byte-pin 封存；主线将提交并尝试 push，记录端此时未宣称提交/push 成功。从本条后记录端停止写入，供主线稳定核验与提交。
+
+
+**LOG-20261113-01 / 主线封存提交**：代码 a20f48c、证据与口径 13f5b2a 已本地提交。证据 MANIFEST 93/93 实际工作树与提交 blob SHA 一致；原生 SPEF/log 保留生成器尾空白，未为格式检查改写科学原件。文档 diff 空白检查通过。git push 无交互尝试 50 s 超时（scratch/recovery_qualification_push.log），远端回执未确认，不称已同步。后续门仍按 REPORT / OPEN_ISSUES 保留。
