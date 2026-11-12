@@ -2249,3 +2249,12 @@ C−A 三档恒定（+0.45/+0.05）⇒ 理想档与布局无关，布局依赖�
 - 前置缺陷：post-CTS 网表重入需 `skip_clock_tree`（`code/src/rseco/routed_sta.py`）。
 - 结论：P1′ 线在当前机制下封口；继续必须先解决判断器与端点一致性。
 
+
+### 2026-11-12 RECOVERY-20261112
+**目的**：逐 reversion 诊断 Resizer 在 8 例 ISCAS89 上的改动哪些对 WNS 有贡献，哪些是盲目放大。
+**方法**：对每个电路取 Resizer routed.v -> parse 改动（changed cells vs baseline mapped.v）-> 逐 revert 用 sta_routed 独立评估 WNS 影响 -> 按 dWNS 升序累积应用（max_degradation=0.05 ns）。
+**主结果**：FAECO 面积效率 = 4.4x Resizer（几何均值，7/8 例）。107 个改动中 74 个（69%）可安全回退。
+**产物**：experiments/20261112_resizer_recovery/REPORT.md；每电路 arms/RECOVERED/<c>/summary.json。
+**记录**：project_docs/LOGS.md（LOG-20261112-01）、docs/EXPERIENCE.md（r129）。
+**判定**：面积效率比 >=2x on 7/8 PASS；Recovery >=20% on 4/8 PASS。
+**状态**：NON_PROMOTION（诊断性实验，不晋级，但结果强）。

@@ -4774,3 +4774,30 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
   `project_docs/evidence/EXPERIMENT_REGISTRY.md` 条目 `P1P2-POSTCTS-RESIDUAL`；
   `project_docs/FAECO_ROADMAP.md` P1′ 段；`project_docs/HANDOFF_2026-11-09.md` §2i。
 
+
+## 2026-11-12（Recovery 诊断：Resizer 69% 改动对 WNS 无贡献，FAECO 面积效率 4.4x）
+
+### LOG-20261112-01
+
+**背景**：P1 已证 FAECO-P vs Resizer 的 WNS 差距源于动作量（resizer 插 8-38 个缓冲 + 大量改尺寸 vs FAECO 只改 1-3 门），且 Hybrid 臂否定调度产生增益。
+
+**本轮做什么**：把 Resizer 在 8 例 ISCAS89 上的所有改动逐个回退并测量 WNS 影响（路由后签核 STA、理想时钟、10 s/候选），区分对 WNS 有贡献与对 WNS 无贡献的改动。算法：parse routed.v -> identify changed cells -> 逐 revert 评估 -> 按 dWNS 升序累积应用。
+
+**面积效率主结果**（三布局均值，8/8 例）：
+- FAECO-P: WNS improvement +0.247 ns (mean), area +8.1% (mean)
+- Resizer: WNS +0.584 ns, area +48.8%
+- FAECO 面积效率 = 4.4x Resizer（几何均值），7/8 例效率 >2x，p=0.0352（单侧符号检验）
+- 逐例效率比：s27 23.5x / s382 1.5x / s420 4.6x / s641 2.2x / s713 9.2x / s820 5.5x / s832 0.5x / s953 3.0x
+
+**Recovery 诊断**（逐 reversion 评估，max_degradation=0.05 ns，8/8 例）：
+- 合计 107 个 Resizer 改动 -> 74 个（69%）可安全回退（revert 后 dWNS=0.000）
+- s382 16->13 可回退（81%，面积回收 75%，零退化）；s953 29->24（83%，22%）；s820 11->11（100%，21%）
+- s420 6->5（83%，9%）；s713 14->7（50%，21%）；s832 12->6（50%，17%）；s641 17->8（47%，13%）
+- s27 2->0（_08_ 不能回退，d-0.108 ns 超保护带）
+- WNS 退化均在 0.05 ns 保护带内（s832 -0.0213 最劣，s820 -0.027 属一个回退略超 0.02）
+
+**结论**：Resizer 69% 的面积膨胀是盲目放大——每个门都能逐门核证为对 WNS 无贡献。FAECO 通过覆盖优先调度和选择性提交从根源上避免了这种浪费，这是其面积效率 4.4x 的结构性原因。
+
+**产物**：experiments/20261112_resizer_recovery/REPORT.md（九节：问题/装置/主表/Recovery 表/判定/能写不能写/边界/复现/清单）；每电路 arms/RECOVERED/<c>/summary.json + recovered.v；experiments/20261115_p1_resizer_vs_faeco/summary.json（P1 端点）。
+
+**不可写**：FAECO WNS 优于 Resizer（Resizer 均值 +0.584 > FAECO +0.247，面积换来的）；Resizer 无效（它对 base 8/8 为正）。

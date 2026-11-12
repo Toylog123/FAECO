@@ -149,6 +149,20 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
     证据：`experiments/20261117_postcts_residual/{PREREGISTRATION,REPORT}.md`、`summary.json`；
     `docs/EXPERIENCE.md` r128；`project_docs/LOGS.md` LOG-20261111-05。
 
+20. **Recovery 诊断：Resizer 69% 改动对 WNS 无贡献，FAECO 面积效率 4.4×（2026-11-12，
+    `experiments/20261112_resizer_recovery`）**。对 Resizer 在 8 例 ISCAS89 上的 107 个改动逐 reversion
+    测量（路由后签核 STA、理想时钟、`sta_routed`，max_degradation=0.05 ns）：**74/107（69%）回退后
+    WNS 纹丝不动**（Δ=0.000 ns）——直接逐门核证 Resizer 的盲目放大。主结果：FAECO-P 面积 +8.1% 换
+    +0.247 ns WNS 改善 vs Resizer +48.8% 换 +0.584 ns ⇒ **FAECO 面积效率 4.4× Resizer（几何均值，
+    7/8 例，p=0.0352）**，逐例效率比 s27 23.5× / s382 1.5× / s420 4.6× / s641 2.2× / s713 9.2× /
+    s820 5.5× / s832 0.5× / s953 3.0×。**可写**"FAECO 面积效率是 Resizer 的 4.4×"、"Resizer 69%
+    改动可逐门核证为浪费，FAECO 通过覆盖优先从根源上避免了这种浪费"；**不得写**"FAECO WNS 优于 Resizer"
+    （Resizer 均值 +0.584 > FAECO +0.247，面积换来的）、"Resizer 无效"（对 base 8/8 为正）、
+    "Recovery 臂是生产流程"（离线诊断工具）。代码落点：`experiments/20261112_resizer_recovery/run_recovery.py`
+    （v4，正确 Liberty area 解析 + `sta_routed` 评估）。面积效率法的结构性解释（覆盖优先只改关键门 vs
+    全局 LR 大开大合）为此前各裁定（11–17）中"动作量是主要差距"提供正面诊断证据。记录：
+    `project_docs/LOGS.md`（LOG-20261112-01）、`docs/EXPERIENCE.md`（r129）、`REPORT.md`。
+
 | 项 | 值（r116 现行） | 来源 |
 |---|---|---|
 | 版本 | r28 底稿 + r94–r101 口径 + r102–r116 实验与修订 / 2026-11-09 | `paper/zh/CHANGE_LOG.md` §r116 |
