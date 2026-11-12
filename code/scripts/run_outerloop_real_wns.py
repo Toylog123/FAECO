@@ -250,12 +250,13 @@ def parse_args() -> argparse.Namespace:
     # OpenROAD placement + CTS + estimate_parasitics -placement per candidate
     # (~8 s instead of ~0.05 s) and is the tier the r30 label family validated.
     p.add_argument("--physical-backend",
-                   choices=("spef", "placed", "placed_ens"), default="spef",
+                   choices=("spef", "placed", "placed_ens", "routed"), default="spef",
                    help="Inner-loop physical model: 'spef' = legacy fanout "
                         "wireload (falsified for buffers), 'placed' = OpenROAD "
                         "placement-derived parasitics, 'placed_ens' = the same "
                         "flow at --placement-utils, averaged to divide the "
-                        "layout-dispersion noise by sqrt(k)")
+                        "layout-dispersion noise by sqrt(k), 'routed' = full "
+                        "routing + signoff RC extraction + STA")
     p.add_argument("--placement-util", type=float, default=0.35,
                    help="Floorplan utilization for the placed backend")
     p.add_argument("--placement-utils", default="0.30,0.35,0.40",

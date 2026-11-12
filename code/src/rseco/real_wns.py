@@ -1360,9 +1360,9 @@ class RealWnsEvaluator:
         self.physical_fanout_penalty = physical_fanout_penalty
         self.physical_depth_penalty = physical_depth_penalty
         self.physical_unit_len_um = physical_unit_len_um
-        if str(physical_backend) not in {"spef", "placed", "placed_ens"}:
+        if str(physical_backend) not in {"spef", "placed", "placed_ens", "routed"}:
             raise ValueError(
-                "physical_backend must be 'spef', 'placed' or 'placed_ens', got "
+                "physical_backend must be 'spef', 'placed', 'placed_ens' or 'routed', got "
                 + repr(physical_backend)
             )
         self.physical_backend = str(physical_backend)
@@ -2130,6 +2130,25 @@ class RealWnsEvaluator:
                 return sta
             return self._combine_ensemble(out_dir, utils, readings)
 
+        if self.physical_backend == "routed":
+            from .routed_sta import DEFAULT_PLATFORM, run_routed_sta
+            out = Path(out_dir)
+            out.mkdir(parents=True, exist_ok=True)
+            sta = run_routed_sta(
+                netlist_path=str(netlist_path),
+                output_dir=str(out),
+                top_module=top_module,
+                period=self.period,
+                util=self.placement_util,
+                density=self.placement_density,
+                clock_port=self.clock_port,
+                platform=self.placement_platform or DEFAULT_PLATFORM,
+                openroad_command=self.openroad_command,
+                flow_timeout_s=self._remaining_tool_timeout(state),
+            )
+            sta.setdefault("budget_event", None)
+            return sta
+
         from .spef import parse_mapped_verilog, write_spef
 
         Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -2561,6 +2580,12 @@ class RealWnsEvaluator:
                     "placement_density": self.placement_density,
                     "placement_platform": self.placement_platform,
                 })
+            elif self.physical_backend == "routed":
+                physical_config.update({
+                    "placement_util": self.placement_util,
+                    "placement_density": self.placement_density,
+                    "placement_platform": self.placement_platform,
+                })
             rc_config_hash = hashlib.sha256(
                 json.dumps(physical_config, sort_keys=True).encode()
             ).hexdigest()
@@ -2762,6 +2787,8 @@ class RealWnsEvaluator:
                 physical_report = sub / "physical" / "ensemble.json"
             elif self.physical_backend == "placed":
                 physical_report = sub / "physical" / "placed.log"
+            elif self.physical_backend == "routed":
+                physical_report = sub / "physical" / "route_sta.log"
             else:
                 physical_report = sub / "physical" / "sta.log"
             if physical_report.exists():

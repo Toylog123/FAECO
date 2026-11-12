@@ -176,6 +176,19 @@ angle$ 记号。⑤ 压页 11→10（句内压缩，未删数字、未缩字号�
 | 质量门 | 主稿 0 Errors / 0 Overfull / 0 Underfull / 0 `??`；补充同 | `latex_quality_gate.py` |
 | 冻结纪律 | 任何内容改动（**含摘要**）须用户明确同意（r96 起历轮修订均已获用户授权） | `AGENTS.md` |
 
+21. **Recovery v2 全量通过：选择性回退 3 例 ≥20% 面积回收、全例 ΔWNS ≤0.006 ns（2026-11-12，
+    `experiments/20261112_resizer_recovery`）**。在 Resizer 的 post-CTS 终点网表上，对 107 个被修
+    改的 gate 逐一独立 STA 评估 WNS 影响，用安全系数 1.5×（补偿逐候选间时序耦合）+ 后验证循环（退化
+    超标则逐次回退最后一步）累积回退。v2 全量 8 例结果：65/107（61%）回退、**3 例 ≥20% 面积回收**
+    （s382 22.8%, s820 20.1%, s953 21.6%）、**全例 ΔWNS ≤0.006 ns**（最大绝对值 0.0057 @ s420）、
+    无一例 WNS 差于 baseline。CLI 工具 `code/scripts/recover_area.py`（`--resizer-dir` + `--baseline`
+    → 自动出 `summary.json` + `recovered.v`，s382 8 秒完成）。论文 draft 见
+    `paper/en/manuscript/FAECO_recovery.tex`（IEEEtran, pdflatex 编译 4 页，0 错误 0 undefined refs）。
+    可写：「在 Resizer 最佳 WNS 基础上选择性回退不必要改动，平均回收 14.1% 面积而 WNS 无损」。
+    不得写：「我们改进了 Resizer」（其 WNS 步骤原样保持，只在之后回退）、「我们的 ECO 优于 Resizer」
+    （不同任务——Resizer 做优化，我们做恢复）。记录：`project_docs/LOGS.md` LOG-20261112、
+    `docs/EXPERIENCE.md` r129。
+
 **r97 改善比例口径（引用前必读）**：比例 = 改善量 / **该档位基线 WNS 绝对值** × 100。预布局 `(C−A)/|A|`、布线后 `(D−B)/|B|`。ISCAS 8 例逐例均值 **15.9%**、总量比 **15.4%**（1.97/12.83）；ITC-99 6 例逐例均值 19.6%、总量比 15.1%（11.51/76.45）。**两族不得合并统计**（规模、修改构造、布局条件均不同）。**比例必须与绝对改善并列读**：s27 的 `+0.13 ns` 因基线仅 `0.39 ns` 而显示为 `33.3%`，与 `+0.89 ns` 的 s641（36.2%）几乎相同，绝对量差 6.8 倍。数据源 `experiments/*/ratio.tsv`（`code/scripts/gen_ratio_table.py` 生成）。
 
 **中英口径到 r94 为止同步**：ITC-99 SEC **16/19**（三态 b09/b20/b21 不计入二态证明）、b17 **12,879 点 / 0 未证**。英文旧值 `18/19` 与 `12,812 + 1` 已清零。**r95/r95b/r96/r97 四轮只改了中文两份**，英文仍用旧叙事（摘要 `1.07 ns 对 0.16 ns`、§4.5 仅「5 改善/1 持平/2 退化」），**不得据英文稿反推中文口径**。

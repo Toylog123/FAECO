@@ -19,7 +19,12 @@ _RESIZER_BLOCK = """\
 # ---- FAECO-P P1: OpenROAD resizer ----
 # Runs after setRC.tcl/set_routing_layers, before routing.
 # Legalising the resizer's new cells is necessary for DRT to find pins.
-repair_timing -setup
+set _max_buf [expr {int([info exists ::env(RESIZER_MAX_BUF_PCT)] ? $::env(RESIZER_MAX_BUF_PCT) : 9999)}]
+if {$_max_buf < 9999} {
+  repair_timing -setup -max_buffer_percent $_max_buf
+} else {
+  repair_timing -setup
+}
 detailed_placement
 # s713: repair_timing can promote tie nets (one_/zero_) to POWER type,
 # which TritonRoute then refuses to route. Demote them back to SIGNAL.

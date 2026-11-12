@@ -4801,3 +4801,28 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 **产物**：experiments/20261112_resizer_recovery/REPORT.md（九节：问题/装置/主表/Recovery 表/判定/能写不能写/边界/复现/清单）；每电路 arms/RECOVERED/<c>/summary.json + recovered.v；experiments/20261115_p1_resizer_vs_faeco/summary.json（P1 端点）。
 
 **不可写**：FAECO WNS 优于 Resizer（Resizer 均值 +0.584 > FAECO +0.247，面积换来的）；Resizer 无效（它对 base 8/8 为正）。
+
+## 2026-11-12（Resizer 面积恢复实验：8 例 v2 全量通过，目标达成）
+
+**背景**：P1 实验中 OpenROAD resizer 以 48.8% 面积增幅换 +0.584 ns WNS，FAECO-P 面积效率是 resizer 的 4.4×。逐实例审计发现 resizer 69%（74/107）的 gate 改动对 WNS 贡献为零。
+
+**本轮做了什么**：
+- 设计并实现两版 Recovery 算法：
+  v1（贪心累积）：按单个候选独立 STA 评估排序，贪心应用 → 4 例 ΔWNS 超 0.02 ns 目标
+  v2（安全系数 + 后验证）：安全系数 1.5× 压缩负 delta 累积（补偿交互效应），后验证循环在退化超标时逐次回退最后一步并重测
+- 实现生产级 CLI 工具 ： +  → 自动出  + ，支持安全系数、退化预算、周期等可配置参数
+- 写英文论文 draft （IEEEtran，pdflatex 编译 4 页，0 错误 0 undefined refs）
+- 8 例 ISCAS89 全部跑通 v2，三点全过：≥3 例面积回收 ≥20%（s382 22.8%, s820 20.1%, s953 21.6%），全例 ΔWNS ≤0.006 ns，无一例差于 baseline WNS
+
+**数据**：（v2 在 ）
+- v2 算法脚本：
+- v1 原始结果：
+- 恢复论文基础的材料：审计摘要 8 例（）
+
+**产物**：
+- CLI 工具：
+- 论文 draft： + 
+- 图件：
+- 实验文档：
+
+**当前状态**：所有目标达成，8 例 v2 读数已写入论文 draft。
