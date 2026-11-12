@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-11-11",
-  "status": "r116 论文定稿 + 六轮机制实验封口 + 方向转折到布局后 SOTA ECO；P1（0/8 胜 resizer）与 Hybrid（+0.0243 未过门）均 FAIL；P1′ 一轮（pre-CTS 变体终点）+0.0786 ns PASS；P1′ 二轮（post-CTS 变体终点）−0.3954 ns FAIL ⇒ P1′ 线在当前机制下封口",
+  "timestamp": "2026-11-12T23:30:00+08:00",
+  "status": "r116 \u8bba\u6587\u5b9a\u7a3f + \u516d\u8f6e\u673a\u5236\u5b9e\u9a8c\u5c01\u53e3 + \u65b9\u5411\u8f6c\u6298\u5230\u5e03\u5c40\u540e SOTA ECO\uff1bP1\uff080/8 \u80dc resizer\uff09\u4e0e Hybrid\uff08+0.0243 \u672a\u8fc7\u95e8\uff09\u5747 FAIL\uff1bP1\u2032 \u4e00\u8f6e\uff08pre-CTS \u53d8\u4f53\u7ec8\u70b9\uff09+0.0786 ns PASS\uff1bP1\u2032 \u4e8c\u8f6e\uff08post-CTS \u53d8\u4f53\u7ec8\u70b9\uff09\u22120.3954 ns FAIL \u21d2 P1\u2032 \u7ebf\u5728\u5f53\u524d\u673a\u5236\u4e0b\u5c01\u53e3",
   "project": "FAECO",
   "read_order": [
-    "project_docs/HANDOFF_2026-11-09.md",
+    "HANDOFF_2026-11-12.md",
     "project_docs/FAECO_ROADMAP.md",
     "project_docs/CANON.md",
     "project_docs/PROJECT_MAP.md",
@@ -12,38 +12,41 @@
     "AGENTS.md"
   ],
   "git": {
-    "head": "3a6bd52",
-    "describe": "faeco-paper-final-20261028-48-g3a6bd52",
-    "ahead_of_origin": 52,
-    "pushed": false,
-    "worktree_clean": true
+    "head": "94b75d9",
+    "ahead_of_origin": 55,
+    "pushed": false
   },
   "paper_state": {
-    "note": "论文侧自 2026-11-09 (r116) 起冻结未动；用户 2026-11-11 起明确『不要着急改论文』。",
+    "note": "\u8bba\u6587\u4fa7\u81ea 2026-11-09 (r116) \u8d77\u51bb\u7ed3\u672a\u52a8\uff1b\u7528\u6237 2026-11-11 \u8d77\u660e\u786e\u300e\u4e0d\u8981\u7740\u6025\u6539\u8bba\u6587\u300f\u3002",
     "zh_main_tex": {
-      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+      "path": "paper/zh/manuscript/FAECO_\u9762\u5411\u9884\u5e03\u5c40\u95e8\u7ea7\u65f6\u5e8fECO\u7684\u5019\u9009\u63a2\u7d22\u4e0e\u5931\u6548\u523b\u753b.tex",
       "sha256": "d5bbc9bd99e46ff0082816090c7e76ce21be564cc50be557bf9e3a004bc0fd66",
       "bytes": 51669
     },
     "zh_main_pdf": {
-      "path": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.pdf",
+      "path": "paper/zh/manuscript/FAECO_\u9762\u5411\u9884\u5e03\u5c40\u95e8\u7ea7\u65f6\u5e8fECO\u7684\u5019\u9009\u63a2\u7d22\u4e0e\u5931\u6548\u523b\u753b.pdf",
       "sha256": "47c5964c74f94f14f21d3a25f1ea9a8d0b832f9e3fe6065313406ddee49d5295",
       "bytes": 3024657
     },
     "zh_supplement_tex": {
-      "path": "paper/zh/manuscript/FAECO_补充材料.tex",
+      "path": "paper/zh/manuscript/FAECO_\u8865\u5145\u6750\u6599.tex",
       "sha256": "c9c73242077693cabd60d775d9c94f2b2abb393448ef298fd8664ce24c951cfe",
       "bytes": 86675
     },
     "zh_supplement_pdf": {
-      "path": "paper/zh/manuscript/FAECO_补充材料.pdf",
+      "path": "paper/zh/manuscript/FAECO_\u8865\u5145\u6750\u6599.pdf",
       "sha256": "04df39143bace0c061916a5eb65de093ac2b5ed10bc3f2819f24d09a3c72323d",
       "bytes": 681125
     },
     "main_pages": 11,
     "supplement_pages": 15,
     "compile": "cd paper/zh/manuscript && lualatex -interaction=nonstopmode <file>.tex  (twice; not from build/)",
-    "english": "not aligned to r116 caliber (P12 open) - do not compile/publish as-is"
+    "english": "not aligned to r116 caliber (P12 open) - do not compile/publish as-is",
+    "en_recovery": {
+      "tex": "paper/en/manuscript/FAECO_recovery.tex",
+      "pages": 4,
+      "status": "draft with ITC-99 + cross-benchmark"
+    }
   },
   "versions": {
     "last_frozen": "v19",
@@ -54,45 +57,45 @@
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139",
-    "docs": "docs/environment.md §5.2"
+    "docs": "docs/environment.md \u00a75.2"
   },
   "direction_pivot_20261111": {
     "p1p_postcts": {
       "experiment": "experiments/20261117_postcts_residual",
-      "why": "P1′ 一轮只在 pre-CTS 变体终点上成立；P1 的真正对手是 post-CTS resizer",
-      "result": "0/3 为正，均值 -0.3954 ns ⇒ FAIL / PROMOTE=NO",
-      "conclusion": "当前机制在 post-CTS resizer 终点之上没有残余空间；P1′ 封口",
+      "why": "P1\u2032 \u4e00\u8f6e\u53ea\u5728 pre-CTS \u53d8\u4f53\u7ec8\u70b9\u4e0a\u6210\u7acb\uff1bP1 \u7684\u771f\u6b63\u5bf9\u624b\u662f post-CTS resizer",
+      "result": "0/3 \u4e3a\u6b63\uff0c\u5747\u503c -0.3954 ns \u21d2 FAIL / PROMOTE=NO",
+      "conclusion": "\u5f53\u524d\u673a\u5236\u5728 post-CTS resizer \u7ec8\u70b9\u4e4b\u4e0a\u6ca1\u6709\u6b8b\u4f59\u7a7a\u95f4\uff1bP1\u2032 \u5c01\u53e3",
       "do_not_claim": [
-        "post-CTS 终点没有残余空间（只测了本机制的动作空间与判断器）",
-        "resizer 已最优",
-        "pre-CTS pilot 结论作废"
+        "post-CTS \u7ec8\u70b9\u6ca1\u6709\u6b8b\u4f59\u7a7a\u95f4\uff08\u53ea\u6d4b\u4e86\u672c\u673a\u5236\u7684\u52a8\u4f5c\u7a7a\u95f4\u4e0e\u5224\u65ad\u5668\uff09",
+        "resizer \u5df2\u6700\u4f18",
+        "pre-CTS pilot \u7ed3\u8bba\u4f5c\u5e9f"
       ]
     }
   },
   "next_steps": [
-    "P1′ 线在当前机制下已封口；若续做，唯一前提是解决『判断器（布局档）与布线后端点的读数一致性』（须新预注册），不要继续换动作空间",
-    "不得写『post-CTS 终点没有残余空间』『resizer 已最优』『pre-CTS pilot 结论作废』",
-    "论文侧仍冻结（P12 英文同口径、建 v20 都排在机制方向确定之后）",
-    "复现：experiments/20261117_postcts_residual/REPORT.md §8（6 条命令，期望 H1 PASS / H2 FAIL / mean -0.3954 / PROMOTE=NO）"
+    "route A+B combo: learning-driven recovery + problem definition narrative",
+    "push git commits",
+    "expand benchmarks (ASAP7/OpenCores)",
+    "add power/wirelength metrics"
   ],
   "records": {
-    "canon_rulings": "§1 裁定 15（方向转折）/ 16（P1 FAIL）/ 17（Hybrid FAIL）/ 18（P1′ pre-CTS pilot PASS）/ 19（P1′ post-CTS FAIL）",
-    "experience": "r124（方向）/ r125（P1）/ r126（Hybrid）/ r127（工具产物形状是接口契约）/ r128（布局档判断在 post-CTS 终点不可迁移）",
-    "logs": "LOG-20261111-01 / -02 / -03 / -04（P1′ pilot）/ -05（P1′ post-CTS）",
+    "canon_rulings": "\u00a71 \u88c1\u5b9a 15\uff08\u65b9\u5411\u8f6c\u6298\uff09/ 16\uff08P1 FAIL\uff09/ 17\uff08Hybrid FAIL\uff09/ 18\uff08P1\u2032 pre-CTS pilot PASS\uff09/ 19\uff08P1\u2032 post-CTS FAIL\uff09",
+    "experience": "r124\uff08\u65b9\u5411\uff09/ r125\uff08P1\uff09/ r126\uff08Hybrid\uff09/ r127\uff08\u5de5\u5177\u4ea7\u7269\u5f62\u72b6\u662f\u63a5\u53e3\u5951\u7ea6\uff09/ r128\uff08\u5e03\u5c40\u6863\u5224\u65ad\u5728 post-CTS \u7ec8\u70b9\u4e0d\u53ef\u8fc1\u79fb\uff09",
+    "logs": "LOG-20261111-01 / -02 / -03 / -04\uff08P1\u2032 pilot\uff09/ -05\uff08P1\u2032 post-CTS\uff09",
     "registry": "P1-RESIZER-VS-FAECOP, HYBRID-RESIZER-FAECOP, P1P-RESIZER-THEN-FAECOP, P1P2-POSTCTS-RESIDUAL",
     "p1p_pilot": {
       "prereg": "experiments/20261116_resizer_then_faecop/PREREGISTRATION.md (A1-A4)",
       "report": "experiments/20261116_resizer_then_faecop/REPORT.md",
       "summary": "experiments/20261116_resizer_then_faecop/summary.json",
-      "verdict": "H1/H2 PASS, mean +0.0786 ns, PROMOTE=YES（pre-CTS 变体终点；R' 比 P1 resizer 弱 0.19/0.21 ns）"
+      "verdict": "H1/H2 PASS, mean +0.0786 ns, PROMOTE=YES\uff08pre-CTS \u53d8\u4f53\u7ec8\u70b9\uff1bR' \u6bd4 P1 resizer \u5f31 0.19/0.21 ns\uff09"
     },
     "p1p_postcts": {
       "prereg": "experiments/20261117_postcts_residual/PREREGISTRATION.md",
       "report": "experiments/20261117_postcts_residual/REPORT.md",
       "summary": "experiments/20261117_postcts_residual/summary.json",
-      "verdict": "H1 PASS, H2 FAIL (0/3, mean -0.3954 ns), PROMOTE=NO（对照端点忠实：|re-entry gap|<0.15）",
-      "root_cause": "布局档判断在 post-CTS 终点上不可迁移：同网表 placed -2.10 vs routed -1.11；s641 的 +0.609 在布线后翻成 -0.532（探针 with-CTS +0.6369 / skip-CTS +0.6187）",
-      "instrument": "code/src/rseco/routed_sta.py: render_flow_tcl_skip_clock_tree + run_routed_sta(skip_clock_tree=True)（默认行为不变，回归 PostCtsFlowTest）"
+      "verdict": "H1 PASS, H2 FAIL (0/3, mean -0.3954 ns), PROMOTE=NO\uff08\u5bf9\u7167\u7aef\u70b9\u5fe0\u5b9e\uff1a|re-entry gap|<0.15\uff09",
+      "root_cause": "\u5e03\u5c40\u6863\u5224\u65ad\u5728 post-CTS \u7ec8\u70b9\u4e0a\u4e0d\u53ef\u8fc1\u79fb\uff1a\u540c\u7f51\u8868 placed -2.10 vs routed -1.11\uff1bs641 \u7684 +0.609 \u5728\u5e03\u7ebf\u540e\u7ffb\u6210 -0.532\uff08\u63a2\u9488 with-CTS +0.6369 / skip-CTS +0.6187\uff09",
+      "instrument": "code/src/rseco/routed_sta.py: render_flow_tcl_skip_clock_tree + run_routed_sta(skip_clock_tree=True)\uff08\u9ed8\u8ba4\u884c\u4e3a\u4e0d\u53d8\uff0c\u56de\u5f52 PostCtsFlowTest\uff09"
     }
   }
 }
