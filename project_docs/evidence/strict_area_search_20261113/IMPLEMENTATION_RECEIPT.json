@@ -1,0 +1,39 @@
+{
+  "status": "implementation_prepared_no_EDA",
+  "plan_sha256": "2efbac2bfaf603fd2814e1e1ba00e0c6254dc7e5aeaf1c314f3fe169b5fcf45e",
+  "copied_files": 197,
+  "mapping_entries": 210,
+  "adaptations": {
+    "physical_driver": "Text identical to archived physical_probe.py; CRLF normalized to LF only. Existing HERE-relative plan and inputs provide local isolation.",
+    "physical_original_sha256": "48606246da902e8b7a210940a9448c60661b1daeda87bb93737df2e86b94701e",
+    "physical_local_sha256": "9566bfb0d4222a233c0bc57476e5ae9986584a3f4ec601fba645ca9d31ec9945",
+    "auditor": "Only baseline input-path verification changed to bounded LOCAL_INPUT_MAP. All other module AST, including audit_arm, identical.",
+    "auditor_original_sha256": "40f8f1b27be6ee6115b6e3bfd439cd1fb38e734adb085640105820549b443bcc",
+    "auditor_local_sha256": "e4ad535c3fe2fac4acf4ac4d58be277ff82b67f68cda4a79f7b13da758be510d"
+  },
+  "validation": {
+    "tdd_red": "ModuleNotFoundError before selection.py existed; expected",
+    "tdd_green": "34 passed",
+    "final_pure_tests": "34 passed in 0.15s",
+    "default_preflight": "passed; validates local history and current tool hashes; no EDA",
+    "local_read_audit": "passed; Python audit hook prohibited every other experiment/evidence directory read"
+  },
+  "review_changes": [
+    "Root requested batch timeout1800s; original draft PLAN preserved in qa/PLAN.pre_review.json.",
+    "WSL sha256sum rc0 emits ASCII stdout plus UTF16LE host warning stderr; switched to bytes capture and ASCII stdout decoding."
+  ],
+  "qa_sha256": {
+    "check_local_reads.py": "44d4832c470bb76cffeb3c6b33218eb3458862a8bd4eb41a8ecc15cd270c2b02",
+    "PLAN.pre_review.json": "45a86f1718b7728e4b00402d346ac3103986255f20ce9787259c4adde53c2179",
+    "preflight.log": "008f85389c1163590d4ba929d0444fbdcf84591d03e44c1a9ad10af0a57ad699",
+    "selection_final.log": "ad216dd98eb65e1f64ee56bc26fb8e308d3a0b5d8e3b06768b1fde27c6d22809",
+    "selection_green.log": "345759ed9dc8fc5db2eb5b1c8d697c24039ee2d856bfc30167553c8fc3953e15",
+    "selection_red.log": "06b345a14b4bad7ca954b1bfa29cd748a8fa47ca55fc7c20f6b85a8f4ef481f3"
+  },
+  "not_performed": [
+    "EDA",
+    "new SEC",
+    "git commit",
+    "changes to prior frozen study"
+  ]
+}
