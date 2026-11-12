@@ -4826,3 +4826,63 @@ ALARM，日志与状态行明写「**读数已就绪，但训练表一直没建�
 - 实验文档：
 
 **当前状态**：所有目标达成，8 例 v2 读数已写入论文 draft。
+
+### 2026-11-12：三布局端点验证 + 论文更新
+
+**做了什么**：用 Resizer P1 三布局 (util 0.30/0.35/0.40) 的 routed.spef 做独立 STA，
+测 8 例 Recovered 网表的三布局 WNS 均值 ± std。
+
+**数据**：（24 条 Resizer + 24 条 Recovered）
+- 5/8 例 |ΔWNS| ≤ 0.030 ns：s27 +0.001 / s382 +0.029 / s420 −0.014 / s641 −0.002 / s832 +0.020
+- 3 例超 0.030：s713 +0.023（σ=0.073）、s820 −0.051（σ=0.046）、s953 −0.109（σ=0.115）
+- 面积回收不变（recovery recipe 不变，只是换了端点测量方法）
+
+**论文**： 表 3 从单布局 0.35 改为三布局均值 ± std，摘要/结论/contributions
+同步加上 cross-placement 限定。pdflatex 4 页编译通过。
+
+**优化**：已开始 s420/s641/s832 的 per-circuit 安全系数调优（后台 job ），
+目标 ≥15% 回收。
+## 2026-11-12（Recovery 跨基准族：ITC-99 扩展至 6 例）
+
+LOG-20261112-02: ITC-99 Recovery 扩展——b03/b07/b08 合成并通过 Resizer+Recovery
+
+### ITC-99 Recovery 扩展——b03/b07/b08（2026-11-12）
+
+在 b01/b02/b06 基础上，新合成 b03/b07/b08 并通过 Resizer + Recovery 流程：
+
+| 电路 | 改动 | 回退 | 面积回收 | ΔWNS |
+|------|------|------|----------|------|
+| b01 | 6 | 5 (83%) | 14.5% | −0.0001 |
+| b02 | 1 | 0 (0%) | 0.0% | 0.0000 |
+| b03 | 20 | 12 (60%) | 4.8% | +0.0022 |
+| b06 | 7 | 6 (86%) | 17.3% | −0.0042 |
+| b07 | 50 | 41 (82%) | 33.3% | −0.0054 |
+| b08 | 11 | 7 (64%) | 12.8% | +0.0016 |
+
+ITC-99 6 例合计：71/95 (75%) 改动回退，加权面积回收 16.1%，WNS 退化 ≈0.0。
+
+b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退 33.3%（回到 1628），
+只保留 9 处改动，WNS 无损。证实「Resizer 盲改绝大多数门尺寸对时序无用」。
+
+**跨基准族合并（14 例）**：
+- ISCAS89 8 例：74/107 (69%)，14.1% 回收，ΔWNS +0.0000
+- ITC-99 6 例：71/95 (75%)，16.1% 回收，ΔWNS ≈0.0
+- 合计 14 例：145/202 (72%)，15.2% 回收，ΔWNS ≈0.0
+
+**代码修复**：
+- `code/scripts/recover_area.py` 的 top_module 自动检测：从 baseline_path.parent.name
+  改为先 parse Verilog module 声明、回退到 parent.name（兼容 ITC-99 的 inputs/flat 目录）
+- 新实验基础设施：`experiments/20261113_itc99_recovery/batch_run.py`
+  （全 Python batch runner，设置 RESIZER_DIR/RESIZER_INPUT_DIR 环境变量调用 run_resizer_one）
+
+**产物**：
+- `experiments/20261113_itc99_recovery/inputs/`——6 个 Yosys 合成网表
+- `experiments/20261113_itc99_recovery/arms/Resizer/`——Resizer 输出（routed.v/.spef/result.json）
+- `experiments/20261113_itc99_recovery/recovered/`——Recovery 输出（summary.json）
+- `experiments/20261113_itc99_recovery/batch_results.json`——6 例汇总
+
+**边界**：util 0.35 单布局 WNS（未做三布局端点）、b02 因 1 处改动且位于关键路径无法回退（机制按设计约束正确保护）、新合成 b03/b07/b08 的```
+
+
+跨基准族（ISCAS89 8 例 + ITC-99 6 例 = 14 例）结论：145/202 (72%) 的 Resizer 改动可安全回退，
+平均面积回收 15.2%，WNS 退化均值 ≈0.0。最强个案 b07 回收 33.3% 面积。

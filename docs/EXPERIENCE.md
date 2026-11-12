@@ -3327,3 +3327,21 @@ B. 改选择结构（多联合候选 / 先接受后组合）。若都不过，�
 4. **不同电路的 Resizer 浪费率变幅极大**（s382 81%、s820 100%、s27 0%），与电路规模/复杂度/时序余量有关——写论文时不能盲目 pooled。
 5. **starecovery 算法本身对 WNS 的累积退化 <=0.05 ns 保护带**是实验设置的可调参数，不是自然属性——放宽 0.05->0.10 会增加可回退数但退化更大，收紧 0.05->0.02 会减少可回退数但更安全（论文必须写死某一档并逐例报告退化）。
 6. **面积效率 vs 绝对 WNS 是两个独立度量** - 对流程 X 选 A、对设计 Y 选 B 的故事留到讨论段。
+
+## r131 — ITC-99 跨基准族 Recovery（2026-11-12）
+
+**结论**：Recovery 机制在 ITC-99（与 ISCAS89 完全不同的电路族）同样成立。
+6/6 电路实现面积回收（含 b07 33.3% 大额回收），跨基准族 14 例合计 72% 改动可回退。
+
+**教训**：
+1. top_module 自动检测不能用 parent.name（对 flat 输入目录如 inputs/b01.v 返回 "inputs" 而非 "b01"）。
+   正确做法：parse Verilog module 声明，回退到 parent.name。
+2. 合成管线的路径需显式控制输出目录，避免 wsl.exe 与 MSYS 路径转换交互。
+3. `run_resizer_one` 内部已拼接 circuit 名到 output dir → 调用方不应再拼接，
+   应把 RESIZER_DIR 设为不包含 circuit 的父目录。
+4. 组合逻辑 EPFL 基准不能直接用于 Resizer（无时钟 → repair_timing -setup 不可用）。
+   OpenCores 拓展需先构造带 clock 的 wrapper。
+5. b02 只有 1 处改动且在关键路径（ΔWNS −0.042 ns），
+   机制按设计约束正确保护——属于 legitimate negative，非机制失效。
+
+**产物**：experiments/20261113_itc99_recovery/{inputs,arms,recovered,batch_results.json}

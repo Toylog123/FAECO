@@ -186,7 +186,17 @@ def recover_area(
 
     # Auto-detect top module from baseline path parent directory name
     if top_module is None:
+        # Try to detect from Verilog file content first (handles flat input dirs)
+        import re
         top_module = baseline_path.parent.name
+        try:
+            with open(baseline_path, encoding="utf-8", errors="replace") as vf:
+                header = vf.read(4096)
+            m = re.search(r"^\s*module\s+(\w+)\s*\(", header, re.MULTILINE)
+            if m:
+                top_module = m.group(1)
+        except (OSError, AttributeError):
+            pass
 
     t0 = time.time()
 
