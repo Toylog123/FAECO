@@ -1,5 +1,17 @@
 # 环境与依赖清单
 
+## 2026-11-13：桌面包进程内的 Yosys 启动
+
+本次宿主带 Windows package identity。即使前置 oss-cad 的 bin/lib，Yosys 仍返回 `0xC0000135`；将同字节可执行文件与依赖 DLL 放在同一目录后恢复。不要修改原安装或升级科学工具版本。
+
+```powershell
+.venv/Scripts/python.exe code/scripts/prepare_packaged_yosys.py
+$env:PATH = "$PWD/scratch/packaged_yosys/bin;C:/oss-cad-suite-build/oss-cad-suite/bin;C:/oss-cad-suite-build/oss-cad-suite/lib;" + $env:PATH
+.venv/Scripts/python.exe -m pytest code/tests -q --tb=line
+```
+
+脚本逐文件核验 SHA256、保存 receipt，已有异哈希文件会拒绝覆盖。本轮同字节临时镜像全回归 1113 passed / 156 subtests；另对受共享产物清理影响的三个文件复检 24 passed。镜像是环境适配，不是算法或映射版本变更。科学长任务仍须超时包装。
+
 > 目标：任何接手者按本文件即可**完整复现**开发 / 实验环境。
 > 环境变更时同步更新本文件。
 

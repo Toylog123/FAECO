@@ -34,7 +34,7 @@ from typing import Optional
 
 # Add code/src to Python path
 ROOT = Path(__file__).resolve().parent.parent.parent
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "code" / "src"))
 
 try:
     from rseco.routed_sta import sta_routed
@@ -277,7 +277,8 @@ def recover_area(
             timeout_s=timeout_s,
         )
 
-        delta = (result.get("wns") or float("-inf")) - resizer_wns
+        revert_wns = result.get("wns")
+        delta = (revert_wns if revert_wns is not None else float("-inf")) - resizer_wns
         area_saved = areas.get(new_ct, 0) - areas.get(old_ct, 0)
         evaluations.append(
             {
@@ -297,7 +298,9 @@ def recover_area(
             )
 
     # 4. Sort and conservative cumulative application
-    evaluations.sort(key=lambda e: -(e.get("delta_wns") or float("-inf")))
+    evaluations.sort(
+        key=lambda e: -(e["delta_wns"] if e.get("delta_wns") is not None else float("-inf"))
+    )
 
     applied = []
     conservative_cumulative = 0.0
@@ -402,7 +405,7 @@ def recover_area(
             else 0.0
         ),
         "resizer_wns": round(resizer_wns, 4),
-        "recovered_wns": round(final_wns, 4) if final_wns else None,
+        "recovered_wns": round(final_wns, 4) if final_wns is not None else None,
         "wns_degradation": round(degradation, 4) if degradation is not None else None,
         "conservative_cumulative": round(conservative_cumulative, 4),
         "safety_factor": safety_factor,
