@@ -1,6 +1,6 @@
 {
   "scope": "two readonly constraint-coverage STA, no physical changes",
-  "status": "registered_before_STA",
+  "status": "two_STA_complete",
   "jobs": [
     {
       "label": "CONTROL",
@@ -19,7 +19,19 @@
         }
       },
       "tcl_sha256": "64197662fc108d3b2360f6f1a212d0c0da1f04b5c52ef5680f43083a984792ba",
-      "timeout_s": 120
+      "timeout_s": 120,
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/library_area_search_20261113/constraint_audit/CONTROL/coverage.tcl"
+      ],
+      "returncode": 0,
+      "elapsed_s": 4.453000000008615
     },
     {
       "label": "SEED",
@@ -38,7 +50,20 @@
         }
       },
       "tcl_sha256": "b46bc09709bb3aba84cd03bbcfc8b369f63cbb299b33acff4e5449af517ee3a5",
-      "timeout_s": 120
+      "timeout_s": 120,
+      "argv": [
+        "wsl.exe",
+        "-d",
+        "Ubuntu",
+        "--",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/library_area_search_20261113/constraint_audit/SEED/coverage.tcl"
+      ],
+      "returncode": 0,
+      "elapsed_s": 0.4529999999940628
     }
-  ]
+  ],
+  "driver_sha256": "bea848fe06d194ff57e00de56cf5e419ac17631e0da8084f87b81126593ff55d"
 }

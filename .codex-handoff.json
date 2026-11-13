@@ -1,17 +1,12 @@
 {
   "timestamp": "2026-11-13",
-  "status": "Strict area continuation: 9 fixed-seed pairs and 2 equal-area library variants all valid but none strictly feasible. Exact accepted s382096 seed retained (-0.594530321% area, setup/TNS improved, hold unchanged, prior SEC101/0). Static full-netlist/Liberty space has62 compatible smaller targets; old recipe covers10; compatibility is not physical feasibility. Own-mechanism superiority and complete constraints remain open.",
+  "status": "Configurable WNS-budget area recovery: Resizer frontend retained; default10ps, TNS auxiliary, hold retained. s382 RESTORE074 accepted with SEC101/0:28.90625% of net added area recovered,4.399524% total area reduction,3.098077ps WNS loss. Historical reclassification, not online-search superiority. Pure policy/bounded-search kernel implemented; physical evaluator and cross-design evidence pending.",
   "project": "FAECO",
   "read_order": [
-    "project_docs/evidence/strict_area_search_20261113/REPORT.md",
-    "project_docs/evidence/recovery_repair_20261113/REPORT.md",
-    "project_docs/HANDOFF_2026-11-12.md",
-    "project_docs/FAECO_ROADMAP.md",
+    "project_docs/evidence/timing_budget_20261113/REPORT.md",
     "project_docs/CANON.md",
-    "project_docs/PROJECT_MAP.md",
-    "project_docs/LOGS.md",
-    "project_docs/OPEN_ISSUES.md",
-    "AGENTS.md"
+    "project_docs/FAECO_ROADMAP.md",
+    "project_docs/OPEN_ISSUES.md"
   ],
   "git": {
     "head_source": "git log -1 --format=%H",
@@ -55,7 +50,7 @@
     "v19_manifest": "139 OK / 9 FAILED",
     "v20": "pending (covers r95-r116 + mechanism code + P1 code)"
   },
-  "tests": "1113 passed /156 subtests; 24 affected tests rechecked; packaged Windows helper required, see docs/environment.md",
+  "tests": "1147 passed /156 subtests (128.96s),34 new dedicated tests included; entire code Python source snapshot unchanged; documented same-byte packaged Yosys mirror used",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139",
@@ -117,5 +112,23 @@
     "new_sec": 0,
     "accepted_endpoint": "unchanged FORWARD__096_",
     "next_focus": "complete candidate generation and constraint coverage before stronger search claims"
+  },
+  "timing_budget_20261113": {
+    "report": "project_docs/evidence/timing_budget_20261113/REPORT.md",
+    "core": "code/src/rseco/budgeted_recovery.py",
+    "adapter": "project_docs/evidence/timing_budget_20261113/evaluate_budget.py",
+    "accepted_endpoint": "RESTORE__074_",
+    "policy": "WNS loss <=10ps vs fixed Resizer; TNS auxiliary; hold nonregression and nonnegative",
+    "scope": "s382 existing clock-only model; no complete IO guarantee",
+    "area_recovery_percent": 28.90625,
+    "new_EDA": "0routes/0STA/1SEC; separate constraint diagnostic2STA",
+    "tests": "1147 passed /156 subtests (128.96s),34 new dedicated tests included; entire code Python source snapshot unchanged; documented same-byte packaged Yosys mirror used",
+    "next": [
+      "connect prospective physical evaluator to expanded candidate space",
+      "complete intended constraints",
+      "equal-budget strong baselines and joint-selection ablation",
+      "cross-design evaluation"
+    ],
+    "verification": "project_docs/evidence/timing_budget_20261113/VERIFICATION.json"
   }
 }

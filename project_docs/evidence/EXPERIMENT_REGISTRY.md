@@ -2491,3 +2491,23 @@ variant独立实现预审通过但文字判据须先澄清：单点仅省2.5024<
 #### TIMING-BUDGET 选中端点SEC运行前登记
 
 记录端已实际打开新PLAN.json：仅RESTORE__074_，固定10ps政策、原物理端点重用，不重布线。PLAN SHA `a984d47d53e994d2b01b6679e60ad5601e4c72cf369225036601ce8201bafba9`；helper SHA `78eee438eac5c570837cb655900610fd829d6a929932b0b6d2d183645b2e6c01`，help已通过。proof timeout180s、外wrapper240s，完整模型/零pin tap投影及source/copy SHA按既有受控证明链。状态PREPARED / NOT_PROVED，待独立准入与主线commit后才执行；预计只新增1SEC、0route/0STA，实际次数以后验收据为准。
+
+
+#### TIMING-BUDGET SEC RUNNING
+
+运行前注册commit `c5a4d05` 与独立准入均完成，唯一RESTORE074现进入SEC（180/240s），无新route/STA。状态RUNNING仅指该证明，25候选EDA仍未运行。
+
+
+#### TIMING-BUDGET 选中端点限定接受完成
+
+RESTORE074在用户10ps/现有约束域获根与独立接受，ACCEPTANCE SHA2de50d475fec765bb0b8729addf75a43d8e929bdcf06b04b752d4fb6eafdff75。全SEC SHA/102实例含21FF/41模型/101proven0unproven通过，精确历史端点未重布线，新增1SEC、0route/0STA。s382净新增面积回收28.90625%同阶段分母独立绑定，WNS损3.098077ps、hold增3.577305ps、TNS损231.982231ps完整报告；新政策接受非旧strict通过、非新算法收益。core工程全回归及在线物理接入另行待办。
+
+
+#### TIMING-BUDGET 工程完整回归完成
+
+v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wrapper132s/rc0，code全py SHA前后同。v1错误环境5failed/1142passed原件保留，未改生产代码只修测试环境。5 tracked fixture备份恢复、44新生成文件隔离，FIXTURE_CLEANUP留痕。历史52四档core一致性和CLI预算合法性通过；均不增加route/STA或证明在线物理收益。实际科学新增仍1SEC/0route/0STA，约束诊断2STA另计。
+
+
+#### TIMING-BUDGET 本轮阶段核验收尾
+
+工程VERIFICATION包含1147/156全套、34专用、compile/CLI4项/真实52pool一致；旧624+398工件SHA未变、233准备副本来源一致。record检查rc0但4obsolete警告归OI-081，25候选草案SUPERSEDED/未运行。阶段成果为历史预算重筛+1SEC接受及纯核心工程门，不作prospective搜索收益；online evaluator/完整约束/跨设计继续pending。科学新route/STA=0，约束诊断2STA单列。最终包封存与commit/push由主线随后执行，本记录不宣称已推送。

@@ -1,0 +1,507 @@
+{
+  "status": "all2_finished",
+  "plan_sha256": "e600cd53f9899d179152d6c84c0cc84476a96998f7e4f117d7f1b4fc4772c7f7",
+  "recipe_sha256": "34d27d66215df9ff04c63c7eabaf543c2a53e71802c9329fc43a2e073509389f",
+  "driver_sha256": "9bbd2713aa21b1f646d45ec13c3976b324c7d1e493cbdf590a2d11ff257bfa78",
+  "runner_sha256": "d5cbbe97219c6809a4560bd4bc6f6e1a0ebfba8857915df4da466b4386b60978",
+  "original_search_summary_sha256": "89ddf95cfe56436ec31acc8a260ed7264aaa17376802b64ffb3a0189b157d113",
+  "jobs": [
+    {
+      "arm": "VARIANT_054_2",
+      "restored": [
+        "_052_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "complete",
+      "returncode": 0,
+      "elapsed_s": 27.828000000008615
+    },
+    {
+      "arm": "VARIANT_096_054_2",
+      "restored": [
+        "_052_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "complete",
+      "returncode": 0,
+      "elapsed_s": 27.547000000005937
+    }
+  ],
+  "rows": [
+    {
+      "arm": "VARIANT_054_2",
+      "restored": [
+        "_052_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_096_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "VARIANT_054_2",
+        "restored": [
+          "_052_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_096_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.828000000008615
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1049.7568,
+      "area_saved": 2.5023999999998523,
+      "area_saved_pct": 0.23781212841853533,
+      "original_saving_retained_pct": 5.405405405405086,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8760304703869792,
+          "hold_ns": 0.4547694720802298,
+          "tns_ns": -13.526441574
+        },
+        "propagated": {
+          "setup_ns": -0.8829038611324336,
+          "hold_ns": 0.46242393247908353,
+          "tns_ns": -13.709483147
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0344450579170541,
+        "hold_ns": -0.0012129186544029835,
+        "tns_ns": -0.2869405750000009
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0344440579170541,
+        "hold_ns": 0.0012119186544029836,
+        "tns_ns": 0.28693957500000095
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "ae374a4187a8a734b8ad10aac3984607c62252e472a7a173c1867f14de5d0664",
+        "flow.tcl": "5742c377b5fdd60d71e1de768e4896b6021753dd82a5af0c0d384f47afbdbdd3",
+        "ideal.log": "3824d3a3e3807b7a75a36310964714001d1e7d9dd6424887d1977556db9af9c9",
+        "ideal.tcl": "a14bac0ff004ffd7f498f165a517d3bdf694d5fc15b18bc59fb0634bdc6637cc",
+        "manifest.json": "cbfbc270fb6ed5e4c99fb7b4f0a7bd17160ac51b7f4dce22eaa7b820cfade618",
+        "propagated.log": "62bdceddc5125dfb1dcfeaa0573a2fabaf32e804a02f4a8bc4c93e8be5ce0a75",
+        "propagated.tcl": "ddef3165475a0a1b07c3fa3d9861eeb934111f19d44dc05e7e8449a82d1b93dd",
+        "routed.def": "d41f4f70efba6b43daebed56f6cefe053675814fe416680c42235dd403faed81",
+        "routed.odb": "8114949ae32e7bdff36869e20cf15a4b4f3faae1e9c8579fef20233ce4f6d4c9",
+        "routed.spef": "a895c383c5c7b3e30bf878cfd6ef8baed80011de7662f7fc7118e6f2a472d74b",
+        "routed.v": "0959a1857db0ecdc3499fd6cc9297fb87974d9d984ad32deffa358aabe8fab42"
+      }
+    },
+    {
+      "arm": "VARIANT_096_054_2",
+      "restored": [
+        "_052_",
+        "_055_",
+        "_074_",
+        "_077_",
+        "_079_",
+        "_081_",
+        "_093_",
+        "_098_",
+        "_102_",
+        "_111_",
+        "_113_"
+      ],
+      "status": "validated_primary_fail",
+      "functional_equivalence": "not checked",
+      "batch": {
+        "arm": "VARIANT_096_054_2",
+        "restored": [
+          "_052_",
+          "_055_",
+          "_074_",
+          "_077_",
+          "_079_",
+          "_081_",
+          "_093_",
+          "_098_",
+          "_102_",
+          "_111_",
+          "_113_"
+        ],
+        "status": "complete",
+        "returncode": 0,
+        "elapsed_s": 27.547000000005937
+      },
+      "structure_check": {
+        "exact_recipe_minus_restored": true,
+        "all_instances": 3128,
+        "functional_instances": 102,
+        "pin_bindings": 335,
+        "excluded_empty_pin_taps": 3026,
+        "all_functional_cells_have_liberty_area": true
+      },
+      "supported_rule_drc_zero": true,
+      "area": 1043.5008,
+      "area_saved": 8.758399999999938,
+      "area_saved_pct": 0.8323424494649169,
+      "original_saving_retained_pct": 18.918918918918788,
+      "metrics": {
+        "ideal": {
+          "setup_ns": -0.8760304703869792,
+          "hold_ns": 0.4547694720802298,
+          "tns_ns": -13.521617889
+        },
+        "propagated": {
+          "setup_ns": -0.8829038611324336,
+          "hold_ns": 0.46242393247908353,
+          "tns_ns": -13.704868317
+        }
+      },
+      "configured_slew_cap_report_no_violations": true,
+      "deltas_ns": {
+        "setup_ns": -0.0344450579170541,
+        "hold_ns": -0.0012129186544029835,
+        "tns_ns": -0.2823257450000014
+      },
+      "deficits_after_tolerance_ns": {
+        "setup_ns": 0.0344440579170541,
+        "hold_ns": 0.0012119186544029836,
+        "tns_ns": 0.28232474500000143
+      },
+      "absolute_hold_feasible": true,
+      "primary_numeric_pass": false,
+      "diagnostic_budget_pass": {
+        "0": false,
+        "0.002": false,
+        "0.005": false,
+        "0.01": false
+      },
+      "output_sha256": {
+        "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flow.log": "3a60b46434b244e7e90e893b14e9ddb85c12bb5390ac10aa31915549f268c41d",
+        "flow.tcl": "7ec87e80cf0e0e5cd8c72c183ca9acd726eaad8df4418abd73bb28630015f32c",
+        "ideal.log": "d8c7eaafc6bd38292679605cb1f12d1bc7d9fdebfcff34e3c3f574c43b456449",
+        "ideal.tcl": "8fa4e079861f5e6d8e441cfcb48d4c8aa5c2edc814fbe9b5e959dc12eea4f729",
+        "manifest.json": "ad429d4564357ee1e216dc7e0bd6abc0cc9985653102f3f5b6fc916d5b3e5446",
+        "propagated.log": "1d21cabb6518b4f481b49463709461d42fbc16e5b7854da540e75608b4f75ab8",
+        "propagated.tcl": "5e70372420f43973c81da035260d26a72d95b3013572e4e0bf9bf40dd97be772",
+        "routed.def": "b0be73ca9598c910106f47020b14ca43a5574302df7712d5abe338f24ad3100a",
+        "routed.odb": "e9f01d4c46c0cce7d7877dc42fc7f37c462d73bcd603b650005884999b5e6492",
+        "routed.spef": "508b99ddeda60a32b6902710556221e2407448115da665652c49736227fb1b34",
+        "routed.v": "f5982fdf7869f90a4188f17608fbc61878f7a55f6930351126a37c320dc85c2d"
+      }
+    }
+  ],
+  "points": {
+    "VARIANT_054_2": {
+      "candidate_id": "VARIANT_054_2",
+      "evidence_kind": "actual",
+      "area": 1049.7568,
+      "metrics": {
+        "setup_ns": -0.8829038611324336,
+        "hold_ns": 0.46242393247908353,
+        "tns_ns": -13.709483147
+      },
+      "checks": {
+        "complete": true,
+        "structure": true,
+        "provenance": true,
+        "drc": true,
+        "drv": true
+      },
+      "endpoint": {
+        "netlist": {
+          "path": "runs/VARIANT_054_2/routed.v",
+          "sha256": "0959a1857db0ecdc3499fd6cc9297fb87974d9d984ad32deffa358aabe8fab42"
+        },
+        "spef": {
+          "path": "runs/VARIANT_054_2/routed.spef",
+          "sha256": "a895c383c5c7b3e30bf878cfd6ef8baed80011de7662f7fc7118e6f2a472d74b"
+        },
+        "odb": {
+          "path": "runs/VARIANT_054_2/routed.odb",
+          "sha256": "8114949ae32e7bdff36869e20cf15a4b4f3faae1e9c8579fef20233ce4f6d4c9"
+        },
+        "def": {
+          "path": "runs/VARIANT_054_2/routed.def",
+          "sha256": "d41f4f70efba6b43daebed56f6cefe053675814fe416680c42235dd403faed81"
+        },
+        "manifest": {
+          "path": "runs/VARIANT_054_2/manifest.json",
+          "sha256": "cbfbc270fb6ed5e4c99fb7b4f0a7bd17160ac51b7f4dce22eaa7b820cfade618"
+        }
+      },
+      "sec_status": "pending"
+    },
+    "VARIANT_096_054_2": {
+      "candidate_id": "VARIANT_096_054_2",
+      "evidence_kind": "actual",
+      "area": 1043.5008,
+      "metrics": {
+        "setup_ns": -0.8829038611324336,
+        "hold_ns": 0.46242393247908353,
+        "tns_ns": -13.704868317
+      },
+      "checks": {
+        "complete": true,
+        "structure": true,
+        "provenance": true,
+        "drc": true,
+        "drv": true
+      },
+      "endpoint": {
+        "netlist": {
+          "path": "runs/VARIANT_096_054_2/routed.v",
+          "sha256": "f5982fdf7869f90a4188f17608fbc61878f7a55f6930351126a37c320dc85c2d"
+        },
+        "spef": {
+          "path": "runs/VARIANT_096_054_2/routed.spef",
+          "sha256": "508b99ddeda60a32b6902710556221e2407448115da665652c49736227fb1b34"
+        },
+        "odb": {
+          "path": "runs/VARIANT_096_054_2/routed.odb",
+          "sha256": "e9f01d4c46c0cce7d7877dc42fc7f37c462d73bcd603b650005884999b5e6492"
+        },
+        "def": {
+          "path": "runs/VARIANT_096_054_2/routed.def",
+          "sha256": "b0be73ca9598c910106f47020b14ca43a5574302df7712d5abe338f24ad3100a"
+        },
+        "manifest": {
+          "path": "runs/VARIANT_096_054_2/manifest.json",
+          "sha256": "ad429d4564357ee1e216dc7e0bd6abc0cc9985653102f3f5b6fc916d5b3e5446"
+        }
+      },
+      "sec_status": "pending"
+    }
+  },
+  "actual_new_cost": {
+    "charged_verifications": 2,
+    "completed_routes": 2,
+    "completed_sta": 4
+  },
+  "budget_scope": "Separate two-route/four-STA probe; excluded from original nine-pair ranking pool.",
+  "elapsed_s": 55.48399999999674,
+  "trace": [
+    {
+      "charged_verifications": 1,
+      "visited": "VARIANT_054_2",
+      "gate": {
+        "feasible": false,
+        "reasons": [
+          "setup_ns",
+          "tns_ns",
+          "hold_ns"
+        ],
+        "area_saved": 2.5024
+      },
+      "best_area_saved": 6.256,
+      "selected": {
+        "candidate_id": "FORWARD__096_",
+        "evidence_kind": "actual",
+        "area": 1046.0032,
+        "metrics": {
+          "setup_ns": -0.8467440637538459,
+          "hold_ns": 0.4636368511334865,
+          "tns_ns": -13.417701721
+        },
+        "checks": {
+          "complete": true,
+          "structure": true,
+          "provenance": true,
+          "drc": true,
+          "drv": true
+        },
+        "endpoint": {
+          "netlist": {
+            "path": "labels/singletons/FORWARD__096_/routed.v",
+            "sha256": "761430cf748245572384ee04ae5942d310547a314bf8dafa5cf0cf2f78e184f3"
+          },
+          "spef": {
+            "path": "labels/singletons/FORWARD__096_/routed.spef",
+            "sha256": "e3960c9b650f0016191dc81838ea675fb312acd75a379f9681f44e14f3b72e46"
+          },
+          "odb": {
+            "path": "labels/singletons/FORWARD__096_/routed.odb",
+            "sha256": "78c78b8fdebd473e7b2192b95f101d38dc615a87ef686d46e81c2cb21ab6e9df"
+          },
+          "def": {
+            "path": "labels/singletons/FORWARD__096_/routed.def",
+            "sha256": "2cf8c76807a481d0d17e5687543fb2d1f0f4c61e653c2bc784f54cd965fc4318"
+          },
+          "manifest": {
+            "path": "labels/singletons/FORWARD__096_/manifest.json",
+            "sha256": "5cc8a46090afd63ccc43ba79c03538d6d5c8cbd1b3c44065880f5388d49e8e76"
+          }
+        },
+        "sec_status": "pass",
+        "acceptance": {
+          "path": "labels/provenance/FORWARD_ACCEPTANCE.json",
+          "sha256": "e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd"
+        },
+        "proof": {
+          "path": "labels/seed_proof/receipt.json",
+          "sha256": "0b0d321503a86d3b7ced1dce064362303bdafb80e0c7e1e982d688ab26bfff06"
+        }
+      }
+    },
+    {
+      "charged_verifications": 2,
+      "visited": "VARIANT_096_054_2",
+      "gate": {
+        "feasible": false,
+        "reasons": [
+          "setup_ns",
+          "tns_ns",
+          "hold_ns"
+        ],
+        "area_saved": 8.7584
+      },
+      "best_area_saved": 6.256,
+      "selected": {
+        "candidate_id": "FORWARD__096_",
+        "evidence_kind": "actual",
+        "area": 1046.0032,
+        "metrics": {
+          "setup_ns": -0.8467440637538459,
+          "hold_ns": 0.4636368511334865,
+          "tns_ns": -13.417701721
+        },
+        "checks": {
+          "complete": true,
+          "structure": true,
+          "provenance": true,
+          "drc": true,
+          "drv": true
+        },
+        "endpoint": {
+          "netlist": {
+            "path": "labels/singletons/FORWARD__096_/routed.v",
+            "sha256": "761430cf748245572384ee04ae5942d310547a314bf8dafa5cf0cf2f78e184f3"
+          },
+          "spef": {
+            "path": "labels/singletons/FORWARD__096_/routed.spef",
+            "sha256": "e3960c9b650f0016191dc81838ea675fb312acd75a379f9681f44e14f3b72e46"
+          },
+          "odb": {
+            "path": "labels/singletons/FORWARD__096_/routed.odb",
+            "sha256": "78c78b8fdebd473e7b2192b95f101d38dc615a87ef686d46e81c2cb21ab6e9df"
+          },
+          "def": {
+            "path": "labels/singletons/FORWARD__096_/routed.def",
+            "sha256": "2cf8c76807a481d0d17e5687543fb2d1f0f4c61e653c2bc784f54cd965fc4318"
+          },
+          "manifest": {
+            "path": "labels/singletons/FORWARD__096_/manifest.json",
+            "sha256": "5cc8a46090afd63ccc43ba79c03538d6d5c8cbd1b3c44065880f5388d49e8e76"
+          }
+        },
+        "sec_status": "pass",
+        "acceptance": {
+          "path": "labels/provenance/FORWARD_ACCEPTANCE.json",
+          "sha256": "e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd"
+        },
+        "proof": {
+          "path": "labels/seed_proof/receipt.json",
+          "sha256": "0b0d321503a86d3b7ced1dce064362303bdafb80e0c7e1e982d688ab26bfff06"
+        }
+      }
+    }
+  ],
+  "selected": {
+    "candidate_id": "FORWARD__096_",
+    "evidence_kind": "actual",
+    "area": 1046.0032,
+    "metrics": {
+      "setup_ns": -0.8467440637538459,
+      "hold_ns": 0.4636368511334865,
+      "tns_ns": -13.417701721
+    },
+    "checks": {
+      "complete": true,
+      "structure": true,
+      "provenance": true,
+      "drc": true,
+      "drv": true
+    },
+    "endpoint": {
+      "netlist": {
+        "path": "labels/singletons/FORWARD__096_/routed.v",
+        "sha256": "761430cf748245572384ee04ae5942d310547a314bf8dafa5cf0cf2f78e184f3"
+      },
+      "spef": {
+        "path": "labels/singletons/FORWARD__096_/routed.spef",
+        "sha256": "e3960c9b650f0016191dc81838ea675fb312acd75a379f9681f44e14f3b72e46"
+      },
+      "odb": {
+        "path": "labels/singletons/FORWARD__096_/routed.odb",
+        "sha256": "78c78b8fdebd473e7b2192b95f101d38dc615a87ef686d46e81c2cb21ab6e9df"
+      },
+      "def": {
+        "path": "labels/singletons/FORWARD__096_/routed.def",
+        "sha256": "2cf8c76807a481d0d17e5687543fb2d1f0f4c61e653c2bc784f54cd965fc4318"
+      },
+      "manifest": {
+        "path": "labels/singletons/FORWARD__096_/manifest.json",
+        "sha256": "5cc8a46090afd63ccc43ba79c03538d6d5c8cbd1b3c44065880f5388d49e8e76"
+      }
+    },
+    "sec_status": "pass",
+    "acceptance": {
+      "path": "labels/provenance/FORWARD_ACCEPTANCE.json",
+      "sha256": "e7d217e8976f79c06724111b5850d64daa0d88b0b913454b76dadfc50ca9b9dd"
+    },
+    "proof": {
+      "path": "labels/seed_proof/receipt.json",
+      "sha256": "0b0d321503a86d3b7ced1dce064362303bdafb80e0c7e1e982d688ab26bfff06"
+    }
+  },
+  "next_sec": "reuse_seed_proof"
+}

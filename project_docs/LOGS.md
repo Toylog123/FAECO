@@ -5294,3 +5294,39 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 
 
 **LOG-20261113-05 / 新SEC计划登记与短暂停写**：已实读PLAN，唯一RESTORE074、10ps历史端点proof-only；PLANa984d47d...、helper78eee438...与180/240s超时已完整写registry。help通过，独立准入及根commit尚待，当前未执行证明。按主线要求从此暂停售托文档写入供冻结commit；后续收到恢复通知再记录，不提前宣称SEC/commit成功。
+
+
+**LOG-20261113-05 / 记录恢复与SEC正式启动**：主线commit `c5a4d05` 已先冻结新policy/PLAN/helper、本地端点和旧wns依赖，独立准入通过。现执行唯一RESTORE074 SEC，internal180s/outer240s；不新增route/STA，实际proof结果待回报。记录端按主线通知恢复写入。
+
+
+**LOG-20261113-05 / SEC producer完成，根与独立验收待核**：唯一RESTORE074 proof stdout显示pass、sources_unchanged=true，wrapper16s/rc0；待根raw与独立核验后正式接受。实际新增1SEC、0route/0STA，不能仅stdout即科学全部通过。
+
+**预算核心交付进展**：budget_core纯内核/测试两文件交付，34tests绿，red/green原件在scratch；独立代码审查开始。主线后续将对actual52与core一致性并做全量回归；物理在线adapter尚pending，未声称productionCLI已接入或oracle测试证明搜索收益。
+
+
+**LOG-20261113-05 / s382面积分母审计实查**：记录端实际读area_baseline_audit/REPORT：完整面积809.5264综合/892.1056修复前CTS/1052.2592 Resizer/1005.9648 RESTORE074。排除CTS前处理82.5792，受控repair流程最终master净新增160.1536，回收46.2944=28.90625%；总降4.399524375743%分开。8新增buffer/24最终master变化≠工具过程34resizes；同面积074不代表同网表。CANON更新仅此s382快照通过，不外推其它13例、不替代SEC/IO资格，无EDA。
+
+
+**LOG-20261113-05 / 根独立复算与rawSEC核验通过**：ROOT_READBACK.json绑定DEF+固定Liberty独立三面积892.1056/1052.2592/1005.9648、counts94/102/102、回收28.90625%。根已核raw SEC101/0及proof/sourceSHA，端点为精确原RESTORE074；WNS−0.003098077ns、hold+0.003577305ns、TNS−0.231982231ns。CANON记根验证通过但最终独立receipt待收；不把历史重筛和1次proof写成新算法收益或全IO安全。
+
+
+**LOG-20261113-05 / 独立最终验收进行中**：reviewer已读budgeted_recovery模块/完整测试及evaluate_budget历史适配器，当前未见阻断性缺陷；调用方物理证书、预算档案与外层超时仍属接口责任。继续只读核SEC全部SHA、完整Reader投影与41master模型覆盖，拟产ACCEPTANCE/INDEPENDENT_REVIEW，无新EDA/SEC。面积子报告仅修公式显示，原receipt/source未变，不把排版修正算新审计结果。
+
+
+**LOG-20261113-05 / 独立最终限定接受完成**：ACCEPTANCE.json SHA2de50d475fec765bb0b8729addf75a43d8e929bdcf06b04b752d4fb6eafdff75、INDEPENDENT_REVIEW SHA3f6e1f0ac881167378e0f3d18f81ca5abc71b239aa2df1808c1ca2b654af8cbc；独立checker/rebuilt_cells核全SEC SHA、102含21FF、41模型覆盖及重建同SHA、101/0，接受RESTORE074于10ps/既有约束域，面积28.90625%分母已绑定。无新EDA/SEC、旧proof原样。CANON已更新完整限定acceptance；core/adapter无阻断缺陷但全回归待根、物理在线/完整IO/机制优势仍未实现。审查者已停止写包供封存。
+
+
+**LOG-20261113-05 / 整体回归v1环境配置遗漏自查**：v1运行中出现失败，主线实查YOSYS_ENV_DIAGNOSIS：同exe SHA94eaf450...，原安装退出3221225781(DLL_NOT_FOUND)，scratch/packaged_yosys同字节镜像rc0、0.67+146。原因是本轮启动未前置既有packaged DLL镜像，非新预算内核已证实代码缺陷。复用prepare_packaged_yosys.py完成359SHA验证/准备，不改生产代码/安装。待v1完整退出保留失败日志后，以正确PATH串行重跑全套；不并发清理/重跑，当前不称全回归通过。
+
+
+**LOG-20261113-05 / 完整回归v1收据与v2运行**：v1最终5failed/1142passed/156subtests，192.95s，失败为既有Yosys convert/demo/CEC链；同exe SHA原安装DLL_NOT_FOUND而镜像正常已明确核验。v2由run_regression.py先核359镜像SHA、设置PATH，child540s/outer600s并保存code全py前后SHA；串行运行约50%未见F，尚无最终通过结论。
+
+**核心与入口进展**：主线CORE_INTEGRATION已将真实52历史端点四档与新核心对齐；evaluate_budget.py用户CLI help及负数/NaN/inf拒绝检查通过，REPORT已写。README/AGENTS/project_docs README/.handoff新入口由根更新，记录端不重复编辑。该CLI为实际历史端点预算选择，不声称在线物理评估器已接入。
+
+
+**LOG-20261113-05 / 完整回归v2通过与fixture隔离**：v2 1147passed/156subtests，pytest128.96s、wrapper132s/rc0，REGRESSION_RECEIPT code_unchanged=true及全py前后SHA。v1 5failed/1142passed保留，环境镜像修正后通过，无code修补。根先备份并恢复5个tracked生成fixture，44个新文件移到scratch/timing_budget_regression_fixture_backup，FIXTURE_CLEANUP.json绑定，不混科学提交。CANON实现/回归门更新，online physical/旧parser/完整IO/跨设计仍open；静态/record检查与最终封存尚在进行，不预报commit/push。
+
+
+**LOG-20261113-05 / 本轮最终核验与停写**：主线VERIFICATION.json绑定完整1147passed/156subtests及34专用测试、compile成功、CLI4项、真实52pool四档一致；HISTORICAL_INTEGRITY验证旧624+398工件逐SHA全不变，233准备副本源SHA一致。check_record.sh rc0但仍警告4份obsolete文档，OI-081保持，不恢复维护停用文件。旧25草案已加SUPERSEDED与PREPARATION_STATUS，明确未运行。
+
+本轮交付限定为预算纯核心/历史CLI、10ps下精确RESTORE074端点SEC接受与s382同阶段面积分母核验；新科学计数1SEC/0route/0STA（另2约束诊断STA），不声称在线物理搜索、完整IO或机制优势。根准备REPORT/evidence封存，commit/push尚未执行验收，记录端不预报成功。从本条起停止全部受托文件写入，供根稳定封存。

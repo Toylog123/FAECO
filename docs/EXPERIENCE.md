@@ -3398,3 +3398,15 @@ strict_area_search自包含副本preflight中，WSL sha256sum返回rc0且stdout 
 ## 2026-11-13 — 超时包装日志与混合编码的结构化读取
 
 timing_budget历史重筛两次工程失败：超时wrapper向stdout加[run]文本使整流JSON解析失败；历史WSL代理警告与指标异编码导致严格UTF8读取失败。保留原raw，在独立文件输出结构化JSON；历史日志先核字节SHA，再按既有审计方式errors=replace/NUL清理，仅提唯一ASCII指标。该兼容读取不改变输入或指标身份，不把解析失败当物理科学失败。v3与独立审计rc0，重筛0route/0STA。
+
+
+## 2026-11-13 — 用阶段快照而非综合输入归因Resizer净新增面积
+
+s382完整层级/DEF审计把综合809.5264、修复前CTS892.1056、Resizer最终1052.2592分开。若用综合初态作纯Resizer分母，会混入82.5792的CTS/前处理增量。以原flow中CTS后、repair_timing前快照为A0，最终master净新增160.1536，RESTORE074回收46.2944，对应28.90625%；总降4.399524%仍另报。
+
+完整有符号账8新增buffer+24最终master变化与日志34过程resizes不是同一计数，不硬改工具日志。没有立即repair后快照时明确归属受控repair流程的最终master净差，不声称瞬态操作总和。该分母只验s382，不反推其它设计；证明/时序/IO门继续独立验收。
+
+
+## 2026-11-13 — 已验环境workaround须进入每次完整回归配置
+
+budget_core整体回归v1遗漏前置packaged DLL镜像，再现原Yosys3221225781(DLL_NOT_FOUND)。同exe SHA在已验scratch镜像rc0，既有prepare_packaged_yosys.py验证359项一致，支持环境配置遗漏归因，不能据失败先改新生产代码。应保留v1完整失败日志并等退出，再用正确PATH串行回归；避免为节时并发清理与重跑造成测试产物干扰。此条尚不声明重跑已过。

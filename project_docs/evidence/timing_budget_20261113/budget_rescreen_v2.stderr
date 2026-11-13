@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\project_docs\evidence\timing_budget_20261113\rescreen.py", line 84, in <module>
+    result = analyze()
+             ^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\project_docs\evidence\timing_budget_20261113\rescreen.py", line 42, in analyze
+    raw = (folder / "propagated.log").read_text(encoding="utf8")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\16225\AppData\Local\Programs\Python\Python311\Lib\pathlib.py", line 1059, in read_text
+    return f.read()
+           ^^^^^^^^
+  File "<frozen codecs>", line 322, in decode
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc0 in position 10: invalid start byte

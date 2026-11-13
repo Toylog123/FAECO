@@ -1,5 +1,8 @@
 # project_docs 入口
 
+> **2026-11-13 当前入口：可调时序预算机制。** 优先读 `project_docs/evidence/timing_budget_20261113/REPORT.md` 与 `project_docs/CANON.md`。保留Resizer前端；默认允许WNS最多损失10ps，TNS辅助、hold保持原门。s382既有端点在该预算下已补SEC101/0：回收Resizer净新增面积28.90625%（总面积−4.399524%，WNS−3.098077ps，TNS−0.231982231ns）。这是已有物理端点重筛，不是新搜索算法收益。新 `code/src/rseco/budgeted_recovery.py` 实现纯策略/有界组合搜索，在线物理评估器、完整IO约束、强基线/跨设计尚待建立；下方strict政策与旧状态均保留历史。
+
+
 > **2026-11-13 最新续跑**：见 `project_docs/evidence/strict_area_search_20261113/REPORT.md`。新增9组合+2同面积variant全部未过严格门，两排序所有预算前缀均保留原096安全端点（面积−0.594530321%）。完整网表/Liberty另枚举62个静态兼容降面积替换，旧清单只覆盖10；剩余51个遗漏目标本轮未测。静态候选不是收益，自有机制优势/完整约束仍open。
 > **2026-11-13 接手优先级**：先读 `evidence/recovery_repair_20261113/REPORT.md`、`CANON.md` 与 `FAECO_ROADMAP.md`。当前目标是自己的机制在时序不下降条件下优化面积；41个物理候选中唯一接受的s382单动作基线节省0.594530321%，联合机制尚无优势证据。下方现行文件数及2026-11-09状态已过期，保留作溯源。
 

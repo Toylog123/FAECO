@@ -1,5 +1,17 @@
 # FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画
 
+可调预算的真实归档数据复核（不启动新EDA）：
+
+```powershell
+.venv/Scripts/python.exe project_docs/evidence/timing_budget_20261113/evaluate_budget.py --budget-ps 0 5 10 20 --output scratch/recovery_budget_results.json
+```
+
+输出同时列出待证明候选与已通过SEC的可交付端点。旧 `code/scripts/recover_area.py` 仍是15ps默认/旧SPEF路径，未被本阶段悄悄替换。
+
+
+> **2026-11-13 当前入口：可调时序预算机制。** 优先读 `project_docs/evidence/timing_budget_20261113/REPORT.md` 与 `project_docs/CANON.md`。保留Resizer前端；默认允许WNS最多损失10ps，TNS辅助、hold保持原门。s382既有端点在该预算下已补SEC101/0：回收Resizer净新增面积28.90625%（总面积−4.399524%，WNS−3.098077ps，TNS−0.231982231ns）。这是已有物理端点重筛，不是新搜索算法收益。新 `code/src/rseco/budgeted_recovery.py` 实现纯策略/有界组合搜索，在线物理评估器、完整IO约束、强基线/跨设计尚待建立；下方strict政策与旧状态均保留历史。
+
+
 > **2026-11-13 最新续跑**：见 `project_docs/evidence/strict_area_search_20261113/REPORT.md`。新增9组合+2同面积variant全部未过严格门，两排序所有预算前缀均保留原096安全端点（面积−0.594530321%）。完整网表/Liberty另枚举62个静态兼容降面积替换，旧清单只覆盖10；剩余51个遗漏目标本轮未测。静态候选不是收益，自有机制优势/完整约束仍open。
 > **2026-11-13 当前研究入口**：[严格时序面积研究](project_docs/evidence/recovery_repair_20261113/REPORT.md) + `project_docs/CANON.md`。s382已有面积下降0.594530321%、propagated WNS/TNS改善及hold不变、SEC通过的局部保守基线；自有机制优势与ICCAD资格尚未建立。下方2026-11-09状态只作历史，工具环境以 `docs/environment.md` 为准，Git状态实时查询。
 

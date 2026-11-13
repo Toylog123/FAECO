@@ -1,0 +1,33 @@
+[
+  {
+    "args": [
+      "--help"
+    ],
+    "returncode": 0,
+    "stderr": ""
+  },
+  {
+    "args": [
+      "--budget-ps",
+      "-1"
+    ],
+    "returncode": 2,
+    "stderr": "usage: evaluate_budget.py [-h] [--budget-ps BUDGET_PS [BUDGET_PS ...]]\r\n                          [--output OUTPUT]\r\nevaluate_budget.py: error: WNS budget must be finite and nonnegative (ps)\r\n"
+  },
+  {
+    "args": [
+      "--budget-ps",
+      "nan"
+    ],
+    "returncode": 2,
+    "stderr": "usage: evaluate_budget.py [-h] [--budget-ps BUDGET_PS [BUDGET_PS ...]]\r\n                          [--output OUTPUT]\r\nevaluate_budget.py: error: WNS budget must be finite and nonnegative (ps)\r\n"
+  },
+  {
+    "args": [
+      "--budget-ps",
+      "inf"
+    ],
+    "returncode": 2,
+    "stderr": "usage: evaluate_budget.py [-h] [--budget-ps BUDGET_PS [BUDGET_PS ...]]\r\n                          [--output OUTPUT]\r\nevaluate_budget.py: error: WNS budget must be finite and nonnegative (ps)\r\n"
+  }
+]

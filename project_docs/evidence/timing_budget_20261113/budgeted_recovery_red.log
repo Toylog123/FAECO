@@ -1,0 +1,18 @@
+[run] 启动（超时 60s）：.venv/Scripts/python.exe -m pytest code/tests/test_budgeted_recovery.py -q
+
+=================================== ERRORS ====================================
+____________ ERROR collecting code/tests/test_budgeted_recovery.py ____________
+ImportError while importing test module 'D:\BaiduSyncdisk\01_Papers\03_FAECO\code\tests\test_budgeted_recovery.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Users\16225\AppData\Local\Programs\Python\Python311\Lib\importlib\__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+code\tests\test_budgeted_recovery.py:6: in <module>
+    from rseco.budgeted_recovery import (
+E   ModuleNotFoundError: No module named 'rseco.budgeted_recovery'
+=========================== short test summary info ===========================
+ERROR code/tests/test_budgeted_recovery.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.23s
+[run] 完成（5s），退出码 2

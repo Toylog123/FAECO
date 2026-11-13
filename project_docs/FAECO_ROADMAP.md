@@ -9,11 +9,11 @@
 **Global constraints:** 默认B=.010ns，finite/nonnegative；tol=1e-6ns；固定参考WNS/hold，hold>=0；TNS辅助；完整计数；不改sealed；实验运行前绑定输入和超时。
 **Review focus:** baseline漂移；NaN/单位/缺证据；组合非加性；同实例备选冲突；未经SEC输出与实际验证成本混淆。
 
-- [ ] Task1 内核：新建code/src/rseco/budgeted_recovery.py及code/tests/test_budgeted_recovery.py。不可变Endpoint/Action/BudgetPolicy；Endpoint绑定scope_id与evidence_id，valid明确代表调用方已完成物理/结构检查，sec_pass单列。assess使用固定reference；select_endpoint(require_sec=True)默认只交付已证明点，无收益精确返回reference。可显式选择待SEC候选但必须标注。
-- [ ] Task1搜索：bounded_search(reference, actions, evaluate, policy, max_evaluations, beam_width, max_depth)。evaluate接收规范排序动作ID元组并从固定reference测联合端点，不累加预测作验收；相同instance不同动作互斥，集合去重，逐实际回调计数。候选从面积估计排序；每层依据实测超预算/hold缺口、面积收益、时序确定保留有界beam，保留数值不合格中间态供后续补偿。已验可行终点档案只作选择，不声称全局最优。宽度/深度/预算为研究参数，默认不向现CLI暗中接入。
-- [ ] Task1 TDD：先验证测试失败，再实现；覆盖finite/negative/ps换算、固定总预算、TNS非硬门、hold拒绝、缺证据/错scope、SEC默认门、非加性、同实例冲突、评估上限、无收益fallback、固定pool随B增加面积不升。单元测试是oracle工程验证，不是科学证据。
-- [ ] Task2 根：timing_budget_20261113内绑定旧52原始证据，输出0/5/10/20ps预算表与选中端点；确认结构/新SPEF/DRV/DRC，记录0新route/STA。重用已有证明核心，仅注册新唯一RESTORE074，180s内部/240s外部，证明前提交注册。
-- [ ] Task3 独立审查：正式核验s382调用repair_timing前CTS面积A0、Resizer后AR、候选AF三点的阶段及完整实例/Liberty计数；形成带SHA回执，缺证据则不报回收率。审核新内核和证明，根复核。
+- [x] Task1 内核：新建code/src/rseco/budgeted_recovery.py及code/tests/test_budgeted_recovery.py。不可变Endpoint/Action/BudgetPolicy；Endpoint绑定scope_id与evidence_id，valid明确代表调用方已完成物理/结构检查，sec_pass单列。assess使用固定reference；select_endpoint(require_sec=True)默认只交付已证明点，无收益精确返回reference。可显式选择待SEC候选但必须标注。
+- [x] Task1搜索：bounded_search(reference, actions, evaluate, policy, max_evaluations, beam_width, max_depth)。evaluate接收规范排序动作ID元组并从固定reference测联合端点，不累加预测作验收；相同instance不同动作互斥，集合去重，逐实际回调计数。候选从面积估计排序；每层依据实测超预算/hold缺口、面积收益、时序确定保留有界beam，保留数值不合格中间态供后续补偿。已验可行终点档案只作选择，不声称全局最优。宽度/深度/预算为研究参数，默认不向现CLI暗中接入。
+- [x] Task1 TDD：先验证测试失败，再实现；覆盖finite/negative/ps换算、固定总预算、TNS非硬门、hold拒绝、缺证据/错scope、SEC默认门、非加性、同实例冲突、评估上限、无收益fallback、固定pool随B增加面积不升。单元测试是oracle工程验证，不是科学证据。
+- [x] Task2 根：timing_budget_20261113内绑定旧52原始证据，输出0/5/10/20ps预算表与选中端点；确认结构/新SPEF/DRV/DRC，记录0新route/STA。重用已有证明核心，仅注册新唯一RESTORE074，180s内部/240s外部，证明前提交注册。
+- [x] Task3 独立审查：正式核验s382调用repair_timing前CTS面积A0、Resizer后AR、候选AF三点的阶段及完整实例/Liberty计数；形成带SHA回执，缺证据则不报回收率。审核新内核和证明，根复核。
 - [ ] Task4 集成：新内核+现有recovery相关测试及完整生产回归（合理超时）；CLI/import smoke；源/证据/文档一致检查，阶段commit+push。CANON/LOG/OI/REGISTRY实时同步，生产CLI15ps/旧SPEF不得误称新物理路径已接通。
 
 **Execution ownership:** 编码子任务独立worker；根负责原始证据/SEC/集成；独立审计worker；专职recorder更新记录。此次只实现/验证本阶段，后续在线物理评估器接入与跨设计/强baseline保持待办，不能称完整ICCAD机制已证实。

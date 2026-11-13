@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\project_docs\evidence\timing_budget_20261113\rescreen.py", line 84, in <module>
+    print(json.dumps(analyze(), indent=2))
+                     ^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\project_docs\evidence\timing_budget_20261113\rescreen.py", line 27, in analyze
+    audit = load(HERE / "INDEPENDENT_SOURCE_AUDIT.json")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\BaiduSyncdisk\01_Papers\03_FAECO\project_docs\evidence\timing_budget_20261113\rescreen.py", line 17, in load
+    return json.loads(path.read_text(encoding="utf-8-sig"))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\16225\AppData\Local\Programs\Python\Python311\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\16225\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\16225\AppData\Local\Programs\Python\Python311\Lib\json\decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)
