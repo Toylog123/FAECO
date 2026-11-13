@@ -5330,3 +5330,6 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 **LOG-20261113-05 / 本轮最终核验与停写**：主线VERIFICATION.json绑定完整1147passed/156subtests及34专用测试、compile成功、CLI4项、真实52pool四档一致；HISTORICAL_INTEGRITY验证旧624+398工件逐SHA全不变，233准备副本源SHA一致。check_record.sh rc0但仍警告4份obsolete文档，OI-081保持，不恢复维护停用文件。旧25草案已加SUPERSEDED与PREPARATION_STATUS，明确未运行。
 
 本轮交付限定为预算纯核心/历史CLI、10ps下精确RESTORE074端点SEC接受与s382同阶段面积分母核验；新科学计数1SEC/0route/0STA（另2约束诊断STA），不声称在线物理搜索、完整IO或机制优势。根准备REPORT/evidence封存，commit/push尚未执行验收，记录端不预报成功。从本条起停止全部受托文件写入，供根稳定封存。
+
+
+**LOG-20261113-05 / 阶段封存与推送完成**：策略/组合搜索内核与端点验收阶段已commit697b0c8并实际push到origin/main（含注册c5a4d05、前置诊断07c6cf2）。timing_budget包97文件+自manifest，manifest170c7934c3ce52cb4a7eca3ac9578fa4f2b21a3a765a95c06749ba10375f2ba7；中间WNS-primary包30+manifest e035362087c6b1131ae0107230ef67922bc0642cf565e708d81f0eb3c5d191e9；25准备包255+manifest922a20ae16504dae6110f413095e9e38cfcb8538928e5791e56c5ad82f746a87。所有证据staged Git blob与工作字节逐项一致；旧624+398原封不动。1147测试/156subtests、34专项包含其中、compile和CLI门通过。两个直连push分别连接重置/443超时；读取现有Windows系统代理后仅对单次Git命令配置http.proxy，9.28s推送成功，未修改全局网络/Git配置。科学未决继续保留：online物理搜索接入、完整约束、强baseline/消融/跨设计与论文；本轮不是新算法收益或论文完成。

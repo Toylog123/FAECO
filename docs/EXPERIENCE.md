@@ -3410,3 +3410,8 @@ s382完整层级/DEF审计把综合809.5264、修复前CTS892.1056、Resizer最�
 ## 2026-11-13 — 已验环境workaround须进入每次完整回归配置
 
 budget_core整体回归v1遗漏前置packaged DLL镜像，再现原Yosys3221225781(DLL_NOT_FOUND)。同exe SHA在已验scratch镜像rc0，既有prepare_packaged_yosys.py验证359项一致，支持环境配置遗漏归因，不能据失败先改新生产代码。应保留v1完整失败日志并等退出，再用正确PATH串行回归；避免为节时并发清理与重跑造成测试产物干扰。此条尚不声明重跑已过。
+
+
+## 2026-11-13 — Git直连失败时复用已启用的系统代理
+
+本轮push两次直连失败（reset/443连接超时），系统Internet Settings已有ProxyEnable=1而Git未配置http.proxy。读取现有代理后通过单次 `git -c http.proxy=<系统已启用地址> -c http.version=HTTP/1.1 push origin main` 成功；不改全局代理、不更换remote，也不把连接失败误归因提交内容。日志保存实际成功提交与返回码。

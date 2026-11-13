@@ -14,7 +14,7 @@
 - [x] Task1 TDD：先验证测试失败，再实现；覆盖finite/negative/ps换算、固定总预算、TNS非硬门、hold拒绝、缺证据/错scope、SEC默认门、非加性、同实例冲突、评估上限、无收益fallback、固定pool随B增加面积不升。单元测试是oracle工程验证，不是科学证据。
 - [x] Task2 根：timing_budget_20261113内绑定旧52原始证据，输出0/5/10/20ps预算表与选中端点；确认结构/新SPEF/DRV/DRC，记录0新route/STA。重用已有证明核心，仅注册新唯一RESTORE074，180s内部/240s外部，证明前提交注册。
 - [x] Task3 独立审查：正式核验s382调用repair_timing前CTS面积A0、Resizer后AR、候选AF三点的阶段及完整实例/Liberty计数；形成带SHA回执，缺证据则不报回收率。审核新内核和证明，根复核。
-- [ ] Task4 集成：新内核+现有recovery相关测试及完整生产回归（合理超时）；CLI/import smoke；源/证据/文档一致检查，阶段commit+push。CANON/LOG/OI/REGISTRY实时同步，生产CLI15ps/旧SPEF不得误称新物理路径已接通。
+- [x] Task4 集成：新内核+现有recovery相关测试及完整生产回归（合理超时）；CLI/import smoke；源/证据/文档一致检查，阶段commit+push。CANON/LOG/OI/REGISTRY实时同步，生产CLI15ps/旧SPEF不得误称新物理路径已接通。
 
 **Execution ownership:** 编码子任务独立worker；根负责原始证据/SEC/集成；独立审计worker；专职recorder更新记录。此次只实现/验证本阶段，后续在线物理评估器接入与跨设计/强baseline保持待办，不能称完整ICCAD机制已证实。
 
