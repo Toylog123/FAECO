@@ -1,0 +1,115 @@
+{
+  "schema": 1,
+  "scope": "User-authorized10ps-budget historical selected endpoint; proof only, no reroute",
+  "policy": {
+    "schema": 1,
+    "kind": "user_authorized_postmeasurement_budget_analysis_and_selected_SEC",
+    "reference": "fixed s382 Resizer CONTROL propagated-clock final physical endpoint",
+    "max_degradation_ns": 0.01,
+    "comparison_budgets_ps": [
+      0,
+      5,
+      10,
+      20
+    ],
+    "numeric_tolerance_ns": 1e-06,
+    "objective": "maximize complete mapped-cell area saving",
+    "constraints": [
+      "WNS >= fixed CONTROL WNS - B - numeric tolerance",
+      "hold >= fixed CONTROL hold - numeric tolerance",
+      "hold >= 0",
+      "complete structure, supported-rule DRC and configured DRV",
+      "SEC required for accepted delivered endpoint"
+    ],
+    "tns": "reported; secondary tie-break after area",
+    "tie_break": [
+      "max area saving",
+      "max TNS",
+      "max WNS",
+      "max hold",
+      "lexical arm ID"
+    ],
+    "scope": "existing constrained paths only; missing IO constraints not resolved",
+    "analysis_cost": {
+      "new_route": 0,
+      "new_STA": 0
+    },
+    "proof_timeout_s": 180,
+    "wrapper_timeout_s": 240,
+    "selection_notice": "52 historical candidate labels; analysis is not prospective search or algorithm advantage"
+  },
+  "singletons": {
+    "RESTORE__074_": [
+      "_074_"
+    ]
+  },
+  "combinations": {},
+  "selected": {
+    "source": "recovery_repair_20261113",
+    "arm": "RESTORE__074_",
+    "area": 1005.9648,
+    "area_saved": 46.294399999999996,
+    "area_saved_pct": 4.399524375743162,
+    "metrics": {
+      "setup_ns": -0.851556880565596,
+      "hold_ns": 0.46721415625228246,
+      "tns_ns": -13.654524803
+    },
+    "deltas_ns": {
+      "setup_ns": -0.0030980773502164993,
+      "hold_ns": 0.003577305118795948,
+      "tns_ns": -0.23198223099999993
+    },
+    "old_strict_pass": false,
+    "wns_primary_numeric_pass": false,
+    "endpoint": "project_docs/evidence/recovery_repair_20261113/runs/RESTORE__074_",
+    "hashes": {
+      "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+      "flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+      "ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+      "ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+      "manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+      "propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+      "propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+      "routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+      "routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+      "routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+      "routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d"
+    },
+    "budget_numeric_pass": true
+  },
+  "source_sha256": {
+    "inputs/CONTROL/manifest.json": "c156c9fad2e0384b4824cf4b7aa62ae1865320ce70cce882c11925a1614c942b",
+    "inputs/CONTROL/propagated.tcl": "8bb9b56fb51eb86de1d40dda20f3bd1157f20fb08bd97f998fcae8e272aead4a",
+    "inputs/CONTROL/routed.spef": "d56c2bc238d25e3659f4d6a65eeda7362acfeebd7c2159f24a18820adcd5afd8",
+    "inputs/CONTROL/routed.v": "3a2666be3cc4cf11c041c8be8793c16e30e617bb2e846468e2454ed5247aab8e",
+    "runs/RESTORE__074_/drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runs/RESTORE__074_/flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+    "runs/RESTORE__074_/flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+    "runs/RESTORE__074_/ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+    "runs/RESTORE__074_/ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+    "runs/RESTORE__074_/manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+    "runs/RESTORE__074_/propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+    "runs/RESTORE__074_/propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+    "runs/RESTORE__074_/routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+    "runs/RESTORE__074_/routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+    "runs/RESTORE__074_/routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+    "runs/RESTORE__074_/routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d",
+    "structure_reader.py": "db708d1360e74efca225c9b2b251802aed7958ceec9feb2fc256b3b42cf9def7",
+    "provenance/run_repair_sec.py": "056e9394c2926450ea2cd2bd7676e401ba911e9a413b60de3d0735f7d05aae07",
+    "provenance/PLAN.json": "075c23ddc2422e9cfb17bd0ed04f254a41f33838493aa7503652aef5326009c9",
+    "provenance/SUMMARY.json": "5ae335bc5e981842a41a912bbf1b4ccf213738106dba02d94b1a52495079c8a9",
+    "provenance/BATCH_RECEIPT.json": "2602d3fc0a0ae2fe2c605a6117a824907232e2bfb5a5481906bc9a14ad5109bc",
+    "inputs/recipe.json": "419249606cf6ba5fb96880fc957be8075e480c62f85dfbfa2cdd5d34334abb82",
+    "COPY_MANIFEST.json": "8e939b92b6abfbfcee7f857311c26efdb644907be4c53f62e2aa4f5b26b3aa49",
+    "POLICY.json": "78621e219112254d521d295ccbcdd88338852d23dc8db41b5f968cc15205a421",
+    "RESCREEN.json": "882fe601dada8158c7988e497e4a23c63d89e4a8eb49bd3c17c9b1653a574a30",
+    "SOURCE_PINS.json": "5a89423c66a716ea38a0676785378c665724514bd21217fd3218ad7edc85bba4",
+    "INDEPENDENT_SOURCE_AUDIT.json": "9057d9fb32c89f9504acf57ffdf73d57b6455d6f88a82647b3e36f86ef9e8685",
+    "rescreen.py": "f1f8a45ef712fac3c552e2204dba20127c62300ad2b0b5f3f68477570243d5a8"
+  },
+  "proof_timeout_s": 180,
+  "outer_timeout_s": 240,
+  "original_status": "old strict failure retained; new budget selection not new algorithm effect"
+}

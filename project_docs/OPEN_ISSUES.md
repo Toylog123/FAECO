@@ -1506,3 +1506,18 @@ A–D完整审计41有效，局部唯一严格点096及SEC/独立接受已齐；
 ### OI-082 / OI-085 / OI-086 严格搜索阶段结案（2026-11-13，保持 open）
 
 9+2新物理点全部有效strict失败，旧096 exact endpoint仍是接受基线；本轮无SEC新结果。OI-082的IO约束缺口具体为3data inputs/6outputs未设IO delays/loads/transition，不能外推完整IO保证。OI-085候选生成审计表明62静态兼容目标仅10被旧rollback覆盖；不是62有效收益，也非52全为bug，未来需独立生成并逐项物理验证。OI-086本轮风险排序在k3及全部prefix没有收益，不能包装机制创新；需转候选覆盖与强同预算基线，而非给已无改进九池换排序。三项及customLib等其它未决继续保留。
+
+
+### OI-082 约束诊断实测（2026-11-13）
+
+记录端实际读library_area_search_20261113/constraint_audit/REPORT.md；两次readonly STA rc0，CONTROL与已接受096均报告3项missing input delays（CLR/FM/TEST）、6项missing output delays及6个unconstrained outputs（GRN1/GRN2/RED1/RED2/YLW1/YLW2）。clock/原约束未改、WNS/hold复现旧值，不证明IO时序；无连接tap blackbox警告保留。用户WNS-primary/TNS-secondary新目标不修复该覆盖缺口。须来源明确的完整SDC，不能臆造IO预算当原benchmark规范。
+
+
+### 当前用户时序政策更新（2026-11-13，OI-082等未决不自动关闭）
+
+用户最新允许10ps WNS损失，主门改CONTROL−0.010ns（1e-6数值容差），TNS辅助，hold原非退化/非负硬门保留，需0/5/10ps对照。明确为预算权衡，不能称原零退化目标已达成。旧WNS-primary重筛与待证明对象暂停，新包重新选择；缺IO约束、科学泛化/机制/解析等未决仍保持。
+
+
+### 当前准备状态（2026-11-13）
+
+用户清除长期goal并要求简要解释后，本轮准备阶段收束。10ps门下RESTORE074为根/独立一致的历史重筛最优候选，尚未新SEC、未正式验收；25库候选和新政策证明待续，均非运行中。原IO约束等缺口保持open，不因新政策筛出候选自动关闭。

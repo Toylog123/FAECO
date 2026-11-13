@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "kind": "user_authorized_postmeasurement_budget_analysis_and_selected_SEC",
+  "reference": "fixed s382 Resizer CONTROL propagated-clock final physical endpoint",
+  "max_degradation_ns": 0.01,
+  "comparison_budgets_ps": [
+    0,
+    5,
+    10,
+    20
+  ],
+  "numeric_tolerance_ns": 1e-06,
+  "objective": "maximize complete mapped-cell area saving",
+  "constraints": [
+    "WNS >= fixed CONTROL WNS - B - numeric tolerance",
+    "hold >= fixed CONTROL hold - numeric tolerance",
+    "hold >= 0",
+    "complete structure, supported-rule DRC and configured DRV",
+    "SEC required for accepted delivered endpoint"
+  ],
+  "tns": "reported; secondary tie-break after area",
+  "tie_break": [
+    "max area saving",
+    "max TNS",
+    "max WNS",
+    "max hold",
+    "lexical arm ID"
+  ],
+  "scope": "existing constrained paths only; missing IO constraints not resolved",
+  "analysis_cost": {
+    "new_route": 0,
+    "new_STA": 0
+  },
+  "proof_timeout_s": 180,
+  "wrapper_timeout_s": 240,
+  "selection_notice": "52 historical candidate labels; analysis is not prospective search or algorithm advantage"
+}

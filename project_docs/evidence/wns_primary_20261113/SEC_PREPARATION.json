@@ -1,0 +1,32 @@
+{
+  "status": "prepared_no_SEC",
+  "plan_sha256": "730fca6191a3eb39ddbe97ca3a880affae0afa03db3c419f29184bf7ba3d2f02",
+  "helper_sha256": "195ff88f4511ea6aa03f9627578e4eb5aa32803842ea3d9c3218e611c8bc1081",
+  "prior_adapter_sha256": "056e9394c2926450ea2cd2bd7676e401ba911e9a413b60de3d0735f7d05aae07",
+  "copy_manifest_sha256": "865394607e8e14e49c61949ec76b4a6072c6925fb495c57e2599094706c815ed",
+  "adaptation": "Only pinned-plan registration, fail-closed local source/selected identity checks, and provenance metadata; entire proof body from dependency pin checks through CLI is text-identical.",
+  "validation": {
+    "help": "passed",
+    "project_AST": "identical",
+    "complete_models_AST": "identical",
+    "proof_body_text": "identical",
+    "read_only_projection": {
+      "gold": {
+        "functional_instances": 102,
+        "removed_exact_no_pin_taps": 3026
+      },
+      "gate": {
+        "functional_instances": 102,
+        "removed_exact_no_pin_taps": 3026
+      }
+    }
+  },
+  "command_after_root_review_commit": "bash code/scripts/run_with_timeout.sh 240 python project_docs/evidence/wns_primary_20261113/run_wns_primary_sec.py COMBO_054_074_098",
+  "not_performed": [
+    "SEC",
+    "reroute",
+    "STA",
+    "git commit",
+    "old package mutation"
+  ]
+}

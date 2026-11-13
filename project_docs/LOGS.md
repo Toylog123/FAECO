@@ -5215,3 +5215,82 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 **LOG-20261113-03 / 新包字节封存**：strict_area_search包manifest封398工件/94441598 bytes，SHA `eb95ccfffcc6e1bcfebbae8d131803efd797d4f821dd15aeddf33ae50d143f9b`；再次verify通过，399个含manifest暂存Git blob与工作区字节完全相同。check_record.sh仍因停用入口产生OI-081历史告警，实际现行文档已同步；不回写停用文件。冻结旧包与paper不变，准备科学阶段提交。
 
 **LOG-20261113-03 / 提交与远端实查**：科学包commit `7277e92`已推送，远端明确`4b8a64d..7277e92 main -> main`，10s/rc0；`git status -sb`随后main与origin一致且clean。机器交接已记本次确认。本轮阶段结束，保留seed，完整候选/约束/强基线与泛化目标继续open；本条作小型文档提交同步，不将阴性完成写成研究目标完成。
+
+
+## LOG-20261113-04 — 完整库候选搜索与论文证据映射准备（2026-11-13）
+
+**授权更新**：用户明确持续推进直到论文完善，主线已建立active goal，继续遵守ICCAD标准、自有机制及WNS/TNS/hold严格非退化目标。记录端实查本轮起点git clean、HEAD `c01ad36`。允许完善论文不意味着科学门未过时直接修改冻结结论，先做稿件-证据映射。
+
+**新阶段（PREPARING / 未EDA）**：新包 `project_docs/evidence/library_area_search_20261113`，从完整静态候选筛出此前未测组合逻辑单点，拟25项（最终数量由生成器独立核验），排除历史10正面积动作与已测054→2；seq/clock不动。所有目标从CONTROL独立实施，固定lex顺序、全量无有利早停，拟25route/50STA，实际接纳严格门不变；如出现严格通过且收益超过已验seed的点，选最佳做完整SEC。
+
+**目的与边界**：以更完整候选生成替代旧rollback名单的范围限制，检验未测组合逻辑空间的物理可行性，不预设有收益或新颖性。旧sealed包只读；预注册/生成计数/审阅/commit完成前不运行EDA。论文映射应清楚区分已接受点、阴性矩阵、静态候选和未闭合约束。
+
+
+**LOG-20261113-04 / 约束只读STA运行前登记**：已实际读constraint_audit预注册；07c6cf2先commit两copy端点与manifest，主线拟外300s/各120s串行2readonly STA，原0.5ns/propagated不变，仅check_setup/unconstrained报告。登记为2diagnostic STA、0route，不混25候选预算、不把旧指标复现当新样本。
+
+**稿件证据映射进展**：独立gap审查发现recovery草稿排序方向、预算0.015与0.05、表文统计等可修不一致；主线后续统一依证据修该草稿，与冻结r116主稿分开。此时只记录发现，不宣称草稿修好或科学门闭合。
+
+
+**LOG-20261113-04 / 用户改变主接受规则：先WNS，TNS次级**：用户明确「优先wns，wns符合了之后tns不是很重要」。主线采用新WNS-primary：WNS/hold相对CONTROL非退化1e-6、hold>=0仍硬门，面积收益为可行集内首选，TNS完整记录/同面积择优，不再hard reject。已优先同步CANON新目标。旧strict实验失败和封存口径原样保留，不回写为通过。先隔离新policy包重筛已归档actual端点、必要时补SEC；此刻无新筛选数值/接受声明。25新EDA暂不启动，等政策定稿。
+
+
+**LOG-20261113-04 / 25候选准备实际停点**：worker按新WNS-primary steering暂停旧三硬门准备。当前仅233本地副本/443aliases及未冻结PREREG草案，静态25候选/11实例已核；尚无PLAN、per-arm recipe、runner、新driver或新TDD，无EDA/SEC/commit。旧草案及sealed包未改，等待独立新policy与历史actual重筛后决定后续；不能记为25包已完成或已运行。
+
+
+**LOG-20261113-04 / 新政策SEC输入准备**：worker仅准备wns_primary_20261113中的CONTROL与COMBO_054_074_098完整端点副本、reader/旧SEC适配器及SHA来源；须等主线新policy预注册与独立筛选确认后才冻结唯一PLAN。当前未写PLAN、未执行SEC/commit、不改旧sealed。复制对象只是待核备选，不是本条接受结论。
+
+
+**LOG-20261113-04 / WNS-primary SEC准备完成（未证明）**：新包22本地副本，唯一PLAN为COMBO_054_074_098/restored054074098并绑定25source（含新PREREG/RESCREEN）；PLAN SHA `730fca6191a3eb39ddbe97ca3a880affae0afa03db3c419f29184bf7ba3d2f02`，helper `195ff88f4511ea6aa03f9627578e4eb5aa32803842ea3d9c3218e611c8bc1081`，SEC_PREPARATION `ba98fe7c2118096534ac76432b01f249a482d79b26e0ea729296e9f1b1251643`。help通过、proof主体逐文本未变、project/complete_models AST相同。只读投影两侧102功能实例、精确移除3026零pin taps；未SEC/EDA/commit，仍不记证明通过或新物理收益。
+
+
+**LOG-20261113-04 / 约束诊断结果实查**：已实际读constraint_audit/REPORT；CONTROL与seed096两STA均rc0，均3missing input delays(CLR/FM/TEST)、6missing output delays和6unconstrained output endpoints(GRN1/GRN2/RED1/RED2/YLW1/YLW2)。原clock/约束未改，WNS/hold复现；tap blackbox warning保留。新增计数2diagnostic STA/0route，不混未执行25proposal。OI-082同步具体缺口，新WNS-primary/TNS-secondary政策维持，未将目标变更当约束修复；COMBO054074098仍pending SEC。
+
+
+**LOG-20261113-04 / 用户选择10ps首轮WNS预算**：最新用户明确允许小幅WNS下降并选择10ps。立即更新CANON：WNS>=CONTROL−0.010ns加1e-6数值容差，TNS辅助，hold非退化/hold>=0原安全门及其他物理/SEC门不变；0/5/10ps对照，10ps不得表述为零退化。旧wns_primary prereg/PLAN/RESCREEN保留政策历史，新包timing_budget_20261113重新筛选；暂停旧selectedSEC，不在旧PLAN下执行。当前无新数值接受声明。
+
+
+**LOG-20261113-04 / 10ps政策独立历史重筛结果（纯读）**：独立重筛52个已审物理端点，0/5/10ps合格数6/15/19；0ps最优COMBO054074098省3.6860879905%，5/10ps同为RESTORE074省4.399524375743%，ΔWNS=-3.098077350ps、Δhold=+3.577305119ps、ΔTNS=-231.982231ps。均为新政策对既有actual证据的重判，不是新EDA或重新发现独立样本；最终接受还待新包/主线核验/SEC。
+
+原full RECOVERY虽然WNS损9.9716ps满足10ps，hold损0.018596ps却超过1e-6ns非退化容差，仍拒绝，不能只看WNS预算。旧wns_primary helper准入已通过但从未执行SEC，旧sealed未改。
+
+
+**LOG-20261113-04 / 根与独立重筛一致及准备阶段收束**：主线与独立对52既有候选一致：0/5/10ps合格6/15/19；5与10ps最佳RESTORE__074_面积1005.9648、节省4.399524375743162%，ΔWNS=-0.0030980773502164993ns、Δhold=+0.003577305118795948ns、ΔTNS=-0.231982231ns。它是新政策下的重筛候选，不是新物理运行或正式接受，SEC未执行。
+
+用户当前要求简要解释并已清除长期goal，本轮在准备阶段收束。25库候选及新政策SEC均待续、不标运行中；主线不再新增POLICY/PLAN。已完成2次constraint诊断STA的结果保留，用户10ps政策继续作为现行偏好但不替代验证。旧strict与WNSprimary文档/失败原件完整保留，后续需恢复明确任务后再执行。
+
+
+**LOG-20261113-04 / 最新研究方向记录（无实现/EDA）**：用户将评价重点改为时序修复净新增面积回收率(A_R−A_F)/(A_R−A_0)，前提A_R>A_0、同库同阶段完整计数。CANON与ROADMAP顶部已明确分母不是改动单元面积和，小分母高比率不等于总收益，仍并列绝对/总面积及WNS/TNS/hold；A_0未核不报旧67%。终极目标为同初始网表独立生成修时序/减面积动作、统一选择反馈的完整自有机制，Resizer仅baseline/可选warmstart，不依赖edit历史。当前未实现/未证明；保持10ps预算、TNS辅助、hold安全门，仅记方向无新设计/EDA。
+
+**准备资产澄清**：timing_budget当前只完成22本地副本+COPY_MANIFEST，尚无本包POLICY/RESCREEN/PLAN/新proofhelper、无SEC/EDA/commit；RESTORE074只是新预算数值eligible，未找到对应既有SEC receipt，不作为正式接受点。
+
+
+**LOG-20261113-04 / A_0测量阶段与归因限定补充**：A_0必须同物理阶段且取Resizer调用前完整面积，不能跨综合/CTS/布线阶段把差额全归Resizer。端到端无法隔离其它阶段时改称相对共同初态净面积开销，不称Resizer专属新增。当前area_audit.json明确No baseline hierarchy expansion，新增面积回收比例暂不报数。已同步CANON/ROADMAP，无EDA/新计算，方向记录完成并停止写入。
+
+
+**LOG-20261113 / 用户澄清Resizer前端地位**：默认保留Resizer作为正式时序修复前端；自有贡献集中候选生成、联合决策和物理反馈，不要求重写前端或独立冷启动。已同步CANON/ROADMAP，覆盖此前过强独立性解释。净新增面积回收率与10ps预算不变；本次无新EDA或收益声明。
+
+
+**LOG-20261113-04 / 可调WNS预算机制设计草案登记**：按用户方向在CANON/ROADMAP记录保留Resizer前端、固定W_R/A_R，B为非负有限ns配置、拟默认0.010ns，优化max A_R−A(x)且W(x)>=W_R−B（1e-6ns纯容差），hold/结构/DRV/物理/SEC门保持，TNS完整报告辅助择优。每轮联合考虑面积与时序代价、组合复测、保留已验证非支配终点；预算不可逐步重置、单动作预测不可累加当保证。UI ps→ns须显式，0/5/10/20仅例子不计新实验。现CLI默认0.015/旧SPEF未改，具体选择算法/实现/物理验证pending，不宣称已默认10ps或机制完成。本次仅文档设计，无代码/封存修改或EDA。
+
+
+**LOG-20261113-04 / 可调预算草案审查补充完成**：W_R/A_R/H_R固定Resizer输出，A0只作回收率分母；无正收益可行点返回CONTROL/已验档案，评分仅proposal且ΔA/ΔWNS非安全保证；已有端点跨预算筛选0新EDA，改变预算后重新搜索独立登记。IO约束缺口不因新预算消失。CANON/ROADMAP已同步，设计仍pending实现与验证，无代码/封存/EDA改动，记录完成。
+
+
+## LOG-20261113-05 — 可调预算核心执行与历史端点分析启动（2026-11-13）
+
+**授权与起点**：用户继续授权执行，主线已在ROADMAP顶部写执行计划。记录端实查HEAD `07c6cf2`，工作区包含上一阶段未提交文档/准备资产，不声称clean。保留这些原件，不修改旧封存证据。
+
+**分工**：budget_core worker实现纯策略/有限组合搜索并TDD；主线负责52历史端点的0/5/10/20ps预算分析及选中点SEC；evidence_audit负责A_0/CTS面积归因；专职记录维护LOGS/REGISTRY/CANON/OI/EXPERIENCE，不改主线正在维护的ROADMAP顶部。
+
+**配置与边界**：W_R/A_R/H_R固定Resizer终点，预算非负有限且单位显式，TNS辅助、hold原门、结构/物理证据门保持。SEC预设单证明180s/外层240s，具体POLICY/PLAN及SHA由主线完成后再登记。oracle/纯策略测试不构成新物理搜索收益；52历史重筛计0新EDA，证明另计。物理评估器接入、多设计与完整约束继续待办，不因核心实现或历史候选通过宣称完整自有机制完成。
+
+
+**LOG-20261113-05 / A0与CTS面积正式归因审计启动**：独立审计限定新包area_baseline_audit子目录，绑定原flow Tcl中CTS/repair_timing次序；完整解析DEF COMPONENTS（含escaped FF），固定Liberty Decimal面积与instance/master净差分，A_R对齐CONTROL完整Verilog、A_F对齐RESTORE074完整V/DEF。复用Reader/Liberty审计器且保source SHA、旧sealed只读；无EDA。未核验前不先报新增面积回收率。
+
+
+**LOG-20261113-05 / 历史预算分析v3完成**：已实际读POLICY/RESCREEN，POLICY SHA78621e21...，52端点0/5/10/20ps合格6/15/19/21；0ps最优COMBO054074098，5/10/20ps最优RESTORE074，均待SEC。v3重筛rc0、独立审计rc0，0新EDA，政策门与排名顺序已登记。
+
+**两项工程失败归因**：wrapper在stdout加[run]导致整流JSON解析失败，保原raw后结构化另写；历史WSL mixed编码提示非UTF8，复用errors=replace与NUL清理，但先验证原始字节SHA、仅取唯一ASCII指标。修复后v3成功。两者是载入/日志协议故障，不是科学反例，也未修改旧原始证据。
+
+
+**LOG-20261113-05 / 新SEC计划登记与短暂停写**：已实读PLAN，唯一RESTORE074、10ps历史端点proof-only；PLANa984d47d...、helper78eee438...与180/240s超时已完整写registry。help通过，独立准入及根commit尚待，当前未执行证明。按主线要求从此暂停售托文档写入供冻结commit；后续收到恢复通知再记录，不提前宣称SEC/commit成功。

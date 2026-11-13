@@ -2427,3 +2427,67 @@ variant独立实现预审通过但文字判据须先澄清：单点仅省2.5024<
 **状态：STAGE_CLOSED / NO_NEW_STRICT_ENDPOINT。** 记录端已实际打开最终REPORT：9+2全部证据有效、strict0；新增11route/22endpointSTA/0SEC，旧exact seed复制校验复用、不重路由。九点job372.829s/runner373.578s/wrapper383s，两variant job55.375s/runner55.484s/wrapper61s，共享主机不作独占性能比较。k3主比较及全部prefix两策略均seed6.256，无排序优势。
 
 九点固定seed邻域扩展假设被本矩阵否证；两等面积中间档均比_1目标三时序更差。静态62候选/33实例与旧覆盖10/62只说明生成范围缺口，不表示收益。下一阶段转完整候选生成/约束覆盖/强基线，不继续在已无改进九点池改排序叙事；旧13标签成本属前轮41route子集，不重复累计。47证据层测试通过，生产/论文未改，旧封存包只读。封manifest及commit/push由主线继续，登记不预告其成功。
+
+
+### 2026-11-13 LIBRARY-AREA-SEARCH-S382
+
+- **状态**：PREPARING / NOT_RUN；新包library_area_search_20261113，等待生成器核验计数与实际预注册审核。
+- **候选域**：完整静态候选中的未测组合逻辑替换，拟25项；排除历史10正面积目标与已测054→2，seq/clock不改。最终实例/目标清单和数量以生成器与独立审查一致为准。
+- **协议**：CONTROL起点每目标独立单点，固定lex全量、无有利早停，拟25route/50STA；保持完整结构/SHA、新布线/提取、propagated WNS/TNS/hold严格非劣、正面积/hold可行及既有物理门。通过且优于seed的最大收益点须SEC与独立接受。
+- **边界**：尚未EDA，不将25静态候选写成25实验或收益；生产/旧证据不改。用户授权论文完善，但科学结论更新先依证据映射及验收，不擅改冻结数字。
+
+
+### 2026-11-13 LIBRARY-AREA-CONSTRAINT-AUDIT
+
+- **状态**：PRE_REGISTERED，记录端已实读constraint_audit/PREREGISTRATION；预注册/MANIFEST/两copy端点由主线commit `07c6cf2` 先固化。
+- **范围**：CONTROL与已接受FORWARD096精确副本各一次readonly STA，保留0.5ns与propagated设置，仅加installed-supported check_setup -verbose / report_checks -unconstrained；不新增IO delay/load/transition，不修改接受门，无routing。
+- **计数/超时**：2diagnostic STA，与拟25candidate/50endpoint STA分开；每次120s、串行总300s，失败停归因。保raw stdout/stderr、source/copy/Tcl/tool SHA及rc；复现指标不是新独立科学样本。
+- **边界**：审计缺失IO规范/clock/unconstrained端点等，不凭空补规格；完整signoff仍未建立。
+
+
+### 2026-11-13 WNS-PRIMARY-POLICY-CHANGE
+
+- **状态**：POLICY_PREPARATION / NO_NEW_PHYSICAL_RUN；用户新指令改变接受目标。
+- **新门**：propagated WNS/hold相对CONTROL非退化1e-6ns、hold>=0及既有证据/物理硬门；面积收益首选，TNS报告且用于同面积次级择优，不再hard拒绝。
+- **首步**：新policy包隔离重筛既有actual物理端点，新增入选者必要SEC；不把重筛计为新route/STA，未宣称新数值结果。
+- **历史与待运行**：旧WNS/TNS/hold strict矩阵与失败不改，论文需准确区分政策变更和证据变化。LIBRARY-AREA-SEARCH拟25新route在新政策定稿前不启动；约束诊断与新policy计数分别保留。
+
+
+#### LIBRARY-AREA-SEARCH-S382 准备暂停点（用户新政策）
+
+新WNS-primary规则定稿前暂停旧严格三硬门构建。已核静态25候选/11实例，233本地副本/443alias与未冻结PREREG草案；尚无PLAN/per-arm recipe/runner/新driver/新TDD，无EDA/SEC/commit。不是完成包，也不是运行中实验，后续计划需与新policy显式对齐。
+
+
+#### LIBRARY-AREA-CONSTRAINT-AUDIT 完成
+
+两端点各STA一次、均rc0，2diagnosticSTA/0route。CONTROL与096均3missing inputs CLR/FM/TEST，6missing outputs且6unconstrained endpoints GRN1/GRN2/RED1/RED2/YLW1/YLW2；clock/约束不变、旧WNS/hold复现。证据RESULTS.json/REPORT.md，不能据此宣称IO签核。新WNS-primary规则不改变此缺口，拟25candidate仍未执行。
+
+
+### 2026-11-13 TIMING-BUDGET-POLICY-CHANGE
+
+**状态：POLICY_PREPARATION / NO_NEW_RUN。** 用户授权首轮10ps WNS损失：WNS>=CONTROL−0.010ns+数值容差1e-6ns，TNS辅助；hold相对CONTROL非退化1e-6且hold>=0保持，其余证据/面积/SEC门不变。0/5/10ps对照以新timing_budget_20261113包承载；旧strict和wns_primary预注册/PLAN/RESCREEN只读，旧selectedSEC暂停等待重筛，不将新政策通过回填旧失败。尚未新筛选结果/SEC/route/STA。
+
+
+#### TIMING-BUDGET 历史端点独立重筛（非新增物理运行）
+
+52已审端点按0/5/10ps计6/15/19合格，最优分别COMBO054074098（3.6860879905%）与RESTORE074（5/10ps同4.399524375743%，ΔWNS−3.098077350ps、Δhold+3.577305119ps、ΔTNS−231.982231ps）。新政策重判，尚待新package与SEC接受；0新增route/STA。原fullRECOVERY虽过10ps WNS仍不满足hold门，不接受。旧WNSprimary计划/helper保历史无SEC执行。
+
+
+#### TIMING-BUDGET / LIBRARY准备阶段收束（2026-11-13）
+
+**状态：PREPARATION_STOPPED / PENDING_CONTINUATION，非RUNNING。** 用户转为简要解释并清除长期goal，本轮不再新增POLICY/PLAN、不执行新SEC或25候选EDA。根与独立52端点重筛一致，5/10ps最优RESTORE__074_仅为待验证候选：area1005.9648/save4.399524375743162%，WNS差−0.0030980773502164993ns、hold差+0.003577305118795948ns、TNS差−0.231982231ns。未正式接受，待续SEC；重筛0route/0STA，约束诊断2STA单列。既有WNSprimary helper/PLAN保历史且无proof，25proposal只到准备停点。
+
+
+### 2026-11-13 TIMING-BUDGET-EXECUTION-PREPARATION
+
+**状态：PREPARING。** 用户授权继续。配置0/5/10/20ps历史端点分析，固定W_R/A_R/H_R、TNS辅助、hold与证据门不变；52历史重筛为0新EDA，纯策略/oracle测试不计物理收益。选中点SEC拟180s/外240s，待主线POLICY/PLAN/SHA完成后实读登记。另有budget_core纯策略/有限组合TDD与A0/CTS面积归因并行，不启动25候选物理批次。
+
+
+#### TIMING-BUDGET POLICY/历史分析固化（SEC尚待注册）
+
+记录端实际读POLICY.json、RESCREEN.json：POLICY SHA `78621e219112254d521d295ccbcdd88338852d23dc8db41b5f968cc15205a421`，固定CONTROL、默认10ps，0/5/10/20ps对照，硬门WNS>=W_R−B−1e-6、hold>=H_R−1e-6且>=0；目标面积，次序TNS/WNS/hold/lexical辅助。52历史候选重筛v3 rc0，独立旧审计重跑rc0，0route/0STA。各档eligible6/15/19/21；0ps选COMBO054074098省3.686087990487513%，5/10/20ps同选RESTORE074省4.399524375743162%，均pending SEC，不作新的搜索成效。proof180/wrapper240已写政策，具体SEC PLAN待下一步。
+
+
+#### TIMING-BUDGET 选中端点SEC运行前登记
+
+记录端已实际打开新PLAN.json：仅RESTORE__074_，固定10ps政策、原物理端点重用，不重布线。PLAN SHA `a984d47d53e994d2b01b6679e60ad5601e4c72cf369225036601ce8201bafba9`；helper SHA `78eee438eac5c570837cb655900610fd829d6a929932b0b6d2d183645b2e6c01`，help已通过。proof timeout180s、外wrapper240s，完整模型/零pin tap投影及source/copy SHA按既有受控证明链。状态PREPARED / NOT_PROVED，待独立准入与主线commit后才执行；预计只新增1SEC、0route/0STA，实际次数以后验收据为准。

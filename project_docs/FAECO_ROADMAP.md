@@ -1,5 +1,47 @@
 # FAECO 路线图：从预布局 ECO 到布局后 SOTA
 
+## 2026-11-13 可调预算执行计划（用户已授权继续）
+
+**Goal:** 实现可调WNS预算的联合选择内核，并完成52既有物理端点的可复现预算分析及选中端点SEC。
+**Architecture:** Resizer提供固定reference；纯Python策略/有界组合搜索与物理评估器分离。历史重筛仅验证判定/选择接口，不冒充在线搜索优势。
+**Tech Stack:** Python/pytest；复用现有OpenSTA/Yosys证明适配器。
+**Spec:** 本文件可调预算草案与CANON最新三条；当前checkout保留用户/此前实验状态，不另建worktree。
+**Global constraints:** 默认B=.010ns，finite/nonnegative；tol=1e-6ns；固定参考WNS/hold，hold>=0；TNS辅助；完整计数；不改sealed；实验运行前绑定输入和超时。
+**Review focus:** baseline漂移；NaN/单位/缺证据；组合非加性；同实例备选冲突；未经SEC输出与实际验证成本混淆。
+
+- [ ] Task1 内核：新建code/src/rseco/budgeted_recovery.py及code/tests/test_budgeted_recovery.py。不可变Endpoint/Action/BudgetPolicy；Endpoint绑定scope_id与evidence_id，valid明确代表调用方已完成物理/结构检查，sec_pass单列。assess使用固定reference；select_endpoint(require_sec=True)默认只交付已证明点，无收益精确返回reference。可显式选择待SEC候选但必须标注。
+- [ ] Task1搜索：bounded_search(reference, actions, evaluate, policy, max_evaluations, beam_width, max_depth)。evaluate接收规范排序动作ID元组并从固定reference测联合端点，不累加预测作验收；相同instance不同动作互斥，集合去重，逐实际回调计数。候选从面积估计排序；每层依据实测超预算/hold缺口、面积收益、时序确定保留有界beam，保留数值不合格中间态供后续补偿。已验可行终点档案只作选择，不声称全局最优。宽度/深度/预算为研究参数，默认不向现CLI暗中接入。
+- [ ] Task1 TDD：先验证测试失败，再实现；覆盖finite/negative/ps换算、固定总预算、TNS非硬门、hold拒绝、缺证据/错scope、SEC默认门、非加性、同实例冲突、评估上限、无收益fallback、固定pool随B增加面积不升。单元测试是oracle工程验证，不是科学证据。
+- [ ] Task2 根：timing_budget_20261113内绑定旧52原始证据，输出0/5/10/20ps预算表与选中端点；确认结构/新SPEF/DRV/DRC，记录0新route/STA。重用已有证明核心，仅注册新唯一RESTORE074，180s内部/240s外部，证明前提交注册。
+- [ ] Task3 独立审查：正式核验s382调用repair_timing前CTS面积A0、Resizer后AR、候选AF三点的阶段及完整实例/Liberty计数；形成带SHA回执，缺证据则不报回收率。审核新内核和证明，根复核。
+- [ ] Task4 集成：新内核+现有recovery相关测试及完整生产回归（合理超时）；CLI/import smoke；源/证据/文档一致检查，阶段commit+push。CANON/LOG/OI/REGISTRY实时同步，生产CLI15ps/旧SPEF不得误称新物理路径已接通。
+
+**Execution ownership:** 编码子任务独立worker；根负责原始证据/SEC/集成；独立审计worker；专职recorder更新记录。此次只实现/验证本阶段，后续在线物理评估器接入与跨设计/强baseline保持待办，不能称完整ICCAD机制已证实。
+
+
+> **可调预算草案审查补充（2026-11-13）**：W_R/A_R/H_R固定为Resizer输出，A_0仅用于净新增面积回收率分母，不替换接受门参考。无可行正收益时精确返回原CONTROL或已验证档案端点；评分仅生成提案，ΔA/ΔWNS比率不能保证安全。对既有物理端点按不同预算筛选计0新EDA；预算改变候选搜索后产生的新独立运行另行预注册/计数。旧IO约束覆盖不足仍在，不因新预算或档案筛选宣称完整安全。
+
+## 2026-11-13 可调预算机制草案（设计待落实）
+
+保留Resizer作为前端，固定其终点W_R/A_R；用户设置非负有限WNS最大损失B(ns)，拟默认0.010ns。优化 `max A_R-A(x)`，硬门 `W(x)>=W_R-B`（1e-6ns纯数值容差），原hold安全门、结构/DRV/物理/SEC保持；TNS完整记录并辅助同面积择优。
+
+每轮共同考虑面积与时序代价，组合实际复测，保留已验证非支配物理终点供不同预算选择。参考不能每步重置，预测不能累加冒充安全证明。UI建议ps输入并显式转ns；0/5/10/20ps只说明可配置档，不是已跑结果。下一步仍需确定实际选择算法、完成实现和物理验证。
+
+现有CLI max-degradation默认0.015，且旧SPEF判断与本草案最终物理门不同；此次没有改代码/默认值/旧证据或新EDA，不称机制完成。此为保留Resizer前端的阶段草案，长期完整自有机制仍是探索目标。
+
+## 2026-11-13 用户澄清：保留Resizer前端，自有后续优化机制
+
+默认流程为共同初始设计 → Resizer时序修复 → 自有面积/时序联合优化 → 物理验证。Resizer可以是正式前端，不要求自行重写时序修复器，也不要求主方法脱离Resizer独立冷启动。自有贡献应落在候选构造、联合选择、交互处理和物理反馈；可以利用Resizer修改历史作为线索，但候选能力不能仅限于撤销其历史动作。比较同一Resizer终点上的原生恢复、简单贪心与自有机制，固定约束和评估预算。沿用净新增面积回收率主指标及总面积/时序并列报告，WNS预算10ps、TNS辅助、hold原安全门不变。此前“仅baseline/可选warm start”“必须从初态独立完成修时序”不再是项目要求。这里明确研究边界，不声明新算法已实现，也不未经核验将Resizer称为已证明最优的SOTA。
+
+
+> **面积归因补充（2026-11-13，现行）**：A_0应取同一物理阶段、Resizer调用前的完整面积；不能用综合前或CTS前A_0与布线后A_R作差并全部归因Resizer。若端到端对照无法隔离其它阶段，指标应称「相对共同初态的净面积开销」，不称「Resizer专属新增面积」。当前area_audit.json明确未展开baseline层次（No baseline hierarchy expansion），因此新增面积回收比例暂不报数。
+
+## 2026-11-13 最新方向与评价口径（优先于下方历史路线）
+
+用户将重点转为回收时序修复带来的净新增面积，评价量为 `(A_R-A_F)/(A_R-A_0)`，仅在A_R>A_0且初始/Resizer/最终三者同库、同阶段、完整实例口径时计算。分母不是改动单元面积总和；始终并列绝对面积、总面积降幅及WNS/TNS/hold，避免把小分母高比例当总收益。A_0未核验前不再引用旧67%。
+
+目标是从同初始网表独立生成修时序和减面积动作、统一选择并反馈实际物理结果的完整自有机制。Resizer作为baseline或可选warm start，不把其edit历史作为候选来源前提。该机制当前未建立、优势未证明；本条只记录研究方向，不展开实现设计或授权新EDA。现行时序偏好为首轮10ps WNS损失预算、TNS辅助、hold原安全门；下方“WNS/TNS/hold均不下降”等是既有strict阶段历史，旧实验结论不回写。
+
 > **2026-11-13 用户最新主目标**：完善为自己的面积优化机制，始终按 ICCAD 标准评估，**保证时序不下降再优化面积**。当前先做 s382 最小补偿研究，主门为 WNS/TNS/hold 均不退化（数值容差1e-6 ns），其余时序预算只作诊断。独立算法贡献须通过等预算强基线、消融、跨设计与完整物理验证建立，不能由工具包装或单例穷举代替。新预注册：`project_docs/evidence/recovery_repair_20261113/PREREGISTRATION.md`；旧资格验证失败原件保留。
 
 > **2026-11-12 接手评估更新**：用户要求先评估现有 Recovery 工作是否匹配 ICCAD，再决定机制优化；确认未提交 DAC 2027 摘要。当前判断：选题属于物理设计优化，但算法新意、强基线与恢复后物理验证尚不足以支持投稿就绪。下方原 P1–P4 和时间预算保留作历史，不代表 Recovery 已获科学晋级；本轮未启动新机制实验。

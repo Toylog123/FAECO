@@ -1,0 +1,284 @@
+{
+  "scope": "retrospective fixed-pool policy analysis; not online search effectiveness",
+  "policy_sha256": "78621e219112254d521d295ccbcdd88338852d23dc8db41b5f968cc15205a421",
+  "script_sha256": "f1f8a45ef712fac3c552e2204dba20127c62300ad2b0b5f3f68477570243d5a8",
+  "source_pins": {
+    "project_docs/evidence/wns_primary_20261113/RESCREEN.json": "f8b6a751d14ab2c56c389c4e0c1cbd726622c540775840e2e16c15a7c7f37fb1",
+    "project_docs/evidence/wns_primary_20261113/independent_rescreen.py": "606a49d6c2d9002c8c3b6456e67e657d2976dcc38e07b03c1d5bec63524c7e34"
+  },
+  "independent_audit_sha256": "9057d9fb32c89f9504acf57ffdf73d57b6455d6f88a82647b3e36f86ef9e8685",
+  "reference": {
+    "area": "1052.2592000000",
+    "metrics": {
+      "setup_ns": -0.8484588032153795,
+      "hold_ns": 0.4636368511334865,
+      "tns_ns": -13.422542572
+    }
+  },
+  "candidate_count": 52,
+  "budgets": [
+    {
+      "budget_ps": 0,
+      "eligible_count": 6,
+      "ranked_arms": [
+        "COMBO_054_074_098",
+        "COMBO_054_098",
+        "COMBO_098_111",
+        "PAIR_096_093",
+        "PAIR_096_102",
+        "FORWARD__096_"
+      ],
+      "selected_pending_SEC": {
+        "source": "recovery_repair_20261113",
+        "arm": "COMBO_054_074_098",
+        "area": 1013.472,
+        "area_saved": 38.787199999999984,
+        "area_saved_pct": 3.686087990487513,
+        "metrics": {
+          "setup_ns": -0.8467980761039939,
+          "hold_ns": 0.46535419961912794,
+          "tns_ns": -13.547679901
+        },
+        "deltas_ns": {
+          "setup_ns": 0.0016607271113855404,
+          "hold_ns": 0.0017173484856414234,
+          "tns_ns": -0.12513732900000107
+        },
+        "old_strict_pass": false,
+        "wns_primary_numeric_pass": true,
+        "endpoint": "project_docs/evidence/recovery_repair_20261113/runs/COMBO_054_074_098",
+        "hashes": {
+          "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "flow.log": "1c2136c0f7f39fd98ee113b74e91d845b151a237ec938e474c1f9ba6ae8384c4",
+          "flow.tcl": "f979393de990acd845743a83fba5bbe61ff0f8c782daf5f9b5595162e2bb71f9",
+          "ideal.log": "c1ff7129742344ba2782e0b011d3df30d77f438a6edebe5bb3b95df007a49ba6",
+          "ideal.tcl": "042a35c47fedc18f29f2f84ada6993a702424a656187413c4b94f2a70d109af1",
+          "manifest.json": "62a38fa24eadd63106969885df4b2b38d272c7b6166f08729135e025d91191e9",
+          "propagated.log": "aa173794065adbebc0b21a92970494f2d6145c63b07995b303c6e96f554c797f",
+          "propagated.tcl": "584f06a572adaf78ff8a37fd18c57e6bd451ae0ed22ae47526ca7fb29c88eeb9",
+          "routed.def": "6ec2cd38fbc5091aaf0cd684cff55395ddbcb8ad7310c768c4572e905d900fed",
+          "routed.odb": "ba11fa4a0aee780dd455b99d894bac8c3c8be4bc33f135a0278c04813110a2e2",
+          "routed.spef": "8435775587ed54b8c298b6e974bcbd08deeb8f29215f119a74ad6a662624e9d9",
+          "routed.v": "bbf0bf09c047f4d2686bf4da429670333236ef58def0a6cd17e6bd0d5bb1f78b"
+        }
+      }
+    },
+    {
+      "budget_ps": 5,
+      "eligible_count": 15,
+      "ranked_arms": [
+        "RESTORE__074_",
+        "COMBO_074_098",
+        "COMBO_054_074_098",
+        "COMBO_054_098",
+        "RESTORE__111_",
+        "COMBO_074_098_111",
+        "COMBO_098_111",
+        "COMBO_054_055_074_098_111",
+        "PAIR_096_093",
+        "PAIR_096_098",
+        "PAIR_096_102",
+        "FORWARD__096_",
+        "FORWARD__093_",
+        "FORWARD__098_",
+        "FORWARD__102_"
+      ],
+      "selected_pending_SEC": {
+        "source": "recovery_repair_20261113",
+        "arm": "RESTORE__074_",
+        "area": 1005.9648,
+        "area_saved": 46.294399999999996,
+        "area_saved_pct": 4.399524375743162,
+        "metrics": {
+          "setup_ns": -0.851556880565596,
+          "hold_ns": 0.46721415625228246,
+          "tns_ns": -13.654524803
+        },
+        "deltas_ns": {
+          "setup_ns": -0.0030980773502164993,
+          "hold_ns": 0.003577305118795948,
+          "tns_ns": -0.23198223099999993
+        },
+        "old_strict_pass": false,
+        "wns_primary_numeric_pass": false,
+        "endpoint": "project_docs/evidence/recovery_repair_20261113/runs/RESTORE__074_",
+        "hashes": {
+          "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+          "flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+          "ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+          "ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+          "manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+          "propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+          "propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+          "routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+          "routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+          "routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+          "routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d"
+        }
+      }
+    },
+    {
+      "budget_ps": 10,
+      "eligible_count": 19,
+      "ranked_arms": [
+        "RESTORE__074_",
+        "RESTORE__054_",
+        "RESTORE__055_",
+        "RESTORE__079_",
+        "COMBO_074_098",
+        "COMBO_054_074_098",
+        "COMBO_054_098",
+        "RESTORE__111_",
+        "COMBO_074_096_098",
+        "COMBO_074_098_111",
+        "COMBO_098_111",
+        "COMBO_054_055_074_098_111",
+        "PAIR_096_093",
+        "PAIR_096_098",
+        "PAIR_096_102",
+        "FORWARD__096_",
+        "FORWARD__093_",
+        "FORWARD__098_",
+        "FORWARD__102_"
+      ],
+      "selected_pending_SEC": {
+        "source": "recovery_repair_20261113",
+        "arm": "RESTORE__074_",
+        "area": 1005.9648,
+        "area_saved": 46.294399999999996,
+        "area_saved_pct": 4.399524375743162,
+        "metrics": {
+          "setup_ns": -0.851556880565596,
+          "hold_ns": 0.46721415625228246,
+          "tns_ns": -13.654524803
+        },
+        "deltas_ns": {
+          "setup_ns": -0.0030980773502164993,
+          "hold_ns": 0.003577305118795948,
+          "tns_ns": -0.23198223099999993
+        },
+        "old_strict_pass": false,
+        "wns_primary_numeric_pass": false,
+        "endpoint": "project_docs/evidence/recovery_repair_20261113/runs/RESTORE__074_",
+        "hashes": {
+          "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+          "flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+          "ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+          "ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+          "manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+          "propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+          "propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+          "routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+          "routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+          "routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+          "routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d"
+        }
+      }
+    },
+    {
+      "budget_ps": 20,
+      "eligible_count": 21,
+      "ranked_arms": [
+        "RESTORE__074_",
+        "RESTORE__054_",
+        "RESTORE__055_",
+        "RESTORE__079_",
+        "RESTORE__052_",
+        "COMBO_074_098",
+        "COMBO_054_074_098",
+        "COMBO_054_098",
+        "RESTORE__111_",
+        "COMBO_074_096_098",
+        "COMBO_074_098_111",
+        "COMBO_098_111",
+        "COMBO_054_055_074_098_111",
+        "COMBO_074_096_098_111",
+        "PAIR_096_093",
+        "PAIR_096_098",
+        "PAIR_096_102",
+        "FORWARD__096_",
+        "FORWARD__093_",
+        "FORWARD__098_",
+        "FORWARD__102_"
+      ],
+      "selected_pending_SEC": {
+        "source": "recovery_repair_20261113",
+        "arm": "RESTORE__074_",
+        "area": 1005.9648,
+        "area_saved": 46.294399999999996,
+        "area_saved_pct": 4.399524375743162,
+        "metrics": {
+          "setup_ns": -0.851556880565596,
+          "hold_ns": 0.46721415625228246,
+          "tns_ns": -13.654524803
+        },
+        "deltas_ns": {
+          "setup_ns": -0.0030980773502164993,
+          "hold_ns": 0.003577305118795948,
+          "tns_ns": -0.23198223099999993
+        },
+        "old_strict_pass": false,
+        "wns_primary_numeric_pass": false,
+        "endpoint": "project_docs/evidence/recovery_repair_20261113/runs/RESTORE__074_",
+        "hashes": {
+          "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+          "flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+          "ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+          "ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+          "manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+          "propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+          "propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+          "routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+          "routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+          "routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+          "routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d"
+        }
+      }
+    }
+  ],
+  "selected_pending_SEC": {
+    "source": "recovery_repair_20261113",
+    "arm": "RESTORE__074_",
+    "area": 1005.9648,
+    "area_saved": 46.294399999999996,
+    "area_saved_pct": 4.399524375743162,
+    "metrics": {
+      "setup_ns": -0.851556880565596,
+      "hold_ns": 0.46721415625228246,
+      "tns_ns": -13.654524803
+    },
+    "deltas_ns": {
+      "setup_ns": -0.0030980773502164993,
+      "hold_ns": 0.003577305118795948,
+      "tns_ns": -0.23198223099999993
+    },
+    "old_strict_pass": false,
+    "wns_primary_numeric_pass": false,
+    "endpoint": "project_docs/evidence/recovery_repair_20261113/runs/RESTORE__074_",
+    "hashes": {
+      "drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "flow.log": "42647a3f49084aab8486de8ab29fc9be7fce8cb97d21071ff5c4e7f48cfb6ca7",
+      "flow.tcl": "3ad27bcedc9e3f80f6968254b25056a7e2edf41f7a71077e78ec6a24d0b8930f",
+      "ideal.log": "3eb9b03db61ee4c0bcdc9544bb2a78148b71cb78aec62fbb675551c49c730e71",
+      "ideal.tcl": "9a8f035fe091d263bab293e2501e7ce688c305f66189df8dbc8f049640ad3fae",
+      "manifest.json": "a21ea9378a489d4a56a493341cddc351b734c0c8445e2c7fff2a263dbc10fd0b",
+      "propagated.log": "3f88120799178c925ee9f6094e27e2b2ede7b7c4f79c61233911e476616052a1",
+      "propagated.tcl": "2cea348c118d925d963d0d4a26c879ff1e3454db825b2578fc1115bbc6efb39d",
+      "routed.def": "3157c42a5ad3fbbcef7b577f0b39e8d745b98a3afe66d02b67c927c19831d28c",
+      "routed.odb": "3d4dd158e39d8af7738c652c726f5efed9679bac007fa211a26f5b9bf49ff189",
+      "routed.spef": "57dcc2bb495219868be6573e9fe5bafe16637fea75d1582dde4ad4b7cf15d107",
+      "routed.v": "f157745fb929b3cb989c6b52153651a771bcd0dc70f7e494533b3a6ac37cba9d"
+    },
+    "budget_numeric_pass": true
+  },
+  "new_route": 0,
+  "new_STA": 0,
+  "limitations": [
+    "s382 only; constrained paths only; no complete IO/signoff claim",
+    "Prior strict failures are preserved; a changed objective is not algorithm gain",
+    "Selection requires new exact-endpoint SEC before acceptance"
+  ]
+}
