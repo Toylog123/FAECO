@@ -1541,3 +1541,10 @@ RESTORE074已有10ps新政策、SEC101/0与根/独立接受；s382同阶段净�
 ### OI-081 本轮复查（2026-11-13，保持 open）
 
 check_record.sh返回rc0，仍警告4份obsolete文档。继续按现行AGENTS不维护停用文件，检查器迁移待处理；不因rc0把此契约漂移关闭。其它未决按上述范围保留。
+
+
+### OI-086 总体机制调研更新（2026-11-13，保持 open）
+
+总体研究邻域包含E-Layout ICCAD2026、PCR2026预印本、RL-CCD DAC2023、Trident2 ICCAD2013、Task-based TCAD2023、OpenPhySyn WOSET2020及OpenROAD，详见overall_related_work_20261113/REPORT.md与来源表。预算、多动作、反馈不能直接当独创机制；相关工作存在也不自动否定本项目。
+
+实际outerloop/recover_area/budgeted_search三链未统一，完整候选与交互选择的价值仍是待验假设。需相同实际物理验证成本的强贪心/原生恢复对照、组件消融、完整约束和跨设计验证，才能主张预算内净面积回收优势。本轮定向调研无EDA/SEC，不是系统综述或算法效能验收。

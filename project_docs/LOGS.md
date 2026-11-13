@@ -5333,3 +5333,19 @@ b07 个案分析：Resizer 膨胀面积 56.5%（1182→1851），Recovery 回退
 
 
 **LOG-20261113-05 / 阶段封存与推送完成**：策略/组合搜索内核与端点验收阶段已commit697b0c8并实际push到origin/main（含注册c5a4d05、前置诊断07c6cf2）。timing_budget包97文件+自manifest，manifest170c7934c3ce52cb4a7eca3ac9578fa4f2b21a3a765a95c06749ba10375f2ba7；中间WNS-primary包30+manifest e035362087c6b1131ae0107230ef67922bc0642cf565e708d81f0eb3c5d191e9；25准备包255+manifest922a20ae16504dae6110f413095e9e38cfcb8538928e5791e56c5ad82f746a87。所有证据staged Git blob与工作字节逐项一致；旧624+398原封不动。1147测试/156subtests、34专项包含其中、compile和CLI门通过。两个直连push分别连接重置/443超时；读取现有Windows系统代理后仅对单次Git命令配置http.proxy，9.28s推送成功，未修改全局网络/Git配置。科学未决继续保留：online物理搜索接入、完整约束、强baseline/消融/跨设计与论文；本轮不是新算法收益或论文完成。
+
+
+## LOG-20261113-06 — 总体机制调研范围调整（2026-11-13）
+
+用户先授权继续实验，继而要求先调研，并明确纠正研究应覆盖总体机制，不能只围绕WNS/面积预算。当前任务调整为先读取完整实际架构，区分旧r116研究路线与新post-Resizer路线，系统比较候选区域、动作空间、组合搜索、多精度STA/物理反馈、接受与证明链；完成调研后再决定下一项物理实验。
+
+本次仅记录范围调整，不启动新EDA、不改科学结论，独立机制优势仍待证明。CANON暂不修改；研究证据包由主线创建并另行绑定，不把拟议调研记成已完成事实。
+
+
+**LOG-20261113-06 / 总体架构与相关机制调研汇合**：记录端已读取scratch/overall_mechanism_audit.md，主线正在汇合overall_related_work_20261113/{REPORT.md,SOURCES.json,MECHANISM_AUDIT.md,LITERATURE_NOTES.md}。旧outerloop、历史recover_area、新budgeted_search实际三链未统一，不能画成已运行的完整新优化流程。近邻覆盖E-Layout ICCAD2026、PCR2026预印本、RL-CCD DAC2023、Trident2 ICCAD2013、Task-based TCAD2023、OpenPhySyn WOSET2020/OpenROAD；预算/多动作/反馈非当然独创，亦不据此否定项目。
+
+CANON顶部记录总体研究假设：完整候选+交互选择在同实际物理验证成本下提高预算内净面积回收，需强贪心/原生恢复、组件消融、完整约束与跨设计证据。OI-086保持open。定向调研非系统综述，0新EDA/0SEC，不改稿件/生产或sealed包；提交状态未预报。从此停止受托文件写入供主线汇合。
+
+**LOG-20261113-06 / 根汇合与文档验证**：REPORT、10项SOURCES、MECHANISM_AUDIT、LITERATURE_NOTES已写入新研究包；根实读核心原文与三链审计，区分已读全文和仅元数据。JSON解析/10来源计数/4文件存在检查通过；git diff --check通过，变更限定新研究包与5份项目记录。check_record.sh rc0仍警告4个已停用入口，沿用OI-081，不更新停用文件。路线图补充同候选/同实际工具成本基线与归因消融判据；无新科学运行、无生产/论文改动。本轮不重复运行代码回归，阶段提交/推送待下步实际执行。
+
+独立架构快审未发现阻断项，指出旧恢复依据是同名master差分而非完整操作日志，根已精确化。该审查不重复联网背书文献，原文核验责任仍按SOURCES；“最接近”限定本轮已读邻域，不作穷尽性排序。

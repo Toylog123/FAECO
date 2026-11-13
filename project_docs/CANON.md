@@ -1,5 +1,11 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-13 总体机制调研结论与研究入口
+
+本轮整体机制定向调研入口为 `project_docs/evidence/overall_related_work_20261113/REPORT.md`（配SOURCES/MECHANISM_AUDIT/LITERATURE_NOTES，由主线汇合）。整体近邻包括E-Layout（ICCAD2026）、PCR（2026预印本）、RL-CCD（DAC2023）、Trident2（ICCAD2013）、Task-based（TCAD2023）、OpenPhySyn（WOSET2020）与OpenROAD。预算参数、多动作、反馈本身不能直接作为独创性依据，也不能据已有近邻否定整个项目。
+
+实际旧outerloop、历史recover_area与新budgeted_search三链尚未统一。待检验的总体假设是：完整候选覆盖与交互选择，能在同样实际物理验证成本下改善预算内净面积回收。须与强贪心/原生恢复比较并做组件消融、完整约束及跨设计验证；OI-086继续open。本轮为定向研究而非系统综述，0新EDA/0SEC，未改稿件/生产代码或既有科学结论。
+
 ## 2026-11-13 可调预算核心与历史CLI工程门通过
 
 纯预算选择/有限组合核心及测试已实现，历史端点evaluate_budget CLI支持用户预算，拒绝负数/NaN/inf，真实52端点0/5/10/20ps与核心结果一致。完整回归v2为1147passed/156subtests（pytest128.96s，wrapper132s/rc0），REGRESSION_RECEIPT确认code全py前后SHA不变。v1的5failed/1142passed保留，系未前置已验packaged Yosys镜像；仅修正环境后重跑，没有为通过而修改生产代码。

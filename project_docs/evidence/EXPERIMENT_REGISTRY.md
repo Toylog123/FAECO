@@ -2511,3 +2511,10 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 #### TIMING-BUDGET 本轮阶段核验收尾
 
 工程VERIFICATION包含1147/156全套、34专用、compile/CLI4项/真实52pool一致；旧624+398工件SHA未变、233准备副本来源一致。record检查rc0但4obsolete警告归OI-081，25候选草案SUPERSEDED/未运行。阶段成果为历史预算重筛+1SEC接受及纯核心工程门，不作prospective搜索收益；online evaluator/完整约束/跨设计继续pending。科学新route/STA=0，约束诊断2STA单列。最终包封存与commit/push由主线随后执行，本记录不宣称已推送。
+
+
+### 2026-11-13 OVERALL-RELATED-WORK-RESEARCH
+
+**类型：定向总体机制调研/只读架构审查，非科学运行、非系统综述。** 证据入口overall_related_work_20261113/{REPORT.md,SOURCES.json,MECHANISM_AUDIT.md,LITERATURE_NOTES.md}由主线汇合；记录端实读scratch完整机制审计。比较区域/候选、动作与交互、有限验证成本、多精度STA物理反馈、接受证明链及整体近邻。0新EDA/0STA/0route/0SEC，未改生产/稿件/封存证据。
+
+当前结论为三条实现链未统一，预算/多动作/反馈不是独创性证据；待检假设是完整候选+交互选择在同实际物理验证成本下改善预算内净面积回收。下一实验须在强简单/原生基线、组件消融与约束/跨设计要求下重新登记，不由本研究条目自动启动。OI-086继续open，未预报提交/推送。
