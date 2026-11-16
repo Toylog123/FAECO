@@ -2518,3 +2518,10 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 **类型：定向总体机制调研/只读架构审查，非科学运行、非系统综述。** 证据入口overall_related_work_20261113/{REPORT.md,SOURCES.json,MECHANISM_AUDIT.md,LITERATURE_NOTES.md}由主线汇合；记录端实读scratch完整机制审计。比较区域/候选、动作与交互、有限验证成本、多精度STA物理反馈、接受证明链及整体近邻。0新EDA/0STA/0route/0SEC，未改生产/稿件/封存证据。
 
 当前结论为三条实现链未统一，预算/多动作/反馈不是独创性证据；待检假设是完整候选+交互选择在同实际物理验证成本下改善预算内净面积回收。下一实验须在强简单/原生基线、组件消融与约束/跨设计要求下重新登记，不由本研究条目自动启动。OI-086继续open，未预报提交/推送。
+
+
+### 2026-11-13 ~ 2026-11-16 ITC99-CROSS-DESIGN-SELECTIVE-RECOVERY
+
+- **状态**：DIAGNOSTIC_COMPLETED（16电路已评估：14电路完成固定SPEF选择性恢复，b14 Resizer 0修改，b22 359修改单步线性回滚在verify_143处600s超时未闭合；b17–b21合成完成但Resizer详细布线超30–56min未完成）。
+- **定义与证据路径**：`experiments/20261113_itc99_recovery/`（含 `recovered/b01..b10`、`arms/Recovery/b05,b11,b12,b13`、`arms/Resizer/b14,b15,b22`）与 `project_docs/evidence/itc99_recovery_20261113/REPORT.md`。
+- **配置与口径边界**：`code/scripts/recover_area.py`（`max_degradation=0.015ns, safety_factor=1.5`），复用Resizer输出 `routed.spef` 与理想时钟 `sta_routed`，`\w+` 同名实例解析（未含escaped DFF分母修正，未重合法化/重布线/重提SPEF，未跑最终SEC）。14完成电路回退 501/612 (81.9%)，回收面积 3026.66/12635.87 µm²（加权23.95%，算术均值18.95%），ΔWNS ∈ [−0.0115, +0.0162] ns。

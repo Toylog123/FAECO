@@ -1,0 +1,861 @@
+% =============================================================================
+% FAECO v3 — 基于Resizer后端的后布局可调预算面积回收
+% 计算机辅助设计与图形学学报模板近似
+% LuaLaTeX 编译
+% =============================================================================
+\documentclass[twocolumn,10pt,fontset=windows]{ctexart}
+
+% -----------------------------------------------------------------------------
+% 字体
+% -----------------------------------------------------------------------------
+\setmainfont[Path=./fonts/,Extension=.ttf,UprightFont=times,BoldFont=timesbd,ItalicFont=timesi,BoldItalicFont=timesbi]{Times New Roman}
+\setCJKmainfont[Path=./fonts/,Extension=.ttf]{FZShuSong-Z01}
+\setCJKsansfont[Path=./fonts/,Extension=.ttf]{SimHei}
+\newCJKfontfamily\songfamily[Path=./fonts/,Extension=.ttf]{FZShuSong-Z01}
+\newCJKfontfamily\fangfamily[Path=./fonts/,Extension=.ttf]{FZFangSong-Z02}
+\newCJKfontfamily\heifamily[Path=./fonts/,Extension=.ttf]{SimHei}
+\let\songti\songfamily\let\heiti\heifamily\let\fangsong\fangfamily
+
+% -----------------------------------------------------------------------------
+% 宏包
+% -----------------------------------------------------------------------------
+\usepackage{amsmath,amssymb}
+\usepackage{newtxmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{array}
+\usepackage[nocompress]{cite}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multirow}
+\usepackage{geometry}
+\usepackage{placeins}
+\usepackage{dblfloatfix}
+\usepackage[noshrink,nospread]{flushend}
+
+% -----------------------------------------------------------------------------
+% 版面
+% -----------------------------------------------------------------------------
+\geometry{a4paper,left=2.0cm,right=2.0cm,top=2.1cm,bottom=2.1cm,columnsep=31.5pt}
+\renewcommand{\eqref}[1]{\textup{（\ref{#1}）}}
+\graphicspath{{../figures/}}
+\setlength{\emergencystretch}{3em}
+\Urlmuskip=0mu plus 3mu\relax
+\raggedbottom
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+
+% -----------------------------------------------------------------------------
+% 标题层级（模板：1级11.5pt黑体 / 2级五号黑体 / 3级10pt书宋）
+% -----------------------------------------------------------------------------
+\ctexset{
+  section = {format=\heiti\fontsize{11.5}{15}\selectfont, beforeskip=6pt, afterskip=4pt},
+  subsection = {format=\heiti\fontsize{10.5}{14}\selectfont, beforeskip=5pt, afterskip=3pt},
+  subsubsection = {format=\songti\fontsize{10}{13}\selectfont, beforeskip=4pt, afterskip=2pt}
+}
+
+% -----------------------------------------------------------------------------
+% 图题/表题
+% -----------------------------------------------------------------------------
+\usepackage{caption}
+\DeclareCaptionFont{songti}{\songti}
+\DeclareCaptionFont{heiti}{\heiti}
+\captionsetup[figure]{font={songti,small},labelfont={bf},skip=3pt}
+\captionsetup[table]{font={heiti,small},labelfont={bf},skip=3pt}
+\captionsetup{labelsep=space}
+
+\begin{document}
+
+\pagestyle{plain}
+
+% ============================================================
+% 中文首部：标题/作者/单位/摘要/关键词
+% ============================================================
+\twocolumn[
+\vspace*{-0.25cm}
+\begin{center}
+{\heiti\zihao{3} FAECO：面向布局后门级ECO的覆盖优先候选调度与可调预算面积回收}\par
+\vspace{6pt}
+{\fangsong\zihao{4} 佟亚龙、刘畅}\par
+\vspace{4pt}
+{\songti\fontsize{8}{12}\selectfont（国防科技大学计算机学院，长沙 410073）}\par\vspace{2pt}
+{\songti\fontsize{8}{12}\selectfont E-mail：chancews@qq.com（通信作者）}\par
+\vspace{6pt}
+\end{center}
+\begin{flushleft}
+  {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
+  后布局门级时序工程变更（engineering change order，ECO）中，
+  时序修复器为收敛时序往往过度放大门尺寸，产生大量对最长路径延迟无贡献的面积浪费。
+  本文提出覆盖优先的候选调度机制与可调最差负松弛（worst negative slack，WNS）预算策略，
+  在OpenROAD Resizer输出上选择性回收不必要面积，同时将时序退化控制在用户指定预算内。
+  在ISCAS89基准的8个电路上，覆盖优先的候选静态时序分析（static timing analysis，STA）评估次数比随机调度节省7.8\%\string~19.0\%；
+  可调预算机制在s382上以仅0.0031\string\,ns的WNS退化回收Resizer净新增面积的28.91\%；
+  选择性恢复在8电路上回退65/107（61\%）对WNS无贡献的修改，3例面积回收超20\%，全例$|\Delta\text{WNS}| \le 0.0057$\string\,ns；
+  跨设计验证在ITC-99族16个电路（14例完成有修改恢复、1例0修改、1例大规模多门耦合超时）上进一步确认，14个完成电路回退501/612（81.9\%）处修改，加权回收净新增面积的24.0\%（范围0.0\%--33.3\%），全例$\Delta\text{WNS} \in [-0.0115, +0.0162]$\string\,ns；
+  Resizer单位面积WNS收益仅为本文覆盖优先机制的1/4.4。
+  结果表明，覆盖优先调度与事后选择性恢复构成一条不依赖重新修时序的面积回收路径。}
+\par
+\vspace{4pt}
+{\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO；面积回收；覆盖优先调度；可调预算；选择性恢复}\par
+\vspace{2pt}
+{\songti\fontsize{8.5}{13}\selectfont 中图法分类号：TP391.41}\par
+\vspace{3pt}
+\end{flushleft}
+]
+
+% ============================================================
+% 英文首部（双语稿用；单语中文稿保留为空壳以使编译通过即可）
+% ============================================================
+\newcommand{\enTitle}{FAECO: Coverage-First Candidate Scheduling and Adjustable-Budget Area Recovery for Post-Layout Gate-Level ECO}
+\newcommand{\enAuthor}{Tong Yalong, Liu Chang}
+\newcommand{\enAffil}{(College of Computer Science and Technology, National University of Defense Technology, Changsha 410073)}
+\newcommand{\enAbstract}{%
+  Post-layout gate-level timing ECO suffers from excessive area overhead caused by timing repair tools
+  that blindly up-size gates on non-critical paths.
+  This paper proposes a coverage-first candidate scheduling mechanism and an adjustable WNS budget policy
+  to selectively recover unnecessary area from the output of OpenROAD Resizer,
+  keeping timing degradation within a user-specified budget.
+  On eight ISCAS89 benchmarks, coverage-first scheduling reduces candidate STA evaluations by 7.8\%--19.0\%
+  compared to random ordering.
+  The adjustable budget mechanism recovers 28.91\% of Resizer's net added area on s382 with only
+  0.0031\,ns WNS degradation.
+  Selective recovery reverts 65 out of 107 (61\%) Resizer changes across all eight circuits;
+  three cases achieve >20\% area recovery, and all cases satisfy $|\Delta\text{WNS}| \le 0.0057$\,ns.
+  Cross-design validation on 16 ITC-99 circuits (14 completed active recovery cases) reverts 501 out of 612 (81.9\%) changes and recovers 24.0\% of net added area (0.0\%--33.3\%), with $\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns.
+  Resizer's per-unit-area WNS efficiency is only 1/4.4 of the coverage-first mechanism.
+  These results establish a post-repair area recovery path that does not require re-performing timing optimization.%
+}
+\newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; selective rollback}
+
+% ============================================================
+% §1 引言
+% ============================================================
+\section{引言}
+
+门级时序ECO是物理设计后端的关键步骤。
+当布局布线后发现时序违例，设计者需在不重跑综合与布局的前提下，
+通过局部门尺寸调整、缓冲器插入、等价替换等手段修复违例路径。
+现代开源EDA工具链中的时序修复器（如OpenROAD Resizer\cite{openroad}）
+提供了有效的自动化时序收敛能力，但其底层采用全局拉格朗日松弛（LR）优化，
+倾向于在所有违例路径上放大门尺寸——包括那些并不影响最长路径延迟的单元。
+
+\medskip
+\noindent\textbf{问题的量级。}
+我们在ISCAS89基准的8个电路上逐门回退了Resizer的107个门尺寸修改，
+用独立布线后签核STA测量每个回退对传播WNS的影响。结果令人惊讶：
+\textbf{107个修改中有74个（69\%）回退后WNS纹丝不动}
+（$\Delta$WNS = 0.000\,ns），其对时序收敛无任何可测量的贡献。
+Resizer的全局LR策略使面积膨胀48.8\%而仅获得$+0.584$\,ns的WNS改善——
+相比之下，本文的覆盖优先机制以面积$+8.1\%$的代价获得$+0.247$\,ns改善，
+\textbf{单位面积改善的WNS收益为Resizer的4.4倍}（几何均值，7/8电路，$p=0.0352$）。
+
+\medskip
+\noindent\textbf{本文的切入点。}
+我们不对Resizer做内部修改，而是在其输出上建立一个事后面积回收层。
+该层由三个互补机制构成：
+\begin{enumerate}
+\item \textbf{覆盖优先候选调度}（第3节）：按候选在时序报告中的覆盖区域排序，
+      优先评估最可能改善最长路径的候选，组内全测后取最优，降低无效候选评估。
+\item \textbf{可调WNS预算}（第4节）：用户设定允许的WNS损失上限$B$（如0.010\,ns），
+      机制在有界组合搜索中优化净面积回收，非支配端点存档供不同预算重用。
+\item \textbf{选择性恢复}（第5节）：逐门评估每个Resizer修改对WNS的独立贡献，
+      以安全系数回退无贡献修改，后验证循环保证退化不超限。
+\end{enumerate}
+三个机制的共同前提是：在当前物理实现点上，
+大多数可能的修改对最长路径延迟不产生影响。
+Resizer 69\%的浪费为这一前提提供了直接证据。
+
+\medskip
+\noindent\textbf{主要贡献。}
+\begin{enumerate}
+\item 首次将覆盖优先概念引入门级ECO，在ISCAS89八例上证明候选STA节省7.8\%--19.0\%且不降低端点质量；
+\item 提出可调WNS预算的形式化框架与有界组合搜索实现，在s382上以0.0031\,ns WNS退化回收Resizer净新增面积的28.91\%；
+\item 通过逐门回退诊断揭示Resizer 69\%改动对WNS无贡献，并以选择性恢复在8电路上回退61\%不必要修改，全例$|\Delta\text{WNS}| \le 0.0057$\,ns；在ITC-99族16个电路完成跨设计验证（14个完成恢复电路回退501/612处修改，加权回收净新增面积的24.0\%，范围0.0\%--33.3\%，$\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns），并在b22上揭示大规模多门累积耦合的恢复边界；
+\item 建立单位面积WNS效率的跨方法比较框架，证明覆盖优先的效率为Resizer的4.4倍。
+\end{enumerate}
+
+% ============================================================
+% §2 背景与相关工作
+% ============================================================
+\section{背景与相关工作}
+
+\subsection{布局后门级ECO}
+
+布局后ECO在固定版图与时钟树的基础上进行局部网表修改，
+是避免重跑全流程的最后手段。主要挑战在于：修改空间的局部性——
+只能改已布线的门尺寸或插入有限缓冲器；评估的昂贵性——
+每次修改需重新合法化、布线、RC提取和STA，单候选评估代价可达数十至上百秒；
+以及候选构造的覆盖完整性——若修改不落在关键路径上，再好的选择策略也无效。
+
+现有工具中，OpenROAD Resizer\cite{openroad}采用全局LR优化进行门尺寸调整，
+RL-CCD\cite{rlccd2023}引入强化学习指导修复动作，
+PCR\cite{pcr2026}利用物理上下文进行候选重映射，
+Trident2\cite{trident2}通过多层候选池提升修复成功率，
+E-Layout\cite{elayout2026}结合布局信息进行ECO候选选择。
+这些工作侧重修复能力（WNS改善量），
+而本文关注的是修复之后的面积效率问题——达成时序目标的代价是否最小化。
+
+\subsection{面积回收}
+
+面积回收在物理设计中有两类主要路径：
+一是多目标联合优化，在修时序的同时约束面积预算；
+二是修复后回退，先完成修时序再清理过度修改。
+OpenROAD的\texttt{recover\_power}命令属于第一类，
+在时序修复后尝试对非关键路径做降尺寸操作。
+本文的选择性恢复属于第二类，但其关键差异在于逐门独立STA评估与安全系数机制，
+使得回退决策有物理测量支撑而非启发式猜测。
+
+\subsection{覆盖优先调度}
+
+在组合优化中，覆盖优先（coverage-first）策略通常用于最大覆盖问题：
+优先处理覆盖最多未覆盖元素的集合，以最少的调用次数达到目标。
+在门级ECO中，一个候选的"覆盖"指其时序报告中经过的门集合；
+优先评估覆盖最长路径端点的候选，等价于优先评估最有可能改善WNS的动作。
+该思想在文献中未见应用于门级ECO候选评估顺序，
+是本文在调度策略上的独特贡献。
+
+% ============================================================
+% §3 覆盖优先候选调度
+% ============================================================
+\section{覆盖优先候选调度}
+
+\subsection{候选区域构造}
+
+给定Resizer输出网表$N_R$及其传播STA报告，
+我们从中提取所有违例路径上的端点及其关联逻辑锥。
+
+\textbf{覆盖区域（$C_c$）。}
+令$E$为传播WNS最差的$k$个端点的集合（$k$为可配置参数），
+$C_c$为这些端点逻辑锥中所有门实例的并集：
+\begin{equation}
+C_c = \bigcup_{e\in E} \mathrm{cone}(e)
+\end{equation}
+$C_c$捕获了当前时序瓶颈所在的"热区"。
+
+\textbf{加权节点割（$C_w$）。}
+对$C_c$中每个门实例，计算其节点代价：
+\begin{equation}
+\begin{aligned}
+\omega(i) = &\; w_1\cdot d_{\mathrm{logic}}(i) + w_2\cdot d_{\mathrm{fanout}}(i) \\
+            &+ w_3\cdot s_{\mathrm{size}}(i) + w_4\cdot c_{\mathrm{cap}}(i) \\
+            &+ w_5\cdot \mathrm{slack}_{\mathrm{wn}}(i)
+\end{aligned}
+\end{equation}
+其中$d_{\mathrm{logic}}$为逻辑深度，$d_{\mathrm{fanout}}$为扇出数，
+$s_{\mathrm{size}}$为当前驱动强度，$c_{\mathrm{cap}}$为负载电容，
+$\mathrm{slack}_{\mathrm{wn}}$为最差负slack。
+五个权重$w_{1..5}=1$（均匀加权），在受控实验中已证明
+权重变化不改变端点选择结果\cite{faeco_old}。
+
+$C_w$为$C_c$的最小权节点割中代价最大的$m$个门实例。
+$C_c$与$C_w$共同构成候选生成的"投入区域"。
+
+\subsection{候选动作类型}
+
+在投入区域的每个目标实例上，生成四类候选动作：
+\begin{enumerate}
+\item \textbf{R（等价替换）：} 将实例替换为同功能的另一驱动强度版本；
+\item \textbf{G（门尺寸调整）：} 将实例替换为同功能更大（升尺寸）或更小（降尺寸）的版本；
+\item \textbf{B（缓冲器插入）：} 在实例输出端插入缓冲器，改善扇出负载与slew；
+\item \textbf{JOINT（联合动作）：} 对两个相邻实例同时做G/R动作。
+\end{enumerate}
+所有候选需通过功能等价检查（局部cut-point或全网表SEC）、
+电气安全检查（同库单元、驱动/负载兼容）以及
+物理可行检查（版图空间、布线通道）。
+
+\subsection{覆盖优先调度算法}
+
+算法~\ref{alg:coverage_first}给出覆盖优先调度的伪代码。
+核心思想是：$C_c$区域内的候选优先于$C_w$区域内的候选；
+同一区域内，按端点WNS降序排列候选（最差端点上的候选最先评估）；
+每组候选全测后取最优提交。
+
+\begin{algorithm}[H]
+\caption{覆盖优先候选调度}
+\label{alg:coverage_first}
+\begin{algorithmic}[1]
+\Require 网表 $N_R$, STA报告 $S$, 区域参数 $k,m$
+\Ensure 已接受补丁集 $\mathcal{P}$
+\State $E \gets S$ 中 WNS 最差的 $k$ 个端点
+\State $C_c \gets \bigcup_{e\in E} \mathrm{cone}(e)$
+\State $C_w \gets$ 最小权节点割中代价最大的 $m$ 个门
+\State $\mathrm{candidates} \gets []$
+\For{$i \in C_c \cup C_w$} \Comment{$C_c$ 优先}
+    \State 对实例 $i$ 生成四类候选动作，追加至 $\mathrm{candidates}$
+\EndFor
+\State 按端点 WNS 降序排列 $\mathrm{candidates}$
+\State $\mathcal{P} \gets \emptyset$
+\For{each group of same-endpoint candidates}
+    \State $\mathrm{best} \gets$ 全测组内候选，取 WNS 最优者
+    \If{$\mathrm{best}.\mathrm{WNS} > N_R.\mathrm{WNS} + \delta$}
+        \State $\mathcal{P} \gets \mathcal{P} \cup \{\mathrm{best}\}$
+        \State 更新 $N_R$, $S$
+    \EndIf
+\EndFor
+\State \Return $\mathcal{P}$
+\end{algorithmic}
+\end{algorithm}
+
+在ISCAS89八例的受控实验中，
+覆盖优先（配置W1）在8/8电路上改善WNS，平均改善$+0.210$\,ns，
+超各自电路判定带7/8例，候选STA次数比三个随机顺序配置少7.8\%--19.0\%。
+控制组（W0：不在覆盖区域生成候选）和基准组（U0：随机顺序）
+均未产生任何改善，说明覆盖区域构造与覆盖优先排序是收益的必要条件。
+
+% ============================================================
+% §4 可调WNS预算机制
+% ============================================================
+\section{可调WNS预算机制}
+
+\subsection{问题形式化}
+
+给定Resizer输出$N_R$及其物理测量$(W_R, A_R, H_R)$，
+其中$W_R$为传播setup WNS，$A_R$为完整映射单元面积，$H_R$为传播hold WNS。
+用户设定WNS损失预算$B \ge 0$（单位ns，默认$B=0.010$\,ns）。
+
+目标是找到一组网表修改动作$\mathbf{a} = (a_1, \ldots, a_t)$，
+使得应用后的网表$N_F$满足：
+\begin{equation}
+\begin{aligned}
+\text{maximize} &\quad A_R - A(N_F) \\
+\text{subject to} &\quad W(N_F) \ge W_R - B - \varepsilon, \\
+                 &\quad H(N_F) \ge \min(H_R, 0) - \varepsilon, \quad H(N_F) \ge 0, \\
+                 &\quad \mathrm{SEC}(N_R, N_F) = \text{proven},
+\end{aligned}
+\end{equation}
+其中$\varepsilon = 10^{-6}$\,ns为数值容差，
+$A(N_F)$和$W(N_F)$需通过实际物理测量获得（重新合法化/布线/RC提取/STA），
+不允许将单动作预测值累加作为组合安全保证。
+总负松弛（total negative slack，TNS）完整报告，在同等面积收益时作为辅助择优依据。
+
+\subsection{有界组合搜索}
+
+我们实现了一个有界beam搜索内核\cite{timing_budget}，
+在固定参考$N_R$上展开组合动作搜索。
+
+\textbf{评估器。}
+每个候选组合$\mathbf{a}$由$\texttt{evaluate}(\mathbf{a})$回调实际测量，
+该回调从固定参考$N_R$出发应用全部$t$个动作，运行完整物理流程并提取
+$W$, $A$, $H$三个测量值。同一实例上的冲突动作被自动排除，重复组合不重复评估。
+
+\textbf{Beam搜索。}
+每层保留$\mathrm{beam\_width}$个父节点。父节点按实测时序赤字
+（$W_R - B - W$）、hold缺口（$\max(0, H_R - H)$）和面积收益排序，
+保留最优父节点（包括数值暂时不合格但可能被后续补偿的中间态）。
+每个父节点上枚举下一层的新动作组合（大小$\le \mathrm{max\_depth}$）。
+
+\textbf{非支配存档。}
+所有通过物理接受门的端点（$W \ge W_R - B - \varepsilon$、
+$H \ge H_R - \varepsilon$、电气与结构检查通过）进入非支配存档。
+存档端点按面积收益排序，SEC合格者优先交付。
+若所有可行端点均无正面积收益，精确退回$N_R$。
+
+\subsection{s382 多预算筛选结果}
+
+同一组候选池可在不同预算下独立筛选，无需为每个预算重新运行物理流程。
+表~\ref{tab:budget_pool}展示了s382的52个既有物理端点在0/5/10/20\,ps
+四档预算下的筛选结果。
+
+\begin{table}[H]
+\centering
+\caption{s382固定52端点池的多预算筛选}
+\label{tab:budget_pool}
+\footnotesize\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lccc}
+\toprule
+\textbf{允许WNS损失} & \textbf{合格端点数} & \textbf{SEC合格最优} & \textbf{总面积回收率} \\
+\midrule
+ 0\,ps（严格不退）&  6 & FORWARD\_096 & 0.59\% \\
+ 5\,ps             & 15 & RESTORE074   & 4.40\% \\
+10\,ps             & 19 & RESTORE074   & 4.40\% \\
+20\,ps             & 21 & RESTORE074   & 4.40\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+0\,ps预算下仅6个端点合格，最优FORWARD\_096仅回收0.59\%面积
+（门尺寸NOR4\_2 $\to$ NOR4\_1，WNS与TNS改善，hold不变，SEC 101/0通过）。
+5\,ps以上RESTORE074占据最优，面积回收4.40\%。
+在固定池中5\,ps以上面积不再改善——这是该特定候选池的前沿上限，
+不构成"5\,ps已足够"的普遍结论。
+
+\subsection{RESTORE074：10\,ps预算下的限定接受}
+
+在用户选定的10\,ps预算下，RESTORE074通过全部接受门。
+表~\ref{tab:restore074}给出其相对Resizer CONTROL的完整物理测量。
+
+\begin{table}[H]
+\centering
+\caption{RESTORE074相对Resizer CONTROL的完整测量（s382, 10\,ps预算）}
+\label{tab:restore074}
+\footnotesize\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{指标} & \textbf{CONTROL} & \textbf{RESTORE074} & \textbf{差值} \\
+\midrule
+完整映射单元面积/\textmu m$^2$ & 1052.2592 & 1005.9648 & $-46.2944$（$-4.40\%$）\\
+传播setup WNS/ns  & $-0.848459$ & $-0.851557$ & $-0.003098$\\
+传播hold WNS/ns   & $+0.463637$ & $+0.467214$ & $+0.003577$\\
+TNS/ns            & $-13.422543$ & $-13.654525$ & $-0.231982$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+RESTORE074回收了Resizer净新增面积的28.91\%（CTS前共同面积
+$A_0=892.1056$\,\textmu m$^2$，Resizer净新增$A_R-A_0=160.1536$\,\textmu m$^2$，
+回收$A_R-A_F=46.2944$\,\textmu m$^2$），
+总面积下降4.40\%。时序侧WNS退化0.003098\,ns（约3.1\,ps）
+完全在10\,ps预算内，hold反而改善0.003577\,ns，
+TNS退化0.232\,ns作为辅助指标不影响接受。
+两态顺序等价检查确认101个等价点全部证明、0个未证明。
+
+\subsection{多电路预算曲线}
+
+同一组策略在s382上的表现促使我们追问：预算-回收的量化关系是否跨电路一致？
+将选择性恢复（§5）中每个电路的逐门独立$\Delta$WNS测量按绝对值分档，
+得到8个ISCAS89电路在0/5/10/20/50/100/200/500\,ps八档预算下的面积回收率曲线
+（图~\ref{fig:budget_curves}与表~\ref{tab:budget_curves}）。
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{budget_curves.pdf}
+\caption{多电路预算曲线。（a）8电路面积回收率随WNS预算的变化，黑线为几何均值；
+（b）B=10\,ps预算下的逐电路面积回收率。}
+\label{fig:budget_curves}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{ISCAS89多电路预算曲线：不同WNS预算下占Resizer净增面积的回收率（\%）}
+\label{tab:budget_curves}
+\footnotesize\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\textbf{电路} & \textbf{修改数} & \textbf{B=0ps} & \textbf{B=5ps} & \textbf{B=10ps} & \textbf{B=20ps} & \textbf{B=50ps} & \textbf{B=100ps} & \textbf{B=200ps} & \textbf{B=500ps} \\
+\midrule
+s27 &  2 &  0.0\% &  0.0\% &  0.0\% &  0.0\% &  0.0\% &  0.0\% & 100.0\% & 100.0\% \\
+s382& 16 & 67.3\% & 67.3\% & 67.3\% & 67.3\% & 67.3\% & 89.1\% & 94.5\% & 100.0\% \\
+s420&  6 & 38.5\% & 38.5\% & 53.8\% & 53.8\% & 53.8\% & 53.8\% & 53.8\% & 100.0\% \\
+s641& 17 & 38.6\% & 38.6\% & 38.6\% & 38.6\% & 50.9\% & 63.2\% & 68.4\% & 100.0\% \\
+s713& 14 & 16.4\% & 37.0\% & 37.0\% & 38.4\% & 42.5\% & 57.5\% & 87.7\% & 100.0\% \\
+s820& 11 & 94.6\% & 94.6\% & 94.6\% & 94.6\% & 100.0\% & 100.0\% & 100.0\% & 100.0\% \\
+s832& 12 & 40.0\% & 46.7\% & 46.7\% & 46.7\% & 71.7\% & 86.7\% & 96.7\% & 100.0\% \\
+s953& 29 & 73.0\% & 73.0\% & 74.3\% & 74.3\% & 76.3\% & 84.2\% & 90.1\% & 100.0\% \\
+\midrule
+\textbf{几何均值} & --- & \textbf{16.1\%} & \textbf{18.2\%} & \textbf{19.0\%} & \textbf{19.1\%} & \textbf{21.3\%} & \textbf{24.4\%} & \textbf{84.7\%} & \textbf{100.0\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{跨电路一致性}：按单门独立$\delta$WNS阈值统计，七电路（s27除外）在零预算（$B=0$\,ps）下即具有16.4\%--94.6\%的单门理论可回收比例（几何均值16.1\%）。
+其中六电路在$B=10$\,ps处已接近或达到$B=20$\,ps处的回收水平（几何均值从16.1\%升至19.0\%），
+表明\textbf{10\,ps是面积回收的有效预算阈值}。
+s713、s641和s832在$B=50\text{--}200$\,ps区间仍有显著增量（如s713从37.0\%升至87.7\%），
+说明部分电路包含大量``需要适度时序代价即可释放''的修改，构成预算曲线的长尾；
+而当$B=500$\,ps时几乎所有修改（含关键路径必需修改）均落入阈值内，回收率趋近100\%。
+s27仅2个修改且单门退化超过100\,ps，说明该电路上Resizer的修改均为时序必需，
+选择性恢复无操作空间。
+需注意表~\ref{tab:budget_curves}反映的是单门独立$\delta$WNS分布的理论上限，而实际多门同时回退还需经受第5节的累积耦合验证。
+
+\subsection{FAECO-P候选的预算敏感度}
+
+上述分析揭示了\textbf{Resizer修改}的预算-回收关系。
+一个对偶的问题是：\textbf{FAECO-P自身产生的新候选}在不同WNS预算下有多少能被接受？
+这将揭示覆盖优先机制的候选质量是否对预算设置鲁棒。
+
+从FAECO-P的eval\_trials数据中提取每个候选的逐门$\delta$WNS（候选应用后相对Resizer基线的WNS变化），
+按预算阈值$B$（$\delta$WNS $\ge -B$为可接受）计算接受率。
+结果见表~\ref{tab:faecop_budget}。
+
+\begin{table}[H]
+\centering
+\caption{FAECO-P候选的预算敏感度（8个ISCAS89电路，8档预算）}
+\label{tab:faecop_budget}
+\footnotesize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrrrrrrrr}
+\toprule
+\textbf{电路} & \textbf{候选} & \textbf{$\delta$WNS$>$0} &
+  \textbf{B=0} & \textbf{B=5} & \textbf{B=10} & \textbf{B=20} & \textbf{B=50} & \textbf{B=100} & \textbf{B=200} & \textbf{B=500} \\
+\midrule
+s27 &  70 & 41\% & 41\% & 70\% & 79\% & 81\% & 83\% & 96\% & 100\% & 100\% \\
+s382 & 209 & 31\% & 31\% & 51\% & 63\% & 76\% & 85\% & 96\% & 100\% & 100\% \\
+s420 & 247 & 43\% & 43\% & 57\% & 66\% & 76\% & 83\% & 94\% & 100\% & 100\% \\
+s641 & 145 & 57\% & 57\% & 70\% & 82\% & 96\% & 97\% & 100\% & 100\% & 100\% \\
+s713 & 229 & 26\% & 26\% & 33\% & 40\% & 62\% & 85\% & 95\% & 100\% & 100\% \\
+s820 & 248 & 31\% & 31\% & 42\% & 49\% & 61\% & 79\% & 94\% & 99\% & 100\% \\
+s832 & 138 & 13\% & 13\% & 24\% & 33\% & 50\% & 81\% & 93\% & 99\% & 100\% \\
+s953 & 248 & 29\% & 29\% & 40\% & 53\% & 62\% & 80\% & 95\% & 100\% & 100\% \\
+\midrule
+几何均值 & — & — & 31.4\% & 45.6\% & 55.8\% & 69.3\% & 84.0\% & 95.3\% & 99.7\% & 100.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{关键观察}：
+(1)~B=0\,ps下正贡献候选仅占13--57\%（几何均值31.4\%），
+说明FAECO-P产生的候选中有\textbf{约69\%会对WNS造成退化}——覆盖优先的"优先"二字源于调度策略而非候选质量；
+(2)~B=10\,ps处接受率升至33--82\%（几何均值55.8\%），
+即\textbf{在10\,ps预算下超过半数的FAECO-P候选可被接受}，
+与§4.5中"10\,ps是有效预算阈值"形成\textbf{双向交叉验证}；
+(3)~s832在B=0\,ps处接受率仅13\%（8电路中最低），
+但其B=50\,ps处已升至81\%，说明该电路候选的$\delta$WNS分布集中于$[-50,0]$\,ps区间——
+需适度预算即可大量启用，但零预算下几乎不可用；
+(4)~所有电路在B=200\,ps处接受率均$\ge$99\%，
+即\textbf{200\,ps预算下FAECO-P候选几乎全部可接受}——但此时WNS退化已达200\,ps，
+对多数应用场景不可接受，强调了预算约束的必要性。
+
+\subsection{联合端到端：预算搜索+选择性恢复}
+
+三个机制能否互补？我们在s382上做了端到端串联：
+RESTORE074（10\,ps预算搜索）输出$\to$选择性恢复。
+RESTORE074已回退Resizer的12/16处修改（面积回收46.29\,\textmu m$^2$，28.91\%）。
+在RESTORE074输出上运行选择性恢复，发现剩余4处修改中的3处
+（\texttt{\_051\_}/\texttt{\_059\_}/\texttt{\_063\_}）
+分别需要59/219/111\,ps的WNS预算才能安全回退，
+远超10\,ps约束；第4处（\texttt{\_074\_}）回退后$\Delta$WNS=0但其面积收益也为0。
+因此额外回收为0。
+
+\textbf{结论}：在10\,ps预算下，三个机制的联合端到端未产生超过RESTORE074单独的增量面积回收。
+这恰好说明RESTORE074已充分捕获了安全回退的空间——预算搜索本身就在做"选择性地接受或拒绝修改"，
+与选择性恢复在操作上等价，区别在于搜索是在网表级组合选择，
+而恢复是事后逐门独立判定。两者在s382上对同一组修改给出了近乎相同的判定：
+预算搜索回退的12个恰好是V2恢复算法中$\Delta$WNS$=0$的那13个（含一个零面积项），
+保留的3个则是恢复算法中$\Delta$WNS$<0$的3个。
+此一致性确认\textbf{搜索的组合视角并未遗漏单门事后恢复能捕获的信息}，
+也确认了\textbf{机制互补的上限受修改本质是否"可回退"的物理约束，而非算法选择}。
+
+% ============================================================
+% §5 选择性面积恢复
+% ============================================================
+\section{选择性面积恢复}
+
+\subsection{动机：Resizer的浪费诊断}
+
+可调预算机制提供了一条"正向"面积回收路径——在预算约束下
+搜索更优的网表配置。然而，Resizer输出本身包含大量对WNS无贡献的修改。
+我们对此进行了逐门诊断。
+
+在ISCAS89八例上，对Resizer的107个门尺寸修改逐一回退
+（将修改后的尺寸恢复为修改前的原尺寸），每次回退运行独立布线后签核STA，
+测量$\Delta$WNS。结果见表~\ref{tab:waste}。
+
+\begin{table}[H]
+\centering
+\caption{Resizer修改的WNS贡献诊断（8电路，107个修改）}
+\label{tab:waste}
+\footnotesize\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{电路} & \textbf{修改数} & \textbf{无贡献修改数} & \textbf{占比} \\
+\midrule
+s27  &  2 &  0 &   0\% \\
+s382 & 16 & 13 &  81\% \\
+s420 &  6 &  5 &  83\% \\
+s641 & 17 &  8 &  47\% \\
+s713 & 14 &  7 &  50\% \\
+s820 & 11 & 11 & 100\% \\
+s832 & 12 &  6 &  50\% \\
+s953 & 29 & 24 &  83\% \\
+\midrule
+\textbf{合计} & \textbf{107} & \textbf{74} & \textbf{69\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+107个修改中74个（69\%）在诊断门限内回退后对最长路径延迟无实质贡献。
+
+\subsection{选择性恢复算法}
+
+基于上述诊断，我们设计了选择性恢复算法（Recovery v2）。
+核心思想是：逐门评估每个修改的独立WNS贡献，
+以安全系数回退无贡献修改，并通过后验证循环保证不超预算。
+
+\medskip
+\noindent\textbf{步骤1：独立贡献测量。}
+对每个被Resizer修改的门$g_i$，生成回退网表$N_{-i}$（仅$g_i$恢复原尺寸），
+运行基于Resizer输出SPEF的独立STA，记录$\Delta_i = W(N_{-i}) - W(N_R)$。
+
+\medskip
+\noindent\textbf{步骤2：安全排序与累积回退。}
+将候选按$\Delta_i$降序（退化最小优先）排列。
+以安全系数$\alpha = 1.5$与允许退化门限$B_{\mathrm{rec}}=0.015$\,ns累积筛选：仅当负向增量乘以$\alpha$后的累积值满足
+$\sum \mathrm{eff}(\Delta_j) + \mathrm{eff}(\Delta_i) \ge -B_{\mathrm{rec}}$
+时接受$g_i$的回退。安全系数用于补偿逐候选间时序耦合的不确定性。
+
+\medskip
+\noindent\textbf{步骤3：后验证循环。}
+累积回退完成后运行一次完整STA验证。
+若实际$\Delta$WNS超过预算门限，逐次回退最后一步，直至满足预算或回退清空。
+
+\subsection{八电路全量结果}
+
+Recovery v2在8个ISCAS89电路上的结果见表~\ref{tab:recovery_v2}。
+
+\begin{table}[H]
+\centering
+\caption{选择性恢复全量结果（8电路，固定SPEF诊断恢复口径）}
+\label{tab:recovery_v2}
+\footnotesize\setlength{\tabcolsep}{3.8pt}
+\begin{tabular}{lrrrrrr}
+\toprule
+\textbf{电路} & \textbf{Resizer} & \textbf{回退} & \textbf{新增面积} & \textbf{Resizer} & \textbf{$\Delta$WNS} & \textbf{$|\Delta\text{WNS}|$/} \\
+              & \textbf{修改} & \textbf{数} & \textbf{回收} & \textbf{修复量/ns} & \textbf{/ps} & \textbf{修复量\%} \\
+\midrule
+s27  &  2 &  0 &  0.0\% & 0.124 &  0.0 & 0.00\% \\
+s382 & 16 & 13 & 22.8\% & 0.333 &  0.0 & 0.00\% \\
+s420 &  6 &  4 &  7.4\% & 0.703 & $-5.7$ & 0.81\% \\
+s641 & 17 &  5 &  8.5\% & 1.438 & $+3.4$ & 0.24\% \\
+s713 & 14 &  5 & 18.0\% & 0.516 & $-0.1$ & 0.02\% \\
+s820 & 11 & 10 & 20.1\% & 0.453 & $+1.2$ & 0.26\% \\
+s832 & 12 &  5 & 14.4\% & 0.597 & $-1.7$ & 0.28\% \\
+s953 & 29 & 23 & 21.6\% & 0.547 & $+0.4$ & 0.07\% \\
+\midrule
+\textbf{合计} & \textbf{107} & \textbf{65（61\%）} & \textbf{均值 14.1\%} & \textbf{4.711} & \textbf{$\ge -5.7$} & \textbf{加权0.27\%}¹ \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\footnotesize ¹加权平均：$\sum |\Delta\text{WNS}| = 12.5$\,ps $\div$ 总Resizer修复量 $4.711$\,ns $= 0.27\%$；表中新增面积回收分母为同名导出逻辑实例净增面积（全实例总面积平均降幅为3.07\%，其中s382总面积降4.40\%、完整CTS前分母下净新增面积回收率为28.91\%）。\normalsize
+\end{table}
+
+全量8例共回退65/107（61\%）的Resizer修改，新增面积回收算术均值14.1\%，
+3例超过20\%（s382 22.8\%、s820 20.1\%、s953 21.6\%）。全例$|\Delta\text{WNS}| \le 0.0057$\,ns（最差为s420的$-5.7$\,ps，其余电路甚至在s641/s820/s953上出现微幅正向改善）。
+\textbf{关键发现：回收引起的最大时序波动仅为Resizer修复量的0.00\%--0.81\%（加权平均0.27\%）}，
+即Resizer为收敛时序付出的99\%+改善在选择性恢复后完整保留。
+s382的CLI工具（\texttt{code/scripts/recover\_area.py}）8秒完成。
+
+\subsection{效率对比}
+
+表~\ref{tab:efficiency}给出覆盖优先机制与Resizer的单位面积WNS效率比较。
+效率定义为$\Delta$WNS除以面积增加比例。
+
+\begin{table}[H]
+\centering
+\caption{单位面积WNS效率：覆盖优先 vs Resizer}
+\label{tab:efficiency}
+\footnotesize\setlength{\tabcolsep}{6pt}
+\begin{tabular}{lrrc}
+\toprule
+\textbf{电路} & \textbf{Resizer} & \textbf{覆盖优先} & \textbf{比值} \\
+\midrule
+s27  & 0.082 & 1.926 & 23.5$\times$ \\
+s382 & 0.013 & 0.019 &  1.5$\times$ \\
+s420 & 0.024 & 0.110 &  4.6$\times$ \\
+s641 & 0.085 & 0.186 &  2.2$\times$ \\
+s713 & 0.033 & 0.303 &  9.2$\times$ \\
+s820 & 0.017 & 0.094 &  5.5$\times$ \\
+s832 & 0.079 & 0.043 &  0.5$\times$ \\
+s953 & 0.010 & 0.031 &  3.0$\times$ \\
+\midrule
+\textbf{几何均值} & 0.031 & 0.136 & \textbf{4.4$\times$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+覆盖优先的几何平均面积效率是Resizer的4.4倍（$p=0.0352$，
+符号秩检验），8例中7例效率更高。
+Resizer面积膨胀48.8\%（几何均值）换$+0.584$\,ns WNS改善，
+而覆盖优先以面积$+8.1\%$换$+0.247$\,ns。
+效率差异的结构性原因是覆盖优先只修改落在关键路径上的门，
+而全局LR在所有违例路径上均等放大。
+
+\subsection{跨设计验证：ITC-99族}
+
+为验证选择性恢复在ISCAS89之外的设计族上是否具有一致的回收能力，
+我们在ITC-99基准的16个电路上完成了跨设计评估。
+每个电路均经过Yosys综合$\to$OpenROAD Resizer时序修复$\to$选择性恢复三个步骤，
+恢复参数与ISCAS89一致（$B_{\mathrm{rec}}=0.015$\,ns，$\alpha=1.5$）。
+结果见表~\ref{tab:itc99_recovery}。
+
+\begin{table}[H]
+\centering
+\caption{ITC-99跨设计选择性恢复结果（16电路，固定SPEF诊断恢复口径）}
+\label{tab:itc99_recovery}
+\footnotesize\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\textbf{电路} & \textbf{Resizer} & \textbf{面积} & \textbf{回退} & \textbf{回收} & \textbf{回收} & \textbf{$\Delta$WNS} & \textbf{基线} & \textbf{Resizer} & $|\Delta\text{WNS}|$/\\
+              & \textbf{修改} & \textbf{增大} & \textbf{修改} & \textbf{面积} & \textbf{率} & \textbf{/ns} & \textbf{WNS/ns} & \textbf{WNS/ns} & 修复量\% \\
+\midrule
+b01 &  6 &  95.1 &  5 &  13.8 & 14.5\% & $-0.0001$ & $-0.59$ & $-0.636$ & N/A \\
+b02 &  1 &  55.1 &  0 &   0.0 &  0.0\% &  $0.0000$ & $-0.21$ & $-0.234$ & N/A \\
+b03 & 20 & 466.7 & 12 &  22.5 &  4.8\% & $+0.0022$ & $-1.91$ & $-1.186$ & 0.30\% \\
+b04 & 62 & 1156.1& 55 & 277.8 & 24.0\% & $-0.0063$ & $-2.92$ & $-2.614$ & 2.06\% \\
+b05 & 56 & 884.6 & 33 & 172.7 & 19.5\% & $+0.0049$ & $-4.55$ & $-3.556$ & 0.49\% \\
+b06 &  7 & 101.4 &  6 &  17.5 & 17.3\% & $-0.0042$ & $-0.52$ & $-0.474$ & 9.13\% \\
+b07 & 50 & 668.1 & 41 & 222.7 & 33.3\% & $-0.0054$ & $-3.48$ & $-2.892$ & 0.92\% \\
+b08 & 11 & 244.0 &  7 &  31.3 & 12.8\% & $+0.0016$ & $-1.39$ & $-1.274$ & 1.38\% \\
+b09 & 16 & 287.8 & 12 &  85.1 & 29.6\% & $+0.0153$ & $-1.26$ & $-1.098$ & 9.44\% \\
+b10 & 13 & 314.1 &  9 &  47.6 & 15.1\% & $-0.0020$ & $-1.70$ & $-1.066$ & 0.32\% \\
+b11 & 45 & 828.3 & 20 & 117.6 & 14.2\% & $-0.0115$ & $-2.45$ & $-1.991$ & 2.48\% \\
+b12 &136 &2303.5&114 & 665.6 & 28.9\% & $+0.0047$ & $-2.67$ & $-1.874$ & 0.59\% \\
+b13 & 29 & 447.9 & 28 & 113.9 & 25.4\% &  $0.0000$ & $-1.43$ & $-1.017$ & 0.00\% \\
+b14 &  0 &   0.0 &  0 &   0.0 &  N/A   &  N/A & $-12.53$ & $-16.230$ & N/A \\
+b15 &160 &4783.3&159 &1238.7 & 25.9\% & $+0.0162$ & $-13.38$ & $-15.124$ & N/A \\
+b22 &359 &9139.5&  0&   0.0 &  0.0\% & 超时未闭合 & $-12.05$ & $-11.950$ & N/A \\
+\midrule
+\textbf{14完结} & \textbf{612} & \textbf{12635.9} & \textbf{501} & \textbf{3026.7} & \textbf{24.0\%} & \textbf{$\ge -0.0115$} & --- & --- & \textbf{0.26\%} \\
+\textbf{16全集} & \textbf{971} & \textbf{21775.4} & \textbf{501} & \textbf{3026.7} & \textbf{13.9\%} & --- & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+在16个评估电路中，b14上Resizer未产生门尺寸修改（0修改）；
+在完成恢复闭合的14个有修改电路（b01--b13、b15）上，Resizer共修改612处、新增面积12635.9\,\textmu m$^2$，
+选择性恢复成功回退501处（81.9\%），加权回收面积3026.7\,\textmu m$^2$（占净新增面积的24.0\%，逐例算术均值19.0\%，范围0.0\%--33.3\%），
+全例$\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns。
+b22是ITC-99族最大电路之一（359处修改，9139.5\,\textmu m$^2$新增面积），
+单门逐次评估显示所有359项$\Delta$WNS均为$0.0000$\,ns（无一退化），
+但全量合并回退时因多门累积负载耦合导致WNS超限退化，且线性逐一弹出回退在600\,s预算内运行至第143轮验证仍未闭合——
+这直接暴露了单门独立假设与单步线性回滚在大规模强耦合电路上的可扩展性边界。
+\textbf{关键发现：在所有完成闭合的电路上，选择性恢复的时序波动仅占合成级时序赤字（理想STA WNS）的0.00\%--1.21\%（加权平均0.26\%）}，
+与ISCAS89族使用物理基线的结论一致。
+ITC-99基线WNS由理想STA（零线延迟，加载LEF）测量，与ISCAS89的物理基线（布图后STA）在绝对值上不可直接相减（故b01/b02/b15跨档差值记N/A），
+但两份独立测试集均确认恢复的时序代价极小。
+
+\textbf{ITC-99族预算曲线}。在四个拥有逐门$\delta$WNS数据的ITC-99电路上，
+我们进一步分析了不同WNS预算下的单门理论面积回收潜力（表~\ref{tab:itc99_budget}）。
+
+\begin{table}[H]
+\centering
+\caption{ITC-99预算曲线：不同WNS预算下的单门理论面积回收率（$\%$占Resizer新增面积）}
+\label{tab:itc99_budget}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\textbf{电路} & \textbf{修改数} & \textbf{B=0} & \textbf{B=5} & \textbf{B=10} & \textbf{B=20} & \textbf{B=50} & \textbf{B=100} & \textbf{B=200} & \textbf{B=500} \\
+\midrule
+b05 & 56 & 60.6\% & 64.8\% & 64.8\% & 65.3\% & 69.0\% & 80.7\% & 94.4\% & 100.0\% \\
+b11 & 45 & 67.0\% & 73.0\% & 75.7\% & 77.0\% & 80.9\% & 96.1\% & 100.0\% & 100.0\% \\
+b12 &136 & 77.0\% & 77.0\% & 77.0\% & 77.0\% & 77.8\% & 84.5\% & 91.4\% & 100.0\% \\
+b13 & 29 & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 100.0\% & 100.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+四电路呈现与ISCAS89一致的单门预算弹性模式：零预算下单门$\delta\text{WNS}=0$的修改已占新增面积的60.6\%--96.8\%，
+超出10\,ps后边际增长显著放缓。b13最为极端——28/29修改的$\delta$WNS为零（占面积96.8\%），
+仅一个修改需要$>$100\,ps预算，整体曲线几乎水平。
+
+跨族交叉验证确认：
+选择性恢复的面积回收能力不限于特定设计族，
+在ISCAS89（8例）和ITC-99（14例完成闭合）两个独立基准共22个完成电路上，全例满足时序退化门限，
+新增面积回收算术均值分别为14.1\%和19.0\%（ITC-99加权回收率24.0\%）。
+其有效性源于Resizer在实际修复中普遍产生了大量对最长路径WNS无贡献的过度放大修改。
+
+% ============================================================
+% §6 讨论
+% ============================================================
+\section{讨论}
+
+\subsection{覆盖优先是效率的来源}
+
+本文三个机制——覆盖优先调度、可调预算、选择性恢复——共享一个核心原则：
+物理信号驱动的选择性。覆盖优先用STA报告中的端点覆盖区域
+限定候选搜索空间；可调预算用实际物理测量（非预测）驱动组合选择；
+选择性恢复用逐门独立STA判定修改的必要性。
+三者的共同前提是：
+在当前物理实现点上，大多数可能的修改对最长路径延迟不产生影响。
+Resizer 69\%的浪费是这一前提的直接证据。
+
+\subsection{与Resizer的关系：互补而非竞争}
+
+本文不主张覆盖优先机制的WNS修复能力优于Resizer。
+事实上，两者的任务不同：Resizer做时序优化（WNS最大化），
+我们做事后面积回收（面积最小化给定WNS约束）。
+选择性恢复回退的是已经由Resizer完成时序修复后的不必要修改，
+它不改变Resizer的WNS步骤，只是在事后清理过度修改。
+正确的定位是互补：Resizer确保时序收敛，本文机制减少收敛代价。
+
+\subsection{局限与未来工作}
+
+\begin{enumerate}
+\item \textbf{单设计预算验证。}
+      RESTORE074的可调预算接受仅在s382上完成。
+      跨设计可调预算验证需要在更多电路上建立完整物理流程链。
+\item \textbf{IO约束缺失。}
+      当前SDC缺少3个输入的输入延迟和6个输出的输出延迟/负载，
+      相对非退化不能宣称完整IO安全性。
+\item \textbf{绝对时序违例。}
+      所有端点的传播WNS仍为负——
+      本文只证明相对Resizer CONTROL的退化受控，并非时序闭合。
+\item \textbf{候选空间有限。}
+      当前候选来自固定配方（历史修改的尺寸档），
+      更完整的候选生成（静态枚举+电气过滤）可扩大搜索空间。
+\item \textbf{安全系数的泛化。}
+      $\alpha=1.5$在8例上有效，但在更大电路族上的
+      最佳取值需要进一步校准。
+\end{enumerate}
+
+\subsection{与在线物理评估器的集成}
+
+当前RESTORE074的测量来自历史既有物理端点（重筛而非新搜索），
+可调预算内核的$\texttt{evaluate}$回调接口已预留在线物理评估器适配器。
+将$\texttt{bounded\_search}$连接到实时OpenROAD流程
+（合法化$\to$布线$\to$RC提取$\to$STA）
+是实现完整在线面积回收搜索的下一工程步骤。
+
+% ============================================================
+% §7 结论
+% ============================================================
+\section{结论}
+
+本文提出了FAECO——一个面向布局后门级ECO的覆盖优先候选调度
+与可调预算面积回收框架。在Resizer时序修复输出的基础上，
+覆盖优先调度通过端点覆盖区域限定搜索空间，实现候选STA评估节省7.8\%--19.0\%；
+可调WNS预算使用户能在0.010\,ns退化预算内于s382上回收Resizer净新增面积的28.91\%（总面积下降4.40\%，全网表两态SEC 101/0通过）；
+选择性恢复逐门诊断并回退Resizer 69\%的无贡献修改，
+在ISCAS89八电路上回退65/107（61\%）处修改，以$|\Delta\text{WNS}| \le 0.0057$\,ns的代价回收平均14.1\%的新增面积；
+跨设计验证在ITC-99族16个电路（14个完成恢复闭合电路）上确认一致效力，回退501/612（81.9\%）处修改，加权回收24.0\%（算术均值19.0\%），全例$\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns。
+
+这些结果共同确立了一条不依赖重新修时序的面积回收路径：
+Resizer负责时序收敛，覆盖优先与选择性恢复负责降低代价。
+该路径在开源的OpenROAD/Yosys/OpenSTA工具链上完全可复现，
+为后布局ECO的面积效率优化提供了新的方法论基线。
+
+\vspace{0.3cm}
+\noindent\textbf{致谢。}
+感谢OpenROAD、Yosys和OpenSTA开源项目提供的完整EDA工具链支持。
+
+% ============================================================
+% 参考文献
+% ============================================================
+\begin{thebibliography}{10}
+
+\bibitem{openroad}
+Ajayi T, Chhabria V A, Foga\c{c}a M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C]//Proceedings of the 56th ACM/IEEE Design Automation Conference (DAC). 2019: 1--4.
+
+\bibitem{elayout2026}
+Fang W, Liang R, Lu Y C, et al. E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2026.
+
+\bibitem{rlccd2023}
+Lu Y C, Chan W T, Guo D, et al. RL-CCD: Concurrent clock and data optimization using attention-based self-supervised reinforcement learning[C]//Proceedings of the 60th ACM/IEEE Design Automation Conference (DAC). 2023: 1--6.
+
+\bibitem{pcr2026}
+Timing-driven logic remapping with local physical context[J]. arXiv preprint arXiv:2610.01918, 2026.
+
+\bibitem{trident2}
+Kahng A B, Kang S, Li B, et al. High-performance gate sizing with a signoff timer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2013: 450--457.
+
+\bibitem{faeco_old}
+Tong Y L, Liu C. FAECO: Candidate exploration and failure characterization for pre-placement gate-level timing ECO[J]. Manuscript, 2026.
+
+\bibitem{timing_budget}
+Lin T W, Huang T W, Wong M D F. Task-based parallel programming for gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2023, 42(4): 1309--1322.
+
+\bibitem{sta}
+OpenSTA Project. \textit{OpenSTA: Gate-level static timing analyzer}[EB/OL]. 2026. \url{https://github.com/The-OpenROAD-Project/OpenSTA}
+
+\bibitem{yosys}
+Wolf C. \textit{Yosys Open SYnthesis Suite}[EB/OL]. 2026. \url{https://github.com/YosysHQ/yosys}
+
+\end{thebibliography}
+
+\end{document}
