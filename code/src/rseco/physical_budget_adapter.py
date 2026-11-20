@@ -246,6 +246,7 @@ def render_propagated_sta_tcl(
     period: float,
     clk_port: str,
     platform: str = DEFAULT_PLATFORM,
+    extra_sta_tcl: str = "",
 ) -> str:
     """Render standalone OpenSTA script for propagated-clock setup/hold/TNS."""
     text = ROUTED_STA_TCL
@@ -258,7 +259,10 @@ def render_propagated_sta_tcl(
         ("CLK_PORT", clk_port),
     ):
         text = text.replace(f"__{key}__", value)
-    text = text.replace("read_spef $SPEF", "read_spef $SPEF\nset_propagated_clock [all_clocks]")
+    inject = "read_spef $SPEF\nset_propagated_clock [all_clocks]"
+    if extra_sta_tcl.strip():
+        inject += "\n" + extra_sta_tcl.strip()
+    text = text.replace("read_spef $SPEF", inject)
     text += "\nreport_check_types -max_slew -max_capacitance -violators -digits 6\n"
     return text
 
@@ -302,6 +306,7 @@ class PhysicalEvaluator:
         droute_iter: int = 15,
         route_timeout_s: int = 900,
         sta_timeout_s: int = 300,
+        extra_sta_tcl: str = "",
         runner: Callable[[list[str], Path, int], int] = _default_runner,
     ) -> None:
         self.odb_path = odb_path
@@ -317,6 +322,7 @@ class PhysicalEvaluator:
         self.droute_iter = droute_iter
         self.route_timeout_s = route_timeout_s
         self.sta_timeout_s = sta_timeout_s
+        self.extra_sta_tcl = extra_sta_tcl
         self.runner = runner
         self.eval_count = 0
 
@@ -374,6 +380,7 @@ class PhysicalEvaluator:
                 top_module=self.top_module,
                 period=self.period,
                 clk_port=self.clk_port,
+                extra_sta_tcl=self.extra_sta_tcl,
             )
             sta_tcl_path = ep_dir / "propagated.tcl"
             sta_tcl_path.write_text(sta_tcl, encoding="utf-8")

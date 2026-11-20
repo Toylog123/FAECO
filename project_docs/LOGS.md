@@ -5578,3 +5578,10 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 1. 在更大规模 ITC-99 电路 `b04`（4078.91 µm²，197 候选）与 `b05`（3424.53 µm²，201 候选）上执行零 Resizer 日志的纯独立重布线恢复（每电路仅 6 次评估）：`b04` 降 0.86% 且 ΔWNS +2.47 ps、Δhold +0.09 ps、SEC PASS（4.17s）；`b05` 6/6 命中降 2.78% 且 ΔWNS +4.85 ps、Δhold +1.10 ps、SEC PASS（0.41s）。至此纯独立重布线+SEC 覆盖 8 电路（6 ISCAS89 + 2 ITC-99），全部 DRC=0、Δhold ≥ 0.00 ps、SEC PASS。
 2. 完成 7 电路显式 IO 约束 + OCV 降额（-early 0.90 / -late 1.10）压力审计：5/7 通过 10 ps 门限（s382/s420/s641/b05 WNS 反升），s713（−10.08 ps）与 s832（−40.76 ps）暴露 IO+OCV 敏感性。
 3. 同步更新 `CANON.md`、`postroute_recovery_20261120/` 与中英文双稿并双遍编译通过。
+
+
+**LOG-20261120-05 / IO+OCV 在线评估门闭环与 b11/b12 规模扩展（2026-11-20）**：
+1. 在 `code/src/rseco/physical_budget_adapter.py` 的 `render_propagated_sta_tcl` 与 `PhysicalEvaluator` 中原生接入 `extra_sta_tcl` 参数并新增回归单测（`51 passed`）。
+2. 对 `s713` 与 `s832` 执行 **IO+OCV 门控的纯独立在线重布线恢复**：在线门自动拒绝全部越界候选并安全回退 `CONTROL`（IO+OCV 退化 `0.00 ps`），使 7/7（100%）电路均满足 `10 ps` IO+OCV 门限。
+3. 扩展至更大规模 ITC-99 电路 `b11`（3181.80 µm²，175 候选）与 `b12`（7977.65 µm²，517 候选）：`b11` 在 6 次评估内回收 `28.78 µm²`（`−0.90%`，$\Delta\text{WNS}=-2.16\text{ ps}$，$\Delta\text{hold}=+0.62\text{ ps}$）且全网表 SEC PASS（0.41s）；`b12` 在严格相对 hold/WNS 门限下安全回退 `CONTROL`（`0.00%`）。
+4. 修复中文 v3 稿件摘要 `\string\,` 与超栏表格（0 Overfull），并同步更新 `postroute_recovery_20261120/REPORT.md` 与中英文双稿。

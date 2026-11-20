@@ -51,9 +51,9 @@
 - `ONLINE_007` 的 TNS 在带 IO 约束下仍优于 `CONTROL`（`-14.715` vs `-14.753`）；
 - `CONTROL` 自身带 IO 约束后 `hold = -0.071990 ns`（`RESTORE074/ONLINE_007` 分别仅差 `-0.22 ps` 与 `-0.03 ps`）。
 
-## 6. 完全脱离 Resizer 日志的通用独立面积回收（6 例重布线 + SEC）
+## 6. 完全脱离 Resizer 日志的通用独立面积回收（10 例重布线 + SEC）
 
-使用 `physical_budget_adapter.py::generate_compatible_candidates` 仅从 `routed.v` + Liberty 枚举组合逻辑降面积候选（**不读取 Resizer 修改日志或修复前 `mapped.v`**），在 $B=10\text{ ps}$、最多 10 次重布线评估预算下执行顺序贪心恢复，全部 6 例均 `DRC=0`、$\Delta\text{hold} \ge 0.00\text{ ps}$ 且全网表 SEC PASS：
+使用 `physical_budget_adapter.py::generate_compatible_candidates` 仅从 `routed.v` + Liberty 枚举组合逻辑降面积候选（**不读取 Resizer 修改日志或修复前 `mapped.v`**），在 $B=10\text{ ps}$、最多 6–10 次重布线评估预算下执行顺序贪心恢复：9/10 电路取得正面积回收且全部 `DRC=0`、$\Delta\text{hold} \ge 0.00\text{ ps}$、全网表 SEC PASS，`b12` 在严格 hold 门限下安全回退 `CONTROL`：
 
 | 电路 | 起点面积 (µm²) | 最终面积 (µm²) | 总面积降幅 | $\Delta\text{WNS}$ (ps) | $\Delta\text{hold}$ (ps) | 评估数 | `NATIVE` 基线 | SEC |
 |---|---:|---:|---:|---:|---:|---:|---:|---|
@@ -65,9 +65,11 @@
 | `s953` | 2433.58 | 2417.32 | **−0.67%** | −9.88 | +2.99 | 6 | 0.00% | PASS |
 | `b04` | 4078.91 | 4043.88 | **−0.86%** | **+2.47** | +0.09 | 6 | 0.00% | PASS |
 | `b05` | 3424.53 | 3329.44 | **−2.78%** | **+4.85** | +1.10 | 6 | 0.00% | PASS |
+| `b11` | 3181.80 | 3153.02 | **−0.90%** | −2.16 | +0.62 | 6 | 0.00% | PASS |
+| `b12` | 7977.65 | 7977.65 | 0.00% | 0.00 | 0.00 | 6 | 0.00% | CONTROL |
 
-## 7. 多电路显式 IO 约束 + OCV 降额压力审计
+## 7. 多电路显式 IO 约束 + OCV 降额压力审计与在线门控闭环
 
 在本地 SKY130 PDK 仅含 `tt_025C_1v80.lib` 的前提下，采用显式 IO 约束（`input/output_delay=0.10 ns, load=0.01 pF, transition=0.05 ns`）与 OCV 降额（`-early 0.90 / -late 1.10`）对 7 个端点复测：
-- **`5 / 7` 通过 `10 ps` 门限**：`s382`（+15.46 ps）、`s420`（+6.05 ps）、`s641`（+5.57 ps）、`s953`（−7.11 ps）、`b05`（+6.92 ps）。
-- **`2 / 7` 暴露 IO+OCV 敏感性**：`s713`（−10.08 ps）、`s832`（−40.76 ps），说明后续应将 IO+OCV 约束直接纳入在线评估门。
+- **未启用在线 IO+OCV 门控时**：`5 / 7` 通过 `10 ps` 门限（`s382 +15.46 ps`、`s420 +6.05 ps`、`s641 +5.57 ps`、`s953 −7.11 ps`、`b05 +6.92 ps`），而 `s713`（−10.08 ps）与 `s832`（−40.76 ps）超限。
+- **将 IO+OCV 直接并入 `physical_budget_adapter.py` 在线评估门后**：对 `s713` 与 `s832` 重跑 10 次评估，在线门控自动拒绝全部越界候选并精确回退 `CONTROL`（IO+OCV 退化 `0.00 ps`），使 7/7（100%）电路均满足 `10 ps` IO+OCV 门限。

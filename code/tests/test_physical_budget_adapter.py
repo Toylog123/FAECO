@@ -11,6 +11,7 @@ from rseco.physical_budget_adapter import (
     load_actions_from_space_audit,
     parse_sta_log,
     render_physical_flow_tcl,
+    render_propagated_sta_tcl,
 )
 
 
@@ -139,3 +140,17 @@ def test_generate_compatible_candidates_tool_agnostic(tmp_path: Path):
 
     all_cats = generate_compatible_candidates(net, categories=("combinational_other", "sequential"))
     assert any(a.instance == "\\dff_reg[0]" and a.target_cell == "sky130_fd_sc_hd__dfxtp_1" for a in all_cats)
+
+
+def test_render_propagated_sta_tcl_injects_extra_io_ocv(tmp_path: Path):
+    tcl = render_propagated_sta_tcl(
+        netlist_path=tmp_path / "routed.v",
+        spef_path=tmp_path / "routed.spef",
+        top_module="s713",
+        period=0.5,
+        clk_port="CK",
+        extra_sta_tcl="set_timing_derate -early 0.90\nset_timing_derate -late 1.10",
+    )
+    assert "set_propagated_clock [all_clocks]" in tcl
+    assert "set_timing_derate -early 0.90" in tcl
+    assert "set_timing_derate -late 1.10" in tcl
