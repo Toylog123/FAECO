@@ -367,15 +367,15 @@ $H \ge H_R - \varepsilon$、电气与结构检查通过）进入非支配存档�
 \centering
 \caption{s382固定52端点池的多预算筛选}
 \label{tab:budget_pool}
-\footnotesize\setlength{\tabcolsep}{6pt}
+\footnotesize\setlength{\tabcolsep}{3.2pt}
 \begin{tabular}{lccc}
 \toprule
-\textbf{允许WNS损失} & \textbf{合格端点数} & \textbf{SEC合格最优} & \textbf{总面积回收率} \\
+\textbf{WNS预算} & \textbf{合格数} & \textbf{SEC合格最优} & \textbf{面积回收率} \\
 \midrule
- 0\,ps（严格不退）&  6 & FORWARD\_096 & 0.59\% \\
- 5\,ps             & 15 & RESTORE074   & 4.40\% \\
-10\,ps             & 19 & RESTORE074   & 4.40\% \\
-20\,ps             & 21 & RESTORE074   & 4.40\% \\
+ 0\,ps（严格）&  6 & FORWARD\_096 & 0.59\% \\
+ 5\,ps        & 15 & RESTORE074   & 4.40\% \\
+10\,ps        & 19 & RESTORE074   & 4.40\% \\
+20\,ps        & 21 & RESTORE074   & 4.40\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -395,15 +395,15 @@ $H \ge H_R - \varepsilon$、电气与结构检查通过）进入非支配存档�
 \centering
 \caption{RESTORE074相对Resizer CONTROL的完整测量（s382, 10\,ps预算）}
 \label{tab:restore074}
-\footnotesize\setlength{\tabcolsep}{6pt}
+\scriptsize\setlength{\tabcolsep}{2.2pt}
 \begin{tabular}{lrrr}
 \toprule
 \textbf{指标} & \textbf{CONTROL} & \textbf{RESTORE074} & \textbf{差值} \\
 \midrule
-完整映射单元面积/\textmu m$^2$ & 1052.2592 & 1005.9648 & $-46.2944$（$-4.40\%$）\\
-传播setup WNS/ns  & $-0.848459$ & $-0.851557$ & $-0.003098$\\
-传播hold WNS/ns   & $+0.463637$ & $+0.467214$ & $+0.003577$\\
-TNS/ns            & $-13.422543$ & $-13.654525$ & $-0.231982$\\
+映射单元面积/\textmu m$^2$ & 1052.2592 & 1005.9648 & $-46.29$（$-4.40\%$）\\
+Setup WNS/ns  & $-0.848459$ & $-0.851557$ & $-0.003098$\\
+Hold WNS/ns   & $+0.463637$ & $+0.467214$ & $+0.003577$\\
+TNS/ns        & $-13.422543$ & $-13.654525$ & $-0.231982$\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -431,11 +431,11 @@ TNS退化0.232\,ns作为辅助指标不影响接受。
 \label{fig:budget_curves}
 \end{figure}
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{ISCAS89多电路预算曲线：不同WNS预算下占Resizer净增面积的回收率（\%）}
 \label{tab:budget_curves}
-\footnotesize\setlength{\tabcolsep}{2.8pt}
+\footnotesize\setlength{\tabcolsep}{5.5pt}
 \begin{tabular}{lrrrrrrrrr}
 \toprule
 \textbf{电路} & \textbf{修改数} & \textbf{B=0ps} & \textbf{B=5ps} & \textbf{B=10ps} & \textbf{B=20ps} & \textbf{B=50ps} & \textbf{B=100ps} & \textbf{B=200ps} & \textbf{B=500ps} \\
@@ -452,7 +452,7 @@ s953& 29 & 73.0\% & 73.0\% & 74.3\% & 74.3\% & 76.3\% & 84.2\% & 90.1\% & 100.0\
 \textbf{几何均值} & --- & \textbf{16.1\%} & \textbf{18.2\%} & \textbf{19.0\%} & \textbf{19.1\%} & \textbf{21.3\%} & \textbf{24.4\%} & \textbf{84.7\%} & \textbf{100.0\%} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \textbf{跨电路一致性}：按单门独立$\delta$WNS阈值统计，七电路（s27除外）在零预算（$B=0$\,ps）下即具有16.4\%--94.6\%的单门理论可回收比例（几何均值16.1\%）。
 其中六电路在$B=10$\,ps处已接近或达到$B=20$\,ps处的回收水平（几何均值从16.1\%升至19.0\%），
@@ -474,11 +474,11 @@ s27仅2个修改且单门退化超过100\,ps，说明该电路上Resizer的修�
 按预算阈值$B$（$\delta$WNS $\ge -B$为可接受）计算接受率。
 结果见表~\ref{tab:faecop_budget}。
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{FAECO-P候选的预算敏感度（8个ISCAS89电路，8档预算）}
 \label{tab:faecop_budget}
-\footnotesize\setlength{\tabcolsep}{3.5pt}
+\footnotesize\setlength{\tabcolsep}{5.5pt}
 \begin{tabular}{lrrrrrrrrrr}
 \toprule
 \textbf{电路} & \textbf{候选} & \textbf{$\delta$WNS$>$0} &
@@ -496,7 +496,7 @@ s953 & 248 & 29\% & 29\% & 40\% & 53\% & 62\% & 80\% & 95\% & 100\% & 100\% \\
 几何均值 & — & — & 31.4\% & 45.6\% & 55.8\% & 69.3\% & 84.0\% & 95.3\% & 99.7\% & 100.0\% \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \textbf{关键观察}：
 (1)~B=0\,ps下正贡献候选仅占13--57\%（几何均值31.4\%），
@@ -598,11 +598,11 @@ $\sum \mathrm{eff}(\Delta_j) + \mathrm{eff}(\Delta_i) \ge -B_{\mathrm{rec}}$
 
 Recovery v2在8个ISCAS89电路上的结果见表~\ref{tab:recovery_v2}。
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{选择性恢复全量结果（8电路，固定SPEF诊断恢复口径）}
 \label{tab:recovery_v2}
-\footnotesize\setlength{\tabcolsep}{3.8pt}
+\footnotesize\setlength{\tabcolsep}{6pt}
 \begin{tabular}{lrrrrrr}
 \toprule
 \textbf{电路} & \textbf{Resizer} & \textbf{回退} & \textbf{新增面积} & \textbf{Resizer} & \textbf{$\Delta$WNS} & \textbf{$|\Delta\text{WNS}|$/} \\
@@ -623,7 +623,7 @@ s953 & 29 & 23 & 21.6\% & 0.547 & $+0.4$ & 0.07\% \\
 
 \vspace{2pt}
 \footnotesize ¹加权平均：$\sum |\Delta\text{WNS}| = 12.5$\,ps $\div$ 总Resizer修复量 $4.711$\,ns $= 0.27\%$；表中新增面积回收分母为同名导出逻辑实例净增面积（全实例总面积平均降幅为3.07\%，其中s382总面积降4.40\%、完整CTS前分母下净新增面积回收率为28.91\%）。\normalsize
-\end{table}
+\end{table*}
 
 全量8例共回退65/107（61\%）的Resizer修改，新增面积回收算术均值14.1\%，
 3例超过20\%（s382 22.8\%、s820 20.1\%、s953 21.6\%）。全例$|\Delta\text{WNS}| \le 0.0057$\,ns（最差为s420的$-5.7$\,ps，其余电路甚至在s641/s820/s953上出现微幅正向改善）。
@@ -674,11 +674,11 @@ Resizer面积膨胀48.8\%（几何均值）换$+0.584$\,ns WNS改善，
 恢复参数与ISCAS89一致（$B_{\mathrm{rec}}=0.015$\,ns，$\alpha=1.5$）。
 结果见表~\ref{tab:itc99_recovery}。
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{ITC-99跨设计选择性恢复结果（16电路，固定SPEF诊断恢复口径）}
 \label{tab:itc99_recovery}
-\footnotesize\setlength{\tabcolsep}{3.2pt}
+\footnotesize\setlength{\tabcolsep}{5.5pt}
 \begin{tabular}{lrrrrrrrrr}
 \toprule
 \textbf{电路} & \textbf{Resizer} & \textbf{面积} & \textbf{回退} & \textbf{回收} & \textbf{回收} & \textbf{$\Delta$WNS} & \textbf{基线} & \textbf{Resizer} & $|\Delta\text{WNS}|$/\\
@@ -704,7 +704,7 @@ b22 &359 &9139.5&356 &3024.2 & 33.1\% & $+0.0011$ & $-12.05$ & $-11.963$ & N/A \
 \textbf{15完结} & \textbf{971} & \textbf{21775.4} & \textbf{857} & \textbf{6050.8} & \textbf{27.8\%} & \textbf{$\ge -0.0115$} & --- & --- & \textbf{0.26\%} \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 在16个评估电路中，b14上Resizer未产生门尺寸修改（0修改）；
 在其余15个有修改电路（b01--b13、b15、b22）上，原线性逐一弹出回滚在b22（359处修改，9139.5\,\textmu m$^2$新增面积）上于第143轮验证触发600\,s超时；
@@ -719,11 +719,11 @@ ITC-99基线WNS由理想STA（零线延迟，加载LEF）测量，与ISCAS89的�
 \textbf{ITC-99族预算曲线}。在四个拥有逐门$\delta$WNS数据的ITC-99电路上，
 我们进一步分析了不同WNS预算下的单门理论面积回收潜力（表~\ref{tab:itc99_budget}）。
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{ITC-99预算曲线：不同WNS预算下的单门理论面积回收率（$\%$占Resizer新增面积）}
 \label{tab:itc99_budget}
-\footnotesize\setlength{\tabcolsep}{3pt}
+\footnotesize\setlength{\tabcolsep}{6pt}
 \begin{tabular}{lrrrrrrrrr}
 \toprule
 \textbf{电路} & \textbf{修改数} & \textbf{B=0} & \textbf{B=5} & \textbf{B=10} & \textbf{B=20} & \textbf{B=50} & \textbf{B=100} & \textbf{B=200} & \textbf{B=500} \\
@@ -734,7 +734,7 @@ b12 &136 & 77.0\% & 77.0\% & 77.0\% & 77.0\% & 77.8\% & 84.5\% & 91.4\% & 100.0\
 b13 & 29 & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 100.0\% & 100.0\% \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 四电路呈现与ISCAS89一致的单门预算弹性模式：零预算下单门$\delta\text{WNS}=0$的修改已占新增面积的60.6\%--96.8\%，
 超出10\,ps后边际增长显著放缓。b13最为极端——28/29修改的$\delta$WNS为零（占面积96.8\%），
@@ -751,11 +751,11 @@ b13 & 29 & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 100.0\% & 100.0
 为克服固定SPEF诊断口径的乐观偏差，我们在ISCAS89全部8个电路上对相同Resizer \texttt{CONTROL}起点执行了完整物理后验流程：
 \texttt{replace\_cell} $\to$ 合法化 $\to$ 清除信号线与15轮详细布线（全部$\text{DRC}=0$）$\to$ 重新提取RCX寄生 $\to$ 独立传播时钟OpenSTA，并对比OpenROAD原生\texttt{repair\_timing -recover\_power 100}（表~\ref{tab:postroute_iscas89}）。
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{ISCAS89全8例真实重布线物理验收与原生\texttt{recover\_power}对照（$B=10$\,ps）}
 \label{tab:postroute_iscas89}
-\footnotesize\setlength{\tabcolsep}{3.4pt}
+\footnotesize\setlength{\tabcolsep}{5.5pt}
 \begin{tabular}{llrrrrrl}
 \toprule
 \textbf{电路} & \textbf{采用策略} & \textbf{CONTROL} & \textbf{最终面积} & \textbf{总面积} & \textbf{$\Delta$WNS} & \textbf{原生} & \textbf{SEC} \\
@@ -771,7 +771,7 @@ s832 & \texttt{RECOVERED\_V2} & 1167.37 & 1132.34 & $-$3.00\% & $-$8.71 & 0.00\%
 s953 & 在线二分隔离（14/23） & 2433.58 & 2319.72 & $-$4.68\% & $+$17.26 & 0.00\% & PASS \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 结果表明：(1)~OpenROAD原生\texttt{recover\_power 100}在负松弛起点上8/8电路均执行0次修改（0.00\%回收）；
 (2)~固定SPEF口径在s820（重布线后$-33.63$\,ps）和s953（$-13.30$\,ps）上存在乐观偏差，
@@ -833,7 +833,7 @@ Resizer 69\%的浪费是这一前提的直接证据。
 
 \subsection{在线物理评估器集成与全库组合搜索（s382）}
 
-我们实现了在线物理评估适配器（\texttt{code/src/rseco/physical\_budget\_adapter.py}），
+我们实现了在线物理评估适配器（\texttt{code/src/rseco/\allowbreak physical\_budget\_adapter.py}），
 将\texttt{bounded\_search}直接接入OpenROAD重合法化、详细重布线、RCX寄生提取与传播时钟STA流程，
 并结合全库兼容替换审计（在s382的102个功能单元中枚举出36个组合逻辑降面积候选，突破Resizer历史回退名单限制）。
 在s382上以$B=10$\,ps、$\mathrm{beam\_width}=2$、$\mathrm{max\_depth}=4$执行14次在线重布线搜索，
@@ -853,11 +853,11 @@ $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 基于\texttt{generate\_compatible\_candidates}，本机制可完全脱离Resizer修改日志与修复前网表，仅从任意布线后\texttt{routed.v}与Liberty库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多10次评估）。
 全部6个活跃ISCAS89电路均在$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps与全网表两态SEC通过下取得0.67\%--5.58\%总面积下降（其中s420回收5.58\%且WNS改善$+4.12$\,ps，s713回收2.32\%且WNS改善$+0.63$\,ps），全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%）。
 
-\begin{table}[H]
+\begin{table*}[t]
 \centering
 \caption{完全脱离Resizer日志的通用独立面积回收（$B=10$\,ps，每电路$\le 10$次重布线）}
 \label{tab:tool_agnostic}
-\footnotesize\setlength{\tabcolsep}{3.0pt}
+\footnotesize\setlength{\tabcolsep}{6pt}
 \begin{tabular}{lrrrrrrl}
 \toprule
 \textbf{电路} & \textbf{起点面积} & \textbf{最终面积} & \textbf{总面积} & \textbf{$\Delta$WNS} & \textbf{$\Delta$hold} & \textbf{评估} & \textbf{原生基线 / SEC} \\
@@ -873,7 +873,7 @@ b04  & 4078.91 & 4043.88 & $-$0.86\% & $+$2.47 & $+$0.09 &  6 & 0.00\% / PASS \\
 b05  & 3424.53 & 3329.44 & $-$2.78\% & $+$4.85 & $+$1.10 &  6 & 0.00\% / PASS \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 在更大规模的ITC-99电路b04（197个独立候选）和b05（201个独立候选）上，仅用6次评估即分别回收0.86\%与2.78\%总面积，且setup WNS（$+2.47$\,ps、$+4.85$\,ps）与hold（$+0.09$\,ps、$+1.10$\,ps）同时改善，DRC为0且全网表SEC通过。
 进一步在7个端点上执行显式IO约束（\texttt{0.10\,ns}延迟、\texttt{0.01\,pF}负载、\texttt{0.05\,ns}转换时间）与OCV降额（\texttt{-early 0.90 / -late 1.10}）联合审计：5/7通过10\,ps预算（s382 $+15.46$\,ps、s420 $+6.05$\,ps、s641 $+5.57$\,ps、s953 $-7.11$\,ps、b05 $+6.92$\,ps），而s713（$-10.08$\,ps）与s832（$-40.76$\,ps）表明应将IO+OCV约束直接纳入在线评估门。
