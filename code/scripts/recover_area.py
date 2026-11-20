@@ -102,10 +102,10 @@ def should_skip(cell_type: str) -> bool:
 
 
 def parse_named_instances(path: Path, areas: dict) -> OrderedDict:
-    """Parse Verilog netlist → {instance_name: cell_type}."""
+    """Parse Verilog netlist → {instance_name: cell_type}, including escaped IDs."""
     text = path.read_text(encoding="utf-8")
     insts = OrderedDict()
-    for m in re.finditer(r"(sky130_fd_sc_hd__\w+)\s+(\w+)\s*\(", text):
+    for m in re.finditer(r"(sky130_fd_sc_hd__\w+)\s+(\\\S+|[A-Za-z_]\w*)\s*\(", text):
         ct = m.group(1)
         inst_name = m.group(2)
         if should_skip(ct):
@@ -323,64 +323,93 @@ def recover_area(
         )
 
     # 5. Build recovered netlist + post-verify
-    recovered_text = resizer_text
-    for ev in applied:
-        recovered_text = apply_revert(recovered_text, ev["instance"], ev["old_cell"])
+    #    (O(log N) binary prefix bisection with tipping-gate isolation)
+    def _build_reverted_text(prefix: list[dict]) -> str:
+        text = resizer_text
+        for ev in prefix:
+            text = apply_revert(text, ev["instance"], ev["old_cell"])
+        return text
 
     recovered_path = out_dir / "recovered.v"
-    final_wns = None
-    degradation = None
-    verify_iter = 0
+    verify_calls = 0
 
-    for verify_iter in range(len(applied) + 1):
-        recovered_path.write_text(recovered_text, encoding="utf-8")
-
+    def _run_verify(subset: list[dict]) -> tuple[float, float]:
+        nonlocal verify_calls
+        idx = verify_calls
+        verify_calls += 1
+        recovered_path.write_text(_build_reverted_text(subset), encoding="utf-8")
         if verbose:
-            print(f"[{top_module}] Verification STA (iter {verify_iter})...")
-        final_result = sta_routed(
+            print(f"[{top_module}] Verification STA (iter {idx}, k={len(subset)})...")
+        res = sta_routed(
             routed_netlist=str(recovered_path),
             spef_path=str(spef_path),
-            output_dir=str(out_dir / f"verify_{verify_iter}"),
+            output_dir=str(out_dir / f"verify_{idx}"),
             top_module=top_module,
             period=period,
             timeout_s=timeout_s,
         )
-        final_wns = final_result.get("wns")
-        if final_wns is None:
-            raise RuntimeError(f"Verification STA failed: {final_result.get('error')}")
-
-        degradation = final_wns - resizer_wns
+        wns = res.get("wns")
+        if wns is None:
+            raise RuntimeError(f"Verification STA failed: {res.get('error')}")
+        deg = wns - resizer_wns
         if verbose:
             print(
-                f"[{top_module}] WNS: {resizer_wns:.4f} -> {final_wns:.4f} "
-                f"(degradation={degradation:+.4f})"
+                f"[{top_module}] WNS: {resizer_wns:.4f} -> {wns:.4f} "
+                f"(degradation={deg:+.4f})"
             )
+        return wns, deg
 
-        if degradation >= -max_degradation:
+    max_isolation_rounds = 5
+    accepted: list[dict] = []
+    remaining = list(applied)
+    final_wns = resizer_wns
+    degradation = 0.0
+    zero_commit_streak = 0
+
+    for rnd in range(1, max_isolation_rounds + 1):
+        if not remaining:
+            break
+        wns_all, deg_all = _run_verify(accepted + remaining)
+        if deg_all >= -max_degradation:
+            accepted.extend(remaining)
+            remaining = []
+            final_wns, degradation = wns_all, deg_all
             if verbose:
                 print(
-                    f"[{top_module}] PASS: degradation {degradation:+.4f} "
+                    f"[{top_module}] PASS (round {rnd}): degradation {degradation:+.4f} "
                     f"within budget {max_degradation}"
                 )
             break
 
-        if not applied:
-            if verbose:
-                print(
-                    f"[{top_module}] FAIL: no more changes to remove, "
-                    f"degradation={degradation:+.4f}"
-                )
-            break
+        best_k = 0
+        lo, hi = 1, len(remaining) - 1
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            wns_m, deg_m = _run_verify(accepted + remaining[:mid])
+            if deg_m >= -max_degradation:
+                best_k = mid
+                final_wns, degradation = wns_m, deg_m
+                lo = mid + 1
+            else:
+                hi = mid - 1
 
-        removed = applied.pop()
+        accepted.extend(remaining[:best_k])
+        tipping = remaining[best_k]
+        remaining = remaining[best_k + 1 :]
         if verbose:
             print(
-                f"[{top_module}] Removing {removed['instance']} "
-                f"(delta={removed['delta_wns']:+.4f}) to fix degradation"
+                f"[{top_module}] Round {rnd} committed +{best_k} (total {len(accepted)}), "
+                f"isolated tipping gate {tipping['instance']}"
             )
-        recovered_text = resizer_text
-        for ev in applied:
-            recovered_text = apply_revert(recovered_text, ev["instance"], ev["old_cell"])
+        if best_k == 0:
+            zero_commit_streak += 1
+            if zero_commit_streak >= 2:
+                break
+        else:
+            zero_commit_streak = 0
+
+    applied = accepted
+    recovered_path.write_text(_build_reverted_text(applied), encoding="utf-8")
 
     # 6. Final summary
     recovered_insts = parse_named_instances(recovered_path, areas)
@@ -410,7 +439,7 @@ def recover_area(
         "conservative_cumulative": round(conservative_cumulative, 4),
         "safety_factor": safety_factor,
         "max_degradation": max_degradation,
-        "verify_iterations": verify_iter + 1,
+        "verify_iterations": verify_calls,
         "elapsed_s": elapsed,
         "applied": [
             {

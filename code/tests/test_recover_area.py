@@ -115,3 +115,86 @@ def test_missing_or_failed_candidate_is_not_accepted(recovery, monkeypatch, tmp_
     assert summary["num_applied"] == 0
     assert summary["recovered_area"] == summary["resizer_area"]
 
+
+def test_escaped_identifiers_are_included_in_area_and_reverts(recovery, monkeypatch, tmp_path):
+    dff_small = "sky130_fd_sc_hd__dfxtp_1"
+    dff_large = "sky130_fd_sc_hd__dfxtp_2"
+    def netlist(buf_cell, dff_cell):
+        return (
+            "module tiny(input clk, input x, output y);\n"
+            f"  {buf_cell} \\u_buf$0 (.A(x), .X(n1));\n"
+            f"  {dff_cell} \\dff_reg[0] (.CLK(clk), .D(n1), .Q(y));\n"
+            "endmodule\n"
+        )
+
+    base = tmp_path / "mapped.v"
+    base.write_text(netlist(SMALL, dff_small), encoding="utf-8")
+    resizer = tmp_path / "resizer"
+    resizer.mkdir()
+    (resizer / "routed.v").write_text(netlist(LARGE, dff_large), encoding="utf-8")
+    (resizer / "routed.spef").write_text("unused", encoding="utf-8")
+
+    def sta(**kwargs):
+        return {"wns": -0.5, "error": None}
+
+    monkeypatch.setattr(recovery, "sta_routed", sta)
+    summary = recovery.recover_area(
+        resizer_dir=resizer,
+        baseline_path=base,
+        out_dir=tmp_path / "out",
+        areas={SMALL: 1.0, LARGE: 2.0, dff_small: 10.0, dff_large: 15.0},
+        verbose=False,
+    )
+    assert summary["base_area"] == 11.0
+    assert summary["resizer_area"] == 17.0
+    assert summary["recovered_area"] == 11.0
+    assert summary["num_changes"] == 2
+    assert summary["num_applied"] == 2
+
+
+def test_binary_bisection_rollback_resolves_coupled_reverts_in_log_steps(recovery, monkeypatch, tmp_path):
+    names = tuple(f"g{i:02d}" for i in range(64))
+    args = inputs(tmp_path, names)
+
+    def sta(**kwargs):
+        directory = Path(kwargs["output_dir"])
+        if directory.name == "baseline" or directory.parent.name == "eval":
+            return {"wns": -1.0, "error": None}
+        text = Path(kwargs["routed_netlist"]).read_text(encoding="utf-8")
+        reverted_count = text.count(f"{SMALL} ")
+        # Coupled threshold: <= 37 reverts are safe, > 37 degrades beyond 0.015 ns.
+        wns = -1.0 if reverted_count <= 37 else -1.05
+        return {"wns": wns, "error": None}
+
+    monkeypatch.setattr(recovery, "sta_routed", sta)
+    summary = recovery.recover_area(**args)
+    assert summary["num_applied"] == 37
+    assert summary["verify_iterations"] <= 18
+    assert summary["recovered_wns"] == -1.0
+
+
+def test_tipping_gate_isolation_recovers_remaining_harmless_gates(recovery, monkeypatch, tmp_path):
+    names = tuple(f"g{i:02d}" for i in range(64))
+    args = inputs(tmp_path, names)
+
+    def sta(**kwargs):
+        directory = Path(kwargs["output_dir"])
+        if directory.name == "baseline" or directory.parent.name == "eval":
+            return {"wns": -1.0, "error": None}
+        text = Path(kwargs["routed_netlist"]).read_text(encoding="utf-8")
+        # Only g20 is a tipping gate when combined with others; all other 63 are safe together.
+        has_tipping_revert = f"{SMALL} g20 " in text
+        reverted_count = text.count(f"{SMALL} ")
+        wns = -1.05 if (has_tipping_revert and reverted_count > 1) else -1.0
+        return {"wns": wns, "error": None}
+
+    monkeypatch.setattr(recovery, "sta_routed", sta)
+    summary = recovery.recover_area(**args)
+    assert summary["num_applied"] == 63
+    assert summary["num_kept"] == 1
+    assert summary["kept"][0]["instance"] == "g20"
+    assert summary["verify_iterations"] <= 10
+    assert summary["recovered_wns"] == -1.0
+
+
+

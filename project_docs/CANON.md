@@ -1,5 +1,14 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-20 在线物理闭环、ISCAS89 全8例重布线验收与 b22 转折门隔离突破
+
+证据入口：`project_docs/evidence/postroute_recovery_20261120/{REPORT.md,SUMMARY.json}`。
+
+1. **ISCAS89 全 8 例真实重布线物理验收（$B=10\text{ ps}$）**：在相同 `CONTROL` 起点上统一执行 `replace_cell` → 重合法化 → 清除信号线 → `detailed_route -droute_end_iter 15`（全部 `DRC=0`）→ 新 RCX 提取 → 独立传播时钟 STA + 全网表两态 SEC。OpenROAD 原生 `repair_timing -recover_power 100` 在 8/8 电路上均做 0 次修改（0.00%）。我方方法在 6/8 电路上取得 1.55%–4.68% 完整映射单元总面积下降（`s382` −4.40%/−3.10ps、`s420` −1.59%/−5.70ps、`s641` −1.55%/−3.88ps、`s713` −2.99%/−2.94ps、`s832` −3.00%/−8.71ps、`s953` 在线二分隔离 `14/23` −4.68%/+17.26ps），6/6 通过全网表 SEC；`s27` 无改，`s820` 因重布线敏感经二分精确回退至 `CONTROL`（0.00%）。所有电路 `hold > +0.45 ns`（无 hold 违例；`s641/s832/s953` 相对 `CONTROL` 存在 `−0.50 ~ −11.31 ps` 轻微 hold 波动，报告实测值而不隐瞒）。
+2. **`s382` 在线物理闭环搜索**：`code/src/rseco/physical_budget_adapter.py` 将 `bounded_search` 正式接入上述真实重布线评估器与 `SPACE_AUDIT.json` 全库候选。hold 安全子集 Depth-2..4 搜索（14 次评估）产出跨源组合 `ONLINE_007`（`_096_ + rebuffer1`），总面积降 1.31%（13.7632 µm²），$\Delta\text{WNS}=-7.028\text{ ps}$（揭示相对单测累加 `-2.865 ps` 的 `-4.163 ps` 非线性耦合），$\Delta\text{hold}=0.000\text{ ps}$，SEC 101/0 通过。
+3. **`recover_area.py` 升级与 `b22` 突破**：修复 `parse_named_instances` 漏掉转义实例（OI-085 生产脚本侧修复），并将尾部回滚升级为 **Tipping-Gate Isolation + Continued Bisection**（44 项单元测试通过）。在 `b22`（359 修改）上仅用 10 次验证 STA 定位并隔离唯一转折门 `_160630_`，将固定 SPEF 回收率从超时 0.0% 提升至 **33.1%（356/359，3024.15 µm²，ΔWNS +0.0011 ns）**。
+4. **仍开放边界**：ITC-99 尚未做全量重布线（当前仍为固定 SPEF 诊断口径）；完整 IO 约束（OI-082）与多角验证仍开放。
+
 ## 2026-11-13 总体机制调研结论与研究入口
 
 本轮整体机制定向调研入口为 `project_docs/evidence/overall_related_work_20261113/REPORT.md`（配SOURCES/MECHANISM_AUDIT/LITERATURE_NOTES，由主线汇合）。整体近邻包括E-Layout（ICCAD2026）、PCR（2026预印本）、RL-CCD（DAC2023）、Trident2（ICCAD2013）、Task-based（TCAD2023）、OpenPhySyn（WOSET2020）与OpenROAD。预算参数、多动作、反馈本身不能直接作为独创性依据，也不能据已有近邻否定整个项目。

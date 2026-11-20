@@ -5553,3 +5553,10 @@ b05/b11/b12/b13 的 per-gate δWNS 提取并计算预算曲线。
 1. 归档嵌套误建目录 `experiments/experiments/20261113_itc99_recovery` 至 `scratch/archived_nested_experiments_20261116/`；归档 `paper/zh/manuscript/` 下5份2026-11-13中间拼接草稿至 `paper/zh/manuscript/backups/drafts_20261113/`。
 2. 修复 `project_docs/LOGS.md`：恢复被误覆写的 `LOG-20261113-05 / 独立最终限定接受完成` 原文，清理顶部重复插入块，保持前序历史字节不变并追加本阶段日志。
 3. 核对并修正 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`、`project_docs/evidence/itc99_recovery_20261113/REPORT.md` 与 `HANDOFF_2026-11-16.md` 中的逐电路数据失真（表4/表5与 `RECOVERED`/`RECOVERED_V2` 源 JSON 对齐、§4.5 正文与表3对齐、表7 `b15` 与合计行对齐、补全参考文献作者与出处信息），并明确区分固定SPEF诊断恢复与完整重布线物理验收口径。
+
+
+**LOG-20261120-01 / 在线物理闭环、ISCAS89 全8例重布线验收与 b22 转折门隔离突破**：
+1. 修复 code/scripts/recover_area.py（OI-085 转义实例全解析 + (\log N)$ 转折门隔离续跑二分），新增回归测试，44 passed；在 22（359修改）上仅用 10 次验证 STA 定位唯一转折门 _160630_，回收 356/359 处修改（3024.15 µm² = 33.1%，ΔWNS +0.0011 ns）。
+2. 新建 code/src/rseco/physical_budget_adapter.py 与单元测试（共 49 passed），将 ounded_search 正式接入真实重布线+RCX+传播时钟 STA；s382 在线搜索发现跨源组合 ONLINE_007（_096_ + rebuffer1，面积 −1.31%、ΔWNS −7.028 ps、Δhold 0.000 ps、SEC 101/0 PASS）。
+3. 完成 ISCAS89 全 8 例真实重布线+新SPEF+传播时钟 STA+全网表 SEC+OpenROAD 
+ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4.68% 总面积下降且 6/6 SEC PASS（其中 s953 经在线二分隔离回收 14/23、面积 −4.68%、WNS 改善 +17.26 ps，s820 精确回退 CONTROL）。证据归档至 project_docs/evidence/postroute_recovery_20261120/ 并同步 CANON.md 与 EXPERIMENT_REGISTRY.md。

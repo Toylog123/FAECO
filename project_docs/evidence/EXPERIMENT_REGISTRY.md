@@ -2525,3 +2525,11 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **状态**：DIAGNOSTIC_COMPLETED（16电路已评估：14电路完成固定SPEF选择性恢复，b14 Resizer 0修改，b22 359修改单步线性回滚在verify_143处600s超时未闭合；b17–b21合成完成但Resizer详细布线超30–56min未完成）。
 - **定义与证据路径**：`experiments/20261113_itc99_recovery/`（含 `recovered/b01..b10`、`arms/Recovery/b05,b11,b12,b13`、`arms/Resizer/b14,b15,b22`）与 `project_docs/evidence/itc99_recovery_20261113/REPORT.md`。
 - **配置与口径边界**：`code/scripts/recover_area.py`（`max_degradation=0.015ns, safety_factor=1.5`），复用Resizer输出 `routed.spef` 与理想时钟 `sta_routed`，`\w+` 同名实例解析（未含escaped DFF分母修正，未重合法化/重布线/重提SPEF，未跑最终SEC）。14完成电路回退 501/612 (81.9%)，回收面积 3026.66/12635.87 µm²（加权23.95%，算术均值18.95%），ΔWNS ∈ [−0.0115, +0.0162] ns。
+
+
+### 2026-11-20 POSTROUTE-RECOVERY-AND-ONLINE-SEARCH
+
+- **状态**：COMPLETED（project_docs/evidence/postroute_recovery_20261120/{REPORT.md,SUMMARY.json}）。
+- **ISCAS89 8例真实重布线 + SEC**：全 8 例执行重合法化+15轮详细布线（DRC=0）+新RCX+传播STA；NATIVE (-recover_power 100) 8/8 为 0%；我方 6/8 有效回收（1.55%–4.68% 总面积降幅，6/6 SEC PASS），s953 二分隔离 14/23 降 4.68% 且 WNS +17.26 ps，s820 回退 CONTROL。
+- **s382 在线 ounded_search**：ONLINE_007（_096_ + rebuffer1），−1.31% 面积、ΔWNS −7.028 ps、Δhold 0.000 ps、SEC 101/0 PASS。
+- **22 转折门隔离**：10 次验证 STA 隔离 _160630_，356/359 回收 3024.15 µm²（33.1%，ΔWNS +0.0011 ns，固定 SPEF 口径）。
