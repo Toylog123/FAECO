@@ -1,9 +1,11 @@
 # 布局后可调预算面积回收：全量重布线物理验收与在线搜索报告
 
-2026-11-20。本报告汇总三项关键推进成果：
+2026-11-20。本报告汇总五项关键推进成果：
 1. **ISCAS89 全 8 例真实重布线物理验收 + OpenROAD 原生 `recover_power` 对照 + 全网表 SEC**；
-2. **`s382` 在线物理闭环组合搜索（`bounded_search` + `PhysicalEvaluator` + `SPACE_AUDIT`）**；
-3. **`b22` 与 `s953` 的转折门隔离 + 续跑二分（Tipping-Gate Isolation + Continued Bisection）**。
+2. **ITC-99 代表 4 例（`b04, b05, b11, b12`）真实重布线物理验收 + `b05` SEC**；
+3. **`s382 / s641 / s953` 在线全库候选闭环搜索与同预算 `Sequential Greedy vs bounded_search` 消融**；
+4. **`b22` 与 `s953` 的转折门隔离 + 续跑二分（Tipping-Gate Isolation + Continued Bisection）**；
+5. **`s382` 显式 IO 约束审计（OI-082）**。
 
 ## 1. ISCAS89 全 8 例真实重布线物理验收（$B = 10\text{ ps}$）
 
@@ -20,22 +22,31 @@
 | `s832` | `RECOVERED_V2` | 1167.37 | 1132.34 | **−3.00%** | −8.71 | −4.11 | 0.00% | PASS |
 | `s953` | **在线二分隔离 (`14/23`)** | 2433.58 | 2319.72 | **−4.68%** | **+17.26** | −11.31 | 0.00% | PASS |
 
-**核心结论**：
-- OpenROAD 原生 `repair_timing -recover_power 100` 在负松弛起点上 **8/8 电路均做 0 次修改（0.00% 回收）**。
-- 在严格重布线 + 传播时钟 + 10ps WNS 预算下，**6/8 电路实现 1.55%–4.68% 完整映射单元总面积下降**，全部 `hold > +0.45 ns`（无任何 hold 违例），且 6/6 通过全网表 SEC。
-- 固定 SPEF 口径的乐观偏差在 `s820`（−33.63 ps）和 `s953`（−13.30 ps）上被真实重布线检出；在线转折门隔离成功将 `s953` 拉回安全域并额外获得 `+17.26 ps` WNS 改善，而 `s820` 诚实回退至 `CONTROL`。
+## 2. ITC-99 代表 4 例真实重布线物理验收
 
-## 2. `s382` 在线物理闭环组合搜索（`bounded_search` + `PhysicalEvaluator`）
+| 电路 | CONTROL 面积 (µm²) | `RECOVERED_V2` 面积 (µm²) | 总面积降幅 | 真实重布线 $\Delta\text{WNS}$ (ps) | $\Delta\text{hold}$ (ps) | `NATIVE` (`-recover_power 100`) | SEC |
+|---|---:|---:|---:|---:|---:|---:|---|
+| `b04` | 4078.91 | 3801.15 | −6.81% | −12.32（微超 10ps） | +2.58 | 0.00% | — |
+| `b05` | 3424.53 | 3251.87 | **−5.04%** | **+8.63**（改善） | +0.94 | 0.00% | **PASS** |
+| `b11` | 3181.80 | 3064.19 | −3.70% | −29.15（超 10ps） | −1.30 | 0.00% | — |
+| `b12` | 7977.65 | 7312.01 | −8.34% | −90.81（超 10ps） | −2.34 | 0.00% | — |
 
-基于新增 [physical_budget_adapter.py](file:///d:/BaiduSyncdisk/01_Papers/03_FAECO/code/src/rseco/physical_budget_adapter.py) 与全库审计 `SPACE_AUDIT.json`（36 个组合逻辑降面积候选），在 `s382` 上执行 14 次在线重布线搜索（`B=10 ps, beam_width=2, max_depth=4`）：
-- 发现全库新候选 `rebuffer1 (buf_6 → buf_1)` 与历史动作 `_096_ (nor4_2 → nor4_1)` 的**跨源 Depth-2 组合** `ONLINE_007`：
-  - 总面积 `1052.2592 → 1038.4960 µm²`（节省 `13.7632 µm²` / **−1.31%**）；
-  - $\Delta\text{WNS} = -7.028\text{ ps}$（单测累加预测为 `−2.865 ps`，实测存在 `−4.163 ps` 非线性耦合）；
-  - $\Delta\text{hold} = 0.000\text{ ps}$，`DRC=0`，全网表 SEC **101 proven / 0 unproven**。
+- 跨两设计族全部 **12/12 电路**上，OpenROAD 原生 `-recover_power 100` 均做 **0 次修改（0.00%）**。
+- `b05` 直接通过 $B=10\text{ ps}$ 重布线与全网表两态 SEC；`b04 / b11 / b12` 再次实证固定 SPEF 的乐观偏差，需经在线二分隔离或重布线搜索才可正式交付。
 
-## 3. `b22` 转折门隔离 + 续跑二分突破
+## 3. 在线全库候选搜索与同预算消融（`s382, s641, s953`）
 
-在 [recover_area.py](file:///d:/BaiduSyncdisk/01_Papers/03_FAECO/code/scripts/recover_area.py) 合入 `parse_named_instances` 全转义识别与 **Tipping-Gate Isolation + Continued Bisection**：
-- `b22`（359 处修改，全解析面积 `56892.06 → 66030.83 µm²`）原线性回滚在 `verify_143` 达 600s 超时（0.0%）；
-- 新算法仅用 **10 次**验证 STA（9 次二分定位唯一转折门 `_160630_: xor2_4→xor2_1` + 1 次全量续跑），成功回退 **`356 / 359`** 处修改，**回收面积 `3024.15 µm²`（Resizer 净增面积的 33.1%）**，$\Delta\text{WNS} = +0.0011\text{ ns}$。
-- 注：`b22` 仍属固定 SPEF 诊断口径（因重布线单次即需十余分钟），但已彻底解除其算法可扩展性瓶颈。
+- **`s382`**：`bounded_search`（`beam=2, depth=4, budget=14`）在 `SPACE_AUDIT` 候选池中发现跨源 Depth-2 组合 `ONLINE_007`（`_096_ + rebuffer1`），总面积 **`−1.31%`（`13.7632 µm²`）**，$\Delta\text{WNS}=-7.028\text{ ps}$、$\Delta\text{hold}=0.000\text{ ps}$、SEC `101/0` PASS。
+- **`s641`（`budget=12`, $B=10\text{ ps}$）**：`Sequential Greedy` 仅用 6 次评估即找到 3 门组合（`_119_ + _155_ + rebuffer16`），节省 **`22.5216 µm²`（−1.99%）**、$\Delta\text{WNS}=-0.43\text{ ps}$、$\Delta\text{hold}=+0.10\text{ ps}$（超越只用历史名单的 `RECOVERED_V2` `17.52 µm²`）；而按层广度展开的 `bounded_search` 在 `budget=12` 时停在 Depth 2（节省 **`15.0144 µm²`**）。
+- **`s953`（`budget=12`, $B=10\text{ ps}$）**：`Sequential Greedy` 与 `bounded_search` 在严格相对 hold 门下同获 **`16.2656 µm²`**（`rebuffer13`）；同时 `bounded_search` 的 `RUN_012`（`_225_ + _231_`）实证了**动作补偿现象**：`_231_` 单测损失 `−23.57 ps` 不可行，但与 `_225_` 联合后仅损失 `−2.96 ps`（节省 `30.03 µm²`，仅因 hold 波动 `−1.09 ps` 被相对 hold 门拒绝）。
+
+## 4. `b22` 转折门隔离 + 续跑二分突破
+
+`b22`（359 处修改，全解析面积 `56892.06 → 66030.83 µm²`）仅用 **10 次**验证 STA 定位唯一转折门 `_160630_`（`xor2_4 → xor2_1`），成功回退 **`356 / 359`** 处修改，回收 **`3024.15 µm²`（33.1%）**，$\Delta\text{WNS} = +0.0011\text{ ns}$（固定 SPEF 诊断口径）。
+
+## 5. `s382` 显式 IO 约束审计（OI-082）
+
+在 `s382` 上显式加入 `set_input_delay 0.10`、`set_output_delay 0.10`、`set_load 0.01`、`set_input_transition 0.05`：
+- `CONTROL`（`-0.848459`）、`RESTORE074`（`-0.851557`）、`ONLINE_007`（`-0.855487`）的 setup WNS 逐位不变；
+- `ONLINE_007` 的 TNS 在带 IO 约束下仍优于 `CONTROL`（`-14.715` vs `-14.753`）；
+- `CONTROL` 自身带 IO 约束后 `hold = -0.071990 ns`（`RESTORE074/ONLINE_007` 分别仅差 `-0.22 ps` 与 `-0.03 ps`）。

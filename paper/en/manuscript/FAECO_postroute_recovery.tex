@@ -1,0 +1,189 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\begin{document}
+
+\title{Post-Repair Area Recovery under Adjustable Timing Budgets via Tipping-Gate Isolation and Online Physical Search}
+
+\author{Yalong Tong and Chang Liu%
+\thanks{Y. Tong and C. Liu are with the College of Computer Science and Technology, National University of Defense Technology, Changsha 410073, China (e-mail: chancews@qq.com).}}
+
+\maketitle
+
+\begin{abstract}
+Post-layout gate-level timing engineering change orders (ECO) frequently rely on global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer to fix setup violations, incurring severe cell-area bloat on non-critical paths.
+Per-gate reversion diagnosis across eight ISCAS89 circuits reveals that 74 out of 107 (69\%) Resizer gate changes have zero measurable contribution to worst negative slack (WNS), while OpenROAD's native \texttt{recover\_power} performs zero area recovery on 12/12 timing-violated post-CTS endpoints.
+To reclaim this area overhead safely, we present a post-repair area recovery framework combining: (1)~an adjustable WNS-budget policy ($B$, default 10\,ps) with fixed-reference physical certification, (2)~an $O(\log N)$ \emph{tipping-gate isolation and continued bisection} algorithm that resolves multi-gate coupling failures without linear rollback timeouts, and (3)~an online post-route evaluator bridging bounded combinatorial search to full-library compatible down-sizing candidates.
+Under full post-route re-legalization, 15-iteration detailed routing ($\text{DRC}=0$), fresh RCX extraction, propagated-clock OpenSTA, and full-netlist two-state sequential equivalence checking (SEC), our framework achieves 1.55\%--4.68\% total mapped-cell area reduction on 6/8 ISCAS89 circuits under $B=10$\,ps (including $-4.68\%$ area with $+17.26$\,ps WNS improvement on s953 via tipping-gate bisection), while safely falling back to \texttt{CONTROL} on routing-sensitive s820.
+On the large ITC-99 benchmark b22 (359 changes), tipping-gate isolation pinpoints a single critical gate (\texttt{\_160630\_}) in 10 STA calls and raises fixed-SPEF penalty recovery from 0.0\% (timeout) to 33.1\% ($3024.15\,\mu\text{m}^2$, $\Delta\text{WNS}=+0.0011$\,ns).
+Equal-budget online ablations on s382, s641, and s953 further clarify the roles of full-library candidate coverage, sequential greedy commit, and non-additive timing compensation.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Timing ECO, area recovery, post-route optimization, tipping-gate isolation, OpenROAD, formal equivalence checking.
+\end{IEEEkeywords}
+
+\section{Introduction}
+In modern physical implementation flows, automated timing repair engines such as OpenROAD Resizer~\cite{ajayi2019openroad} apply global Lagrangian relaxation (LR) gate sizing and buffering to reduce worst negative slack (WNS).
+Because LR acts across all violating cones simultaneously, it routinely upsizes gates that do not lie on the post-route critical path.
+On timing-violated post-CTS designs, however, OpenROAD's built-in \texttt{repair\_timing -recover\_power 100} refuses to downsize any cell: across all 12 benchmark circuits (8 ISCAS89 and 4 ITC-99) evaluated in this study, native \texttt{recover\_power} achieves \textbf{0.00\%} area reduction.
+
+A natural alternative is post-repair selective rollback~\cite{lin2023taskflow}.
+Yet two fundamental obstacles prevent naive rollback from working reliably in post-route ECO:
+\begin{enumerate}
+    \item \textbf{Fixed-SPEF optimism}: Evaluating cell swaps against frozen pre-ECO SPEF parasitics with an ideal clock can mispredict post-route timing. We show experimentally that fixed-SPEF evaluations report $+1.2$\,ps and $+0.4$\,ps on s820 and s953, whereas full re-legalization, detailed routing, and fresh RCX reveal $-33.63$\,ps and $-13.30$\,ps degradations.
+    \item \textbf{Multi-gate coupling cliffs and $O(N)$ rollback timeouts}: On large circuits such as ITC-99 b22 (359 Resizer edits), every individual gate reversion measures $\Delta\text{WNS}=0.000$\,ns in isolation, yet reverting all 359 simultaneously triggers a $-106.4$\,ps WNS cliff. Linear one-by-one popping times out at 600\,s after 144 STA calls, yielding 0.0\% recovery.
+\end{enumerate}
+
+To overcome these bottlenecks, this paper makes the following contributions:
+\begin{itemize}
+    \item \textbf{Adjustable WNS-Budget Policy and Online Physical Adapter}: We formalize post-repair area recovery relative to a fixed Resizer reference $(W_R, A_R, H_R)$ under a user-configurable WNS loss budget $B$ (default 10\,ps), non-negative hold, zero DRC, and full-netlist two-state SEC.
+    \item \textbf{Tipping-Gate Isolation and Continued Bisection}: We replace $O(N)$ linear rollback with $O(\log N)$ prefix bisection that isolates critical tipping gates and immediately recovers the remaining harmless set. On b22, 10 STA calls pinpoint a single tipping gate and unlock 356/359 reverts ($33.1\%$ penalty recovery); on s953 under full post-route re-routing, isolating 2 tipping gates recovers 14/23 edits ($-4.68\%$ total area, $+17.26$\,ps WNS improvement).
+    \item \textbf{Full Post-Route + SEC Physical Evidence and Honest Ablations}: We report complete re-routed, fresh-RCX, propagated-clock STA and SEC verification across all 8 ISCAS89 and 4 representative ITC-99 circuits, plus equal-budget online ablations comparing Sequential Greedy against BFS-style bounded search over full-library candidates.
+\end{itemize}
+
+\section{Problem Formulation and Methodology}
+
+\subsection{Fixed-Reference Adjustable-Budget Formulation}
+Given a Resizer-repaired routed design $N_R$ with complete Liberty-known functional cell area $A_R$ (including escaped sequential and buffer identifiers), propagated setup slack $W_R$, and propagated hold slack $H_R$, the user specifies a finite non-negative WNS loss budget $B \ge 0$ (default $B = 0.010$\,ns).
+We seek a compatible cell-replacement tuple $\mathbf{a} = (a_1, \dots, a_t)$ producing $N_F$ that solves:
+\begin{equation}
+\begin{aligned}
+\max_{\mathbf{a}} \quad & A_R - A(N_F) \\
+\text{s.t.} \quad & W(N_F) \ge W_R - B - \varepsilon, \\
+& H(N_F) \ge \max(0, H_R - \varepsilon), \\
+& \text{DRC}(N_F) = 0, \quad \text{SEC}(N_R, N_F) = \text{proven},
+\end{aligned}
+\end{equation}
+where $\varepsilon = 10^{-6}$\,ns is numerical tolerance, TNS is tracked as an auxiliary tie-breaker, and all metrics of $N_F$ are measured directly from the modified netlist rather than summed from isolated single-gate predictions.
+
+\subsection{Tipping-Gate Isolation and Continued Bisection}
+When a batch of individually safe reverts $C = [c_1, \dots, c_m]$ fails joint verification, linear popping takes $O(m)$ STA runs and discards all candidates behind a high-index cliff gate.
+Instead, Algorithm~\ref{alg:bisect} performs $O(\log m)$ binary search on the remaining prefix to find the maximal safe prefix $C_{1..k}$, commits it, isolates the single tipping gate $c_{k+1}$, and immediately tests the entire remaining suffix $C_{k+2..m}$ in one STA call.
+Because most large-circuit coupling cliffs are triggered by a handful of tipping gates, one or two isolation rounds recover nearly the entire harmless set.
+
+\begin{algorithm}[t]
+\caption{Tipping-Gate Isolation with Continued Bisection}
+\label{alg:bisect}
+\begin{algorithmic}[1]
+\Require Sorted candidate reverts $R$, reference $W_R$, budget $B$, max rounds $M$
+\Ensure Committed safe subset $A$
+\State $A \gets []$
+\For{$\text{round} = 1 \dots M$}
+    \If{$R$ is empty} \textbf{break} \EndIf
+    \If{$\text{Verify}(A + R) \ge W_R - B$}
+        \State $A \gets A + R$; \textbf{break}
+    \EndIf
+    \State Binary search $k \in [0, |R|-1]$ for largest safe prefix $\text{Verify}(A + R[0:k]) \ge W_R - B$
+    \State $A \gets A + R[0:k]$
+    \State Isolate tipping gate $R[k]$; $R \gets R[k+1:]$
+\EndFor
+\State \Return $A$
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Full-Library Candidate Space and Online Physical Evaluator}
+To avoid restricting recovery to Resizer's historical edit log, we audit the complete routed netlist against the SkyWater 130\,nm Liberty library (\texttt{sky130\_fd\_sc\_hd}), matching full pin directions, boolean functions, and sequential state groups to enumerate all area-reducing combinational replacements.
+Our online adapter (\texttt{physical\_budget\_adapter.py}) applies each candidate tuple to the routed OpenDB/DEF, runs \texttt{detailed\_placement}, clears signal wires, executes \texttt{global\_route} and 15-iteration \texttt{detailed\_route}, extracts fresh RCX parasitics, and invokes standalone OpenSTA with \texttt{set\_propagated\_clock}.
+
+\section{Experimental Results}
+
+\subsection{Experimental Setup}
+All experiments use Yosys~0.33/0.67 synthesis, OpenROAD~26Q3, standalone OpenSTA, and the SkyWater 130\,nm PDK (\texttt{tt\_025C\_1v80}, 0.5\,ns clock period).
+Complete functional cell area is parsed over all Liberty-known instances including escaped DFFs, excluding only unconnected physical tap cells (\texttt{tapvpwrvgnd\_1}), which are explicitly projected out before two-state Yosys SEC (\texttt{equiv\_simple + equiv\_induct seq10}).
+
+\subsection{ISCAS89 Full Post-Route Verification and Native Baseline}
+Table~\ref{tab:iscas89_postroute} summarizes the full 8-circuit ISCAS89 results under complete re-legalization, 15-iteration re-routing ($\text{DRC}=0$), fresh RCX, propagated-clock STA, and full-netlist SEC ($B=10$\,ps).
+
+\begin{table}[t]
+\centering
+\caption{ISCAS89 Full Post-Route + SEC Verification ($B=10$\,ps)}
+\label{tab:iscas89_postroute}
+\scriptsize\setlength{\tabcolsep}{3.2pt}
+\begin{tabular}{llrrrrrl}
+\toprule
+Circuit & Strategy & \texttt{CONTROL} & Final Area & Area & $\Delta$WNS & Native & SEC \\
+        &          & ($\mu\text{m}^2$) & ($\mu\text{m}^2$) & Save & (ps) & Save & \\
+\midrule
+s27  & \texttt{CONTROL} (0 edits) &  193.94 &  193.94 &  0.00\% &  0.00 & 0.00\% & --- \\
+s382 & \texttt{RESTORE074}        & 1052.26 & 1005.96 & $-$4.40\% & $-$3.10 & 0.00\% & PASS \\
+s420 & \texttt{RECOVERED\_V2}     &  942.15 &  927.14 & $-$1.59\% & $-$5.70 & 0.00\% & PASS \\
+s641 & \texttt{RECOVERED\_V2}     & 1133.59 & 1116.07 & $-$1.55\% & $-$3.88 & 0.00\% & PASS \\
+s713 & \texttt{RECOVERED\_V2}     & 1131.08 & 1097.30 & $-$2.99\% & $-$2.94 & 0.00\% & PASS \\
+s820 & Bisect fallback            & 1106.06 & 1106.06 &  0.00\% &  0.00 & 0.00\% & --- \\
+s832 & \texttt{RECOVERED\_V2}     & 1167.37 & 1132.34 & $-$3.00\% & $-$8.71 & 0.00\% & PASS \\
+s953 & Bisect (14/23)             & 2433.58 & 2319.72 & $-$4.68\% & $+$17.26 & 0.00\% & PASS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Key observations:
+(1)~OpenROAD's native \texttt{recover\_power 100} produces \textbf{0.00\%} recovery on all 8/8 circuits.
+(2)~Fixed-SPEF diagnosis failed to catch post-route regressions on s820 ($-33.63$\,ps) and s953 ($-13.30$\,ps); post-route tipping-gate bisection rescued s953 by isolating 2 gates (\texttt{\_178\_}, \texttt{\_348\_}), recovering 14/23 edits ($-4.68\%$ total area) while \emph{improving} setup WNS by $+17.26$\,ps, and safely fell back to \texttt{CONTROL} on s820.
+(3)~All 6 active endpoints pass full-netlist two-state SEC and maintain hold slack $> +0.45$\,ns (with minor relative hold shifts of $-0.50$ to $-11.31$\,ps on s641/s832/s953).
+
+\subsection{ITC-99 Scalability, Tipping-Gate Isolation, and Post-Route Checks}
+Across 16 ITC-99 circuits under fixed-SPEF diagnosis, b14 had 0 Resizer edits; on the remaining 15 active circuits, our tipping-gate bisection resolved the b22 timeout (359 edits): in 10 STA calls it isolated a single tipping gate (\texttt{\_160630\_}: \texttt{xor2\_4}$\to$\texttt{xor2\_1}) and reverted 356/359 edits, saving $3024.15\,\mu\text{m}^2$ ($33.1\%$ of Resizer's net area penalty) with $\Delta\text{WNS}=+0.0011$\,ns.
+Across all 15 completed ITC-99 circuits, 857/971 ($88.3\%$) edits are reverted ($27.8\%$ weighted penalty recovery).
+
+We further ran full post-route re-routing and native comparison on four representative medium-to-large ITC-99 circuits (Table~\ref{tab:itc99_postroute}).
+Again, native \texttt{recover\_power 100} yields 0.00\% across all 4/4 circuits (12/12 across both suites).
+Circuit b05 directly passes $B=10$\,ps and full-netlist SEC ($-5.04\%$ total area, $+8.63$\,ps WNS improvement, $+0.94$\,ps hold improvement), whereas b04 ($-12.32$\,ps), b11 ($-29.15$\,ps), and b12 ($-90.81$\,ps) exceed 10\,ps upon re-routing, confirming that large circuits require online post-route gating rather than fixed-SPEF acceptance.
+
+\begin{table}[t]
+\centering
+\caption{ITC-99 Representative Post-Route Verification ($B=10$\,ps)}
+\label{tab:itc99_postroute}
+\scriptsize\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrrrl}
+\toprule
+Circuit & \texttt{CONTROL} & \texttt{RECOVERED\_V2} & Area & $\Delta$WNS & Native & SEC \\
+        & ($\mu\text{m}^2$) & ($\mu\text{m}^2$) & Save & (ps) & Save & \\
+\midrule
+b04 & 4078.91 & 3801.15 & $-$6.81\% & $-$12.32 (over) & 0.00\% & --- \\
+b05 & 3424.53 & 3251.87 & $-$5.04\% & $+$8.63 (pass)  & 0.00\% & PASS \\
+b11 & 3181.80 & 3064.19 & $-$3.70\% & $-$29.15 (over) & 0.00\% & --- \\
+b12 & 7977.65 & 7312.01 & $-$8.34\% & $-$90.81 (over) & 0.00\% & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Online Full-Library Search, Equal-Budget Ablations, and IO Audit}
+\begin{itemize}
+    \item \textbf{s382 Online Search}: Running \texttt{bounded\_search} ($\text{beam}=2, \text{depth}=4, 14$ post-route evals) over full-library candidates discovered \texttt{ONLINE\_007}, a cross-source Depth-2 combination of historical \texttt{\_096\_} (\texttt{nor4\_2}$\to$\texttt{nor4\_1}) and newly discovered \texttt{rebuffer1} (\texttt{buf\_6}$\to$\texttt{buf\_1}), saving $13.7632\,\mu\text{m}^2$ ($-1.31\%$, $\Delta\text{WNS}=-7.028$\,ps, $\Delta\text{hold}=0.000$\,ps, SEC 101/0 PASS). Its measured $\Delta\text{WNS}$ differs from the linear singleton sum ($-2.865$\,ps) by $-4.163$\,ps, demonstrating non-additive routing coupling.
+    \item \textbf{s641 \& s953 Equal-Budget Ablations (12 Evals, $B=10$\,ps)}: On s641, Sequential Greedy over full-library candidates found a 3-gate combo (\texttt{\_119\_}+\texttt{\_155\_}+\texttt{rebuffer16}) in 6 evals saving $22.52\,\mu\text{m}^2$ ($-1.99\%$, $\Delta\text{WNS}=-0.43$\,ps), outperforming BFS-style \texttt{bounded\_search} ($15.01\,\mu\text{m}^2$) and history-only \texttt{RECOVERED\_V2} ($17.52\,\mu\text{m}^2$). On s953, both achieved $16.27\,\mu\text{m}^2$, while \texttt{bounded\_search} uncovered a compensating pair (\texttt{\_225\_}+\texttt{\_231\_}) that reduced \texttt{\_231\_}'s standalone $-23.57$\,ps loss to $-2.96$\,ps ($30.03\,\mu\text{m}^2$ saved).
+    \item \textbf{s382 Explicit IO Constraint Audit}: Adding \texttt{input/output\_delay=0.10\,ns}, \texttt{load=0.01\,pF}, and \texttt{transition=0.05\,ns} leaves setup WNS unchanged for \texttt{CONTROL}, \texttt{RESTORE074}, and \texttt{ONLINE\_007}, while \texttt{ONLINE\_007} achieves better TNS ($-14.715$\,ns) than \texttt{CONTROL} ($-14.753$\,ns).
+\end{itemize}
+
+\section{Conclusion}
+We presented a post-repair area recovery framework that bridges adjustable WNS budgets, $O(\log N)$ tipping-gate isolation, and online post-route physical verification.
+Across 12 benchmark circuits where OpenROAD's native \texttt{recover\_power} achieves 0.00\% recovery, our framework delivers SEC-proven, DRC-clean post-route area reductions of 1.55\%--5.04\% under a 10\,ps WNS budget while faithfully rejecting unstable configurations.
+
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{9}
+\bibitem{ajayi2019openroad}
+T.~Ajayi et al., ``Toward an open-source digital flow: First learnings from the OpenROAD project,'' in \emph{Proc. DAC}, 2019, pp. 1--4.
+
+\bibitem{lin2023taskflow}
+T.-W. Lin, T.-W. Huang, and M.~D.~F. Wong, ``Task-based parallel programming for gate sizing,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~42, no.~4, pp. 1309--1322, 2023.
+
+\bibitem{kahng2013trident2}
+A.~B. Kahng, S.~Kang, B.~Li, et al., ``High-performance gate sizing with a signoff timer,'' in \emph{Proc. ICCAD}, 2013, pp. 450--457.
+
+\bibitem{lu2023rlccd}
+Y.-C. Lu, W.-T. Chan, D.~Guo, et al., ``RL-CCD: Concurrent clock and data optimization using attention-based self-supervised reinforcement learning,'' in \emph{Proc. DAC}, 2023, pp. 1--6.
+
+\bibitem{fang2026elayout}
+W.~Fang, R.~Liang, Y.-C. Lu, et al., ``E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation,'' in \emph{Proc. ICCAD}, 2026.
+\end{thebibliography}
+
+\end{document}

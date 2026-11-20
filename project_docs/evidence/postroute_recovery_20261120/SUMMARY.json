@@ -191,5 +191,91 @@
     "verify_sta_calls": 10,
     "dwns_ns": 0.0011,
     "scope": "fixed_spef_ideal_sta_diagnostic_with_full_escaped_area_parser"
+  },
+  "itc99_postroute": [
+    {
+      "circuit": "b04",
+      "control_area": 4078.912,
+      "native_saved": 0.0,
+      "rec_v2_area": 3801.1456,
+      "rec_v2_saved": 277.7664,
+      "rec_v2_pct": 6.81,
+      "rec_v2_dwns_ps": -12.32,
+      "rec_v2_dhold_ps": 2.584,
+      "drc": 0,
+      "sec_status": "not_run"
+    },
+    {
+      "circuit": "b05",
+      "control_area": 3424.5344,
+      "native_saved": 0.0,
+      "rec_v2_area": 3251.8688,
+      "rec_v2_saved": 172.6656,
+      "rec_v2_pct": 5.04,
+      "rec_v2_dwns_ps": 8.63,
+      "rec_v2_dhold_ps": 0.94,
+      "drc": 0,
+      "sec_status": "pass"
+    },
+    {
+      "circuit": "b11",
+      "control_area": 3181.8016,
+      "native_saved": 0.0,
+      "rec_v2_area": 3064.1888,
+      "rec_v2_saved": 117.6128,
+      "rec_v2_pct": 3.7,
+      "rec_v2_dwns_ps": -29.149,
+      "rec_v2_dhold_ps": -1.298,
+      "drc": 0,
+      "sec_status": "not_run"
+    },
+    {
+      "circuit": "b12",
+      "control_area": 7977.6512,
+      "native_saved": 0.0,
+      "rec_v2_area": 7312.0128,
+      "rec_v2_saved": 665.6384,
+      "rec_v2_pct": 8.34,
+      "rec_v2_dwns_ps": -90.809,
+      "rec_v2_dhold_ps": -2.341,
+      "drc": 0,
+      "sec_status": "not_run"
+    }
+  ],
+  "online_ablation_b10ps_eval12": {
+    "s641": {
+      "greedy_saved": 22.5216,
+      "greedy_evals": 6,
+      "greedy_dwns_ps": -0.427,
+      "bounded_saved": 15.0144,
+      "bounded_evals": 12,
+      "bounded_dwns_ps": 3.678
+    },
+    "s953": {
+      "greedy_saved": 16.2656,
+      "greedy_evals": 6,
+      "greedy_dwns_ps": -9.88,
+      "bounded_saved": 16.2656,
+      "bounded_evals": 12,
+      "bounded_dwns_ps": -9.88
+    }
+  },
+  "s382_io_audit": {
+    "constraints": "input_delay=0.10ns, output_delay=0.10ns, load=0.01pF, input_transition=0.05ns",
+    "CONTROL": {
+      "setup_ns": -0.848459,
+      "hold_ns": -0.07199,
+      "tns_ns": -14.753122
+    },
+    "RESTORE074": {
+      "setup_ns": -0.851557,
+      "hold_ns": -0.07221,
+      "tns_ns": -14.98839
+    },
+    "ONLINE_007": {
+      "setup_ns": -0.855487,
+      "hold_ns": -0.072022,
+      "tns_ns": -14.715229
+    }
   }
 }

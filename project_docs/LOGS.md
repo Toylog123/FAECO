@@ -5560,3 +5560,9 @@ b05/b11/b12/b13 的 per-gate δWNS 提取并计算预算曲线。
 2. 新建 code/src/rseco/physical_budget_adapter.py 与单元测试（共 49 passed），将 ounded_search 正式接入真实重布线+RCX+传播时钟 STA；s382 在线搜索发现跨源组合 ONLINE_007（_096_ + rebuffer1，面积 −1.31%、ΔWNS −7.028 ps、Δhold 0.000 ps、SEC 101/0 PASS）。
 3. 完成 ISCAS89 全 8 例真实重布线+新SPEF+传播时钟 STA+全网表 SEC+OpenROAD 
 ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4.68% 总面积下降且 6/6 SEC PASS（其中 s953 经在线二分隔离回收 14/23、面积 −4.68%、WNS 改善 +17.26 ps，s820 精确回退 CONTROL）。证据归档至 project_docs/evidence/postroute_recovery_20261120/ 并同步 CANON.md 与 EXPERIMENT_REGISTRY.md。
+
+
+**LOG-20261120-02 / ITC-99 重布线验收、s641/s953 同预算消融与 s382 IO 审计**：
+1. ITC-99 代表 4 例（b04/b05/b11/b12）完成真实重布线+新SPEF+传播时钟STA+原生 -recover_power 100 对照：NATIVE 4/4 为 0%；05 直接通过 =10\text{ ps}$ 门限（总面积 −5.04%、ΔWNS +8.63 ps、Δhold +0.94 ps）并过全网表 SEC（5.75s）；b04（−12.32ps）、b11（−29.15ps）、b12（−90.81ps）暴露固定 SPEF 乐观偏差。
+2. 完成 s641 与 s953 在 SPACE_AUDIT 全库候选池上 udget=12 的 Sequential Greedy vs bounded_search 同预算消融：s641 上 Sequential Greedy 节省 22.52 µm²（−1.99%、ΔWNS −0.43 ps）优于 bounded_search（15.01 µm²）；s953 两者平手（16.27 µm²），且 bounded_search 的 _225_ + _231_ 实证了将单测 −23.57 ps 补偿至 −2.96 ps 的交互现象。
+3. 完成 s382 显式 IO 约束审计（OI-082）：加入 input/output_delay=0.10ns, load=0.01pF, transition=0.05ns 后，setup WNS 与 ΔWNS 逐位不变，ONLINE_007 的 TNS 优于 CONTROL。更新 postroute_recovery_20261120/{REPORT.md,SUMMARY.json} 与 CANON.md。

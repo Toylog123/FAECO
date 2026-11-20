@@ -2533,3 +2533,11 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **ISCAS89 8例真实重布线 + SEC**：全 8 例执行重合法化+15轮详细布线（DRC=0）+新RCX+传播STA；NATIVE (-recover_power 100) 8/8 为 0%；我方 6/8 有效回收（1.55%–4.68% 总面积降幅，6/6 SEC PASS），s953 二分隔离 14/23 降 4.68% 且 WNS +17.26 ps，s820 回退 CONTROL。
 - **s382 在线 ounded_search**：ONLINE_007（_096_ + rebuffer1），−1.31% 面积、ΔWNS −7.028 ps、Δhold 0.000 ps、SEC 101/0 PASS。
 - **22 转折门隔离**：10 次验证 STA 隔离 _160630_，356/359 回收 3024.15 µm²（33.1%，ΔWNS +0.0011 ns，固定 SPEF 口径）。
+
+
+### 2026-11-20 ITC99-POSTROUTE-AND-ONLINE-ABLATION
+
+- **状态**：COMPLETED（汇总于 project_docs/evidence/postroute_recovery_20261120/{REPORT.md,SUMMARY.json}）。
+- **ITC-99 4例重布线**：05 通过 =10\text{ ps}$ + SEC（−5.04%、+8.63ps）；04/b11/b12 超 10ps；NATIVE 4/4 为 0%。
+- **s641/s953 同预算消融（udget=12）**：s641 Sequential Greedy 22.52 µm² > bounded_search 15.01 µm²；s953 16.27 vs 16.27 µm²（RUN_012 实证动作补偿）。
+- **s382 IO 审计（OI-082）**：setup WNS 不变，ONLINE_007 TNS 优于 CONTROL。
