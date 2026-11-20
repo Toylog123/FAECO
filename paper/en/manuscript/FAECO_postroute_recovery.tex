@@ -12,7 +12,7 @@
 
 \begin{document}
 
-\title{Post-Repair Area Recovery under Adjustable Timing Budgets via Tipping-Gate Isolation and Online Physical Search}
+\title{Tool-Agnostic Post-Route Area Recovery under Adjustable Timing Budgets via Full-Library Candidate Search and Tipping-Gate Isolation}
 
 \author{Yalong Tong and Chang Liu%
 \thanks{Y. Tong and C. Liu are with the College of Computer Science and Technology, National University of Defense Technology, Changsha 410073, China (e-mail: chancews@qq.com).}}
@@ -20,12 +20,11 @@
 \maketitle
 
 \begin{abstract}
-Post-layout gate-level timing engineering change orders (ECO) frequently rely on global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer to fix setup violations, incurring severe cell-area bloat on non-critical paths.
-Per-gate reversion diagnosis across eight ISCAS89 circuits reveals that 74 out of 107 (69\%) Resizer gate changes have zero measurable contribution to worst negative slack (WNS), while OpenROAD's native \texttt{recover\_power} performs zero area recovery on 12/12 timing-violated post-CTS endpoints.
-To reclaim this area overhead safely, we present a post-repair area recovery framework combining: (1)~an adjustable WNS-budget policy ($B$, default 10\,ps) with fixed-reference physical certification, (2)~an $O(\log N)$ \emph{tipping-gate isolation and continued bisection} algorithm that resolves multi-gate coupling failures without linear rollback timeouts, and (3)~an online post-route evaluator bridging bounded combinatorial search to full-library compatible down-sizing candidates.
-Under full post-route re-legalization, 15-iteration detailed routing ($\text{DRC}=0$), fresh RCX extraction, propagated-clock OpenSTA, and full-netlist two-state sequential equivalence checking (SEC), our framework achieves 1.55\%--4.68\% total mapped-cell area reduction on 6/8 ISCAS89 circuits under $B=10$\,ps (including $-4.68\%$ area with $+17.26$\,ps WNS improvement on s953 via tipping-gate bisection), while safely falling back to \texttt{CONTROL} on routing-sensitive s820.
-On the large ITC-99 benchmark b22 (359 changes), tipping-gate isolation pinpoints a single critical gate (\texttt{\_160630\_}) in 10 STA calls and raises fixed-SPEF penalty recovery from 0.0\% (timeout) to 33.1\% ($3024.15\,\mu\text{m}^2$, $\Delta\text{WNS}=+0.0011$\,ns).
-Equal-budget online ablations on s382, s641, and s953 further clarify the roles of full-library candidate coverage, sequential greedy commit, and non-additive timing compensation.
+Post-layout gate-level timing engineering change orders (ECO) frequently rely on global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer to fix setup violations, incurring severe cell-area bloat on non-critical paths while OpenROAD's native \texttt{recover\_power} performs zero area recovery on 12/12 timing-violated post-CTS endpoints.
+We present a \textbf{tool-agnostic} post-route area recovery framework that requires \emph{no} upstream tool edit logs or pre-repair netlists, treating Resizer solely as a comparison baseline.
+Our framework combines: (1)~a full-library compatible down-sizing candidate generator operating directly on any routed netlist and Liberty library, (2)~an adjustable WNS-budget policy ($B$, default 10\,ps) with fixed-reference physical certification, and (3)~an $O(\log N)$ \emph{tipping-gate isolation and continued bisection} algorithm for large coupled rollback sets.
+Under full post-route re-legalization, 15-iteration detailed routing ($\text{DRC}=0$), fresh RCX extraction, propagated-clock OpenSTA, and full-netlist two-state sequential equivalence checking (SEC), our tool-agnostic engine achieves 0.67\%--5.58\% total mapped-cell area reduction across 6/6 active ISCAS89 circuits in only 6--10 evaluations per circuit with $\Delta\text{hold} \ge 0.00$\,ps and 6/6 SEC pass (including $-5.58\%$ area with $+4.12$\,ps WNS improvement on s420).
+When upstream edit diffs are optionally available, tipping-gate isolation pinpoints a single critical gate (\texttt{\_160630\_}) on ITC-99 b22 (359 edits) in 10 STA calls, raising fixed-SPEF recovery from 0.0\% (timeout) to 33.1\% ($3024.15\,\mu\text{m}^2$, $\Delta\text{WNS}=+0.0011$\,ns), and recovers $-4.68\%$ area with $+17.26$\,ps WNS improvement on s953.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -100,6 +99,31 @@ Our online adapter (\texttt{physical\_budget\_adapter.py}) applies each candidat
 \subsection{Experimental Setup}
 All experiments use Yosys~0.33/0.67 synthesis, OpenROAD~26Q3, standalone OpenSTA, and the SkyWater 130\,nm PDK (\texttt{tt\_025C\_1v80}, 0.5\,ns clock period).
 Complete functional cell area is parsed over all Liberty-known instances including escaped DFFs, excluding only unconnected physical tap cells (\texttt{tapvpwrvgnd\_1}), which are explicitly projected out before two-state Yosys SEC (\texttt{equiv\_simple + equiv\_induct seq10}).
+
+\subsection{Tool-Agnostic Post-Route Area Recovery (Zero Upstream Logs)}
+Table~\ref{tab:tool_agnostic} reports our fully independent, tool-agnostic post-route area recovery results across the six active ISCAS89 benchmarks using \texttt{generate\_compatible\_candidates} on \texttt{routed.v} + Liberty alone (without any Resizer edit history or pre-repair netlist, $B=10$\,ps, $\le 10$ evaluations per circuit).
+All 6/6 circuits achieve 0.67\%--5.58\% total area reduction with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 6/6 full-netlist SEC pass, whereas the baseline OpenROAD \texttt{recover\_power 100} achieves 0.00\% on all 6/6.
+Notably, on s420, tool-agnostic recovery discovers redundant buffers outside Resizer's edit log and reduces total area by $5.58\%$ ($52.55\,\mu\text{m}^2$) while \emph{improving} WNS by $+4.12$\,ps---$3.5\times$ the area savings of history-based rollback ($1.59\%$).
+
+\begin{table}[t]
+\centering
+\caption{Tool-Agnostic Post-Route Area Recovery (Zero Resizer Logs, $B=10$\,ps)}
+\label{tab:tool_agnostic}
+\scriptsize\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{lrrrrrrl}
+\toprule
+Circuit & Start Area & Final Area & Area & $\Delta$WNS & $\Delta$hold & Evals & Native / SEC \\
+        & ($\mu\text{m}^2$) & ($\mu\text{m}^2$) & Save & (ps) & (ps) & & \\
+\midrule
+s382 & 1052.26 & 1033.49 & $-$1.78\% & $-$6.70 & $+$0.00 & 10 & 0.00\% / PASS \\
+s420 &  942.15 &  889.60 & $-$5.58\% & $+$4.12 & $+$0.01 & 10 & 0.00\% / PASS \\
+s641 & 1133.59 & 1111.07 & $-$1.99\% & $-$0.43 & $+$0.10 &  6 & 0.00\% / PASS \\
+s713 & 1131.08 & 1104.81 & $-$2.32\% & $+$0.63 & $+$3.65 & 10 & 0.00\% / PASS \\
+s832 & 1167.37 & 1147.35 & $-$1.71\% & $-$4.17 & $+$2.64 & 10 & 0.00\% / PASS \\
+s953 & 2433.58 & 2417.32 & $-$0.67\% & $-$9.88 & $+$2.99 &  6 & 0.00\% / PASS \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{ISCAS89 Full Post-Route Verification and Native Baseline}
 Table~\ref{tab:iscas89_postroute} summarizes the full 8-circuit ISCAS89 results under complete re-legalization, 15-iteration re-routing ($\text{DRC}=0$), fresh RCX, propagated-clock STA, and full-netlist SEC ($B=10$\,ps).

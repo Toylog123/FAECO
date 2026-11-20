@@ -1,5 +1,19 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-20 口径升级：完全脱离 Resizer 日志的通用独立面积回收（Resizer 仅作对比基线）
+
+用户正式拍板将项目定位切换为**不依赖 Resizer 修改日志或修复前网表的通用布局后面积回收机制**（Resizer 及其原生 `recover_power` 仅作为外部对比基线）。证据入口：`project_docs/evidence/postroute_recovery_20261120/{REPORT.md,SUMMARY.json}`。
+
+- **独立候选生成**：`code/src/rseco/physical_budget_adapter.py::generate_compatible_candidates` 仅读取布线后 `routed.v` 与 Liberty 库枚举合法降面积替换（50 项单元测试通过）。
+- **纯独立 6 例全重布线 + SEC 实证（$B=10\text{ ps}$，仅 6–10 次评估，ZERO Resizer 日志）**：
+  - `s382`：−1.78%（1052.26→1033.49 µm²），ΔWNS −6.70 ps，Δhold +0.00 ps，SEC PASS
+  - `s420`：**−5.58%**（942.15→889.60 µm²），**ΔWNS +4.12 ps（改善）**，Δhold +0.01 ps，SEC PASS（较依赖历史名单的 1.59% 提升 **3.5×**）
+  - `s641`：−1.99%（1133.59→1111.07 µm²），ΔWNS −0.43 ps，Δhold +0.10 ps，SEC PASS
+  - `s713`：−2.32%（1131.08→1104.81 µm²），**ΔWNS +0.63 ps（改善）**，Δhold +3.65 ps，SEC PASS
+  - `s832`：−1.71%（1167.37→1147.35 µm²），ΔWNS −4.17 ps，Δhold +2.64 ps，SEC PASS
+  - `s953`：−0.67%（2433.58→2417.32 µm²），ΔWNS −9.88 ps，Δhold +2.99 ps，SEC PASS
+  - 全部 6/6 `DRC=0`、**6/6 Δhold ≥ 0.00 ps**、**6/6 全网表两态 SEC PASS**；而对比基线 OpenROAD `repair_timing -recover_power 100` 在全部 12/12 电路（8 ISCAS89 + 4 ITC-99）上均做 0 次修改（0.00%）。历史基于差分回退的结果（`RESTORE074`、`RECOVERED_V2`、`b22`）保留作为“有前序修改日志时的增量诊断与转折门隔离算法”验证。
+
 ## 2026-11-20 在线物理闭环、ISCAS89 全8例重布线验收与 b22 转折门隔离突破
 
 证据入口：`project_docs/evidence/postroute_recovery_20261120/{REPORT.md,SUMMARY.json}`。

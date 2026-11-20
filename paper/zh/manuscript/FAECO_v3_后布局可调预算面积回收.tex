@@ -848,6 +848,31 @@ $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 (2)~在s953上，两者在严格相对hold门下同获16.27\,\textmu m$^2$（\texttt{rebuffer13}），但\texttt{bounded\_search}的Depth-2组合\texttt{\_225\_}+\texttt{\_231\_}实证了动作补偿现象——\texttt{\_231\_}单测退化$-23.57$\,ps不可行，联合\texttt{\_225\_}后退化收窄至$-2.96$\,ps（节省30.03\,\textmu m$^2$）。
 上述消融表明：在紧凑物理预算下全库候选覆盖与顺序提交是首要收益来源，而有界组合搜索在存在时序耦合补偿时发挥补充作用。
 
+\subsection{完全脱离Resizer日志的通用独立面积回收}
+
+基于\texttt{generate\_compatible\_candidates}，本机制可完全脱离Resizer修改日志与修复前网表，仅从任意布线后\texttt{routed.v}与Liberty库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多10次评估）。
+全部6个活跃ISCAS89电路均在$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps与全网表两态SEC通过下取得0.67\%--5.58\%总面积下降（其中s420回收5.58\%且WNS改善$+4.12$\,ps，s713回收2.32\%且WNS改善$+0.63$\,ps），全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%）。
+
+\begin{table}[H]
+\centering
+\caption{完全脱离Resizer日志的通用独立面积回收（$B=10$\,ps，每电路$\le 10$次重布线）}
+\label{tab:tool_agnostic}
+\footnotesize\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{lrrrrrrl}
+\toprule
+\textbf{电路} & \textbf{起点面积} & \textbf{最终面积} & \textbf{总面积} & \textbf{$\Delta$WNS} & \textbf{$\Delta$hold} & \textbf{评估} & \textbf{原生基线 / SEC} \\
+              & \textbf{/\textmu m$^2$} & \textbf{/\textmu m$^2$} & \textbf{降幅} & \textbf{/ps} & \textbf{/ps} & \textbf{数} & \\
+\midrule
+s382 & 1052.26 & 1033.49 & $-$1.78\% & $-$6.70 & $+$0.00 & 10 & 0.00\% / PASS \\
+s420 &  942.15 &  889.60 & $-$5.58\% & $+$4.12 & $+$0.01 & 10 & 0.00\% / PASS \\
+s641 & 1133.59 & 1111.07 & $-$1.99\% & $-$0.43 & $+$0.10 &  6 & 0.00\% / PASS \\
+s713 & 1131.08 & 1104.81 & $-$2.32\% & $+$0.63 & $+$3.65 & 10 & 0.00\% / PASS \\
+s832 & 1167.37 & 1147.35 & $-$1.71\% & $-$4.17 & $+$2.64 & 10 & 0.00\% / PASS \\
+s953 & 2433.58 & 2417.32 & $-$0.67\% & $-$9.88 & $+$2.99 &  6 & 0.00\% / PASS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 % ============================================================
 % §7 结论
 % ============================================================

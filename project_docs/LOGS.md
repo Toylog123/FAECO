@@ -5566,3 +5566,9 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 1. ITC-99 代表 4 例（b04/b05/b11/b12）完成真实重布线+新SPEF+传播时钟STA+原生 -recover_power 100 对照：NATIVE 4/4 为 0%；05 直接通过 =10\text{ ps}$ 门限（总面积 −5.04%、ΔWNS +8.63 ps、Δhold +0.94 ps）并过全网表 SEC（5.75s）；b04（−12.32ps）、b11（−29.15ps）、b12（−90.81ps）暴露固定 SPEF 乐观偏差。
 2. 完成 s641 与 s953 在 SPACE_AUDIT 全库候选池上 udget=12 的 Sequential Greedy vs bounded_search 同预算消融：s641 上 Sequential Greedy 节省 22.52 µm²（−1.99%、ΔWNS −0.43 ps）优于 bounded_search（15.01 µm²）；s953 两者平手（16.27 µm²），且 bounded_search 的 _225_ + _231_ 实证了将单测 −23.57 ps 补偿至 −2.96 ps 的交互现象。
 3. 完成 s382 显式 IO 约束审计（OI-082）：加入 input/output_delay=0.10ns, load=0.01pF, transition=0.05ns 后，setup WNS 与 ΔWNS 逐位不变，ONLINE_007 的 TNS 优于 CONTROL。更新 postroute_recovery_20261120/{REPORT.md,SUMMARY.json} 与 CANON.md。
+
+
+**LOG-20261120-03 / 正式切换为“完全脱离 Resizer 日志的通用独立面积回收”**：
+1. 在 `code/src/rseco/physical_budget_adapter.py` 新增 `generate_compatible_candidates`，仅从布线后 `routed.v` 与 Liberty 库枚举兼容降面积替换（50 passed）。
+2. 在 ISCAS89 6 个活跃电路（`s382, s420, s641, s713, s832, s953`）上跑通零历史日志依赖的纯独立重布线恢复（$B=10\text{ ps}$，每电路仅 6–10 次评估）：全部取得 0.67%–5.58% 总面积下降（`s420` −5.58% 且 WNS +4.12 ps、`s713` −2.32% 且 WNS +0.63 ps），6/6 `DRC=0`、6/6 `Δhold ≥ 0.00 ps`、6/6 全网表两态 SEC PASS，全面超越对比基线 OpenROAD `recover_power 100`（0.00%）。
+3. 更新 `CANON.md`、`postroute_recovery_20261120/{REPORT.md,SUMMARY.json}` 及中英文双稿。

@@ -16,11 +16,18 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from .budgeted_recovery import Action, Endpoint
+from .logic_rewrite import parse_liberty_cells
 from .opensta import _to_sta_path
 from .placed_sta import DEFAULT_OPENROAD, DEFAULT_PLATFORM
 from .routed_sta import DEFAULT_ORFS, DEFAULT_STA, ROUTED_STA_TCL
 
 
+DEFAULT_LIBERTY = (
+    Path(__file__).resolve().parents[3]
+    / "data/raw/benchmarks/raw/openroad_flow_scripts_sky130hd"
+    / "da8f092a02a8e75658cc3100691aabff05f35629"
+    / "lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
+)
 SKIP_CELL_PREFIXES = ("fill_", "tapvpwrvgnd", "decap_", "antenna_", "probe_")
 
 
@@ -82,6 +89,97 @@ def load_actions_from_space_audit(
                 category=c.get("category", "combinational_other"),
             )
         )
+    return actions
+
+
+def _parse_liberty_areas(lib_text: str) -> dict[str, float]:
+    areas: dict[str, float] = {}
+    starts = list(re.finditer(r'^\s*cell\s*\(\s*"([^"\n]+)"\s*\)\s*\{', lib_text, re.M))
+    for i, match in enumerate(starts):
+        end = starts[i + 1].start() if i + 1 < len(starts) else len(lib_text)
+        vals = re.findall(r'^\s*area\s*:\s*([\d.eE+-]+)\s*;', lib_text[match.end() : end], re.M)
+        if len(vals) == 1:
+            areas[match.group(1)] = float(vals[0])
+    return areas
+
+
+def generate_compatible_candidates(
+    netlist_path: Path,
+    lib_path: Path = DEFAULT_LIBERTY,
+    *,
+    categories: tuple[str, ...] = ("combinational_other",),
+) -> list[PhysicalAction]:
+    """Tool-agnostic candidate generator: enumerate area-reducing replacements
+    directly from a routed Verilog netlist and Liberty library (no Resizer log
+    or pre-repair baseline netlist required).
+    """
+    lib_text = lib_path.read_text(encoding="utf-8")
+    cells = parse_liberty_cells(lib_text)
+    areas = _parse_liberty_areas(lib_text)
+    by_sig: dict[tuple, list[tuple[str, float]]] = {}
+    for cname, info in cells.items():
+        if any(prefix in cname for prefix in SKIP_CELL_PREFIXES):
+            continue
+        c_area = areas.get(cname)
+        if c_area is None or c_area <= 0:
+            continue
+        family = re.sub(r"_\d+$", "", cname)
+        sig = (
+            info.family,
+            info.sequential_kind,
+            tuple(sorted(info.input_pins)),
+            info.output_pin,
+            info.function,
+            info.next_state,
+            info.clocked_on,
+            info.latch_enable,
+        )
+        by_sig.setdefault(sig, []).append((cname, c_area))
+
+    text = netlist_path.read_text(encoding="utf-8")
+    allowed = set(categories)
+    actions: list[PhysicalAction] = []
+    for m in re.finditer(r"(sky130_fd_sc_hd__\w+)\s+(\\\S+|[A-Za-z_]\w*)\s*\(", text):
+        ct, inst = m.group(1), m.group(2)
+        if any(prefix in ct for prefix in SKIP_CELL_PREFIXES) or ct not in cells:
+            continue
+        src = cells[ct]
+        src_area = areas.get(ct)
+        if src_area is None:
+            continue
+        family = re.sub(r"_\d+$", "", ct)
+        if src.sequential_kind:
+            cat = "sequential"
+        elif re.search(r"__(clkbuf|clkinv)$", family):
+            cat = "clock_family"
+        else:
+            cat = "combinational_other"
+        if allowed and cat not in allowed:
+            continue
+        sig = (
+            src.family,
+            src.sequential_kind,
+            tuple(sorted(src.input_pins)),
+            src.output_pin,
+            src.function,
+            src.next_state,
+            src.clocked_on,
+            src.latch_enable,
+        )
+        for tgt_name, tgt_area in by_sig.get(sig, []):
+            saving = src_area - tgt_area
+            if saving > 1e-9:
+                actions.append(
+                    PhysicalAction(
+                        action_id=f"{inst}={tgt_name}",
+                        instance=inst,
+                        source_cell=ct,
+                        target_cell=tgt_name,
+                        estimated_area_saving=round(saving, 6),
+                        category=cat,
+                    )
+                )
+    actions.sort(key=lambda a: (-a.estimated_area_saving, a.action_id))
     return actions
 
 

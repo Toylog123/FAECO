@@ -3,9 +3,11 @@ from pathlib import Path
 
 from rseco.budgeted_recovery import BudgetPolicy, Endpoint, bounded_search
 from rseco.physical_budget_adapter import (
+    DEFAULT_LIBERTY,
     PhysicalAction,
     PhysicalEvaluator,
     compute_mapped_area,
+    generate_compatible_candidates,
     load_actions_from_space_audit,
     parse_sta_log,
     render_physical_flow_tcl,
@@ -115,3 +117,25 @@ def test_load_actions_from_real_space_audit_if_present():
     if audit.exists():
         actions = load_actions_from_space_audit(audit)
         assert len(actions) == 36
+
+
+def test_generate_compatible_candidates_tool_agnostic(tmp_path: Path):
+    if not DEFAULT_LIBERTY.exists():
+        return
+    net = tmp_path / "routed.v"
+    net.write_text(
+        "module tiny(input clk, input a, input b, output y);\n"
+        "  sky130_fd_sc_hd__tapvpwrvgnd_1 tap_0 ();\n"
+        "  sky130_fd_sc_hd__nor4_2 _096_ (.A(a), .B(b), .C(a), .D(b), .Y(y));\n"
+        "  sky130_fd_sc_hd__buf_6 rebuffer1 (.A(a), .X(y));\n"
+        "  sky130_fd_sc_hd__dfxtp_4 \\dff_reg[0] (.CLK(clk), .D(a), .Q(y));\n"
+        "endmodule\n",
+        encoding="utf-8",
+    )
+    comb = generate_compatible_candidates(net, categories=("combinational_other",))
+    assert any(a.instance == "_096_" and a.target_cell == "sky130_fd_sc_hd__nor4_1" for a in comb)
+    assert any(a.instance == "rebuffer1" and a.target_cell == "sky130_fd_sc_hd__buf_1" for a in comb)
+    assert all(a.category == "combinational_other" for a in comb)
+
+    all_cats = generate_compatible_candidates(net, categories=("combinational_other", "sequential"))
+    assert any(a.instance == "\\dff_reg[0]" and a.target_cell == "sky130_fd_sc_hd__dfxtp_1" for a in all_cats)
