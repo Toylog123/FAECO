@@ -5572,3 +5572,9 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 1. 在 `code/src/rseco/physical_budget_adapter.py` 新增 `generate_compatible_candidates`，仅从布线后 `routed.v` 与 Liberty 库枚举兼容降面积替换（50 passed）。
 2. 在 ISCAS89 6 个活跃电路（`s382, s420, s641, s713, s832, s953`）上跑通零历史日志依赖的纯独立重布线恢复（$B=10\text{ ps}$，每电路仅 6–10 次评估）：全部取得 0.67%–5.58% 总面积下降（`s420` −5.58% 且 WNS +4.12 ps、`s713` −2.32% 且 WNS +0.63 ps），6/6 `DRC=0`、6/6 `Δhold ≥ 0.00 ps`、6/6 全网表两态 SEC PASS，全面超越对比基线 OpenROAD `recover_power 100`（0.00%）。
 3. 更新 `CANON.md`、`postroute_recovery_20261120/{REPORT.md,SUMMARY.json}` 及中英文双稿。
+
+
+**LOG-20261120-04 / ITC-99 规模扩展（b04/b05 纯独立重布线+SEC）与全7例 IO+OCV 压力审计**：
+1. 在更大规模 ITC-99 电路 `b04`（4078.91 µm²，197 候选）与 `b05`（3424.53 µm²，201 候选）上执行零 Resizer 日志的纯独立重布线恢复（每电路仅 6 次评估）：`b04` 降 0.86% 且 ΔWNS +2.47 ps、Δhold +0.09 ps、SEC PASS（4.17s）；`b05` 6/6 命中降 2.78% 且 ΔWNS +4.85 ps、Δhold +1.10 ps、SEC PASS（0.41s）。至此纯独立重布线+SEC 覆盖 8 电路（6 ISCAS89 + 2 ITC-99），全部 DRC=0、Δhold ≥ 0.00 ps、SEC PASS。
+2. 完成 7 电路显式 IO 约束 + OCV 降额（-early 0.90 / -late 1.10）压力审计：5/7 通过 10 ps 门限（s382/s420/s641/b05 WNS 反升），s713（−10.08 ps）与 s832（−40.76 ps）暴露 IO+OCV 敏感性。
+3. 同步更新 `CANON.md`、`postroute_recovery_20261120/` 与中英文双稿并双遍编译通过。
