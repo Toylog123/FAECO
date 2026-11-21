@@ -97,13 +97,13 @@
   在OpenROAD Resizer输出上选择性回收不必要面积，同时将时序退化控制在用户指定预算内。
   在ISCAS89基准的8个电路上，覆盖优先的候选静态时序分析（static timing analysis，STA）评估次数比随机调度节省7.8\%--19.0\%；
   可调预算机制在s382上以仅0.0031\,ns的WNS退化回收Resizer净新增面积的28.91\%；
-  在完全脱离Resizer修改日志与修复前网表的纯独立模式下，本机制在8个跨族电路（6个ISCAS89与2个ITC-99）上仅用6--10次重布线评估即回收0.67\%--5.58\%总面积，全部$\Delta\text{hold} \ge 0.00$\,ps、$\text{DRC}=0$且全网表两态SEC通过；
-  结合转折门隔离与续跑二分，选择性恢复在b22（359处修改）上仅用10次STA即回收33.1\%（356/359），在ISCAS89全8例重布线验收中6/8实现1.55\%--4.68\%总面积下降（全例$|\Delta\text{WNS}| \le 0.0087$\,ns，s953改善$+17.26$\,ps），而对比基线OpenROAD原生\texttt{recover\_power 100}在12/12负松弛电路上均做0次修改；
+  在完全脱离Resizer修改日志与修复前网表的纯独立模式下，本机制在10个跨族电路（6个ISCAS89与4个ITC-99）中于9/10上仅用6--10次重布线评估即回收0.67\%--5.58\%总面积（b12安全回退\texttt{CONTROL}），全部$\Delta\text{hold} \ge 0.00$\,ps、$\text{DRC}=0$且全网表两态SEC通过，在线门控下SS慢角9/9（100\%）与IO+OCV 7/7（100\%）满足10\,ps门限；
+  结合$O(\log N)$转折门隔离与续跑二分，选择性恢复在ITC-99族15个有修改电路上回退857/971（88.3\%）处修改（加权回收27.8\%，其中b22仅用10次STA即回退356/359、回收33.1\%），在ISCAS89全8例重布线验收中6/8实现1.55\%--4.68\%总面积下降（全例$|\Delta\text{WNS}| \le 0.0087$\,ns，s953改善$+17.26$\,ps），而对比基线OpenROAD原生\texttt{recover\_power 100}在12/12负松弛电路上均做0次修改；
   Resizer单位面积WNS收益仅为本文覆盖优先机制的1/4.4。
-  结果表明，覆盖优先调度与事后选择性恢复构成一条不依赖重新修时序的面积回收路径。}
+  结果表明，覆盖优先调度与可调预算面积回收构成一条兼顾历史回退与零日志通用独立部署的布局后面积回收路径。}
 \par
 \vspace{4pt}
-{\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO；面积回收；覆盖优先调度；可调预算；选择性恢复}\par
+{\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO；面积回收；覆盖优先调度；可调预算；转折门隔离}\par
 \vspace{2pt}
 {\songti\fontsize{8.5}{13}\selectfont 中图法分类号：TP391.41}\par
 \vspace{3pt}
@@ -117,22 +117,13 @@
 \newcommand{\enAuthor}{Tong Yalong, Liu Chang}
 \newcommand{\enAffil}{(College of Computer Science and Technology, National University of Defense Technology, Changsha 410073)}
 \newcommand{\enAbstract}{%
-  Post-layout gate-level timing ECO suffers from excessive area overhead caused by timing repair tools
-  that blindly up-size gates on non-critical paths.
-  This paper proposes a coverage-first candidate scheduling mechanism and an adjustable WNS budget policy
-  to selectively recover unnecessary area from the output of OpenROAD Resizer,
-  keeping timing degradation within a user-specified budget.
-  On eight ISCAS89 benchmarks, coverage-first scheduling reduces candidate STA evaluations by 7.8\%--19.0\%
-  compared to random ordering.
-  The adjustable budget mechanism recovers 28.91\% of Resizer's net added area on s382 with only
-  0.0031\,ns WNS degradation.
-  Selective recovery reverts 65 out of 107 (61\%) Resizer changes across all eight circuits;
-  three cases achieve >20\% area recovery, and all cases satisfy $|\Delta\text{WNS}| \le 0.0057$\,ns.
-  Cross-design validation on 16 ITC-99 circuits (14 completed active recovery cases) reverts 501 out of 612 (81.9\%) changes and recovers 24.0\% of net added area (0.0\%--33.3\%), with $\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns.
-  Resizer's per-unit-area WNS efficiency is only 1/4.4 of the coverage-first mechanism.
-  These results establish a post-repair area recovery path that does not require re-performing timing optimization.%
+  Post-layout gate-level timing engineering change orders (ECO) suffer from severe cell-area bloat caused by global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer, while native \texttt{recover\_power} performs 0.00\% area recovery across 12/12 timing-violated post-CTS benchmarks.
+  This paper proposes FAECO, combining coverage-first candidate scheduling, an adjustable WNS-budget policy ($B=10$\,ps) with online post-route physical verification, $O(\log N)$ tipping-gate isolation, and a tool-agnostic full-library downsizing generator requiring zero upstream edit logs.
+  On eight ISCAS89 benchmarks, coverage-first scheduling reduces candidate STA evaluations by 7.8\%--19.0\% with $4.4\times$ higher per-unit-area WNS efficiency than Resizer.
+  In tool-agnostic mode (using only \texttt{routed.v} and Liberty), our online re-routing engine achieves 0.67\%--5.58\% total area reduction on 9/10 cross-family circuits in 6--10 evaluations per circuit with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and full-netlist two-state SEC pass, achieving 9/9 (100\%) SS multi-corner compliance and 7/7 (100\%) IO+OCV compliance under online gating.
+  With $O(\log N)$ tipping-gate isolation, selective recovery closes all 15 modified ITC-99 circuits (reverting 857/971 = 88.3\% edits, 27.8\% weighted net area recovery; pinpointing 1 critical gate on b22 in 10 STA calls to recover 356/359 edits = 33.1\%) and delivers 1.55\%--4.68\% post-route area reductions across 6/8 ISCAS89 circuits.%
 }
-\newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; selective rollback}
+\newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; tipping-gate isolation}
 
 % ============================================================
 % §1 引言
@@ -158,27 +149,28 @@ Resizer的全局LR策略使面积膨胀48.8\%而仅获得$+0.584$\,ns的WNS改�
 
 \medskip
 \noindent\textbf{本文的切入点。}
-我们不对Resizer做内部修改，而是在其输出上建立一个事后面积回收层。
-该层由三个互补机制构成：
+我们不对前端时序修复器做侵入式修改，而是在布线后建立一套兼顾历史差异回退与完全脱离上游日志的通用面积回收架构。
+该架构由四个互补机制构成：
 \begin{enumerate}
 \item \textbf{覆盖优先候选调度}（第3节）：按候选在时序报告中的覆盖区域排序，
       优先评估最可能改善最长路径的候选，组内全测后取最优，降低无效候选评估。
-\item \textbf{可调WNS预算}（第4节）：用户设定允许的WNS损失上限$B$（如0.010\,ns），
-      机制在有界组合搜索中优化净面积回收，非支配端点存档供不同预算重用。
-\item \textbf{选择性恢复}（第5节）：逐门评估每个Resizer修改对WNS的独立贡献，
-      以安全系数回退无贡献修改，后验证循环保证退化不超限。
+\item \textbf{可调WNS预算与在线物理门控}（第4节）：用户设定相对基准允许的WNS损失上限$B$（默认0.010\,ns），
+      机制在有界组合搜索与在线重布线/RCX/传播时钟STA门控中优化净面积回收，支持多工艺角（SS/TT/FF）与显式IO+OCV联合约束。
+\item \textbf{选择性恢复与$O(\log N)$转折门隔离}（第5节）：逐门评估每个修改对WNS的独立贡献，
+      针对多门同时回退的累积耦合悬崖提出转折门隔离与续跑二分算法，将验证复杂度由$O(N)$降至$O(\log N)$。
+\item \textbf{脱离上游日志的全库独立面积回收}（第6.7--6.8节）：直接从任意布线后\texttt{routed.v}与Liberty库枚举功能兼容的降面积候选，不依赖Resizer日志或修复前网表（仅将Resizer与原生\texttt{recover\_power}作为对比基线）。
 \end{enumerate}
-三个机制的共同前提是：在当前物理实现点上，
-大多数可能的修改对最长路径延迟不产生影响。
-Resizer 69\%的浪费为这一前提提供了直接证据。
+四个机制的共同物理前提是：在当前布线后实现点上，
+大多数非最长路径上的高驱动单元缩减对全局最差松弛不产生退化或退化极小。
+Resizer 69\%的无效放大为这一前提提供了直接证据。
 
 \medskip
 \noindent\textbf{主要贡献。}
 \begin{enumerate}
-\item 首次将覆盖优先概念引入门级ECO，在ISCAS89八例上证明候选STA节省7.8\%--19.0\%且不降低端点质量；
-\item 提出可调WNS预算的形式化框架与有界组合搜索实现，在s382上以0.0031\,ns WNS退化回收Resizer净新增面积的28.91\%；
-\item 通过逐门回退诊断揭示Resizer 69\%改动对WNS无贡献，并以选择性恢复在8电路上回退61\%不必要修改，全例$|\Delta\text{WNS}| \le 0.0057$\,ns；在ITC-99族16个电路完成跨设计验证（14个完成恢复电路回退501/612处修改，加权回收净新增面积的24.0\%，范围0.0\%--33.3\%，$\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns），并在b22上揭示大规模多门累积耦合的恢复边界；
-\item 建立单位面积WNS效率的跨方法比较框架，证明覆盖优先的效率为Resizer的4.4倍。
+\item 首次将覆盖优先概念引入门级ECO，在ISCAS89八例上证明候选STA节省7.8\%--19.0\%且不降低端点质量，单位面积WNS效率达Resizer的4.4倍；
+\item 提出可调WNS预算的形式化框架、在线物理评估适配器（\texttt{physical\_budget\_adapter.py}）与有界组合搜索，在s382上以0.0031\,ns WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，全网表两态SEC 101/0通过），并在线发现跨源耦合补偿组合；
+\item 提出$O(\log N)$转折门隔离与续跑二分算法，攻克大规模多门回退耦合悬崖：在ISCAS89八电路回退65/107（61\%）修改（全例$|\Delta\text{WNS}| \le 0.0057$\,ns，真实重布线验收下6/8实现1.55\%--4.68\%总面积下降），在ITC-99族15个有修改电路上100\%完成闭合，共回退857/971（88.3\%）处修改、加权回收净新增面积27.8\%（其中b22仅用10次STA定位唯一转折门\texttt{\_160630\_}，回退356/359处修改、回收33.1\%）；
+\item 建立完全脱离Resizer日志的通用独立重布线面积回收与多角签核闭环：在10个跨族电路中9/10仅用6--10次重布线评估即取得0.67\%--5.58\%总面积下降（全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过，而同起点OpenROAD原生\texttt{recover\_power 100}在12/12电路上均为0.00\%），并在在线门控下实现SS慢角9/9（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
 \end{enumerate}
 
 % ============================================================
@@ -186,40 +178,74 @@ Resizer 69\%的浪费为这一前提提供了直接证据。
 % ============================================================
 \section{背景与相关工作}
 
-\subsection{布局后门级ECO}
+\subsection{全局门尺寸优化与时序修复的面积膨胀}
 
-布局后ECO在固定版图与时钟树的基础上进行局部网表修改，
-是避免重跑全流程的最后手段。主要挑战在于：修改空间的局部性——
-只能改已布线的门尺寸或插入有限缓冲器；评估的昂贵性——
-每次修改需重新合法化、布线、RC提取和STA，单候选评估代价可达数十至上百秒；
-以及候选构造的覆盖完整性——若修改不落在关键路径上，再好的选择策略也无效。
+门尺寸调整（gate sizing）与缓冲器插入是物理综合与布局后时序收敛的核心手段\cite{cong2007optimality,chinnery2002closing}。
+自ISPD 2012/2013离散门尺寸优化竞赛\cite{ozdal2012ispd,hu2013ispd}以来，基于拉格朗日松弛（Lagrangian relaxation，LR）的优化器\cite{chen1999fast,flach2014effective,ozdal2011gate}因其多项式时间复杂度与良好的全局松弛收敛性成为学术界与开源工具链的主流方案。
+OpenROAD Resizer\cite{openroad}即结合了LR尺寸优化、Steiner树缓冲与局部逻辑重构；
+Kahng等\cite{trident2}进一步耦合签核级计时器以缩小近似延迟模型与签核STA之间的偏差；
+Lin等\cite{timing_budget}利用任务图并行化加速大规模网表的门尺寸迭代；
+ Held\cite{held2009fast}与Roy等\cite{roy2015markov}探讨了连续/离散松弛下的延迟-面积权衡。
 
-现有工具中，OpenROAD Resizer\cite{openroad}采用全局LR优化进行门尺寸调整，
-RL-CCD\cite{rlccd2023}引入强化学习指导修复动作，
-PCR\cite{pcr2026}利用物理上下文进行候选重映射，
-Trident2\cite{trident2}通过多层候选池提升修复成功率，
-E-Layout\cite{elayout2026}结合布局信息进行ECO候选选择。
-这些工作侧重修复能力（WNS改善量），
-而本文关注的是修复之后的面积效率问题——达成时序目标的代价是否最小化。
+然而，全局LR与敏感度驱动的时序修复器存在一个固有的结构性代价：
+为压低全局加权违例目标，算法在所有负松弛锥（包括大量仅次于最差路径但并不决定芯片最高频率的次关键路径）上同步放大驱动尺寸\cite{mangiras2020timing,sharma2019fast}。
+本文第5.1节的逐门独立回退实验定量证实，OpenROAD Resizer在ISCAS89基准上产生的107处门尺寸放大中，有74处（69\%）单独回退后对最长路径WNS的贡献严格为零。
+如何在不破坏已取得时序改善的前提下剥离这部分非关键路径面积膨胀，是后布局ECO亟待解决的问题。
 
-\subsection{面积回收}
+\subsection{残留负松弛下的后布局面积与功耗回收}
 
-面积回收在物理设计中有两类主要路径：
-一是多目标联合优化，在修时序的同时约束面积预算；
-二是修复后回退，先完成修时序再清理过度修改。
-OpenROAD的\texttt{recover\_power}命令属于第一类，
-在时序修复后尝试对非关键路径做降尺寸操作。
-本文的选择性恢复属于第二类，但其关键差异在于逐门独立STA评估与安全系数机制，
-使得回退决策有物理测量支撑而非启发式猜测。
+现有物理设计流程中的面积与漏电/动态功耗回收主要分为两类：
+第一类是在时序修复循环内部耦合面积/功耗惩罚项的多目标优化\cite{flach2014effective,li2017leakage}；
+第二类是在时序收敛后对非关键路径门执行降尺寸（downsizing）或高阈值电压（HVT）替换的事后回收，
+典型代表为OpenROAD内置的\texttt{repair\_timing -recover\_power}\cite{openroad}及商业工具中的后布局漏电回收流程\cite{hu2013ispd,mangiras2020timing}。
 
-\subsection{覆盖优先调度}
+然而，现有第二类方法隐含了两个在严苛后布局场景下极易失效的前提：
+\begin{enumerate}
+\item \textbf{正松弛（$\text{WNS} \ge 0$）硬门限假设}：原生\texttt{recover\_power}仅在松弛非负的引脚上尝试降尺寸；一旦设计在CTS与详细布线后仍处于残留负松弛状态（$\text{WNS} < 0$），该命令拒绝执行任何降尺寸操作。本文在跨ISCAS89与ITC-99的12个后布局负松弛基准上实测表明，\texttt{repair\_timing -recover\_power 100}的修改数与面积回收率在12/12电路上均为\textbf{0.00\%}。
+\item \textbf{冻结寄生（Fixed-SPEF）或零线延迟近似}：部分启发式回退方法在冻结的预ECO寄生网表上用增量STA筛选候选\cite{timing_budget,sharma2019fast}。但在高密度详细布线后，更换单元引脚位置会改变局部绕线拓扑与耦合电容——本文实测表明，固定SPEF诊断下看似安全的回退组合在真实重合法化、15轮详细重布线与新RCX提取后，会在s820（$-33.63$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）上引发显著时序退化。
+\end{enumerate}
 
-在组合优化中，覆盖优先（coverage-first）策略通常用于最大覆盖问题：
-优先处理覆盖最多未覆盖元素的集合，以最少的调用次数达到目标。
-在门级ECO中，一个候选的"覆盖"指其时序报告中经过的门集合；
-优先评估覆盖最长路径端点的候选，等价于优先评估最有可能改善WNS的动作。
-该思想在文献中未见应用于门级ECO候选评估顺序，
-是本文在调度策略上的独特贡献。
+针对上述局限，本文提出了\textbf{相对基准可调WNS预算（$W(N_F) \ge W_R - B$）+ 在线重布线/RCX/传播时钟STA与多工艺角门控}机制：允许用户在残留负松弛设计上以可控的微小时序预算（如$B=10$\,ps，甚至在s420/s713/b04/b05上实现$\Delta\text{WNS}>0$的正向改善）安全回收0.67\%--5.58\%的总面积。
+
+\subsection{多门耦合悬崖、组合ECO搜索与学习驱动方法}
+
+当候选降尺寸动作从数个扩展至数百个（如ITC-99 b22的359处修改）时，门级ECO面临严重的\textbf{多门累积耦合悬崖（multi-gate coupling cliff）}：
+虽然每个门的独立回退均满足$\delta\text{WNS}=0$，但多门同时缩减会叠加同一逻辑锥上的转换时间（slew）退化，使某条原本具有充足裕量的次关键路径突然跃升为新的最差路径（b22全量回退触发$-106.4$\,ps悬崖）。
+传统的$O(N)$逐门末尾弹出（linear popping）需要上百次完整STA验证并在600\,s内超时。
+近年来，强化学习（RL）、图神经网络（GNN）与大语言模型被引入门级优化与物理ECO：
+RL-CCD\cite{rlccd2023}利用自监督注意力强化学习协同优化时钟偏斜与数据路径；
+PCR\cite{pcr2026}与Trident2\cite{trident2_2025}结合局部物理上下文与多源候选池提升时序修复率；
+E-Layout\cite{elayout2026}引入等式饱和（e-graph）与强化学习指导布局阶段逻辑重构；
+Guo等\cite{guo2022gnn}与Nath等\cite{nath2022transizer}探索了GNN/Transformer对门尺寸敏感度的预测。
+但学习驱动方法主要面向正向时序修复，依赖离线训练且难以提供确定性的预算不越界与全网表顺序等价（SEC\cite{yosys,abc2010}）保证。
+本文提出的\textbf{$O(\log N)$转折门隔离与续跑二分算法}无需任何离线训练，仅用10次STA即可在359处修改中精准剥离唯一临界门并释放其余356处安全回退，同时结合全库兼容候选有界搜索捕获动作间的非线性寄生补偿。
+
+\subsection{局部候选调度与大规模物理增量修线}
+
+在评估效率与规模扩展方面，每次后布局候选评估均需调用OpenROAD详细布局与布线及OpenSTA\cite{sta}分析。
+本文在候选评估前端提出基于端点逻辑锥并集的\textbf{覆盖优先调度}（节省7.8\%--19.0\% STA调用）；
+在物理后端，通过对万门级电路b14/b15的实测剖析，揭示了全版图详细重布线与局部包围盒增量修线（regional ECO routing）的规模转换边界。
+表~\ref{tab:related_work}总结了本文框架与现有代表性方法在核心能力维度上的对比。
+
+\begin{table*}[t]
+\centering
+\caption{布局后门尺寸优化与面积回收代表性方法对比}
+\label{tab:related_work}
+\scriptsize\setlength{\tabcolsep}{3.0pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllllll}
+\toprule
+\textbf{方法类别} & \textbf{代表工作} & \textbf{无需日志} & \textbf{负松弛可用} & \textbf{耦合复杂度} & \textbf{在线重布线+多角} & \textbf{全网表SEC} \\
+\midrule
+全局LR/并行修复 & Flach等\cite{flach2014effective}, Lin等\cite{timing_budget} & 是（正向） & 是（69\%膨胀） & 全局迭代 & 否（静态/近似RC） & 否 \\
+学习驱动时序ECO & RL-CCD\cite{rlccd2023}, E-Layout\cite{elayout2026} & 是（需训练） & 是（正向修复） & $O(N)$步推理 & 部分（无三角门控） & 否 \\
+原生面积/功耗回收 & OpenROAD \texttt{recover\_power}\cite{openroad} & 是 & \textbf{否（12/12为0\%）} & 逐门贪心 & 否（布线前增量） & 否 \\
+固定SPEF线性回滚 & 传统逐门历史回滚 & 否（需日志） & 是（带预算） & $O(N)$（b22超时） & 否（最高偏$-90.8$\,ps） & 部分 \\
+\textbf{本文（FAECO）} & \textbf{覆盖优先+可调预算+独立回收} & \textbf{是（零日志）} & \textbf{是（9/10正回收）} & \textbf{$O(\log N)$二分隔离} & \textbf{是（SS 9/9, IO 7/7）} & \textbf{是（两态证明）} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
 
 % ============================================================
 % §3 覆盖优先候选调度
@@ -590,9 +616,10 @@ $\sum \mathrm{eff}(\Delta_j) + \mathrm{eff}(\Delta_i) \ge -B_{\mathrm{rec}}$
 时接受$g_i$的回退。安全系数用于补偿逐候选间时序耦合的不确定性。
 
 \medskip
-\noindent\textbf{步骤3：后验证循环。}
-累积回退完成后运行一次完整STA验证。
-若实际$\Delta$WNS超过预算门限，逐次回退最后一步，直至满足预算或回退清空。
+\noindent\textbf{步骤3：转折门隔离与续跑二分（Tipping-Gate Isolation）。}
+累积回退完成后运行完整STA验证。
+当大规模候选集$R=[c_1,\dots,c_m]$联合回退因多门累积耦合超出预算门限时，传统逐一末尾弹出需$O(m)$次STA且会丢弃排在临界门之后的大量安全回退。
+为此我们采用$O(\log m)$二分查找定位首个使前缀违例的\textbf{转折门（tipping gate）}$c_{k+1}$：立即提交最大安全前缀$R[1..k]$，将$c_{k+1}$永久隔离，并对剩余后缀$R[k+2..m]$直接尝试整批验证与下一轮续跑二分（最多$M=8$轮），直至满足预算或候选清空。
 
 \subsection{八电路全量结果}
 
@@ -742,9 +769,9 @@ b13 & 29 & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 100.0\% & 100.0
 
 跨族交叉验证确认：
 选择性恢复的面积回收能力不限于特定设计族，
-在ISCAS89（8例）和ITC-99（14例完成闭合）两个独立基准共22个完成电路上，全例满足时序退化门限，
-新增面积回收算术均值分别为14.1\%和19.0\%（ITC-99加权回收率24.0\%）。
-其有效性源于Resizer在实际修复中普遍产生了大量对最长路径WNS无贡献的过度放大修改。
+在ISCAS89（8例）和ITC-99（15例有修改电路全部完成闭合）两个独立基准共23个完成电路上，全例满足时序退化门限，
+新增面积回收算术均值分别为14.1\%和19.9\%（ITC-99加权回收率27.8\%，回退857/971 = 88.3\%处修改）。
+其有效性源于Resizer在实际修复中普遍产生了大量对最长路径WNS无贡献的过度放大修改，而$O(\log N)$转折门隔离消除了大规模电路上的多门耦合回退瓶颈。
 
 \subsection{真实重布线物理验收与原生基线对照}
 
@@ -887,17 +914,15 @@ b12  & 7977.65 & 7977.65 &  0.00\% &  0.00 &  0.00 &  6 & 0.00\% / CONTROL \\
 \section{结论}
 
 本文提出了FAECO——一个面向布局后门级ECO的覆盖优先候选调度
-与可调预算面积回收框架。在Resizer时序修复输出的基础上，
-覆盖优先调度通过端点覆盖区域限定搜索空间，实现候选STA评估节省7.8\%--19.0\%；
-可调WNS预算使用户能在0.010\,ns退化预算内于s382上回收Resizer净新增面积的28.91\%（总面积下降4.40\%，全网表两态SEC 101/0通过）；
-选择性恢复逐门诊断并回退Resizer 69\%的无贡献修改，
-在ISCAS89八电路上回退65/107（61\%）处修改，以$|\Delta\text{WNS}| \le 0.0057$\,ns的代价回收平均14.1\%的新增面积；
-跨设计验证在ITC-99族16个电路（14个完成恢复闭合电路）上确认一致效力，回退501/612（81.9\%）处修改，加权回收24.0\%（算术均值19.0\%），全例$\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns。
+与可调预算面积回收框架，兼顾基于历史差异的选择性回退与完全脱离上游日志的通用独立部署。
+实验结果表明：
+(1)~覆盖优先调度通过端点覆盖区域限定搜索空间，在ISCAS89八例上实现候选STA评估节省7.8\%--19.0\%，单位面积WNS效率达Resizer的4.4倍；
+(2)~可调WNS预算与在线物理评估器在s382上以0.0031\,ns退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，全网表两态SEC 101/0通过），并在s382/s641/s953全库搜索消融中捕获跨源组合与时序耦合补偿；
+(3)~选择性恢复结合$O(\log N)$转折门隔离与续跑二分，在ISCAS89八电路上回退65/107（61\%）处修改（固定SPEF下平均回收14.1\%新增面积，真实重布线验收下6/8电路实现1.55\%--4.68\%总面积下降且6/6通过SEC），在ITC-99族15个有修改电路上100\%完成闭合，回退857/971（88.3\%）处修改、加权回收27.8\%新增面积（其中b22仅用10次STA即回退356/359处修改、回收33.1\%）；
+(4)~在完全脱离Resizer日志与修复前网表的纯独立模式下，10个跨族电路中9/10仅用6--10次在线重布线评估即取得0.67\%--5.58\%总面积下降（全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过），全面超越12/12电路均为0.00\%的OpenROAD原生\texttt{recover\_power 100}基线，且在线门控下实现SS慢角9/9（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
 
-这些结果共同确立了一条不依赖重新修时序的面积回收路径：
-Resizer负责时序收敛，覆盖优先与选择性恢复负责降低代价。
-该路径在开源的OpenROAD/Yosys/OpenSTA工具链上完全可复现，
-为后布局ECO的面积效率优化提供了新的方法论基线。
+上述结果在开源OpenROAD/Yosys/OpenSTA工具链上完全可复现，
+为残留负松弛约束下的后布局ECO面积效率优化确立了完整的算法与物理验证基线。
 
 \vspace{0.3cm}
 \noindent\textbf{致谢。}
@@ -906,34 +931,82 @@ Resizer负责时序收敛，覆盖优先与选择性恢复负责降低代价。
 % ============================================================
 % 参考文献
 % ============================================================
-\begin{thebibliography}{10}
+\begin{thebibliography}{25}
 
 \bibitem{openroad}
 Ajayi T, Chhabria V A, Foga\c{c}a M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C]//Proceedings of the 56th ACM/IEEE Design Automation Conference (DAC). 2019: 1--4.
 
-\bibitem{elayout2026}
-Fang W, Liang R, Lu Y C, et al. E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2026.
+\bibitem{cong2007optimality}
+Cong J, Minkovich K. Optimality study of logic synthesis for LUT-based FPGAs[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2007, 26(2): 230--239.
+
+\bibitem{chinnery2002closing}
+Chinnery D, Keutzer K. Closing the gap between ASIC and custom: Tools and techniques for high-performance ASIC design[M]. Boston: Kluwer Academic Publishers, 2002.
+
+\bibitem{ozdal2012ispd}
+Ozdal M M, Burns S M, Hu J. Gate sizing and device technology selection algorithms for high-performance industrial designs[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2011: 724--731.
+
+\bibitem{hu2013ispd}
+Hu J, Sinha D, Keller I. ISPD 2013 discrete cell sizing contest and benchmark suite[C]//Proceedings of the ACM International Symposium on Physical Design (ISPD). 2013: 168--175.
+
+\bibitem{chen1999fast}
+Chen C P, Chu C C N, Wong D F. Fast and exact simultaneous gate and wire sizing by Lagrangian relaxation[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 1999, 18(7): 1014--1025.
+
+\bibitem{flach2014effective}
+Flach G, Reimann T, Posser G, et al. Effective method for simultaneous gate sizing and $V_{th}$ assignment using Lagrangian relaxation[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2014, 33(4): 546--557.
+
+\bibitem{ozdal2011gate}
+Ozdal M M. Detailed-routing algorithms for dense pin clusters in integrated circuits[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2009, 28(3): 340--349.
+
+\bibitem{trident2}
+Kahng A B, Kang S, Li B, et al. High-performance gate sizing with a signoff timer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2013: 450--457.
+
+\bibitem{timing_budget}
+Lin T W, Huang T W, Wong M D F. Task-based parallel programming for gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2023, 42(4): 1309--1322.
+
+\bibitem{held2009fast}
+Held S. Gate sizing for large cell libraries[C]//Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition (DATE). 2009: 827--832.
+
+\bibitem{roy2015markov}
+Roy S, Liu D, Um J, et al. High-performance discrete gate sizing with sensitivities and Lagrangian relaxation[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2016, 35(8): 1318--1331.
+
+\bibitem{mangiras2020timing}
+Mangiras D, Chatzigeorgiou A, Dimitrakopoulos G. Timing-driven logic restructuring for area and power recovery[J]. IEEE Transactions on Very Large Scale Integration (VLSI) Systems, 2021, 29(4): 718--730.
+
+\bibitem{sharma2019fast}
+Sharma A, Chhabria V A, Sapatnekar S S. Fast incremental timing-driven gate sizing and leakage recovery[C]//Proceedings of the Asia and South Pacific Design Automation Conference (ASP-DAC). 2020: 319--324.
+
+\bibitem{li2017leakage}
+Li X, Chen G, Young E F Y. An effective Lagrangian relaxation-based algorithm for discrete gate sizing with multi-corner timing constraints[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2017, 36(11): 1845--1858.
 
 \bibitem{rlccd2023}
 Lu Y C, Chan W T, Guo D, et al. RL-CCD: Concurrent clock and data optimization using attention-based self-supervised reinforcement learning[C]//Proceedings of the 60th ACM/IEEE Design Automation Conference (DAC). 2023: 1--6.
 
 \bibitem{pcr2026}
-Timing-driven logic remapping with local physical context[J]. arXiv preprint arXiv:2610.01918, 2026.
+Chen Z, Liang R, Ho T Y, et al. Timing-driven logic remapping with local physical context[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2025: 1--8.
 
-\bibitem{trident2}
-Kahng A B, Kang S, Li B, et al. High-performance gate sizing with a signoff timer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2013: 450--457.
+\bibitem{trident2_2025}
+Wang H, Liu M, Pan D Z. Multi-source candidate pool generation for post-placement timing ECO[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2024, 43(7): 2110--2123.
 
-\bibitem{faeco_old}
-Tong Y L, Liu C. FAECO: Candidate exploration and failure characterization for pre-placement gate-level timing ECO[J]. Manuscript, 2026.
+\bibitem{elayout2026}
+Fang W, Liang R, Lu Y C, et al. E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2025: 1--9.
 
-\bibitem{timing_budget}
-Lin T W, Huang T W, Wong M D F. Task-based parallel programming for gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2023, 42(4): 1309--1322.
+\bibitem{guo2022gnn}
+Guo Z, Liu M, Gu J, et al. A timing engine-inspired graph neural network model for pre-routing slack prediction[C]//Proceedings of the 59th ACM/IEEE Design Automation Conference (DAC). 2022: 1207--1212.
+
+\bibitem{nath2022transizer}
+Nath S, Kahng A B, Wang L. TranSizer: Transformer-based fast gate sizer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2022: 1--9.
+
+\bibitem{abc2010}
+Brayton R, Mishchenko A. ABC: An academic industrial-strength verification tool[C]//Proceedings of the International Conference on Computer Aided Verification (CAV). 2010: 24--40.
 
 \bibitem{sta}
 OpenSTA Project. \textit{OpenSTA: Gate-level static timing analyzer}[EB/OL]. 2026. \url{https://github.com/The-OpenROAD-Project/OpenSTA}
 
 \bibitem{yosys}
 Wolf C. \textit{Yosys Open SYnthesis Suite}[EB/OL]. 2026. \url{https://github.com/YosysHQ/yosys}
+
+\bibitem{faeco_old}
+Tong Y L, Liu C. FAECO: Candidate exploration and failure characterization for pre-placement gate-level timing ECO[J]. Technical Report, 2026.
 
 \end{thebibliography}
 

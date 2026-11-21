@@ -3415,3 +3415,10 @@ budget_core整体回归v1遗漏前置packaged DLL镜像，再现原Yosys32212257
 ## 2026-11-13 — Git直连失败时复用已启用的系统代理
 
 本轮push两次直连失败（reset/443连接超时），系统Internet Settings已有ProxyEnable=1而Git未配置http.proxy。读取现有代理后通过单次 `git -c http.proxy=<系统已启用地址> -c http.version=HTTP/1.1 push origin main` 成功；不改全局代理、不更换remote，也不把连接失败误归因提交内容。日志保存实际成功提交与返回码。
+
+
+## 2026-11-21：OpenROAD `initialize_floorplan -utilization` 百分比单位陷阱（`b15` 11.4 万 tapcell 超时根因）
+
+- **现象**：ITC-99 `b15`（4,300 个逻辑单元，功能面积 `34,895.97 µm²`）在重布线阶段 `pin_access` 耗时 2 分钟、`detailed_route` 超过 600s 超时，即使只清除 6 条局部直连信号线仍超时。
+- **根因**：`resizer_flow.tcl` 中写了 `set UTIL 0.35; initialize_floorplan -utilization $UTIL`。OpenROAD 的 `-utilization` 参数单位是**百分比（0–100）**而非小数（0–1），传入 `0.35` 被当作 **0.35% 利用率**，导致生成的 Die 面积膨胀 100 倍至 `2937 µm × 2937 µm`（`8.60 × 10^6 µm²`），随后 `tapcell -distance 14` 在空版图上插入了 **114,480 个 tapcell**（总组件 118,780 个），拖垮了全图 `pin_access` 与 `detailed_route` 区域索引。
+- **修复**：将 `-utilization` 改为百分比整数（如 `35` 表示 35% 利用率），`b15` 核心面积即回归正常的 `85,280.54 µm²`（`297 µm × 297 µm`），tapcell 降至 `1,144` 个，总组件数由 `118,780` 降至 `5,494`，内存占用由 `712 MB` 降至 `175 MB`。

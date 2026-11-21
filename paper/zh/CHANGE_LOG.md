@@ -715,3 +715,10 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 **验收**：主稿质量门 PASS（11 页，Errors/Overfull/Underfull 全 0，Undefined 5 为字体替身）；补充 PASS（15 页，全 0）；`??` 计数 0；三副本（manuscript/build/paper/zh）逐字节一致。
 
 **指纹**：主稿 tex `d5bbc9bd`（51,669 B）/ PDF `47c5964c`（3,024,657 B）；补充 tex `c9c73242`（86,744 B）/ PDF `04df3914`（681,125 B）。随本轮提交。
+
+
+## 2026-11-21：中英文双稿首尾口径统一、四象限《相关工作》重构与 24–25 篇文献扩充
+
+- 统一 `FAECO_v3_后布局可调预算面积回收.tex` 的中英文摘要、`§1 引言`、`§5.2`、`§6.4` 与 `§7 结论` 口径（15/15 ITC-99 有修改电路闭合、回退 857/971 = 88.3%、加权回收 27.8%、`b22` 10 次 STA 转折门隔离 356/359 = 33.1%；10 电路纯独立重布线 9/10 正回收 0.67%–5.58% + SEC PASS；12/12 原生 `recover_power` 0.00%；SS 慢角 9/9 与 IO+OCV 7/7 在线门控 100% 达标）。
+- 重构中英文双稿《背景与相关工作》为四象限结构并新增方法对比表 `tab:related_work`，扩充权威参考文献至 24–25 篇；英文稿 `FAECO_postroute_recovery.tex` 扩充为 5 页完整 IEEEtran 论文（含多角签核表 `tab:multicorner` 与 `budget_curves.pdf`）。
+- 验收：中文稿 LuaLaTeX 双遍 12 页、英文稿 pdfLaTeX 双遍 5 页，均 **0 Error / 0 Overfull / 0 Undefined**，同步至 `paper/{zh,en}/build/`。

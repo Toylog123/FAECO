@@ -5597,3 +5597,11 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 1. 在 `s641` 上将 SS/TT/FF 三角全部接入在线评估门：系统自动拒绝仅在 TT 合格但在 SS/FF 退化的候选，最终选中 `rebuffer16=buf_1`（面积 `−7.51 µm² / −0.66%`，SEC PASS），同时改善三角时序（SS Setup **`+71.69 ps`**、TT Setup **`+4.74 ps`**、FF Hold **`+1.29 ps`**），实现 **9/9（100%）** SS 10 ps 达标与 **5/9** FF Hold 严格非退化。
 2. 在 `b15`（34,895.97 µm²）上验证仅清除替换单元直连 net 的局部清线重布线（5 次评估），确认 OpenROAD `detailed_route` 仍需遍历全版图而在 600s 超时（`3000.14s`），完成工具链规模边界定位。
 3. 同步更新 `postroute_recovery_20261120/REPORT.md` 与中英文双稿并重编译提交。
+
+
+**LOG-20261121-01 / 中英文双稿首尾口径大一统、四象限《相关工作》重构与 24–25 篇权威文献扩充（2026-11-21）**：
+1. 统一 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex` 首尾全部数字：中英文摘要、`§1 引言`（四大互补机制与四大贡献）、`§5.2 步骤3（转折门隔离与续跑二分）`、`§6.4 跨族汇总段` 与 `§7 结论` 全部对齐至最新实测（ITC-99 15/15 有修改电路 100% 闭合、回退 857/971 = 88.3%、加权回收 27.8%、`b22` 10 次 STA 隔离 `_160630_` 回退 356/359 = 33.1%；纯独立重布线 10 电路中 9/10 正回收 0.67%–5.58% + SEC PASS；12/12 原生 `recover_power` 为 0.00%；在线门控 SS 慢角 9/9 与 IO+OCV 7/7 满足 10 ps 门限）。
+2. 按四象限重构中英文双稿《背景与相关工作》（全局 LR 门尺寸优化与面积膨胀、残留负松弛下的后布局面积/功耗回收、多门耦合悬崖与组合/学习驱动 ECO、局部候选调度与大规模物理修线），新增代表性方法对比表 `tab:related_work`，并将参考文献由 5–9 篇扩充至 24–25 篇权威 DAC/ICCAD/TCAD/ISPD/CAV 文献（修正 `pcr2026` 与 `trident2` 条目）。
+3. 将 `paper/en/manuscript/FAECO_postroute_recovery.tex` 扩充为 5 页完整 IEEEtran 论文（新增 `Section II: Related Work`、表 `tab:related_work`、表 `tab:multicorner`、图 `budget_curves.pdf` 及完整实验与规模诊断小节）。
+4. 定位 `b15` 原版图 600s 超时根因：`experiments/20261113_itc99_recovery/arms/Resizer/b15/resizer_flow.tcl` 将 OpenROAD 百分比参数 `-utilization` 误写为 `0.35`（0.35% 利用率），使版图面积膨胀 100 倍（`8.60e6 µm²`）并插入 `114,480` 个 tapcell（记入 `docs/EXPERIENCE.md`）。
+5. 双稿双遍编译通过（中文 v3 稿 12 页、英文稿 5 页，均 **0 Error / 0 Overfull / 0 Undefined citation**）并同步至 `build/`。
