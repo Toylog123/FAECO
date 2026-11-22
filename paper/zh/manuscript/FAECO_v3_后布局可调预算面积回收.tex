@@ -160,6 +160,14 @@ Resizer的全局LR策略使面积膨胀48.8\%而仅获得$+0.584$\,ns的WNS改�
       针对多门同时回退的累积耦合悬崖提出转折门隔离与续跑二分算法，将验证复杂度由$O(N)$降至$O(\log N)$。
 \item \textbf{脱离上游日志的全库独立面积回收}（第6.7--6.8节）：直接从任意布线后\texttt{routed.v}与Liberty库枚举功能兼容的降面积候选，不依赖Resizer日志或修复前网表（仅将Resizer与原生\texttt{recover\_power}作为对比基线）。
 \end{enumerate}
+整体双模式架构与在线门控闭环流程如图~\ref{fig:framework_arch}所示。
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig_framework_arch_zh.pdf}
+\caption{FAECO双模式后布局可调预算面积回收整体架构：（a）脱离上游日志的纯独立全库微批次回收模式；（b）覆盖优先调度与$O(\log N)$转折门隔离模式，共享在线重布线、多工艺角STA与全网表两态SEC门控。}
+\label{fig:framework_arch}
+\end{figure*}
 四个机制的共同物理前提是：在当前布线后实现点上，
 大多数非最长路径上的高驱动单元缩减对全局最差松弛不产生退化或退化极小。
 Resizer 69\%的无效放大为这一前提提供了直接证据。
@@ -619,7 +627,14 @@ $\sum \mathrm{eff}(\Delta_j) + \mathrm{eff}(\Delta_i) \ge -B_{\mathrm{rec}}$
 \noindent\textbf{步骤3：转折门隔离与续跑二分（Tipping-Gate Isolation）。}
 累积回退完成后运行完整STA验证。
 当大规模候选集$R=[c_1,\dots,c_m]$联合回退因多门累积耦合超出预算门限时，传统逐一末尾弹出需$O(m)$次STA且会丢弃排在临界门之后的大量安全回退。
-为此我们采用$O(\log m)$二分查找定位首个使前缀违例的\textbf{转折门（tipping gate）}$c_{k+1}$：立即提交最大安全前缀$R[1..k]$，将$c_{k+1}$永久隔离，并对剩余后缀$R[k+2..m]$直接尝试整批验证与下一轮续跑二分（最多$M=8$轮），直至满足预算或候选清空。
+为此我们采用$O(\log m)$二分查找定位首个使前缀违例的\textbf{转折门（tipping gate）}$c_{k+1}$：立即提交最大安全前缀$R[1..k]$，将$c_{k+1}$永久隔离，并对剩余后缀$R[k+2..m]$直接尝试整批验证与下一轮续跑二分（最多$M=8$轮），直至满足预算或候选清空（机制原理见图~\ref{fig:tipping_gate}）。
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig_tipping_gate_mech_zh.pdf}
+\caption{$O(\log N)$转折门隔离与续跑二分机制示例（b22）：（a）单门孤立$\delta\text{WNS}=0$但联合回退于第359门处触发$-106.4$\,ps耦合悬崖，导致传统$O(N)$线性弹出于第143轮超时；（b）二分前缀定位\texttt{\_160630\_}并续跑后缀，仅10次STA即回收356/359处修改（33.1\%）。}
+\label{fig:tipping_gate}
+\end{figure*}
 
 \subsection{八电路全量结果}
 
@@ -808,7 +823,14 @@ s953 & 在线二分隔离（14/23） & 2433.58 & 2319.72 & $-$4.68\% & $+$17.26 
 在ITC-99代表4个大中规模电路（b04、b05、b11、b12）上的同口径重布线物理验收进一步显示：
 OpenROAD原生\texttt{recover\_power 100}仍为4/4零修改（跨两族12/12均为0\%）；
 b05直接通过$B=10$\,ps重布线门限与全网表SEC（总面积$-5.04\%$，$\Delta\text{WNS}=+8.63$\,ps，$\Delta\text{hold}=+0.94$\,ps）；
-而b04（$-12.32$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）在重布线后超出10\,ps门限，再次证实大电路不能仅凭固定SPEF诊断数宣称物理安全，必须经过在线重布线筛选或二分隔离。
+而b04（$-12.32$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）在重布线后超出10\,ps门限，再次证实大电路不能仅凭固定SPEF诊断数宣称物理安全，必须经过在线重布线筛选或二分隔离（对比见图~\ref{fig:multicorner_spef}b）。
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig_multicorner_spef_zh.pdf}
+\caption{跨工艺角签核与固定SPEF偏差可视化：（a）真实SKY130 SS/TT/FF三工艺角下10个纯独立回收端点的时序变化（在线三角门控消除s641 SS违例后实现SS 10/10达标）；（b）固定SPEF乐观预测与真实重布线+新RCX实测之间的偏差对照，及s953在线二分修正效果。}
+\label{fig:multicorner_spef}
+\end{figure*}
 
 在显式IO约束审计（OI-082）中，为s382补加\texttt{input/output\_delay=0.10\,ns}、\texttt{load=0.01\,pF}与\texttt{transition=0.05\,ns}后，
 \texttt{CONTROL}、\texttt{RESTORE074}与\texttt{ONLINE\_007}的传播setup WNS逐位不变（关键路径在内部寄存器间），
@@ -879,7 +901,14 @@ $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 
 基于\texttt{generate\_compatible\_candidates}，本机制可完全脱离Resizer修改日志与修复前网表，仅从任意布线后\texttt{routed.v}与Liberty库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多6--10次评估）。
 为提升该机制在任意电路与单元库上的普适性，适配器默认自动过滤低功耗隔离单元（\texttt{lpflow\_*}）与时钟虚拟负载（\texttt{clkload*}），并引入两项通用物理加速机制：(1)~\textbf{标准驱动优先排序}（\texttt{deprioritize\_zero\_drive}）：将极易引起slew恶化的\texttt{\_0}超弱驱动变体延后，优先评估常规驱动与缓冲器/反相器缩减；(2)~\textbf{自适应微批次二分恢复}（\texttt{adaptive\_batch\_recovery}）：按$\mathrm{batch\_size}=3$批量提交不共实例候选，整批通过即一次提交3门，若违例则自动在批内执行$O(\log k)$二分切分隔离转折门。
-在10个跨族电路（6个ISCAS89与4个ITC-99）上实现\textbf{10/10（100\%）}正面积回收（0.67\%--5.58\%），全部$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps且10/10全网表两态SEC通过，全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%）。
+在10个跨族电路（6个ISCAS89与4个ITC-99）上实现\textbf{10/10（100\%）}正面积回收（0.67\%--5.58\%），全部$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps且10/10全网表两态SEC通过，全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%），各电路总面积降幅与重布线后时序余量对比见图~\ref{fig:tool_agnostic_results}，详细多工艺角签核对照见图~\ref{fig:multicorner_spef}a。
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig_tool_agnostic_results_zh.pdf}
+\caption{完全脱离Resizer日志的纯独立重布线面积回收效果（10/10全胜）：（a）总面积降幅显著超越同起点OpenROAD原生\texttt{recover\_power 100}（0.00\%），标注微批次与安全驱动排序对b05/b12的增益；（b）真实重布线+新RCX后Setup $\Delta\text{WNS}$与Hold $\Delta\text{hold}$，全部严格满足$B=10$\,ps预算与非退化Hold约束。}
+\label{fig:tool_agnostic_results}
+\end{figure*}
 
 \begin{table*}[t]
 \centering

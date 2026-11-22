@@ -116,7 +116,14 @@ where $\varepsilon = 10^{-6}$\,ns is numerical tolerance, TNS is tracked as an a
 \subsection{Tipping-Gate Isolation and Continued Bisection}
 When a batch of individually safe reverts $C = [c_1, \dots, c_m]$ fails joint verification, linear popping takes $O(m)$ STA runs and discards all candidates behind a high-index cliff gate.
 Instead, Algorithm~\ref{alg:bisect} performs $O(\log m)$ binary search on the remaining prefix to find the maximal safe prefix $C_{1..k}$, commits it, isolates the single tipping gate $c_{k+1}$, and immediately tests the entire remaining suffix $C_{k+2..m}$ in one STA call.
-Because most large-circuit coupling cliffs are triggered by one or two critical gates on shared fanout cones, a single isolation round recovers nearly the entire harmless set.
+Because most large-circuit coupling cliffs are triggered by one or two critical gates on shared fanout cones, a single isolation round recovers nearly the entire harmless set (Fig.~\ref{fig:tipping_gate}).
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig_tipping_gate_mech_en.pdf}
+\caption{$O(\log N)$ tipping-gate isolation and continued bisection on ITC-99 b22 (359 edits): (a) every isolated gate shows $\delta\text{WNS}=0.000$\,ns while joint revert triggers a $-106.4$\,ps cliff, causing $O(N)$ linear popping to time out at iteration 143; (b) logarithmic prefix search pinpoints \texttt{\_160630\_} and passes the remaining suffix in 10 STA calls (356/359 reverts = 33.1\%).}
+\label{fig:tipping_gate}
+\end{figure*}
 
 \begin{algorithm}[t]
 \caption{Tipping-Gate Isolation with Continued Bisection}
@@ -142,6 +149,14 @@ Because most large-circuit coupling cliffs are triggered by one or two critical 
 To eliminate any reliance on Resizer's edit history or pre-repair netlists, \texttt{generate\_compatible\_candidates} parses any routed Verilog netlist against the SkyWater 130\,nm Liberty library (\texttt{sky130\_fd\_sc\_hd}), matching cell family, pin names/directions, Boolean truth functions, and sequential state groups to enumerate all smaller-area footprint-compatible replacements.
 To guarantee universal cross-library robustness, the generator automatically filters special power-isolation cells (\texttt{lpflow\_*}) and virtual clock loads (\texttt{clkload*}), deduplicates per-instance targets, and applies safe-drive prioritization (\texttt{deprioritize\_zero\_drive}) so standard-drive and buffer/inverter reductions are evaluated ahead of ultra-weak \texttt{\_0} variants that induce sharp slew cliffs.
 Paired with \texttt{adaptive\_batch\_recovery} (which probes disjoined instance batches of size 3 and falls back to in-batch $O(\log k)$ tipping-gate bisection on budget violations), our online physical adapter (\texttt{physical\_budget\_adapter.py}) applies each candidate tuple via \texttt{replace\_cell}, executes \texttt{detailed\_placement}, clears signal wires, runs \texttt{pin\_access}, \texttt{global\_route}, and 15-iteration \texttt{detailed\_route} ($\text{DRC}=0$), extracts fresh RCX parasitics, and invokes standalone OpenSTA with \texttt{set\_propagated\_clock}.
+Fig.~\ref{fig:framework_arch} illustrates the overall dual-mode architecture and physical certification loop.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig_framework_arch_en.pdf}
+\caption{Overall dual-mode FAECO architecture: Mode A performs tool-agnostic area recovery directly from \texttt{routed.v} + Liberty via safe-drive ordering and adaptive mini-batch search; Mode B performs coverage-first scheduling and $O(\log N)$ tipping-gate isolation when optional upstream edit diffs are provided. Both share online post-route re-routing, multi-corner STA, and two-state SEC gating.}
+\label{fig:framework_arch}
+\end{figure*}
 
 \section{Experimental Results}
 
@@ -155,6 +170,14 @@ All \textbf{10/10 (100\%)} circuits achieve 0.67\%--5.58\% total area reduction 
 Notably, on s420, tool-agnostic recovery discovers redundant buffers outside Resizer's edit log and reduces total area by $5.58\%$ ($52.55\,\mu\text{m}^2$) while \emph{improving} WNS by $+4.12$\,ps---$3.5\times$ the area savings of history-based rollback ($1.59\%$).
 On ITC-99 b05, adaptive mini-batch recovery commits 8 gates in 8 evaluations, raising total area reduction from $2.78\%$ to \textbf{3.47\%} ($118.86\,\mu\text{m}^2$) while improving both WNS ($+7.43$\,ps) and hold ($+2.02$\,ps).
 On b12 ($7977.65\,\mu\text{m}^2$, 238 unique instances), filtering out \texttt{lpflow\_*} isolation cells and deprioritizing ultra-weak \texttt{\_0} variants unlocks 4 clean buffer reductions saving \textbf{65.06\,$\mu\text{m}^2$ ($-0.82\%$)} at $\Delta\text{WNS}=-0.03$\,ps and $\Delta\text{hold}=+0.05$\,ps (SEC PASS).
+Fig.~\ref{fig:tool_agnostic_results} compares per-circuit area savings and post-route timing against the native baseline.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig_tool_agnostic_results_en.pdf}
+\caption{Tool-agnostic post-route area recovery across 10 benchmarks (10/10 win rate): (a) total area reductions vs.\ native OpenROAD \texttt{recover\_power 100} (0.00\% on all 10 circuits); (b) propagated post-route $\Delta\text{WNS}$ and $\Delta\text{hold}$, all strictly within the 10\,ps budget and $\Delta\text{hold}\ge 0$.}
+\label{fig:tool_agnostic_results}
+\end{figure*}
 
 \begin{table}[t]
 \centering
@@ -186,6 +209,14 @@ Under TT-only online gating, 9/10 endpoints (including b12 at $+64.59$\,ps SS se
 Enabling all three corners (SS/TT/FF) directly inside s641's online gate automatically rejects candidates with SS or FF degradation and selects \texttt{rebuffer16=buf\_1} ($-0.66\%$ area, SEC PASS), simultaneously improving SS setup ($+71.69$\,ps), TT setup ($+4.74$\,ps), and FF hold ($+1.29$\,ps) to achieve \textbf{10/10 (100\%) SS 10\,ps compliance} and 6/10 strict FF hold non-degradation (remaining 4 within $-0.10$ to $-3.94$\,ps).
 
 Similarly, under explicit IO constraints (\texttt{0.10\,ns} input/output delay, \texttt{0.01\,pF} output load, \texttt{0.05\,ns} input transition) and OCV derating (\texttt{-early 0.90 / -late 1.10}), 5/7 audited endpoints pass the 10\,ps budget post-hoc (s382 $+15.46$\,ps, s420 $+6.05$\,ps, s641 $+5.57$\,ps, s953 $-7.11$\,ps, b05 $+6.92$\,ps), while embedding IO+OCV directly into \texttt{physical\_budget\_adapter.py} and re-running s713 and s832 rejects violating edits and falls back safely to \texttt{CONTROL} ($0.00$\,ps degradation), achieving \textbf{7/7 (100\%) IO+OCV compliance}.
+Fig.~\ref{fig:multicorner_spef} visualizes both the multi-corner SS/TT/FF signoff distribution and the discrepancy between fixed-SPEF estimates and full re-routed measurements.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.96\textwidth]{fig_multicorner_spef_en.pdf}
+\caption{Multi-corner signoff and fixed-SPEF optimism diagnosis: (a) real SkyWater 130\,nm SS/TT/FF timing shifts across all 10 endpoints (3-corner online gating flips s641 from $-18.50$\,ps fail to $+71.69$\,ps SS gain); (b) fixed-SPEF predictions vs.\ full re-routed + fresh-RCX measurements across 6 circuits, alongside online bisection repair on s953.}
+\label{fig:multicorner_spef}
+\end{figure*}
 
 \begin{table}[t]
 \centering

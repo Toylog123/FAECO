@@ -728,3 +728,9 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 同步中英文双稿摘要、引言贡献、方法说明、表 `tab:tool_agnostic`、`tab:related_work` 与结论：`b05` 升级至 `-3.47%`（8 门，WNS `+7.43 ps`），`b12` 攻克至 `-0.82%`（4 门，WNS `-0.03 ps`、SS `+64.59 ps`、SEC PASS），实现纯独立重布线 **10/10（100%）全胜** 与 **SS 10/10 达标**。
 - 补充 `b15` 在 35% 利用率 + 8 线程下的诊断数据（`pin_access` 120s → 19s，全芯片 `detailed_route` 仍超 1200s）。
+
+
+## 2026-11-22（续）：新增 4 套机制与实验结果矢量图（全稿共 5 图）
+
+- 新增生成器 `paper/zh/figures/gen_v3_figures.py` 及 4 套双语矢量 PDF：`fig_framework_arch_{zh,en}.pdf`（整体架构）、`fig_tipping_gate_mech_{zh,en}.pdf`（$O(\log N)$ 转折门隔离）、`fig_tool_agnostic_results_{zh,en}.pdf`（10/10 独立重布线效果）、`fig_multicorner_spef_{zh,en}.pdf`（SS/TT/FF 多角签核与固定 SPEF 偏差）。
+- 逐张视觉检查并修复字符与图例遮挡后嵌入双稿：中文 v3 稿 14 页、英文 IEEEtran 稿 7 页，均 **0 Error / 0 Overfull / 0 Undefined**。

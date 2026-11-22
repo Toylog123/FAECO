@@ -5617,3 +5617,12 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 3. 至此脱离 Resizer 日志的纯独立重布线达成 **10/10（100%）正面积回收**、**10/10 DRC=0**、**10/10 SEC PASS**、**SS 慢角 10/10（100%）10 ps 达标**、**FF Hold 6/10 严格非退化**。
 4. 在 `b15`（35% 利用率 + `-threads 8`）下验证 `pin_access` 耗时由 120s 降至 19s（组件 118,780 → 5,494），但 15 轮全图 `detailed_route` 仍超 1200s。
 5. 同步更新 `postroute_recovery_20261120/REPORT.md` 与中英文双稿并重编译提交。
+
+
+**LOG-20261122-02 / 新增 4 套双语机制与实验高清矢量图并嵌入双稿（全稿 5 图，2026-11-22）**：
+1. 新建 `paper/zh/figures/gen_v3_figures.py` 生成 4 套中英双语高清矢量 PDF（及 PNG 视觉检查副本）：
+   - `fig_framework_arch_{zh,en}.pdf`：双模式后布局可调预算面积回收整体架构图；
+   - `fig_tipping_gate_mech_{zh,en}.pdf`：$O(\log N)$ 转折门隔离与续跑二分机制示例图（对比 `b22` 上 $O(N)$ 线性弹出 143 轮超时与 $-106.4\text{ ps}$ 耦合悬崖）；
+   - `fig_tool_agnostic_results_{zh,en}.pdf`：10/10 全胜脱离 Resizer 日志纯独立重布线面积降幅与重布线后时序（Setup $\Delta\text{WNS}$ + Hold $\Delta\text{hold}$）对比图；
+   - `fig_multicorner_spef_{zh,en}.pdf`：真实 SS/TT/FF 多工艺角签核分布与固定 SPEF 乐观偏差对比图（含 `s641` 在线三角门控修正与 `s953` 在线二分修正）。
+2. 逐张通过视觉检查确认无字形缺失与标签遮挡后，同步嵌入中英文双稿（各含 5 图）；双遍编译均 **0 Error / 0 Overfull / 0 Undefined references**（中文 v3 稿 14 页、英文 IEEEtran 稿 7 页）。
