@@ -15,7 +15,7 @@ import time
 from pathlib import Path
 from typing import Callable, Iterable
 
-from .budgeted_recovery import Action, Endpoint
+from .budgeted_recovery import Action, BudgetPolicy, Endpoint, assess
 from .logic_rewrite import parse_liberty_cells
 from .opensta import _to_sta_path
 from .placed_sta import DEFAULT_OPENROAD, DEFAULT_PLATFORM
@@ -29,6 +29,8 @@ DEFAULT_LIBERTY = (
     / "lib/sky130_fd_sc_hd__tt_025C_1v80.lib"
 )
 SKIP_CELL_PREFIXES = ("fill_", "tapvpwrvgnd", "decap_", "antenna_", "probe_")
+SKIP_CANDIDATE_CELL_PREFIXES = (*SKIP_CELL_PREFIXES, "lpflow_")
+DEFAULT_SKIP_INSTANCE_PREFIXES = ("clkload",)
 
 
 @dataclass(frozen=True)
@@ -108,6 +110,9 @@ def generate_compatible_candidates(
     lib_path: Path = DEFAULT_LIBERTY,
     *,
     categories: tuple[str, ...] = ("combinational_other",),
+    skip_instance_prefixes: tuple[str, ...] = DEFAULT_SKIP_INSTANCE_PREFIXES,
+    one_per_instance: bool = False,
+    deprioritize_zero_drive: bool = False,
 ) -> list[PhysicalAction]:
     """Tool-agnostic candidate generator: enumerate area-reducing replacements
     directly from a routed Verilog netlist and Liberty library (no Resizer log
@@ -118,7 +123,7 @@ def generate_compatible_candidates(
     areas = _parse_liberty_areas(lib_text)
     by_sig: dict[tuple, list[tuple[str, float]]] = {}
     for cname, info in cells.items():
-        if any(prefix in cname for prefix in SKIP_CELL_PREFIXES):
+        if any(prefix in cname for prefix in SKIP_CANDIDATE_CELL_PREFIXES):
             continue
         c_area = areas.get(cname)
         if c_area is None or c_area <= 0:
@@ -141,7 +146,9 @@ def generate_compatible_candidates(
     actions: list[PhysicalAction] = []
     for m in re.finditer(r"(sky130_fd_sc_hd__\w+)\s+(\\\S+|[A-Za-z_]\w*)\s*\(", text):
         ct, inst = m.group(1), m.group(2)
-        if any(prefix in ct for prefix in SKIP_CELL_PREFIXES) or ct not in cells:
+        if any(prefix in ct for prefix in SKIP_CANDIDATE_CELL_PREFIXES) or ct not in cells:
+            continue
+        if skip_instance_prefixes and any(inst.startswith(p) for p in skip_instance_prefixes):
             continue
         src = cells[ct]
         src_area = areas.get(ct)
@@ -179,8 +186,104 @@ def generate_compatible_candidates(
                         category=cat,
                     )
                 )
-    actions.sort(key=lambda a: (-a.estimated_area_saving, a.action_id))
+    if deprioritize_zero_drive:
+        actions.sort(
+            key=lambda a: (
+                1 if a.target_cell.endswith("_0") else 0,
+                0 if re.search(r"__(buf|inv)_\d+$", a.target_cell) else 1,
+                -a.estimated_area_saving,
+                a.action_id,
+            )
+        )
+    else:
+        actions.sort(key=lambda a: (-a.estimated_area_saving, a.action_id))
+    if one_per_instance:
+        deduped: list[PhysicalAction] = []
+        seen: set[str] = set()
+        for act in actions:
+            if act.instance not in seen:
+                seen.add(act.instance)
+                deduped.append(act)
+        return deduped
     return actions
+
+
+def adaptive_batch_recovery(
+    reference: Endpoint,
+    actions: Iterable[PhysicalAction],
+    evaluate: Callable[[tuple[str, ...]], Endpoint],
+    policy: BudgetPolicy | None = None,
+    *,
+    max_evaluations: int = 10,
+    batch_size: int = 3,
+) -> dict:
+    """Universal adaptive mini-batch post-route area recovery with bisection fallback.
+
+    Groups distinct-instance downsizing actions into mini-batches of ``batch_size``.
+    If a whole mini-batch satisfies ``assess(reference, ep, policy)``, all its actions
+    are committed in a single physical evaluation; otherwise, the batch is bisected
+    to isolate tipping gates and salvage safe subsets within ``max_evaluations``.
+    """
+    active_policy = policy or BudgetPolicy()
+    if batch_size < 1:
+        raise ValueError("batch_size must be >= 1")
+
+    unique_actions: list[PhysicalAction] = []
+    seen_inst: set[str] = set()
+    for a in actions:
+        if a.instance not in seen_inst:
+            seen_inst.add(a.instance)
+            unique_actions.append(a)
+
+    committed: list[str] = []
+    best = reference
+    evals = 0
+    trace: list[dict] = []
+
+    def try_chunk(chunk: list[PhysicalAction]) -> None:
+        nonlocal best, evals
+        if not chunk or evals >= max_evaluations:
+            return
+        trial = tuple(sorted((*committed, *(a.action_id for a in chunk))))
+        ep = evaluate(trial)
+        evals += 1
+        gate = assess(reference, ep, active_policy)
+        accepted = gate.feasible and (ep.area < best.area - 1e-9)
+        trace.append(
+            {
+                "actions": list(trial),
+                "batch_len": len(chunk),
+                "feasible": gate.feasible,
+                "accepted": accepted,
+                "area": ep.area,
+                "wns_ns": ep.wns_ns,
+                "hold_wns_ns": ep.hold_wns_ns,
+            }
+        )
+        if accepted:
+            committed.extend(a.action_id for a in chunk)
+            best = ep
+            return
+        if len(chunk) > 1 and evals < max_evaluations:
+            mid = len(chunk) // 2
+            try_chunk(chunk[:mid])
+            if evals < max_evaluations:
+                try_chunk(chunk[mid:])
+
+    idx = 0
+    while idx < len(unique_actions) and evals < max_evaluations:
+        rem_evals = max_evaluations - evals
+        cur_batch = min(batch_size, len(unique_actions) - idx) if rem_evals >= 2 else 1
+        chunk = unique_actions[idx : idx + cur_batch]
+        idx += cur_batch
+        try_chunk(chunk)
+
+    return {
+        "selected": best,
+        "committed": list(committed),
+        "evaluations_used": evals,
+        "trace": trace,
+    }
 
 
 def _tcl_brace(value: str) -> str:

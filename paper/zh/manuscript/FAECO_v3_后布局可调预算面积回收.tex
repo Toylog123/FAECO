@@ -97,7 +97,7 @@
   在OpenROAD Resizer输出上选择性回收不必要面积，同时将时序退化控制在用户指定预算内。
   在ISCAS89基准的8个电路上，覆盖优先的候选静态时序分析（static timing analysis，STA）评估次数比随机调度节省7.8\%--19.0\%；
   可调预算机制在s382上以仅0.0031\,ns的WNS退化回收Resizer净新增面积的28.91\%；
-  在完全脱离Resizer修改日志与修复前网表的纯独立模式下，本机制在10个跨族电路（6个ISCAS89与4个ITC-99）中于9/10上仅用6--10次重布线评估即回收0.67\%--5.58\%总面积（b12安全回退\texttt{CONTROL}），全部$\Delta\text{hold} \ge 0.00$\,ps、$\text{DRC}=0$且全网表两态SEC通过，在线门控下SS慢角9/9（100\%）与IO+OCV 7/7（100\%）满足10\,ps门限；
+  在完全脱离Resizer修改日志与修复前网表的纯独立模式下，本机制在10个跨族电路（6个ISCAS89与4个ITC-99）上实现10/10（100\%）正面积回收（仅用6--10次重布线评估即回收0.67\%--5.58\%总面积，其中b05达$-3.47\%$且$\Delta\text{WNS}=+7.43$\,ps，b12达$-0.82\%$且$\Delta\text{WNS}=-0.03$\,ps），全部$\Delta\text{hold} \ge 0.00$\,ps、$\text{DRC}=0$且10/10全网表两态SEC通过，在线门控下SS慢角10/10（100\%）与IO+OCV 7/7（100\%）满足10\,ps门限；
   结合$O(\log N)$转折门隔离与续跑二分，选择性恢复在ITC-99族15个有修改电路上回退857/971（88.3\%）处修改（加权回收27.8\%，其中b22仅用10次STA即回退356/359、回收33.1\%），在ISCAS89全8例重布线验收中6/8实现1.55\%--4.68\%总面积下降（全例$|\Delta\text{WNS}| \le 0.0087$\,ns，s953改善$+17.26$\,ps），而对比基线OpenROAD原生\texttt{recover\_power 100}在12/12负松弛电路上均做0次修改；
   Resizer单位面积WNS收益仅为本文覆盖优先机制的1/4.4。
   结果表明，覆盖优先调度与可调预算面积回收构成一条兼顾历史回退与零日志通用独立部署的布局后面积回收路径。}
@@ -120,7 +120,7 @@
   Post-layout gate-level timing engineering change orders (ECO) suffer from severe cell-area bloat caused by global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer, while native \texttt{recover\_power} performs 0.00\% area recovery across 12/12 timing-violated post-CTS benchmarks.
   This paper proposes FAECO, combining coverage-first candidate scheduling, an adjustable WNS-budget policy ($B=10$\,ps) with online post-route physical verification, $O(\log N)$ tipping-gate isolation, and a tool-agnostic full-library downsizing generator requiring zero upstream edit logs.
   On eight ISCAS89 benchmarks, coverage-first scheduling reduces candidate STA evaluations by 7.8\%--19.0\% with $4.4\times$ higher per-unit-area WNS efficiency than Resizer.
-  In tool-agnostic mode (using only \texttt{routed.v} and Liberty), our online re-routing engine achieves 0.67\%--5.58\% total area reduction on 9/10 cross-family circuits in 6--10 evaluations per circuit with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and full-netlist two-state SEC pass, achieving 9/9 (100\%) SS multi-corner compliance and 7/7 (100\%) IO+OCV compliance under online gating.
+  In tool-agnostic mode (using only \texttt{routed.v} and Liberty), our online re-routing engine with adaptive mini-batch recovery and safe-drive prioritization achieves 0.67\%--5.58\% total area reduction on 10/10 cross-family circuits in 6--10 evaluations per circuit with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 10/10 full-netlist two-state SEC pass, achieving 10/10 (100\%) SS multi-corner compliance and 7/7 (100\%) IO+OCV compliance under online gating.
   With $O(\log N)$ tipping-gate isolation, selective recovery closes all 15 modified ITC-99 circuits (reverting 857/971 = 88.3\% edits, 27.8\% weighted net area recovery; pinpointing 1 critical gate on b22 in 10 STA calls to recover 356/359 edits = 33.1\%) and delivers 1.55\%--4.68\% post-route area reductions across 6/8 ISCAS89 circuits.%
 }
 \newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; tipping-gate isolation}
@@ -170,7 +170,7 @@ Resizer 69\%的无效放大为这一前提提供了直接证据。
 \item 首次将覆盖优先概念引入门级ECO，在ISCAS89八例上证明候选STA节省7.8\%--19.0\%且不降低端点质量，单位面积WNS效率达Resizer的4.4倍；
 \item 提出可调WNS预算的形式化框架、在线物理评估适配器（\texttt{physical\_budget\_adapter.py}）与有界组合搜索，在s382上以0.0031\,ns WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，全网表两态SEC 101/0通过），并在线发现跨源耦合补偿组合；
 \item 提出$O(\log N)$转折门隔离与续跑二分算法，攻克大规模多门回退耦合悬崖：在ISCAS89八电路回退65/107（61\%）修改（全例$|\Delta\text{WNS}| \le 0.0057$\,ns，真实重布线验收下6/8实现1.55\%--4.68\%总面积下降），在ITC-99族15个有修改电路上100\%完成闭合，共回退857/971（88.3\%）处修改、加权回收净新增面积27.8\%（其中b22仅用10次STA定位唯一转折门\texttt{\_160630\_}，回退356/359处修改、回收33.1\%）；
-\item 建立完全脱离Resizer日志的通用独立重布线面积回收与多角签核闭环：在10个跨族电路中9/10仅用6--10次重布线评估即取得0.67\%--5.58\%总面积下降（全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过，而同起点OpenROAD原生\texttt{recover\_power 100}在12/12电路上均为0.00\%），并在在线门控下实现SS慢角9/9（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
+\item 建立完全脱离Resizer日志的通用独立重布线面积回收与多角签核闭环：通过标准驱动优先（\texttt{deprioritize\_zero\_drive}）与自适应微批次二分恢复（\texttt{adaptive\_batch\_recovery}），在10个跨族电路上实现10/10（100\%）正面积回收（仅6--10次重布线即降0.67\%--5.58\%，全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过，而同起点OpenROAD原生\texttt{recover\_power 100}在12/12电路上均为0.00\%），并在在线门控下实现SS慢角10/10（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
 \end{enumerate}
 
 % ============================================================
@@ -241,7 +241,7 @@ Guo等\cite{guo2022gnn}与Nath等\cite{nath2022transizer}探索了GNN/Transforme
 学习驱动时序ECO & RL-CCD\cite{rlccd2023}, E-Layout\cite{elayout2026} & 是（需训练） & 是（正向修复） & $O(N)$步推理 & 部分（无三角门控） & 否 \\
 原生面积/功耗回收 & OpenROAD \texttt{recover\_power}\cite{openroad} & 是 & \textbf{否（12/12为0\%）} & 逐门贪心 & 否（布线前增量） & 否 \\
 固定SPEF线性回滚 & 传统逐门历史回滚 & 否（需日志） & 是（带预算） & $O(N)$（b22超时） & 否（最高偏$-90.8$\,ps） & 部分 \\
-\textbf{本文（FAECO）} & \textbf{覆盖优先+可调预算+独立回收} & \textbf{是（零日志）} & \textbf{是（9/10正回收）} & \textbf{$O(\log N)$二分隔离} & \textbf{是（SS 9/9, IO 7/7）} & \textbf{是（两态证明）} \\
+\textbf{本文（FAECO）} & \textbf{覆盖优先+可调预算+独立回收} & \textbf{是（零日志）} & \textbf{是（10/10正回收）} & \textbf{$O(\log N)$二分隔离} & \textbf{是（SS 10/10, IO 7/7）} & \textbf{是（两态证明）} \\
 \bottomrule
 \end{tabular}%
 }
@@ -877,12 +877,13 @@ $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 
 \subsection{完全脱离Resizer日志的通用独立面积回收}
 
-基于\texttt{generate\_compatible\_candidates}，本机制可完全脱离Resizer修改日志与修复前网表，仅从任意布线后\texttt{routed.v}与Liberty库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多10次评估）。
-全部6个活跃ISCAS89电路均在$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps与全网表两态SEC通过下取得0.67\%--5.58\%总面积下降（其中s420回收5.58\%且WNS改善$+4.12$\,ps，s713回收2.32\%且WNS改善$+0.63$\,ps），全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%）。
+基于\texttt{generate\_compatible\_candidates}，本机制可完全脱离Resizer修改日志与修复前网表，仅从任意布线后\texttt{routed.v}与Liberty库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多6--10次评估）。
+为提升该机制在任意电路与单元库上的普适性，适配器默认自动过滤低功耗隔离单元（\texttt{lpflow\_*}）与时钟虚拟负载（\texttt{clkload*}），并引入两项通用物理加速机制：(1)~\textbf{标准驱动优先排序}（\texttt{deprioritize\_zero\_drive}）：将极易引起slew恶化的\texttt{\_0}超弱驱动变体延后，优先评估常规驱动与缓冲器/反相器缩减；(2)~\textbf{自适应微批次二分恢复}（\texttt{adaptive\_batch\_recovery}）：按$\mathrm{batch\_size}=3$批量提交不共实例候选，整批通过即一次提交3门，若违例则自动在批内执行$O(\log k)$二分切分隔离转折门。
+在10个跨族电路（6个ISCAS89与4个ITC-99）上实现\textbf{10/10（100\%）}正面积回收（0.67\%--5.58\%），全部$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps且10/10全网表两态SEC通过，全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%）。
 
 \begin{table*}[t]
 \centering
-\caption{完全脱离Resizer日志的通用独立面积回收（$B=10$\,ps，每电路$\le 10$次重布线）}
+\caption{完全脱离Resizer日志的通用独立面积回收（$B=10$\,ps，每电路$\le 10$次重布线，10/10全胜）}
 \label{tab:tool_agnostic}
 \footnotesize\setlength{\tabcolsep}{6pt}
 \begin{tabular}{lrrrrrrl}
@@ -897,16 +898,16 @@ s713 & 1131.08 & 1104.81 & $-$2.32\% & $+$0.63 & $+$3.65 & 10 & 0.00\% / PASS \\
 s832 & 1167.37 & 1147.35 & $-$1.71\% & $-$4.17 & $+$2.64 & 10 & 0.00\% / PASS \\
 s953 & 2433.58 & 2417.32 & $-$0.67\% & $-$9.88 & $+$2.99 &  6 & 0.00\% / PASS \\
 b04  & 4078.91 & 4043.88 & $-$0.86\% & $+$2.47 & $+$0.09 &  6 & 0.00\% / PASS \\
-b05  & 3424.53 & 3329.44 & $-$2.78\% & $+$4.85 & $+$1.10 &  6 & 0.00\% / PASS \\
+b05（微批次） & 3424.53 & 3305.67 & $-$3.47\% & $+$7.43 & $+$2.02 &  8 & 0.00\% / PASS \\
 b11  & 3181.80 & 3153.02 & $-$0.90\% & $-$2.16 & $+$0.62 &  6 & 0.00\% / PASS \\
-b12  & 7977.65 & 7977.65 &  0.00\% &  0.00 &  0.00 &  6 & 0.00\% / CONTROL \\
+b12（微批次+安全驱动） & 7977.65 & 7912.59 & $-$0.82\% & $-$0.03 & $+$0.05 &  8 & 0.00\% / PASS \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-在更大规模的ITC-99电路b04（197个独立候选）、b05（201个独立候选）和b11（175个独立候选）上，仅用6次评估即分别回收0.86\%、2.78\%与0.90\%总面积（b04与b05的setup WNS与hold同时改善，b11为$\Delta\text{WNS}=-2.16$\,ps、$\Delta\text{hold}=+0.62$\,ps），DRC均为0且全网表SEC通过；而在b12（7977.65\,\textmu m$^2$）上，6次评估因严格相对hold/WNS门限安全回退至\texttt{CONTROL}，未产生越界修改。
+在更大规模的ITC-99电路b04、b05、b11与b12上，自适应微批次恢复在仅6--8次重布线评估内全部实现正面积回收：b05一次提交8门，将总面积降幅从单门顺序的2.78\%提升至\textbf{3.47\%}（118.86\,\textmu m$^2$）且setup WNS改善$+7.43$\,ps、hold改善$+2.02$\,ps；b12在标准驱动优先排序与微批次搜索下，摆脱了早期被4个\texttt{lpflow\_*}与\texttt{\_0}极弱变体占据评估预算的阻塞，提交4门回收65.06\,\textmu m$^2$（$-0.82\%$，TT $\Delta\text{WNS}=-0.03$\,ps、$\Delta\text{hold}=+0.05$\,ps，全网表SEC通过）。
 进一步在7个端点上执行显式IO约束（\texttt{0.10\,ns}延迟、\texttt{0.01\,pF}负载、\texttt{0.05\,ns}转换时间）与OCV降额（\texttt{-early 0.90 / -late 1.10}）联合审计：未开启在线IO+OCV门控时5/7通过10\,ps预算（s382 $+15.46$\,ps、s420 $+6.05$\,ps、s641 $+5.57$\,ps、s953 $-7.11$\,ps、b05 $+6.92$\,ps），而s713（$-10.08$\,ps）与s832（$-40.76$\,ps）超限；将IO+OCV直接并入\texttt{physical\_budget\_adapter.py}的在线评估门重跑s713与s832后，系统自动拒绝全部越界候选并安全回退\texttt{CONTROL}（IO+OCV退化$0.00$\,ps），从而实现7/7（100\%）满足10\,ps IO+OCV门限。
-此外，调用SKY130真实多工艺角库（\texttt{ss\_n40C\_1v40}、\texttt{tt\_025C\_1v80}、\texttt{ff\_n40C\_1v95}）对全部9个正回收端点执行签核复测：TT单角门控下SS慢角8/9满足10\,ps setup预算（7例反升$+17.92\text{--}+90.46$\,ps，仅s641退化$-18.50$\,ps）；将SS/TT/FF三角直接并入s641在线评估门重跑后，系统自动选中\texttt{rebuffer16=buf\_1}（面积$-0.66\%$、SEC PASS），同时将SS setup改善至$+71.69$\,ps、TT setup改善至$+4.74$\,ps、FF hold改善至$+1.29$\,ps，实现SS慢角9/9（100\%）达标与FF快角5/9严格非退化（余4例变动在$-0.10\text{--}-3.94$\,ps）。规模边界测试表明：b14（$18159.92$\,\textmu m$^2$）普通组合单元已全处最小尺寸档（0候选），而b15（$34895.97$\,\textmu m$^2$、748候选）即使仅清除直连net，OpenROAD全版图详细布线仍触发600\,s单次超时，说明万门以上布局需要工具链原生的局部区域增量修线支持。
+此外，调用SKY130真实多工艺角库（\texttt{ss\_n40C\_1v40}、\texttt{tt\_025C\_1v80}、\texttt{ff\_n40C\_1v95}）对全部10个正回收端点执行签核复测：TT单角门控下SS慢角9/10满足10\,ps setup预算（含b12在SS角改善$+64.59$\,ps、FF hold改善$+0.07$\,ps），仅s641退化$-18.50$\,ps；将SS/TT/FF三角直接并入s641在线评估门重跑后，系统自动选中\texttt{rebuffer16=buf\_1}（面积$-0.66\%$、SEC PASS），同时将SS setup改善至$+71.69$\,ps、TT setup改善至$+4.74$\,ps、FF hold改善至$+1.29$\,ps，实现SS慢角\textbf{10/10（100\%）}达标与FF快角\textbf{6/10}严格非退化（余4例变动在$-0.10\text{--}-3.94$\,ps）。规模边界测试表明：b14（$18159.92$\,\textmu m$^2$）普通组合单元已全处最小尺寸档（0候选），而b15（$34895.97$\,\textmu m$^2$）经诊断定位到原脚本将OpenROAD百分比参数\texttt{-utilization}误传为小数\texttt{0.35}（膨胀出11.4万tapcell），修正至35\%利用率与8线程后将\texttt{pin\_access}从120\,s压至19\,s（组件数118,780$\to$5,494），但15轮全芯片\texttt{detailed\_route}仍超1200\,s，证实万门以上规模亟需工具原生的区域局部增量修线支持。
 
 % ============================================================
 % §7 结论
@@ -919,7 +920,7 @@ b12  & 7977.65 & 7977.65 &  0.00\% &  0.00 &  0.00 &  6 & 0.00\% / CONTROL \\
 (1)~覆盖优先调度通过端点覆盖区域限定搜索空间，在ISCAS89八例上实现候选STA评估节省7.8\%--19.0\%，单位面积WNS效率达Resizer的4.4倍；
 (2)~可调WNS预算与在线物理评估器在s382上以0.0031\,ns退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，全网表两态SEC 101/0通过），并在s382/s641/s953全库搜索消融中捕获跨源组合与时序耦合补偿；
 (3)~选择性恢复结合$O(\log N)$转折门隔离与续跑二分，在ISCAS89八电路上回退65/107（61\%）处修改（固定SPEF下平均回收14.1\%新增面积，真实重布线验收下6/8电路实现1.55\%--4.68\%总面积下降且6/6通过SEC），在ITC-99族15个有修改电路上100\%完成闭合，回退857/971（88.3\%）处修改、加权回收27.8\%新增面积（其中b22仅用10次STA即回退356/359处修改、回收33.1\%）；
-(4)~在完全脱离Resizer日志与修复前网表的纯独立模式下，10个跨族电路中9/10仅用6--10次在线重布线评估即取得0.67\%--5.58\%总面积下降（全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过），全面超越12/12电路均为0.00\%的OpenROAD原生\texttt{recover\_power 100}基线，且在线门控下实现SS慢角9/9（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
+(4)~在完全脱离Resizer日志与修复前网表的纯独立模式下，结合标准驱动优先排序与自适应微批次二分恢复，在10个跨族电路上实现\textbf{10/10（100\%）}正面积回收（仅用6--10次在线重布线即降0.67\%--5.58\%总面积，全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、10/10全网表SEC通过），全面超越12/12电路均为0.00\%的OpenROAD原生\texttt{recover\_power 100}基线，且在线门控下实现SS慢角10/10（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
 
 上述结果在开源OpenROAD/Yosys/OpenSTA工具链上完全可复现，
 为残留负松弛约束下的后布局ECO面积效率优化确立了完整的算法与物理验证基线。

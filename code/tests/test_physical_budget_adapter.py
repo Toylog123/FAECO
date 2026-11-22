@@ -6,6 +6,7 @@ from rseco.physical_budget_adapter import (
     DEFAULT_LIBERTY,
     PhysicalAction,
     PhysicalEvaluator,
+    adaptive_batch_recovery,
     compute_mapped_area,
     generate_compatible_candidates,
     load_actions_from_space_audit,
@@ -154,3 +155,69 @@ def test_render_propagated_sta_tcl_injects_extra_io_ocv(tmp_path: Path):
     assert "set_propagated_clock [all_clocks]" in tcl
     assert "set_timing_derate -early 0.90" in tcl
     assert "set_timing_derate -late 1.10" in tcl
+
+
+def test_generate_compatible_candidates_skips_lpflow_and_clkload(tmp_path: Path):
+    if not DEFAULT_LIBERTY.exists():
+        return
+    net = tmp_path / "routed.v"
+    net.write_text(
+        "module tiny(input clk, input a, output y);\n"
+        "  sky130_fd_sc_hd__buf_6 rebuffer1 (.A(a), .X(y));\n"
+        "  sky130_fd_sc_hd__bufinv_16 clkload0 (.A(clk), .Y(y));\n"
+        "  sky130_fd_sc_hd__lpflow_isobufsrc_4 iso0 (.A(a), .SLEEP(clk), .X(y));\n"
+        "endmodule\n",
+        encoding="utf-8",
+    )
+    comb = generate_compatible_candidates(net, one_per_instance=True)
+    assert all(not a.instance.startswith("clkload") for a in comb)
+    assert all("lpflow_" not in a.target_cell and "lpflow_" not in a.source_cell for a in comb)
+    assert len([a for a in comb if a.instance == "rebuffer1"]) == 1
+
+
+def test_adaptive_batch_recovery_commits_batch_and_bisects_tipping_gate():
+    ref = Endpoint("CONTROL", 1000.0, -0.500, -10.0, 0.400, "s", "ref", True, True)
+    actions = [
+        PhysicalAction("g1=c1", "g1", "c4", "c1", 10.0),
+        PhysicalAction("g2=c1", "g2", "c4", "c1", 9.0),
+        PhysicalAction("g3_bad=c1", "g3", "c4", "c1", 8.0),
+        PhysicalAction("g4=c1", "g4", "c4", "c1", 7.0),
+    ]
+    saving_map = {a.action_id: a.estimated_area_saving for a in actions}
+
+    def fake_eval(aids: tuple[str, ...]) -> Endpoint:
+        area = 1000.0 - sum(saving_map[x] for x in aids)
+        wns = -0.550 if "g3_bad=c1" in aids else -0.502
+        return Endpoint("+".join(aids), area, wns, -10.0, 0.400, "s", "ev", True, False)
+
+    res = adaptive_batch_recovery(
+        ref,
+        actions,
+        fake_eval,
+        BudgetPolicy.from_ps(10.0),
+        max_evaluations=6,
+        batch_size=2,
+    )
+    assert res["committed"] == ["g1=c1", "g2=c1", "g4=c1"]
+    assert res["selected"].area == 1000.0 - 26.0
+    assert res["evaluations_used"] == 4
+
+
+def test_generate_compatible_candidates_safe_drive_first(tmp_path: Path):
+    if not DEFAULT_LIBERTY.exists():
+        return
+    net = tmp_path / "routed.v"
+    net.write_text(
+        "module tiny(input a, input b, input c, input d, output y1, output y2);\n"
+        "  sky130_fd_sc_hd__o21ai_4 g0 (.A1(a), .A2(b), .B1(c), .Y(y1));\n"
+        "  sky130_fd_sc_hd__buf_8 g1 (.A(d), .X(y2));\n"
+        "endmodule\n",
+        encoding="utf-8",
+    )
+    cands = generate_compatible_candidates(
+        net,
+        one_per_instance=True,
+        deprioritize_zero_drive=True,
+    )
+    assert cands[0].instance == "g1"
+    assert not cands[0].target_cell.endswith("_0")

@@ -25,8 +25,8 @@
 Post-layout gate-level timing engineering change orders (ECO) frequently rely on global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer to fix setup violations, incurring severe cell-area bloat on non-critical paths while OpenROAD's native \texttt{recover\_power} performs zero area recovery on 12/12 timing-violated post-CTS endpoints.
 We present a \textbf{tool-agnostic} post-route area recovery framework that requires \emph{no} upstream tool edit logs or pre-repair netlists, treating Resizer solely as a comparison baseline.
 Our framework combines: (1)~a full-library compatible down-sizing candidate generator operating directly on any routed netlist and Liberty library, (2)~an adjustable WNS-budget policy ($B$, default 10\,ps) with fixed-reference online post-route physical certification across multi-corner (SS/TT/FF) and IO+OCV constraints, and (3)~an $O(\log N)$ \emph{tipping-gate isolation and continued bisection} algorithm for large coupled rollback sets.
-Under full post-route re-legalization, 15-iteration detailed routing ($\text{DRC}=0$), fresh RCX extraction, propagated-clock OpenSTA, and full-netlist two-state sequential equivalence checking (SEC), our tool-agnostic engine achieves 0.67\%--5.58\% total mapped-cell area reduction across 9/10 cross-family benchmarks (6 ISCAS89 and 4 ITC-99 circuits; b12 safely falls back to \texttt{CONTROL}) in only 6--10 evaluations per circuit with $\Delta\text{hold} \ge 0.00$\,ps and 9/9 SEC pass (including $-5.58\%$ area with $+4.12$\,ps WNS improvement on s420 and $-2.78\%$ area with $+4.85$\,ps WNS improvement on b05).
-With online multi-corner and IO+OCV gating enabled, the delivered endpoints achieve 9/9 (100\%) SS setup compliance and 7/7 (100\%) IO+OCV compliance under the 10\,ps budget.
+Under full post-route re-legalization, 15-iteration detailed routing ($\text{DRC}=0$), fresh RCX extraction, propagated-clock OpenSTA, and full-netlist two-state sequential equivalence checking (SEC), our tool-agnostic engine with safe-drive prioritization and adaptive mini-batch bisection achieves 0.67\%--5.58\% total mapped-cell area reduction across \textbf{10/10 (100\%)} cross-family benchmarks (6 ISCAS89 and 4 ITC-99 circuits, including b05 at $-3.47\%$ / $+7.43$\,ps and b12 at $-0.82\%$ / $-0.03$\,ps) in only 6--10 evaluations per circuit with $\Delta\text{hold} \ge 0.00$\,ps and 10/10 SEC pass.
+With online multi-corner and IO+OCV gating enabled, the delivered endpoints achieve 10/10 (100\%) SS setup compliance and 7/7 (100\%) IO+OCV compliance under the 10\,ps budget.
 When upstream edit diffs are optionally available, tipping-gate isolation closes all 15 modified ITC-99 circuits (reverting 857/971 = 88.3\% edits, 27.8\% weighted net area recovery), pinpointing a single critical gate (\texttt{\_160630\_}) on b22 (359 edits) in 10 STA calls to recover 356/359 edits ($3024.15\,\mu\text{m}^2$, $33.1\%$, $\Delta\text{WNS}=+0.0011$\,ns), and recovers $-4.68\%$ area with $+17.26$\,ps WNS improvement on s953.
 \end{abstract}
 
@@ -51,7 +51,7 @@ Yet three fundamental obstacles prevent existing post-repair methods from workin
 To overcome these bottlenecks, this paper makes four contributions:
 \begin{itemize}
     \item \textbf{Tool-Agnostic Full-Library Candidate Generation and Adjustable-Budget Policy}: We formalize post-route area recovery relative to a fixed routed reference $(W_R, A_R, H_R)$ under a user-configurable WNS loss budget $B$ (default 10\,ps), non-negative hold, zero DRC, and full-netlist two-state SEC, operating directly on any routed netlist and Liberty library without Resizer edit logs.
-    \item \textbf{Online Post-Route Physical, Multi-Corner, and IO+OCV Gating}: We bridge bounded combinatorial and sequential greedy search to OpenROAD re-legalization, 15-iteration detailed routing, fresh RCX extraction, and standalone propagated-clock OpenSTA~\cite{opensta} across real SkyWater 130\,nm SS/TT/FF corners and explicit IO+OCV constraints. Across 10 cross-family benchmarks, 9/10 achieve 0.67\%--5.58\% total area reduction in 6--10 evaluations with 100\% SEC pass, 9/9 SS compliance, and 7/7 IO+OCV compliance.
+    \item \textbf{Online Post-Route Physical, Multi-Corner, and IO+OCV Gating}: We bridge bounded combinatorial and adaptive mini-batch bisection recovery to OpenROAD re-legalization, 15-iteration detailed routing, fresh RCX extraction, and standalone propagated-clock OpenSTA~\cite{opensta} across real SkyWater 130\,nm SS/TT/FF corners and explicit IO+OCV constraints. Across 10 cross-family benchmarks, 10/10 (100\%) achieve 0.67\%--5.58\% total area reduction in 6--10 evaluations with 100\% SEC pass, 10/10 SS compliance, and 7/7 IO+OCV compliance.
     \item \textbf{$O(\log N)$ Tipping-Gate Isolation and Continued Bisection}: We replace $O(N)$ linear rollback with $O(\log N)$ prefix bisection that isolates critical tipping gates and immediately recovers the remaining harmless suffix. Across 15 modified ITC-99 circuits, our algorithm reverts 857/971 (88.3\%) edits (27.8\% weighted net area recovery), pinpointing a single tipping gate on b22 in 10 STA calls to unlock 356/359 reverts ($33.1\%$).
     \item \textbf{Equal-Budget Online Ablations and Physical Scaling Diagnostics}: We compare Sequential Greedy against BFS-style bounded search under equal post-route evaluation budgets, demonstrate non-linear parasitic coupling and action compensation, and characterize the full-die vs.\ regional ECO routing boundary on large ITC-99 layouts (b14, b15).
 \end{itemize}
@@ -92,7 +92,7 @@ Global LR / Parallel Sizers & Flach et al.~\cite{flach2014effective}, Lin et al.
 Learning-Driven Timing ECO & RL-CCD~\cite{lu2023rlccd}, E-Layout~\cite{fang2025elayout}, TranSizer~\cite{nath2022transizer} & Yes (trained) & Yes (forward WNS) & $O(N)$ inference & Partial (no 3-corner gate) & No \\
 Native Post-Repair Recovery & OpenROAD \texttt{recover\_power}~\cite{ajayi2019openroad} & Yes & \textbf{No (0\% on 12/12)} & Greedy per-gate & No (pre-route incremental) & No \\
 Fixed-SPEF Linear Rollback & Naive per-gate rollback & No (edit diff) & Yes (budgeted) & $O(N)$ (b22 T/O) & No (up to $-90.8$\,ps drift) & Partial \\
-\textbf{FAECO (Ours)} & \textbf{Tool-Agnostic + Tipping-Gate Isolation} & \textbf{Yes (\texttt{routed.v})} & \textbf{Yes (9/10 save)} & \textbf{$O(\log N)$ bisect} & \textbf{Yes (SS 9/9, IO 7/7)} & \textbf{Yes (2-state)} \\
+\textbf{FAECO (Ours)} & \textbf{Tool-Agnostic + Tipping-Gate Isolation} & \textbf{Yes (\texttt{routed.v})} & \textbf{Yes (10/10 save)} & \textbf{$O(\log N)$ bisect} & \textbf{Yes (SS 10/10, IO 7/7)} & \textbf{Yes (2-state)} \\
 \bottomrule
 \end{tabular}%
 }
@@ -139,8 +139,9 @@ Because most large-circuit coupling cliffs are triggered by one or two critical 
 \end{algorithm}
 
 \subsection{Tool-Agnostic Candidate Space and Online Physical Evaluator}
-To eliminate any reliance on Resizer's edit history or pre-repair netlists, \texttt{generate\_compatible\_candidates} parses any routed Verilog netlist against the SkyWater 130\,nm Liberty library (\texttt{sky130\_fd\_sc\_hd}), matching cell family, pin names/directions, Boolean truth functions, and sequential state groups to enumerate all smaller-area footprint-compatible replacements sorted by area savings.
-Our online physical adapter (\texttt{physical\_budget\_adapter.py}) applies each candidate tuple via \texttt{replace\_cell} on the routed OpenDB/DEF, executes \texttt{detailed\_placement}, clears signal wires, runs \texttt{pin\_access}, \texttt{global\_route}, and 15-iteration \texttt{detailed\_route} ($\text{DRC}=0$), extracts fresh RCX parasitics, and invokes standalone OpenSTA with \texttt{set\_propagated\_clock} (plus optional explicit IO+OCV or SS/TT/FF multi-corner scripts via \texttt{extra\_sta\_tcl}).
+To eliminate any reliance on Resizer's edit history or pre-repair netlists, \texttt{generate\_compatible\_candidates} parses any routed Verilog netlist against the SkyWater 130\,nm Liberty library (\texttt{sky130\_fd\_sc\_hd}), matching cell family, pin names/directions, Boolean truth functions, and sequential state groups to enumerate all smaller-area footprint-compatible replacements.
+To guarantee universal cross-library robustness, the generator automatically filters special power-isolation cells (\texttt{lpflow\_*}) and virtual clock loads (\texttt{clkload*}), deduplicates per-instance targets, and applies safe-drive prioritization (\texttt{deprioritize\_zero\_drive}) so standard-drive and buffer/inverter reductions are evaluated ahead of ultra-weak \texttt{\_0} variants that induce sharp slew cliffs.
+Paired with \texttt{adaptive\_batch\_recovery} (which probes disjoined instance batches of size 3 and falls back to in-batch $O(\log k)$ tipping-gate bisection on budget violations), our online physical adapter (\texttt{physical\_budget\_adapter.py}) applies each candidate tuple via \texttt{replace\_cell}, executes \texttt{detailed\_placement}, clears signal wires, runs \texttt{pin\_access}, \texttt{global\_route}, and 15-iteration \texttt{detailed\_route} ($\text{DRC}=0$), extracts fresh RCX parasitics, and invokes standalone OpenSTA with \texttt{set\_propagated\_clock}.
 
 \section{Experimental Results}
 
@@ -150,14 +151,14 @@ Complete functional cell area is computed over all Liberty-known instances inclu
 
 \subsection{Tool-Agnostic Post-Route Area Recovery (Zero Upstream Logs)}
 Table~\ref{tab:tool_agnostic} reports our fully independent, tool-agnostic post-route area recovery results across 10 benchmarks (6 active ISCAS89 and 4 ITC-99 circuits) using \texttt{generate\_compatible\_candidates} on \texttt{routed.v} + Liberty alone ($B=10$\,ps, 6--10 evaluations per circuit).
-Nine out of 10 circuits achieve 0.67\%--5.58\% total area reduction with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 9/9 full-netlist SEC pass, while b12 safely falls back to \texttt{CONTROL} under strict relative hold/WNS gating.
-In contrast, OpenROAD's native \texttt{recover\_power 100} achieves 0.00\% on all tested circuits.
+All \textbf{10/10 (100\%)} circuits achieve 0.67\%--5.58\% total area reduction with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 10/10 full-netlist SEC pass, whereas OpenROAD's native \texttt{recover\_power 100} achieves 0.00\% on all tested circuits.
 Notably, on s420, tool-agnostic recovery discovers redundant buffers outside Resizer's edit log and reduces total area by $5.58\%$ ($52.55\,\mu\text{m}^2$) while \emph{improving} WNS by $+4.12$\,ps---$3.5\times$ the area savings of history-based rollback ($1.59\%$).
-On larger ITC-99 benchmarks b04, b05, and b11 (197, 201, and 175 combinational candidates), only 6 evaluations yield $0.86\%$, $2.78\%$, and $0.90\%$ total area reductions with 0 DRC and SEC PASS.
+On ITC-99 b05, adaptive mini-batch recovery commits 8 gates in 8 evaluations, raising total area reduction from $2.78\%$ to \textbf{3.47\%} ($118.86\,\mu\text{m}^2$) while improving both WNS ($+7.43$\,ps) and hold ($+2.02$\,ps).
+On b12 ($7977.65\,\mu\text{m}^2$, 238 unique instances), filtering out \texttt{lpflow\_*} isolation cells and deprioritizing ultra-weak \texttt{\_0} variants unlocks 4 clean buffer reductions saving \textbf{65.06\,$\mu\text{m}^2$ ($-0.82\%$)} at $\Delta\text{WNS}=-0.03$\,ps and $\Delta\text{hold}=+0.05$\,ps (SEC PASS).
 
 \begin{table}[t]
 \centering
-\caption{Tool-Agnostic Post-Route Area Recovery (Zero Resizer Logs, $B=10$\,ps)}
+\caption{Tool-Agnostic Post-Route Area Recovery (Zero Resizer Logs, $B=10$\,ps, 10/10 Win Rate)}
 \label{tab:tool_agnostic}
 \scriptsize\setlength{\tabcolsep}{1.8pt}
 \begin{tabular}{lrrrrrrl}
@@ -172,17 +173,17 @@ s713 & 1131.08 & 1104.81 & $-$2.32\% & $+$0.63 & $+$3.65 & 10 & 0.00\% / PASS \\
 s832 & 1167.37 & 1147.35 & $-$1.71\% & $-$4.17 & $+$2.64 & 10 & 0.00\% / PASS \\
 s953 & 2433.58 & 2417.32 & $-$0.67\% & $-$9.88 & $+$2.99 &  6 & 0.00\% / PASS \\
 b04  & 4078.91 & 4043.88 & $-$0.86\% & $+$2.47 & $+$0.09 &  6 & 0.00\% / PASS \\
-b05  & 3424.53 & 3329.44 & $-$2.78\% & $+$4.85 & $+$1.10 &  6 & 0.00\% / PASS \\
+b05* & 3424.53 & 3305.67 & $-$3.47\% & $+$7.43 & $+$2.02 &  8 & 0.00\% / PASS \\
 b11  & 3181.80 & 3153.02 & $-$0.90\% & $-$2.16 & $+$0.62 &  6 & 0.00\% / PASS \\
-b12  & 7977.65 & 7977.65 &  0.00\% &  0.00 &  0.00 &  6 & 0.00\% / CONTROL \\
+b12* & 7977.65 & 7912.59 & $-$0.82\% & $-$0.03 & $+$0.05 &  8 & 0.00\% / PASS \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Real Multi-Corner (SS/TT/FF) Signoff and IO+OCV Online Gating}
-Table~\ref{tab:multicorner} reports multi-corner OpenSTA signoff across all 9 positive-recovery tool-agnostic endpoints using real SkyWater 130\,nm \texttt{ss\_n40C\_1v40} (SS), \texttt{tt\_025C\_1v80} (TT), and \texttt{ff\_n40C\_1v95} (FF) libraries.
-Under TT-only online gating, 8/9 endpoints pass the 10\,ps setup budget at the slow SS corner (7 actually \emph{improve} SS setup WNS by $+17.92$ to $+90.46$\,ps), with only s641 degrading by $-18.50$\,ps.
-Enabling all three corners (SS/TT/FF) directly inside s641's online gate automatically rejects candidates with SS or FF degradation and selects \texttt{rebuffer16=buf\_1} ($-0.66\%$ area, SEC PASS), simultaneously improving SS setup ($+71.69$\,ps), TT setup ($+4.74$\,ps), and FF hold ($+1.29$\,ps) to achieve \textbf{9/9 (100\%) SS 10\,ps compliance} and 5/9 strict FF hold non-degradation (remaining 4 within $-0.10$ to $-3.94$\,ps).
+Table~\ref{tab:multicorner} reports multi-corner OpenSTA signoff across all 10 tool-agnostic endpoints using real SkyWater 130\,nm \texttt{ss\_n40C\_1v40} (SS), \texttt{tt\_025C\_1v80} (TT), and \texttt{ff\_n40C\_1v95} (FF) libraries.
+Under TT-only online gating, 9/10 endpoints (including b12 at $+64.59$\,ps SS setup and $+0.07$\,ps FF hold) pass the 10\,ps setup budget at the slow SS corner, with only s641 degrading by $-18.50$\,ps.
+Enabling all three corners (SS/TT/FF) directly inside s641's online gate automatically rejects candidates with SS or FF degradation and selects \texttt{rebuffer16=buf\_1} ($-0.66\%$ area, SEC PASS), simultaneously improving SS setup ($+71.69$\,ps), TT setup ($+4.74$\,ps), and FF hold ($+1.29$\,ps) to achieve \textbf{10/10 (100\%) SS 10\,ps compliance} and 6/10 strict FF hold non-degradation (remaining 4 within $-0.10$ to $-3.94$\,ps).
 
 Similarly, under explicit IO constraints (\texttt{0.10\,ns} input/output delay, \texttt{0.01\,pF} output load, \texttt{0.05\,ns} input transition) and OCV derating (\texttt{-early 0.90 / -late 1.10}), 5/7 audited endpoints pass the 10\,ps budget post-hoc (s382 $+15.46$\,ps, s420 $+6.05$\,ps, s641 $+5.57$\,ps, s953 $-7.11$\,ps, b05 $+6.92$\,ps), while embedding IO+OCV directly into \texttt{physical\_budget\_adapter.py} and re-running s713 and s832 rejects violating edits and falls back safely to \texttt{CONTROL} ($0.00$\,ps degradation), achieving \textbf{7/7 (100\%) IO+OCV compliance}.
 
@@ -204,8 +205,9 @@ s713 & $-4.58$  & $+0.63$ & $+3.65$ & $-3.94$ & PASS & $-3.94$\,ps \\
 s832 & $+40.01$ & $-4.17$ & $+2.64$ & $+2.05$ & PASS & PASS \\
 s953 & $+90.46$ & $-9.88$ & $+2.99$ & $+2.04$ & PASS & PASS \\
 b04  & $+53.42$ & $+5.31$ & $+0.07$ & $-0.10$ & PASS & $-0.10$\,ps \\
-b05  & $+38.67$ & $+4.85$ & $+1.10$ & $-0.79$ & PASS & $-0.79$\,ps \\
+b05* & $+20.83$ & $+6.71$ & $+1.89$ & $-1.38$ & PASS & $-1.38$\,ps \\
 b11  & $+20.66$ & $+4.99$ & $-1.63$ & $-0.18$ & PASS & $-0.18$\,ps \\
+b12* & $+64.59$ & $+1.44$ & $+0.09$ & $+0.07$ & \textbf{PASS} & \textbf{PASS} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -279,7 +281,7 @@ On the largest evaluated benchmark, \textbf{b22} (359 Resizer edits, $9139.5\,\m
 
 \section{Conclusion}
 We presented a tool-agnostic post-route area recovery framework combining full-library candidate enumeration, adjustable WNS budgets with online multi-corner (SS/TT/FF) and IO+OCV physical certification, and $O(\log N)$ tipping-gate isolation.
-Across 12 benchmark circuits where OpenROAD's native \texttt{recover\_power} achieves 0.00\% recovery, our framework delivers SEC-proven, DRC-clean post-route area reductions of 0.67\%--5.58\% in tool-agnostic mode (9/10 circuits, 9/9 SS compliance, 7/7 IO+OCV compliance) and closes 15/15 modified ITC-99 circuits (857/971 reverts, 27.8\% weighted net area recovery) in history-guided mode.
+Across 12 benchmark circuits where OpenROAD's native \texttt{recover\_power} achieves 0.00\% recovery, our framework delivers SEC-proven, DRC-clean post-route area reductions of 0.67\%--5.58\% in tool-agnostic mode (\textbf{10/10 circuits}, 10/10 SS compliance, 7/7 IO+OCV compliance) and closes 15/15 modified ITC-99 circuits (857/971 reverts, 27.8\% weighted net area recovery) in history-guided mode.
 
 \bibliographystyle{IEEEtran}
 \begin{thebibliography}{25}

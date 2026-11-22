@@ -722,3 +722,9 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - 统一 `FAECO_v3_后布局可调预算面积回收.tex` 的中英文摘要、`§1 引言`、`§5.2`、`§6.4` 与 `§7 结论` 口径（15/15 ITC-99 有修改电路闭合、回退 857/971 = 88.3%、加权回收 27.8%、`b22` 10 次 STA 转折门隔离 356/359 = 33.1%；10 电路纯独立重布线 9/10 正回收 0.67%–5.58% + SEC PASS；12/12 原生 `recover_power` 0.00%；SS 慢角 9/9 与 IO+OCV 7/7 在线门控 100% 达标）。
 - 重构中英文双稿《背景与相关工作》为四象限结构并新增方法对比表 `tab:related_work`，扩充权威参考文献至 24–25 篇；英文稿 `FAECO_postroute_recovery.tex` 扩充为 5 页完整 IEEEtran 论文（含多角签核表 `tab:multicorner` 与 `budget_curves.pdf`）。
 - 验收：中文稿 LuaLaTeX 双遍 12 页、英文稿 pdfLaTeX 双遍 5 页，均 **0 Error / 0 Overfull / 0 Undefined**，同步至 `paper/{zh,en}/build/`。
+
+
+## 2026-11-22：通用微批次二分与安全驱动排序结果同步（10/10 全胜 + SS 10/10）
+
+- 同步中英文双稿摘要、引言贡献、方法说明、表 `tab:tool_agnostic`、`tab:related_work` 与结论：`b05` 升级至 `-3.47%`（8 门，WNS `+7.43 ps`），`b12` 攻克至 `-0.82%`（4 门，WNS `-0.03 ps`、SS `+64.59 ps`、SEC PASS），实现纯独立重布线 **10/10（100%）全胜** 与 **SS 10/10 达标**。
+- 补充 `b15` 在 35% 利用率 + 8 线程下的诊断数据（`pin_access` 120s → 19s，全芯片 `detailed_route` 仍超 1200s）。

@@ -5605,3 +5605,15 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 3. 将 `paper/en/manuscript/FAECO_postroute_recovery.tex` 扩充为 5 页完整 IEEEtran 论文（新增 `Section II: Related Work`、表 `tab:related_work`、表 `tab:multicorner`、图 `budget_curves.pdf` 及完整实验与规模诊断小节）。
 4. 定位 `b15` 原版图 600s 超时根因：`experiments/20261113_itc99_recovery/arms/Resizer/b15/resizer_flow.tcl` 将 OpenROAD 百分比参数 `-utilization` 误写为 `0.35`（0.35% 利用率），使版图面积膨胀 100 倍（`8.60e6 µm²`）并插入 `114,480` 个 tapcell（记入 `docs/EXPERIENCE.md`）。
 5. 双稿双遍编译通过（中文 v3 稿 12 页、英文稿 5 页，均 **0 Error / 0 Overfull / 0 Undefined citation**）并同步至 `build/`。
+
+
+**LOG-20261122-01 / 通用微批次二分与安全驱动排序落地——纯独立重布线 10/10 全胜 + SS 10/10 闭环（2026-11-22）**：
+1. 在 `code/src/rseco/physical_budget_adapter.py` 中合入两项通用基础设施升级并全部通过回归测试（`54 passed`）：
+   - `generate_compatible_candidates` 默认过滤 `lpflow_*` 隔离单元与 `clkload*` 虚拟时钟负载，支持 `one_per_instance=True` 去重与 `deprioritize_zero_drive=True`（标准驱动优先、`\_0` 超弱驱动延后、缓冲器/反相器优先）；
+   - 新增 `adaptive_batch_recovery`（`batch_size=3` 微批次批量提交，违例时自动批内 $O(\log k)$ 二分切分隔离转折门）。
+2. 在 ITC-99 大中电路实测验证全面突破：
+   - **`b05`**：微批次在 8 次评估内提交 8 门，总面积降幅从 `−2.78%` 提升至 **`−3.47%`（`118.86 µm²`）**，Setup WNS 改善 **`+7.43 ps`**、Hold 改善 **`+2.02 ps`**、SS `+20.83 ps`、TT `+6.71 ps`、FF `+3.78 ps`、`SEC PASS`；
+   - **`b12`**：消除 `lpflow_*` 与 `_0` 变体阻塞后提交 4 门，总面积降 **`−0.82%`（`65.06 µm²`）**、$\Delta\text{WNS}=-0.031\text{ ps}$、$\Delta\text{hold}=+0.048\text{ ps}$，三角签名全部改善（**SS `+64.59 ps`、TT `+1.44 ps`、FF Hold `+0.07 ps`**）、`SEC PASS`。
+3. 至此脱离 Resizer 日志的纯独立重布线达成 **10/10（100%）正面积回收**、**10/10 DRC=0**、**10/10 SEC PASS**、**SS 慢角 10/10（100%）10 ps 达标**、**FF Hold 6/10 严格非退化**。
+4. 在 `b15`（35% 利用率 + `-threads 8`）下验证 `pin_access` 耗时由 120s 降至 19s（组件 118,780 → 5,494），但 15 轮全图 `detailed_route` 仍超 1200s。
+5. 同步更新 `postroute_recovery_20261120/REPORT.md` 与中英文双稿并重编译提交。
