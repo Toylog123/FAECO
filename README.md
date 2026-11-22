@@ -1,7 +1,7 @@
 # FAECO：覆盖优先调度与可调预算的后布局门级时序 ECO 面积回收
 
-> **2026-11-22 当前总入口：[`project_docs/HANDOFF_2026-11-22.md`](project_docs/HANDOFF_2026-11-22.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
-> 当前处于 **`v20`（`v2026-11-22-postroute-v3-zh`）** 中文 v3 后布局收口态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)），已完成学术化去工程表达、5 套 Nature 风格矢量图表嵌入、目录清理及版本整理；英文稿 `paper/en/` 暂冻维持历史同步点。
+> **2026-11-23 当前总入口：[`project_docs/HANDOFF_2026-11-22.md`](project_docs/HANDOFF_2026-11-22.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
+> 当前处于 **`v21`（`v2026-11-23-postroute-baselines-b15`）** 中文 v3 后布局定稿态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，15 页 / 6 套 Nature 矢量图），新增同起点四方法强基线对照、10/10 完整 PPA 功耗与 IO+OCV 签核，以及万门级 `b15` 局部增量绕线 `7.7×` 提速闭合；英文稿 `paper/en/` 暂冻。
 
 <details>
 <summary>历史入口归档（2026-11-09 / 2026-11-13 预布局与单点过渡期说明，点击展开仅作溯源）</summary>

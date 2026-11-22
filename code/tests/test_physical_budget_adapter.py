@@ -221,3 +221,35 @@ def test_generate_compatible_candidates_safe_drive_first(tmp_path: Path):
     )
     assert cands[0].instance == "g1"
     assert not cands[0].target_cell.endswith("_0")
+
+
+def test_generate_compatible_candidates_slack_margins_and_local_tcl(tmp_path: Path):
+    from rseco.physical_budget_adapter import render_local_incremental_flow_tcl
+
+    if not DEFAULT_LIBERTY.exists():
+        return
+    net = tmp_path / "routed.v"
+    net.write_text(
+        "module tiny(input a, input b, input c, input d, output y1, output y2);\n"
+        "  sky130_fd_sc_hd__buf_8 g_crit (.A(a), .X(y1));\n"
+        "  sky130_fd_sc_hd__buf_4 g_slack (.A(b), .X(y2));\n"
+        "endmodule\n",
+        encoding="utf-8",
+    )
+    cands = generate_compatible_candidates(
+        net,
+        one_per_instance=True,
+        deprioritize_zero_drive=True,
+        slack_margins_ps={"g_crit": 0.0, "g_slack": 180.0},
+    )
+    assert cands[0].instance == "g_slack"
+    tcl = render_local_incremental_flow_tcl(
+        odb_path=tmp_path / "ctrl.odb",
+        spef_path=tmp_path / "ctrl.spef",
+        out_dir=tmp_path / "out",
+        top_module="b15",
+        period=0.5,
+        clk_port="CK",
+        replacements=[("g_slack", "sky130_fd_sc_hd__buf_1")],
+    )
+    assert "CLEARED_TOUCHED_WIRES" in tcl and "global_route -allow_congestion" in tcl

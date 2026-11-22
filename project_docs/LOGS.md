@@ -5644,3 +5644,12 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
    - `paper/zh/build/` 仅保留 3 份洁净 `.pdf` 与 `.gitkeep`/`fonts/`，过程日志与调试图片移入 `paper/zh/archives/build_legacy_20261122/`；
    - `paper/zh/figures/` 中 QA 栅格 `.png` 与 `.alignment.json` 迁入 `paper/zh/figures/qa_previews/`。
 3. 新建 `versions/v20/`（`v2026-11-22-postroute-v3-zh`）与 `MANIFEST.sha256`，更新 `BASELINE_INDEX.csv`（`v19` 标为 `superseded`，`v20` 标为 `active`）、`project_docs/HANDOFF_2026-11-22.md`、`paper/zh/README.md`、`README.md`、`project_docs/CANON.md` 与 `.codex-handoff.json`。
+
+
+**LOG-20261123-01 / 强外部基线对照、完整 PPA/IO+OCV、万门 `b15` 局部增量绕线突破与 `v21` 定稿（2026-11-23）**：
+1. **代码与测试升级**：`code/src/rseco/physical_budget_adapter.py` 新增 `slack_margins_ps` 联合松弛裕量排序与 `render_local_incremental_flow_tcl`；`code/tests/test_physical_budget_adapter.py` 新增对应单测，`pytest` 核心 55 项全通过。
+2. **证据闭环入库（`project_docs/evidence/postroute_strong_baselines_20261122/{REPORT.md, SUMMARY.json}`）**：
+   - 全 10 跨族电路四方法同起点对照：Native `0/10`、`FIXED_SPEF_SENS_BATCH` `5/10`（有效均降 `0.14%`，`s641/s713/s832` 违例 `-40.89 ~ -123.44 ps`）、`ONLINE_SENS_GREEDY` `9/10`（均降 `2.11%`，`s953` `0.00%`、`b12` `0.41%`）、FAECO `10/10`（均降 `2.01%`、`b12` `0.82%`）；
+   - 全 10 电路总功耗均值 `-0.96%`、组合功耗均值 `-3.72%`（最高 `s420 -8.26%` / 漏电 `-8.68%`），补齐 `b04/b11/b12` 后显式 IO+OCV 达 **10/10（100%）**；
+   - `b12` 局部增量绕线 `2.12×` 提速（`52.94 s` vs `112.02 s`）；`b15`（3.37 万 $\mu\text{m}^2$，5,494 组件）`6/6` 轮局部增量 `DRC=0`（`184.83–200.92 s`，相对全芯片重布线 `1426.14 s` 提速 `7.7×`），`RUN_006` 净回收 `-0.26%`、`TT +0.068 ps`、`SS +199.996 ps`、`FF hold 0.000 ps`、`IO+OCV +0.027 ps`、漏电 `-0.84%`、**全网表 SEC PASS**。
+3. **论文、图表与基线收口**：新增 `fig_strong_baselines_zh.pdf`（0 fail / 0 warn），重构中文 v3 论文 §6–§8 章节顺序（15 页，0 Error / 0 Overfull / 0 Undefined，双副本同步），新增并校验 `versions/v21/MANIFEST.sha256`（162 OK / 0 FAIL），同步更新 `BASELINE_INDEX.csv`、`HANDOFF_2026-11-22.md`、`README.md`、`paper/zh/README.md`、`.codex-handoff.json` 与 `CANON.md`。

@@ -113,6 +113,7 @@ def generate_compatible_candidates(
     skip_instance_prefixes: tuple[str, ...] = DEFAULT_SKIP_INSTANCE_PREFIXES,
     one_per_instance: bool = False,
     deprioritize_zero_drive: bool = False,
+    slack_margins_ps: dict[str, float] | None = None,
 ) -> list[PhysicalAction]:
     """Tool-agnostic candidate generator: enumerate area-reducing replacements
     directly from a routed Verilog netlist and Liberty library (no Resizer log
@@ -186,17 +187,19 @@ def generate_compatible_candidates(
                         category=cat,
                     )
                 )
-    if deprioritize_zero_drive:
-        actions.sort(
-            key=lambda a: (
-                1 if a.target_cell.endswith("_0") else 0,
-                0 if re.search(r"__(buf|inv)_\d+$", a.target_cell) else 1,
-                -a.estimated_area_saving,
-                a.action_id,
-            )
-        )
-    else:
-        actions.sort(key=lambda a: (-a.estimated_area_saving, a.action_id))
+    def _sort_key(a: PhysicalAction) -> tuple:
+        zero_pen = 1 if (deprioritize_zero_drive and a.target_cell.endswith("_0")) else 0
+        buf_pref = 0 if (deprioritize_zero_drive and re.search(r"__(buf|inv)_\d+$", a.target_cell)) else 1
+        if slack_margins_ps is not None:
+            margin_ps = slack_margins_ps.get(a.instance, 0.0)
+            off_crit = 0 if margin_ps > 5.0 else 1
+            score = a.estimated_area_saving * (0.1 + min(max(margin_ps, 0.0), 200.0) / 200.0)
+            return (zero_pen, off_crit, -score, buf_pref, -a.estimated_area_saving, a.action_id)
+        if deprioritize_zero_drive:
+            return (zero_pen, buf_pref, -a.estimated_area_saving, a.action_id)
+        return (-a.estimated_area_saving, a.action_id)
+
+    actions.sort(key=_sort_key)
     if one_per_instance:
         deduped: list[PhysicalAction] = []
         seen: set[str] = set()
@@ -333,6 +336,63 @@ check_placement -verbose
 write_verilog {_to_sta_path(out_dir / "routed.v")}
 write_def {_to_sta_path(out_dir / "routed.def")}
 write_db {_to_sta_path(out_dir / "routed.odb")}
+define_process_corner -ext_model_index 0 X
+extract_parasitics -ext_model_file {orfs}/rcx/rcx_patterns.rules
+write_spef {_to_sta_path(out_dir / "routed.spef")}
+puts "PHYSICAL_PROBE_OK"
+exit
+"""
+
+
+def render_local_incremental_flow_tcl(
+    *,
+    odb_path: Path,
+    spef_path: Path,
+    out_dir: Path,
+    top_module: str,
+    period: float,
+    clk_port: str,
+    replacements: Iterable[tuple[str, str]],
+    platform: str = DEFAULT_PLATFORM,
+    orfs: str = DEFAULT_ORFS,
+    droute_iter: int = 6,
+) -> str:
+    """Render local touched-net incremental ECO re-routing Tcl from a routed ODB."""
+    rep_list = list(replacements)
+    changes = "\n".join(f"replace_cell {_tcl_brace(inst)} {_tcl_brace(cell)}" for inst, cell in rep_list)
+    inst_list = " ".join(_tcl_brace(inst) for inst, _ in rep_list)
+    return f"""set_thread_count 8
+read_liberty {platform}/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+read_db {_to_sta_path(odb_path)}
+create_clock -name clk -period {period} [get_ports {clk_port}]
+set_propagated_clock [all_clocks]
+source {orfs}/setRC.tcl
+read_spef {_to_sta_path(spef_path)}
+{changes}
+detailed_placement
+check_placement -verbose
+set_routing_layers -signal met1-met5 -clock met3-met5
+set block [ord::get_db_block]
+set cleared 0
+foreach iname [list {inst_list}] {{
+    set inst [$block findInst $iname]
+    if {{$inst ne "NULL"}} {{
+        foreach iterm [$inst getITerms] {{
+            set net [$iterm getNet]
+            if {{$net ne "NULL" && !([$net getSigType] in {{POWER GROUND}})}} {{
+                set wire [$net getWire]
+                if {{$wire ne "NULL"}} {{ odb::dbWire_destroy $wire; incr cleared }}
+            }}
+        }}
+    }}
+}}
+puts "CLEARED_TOUCHED_WIRES $cleared"
+pin_access
+global_route -allow_congestion
+detailed_route -output_drc {_to_sta_path(out_dir / "drc.rpt")} -verbose 0 -droute_end_iter {droute_iter}
+check_placement -verbose
+write_verilog {_to_sta_path(out_dir / "routed.v")}
+write_def {_to_sta_path(out_dir / "routed.def")}
 define_process_corner -ext_model_index 0 X
 extract_parasitics -ext_model_file {orfs}/rcx/rcx_patterns.rules
 write_spef {_to_sta_path(out_dir / "routed.spef")}

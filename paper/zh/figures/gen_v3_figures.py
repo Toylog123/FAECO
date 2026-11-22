@@ -581,6 +581,90 @@ def make_fig_budget_curves() -> None:
     export_figure(fig, "budget_curves", check_alignment=True)
 
 
+# ==============================================================================
+# Figure 6: 4-Method Same-Budget Baselines (10 Circuits) & Local Incremental Speedup
+# ==============================================================================
+def make_fig_strong_baselines(lang: str) -> None:
+    zh = lang == "zh"
+    ckts = ["s382", "s420", "s641", "s713", "s832", "s953", "b04", "b05", "b11", "b12"]
+    spef_batch = [0.71, 0.27, 0.00, 0.00, 0.00, 0.00, 0.18, 0.11, 0.12, 0.00]
+    spef_fail = [False, False, True, True, True, True, False, False, False, True]
+    sens_onl = [1.66, 5.98, 1.66, 2.99, 2.68, 0.00, 1.26, 3.32, 1.10, 0.41]
+    faeco = [1.78, 5.58, 1.99, 2.32, 1.71, 0.67, 0.86, 3.47, 0.90, 0.82]
+
+    fig = plt.figure(figsize=(7.20, 2.75), facecolor="white")
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.55, 1.0], wspace=0.26, left=0.070, right=0.985, top=0.84, bottom=0.19)
+    ax1 = fig.add_subplot(gs[0, 0])
+    ax2 = fig.add_subplot(gs[0, 1])
+
+    # Panel (a): 4-method comparison (Native=0.00% baseline noted)
+    add_panel_label(ax1, "a", x_offset_pt=-26, y_offset_pt=7)
+    x = np.arange(len(ckts))
+    w = 0.26
+    ax1.bar(x - w, spef_batch, width=w, color="#D8DCE8",
+            label="固定SPEF预筛 (5/10)" if zh else "Fixed-SPEF Batch (5/10)", zorder=3)
+    ax1.bar(x, sens_onl, width=w, color="#7884B4",
+            label="在线灵敏度贪心 (9/10)" if zh else "Online Sens-Greedy (9/10)", zorder=3)
+    ax1.bar(x + w, faeco, width=w, color=PALETTE["blue_main"],
+            label="FAECO 独立闭环 (10/10)" if zh else "FAECO Independent (10/10)", zorder=4)
+
+    for i, is_fail in enumerate(spef_fail):
+        if is_fail:
+            ax1.scatter([x[i] - w], [0.22], marker="x", s=20, color=PALETTE["red"], lw=1.2, zorder=5)
+
+    ax1.annotate("0% vs 0.67%" if zh else "0% vs 0.67%",
+                 xy=(5 + w, 0.67), xytext=(5.05, 1.85),
+                 ha="center", fontsize=6.0, fontweight="bold", color=PALETTE["blue_main"],
+                 arrowprops=dict(arrowstyle="->", color=PALETTE["blue_main"], lw=0.8))
+    ax1.annotate("2.0x" if zh else "2.0x",
+                 xy=(9 + w, 0.82), xytext=(8.85, 2.05),
+                 ha="center", fontsize=6.0, fontweight="bold", color=PALETTE["blue_main"],
+                 arrowprops=dict(arrowstyle="->", color=PALETTE["blue_main"], lw=0.8))
+
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(ckts, fontsize=6.7, fontweight="bold")
+    ax1.set_ylabel("有效总面积降幅 (%)" if zh else "Valid Total Area Reduction (%)")
+    ax1.set_ylim(0, 7.1)
+    ax1.set_yticks([0, 2, 4, 6])
+    ax1.set_title("同起点同预算四方法对照（原生基线 0/10 = 0.0%）" if zh
+                  else "Same-Budget 4-Method Comparison (Native 0/10 = 0.0%)",
+                  fontsize=7.7, fontweight="bold", loc="left", pad=5, color=PALETTE["ink"])
+    ax1.legend(loc="upper right", fontsize=5.8, ncol=1)
+
+    # Panel (b): Full-chip vs Local Incremental Routing Runtime (b12, b15)
+    add_panel_label(ax2, "b", x_offset_pt=-28, y_offset_pt=7)
+    scale_ckts = ["b12\n(8.0k \u03bcm\u00b2)", "b15\n(33.7k \u03bcm\u00b2)"] if not zh else ["b12\n(7978 \u03bcm\u00b2)", "b15\n(33737 \u03bcm\u00b2)"]
+    t_full = [112.02, 1426.14]
+    t_incr = [52.94, 184.83]
+    xs = np.arange(len(scale_ckts))
+    bw = 0.30
+    b_f = ax2.bar(xs - bw / 2 - 0.02, t_full, width=bw, color="#B8C2DA",
+                  label="全芯片擦除重布线" if zh else "Full-Chip Re-Route", zorder=3)
+    b_i = ax2.bar(xs + bw / 2 + 0.02, t_incr, width=bw, color=PALETTE["blue_main"],
+                  label="局部直连增量绕线" if zh else "Local Incremental Route", zorder=4)
+
+    for bar, val, tag in zip(b_f, t_full, ["0 DRC", "66 DRC"]):
+        ax2.text(bar.get_x() + bar.get_width() / 2, val + 35, f"{val:.0f}s\n({tag})",
+                 ha="center", va="bottom", fontsize=5.8, fontweight="bold",
+                 color=PALETTE["red"] if "66" in tag else PALETTE["neutral_dark"])
+    for bar, val, sp in zip(b_i, t_incr, ["2.1x\n(0 DRC)", "7.7x\n(0 DRC)"]):
+        ax2.text(bar.get_x() + bar.get_width() / 2 + 0.03, val + 35, f"{val:.0f}s\n{sp}",
+                 ha="center", va="bottom", fontsize=5.8, fontweight="bold", color=PALETTE["blue_main"])
+
+    ax2.set_xticks(xs)
+    ax2.set_xticklabels(scale_ckts, fontsize=6.9, fontweight="bold")
+    ax2.set_xlim(-0.52, 1.55)
+    ax2.set_ylabel("单次物理评估耗时 (s)" if zh else "Per-Eval Physical Runtime (s)")
+    ax2.set_ylim(0, 1780)
+    ax2.set_yticks([0, 400, 800, 1200, 1600])
+    ax2.set_title("万门级局部增量绕线提速与DRC收敛" if zh
+                  else "Local Incremental Routing Speedup & DRC",
+                  fontsize=7.7, fontweight="bold", loc="left", pad=5, color=PALETTE["ink"])
+    ax2.legend(loc="upper left", fontsize=5.8)
+
+    export_figure(fig, f"fig_strong_baselines_{lang}", check_alignment=True)
+
+
 def main() -> None:
     apply_nature_style()
     for lang in ("zh", "en"):
@@ -588,6 +672,7 @@ def main() -> None:
         make_fig_tipping_gate_mech(lang)
         make_fig_tool_agnostic_results(lang)
         make_fig_multicorner_spef(lang)
+        make_fig_strong_baselines(lang)
     make_fig_budget_curves()
 
 

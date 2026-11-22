@@ -748,3 +748,12 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - **双遍编译验收**：`lualatex` 双遍编译 14 页 PDF（`834303 B`），`0 Error / 0 Overfull / 0 Undefined references`，同步至 `paper/zh/` 与 `paper/zh/build/`。
 - **文件夹整理**：按“只做中文”口径梳理 `paper/zh/`：将旧备份、Round5 历史评审草稿与失效调试脚本迁入 `paper/zh/archives/manuscript_legacy_20261122/`；旧编译日志与临时 PNG 迁入 `paper/zh/archives/build_legacy_20261122/`；图片 QA 栅格预览与 `.alignment.json` 迁入 `paper/zh/figures/qa_previews/`。
 - **版本冻结**：新增 `versions/v20/`（`v2026-11-22-postroute-v3-zh`），更新 `paper/zh/README.md`、`README.md`、`project_docs/HANDOFF_2026-11-22.md` 与 `BASELINE_INDEX.csv`。
+
+
+## 2026-11-23（强外部基线对照 + PPA 功耗 + 10/10 IO+OCV + `b15` 万门局部增量突破 + `v21` 定稿）
+
+- **新增实验与代码升级（55 项单测通过）**：
+  - 在 `physical_budget_adapter.py` 中耦合 `slack_margins_ps` 联合松弛裕量感知排序与 `render_local_incremental_flow_tcl` 局部直连线网增量绕线。
+  - 完成全 10 电路同起点四方法强基线对照（原生 `0/10` / 固定 SPEF 预筛 `5/10` 均降 `0.14%` / 在线单门灵敏度贪心 `9/10` `s953=0.00%` / FAECO `10/10`）、10/10 完整功耗降低（组合功耗均 `-3.72%`）与 10/10 对称 IO+OCV 签核，以及 `b15`（`33,737.36 µm²`）`7.7×` 局部增量提速（`184.83 s`、`DRC=0`、`−0.26%` 面积、`SS +200.00 ps`、`SEC PASS`）。
+- **新增图表与结构重排**：`gen_v3_figures.py` 新增 Nature 风格 `fig_strong_baselines_zh.pdf`（`audit_pdf_text.py` $\ge 5.8\text{ pt}$、`audit_figure_collisions.py` **0 fail, 0 warn PASS**）；正文将原 §6 拆顺为 §6《在线物理闭环、强基线对照与规模突破》+ §7《讨论》+ §8《结论》，双遍编译 **15 页（0 Error / 0 Overfull / 0 Undefined，页均饱满无孤儿页）**，同步至 `paper/zh/` 与 `paper/zh/build/`。
+- **基线晋级**：新建并全验 `versions/v21/`（`162 OK / 0 FAIL`），更新 `BASELINE_INDEX.csv`、`HANDOFF`、`README` 与 `CANON`。

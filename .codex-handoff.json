@@ -1,10 +1,11 @@
 {
-  "timestamp": "2026-11-22",
-  "status": "v20 (v2026-11-22-postroute-v3-zh): Chinese v3 post-route adjustable-budget & tool-agnostic area recovery paper finalized (14p, 5 Nature-style vector figs, 0 Overfull, academic prose cleaned), folders tidied, English frozen at prior sync point.",
+  "timestamp": "2026-11-23",
+  "status": "v21 (v2026-11-23-postroute-baselines-b15): Chinese v3 post-route paper upgraded with 10-circuit 4-method strong baselines, 10/10 PPA power & IO+OCV closure, and 7.7x local incremental routing breakthrough on 5,494-component b15 (15p, 6 Nature vector figs, 0 Overfull); English frozen.",
   "project": "FAECO",
   "read_order": [
     "project_docs/HANDOFF_2026-11-22.md",
     "project_docs/CANON.md",
+    "project_docs/evidence/postroute_strong_baselines_20261122/REPORT.md",
     "project_docs/evidence/postroute_recovery_20261120/REPORT.md",
     "project_docs/OPEN_ISSUES.md"
   ],
@@ -14,18 +15,18 @@
     "push_status": "local commits on main ahead of origin/main; query git status -sb and git log -5 --oneline"
   },
   "paper_state": {
-    "note": "聚焦中文论文 v3 定稿（后布局可调预算与独立面积回收）；英文工作稿 paper/en/ 暂冻。",
+    "note": "聚焦中文论文 v3 定稿（后布局强基线对照 + PPA + 万门 b15 局部增量绕线）；英文工作稿 paper/en/ 暂冻。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "e22b545118f0a4e99ef37c6a92255c6c08ae0351e8fa39dbf9187769b673928d",
-      "bytes": 72179,
-      "pages": 14
+      "sha256": "5b80a9be3e9828d96aedfc7ca0cadc9691bcf3fcab9873ca0e3199cf982ed8a4",
+      "bytes": 79845,
+      "pages": 15
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "366089afba286b8947a1c61b961faf7204c590d5407b8f04bf97a4847a460dd6",
-      "bytes": 834303,
-      "pages": 14
+      "sha256": "6a37a80e9f87be548e9d0c71e9d5f9682cf6b4e04ceabb9edff803885a53e26c",
+      "bytes": 907370,
+      "pages": 15
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
     "zh_archived_supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
@@ -33,9 +34,9 @@
     "english": "frozen at prior sync point (paper/en/manuscript/FAECO_postroute_recovery.tex) per user instruction to focus on Chinese manuscript and repo cleanup"
   },
   "versions": {
-    "current_baseline": "v20",
-    "last_frozen": "v19 (superseded)",
-    "v20_manifest": "versions/v20/MANIFEST.sha256 (159 entries OK)"
+    "current_baseline": "v21",
+    "last_frozen": "v20 (superseded)",
+    "v21_manifest": "versions/v21/MANIFEST.sha256 (162 entries OK)"
   },
   "tests": "1147 passed /156 subtests (128.96s),34 new dedicated tests included; entire code Python source snapshot unchanged; documented same-byte packaged Yosys mirror used",
   "environment": {
