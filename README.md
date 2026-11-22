@@ -1,4 +1,10 @@
-# FAECO：面向预布局门级时序 ECO 的候选探索与失效刻画
+# FAECO：覆盖优先调度与可调预算的后布局门级时序 ECO 面积回收
+
+> **2026-11-22 当前总入口：[`project_docs/HANDOFF_2026-11-22.md`](project_docs/HANDOFF_2026-11-22.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
+> 当前处于 **`v20`（`v2026-11-22-postroute-v3-zh`）** 中文 v3 后布局收口态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)），已完成学术化去工程表达、5 套 Nature 风格矢量图表嵌入、目录清理及版本整理；英文稿 `paper/en/` 暂冻维持历史同步点。
+
+<details>
+<summary>历史入口归档（2026-11-09 / 2026-11-13 预布局与单点过渡期说明，点击展开仅作溯源）</summary>
 
 可调预算的真实归档数据复核（不启动新EDA）：
 
@@ -8,22 +14,23 @@
 
 输出同时列出待证明候选与已通过SEC的可交付端点。旧 `code/scripts/recover_area.py` 仍是15ps默认/旧SPEF路径，未被本阶段悄悄替换。
 
-
 > **2026-11-13 当前入口：可调时序预算机制。** 优先读 `project_docs/evidence/timing_budget_20261113/REPORT.md` 与 `project_docs/CANON.md`。保留Resizer前端；默认允许WNS最多损失10ps，TNS辅助、hold保持原门。s382既有端点在该预算下已补SEC101/0：回收Resizer净新增面积28.90625%（总面积−4.399524%，WNS−3.098077ps，TNS−0.231982231ns）。这是已有物理端点重筛，不是新搜索算法收益。新 `code/src/rseco/budgeted_recovery.py` 实现纯策略/有界组合搜索，在线物理评估器、完整IO约束、强基线/跨设计尚待建立；下方strict政策与旧状态均保留历史。
-
 
 > **2026-11-13 最新续跑**：见 `project_docs/evidence/strict_area_search_20261113/REPORT.md`。新增9组合+2同面积variant全部未过严格门，两排序所有预算前缀均保留原096安全端点（面积−0.594530321%）。完整网表/Liberty另枚举62个静态兼容降面积替换，旧清单只覆盖10；剩余51个遗漏目标本轮未测。静态候选不是收益，自有机制优势/完整约束仍open。
 > **2026-11-13 当前研究入口**：[严格时序面积研究](project_docs/evidence/recovery_repair_20261113/REPORT.md) + `project_docs/CANON.md`。s382已有面积下降0.594530321%、propagated WNS/TNS改善及hold不变、SEC通过的局部保守基线；自有机制优势与ICCAD资格尚未建立。下方2026-11-09状态只作历史，工具环境以 `docs/environment.md` 为准，Git状态实时查询。
 
-> **历史接手者第一站（2026-11-09 起）：`project_docs/HANDOFF_2026-11-09.md`**（三十秒现状 + 复现入口 + 自检命令）。本文档只做总览与目录索引；任何进度、口径、结论以 HANDOFF / CANON 为准，本文档不与它们冲突。
+</details>
 
-## 当前状态（2026-11-09 复核）
+## 当前状态（2026-11-22 复核）
 
-- **论文**：中文主稿 **11 页 / 7 图 / 5 表 / 17 参考文献**，补充 **15 页 / 22 表 / 5 图**；两份质量门均 GATE PASS（Errors/Overfull/Underfull 全 0，Undefined 5 = 字体替身警告）。英文 `paper/en/manuscript/FAECO.tex` 仍 26 页且**未同口径**（摘要仍写 1.07 / 0.16 ns，中文现行 1.29 / 1.68 ns）。
-- **git**：`main` 领先 `origin/main` **30 条未推送提交**，工作区 clean，HEAD = `faa533a`。`git describe --tags` = `faeco-paper-final-20261028-26-gfaa533a`。
-- **基线**：`versions/v19/MANIFEST.sha256`（148 条）= **139 OK / 9 FAILED**，9 条漂移 = r95/r95b 文本改动 + r108/r113 代码改动的预期结果；**v20 待建**（收录 r95–r116）。
-- **测试**：`PATH` 前置 OSS-CAD `bin`+`lib` 后，`.venv/Scripts/python.exe -m pytest code/tests -q` → **1056 passed + 156 subtests**（唯一红 = `test_fix_crcrlf.py` 的 `\r\r\n` 扫描，已随编码缺陷一并修复）。
-- **环境**：WSL2 Ubuntu（默认 v2）可用：OpenROAD 2.0、OpenSTA 3.1.0、`/usr/bin/yosys` 0.33（shim 0.70+255）。Windows 侧 OSS-CAD 的 `yosys` 需 `bin` 与 `lib` **同时**入 PATH，否则 `yosys -V` 报 `0xC0000139`（DLL 导出缺失）的假红。
+- **活跃论文（中文 v3）**：`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（**14 页 / 5 张 Nature 风格矢量图 / LuaLaTeX 0 Error / 0 Overfull / 0 Undefined references**），双副本 PDF 已同步至 `paper/zh/FAECO_v3_后布局可调预算面积回收.pdf` 与 `paper/zh/build/`。早期预布局 v1/v2 中文主稿与补充材料继续保留在 `paper/zh/manuscript/` 作历史归档；英文工作稿 `paper/en/` 暂冻。
+- **版本与目录**：`versions/v20/` 已落地（`BASELINE_INDEX.csv` `status=active` 指向 `v20`，原 `v19` 标为 `superseded`）；`paper/zh/` 下旧备份、编译日志与 QA 预览图已分别归整到 `paper/zh/archives/` 与 `paper/zh/figures/qa_previews/`。
+- **核心成果口径**（详见 `project_docs/evidence/postroute_recovery_20261120/REPORT.md`）：
+  - **脱离上游日志纯独立重布线回收**：10/10（100%）跨族电路实现 `0.67%–5.58%` 总面积降幅（仅 6–10 次评估、全部 `DRC=0`、`Δhold >= 0`、10/10 SEC PASS），超越 12/12 为 `0.00%` 的原生 `recover_power 100`；
+  - **多角与 IO+OCV 联合签核**：在线门控下 SKY130 SS 慢角 **10/10（100%）** 满足 10 ps 预算，IO+OCV 联合审计 **7/7（100%）** 达标；
+  - **$O(\log N)$ 转折门隔离**：`b22` 仅用 10 次 STA 定位唯一转折门并回收 356/359 处修改（33.1%）。
+- **测试**：`pytest code/tests/test_physical_budget_adapter.py code/tests/test_budgeted_recovery.py code/tests/test_recover_area.py -q` → **54 passed**。
+- **环境**：WSL2 Ubuntu（OpenROAD、OpenSTA、Yosys）+ Windows Python `.venv` + LuaLaTeX（详见 `docs/environment.md`）。
 
 ## 项目简介
 
@@ -44,7 +51,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 ## 现行权威状态入口
 
-1. **三十秒现状 + 复现入口 + 自检 + 后续规划**：`project_docs/HANDOFF_2026-11-09.md`（接手者第一站）
+1. **三十秒现状 + 复现入口 + 自检 + 后续规划**：`project_docs/HANDOFF_2026-11-22.md`（接手者第一站）
 2. **唯一现行口径**：`project_docs/CANON.md`（任何文档与它冲突，以它为准）
 3. **目录 / 版本 / 数据资产 / 结构性坑**：`project_docs/PROJECT_MAP.md`
 4. **事实流水**：`project_docs/LOGS.md`（正序，可回溯）
@@ -58,8 +65,8 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 1. **环境**：读 `docs/environment.md`；Python 依赖见根 `pyproject.toml`（`pip install -e .`）；WSL2 内 Yosys/OpenSTA 按 environment.md 安装。Windows 侧跑 yosys 需 OSS-CAD `bin` + `lib` 同时入 PATH。
 2. **测试**：`bash code/scripts/run_with_timeout.sh 300 .venv/Scripts/python.exe -m pytest code/tests -q`（须用 `.venv/Scripts/python.exe` 显式 Python，不能只写 `python`）。
 3. **实验**：`experiments/INVENTORY.md` 总索引、`experiments/RESULTS.md` 顶层汇总；复现入口脚本在 `code/scripts/`。
-4. **论文**：中文主稿 `paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`、补充 `paper/zh/manuscript/FAECO_补充材料.tex`；**必须 `cd` 入 `manuscript/` 后显式选目标、LuaLaTeX 连跑两遍**（不能自动猜主文件）。当前 PDF 在 `paper/zh/build/`。
-5. **交接**：读 `project_docs/HANDOFF_2026-11-09.md`。
+4. **论文**：当前活跃中文 v3 主稿 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（归档 v2 稿与补充材料同在 `manuscript/`，详见 `paper/zh/README.md`）；**必须 `cd` 入 `manuscript/` 后显式选目标、LuaLaTeX 连跑两遍**（不能自动猜主文件）。洁净成品 PDF 在 `paper/zh/` 与 `paper/zh/build/`。
+5. **交接**：读 `project_docs/HANDOFF_2026-11-22.md`。
 
 ## 目录角色
 

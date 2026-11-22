@@ -1,54 +1,41 @@
 {
-  "timestamp": "2026-11-13",
-  "status": "Configurable WNS-budget area recovery: Resizer frontend retained; default10ps, TNS auxiliary, hold retained. s382 RESTORE074 accepted with SEC101/0:28.90625% of net added area recovered,4.399524% total area reduction,3.098077ps WNS loss. Historical reclassification, not online-search superiority. Pure policy/bounded-search kernel implemented; physical evaluator and cross-design evidence pending.",
+  "timestamp": "2026-11-22",
+  "status": "v20 (v2026-11-22-postroute-v3-zh): Chinese v3 post-route adjustable-budget & tool-agnostic area recovery paper finalized (14p, 5 Nature-style vector figs, 0 Overfull, academic prose cleaned), folders tidied, English frozen at prior sync point.",
   "project": "FAECO",
   "read_order": [
-    "project_docs/evidence/timing_budget_20261113/REPORT.md",
+    "project_docs/HANDOFF_2026-11-22.md",
     "project_docs/CANON.md",
-    "project_docs/FAECO_ROADMAP.md",
+    "project_docs/evidence/postroute_recovery_20261120/REPORT.md",
     "project_docs/OPEN_ISSUES.md"
   ],
   "git": {
     "head_source": "git log -1 --format=%H",
     "status_source": "git status -sb",
-    "push_status": "2026-11-13: implementation/evidence697b0c8 actually pushed to origin/main; registered c5a4d05 and prior diagnostic07c6cf2 included. Existing Windows proxy applied per Git command after direct-connect failure; global configuration unchanged. Query git status -sb for subsequent documentation commits."
+    "push_status": "local commits on main ahead of origin/main; query git status -sb and git log -5 --oneline"
   },
   "paper_state": {
-    "note": "\u8bba\u6587\u4fa7\u81ea 2026-11-09 (r116) \u8d77\u51bb\u7ed3\u672a\u52a8\uff1b\u7528\u6237 2026-11-11 \u8d77\u660e\u786e\u300e\u4e0d\u8981\u7740\u6025\u6539\u8bba\u6587\u300f\u3002",
-    "zh_main_tex": {
-      "path": "paper/zh/manuscript/FAECO_\u9762\u5411\u9884\u5e03\u5c40\u95e8\u7ea7\u65f6\u5e8fECO\u7684\u5019\u9009\u63a2\u7d22\u4e0e\u5931\u6548\u523b\u753b.tex",
-      "sha256": "d5bbc9bd99e46ff0082816090c7e76ce21be564cc50be557bf9e3a004bc0fd66",
-      "bytes": 51669
+    "note": "聚焦中文论文 v3 定稿（后布局可调预算与独立面积回收）；英文工作稿 paper/en/ 暂冻。",
+    "zh_v3_main_tex": {
+      "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
+      "sha256": "e22b545118f0a4e99ef37c6a92255c6c08ae0351e8fa39dbf9187769b673928d",
+      "bytes": 72179,
+      "pages": 14
     },
-    "zh_main_pdf": {
-      "path": "paper/zh/manuscript/FAECO_\u9762\u5411\u9884\u5e03\u5c40\u95e8\u7ea7\u65f6\u5e8fECO\u7684\u5019\u9009\u63a2\u7d22\u4e0e\u5931\u6548\u523b\u753b.pdf",
-      "sha256": "47c5964c74f94f14f21d3a25f1ea9a8d0b832f9e3fe6065313406ddee49d5295",
-      "bytes": 3024657
+    "zh_v3_main_pdf": {
+      "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
+      "sha256": "366089afba286b8947a1c61b961faf7204c590d5407b8f04bf97a4847a460dd6",
+      "bytes": 834303,
+      "pages": 14
     },
-    "zh_supplement_tex": {
-      "path": "paper/zh/manuscript/FAECO_\u8865\u5145\u6750\u6599.tex",
-      "sha256": "c9c73242077693cabd60d775d9c94f2b2abb393448ef298fd8664ce24c951cfe",
-      "bytes": 86675
-    },
-    "zh_supplement_pdf": {
-      "path": "paper/zh/manuscript/FAECO_\u8865\u5145\u6750\u6599.pdf",
-      "sha256": "04df39143bace0c061916a5eb65de093ac2b5ed10bc3f2819f24d09a3c72323d",
-      "bytes": 681125
-    },
-    "main_pages": 11,
-    "supplement_pages": 15,
-    "compile": "cd paper/zh/manuscript && lualatex -interaction=nonstopmode <file>.tex  (twice; not from build/)",
-    "english": "not aligned to r116 caliber (P12 open) - do not compile/publish as-is",
-    "en_recovery": {
-      "tex": "paper/en/manuscript/FAECO_recovery.tex",
-      "pages": 4,
-      "status": "draft with ITC-99 + cross-benchmark"
-    }
+    "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
+    "zh_archived_supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
+    "compile": "cd paper/zh/manuscript && lualatex -interaction=nonstopmode \"FAECO_v3_后布局可调预算面积回收.tex\" (twice)",
+    "english": "frozen at prior sync point (paper/en/manuscript/FAECO_postroute_recovery.tex) per user instruction to focus on Chinese manuscript and repo cleanup"
   },
   "versions": {
-    "last_frozen": "v19",
-    "v19_manifest": "139 OK / 9 FAILED",
-    "v20": "pending (covers r95-r116 + mechanism code + P1 code)"
+    "current_baseline": "v20",
+    "last_frozen": "v19 (superseded)",
+    "v20_manifest": "versions/v20/MANIFEST.sha256 (159 entries OK)"
   },
   "tests": "1147 passed /156 subtests (128.96s),34 new dedicated tests included; entire code Python source snapshot unchanged; documented same-byte packaged Yosys mirror used",
   "environment": {

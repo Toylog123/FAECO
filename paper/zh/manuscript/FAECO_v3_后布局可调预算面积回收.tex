@@ -120,7 +120,7 @@
   Post-layout gate-level timing engineering change orders (ECO) suffer from severe cell-area bloat caused by global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer, while native \texttt{recover\_power} performs 0.00\% area recovery across 12/12 timing-violated post-CTS benchmarks.
   This paper proposes FAECO, combining coverage-first candidate scheduling, an adjustable WNS-budget policy ($B=10$\,ps) with online post-route physical verification, $O(\log N)$ tipping-gate isolation, and a tool-agnostic full-library downsizing generator requiring zero upstream edit logs.
   On eight ISCAS89 benchmarks, coverage-first scheduling reduces candidate STA evaluations by 7.8\%--19.0\% with $4.4\times$ higher per-unit-area WNS efficiency than Resizer.
-  In tool-agnostic mode (using only \texttt{routed.v} and Liberty), our online re-routing engine with adaptive mini-batch recovery and safe-drive prioritization achieves 0.67\%--5.58\% total area reduction on 10/10 cross-family circuits in 6--10 evaluations per circuit with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 10/10 full-netlist two-state SEC pass, achieving 10/10 (100\%) SS multi-corner compliance and 7/7 (100\%) IO+OCV compliance under online gating.
+  In tool-agnostic mode (requiring only a post-route gate-level netlist and standard cell library), our online re-routing engine with adaptive mini-batch recovery and safe-drive prioritization achieves 0.67\%--5.58\% total area reduction on 10/10 cross-family circuits in 6--10 evaluations per circuit with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 10/10 full-netlist two-state SEC pass, achieving 10/10 (100\%) SS multi-corner compliance and 7/7 (100\%) IO+OCV compliance under online gating.
   With $O(\log N)$ tipping-gate isolation, selective recovery closes all 15 modified ITC-99 circuits (reverting 857/971 = 88.3\% edits, 27.8\% weighted net area recovery; pinpointing 1 critical gate on b22 in 10 STA calls to recover 356/359 edits = 33.1\%) and delivers 1.55\%--4.68\% post-route area reductions across 6/8 ISCAS89 circuits.%
 }
 \newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; tipping-gate isolation}
@@ -158,7 +158,7 @@ Resizer的全局LR策略使面积膨胀48.8\%而仅获得$+0.584$\,ns的WNS改�
       机制在有界组合搜索与在线重布线/RCX/传播时钟STA门控中优化净面积回收，支持多工艺角（SS/TT/FF）与显式IO+OCV联合约束。
 \item \textbf{选择性恢复与$O(\log N)$转折门隔离}（第5节）：逐门评估每个修改对WNS的独立贡献，
       针对多门同时回退的累积耦合悬崖提出转折门隔离与续跑二分算法，将验证复杂度由$O(N)$降至$O(\log N)$。
-\item \textbf{脱离上游日志的全库独立面积回收}（第6.7--6.8节）：直接从任意布线后\texttt{routed.v}与Liberty库枚举功能兼容的降面积候选，不依赖Resizer日志或修复前网表（仅将Resizer与原生\texttt{recover\_power}作为对比基线）。
+\item \textbf{脱离上游日志的全库独立面积回收}（第6.7--6.8节）：直接从布线后门级网表与标准单元库枚举功能兼容的降面积候选，不依赖上游修改日志或修复前网表（仅将Resizer与原生\texttt{recover\_power}作为对比基线）。
 \end{enumerate}
 整体双模式架构与在线门控闭环流程如图~\ref{fig:framework_arch}所示。
 
@@ -176,9 +176,9 @@ Resizer 69\%的无效放大为这一前提提供了直接证据。
 \noindent\textbf{主要贡献。}
 \begin{enumerate}
 \item 首次将覆盖优先概念引入门级ECO，在ISCAS89八例上证明候选STA节省7.8\%--19.0\%且不降低端点质量，单位面积WNS效率达Resizer的4.4倍；
-\item 提出可调WNS预算的形式化框架、在线物理评估适配器（\texttt{physical\_budget\_adapter.py}）与有界组合搜索，在s382上以0.0031\,ns WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，全网表两态SEC 101/0通过），并在线发现跨源耦合补偿组合；
+\item 提出可调WNS预算的形式化框架、在线物理重布线评估闭环与有界组合搜索，在s382上以0.0031\,ns WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，全网表两态SEC 101/0通过），并在线发现跨源耦合补偿组合；
 \item 提出$O(\log N)$转折门隔离与续跑二分算法，攻克大规模多门回退耦合悬崖：在ISCAS89八电路回退65/107（61\%）修改（全例$|\Delta\text{WNS}| \le 0.0057$\,ns，真实重布线验收下6/8实现1.55\%--4.68\%总面积下降），在ITC-99族15个有修改电路上100\%完成闭合，共回退857/971（88.3\%）处修改、加权回收净新增面积27.8\%（其中b22仅用10次STA定位唯一转折门\texttt{\_160630\_}，回退356/359处修改、回收33.1\%）；
-\item 建立完全脱离Resizer日志的通用独立重布线面积回收与多角签核闭环：通过标准驱动优先（\texttt{deprioritize\_zero\_drive}）与自适应微批次二分恢复（\texttt{adaptive\_batch\_recovery}），在10个跨族电路上实现10/10（100\%）正面积回收（仅6--10次重布线即降0.67\%--5.58\%，全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过，而同起点OpenROAD原生\texttt{recover\_power 100}在12/12电路上均为0.00\%），并在在线门控下实现SS慢角10/10（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
+\item 建立完全脱离Resizer日志的通用独立重布线面积回收与多角签核闭环：通过标准驱动优先排序与自适应微批次二分恢复机制，在10个跨族电路上实现10/10（100\%）正面积回收（仅6--10次重布线即降0.67\%--5.58\%，全部$\text{DRC}=0$、$\Delta\text{hold}\ge 0.00$\,ps、全网表SEC通过，而同起点OpenROAD原生\texttt{recover\_power 100}在12/12电路上均为0.00\%），并在在线门控下实现SS慢角10/10（100\%）与IO+OCV 7/7（100\%）满足10\,ps预算。
 \end{enumerate}
 
 % ============================================================
@@ -671,7 +671,7 @@ s953 & 29 & 23 & 21.6\% & 0.547 & $+0.4$ & 0.07\% \\
 3例超过20\%（s382 22.8\%、s820 20.1\%、s953 21.6\%）。全例$|\Delta\text{WNS}| \le 0.0057$\,ns（最差为s420的$-5.7$\,ps，其余电路甚至在s641/s820/s953上出现微幅正向改善）。
 \textbf{关键发现：回收引起的最大时序波动仅为Resizer修复量的0.00\%--0.81\%（加权平均0.27\%）}，
 即Resizer为收敛时序付出的99\%+改善在选择性恢复后完整保留。
-s382的CLI工具（\texttt{code/scripts/recover\_area.py}）8秒完成。
+以s382为例，完整的候选分析与选择性恢复流程仅需8\,s即可完成。
 
 \subsection{效率对比}
 
@@ -791,7 +791,7 @@ b13 & 29 & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 100.0\% & 100.0
 \subsection{真实重布线物理验收与原生基线对照}
 
 为克服固定SPEF诊断口径的乐观偏差，我们在ISCAS89全部8个电路上对相同Resizer \texttt{CONTROL}起点执行了完整物理后验流程：
-\texttt{replace\_cell} $\to$ 合法化 $\to$ 清除信号线与15轮详细布线（全部$\text{DRC}=0$）$\to$ 重新提取RCX寄生 $\to$ 独立传播时钟OpenSTA，并对比OpenROAD原生\texttt{repair\_timing -recover\_power 100}（表~\ref{tab:postroute_iscas89}）。
+单元原地替换 $\to$ 增量合法化 $\to$ 信号线清除与详细重布线收敛（全部$\text{DRC}=0$）$\to$ 重新提取全芯片寄生参数 $\to$ 独立传播时钟STA，并对比OpenROAD原生\texttt{repair\_timing -recover\_power 100}（表~\ref{tab:postroute_iscas89}）。
 
 \begin{table*}[t]
 \centering
@@ -832,7 +832,7 @@ b05直接通过$B=10$\,ps重布线门限与全网表SEC（总面积$-5.04\%$，$
 \label{fig:multicorner_spef}
 \end{figure*}
 
-在显式IO约束审计（OI-082）中，为s382补加\texttt{input/output\_delay=0.10\,ns}、\texttt{load=0.01\,pF}与\texttt{transition=0.05\,ns}后，
+在显式输入/输出边界约束审计中，为s382补加$0.10$\,ns端口输入/输出延迟、$0.01$\,pF输出负载与$0.05$\,ns输入转换时间后，
 \texttt{CONTROL}、\texttt{RESTORE074}与\texttt{ONLINE\_007}的传播setup WNS逐位不变（关键路径在内部寄存器间），
 且\texttt{ONLINE\_007}的TNS（$-14.715$\,ns）优于\texttt{CONTROL}（$-14.753$\,ns）。
 
@@ -863,44 +863,36 @@ Resizer 69\%的浪费是这一前提的直接证据。
 \subsection{局限与未来工作}
 
 \begin{enumerate}
-\item \textbf{单设计预算验证。}
-      RESTORE074的可调预算接受仅在s382上完成。
-      跨设计可调预算验证需要在更多电路上建立完整物理流程链。
-\item \textbf{IO约束缺失。}
-      当前SDC缺少3个输入的输入延迟和6个输出的输出延迟/负载，
-      相对非退化不能宣称完整IO安全性。
-\item \textbf{绝对时序违例。}
-      所有端点的传播WNS仍为负——
-      本文只证明相对Resizer CONTROL的退化受控，并非时序闭合。
-\item \textbf{候选空间有限。}
-      当前候选来自固定配方（历史修改的尺寸档），
-      更完整的候选生成（静态枚举+电气过滤）可扩大搜索空间。
-\item \textbf{安全系数的泛化。}
-      $\alpha=1.5$在8例上有效，但在更大电路族上的
-      最佳取值需要进一步校准。
+\item \textbf{固有负松弛基线的相对保护边界。}
+      本文的预算门控保障机制聚焦于相对布线后Resizer起点的可控退化（$B=10$\,ps）与净面积回收，而非对存在固有约束违例的设计执行绝对时序闭合（$\text{WNS} \ge 0$）。
+\item \textbf{最小尺寸电路的组合重构空间。}
+      若待优化网表在前期综合或物理优化阶段已将常规组合单元全部映射至最小尺寸档（如b14），纯单元降尺寸替代空间将趋于枯竭，后续需引入逻辑重构或冗余门合并以拓展回收空间。
+\item \textbf{超万门级设计的全芯片重布线开销。}
+      当设计规模升至数万平方微米量级时（如b15），全芯片详细重布线的单次评估开销限制了在线探索深度，未来需要结合区域局部增量修线或可迁移时序代理模型加速评估闭环。
+\item \textbf{跨工艺节点超参数自适应校准。}
+      当前实验在SKY130 130\,nm工艺与两套标准基准集上验证了耦合安全系数$\alpha=1.5$与微批次规模$b=3$的有效性，面向更先进工艺节点或高布线拥塞设计的自适应参数整定仍值得进一步研究。
 \end{enumerate}
 
-\subsection{在线物理评估器集成与全库组合搜索（s382）}
+\subsection{在线物理评估闭环与全库组合搜索（s382）}
 
-我们实现了在线物理评估适配器（\texttt{code/src/rseco/\allowbreak physical\_budget\_adapter.py}），
-将\texttt{bounded\_search}直接接入OpenROAD重合法化、详细重布线、RCX寄生提取与传播时钟STA流程，
-并结合全库兼容替换审计（在s382的102个功能单元中枚举出36个组合逻辑降面积候选，突破Resizer历史回退名单限制）。
-在s382上以$B=10$\,ps、$\mathrm{beam\_width}=2$、$\mathrm{max\_depth}=4$执行14次在线重布线搜索，
+我们将有界组合束搜索直接接入由增量合法化、详细重布线、寄生重提取与传播时钟STA组成的在线物理评估闭环，
+并结合全库功能兼容替换枚举（在s382的102个功能单元中枚举出36个组合逻辑降面积候选，突破上游历史回退名单限制）。
+在s382上以$B=10$\,ps、束宽2、最大深度4执行14次在线重布线搜索，
 发现跨源Depth-2组合\texttt{ONLINE\_007}（历史动作\texttt{\_096\_}与全库新候选\texttt{rebuffer1: buf\_6$\to$buf\_1}）：
 完整面积由1052.26\,\textmu m$^2$降至1038.50\,\textmu m$^2$（$-1.31\%$），
 $\Delta\text{WNS}=-7.028$\,ps（单测累加预测为$-2.865$\,ps，实测捕获$-4.163$\,ps非线性寄生耦合），
 $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 这验证了可调预算组合搜索在摆脱历史日志依赖后仍能在线发现安全有效的跨源面积回收组合。
 
-进一步在s641和s953全库候选池上执行同预算（$B=10$\,ps，最多12次重布线评估）的顺序贪心（Sequential Greedy）与\texttt{bounded\_search}（$\mathrm{beam\_width}=2$，$\mathrm{max\_depth}=4$）消融对照：
-(1)~在s641上，顺序贪心仅用6次评估即找到3门组合（\texttt{\_119\_}+\texttt{\_155\_}+\texttt{rebuffer16}），节省22.52\,\textmu m$^2$（$-1.99\%$，$\Delta\text{WNS}=-0.43$\,ps，$\Delta\text{hold}=+0.10$\,ps），优于同预算按层广度展开的\texttt{bounded\_search}（15.01\,\textmu m$^2$）及仅用历史名单的\texttt{RECOVERED\_V2}（17.52\,\textmu m$^2$）；
-(2)~在s953上，两者在严格相对hold门下同获16.27\,\textmu m$^2$（\texttt{rebuffer13}），但\texttt{bounded\_search}的Depth-2组合\texttt{\_225\_}+\texttt{\_231\_}实证了动作补偿现象——\texttt{\_231\_}单测退化$-23.57$\,ps不可行，联合\texttt{\_225\_}后退化收窄至$-2.96$\,ps（节省30.03\,\textmu m$^2$）。
+进一步在s641和s953全库候选池上执行同预算（$B=10$\,ps，最多12次重布线评估）的顺序贪心与有界束搜索（束宽2、最大深度4）消融对照：
+(1)~在s641上，顺序贪心仅用6次评估即找到3门组合（\texttt{\_119\_}+\texttt{\_155\_}+\texttt{rebuffer16}），节省22.52\,\textmu m$^2$（$-1.99\%$，$\Delta\text{WNS}=-0.43$\,ps，$\Delta\text{hold}=+0.10$\,ps），优于同预算按层广度展开的有界束搜索（15.01\,\textmu m$^2$）及仅用历史名单的\texttt{RECOVERED\_V2}（17.52\,\textmu m$^2$）；
+(2)~在s953上，两者在严格相对hold门下同获16.27\,\textmu m$^2$（\texttt{rebuffer13}），但有界束搜索的Depth-2组合\texttt{\_225\_}+\texttt{\_231\_}实证了动作补偿现象——\texttt{\_231\_}单测退化$-23.57$\,ps不可行，联合\texttt{\_225\_}后退化收窄至$-2.96$\,ps（节省30.03\,\textmu m$^2$）。
 上述消融表明：在紧凑物理预算下全库候选覆盖与顺序提交是首要收益来源，而有界组合搜索在存在时序耦合补偿时发挥补充作用。
 
-\subsection{完全脱离Resizer日志的通用独立面积回收}
+\subsection{完全脱离上游日志的通用独立面积回收}
 
-基于\texttt{generate\_compatible\_candidates}，本机制可完全脱离Resizer修改日志与修复前网表，仅从任意布线后\texttt{routed.v}与Liberty库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多6--10次评估）。
-为提升该机制在任意电路与单元库上的普适性，适配器默认自动过滤低功耗隔离单元（\texttt{lpflow\_*}）与时钟虚拟负载（\texttt{clkload*}），并引入两项通用物理加速机制：(1)~\textbf{标准驱动优先排序}（\texttt{deprioritize\_zero\_drive}）：将极易引起slew恶化的\texttt{\_0}超弱驱动变体延后，优先评估常规驱动与缓冲器/反相器缩减；(2)~\textbf{自适应微批次二分恢复}（\texttt{adaptive\_batch\_recovery}）：按$\mathrm{batch\_size}=3$批量提交不共实例候选，整批通过即一次提交3门，若违例则自动在批内执行$O(\log k)$二分切分隔离转折门。
+基于全库功能等价替换枚举，本机制可完全脱离上游Resizer修改日志与修复前网表，仅从布线后门级网表与标准单元库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多6--10次评估）。
+为提升该机制在不同电路与标准单元库上的普适性，候选构建阶段自动排除非功能隔离填充单元与纯时钟虚拟负载单元，并引入两项通用加速策略：(1)~\textbf{标准驱动优先排序}：将极易引起信号转换时间急剧恶化的超弱最小驱动变体（零级驱动）延后，优先评估常规标准驱动与缓冲器/反相器缩减；(2)~\textbf{自适应微批次二分恢复}：以微批次规模$b=3$并行提交互不重叠实例的降面积候选，整批通过即单次评估提交3门，若触发时序越界则在批内自动执行$O(\log b)$二分切分以隔离转折门。
 在10个跨族电路（6个ISCAS89与4个ITC-99）上实现\textbf{10/10（100\%）}正面积回收（0.67\%--5.58\%），全部$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps且10/10全网表两态SEC通过，全面超越仅作为对比基线的OpenROAD原生\texttt{recover\_power 100}（0.00\%），各电路总面积降幅与重布线后时序余量对比见图~\ref{fig:tool_agnostic_results}，详细多工艺角签核对照见图~\ref{fig:multicorner_spef}a。
 
 \begin{figure*}[t]
@@ -934,9 +926,9 @@ b12（微批次+安全驱动） & 7977.65 & 7912.59 & $-$0.82\% & $-$0.03 & $+$0
 \end{tabular}
 \end{table*}
 
-在更大规模的ITC-99电路b04、b05、b11与b12上，自适应微批次恢复在仅6--8次重布线评估内全部实现正面积回收：b05一次提交8门，将总面积降幅从单门顺序的2.78\%提升至\textbf{3.47\%}（118.86\,\textmu m$^2$）且setup WNS改善$+7.43$\,ps、hold改善$+2.02$\,ps；b12在标准驱动优先排序与微批次搜索下，摆脱了早期被4个\texttt{lpflow\_*}与\texttt{\_0}极弱变体占据评估预算的阻塞，提交4门回收65.06\,\textmu m$^2$（$-0.82\%$，TT $\Delta\text{WNS}=-0.03$\,ps、$\Delta\text{hold}=+0.05$\,ps，全网表SEC通过）。
-进一步在7个端点上执行显式IO约束（\texttt{0.10\,ns}延迟、\texttt{0.01\,pF}负载、\texttt{0.05\,ns}转换时间）与OCV降额（\texttt{-early 0.90 / -late 1.10}）联合审计：未开启在线IO+OCV门控时5/7通过10\,ps预算（s382 $+15.46$\,ps、s420 $+6.05$\,ps、s641 $+5.57$\,ps、s953 $-7.11$\,ps、b05 $+6.92$\,ps），而s713（$-10.08$\,ps）与s832（$-40.76$\,ps）超限；将IO+OCV直接并入\texttt{physical\_budget\_adapter.py}的在线评估门重跑s713与s832后，系统自动拒绝全部越界候选并安全回退\texttt{CONTROL}（IO+OCV退化$0.00$\,ps），从而实现7/7（100\%）满足10\,ps IO+OCV门限。
-此外，调用SKY130真实多工艺角库（\texttt{ss\_n40C\_1v40}、\texttt{tt\_025C\_1v80}、\texttt{ff\_n40C\_1v95}）对全部10个正回收端点执行签核复测：TT单角门控下SS慢角9/10满足10\,ps setup预算（含b12在SS角改善$+64.59$\,ps、FF hold改善$+0.07$\,ps），仅s641退化$-18.50$\,ps；将SS/TT/FF三角直接并入s641在线评估门重跑后，系统自动选中\texttt{rebuffer16=buf\_1}（面积$-0.66\%$、SEC PASS），同时将SS setup改善至$+71.69$\,ps、TT setup改善至$+4.74$\,ps、FF hold改善至$+1.29$\,ps，实现SS慢角\textbf{10/10（100\%）}达标与FF快角\textbf{6/10}严格非退化（余4例变动在$-0.10\text{--}-3.94$\,ps）。规模边界测试表明：b14（$18159.92$\,\textmu m$^2$）普通组合单元已全处最小尺寸档（0候选），而b15（$34895.97$\,\textmu m$^2$）经诊断定位到原脚本将OpenROAD百分比参数\texttt{-utilization}误传为小数\texttt{0.35}（膨胀出11.4万tapcell），修正至35\%利用率与8线程后将\texttt{pin\_access}从120\,s压至19\,s（组件数118,780$\to$5,494），但15轮全芯片\texttt{detailed\_route}仍超1200\,s，证实万门以上规模亟需工具原生的区域局部增量修线支持。
+在更大规模的ITC-99电路b04、b05、b11与b12上，自适应微批次恢复在仅6--8次重布线评估内全部实现正面积回收：b05一次提交8门，将总面积降幅从单门顺序的2.78\%提升至\textbf{3.47\%}（118.86\,\textmu m$^2$）且setup WNS改善$+7.43$\,ps、hold改善$+2.02$\,ps；b12在标准驱动优先排序与微批次搜索下，避免了评估预算被非功能隔离单元与超弱最小驱动变体阻塞，提交4门回收65.06\,\textmu m$^2$（$-0.82\%$，TT $\Delta\text{WNS}=-0.03$\,ps、$\Delta\text{hold}=+0.05$\,ps，全网表SEC通过）。
+进一步在7个端点上执行显式IO约束（$0.10$\,ns端口延迟、$0.01$\,pF输出负载与$0.05$\,ns输入转换时间）与片上工艺偏差（OCV）降额（早路径0.90、晚路径1.10）联合审计：未开启在线IO+OCV门控时5/7通过10\,ps预算（s382 $+15.46$\,ps、s420 $+6.05$\,ps、s641 $+5.57$\,ps、s953 $-7.11$\,ps、b05 $+6.92$\,ps），而s713（$-10.08$\,ps）与s832（$-40.76$\,ps）超限；将上述IO+OCV联合约束直接并入在线物理评估闭环重跑s713与s832后，系统自动拒绝全部越界候选并安全回退至\texttt{CONTROL}（IO+OCV退化$0.00$\,ps），从而实现7/7（100\%）满足10\,ps IO+OCV门限。
+此外，基于SKY130真实多工艺角库（慢角$\text{SS}_{-40^\circ\text{C},1.40\,\text{V}}$、典型角$\text{TT}_{25^\circ\text{C},1.80\,\text{V}}$、快角$\text{FF}_{-40^\circ\text{C},1.95\,\text{V}}$）对全部10个正回收端点执行签核复测：TT单角门控下SS慢角已有9/10满足10\,ps setup预算（含b12在SS角改善$+64.59$\,ps、FF hold改善$+0.07$\,ps），仅s641退化$-18.50$\,ps；将三角约束同步并入s641在线门控重跑后，算法自动收敛至安全替代点（面积$-0.66\%$、SEC通过），同步将SS setup改善至$+71.69$\,ps、TT setup改善至$+4.74$\,ps、FF hold改善至$+1.29$\,ps，从而实现SS慢角\textbf{10/10（100\%）}达标与FF快角\textbf{6/10}严格非退化（余4例变动在$-0.10\text{--}-3.94$\,ps）。规模边界测试进一步揭示了当前纯独立在线模式的适用边界：b14（$18159.92$\,\textmu m$^2$）常规组合单元在前期流程中已全部映射至最小尺寸档，可替换候选空间为空；而在更大规模的b15（$34895.97$\,\textmu m$^2$，35\%布局利用率下共5,494个组件）上，全芯片详细重布线的单次评估时间超过1200\,s，证实万门级以上规模亟需结合局部区域增量修线机制以压缩在线搜索开销。
 
 % ============================================================
 % §7 结论

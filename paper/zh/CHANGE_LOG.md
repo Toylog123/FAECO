@@ -740,3 +740,11 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 按 `nature-figure` 技能重构全套 5 张图（含重绘 `budget_curves.pdf` 并改通栏）：统一低饱和 Nature Steel-Blue & NMI Pastel 学术色系、去网格线/黑边柱/图例框、标准 `182.9 mm` 双栏宽度与 `a`/`b` 面板标签，导出 SVG + PDF + 300 DPI PNG。
 - 全部 9 份 PDF 通过 `audit_pdf_text.py`（最小字号 $\ge 5.7\text{ pt}$）与 `audit_figure_collisions.py`（**0 fail, 0 warn, PASS**）；中英文双稿重编译均 **0 Error / 0 Overfull / 0 Undefined**（中文 13 页、英文 7 页）。
+
+
+## 2026-11-22（去工程化学术润色 + 中文目录梳理 + v20 版本冻结）
+
+- **学术化润色（`user-academic-writing-style` 规范）**：系统去除 `FAECO_v3_后布局可调预算面积回收.tex` 全文中的 `.py` 脚本文件名、`physical_budget_adapter.py`/`deprioritize_zero_drive`/`adaptive_batch_recovery`/`bounded_search` 等内部符号、OpenROAD Tcl 参数名（`-utilization 0.35`、`tapcell`、`pin_access`、`replace_cell` 等）及 `OI-082` 等研发编号，并同步修订 §6.3《局限与未来工作》与全文收尾一致；保留全部实测数据与对比结论 100% 不变。
+- **双遍编译验收**：`lualatex` 双遍编译 14 页 PDF（`834303 B`），`0 Error / 0 Overfull / 0 Undefined references`，同步至 `paper/zh/` 与 `paper/zh/build/`。
+- **文件夹整理**：按“只做中文”口径梳理 `paper/zh/`：将旧备份、Round5 历史评审草稿与失效调试脚本迁入 `paper/zh/archives/manuscript_legacy_20261122/`；旧编译日志与临时 PNG 迁入 `paper/zh/archives/build_legacy_20261122/`；图片 QA 栅格预览与 `.alignment.json` 迁入 `paper/zh/figures/qa_previews/`。
+- **版本冻结**：新增 `versions/v20/`（`v2026-11-22-postroute-v3-zh`），更新 `paper/zh/README.md`、`README.md`、`project_docs/HANDOFF_2026-11-22.md` 与 `BASELINE_INDEX.csv`。

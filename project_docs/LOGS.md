@@ -5635,3 +5635,12 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
    - 同时导出 `.pdf`（TrueType 可编辑文本）、`.svg`（`<text>` 节点）与 300 DPI `.png`。
 2. 全套通过 `nature-figure` 自动化质检：`validate_figure.py` (`17 pass, 0 fail`)、`audit_panel_alignment.py`（共享边距/宽/高 $\le 1.5\text{ pt}$）、`audit_pdf_text.py`（全部字号 $\ge 5.7\text{ pt} \ge 5\text{ pt}$ 下限）、`audit_figure_collisions.py`（全部 9/9 PDF 均 **0 fail, 0 warn, PASS**）。
 3. 将 `budget_curves.pdf` 升格为双栏通栏排版并双遍重编译双稿（中文 v3 稿 13 页、英文 IEEEtran 稿 7 页，均 **0 Error / 0 Overfull / 0 Undefined references**）。
+
+
+**LOG-20261122-04 / 中文 v3 论文去工程化润色、文件夹梳理与 v20 基线定稿（2026-11-22）**：
+1. 依据 `user-academic-writing-style` 规范对活跃中文主稿 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex` 进行全文去工程化学术润色，移除源码路径、Python 函数名、命令行选项及内部跟踪编号，更新 §6.3《局限与未来工作》匹配后布局完整结论，重新双遍 `lualatex` 编译通过（14 页 / 0 Error / 0 Overfull / 0 Undefined references），同步交付至 `paper/zh/` 与 `paper/zh/build/`。
+2. 完成中文论文目录与根环境整理（英文稿 `paper/en/` 按用户指令暂冻）：
+   - `paper/zh/manuscript/` 仅保留 3 份 `.tex`、成品 `.pdf` 与 `fonts/`，旧备份与 Round5 历史草稿/评审文档移入 `paper/zh/archives/manuscript_legacy_20261122/`；
+   - `paper/zh/build/` 仅保留 3 份洁净 `.pdf` 与 `.gitkeep`/`fonts/`，过程日志与调试图片移入 `paper/zh/archives/build_legacy_20261122/`；
+   - `paper/zh/figures/` 中 QA 栅格 `.png` 与 `.alignment.json` 迁入 `paper/zh/figures/qa_previews/`。
+3. 新建 `versions/v20/`（`v2026-11-22-postroute-v3-zh`）与 `MANIFEST.sha256`，更新 `BASELINE_INDEX.csv`（`v19` 标为 `superseded`，`v20` 标为 `active`）、`project_docs/HANDOFF_2026-11-22.md`、`paper/zh/README.md`、`README.md`、`project_docs/CANON.md` 与 `.codex-handoff.json`。

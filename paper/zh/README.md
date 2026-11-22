@@ -1,34 +1,46 @@
-# paper/zh — FAECO 论文（LaTeX 唯一源）
+# paper/zh — FAECO 中文论文目录（2026-11-22 整理版）
 
-2026-08-04 起，FAECO 论文只以 LaTeX 形式维护于本目录。**当前主稿已进入内容冻结**（用户指令，2026-09-29）：
-tag `faeco-paper-final-20260929`（= `a8142b6`），9 页 / 0 Error / 0 Overfull / 0 Underfull。
+当前专注于**中文论文 v3（后布局可调预算与独立面积回收）**，英文工作稿暂冻在 `paper/en/`。
 
-## 结构
+## 一、目录结构
 
-- `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`：**唯一主稿**（单文件 ctexart，lualatex 编译；JCAD 版式近似）
-- `manuscript/FAECO_….pdf` 与 `FAECO_….pdf`（本目录）：**双副本**，字节 SHA256 须一致
-- `submission/`：**T20 投稿件打包**（目标期刊 **Integration, the VLSI Journal**，由 JCAD 改投）——投稿检查单、cover letter 草稿、补充材料清单
-- `figures/`：图源（`fig_iscas89.pdf` 为编译依赖，禁删）
-- `responses/`、`review_rounds/`：审稿轮次记录
-- `build/`：编译中间产物
-- `CHANGE_LOG.md`：论文改动日志（每次改 `.tex` 必须登记）
+| 路径 | 角色 | 状态 |
+|---|---|---|
+| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，14 页，5 图，学术化去工程表达已完成） | 活跃 |
+| `FAECO_v3_后布局可调预算面积回收.pdf` | 顶层交付 PDF（与 `manuscript/`、`build/` 同名 PDF 逐字节同步） | 活跃 |
+| `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex` | v1/v2 预布局中文主稿（对应冻结基线 `v19`） | 历史归档 |
+| `manuscript/FAECO_补充材料.tex` | v1/v2 预布局中文补充材料 | 历史归档 |
+| `build/` | 洁净编译产物目录（仅保留活跃 v3 与归档 v2/补充 PDF，不含过程日志与临时 PNG） | 活跃 |
+| `figures/` | 矢量图源（`*.pdf`、`*.svg`）与生成器（`gen_v3_figures.py` 等）；QA 栅格图与对齐 JSON 统一置于 `figures/qa_previews/` | 活跃 |
+| `archives/` | 历史轮次备份、旧编译日志（`build_legacy_20261122/`）、早期 Round5 草稿与旧审稿纪录（`manuscript_legacy_20261122/`） | 归档 |
+| `review_rounds/`、`responses/`、`submission/` | 各轮审稿记录、回复与期刊格式清单 | 归档/参考 |
+| `scripts/` | 编译脚本与 LaTeX 质量门检查 | 工具 |
+| `CHANGE_LOG.md` | 中文论文修改流水记录 | 持续维护 |
 
-## 编译与验收
+## 二、现行中文 v3 编译与验收命令
 
-```bash
+必须在 `paper/zh/manuscript/` 下使用 `lualatex` 连续编译两遍（保证交叉引用与字体路径 `./fonts/` 正确）：
+
+```powershell
 cd paper/zh/manuscript
-lualatex -interaction=nonstopmode "FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex"   # 跑两遍
-python ../scripts/checks/latex_quality_gate.py   # Errors/Overfull/Underfull 全 0，PAGES=10
-cp "FAECO_….pdf" "../FAECO_….pdf"                # 同步双副本，字节 SHA256 一致
-pdftotext -layout "FAECO_….pdf" - | sha256sum    # 内容指纹（判内容一致用这个，不用字节 SHA）
+lualatex -interaction=nonstopmode "FAECO_v3_后布局可调预算面积回收.tex"
+lualatex -interaction=nonstopmode "FAECO_v3_后布局可调预算面积回收.tex"
+Copy-Item "FAECO_v3_后布局可调预算面积回收.pdf" "../FAECO_v3_后布局可调预算面积回收.pdf" -Force
+Copy-Item "FAECO_v3_后布局可调预算面积回收.pdf" "../build/FAECO_v3_后布局可调预算面积回收.pdf" -Force
 ```
 
-- 质量门的 `Undefined: 5` 是字体替身警告，非引用未解析（判引用看 `??` 计数）。
-- 版面异常**先查 `\FloatBarrier`**（双栏下会退化为 `\clearpage`），禁止缩字体/行距/砍内容。
+若需清理 `manuscript/` 下编译产生的临时 `.aux`/`.log`/`.out`，请移至 `paper/zh/archives/` 或在确认无追踪冲突后再清理，以保持源码目录整洁。
 
-## 内容维护
+## 三、图表重绘与质检入口
 
-- **内容修改已冻结**：任何内容改动须先取得用户同意；改 `.tex` 前先读 `project_docs/evidence/PAPER_EVIDENCE_MANIFEST.md`（逐数字绑定）。
-- 数字只认 `experiments/20260826_aggregation/summary.json` 等已钉定实验族产物；铁律 `same claim ⇒ same revision + same config family`。
-- 诚实记录负面结论（EMA 无独立增益、S 无 timing repair capability 等已如实写入）。
-- 参考文献使用手写 thebibliography（19 条），新增引用时同步更新编号。
+全部 5 套矢量图由 `paper/zh/figures/gen_v3_figures.py` 按 `nature-figure` 规范生成（当前版本以中文 `*zh.pdf` 及共用 `budget_curves.pdf` 为核心交付）：
+
+```powershell
+.venv/Scripts/python.exe paper/zh/figures/gen_v3_figures.py
+```
+
+## 四、写作与数字核对规范
+
+- **数字单一可信源**：所有面积、WNS、hold、TNS 与 SEC 读数必须直接来自 `project_docs/evidence/postroute_recovery_20261120/{REPORT.md, SUMMARY.json}` 与 `project_docs/CANON.md`。
+- **去工程化学术风格**：正文与图注统一使用算法/方法论术语，不引入 `.py` 文件名、Python 函数名、命令行选项或工程 issue 编号。
+- **修改留痕**：每次修改 `.tex` 或 `figures/`，同步更新 `paper/zh/CHANGE_LOG.md` 与 `project_docs/LOGS.md`。
