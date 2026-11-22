@@ -734,3 +734,9 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 新增生成器 `paper/zh/figures/gen_v3_figures.py` 及 4 套双语矢量 PDF：`fig_framework_arch_{zh,en}.pdf`（整体架构）、`fig_tipping_gate_mech_{zh,en}.pdf`（$O(\log N)$ 转折门隔离）、`fig_tool_agnostic_results_{zh,en}.pdf`（10/10 独立重布线效果）、`fig_multicorner_spef_{zh,en}.pdf`（SS/TT/FF 多角签核与固定 SPEF 偏差）。
 - 逐张视觉检查并修复字符与图例遮挡后嵌入双稿：中文 v3 稿 14 页、英文 IEEEtran 稿 7 页，均 **0 Error / 0 Overfull / 0 Undefined**。
+
+
+## 2026-11-22（Nature 视觉升级）：全部 5 套图表按 `nature-figure` 规范重制（0 Fail / 0 Warn 全检通过）
+
+- 按 `nature-figure` 技能重构全套 5 张图（含重绘 `budget_curves.pdf` 并改通栏）：统一低饱和 Nature Steel-Blue & NMI Pastel 学术色系、去网格线/黑边柱/图例框、标准 `182.9 mm` 双栏宽度与 `a`/`b` 面板标签，导出 SVG + PDF + 300 DPI PNG。
+- 全部 9 份 PDF 通过 `audit_pdf_text.py`（最小字号 $\ge 5.7\text{ pt}$）与 `audit_figure_collisions.py`（**0 fail, 0 warn, PASS**）；中英文双稿重编译均 **0 Error / 0 Overfull / 0 Undefined**（中文 13 页、英文 7 页）。

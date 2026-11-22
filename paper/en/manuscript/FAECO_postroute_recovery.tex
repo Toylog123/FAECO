@@ -252,12 +252,12 @@ Three key findings emerge:
     \item \textbf{Online bisection recovery}: Running Algorithm~\ref{alg:bisect} with our online post-route evaluator on s953 isolates two tipping gates and commits 14/23 reverts, reducing total area by $4.68\%$ ($113.86\,\mu\text{m}^2$) while \emph{improving} post-route propagated WNS by $+17.26$\,ps; on s820, online bisection safely falls back to \texttt{CONTROL}.
 \end{enumerate}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{budget_curves.pdf}
+\includegraphics[width=0.95\textwidth]{budget_curves.pdf}
 \caption{Multi-circuit WNS budget elasticity curves across eight ISCAS89 benchmarks: (a) area recovery ratio vs.\ allowed WNS budget $B$ (black curve: geometric mean); (b) per-circuit recovery at $B=10$\,ps.}
 \label{fig:budget_curves}
-\end{figure}
+\end{figure*}
 
 \begin{table}[t]
 \centering

@@ -5626,3 +5626,12 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
    - `fig_tool_agnostic_results_{zh,en}.pdf`：10/10 全胜脱离 Resizer 日志纯独立重布线面积降幅与重布线后时序（Setup $\Delta\text{WNS}$ + Hold $\Delta\text{hold}$）对比图；
    - `fig_multicorner_spef_{zh,en}.pdf`：真实 SS/TT/FF 多工艺角签核分布与固定 SPEF 乐观偏差对比图（含 `s641` 在线三角门控修正与 `s953` 在线二分修正）。
 2. 逐张通过视觉检查确认无字形缺失与标签遮挡后，同步嵌入中英文双稿（各含 5 图）；双遍编译均 **0 Error / 0 Overfull / 0 Undefined references**（中文 v3 稿 14 页、英文 IEEEtran 稿 7 页）。
+
+
+**LOG-20261122-03 / 启用 `nature-figure` 规范重制全 5 套出版级矢量图表（0 Fail / 0 Warn 全检通过，2026-11-22）**：
+1. 按 `nature-figure` 技能的设计理论与质量门重建全部 5 套中英文双语图表（含重绘原有 `budget_curves.pdf`）：
+   - 采用统一低饱和 Nature Steel-Blue (`#0F4D92`/`#3775BA`) & NMI Cool-Neutral (`#484878`/`#7884B4`/`#D8DCE8`) & 受限语义红绿 (`#2E9E44`/`#B64342`) 学术色系；
+   - 极简 2 边坐标轴、去噪点水平网格线、无边框图例、无黑边柱体、标准 `182.9 mm` 双栏出版物理尺寸及左下角加粗小写字母面板标签（`a`, `b`）；
+   - 同时导出 `.pdf`（TrueType 可编辑文本）、`.svg`（`<text>` 节点）与 300 DPI `.png`。
+2. 全套通过 `nature-figure` 自动化质检：`validate_figure.py` (`17 pass, 0 fail`)、`audit_panel_alignment.py`（共享边距/宽/高 $\le 1.5\text{ pt}$）、`audit_pdf_text.py`（全部字号 $\ge 5.7\text{ pt} \ge 5\text{ pt}$ 下限）、`audit_figure_collisions.py`（全部 9/9 PDF 均 **0 fail, 0 warn, PASS**）。
+3. 将 `budget_curves.pdf` 升格为双栏通栏排版并双遍重编译双稿（中文 v3 稿 13 页、英文 IEEEtran 稿 7 页，均 **0 Error / 0 Overfull / 0 Undefined references**）。
