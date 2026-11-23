@@ -3429,3 +3429,10 @@ budget_core整体回归v1遗漏前置packaged DLL镜像，再现原Yosys32212257
 `s713` 的 Verilog 将带斜线的实例写成 `\DFF_0/rebuffer1`，DEF 和 OpenDB 使用 `DFF_0/rebuffer1`。初版 `replace_cell` 使用词法转义名导致 `STA-0125`。仅修命令后，布线成功，但期望 master 表带转义前缀，后验对比将同一实例识别成两个键，跳过 STA。两次错误分开保留。
 
 候选动作 ID 保留来源可追溯性，物理命令与期望 master 使用同一个去前缀实例名，并逐候选校验实际 DEF 中的原 master。复用路线必须绑定全部动作、参考输入及工具资产指纹、产物 SHA256，再独立读取网表和执行四场景 STA。`s713_replay/RUN_001` 已确认目标 master、DRC=0 与四场景有效度量，随后因实测 IO+OCV hold 未过门。工程失败、复用路线和真实时序拒绝分别记账。
+
+
+## 2026-11-23 — 读既有 OpenDB 前绑定物理生产器与数据库 schema
+
+ASAP7 GCD 原 ORFS 物理结果的 ODB 需要 schema 0.142，OpenROAD 26Q3 读器仅支持 0.134，`read_db` 在时序分析之前退出。应保留生产器版本和二进制指纹，先确认数据库兼容性，再把失败归入时序或算法。现成 DEF 与 DRC 报告仍可用于绑定原物理状态。
+
+时序复测可从同一输出端点的 V、SDC 与 SPEF 单独恢复，逐视图固定 Liberty；ODB/DEF/DRC 保留原件与哈希。本轮 OpenSTA 3.1.0 读同源三件，FF setup/hold 与生产器报告在其输出精度下一致，TT 和 SS 也获得有效结果。此方法验证 STA 导入和已有时序，物理重布线的兼容性继续由原生产器或后续独立预检判定。证据见 `project_docs/evidence/tcad_preflight_20261123/`。

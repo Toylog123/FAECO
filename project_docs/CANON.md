@@ -1,5 +1,9 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-23 现行投稿目标
+
+用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
+
 ## 2026-11-23 中文 v3 配图与实验口径修订
 
 中文活跃工作稿为 14 页，含六幅 ImageGen 示意图、十例 SKY130 逐端点对照与 s713/s832 联合评测。v22 标签锁定此前中文稿和工程基线。英文工作稿暂冻。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [联合评测](evidence/sky130_joint_constraints_20261123/REPORT.md) · [图件记录](../paper/zh/figures/imagegen_20261123/PROMPTS.json)

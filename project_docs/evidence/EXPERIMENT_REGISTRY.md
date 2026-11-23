@@ -2592,3 +2592,19 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **状态** COMPLETED，两个最终运行退出码均为 0。合格结果以 `s713_replay`、`s832` 为准。两例各 10 个候选、1 个零动作对照，分别执行 52 次 STA（参照与历史点各四景、对照四景、候选四景）。`s713_replay` 全部 11 条路线均由第一次技术重试的动作、输入及产物指纹匹配复用，执行 0 条新路线、0 SEC；10 个候选通过物理身份门与 DRC，IO+OCV 绝对 hold 为 `−99.035 至 −98.036 ps`，严格及相对诊断均无端点。s832 的相对诊断结果见上一条，两例合计严格接受 `0/2`。
 - **计数与追溯**：初跑 `s713` 11 次物理调用，8 条完成，40 次 STA。技术重试 `s713_retry` 11 次物理调用全部完成，3 条因身份表错误跳过 STA，共 40 次 STA。最终回放独立 STA 52 次，不新增物理调用。`s832` 11 次物理调用全部完成，52 次 STA 及 1 次 SEC。汇总全阶段 33 次物理调用、30 条完成路线、184 次 STA、1 次 SEC，另有最终 s713 的 11 条路由产物复用。最终证据集为 20 个候选、2 个零动作对照、104 次 STA、1 次 SEC，工程失败的初跑不进入候选可行率。
 - **最终本机收据**：`scratch/sky130_joint_constraints_20261123/s713_replay/summary.json` SHA256 `8b727b3f0e6559deb5e71bb39d9292babcb1e1643cfac48e42292f769dd4a180`；`scratch/sky130_joint_constraints_20261123/s832/summary.json` SHA256 `072294ba7b0a73ab6eceb2b7fac26e3b94fd504d680c83e2d8150f3b3f1fbe3d`。可携带证据目录为 `project_docs/evidence/sky130_joint_constraints_20261123/`。
+
+
+### 2026-11-23 ASAP7-GCD-CONTROL-3VIEW-SMOKE
+
+- **状态** PREREGISTERED。目标为确认既有 ASAP7 GCD 详细布线起点能在三场景读取原约束并得到 setup、hold 测量。此项为资格冒烟，范围限于开发用 GCD 的既有 CONTROL。
+- 固定输入为 WSL `/home/toylog/rseco_timing/adaptive_20261120/rcx_smoke/results/asap7/gcd/base/6_final.{odb,sdc,spef,v,def}`。同一运行的 `logs/asap7/gcd/base/5_2_route.json` 报告 `detailedroute__route__drc_errors=0`。保留源 SDC 的 310 ps 传播 core clock、310 ps 虚拟 I/O 时钟和 62 ps 输入/输出延迟，三场景共用一份原 SPEF。因此比较维度为 Liberty PVT，寄生口径固定。
+- 固定 WSL OpenROAD 26Q3 `/home/toylog/faeco_eda/or26Q3/bin/openroad`。RVT FF、TT、SS 三视图分别独立启动 OpenROAD，每视图明确载入 AO、INVBUF、OA、SIMPLE_211120、SEQ 五套 NLDM Liberty。原输入及布线产物只读。每视图限时 30 s，整体限时 100 s，共至多 3 次 STA，物理布线、RCX、SEC 调用均为零。
+- 要求既有 DRC 为零，三视图均有有效、可测的 setup 与 hold，且每个视图绝对 hold 非负才能通过本次严格冒烟。setup 可保留负 slack。输出落在 `project_docs/evidence/tcad_preflight_20261123/`。本项不提供算法比较或留出规模验证。
+
+- **工具准备事件** 初次命令在 SHA256 输入预检停止。组装 Liberty 文件名时遗漏 `asap7sc7p5t_` 前缀，本次调用未进入 OpenROAD，实测计数为 0 STA。根据原 ORFS 文件清单和 `6_report.log` 对正确库名逐一定位，按原登记的 RVT 视图与五组 Liberty 启动后续复测。
+
+- **工具兼容性与复测预案** OpenROAD 26Q3 在 FF 场景的 `read_db` 阶段退出。错误为原 ODB schema `0.142` 新于读器的 `0.134`，保留 `FF.log`，至此实际测完 0 次 STA。优先找回并固定 ORFS 产出该 ODB 的 OpenROAD 二进制，或使用 OpenSTA 3.1.0 读取同一已固定的 `6_final.v/.sdc/.spef` 及按场景列明的原五组 RVT 库。ODB、DEF 和 DRC 仍与评测端点以哈希绑定，不转换或修改原件。已有生产器 FF 读数只用来做复现差异核对，原联合门、预算及完整三视图要求保持。
+
+
+- **状态** COMPLETED。使用 OpenSTA 3.1.0，直接读取已固定的 `6_final.v/.sdc/.spef`，每场景使用同一原 SPEF 和登记的五组 RVT NLDM Liberty。三进程均 rc 0，分别用时 1.766、1.578、1.531 s。FF setup/hold `−37.960829/+41.599637 ps`，TT `−166.709424/+59.198008 ps`，SS `−401.929379/+43.915302 ps`。FF 与原生产器 `6_report.json` 的 `−37.9608/+41.5996 ps` 在后者精度下一致。三视图 hold 非负，控制件通过本次测量及 hold 门。实测计数 3 STA、0 新布线、0 RCX、0 SEC。无候选评估。
+- [配置与输入指纹](tcad_preflight_20261123/CONFIG.json) SHA256 `bb1c84d59892f5dbab3da2eb9bf2ad294608bcd9067b6d66d42305930ee3eeab`，[结果及日志指纹](tcad_preflight_20261123/SUMMARY.json) SHA256 `8f57c80d4985edfce128c43f66404ace90cdc72f43ce7f557f0aadbdaa75b324`。ODB 读入诊断保存在同目录 `openroad26q3_odb_diagnostic/`。

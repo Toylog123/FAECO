@@ -1,0 +1,86 @@
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+Warning 1212: /home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+GCD_SETUP_SECONDS -1.6670942404317657e-10
+GCD_HOLD_SECONDS 5.919800760700866e-11
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+Startpoint: u84 (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: u84 (rising edge-triggered flip-flop clocked by core_clock)
+Path Group: core_clock
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock core_clock (rise edge)
+   0.000000    0.000000   clock source latency
+   0.000000    0.000000 ^ clk (in)
+  17.600334   17.600334 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+  27.384136   44.984470 ^ clkbuf_2_3__f_clk/Y (BUFx2_ASAP7_75t_R)
+   0.418440   45.402912 ^ u84/CLK (DFFHQNx1_ASAP7_75t_R)
+  63.352455  108.755363 ^ u84/QN (DFFHQNx1_ASAP7_75t_R)
+  13.982745  122.738113 v u226/Y (AOI21x1_ASAP7_75t_R)
+   0.036623  122.774734 v u84/D (DFFHQNx1_ASAP7_75t_R)
+             122.774734   data arrival time
+
+   0.000000    0.000000   clock core_clock (rise edge)
+   0.000000    0.000000   clock source latency
+   0.000000    0.000000 ^ clk (in)
+  18.902075   18.902075 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+  30.349438   49.251514 ^ clkbuf_2_3__f_clk/Y (BUFx2_ASAP7_75t_R)
+   0.518915   49.770428 ^ u84/CLK (DFFHQNx1_ASAP7_75t_R)
+  -4.367517   45.402912   clock reconvergence pessimism
+  18.173813   63.576729   library hold time
+              63.576729   data required time
+-----------------------------------------------------------------
+              63.576729   data required time
+            -122.774734   data arrival time
+-----------------------------------------------------------------
+              59.198009   slack (MET)
+
+
+Startpoint: u5 (rising edge-triggered flip-flop clocked by core_clock)
+Endpoint: resp_msg[0] (output port clocked by vclk_core_clock)
+Path Group: vclk_core_clock
+Path Type: min
+
+      Delay        Time   Description
+-----------------------------------------------------------------
+   0.000000    0.000000   clock core_clock (rise edge)
+   0.000000    0.000000   clock source latency
+   0.000000    0.000000 ^ clk (in)
+  17.600334   17.600334 ^ clkbuf_0_clk/Y (BUFx2_ASAP7_75t_R)
+  27.062489   44.662823 ^ clkbuf_2_0__f_clk/Y (BUFx2_ASAP7_75t_R)
+   0.573906   45.236729 ^ u5/CLK (DFFHQNx1_ASAP7_75t_R)
+  57.590271  102.826996 ^ u5/QN (DFFHQNx1_ASAP7_75t_R)
+  22.407160  125.234154 ^ place175/Y (BUFx3_ASAP7_75t_R)
+  17.768772  143.002930 ^ u10/Y (AO21x1_ASAP7_75t_R)
+  14.353671  157.356598 ^ output80/Y (BUFx3_ASAP7_75t_R)
+   0.004094  157.360687 ^ resp_msg[0] (out)
+             157.360687   data arrival time
+
+   0.000000    0.000000   clock vclk_core_clock (rise edge)
+  36.224998   36.224998   clock network delay (ideal)
+   0.000000   36.224998   clock reconvergence pessimism
+ -62.000004  -25.775003   output external delay
+             -25.775003   data required time
+-----------------------------------------------------------------
+             -25.775003   data required time
+            -157.360687   data arrival time
+-----------------------------------------------------------------
+             183.135696   slack (MET)
+
+
+PREFLIGHT_STA_COMPLETE

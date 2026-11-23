@@ -5727,3 +5727,29 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 **LOG-20261123-13 / 中文 v3 证据对齐与六幅 ImageGen 配图交付（2026-11-23）**
 
 [原始证据包](evidence/sky130_joint_constraints_20261123/REPORT.md) 归档历史 357 个引用文件及本次原始轨迹。中文稿纳入逐端点数据、同参考联合重测和 s832 相对诊断。六图直接使用 [ImageGen 成图](../paper/zh/figures/imagegen_20261123/PROMPTS.json)。双遍编译通过并复查全 14 页，六图原生嵌入，无溢出或孤立的参考文献末页。三份 PDF 的 SHA-256 一致（5ec838ac0821e257fd7548c93bb28693ca9028896c5b6ded8cd299c362e6ecae）。v22 标签为回退点。
+
+
+**LOG-20261123-14 / TCAD 适配与投稿成熟度快评（2026-11-23）**
+
+回读 802c453a 主稿、十例端点及两例严格评估。TCAD 选题范围适配。待验命题为同起点、同候选池、同约束下，交互感知微批次能否提升可接受面积与物理评估成本的折中。近邻原文及两条已核实的引用偏差记入 OI-089。只做评估与记录，未改论文、未运行 EDA。
+
+
+**LOG-20261123-15 / 用户选定 TCAD 与投稿证据准备（2026-11-23）**
+
+- 用户选定 IEEE TCAD 作为后布局 v3 的投稿目标。2026-10-12 的 Integration 决策对应预布局历史稿，现行目标已同步 CANON。
+- 保留 OI-089 的直接近邻与引用偏差。开始回查可复用的 SKY130 详细布线输入、其原始约束和强基线实现以准备后续方案；这一步为只读输入核查，无已登记或启动的新 EDA 实验。
+
+
+**LOG-20261123-16 / ASAP7 GCD 三视图资格冒烟预注册（2026-11-23）**
+
+- 已实查 ORFS GCD 原 `6_final` 五件、源 SDC 和最终零 DRC 计数，登记 `ASAP7-GCD-CONTROL-3VIEW-SMOKE`。固定原约束、SPEF、FF/TT/SS 的 RVT 库及 OpenROAD 26Q3，只复测最多 3 次 STA。此条记录时尚未启动运行。
+
+- 首次输入 SHA256 预检发现 Liberty 文件名缺 `asap7sc7p5t_` 前缀，未启动 OpenROAD 或 STA。对照原 ORFS 库清单及日志修正路径，按同一方案复测。
+
+- 26Q3 读原 ODB 时发现 schema `0.142 > 0.134`，时序未测，错误原件保留。登记工具兼容性恢复路径，优先复用产出该物理状态的二进制，备选为固定 V/SDC/SPEF 的 OpenSTA 导入。
+
+
+**LOG-20261123-17 / ASAP7 GCD 资格冒烟与 SKY130 输入查册收尾（2026-11-23）**
+
+- `ASAP7-GCD-CONTROL-3VIEW-SMOKE` 完成。原 V/SDC/SPEF 经 OpenSTA 3.1.0 得到 FF、TT、SS 三视图，绝对 hold 分别为 `+41.600/+59.198/+43.915 ps`。FF 与生产器报告精度一致。只计 3 STA，0 新布线/RCX/SEC。原 ODB 读器错误及测量配置分别存入证据目录。
+- 查到可复用的 ITC-99 物理输入 `experiments/20261113_itc99_recovery/arms/Resizer/{b02,b06,b09,b10,b13,b03/b03,b07/b07,b08/b08}/routed.{def,v,spef}` 及同目录 `resizer_sta.tcl`，各有空 DRC 报告。历史约束是 CK 0.5 ns clock-only，b13 指定传播时钟。它们有过历史恢复或同族暴露。另查到 2026-10-28 的 SKY130 GCD 环境冒烟，但保存的候选网表与 DEF 缺原始 mapped.v 中的触发器，且配套 STA 指向 mapped.v，本次输入筛选排除。此次查册未确认其余跨家族现成 SKY130 详细布线输入。
