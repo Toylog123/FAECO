@@ -84,3 +84,11 @@ Ibex、GCD 和 AES 共 108 次独立候选 DRT/RCX，324 次视图 STA，合格�
 | `hold_diagnostics_ibex_v1.tar.gz` | 34 | `2b79112c536ac11039b08d787444c528482ba2c6edc88457cf3aae1835123c1e` |
 
 三套矩阵的独立核验均为 rc 0。程序回归 101 项通过。[矩阵命令](SCREEN_MATRIX_COMMANDS.txt) · [独立核验器](verify_screened_matrix.py)
+
+## 后续定位
+
+固定动作收据的事后回放说明，遇到相对 hold 拒收时暂缓拆分，可以在六次内访问 Ibex、GCD 已证明的后段组合，并能保持 ASAP7 已观察的 setup-only 拆分路径。三个 SKY130 回放都复现了固定批次的执行序列，AES 仍无正式回收。本次以原端点和原证明为证据，未产生新调度运行时间。 [调度与覆盖诊断](SCHEDULER_COVERAGE_DIAGNOSTIC.md)
+
+AES 从相同 CONTROL 零编辑重布线后，网表字节一致，SS hold 自身下降 0.676792 ps。以该读数重看既有 18 次筛选评估，8 次通过相对 hold，最大实测物理减量 11.2608（0.009665%），低于 0.01% 目标。两个 33.7824 端点继续拒收。对两个代表候选的三处 hold 退化，交叉读入的 SPEF 完整复现实测变化。 [AES 路由与 hold 诊断](AES_REROUTE_HOLD_DIAGNOSTIC.md) · [零编辑及投影验收](AES_ZERO_REROUTE_VERIFIED.json)
+
+两次 AES 诊断原件归档于 `scratch/tcad_ibex_20261123/aes_hold_cause_diag_v1.tar.gz`，含 67 个成员，SHA-256 为 `999f944c7925a90997b80eb446512685731a5cfb14a3d0513df829c9da9a5aab`。已将归档中的控制收据、零编辑收据、交叉 STA 输入和结果逐字节与原件核对。

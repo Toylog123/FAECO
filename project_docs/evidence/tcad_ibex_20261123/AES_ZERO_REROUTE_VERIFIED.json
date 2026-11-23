@@ -1,0 +1,351 @@
+{
+  "status": "diagnostic_replayed_and_checked",
+  "clock": "CLOCK_MONOTONIC_RAW",
+  "zero_config": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_zero_reroute_diag_v1/config.json",
+    "sha256": "50aaf0ea602ace552a408d873e3c34427afeae073dbca30effd6ade661c47ee9",
+    "bytes": 10011
+  },
+  "zero_receipt": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_zero_reroute_diag_v1/noop/receipt.json",
+    "sha256": "8cfbff74559103f990f73b39073efba3c08a7c6d15c6f7e686cc69052a466052",
+    "bytes": 54359
+  },
+  "zero_layout": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_zero_reroute_diag_v1/noop/layout_changes.json",
+    "sha256": "84a4013eb98c02f6ef738ccc79043a5ffbd28a6dde98ecf25fb45af0a3dce174",
+    "bytes": 300
+  },
+  "recorded_matrix_results": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/results.json",
+    "sha256": "b4289fa51f666f500517ba24d1534eb41050991abbe33f68de132501c3db21a3",
+    "bytes": 203385
+  },
+  "drc_violations": 0,
+  "area_saved": 0.0,
+  "changed_nets": [
+    "_03312_",
+    "clk",
+    "clknet_0_clk",
+    "net255",
+    "net7927",
+    "net8407"
+  ],
+  "same_functional_verilog_sha256": "d18184860bc6199b75cf1f408a8be6b1190e6a4b4273e383c43acc1c50bec735",
+  "zero_edit_views": {
+    "FF": {
+      "control_hold_wns_ps": 336.2738976164792,
+      "zero_edit_hold_wns_ps": 336.2739531276304,
+      "delta_hold_wns_ps": 5.551115123125783e-05,
+      "zero_edit_hold_tns_ps": 0.0
+    },
+    "TT": {
+      "control_hold_wns_ps": 523.9148559432749,
+      "zero_edit_hold_wns_ps": 523.9148559432749,
+      "delta_hold_wns_ps": 0.0,
+      "zero_edit_hold_tns_ps": 0.0
+    },
+    "SS": {
+      "control_hold_wns_ps": 55.29576796448055,
+      "zero_edit_hold_wns_ps": 54.61897600866905,
+      "delta_hold_wns_ps": -0.6767919558114954,
+      "zero_edit_hold_tns_ps": 0.0
+    }
+  },
+  "projection_checked_at_original_relative_hold_tolerance_ps": 0.001,
+  "projection": {
+    "single": {
+      "evaluated": 6,
+      "clears_hold": 4,
+      "largest_measured_physical_area_delta": 11.260800000003655,
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/single/01_physical/receipt.json",
+            "sha256": "9fb1f6cb5a95d9642c23854078d2344c0afc597f41cefd4777c79db1f71ea45f",
+            "bytes": 54592
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.00011102230246251565,
+            "SS": 0.015099033134902129
+          },
+          "clears_hold_in_projection": true
+        },
+        {
+          "attempt": 2,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/single/02_physical/receipt.json",
+            "sha256": "bba3d23f7a1fcb4d40e073d1ae6de437cc4699206aae4ad842b840930044a491",
+            "bytes": 54594
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.0,
+            "SS": 0.0
+          },
+          "clears_hold_in_projection": true
+        },
+        {
+          "attempt": 3,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/single/03_physical/receipt.json",
+            "sha256": "1b5f2aab132196383e8980a31748768eca684ce618eef664162f1ceb8069efa3",
+            "bytes": 54591
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": -0.00011102230246251565,
+            "TT": 0.0004440892098500626,
+            "SS": -0.17186252421197423
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 4,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/single/04_physical/receipt.json",
+            "sha256": "f2b38f142fe1a188be3def6a7f9b4cb3e4f688017d7e7f7c130f4832b43d060e",
+            "bytes": 54593
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": -5.551115123125783e-05,
+            "TT": 0.00011102230246251565,
+            "SS": 0.07838174553853605
+          },
+          "clears_hold_in_projection": true
+        },
+        {
+          "attempt": 5,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/single/05_physical/receipt.json",
+            "sha256": "5b6cb342d0d9002e1b7e6b01ce474cd774bc47f79a8219afdf849a951bd2dab3",
+            "bytes": 54593
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": -5.551115123125783e-05,
+            "TT": 0.0,
+            "SS": -0.030864200084579352
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 6,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/single/06_physical/receipt.json",
+            "sha256": "eeffd9b8966d752bd2e13198b7ba8265aea5b0baca283514196141da5d3d0d48",
+            "bytes": 54591
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.0,
+            "SS": 0.0
+          },
+          "clears_hold_in_projection": true
+        }
+      ]
+    },
+    "fixed": {
+      "evaluated": 6,
+      "clears_hold": 1,
+      "largest_measured_physical_area_delta": 11.260800000003655,
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/fixed/01_physical/receipt.json",
+            "sha256": "0cbe77bd3d8c86cc62280c5c3976a1334946c356641eb1dc6a9f6f20798e3bef",
+            "bytes": 54660
+          },
+          "area_saved": 33.782400000010966,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.0,
+            "SS": -0.15698553568199713
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 2,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/fixed/02_physical/receipt.json",
+            "sha256": "fa432cf0044d57e76df72d1e877656e91ce0c752a42b736ffe53a04e54b1a514",
+            "bytes": 54665
+          },
+          "area_saved": 33.782400000010966,
+          "delta_hold_vs_zero_ps": {
+            "FF": -5.551115123125783e-05,
+            "TT": 0.00016653345369377348,
+            "SS": -0.9325873406851315
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 3,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/fixed/03_physical/receipt.json",
+            "sha256": "cef07180746a002b8a0f9108eeb015e5880b350c87c82dc8726936eb9679f492",
+            "bytes": 54713
+          },
+          "area_saved": 33.782400000010966,
+          "delta_hold_vs_zero_ps": {
+            "FF": -0.05007105841059456,
+            "TT": -0.07771561172376096,
+            "SS": -0.12390088954816747
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 4,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/fixed/04_physical/receipt.json",
+            "sha256": "810ccff8217be815979a5cef503a8ffbec5bb3d9e875efcff6bdccfce400d8d1",
+            "bytes": 54742
+          },
+          "area_saved": 33.782400000010966,
+          "delta_hold_vs_zero_ps": {
+            "FF": -0.0017763568394002505,
+            "TT": -0.0027755575615628914,
+            "SS": 0.0
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 5,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/fixed/05_physical/receipt.json",
+            "sha256": "27fc8911c749f7960d871b99731770d80196b9ec676d5730bc7008bc8ef42010",
+            "bytes": 54656
+          },
+          "area_saved": 33.782400000010966,
+          "delta_hold_vs_zero_ps": {
+            "FF": -0.07027711745877241,
+            "TT": -0.10841327835464654,
+            "SS": 0.8673062268371723
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 6,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/fixed/06_physical/receipt.json",
+            "sha256": "4f84b971dad5c4812f18ba990d241a286c9785b4c14589208aad483304cc9fd5",
+            "bytes": 54607
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.06317169010117141,
+            "TT": 0.09903189379656396,
+            "SS": 0.0
+          },
+          "clears_hold_in_projection": true
+        }
+      ]
+    },
+    "faeco": {
+      "evaluated": 6,
+      "clears_hold": 3,
+      "largest_measured_physical_area_delta": 11.260800000003655,
+      "attempts": [
+        {
+          "attempt": 1,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/faeco/01_physical/receipt.json",
+            "sha256": "c4d9dc53823387459afa638523c6fa2d598b9f6ea8b1f65946d18d90280b1afa",
+            "bytes": 54662
+          },
+          "area_saved": 33.782400000010966,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.0,
+            "SS": -0.15698553568199713
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 2,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/faeco/02_physical/receipt.json",
+            "sha256": "130b71b739efaf729c8a1842397278b201cd93b221734394e3f73eff2821ad8f",
+            "bytes": 54583
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.00011102230246251565,
+            "SS": 0.015099033134902129
+          },
+          "clears_hold_in_projection": true
+        },
+        {
+          "attempt": 3,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/faeco/03_physical/receipt.json",
+            "sha256": "c3c260b90000ca1abacbe6bfd563d587b3b817b29279c886c34d44f9667d6a29",
+            "bytes": 54622
+          },
+          "area_saved": 22.52160000000731,
+          "delta_hold_vs_zero_ps": {
+            "FF": -0.00011102230246251565,
+            "TT": 0.0004440892098500626,
+            "SS": -0.17186252421197423
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 4,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/faeco/04_physical/receipt.json",
+            "sha256": "86af1ee30be50ec1c61b81e3f83bddab0cd6ebf6daa83da18aabbc72eaee5cb5",
+            "bytes": 54582
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": 0.0,
+            "TT": 0.0,
+            "SS": 0.0
+          },
+          "clears_hold_in_projection": true
+        },
+        {
+          "attempt": 5,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/faeco/05_physical/receipt.json",
+            "sha256": "9dae72ee5ff844eda9e04564afbf24f15f56665727b721ca5b56b9bbfeb6c09e",
+            "bytes": 54583
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": -0.00011102230246251565,
+            "TT": 0.0004440892098500626,
+            "SS": -0.17186252421197423
+          },
+          "clears_hold_in_projection": false
+        },
+        {
+          "attempt": 6,
+          "raw_receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1/screened/faeco/06_physical/receipt.json",
+            "sha256": "d3f3381182a0aabb3ffc6d74bbe3fc114ea95e558d46a82f7d4a7a40293008ef",
+            "bytes": 54579
+          },
+          "area_saved": 11.260800000003655,
+          "delta_hold_vs_zero_ps": {
+            "FF": -5.551115123125783e-05,
+            "TT": 0.00011102230246251565,
+            "SS": 0.07838174553853605
+          },
+          "clears_hold_in_projection": true
+        }
+      ]
+    }
+  },
+  "zero_probe_raw_seconds": 113.555907917,
+  "no_new_sec_or_scheduler_run": true
+}

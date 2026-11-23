@@ -6157,3 +6157,27 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - T01 四个物理探针另计 4 次 DRT/RCX、12 次视图 STA，原 CONTROL 正式验收候选 SEC 为 0。T02 Ibex 与 T03 GCD/AES 三套六臂矩阵独立核验，合计 108 次 DRT/RCX、324 次视图 STA、5 次候选 SEC、0 次缓存。历史零编辑诊断另有 4 次 SEC，均为 13648/0。共同起点资格、筛选 TT 试次和候选三角实跑分别记账。回归测试 101 项通过。
 - 完整归档均在 `scratch/tcad_ibex_20261123/`，本地实际 SHA-256 已复验。`screen_ibex_complete_v1.tar.gz` 为 `8f47ed4e504396826410e333f29cca8f0eaf2ec871a319727e60b9e0d33bd508`，`screen_holdout_gcd_v1.tar.gz` 为 `2199d21b28109bd5a0e408567cd66a0cce67b3e45589345d7fe8589fde9d8f8b`，`screen_holdout_aes_v1.tar.gz` 为 `25e476d66a9d4ef39965ef02fb932b04883ad1c17bb23d87b5bcc468ae88bf70`，`hold_diagnostics_ibex_v1.tar.gz` 为 `2b79112c536ac11039b08d787444c528482ba2c6edc88457cf3aae1835123c1e`。三个主归档的成员与原配置、原结果、池和筛选收据指纹逐项核对。
 - 计入筛选成本后，只有 Ibex 和 GCD 的筛选固定批次在 720 RAW s 与六次共同限制下达到 0.01% 面积目标，两例端点的三角均无新增负 setup 端点。AES 冻结筛选消除了已测试候选的 setup 超预算，正式面积仍为零。Ibex/GCD 调度覆盖、历史零编辑参照及 AES 多视图相对 hold 的后续问题分别落实至 OI-097／098／100。[实验总表](evidence/tcad_ibex_20261123/SCREEN_ABLATION_REPORT.md) · [现行口径](CANON.md#2026-11-24-sky130hd-候选筛选同预算消融与留出验证)
+
+## LOG-20261124-15｜登记调度覆盖与 AES 零编辑重布线归因
+
+- 分开检验两项失效原因。只读回放冻结矩阵的动作组和调用序列，检查同一六次物理调用配额下，先扩大覆盖再拆分能否触及已经实测通过的动作组，未测动作组保留未知。单独从 AES 合格起点 `ss_hold_targeted_v2b` 做一次零编辑详细重布线和复提取，使用原 SDC、原生 FastRoute、ODB 内嵌导引、4 线程和 64 个 DRT 迭代上限。先核验三角绝对与相对 hold，再与已测候选比较传播路径和寄生变化。该试次单列，不纳入正式矩阵或新增候选 SEC。[归因预登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-aes-zero-edit-reroute-and-scheduler-diagnostic-v1)
+- AES 零编辑重布线实际于 07:41:25（UTC+8）启动，WSL 外层限时进程 PID 438，驱动 PID 439，CPU 6–11。外层限时 2400 s，DRT/RCX、单视图 STA、SEC 各阶段限时配置为 1500/180/210 s。使用 `probe_aes_zero_reroute.py` 和同一矩阵输入绑定，配置 SHA-256 `50aaf0ea602ace552a408d873e3c34427afeae073dbca30effd6ade661c47ee9`。[实际入口](evidence/tcad_ibex_20261123/probe_aes_zero_reroute.py)
+
+## LOG-20261124-16｜AES 零编辑触发 SS 相对 hold 拒收
+
+- 已实查空动作组完成一次 DRT/RCX 和三视图 STA，四个工具操作返回 0，DRC=0、面积差为零、网表与原合格起点字节一致、组件均未移动。六条未触达网的走线发生变化，包括 `clk` 和 `clknet_0_clk`。从零编辑评估入口到收据用时 113.555908 RAW s，DRT/RCX 用时 100.836876 s，另有重读共同起点的三视图 STA 与 ODB inventory。候选数和候选 SEC 均为零。
+- FF/TT/SS 的 hold WNS 由 +336.273898/+523.914856/+55.295768 ps 变为 +336.273953/+523.914856/+54.618976 ps。唯一拒因为 SS 相对 hold，下降 0.676792 ps，三角绝对 hold 仍为正，hold TNS 均为零。零编辑评估收据 SHA-256 `8cfbff74559103f990f73b39073efba3c08a7c6d15c6f7e686cc69052a466052`。此试次定位到有改线的零编辑重布线路径，待结合候选路径和交叉证据归因。[实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-aes-zero-edit-reroute-and-scheduler-diagnostic-v1)
+
+## LOG-20261124-17｜三设计调度覆盖回放完成
+
+- 复核三套 SKY130HD 筛选池的原 FAECO 均为 `(1,2,3) → (1) → (2,3) → (2) → (3) → (4)`。前五次耗在首个被拒整批及其拆分，仅覆盖四个排名；Ibex 和 GCD 的已测合格整批分别在排名 7–9 和 13–15。按任何视图出现 `hold_regression` 时先跳到后续整批的规则回放，三个 SKY130HD 设计的完整动作序列均与其原固定臂逐项匹配。Ibex 第 3 次和 GCD 第 5 次触及正式通过的原收据，AES 仍无通过端点。两条 ASAP7 串行的初批涉及 setup 拒因且无相对 hold 拒因，回放仍保留原拆分和第 3 次达标端点。
+- 回放继承原收据的面积和 SEC 证据。规则在已知结果后提出，未新执行候选物理验证、STA 或 SEC，未测新规则运行时间或在独立样本上的综合效果。[调度诊断](evidence/tcad_ibex_20261123/SCHEDULER_COVERAGE_DIAGNOSTIC.md)
+
+## LOG-20261124-18｜AES hold 参照投影及候选寄生交叉复测
+
+- 对原筛选池 18 次评估，只将各角相对 hold 的参照改为本轮零编辑重布线，保持原绝对 hold、setup、DRC、电气条件。单门／固定／FAECO 各有 4／1／3 次通过该物理和时序复核，合计 8 次、5 种不同单门编辑，最大已测面积减量 11.2608（0.009665%），仍小于 0.01% 目标。六次面积减量为 33.7824 的三门评估仍被拒，其中固定批次第 2 次相对零编辑 SS 下降 0.932587 ps，第 5 次仍有 FF/TT 拒因。这次投影未重跑搜索或追加候选 SEC。
+- 对固定批次第 2 次的 SS，以及第 5 次的 FF、TT，分别执行原 CONTROL 和候选 ODB 与两套 SPEF 的四格交叉，实际完成 12 次 STA，保留原 SDC 和各角 Liberty。每组的两种同源组合复现各自 hold 指标，最差路径身份和注解覆盖四格一致。固定 CONTROL ODB 只换候选 SPEF 即分别复现 −1.609379、−0.070222、−0.108413 ps 的原损失，固定 CONTROL SPEF 只换候选 ODB 则分别保持原值。最差路径的读数将第 2 次定位到捕获时钟变晚，第 5 次定位到发射与捕获时钟寄生传播的变化量不同。此归因覆盖两个候选的三个角，未增加候选 DRT/RCX 或 SEC。交叉清单和原结果 SHA-256 分别是 `872d357715b8db8d60113e44b35f7a58bd6ad7aa04eb8ad661a9ae2db5c0afdd`、`8894f60adb0bb8cda566f7dbc49a4adccbf2a9b750f70e59526892f6cdab404d`。[AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md)
+
+## LOG-20261124-19｜完成归因核验与原件归档
+
+- 新增 AES 零编辑 1 DRT/RCX、3 视图 STA，共同起点重读 3 STA，交叉诊断 12 STA，候选和 SEC 计数均为 0。调度与 AES 参照投影复用已测收据。原件归档 `scratch/tcad_ibex_20261123/aes_hold_cause_diag_v1.tar.gz`，16,741,646 字节，SHA-256 `999f944c7925a90997b80eb446512685731a5cfb14a3d0513df829c9da9a5aab`，已从包内独立核对零编辑收据及交叉配置、结果指纹。记录脚本返回 0，告警引用的是四个停用路径，现行状态和未决事项已同步。[精简回执](evidence/tcad_ibex_20261123/AES_ZERO_REROUTE_VERIFIED.json) · [AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md) · [调度诊断](evidence/tcad_ibex_20261123/SCHEDULER_COVERAGE_DIAGNOSTIC.md)

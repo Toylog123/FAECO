@@ -3460,3 +3460,9 @@ SKY130HD Ibex 的 hold 修复增量路由可以在详细布线 DRC=0 时仍有�
 ## 2026-11-23 — 零编辑重布线可改变 hold，复提取可验证冻结端点
 
 SKY130HD Ibex 在修复后共同起点做零动作 DRT，以文本导引或保留 ODB 内嵌导引分别改变 13 或 16 条网的布线。两次最终 DRC 均为零，SS hold WNS 均减少 0.079936 ps，高于既定 0.001 ps 非退化容差。若目的在于验证冻结物理端点能否重读，应以同一 ODB 重提寄生并保留原走线。此处复提后 FF/TT/SS 的 setup 与 hold WNS/TNS 均精确复现，SEC 为 13648/0。零编辑复提、零编辑重布线以及实际候选 DRT+RCX 单独计数。候选继续相对冻结起点执行原有时序门。[三版实测收据](../project_docs/evidence/tcad_ibex_20261123/SKY130_NOOP_AUDIT.json)
+
+## 2026-11-24 — 分开诊断有限预算下的覆盖损失和重布线 hold 变化
+
+六次物理预算下，Ibex 和 GCD 的原 FAECO 递归花四次拆分首次被拒整批，剩余一槽单门，只覆盖候选池头四名。两例各有较后排名的整批实际通过。先把命中相对 hold 的首批拆分延后，在只读回放中走到固定臂已经实测的合格端点。AES 的固定臂同样零回收，说明扩大覆盖本身无法解除这批相对 hold 拒因。验证调度改动时，固定起点、候选池、工艺门和物理配额，分别记录排序覆盖、实际工具成本和绝对时序。有实测收据的回放可确认已有物理端点，独立复跑才能测新调度及墙钟。[调度诊断](../project_docs/evidence/tcad_ibex_20261123/SCHEDULER_COVERAGE_DIAGNOSTIC.md)
+
+AES 一个同配方零编辑控制可产生 0.676792 ps 的 SS hold WNS 下降，未触达的六条网有改线。调换该参照可以诊断共同扰动与候选剩余变化，8/18 的投影仍没有达到原面积目标。要把寄生效应从候选单元切换分开，应在原 SDC 和对应 Liberty 下做 CONTROL/候选 ODB 和两套 SPEF 的四格 STA，先校验同源两格复现原指标，并核验寄生注解与最差路径身份。AES 两个固定批次的三个拒收视图由各自候选 SPEF 复现全部末端 hold WNS 变化。当前数据可定位这三例寄生因素，通用 hold 容差的制定还需独立路由样本。[实测登记](../project_docs/evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-aes-zero-edit-reroute-and-scheduler-diagnostic-v1)
