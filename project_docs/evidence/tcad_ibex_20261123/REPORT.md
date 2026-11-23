@@ -27,7 +27,7 @@ SKY130HD 原始终点三次 DRT 均收敛至零，最后一次含天线修复，
 
 SKY130HD 原始五件端点、布线导引、生产日志及两种 STA 读法原件另存于 `scratch/tcad_ibex_20261123/sky130_control_original.tar.gz`。SHA-256 为 `a345751e20c7e0a19b35e401ab39fac905589168a298dd8dd736a8bdb8b1f8f8`。
 
-第一轮共同修复插入 14 个 hold 缓冲。重新合法化和详细布线后 DRC 为零，OpenRCX 提取 15,256 网，原始至修复的全网表 SEC 为 13,648/0。SS hold 改善至 −3.293366 ps，尚有一个输入数据至 FIFO 的违例端点和一处独立天线违规。第二轮增加 10 个 hold 缓冲，随后原生天线修复再加 2 个物理二极管。最终 DRC 与天线违规均为零，全网表 SEC 为 13,648/0，三视图 hold 全通过。原始 I/O SDC 逐字节保留。24 个缓冲使 TT Liberty 功能面积从 144372.2144 增至 144612.4448，修复开销为 240.2304（0.1664%）。后续三臂统一使用修复后面积为参考。修复后的完整端点归档至 `scratch/tcad_ibex_20261123/sky130_control_repaired.tar.gz`，SHA-256 为 `0d36cf6f3046b67fe9c5b1313b08932fea3154a826bf71efc04cc616b4aed0bd`。[修复端点资格回执](sky130_control/REPAIRED_CONTROL.json) · [SKY130 对照命令](SKY130_P1_COMMAND.txt)
+第一轮共同修复插入 14 个 hold 缓冲。重新合法化和详细布线后 DRC 为零，OpenRCX 提取 15,256 网，原始至修复的全网表 SEC 为 13,648/0。SS hold 改善至 −3.293366 ps，尚有一个输入数据至 FIFO 的违例端点和一处独立天线违规。第二轮增加 10 个 hold 缓冲，随后原生天线修复再加 2 个物理二极管。最终 DRC 与天线违规均为零，全网表 SEC 为 13,648/0，三视图 hold 全通过。原始 I/O SDC 逐字节保留。24 个缓冲使 TT Liberty 功能面积从 144372.2144 增至 144612.4448，修复开销为 240.2304（0.1664%）。后续三臂统一使用修复后面积为参考。修复后的完整端点归档至 `scratch/tcad_ibex_20261123/sky130_control_repaired.tar.gz`，SHA-256 为 `0d36cf6f3046b67fe9c5b1313b08932fea3154a826bf71efc04cc616b4aed0bd`。[修复端点资格回执](sky130_control/REPAIRED_CONTROL.json) · [SKY130 正式对照命令](SKY130_P1_REEXTRACT_COMMAND.txt)
 
 ## 同预算对照
 
@@ -50,6 +50,10 @@ SKY130HD 原始五件端点、布线导引、生产日志及两种 STA 读法原
 ### SKY130HD
 
 SKY130HD 比较前分别用文本导引和 ODB 内嵌导引重放零动作详细布线。两次都改变了部分走线，SS hold 均减少 0.079936 ps。最终冻结详细布线的重提取验证保持全部网的几何，三视图 setup、hold 回读与起点一致，SEC 为 13,648/0。该验证计 0 次新 DRT、1 次 RCX、3 次 STA、1 次 SEC。正式三臂对 1,112 个实例的同序候选池执行相同的内嵌导引局部 DRT 和 RCX，并按上述原门限验收。[零动作回执](SKY130_NOOP_AUDIT.json) · [正式执行命令](SKY130_P1_REEXTRACT_COMMAND.txt)
+
+用户要求先暂停并复核 10 ps。SKY130HD 的单门六次和固定批次第一次已有完整候选回执，合格回收为零。固定批次第二次日志已有 DRT、RCX 完成标记，尚未形成三视图与最终候选回执。控制进程暂停在该次评估，后续候选与 FAECO 臂尚未启动。暂停涉及的耗时需单列。原 10 ps 仍为这批结果的登记口径。
+
+现有完整候选的只读回查显示，ASAP7 的 1 ns 时钟与 SKY130HD 的 10 ns 时钟使 10 ps 分别占周期的 1% 和 0.1%。ASAP7 四个已通过原门限及 SEC 的端点在 5 ps 相对预算下也通过相对 setup 检查，但其 FF WNS 均从起点约 +0.380 ps 降至 −4.38 ps。SKY130HD 六个单门候选的 TT setup 损失为 377.550–763.920 ps。建议分别保护已达标视图的零 slack 底线，并用占时钟周期的损失比例绘制面积前沿。在新门限下比较策略需要各自重新运行搜索。新门限待决定。
 
 ## SEC 工具预检
 

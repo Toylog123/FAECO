@@ -2681,3 +2681,8 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - SKY 共用零动作 v1 以文本 guide 做 DRT，v2 用冻结 ODB 的 embedded guide 做 DRT。两者均为 1 DRT、1 RCX、3 STA，改线 13/16 条，SS hold 同为 −0.079936 ps 相对变化，均无 SEC 或候选。在候选前修订零编辑门为冻结 _03 布线重新 RCX。v3 为 0 新 DRT、1 RCX、3 STA、1 SEC 13648/0，DRC 沿用冻结零，三个视图 setup/hold WNS/TNS 及布线几何精确复现。进入正式 v3 候选，候选仍统一局部 DRT+新 RCX、相对 setup −10 ps/hold 非负及 0.001 ps 容差、每臂六次/批大小三/四线程。正式运行器 SHA256 7335409577e9a5b2a69e664d8b447be47cb46defcfe744ef52134f756309461f。[实际命令](tcad_ibex_20261123/SKY130_P1_REEXTRACT_COMMAND.txt) · [零动作三版核验](tcad_ibex_20261123/SKY130_NOOP_AUDIT.json)
 - ASAP7 三臂结束并独立核验。单门／固定微批次／FAECO 自适应均 6 DRT、6 RCX、18 STA，SEC 次数为 3/0/1。选中 single/05、CONTROL、faeco/03，面积回收 0.37908/0/0.26244 TT Liberty 功能单元面积。公共 1325.602 s 窗口完成 4/6/5 次并回收 0.26244/0/0.26244。共享零动作独立记账。[配置](tcad_ibex_20261123/ASAP7_P1_CONFIG.json) · [原结果](tcad_ibex_20261123/ASAP7_P1_RESULTS.json) · [核验](tcad_ibex_20261123/ASAP7_P1_VERIFIED.json)
+
+#### SKY130HD P1 暂停（用户指示）
+
+- v3 已取得最终收据的候选为 single/01–06 与 fixed/01，共 7 次 DRT、7 次 RCX、21 次 STA、0 候选 SEC，均 DRC=0 且被门拒收。控制进程已暂停，fixed/02 子进程已退出、控制进程未归档最终收据，后续候选未启动。六次/臂预算与验收阈值沿用登记。fixed/02 完成性和计时需由最终收据确认，暂停间隔另记。阶段记录暂不形成完整三臂比较或公共墙钟结论。
+- ASAP7 单门和自适应已完成的账本均在第三次达到面积回收 0.26244，对应本次观测累计 835.516/751.489 s。该观测保留为同收益时间描述，等调用次数和等公共墙钟前缀结果见完整核验。[ASAP7 三臂核验](tcad_ibex_20261123/ASAP7_P1_VERIFIED.json)
