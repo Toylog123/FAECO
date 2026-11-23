@@ -1607,3 +1607,26 @@ SKY130HD Ibex 的原始布线及 RCX 已完成。ORFS 的 `6_report.json` 记 84
 ## OI-091（2026-11-23，open）— SKY130HD Ibex 原始共同起点的 SS hold 违例
 
 原 ORFS 输入保持原 I/O 与时钟，虽然 DRC 和天线均为零，物理 ODB 三视图重测的 SS 绝对 hold 仍为 `−1379.766 ps`。原始 CONTROL 和资格不通过的记录一并保留。另起独立目录从同一原始快照诊断并修复 hold。修复后 CONTROL 须以原 SDC 在三视图闭合 hold、DRC、天线、RCX 和共享零动作资格，方可开始 SKY130HD 三臂。
+
+
+### OI-091 限定闭合（2026-11-23）
+
+修复后共同起点在原 I/O、完整 ODB 及新 SPEF 的 FF/TT/SS 下得到 +288.152/+466.107/+115.914 ps hold WNS。新 DRT=0、天线零、RCX、原 SDC 字节一致及原始至修复两态 SEC 13648/0 均核验通过。此闭合覆盖该共同起点的 P0 资格。原始 CONTROL 的不合格收据及 SS setup 负余量保留。共享零编辑复提 RCX 后同三视图精确复现，并开始 P1。[修复起点收据](evidence/tcad_ibex_20261123/sky130_control/REPAIRED_CONTROL.json) · [零动作核验](evidence/tcad_ibex_20261123/SKY130_NOOP_AUDIT.json)
+
+## OI-092（2026-11-23，open）— 原终态 filler 占位阻断新增 hold buffer 合法化
+
+SKY130HD 的首个 hold 修复续跑从原终态派生，保留原终态 21,961 个末段 filler，合法化 `DPL-0038` 报 100.1% 占用，未开始布线或 RCX。重试保留物理输入与 SDC，先验证拆除对象只属于原 filler master，再在详细布线后补回 filler，查核其余原实例身份。原失败与技术修正后的新物理证据分开。
+
+
+### OI-092 限定闭合（2026-11-23）
+
+仅移除原四种末段 filler，满足合法化前置条件并在布线后合法复填 21,936 个，完成 DRT 及 RCX。新端点的独立天线违规由 OI-093 跟踪。
+
+## OI-093（2026-11-23，open）— SKY130HD hold 修复端点的天线违规
+
+`hold_repair_sky130_02/endpoint/` 的 DRT=0 且 RCX 完成，独立天线检查仍报告一条网、一个引脚。原件 `antenna.rpt` 指向 `data_rvalid_i → hold3717/A`。保持共同起点资格门，等待同一原约束下的天线闭合和新提取；诊断 STA/SEC 仅供判定后续修复。
+
+
+### OI-093 限定闭合（2026-11-23）
+
+`_03` 的 DRT=0 后再次独立检查发现两条天线路径。按原生 diode-only 修复一次、两颗二极管及增量 DRT 后，最终独立天线和 DRC 报告均为空，RCX 完成，原 SDC 指纹一致。收据 `hold_repair_sky130_03/RECEIPT.json` 绑定原件。此修复的时序和 SEC 准入仍按 OI-091 跟踪。

@@ -6,8 +6,8 @@
 
 ## 2026-11-23 TCAD Ibex 双工艺原始起点核验
 
-- ASAP7 Ibex 原始 ORFS CONTROL 已完成 CTS、详细布线（DRC=0）和 RCX。按原约束独立 STA，FF/TT/SS 的 hold WNS 为 +35.956/+53.159/+77.237 ps，均非负。共享零动作通过三视图、电气与 SEC（17363/0），三臂对照在执行，目前完成单门臂。[ASAP7 收据](evidence/tcad_ibex_20261123/asap7_control/CONTROL.json)
-- SKY130HD Ibex 原始 ORFS CONTROL 的最终 DRC、天线违规均为零，RCX 完成。在原 I/O 与完整 ODB 下，SS hold WNS 为 −1379.766 ps，原始起点未达进入三臂的门限。统一 hold 修复已条件式登记；恢复后的资格、零动作和三臂结果待实测。[SKY130HD 收据](evidence/tcad_ibex_20261123/sky130_control/CONTROL.json)
+- ASAP7 Ibex 原始 ORFS CONTROL 已完成 CTS、详细布线（DRC=0）和 RCX。按原约束独立 STA，FF/TT/SS 的 hold WNS 为 +35.956/+53.159/+77.237 ps，均非负。共享零动作通过三视图、电气与 SEC（17363/0）。每臂六次物理评估后，单门／固定微批次／FAECO 自适应分别回收 0.37908／0／0.26244 TT Liberty 功能单元面积；公共窗口 1325.602 s 内分别回收 0.26244／0／0.26244。本配置下 FAECO 在等调用次数时低于单门，等墙钟时与单门持平。[原始起点](evidence/tcad_ibex_20261123/asap7_control/CONTROL.json) · [三臂核验](evidence/tcad_ibex_20261123/ASAP7_P1_VERIFIED.json)
+- SKY130HD Ibex 原始 ORFS CONTROL 的最终 DRC、天线违规均为零，RCX 完成。在原 I/O 与完整 ODB 下，SS hold WNS 为 −1379.766 ps，原始起点未达进入三臂的门限。从原物理快照完成共同 hold 修复，并核验最终 DRC=0、天线零、RCX、原 SDC 字节一致、原始至修复两态 SEC 13648/0。修复起点的 FF/TT/SS hold WNS 为 +288.152/+466.107/+115.914 ps，SS setup WNS 为 −38.757 ns。两次零动作 DRT 均产生 −0.079936 ps 的 SS hold 变化，未进入候选。正式零编辑门从冻结布线 ODB 重新 RCX 后三视图无变化，SEC 13648/0。三臂已从同一修复起点启动，每个候选仍做局部 DRT 和新 RCX。[原始起点](evidence/tcad_ibex_20261123/sky130_control/CONTROL.json) · [修复起点](evidence/tcad_ibex_20261123/sky130_control/REPAIRED_CONTROL.json) · [零动作核验](evidence/tcad_ibex_20261123/SKY130_NOOP_AUDIT.json) · [正式命令](evidence/tcad_ibex_20261123/SKY130_P1_REEXTRACT_COMMAND.txt)
 
 ## 2026-11-23 中文 v3 配图与实验口径修订
 
