@@ -146,3 +146,4 @@ Yosys 使用 TT Liberty 导入单元功能模型，并以 `hierarchy -simcheck` 
 
 - ASAP7 按两种相反顺序同机串行测到相同的 0.26244 面积端点。两组 FAECO 分别少用 40.311 s 与 35.195 s，主要来自一次 SEC 的差异。另记录 WSL 单调时钟与宿主稳态计时的速率偏差。[串行复跑报告](ASAP7_SERIAL_REPORT.md)
 - SKY130HD 用原件和两组 ODB/SPEF 交叉 STA 定位 TT 退化。候选优先把高扇出 `buf_12` 降为 `buf_1`，扩大了同一分支上多条路径的延迟。定位两例中，固定 CONTROL 寄生复现了大部分退化。[TT 归因报告](SKY130_TT_CAUSE.md)
+- 在之后冻结的筛选消融中，Ibex、GCD、AES 分别完成六臂对照。新筛选固定批次在 Ibex 和 GCD 达到 0.01% 面积目标。AES 新筛选消除了本组 TT setup 拒收，18 个候选仍因相对 hold 被拒。[筛选、调度消融与留出报告](SCREEN_ABLATION_REPORT.md)

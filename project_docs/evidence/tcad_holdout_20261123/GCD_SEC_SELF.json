@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "proven": 262,
+  "unproven": 0,
+  "model": "Two-state Liberty transition cells with Yosys clk2fflogic (negative hold convention for coincident asynchronous reset deassertion and clock edge).",
+  "returncode": 0,
+  "elapsed_seconds": 0.679,
+  "gold": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd/results/sky130hd/gcd/base/6_final.v",
+    "bytes": 47571,
+    "sha256": "df1e047b4e46311131c89a198214ca9e55fc29dee81bd3376a2a2c5557e469bc"
+  },
+  "gate": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd/results/sky130hd/gcd/base/6_final.v",
+    "bytes": 47571,
+    "sha256": "df1e047b4e46311131c89a198214ca9e55fc29dee81bd3376a2a2c5557e469bc"
+  },
+  "yosys_launcher": {
+    "path": "/usr/local/bin/yosys",
+    "bytes": 729,
+    "sha256": "4f8e613d835c248c63f0e487fb956e1667b9291ef87f0514fffb4dc07878d379"
+  },
+  "yosys_binary": {
+    "path": "/home/toylog/faeco_eda/oss-latest/libexec/yosys",
+    "bytes": 35099232,
+    "sha256": "97be71629a92be6e5f25496e3ad4af071ac781dd1cc5d7718c05b209267bebbb"
+  },
+  "yosys_version": "Yosys 0.70+255 (git sha1 72b0054f0, Release, Clang /usr/bin/clang++ 21.1.8)",
+  "liberties": [
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "bytes": 12800135,
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    }
+  ],
+  "loaded_liberties": [
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "bytes": 12800135,
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    }
+  ],
+  "script": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd/p0_sec_self/prove.ys",
+    "bytes": 899,
+    "sha256": "0da55f374dfe5f04386663d614715e7c8de09670e321268ea876acac3b8cc3af"
+  },
+  "log": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd/p0_sec_self/prove.log",
+    "bytes": 650086,
+    "sha256": "29da0c8dd64f1d3043eb936bf3897ca01960da9e9e3f2b15f66a2d7c9eae1ee5"
+  },
+  "command": [
+    "/usr/bin/timeout",
+    "--kill-after=10s",
+    "180s",
+    "/usr/local/bin/yosys",
+    "-Q",
+    "-s",
+    "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd/p0_sec_self/prove.ys"
+  ]
+}

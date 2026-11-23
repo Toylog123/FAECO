@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "proven": 11089,
+  "unproven": 0,
+  "model": "Two-state Liberty transition cells with Yosys clk2fflogic (negative hold convention for coincident asynchronous reset deassertion and clock edge).",
+  "returncode": 0,
+  "elapsed_seconds": 19.591,
+  "gold": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes/results/sky130hd/aes/base/6_final.v",
+    "bytes": 1660223,
+    "sha256": "1a82b19f8fed8a060687277129eda5cc3e403a2063dbd2f14a9bdedfcf013670"
+  },
+  "gate": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes/ss_hold_targeted_v2b/6_final.v",
+    "bytes": 1677726,
+    "sha256": "d18184860bc6199b75cf1f408a8be6b1190e6a4b4273e383c43acc1c50bec735"
+  },
+  "yosys_launcher": {
+    "path": "/usr/local/bin/yosys",
+    "bytes": 729,
+    "sha256": "4f8e613d835c248c63f0e487fb956e1667b9291ef87f0514fffb4dc07878d379"
+  },
+  "yosys_binary": {
+    "path": "/home/toylog/faeco_eda/oss-latest/libexec/yosys",
+    "bytes": 35099232,
+    "sha256": "97be71629a92be6e5f25496e3ad4af071ac781dd1cc5d7718c05b209267bebbb"
+  },
+  "yosys_version": "Yosys 0.70+255 (git sha1 72b0054f0, Release, Clang /usr/bin/clang++ 21.1.8)",
+  "liberties": [
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "bytes": 12800135,
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    }
+  ],
+  "loaded_liberties": [
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+      "bytes": 12800135,
+      "sha256": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    }
+  ],
+  "script": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes/ss_hold_targeted_v2b/p0_sec_native_vs_repaired/prove.ys",
+    "bytes": 916,
+    "sha256": "0d173f421121f4752cb5ae07fc590447816be18a10e630142cda4cc7b8baa0b7"
+  },
+  "log": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes/ss_hold_targeted_v2b/p0_sec_native_vs_repaired/prove.log",
+    "bytes": 19915908,
+    "sha256": "ebda5f511603f003ea1d15cee67d552d87c9faf02d087d69bcd9cfee5b6c1a11"
+  },
+  "command": [
+    "/usr/bin/timeout",
+    "--kill-after=10s",
+    "180s",
+    "/usr/local/bin/yosys",
+    "-Q",
+    "-s",
+    "/home/toylog/faeco_tcad_sky_holdout_20261123/aes/ss_hold_targeted_v2b/p0_sec_native_vs_repaired/prove.ys"
+  ]
+}

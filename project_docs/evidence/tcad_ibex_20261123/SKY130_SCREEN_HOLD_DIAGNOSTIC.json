@@ -1,0 +1,236 @@
+{
+  "interpretation": "separate hold diagnostic using historical embedded zero-edit DRT; strict outcomes unchanged",
+  "pilot_results_sha256": "c63a5ce29513ffe39d7fe6516cf604b082d02734cbd0bd63fd799eb3704abeb2",
+  "zero_edit_binding": {
+    "receipt": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/compare_sky130_v2/noop/receipt.json",
+      "sha256": "bb69f3b50dc61ad9c9988048460efd59da48bb0aba199ac46496ea49f458a250",
+      "bytes": 26596
+    },
+    "config": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/compare_sky130_v2/config.json",
+      "sha256": "0f46c59490c0d6c134aaf2e47b7a6fdc0bac29c8eb85571c5660d5fb510d744f",
+      "bytes": 7465
+    },
+    "control_hold_deltas_ps": {
+      "FF": -5.551115123125783e-05,
+      "TT": 0.0,
+      "SS": -0.07993605777301127
+    },
+    "changed_nets": 16
+  },
+  "cases": [
+    {
+      "hold_comparisons": {
+        "FF": {
+          "source_hold_ps": 288.1518912367653,
+          "zero_edit_hold_ps": 288.1518357256141,
+          "candidate_hold_ps": 288.15194674791655,
+          "delta_vs_source_ps": 5.551115123125783e-05,
+          "delta_vs_zero_edit_ps": 0.00011102230246251565,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "TT": {
+          "source_hold_ps": 466.10704185212626,
+          "zero_edit_hold_ps": 466.10704185212626,
+          "candidate_hold_ps": 466.10704185212626,
+          "delta_vs_source_ps": 0.0,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "SS": {
+          "source_hold_ps": 115.91350101980424,
+          "zero_edit_hold_ps": 115.83356496203123,
+          "candidate_hold_ps": 115.83356496203123,
+          "delta_vs_source_ps": -0.07993605777301127,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        }
+      },
+      "strict_failures": [
+        "SS:hold_regression"
+      ],
+      "diagnostic_failures": [],
+      "diagnostic_qualifies_for_sec": true,
+      "case": 1,
+      "action": {
+        "action_id": "\\place2749=sky130_fd_sc_hd__buf_8",
+        "instance": "place2749",
+        "source_cell": "sky130_fd_sc_hd__buf_12",
+        "target_cell": "sky130_fd_sc_hd__buf_8",
+        "estimated_area_saving": 5.0048,
+        "category": "combinational_other"
+      },
+      "area_saved": 5.004799999995157,
+      "strict_accepted": false,
+      "routed_verilog": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/screen_ibex_pilot_v2/case_01/routed.v",
+        "sha256": "2ae07ba8a5fb6da6025282b4fa61e7fe7e2eb18272193b0dab16cc8466e083ba",
+        "bytes": 2190675
+      }
+    },
+    {
+      "hold_comparisons": {
+        "FF": {
+          "source_hold_ps": 288.1518912367653,
+          "zero_edit_hold_ps": 288.1518357256141,
+          "candidate_hold_ps": 288.15178021446286,
+          "delta_vs_source_ps": -0.00011102230246251565,
+          "delta_vs_zero_edit_ps": -5.551115123125783e-05,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "TT": {
+          "source_hold_ps": 466.10704185212626,
+          "zero_edit_hold_ps": 466.10704185212626,
+          "candidate_hold_ps": 466.10704185212626,
+          "delta_vs_source_ps": 0.0,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "SS": {
+          "source_hold_ps": 115.91350101980424,
+          "zero_edit_hold_ps": 115.83356496203123,
+          "candidate_hold_ps": 115.80691960944023,
+          "delta_vs_source_ps": -0.10658141036401503,
+          "delta_vs_zero_edit_ps": -0.026645352591003757,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": false
+        }
+      },
+      "strict_failures": [
+        "SS:hold_regression"
+      ],
+      "diagnostic_failures": [
+        "SS:hold_vs_rerouted_zero_edit"
+      ],
+      "diagnostic_qualifies_for_sec": false,
+      "case": 2,
+      "action": {
+        "action_id": "\\place2755=sky130_fd_sc_hd__buf_8",
+        "instance": "place2755",
+        "source_cell": "sky130_fd_sc_hd__buf_12",
+        "target_cell": "sky130_fd_sc_hd__buf_8",
+        "estimated_area_saving": 5.0048,
+        "category": "combinational_other"
+      },
+      "area_saved": 5.004799999995157,
+      "strict_accepted": false,
+      "routed_verilog": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/screen_ibex_pilot_v2/case_02/routed.v",
+        "sha256": "05e48a359e624652432c446f34615d8bd6c9c034a34cdfa6b113fa64ba5b964c",
+        "bytes": 2190675
+      }
+    },
+    {
+      "hold_comparisons": {
+        "FF": {
+          "source_hold_ps": 288.1518912367653,
+          "zero_edit_hold_ps": 288.1518357256141,
+          "candidate_hold_ps": 288.1518357256141,
+          "delta_vs_source_ps": -5.551115123125783e-05,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "TT": {
+          "source_hold_ps": 466.10704185212626,
+          "zero_edit_hold_ps": 466.10704185212626,
+          "candidate_hold_ps": 466.10704185212626,
+          "delta_vs_source_ps": 0.0,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "SS": {
+          "source_hold_ps": 115.91350101980424,
+          "zero_edit_hold_ps": 115.83356496203123,
+          "candidate_hold_ps": 115.83711767571003,
+          "delta_vs_source_ps": -0.07638334409421077,
+          "delta_vs_zero_edit_ps": 0.003552713678800501,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        }
+      },
+      "strict_failures": [
+        "SS:hold_regression"
+      ],
+      "diagnostic_failures": [],
+      "diagnostic_qualifies_for_sec": true,
+      "case": 3,
+      "action": {
+        "action_id": "\\_15066_=sky130_fd_sc_hd__o31ai_2",
+        "instance": "_15066_",
+        "source_cell": "sky130_fd_sc_hd__o31ai_4",
+        "target_cell": "sky130_fd_sc_hd__o31ai_2",
+        "estimated_area_saving": 8.7584,
+        "category": "combinational_other"
+      },
+      "area_saved": 8.758399999991525,
+      "strict_accepted": false,
+      "routed_verilog": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/screen_ibex_pilot_v2/case_03/routed.v",
+        "sha256": "96ac31c61fb36e06fbb98e9e9f6eb1acacc5bac4c9525085cf17f5b7f10f7c84",
+        "bytes": 2190676
+      }
+    },
+    {
+      "hold_comparisons": {
+        "FF": {
+          "source_hold_ps": 288.1518912367653,
+          "zero_edit_hold_ps": 288.1518357256141,
+          "candidate_hold_ps": 288.1518357256141,
+          "delta_vs_source_ps": -5.551115123125783e-05,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "TT": {
+          "source_hold_ps": 466.10704185212626,
+          "zero_edit_hold_ps": 466.10704185212626,
+          "candidate_hold_ps": 466.10704185212626,
+          "delta_vs_source_ps": 0.0,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        },
+        "SS": {
+          "source_hold_ps": 115.91350101980424,
+          "zero_edit_hold_ps": 115.83356496203123,
+          "candidate_hold_ps": 115.83356496203123,
+          "delta_vs_source_ps": -0.07993605777301127,
+          "delta_vs_zero_edit_ps": 0.0,
+          "absolute_nonnegative": true,
+          "hold_within_zero_edit_tolerance": true
+        }
+      },
+      "strict_failures": [
+        "SS:hold_regression"
+      ],
+      "diagnostic_failures": [],
+      "diagnostic_qualifies_for_sec": true,
+      "case": 4,
+      "action": {
+        "action_id": "\\_15882_=sky130_fd_sc_hd__a31oi_2",
+        "instance": "_15882_",
+        "source_cell": "sky130_fd_sc_hd__a31oi_4",
+        "target_cell": "sky130_fd_sc_hd__a31oi_2",
+        "estimated_area_saving": 8.7584,
+        "category": "combinational_other"
+      },
+      "area_saved": 8.758399999991525,
+      "strict_accepted": false,
+      "routed_verilog": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/screen_ibex_pilot_v2/case_04/routed.v",
+        "sha256": "beaf97a710e0a82bcdf5beb0da97ae0ca38f8ad6db37096b5457d6518c350088",
+        "bytes": 2190676
+      }
+    }
+  ],
+  "diagnostic_sec_executed": false,
+  "diagnostic_sec": []
+}

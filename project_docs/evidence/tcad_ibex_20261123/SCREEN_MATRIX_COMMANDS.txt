@@ -1,0 +1,46 @@
+# Execute each block in its own PowerShell session from the repository root.
+
+# Ibex development matrix
+$e='project_docs/evidence/tcad_ibex_20261123'
+$root='/home/toylog/faeco_tcad_ibex_20261123'
+$flow='/home/toylog/faeco_eda/orfs/flow'
+$d="$root/hold_repair_sky130_03/endpoint"
+$common=@('--pdk','sky130hd','--control-dir',"$d",'--original-sdc',"$flow/designs/sky130hd/ibex/constraint.sdc",'--control-drc',"$d/drc.rpt",'--embedded-guides','--zero-reextract','--views-json',"$d/qualification/CONTROL.json",'--sta',"$e/sky130_control/sta_from_odb.py",'--sec',"$e/prove_ibex.py",'--threads','4','--max-evals','6','--batch-size','3','--droute-iters','64','--route-timeout','1500','--sta-timeout','180','--sec-timeout','210','--report-setup-endpoints')
+wsl taskset -c 0-5 python3 -B "$e/run_screened_matrix.py" @common --screen-pool "$root/screen_ibex_v2/screen_pool.json" --screen-receipt "$root/screen_ibex_v2/screen_receipt.json" --pool-order legacy-first --wall-limit-seconds 720 --target-area-pct .01 --out "$root/screen_matrix_ibex_v1" | Tee-Object scratch/tcad_ibex_20261123/screen_matrix_ibex_v1.log
+exit $LASTEXITCODE
+
+# GCD holdout. The isolated wrapper preserves the exact qualified SDC expressions.
+$e='project_docs/evidence/tcad_ibex_20261123'
+$h='project_docs/evidence/tcad_holdout_20261123'
+$root='/home/toylog/faeco_tcad_ibex_20261123'
+$hold='/home/toylog/faeco_tcad_sky_holdout_20261123'
+$flow='/home/toylog/faeco_eda/orfs/flow'
+$name='gcd'
+$top='gcd'
+$d="$hold/$name/results/sky130hd/$name/base"
+$dr="$hold/$name/reports/sky130hd/$name/base/5_route_drc.rpt"
+$q="$hold/$name/qualification/CONTROL.json"
+$route="$flow/platforms/sky130hd/fastroute.tcl"
+$common=@('--top',"$top",'--pdk','sky130hd','--control-dir',"$d",'--original-sdc',"$flow/designs/sky130hd/$name/constraint.sdc",'--control-drc',"$dr",'--embedded-guides','--zero-reextract','--views-json',"$q",'--sta',"$h/sta_holdout.py",'--sec',"$h/prove_holdout.py",'--threads','4','--max-evals','6','--batch-size','3','--droute-iters','64','--route-timeout','1500','--sta-timeout','180','--sec-timeout','210','--report-setup-endpoints')
+wsl taskset -c 6-11 python3 -B "$e/run_holdout_screened.py" screen @common --out "$hold/${name}_screen_v1" | Tee-Object "scratch/tcad_ibex_20261123/${name}_screen_v1.log"
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+wsl taskset -c 6-11 python3 -B "$e/run_holdout_screened.py" matrix @common --screen-pool "$hold/${name}_screen_v1/screen_pool.json" --screen-receipt "$hold/${name}_screen_v1/screen_receipt.json" --routing-config "$route" --helper-source "$h/holdout_tools.py" --helper-source "$e/sky130_control/sta_from_odb.py" --helper-source "$e/prove_ibex.py" --pool-order screened-first --wall-limit-seconds 720 --target-area-pct .01 --out "$hold/${name}_matrix_v1" | Tee-Object "scratch/tcad_ibex_20261123/${name}_matrix_v1.log"
+exit $LASTEXITCODE
+
+# AES holdout with the original SDC and qualified targeted-hold CONTROL.
+$e='project_docs/evidence/tcad_ibex_20261123'
+$h='project_docs/evidence/tcad_holdout_20261123'
+$root='/home/toylog/faeco_tcad_ibex_20261123'
+$hold='/home/toylog/faeco_tcad_sky_holdout_20261123'
+$flow='/home/toylog/faeco_eda/orfs/flow'
+$name='aes'
+$top='aes_cipher_top'
+$d="$hold/$name/ss_hold_targeted_v2b"
+$dr="$d/drc.rpt"
+$q="$d/qualification/CONTROL.json"
+$route="$flow/designs/sky130hd/aes/fastroute.tcl"
+$common=@('--top',"$top",'--pdk','sky130hd','--control-dir',"$d",'--original-sdc',"$flow/designs/sky130hd/$name/constraint.sdc",'--control-drc',"$dr",'--embedded-guides','--zero-reextract','--views-json',"$q",'--sta',"$h/sta_holdout.py",'--sec',"$h/prove_holdout.py",'--threads','4','--max-evals','6','--batch-size','3','--droute-iters','64','--route-timeout','1500','--sta-timeout','180','--sec-timeout','210','--report-setup-endpoints')
+wsl taskset -c 6-11 python3 -B "$e/run_holdout_screened.py" screen @common --out "$hold/${name}_screen_v1" | Tee-Object "scratch/tcad_ibex_20261123/${name}_screen_v1.log"
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+wsl taskset -c 6-11 python3 -B "$e/run_holdout_screened.py" matrix @common --screen-pool "$hold/${name}_screen_v1/screen_pool.json" --screen-receipt "$hold/${name}_screen_v1/screen_receipt.json" --routing-config "$route" --helper-source "$h/holdout_tools.py" --helper-source "$e/sky130_control/sta_from_odb.py" --helper-source "$e/prove_ibex.py" --pool-order legacy-first --wall-limit-seconds 720 --target-area-pct .01 --out "$hold/${name}_matrix_v1" | Tee-Object "scratch/tcad_ibex_20261123/${name}_matrix_v1.log"
+exit $LASTEXITCODE

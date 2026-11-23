@@ -1649,7 +1649,35 @@ ASAP7 主档单门与 FAECO 在各自第三次到达同一已验证物理端点�
 
 ASAP7 复跑期间短时同机配对采样显示，WSL `CLOCK_MONOTONIC_RAW` 与 Windows QPC 吻合，`time.monotonic()` 在采样区间推进约快 4.0%–4.6%。预登记的四臂比较保留同一 WSL 单调秒，日历 UTC 用作顺序标记。抽查倍率仅用于讨论时间差对共同缩放的敏感性。换算宿主实时时间仍缺少从每臂起点到终点的同域 QPC/RAW 计时。[时钟原件](evidence/tcad_ibex_20261123/ASAP7_SERIAL_CLOCK_AUDIT.md)
 
+### OI-096 新一轮筛选消融计时已改用 RAW（限定进展）
+
+新一轮筛选、物理探针和矩阵记录使用 `CLOCK_MONOTONIC_RAW`。跨早期筛选与探针准备的宿主 QPC 围栏为 107.747–108.334 s，RAW 经过 108.030 s，符合围栏，旧 `CLOCK_MONOTONIC` 同段经过 112.922 s。新轮计时直接使用 RAW，先前 ASAP7 各臂仍按当时所测时钟标记。并发负载差异另作为试验工况记录。[新筛选消融](evidence/tcad_ibex_20261123/SCREEN_ABLATION_REPORT.md)
+
 
 ## OI-097（2026-11-23，open）— SKY130HD 高扇出缓冲候选筛选
 
 18 个候选的 TT 最差 setup 路径均穿过本次缩小的高扇出缓冲。FIFO 与寄存器堆各一例用七组 TT STA 交叉验证，CONTROL SPEF 下换候选 ODB 就出现大幅 WNS/TNS 损失。诊断闭合到这两个分支的归因。候选筛选如何处理高扇出和时序敏感度、排序变化后能否在相同 setup/hold/SEC 门下回收面积，仍需新实验。[TT 归因](evidence/tcad_ibex_20261123/SKY130_TT_CAUSE.md)
+
+### OI-097 温和换门及低扇出探针（限定进展）
+
+两处高扇出缓冲降至较近的 `buf_8` 与两处扇出 1 的替换均完成详细布线及三角 STA，四个端点都通过 setup 联合包络与绝对 hold。原 CONTROL 的 SS 相对 hold 门拒收四个端点，实测候选面积下降 5.0048–8.7584。历史零编辑自身下降 0.079936 ps，四个探针对它的差异在 −0.026645 至 +0.003553 ps。T02 在同一正式门下把原排序 TT setup 拒收从 18 降到 0，并确认四个正回收实例。主要剩余拒因为 SS 相对 hold。当前在高扇出上直接验证的仍只有两处代表缓冲，其他扇出与档位下是否复现、以及零编辑重布线能否成为稳健的相对 hold 对照仍待检验。[筛选消融报告](evidence/tcad_ibex_20261123/SCREEN_ABLATION_REPORT.md)
+
+## OI-098（2026-11-23，open）— 自适应拆分占用后续候选评估预算
+
+留出 GCD 的冻结筛选池中，固定批次在第 5 次以排名 13–15 的三门获得回收 11.2608（0.234742%，SEC 262/0）。FAECO 在相同六次预算内依次评估 `(1,2,3)`、`(1)`、`(2,3)`、`(2)`、`(3)`、`(4)`，同池未触及可行组合。该样本表明早期被拒批次的拆分会与向后覆盖竞争预算。何时切换到向后扩展，以及新调度能否同时保留 ASAP7 的 SEC 节省仍待独立实验。GCD 证据限于本次六次预算。[GCD 留出核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_GCD_VERIFIED.json)
+
+Ibex T02 在筛选池上重现同一 FAECO 候选排名序列，六次都只因 SS 相对 hold 拒收。固定批次在第 3 次覆盖排名 7–9 并回收 22.5216，首达 0.01% 目标，六次累计选中 62.56。此时观察范围覆盖 Ibex 开发样本与 GCD 留出样本。[Ibex 核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_IBEX_VERIFIED.json)
+
+Ibex 第三次 FAECO 已测物理端点面积减 17.5168，SS hold 与旧零编辑重布线完全相同。在历史零编辑基准下的端点诊断已补原网表对候选网表 SEC 13648/0。正式矩阵使用冻结原 CONTROL，FAECO 在六次内的回收仍为零。用零编辑重布线作相对门后，调度会实际怎样推进、用多少时间，仍待独立实跑。[hold 投影](evidence/tcad_ibex_20261123/SKY130_SCREEN_HOLD_PROJECTION.json) · [端点 SEC](evidence/tcad_ibex_20261123/SKY130_SCREEN_FAECO_HOLD_SEC.json)
+
+## OI-099（2026-11-24，open）— AES 主留出原始起点的 SS hold 违例
+
+SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 ps/720 ps SDC 与 I/O 均匹配，SS hold WNS 为 −975.978 ps、TNS 为 −124464.094 ps，原起点资格状态为 `hold_infeasible`。后续需从冻结原生端点在原约束下实际修复、重布线和复提取，并重做三角绝对 hold、DRC 与 SEC，才可作为留出矩阵共同起点。[留出报告](evidence/tcad_holdout_20261123/REPORT.md)
+
+### OI-099 最终修复共同起点（限定闭合）
+
+同原约束的 `ss_hold_targeted_v2b` 端点重新完成 DRT/RCX，DRC 为 0，FF/TT/SS hold WNS 为 +336.274/+523.915/+55.296 ps，原生至修复后全网表 SEC 11089/0。资格文件和证明分别为 SHA-256 `c697450a257ef4e63182f02c0ce4fb3c5925b41f366628a97672ac440192d4f8` 和 `bdc28e0f27e7b653965de68a27e611cbc4da006105bb68ef063756ee1f3ac02f`。此资格限于共同起点，候选效应另验。[留出起点报告](evidence/tcad_holdout_20261123/REPORT.md)
+
+## OI-100（2026-11-24，open）— AES 筛选候选的多视图相对 hold 拒收
+
+AES 的 18 个冻结筛选候选均完成 DRT/RCX，setup、DRC、电气与绝对 hold 全部通过。每个候选至少触发一角相对 hold 拒收，SS 17、TT 3、FF 3，候选可跨角。两个固定批次均实测面积减 33.7824，第 2 次只因 SS 下降 1.609379 ps 拒收；第 5 次 SS 改善 0.190514 ps，而 FF/TT 各下降 0.070222/0.108413 ps 并被拒。正式回收为零。AES 尚无同配方的零编辑重布线诊断，当前无法拆分共同路由扰动与换门影响。[AES 核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_AES_VERIFIED.json)

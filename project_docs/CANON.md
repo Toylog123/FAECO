@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 SKY130HD 候选筛选、同预算消融与留出验证
+
+- Ibex、GCD、AES 各完成两种排序 × 三种调度 × 六次物理验证。三套矩阵共 108 次 DRT/RCX、324 次视图 STA、5 次候选 SEC、0 次缓存。按原 I/O/SDC、三视图 1% 周期的 WNS 预算及登记的 TNS 门，正式验收仍要求 hold 非负且相对原 CONTROL 非退化、DRC=0、电气无新增违例和非空两态 SEC。清单包含每个候选的绝对裕度、原端点差值和新增负 setup 端点。各筛选臂的 720 RAW s 预算全额计入本设计的固定 SPEF TT 筛选时间。三设计的原面积排序均回收零。两种排序各 54 次，TT WNS 或 TNS 超预算的计数为 45／0。[总报告](evidence/tcad_ibex_20261123/SCREEN_ABLATION_REPORT.md) · [实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-sky130hd-screen-ablation-holdout-v1)
+- 计入筛选后，只有固定批次达到 0.01% 面积目标。Ibex 在 562.523 RAW s 的第三次候选验收回收 22.5216 µm²（0.01557%，SEC 13648/0），六次前缀回收 62.56 µm²（0.04326%）。Ibex 筛选单门第六次回收 7.5072 µm²，完成时间 923.421 RAW s。GCD 留出在 146.249 RAW s 的第五次验收回收 11.2608 µm²（0.23474%，SEC 262/0），也是六次内的回收。Ibex 与 GCD 的达标端点三视图均无新增负 setup 端点。三设计 FAECO 在六次与 720 s 均回收零。AES 留出六臂均回收零，冻结筛选的 18 个候选均只因相对 hold 拒收。[Ibex 核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_IBEX_VERIFIED.json) · [GCD 核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_GCD_VERIFIED.json) · [AES 核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_AES_VERIFIED.json)
+- Ibex 四个温和降档及低扇出探针均通过三角 setup 预算和绝对 hold，均触发相对原 CONTROL 的 SS hold 拒收。按历史零编辑重布线做独立归因，补证的三个探针与已实跑的 FAECO 第三次端点均通过两态 SEC 13648/0。后者实测面积下降 17.5168 µm²，SS hold 与该零编辑物理端点相同。这个 hold 参照仅用于归因，采用此参照的整套搜索和计时尚未运行。[探针证明](evidence/tcad_ibex_20261123/SKY130_SCREEN_HOLD_SEC_VERIFIED.json) · [FAECO 端点证明](evidence/tcad_ibex_20261123/SKY130_SCREEN_FAECO_HOLD_SEC.json)
+
 ## 2026-11-23 TCAD Ibex 双工艺原始起点核验
 
 - ASAP7 Ibex 原始 ORFS CONTROL 已完成 CTS、详细布线（DRC=0）和 RCX。按原约束独立 STA，FF/TT/SS 的 hold WNS 为 +35.956/+53.159/+77.237 ps，均非负。共享零动作通过三视图、电气与 SEC（17363/0）。每臂六次物理评估后，单门／固定微批次／FAECO 自适应分别回收 0.37908／0／0.26244 TT Liberty 功能单元面积；公共窗口 1325.602 s 内分别回收 0.26244／0／0.26244。本配置下 FAECO 在等调用次数时低于单门，等墙钟时与单门持平。[原始起点](evidence/tcad_ibex_20261123/asap7_control/CONTROL.json) · [三臂核验](evidence/tcad_ibex_20261123/ASAP7_P1_VERIFIED.json)

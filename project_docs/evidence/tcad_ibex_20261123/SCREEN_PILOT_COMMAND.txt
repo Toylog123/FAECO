@@ -1,0 +1,12 @@
+# The first invocation stopped at a canonical instance identity mismatch before screening STA.
+# The commands below show the fresh v2 retry.
+# Both runs use the original SKY130HD Ibex CONTROL and the same eligibility rules.
+$e='project_docs/evidence/tcad_ibex_20261123'
+$root='/home/toylog/faeco_tcad_ibex_20261123'
+$flow='/home/toylog/faeco_eda/orfs/flow'
+$d="$root/hold_repair_sky130_03/endpoint"
+$common=@('--pdk','sky130hd','--control-dir',"$d",'--original-sdc',"$flow/designs/sky130hd/ibex/constraint.sdc",'--control-drc',"$d/drc.rpt",'--embedded-guides','--zero-reextract','--views-json',"$d/qualification/CONTROL.json",'--sta',"$e/sky130_control/sta_from_odb.py",'--sec',"$e/prove_ibex.py",'--threads','4','--max-evals','6','--batch-size','3','--droute-iters','64','--route-timeout','1500','--sta-timeout','180','--sec-timeout','210','--report-setup-endpoints')
+wsl taskset -c 0-5 python3 -B "$e/screen_sky130_candidates.py" @common --pilot --out "$root/screen_ibex_v2" | Tee-Object scratch/tcad_ibex_20261123/screen_ibex_v2.log
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+wsl taskset -c 0-5 python3 -B "$e/screen_sky130_candidates.py" @common --pilot-receipt "$root/screen_ibex_v2/pilot_receipt.json" --out "$root/screen_ibex_pilot_v2" | Tee-Object scratch/tcad_ibex_20261123/screen_ibex_pilot_v2.log
+exit $LASTEXITCODE

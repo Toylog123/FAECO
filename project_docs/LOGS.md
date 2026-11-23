@@ -6025,3 +6025,135 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - ASAP7 独立实跑验收 rc 0，核对冻结原 SDC、候选池、逐阶段收据、故障门和 SEC。四臂及前轮的达标端点 ODB/DEF/V 与去日期 SPEF 字节一致。两种串行顺序的差值 40.311 和 35.195 WSL 单调秒主要来自单门多一次 SEC。完整归档与结果哈希见报告，正式计时另附时钟覆盖限制。[复跑报告](evidence/tcad_ibex_20261123/ASAP7_SERIAL_REPORT.md)
 - SKY130HD 在 ASAP7 串行计时完成后执行七组 TT STA，真实端点读回与既有结果匹配。两例在固定 CONTROL SPEF 下换候选 ODB 后重现主要 WNS/TNS 损失。固定 CONTROL ODB 换候选 SPEF 时 WNS 改变量至多 0.987 ps，TNS 改善，完成高扇出降驱动的两例验证。结合路径与端点 slack 分布可解释 FIFO 新违例和寄存器堆原有违例的累加。综合回归 98 项通过。[TT 归因](evidence/tcad_ibex_20261123/SKY130_TT_CAUSE.md)
+
+## LOG-20261123-67｜登记候选筛查、调度消融与留出验证
+
+- 用户授权执行 T01/T02/T03。T01 从冻结 SKY130HD Ibex CONTROL 检查 FIFO `place2749`、寄存器堆 `place2755` 的温和降档与最多两个低负载对照。固定 SPEF 筛查后，最多四个独立物理端点实跑。T02 使用原面积排序和冻结新排序，各比较单门、固定批次和 FAECO，六次物理调用、720 s 公共窗口和 0.01% 面积目标。T03 先登记独立设计及原始 I/O 下的物理起点，待筛选规则冻结后执行。三阶段沿用原 1% tradeoff setup WNS/TNS 和正式物理/hold/SEC 门，计时采用 `CLOCK_MONOTONIC_RAW` 并单列、计入筛选成本。当前为登记阶段，真实替换、命令和端点结论在各阶段启动后绑定。[实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-sky130hd-screen-ablation-holdout-v1)
+
+## LOG-20261123-68｜在首批 EDA 前冻结候选筛选规则
+
+- 每个兼容、已放置且不涉时钟的实例选择 TT Liberty 目标面积最大且确实更小的合法档位。按最大输出扇出升序、面积节省降序、动作 ID 升序形成固定顺序。最多跑 32 个固定 CONTROL SPEF 的 TT 单动作读回，达到 18 个通过即停止；筛查检查逐角预算在 TT 的 WNS/TNS 分量、TT hold 非负、无新增转换时间与最大电容违规。T01 实跑两个高扇出原诊断位置的最近档和筛选后首两个低扇出动作。正式物理端点另用 FF/TT/SS 完整联合门。旧零编辑重布线 SS hold Δ 为 −0.079936 ps，归因时与候选的相对 hold 差值分开报，不计作正式面积回收。[冻结规则](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-sky130hd-screen-ablation-holdout-v1)
+
+## LOG-20261123-69｜启动 Ibex 筛选和留出起点制备
+
+- T01 Ibex 筛选实跑 PID 2250，WSL `ps` 启动时间 23:14:19（UTC+8），`taskset` 确认 CPU 0–5，输出 `screen_ibex_v1` 后接 `screen_ibex_pilot_v1`。4 线程、64 DRT 轮，DRT/STA/SEC 工具限时 1500/180/210 s，采用 RAW 时间，实际脚本 SHA-256 `a19a3f9ee1cf5d140cde2bc3301a5de5193279fa7cad219c390f40e130874612`。筛选清单尚未封存。[运行命令](evidence/tcad_ibex_20261123/SCREEN_PILOT_COMMAND.txt)
+- T03 起点按主留出 AES、补充 GCD 制备，WSL 生产脚本 PID 312 实查 23:11:51（UTC+8）启动。AES DRT 调度 PID 2223 在 CPU 6–11，4 线程，原始 AES SDC SHA-256 `d87b13b726bd0f8926ac9236914619fd630b0afc4cbd902bd4cd760f214e53cb`。候选与策略评估尚未启动，T01 的资源记录保留起点生产并行状态。[留出登记](evidence/tcad_holdout_20261123/REPORT.md)
+
+## LOG-20261123-70｜修复筛选器的 ODB 名对齐后重试
+
+- `screen_ibex_v1` 在候选兼容覆盖检查处退出。实查仅有实例索引和成功的 ODB inventory 输入、日志，无固定 SPEF 候选、路由或端点结论。原因是已对齐实例再次被规范化，造成不能用原 ODB 名匹配。改用现有 `align_db_instances` 的原名映射，复用 v1 inventory 实查恢复 1112/1112 合法候选，两处拟探针最近合法档均为 `buf_8`。修复后按冻结规则启用新路径 `screen_ibex_v2`、`screen_ibex_pilot_v2`。v2 实查 PID 2422、23:17:27（UTC+8）启动、CPU 0–5，当前已生成扇出日志。v2 脚本 SHA-256 `477e8a14f38b8d3434b14896fea4959c1a2afca262d6653156aa7ff82aa3b7d3`。初次启动留作工程记录，不计作筛选科学试验。
+
+## LOG-20261123-71｜Ibex 固定 SPEF 筛选和物理探针清单封存
+
+- `screen_ibex_v2` 共试到第 18 个，18/18 通过，最大输出扇出均为 1，耗时 129.454710207 RAW s，门限为 TT WNS 100 ps、TNS 1000 ps。池 SHA-256 `4c393545b7d356002bd4fc3bf534b686bf1ee3da170b70469359d796f1f984e0`，筛选收据 `2d14b8bd78fbe7b103fd31fc93acc9d8a355217c13341dfe9eff0f347ad54447`。本次筛选机器上同时准备留出起点，记录为该工况下的实测成本。
+- FIFO `place2749`（扇出 27）和寄存器堆 `place2755`（扇出 31）的 `buf_12→buf_8` 固定 SPEF WNS 均不变，TNS 分别损失 30.134 和 260.947 ps，TT 初筛均通过。两个低负载探针为 `_15066_→o31ai_2` 和 `_15882_→a31oi_2`，前者 TT WNS/TNS 分别改善 0.763/23.707 ps，后者均不变。四探针清单 SHA-256 `ee88f8bb3d4b9ef5160ac01c3eaebe014f1b83e4e8b3eb5f4e86a86d960ca95c`。固定 SPEF 结果只说明筛查表现，真实联合验证和面积结论另记。
+
+## LOG-20261123-72｜复核筛选顺序并抽查 RAW 时钟
+
+- 独立核对 18 个固定 SPEF 子收据逐项与汇总相同，筛选池 SHA、扇出/面积/ID 顺序和 TT WNS/TNS/绝对 hold 均符合登记。18 个动作各自预估节省 5.0048–8.7584 个 TT Liberty 面积单位。
+- 低开销宿主 QPC 围栏在 23:19:31 和 23:21:19（UTC+8）之间累计 107.747–108.334 s，WSL `CLOCK_MONOTONIC_RAW` 走过 108.030 s，WSL `CLOCK_MONOTONIC` 走过 112.922 s。两个采样点依次为 `QPC前/QPC后/RAW/MONOTONIC = 3124684111998/3124687014395/601.641264981/623.050082533` 与 `3125764488780/3125767454855/709.671652086/735.971592301`，QPC 频率 10 MHz。此抽查支持本轮采用 RAW，正式耗时按各运行的连续 RAW 钟，不用抽查折算。[此前时钟核查](evidence/tcad_ibex_20261123/ASAP7_SERIAL_CLOCK_AUDIT.md)
+- 23:52:43 补采第三点 `3144605216029/3144608224857/2593.737063003/2710.224404535`。第一至第三点跨越筛选、物理探针和矩阵部分执行，QPC 围栏 1991.820–1992.411 s，RAW 1992.096 s，默认 MONOTONIC 2087.174 s。RAW 的较长区间落在宿主围栏内。
+
+## LOG-20261123-73｜GCD 留出起点取得物理与三视图 hold 资格
+
+- GCD 单独生产两线程、CPU 6–11 和 1200 s 限时，`producer.rc` 为 0。原始 I/O、时钟和源 SDC 与资格收据绑定，DRC=0，FF/TT/SS hold WNS 分别 +358.948/+430.727/+342.905 ps。原件 `/home/toylog/faeco_tcad_sky_holdout_20261123/gcd/qualification/CONTROL.json`，SHA-256 `5c2dfa530777cca5e141209d027445b8e966aa070890d1570cef880c4ba34ea9`。三次资格 STA 均为起点，当前资格收据中候选布线、候选 STA、SEC 均为 0。主留出 AES 继续详细布线。[留出起点](evidence/tcad_holdout_20261123/REPORT.md)
+
+## LOG-20261123-74｜FIFO 温和降档首个物理探针完成
+
+- `screen_ibex_pilot_v2/case_01` 的 `place2749: buf_12→buf_8` 的 DRT/RCX 合计 124.140 RAW s，DRC=0，实测面积节省 5.0048。TT ΔWNS −0.002665 ps，ΔTNS +16.797 ps，三角 setup 门均通过。唯一拒因是 SS 相对 hold，Δ−0.07993605777301127 ps，与既有内嵌导引零编辑重布线 SS 差值精确相等。绝对 SS hold 仍约 +115.834 ps。原门下未触发候选 SEC，此端点没有计入正式回收。下一探针继续。[零编辑对照](evidence/tcad_ibex_20261123/SKY130_NOOP_AUDIT.json)
+- 原起点、历史零编辑 DRT 与 case_01 的 SS 最差 `core_clock` min 路均是 `data_rdata_i[25]` 到 `load_store_unit_i.rdata_q[25]/D`。case_01 的 16 条未显式触达但改变的网与零编辑的改变网集合完全相同，其余两个改变网恰为本动作触达的 `_00460_` 和 `net2755`，组件均未移动。该实测支持把此例相对 hold 拒因单列为共同重布线扰动线索。
+- 沿该触发器的捕获钟从 `clk_i` 到 `clknet_leaf_78__00039_` 逐网核对 SPEF。展开 `*NAME_MAP` 后，case_01 与零编辑的 7 个串接捕获钟网的 RC 块都一致，其中 5 个相对原起点改变。两个中间数据网 `net63`、`_00267_` 的 RC 块在三端点一致。观察将共同变化定位到捕获钟寄生，尚未单独分解某个 RC 项的延时贡献。
+
+## LOG-20261123-75｜Ibex 四个物理探针完成，SS 相对 hold 为共同拒因
+
+- 四个探针均完成 DRT/RCX、各三角 STA、DRC=0，总计 4 次 DRT、4 次 RCX、12 次 STA，无缓存或候选 SEC，实际评估耗时 545.012907478 RAW s。两处温和降档各节省 5.0048，两处低扇出动作各节省 8.7584。TT WNS 的相对改变量在 −0.002665 至 +0.986766 ps 之间，四次 TT TNS 均改善，三角 setup 门均过且绝对 hold 非负。四次唯一拒因为 SS 相对 hold，分别为 −0.079936、−0.106581、−0.076383、−0.079936 ps。试作零编辑参照的差值为 0、−0.026645、+0.003553、0 ps，只用于归因，正式联合门下四例验收回收为 0。原结果状态 `matched` 表示流程完整，候选准入按逐例门收据判定。SHA-256 `c63a5ce29513ffe39d7fe6516cf604b082d02734cbd0bd63fd799eb3704abeb2`。
+
+## LOG-20261123-76｜启动 Ibex 原排序与筛选排序消融矩阵
+
+- `screen_matrix_ibex_v1` 实查 PID 6235、23:31:00（UTC+8）启动、CPU 0–5，先原面积排序，再冻结筛选排序；各自按单门、固定批次、FAECO 串行执行。各臂六次物理调用、4 线程、64 DRT 轮、720 RAW s 公共窗口和 0.01% 面积目标。每条筛选臂全额计入 `screen_ibex_v2` 的 129.454710207 s，起点和一次零编辑复提取预检单列。配置 SHA-256 `586be0f6f8ef8eaf1eb219790978882cca6f37ac6c12cbf874a5720d26f4af97`。留出 AES 同期仍在 CPU 6–11 准备起点，待按实际结束时间记载各臂背景。
+
+## LOG-20261123-77｜GCD 冻结规则完成筛选并启动留出矩阵
+
+- GCD 首次筛选在 EDA 前退出，也未生成试验目录。资格回读的 `0.22/1.1` 舍入略低于约束文本的 `0.2`，触发旧解析器的精确浮点比较。在独立入口 `run_holdout_screened.py` 中，先用绝对容差 `1e-12` 核对比率，再把源文件字面值传给原解析器复核其它约束。资格、筛选规则和正在运行的 Ibex T02 代码保持原样。包装器 SHA-256 `6173b45418c4b9d31e759632754bb5be085127e48a3cad141bea2403ce7f6ced`。修正后 PID 7172 于 23:33:34（UTC+8）开始在 CPU 6–11 实跑。
+- GCD 原 1100 ps 周期得 TT WNS 限 11 ps、TNS 限 570.255 ps。筛选 20 个、通过 18 个，两拒因均为 TT WNS，20 个动作最大输出扇出均为 1。筛选 52.520673 RAW s，池 SHA-256 `ede7990f6f7f4c7ff26cd9c9bd9cc506d5bd4281258cc7118e8a66c33568f40b`，收据 SHA-256 `e88c5683baf1a07d0a10c42d980cad37ab0c04ac480e91677fa85cf6d5c4ed7b`。矩阵 PID 7536 实查 23:34:28（UTC+8）启动、CPU 6–11、筛选排序先行，执行每臂六次、RAW 720 s 窗和 0.01% 面积目标，配置 SHA-256 `004d77026633fbc2bd6e6b9a07d3ca9440ed0b884ba72ed9ae7a825622c107e0`。AES 起点生产仍与 GCD 共享 CPU 6–11；按实际背景解释绝对时间。
+
+## LOG-20261123-78｜GCD 筛选固定批次取得首个验收回收
+
+- `gcd_matrix_v1/screened/fixed/05_physical` 将 `_092_`、`_093_` 和 `_094_` 降至 `mux2_1`，6 次评估内首个合格端点，DRC=0，三角联合门通过，SEC 262/0。面积节省 11.2608（0.234742%），达到 0.47971008 的预设目标。搜索首达 93.728567 RAW s，计入筛选为 146.249240 s。相同筛选排序下的单门臂六次均拒，正式回收 0。两个臂的成本都发生在 AES 并发制备期间，剩余自适应和原排序结果待完成后共同解释。
+- 同一筛选排序的 FAECO 完成六次，正式回收 0。有三例只被相对 hold 拒收，余三例还违反 FF setup TNS 预算，候选 SEC 为 0。筛选排序的三臂面积依次为 0、11.2608、0，后续原排序继续同预算实跑。
+- 用筛选池序号复核调度覆盖后，固定批次第 5 次通过的恰为排名 13–15 的三门。单门只到排名 6。FAECO 的六次动作是 `(1,2,3)`、`(1)`、`(2,3)`、`(2)`、`(3)`、`(4)`，预算用在第一个被拒批次的拆分与紧接的一个动作，尚未覆盖第 13–15 名。只据实测覆盖解释本例的算法差异。
+
+## LOG-20261123-79｜GCD 六臂留出矩阵完成并独立核验
+
+- 36/36 次候选完成 DRT/RCX、108 次逐视图 STA、1 次候选 SEC、0 缓存命中，独立审计 rc 0。原排序三臂均为 0，筛选排序单门／固定／FAECO 为 0／11.2608／0。仅筛选固定批次第 5 次的端点合格，面积相对降 0.234742%，FF/TT/SS 无新增负 setup 端点，hold 增量 0/+0.231731/+0.937694 ps，SEC 262/0。计筛选首达 146.249239816 RAW s。
+- 对 18 次候选按每池计，任一 setup 门拒收由原排序 17 次降到筛选排序 5 次，TT WNS 或 TNS 的拒收并集由 15 次降到 0，原排序两个 TT 分项各为 13 次。仅相对 hold 拒收分别为 1 与 12 次，筛选还有 1 次合格。此处反映候选可行性与搜索覆盖，墙钟保留同机 AES 制备并发背景。原始结果 SHA-256 `eb9a8838d8918530f31fd8f421b10f3e1e350e97fb8d131e90efec62a217e0bc`，产物归档 SHA-256 `2199d21b28109bd5a0e408567cd66a0cce67b3e45589345d7fe8589fde9d8f8b`。[GCD 独立验收](evidence/tcad_ibex_20261123/SCREEN_MATRIX_GCD_VERIFIED.json)
+
+## LOG-20261124-01｜AES 原生布线完成，原约束 SS hold 未取得资格
+
+- 原生 AES producer rc 0，详细布线 DRC=0 并完成寄生提取，起点生产工具报告 2832.64 s。用原 3600 ps 周期、720 ps I/O、258 个输入和 129 个输出复核，FF/TT/SS hold WNS 为 +341.429/+529.873/−975.978 ps，SS hold TNS −124464.094 ps。原资格收据 `/home/toylog/faeco_tcad_sky_holdout_20261123/aes/qualification/CONTROL.json` 状态 `hold_infeasible`，SHA-256 `88f22171c81197aa9b1e4bdeb5e4b94ffd7ef0975de456d218124aea6bbd08b8`。当前 3 次起点 STA、0 次候选布线/STA/SEC。
+- 另从同一物理快照在原 SDC 下做有界共同 hold 修复，继续保留原生结果。后续验收至少包括重新详细布线与 RCX、DRC、同源 SDC/I/O、三角绝对 hold 与 SEC。通过前不读取留出候选或调度结果。Ibex T02 继续独立运行。
+- AES 修复 OpenROAD PID 12371，00:01:12（UTC+8）启动、CPU 6–11、4 线程、1800 s 限时，目标 SS hold 裕量 +0.10 ns。保留原 SDC，修复工具允许 setup 违例，修复后的 setup 变化随资格另报。实际修改脚本 SHA-256 `3cdbbb040a15a3eccf02eb34f55cc797abe8fb663bc744ba59be1aa9fa4efef3`，输出 `aes/ss_hold_repair_v1`。工具实报插入 197 个 hold 缓冲，正详细重布线，尚无修复后 hold 资格结论。[实跑入口](evidence/tcad_holdout_20261123/repair_aes_hold.sh)
+
+## LOG-20261124-02｜AES 第一次 hold 修复仍余一个 SS 违例
+
+- `ss_hold_repair_v1` 工具 rc 0、耗时报告 428.59 s，插入 197 个 hold 缓冲及 16 个天线二极管，DRC=0、天线报告为空、RCX 15656 个网。保留原导出 SDC SHA-256 `379f839cc62d103d029661350ad1a79355419c4fd1a4733d698ab2c365686a9b`。估计寄生下报告 +100.062 ps SS hold，实际 DRT/SPEF 三角资格中 FF +336.274、TT +523.915、SS −66.616 ps，SS TNS 同为 −66.616 ps。资格仍为 `hold_infeasible`，收据 SHA-256 `0b374fcaa04f8dbbb07a866dbcae503719755a292899b657361c94784fdd6908`。留出候选保持为 0，余违例按同原 SDC 修复和复测。
+
+## LOG-20261124-03｜Ibex 原面积排序三臂完整对照结束
+
+- `screen_matrix_ibex_v1/matrix_progress.json` 表明原排序单门／固定／FAECO 均完成六次，累计 18 次 DRT/RCX 和 54 次 STA，候选 SEC 为 0。18 个实际端点均超过 TT WNS/TNS 损失预算，且违反 SS 相对 hold 门。720 s 内三臂均完成 5 次，窗内及六次最终的回收均为 0；三臂搜索耗时依次 849.084／810.366／728.936 RAW s。该阶段登记原排序，冻结筛选排序随后继续。
+
+## LOG-20261124-04｜AES 单端点修复首试在布线前退出
+
+- `ss_hold_targeted_v2` 从修复 v1 冻结端点读取 +0.20 ns 定向策略，触发路径为 `key[70]` 至 `u0.w[1][6]$_DFF_P_/D`。尝试 target `dlygate4sd1_1` 时入口检查未读回已插入的延时单元，报 `Targeted sink delay buffer was not inserted`，工具 rc 1，报告耗时 9.26 s。实查目录仅有清单、日志和退出码，DRT/RCX/资格及候选均未启动。脚本输入 SHA-256 `1309d10b021cdb6727ec419bef14c325815970814dee639420735b1b43afe571`。保留失败，继续定位层次化端点映射。
+- 新目录 `ss_hold_targeted_v2b` 于 00:14:29（UTC+8）启动，OpenROAD PID 13433、CPU 6–11、4 线程。根因是接口使用名字前缀并添加后缀，原检查用未加后缀的名字寻找实例。现在以插入命令返回对象核验 master，并断言输出网只有该单元输出与原目标寄存器输入。日志实证唯一新增 `faeco_hold_target_v28641`，清理 1 条局部线网，估计 SS hold +53.585 ps。脚本 SHA-256 `6758ee3119691840edfb14be9adf5dc6d6e87e07ec104bef33c89590fce29127`，实际 DRT 和 RCX 仍待完成。
+
+## LOG-20261124-05｜AES 定向修复实布线后三角 hold 通过
+
+- `ss_hold_targeted_v2b` DRT/RCX 完成，repair rc 0、工具报告 115.96 s、DRC=0。实际 FF/TT/SS hold WNS 为 +336.273898/+523.914856/+55.295768 ps，三角 hold TNS 为 0。原约束重新核对并生成 `hold_qualified` 物理与时序资格，SHA-256 `c697450a257ef4e63182f02c0ce4fb3c5925b41f366628a97672ac440192d4f8`。该阶段的三角 STA 属于共同起点，原生与修复后的全网表 SEC 绑定及候选矩阵另记。
+- RCX 提取 15657 个网，导出 SDC 仍逐字节匹配原生 `379f839cc62d103d029661350ad1a79355419c4fd1a4733d698ab2c365686a9b`。原生与最终修复后的全网表 SEC 为 11089/0，rc 0，原件 `p0_sec_native_vs_repaired/receipt.json`，SHA-256 `bdc28e0f27e7b653965de68a27e611cbc4da006105bb68ef063756ee1f3ac02f`。输入网表 SHA-256 `1a82b19f8fed8a060687277129eda5cc3e403a2063dbd2f14a9bdedfcf013670`，修复网表 `d18184860bc6199b75cf1f408a8be6b1190e6a4b4273e383c43acc1c50bec735`。该端点取得 AES 留出共同起点资格，候选计数仍分开。
+
+## LOG-20261124-06｜AES 冻结规则筛选完成，六臂实跑启动
+
+- `aes_screen_v1` 以资格通过的 `ss_hold_targeted_v2b` 按冻结规则筛选 18/18，动作最大输出扇出均为 1。原周期 3600 ps，TT WNS/TNS 阈值 36/360 ps，筛选真实 RAW 耗时 113.363032440 s。筛选池 SHA-256 `1bd07df9ff7d5f0679f46968a19f09be4543ce2692af6e5c362b636cfd6177ce`；收据 SHA-256 `3bf60527e63e877e9cb05af70b82ec1698118773cefbc0d6c4b6dd2b42a5bd79`。
+- `aes_matrix_v1` 实查 PID 15006、00:21:18（UTC+8）启动、CPU 6–11，使用 AES 自身 FastRoute 配置，原排序先行。各排序内三臂按单门、固定、FAECO，各六次和 720 RAW s 公共窗口，0.01% 面积目标，以筛选收据全额计入每个筛选臂。配置 SHA-256 `bc62ef9ac0225aca50768bd1b243ae1311a2565c7863ad4183d29a23030002d9`。同机 Ibex 在 CPU 0–5 独立运行。
+
+## LOG-20261124-07｜Ibex 筛选单门第六次过原联合门
+
+- `screen_matrix_ibex_v1/screened/single/06_physical` 的 `_14904_→xnor2_1` 通过原 WNS/TNS、三角 hold、DRC 与电气门，非空 SEC 13648/0，证明收据 SHA-256 `a2080db64c2dbc5c8f08e67782b2fd12b52f0f86e602c02ca596a399c8bb1b17`。功能面积实减 7.5072（约 0.00519%）。TT WNS/TNS 改善 0.374811/168.956404 ps，SS hold 改善 1.674216 ps 至 +117.587717 ps。前五次都只因 SS 相对 hold 拒收。
+- 第六次通过检查点的实际搜索时间为 793.966596 RAW s，计全额筛选为 923.421306 s，超出 720 s 窗且回收低于 14.46124448 预设目标。因此六次前缀为正，公平窗口回收仍为零，首达预设面积未触发。筛选固定批次和 FAECO 继续实跑。
+
+## LOG-20261124-08｜Ibex 筛选固定批次第三次达到面积目标
+
+- `screen_matrix_ibex_v1/screened/fixed/03_physical` 接受筛选池排名 7–9 的 `_14906_`、`_14973_`、`_15037_` 三门。实测面积下降 22.5216（0.015574%），超过预定 14.46124448，DRC=0、三角联合门均过、SEC 13648/0。TT WNS/TNS 改善 +0.031086/+66.005867 ps，SS hold 改善 +0.084377 ps。三视图无新增负 setup 端点，证明收据 SHA-256 `2c968618846e7bdcbc400297656e29cb1439b5a04ce2a287d5e8f293cd1c47ce`。前缀分项工具耗时已产生，计入筛选的精确窗口时间留待整臂检查点原件。
+- 整臂 6 次均完成 DRT/RCX 与三视图 STA，三次候选 SEC。720 s 内完成三次，回收 22.5216，搜索首达 433.067932548 RAW s，计筛选首达 562.522642755 RAW s。六次搜索共 1006.023533719 RAW s，最后保留第 5 次验收面积回收 62.56（0.043260%）。三次拒收中两次只违反 SS 相对 hold，一次兼有 SS WNS 预算拒因。FAECO 筛选臂随后运行。
+
+## LOG-20261124-09｜Ibex T02 六臂完成并独立核验
+
+- 36 次 DRT/RCX、108 次三视图 STA、4 次候选 SEC、缓存 0，原始结果 SHA-256 `0380617dae7d5a7c66f46ec89c64dcc221889764d38612c37dcdc44435fe9800`。独立核验绑定配置 `586be0f6f8ef8eaf1eb219790978882cca6f37ac6c12cbf874a5720d26f4af97` 与原始结果。原排序三臂六次及 720 s 回收均为 0。筛选排序单门／固定／FAECO 分别在六次回收 7.5072／62.56／0，计入筛选的 720 s 窗为 0／22.5216／0，窗内完成数 4／3／4。只有固定批次达到 0.01%，首达 562.522643 RAW s。四个实际合格证据各自 SEC 13648/0。
+- 各池 18 次中，任一视图 setup 门拒收从 18 降至 1，TT WNS 或 TNS 拒收并集从 18 到 0。筛选排序的 13 次候选只违反 SS 相对 hold，其余 1 次同时违反 SS WNS 和 hold，4 次通过。筛选 FAECO 与 GCD 一样在头三名反复拆分，六次仅覆盖到第 4 名，固定批次在第 3 次推进到合格的排名 7–9。报告区分筛选前端改变和调度覆盖，不把该两例的固定批次结果外推为全局策略优势。相邻阶段的同机 AES 生产、修复和候选评估工况另录。[Ibex 独立验收](evidence/tcad_ibex_20261123/SCREEN_MATRIX_IBEX_VERIFIED.json)
+- 两个候选池各 18 次实跑、13 种不同物理动作组和 5 组独立重复。十对相同动作的 ODB、DEF、网表 SHA-256，以及每角 setup/hold WNS/TNS 的标量读数完全一致。独立重复均计入实际执行调用，SPEF 文件身份另以保存的完整原件为准。
+
+## LOG-20261124-10｜Ibex 对齐历史零编辑重布线的 hold 诊断
+
+- 基于已测的动作组，按旧内嵌导引零编辑的各角 hold 对照做只读投影，保留绝对 hold 非负和其余原门。筛选 FAECO 第三次的 `_15882_`、`_19398_` 联合实测减少面积 17.5168，SS hold 变化 −0.07993605777301127 ps，与历史零编辑精确相等。这是该 arm 已有物理端点在校准 hold 对照上的现象。该阶段记录的是已实跑动作组的物理和时序诊断，原正式矩阵仍按原 CONTROL 判定；第三次原验收无候选 SEC，改判后的调度与端到端时钟另需实际试次。[只读投影](evidence/tcad_ibex_20261123/SKY130_SCREEN_HOLD_PROJECTION.json)
+
+## LOG-20261124-11｜AES 留出原面积排序三臂完成
+
+- `aes_matrix_v1/matrix_progress.json` 原排序单门／固定／FAECO 各完成 6 次 DRT/RCX、18 次视图 STA，候选 SEC 0。三个臂在 720 s 窗内分别完成 5／5／6 次，窗内及六次正式回收均为 0。搜索耗时分别 725.288／723.764／707.390 RAW s。18 次中 12 次违反 setup 门，均含 TT WNS 或 TNS 拒因；剩余 6 次仅违反相对 hold。18 次均含 SS 相对 hold 拒因。冻结筛选池继续实跑，原排序结果仅作该侧对照。
+
+## LOG-20261124-12｜AES 留出正式实跑六臂完成
+
+- 原收据 `aes_matrix_v1/results.json` 为 `matched`，SHA-256 `b4289fa51f666f500517ba24d1534eb41050991abbe33f68de132501c3db21a3`。36 次实际 DRT/RCX、108 次视图 STA、0 次候选 SEC、0 次缓存、26 种动作组。两种排序三方法均在六次及 720 s 两种预算下回收为 0，未达到 11.65079904（0.01%）预设面积目标。筛选单门／固定批次／FAECO 搜索 610.868／658.087／757.645 RAW s，全额计入 113.363 s 筛选后窗内完成 5／5／4 次。
+- 逐候选读回，原排序 12 次违反 setup 门，均含 TT 拒因，筛选排序该计数为 0。36 个候选均 DRC=0，FF/TT/SS 绝对 hold WNS 的跨候选最低值为 +336.081774/+523.616983/+53.263172 ps。18 个筛选候选均只违反相对 hold，其中 SS 17、TT 3、FF 3（候选可跨角）。最大筛选面积回收的两个固定批次均为 33.7824，第 2 次只因 SS 的 −1.609379 ps 拒收，第 5 次 SS 改善 0.190514 ps，但 FF/TT 下降 0.070222/0.108413 ps。独立验收和完整原件归档另记。
+- 独立验收收据已写入，SHA-256 `506551827c0f9531f2359877c57b013f163481b6c0f1ce79a3ee6c5487f7e136`，绑定配置、筛选池、筛选耗时收据和原始结果，核对了 36 个物理端点及零缓存。共同起点的原生至修复 SEC（11089/0）单列，候选 SEC 为 0。[AES 独立验收](evidence/tcad_ibex_20261123/SCREEN_MATRIX_AES_VERIFIED.json)
+
+## LOG-20261124-13｜Ibex 零编辑 hold 诊断补 SEC
+
+- 正式候选计时结束后，分别对 T01 的探针 01／03／04 与 T02 已实跑的筛选 FAECO 第 3 次各做一次原 CONTROL 网表到候选网表的两态 SEC。四个原日志均为 13648/0、rc 0，并分别核对证明输入哈希。三探针按历史零编辑的 hold 对照物理诊断及证明均通过，已测面积为 5.0048／8.7584／8.7584。T02 FAECO 已测候选在该对照下通过，已测面积为 17.5168。探针 02 仍违反诊断 hold 门，未触发 SEC。[探针 SEC](evidence/tcad_ibex_20261123/SKY130_SCREEN_HOLD_SEC_VERIFIED.json) · [FAECO 端点 SEC](evidence/tcad_ibex_20261123/SKY130_SCREEN_FAECO_HOLD_SEC.json)
+- 四次补证归入另外的 hold 归因诊断。正式 T01 的四例拒收以及 T02 FAECO 的六次零回收继续使用冻结原 CONTROL；归因端点的已测物理结果与按新参照运行搜索的成本和路径各有各的证据，目前仅前者已测。
+
+## LOG-20261124-14｜T01–T03 规约实验收尾与原件封存
+
+- T01 四个物理探针另计 4 次 DRT/RCX、12 次视图 STA，原 CONTROL 正式验收候选 SEC 为 0。T02 Ibex 与 T03 GCD/AES 三套六臂矩阵独立核验，合计 108 次 DRT/RCX、324 次视图 STA、5 次候选 SEC、0 次缓存。历史零编辑诊断另有 4 次 SEC，均为 13648/0。共同起点资格、筛选 TT 试次和候选三角实跑分别记账。回归测试 101 项通过。
+- 完整归档均在 `scratch/tcad_ibex_20261123/`，本地实际 SHA-256 已复验。`screen_ibex_complete_v1.tar.gz` 为 `8f47ed4e504396826410e333f29cca8f0eaf2ec871a319727e60b9e0d33bd508`，`screen_holdout_gcd_v1.tar.gz` 为 `2199d21b28109bd5a0e408567cd66a0cce67b3e45589345d7fe8589fde9d8f8b`，`screen_holdout_aes_v1.tar.gz` 为 `25e476d66a9d4ef39965ef02fb932b04883ad1c17bb23d87b5bcc468ae88bf70`，`hold_diagnostics_ibex_v1.tar.gz` 为 `2b79112c536ac11039b08d787444c528482ba2c6edc88457cf3aae1835123c1e`。三个主归档的成员与原配置、原结果、池和筛选收据指纹逐项核对。
+- 计入筛选成本后，只有 Ibex 和 GCD 的筛选固定批次在 720 RAW s 与六次共同限制下达到 0.01% 面积目标，两例端点的三角均无新增负 setup 端点。AES 冻结筛选消除了已测试候选的 setup 超预算，正式面积仍为零。Ibex/GCD 调度覆盖、历史零编辑参照及 AES 多视图相对 hold 的后续问题分别落实至 OI-097／098／100。[实验总表](evidence/tcad_ibex_20261123/SCREEN_ABLATION_REPORT.md) · [现行口径](CANON.md#2026-11-24-sky130hd-候选筛选同预算消融与留出验证)
