@@ -12,6 +12,9 @@
 - 新评测协议双工艺执行结束。主档逐视图允许 1% 原周期的 WNS 损失及登记的 TNS 损失，三方法各六次独立候选测量，沿用原约束、hold 与 SEC 门。ASAP7 单门／固定批次／FAECO 在 1200 s 内回收 0.26244／0／0.26244，六次评估回收 0.37908／0／0.26244。首达 0.01% 面积为 1135.931 s／未达到／810.920 s，两种达标方法得到同一端点，FF 新增 15 个负 setup 端点，SEC 17363/0。两臂并行负载不同，时间结果按观测描述。SKY130HD 在 720 s 内和六次评估后均回收零，所有候选的 TT WNS/TNS 退化超出包络。
 - 新协议诊断以 0% 为参照，ASAP7 的 protect@0.5% 与 protect@1% 都找到保持 FF setup 非负的端点。单门与 FAECO 分别回收 0.24786 与 0.13122，无新增负 setup 端点，SEC 均 17363/0。0% 的两种模式、SKY130HD 的全部诊断和 ASAP7 的固定批次均回收零。主档的真实墙钟与缓存诊断成本分账。[本轮报告](evidence/tcad_ibex_20261123/REPORT.md#按原周期归一化的-setup-预算对照) · [登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-ibex-p1-setup-protocol-v1) · [评测方法](planning/FAECO_EVALUATION_PROTOCOL_DRAFT_20261123.md)
 
+- ASAP7 同机独占 EDA 队列，固定 CPU 0–5、四线程，依 FAECO→单门和单门→FAECO 完成两对至相同面积目标的串行复跑。四臂均在第三次回收 0.26244，且 ODB/DEF/V、去日期 SPEF、各角时序和 SEC 与前轮首次达标端点一致。按预登记的 WSL 单调钟，逆序 FAECO/单门 688.233/728.543 s，原序 695.670/730.866 s，单门分别多 40.311/35.195 s。两组差异主要来自单门多一次 SEC。宿主 QPC 和 WSL RAW 抽查显示该 WSL 单调钟快约 4%–4.6%，原值按同一时钟报告。[复跑报告](evidence/tcad_ibex_20261123/ASAP7_SERIAL_REPORT.md) · [时钟对照](evidence/tcad_ibex_20261123/ASAP7_SERIAL_CLOCK_AUDIT.md)
+- SKY130HD TT 的 18 个候选最差路径都经过本次降驱动的高扇出缓冲 `buf_12 → buf_1`。两个代表分支做七组 ODB/SPEF 交叉 STA，沿用 CONTROL 的 SPEF 时切换到候选 ODB，FIFO 与寄存器堆分别损失 474.644/403.733 ps WNS 和 24.628/22.368 ns TNS。仅替换为候选 SPEF 时 WNS 只变动 −0.002665/+0.986766 ps，TNS 改善 0.035481/0.565102 ns。在这两个分支，换门主导 TT 恶化。FIFO 体现新负端点的累加，寄存器堆体现既有负端点的退化。[TT 归因](evidence/tcad_ibex_20261123/SKY130_TT_CAUSE.md)
+
 ## 2026-11-23 中文 v3 配图与实验口径修订
 
 中文活跃工作稿为 14 页，含六幅 ImageGen 示意图、十例 SKY130 逐端点对照与 s713/s832 联合评测。v22 标签锁定此前中文稿和工程基线。英文工作稿暂冻。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [联合评测](evidence/sky130_joint_constraints_20261123/REPORT.md) · [图件记录](../paper/zh/figures/imagegen_20261123/PROMPTS.json)

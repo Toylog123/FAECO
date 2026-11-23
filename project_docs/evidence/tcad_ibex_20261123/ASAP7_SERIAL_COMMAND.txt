@@ -1,0 +1,6 @@
+# Executed from the FAECO root in PowerShell. WSL affinity 0–5 is fixed for all four timed arms.
+$e='project_docs/evidence/tcad_ibex_20261123'
+$flow='/home/toylog/faeco_eda/orfs/flow'
+$root='/home/toylog/faeco_tcad_ibex_20261123'
+wsl timeout --kill-after=10s 14400s taskset -c 0-5 python3 -u "$e/run_asap7_serial_repeat.py" --pdk asap7 --control-dir "$root/control_asap7/results/asap7/ibex/base" --original-sdc "$flow/designs/asap7/ibex/constraint.sdc" --control-drc "$root/control_asap7/reports/asap7/ibex/base/5_route_drc.rpt" --route-guide "$root/control_asap7/results/asap7/ibex/base/route.guide" --views-json "$e/asap7_control/CONTROL.json" --previous-run "$root/setup_protocol_asap7_v1" --out "$root/setup_serial_asap7_v1" --sec "$e/prove_ibex.py" --threads 4 --max-evals 6 --batch-size 3 --droute-iters 64 --route-timeout 1500 --sta-timeout 180 --sec-timeout 210 --report-setup-endpoints | Tee-Object scratch/tcad_ibex_20261123/setup_serial_asap7_v1.log
+exit $LASTEXITCODE

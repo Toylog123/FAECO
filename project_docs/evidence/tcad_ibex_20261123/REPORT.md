@@ -141,3 +141,8 @@ python3 -B project_docs/evidence/tcad_ibex_20261123/verify_setup_protocol.py \
 ## SEC 工具预检
 
 Yosys 使用 TT Liberty 导入单元功能模型，并以 `hierarchy -simcheck` 拒绝使用未定义和黑盒模块。SKY130 工艺的 Liberty 触发器含异步复位，初始直接 SAT 导入报告缺少相关 FF 模型。采用 `clk2fflogic` 将事件显式化，按工具的两态时序模型和异步复位撤销与时钟同刻时的负 hold 约定检查。SKY130 和 ASAP7 的合成阶段网表自比分别为 13,517/0 与 17,235/0（已证/未证）。正式对照的等价证明绑定实际布线网表。
+
+## 后续核验
+
+- ASAP7 按两种相反顺序同机串行测到相同的 0.26244 面积端点。两组 FAECO 分别少用 40.311 s 与 35.195 s，主要来自一次 SEC 的差异。另记录 WSL 单调时钟与宿主稳态计时的速率偏差。[串行复跑报告](ASAP7_SERIAL_REPORT.md)
+- SKY130HD 用原件和两组 ODB/SPEF 交叉 STA 定位 TT 退化。候选优先把高扇出 `buf_12` 降为 `buf_1`，扩大了同一分支上多条路径的延迟。定位两例中，固定 CONTROL 寄生复现了大部分退化。[TT 归因报告](SKY130_TT_CAUSE.md)

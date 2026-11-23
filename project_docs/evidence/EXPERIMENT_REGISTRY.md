@@ -2712,3 +2712,23 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - **执行已绑定** 本地 17:13:36（UTC+8）并行启动。ASAP7 PID 670、CPU 0–5、原文本导引，配置 SHA256 14c47373d13f84bfdaf499847bfce96dc2f37dd7548c45268ae106e69e88eaad；SKY130HD PID 673、CPU 6–11、ODB 内嵌导引及共享零编辑复提取，配置 SHA256 cf01d187a703752a3ee7f83cddf8a315ff8f2981ac202a292d4e9941e3af372c。两份配置分别为 WSL /home/toylog/faeco_tcad_ibex_20261123/setup_protocol_asap7_v1/config.json 和 setup_protocol_sky130_v1/config.json。两进程各四线程、64 DRT 轮、1500/180/210 s，候选启用 setup 端点盘点。共享零动作单次保留原 setup 预检 10 ps，计时在主臂窗口外。在启动前确认 93 项测试与端点审计探针。
 - **TNS 字段解读** 原配置的 tns_gate=false 为基础驱动遗留字段。新 setup_tns_loss_budget 字段绑定本轮逐视图 TNS 包络，sweep 的候选评估直接调用该门，超限标记 setup_tns_budget。复核以实际候选门和收据为准，原始配置留存。
+
+
+### 2026-11-23 TCAD-IBEX-ASAP7-TARGET-SERIAL-REVERSE-V1
+
+- **目的与对照** 用户要求排除前轮同机并行干扰后，确认 ASAP7 两种方法到同一回收目标的墙钟差。此次在同一工作站、同一进程串行执行两对完整复跑，先 FAECO→单门贪心，再单门贪心→FAECO。四臂固定 CPU 0–5、OpenROAD 各 4 线程，运行前查无其他 EDA 作业，记录起止时间与背景负载。原件输出为 WSL /home/toylog/faeco_tcad_ibex_20261123/setup_serial_asap7_v1。此前 810.920 s 和 1135.931 s 仅为原有不等负载观测，不并入本轮配对计时。[前轮主比较](tcad_ibex_20261123/REPORT.md#asap7-主比较)
+- **冻结配置** 沿用前轮 ASAP7 原始 CONTROL、原 SDC 与 I/O、相同候选池顺序、文本导引、FF/TT/SS 三视图及物理设置。采用相同 tradeoff 1% 路径，WNS 各角相对损失最多 10 ps，TNS 沿原逐角包络，hold、DRC、电气和非空 SEC 门不变。以 CONTROL 的 0.01% 即 0.212978808 面积为阈值，四臂各最多六次候选评估，首次完整验收并达到目标即停止。共享起点和一次零动作预检单列，不计入方法墙钟。实际命令、版本与输入哈希在启动回执登记。
+- **计时和核验** 四臂从各自策略入口计时到首个满足目标的端点完成验收，记录每次已完成检查点及 DRT/RCX、三角 STA、实际 SEC 次数与耗时。四臂独立重跑全部所需物理验证和 SEC，不走缓存。若停止前未达目标，报告已有完整前缀和六次内未达到。分别核对首达面积、候选动作、ODB/DEF/V 和去日期 SPEF、逐角时序及 SEC 绑定。两对分别比较时间差的方向和波动，确认本机本例的复现范围和工作量来源，跨设计或稳定提速仍需额外数据。
+- **实际启动** WSL `ps` 实查为 21:11:55（UTC+8），外层限时 PID 346，实验驱动 PID 428、CPU 0–5。原调用在相同资格回执和 `setup_protocol_asap7_v1` 前轮原件下运行 `run_asap7_serial_repeat.py`。外层限时 14400 s，单次 DRT/RCX、每视图 STA、SEC 限时 1500/180/210 s，4 线程、64 次 DRT 轮、批宽上限 3、启用 setup 端点报告。配置 SHA-256 `280c776244e3dfe187aa685b7a177be1c8ebae1910a7932337d66243010e2427`，启动前针对性测试 33 项通过。
+
+
+- **完成与复核** 四臂均独立实跑至第三次，同面积回收 0.26244。逆序 688.233/728.543 s，原序 695.670/730.866 s，分别为 FAECO 和单门。单门在两对中均多一次 SEC，增加 38.480/37.066 s 的 SEC 计时。核验 rc 0，四端点与前轮首达端点的 ODB、DEF、V 和去日期 SPEF 一致，四端点 SEC 均为 17363/0，合计 12 DRT/RCX、36 STA、6 SEC、缓存命中 0。结果 SHA-256 `d5b1adc79bee8c39278401486f20d306b9552f2068b8d40197aecd613d8e0a29`。QPC/RAW 与 WSL MONOTONIC 差异单列，正式差值使用预登记 WSL 时钟。完整 EDA 归档 SHA-256 `b016a9f5e103c2db7281d74c69e0fe6d97486a8f85f57d609fd653df8b1fcccd`。[复跑报告](tcad_ibex_20261123/ASAP7_SERIAL_REPORT.md) · [独立核验](tcad_ibex_20261123/ASAP7_SERIAL_VERIFIED.json)
+
+
+### 2026-11-23 TCAD-IBEX-SKY130HD-TT-TIMING-CAUSE
+
+- **先行资料核查** 绑定此前 SKY130HD 主档的 18 个候选、同起点 TT 收据和零动作对照，逐端点检查 setup WNS/TNS、大幅变化的路径、换门与布局和寄生证据。先读取已有日志、SPEF、DEF 等，不与 ASAP7 串行计时竞跑 EDA。仅在证据不足时另登记针对性工具查询，保持原约束。将直接验证的路径和因素与尚未检验的解释分开记录。[前轮核验](tcad_ibex_20261123/SKY130_P1_SETUP_VERIFIED.json)
+
+- **交叉复测预登记** 对 FIFO 单门 01 和寄存器堆单门 05 分别交叉 CONTROL/候选 ODB 与 CONTROL/候选 SPEF，两例共用 CONTROL×CONTROL，预期七组 TT STA。固定原 SDC、TT Liberty 与 OpenROAD。真实组合先检查能否复现原 WNS、TNS 与负端点，再比较固定发射/捕获路径、同一驱动器的固定分支及逐端点负 slack 累计。交叉结果用于分离同一固定样本的单元选择和 RC 效应。ASAP7 四臂结束前不启动。[路径证据和组合说明](tcad_ibex_20261123/SKY130_TT_CAUSE.md)
+
+- **交叉复测完成** ASAP7 四臂结束后运行，七组均 rc 0。真实 CONTROL 和候选组核对 WNS、TNS、负端点集一致。固定 CONTROL 寄生使用候选 ODB 时，FIFO 和寄存器堆的 WNS 变化分别为 −474.644、−403.733 ps，TNS 变化为 −24.628、−22.368 ns。固定 CONTROL ODB 只换候选寄生时，WNS 变化为 −0.002665、+0.986766 ps，TNS 变化为 +0.035481、+0.565102 ns。逐负端点 slack 和与 TNS 的取值差绝对值上界 0.007191 ps。结论覆盖两例交叉拆分和 18 例观测路径。原结果 SHA-256 `1040196a01aecbdf0efe36b8dad3f1284ffb6c1895938ba0de08978954c421ab`。[TT 归因](tcad_ibex_20261123/SKY130_TT_CAUSE.md)
