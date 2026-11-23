@@ -1,5 +1,16 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-23 中文 v3 配图与实验口径修订
+
+中文活跃工作稿为 14 页，含六幅 ImageGen 示意图、十例 SKY130 逐端点对照与 s713/s832 联合评测。v22 标签锁定此前中文稿和工程基线。英文工作稿暂冻。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [联合评测](evidence/sky130_joint_constraints_20261123/REPORT.md) · [图件记录](../paper/zh/figures/imagegen_20261123/PROMPTS.json)
+
+## 2026-11-23 SKY130 端点对齐与 s713/s832 联合约束复查
+
+- v22 历史十个名义正回收端点的面积降幅为 0.67%–5.58%、均值 2.01%，均有零 DRC 和非空全网表两态 SEC。逐端点回读已绑定网表、SPEF、证明输入和各分析所用 CONTROL。部分历史分析使用独立重布线 CONTROL，和候选路由输入的 Resizer 快照存在字节差异。[逐端点证据](evidence/sky130_joint_constraints_20261123/ENDPOINTS.md)
+- 保持上述十个物理端点时，SS setup 预算通过 9/10，FF hold 严格相对非退化 5/10。将 s641 切至面积降 0.662% 的多角替代点后，分别为 10/10 和 6/10，该替代点缺 IO+OCV 绑定。十个名义端点的 IO+OCV 相对 setup 预算通过 8/10，另外两个以原始 CONTROL 回退达相对 setup 门且面积收益为零。十个名义端点及对应历史 CONTROL 的 IO+OCV 绝对 hold 全部为负。历史的通过率分别对应各条件和端点。
+- `SKY130-JOINT-B10-S713-S832` 为两例新联合评测。每例固定同一 CONTROL 快照，使用同一候选网表与 SPEF 测时钟约束下 TT、SS、FF 及 TT+IO+OCV，四场景均需通过 10 ps setup 损失预算、hold 非退化与非负硬门，并要求正面积收益、DRC=0、最终非空两态 SEC。最终实测每例 10 个候选，合计 20 个候选均 DRC=0，全部保留 IO+OCV 绝对 hold 违例，严格接受 0/2。
+- s713 严格门及相对诊断均无正收益端点，候选 IO+OCV hold 为 −99.035 至 −98.036 ps，原 CONTROL 为 −98.219 ps。s832 的 `RUN_005` 仅在 IO+OCV 不要求绝对 hold 非负的相对诊断条件下回收 3.7536 µm²（0.322%），IO+OCV setup/hold 分别改善 +6.404/+0.801 ps，绝对 hold 仍为 −74.515 ps，DRC=0、SEC 162/0。这一项计作诊断。结果的作用域为冻结设计、候选顺序、两例 10 次评估预算及明确的四场景约束。[联合约束证据](evidence/sky130_joint_constraints_20261123/)
+
 ## 2026-11-23 横向对比扩展与 ASAP7 7 nm 两万门跨工艺定稿（`v22`）
 
 - **活跃基线与中文主稿**：基线升级至 **`v22`（`v2026-11-23-cross-pdk-lr-baselines`）**；中文 v3 主稿 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（15 页，6 套 Nature 矢量图，LuaLaTeX 0 Error / 0 Overfull / 0 Undefined，无孤儿参考文献尾页，经 `user-academic-writing-style` 全文学术化润色）已集成 LR 10 电路同台基线、OpenROAD 负裕度开关证伪、文献 8 类横评表 1、以及 ASAP7 7 nm 两万门级 `aes_cipher_top` 验证（`v22` 清单 `165 OK / 0 FAIL`、`pytest` 核心 65 项全通过）；英文稿 `paper/en/` 维持暂冻。证据入口：`project_docs/evidence/cross_pdk_lr_baselines_20261123/{REPORT.md, SUMMARY.json}`。

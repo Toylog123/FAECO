@@ -1,5 +1,7 @@
 # FAECO：覆盖优先调度与可调预算的后布局门级时序 ECO 面积回收
 
+> **2026-11-23 中文活跃工作稿已修订**。见[中文 v3 PDF](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)（14 页、6 幅 ImageGen 示意图）及[两例联合评测](project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)。下方 v22 信息对应标签冻结稿。
+
 > **2026-11-23 当前总入口：[`project_docs/HANDOFF_2026-11-23.md`](project_docs/HANDOFF_2026-11-23.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
 > 当前处于 **`v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 中文 v3 后布局定稿态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，15 页 / 6 套 Nature 矢量图），新增经典 LR 10 电路实测对照、OpenROAD 负裕度开关证伪、表 1 八类文献扩充，以及 ASAP7 7 nm 两万门 `aes_cipher_top` 跨工艺验证；英文稿 `paper/en/` 暂冻。
 

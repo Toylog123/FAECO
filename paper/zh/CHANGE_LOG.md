@@ -769,3 +769,10 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
   - 依据 `背景/问题 → 技术路线 → 主要结果与口径边界` 重构中/英摘要，消除 25 处细粒度数字堆叠；重写 §1.3 四条贡献使其兼具`设计思想 + 解决困难 + 证据`三层信息并消除未验证"首次"/"突破"过强断言；
   - 全局清除 CLI 参数名（如 `repair_timing -recover_power`）、内部工程实例名（如 `_160630_`、`rebuffer1`、`eval_trials`）及工程过程词（`Recovery v2`、`令人惊讶`），并按规范完成 DRC、RCX、CTS、SPEF、OCV、HVT/LVT/RVT/SLVT 等术语首次中文化展开；
   - 重写 §8 结论提炼物理规律与适用边界（避免机械复读前文数字），并将参考文献字号调为标准 `\footnotesize` 使全篇齐整收敛为 **15 页（0 Error / 0 Overfull / 0 Undefined，第 15 页双栏均衡排满，三副本 PDF 同步，v22 清单 `165 OK / 0 FAIL`）**。
+
+
+## 2026-11-23 中文 v3 逐端点证据与生图配图修订
+
+- 双语摘要、正文、结论和图表说明同步十个 SKY130 实际端点及 s713/s832 固定参考联合试验。严格联合门 0/2。s832 的 0.322% 回收仅适用于相对诊断，IO+OCV 绝对 hold 为 −74.515 ps，SEC 162/0。同步校正贪心对照、b15 DRC 条件、二分复杂度适用条件与 ASAP7 TNS。
+- 六幅配图采用 [ImageGen 成图与提示词](figures/imagegen_20261123/PROMPTS.json)。正文和 LaTeX 表保留定量结果。证据见 [SKY130 报告](../../project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)。
+- LuaLaTeX 双遍通过，实嵌六幅图（338–353 ppi），14 页视觉复查，无编译错误、溢出和未解析引用。保留环境字体替代提示。TeX SHA-256 为 34b9f3b9e8fbb20c985ccc96f3887ba7c0c0a4a48f260847644c3902c9d6ef68，PDF 三副本 SHA-256 为 5ec838ac0821e257fd7548c93bb28693ca9028896c5b6ded8cd299c362e6ecae。

@@ -1,0 +1,3963 @@
+{
+  "scope": "Readback of the v22 historical SKY130 physical endpoints and associated pre-existing measurements. No new EDA was run to generate this alignment.",
+  "sha_scope": "SHA-256 of current local bytes. SEC raw-netlist links also check exact tap-projected content against proof receipts. See ENDPOINTS.md for limitations.",
+  "nominal_positive": [
+    {
+      "endpoint_id": "s382:v22_nominal_positive:RUN_008",
+      "circuit": "s382",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.v",
+          "sha256": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+          "bytes": 192236
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.spef",
+          "sha256": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+          "bytes": 175490
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.def",
+          "sha256": "6df6ea184f0597bd49536205ffa1637f51e4f55c52790ddd85b9787f8e4bf9ec",
+          "bytes": 407579
+        }
+      },
+      "endpoint_directory": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/routed.v",
+          "sha256": "b0e29995cb2f93958c607a1f2ed0e47fc8ad5cc9a15c90f6ec4f9181538642ea",
+          "bytes": 192236
+        },
+        "spef": {
+          "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/routed.spef",
+          "sha256": "60e7d518808351a82e9c8d5db4daedc9b66e0299c6f425c4c748da95a250bb16",
+          "bytes": 178746
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/flow.tcl",
+        "sha256": "c93d40136c905cb249aa55c677b7069a13f25f0139741e1bc7e4e12835e423f4",
+        "bytes": 1902
+      },
+      "flow_log": {
+        "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/flow.log",
+        "sha256": "5a3b479e6cb008cffe55dda7ce0a7590185394effef4084964305edaed30d4bb",
+        "bytes": 7009
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/tool_agnostic_iscas89/s382/summary.json",
+          "sha256": "ee9e48180baa5d0fe763fca2a69405f496780f8e1b3be4b2a0e94bb2692ffc1e",
+          "bytes": 387
+        },
+        "control_area_um2": 1052.2592,
+        "endpoint_area_um2": 1033.4912,
+        "setup_delta_ps_reported": -6.703,
+        "hold_delta_ps_reported": 0.0,
+        "evaluations": 10,
+        "committed": [
+          "rebuffer1=sky130_fd_sc_hd__buf_1",
+          "_096_=sky130_fd_sc_hd__nor4_1",
+          "_093_=sky130_fd_sc_hd__nor3_1"
+        ],
+        "reference_source": "hardcoded in scratch/run_tool_agnostic_iscas89.py",
+        "endpoint_sta_tcl": {
+          "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/propagated.tcl",
+          "sha256": "b40d934ca12d3501f826542e0375068a34486038da814397fb463520cc35dfe0",
+          "bytes": 909
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/tool_agnostic_iscas89/s382/evals/RUN_008/propagated.log",
+          "sha256": "d9f9d29184e508cb408c99687bf9e3191e135fd5e587a4a319fc44430c71b041",
+          "bytes": 348
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -855.162052,
+          "hold_ps": 463.636851,
+          "tns_ps": -13400.0
+        },
+        "area_saved_pct": 1.783591
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.v",
+              "sha256": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+              "bytes": 192236
+            },
+            "spef": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.spef",
+              "sha256": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+              "bytes": 175490
+            },
+            "def": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.def",
+              "sha256": "6df6ea184f0597bd49536205ffa1637f51e4f55c52790ddd85b9787f8e4bf9ec",
+              "bytes": 407579
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -5321.119545,
+            "hold_ps": 1810.862571,
+            "tns_ps": -90700.737
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -5286.17905,
+            "hold_ps": 1810.862571,
+            "tns_ps": -91317.841
+          },
+          "delta_ps": {
+            "setup_ps": 34.940495,
+            "hold_ps": 0.0,
+            "tns_ps": -617.104
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s382_SS_ctrl.tcl",
+            "sha256": "0ce3483e1814ed01b506a3bee9aab5fb7127831ba62b63cc42e27cb7c20ca5df",
+            "bytes": 582
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s382_SS_ctrl.log",
+            "sha256": "c30de0d2183bfb4d05c09b4a7cf3ffd6f20a48972667b9d4f5a0f19066d57c41",
+            "bytes": 317
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s382_SS_rec.tcl",
+            "sha256": "3d3ca93feba0ac02e8295dab13ea25d5cda39aaf34c48601cb4c52687c07adae",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s382_SS_rec.log",
+            "sha256": "caa8ccbe67166a478e8126b33e7250465c22c6828d88266bf6e2949f96eadfd0",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.v",
+              "sha256": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+              "bytes": 192236
+            },
+            "spef": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.spef",
+              "sha256": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+              "bytes": 175490
+            },
+            "def": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.def",
+              "sha256": "6df6ea184f0597bd49536205ffa1637f51e4f55c52790ddd85b9787f8e4bf9ec",
+              "bytes": 407579
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -848.457082,
+            "hold_ps": 463.636851,
+            "tns_ps": -13421.55
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -855.162052,
+            "hold_ps": 463.636851,
+            "tns_ps": -13400.16
+          },
+          "delta_ps": {
+            "setup_ps": -6.70497,
+            "hold_ps": 0.0,
+            "tns_ps": 21.39
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s382_TT_ctrl.tcl",
+            "sha256": "2f68a1bd37e4315bcb18f6013795cccd8c23d344be07ed19b3a1dd4c920fd95a",
+            "bytes": 582
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s382_TT_ctrl.log",
+            "sha256": "35c008473bd168d3f5aedfc2331e7e90cffcff6bcc027720c8768b2a4dae79db",
+            "bytes": 318
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s382_TT_rec.tcl",
+            "sha256": "28cbe32dd8843d900c4dce3327e6ae96920efe0c84e7a733e15c3386a43a5a6f",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s382_TT_rec.log",
+            "sha256": "037ceabfd9f336301874f53b4e21e874d1abda6590561d44ded556690fe4bda0",
+            "bytes": 306
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.v",
+              "sha256": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+              "bytes": 192236
+            },
+            "spef": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.spef",
+              "sha256": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+              "bytes": 175490
+            },
+            "def": {
+              "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.def",
+              "sha256": "6df6ea184f0597bd49536205ffa1637f51e4f55c52790ddd85b9787f8e4bf9ec",
+              "bytes": 407579
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -355.713403,
+            "hold_ps": 297.793068,
+            "tns_ps": -4844.725
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -353.989393,
+            "hold_ps": 297.793068,
+            "tns_ps": -4792.88
+          },
+          "delta_ps": {
+            "setup_ps": 1.72401,
+            "hold_ps": 0.0,
+            "tns_ps": 51.845
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s382_FF_ctrl.tcl",
+            "sha256": "695e4749e74771ce3a006b700cb3050d27c187dbde9212c3b186eef74d951716",
+            "bytes": 582
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s382_FF_ctrl.log",
+            "sha256": "fc430899219303d2362d7813dac343c4fa361ecd5bff4088c2c14df2cb80e474",
+            "bytes": 317
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s382_FF_rec.tcl",
+            "sha256": "8a6b6bd5f96f52af78d824d5eef7c1cbcbbfd7cb96e117b951040378fae4c3c5",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s382_FF_rec.log",
+            "sha256": "d253329618a749d62a74d4ad8e47bf4d7f55ee91fe0a3b033b2af7c4bf8c6074",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.v",
+            "sha256": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+            "bytes": 192236
+          },
+          "spef": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.spef",
+            "sha256": "15fbc8508cad36f0f56a6fb4839af589524e7ce9f11dbba7f454b36ed0f9a55a",
+            "bytes": 175490
+          },
+          "def": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.def",
+            "sha256": "6df6ea184f0597bd49536205ffa1637f51e4f55c52790ddd85b9787f8e4bf9ec",
+            "bytes": 407579
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -995.357685,
+          "hold_ps": -100.759442,
+          "tns_ps": -17515.909
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -979.8925,
+          "hold_ps": -100.818659,
+          "tns_ps": -17490.133
+        },
+        "delta_ps": {
+          "setup_ps": 15.465185,
+          "hold_ps": -0.059217,
+          "tns_ps": 25.776
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s382_ctrl.tcl",
+          "sha256": "cb17a6492dade288d2303a0f132db920da613635726786d05df0b085034b0777",
+          "bytes": 944
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s382_ctrl.log",
+          "sha256": "a106bdb7c195ab16a8cda14cf242e0c4f26ce27a7c7e3650fc385fb30e98ff11",
+          "bytes": 1093
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s382_faeco.tcl",
+          "sha256": "4d8449dd55bf77e2f8549b78370c35d5cab3ac8bed43890335a20c49250571a9",
+          "bytes": 924
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s382_faeco.log",
+          "sha256": "c6b60062c6796e67ff2de72f74ef35006b74d6b78b2646f9bb86e102d75f0bfc",
+          "bytes": 1084
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 101,
+        "unproven": 0,
+        "taps_projected": 3026,
+        "gold_matching_directories": [
+          "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s382/routed.v",
+            "sha256": "30e0a224d337f104ce43e01211d9f2003ad9da8a5990e4ad6a74cb57569496ea",
+            "bytes": 192236
+          }
+        ],
+        "gold_projected_sha256": "5bdd74efbdc929e9042644fe340d52a5a710daae00190ec33b84f934ea8a7a85",
+        "endpoint_projected_sha256": "89ae08cb804897b4b9fb8574ffe8770bd6bcb6e017dc7911c79bac498ded822b",
+        "receipt": {
+          "path": "scratch/tool_agnostic_iscas89/s382/sec/sec_summary.json",
+          "sha256": "ce1d3d281ced58732734eb270df5757d7e212a16857b6b2693a0c250b99c814d",
+          "bytes": 739
+        },
+        "log": {
+          "path": "scratch/tool_agnostic_iscas89/s382/sec/proof/sec.log",
+          "sha256": "7b6b9d2c96af102893743837aba7568de4a3e84bb8efad37135ebdcd6019fea5",
+          "bytes": 84370
+        },
+        "script": {
+          "path": "scratch/tool_agnostic_iscas89/s382/sec/proof/sec.ys",
+          "sha256": "a29dac3b305a100f9150c81d46f2fa267aaac1207d74f9e1a2c60a72e2a10371",
+          "bytes": 614
+        },
+        "cell_models": {
+          "path": "scratch/tool_agnostic_iscas89/s382/sec/proof/cells.v",
+          "sha256": "7d37ef9bdc0d36d34c5c2891bf09a6913de4f939047d44454a30a34935979d20",
+          "bytes": 5026
+        }
+      }
+    },
+    {
+      "endpoint_id": "s420:v22_nominal_positive:RUN_010",
+      "circuit": "s420",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s420",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s420/routed.v",
+          "sha256": "049d3e424c5fafaa7d0871b863a69e076b78e529565c38b43d621beaaf422c49",
+          "bytes": 169637
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s420/routed.spef",
+          "sha256": "a8a8cb1caf3bf7a782d3f7f630c78802a1459e9bfbb26d73a1b8d61b781797b1",
+          "bytes": 161087
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s420/routed.def",
+          "sha256": "872caa1b904eea5b1c1b4ec451a63c55a3387ac27835d9bc82926cb2d5cefae8",
+          "bytes": 363974
+        }
+      },
+      "endpoint_directory": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/routed.v",
+          "sha256": "c5ae9b11a2cf3a78869dcc54dfcf83db08af34b9897b7ffbc2ae317198976c59",
+          "bytes": 169637
+        },
+        "spef": {
+          "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/routed.spef",
+          "sha256": "c1dcf23fa55abe2e111bb80ad9030efaf0b47b7ffb6f21aa527c7cbb826c10ae",
+          "bytes": 163254
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/flow.tcl",
+        "sha256": "d4b1f18bf61a4c77513e6f4d715ada6b023bca54a60c38aff25ebc74fade2088",
+        "bytes": 2164
+      },
+      "flow_log": {
+        "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/flow.log",
+        "sha256": "6bb357215c167ad302e19588c810f223e0449704155921590d8c3ce3d11191cf",
+        "bytes": 7008
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/tool_agnostic_iscas89/s420/summary.json",
+          "sha256": "247e3c1e9a9777699d18ef4d235e36eb5ecb2bff6bec89b4d2b23e0b118e8221",
+          "bytes": 607
+        },
+        "control_area_um2": 942.1536,
+        "endpoint_area_um2": 889.6032,
+        "setup_delta_ps_reported": 4.12,
+        "hold_delta_ps_reported": 0.013,
+        "evaluations": 10,
+        "committed": [
+          "_057_=sky130_fd_sc_hd__nor2_1",
+          "rebuffer13=sky130_fd_sc_hd__buf_1",
+          "rebuffer14=sky130_fd_sc_hd__buf_1",
+          "rebuffer15=sky130_fd_sc_hd__buf_1",
+          "rebuffer6=sky130_fd_sc_hd__buf_1",
+          "rebuffer8=sky130_fd_sc_hd__buf_1",
+          "rebuffer16=sky130_fd_sc_hd__buf_1",
+          "rebuffer2=sky130_fd_sc_hd__buf_1"
+        ],
+        "reference_source": "scratch/iscas89_postroute_verify/s420/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/propagated.tcl",
+          "sha256": "56e3b59897054895e3051fa90dabbc9b98e5a8610549b80c2e07605b6797df30",
+          "bytes": 909
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/tool_agnostic_iscas89/s420/evals/RUN_010/propagated.log",
+          "sha256": "72472c2be9bfce8b2f29d8903978c99af6f2245856f30fa4adcf3fde3f853057",
+          "bytes": 349
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1219.687684,
+          "hold_ps": 460.058186,
+          "tns_ps": -13300.0
+        },
+        "area_saved_pct": 5.577689
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "scratch/iscas89_postroute_verify/s420/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.v",
+              "sha256": "25be7736c6121fc743d3cd713c30b59c0f25bd85d7c4004707e89fda3863abec",
+              "bytes": 169637
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.spef",
+              "sha256": "5779af23e6b3e7f26e8d627b7364f0a2c0ea81736510ea06812a9058c5266438",
+              "bytes": 163641
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.def",
+              "sha256": "281e0c9278aec8f5121100146e4941a587787b3cb8b7d5b8420b453522a2cfd2",
+              "bytes": 363974
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -6516.992279,
+            "hold_ps": 1620.081291,
+            "tns_ps": -77446.03
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -6499.075056,
+            "hold_ps": 1620.15501,
+            "tns_ps": -77409.981
+          },
+          "delta_ps": {
+            "setup_ps": 17.917223,
+            "hold_ps": 0.073719,
+            "tns_ps": 36.049
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s420_SS_ctrl.tcl",
+            "sha256": "79030330e75495a3c655b4cdedb941add2a3deb6fa639c062ec72198ae696629",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s420_SS_ctrl.log",
+            "sha256": "a443844331e795f3cd8e9e52c4d2794ab80420c17b68762c42bcd54a351e21da",
+            "bytes": 304
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s420_SS_rec.tcl",
+            "sha256": "e64147713060972bacbb0ee5d2c2e4b5853c27c896982accab4d04b164c3896e",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s420_SS_rec.log",
+            "sha256": "25bf9593dbb3753d7dc50abd4d6b434de14061dfe293f9c45ffe6c5aed52e9e8",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "scratch/iscas89_postroute_verify/s420/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.v",
+              "sha256": "25be7736c6121fc743d3cd713c30b59c0f25bd85d7c4004707e89fda3863abec",
+              "bytes": 169637
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.spef",
+              "sha256": "5779af23e6b3e7f26e8d627b7364f0a2c0ea81736510ea06812a9058c5266438",
+              "bytes": 163641
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.def",
+              "sha256": "281e0c9278aec8f5121100146e4941a587787b3cb8b7d5b8420b453522a2cfd2",
+              "bytes": 363974
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1223.807944,
+            "hold_ps": 460.045224,
+            "tns_ps": -13004.69
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1219.687684,
+            "hold_ps": 460.058186,
+            "tns_ps": -13300.931
+          },
+          "delta_ps": {
+            "setup_ps": 4.12026,
+            "hold_ps": 0.012962,
+            "tns_ps": -296.241
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s420_TT_ctrl.tcl",
+            "sha256": "f03a520e18a1609a0fd587e043267d5519cde9e1c920ce4967d5d0912f41a3d7",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s420_TT_ctrl.log",
+            "sha256": "b7a510a944fc120df8e36a74721706b6aaf4b6c87b9725be190bb8102c154327",
+            "bytes": 304
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s420_TT_rec.tcl",
+            "sha256": "ebe15818acd0bb98316ce9759049a99ece4af00e915499e50a5e58131d1c1033",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s420_TT_rec.log",
+            "sha256": "8c64b64f0bf00f7a1783f4e95fcab7f44387a5927da73f517e41c556ae168080",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "scratch/iscas89_postroute_verify/s420/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.v",
+              "sha256": "25be7736c6121fc743d3cd713c30b59c0f25bd85d7c4004707e89fda3863abec",
+              "bytes": 169637
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.spef",
+              "sha256": "5779af23e6b3e7f26e8d627b7364f0a2c0ea81736510ea06812a9058c5266438",
+              "bytes": 163641
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.def",
+              "sha256": "281e0c9278aec8f5121100146e4941a587787b3cb8b7d5b8420b453522a2cfd2",
+              "bytes": 363974
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -559.484681,
+            "hold_ps": 291.705826,
+            "tns_ps": -4992.332
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -562.324909,
+            "hold_ps": 291.719759,
+            "tns_ps": -4931.376
+          },
+          "delta_ps": {
+            "setup_ps": -2.840228,
+            "hold_ps": 0.013933,
+            "tns_ps": 60.956
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s420_FF_ctrl.tcl",
+            "sha256": "a6d19d617674f66d9563bfb037f098b94f8fa763fd8504610bbeccbb4f622a23",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s420_FF_ctrl.log",
+            "sha256": "a6e2c1c564d3498940ec080f4638cf8f8fbc361c4baffbfd16b5cf7f861cb074",
+            "bytes": 304
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s420_FF_rec.tcl",
+            "sha256": "ec1dd2bd7b7fc38e1dba2bdb7f97884ba8cc66d393f68066f83c28121024da64",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s420_FF_rec.log",
+            "sha256": "11f03c35296000ed963bf1adb596db3947be694b40549e9428a62ef2b7d414bd",
+            "bytes": 308
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "scratch/iscas89_postroute_verify/s420/CONTROL",
+        "control_files": {
+          "v": {
+            "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.v",
+            "sha256": "25be7736c6121fc743d3cd713c30b59c0f25bd85d7c4004707e89fda3863abec",
+            "bytes": 169637
+          },
+          "spef": {
+            "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.spef",
+            "sha256": "5779af23e6b3e7f26e8d627b7364f0a2c0ea81736510ea06812a9058c5266438",
+            "bytes": 163641
+          },
+          "def": {
+            "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.def",
+            "sha256": "281e0c9278aec8f5121100146e4941a587787b3cb8b7d5b8420b453522a2cfd2",
+            "bytes": 363974
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -1672.940453,
+          "hold_ps": -67.435016,
+          "tns_ps": -16808.538
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1667.208593,
+          "hold_ps": -66.74554,
+          "tns_ps": -17141.602
+        },
+        "delta_ps": {
+          "setup_ps": 5.73186,
+          "hold_ps": 0.689476,
+          "tns_ps": -333.064
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s420_ctrl.tcl",
+          "sha256": "034158333e13daec91bdf0842b1a245bfecaedffa553954d2e9c52242f89baff",
+          "bytes": 918
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s420_ctrl.log",
+          "sha256": "b0c9b02d178f33c6d366d3ba4518247a170d039291150969d316e546f708631f",
+          "bytes": 1080
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s420_faeco.tcl",
+          "sha256": "48157f4c683b87a9273840f38686e3eb3009bd307c4d98d88f4b60c2189a1da6",
+          "bytes": 924
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s420_faeco.log",
+          "sha256": "e4368f853da94370c3400a63cb851ba2bdb4fc826f80d6e2cd3123c146a7b139",
+          "bytes": 1082
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 95,
+        "unproven": 0,
+        "taps_projected": 2672,
+        "gold_matching_directories": [
+          "scratch/iscas89_postroute_verify/s420/CONTROL"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "scratch/iscas89_postroute_verify/s420/CONTROL/routed.v",
+            "sha256": "25be7736c6121fc743d3cd713c30b59c0f25bd85d7c4004707e89fda3863abec",
+            "bytes": 169637
+          }
+        ],
+        "gold_projected_sha256": "44870c9aee831eb5360f37bd4d5174282a104d0cd067243a4ffa2bf416cdd100",
+        "endpoint_projected_sha256": "f8ec10f69003448917f2d84f43eccb56afaec6c7cf11a99bde7016d2bbdc5674",
+        "receipt": {
+          "path": "scratch/tool_agnostic_iscas89/s420/sec/sec_summary.json",
+          "sha256": "4ce8020973b13825c9a1a2de9747e6cb5f40a2fe05e31dc61711f00872c11550",
+          "bytes": 739
+        },
+        "log": {
+          "path": "scratch/tool_agnostic_iscas89/s420/sec/proof/sec.log",
+          "sha256": "99cd32c4bae6a4fc8d9c3b01a27a32008cd8552d26ccd88e47d77533fb8b6987",
+          "bytes": 72568
+        },
+        "script": {
+          "path": "scratch/tool_agnostic_iscas89/s420/sec/proof/sec.ys",
+          "sha256": "defc7f9dc33fe628023d45ca6860babbf0fbf3e2194a3291a69838efd195a00e",
+          "bytes": 614
+        },
+        "cell_models": {
+          "path": "scratch/tool_agnostic_iscas89/s420/sec/proof/cells.v",
+          "sha256": "70b33ec19f28800346a231a756f62a3446c7e1169170a8160ffe0735656b26b1",
+          "bytes": 3736
+        }
+      }
+    },
+    {
+      "endpoint_id": "s641:v22_nominal_positive:RUN_005",
+      "circuit": "s641",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.v",
+          "sha256": "c6e9ebb20fea3a1ea41f972ad19ff2011ea1f2fac9de91eac57265fb8f10ede6",
+          "bytes": 217205
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.spef",
+          "sha256": "6b4411ebf0b5c88bcb940f9c9fdeb77343d0a16b10d26461fa0da7e6ea1d0d22",
+          "bytes": 235456
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.def",
+          "sha256": "627220ecf1c12214f2da52de8249a869c82559ed6ba7d308df6683b14d68b474",
+          "bytes": 486571
+        }
+      },
+      "endpoint_directory": "scratch/online_ablation/s641_ablation/evals/RUN_005",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/routed.v",
+          "sha256": "8e9f927876c7be19b9b00125c3df959757dadb9f3b42d012ea7fec8218a438f8",
+          "bytes": 217205
+        },
+        "spef": {
+          "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/routed.spef",
+          "sha256": "6c277673f191ae0a0d0eb835fff8f07b0c4ad480dd9a891182feb4206ff92e70",
+          "bytes": 238780
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/flow.tcl",
+        "sha256": "6be60b377dd72022836d9626e60a760dec65b2a60c643fad4c8966599b50ee05",
+        "bytes": 1915
+      },
+      "flow_log": {
+        "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/flow.log",
+        "sha256": "d879526801a4410482ebf578bc04b435616e8a474407aae7036a640da94b4041",
+        "bytes": 7010
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/online_ablation/s641_ablation/ablation_summary.json",
+          "sha256": "e309b056bba8873b2d7cb8538496f98fa44df0d7949e01ffc28b11975829afc7",
+          "bytes": 4949
+        },
+        "control_area_um2": 1133.5872,
+        "endpoint_area_um2": 1111.0656,
+        "setup_delta_ps_reported": -0.427,
+        "hold_delta_ps_reported": 0.104,
+        "evaluations": 6,
+        "committed": [
+          "_119_=sky130_fd_sc_hd__nand2_1",
+          "_155_=sky130_fd_sc_hd__nand2b_1",
+          "rebuffer16=sky130_fd_sc_hd__buf_1"
+        ],
+        "reference_source": "scratch/iscas89_postroute_verify/s641/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/propagated.tcl",
+          "sha256": "1acb089d814492e7fbab65da2e6cbf4d38f497c16ac41b843b1233d280809279",
+          "bytes": 915
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/online_ablation/s641_ablation/evals/RUN_005/propagated.log",
+          "sha256": "8e606524c0d4f7f3779f0ca3144803fb3948a24fbd83518b2b7388b0b5ddc138",
+          "bytes": 353
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1119.905724,
+          "hold_ps": 477.485662,
+          "tns_ps": -15810.0
+        },
+        "area_saved_pct": 1.986755
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "scratch/iscas89_postroute_verify/s641/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.v",
+              "sha256": "43d77338ab5665f0ac2906290f63d9ee3a62e2b3e37e28ae58bc2b089efe94c0",
+              "bytes": 217205
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.spef",
+              "sha256": "2831b4582f6affb2312891a52fe346206b6a8666997bef0970aa716ead408fc4",
+              "bytes": 241215
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.def",
+              "sha256": "04f5a37159b11331a4f7098e45993ce22aaae8d710c7b8c1903829da473efad8",
+              "bytes": 487511
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -6289.047061,
+            "hold_ps": 1592.608823,
+            "tns_ps": -93704.582
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -6307.552258,
+            "hold_ps": 1593.400301,
+            "tns_ps": -94257.935
+          },
+          "delta_ps": {
+            "setup_ps": -18.505197,
+            "hold_ps": 0.791478,
+            "tns_ps": -553.353
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s641_SS_ctrl.tcl",
+            "sha256": "5eab2260daae448d7ad2b563f917974cf5c0db2ee33a13a75f9781dcdfdba174",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s641_SS_ctrl.log",
+            "sha256": "91cd5f1211d32a3765cb4ccd37b7ba723bdbe563f781feab7039a5b37c3cee88",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s641_SS_rec.tcl",
+            "sha256": "acb4e24154d23663bb8e8199d944948a715c5a6f60622db4d8f6685b66697296",
+            "bytes": 568
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s641_SS_rec.log",
+            "sha256": "7cbddcfe3b390d607c507458240cf265e912f4e3e414e50d76851600f0fcb206",
+            "bytes": 310
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "scratch/iscas89_postroute_verify/s641/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.v",
+              "sha256": "43d77338ab5665f0ac2906290f63d9ee3a62e2b3e37e28ae58bc2b089efe94c0",
+              "bytes": 217205
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.spef",
+              "sha256": "2831b4582f6affb2312891a52fe346206b6a8666997bef0970aa716ead408fc4",
+              "bytes": 241215
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.def",
+              "sha256": "04f5a37159b11331a4f7098e45993ce22aaae8d710c7b8c1903829da473efad8",
+              "bytes": 487511
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1119.479176,
+            "hold_ps": 477.382023,
+            "tns_ps": -15661.886
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1119.905724,
+            "hold_ps": 477.485662,
+            "tns_ps": -15814.932
+          },
+          "delta_ps": {
+            "setup_ps": -0.426548,
+            "hold_ps": 0.103639,
+            "tns_ps": -153.046
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s641_TT_ctrl.tcl",
+            "sha256": "09c665a4cd0f821f227f688502fcf11ae5c4c9bbaccb7fff3eb830cf0160e746",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s641_TT_ctrl.log",
+            "sha256": "d822ad59fd2a3bd6921cda1460183d5ed779a53248a3ad3dea78f23c0ce943b0",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s641_TT_rec.tcl",
+            "sha256": "06001315aa255cc9e8a1e9629a70d3dc71bcb44e1939316d23045e16aebf3101",
+            "bytes": 568
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s641_TT_rec.log",
+            "sha256": "28503fa600026b2438706e071240b035f1af1bfd53e7ffe232ca1cf7fab629c2",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "scratch/iscas89_postroute_verify/s641/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.v",
+              "sha256": "43d77338ab5665f0ac2906290f63d9ee3a62e2b3e37e28ae58bc2b089efe94c0",
+              "bytes": 217205
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.spef",
+              "sha256": "2831b4582f6affb2312891a52fe346206b6a8666997bef0970aa716ead408fc4",
+              "bytes": 241215
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.def",
+              "sha256": "04f5a37159b11331a4f7098e45993ce22aaae8d710c7b8c1903829da473efad8",
+              "bytes": 487511
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -506.457765,
+            "hold_ps": 315.909437,
+            "tns_ps": -6224.344
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -504.353503,
+            "hold_ps": 314.509807,
+            "tns_ps": -6295.459
+          },
+          "delta_ps": {
+            "setup_ps": 2.104262,
+            "hold_ps": -1.39963,
+            "tns_ps": -71.115
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s641_FF_ctrl.tcl",
+            "sha256": "7c27aee0a7a3c96ba5b274ab85cafbfffbd9c5780dbd7ad55e3976b50a6db76e",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s641_FF_ctrl.log",
+            "sha256": "151570a055c9ca731fd5b0c6f0cc17ef77d2b4dbf9affa71a802903f98fcd3a2",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s641_FF_rec.tcl",
+            "sha256": "d6d456384f528cda06bd828be330ecce4bf9d973294dfd158704b62ff17c9909",
+            "bytes": 568
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s641_FF_rec.log",
+            "sha256": "2020dd2e18d9696be0383dc69e53ec6c71addbfdc6c2ca9c1603334f9a2ee110",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "scratch/iscas89_postroute_verify/s641/CONTROL",
+        "control_files": {
+          "v": {
+            "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.v",
+            "sha256": "43d77338ab5665f0ac2906290f63d9ee3a62e2b3e37e28ae58bc2b089efe94c0",
+            "bytes": 217205
+          },
+          "spef": {
+            "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.spef",
+            "sha256": "2831b4582f6affb2312891a52fe346206b6a8666997bef0970aa716ead408fc4",
+            "bytes": 241215
+          },
+          "def": {
+            "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.def",
+            "sha256": "04f5a37159b11331a4f7098e45993ce22aaae8d710c7b8c1903829da473efad8",
+            "bytes": 487511
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -2105.847718,
+          "hold_ps": -82.559432,
+          "tns_ps": -39162.376
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2100.941199,
+          "hold_ps": -82.921003,
+          "tns_ps": -39233.883
+        },
+        "delta_ps": {
+          "setup_ps": 4.906519,
+          "hold_ps": -0.361571,
+          "tns_ps": -71.507
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s641_ctrl.tcl",
+          "sha256": "7961c680e8dcfc8beadbab76d1d454697738fa3c966c35dbfa5d4d3df7f0a734",
+          "bytes": 918
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s641_ctrl.log",
+          "sha256": "ad1e9fafdca6bef9fb3ce063ce103ec600a72b7ac37cc14e38c3d9fd061dd90e",
+          "bytes": 1078
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s641_faeco.tcl",
+          "sha256": "46ee23de1e729b4c17768c376b924d0cb53bb5964ef2a2a6c7ab5009d88f55fb",
+          "bytes": 930
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s641_faeco.log",
+          "sha256": "84e9b253b9f06af08070eb85e65b1537a667dba6e83bc97c41b7982eac4a2c6e",
+          "bytes": 1086
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 136,
+        "unproven": 0,
+        "taps_projected": 3384,
+        "gold_matching_directories": [
+          "scratch/iscas89_postroute_verify/s641/CONTROL"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "scratch/iscas89_postroute_verify/s641/CONTROL/routed.v",
+            "sha256": "43d77338ab5665f0ac2906290f63d9ee3a62e2b3e37e28ae58bc2b089efe94c0",
+            "bytes": 217205
+          }
+        ],
+        "gold_projected_sha256": "7387e6dfdd9737d692b6892c0b85e25ce075bb44e1a8d78dc163b9a55317ff05",
+        "endpoint_projected_sha256": "623626cd3d2348e6cc715563d71dd9feb74eab420935b76c5c5a59b3067818f6",
+        "receipt": {
+          "path": "scratch/online_ablation/s641_ablation/sec/sec_summary.json",
+          "sha256": "812bdce9e08014a4f075c395c5a1ffbed4dfa34837ce3ab1a5456df806039c3e",
+          "bytes": 742
+        },
+        "log": {
+          "path": "scratch/online_ablation/s641_ablation/sec/proof/sec.log",
+          "sha256": "107e12ec660f53e8c62d09e303a371049eceef438a7f94f8b9fba9c5d957b9d2",
+          "bytes": 92701
+        },
+        "script": {
+          "path": "scratch/online_ablation/s641_ablation/sec/proof/sec.ys",
+          "sha256": "d5728f9aaf8d0774d62a0da3c3de8e2fac6e0b752af252e38e1b902f471c2981",
+          "bytes": 626
+        },
+        "cell_models": {
+          "path": "scratch/online_ablation/s641_ablation/sec/proof/cells.v",
+          "sha256": "b560ea24e0f19b41a4b0aa0831c8d367108a3ec57fc441b45f4ecdf96cd5070e",
+          "bytes": 5244
+        }
+      }
+    },
+    {
+      "endpoint_id": "s713:v22_nominal_positive:RUN_008",
+      "circuit": "s713",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713/routed.v",
+          "sha256": "9cf91dab4559ca632b17db1d4106a0c5851cbb1c4b7fc580f547b204e1dbf6e9",
+          "bytes": 218173
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713/routed.spef",
+          "sha256": "e486247ae825ac303d9e8a37c2f2a178ea30fbb0185dfce7b1699e58a9fa71c2",
+          "bytes": 233820
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713/routed.def",
+          "sha256": "251944a9d46d9e379bcfbaa821a6d349eb434fc2fde96c1e58b4fa64e5477a8f",
+          "bytes": 485380
+        }
+      },
+      "endpoint_directory": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/routed.v",
+          "sha256": "0afee2bf242e24db00b968841f0106f096b7c44e812f01048ca502f872c4fa79",
+          "bytes": 218173
+        },
+        "spef": {
+          "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/routed.spef",
+          "sha256": "f553a9826412b4e338da0c6b03054f7ec7fc6b85ce4efd420b9bb08b02997762",
+          "bytes": 234774
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/flow.tcl",
+        "sha256": "a00adeff562481e20762f7f8dcee2bcda7d1e69d8d77d836296c90dfadb6f013",
+        "bytes": 1905
+      },
+      "flow_log": {
+        "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/flow.log",
+        "sha256": "20e981fde0c4fa166de82cc391bbc4d534c220a1875061e4a63cccd186c3ab37",
+        "bytes": 7010
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/tool_agnostic_iscas89/s713/summary.json",
+          "sha256": "f0f2e8824a27db5064a6b3f56e7ecfd55e10146f486ad06d44c4ae0901664b5f",
+          "bytes": 402
+        },
+        "control_area_um2": 1131.0848,
+        "endpoint_area_um2": 1104.8096,
+        "setup_delta_ps_reported": 0.629,
+        "hold_delta_ps_reported": 3.646,
+        "evaluations": 10,
+        "committed": [
+          "_097_=sky130_fd_sc_hd__a21oi_1",
+          "_117_=sky130_fd_sc_hd__nand2_1",
+          "rebuffer53=sky130_fd_sc_hd__buf_1"
+        ],
+        "reference_source": "scratch/iscas89_postroute_verify/s713/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/propagated.tcl",
+          "sha256": "910055ebd580c1bba302a3b836276ca44ec701777bffde496b5dddd2a402efc9",
+          "bytes": 909
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/tool_agnostic_iscas89/s713/evals/RUN_008/propagated.log",
+          "sha256": "2a62ec42ec2754ec10c4a7f8562e021643febd895eff706a979a78ff5e717deb",
+          "bytes": 349
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1241.43984,
+          "hold_ps": 486.613916,
+          "tns_ps": -18720.0
+        },
+        "area_saved_pct": 2.323009
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "scratch/iscas89_postroute_verify/s713/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.v",
+              "sha256": "6acc196b1bddc0708c9db5cad29fcebe3696c885d0452b9c97ee8fe3edf340ee",
+              "bytes": 218173
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.spef",
+              "sha256": "20eed0ffc754d408abccfbe6dd1dec38bd28bbfb62380b25cbf56bf6cb3b6b47",
+              "bytes": 236945
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.def",
+              "sha256": "d4f9c7ea99fc1217cfb4f0efb23fb995ed67eb7287479469bdc7cc52376bf0fa",
+              "bytes": 487544
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -6995.309221,
+            "hold_ps": 1602.239452,
+            "tns_ps": -105338.86
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -6999.891777,
+            "hold_ps": 1644.070213,
+            "tns_ps": -107511.887
+          },
+          "delta_ps": {
+            "setup_ps": -4.582556,
+            "hold_ps": 41.830761,
+            "tns_ps": -2173.027
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s713_SS_ctrl.tcl",
+            "sha256": "17bd7757c3e9e29331bac9c6cb11f2576005d94e9461fd656349a5bc3a6f1c2f",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s713_SS_ctrl.log",
+            "sha256": "511326de7ffe0e9d89a18c1c090d5d95d98527b6c4d04b35ea8be5eb903f22bf",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s713_SS_rec.tcl",
+            "sha256": "17167a05428a853abf5cbb62fb1ba446f103d0ea9b92423f8ed8c793020ed3b6",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s713_SS_rec.log",
+            "sha256": "f1fa2f04801cba329079b0bd3ab21d38ea6dd8ba36f5fcc11caee58d0bf289fe",
+            "bytes": 308
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "scratch/iscas89_postroute_verify/s713/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.v",
+              "sha256": "6acc196b1bddc0708c9db5cad29fcebe3696c885d0452b9c97ee8fe3edf340ee",
+              "bytes": 218173
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.spef",
+              "sha256": "20eed0ffc754d408abccfbe6dd1dec38bd28bbfb62380b25cbf56bf6cb3b6b47",
+              "bytes": 236945
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.def",
+              "sha256": "d4f9c7ea99fc1217cfb4f0efb23fb995ed67eb7287479469bdc7cc52376bf0fa",
+              "bytes": 487544
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1242.068448,
+            "hold_ps": 482.967666,
+            "tns_ps": -18192.007
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1241.43984,
+            "hold_ps": 486.613916,
+            "tns_ps": -18724.524
+          },
+          "delta_ps": {
+            "setup_ps": 0.628608,
+            "hold_ps": 3.64625,
+            "tns_ps": -532.517
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s713_TT_ctrl.tcl",
+            "sha256": "2ea8231fcb799f60b5f045c688fd93d704a705f5af605592251e32eca9abdc43",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s713_TT_ctrl.log",
+            "sha256": "3e9d820a34dd6e0e2ab376ae1c846adae624f9d8b917ab47a118729d22b8e72b",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s713_TT_rec.tcl",
+            "sha256": "ff71fd1db5ca477a9360b60e41d59fff242bd15a4445f68b6435ec9cc9679add",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s713_TT_rec.log",
+            "sha256": "0ed6542d7c80e9fba8516d54ea0203c135cb61ac0b8f42990a6ba8d69dd2b9eb",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "scratch/iscas89_postroute_verify/s713/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.v",
+              "sha256": "6acc196b1bddc0708c9db5cad29fcebe3696c885d0452b9c97ee8fe3edf340ee",
+              "bytes": 218173
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.spef",
+              "sha256": "20eed0ffc754d408abccfbe6dd1dec38bd28bbfb62380b25cbf56bf6cb3b6b47",
+              "bytes": 236945
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.def",
+              "sha256": "d4f9c7ea99fc1217cfb4f0efb23fb995ed67eb7287479469bdc7cc52376bf0fa",
+              "bytes": 487544
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -580.549608,
+            "hold_ps": 314.948623,
+            "tns_ps": -7863.325
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -580.145321,
+            "hold_ps": 311.004167,
+            "tns_ps": -8166.875
+          },
+          "delta_ps": {
+            "setup_ps": 0.404287,
+            "hold_ps": -3.944456,
+            "tns_ps": -303.55
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s713_FF_ctrl.tcl",
+            "sha256": "41166ae05c281db9dc77f46cefe780ca909fc925b25c9434e865d72f52db4857",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s713_FF_ctrl.log",
+            "sha256": "cc386043395eb64bca2c05d3cdca25f9ccf1d07750a85bc0817f148e5cd49ac6",
+            "bytes": 304
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s713_FF_rec.tcl",
+            "sha256": "f456721a225ffafb9d314cdc9e9f590d0f982ae888b07629a12bf5d267b8d4fa",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s713_FF_rec.log",
+            "sha256": "168e364a5a1840d743e02984d6cd71716eb71b51599de2ad0f26aeb0a0f52db9",
+            "bytes": 308
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "scratch/iscas89_postroute_verify/s713/CONTROL",
+        "control_files": {
+          "v": {
+            "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.v",
+            "sha256": "6acc196b1bddc0708c9db5cad29fcebe3696c885d0452b9c97ee8fe3edf340ee",
+            "bytes": 218173
+          },
+          "spef": {
+            "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.spef",
+            "sha256": "20eed0ffc754d408abccfbe6dd1dec38bd28bbfb62380b25cbf56bf6cb3b6b47",
+            "bytes": 236945
+          },
+          "def": {
+            "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.def",
+            "sha256": "d4f9c7ea99fc1217cfb4f0efb23fb995ed67eb7287479469bdc7cc52376bf0fa",
+            "bytes": 487544
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -2099.986851,
+          "hold_ps": -98.312414,
+          "tns_ps": -43813.843
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2110.134067,
+          "hold_ps": -98.115599,
+          "tns_ps": -45205.791
+        },
+        "delta_ps": {
+          "setup_ps": -10.147216,
+          "hold_ps": 0.196815,
+          "tns_ps": -1391.948
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s713_ctrl.tcl",
+          "sha256": "a6c03e671108de47c5732fd397370ae9db60c2181aa213c1f9329298bf90dea3",
+          "bytes": 918
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s713_ctrl.log",
+          "sha256": "21b261a12a1a2b0521cbedf8c69eb6d0748db33cc2550de7070c97fa15cbc8c8",
+          "bytes": 1080
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s713_faeco.tcl",
+          "sha256": "0504e8f7ddcb43935ffe53d794148924f13619bb700a5f4c1bc5273a87969c91",
+          "bytes": 924
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s713_faeco.log",
+          "sha256": "edc3d28705bf9cbdd7a7c220425c18f9e6c71836c54f8143b9ed3196e407330b",
+          "bytes": 1082
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 134,
+        "unproven": 0,
+        "taps_projected": 3402,
+        "gold_matching_directories": [
+          "scratch/iscas89_postroute_verify/s713/CONTROL"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "scratch/iscas89_postroute_verify/s713/CONTROL/routed.v",
+            "sha256": "6acc196b1bddc0708c9db5cad29fcebe3696c885d0452b9c97ee8fe3edf340ee",
+            "bytes": 218173
+          }
+        ],
+        "gold_projected_sha256": "4e8cc46ecf2bb3aedef10b9d7be02f97ca9d4479a5998e3db3210479141eeb22",
+        "endpoint_projected_sha256": "9f12d8beff3b21f50e8874779db3124f8827085e374307b3a11b94ff77f1548f",
+        "receipt": {
+          "path": "scratch/tool_agnostic_iscas89/s713/sec/sec_summary.json",
+          "sha256": "53cfb47a180ea935aea44d5543a3b384e3c7d58aa1de9698a660db5e22423ede",
+          "bytes": 740
+        },
+        "log": {
+          "path": "scratch/tool_agnostic_iscas89/s713/sec/proof/sec.log",
+          "sha256": "95dffea091109a4b136950967d016bab4edd84c5e181ff26a77519a4f6a2fcb6",
+          "bytes": 92218
+        },
+        "script": {
+          "path": "scratch/tool_agnostic_iscas89/s713/sec/proof/sec.ys",
+          "sha256": "84e5eedec095152870607379c26743f81093246307649aff0a0539fa3f04f10e",
+          "bytes": 614
+        },
+        "cell_models": {
+          "path": "scratch/tool_agnostic_iscas89/s713/sec/proof/cells.v",
+          "sha256": "aac1e4e7f1f2b55cdd9ac4ce9a74e93210a42272fafba3781c506195f8e305cf",
+          "bytes": 5392
+        }
+      }
+    },
+    {
+      "endpoint_id": "s832:v22_nominal_positive:RUN_009",
+      "circuit": "s832",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832/routed.v",
+          "sha256": "0de91d9cdc79deea6f05d038db6583ccf7f06395d31796e23086f0f6e6f85a8e",
+          "bytes": 217579
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832/routed.spef",
+          "sha256": "b802277aafb22eee5cd106cf2324b4b2c7976a0a12d3b78e7b520f765ce5c9e3",
+          "bytes": 286851
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832/routed.def",
+          "sha256": "c327792630d2cefc51a65fd9474dd98074960263d2e8baf221eedeec810bbdb2",
+          "bytes": 510838
+        }
+      },
+      "endpoint_directory": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/routed.v",
+          "sha256": "00028248950603fb54b32213fc90dd49b66ee51ad76e731d48239de5a5bfc91a",
+          "bytes": 217579
+        },
+        "spef": {
+          "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/routed.spef",
+          "sha256": "0bc1c195dac5d554677186f87a94282ac7a2f2ca40c3b762875e6a24ee25566c",
+          "bytes": 295646
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/flow.tcl",
+        "sha256": "e29072b02738fcaa7ecba35e48dc21936cade3dae612257a7b1dbd8f18de345e",
+        "bytes": 1851
+      },
+      "flow_log": {
+        "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/flow.log",
+        "sha256": "32117b0c6500a415b8b6d5519a3eef51bec1f2e49a060f13692f3035413595fe",
+        "bytes": 7012
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/tool_agnostic_iscas89/s832/summary.json",
+          "sha256": "af1b9724a4dd7cbb9b8d7a97d5b0e077f1e696142c8166dc3b843e128295fb79",
+          "bytes": 359
+        },
+        "control_area_um2": 1167.3696,
+        "endpoint_area_um2": 1147.3504,
+        "setup_delta_ps_reported": -4.165,
+        "hold_delta_ps_reported": 2.643,
+        "evaluations": 10,
+        "committed": [
+          "_252_=sky130_fd_sc_hd__nor4b_1",
+          "_147_=sky130_fd_sc_hd__or3_1"
+        ],
+        "reference_source": "scratch/iscas89_postroute_verify/s832/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/propagated.tcl",
+          "sha256": "981304bbee9d4617d10dba1b54eeb19721c23d6e5365083ca7be42f2b09d630e",
+          "bytes": 909
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/tool_agnostic_iscas89/s832/evals/RUN_009/propagated.log",
+          "sha256": "b0200dd2a78c3b014477fa702914731356cdff7d1673295397046f9a4b25fea8",
+          "bytes": 349
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1014.945905,
+          "hold_ps": 727.251703,
+          "tns_ps": -4820.0
+        },
+        "area_saved_pct": 1.714898
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "scratch/iscas89_postroute_verify/s832/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.v",
+              "sha256": "42b83fdfdc8510dd2f041ea87bc48fec793c8fb36822e453c4e88b362cec0a95",
+              "bytes": 217579
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.spef",
+              "sha256": "58d9397619600ea97f9bc2e77731f9bf42e0dc00e9fed5b500b7cfa84d3b67c3",
+              "bytes": 288901
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.def",
+              "sha256": "56a64b27aca6c93f758ded9d939202e32620273db63eb2cc18bcbec91fbe9951",
+              "bytes": 511070
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -6419.233145,
+            "hold_ps": 2421.68019,
+            "tns_ps": -29597.813
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -6379.224704,
+            "hold_ps": 2426.40219,
+            "tns_ps": -29953.093
+          },
+          "delta_ps": {
+            "setup_ps": 40.008441,
+            "hold_ps": 4.722,
+            "tns_ps": -355.28
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s832_SS_ctrl.tcl",
+            "sha256": "a2116b616c6c4d31827ce33dba3a8304060102ff980916cd7f018f99b60c0af0",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s832_SS_ctrl.log",
+            "sha256": "377587501d5d4a83bef8f36fe092162bb95ff3683e441e7abef73e86a50a0cfc",
+            "bytes": 304
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s832_SS_rec.tcl",
+            "sha256": "3c077302716127a41fdc8ef5e2f72b78de05eb6a7f7d69702028332ee87dc0f2",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s832_SS_rec.log",
+            "sha256": "1f5bc3300e102d1861b293c27646f9cb0dcef08820febe2fd9717e8c59fd471c",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "scratch/iscas89_postroute_verify/s832/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.v",
+              "sha256": "42b83fdfdc8510dd2f041ea87bc48fec793c8fb36822e453c4e88b362cec0a95",
+              "bytes": 217579
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.spef",
+              "sha256": "58d9397619600ea97f9bc2e77731f9bf42e0dc00e9fed5b500b7cfa84d3b67c3",
+              "bytes": 288901
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.def",
+              "sha256": "56a64b27aca6c93f758ded9d939202e32620273db63eb2cc18bcbec91fbe9951",
+              "bytes": 511070
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1010.780459,
+            "hold_ps": 724.608928,
+            "tns_ps": -4786.495
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1014.945905,
+            "hold_ps": 727.251703,
+            "tns_ps": -4820.839
+          },
+          "delta_ps": {
+            "setup_ps": -4.165446,
+            "hold_ps": 2.642775,
+            "tns_ps": -34.344
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s832_TT_ctrl.tcl",
+            "sha256": "e2e82d6bd061f759b2bcc1f82efbfc234350bfcb1ad3e3c7cf0bdef1a3a05dcf",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s832_TT_ctrl.log",
+            "sha256": "3641ffdc585ec028685b1b172ab10900329c964e7cdbf550020c62fa67e74837",
+            "bytes": 304
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s832_TT_rec.tcl",
+            "sha256": "f542b6a5e9f58d22992d08c9fd29760438d612792bf2cc2ecfdb9d2be2d3bb9a",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s832_TT_rec.log",
+            "sha256": "495c5fa2cfdb107169c70f10dff6c340306c5f4496ba6b54c546c70f5d275f2b",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "scratch/iscas89_postroute_verify/s832/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.v",
+              "sha256": "42b83fdfdc8510dd2f041ea87bc48fec793c8fb36822e453c4e88b362cec0a95",
+              "bytes": 217579
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.spef",
+              "sha256": "58d9397619600ea97f9bc2e77731f9bf42e0dc00e9fed5b500b7cfa84d3b67c3",
+              "bytes": 288901
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.def",
+              "sha256": "56a64b27aca6c93f758ded9d939202e32620273db63eb2cc18bcbec91fbe9951",
+              "bytes": 511070
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -456.862492,
+            "hold_ps": 473.012962,
+            "tns_ps": -2032.999
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -462.271887,
+            "hold_ps": 475.066431,
+            "tns_ps": -2047.924
+          },
+          "delta_ps": {
+            "setup_ps": -5.409395,
+            "hold_ps": 2.053469,
+            "tns_ps": -14.925
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s832_FF_ctrl.tcl",
+            "sha256": "51be3a78bb2fd2612d380bc029b082c07db715227677b5d23741c570b0c73877",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s832_FF_ctrl.log",
+            "sha256": "5b9b2a98d7ca5d74478db246cc2ac68208e4c5acd826ae58cad42f63221ec5b0",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s832_FF_rec.tcl",
+            "sha256": "f4da0ce7e28a352fc50a518c8d8d388f8b5a2e6c9c464ccd7e4e91f25c5cf378",
+            "bytes": 562
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s832_FF_rec.log",
+            "sha256": "a7ceccb173fdd7e837aaa9641fd824577dcfc9c4d1672ccebb7384afab82f4e0",
+            "bytes": 307
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "scratch/iscas89_postroute_verify/s832/CONTROL",
+        "control_files": {
+          "v": {
+            "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.v",
+            "sha256": "42b83fdfdc8510dd2f041ea87bc48fec793c8fb36822e453c4e88b362cec0a95",
+            "bytes": 217579
+          },
+          "spef": {
+            "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.spef",
+            "sha256": "58d9397619600ea97f9bc2e77731f9bf42e0dc00e9fed5b500b7cfa84d3b67c3",
+            "bytes": 288901
+          },
+          "def": {
+            "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.def",
+            "sha256": "56a64b27aca6c93f758ded9d939202e32620273db63eb2cc18bcbec91fbe9951",
+            "bytes": 511070
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -1712.616493,
+          "hold_ps": -74.679957,
+          "tns_ps": -27702.375
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1729.820509,
+          "hold_ps": -74.523956,
+          "tns_ps": -27756.065
+        },
+        "delta_ps": {
+          "setup_ps": -17.204016,
+          "hold_ps": 0.156001,
+          "tns_ps": -53.69
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s832_ctrl.tcl",
+          "sha256": "51ab79568606f072a13aff428a9a2eedc07ee1e77be9c35c90237cd0861e096b",
+          "bytes": 918
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s832_ctrl.log",
+          "sha256": "0cc10920ea3bfd4b433f154dc42684d5604ef510f5c52b24a04924df85eeea3a",
+          "bytes": 1079
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s832_faeco.tcl",
+          "sha256": "09eced95458e8ab9e5a849eb5d292bd9d7783096ec98300a367e011dc5b15cb9",
+          "bytes": 924
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s832_faeco.log",
+          "sha256": "87d4d9f94196b138e9c38b69354489927b1a694f668ff985da4400bcbd5a1a49",
+          "bytes": 1083
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 162,
+        "unproven": 0,
+        "taps_projected": 3348,
+        "gold_matching_directories": [
+          "scratch/iscas89_postroute_verify/s832/CONTROL"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "scratch/iscas89_postroute_verify/s832/CONTROL/routed.v",
+            "sha256": "42b83fdfdc8510dd2f041ea87bc48fec793c8fb36822e453c4e88b362cec0a95",
+            "bytes": 217579
+          }
+        ],
+        "gold_projected_sha256": "886fb9d44db2e54e0c24198fc97c7216d817e043a0da160c67123e1c3559550a",
+        "endpoint_projected_sha256": "d482a8473f706c4b25f5263913992847d86e32b53949477476eb14ee8a79b632",
+        "receipt": {
+          "path": "scratch/tool_agnostic_iscas89/s832/sec/sec_summary.json",
+          "sha256": "81f8a8b8b10631c03dc1c80d0be4eb9e8362c03c23705452fd6dedc20a8ec7b4",
+          "bytes": 725
+        },
+        "log": {
+          "path": "scratch/tool_agnostic_iscas89/s832/sec/proof/sec.log",
+          "sha256": "f281ee8a7944fcb415264e0a77917682cd671930711b843e3c61038d97d383ee",
+          "bytes": 117865
+        },
+        "script": {
+          "path": "scratch/tool_agnostic_iscas89/s832/sec/proof/sec.ys",
+          "sha256": "f47bdb3d02c4a08352aae189cdbb56afdbf6e80c6e4e8b5cafdccdffc4785404",
+          "bytes": 614
+        },
+        "cell_models": {
+          "path": "scratch/tool_agnostic_iscas89/s832/sec/proof/cells.v",
+          "sha256": "553c70696d2391c48a0790602552d5b0193f332626dfbaed2f7ffb36e3edb2f7",
+          "bytes": 6290
+        }
+      }
+    },
+    {
+      "endpoint_id": "s953:v22_nominal_positive:RUN_001",
+      "circuit": "s953",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s953",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s953/routed.v",
+          "sha256": "7bef9e7f5a06954016d2be4fc7f59a5dcb92f1c0b90c2239ee008858a46423bd",
+          "bytes": 421380
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s953/routed.spef",
+          "sha256": "ceebeac53238636969fda8c4ae56e84465d7fc4d2bbb73838ead69da2b4983a0",
+          "bytes": 516153
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s953/routed.def",
+          "sha256": "2f332fab187b830cc0bb606633cc87551935f354be510fe5f9a6b7d5991a8780",
+          "bytes": 962838
+        }
+      },
+      "endpoint_directory": "scratch/online_ablation/s953_ablation/evals/RUN_001",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/routed.v",
+          "sha256": "9d87158747c6dd80b56175ede6c903c55a64dfe8d1c3912892cf03d8470e13e1",
+          "bytes": 421379
+        },
+        "spef": {
+          "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/routed.spef",
+          "sha256": "134aa81d15f03f87b2829eae11140bc83d241245a0645a200ca72911b36b2fc4",
+          "bytes": 520968
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/flow.tcl",
+        "sha256": "4dd07a3be4b9220e154c7849f28d6e6842e09289715b5a30a1d9484be314fc0e",
+        "bytes": 1816
+      },
+      "flow_log": {
+        "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/flow.log",
+        "sha256": "409cb77284b6e789e8fa27fefc9afe25fae2c364e4441c95bcc0abf067b7aad3",
+        "bytes": 7077
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/online_ablation/s953_ablation/ablation_summary.json",
+          "sha256": "14cce7cb86f9aa047d996ccb109a855579709ea02f072ab9fb5bc62e07e00ae5",
+          "bytes": 4736
+        },
+        "control_area_um2": 2433.584,
+        "endpoint_area_um2": 2417.3184,
+        "setup_delta_ps_reported": -9.88,
+        "hold_delta_ps_reported": 2.988,
+        "evaluations": 6,
+        "committed": [
+          "rebuffer13=sky130_fd_sc_hd__buf_1"
+        ],
+        "reference_source": "scratch/iscas89_postroute_verify/s953/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/propagated.tcl",
+          "sha256": "cb7777a08b68a692c8e4368bff1a2cffdc158d0026fb202c0cac56f840c4fbb5",
+          "bytes": 915
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/online_ablation/s953_ablation/evals/RUN_001/propagated.log",
+          "sha256": "f6caf28feaeae50bf847dd77c0651dc37a6fb3d5aca2041b2d2c86a1611c6e58",
+          "bytes": 353
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1321.163623,
+          "hold_ps": 690.928426,
+          "tns_ps": -29040.0
+        },
+        "area_saved_pct": 0.66838
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "scratch/iscas89_postroute_verify/s953/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.v",
+              "sha256": "f9053040a3e035666242c5878b02ae384bb9e9d351a0e9015eabc5b02b4b7daf",
+              "bytes": 421380
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.spef",
+              "sha256": "7cb5889dbf57cc612862d879c901f7d485d960f442731003f7eb5b1971931ad7",
+              "bytes": 524853
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.def",
+              "sha256": "cf6426163d0409277cdb2d320a3bcc03381cfa56c6ea083bbb68fd9da6493023",
+              "bytes": 963377
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -7783.392597,
+            "hold_ps": 2356.126849,
+            "tns_ps": -165168.411
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -7692.933401,
+            "hold_ps": 2363.915508,
+            "tns_ps": -167301.025
+          },
+          "delta_ps": {
+            "setup_ps": 90.459196,
+            "hold_ps": 7.788659,
+            "tns_ps": -2132.614
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s953_SS_ctrl.tcl",
+            "sha256": "db22a73ac0af2256bc7553e82c35f6bf992a0adcc988bda0c2c075eb5a3551fa",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s953_SS_ctrl.log",
+            "sha256": "a07fdb4e1a3a39a5c16161d729f133c55e8892bbafc8b6c744b90682eb0bb9eb",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s953_SS_rec.tcl",
+            "sha256": "671ffaed81c92255aec782eb0c0ebdb716e9e895a6f3421b5b8f74d16d6830ff",
+            "bytes": 568
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s953_SS_rec.log",
+            "sha256": "9c051934ed2a9d5e6d9a6ef09d1623a3085f390319caaba6977557ef5f654c0e",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "scratch/iscas89_postroute_verify/s953/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.v",
+              "sha256": "f9053040a3e035666242c5878b02ae384bb9e9d351a0e9015eabc5b02b4b7daf",
+              "bytes": 421380
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.spef",
+              "sha256": "7cb5889dbf57cc612862d879c901f7d485d960f442731003f7eb5b1971931ad7",
+              "bytes": 524853
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.def",
+              "sha256": "cf6426163d0409277cdb2d320a3bcc03381cfa56c6ea083bbb68fd9da6493023",
+              "bytes": 963377
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1311.284081,
+            "hold_ps": 687.940038,
+            "tns_ps": -28139.729
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1321.163623,
+            "hold_ps": 690.928426,
+            "tns_ps": -29041.756
+          },
+          "delta_ps": {
+            "setup_ps": -9.879542,
+            "hold_ps": 2.988388,
+            "tns_ps": -902.027
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s953_TT_ctrl.tcl",
+            "sha256": "659db5b49e14a074a648af7f4ae2a2d688f177731d66e0cef7957e6a8b5a1e0b",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s953_TT_ctrl.log",
+            "sha256": "eba9c1d83dcdc1579f6d16d44136225399a9cd7e44f77096bb2d8695cd8a3825",
+            "bytes": 303
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s953_TT_rec.tcl",
+            "sha256": "afe16c9d3728bf08074d6a07d6beaeee86a09885eb76daf5670627bedb14ecf6",
+            "bytes": 568
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s953_TT_rec.log",
+            "sha256": "6f13f5c04bd835b8202c2697939ba26c777340e68b813f95fca878a3ad468d35",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "scratch/iscas89_postroute_verify/s953/CONTROL",
+          "control_files": {
+            "v": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.v",
+              "sha256": "f9053040a3e035666242c5878b02ae384bb9e9d351a0e9015eabc5b02b4b7daf",
+              "bytes": 421380
+            },
+            "spef": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.spef",
+              "sha256": "7cb5889dbf57cc612862d879c901f7d485d960f442731003f7eb5b1971931ad7",
+              "bytes": 524853
+            },
+            "def": {
+              "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.def",
+              "sha256": "cf6426163d0409277cdb2d320a3bcc03381cfa56c6ea083bbb68fd9da6493023",
+              "bytes": 963377
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -628.54344,
+            "hold_ps": 436.523762,
+            "tns_ps": -12688.004
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -626.233232,
+            "hold_ps": 438.561631,
+            "tns_ps": -13261.421
+          },
+          "delta_ps": {
+            "setup_ps": 2.310208,
+            "hold_ps": 2.037869,
+            "tns_ps": -573.417
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s953_FF_ctrl.tcl",
+            "sha256": "1cd41dbbcdcbef59d0eee99a1f34f0a1de902706ff9ffa9c8d1fe31ab5964efc",
+            "bytes": 556
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/s953_FF_ctrl.log",
+            "sha256": "06a8e19e4fa46f5a2781eb3bb2bc5470082330a0dbf063d2b1b832365b4fc8af",
+            "bytes": 305
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/s953_FF_rec.tcl",
+            "sha256": "aa8af20b83e4bb3cf575a6f09dfff3179fdc917fba06611d9cafa5674ebf2108",
+            "bytes": 568
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/s953_FF_rec.log",
+            "sha256": "e02832e3412555fbf65472783ce47b209fb03a3e381132ca46c427751d4a4293",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "scratch/iscas89_postroute_verify/s953/CONTROL",
+        "control_files": {
+          "v": {
+            "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.v",
+            "sha256": "f9053040a3e035666242c5878b02ae384bb9e9d351a0e9015eabc5b02b4b7daf",
+            "bytes": 421380
+          },
+          "spef": {
+            "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.spef",
+            "sha256": "7cb5889dbf57cc612862d879c901f7d485d960f442731003f7eb5b1971931ad7",
+            "bytes": 524853
+          },
+          "def": {
+            "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.def",
+            "sha256": "cf6426163d0409277cdb2d320a3bcc03381cfa56c6ea083bbb68fd9da6493023",
+            "bytes": 963377
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -1514.207426,
+          "hold_ps": -118.624888,
+          "tns_ps": -39134.045
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1521.314963,
+          "hold_ps": -119.651816,
+          "tns_ps": -40197.262
+        },
+        "delta_ps": {
+          "setup_ps": -7.107537,
+          "hold_ps": -1.026928,
+          "tns_ps": -1063.217
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s953_ctrl.tcl",
+          "sha256": "b1edd062a25285c76d73d22d124ee920522de7c4d9c9f1d655b18904fa862db5",
+          "bytes": 918
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s953_ctrl.log",
+          "sha256": "bf0e7841acd276b9cdb7bc4d80df1a5f6e4133e33b5f9d06d14749810881e7aa",
+          "bytes": 1080
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/s953_faeco.tcl",
+          "sha256": "5ecbb73df2a75c3bfd5de663f5ae7518505db7262c89317f8cb1e26a8c0759ae",
+          "bytes": 930
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/s953_faeco.log",
+          "sha256": "489d9cd633c38a58d5cd014e83e09a902a400e3c886c5136965fb0a5b7274b6a",
+          "bytes": 1087
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 271,
+        "unproven": 0,
+        "taps_projected": 6500,
+        "gold_matching_directories": [
+          "scratch/iscas89_postroute_verify/s953/CONTROL"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "scratch/iscas89_postroute_verify/s953/CONTROL/routed.v",
+            "sha256": "f9053040a3e035666242c5878b02ae384bb9e9d351a0e9015eabc5b02b4b7daf",
+            "bytes": 421380
+          }
+        ],
+        "gold_projected_sha256": "bbbd30c53912b3bb73143ceb838ba9b60cdb5fc32a46e52709a281bd8bef7fe8",
+        "endpoint_projected_sha256": "d8f6f5b5fd5a0939006758309bcc8d7d4d1407a46bbfdd7e404356072936e29f",
+        "receipt": {
+          "path": "scratch/online_ablation/s953_ablation/sec/sec_summary.json",
+          "sha256": "54e75955638971115f9187cdca87c999d174d9d6be52a7528b24049bda3b26f0",
+          "bytes": 742
+        },
+        "log": {
+          "path": "scratch/online_ablation/s953_ablation/sec/proof/sec.log",
+          "sha256": "5f1b162241f7fe9af72f9ddccc76d0ca31a7c7bb4263154016b02cc4539d0609",
+          "bytes": 183061
+        },
+        "script": {
+          "path": "scratch/online_ablation/s953_ablation/sec/proof/sec.ys",
+          "sha256": "63d952a500d482c1f960523858b8b9c22f230aa0cf6ea253ad56f1a416802e10",
+          "bytes": 626
+        },
+        "cell_models": {
+          "path": "scratch/online_ablation/s953_ablation/sec/proof/cells.v",
+          "sha256": "e72fb5b1458b191926183d57d0a7f2cc157fbcbc31bddfb473381ac7363a7d58",
+          "bytes": 9057
+        }
+      }
+    },
+    {
+      "endpoint_id": "b04:v22_nominal_positive:RUN_006",
+      "circuit": "b04",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b04",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.v",
+          "sha256": "447b67b6a93216e690cc72414d9661931602b1569b1ee791ad58ce85114bb46a",
+          "bytes": 700626
+        },
+        "spef": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.spef",
+          "sha256": "c50538a3e82a2e925d654ec856e0a2803077b7b076dfc40543bdc8eb5cb99427",
+          "bytes": 706687
+        },
+        "def": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.def",
+          "sha256": "74ce34b213d7a1146257528146d368cfdd53ad61935f56db6f9e9e756cdea1be",
+          "bytes": 1474632
+        }
+      },
+      "endpoint_directory": "scratch/tool_agnostic_itc99/b04/evals/RUN_006",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/routed.v",
+          "sha256": "760c0c626f8413d967bf2889d7bbc0456660699351b087ba8f17f90868f2bc2b",
+          "bytes": 700625
+        },
+        "spef": {
+          "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/routed.spef",
+          "sha256": "73854232c5c9e44fc010ee6178115dc672c9bb620b7d60d440910085aabd9fe9",
+          "bytes": 728025
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/flow.tcl",
+        "sha256": "5d1e5f54eefbebc1fe9ab9bb80dc41d29be361546b688f344fb7051f607eee18",
+        "bytes": 1836
+      },
+      "flow_log": {
+        "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/flow.log",
+        "sha256": "23dc11a8b9ea774b76abfc7f7627df32ada7ac65dc99c272a3ca62cd9dba1f75",
+        "bytes": 7014
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/tool_agnostic_itc99/b04/summary.json",
+          "sha256": "a3e3beec66b1c9d1697242d50acc7c0e705abb6ebde9729344467bcec26fd2cb",
+          "bytes": 344
+        },
+        "control_area_um2": 4078.912,
+        "endpoint_area_um2": 4043.8784,
+        "setup_delta_ps_reported": 2.473,
+        "hold_delta_ps_reported": 0.093,
+        "evaluations": 6,
+        "committed": [
+          "_3688_=sky130_fd_sc_hd__xnor2_1",
+          "rebuffer50=sky130_fd_sc_hd__buf_1"
+        ],
+        "reference_source": "scratch/itc99_postroute_verify/b04/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/propagated.tcl",
+          "sha256": "857554ba8d6b14334212ab9ad25c669f5d8815d3615940d111032bce548535be",
+          "bytes": 902
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/tool_agnostic_itc99/b04/evals/RUN_006/propagated.log",
+          "sha256": "1cbbfa9167f40809d38641aa5cc021499abc6e9bdc1442d924dfe0c475bc9267",
+          "bytes": 345
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2609.92139,
+          "hold_ps": 445.436188,
+          "tns_ps": -79930.0
+        },
+        "area_saved_pct": 0.858896
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b04",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.v",
+              "sha256": "447b67b6a93216e690cc72414d9661931602b1569b1ee791ad58ce85114bb46a",
+              "bytes": 700626
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.spef",
+              "sha256": "c50538a3e82a2e925d654ec856e0a2803077b7b076dfc40543bdc8eb5cb99427",
+              "bytes": 706687
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.def",
+              "sha256": "74ce34b213d7a1146257528146d368cfdd53ad61935f56db6f9e9e756cdea1be",
+              "bytes": 1474632
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -13895.267159,
+            "hold_ps": 1484.642964,
+            "tns_ps": -421779.144
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -13841.844115,
+            "hold_ps": 1484.513179,
+            "tns_ps": -431016.113
+          },
+          "delta_ps": {
+            "setup_ps": 53.423044,
+            "hold_ps": -0.129785,
+            "tns_ps": -9236.969
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b04_SS_ctrl.tcl",
+            "sha256": "0b2db1d94032f55bad44a96c4c01db071b89dd340a646f7ebf5980f9d8e059bb",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/b04_SS_ctrl.log",
+            "sha256": "98e353b83d1c08415786b3c38357828c34d767de175bd8e81b556682f0dfb9fc",
+            "bytes": 312
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b04_SS_rec.tcl",
+            "sha256": "57566e70821327c0801c823af231333ed8496bc1ee75cbc2cc94d08417e40d81",
+            "bytes": 555
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/b04_SS_rec.log",
+            "sha256": "ed4cb64bed0ab978314ba391d5d77dfae1609069047a6ccb95218e814082d39a",
+            "bytes": 306
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b04",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.v",
+              "sha256": "447b67b6a93216e690cc72414d9661931602b1569b1ee791ad58ce85114bb46a",
+              "bytes": 700626
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.spef",
+              "sha256": "c50538a3e82a2e925d654ec856e0a2803077b7b076dfc40543bdc8eb5cb99427",
+              "bytes": 706687
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.def",
+              "sha256": "74ce34b213d7a1146257528146d368cfdd53ad61935f56db6f9e9e756cdea1be",
+              "bytes": 1474632
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -2615.232697,
+            "hold_ps": 445.366188,
+            "tns_ps": -77689.201
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -2609.92139,
+            "hold_ps": 445.436188,
+            "tns_ps": -79927.223
+          },
+          "delta_ps": {
+            "setup_ps": 5.311307,
+            "hold_ps": 0.07,
+            "tns_ps": -2238.022
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b04_TT_ctrl.tcl",
+            "sha256": "97523ff9c7ad01dc87a4cf635e1fc14733ce94d134b6234b15be4f8124ee3355",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/b04_TT_ctrl.log",
+            "sha256": "26314ae9e9522b181ef09d74cf4f74148f42ea9fa56831fdc87fa1009d100332",
+            "bytes": 313
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b04_TT_rec.tcl",
+            "sha256": "830747ea5482b18bab6be76242895bb5554531900871f0c742cc39b1ff1f717b",
+            "bytes": 555
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/b04_TT_rec.log",
+            "sha256": "4ce80136eb9342a9df5657b5e97714d7b3d29d9488d6e92a7bb568e31c2d2659",
+            "bytes": 303
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b04",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.v",
+              "sha256": "447b67b6a93216e690cc72414d9661931602b1569b1ee791ad58ce85114bb46a",
+              "bytes": 700626
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.spef",
+              "sha256": "c50538a3e82a2e925d654ec856e0a2803077b7b076dfc40543bdc8eb5cb99427",
+              "bytes": 706687
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.def",
+              "sha256": "74ce34b213d7a1146257528146d368cfdd53ad61935f56db6f9e9e756cdea1be",
+              "bytes": 1474632
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1320.290988,
+            "hold_ps": 279.937601,
+            "tns_ps": -35416.149
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1316.881715,
+            "hold_ps": 279.835544,
+            "tns_ps": -36831.116
+          },
+          "delta_ps": {
+            "setup_ps": 3.409273,
+            "hold_ps": -0.102057,
+            "tns_ps": -1414.967
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b04_FF_ctrl.tcl",
+            "sha256": "17f6d31dbdef564be498b233d02da4d6115f7ec5e318ca7bfc823ac3c2e7e8f7",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/b04_FF_ctrl.log",
+            "sha256": "f61309018c088a712f2df2abb29643a94c476d53696b119be6518d2fc8ad310a",
+            "bytes": 313
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b04_FF_rec.tcl",
+            "sha256": "a2bd642981c8c931cd03929db906a0db937c8b0f11e011b46cfeeb25ace9c38b",
+            "bytes": 555
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/b04_FF_rec.log",
+            "sha256": "92cbc36f72b9a5f38abc6b930f9c98b9ab487eb3ed2a739599232543a03e0291",
+            "bytes": 306
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b04",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.v",
+            "sha256": "447b67b6a93216e690cc72414d9661931602b1569b1ee791ad58ce85114bb46a",
+            "bytes": 700626
+          },
+          "spef": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.spef",
+            "sha256": "c50538a3e82a2e925d654ec856e0a2803077b7b076dfc40543bdc8eb5cb99427",
+            "bytes": 706687
+          },
+          "def": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b04/routed.def",
+            "sha256": "74ce34b213d7a1146257528146d368cfdd53ad61935f56db6f9e9e756cdea1be",
+            "bytes": 1474632
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -2947.444289,
+          "hold_ps": -123.292668,
+          "tns_ps": -92844.2
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2941.483723,
+          "hold_ps": -120.095642,
+          "tns_ps": -95309.937
+        },
+        "delta_ps": {
+          "setup_ps": 5.960566,
+          "hold_ps": 3.197026,
+          "tns_ps": -2465.737
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b04_ctrl.tcl",
+          "sha256": "ecd9e826b6ceadc0fb74a621851cf84cce1eacf634b50ba0350347bc3f4be1f2",
+          "bytes": 931
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b04_ctrl.log",
+          "sha256": "6bef55802cfb60464a3b1922bc970200b6a51722fcaf082ebe7b24dd83e99cee",
+          "bytes": 1088
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b04_faeco.tcl",
+          "sha256": "b35891ffee97ff9df4e6b1293733d24dfbd0265e0b4a0ed6906e062ffb202b68",
+          "bytes": 917
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b04_faeco.log",
+          "sha256": "147ac56ce9d686419d603dffd6516ec3793224d22352949e2f147a5201eb51d2",
+          "bytes": 1080
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 357,
+        "unproven": 0,
+        "taps_projected": 10887,
+        "gold_matching_directories": [
+          "scratch/itc99_postroute_verify/b04/CONTROL"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "scratch/itc99_postroute_verify/b04/CONTROL/routed.v",
+            "sha256": "a59173c005f6c4abd5bf539d5b95ca51afb2c1cc27c4034e054a207d745847d8",
+            "bytes": 700626
+          }
+        ],
+        "gold_projected_sha256": "7a856ddba6f0ef07a4cc9f4985a5544735af3b7a9c4e75b44c2ee64ff8340063",
+        "endpoint_projected_sha256": "14af20a61de3830435cca6fc65b1b8986dc04b51bc9d43cb1a7e12b4eb89a24b",
+        "receipt": {
+          "path": "scratch/tool_agnostic_itc99/b04/sec/sec_summary.json",
+          "sha256": "87807a3032556d51f99e20f8f6595626b7fc4cfdd4e4d6c016d95f1f24816b3b",
+          "bytes": 735
+        },
+        "log": {
+          "path": "scratch/tool_agnostic_itc99/b04/sec/proof/sec.log",
+          "sha256": "e5b63a07b611a8ae30f229c3c0610cac70b525b5f44d8fac0578b2b9814d3eda",
+          "bytes": 252300
+        },
+        "script": {
+          "path": "scratch/tool_agnostic_itc99/b04/sec/proof/sec.ys",
+          "sha256": "d5aa162663f389eb240d79efdedec1a7c80d311cf9e92b12b30505daae066d47",
+          "bytes": 600
+        },
+        "cell_models": {
+          "path": "scratch/tool_agnostic_itc99/b04/sec/proof/cells.v",
+          "sha256": "65ccbc2d730369d59ed505ed5fca3b1f8c6bdb808f9d38623ba4cdb06586919d",
+          "bytes": 7788
+        }
+      }
+    },
+    {
+      "endpoint_id": "b05:v22_nominal_positive:RUN_005",
+      "circuit": "b05",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b05",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.v",
+          "sha256": "b99554802047a361fdb95280d9208fdf86e240cfa66a6f48c6fea79c60b6838b",
+          "bytes": 618953
+        },
+        "spef": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.spef",
+          "sha256": "c00159c3c2057d544310e6c6a36dd37d533416afe52ff2cdec7c1597bd2a5eea",
+          "bytes": 681915
+        },
+        "def": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.def",
+          "sha256": "047cbed440936989e78ac22faebb37b7fb2ccd01b0bc87d816cc966943eac5bb",
+          "bytes": 1346799
+        }
+      },
+      "endpoint_directory": "scratch/universal_batch_recovery/b05/evals/RUN_005",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/routed.v",
+          "sha256": "5540919910494b8b53bfd133a24b27c747194d45821e8cadfbc096c7fa5201c7",
+          "bytes": 618950
+        },
+        "spef": {
+          "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/routed.spef",
+          "sha256": "7d9ce5a1691a84919315c33e7acf0065a590884ed795cc2ee37141ea49f799b3",
+          "bytes": 700849
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/flow.tcl",
+        "sha256": "a4eb0ff4a54cc772b7e134f6c6b3402786165e965d744d9190019ed3792f94ea",
+        "bytes": 2157
+      },
+      "flow_log": {
+        "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/flow.log",
+        "sha256": "bf4755bee52a675805cd7fd91953b7a774bdc9e65d65213ca505e905fc574e0b",
+        "bytes": 7100
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/universal_batch_recovery/b05/summary.json",
+          "sha256": "bdbc1155bc49319d2064e16933efec23265a7eccf2dfbb159233163907e2185a",
+          "bytes": 857
+        },
+        "control_area_um2": 3424.5344,
+        "endpoint_area_um2": 3305.6704,
+        "setup_delta_ps_reported": 7.43,
+        "hold_delta_ps_reported": 2.015,
+        "evaluations": 8,
+        "committed": [
+          "_6006_=sky130_fd_sc_hd__o2111ai_1",
+          "rebuffer398=sky130_fd_sc_hd__buf_1",
+          "rebuffer50=sky130_fd_sc_hd__buf_1",
+          "split117=sky130_fd_sc_hd__buf_1",
+          "_5920_=sky130_fd_sc_hd__nor4bb_1",
+          "_5982_=sky130_fd_sc_hd__o31ai_1",
+          "_5777_=sky130_fd_sc_hd__nand3_1",
+          "_5778_=sky130_fd_sc_hd__o21ai_0"
+        ],
+        "reference_source": "scratch/itc99_postroute_verify/b05/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/propagated.tcl",
+          "sha256": "a69cfefe9cbb2573c03de0d13f69a247eba3982997fc9795192f51c1f4182a5b",
+          "bytes": 912
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/universal_batch_recovery/b05/evals/RUN_005/propagated.log",
+          "sha256": "1ec854d89a9f84e27756517901618dcf26659d43f2ea1ff8ab9999b3d314b695",
+          "bytes": 352
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -3562.933504,
+          "hold_ps": 470.984141,
+          "tns_ps": -75690.0
+        },
+        "area_saved_pct": 3.470954
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b05",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.v",
+              "sha256": "b99554802047a361fdb95280d9208fdf86e240cfa66a6f48c6fea79c60b6838b",
+              "bytes": 618953
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.spef",
+              "sha256": "c00159c3c2057d544310e6c6a36dd37d533416afe52ff2cdec7c1597bd2a5eea",
+              "bytes": 681915
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.def",
+              "sha256": "047cbed440936989e78ac22faebb37b7fb2ccd01b0bc87d816cc966943eac5bb",
+              "bytes": 1346799
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -17523.108298,
+            "hold_ps": 1526.668902,
+            "tns_ps": -353253.967
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -17502.28229,
+            "hold_ps": 1524.342319,
+            "tns_ps": -375781.586
+          },
+          "delta_ps": {
+            "setup_ps": 20.826008,
+            "hold_ps": -2.326583,
+            "tns_ps": -22527.619
+          },
+          "control_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b05/ctrl_SS.tcl",
+            "sha256": "714a8fa813263c18fa8a7709cc2e96eb8980d15483760565b3ac12e7aa707162",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/universal_batch_recovery/b05/ctrl_SS.log",
+            "sha256": "ecd9296c68e320385522468ea42722b29aee0f61d2845d885142ebc65dced68c",
+            "bytes": 312
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b05/rec_SS.tcl",
+            "sha256": "796516fefc782de06bb108d11ed0b4ef09999f4d50026d486ca8442867958763",
+            "bytes": 565
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/universal_batch_recovery/b05/rec_SS.log",
+            "sha256": "aa3dc1c48d888740a6a2e905fef904c8f67bb3c0b6fb3ae6b01fba662d0a863c",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b05",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.v",
+              "sha256": "b99554802047a361fdb95280d9208fdf86e240cfa66a6f48c6fea79c60b6838b",
+              "bytes": 618953
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.spef",
+              "sha256": "c00159c3c2057d544310e6c6a36dd37d533416afe52ff2cdec7c1597bd2a5eea",
+              "bytes": 681915
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.def",
+              "sha256": "047cbed440936989e78ac22faebb37b7fb2ccd01b0bc87d816cc966943eac5bb",
+              "bytes": 1346799
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -3569.639695,
+            "hold_ps": 469.089712,
+            "tns_ps": -70910.255
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -3562.933504,
+            "hold_ps": 470.984141,
+            "tns_ps": -75688.782
+          },
+          "delta_ps": {
+            "setup_ps": 6.706191,
+            "hold_ps": 1.894429,
+            "tns_ps": -4778.527
+          },
+          "control_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b05/ctrl_TT.tcl",
+            "sha256": "e3333beca7c68958abaa63309b4417f3daa5f213b85cfefd556aa22003af56c7",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/universal_batch_recovery/b05/ctrl_TT.log",
+            "sha256": "a0ecd637b5317fd160d4c9d81c5309776dfb2f16c4139f73c499cecb728aa1d9",
+            "bytes": 311
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b05/rec_TT.tcl",
+            "sha256": "30ef279117f7195c6869645dcee551016084ba16f9a3b277ff8eb9a46a7b71a8",
+            "bytes": 565
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/universal_batch_recovery/b05/rec_TT.log",
+            "sha256": "86f91b7944adc3b63406b5fc00dc2deb52de7b59ccefc3aaff98ecad53799097",
+            "bytes": 310
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b05",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.v",
+              "sha256": "b99554802047a361fdb95280d9208fdf86e240cfa66a6f48c6fea79c60b6838b",
+              "bytes": 618953
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.spef",
+              "sha256": "c00159c3c2057d544310e6c6a36dd37d533416afe52ff2cdec7c1597bd2a5eea",
+              "bytes": 681915
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.def",
+              "sha256": "047cbed440936989e78ac22faebb37b7fb2ccd01b0bc87d816cc966943eac5bb",
+              "bytes": 1346799
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -2017.281897,
+            "hold_ps": 295.580005,
+            "tns_ps": -37345.192
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -2013.503142,
+            "hold_ps": 294.197083,
+            "tns_ps": -39936.478
+          },
+          "delta_ps": {
+            "setup_ps": 3.778755,
+            "hold_ps": -1.382922,
+            "tns_ps": -2591.286
+          },
+          "control_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b05/ctrl_FF.tcl",
+            "sha256": "de0198c9807588012f828d88aa6882eded5e2ac03d12e7aed40938c62220872b",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/universal_batch_recovery/b05/ctrl_FF.log",
+            "sha256": "46f219cd88cedde68cbf60b3baeeed2e3853d5845682b0dc2bbe3dac497ca13f",
+            "bytes": 312
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b05/rec_FF.tcl",
+            "sha256": "57e02e822958a6ae0826e5f8390fe25d1b3afebaf4d8c98ba7ab5e01ca23a9b7",
+            "bytes": 565
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/universal_batch_recovery/b05/rec_FF.log",
+            "sha256": "6722d08d5234b588d6696ada82d3ef7066a90c7f0c3290772fc931d1a21d3b18",
+            "bytes": 309
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "scratch/itc99_postroute_verify/b05/CONTROL",
+        "control_files": {
+          "v": {
+            "path": "scratch/itc99_postroute_verify/b05/CONTROL/routed.v",
+            "sha256": "e996cd1556c3a17fd781c2d15c5802794b9bf845896cfa9e467c2b430ab79719",
+            "bytes": 618953
+          },
+          "spef": {
+            "path": "scratch/itc99_postroute_verify/b05/CONTROL/routed.spef",
+            "sha256": "c7159488b71b7f7fa2f316f161ef04511de5c67fc3243d9a58e7bfea81331cd2",
+            "bytes": 701755
+          },
+          "def": {
+            "path": "scratch/itc99_postroute_verify/b05/CONTROL/routed.def",
+            "sha256": "41ffb91c718c2bcc7dcdf179cb8b44794cf0abde3f4e4d2bc463ba961d784321",
+            "bytes": 1347512
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -3990.633601,
+          "hold_ps": -41.33674,
+          "tns_ps": -156076.447
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -3986.799335,
+          "hold_ps": -38.50735,
+          "tns_ps": -161077.713
+        },
+        "delta_ps": {
+          "setup_ps": 3.834266,
+          "hold_ps": 2.82939,
+          "tns_ps": -5001.266
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b05_ctrl.tcl",
+          "sha256": "c33315935e6d25d9eaefaf5adbd909a22da79b67b3024928139389f883e5b2e1",
+          "bytes": 911
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b05_ctrl.log",
+          "sha256": "34cd46464596e3280a845578172a29cda3810beb4790879dc1a6fb48c757fbf6",
+          "bytes": 1079
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b05_faeco.tcl",
+          "sha256": "5ac64d0d7af83e09d6b82cf33db587b9e2cf0f492fd4ef6077fc4649eb8ce24f",
+          "bytes": 927
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b05_faeco.log",
+          "sha256": "f9b153407a008a16213577010ea1dbb7e5c8186ab43212116ac5a7849717ec7f",
+          "bytes": 1085
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 404,
+        "unproven": 0,
+        "taps_projected": 9516,
+        "gold_matching_directories": [
+          "experiments/20261113_itc99_recovery/arms/Resizer/b05"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b05/routed.v",
+            "sha256": "b99554802047a361fdb95280d9208fdf86e240cfa66a6f48c6fea79c60b6838b",
+            "bytes": 618953
+          }
+        ],
+        "gold_projected_sha256": "9d8e366c37825313ab80103f8475e61074d68b520982c544ce4144ccb4d535a1",
+        "endpoint_projected_sha256": "ecc92c35663fa1e91707e107d1d068d98423cebdb188b0f06807f07c5b80daa5",
+        "receipt": {
+          "path": "scratch/universal_batch_recovery/b05/sec/sec_summary.json",
+          "sha256": "22c30ed88e83f7d7970bfd13864c5c4458cc9fc7a15e15b5689a89703f74c5c4",
+          "bytes": 741
+        },
+        "log": {
+          "path": "scratch/universal_batch_recovery/b05/sec/proof/sec.log",
+          "sha256": "5c68c9ed7bd2549dc941621717bb1b8bcdedf203090fa6fc9693ee3f38803641",
+          "bytes": 291574
+        },
+        "script": {
+          "path": "scratch/universal_batch_recovery/b05/sec/proof/sec.ys",
+          "sha256": "66484be42ab231a8b9b41fdf19dabc59490360536184d8375d039f5e5b723e1d",
+          "bytes": 620
+        },
+        "cell_models": {
+          "path": "scratch/universal_batch_recovery/b05/sec/proof/cells.v",
+          "sha256": "fcb578b5c36a6c538bf8bc31fb2a2335e875549afc6ae4302a32d5626c1b6c42",
+          "bytes": 10578
+        }
+      }
+    },
+    {
+      "endpoint_id": "b11:v22_nominal_positive:RUN_005",
+      "circuit": "b11",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b11",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.v",
+          "sha256": "96d63b41c78aa9b150074b1fa419a902c3a9793e3750d9a89b9dc7cfe931bff2",
+          "bytes": 560067
+        },
+        "spef": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.spef",
+          "sha256": "b021306122b697a496b9f2d78f6f58b71e1fafe27d83ce6d73ee5ea72d730147",
+          "bytes": 621601
+        },
+        "def": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.def",
+          "sha256": "7914cfffcd397ae25366301e3b7f95cabe27073eb7b1879eda5507e24ac09636",
+          "bytes": 1230508
+        }
+      },
+      "endpoint_directory": "scratch/tool_agnostic_itc99/b11/evals/RUN_005",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/routed.v",
+          "sha256": "0aa51e08a495260a711702a4a45c9f80231f7407bc645eb034e268031a9b59f0",
+          "bytes": 560067
+        },
+        "spef": {
+          "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/routed.spef",
+          "sha256": "4586df22a712c7e099445770c8a39393f3861d99b751fabd93dc0fbd38fbde8b",
+          "bytes": 638713
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/flow.tcl",
+        "sha256": "f047324cf8c427b81c87493b4bc832a91038fd16611b19b92a219625d06c66d5",
+        "bytes": 1834
+      },
+      "flow_log": {
+        "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/flow.log",
+        "sha256": "7f21b45cd7510d8071a6fbebdb94a9aba43fa699cfb4f0cd48c6f86bb9f54dc1",
+        "bytes": 7064
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/tool_agnostic_itc99/b11/summary.json",
+          "sha256": "98a2bb328c4c35efe226de38605d6fec4768471d2f255dd1c8d2ca1050824d11",
+          "bytes": 341
+        },
+        "control_area_um2": 3181.8016,
+        "endpoint_area_um2": 3153.024,
+        "setup_delta_ps_reported": -2.164,
+        "hold_delta_ps_reported": 0.62,
+        "evaluations": 6,
+        "committed": [
+          "_3996_=sky130_fd_sc_hd__a31oi_1",
+          "_4071_=sky130_fd_sc_hd__o31ai_1"
+        ],
+        "reference_source": "scratch/itc99_postroute_verify/b11/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/propagated.tcl",
+          "sha256": "963dca9714fe0d86a2252ed7bb4ef89054d87ab6ce587409d305aa4ac72b33d3",
+          "bytes": 902
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/tool_agnostic_itc99/b11/evals/RUN_005/propagated.log",
+          "sha256": "a67c172170afd59ada482b38c168ab2343fc4a00c2ab0cd484021707bcee3a93",
+          "bytes": 346
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1991.436349,
+          "hold_ps": 487.238916,
+          "tns_ps": -40610.0
+        },
+        "area_saved_pct": 0.904444
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b11",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.v",
+              "sha256": "96d63b41c78aa9b150074b1fa419a902c3a9793e3750d9a89b9dc7cfe931bff2",
+              "bytes": 560067
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.spef",
+              "sha256": "b021306122b697a496b9f2d78f6f58b71e1fafe27d83ce6d73ee5ea72d730147",
+              "bytes": 621601
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.def",
+              "sha256": "7914cfffcd397ae25366301e3b7f95cabe27073eb7b1879eda5507e24ac09636",
+              "bytes": 1230508
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -10985.543142,
+            "hold_ps": 1738.330591,
+            "tns_ps": -218145.966
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -10964.887664,
+            "hold_ps": 1737.863631,
+            "tns_ps": -221600.998
+          },
+          "delta_ps": {
+            "setup_ps": 20.655478,
+            "hold_ps": -0.46696,
+            "tns_ps": -3455.032
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b11_SS_ctrl.tcl",
+            "sha256": "f0c9c2d8d20be49973eb891bb1c1117453c4bd61ea6cad1e2e72eecfe566d685",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/b11_SS_ctrl.log",
+            "sha256": "627bb06e821fedd6759ddcc59a9ccd9c3c749242e699d49c892f632783235f84",
+            "bytes": 313
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b11_SS_rec.tcl",
+            "sha256": "5f54a4f4bbcd7afaaf8a6a179ddfee085d76339151b8b462acbd2337b92db3cb",
+            "bytes": 555
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/b11_SS_rec.log",
+            "sha256": "ac440a1f2ecfb1434d3ee7c1ca7469c5c3bcb94d567ded803b62863966c68c4d",
+            "bytes": 306
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b11",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.v",
+              "sha256": "96d63b41c78aa9b150074b1fa419a902c3a9793e3750d9a89b9dc7cfe931bff2",
+              "bytes": 560067
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.spef",
+              "sha256": "b021306122b697a496b9f2d78f6f58b71e1fafe27d83ce6d73ee5ea72d730147",
+              "bytes": 621601
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.def",
+              "sha256": "7914cfffcd397ae25366301e3b7f95cabe27073eb7b1879eda5507e24ac09636",
+              "bytes": 1230508
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1996.425469,
+            "hold_ps": 488.870611,
+            "tns_ps": -40045.807
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1991.436349,
+            "hold_ps": 487.238916,
+            "tns_ps": -40608.131
+          },
+          "delta_ps": {
+            "setup_ps": 4.98912,
+            "hold_ps": -1.631695,
+            "tns_ps": -562.324
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b11_TT_ctrl.tcl",
+            "sha256": "0dd163819b39580ae9dcff4396351a498bdac57b24ef8fd8d5dba22d4b40a626",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/b11_TT_ctrl.log",
+            "sha256": "8dcf249645f23ce1d7ab68e70ae3779de28c1cd15bd29431f8b0d235dcee9bb6",
+            "bytes": 311
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b11_TT_rec.tcl",
+            "sha256": "46bc18deff354397ddf314caf0c54554d61316adf24957e8dfcfd5927ec082ba",
+            "bytes": 555
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/b11_TT_rec.log",
+            "sha256": "73b147e359d8e8ba6e0bd37dc08f1cd2be588a4107d7c19f878b098caebfb14d",
+            "bytes": 304
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b11",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.v",
+              "sha256": "96d63b41c78aa9b150074b1fa419a902c3a9793e3750d9a89b9dc7cfe931bff2",
+              "bytes": 560067
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.spef",
+              "sha256": "b021306122b697a496b9f2d78f6f58b71e1fafe27d83ce6d73ee5ea72d730147",
+              "bytes": 621601
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.def",
+              "sha256": "7914cfffcd397ae25366301e3b7f95cabe27073eb7b1879eda5507e24ac09636",
+              "bytes": 1230508
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1015.752371,
+            "hold_ps": 292.85388,
+            "tns_ps": -19032.848
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1044.774711,
+            "hold_ps": 292.677299,
+            "tns_ps": -19301.186
+          },
+          "delta_ps": {
+            "setup_ps": -29.02234,
+            "hold_ps": -0.176581,
+            "tns_ps": -268.338
+          },
+          "control_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b11_FF_ctrl.tcl",
+            "sha256": "0afb9f6a4a2b5d20f3a432f7ac7425fb33d2bf76d5b867c3d4bf5aee4f735d0a",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/multicorner_signoff/b11_FF_ctrl.log",
+            "sha256": "5754ea11fdf28336b496c717bb3b64a59c22a3342ef6892fed58a92ce3b64043",
+            "bytes": 313
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/multicorner_signoff/b11_FF_rec.tcl",
+            "sha256": "d2ef3f147ac13a5d8f7cbccbf6fd1238003438c290edd97dd5d1ea4234bb5650",
+            "bytes": 555
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/multicorner_signoff/b11_FF_rec.log",
+            "sha256": "cfd189d7eff7a28de8f9f1f96d635bfbbecac21b2d7fd97c06d81a738d7a490c",
+            "bytes": 306
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b11",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.v",
+            "sha256": "96d63b41c78aa9b150074b1fa419a902c3a9793e3750d9a89b9dc7cfe931bff2",
+            "bytes": 560067
+          },
+          "spef": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.spef",
+            "sha256": "b021306122b697a496b9f2d78f6f58b71e1fafe27d83ce6d73ee5ea72d730147",
+            "bytes": 621601
+          },
+          "def": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.def",
+            "sha256": "7914cfffcd397ae25366301e3b7f95cabe27073eb7b1879eda5507e24ac09636",
+            "bytes": 1230508
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -2263.603083,
+          "hold_ps": -81.880655,
+          "tns_ps": -47654.667
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2258.377929,
+          "hold_ps": -81.407756,
+          "tns_ps": -48225.01
+        },
+        "delta_ps": {
+          "setup_ps": 5.225154,
+          "hold_ps": 0.472899,
+          "tns_ps": -570.343
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b11_ctrl.tcl",
+          "sha256": "e9af6cf4b9f24d42cbba5d87b245c1e309eb34bfc4e1f1e7bbd874786aca3c33",
+          "bytes": 931
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b11_ctrl.log",
+          "sha256": "7d2257849614da18d26522af0d70eef26dac15eacea44a21b2f1e017881dc948",
+          "bytes": 1086
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b11_faeco.tcl",
+          "sha256": "81164772f5c9fbe5da2d8e6fc7cd6b138027892958709e3d14aeb2fd7ade9b8f",
+          "bytes": 917
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b11_faeco.log",
+          "sha256": "9096b6363969835c7cbc352a8700759da91c35ebe1067f922d91e496bb7d46cf",
+          "bytes": 1079
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 346,
+        "unproven": 0,
+        "taps_projected": 8642,
+        "gold_matching_directories": [
+          "experiments/20261113_itc99_recovery/arms/Resizer/b11"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b11/routed.v",
+            "sha256": "96d63b41c78aa9b150074b1fa419a902c3a9793e3750d9a89b9dc7cfe931bff2",
+            "bytes": 560067
+          }
+        ],
+        "gold_projected_sha256": "ffc0dcc621254e6608f9cf044a819f2c4ef3dc81366ae54c95bfe4f1523be796",
+        "endpoint_projected_sha256": "10b27c77cfd85d84823b8dc91283e3ca37ac3fd0c85380d55a6737ce5efa7d39",
+        "receipt": {
+          "path": "scratch/tool_agnostic_itc99/b11/sec/sec_summary.json",
+          "sha256": "a74ba712fffa00514ce455127bdd11044badccb80f15e9beb3b587b61d6b40df",
+          "bytes": 735
+        },
+        "log": {
+          "path": "scratch/tool_agnostic_itc99/b11/sec/proof/sec.log",
+          "sha256": "e35f78238bb68f519e350d31da6e5930194fff5d055493a5766837379a31a22d",
+          "bytes": 260918
+        },
+        "script": {
+          "path": "scratch/tool_agnostic_itc99/b11/sec/proof/sec.ys",
+          "sha256": "5e51a0b4491a3770c88ba64d522fe436d18bf924ba38f129a69f0a2fe08de59b",
+          "bytes": 600
+        },
+        "cell_models": {
+          "path": "scratch/tool_agnostic_itc99/b11/sec/proof/cells.v",
+          "sha256": "e3b71be2eda71c5af3ab35e16eb7134b381cf348bb106436ea0d4e465c0aedb6",
+          "bytes": 10128
+        }
+      }
+    },
+    {
+      "endpoint_id": "b12:v22_nominal_positive:RUN_005",
+      "circuit": "b12",
+      "role": "v22_nominal_positive",
+      "flow_input_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b12",
+      "flow_input_files": {
+        "v": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.v",
+          "sha256": "fb8d48a360c9b32889ced51989bdea1123ab245c9520fcd559207343fdfb2807",
+          "bytes": 1381486
+        },
+        "spef": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.spef",
+          "sha256": "58b4b31b46d48473d7012435f1d03aea11ed7bf124850f500411446f033f25f1",
+          "bytes": 1489517
+        },
+        "def": {
+          "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.def",
+          "sha256": "0de765b831c2cbf2f754c2a874ec21cdfbe40ea44cd8d1a126f146ba7b5f2f14",
+          "bytes": 2939128
+        }
+      },
+      "endpoint_directory": "scratch/universal_batch_recovery/b12/evals/RUN_005",
+      "endpoint_files": {
+        "v": {
+          "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/routed.v",
+          "sha256": "6efc656cacba1d59afc6dc7ad5119697512c604cedb1a47995ac166636158ec1",
+          "bytes": 1381482
+        },
+        "spef": {
+          "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/routed.spef",
+          "sha256": "1f6000e5766babf01ed09bb62a8e813eb5338728070862630ed7610f7e09e5b1",
+          "bytes": 1525029
+        },
+        "def": null
+      },
+      "routed_def_emitted": false,
+      "drc_count": 0,
+      "drc_report": {
+        "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "flow_tcl": {
+        "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/flow.tcl",
+        "sha256": "7e038b0221399e8f14950cbacbc144419f233bfa53541626efb549cc0738a5de",
+        "bytes": 1955
+      },
+      "flow_log": {
+        "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/flow.log",
+        "sha256": "700054fb04a8b15553b7cdc7413609dab6828de96188c3f33d2c09ec3211196b",
+        "bytes": 7149
+      },
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/universal_batch_recovery/b12/summary.json",
+          "sha256": "d8ddd7655bd551fdfb4e23f4639f6af5ec95c9aa8e9fed1dd515541790d5b527",
+          "bytes": 697
+        },
+        "control_area_um2": 7977.6512,
+        "endpoint_area_um2": 7912.5888,
+        "setup_delta_ps_reported": -0.031,
+        "hold_delta_ps_reported": 0.048,
+        "evaluations": 8,
+        "committed": [
+          "rebuffer334=sky130_fd_sc_hd__buf_1",
+          "rebuffer451=sky130_fd_sc_hd__buf_1",
+          "rebuffer452=sky130_fd_sc_hd__buf_1",
+          "split=sky130_fd_sc_hd__buf_1"
+        ],
+        "reference_source": "scratch/itc99_postroute_verify/b12/CONTROL/result.json",
+        "endpoint_sta_tcl": {
+          "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/propagated.tcl",
+          "sha256": "33fcc3c3a4fb4bc1ae0cbf9303bf5841d184122e67a0f6f32941a7afb7fea44b",
+          "bytes": 912
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/universal_batch_recovery/b12/evals/RUN_005/propagated.log",
+          "sha256": "805598ac120678627f6f41ace394b4d20fce90000eebb2a680e79563403d94ea",
+          "bytes": 353
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1874.716382,
+          "hold_ps": 399.570127,
+          "tns_ps": -150160.0
+        },
+        "area_saved_pct": 0.815558
+      },
+      "corners": {
+        "SS": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b12",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.v",
+              "sha256": "fb8d48a360c9b32889ced51989bdea1123ab245c9520fcd559207343fdfb2807",
+              "bytes": 1381486
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.spef",
+              "sha256": "58b4b31b46d48473d7012435f1d03aea11ed7bf124850f500411446f033f25f1",
+              "bytes": 1489517
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.def",
+              "sha256": "0de765b831c2cbf2f754c2a874ec21cdfbe40ea44cd8d1a126f146ba7b5f2f14",
+              "bytes": 2939128
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -10024.081121,
+            "hold_ps": 1332.105648,
+            "tns_ps": -748519.714
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -9959.492786,
+            "hold_ps": 1332.411959,
+            "tns_ps": -870325.256
+          },
+          "delta_ps": {
+            "setup_ps": 64.588335,
+            "hold_ps": 0.306311,
+            "tns_ps": -121805.542
+          },
+          "control_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b12/ctrl_SS.tcl",
+            "sha256": "d4148634d7fae14bc7eebaa1df6e467580cdb16a3ceb47e8ce58fda4203d8aa3",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/universal_batch_recovery/b12/ctrl_SS.log",
+            "sha256": "f65f089a577f15d04cbd3ef42d7d0d33e28eeedd040175c06a7390693f4eb955",
+            "bytes": 311
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b12/rec_SS.tcl",
+            "sha256": "d4d227b640f5d73ef33f828a2d740ce4ce0d1e7c8a9026649cbeb93e1e78afb6",
+            "bytes": 565
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/universal_batch_recovery/b12/rec_SS.log",
+            "sha256": "e5391f3a0552ee30c958bbedeed688f29bfd51d8392c4db4b506e06120da01a8",
+            "bytes": 310
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "TT": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b12",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.v",
+              "sha256": "fb8d48a360c9b32889ced51989bdea1123ab245c9520fcd559207343fdfb2807",
+              "bytes": 1381486
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.spef",
+              "sha256": "58b4b31b46d48473d7012435f1d03aea11ed7bf124850f500411446f033f25f1",
+              "bytes": 1489517
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.def",
+              "sha256": "0de765b831c2cbf2f754c2a874ec21cdfbe40ea44cd8d1a126f146ba7b5f2f14",
+              "bytes": 2939128
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -1876.157452,
+            "hold_ps": 399.48117,
+            "tns_ps": -129696.533
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -1874.716382,
+            "hold_ps": 399.570127,
+            "tns_ps": -150160.172
+          },
+          "delta_ps": {
+            "setup_ps": 1.44107,
+            "hold_ps": 0.088957,
+            "tns_ps": -20463.639
+          },
+          "control_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b12/ctrl_TT.tcl",
+            "sha256": "62196d86be933dd852acbafab66c4d33ecb42ad061ff0dec0348c4ca220a03e7",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/universal_batch_recovery/b12/ctrl_TT.log",
+            "sha256": "59e5ef020c303be1d1ca7011a57a6658ed719b11b6ecf5a5c5d8b6b6b6d950a0",
+            "bytes": 313
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b12/rec_TT.tcl",
+            "sha256": "d9a152bcd09937bcc8180af5234377fb9ef0a4a05d09eee259a5073e36ace247",
+            "bytes": 565
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/universal_batch_recovery/b12/rec_TT.log",
+            "sha256": "c515506e41e2861e7b1fc8c3428b279727456a2203d96e06a90b9816f8d0adf0",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        },
+        "FF": {
+          "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b12",
+          "control_files": {
+            "v": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.v",
+              "sha256": "fb8d48a360c9b32889ced51989bdea1123ab245c9520fcd559207343fdfb2807",
+              "bytes": 1381486
+            },
+            "spef": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.spef",
+              "sha256": "58b4b31b46d48473d7012435f1d03aea11ed7bf124850f500411446f033f25f1",
+              "bytes": 1489517
+            },
+            "def": {
+              "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.def",
+              "sha256": "0de765b831c2cbf2f754c2a874ec21cdfbe40ea44cd8d1a126f146ba7b5f2f14",
+              "bytes": 2939128
+            }
+          },
+          "control_values_ps": {
+            "setup_ps": -918.17931,
+            "hold_ps": 258.650212,
+            "tns_ps": -58016.052
+          },
+          "endpoint_values_ps": {
+            "setup_ps": -888.381702,
+            "hold_ps": 258.716049,
+            "tns_ps": -71240.99
+          },
+          "delta_ps": {
+            "setup_ps": 29.797608,
+            "hold_ps": 0.065837,
+            "tns_ps": -13224.938
+          },
+          "control_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b12/ctrl_FF.tcl",
+            "sha256": "7b4c7da039467cc42e891e385ad5ab23211c4fdb44b155ff52648bc1a65265fd",
+            "bytes": 569
+          },
+          "control_sta_log": {
+            "path": "scratch/universal_batch_recovery/b12/ctrl_FF.log",
+            "sha256": "49fb856a784dd72d665c73fa744556faad921c4d463cc4cb6e36896317969e6b",
+            "bytes": 312
+          },
+          "endpoint_sta_tcl": {
+            "path": "scratch/universal_batch_recovery/b12/rec_FF.tcl",
+            "sha256": "e6498fe433dcd3b2d0e4faa1ae0280181fd8c5ed182b4e0945247a044451a2dd",
+            "bytes": 565
+          },
+          "endpoint_sta_log": {
+            "path": "scratch/universal_batch_recovery/b12/rec_FF.log",
+            "sha256": "50ed5088018d86e443a6f90739bdca9328e329838e07fea3287e30ffe4c7ffae",
+            "bytes": 311
+          },
+          "same_analysis_tcl_except_input_paths": true
+        }
+      },
+      "io_ocv_tt": {
+        "control_directory": "experiments/20261113_itc99_recovery/arms/Resizer/b12",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.v",
+            "sha256": "fb8d48a360c9b32889ced51989bdea1123ab245c9520fcd559207343fdfb2807",
+            "bytes": 1381486
+          },
+          "spef": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.spef",
+            "sha256": "58b4b31b46d48473d7012435f1d03aea11ed7bf124850f500411446f033f25f1",
+            "bytes": 1489517
+          },
+          "def": {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.def",
+            "sha256": "0de765b831c2cbf2f754c2a874ec21cdfbe40ea44cd8d1a126f146ba7b5f2f14",
+            "bytes": 2939128
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -2139.889377,
+          "hold_ps": -40.948994,
+          "tns_ps": -153832.718
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2138.428545,
+          "hold_ps": -45.880633,
+          "tns_ps": -176461.258
+        },
+        "delta_ps": {
+          "setup_ps": 1.460832,
+          "hold_ps": -4.931639,
+          "tns_ps": -22628.54
+        },
+        "control_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b12_ctrl.tcl",
+          "sha256": "66710231b2196287e3e0804d0dde7ca061ad174944bb9688fe1f3e786110323a",
+          "bytes": 931
+        },
+        "control_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b12_ctrl.log",
+          "sha256": "b115ac6e2b5b7479e83a0eca172d0fd8d2bf99471c4e81926dfaf4477789a8e9",
+          "bytes": 1088
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/ppa_ioocv_10_audit/b12_faeco.tcl",
+          "sha256": "06305c34d77b6d2aa22f30a897947754b3e96f79445780f4e8d134b2169f9c70",
+          "bytes": 927
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/ppa_ioocv_10_audit/b12_faeco.log",
+          "sha256": "9cf28760cebe3b743e2420e8727716180430d79bb6c94c93a408f487cad941d0",
+          "bytes": 1086
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "sec": {
+        "mode": "two-state whole netlist after projection of zero-pin tap cells",
+        "status": "pass",
+        "proven": 761,
+        "unproven": 0,
+        "taps_projected": 21157,
+        "gold_matching_directories": [
+          "experiments/20261113_itc99_recovery/arms/Resizer/b12"
+        ],
+        "gold_raw_verilog_files": [
+          {
+            "path": "experiments/20261113_itc99_recovery/arms/Resizer/b12/routed.v",
+            "sha256": "fb8d48a360c9b32889ced51989bdea1123ab245c9520fcd559207343fdfb2807",
+            "bytes": 1381486
+          }
+        ],
+        "gold_projected_sha256": "29d28d1b8e2c59790c7b5ac5066b04d88f15406ab5ac933c725a0336d975acfd",
+        "endpoint_projected_sha256": "c53447304f754e6a6a48bd2dd3ccc33f29776bcb80ebc22007e435bbb6e26c60",
+        "receipt": {
+          "path": "scratch/universal_batch_recovery/b12/sec/sec_summary.json",
+          "sha256": "3a4b4df318e549da676e450b46a31f103fa959e430068babaa5c2235b5cd0fb4",
+          "bytes": 742
+        },
+        "log": {
+          "path": "scratch/universal_batch_recovery/b12/sec/proof/sec.log",
+          "sha256": "1505988ae57efd342214c6517f26a26d1cb005892451ce6683ae840a1e1c6d15",
+          "bytes": 557627
+        },
+        "script": {
+          "path": "scratch/universal_batch_recovery/b12/sec/proof/sec.ys",
+          "sha256": "d6055cccab3004a50990f3ba9a579a14e2fa106294987a59298d755fd784604f",
+          "bytes": 620
+        },
+        "cell_models": {
+          "path": "scratch/universal_batch_recovery/b12/sec/proof/cells.v",
+          "sha256": "1fb089717fd0d7f446f6e2970a894229581fd9532abe4eac3fb625816002283f",
+          "bytes": 13654
+        }
+      }
+    }
+  ],
+  "s641_multicorner_substitute": {
+    "endpoint_id": "s641:s641_multicorner_substitute:RUN_005",
+    "circuit": "s641",
+    "role": "s641_multicorner_substitute",
+    "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641",
+    "flow_input_files": {
+      "v": {
+        "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.v",
+        "sha256": "c6e9ebb20fea3a1ea41f972ad19ff2011ea1f2fac9de91eac57265fb8f10ede6",
+        "bytes": 217205
+      },
+      "spef": {
+        "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.spef",
+        "sha256": "6b4411ebf0b5c88bcb940f9c9fdeb77343d0a16b10d26461fa0da7e6ea1d0d22",
+        "bytes": 235456
+      },
+      "def": {
+        "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.def",
+        "sha256": "627220ecf1c12214f2da52de8249a869c82559ed6ba7d308df6683b14d68b474",
+        "bytes": 486571
+      }
+    },
+    "endpoint_directory": "scratch/multicorner_gated_s641/evals/RUN_005",
+    "endpoint_files": {
+      "v": {
+        "path": "scratch/multicorner_gated_s641/evals/RUN_005/routed.v",
+        "sha256": "aea18f61c043f546fec93d2dd7a0e3e9f8c243e9b9474274915f1ca35bc5fa05",
+        "bytes": 217205
+      },
+      "spef": {
+        "path": "scratch/multicorner_gated_s641/evals/RUN_005/routed.spef",
+        "sha256": "9b61df625653e307be97548f7c826c6021fbdc194296d03577632b6e8b09446a",
+        "bytes": 238974
+      },
+      "def": null
+    },
+    "routed_def_emitted": false,
+    "drc_count": 0,
+    "drc_report": {
+      "path": "scratch/multicorner_gated_s641/evals/RUN_005/drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "flow_tcl": {
+      "path": "scratch/multicorner_gated_s641/evals/RUN_005/flow.tcl",
+      "sha256": "37e68c76e9796d2f42c3267c481a1c339ec2009ff04d14a02317bac27af4d86e",
+      "bytes": 1795
+    },
+    "flow_log": {
+      "path": "scratch/multicorner_gated_s641/evals/RUN_005/flow.log",
+      "sha256": "ef7f87e8370d38d135ef607313b07c66a26dbc214ac0174af41655c9b5706221",
+      "bytes": 7010
+    },
+    "nominal_selection": {
+      "source": {
+        "path": "scratch/multicorner_gated_s641/summary.json",
+        "sha256": "e435aeec66a1f24956373bd937d4a15ac727cb59b3402d522f0ffb5f0b067ac0",
+        "bytes": 370
+      },
+      "control_area_um2": 1133.5872,
+      "endpoint_area_um2": 1126.08,
+      "setup_delta_ps_reported": 4.74,
+      "hold_delta_ps_reported": 1.204,
+      "committed": [
+        "rebuffer16=sky130_fd_sc_hd__buf_1"
+      ],
+      "reference_source": "explicit ctrl_TT.tcl timing, area from reroute CONTROL result.json",
+      "corner_recipe": "TT endpoint from historical evaluator using ORFS Liberty, TT control from explicit audit Liberty",
+      "area_saved_pct": 0.662252
+    },
+    "corners": {
+      "SS": {
+        "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.v",
+            "sha256": "c6e9ebb20fea3a1ea41f972ad19ff2011ea1f2fac9de91eac57265fb8f10ede6",
+            "bytes": 217205
+          },
+          "spef": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.spef",
+            "sha256": "6b4411ebf0b5c88bcb940f9c9fdeb77343d0a16b10d26461fa0da7e6ea1d0d22",
+            "bytes": 235456
+          },
+          "def": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.def",
+            "sha256": "627220ecf1c12214f2da52de8249a869c82559ed6ba7d308df6683b14d68b474",
+            "bytes": 486571
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -6333.937375,
+          "hold_ps": 1593.754906,
+          "tns_ps": -93844.742
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -6262.251162,
+          "hold_ps": 1596.426547,
+          "tns_ps": -94268.6
+        },
+        "delta_ps": {
+          "setup_ps": 71.686213,
+          "hold_ps": 2.671641,
+          "tns_ps": -423.858
+        },
+        "control_sta_tcl": {
+          "path": "scratch/multicorner_gated_s641/ctrl_SS.tcl",
+          "sha256": "ec0aa2cf65459118b17440e8eb599df2e20371b3adf72ebf96581b69460ab755",
+          "bytes": 582
+        },
+        "control_sta_log": {
+          "path": "scratch/multicorner_gated_s641/ctrl_SS.log",
+          "sha256": "49b19869ed91abb27f3ae8dc5d86d439fbaede12b68b542d2e3ca90a7d776b00",
+          "bytes": 317
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/multicorner_gated_s641/eval5_SS.tcl",
+          "sha256": "fde6dfd1ddc6392da2a5d5df192b0ef46fa581ef5981061931541fddbdc15aa5",
+          "bytes": 554
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/multicorner_gated_s641/eval5_SS.log",
+          "sha256": "e4f5d721d36d116121d57c537903d3128d2d4c36e53b809239313a77c37b0d68",
+          "bytes": 304
+        },
+        "same_analysis_tcl_except_input_paths": true
+      },
+      "TT": {
+        "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.v",
+            "sha256": "c6e9ebb20fea3a1ea41f972ad19ff2011ea1f2fac9de91eac57265fb8f10ede6",
+            "bytes": 217205
+          },
+          "spef": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.spef",
+            "sha256": "6b4411ebf0b5c88bcb940f9c9fdeb77343d0a16b10d26461fa0da7e6ea1d0d22",
+            "bytes": 235456
+          },
+          "def": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.def",
+            "sha256": "627220ecf1c12214f2da52de8249a869c82559ed6ba7d308df6683b14d68b474",
+            "bytes": 486571
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -1123.212634,
+          "hold_ps": 477.911488,
+          "tns_ps": -15690.454
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1118.472648,
+          "hold_ps": 479.115914,
+          "tns_ps": -15780.0
+        },
+        "delta_ps": {
+          "setup_ps": 4.739986,
+          "hold_ps": 1.204426,
+          "tns_ps": -89.546
+        },
+        "control_sta_tcl": {
+          "path": "scratch/multicorner_gated_s641/ctrl_TT.tcl",
+          "sha256": "7889ff2896c06eeede84ab2bb09ffad16792eb5bb980644e818fa4838a843b1a",
+          "bytes": 582
+        },
+        "control_sta_log": {
+          "path": "scratch/multicorner_gated_s641/ctrl_TT.log",
+          "sha256": "5940837f9eb02969195e2ad95708e05d08ea1f7de4f2f2c8860497522a449a7f",
+          "bytes": 318
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/multicorner_gated_s641/evals/RUN_005/propagated.tcl",
+          "sha256": "a72dbddf5f1780a3a68e097c13c7d6beeb8ea02e224404db3353a40b8fcb03ee",
+          "bytes": 901
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/multicorner_gated_s641/evals/RUN_005/propagated.log",
+          "sha256": "0a94036aa2b31aa79dfc0a85b94b21fc0c46f5878725a41b6735028318b3d478",
+          "bytes": 346
+        },
+        "same_analysis_tcl_except_input_paths": false
+      },
+      "FF": {
+        "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641",
+        "control_files": {
+          "v": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.v",
+            "sha256": "c6e9ebb20fea3a1ea41f972ad19ff2011ea1f2fac9de91eac57265fb8f10ede6",
+            "bytes": 217205
+          },
+          "spef": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.spef",
+            "sha256": "6b4411ebf0b5c88bcb940f9c9fdeb77343d0a16b10d26461fa0da7e6ea1d0d22",
+            "bytes": 235456
+          },
+          "def": {
+            "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.def",
+            "sha256": "627220ecf1c12214f2da52de8249a869c82559ed6ba7d308df6683b14d68b474",
+            "bytes": 486571
+          }
+        },
+        "control_values_ps": {
+          "setup_ps": -506.824249,
+          "hold_ps": 313.857856,
+          "tns_ps": -6241.005
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -504.547348,
+          "hold_ps": 315.143384,
+          "tns_ps": -6294.229
+        },
+        "delta_ps": {
+          "setup_ps": 2.276901,
+          "hold_ps": 1.285528,
+          "tns_ps": -53.224
+        },
+        "control_sta_tcl": {
+          "path": "scratch/multicorner_gated_s641/ctrl_FF.tcl",
+          "sha256": "ab52f969c65162ca903046a52e865919837a7751930e03ee3b871e74c5dc4903",
+          "bytes": 582
+        },
+        "control_sta_log": {
+          "path": "scratch/multicorner_gated_s641/ctrl_FF.log",
+          "sha256": "f584d6e893ce37d8a45f0524ee7539b6e214176e52fbf5dad5073a8ee463b508",
+          "bytes": 316
+        },
+        "endpoint_sta_tcl": {
+          "path": "scratch/multicorner_gated_s641/eval5_FF.tcl",
+          "sha256": "4793455ddfe04287001431418aaf60477fa548740b952f21be5345bbc5202760",
+          "bytes": 554
+        },
+        "endpoint_sta_log": {
+          "path": "scratch/multicorner_gated_s641/eval5_FF.log",
+          "sha256": "c28f15de08bcb1889f2d1aac22daf27e57c3159f8c2c47c9906fa7f5dba5c6ae",
+          "bytes": 303
+        },
+        "same_analysis_tcl_except_input_paths": true
+      }
+    },
+    "io_ocv_tt": null,
+    "sec": {
+      "mode": "two-state whole netlist after projection of zero-pin tap cells",
+      "status": "pass",
+      "proven": 136,
+      "unproven": 0,
+      "taps_projected": 3384,
+      "gold_matching_directories": [
+        "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641"
+      ],
+      "gold_raw_verilog_files": [
+        {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s641/routed.v",
+          "sha256": "c6e9ebb20fea3a1ea41f972ad19ff2011ea1f2fac9de91eac57265fb8f10ede6",
+          "bytes": 217205
+        }
+      ],
+      "gold_projected_sha256": "5f4df5c32594cd076c56cba1fb13fde10966316f11fd0a7a7fc75a6df80c1a7c",
+      "endpoint_projected_sha256": "0b60e4b6cd40fe224bed94cde815b3535f2f56665a578084e387c62fa2517912",
+      "receipt": {
+        "path": "scratch/multicorner_gated_s641/sec/sec_summary.json",
+        "sha256": "a6c8e44e14ddff7f8c8965e58982389bfb590482f91b341f231e909f05e6f9c5",
+        "bytes": 736
+      },
+      "log": {
+        "path": "scratch/multicorner_gated_s641/sec/proof/sec.log",
+        "sha256": "314a68e0b08c29fd154508fb634ccdb9271f90f208f283689b2a4f8914be768c",
+        "bytes": 92621
+      },
+      "script": {
+        "path": "scratch/multicorner_gated_s641/sec/proof/sec.ys",
+        "sha256": "6e98868c3df4601a6e4cec70bddb190b3194cf0616de5433f49396fbbc51434a",
+        "bytes": 598
+      },
+      "cell_models": {
+        "path": "scratch/multicorner_gated_s641/sec/proof/cells.v",
+        "sha256": "b560ea24e0f19b41a4b0aa0831c8d367108a3ec57fc441b45f4ecdf96cd5070e",
+        "bytes": 5244
+      }
+    }
+  },
+  "historical_io_fallbacks": [
+    {
+      "endpoint_id": "s713:historical_io_fallback:CONTROL",
+      "circuit": "s713",
+      "role": "historical_io_fallback",
+      "endpoint_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713",
+      "endpoint_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713/routed.v",
+          "sha256": "9cf91dab4559ca632b17db1d4106a0c5851cbb1c4b7fc580f547b204e1dbf6e9",
+          "bytes": 218173
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713/routed.spef",
+          "sha256": "e486247ae825ac303d9e8a37c2f2a178ea30fbb0185dfce7b1699e58a9fa71c2",
+          "bytes": 233820
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713/routed.def",
+          "sha256": "251944a9d46d9e379bcfbaa821a6d349eb434fc2fde96c1e58b4fa64e5477a8f",
+          "bytes": 485380
+        }
+      },
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713",
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/io_ocv_gated_iscas89/s713/summary.json",
+          "sha256": "64b962f105d2f2df4e046b302e093954cf41b5e194b473dfcecd3c0247e986b6",
+          "bytes": 297
+        },
+        "control_area_um2": 1131.0848,
+        "endpoint_area_um2": 1131.0848,
+        "area_saved_pct": 0.0,
+        "evaluations": 10,
+        "committed": []
+      },
+      "corners": null,
+      "io_ocv_tt": {
+        "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s713",
+        "control_values_ps": {
+          "setup_ps": -2172.88143,
+          "hold_ps": -98.218933,
+          "tns_ps": -44180.0
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -2172.88143,
+          "hold_ps": -98.218933,
+          "tns_ps": -44180.0
+        },
+        "delta_ps": {
+          "setup_ps": 0.0,
+          "hold_ps": 0.0,
+          "tns_ps": 0.0
+        },
+        "control_sta_tcl": {
+          "path": "scratch/io_ocv_gated_iscas89/s713/ctrl_io_ocv.tcl",
+          "sha256": "571b678866cd6facdf409dc4a1b810dc241470835871f308aaf88548b0c7f6b3",
+          "bytes": 1219
+        },
+        "control_sta_log": {
+          "path": "scratch/io_ocv_gated_iscas89/s713/ctrl_io_ocv.log",
+          "sha256": "8585a92bd4af1aac5040713fe12bff9c35faded3c5de3a92bb1d56dbd51e7698",
+          "bytes": 361
+        }
+      },
+      "sec": {
+        "status": "identity",
+        "note": "CONTROL reused without a cell replacement; this is not a positive endpoint proof."
+      }
+    },
+    {
+      "endpoint_id": "s832:historical_io_fallback:CONTROL",
+      "circuit": "s832",
+      "role": "historical_io_fallback",
+      "endpoint_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832",
+      "endpoint_files": {
+        "v": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832/routed.v",
+          "sha256": "0de91d9cdc79deea6f05d038db6583ccf7f06395d31796e23086f0f6e6f85a8e",
+          "bytes": 217579
+        },
+        "spef": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832/routed.spef",
+          "sha256": "b802277aafb22eee5cd106cf2324b4b2c7976a0a12d3b78e7b520f765ce5c9e3",
+          "bytes": 286851
+        },
+        "def": {
+          "path": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832/routed.def",
+          "sha256": "c327792630d2cefc51a65fd9474dd98074960263d2e8baf221eedeec810bbdb2",
+          "bytes": 510838
+        }
+      },
+      "flow_input_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832",
+      "nominal_selection": {
+        "source": {
+          "path": "scratch/io_ocv_gated_iscas89/s832/summary.json",
+          "sha256": "bf0bbd6f73e7b75676f60d126390aeb110510cd2d1a1898bfda901315cd88f53",
+          "bytes": 297
+        },
+        "control_area_um2": 1167.3696,
+        "endpoint_area_um2": 1167.3696,
+        "area_saved_pct": 0.0,
+        "evaluations": 10,
+        "committed": []
+      },
+      "corners": null,
+      "io_ocv_tt": {
+        "control_directory": "experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/s832",
+        "control_values_ps": {
+          "setup_ps": -1809.225436,
+          "hold_ps": -75.316434,
+          "tns_ps": -28830.0
+        },
+        "endpoint_values_ps": {
+          "setup_ps": -1809.225436,
+          "hold_ps": -75.316434,
+          "tns_ps": -28830.0
+        },
+        "delta_ps": {
+          "setup_ps": 0.0,
+          "hold_ps": 0.0,
+          "tns_ps": 0.0
+        },
+        "control_sta_tcl": {
+          "path": "scratch/io_ocv_gated_iscas89/s832/ctrl_io_ocv.tcl",
+          "sha256": "112817d2f9b78ba7c3ba12a7004bdf9eef0901ba9e96af74eeecab36992676f3",
+          "bytes": 1219
+        },
+        "control_sta_log": {
+          "path": "scratch/io_ocv_gated_iscas89/s832/ctrl_io_ocv.log",
+          "sha256": "47f0517f61dfe259783aca4491a8d577943a631594ad7fc3f15ed3263ded1084",
+          "bytes": 359
+        }
+      },
+      "sec": {
+        "status": "identity",
+        "note": "CONTROL reused without a cell replacement; this is not a positive endpoint proof."
+      }
+    }
+  ]
+}

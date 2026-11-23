@@ -3422,3 +3422,10 @@ budget_core整体回归v1遗漏前置packaged DLL镜像，再现原Yosys32212257
 - **现象**：ITC-99 `b15`（4,300 个逻辑单元，功能面积 `34,895.97 µm²`）在重布线阶段 `pin_access` 耗时 2 分钟、`detailed_route` 超过 600s 超时，即使只清除 6 条局部直连信号线仍超时。
 - **根因**：`resizer_flow.tcl` 中写了 `set UTIL 0.35; initialize_floorplan -utilization $UTIL`。OpenROAD 的 `-utilization` 参数单位是**百分比（0–100）**而非小数（0–1），传入 `0.35` 被当作 **0.35% 利用率**，导致生成的 Die 面积膨胀 100 倍至 `2937 µm × 2937 µm`（`8.60 × 10^6 µm²`），随后 `tapcell -distance 14` 在空版图上插入了 **114,480 个 tapcell**（总组件 118,780 个），拖垮了全图 `pin_access` 与 `detailed_route` 区域索引。
 - **修复**：将 `-utilization` 改为百分比整数（如 `35` 表示 35% 利用率），`b15` 核心面积即回归正常的 `85,280.54 µm²`（`297 µm × 297 µm`），tapcell 降至 `1,144` 个，总组件数由 `118,780` 降至 `5,494`，内存占用由 `712 MB` 降至 `175 MB`。
+
+
+## 2026-11-23 — 同一个实例贯穿 Verilog 候选、OpenDB 操作与物理回读（OI-088）
+
+`s713` 的 Verilog 将带斜线的实例写成 `\DFF_0/rebuffer1`，DEF 和 OpenDB 使用 `DFF_0/rebuffer1`。初版 `replace_cell` 使用词法转义名导致 `STA-0125`。仅修命令后，布线成功，但期望 master 表带转义前缀，后验对比将同一实例识别成两个键，跳过 STA。两次错误分开保留。
+
+候选动作 ID 保留来源可追溯性，物理命令与期望 master 使用同一个去前缀实例名，并逐候选校验实际 DEF 中的原 master。复用路线必须绑定全部动作、参考输入及工具资产指纹、产物 SHA256，再独立读取网表和执行四场景 STA。`s713_replay/RUN_001` 已确认目标 master、DRC=0 与四场景有效度量，随后因实测 IO+OCV hold 未过门。工程失败、复用路线和真实时序拒绝分别记账。

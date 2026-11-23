@@ -2541,3 +2541,54 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **ITC-99 4例重布线**：05 通过 =10\text{ ps}$ + SEC（−5.04%、+8.63ps）；04/b11/b12 超 10ps；NATIVE 4/4 为 0%。
 - **s641/s953 同预算消融（udget=12）**：s641 Sequential Greedy 22.52 µm² > bounded_search 15.01 µm²；s953 16.27 vs 16.27 µm²（RUN_012 实证动作补偿）。
 - **s382 IO 审计（OI-082）**：setup WNS 不变，ONLINE_007 TNS 优于 CONTROL。
+
+
+### 2026-11-23 V22-ASAP7-SEC-HANDOFF-REPLAY
+
+- **状态**：REGISTERED。核验 v22 所引用的既有 `eval_016` 与 `eval_059` 两态 Yosys SEC。历史 `sec_eval_016.log`、`sec_eval_059.log` 各仅 1 字节，需带完整 stdout 和退出码重放。
+- **配置**：Yosys `0.70+255`（`72b0054f0`），Ubuntu，本地 `main=bd44e1994cf157d972dfcaf539862273e4e27a02`。使用 `/home/toylog/faeco_asap7_aes/` 下既有 `sec_eval_{016,059}.ys`、`asap7_models.v`、`control.v` 和对应 `evals/eval_{016,059}/opt.v`。既有脚本删 TAPCELL、flatten、`equiv_simple -undef`、`equiv_induct -undef`、`equiv_status -assert`。非静默执行，每端点独立限时 120 s。只重放形式验证，布线与 STA 次数均为 0。
+
+- **状态**：COMPLETED（2/2 SEC PASS）。两条限时命令各约 25 s，退出码均为 0，均为 1252 proven / 0 unproven。完整非静默日志位于 `scratch/v22_handoff_sec_20261123/`。原始 1 字节日志已保留。本回放验证同一 CONTROL 与现有网表的两态等价，不含新布线、新 RCX 或 STA。
+
+| 输入或日志 | SHA256 |
+|---|---|
+| WSL `asap7_models.v` | `8800783e51ed20a9cb666cb42723b00a8c979704b183d26697f9460f88165ff9` |
+| WSL `control.v` | `87f0fc0ba6cf0f47aaee623ff32fa42db67b2bc748495d0114ac57ad2a641e94` |
+| WSL `sec_eval_016.ys` | `286a80570295ae6229cabc2f78c85abb5c29455b4bcfc3a97ab7e271f1f197d8` |
+| WSL `sec_eval_059.ys` | `165548e1db541f6aeade761f7eb22be8b3e9bb371c928c1738158858bea23c4e` |
+| WSL `evals/eval_016/opt.v` | `c5a7a0b313c3aeaf79464202c8cadf6bb1d029dc52fa827a10c8255caa3800d0` |
+| WSL `evals/eval_059/opt.v` | `541410f39257248953cba09792b68783b4ff12bbfc72e51f7b2680e8514b2fa7` |
+| scratch `eval_016.log` | `a3e72288a649a2c2910d236e00ec6d52581ea4b48651c6ec3b979fdf67605a0e` |
+| scratch `eval_059.log` | `9694fe779517f32e70a0439db7a10d5da59e7c695c190d374e3251464c2f713b` |
+
+
+### 2026-11-23 SKY130-JOINT-B10-S713-S832
+
+- **状态**：PREREGISTERED，未启动新 EDA，待既有 10 电路端点对齐。假设为至少一个电路在同一候选端点上实现正面积收益且通过四场景联合门。合格端点为零可否定本预算、候选空间和评测配置下的假设，工具失败与未完成单列。
+- **版本与输入**：本地 v22 `bd44e1994cf157d972dfcaf539862273e4e27a02`。固定 `experiments/20261115_p1_resizer_vs_faeco/arms/Resizer/{s713,s832}/routed.{def,v,spef}` 为各电路 CONTROL。四个参照值从同一原始 CONTROL 网表与 SPEF 重测。先以同一 OpenSTA 配置重测历史正收益 `s713/RUN_008`、`s832/RUN_009`（观察对照，与新搜索分开），另从冻结 DEF 和 LEF 各做一次零动作路线对照。
+- **物理评估**：OpenROAD 26Q3，每电路 4 线程，重合法化、全量重布线、15 轮 DRT、新 RCX。每个候选的同一网表和 SPEF 分别执行时钟约束下的 TT、SS、FF 分析，以及 TT 显式 IO+OCV 分析。全部使用 CK 0.5 ns、传播时钟。IO+OCV 沿用 v21，输入及输出延迟 0.10 ns、输入转换时间 0.05 ns、输出负载 0.01 pF、early/late 降额 0.90/1.10。
+- **联合接受门**：每一场景相对其 CONTROL 的 setup WNS 差值 ≥ −10.001 ps、绝对 hold ≥ 0 ps、hold 差值 ≥ −0.001 ps。面积必须降低、DRC 必须为零，最终端点必须通过非空全网表两态 SEC。TNS 作辅助指标。单列相对 CONTROL 诊断，诊断只撤去 IO+OCV 的非负 hold 硬门，仍报告残留绝对 hold，不计入严格联合通过。
+- **搜索及限时**：现有兼容候选枚举，每实例最多一动作，安全驱动优先排序，3 动作微批次与二分。零动作对照外每电路至多 10 次新物理评估，最多并行 2 电路。OpenROAD、每场景 STA、SEC 分别限时 180、60、180 s，每电路累计墙钟上限 2500 s。
+- **产物**：`project_docs/evidence/sky130_joint_constraints_20261123/` 记录输入指纹、命令、Tcl、动作、对照、度量及验收回执，`scratch/sky130_joint_constraints_20261123/` 留存本轮物理原始工件与日志。按端点绑定并计数，区分历史端点重测、新路线、STA、SEC 与失败/超时。
+
+
+- **状态**：RUNNING。先完成 `project_docs/evidence/sky130_joint_constraints_20261123/{ENDPOINTS.md,ENDPOINTS.json}` 端点对齐，再启动两电路。运行入口为同目录 `run_joint.py`（SHA256 `79794439279c2a64431a707af0021abaaE368adde9328d23418331e3faf3df52`，大小写无关）；两份 `scratch/sky130_joint_constraints_20261123/{s713,s832}/config.json` 已冻结实际输入、工具资产指纹和有序候选（18、23 个）。四场景 STA 用 build26 OpenROAD 源树测试库，TT 与 IO+OCV 使用同一 TT 库；OpenROAD 物理步骤沿用 ORFS 平台 TT。SEC 沿用历史 `/usr/bin/yosys` 0.33。
+- **先验对照重测**：本轮按同一固定 V/SPEF 分别重测各电路四场景的 CONTROL 与历史正收益端点。两个 CONTROL 的 IO+OCV 绝对 hold 为 `−98.219/−75.316 ps`。`s713/RUN_008` 的 IO+OCV setup 差值为 `+9.917 ps`，但 IO+OCV 绝对 hold `−98.116 ps`、FF hold 差值 `−3.884 ps`；`s832/RUN_009` 的 IO+OCV setup 差值为 `−36.161 ps`、绝对 hold `−74.524 ps`。这两条是各 8 次独立 STA 的历史观察对照，登记在当前配置下复测的差值，不沿用 v21 不同 CONTROL 的数值。原始 `{CONTROL,HISTORIC_TT}/metrics.json` 随每电路运行目录留存。
+
+
+- **RUNNING 更新与技术重试预注册**：`s713` 首轮 `RUN_001/RUN_003/RUN_004` 在 OpenROAD `replace_cell` 阶段退出，`STA-0125` 报 `\DFF_0/rebuffer1` 不存在。实查固定 CONTROL 网表第 236 行的 Verilog 转义名为 `\DFF_0/rebuffer1`，DEF 第 220 行精确实例名为 `DFF_0/rebuffer1`，原 master 同为 `sky130_fd_sc_hd__buf_4`。三个错误均保留为工具输入身份故障，单列计数。预注册在独立 `_retry` 目录按同一 `s713` 预算、原物理输入、同排序动作及验收条件完整重试，唯一变更是生成物理替换命令时去掉一个 Verilog 转义前缀，并验证 DEF 的精确实例名与原 master。等原 `s713` 运行结束再启动重试，同时运行最多两个电路。无改动 `s832` 运行。
+
+
+- **技术重试已启动**：修正驱动 SHA256 `ac6de1d3940baf66dbabbf0188afbd8049a91612fd82000b4736de2f59f213b5`。离线前置核验逐一绑定 `s713` 的 18 个与 `s832` 的 23 个候选到 DEF 实例和原 master。重试配置为 `scratch/sky130_joint_constraints_20261123/s713_retry/config.json`，SHA256 `85208460c30fddad9e523e480303bf6c1755f40aa00e6bcca751b317556ae6e5`。首次驱动保存在 `scratch/sky130_joint_constraints_20261123/run_joint_initial.py`。初跑 `s713` 10 次候选调用中 7 次走完物理流，3 次替换前置失败。零动作对照另 1 次，原始结果全部保留。
+
+
+- **第二次身份故障与恢复预注册**：`s713_retry/RUN_001` 的 OpenROAD 返回码为 0，DRC 为 0，新 DEF 第 220 行和网表均证实 `DFF_0/rebuffer1` 已替换为 `sky130_fd_sc_hd__buf_1`，但替换期望表仍以带前缀的原始动作名为键，Verilog Reader 则返回规范名，导致身份门拒绝并跳过 STA。保留初跑与第一次技术重试，统一命令、期望 master 表和读回数据使用的 DEF/Verilog 规范实例身份。新独立 `s713` 最终评测以同一固定输入、候选、10 次调用预算与门限运行。仅在动作元组、输入与工具资产指纹、原路线产物哈希一致时复用第一次重试已完成的路线，对缺失的四场景 STA 独立补测。动作不同或路线不全时运行新物理评估。分开记录实际新路线、复用路线、实际物理评估和 STA。
+
+
+- **身份修复回读通过**：`s713_replay/config.json` SHA256 `4e20582324ebf4fc196357b55df5e2589f6ffba41c0868054f0eb087ac05c435`，使用驱动 SHA256 `fe296122f6defb45a824c25ba8aedf33e671e09ebdda77e1629ae72b409cd42e`。回放首个候选复用 `s713_retry/RUN_001` 的已完成路线，读回 master 一致，DRC=0，四景 STA 全部有效。IO+OCV hold 绝对 `−98.719 ps`，低于同源 CONTROL `−98.219 ps`，由真实时序门拒收。OI-088 限定修复验证通过。
+- **`s832` 验证完成**：1 次无变更控制 + 10 次新候选路线均完成且 DRC=0，共 52 次实际独立 STA（CONTROL 与历史重测 8、零动作对照 4、候选 40），1 次 SEC。严格门无交付，十个候选的 IO+OCV 绝对 hold 均为负。相对诊断端点 `RUN_005` 把 `rebuffer10` 降至 `buf_1`，回收 `3.7536 µm²`（`0.322%`），IO+OCV 的 setup、hold 差值为 `+6.404/+0.801 ps`，绝对 hold `−74.515 ps`，SEC `162/0`。仅供相对诊断。无变更物理对照、搜索与 SEC 墙钟合计 `436.375 s`。
+
+
+- **状态** COMPLETED，两个最终运行退出码均为 0。合格结果以 `s713_replay`、`s832` 为准。两例各 10 个候选、1 个零动作对照，分别执行 52 次 STA（参照与历史点各四景、对照四景、候选四景）。`s713_replay` 全部 11 条路线均由第一次技术重试的动作、输入及产物指纹匹配复用，执行 0 条新路线、0 SEC；10 个候选通过物理身份门与 DRC，IO+OCV 绝对 hold 为 `−99.035 至 −98.036 ps`，严格及相对诊断均无端点。s832 的相对诊断结果见上一条，两例合计严格接受 `0/2`。
+- **计数与追溯**：初跑 `s713` 11 次物理调用，8 条完成，40 次 STA。技术重试 `s713_retry` 11 次物理调用全部完成，3 条因身份表错误跳过 STA，共 40 次 STA。最终回放独立 STA 52 次，不新增物理调用。`s832` 11 次物理调用全部完成，52 次 STA 及 1 次 SEC。汇总全阶段 33 次物理调用、30 条完成路线、184 次 STA、1 次 SEC，另有最终 s713 的 11 条路由产物复用。最终证据集为 20 个候选、2 个零动作对照、104 次 STA、1 次 SEC，工程失败的初跑不进入候选可行率。
+- **最终本机收据**：`scratch/sky130_joint_constraints_20261123/s713_replay/summary.json` SHA256 `8b727b3f0e6559deb5e71bb39d9292babcb1e1643cfac48e42292f769dd4a180`；`scratch/sky130_joint_constraints_20261123/s832/summary.json` SHA256 `072294ba7b0a73ab6eceb2b7fac26e3b94fd504d680c83e2d8150f3b3f1fbe3d`。可携带证据目录为 `project_docs/evidence/sky130_joint_constraints_20261123/`。

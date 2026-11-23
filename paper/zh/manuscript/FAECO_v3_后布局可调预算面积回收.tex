@@ -91,10 +91,10 @@
 \end{center}
 \begin{flushleft}
   {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
-  后布局门级时序工程变更（engineering change order，ECO）中，基于全局拉格朗日松弛（Lagrangian relaxation，LR）的时序修复器常在非关键路径上过度放大单元尺寸而引发显著面积膨胀，而现有工具原生功耗回收机制在残留负松弛起点上近乎停摆，基于冻结寄生的离线预筛亦易在重布线后触发时序退化。
-  为此，本文提出覆盖优先调度与可调最差负松弛（worst negative slack，WNS）预算的面积回收框架FAECO：在依托上游差异网表时，采用端点逻辑锥覆盖调度与$O(\log N)$转折门隔离算法剥离冗余放大；在完全脱离修复日志的独立部署模式下，通过全库功能等价枚举、标准驱动优先排序与自适应微批次二分恢复，以用户可调WNS预算（默认10\,ps）、在线重布线/多工艺角静态时序分析（static timing analysis，STA）及全网表顺序等价性检查（sequential equivalence checking，SEC）为闭环门控实现安全压缩。
-  在SKY130 130\,nm工艺ISCAS89与ITC-99基准的15轮详细重布线与传播时钟签核下，纯独立模式在10/10跨族电路上仅以6--10次在线评估即实现0.67\%--5.58\%净面积下降并同步降低组合功耗（10/10满足慢角、显式输入/输出边界及片上工艺偏差约束并通过全网表SEC），明显优于同起点原生功耗恢复（0/10）、经典离线LR基线（重布线后10/10违例退化）与固定寄生批处理（5/10违例）；选择性回退在两族基准实现88.3\%/61\%冗余修改清理，并借助局部直连增量绕线将万门级b15单次评估提速7.7倍。
-  进一步跨工艺拓展至ASAP7 7\,nm两万门级工业基准\texttt{aes\_cipher\_top}（全局布线寄生口径），FAECO以零WNS与零保持时间退化回收0.266\%面积（原生恢复的2.25倍）并净改善总负松弛（total negative slack，TNS）$+48.18$\,ps（原生恶化$-2516.01$\,ps），为残留负松弛约束下的后布局功耗-性能-面积协同优化提供了完整物理验证方案。}
+  布局后门级时序工程变更（engineering change order，ECO）会增加单元面积，而残留负松弛和布线寄生变化使离线预筛难以判定可回收的面积。
+  本文提出面积回收框架FAECO，将最差负松弛（worst negative slack，WNS）损失预算与在线重布线、静态时序分析（static timing analysis，STA）及全网表顺序等价性检查（sequential equivalence checking，SEC）结合。
+  有上游修改记录时，框架按端点逻辑锥覆盖调度候选，以前缀二分隔离超预算的回退动作。独立模式直接从布线后网表与单元库枚举兼容替换，并自适应拆分越界批次。
+  在SKY130的十个ISCAS89与ITC-99电路中，独立模式在6--10次评估内均取得0.67\%--5.58\%的名义面积降幅，且通过设计规则检查与两态SEC。相同重布线评估上限下，单门在线贪心在9例取得正收益，平均面积降幅为2.11\%，FAECO为2.01\%。对相同十个正回收端点复测时，慢角与显式输入/输出约束叠加工艺降额分别有9例和8例满足10\,ps建立时间预算。以固定参考联合评估s713和s832时，两例均受显式IO约束下的绝对保持时间限制。对ASAP7的AES密码核，全局布线寄生估算显示FAECO回收0.266\%面积，且总负松弛改善48.18\,ps。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO；面积回收；覆盖优先调度；可调预算；转折门隔离}\par
@@ -111,11 +111,10 @@
 \newcommand{\enAuthor}{Tong Yalong, Liu Chang}
 \newcommand{\enAffil}{(College of Computer Science and Technology, National University of Defense Technology, Changsha 410073)}
 \newcommand{\enAbstract}{%
-  Post-layout gate-level timing engineering change orders (ECO) suffer from severe cell-area bloat caused by global Lagrangian relaxation (LR) sizers such as OpenROAD Resizer, while native \texttt{recover\_power} performs 0.00\% area recovery across 12/12 timing-violated post-CTS benchmarks.
-  This paper proposes FAECO, combining coverage-first candidate scheduling, an adjustable WNS-budget policy ($B=10$\,ps) with online post-route physical verification, $O(\log N)$ tipping-gate isolation, and a tool-agnostic full-library downsizing generator requiring zero upstream edit logs.
-  On eight ISCAS89 benchmarks, coverage-first scheduling reduces candidate STA evaluations by 7.8\%--19.0\% with $4.4\times$ higher per-unit-area WNS efficiency than Resizer.
-  In tool-agnostic mode (requiring only a post-route gate-level netlist and standard cell library), our online re-routing engine with adaptive mini-batch recovery and safe-drive prioritization achieves 0.67\%--5.58\% total area reduction (3.72\% average combinational power reduction) on 10/10 cross-family circuits in 6--10 evaluations per circuit with $\text{DRC}=0$, $\Delta\text{hold} \ge 0.00$\,ps, and 10/10 full-netlist two-state SEC pass, outperforming offline fixed-SPEF sensitivity screening (5/10 pass, 0.14\% avg) and single-gate online sensitivity greedy (failing on s953) while achieving 10/10 (100\%) SS multi-corner and 10/10 (100\%) IO+OCV compliance under online gating. Furthermore, local touched-net incremental routing achieves a $7.7\times$ per-evaluation speedup on 5,494-component b15 (184.8\,s with $\text{DRC}=0$ vs.\ 1426.1\,s full re-route), delivering 0.26\% area reduction, $+200.00$\,ps SS gain, and SEC pass.
-  With $O(\log N)$ tipping-gate isolation, selective recovery closes all 15 modified ITC-99 circuits (reverting 857/971 = 88.3\% edits, 27.8\% weighted net area recovery; pinpointing 1 critical gate on b22 in 10 STA calls to recover 356/359 edits = 33.1\%) and delivers 1.55\%--4.68\% post-route area reductions across 6/8 ISCAS89 circuits.%
+  Post-layout gate-level timing engineering change orders (ECOs) can increase cell area, while residual negative slack and routing changes limit the reliability of offline downsizing estimates.
+  FAECO pairs an adjustable worst negative slack (WNS) budget with on-line rerouting, static timing analysis (STA), and final full-netlist sequential equivalence checking (SEC).
+  With upstream edit records, it prioritizes candidates by timing-cone coverage and bisects prefixes to isolate over-budget reversions. Without such records, it enumerates compatible library substitutions and adaptively splits batches that violate the acceptance criteria.
+  Across ten SKY130 ISCAS89 and ITC-99 designs, six to ten evaluations per design yield nominal area reductions of 0.67\%--5.58\%, with zero design-rule violations and full-netlist two-state SEC passes. Under the same rerouting evaluation limits, single-gate online greedy recovers area in nine designs and averages 2.11\%, compared with 2.01\% for FAECO. Of the ten positive FAECO endpoints, nine meet the 10\,ps setup-loss budget at the slow corner and eight meet it under explicit I/O constraints and on-chip variation derating. On s713 and s832, joint re-evaluation with fixed references yields no positive endpoint under the absolute hold constraint in the I/O stress scenario. On an ASAP7 AES design with estimated global-routing parasitics, FAECO reduces area by 0.266\% and improves total negative slack by 48.18\,ps.%
 }
 \newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; tipping-gate isolation}
 
@@ -127,18 +126,12 @@
 门级时序ECO是物理设计后端的关键步骤。
 当布局布线后发现时序违例，设计者需在不重跑综合与布局的前提下，
 通过局部门尺寸调整、缓冲器插入、等价替换等手段修复违例路径。
-现代开源EDA工具链中的时序修复器（如OpenROAD Resizer\cite{openroad}）
-提供了有效的自动化时序收敛能力，但其底层采用全局拉格朗日松弛（LR）优化，
-倾向于在所有违例路径上放大门尺寸——包括那些并不影响最长路径延迟的单元。
+现代物理设计工具中的时序修复器（如OpenROAD Resizer\cite{openroad}）通过放大单元、缓冲和其他局部动作改善违例路径。修复后，部分尺寸修改对最差路径的延迟影响很小，因而留下了面积回收空间。
 
 \medskip
 \noindent\textbf{问题的量级。}
-我们在ISCAS89基准的8个电路上逐门回退了Resizer的107个门尺寸修改，
-用独立布线后签核STA测量每个回退对传播最差负松弛（WNS）的影响。实测表明：
-\textbf{107个修改中有74个（69\%）回退后WNS保持不变}
-（$\Delta\text{WNS} = 0.000$\,ns），对时序收敛无任何可测量的贡献。
-Resizer的全局LR策略使面积膨胀48.8\%而仅获得$+0.584$\,ns的WNS改善——
-相比之下，本文的覆盖优先机制以面积$+8.1\%$的代价获得$+0.247$\,ns改善，
+我们在八个ISCAS89电路上逐门回退Resizer的107个尺寸修改，使用布线后基准的寄生参数进行静态时序诊断。
+其中74处（69\%）在记录精度内保持WNS不变。Resizer的面积增加48.8\%，WNS改善0.584\,ns。覆盖优先机制的面积增加8.1\%，WNS改善0.247\,ns。
 \textbf{单位面积改善的WNS收益为Resizer的4.4倍}（几何均值，7/8电路，$p=0.0352$）。
 
 \medskip
@@ -150,29 +143,26 @@ Resizer的全局LR策略使面积膨胀48.8\%而仅获得$+0.584$\,ns的WNS改�
       优先评估最可能改善最长路径的候选，组内全测后取最优，减少无效候选评估。
 \item \textbf{可调WNS预算与在线物理门控}（第4节）：用户设定相对基准允许的WNS损失上限$B$（默认0.010\,ns），
       机制在有界组合搜索与在线重布线、寄生参数提取（parasitic extraction，RCX）及传播时钟STA门控中优化净面积回收，支持多工艺角（慢角SS/典型角TT/快角FF）与显式输入/输出边界（IO）及片上工艺偏差（on-chip variation，OCV）联合约束。
-\item \textbf{选择性恢复与$O(\log N)$转折门隔离}（第5节）：逐门评估每个修改对WNS的独立贡献，
-      针对多门同时回退的累积耦合悬崖提出转折门隔离与续跑二分算法，将验证复杂度由$O(N)$降至$O(\log N)$。
-\item \textbf{脱离上游日志的全库独立面积回收}（第6节）：直接从布线后门级网表与标准单元库枚举功能兼容的降面积候选，不依赖上游修改日志或修复前网表（仅将Resizer与原生功耗回收引擎作为对比基线）。
+\item \textbf{选择性恢复与转折门隔离}（第5节）：逐门诊断回退对WNS的影响，再按前缀二分定位导致联合回退越界的动作。每次二分定位的验证调用数为对数级，整段搜索受续跑次数限制。
+\item \textbf{无需上游日志的独立面积回收}（第6节）：从布线后门级网表与标准单元库枚举功能兼容替换，在布线后物理快照上通过重布线评估候选。
 \end{enumerate}
 整体双模式架构与在线门控闭环流程如图~\ref{fig:framework_arch}所示。
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.96\textwidth]{fig_framework_arch_zh.pdf}
-\caption{FAECO双模式后布局可调预算面积回收整体架构：（a）脱离上游日志的独立全库微批次回收模式；（b）覆盖优先调度与$O(\log N)$转折门隔离模式，共享在线重布线、多工艺角STA与全网表两态SEC门控。}
+\includegraphics[width=0.96\textwidth]{imagegen_20261123/01_framework.png}
+\caption{FAECO双模式架构。选择性回退与独立候选生成共用在线物理评估、时序预算判定与端点等价性检查。}
 \label{fig:framework_arch}
 \end{figure*}
-四个机制共同依据的物理前提是：在当前布线后实现点上，
-大多数非最长路径上的高驱动单元缩减对全局最差松弛不产生退化或退化极小，
-Resizer 69\%的无效放大为这一前提提供了直接定量依据。
+107处单门回退的诊断给出了候选筛选依据。联合回退造成的路径变化由后续时序评估检验。
 
 \medskip
 \noindent\textbf{主要贡献。}
 \begin{enumerate}
 \item \textbf{覆盖优先候选调度}：针对传统随机或局部启发式评估对关键瓶颈覆盖效率低的问题，按端点逻辑锥与加权节点割构造搜索区域并优先验证热点候选，在ISCAS89八例上将候选STA评估次数减少7.8\%--19.0\%，单位面积WNS效率达到Resizer的4.4倍。
 \item \textbf{可调WNS预算与在线组合搜索}：针对零容差约束放弃安全回收空间及离线估计失真的困难，建立以固定物理基准为参照的可调预算形式化框架与有界束搜索，在s382上仅以0.0031\,ns的WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，两态SEC 101/0通过），并在线捕获非加性寄生耦合补偿组合。
-\item \textbf{$O(\log N)$转折门隔离与续跑二分}：针对多门同时回退时的非线性累积耦合悬崖，设计二分隔离算法剥离临界门并释放安全后缀；选择性恢复在ISCAS89上以$|\Delta\text{WNS}| \le 0.0057$\,ns回退61\%修改（重布线后6/8实现1.55\%--4.68\%总面积下降），在ITC-99全部15个有修改电路上回退88.3\%修改（加权回收27.8\%，b22仅以10次STA即回收33.1\%）。
-\item \textbf{跨设计、跨工艺独立闭环与增量绕线加速}：提出不依赖修改日志的全库等效替换枚举、标准驱动优先排序与自适应微批次恢复，在10/10跨族电路的15轮详细重布线中实现0.67\%--5.58\%净面积下降及SS/IO+OCV/SEC 100\%闭合，全面超越同起点原生恢复（0/10）、离线LR基线（重布线后10/10坍塌）与固定寄生批处理（5/10违例），并在万门级b15上借局部直连增量绕线提速7.7倍、于ASAP7 7\,nm两万门级\texttt{aes\_cipher\_top}（全局布线口径）实现2.25倍于原生的面积回收且净改善TNS $+48.18$\,ps。
+\item \textbf{转折门隔离与续跑二分}：以先失败的回退前缀为起点，分段定位高风险修改并继续检查剩余动作。在固定寄生诊断中，ISCAS89与ITC-99分别回退61\%和88.3\%的上游修改。b22利用10次验证STA回退356处，回收上游净新增面积的33.1\%。
+\item \textbf{独立后布局面积回收}：将库内兼容替换、驱动档位排序和微批次物理评估接成闭环。在十个SKY130电路中获得0.67\%--5.58\%的名义面积降幅，全部端点通过两态SEC。多角与输入/输出约束复测量化了同一批端点的时序边界。另在5,494组件的b15与20,097实例的ASAP7 AES上分别验证了局部增量绕线和跨工艺候选生成。
 \end{enumerate}
 
 % ============================================================
@@ -183,15 +173,13 @@ Resizer 69\%的无效放大为这一前提提供了直接定量依据。
 \subsection{全局门尺寸优化与时序修复的面积膨胀}
 
 门尺寸调整（gate sizing）与缓冲器插入是物理综合与布局后时序收敛的核心手段\cite{cong2007optimality,chinnery2002closing}。
-自ISPD 2012/2013离散门尺寸优化竞赛\cite{ozdal2012ispd,hu2013ispd}以来，基于拉格朗日松弛（Lagrangian relaxation，LR）的优化器\cite{chen1999fast,flach2014effective,ozdal2011gate}因其多项式时间复杂度与良好的全局松弛收敛性成为学术界与开源工具链的主流方案。
-OpenROAD Resizer\cite{openroad}即结合了LR尺寸优化、Steiner树缓冲与局部逻辑重构；
+自ISPD 2012/2013离散门尺寸优化竞赛\cite{ozdal2012ispd,hu2013ispd}以来，拉格朗日松弛（Lagrangian relaxation，LR）成为门尺寸优化的重要方法\cite{chen1999fast,flach2014effective,ozdal2011gate}。OpenROAD Resizer\cite{openroad}提供了开放的门尺寸调整和缓冲等物理优化入口。
 Kahng等\cite{trident2}进一步耦合签核级计时器以缩小近似延迟模型与签核STA之间的偏差；
 Lin等\cite{timing_budget}利用任务图并行化加速大规模网表的门尺寸迭代；
 Held\cite{held2009fast}与Roy等\cite{roy2015markov}探讨了连续与离散松弛下的延迟-面积权衡。
 
-然而，全局LR与敏感度驱动的时序修复器存在一个固有的结构性代价：
-为压低全局加权违例目标，算法在所有负松弛锥（包括大量仅次于最差路径但并不决定芯片最高频率的次关键路径）上同步放大驱动尺寸\cite{mangiras2020timing,sharma2019fast}。
-第5.1节的逐门独立回退实验证实，OpenROAD Resizer在ISCAS89基准上产生的107处门尺寸放大中，有74处（69\%）单独回退后对最长路径WNS的贡献为零。
+全局加权违例目标涵盖多条时序锥，局部动作可以改善次关键路径，也可能对设计的WNS影响很小\cite{mangiras2020timing,sharma2019fast}。
+第5.1节在固定寄生条件下逐门回退OpenROAD Resizer的尺寸修改。107处修改中，74处单独回退后对WNS的影响低于报告分辨率。
 如何在不破坏已取得时序改善的前提下剥离这部分非关键路径面积膨胀，是后布局ECO亟待解决的问题。
 
 \subsection{残留负松弛下的后布局面积与功耗回收}
@@ -201,23 +189,22 @@ Held\cite{held2009fast}与Roy等\cite{roy2015markov}探讨了连续与离散松�
 第二类是在时序收敛后对非关键路径门执行降尺寸（downsizing）或高阈值电压（high threshold voltage，HVT）替换的事后回收，
 典型代表为OpenROAD内置的原生功耗回收引擎\cite{openroad}及商业工具中的后布局漏电回收流程\cite{hu2013ispd,mangiras2020timing}。
 
-然而，第二类方法隐含了两个在严苛后布局场景下极易失效的前提：
+残留负松弛和布线拓扑变化决定了事后回收方法在本任务中的适用范围。
 \begin{enumerate}
-\item \textbf{正松弛（$\text{WNS} \ge 0$）硬门限假设}：原生功耗回收引擎仅在松弛非负的引脚上尝试降尺寸；一旦设计在时钟树综合（clock tree synthesis，CTS）与详细布线后仍处于残留负松弛状态（$\text{WNS} < 0$），该机制拒绝执行任何降尺寸操作。在跨ISCAS89与ITC-99的12个后布局负松弛基准上，OpenROAD原生功耗回收的修改数与面积回收率在12/12电路上均为\textbf{0.00\%}；在s382上即使将目标松弛裕度放宽至$-1.0$\,ns并允许建立时间违例，实测仍返回零修改（+0.00\%面积变化）。而在包含部分正松弛支路的复杂工业电路上，原生恢复虽可局部触发替换，但因缺乏全局TNS与在线重布线门控，易在未受控支路上引发剧烈TNS退化。
-\item \textbf{冻结寄生或零线延迟近似}：部分启发式回退方法在冻结的预ECO标准寄生交换格式（standard parasitic exchange format，SPEF）网表上用增量STA筛选候选\cite{timing_budget,sharma2019fast}。但在高密度详细布线后，更换单元引脚位置会改变局部绕线拓扑与耦合电容——固定SPEF诊断下看似安全的回退组合在重合法化、15轮详细重布线与新RCX提取后，会在s820（$-33.63$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）上引发显著时序退化。
+\item \textbf{原生功耗回收}：在跨ISCAS89与ITC-99的12个SKY130后布局负松弛基准上，OpenROAD原生回收均未触发替换。s382在两种放宽裕量的配置下也返回零修改。ASAP7 AES上触发了341次替换，其经全局布线寄生估算后的总负松弛恶化。
+\item \textbf{冻结寄生预筛}：部分回退方法在标准寄生交换格式（standard parasitic exchange format，SPEF）中固定ECO前的寄生参数\cite{timing_budget,sharma2019fast}。单元替换可改变引脚位置与信号线拓扑。固定寄生下通过预筛的组合，在重布线与寄生重提取后可越过预算，例如s820、b11与b12的建立时间WNS分别下降33.63、29.15和90.81\,ps。
 \end{enumerate}
 
-针对上述局限，本文提出了\textbf{相对基准可调WNS预算（$W(N_F) \ge W_R - B$）+ 在线重布线/RCX/传播时钟STA与多工艺角门控}机制：允许用户在残留负松弛设计上以可控的微小时序预算（如$B=10$\,ps，甚至在s420/s713/b04/b05上实现$\Delta\text{WNS}>0$的正向改善）安全回收0.67\%--5.58\%的总面积。
+本文以布线后参考的相对WNS预算（$W(N_F) \ge W_R-B$）筛选候选，验证流程包含重布线、寄生重提取和传播时钟STA。表~\ref{tab:tool_agnostic}和表~\ref{tab:aligned_timing}分别报告名义面积回收与工艺角复测。
 
 \subsection{多门耦合悬崖、组合ECO搜索与学习驱动方法}
 
 当候选降尺寸动作从数个扩展至数百个（如ITC-99 b22的359处修改）时，门级ECO面临严重的\textbf{多门累积耦合悬崖（multi-gate coupling cliff）}：
-虽然每个门的独立回退均满足$\delta\text{WNS}=0$，但多门同时缩减会叠加同一逻辑锥上的转换时间（slew）退化，使某条原本具有充足裕量的次关键路径突然跃升为新的最差路径（b22全量回退触发$-106.4$\,ps悬崖）。
-传统的$O(N)$逐门末尾弹出（linear popping）需要上百次完整STA验证并在600\,s内超时。
+b22的逐门固定寄生诊断中，每处独立回退的$\delta\text{WNS}$均为零，全部回退时WNS下降106.4\,ps。在同一案例中，线性末尾弹出法在第143轮达到600\,s时限。
 近年来，多动作物理综合框架、强化学习（RL）、图神经网络（GNN）与大语言模型进化也被引入门级优化与物理ECO：
 早期Trident~2.0\cite{trident2}交替执行非关键扇出缩减、局部窥孔（peephole）重构与签核定时器校准；OpenPhySyn\cite{openphysyn2020}在OpenDB之上提供了可扩展的多动作物理综合框架（主要面向布线前阶段）。在学习驱动方面，RL-Sizer\cite{rlsizer2021}利用图神经网络与连续强化学习在交叠路径微区上批量调整门尺寸；IR-Aware ECO\cite{ireco2024}采用关系图卷积网络与拉格朗日乘子耦合IR降感知的功耗-延迟优化；RL-CCD\cite{rlccd2023}利用自监督注意力强化学习协同优化时钟偏斜与数据路径；PCR\cite{pcr2026}与Trident2\cite{trident2_2025}结合局部物理上下文与多源候选池提升时序修复率；E-Layout\cite{elayout2026}引入等式饱和（e-graph）与强化学习指导布局阶段逻辑重构；Guo等\cite{guo2022gnn}与Nath等\cite{nath2022transizer}探索了GNN/Transformer对门尺寸敏感度的预测；最新GoalEvolve\cite{goalevolve2026}则通过大语言模型对全流程物理设计源码进行目标驱动演化。
 但上述学习/进化与布线前方法大多面向正向时序修复、依赖离线训练或全流程重写，难以在布线后残留负松弛起点上提供确定性的可调预算保护与全网表顺序等价（SEC\cite{yosys,abc2010}）保证。
-本文提出的\textbf{$O(\log N)$转折门隔离与续跑二分算法}无需任何离线训练，仅用10次STA即可在359处修改中精准剥离唯一临界门并释放其余356处安全回退，同时结合全库兼容候选有界搜索捕获动作间的非线性寄生补偿。
+前缀二分在b22的固定寄生诊断中以10次验证STA隔离一个临界动作，最终回退359处修改中的356处。第5.2节给出单次二分的适用前提与续跑开销。
 
 \subsection{局部候选调度与大规模物理增量修线}
 
@@ -236,14 +223,14 @@ Held\cite{held2009fast}与Roy等\cite{roy2015markov}探讨了连续与离散松�
 \toprule
 \textbf{方法类别} & \textbf{代表工作} & \textbf{无需日志} & \textbf{负松弛可用} & \textbf{耦合复杂度} & \textbf{在线物理+多角} & \textbf{全网表SEC} \\
 \midrule
-经典LR与并行尺寸 & Chen等\cite{chen1999fast}, Flach等\cite{flach2014effective}, Lin等\cite{timing_budget} & 是（正向） & 10/10重布线崩溃 & 全局迭代 & 否（冻结/近似RC） & 否 \\
+经典LR与并行尺寸 & Chen等\cite{chen1999fast}, Flach等\cite{flach2014effective}, Lin等\cite{timing_budget} & 是（正向） & 本文冻结SPEF实现0/10合格 & 全局迭代 & 本文基线离线选取 & 本文基线未测 \\
 Signoff校准与开源综合 & Trident~2.0\cite{trident2}, OpenPhySyn\cite{openphysyn2020} & 是 & 主要面向收敛/布线前 & 局部peephole/管线 & 部分（无post-route） & 否 \\
 RL与IR感知ECO & RL-Sizer\cite{rlsizer2021}, IR-Aware ECO\cite{ireco2024} & 是（需训练） & 以TNS/功耗Pareto为主 & 局部邻域 & 部分（整轮/增量STA） & 否 \\
 时钟重构与布局重写 & RL-CCD\cite{rlccd2023}, PCR\cite{pcr2026}, E-Layout\cite{elayout2026} & 是（需训练） & 正向修违例/TNS & 锥掩码/MFFC & 部分（商业/全局反馈） & 部分 \\
 LLM物理流程演化 & GoalEvolve\cite{goalevolve2026} & 是（全流程） & 依赖源码重演化 & 全流程迭代 & 是（末段signoff） & 否 \\
 OpenROAD原生回收 & 原生功耗回收引擎\cite{openroad} & 是 & \textbf{SKY130 0\%；ASAP7仅0.12\%且TNS$-$20\%} & 逐门贪心 & 否（布线前增量） & 否 \\
 离线固定SPEF批/回滚 & 传统历史回滚与灵敏度批处理 & 部分 & 5/10有效（均降0.14\%） & $O(N)$（b22超时） & 否（最高偏$-123.4$\,ps） & 部分 \\
-\textbf{本文（FAECO）} & \textbf{覆盖优先+可调预算+微批次} & \textbf{是（零日志）} & \textbf{是（SKY130 10/10；ASAP7 2.25$\times$原生）} & \textbf{$O(\log N)$二分隔离} & \textbf{是（SS/IO 10/10）} & \textbf{是（100\%通过）} \\
+\textbf{本文（FAECO）} & \textbf{覆盖优先+可调预算+微批次} & 独立模式是 & SKY130名义10/10回收 & 前缀二分与预算上限 & 重布线与工艺角复测 & 名义端点10/10通过 \\
 \bottomrule
 \end{tabular}%
 }
@@ -354,7 +341,7 @@ $C_c$与$C_w$共同构成候选生成的"投入区域"。
 \begin{aligned}
 \text{maximize} &\quad A_R - A(N_F) \\
 \text{subject to} &\quad W(N_F) \ge W_R - B - \varepsilon, \\
-                 &\quad H(N_F) \ge \min(H_R, 0) - \varepsilon, \quad H(N_F) \ge 0, \\
+                 &\quad H(N_F) \ge H_R - \varepsilon, \quad H(N_F) \ge 0, \\
                  &\quad \mathrm{SEC}(N_R, N_F) = \text{proven},
 \end{aligned}
 \end{equation}
@@ -414,7 +401,7 @@ $H \ge H_R - \varepsilon$、电气与结构检查通过）进入非支配存档�
 在固定池中5\,ps以上面积不再改善——这是该特定候选池的前沿上限，
 不构成"5\,ps已足够"的普遍结论。
 
-\subsection{RESTORE074：10\,ps预算下的限定接受}
+\subsection{RESTORE074：\texorpdfstring{10\,ps}{10 ps}预算下的限定接受}
 
 在用户选定的10\,ps预算下，RESTORE074通过全部接受门。
 表~\ref{tab:restore074}给出其相对Resizer CONTROL的完整物理测量。
@@ -444,18 +431,14 @@ $A_0=892.1056$\,\textmu m$^2$，Resizer净新增$A_R-A_0=160.1536$\,\textmu m$^2
 TNS退化0.232\,ns作为辅助指标不影响接受。
 两态顺序等价检查确认101个等价点全部证明、0个未证明。
 
-\subsection{多电路预算曲线}
+\subsection{多电路预算与单门可回收面积}
 
-同一组策略在s382上的表现促使我们追问：预算-回收的量化关系是否跨电路一致？
-将选择性恢复（§5）中每个电路的逐门独立$\Delta$WNS测量按绝对值分档，
-得到8个ISCAS89电路在0/5/10/20/50/100/200/500\,ps八档预算下的面积回收率曲线
-（图~\ref{fig:budget_curves}与表~\ref{tab:budget_curves}）。
+图~\ref{fig:budget_curves}示意预算放宽时可行集合的变化。表~\ref{tab:budget_curves}按固定寄生下的单门独立$\delta$WNS，将八个ISCAS89电路的名义可回收面积列为八档。联合组合的面积与时序需经重新验证。
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{budget_curves.pdf}
-\caption{多电路预算曲线。（a）8电路面积回收率随WNS预算的变化，黑线为几何均值；
-（b）B=10\,ps预算下的逐电路面积回收率。}
+\includegraphics[width=0.95\textwidth]{imagegen_20261123/02_budget.png}
+\caption{可调WNS预算与可行面积。比较同一参考下的放宽预算和候选可行集合，逐电路定量结果见表~\ref{tab:budget_curves}。}
 \label{fig:budget_curves}
 \end{figure*}
 
@@ -477,14 +460,13 @@ s820& 11 & 94.6\% & 94.6\% & 94.6\% & 94.6\% & 100.0\% & 100.0\% & 100.0\% & 100
 s832& 12 & 40.0\% & 46.7\% & 46.7\% & 46.7\% & 71.7\% & 86.7\% & 96.7\% & 100.0\% \\
 s953& 29 & 73.0\% & 73.0\% & 74.3\% & 74.3\% & 76.3\% & 84.2\% & 90.1\% & 100.0\% \\
 \midrule
-\textbf{几何均值} & --- & \textbf{16.1\%} & \textbf{18.2\%} & \textbf{19.0\%} & \textbf{19.1\%} & \textbf{21.3\%} & \textbf{24.4\%} & \textbf{84.7\%} & \textbf{100.0\%} \\
+\textbf{带下限的几何均值} & --- & \textbf{16.1\%} & \textbf{18.2\%} & \textbf{19.0\%} & \textbf{19.1\%} & \textbf{21.3\%} & \textbf{24.4\%} & \textbf{84.7\%} & \textbf{100.0\%} \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-\textbf{跨电路一致性}：按单门独立$\delta$WNS阈值统计，七电路（s27除外）在零预算（$B=0$\,ps）下即具有16.4\%--94.6\%的单门理论可回收比例（几何均值16.1\%）。
-其中六电路在$B=10$\,ps处已接近或达到$B=20$\,ps处的回收水平（几何均值从16.1\%升至19.0\%），
-表明\textbf{10\,ps是面积回收的有效预算阈值}。
+按单门独立$\delta$WNS阈值统计，除s27外，七个电路零预算下的单门理论可回收比例为16.4\%--94.6\%。几何均值按八个电路计算，低于0.01\%的比例以0.01\%计入。该均值由零预算下的16.1\%升至10\,ps预算下的19.0\%。
+在这组单门诊断曲线上，10\,ps已覆盖20\,ps档的大部分增量。
 s713、s641和s832在$B=50\text{--}200$\,ps区间仍有显著增量（如s713从37.0\%升至87.7\%），
 说明部分电路包含大量``需要适度时序代价即可释放''的修改，构成预算曲线的长尾；
 而当$B=500$\,ps时几乎所有修改（含关键路径必需修改）均落入阈值内，回收率趋近100\%。
@@ -561,9 +543,7 @@ s953 & 248 & 29\% & 29\% & 40\% & 53\% & 62\% & 80\% & 95\% & 100\% & 100\% \\
 搜索更优的网表配置。然而，Resizer输出本身包含大量对WNS无贡献的修改。
 我们对此进行了逐门诊断。
 
-在ISCAS89八例上，对Resizer的107个门尺寸修改逐一回退
-（将修改后的尺寸恢复为修改前的原尺寸），每次回退运行独立布线后签核STA，
-测量$\Delta$WNS。结果见表~\ref{tab:waste}。
+在八个ISCAS89电路上，逐一将Resizer修改的107处门恢复至原尺寸，载入布线后参考的固定SPEF运行STA，记录$\Delta$WNS。结果见表~\ref{tab:waste}。
 
 \begin{table}[H]
 \centering
@@ -612,12 +592,12 @@ $\sum \mathrm{eff}(\Delta_j) + \mathrm{eff}(\Delta_i) \ge -B_{\mathrm{rec}}$
 \noindent\textbf{步骤3：转折门隔离与续跑二分（Tipping-Gate Isolation）。}
 累积回退完成后运行完整STA验证。
 当大规模候选集$R=[c_1,\dots,c_m]$联合回退因多门累积耦合超出预算门限时，传统逐一末尾弹出需$O(m)$次STA且会丢弃排在临界门之后的大量安全回退。
-为此我们采用$O(\log m)$二分查找定位首个使前缀违例的\textbf{转折门（tipping gate）}$c_{k+1}$：立即提交最大安全前缀$R[1..k]$，将$c_{k+1}$永久隔离，并对剩余后缀$R[k+2..m]$直接尝试整批验证与下一轮续跑二分（最多$M=8$轮），直至满足预算或候选清空（机制原理见图~\ref{fig:tipping_gate}）。
+若当前排序的前缀可行性近似单调，则以已测安全前缀和已测失效前缀为界，通过$O(\log m)$次验证将边界缩小到相邻前缀。算法提交确认可行的前缀$R[1..k]$，跳过边界动作$c_{k+1}$，从接受点继续整批验证或二分剩余后缀$R[k+2..m]$（图~\ref{fig:tipping_gate}）。最多续跑$M=8$轮，验证调用数受$O(M(1+\log m))$约束。非单调耦合可能隐藏可行前缀或组合，若要识别给定排序的全体可行前缀，最坏需要$\Theta(m)$次前缀测试。
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.96\textwidth]{fig_tipping_gate_mech_zh.pdf}
-\caption{$O(\log N)$转折门隔离与续跑二分机制示例（b22）：（a）单门孤立$\delta\text{WNS}=0$但联合回退于第359门处触发$-106.4$\,ps耦合悬崖，导致传统$O(N)$线性弹出于第143轮超时；（b）二分前缀定位\texttt{\_160630\_}并续跑后缀，仅10次STA即回收356/359处修改（33.1\%）。}
+\includegraphics[width=0.96\textwidth]{imagegen_20261123/03_tipping.png}
+\caption{转折门隔离与后缀续跑。整批验证失败后缩小前缀边界，提交已验证前缀，并在接受点上继续检查后缀。}
 \label{fig:tipping_gate}
 \end{figure*}
 
@@ -690,8 +670,7 @@ s953 & 0.010 & 0.031 &  3.0$\times$ \\
 符号秩检验），8例中7例效率更高。
 Resizer面积膨胀48.8\%（几何均值）换$+0.584$\,ns WNS改善，
 而覆盖优先以面积$+8.1\%$换$+0.247$\,ns。
-效率差异的结构性原因是覆盖优先只修改落在关键路径上的门，
-而全局LR在所有违例路径上均等放大。
+覆盖优先按候选与关键端点逻辑锥的交集分配评估预算。两种策略的WNS改善幅度与面积代价应并列解读。
 
 \subsection{跨设计验证：ITC-99族}
 
@@ -735,7 +714,7 @@ b22 &359 &9139.5&356 &3024.2 & 33.1\% & $+0.0011$ & $-12.05$ & $-11.963$ & N/A \
 
 在16个评估电路中，b14上Resizer未产生门尺寸修改（0修改）；
 在其余15个有修改电路（b01--b13、b15、b22）上，原线性逐一弹出回滚在b22（359处修改，9139.5\,\textmu m$^2$新增面积）上于第143轮验证触发600\,s超时；
-引入\textbf{转折门隔离与续跑二分（Tipping-Gate Isolation）}后，仅用10次验证STA便精准定位并隔离唯一临界异或门，随后一次性通过其余356处回退，在b22上回收3024.2\,\textmu m$^2$（33.1\%）且$\Delta\text{WNS}=+0.0011$\,ns。
+在固定SPEF下，359处同时回退使WNS下降106.4\,ps。前缀二分与续跑以10次验证STA定位异或门\texttt{\_160630\_}，最终回退356处，回收3024.2\,\textmu m$^2$（33.1\%），$\Delta\text{WNS}=+0.0011$\,ns。
 至此15个有修改电路全部闭合，共回退857/971（88.3\%）处修改，加权回收面积6050.8\,\textmu m$^2$（占净新增面积的27.8\%，逐例算术均值19.9\%，范围0.0\%--33.1\%），
 全例$\Delta\text{WNS} \in [-0.0115, +0.0162]$\,ns。
 \textbf{关键发现：在所有完成闭合的电路上，选择性恢复的时序波动仅占合成级时序赤字（理想STA WNS）的0.00\%--1.21\%（加权平均0.26\%）}，
@@ -771,7 +750,7 @@ b13 & 29 & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 96.8\% & 100.0\% & 100.0
 选择性恢复的面积回收能力不限于特定设计族，
 在ISCAS89（8例）和ITC-99（15例有修改电路全部完成闭合）两个独立基准共23个完成电路上，全例满足时序退化门限，
 新增面积回收算术均值分别为14.1\%和19.9\%（ITC-99加权回收率27.8\%，回退857/971 = 88.3\%处修改）。
-其有效性源于Resizer在实际修复中普遍产生了大量对最长路径WNS无贡献的过度放大修改，而$O(\log N)$转折门隔离消除了大规模电路上的多门耦合回退瓶颈。
+这些结果量化了固定寄生诊断中的回收空间。后续详细重布线进一步验证寄生变化对结果的影响。
 
 \subsection{真实重布线物理验收与原生基线对照}
 
@@ -808,12 +787,12 @@ s953 & 在线二分隔离（14/23） & 2433.58 & 2319.72 & $-$4.68\% & $+$17.26 
 在ITC-99代表4个大中规模电路（b04、b05、b11、b12）上的同口径重布线物理验收进一步显示：
 OpenROAD原生功耗回收仍为4/4零修改（跨两族12/12均为0\%）；
 b05直接通过$B=10$\,ps重布线门限与全网表SEC（总面积$-5.04\%$，$\Delta\text{WNS}=+8.63$\,ps，$\Delta\text{hold}=+0.94$\,ps）；
-而b04（$-12.32$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）在重布线后超出10\,ps门限，再次证实大电路不能仅凭固定SPEF诊断数宣称物理安全，必须经过在线重布线筛选或二分隔离（对比见图~\ref{fig:multicorner_spef}b）。
+b04（$-12.32$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）在重布线后超出10\,ps门限。图~\ref{fig:multicorner_spef}示意固定寄生与重布线评估的区别。
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.96\textwidth]{fig_multicorner_spef_zh.pdf}
-\caption{跨工艺角签核与固定SPEF偏差可视化：（a）真实SKY130 SS/TT/FF三工艺角下10个纯独立回收端点的时序变化（在线三角门控消除s641 SS违例后实现SS 10/10达标）；（b）固定SPEF乐观预测与真实重布线+新RCX实测之间的偏差对照，及s953在线二分修正效果。}
+\includegraphics[width=0.96\textwidth]{imagegen_20261123/04_timing_views.png}
+\caption{冻结寄生预筛与重布线时序评估。重提取寄生参数后，分别测量典型角TT、慢角SS、快角FF以及TT下显式输入/输出约束与片上降额四种时序视图。}
 \label{fig:multicorner_spef}
 \end{figure*}
 
@@ -835,7 +814,7 @@ b05直接通过$B=10$\,ps重布线门限与全网表SEC（总面积$-5.04\%$，$
 完整面积由1052.26\,\textmu m$^2$降至1038.50\,\textmu m$^2$（$-1.31\%$），
 $\Delta\text{WNS}=-7.028$\,ps（单测累加预测为$-2.865$\,ps，实测捕获$-4.163$\,ps非线性寄生耦合），
 $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
-这验证了可调预算组合搜索在摆脱历史日志依赖后仍能在线发现安全有效的跨源面积回收组合。
+该组合同时使用了历史名单与库内枚举，实测WNS变化体现了动作间的非加性。
 
 进一步在s641和s953全库候选池上执行同预算（$B=10$\,ps，最多12次重布线评估）的顺序贪心与有界束搜索（束宽2、最大深度4）消融对照：
 (1)~在s641上，顺序贪心仅用6次评估即找到3门组合（含2处逻辑门与1处缓冲器降尺寸），节省22.52\,\textmu m$^2$（$-1.99\%$，$\Delta\text{WNS}=-0.43$\,ps，$\Delta\text{hold}=+0.10$\,ps），优于同预算按层广度展开的有界束搜索（15.01\,\textmu m$^2$）及仅用历史名单的选择性恢复结果（17.52\,\textmu m$^2$）；
@@ -844,20 +823,20 @@ $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 
 \subsection{完全脱离上游日志的独立面积回收}
 
-基于全库功能等价替换枚举，本机制可完全脱离上游Resizer修改日志与修复前网表，仅从布线后门级网表与标准单元库出发执行在线重布线面积回收（表~\ref{tab:tool_agnostic}，$B=10$\,ps，每电路最多6--10次评估）。
-为提升该机制在不同电路与标准单元库上的适配性，候选构建阶段自动排除非功能隔离填充单元与纯时钟虚拟负载单元，并引入两项策略：(1)~\textbf{标准驱动优先排序}：将极易引起信号转换时间急剧恶化的超弱最小驱动变体延后，优先评估常规标准驱动与缓冲器/反相器缩减；(2)~\textbf{自适应微批次二分恢复}：以微批次规模$b=3$并行提交互不重叠实例的降面积候选，整批通过即单次评估提交3门，若触发时序越界则在批内自动执行$O(\log b)$二分切分以隔离转折门。
-在10个跨族电路（6个ISCAS89与4个ITC-99）上实现\textbf{10/10（100\%）}正面积回收（0.67\%--5.58\%），全部$\text{DRC}=0$、$\Delta\text{hold} \ge 0.00$\,ps且10/10全网表两态SEC通过，全面超越仅作为对比基线的OpenROAD原生功耗回收（0.00\%），各电路总面积降幅与重布线后时序余量对比见图~\ref{fig:tool_agnostic_results}，详细多工艺角签核对照见图~\ref{fig:multicorner_spef}a。
+候选集合由布线后门级网表与标准单元库生成。在线评估从对应的物理快照出发，执行单元替换、重新合法化、详细重布线、寄生重提取和传播时钟STA。图~\ref{fig:tool_agnostic_results}给出无需上游修改日志的流程。
+候选生成排除非功能隔离填充单元和虚拟时钟负载，优先考虑常规驱动变体。微批次最多合并三处不同实例的替换。整批满足约束时一次提交，越界时依次检查两个子批，并以最新接受点测试后续子批。单条分裂路径的深度为$O(\log b)$，展开大小为$b$的整棵二叉树最多需要$2b-1$次评估。完整搜索受预设评估上限约束。
+表~\ref{tab:tool_agnostic}展示六个ISCAS89与四个ITC-99电路的名义结果。在各自名义参考下，所有候选端点均满足10\,ps建立时间预算和相对保持时间门，每例需6--10次物理评估。总面积下降0.67\%--5.58\%，十例均通过设计规则检查与全网表两态SEC。
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.92\textwidth]{fig_tool_agnostic_results_zh.pdf}
-\caption{脱离上游日志的独立重布线面积回收效果（10/10正收益）：（a）总面积降幅相对同起点OpenROAD原生功耗回收（0.00\%），标注微批次与安全驱动排序对b05/b12的增益；（b）真实重布线与新RCX后建立时间$\Delta\text{WNS}$与保持时间$\Delta\text{hold}$，全部满足$B=10$\,ps预算与非退化约束。}
+\includegraphics[width=0.92\textwidth]{imagegen_20261123/05_independent_recovery.png}
+\caption{无需上游日志的等价单元降尺寸。兼容替换保留逻辑连接，单元宽度和引脚位置改变后重布受影响的信号线。}
 \label{fig:tool_agnostic_results}
 \end{figure*}
 
 \begin{table*}[t]
 \centering
-\caption{完全脱离Resizer日志的独立面积回收（$B=10$\,ps，每电路$\le 10$次重布线，10/10全胜）}
+\caption{独立面积回收的名义结果（$B=10$\,ps，6--10次重布线评估）}
 \label{tab:tool_agnostic}
 \footnotesize\setlength{\tabcolsep}{6pt}
 \begin{tabular}{lrrrrrrl}
@@ -879,92 +858,143 @@ b12（微批次+安全驱动） & 7977.65 & 7912.59 & $-$0.82\% & $-$0.03 & $+$0
 \end{tabular}
 \end{table*}
 
-在更大规模的ITC-99电路b04、b05、b11与b12上，自适应微批次恢复在仅6--8次重布线评估内全部实现正面积回收：b05一次提交8门，将总面积降幅从单门顺序的2.78\%提升至\textbf{3.47\%}（118.86\,\textmu m$^2$）且setup WNS改善$+7.43$\,ps、hold改善$+2.02$\,ps；b12在标准驱动优先排序与微批次搜索下，避免了评估预算被非功能隔离单元与超弱最小驱动变体阻塞，提交4门回收65.06\,\textmu m$^2$（$-0.82\%$，TT $\Delta\text{WNS}=-0.03$\,ps、$\Delta\text{hold}=+0.05$\,ps，全网表SEC通过）。
-进一步在全部10个端点上执行显式IO约束（$0.10$\,ns端口延迟、$0.01$\,pF输出负载与$0.05$\,ns输入转换时间）与片上工艺偏差（OCV）降额（早路径0.90、晚路径1.10）联合审计：未开启在线IO+OCV门控时8/10直接满足10\,ps预算（含新增实测b04 $+5.96$\,ps、b11 $+5.22$\,ps、b12 $+1.46$\,ps），仅s713（$-10.15$\,ps）与s832（$-17.20$\,ps）超限；将上述IO+OCV联合约束直接并入在线物理评估闭环重跑s713与s832后，系统自动拒绝越界候选并安全回退至\texttt{CONTROL}（退化$0.00$\,ps），从而实现\textbf{10/10（100\%）}满足10\,ps IO+OCV门限。
-此外，基于SKY130真实多工艺角库（慢角$\text{SS}_{-40^\circ\text{C},1.40\,\text{V}}$、典型角$\text{TT}_{25^\circ\text{C},1.80\,\text{V}}$、快角$\text{FF}_{-40^\circ\text{C},1.95\,\text{V}}$）对全部10个正回收端点执行签核复测：TT单角门控下SS慢角已有9/10满足10\,ps setup预算（含b12在SS角改善$+64.59$\,ps、FF hold改善$+0.07$\,ps），仅s641退化$-18.50$\,ps；将三角约束同步并入s641在线门控重跑后，算法自动收敛至安全替代点（面积$-0.66\%$、SEC通过），同步将SS setup改善至$+71.69$\,ps、TT setup改善至$+4.74$\,ps、FF hold改善至$+1.29$\,ps，从而实现SS慢角\textbf{10/10（100\%）}达标与FF快角\textbf{6/10}严格非退化（余4例变动在$-0.10\text{--}-3.94$\,ps）。
+在ITC-99上，b05的单门顺序与微批次搜索分别回收2.78\%和3.47\%的总面积。b12在八次评估内提交四处替换，回收65.06\,\textmu m$^2$（0.82\%），其名义建立时间与保持时间WNS分别变化$-0.03$\,ps和$+0.05$\,ps。
 
-\subsection{同起点五方法强基线对照与完整PPA功耗审计}
+\subsection{同一候选端点的多工艺角与显式IO复测}
 
-为验证本方法并非仅超越遇负松弛即拒绝修改的原生基线，我们在全部10个电路的相同布线后起点、$B=10$\,ps预算与相同6--10次评估上限下，横向对比了五类方案（图~\ref{fig:strong_baselines}a、表~\ref{tab:strong_baselines_ppa}）：
-(1)~OpenROAD原生基线（10/10为0.00\%）；
-(2)~\textbf{离线固定寄生灵敏度批处理}：在冻结寄生网表上按引脚松弛余量加权面积收益进行排序与逐门预筛（将10\,ps预算内的候选批量一次性提交真实重布线）；
-(3)~\textbf{经典拉格朗日松弛（LR）离线离散降尺寸}：在冻结SPEF上执行5轮子梯度拉格朗日乘子更新与成本-松弛权衡选取（每电路17--60处候选），再一次性提交相同详细重布线与传播STA验收；
-(4)~\textbf{同预算在线单门灵敏度贪心}：沿用相同松弛余量灵敏度排序，在相同重布线次数下逐门在线试探（不含零级驱动延后与微批次二分）；
-(5)~\textbf{FAECO独立闭环}。
+表~\ref{tab:aligned_timing}固定表~\ref{tab:tool_agnostic}的十个正回收网表及其重提取寄生，报告图~\ref{fig:multicorner_spef}所示四种时序视图。三个工艺角分别为典型角TT（$25^\circ$C，1.80\,V）、慢角SS（$-40^\circ$C，1.40\,V）和快角FF（$-40^\circ$C，1.95\,V）。显式输入/输出（input/output，IO）约束在TT下采用0.10\,ns输入与输出延迟、0.01\,pF输出负载、0.05\,ns输入转换时间，以及片上工艺偏差（on-chip variation，OCV）早/晚降额0.90/1.10。
+
+\begin{table*}[t]
+\centering
+\caption{十个SKY130正回收端点的四种时序复测（ps）}
+\label{tab:aligned_timing}
+\footnotesize\setlength{\tabcolsep}{5.5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & \multicolumn{4}{c}{相对各视图参考的建立/保持时间WNS变化} & 绝对保持时间WNS \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-6}
+电路 & TT & SS & FF & TT IO+OCV & TT IO+OCV（参考/候选） \\
+\midrule
+s382 & $-6.705/0.000$ & $+34.940/0.000$ & $+1.724/0.000$ & $+15.465/-0.059$ & $-100.759/-100.819$ \\
+s420 & $+4.120/+0.013$ & $+17.917/+0.074$ & $-2.840/+0.014$ & $+5.732/+0.689$ & $-67.435/-66.746$ \\
+s641 & $-0.427/+0.104$ & $-18.505/+0.791$ & $+2.104/-1.400$ & $+4.907/-0.362$ & $-82.559/-82.921$ \\
+s713 & $+0.629/+3.646$ & $-4.583/+41.831$ & $+0.404/-3.944$ & $-10.147/+0.197$ & $-98.312/-98.116$ \\
+s832 & $-4.165/+2.643$ & $+40.008/+4.722$ & $-5.409/+2.053$ & $-17.204/+0.156$ & $-74.680/-74.524$ \\
+s953 & $-9.880/+2.988$ & $+90.459/+7.789$ & $+2.310/+2.038$ & $-7.108/-1.027$ & $-118.625/-119.652$ \\
+b04 & $+5.311/+0.070$ & $+53.423/-0.130$ & $+3.409/-0.102$ & $+5.961/+3.197$ & $-123.293/-120.096$ \\
+b05 & $+6.706/+1.894$ & $+20.826/-2.327$ & $+3.779/-1.383$ & $+3.834/+2.829$ & $-41.337/-38.507$ \\
+b11 & $+4.989/-1.632$ & $+20.655/-0.467$ & $-29.022/-0.177$ & $+5.225/+0.473$ & $-81.881/-81.408$ \\
+b12 & $+1.441/+0.089$ & $+64.588/+0.306$ & $+29.798/+0.066$ & $+1.461/-4.932$ & $-40.949/-45.881$ \\
+\bottomrule
+\end{tabular}
+\parbox{0.95\textwidth}{\footnotesize 各行使用表~\ref{tab:tool_agnostic}的候选网表和寄生。五个ISCAS89电路（s420、s641、s713、s832、s953）的三角与IO+OCV参考采用独立重布线CONTROL。b05的三角参考为Resizer原始端点，IO+OCV采用独立重布线CONTROL。其余复测使用Resizer原始端点。同一候选在不同参考下的差值分列，例如b11的名义保持时间变化为+0.620\,ps，TT复测为$-1.632$\,ps。}
+\end{table*}
+
+同一批正回收端点中，9例满足SS建立时间预算，5例满足FF相对保持时间非退化。s641采用另一网表和寄生作为多角恢复端点后，面积下降0.66\%，SS建立时间WNS改善71.686\,ps，FF保持时间WNS改善1.286\,ps，SEC通过。替换该例后，SS建立时间预算与FF相对保持时间非退化分别为10/10和6/10。该替代端点缺少IO+OCV复测，其TT历史读数的参考与候选采用不同版本的TT库。
+
+十个名义正回收端点中，8例满足IO+OCV建立时间预算。s713与s832在该视图分别下降10.147和17.204\,ps，复测后的在线筛选均返回其原始Resizer参考点，面积回收均为零。十个名义端点及其IO+OCV参考点均有负的绝对保持时间余量。相对WNS合格只表明其相对参考的退化受控。
+
+\subsection{s713与s832的同参考联合门控}
+
+为判断显式IO建立时间超预算的两个电路能否联合回收，每例固定一个Resizer物理快照。参考与候选的四种时序视图分别读取同一份网表及其对应的SPEF。联合接受要求面积下降、设计规则检查通过、四种视图的建立时间WNS损失均不超过10\,ps，且保持时间WNS相对不下降并保持非负。总负松弛同时记录，用于诊断。两例各测试十个候选与一个零替换重布线对照，二十个候选点的设计规则检查均通过。两例的原始IO+OCV绝对保持时间WNS分别为$-98.219$\,ps和$-75.316$\,ps，两个零替换对照与二十个候选点的该项余量仍为负，联合约束下无正回收端点。
+
+在保留其余门限、仅移除IO+OCV绝对保持时间非负条件的诊断中，s713仍未获得正回收端点，十个候选在该视图的绝对保持时间WNS为$-99.035$至$-98.036$\,ps。s832有一个可行诊断端点，将总面积从1167.3696降至1163.6160\,\textmu m$^2$（0.322\%），Yosys证明162个等价点且无未证点。四种视图的相对时序变化见表~\ref{tab:s832_relative_joint}。该端点的IO+OCV绝对保持时间WNS为$-74.515$\,ps，仍低于非负门限。
+
+\begin{table}[t]
+\centering
+\caption{s832相对保持时间诊断端点的时序变化（ps）}
+\label{tab:s832_relative_joint}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrr}
+\toprule
+时序视图 & $\Delta$建立WNS & $\Delta$保持WNS & $\Delta$TNS \\
+\midrule
+TT & $-4.150$ & $+5.708$ & $+4.010$ \\
+SS & $+18.811$ & $+22.091$ & $-99.682$ \\
+FF & $+2.686$ & $+1.676$ & $-1.792$ \\
+TT IO+OCV & $+6.404$ & $+0.801$ & $+39.753$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{五种面积回收方法与功耗对照}
+
+图~\ref{fig:strong_baselines}给出五种方法的比较流程。各方法从同一电路对应的Resizer物理输入出发，使用10\,ps建立时间损失预算。在线单门贪心与FAECO共享各电路6--10次重布线评估上限。固定SPEF灵敏度批处理和五轮冻结寄生LR降尺寸先离线选取，再按相同重布线路径评价一个终点。OpenROAD原生功耗回收使用工具内置策略。逐电路有效面积与功耗见表~\ref{tab:strong_baselines_ppa}。
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{fig_strong_baselines_zh.pdf}
-\caption{同起点强基线对照与万门级增量绕线提速：（a）四方法在全部10个电路上的有效总面积降幅对比（红叉标示固定SPEF离线批处理重布线后违反10\,ps或hold门的失效案例）；（b）b12与万门级b15上全芯片擦除重布线与局部直连线网增量绕线的单次评估耗时及DRC收敛对比。}
+\includegraphics[width=0.95\textwidth]{imagegen_20261123/06_comparison.png}
+\caption{五种面积回收方法的物理评估流程。离线方法对选定终点作重布线后验，在线方法使用重布线结果决定后续替换。}
 \label{fig:strong_baselines}
 \end{figure*}
 
 \begin{table*}[t]
 \centering
-\caption{同起点强基线对照（原生与LR重布线后均0.00\%）及FAECO完整PPA功耗与IO+OCV签核汇总}
+\caption{五种方法的有效面积降幅与FAECO端点功耗。原生回收与本文冻结寄生LR实现在该组基准上的有效降幅均为0.00\%。}
 \label{tab:strong_baselines_ppa}
 \footnotesize\setlength{\tabcolsep}{4.5pt}
 \begin{tabular}{l|rr|rr|rrr}
 \toprule
-\textbf{电路} & \textbf{固定SPEF批} & \textbf{后验ΔWNS/门控} & \textbf{单门灵敏度} & \textbf{FAECO} & \textbf{Δ总功耗} & \textbf{Δ组合功耗} & \textbf{IO+OCV ΔWNS} \\
+\textbf{电路} & \textbf{固定SPEF批} & \textbf{后验WNS变化/门控} & \textbf{单门灵敏度} & \textbf{FAECO} & \textbf{总功耗变化} & \textbf{组合功耗变化} & \textbf{IO+OCV $\Delta$WNS} \\
               & \textbf{有效降幅} & \textbf{/ps} & \textbf{在线贪心} & \textbf{独立闭环} & & & \textbf{/ps} \\
 \midrule
 s382 & 0.71\% & $-$4.58 / PASS    & 1.66\% & \textbf{1.78\%} & $-$0.27\% & $-$3.57\% & $+$15.46 \\
 s420 & 0.27\% & $-$7.78 / PASS    & \textbf{5.98\%} & 5.58\% & $-$2.26\% & $-$8.26\% & $+$5.73 \\
 s641 & 0.00\% & $-$40.89 / FAIL   & 1.66\% & \textbf{1.99\%} & $-$0.82\% & $-$6.36\% & $+$4.91 \\
-s713 & 0.00\% & $-$121.31 / FAIL  & \textbf{2.99\%} & 2.32\% & $-$1.09\% & $-$7.46\% & 0.00（在线门控） \\
-s832 & 0.00\% & $-$123.44 / FAIL  & \textbf{2.68\%} & 1.71\% & $-$1.12\% & $-$3.36\% & 0.00（在线门控） \\
+s713 & 0.00\% & $-$121.31 / FAIL  & \textbf{2.99\%} & 2.32\% & $-$1.09\% & $-$7.46\% & $-$10.15 \\
+s832 & 0.00\% & $-$123.44 / FAIL  & \textbf{2.68\%} & 1.71\% & $-$1.12\% & $-$3.36\% & $-$17.20 \\
 s953 & 0.00\% & hold $-$2.77 / FAIL & 0.00\% & \textbf{0.67\%} & $-$0.88\% & $-$1.54\% & $-$7.11 \\
 b04  & 0.18\% & $+$0.78 / PASS    & \textbf{1.26\%} & 0.86\% & $-$0.76\% & $-$1.57\% & $+$5.96 \\
 b05  & 0.11\% & $+$2.66 / PASS    & 3.32\% & \textbf{3.47\%} & $-$0.16\% & $-$1.42\% & $+$3.83 \\
 b11  & 0.12\% & $-$1.20 / PASS    & \textbf{1.10\%} & 0.90\% & $-$0.91\% & $-$0.87\% & $+$5.22 \\
 b12  & 0.00\% & hold $-$0.002 / FAIL & 0.41\% & \textbf{0.82\%} & $-$1.31\% & $-$2.83\% & $+$1.46 \\
 \midrule
-\textbf{汇总} & \textbf{5/10 有效} & 均降 \textbf{0.14\%} & \textbf{9/10}（均2.11\%） & \textbf{10/10}（均2.01\%） & 均\textbf{$-$0.96\%} & 均\textbf{$-$3.72\%} & \textbf{10/10 PASS} \\
+\textbf{汇总} & \textbf{5/10有效} & 均降 \textbf{0.14\%} & \textbf{9/10}（均2.11\%） & \textbf{10/10}（均2.01\%） & 均\textbf{$-$0.96\%} & 均\textbf{$-$3.72\%} & \textbf{8/10}在预算内 \\
 \bottomrule
 \end{tabular}
 \end{table*}
 
-由表~\ref{tab:strong_baselines_ppa}可得出四项关键结论：
-(1)~\textbf{离线固定寄生预筛与经典LR基线的不可靠性}：即便在冻结SPEF上仅挑选1个高裕量候选，离线批处理在s641（$-40.89$\,ps）、s713（$-121.31$\,ps）与s832（$-123.44$\,ps）上重布线后均出现大幅Setup坍塌，在s953/b12上引发hold微退，导致5/10电路被后验门控拒收，平均有效收益仅0.14\%；而传统5轮冻结寄生拉格朗日松弛基线虽然表面宣称7.81\%--14.14\%的激进降幅（每电路17--60门），在完整重合法化、15轮详细重布线与新RCX后\textbf{10/10（0\%合格）}发生显著Setup坍塌（s382退化$-218.76$\,ps、s713达$-503.84$\,ps、s953达$-399.66$\,ps、b05达$-624.06$\,ps、b12达$-706.03$\,ps，其余电路$-79.60\sim-320.82$\,ps），有效面积收益均为0.00\%，印证了静态线性乘子无法预测重布线耦合跃变与多门slew悬崖；
-(2)~\textbf{松弛灵敏度与微批次机制的正交互补性}：纯单门在线灵敏度贪心虽在s420/s713/s832/b04/b11中凭借非关键路径优先获得高效率，但在耦合敏感的s953上完全受阻（0.00\%）且在b12上仅获0.41\%；相反，FAECO凭借安全驱动排序与自适应微批次在10/10电路全数取得正收益（b12达0.82\%、2倍于单门贪心），表明将“松弛裕量感知”与“微批次二分”耦合可进一步融合二者优势；
-(3)~\textbf{完整PPA功耗协同收益}：在未对功耗单独优化的前提下，FAECO在全部10个电路上同步降低总功耗（均值$-0.96\%$）与组合逻辑功耗（均值$-3.72\%$，s420组合功耗降8.26\%、静态漏电降8.68\%）。
+冻结寄生灵敏度批处理中，五例的候选终点在详细重布线后违反建立或保持时间门限，有效面积平均下降0.14\%。实测的五轮冻结寄生LR在离线阶段给出7.81\%--14.14\%的面积降幅，重布线后建立时间WNS下降79.60--706.03\,ps，十例均未通过预算。此结果量化了该LR实现的冻结寄生误差。
 
-\subsection{局部直连线网增量绕线加速与万门级电路b15闭合}
+同预算下，单门在线贪心在九例取得正收益，平均降幅为2.11\%。FAECO的平均降幅为2.01\%，十例均取得正收益。FAECO在单门贪心无正收益的s953回收0.67\%，在b12回收0.82\%，后者为单门贪心0.41\%的两倍。s420、s713、s832、b04与b11由单门贪心获得更大降幅。
 
-针对更大规模设计全芯片详细重布线耗时高昂的瓶颈，我们将全芯片信号线擦除改进为\textbf{局部直连线网增量绕线}：保留未受修改单元触及的既有布线拓扑，仅清除与待评估替身单元直连的信号线网并调用局部增量全局与详细布线。
-首先在b12（7977.65\,\textmu m$^2$）上同配置对标（图~\ref{fig:strong_baselines}b）：局部增量绕线将单次评价时间由112.02\,s缩短至52.94\,s（\textbf{2.12倍提速}），且提取后的建立时间WNS（$-1.8759$\,ns与$-1.8747$\,ns之差仅1.17\,ps）与保持时间（偏差0.09\,ps）高度吻合全芯片重布线结果。
-进而将该局部增量流程与建立/保持时间联合裕量排序耦合，在b14与万门级b15上开展跨尺度评估：
-b14（18159.92\,\textmu m$^2$）由于前端综合已将全部常规组合单元映射至最小尺寸档，可降尺寸候选集为空；
-而在b15（25\%布局利用率下共5,494个标准单元组件、4,373条线网，总面积33737.36\,\textmu m$^2$，基准全芯片布线耗时980.95\,s、$\text{DRC}=0$）上，若沿用全芯片擦除重布线单次评估耗时1426.14\,s且10轮后仍残留66处DRC违例；切换为局部直连线网增量绕线后，全部6轮在线搜索均在184.83--200.92\,s内收敛至\textbf{DRC=0}（\textbf{7.1--7.7倍提速}）。在仅容忍0.05\,ps寄生提取舍入底噪（绝对保持时间余量高达$+445.66$\,ps，实测微小波动仅$-0.021$\,ps）的门控下，第6轮评估（184.83\,s）提交5个高裕量门回收\textbf{88.84\,\textmu m$^2$}（$-0.26\%$），实现典型角建立时间改善$+0.068$\,ps、慢角建立时间改善\textbf{$+199.996$\,ps}（慢角保持时间变化$0.000$\,ps）、快角保持时间变化$0.000$\,ps、显式IO+OCV改善$+0.027$\,ps、静态漏电下降$-0.84\%$且全网表两态SEC通过。
+面积优化端点的总功耗和组合逻辑功耗均低于各自参考，十例平均分别下降0.96\%和3.72\%。其中s420的组合功耗下降8.26\%，静态漏电下降8.68\%。
 
-\subsection{跨工艺节点验证：ASAP7 7\,nm两万门级aes\_cipher\_top}
+\subsection{局部直连线网增量绕线}
 
-为评估本方法脱离SKY130 130\,nm之后对先进工艺与更大规模工业基准的跨尺度适用性，我们将候选生成器扩展至支持多文件、多阈值电压（低阈值LVT/常规阈值RVT/超低阈值SLVT）标准单元库，并在ASAP7 7\,nm多阈值库下的20,097实例密码核\texttt{aes\_cipher\_top}（含19,534个逻辑与时序单元及563个阱接触单元）上开展同起点验证（表~\ref{tab:asap7_aes}）。需要指出，不同于前文SKY130全流程15轮详细重布线与RCX提取口径，本节严格遵循MLCAD26公开基线的后布局全局布线评估协议（时序修复后经详细合法化、全局布线与全局寄生参数提取，理想时钟），单次全芯片评估耗时约8.4--9.3\,s。
+全芯片信号线擦除后需要重新处理与本次候选无关的布线。局部增量流程仅清除与替换实例直连的信号线网，保留其余布线并调用详细布线修正受影响区域。
+
+在b12的同一替换组合上，全芯片重布线耗时112.02\,s并达到$\text{DRC}=0$，局部增量绕线耗时52.94\,s，残留16处设计规则违例。二者的建立和保持时间WNS相差1.17\,ps和0.09\,ps。时间比包含不同的布线收敛状态。
+
+在b14上，综合后常规组合单元已居最小驱动档，候选集合为空。b15有5,494个标准单元组件和4,373条线网，布局利用率为25\%，参考总面积为33737.36\,\textmu m$^2$。全芯片擦除后评估耗时1426.14\,s，十轮详细重布线后仍有66处违例。局部增量搜索的六次评估均达到$\text{DRC}=0$，耗时184.83--200.92\,s。第六次评估提交五处替换，回收88.84\,\textmu m$^2$（0.26\%），典型角建立时间改善0.068\,ps，慢角建立时间改善199.996\,ps，快角保持时间无变化。典型角保持时间下降0.021\,ps，评估采用0.05\,ps寄生提取数值容差，参考的绝对保持时间余量为445.66\,ps。最终端点静态漏电下降0.84\%，通过全网表两态SEC。
+
+\subsection{ASAP7 AES密码核的全局布线评估}
+
+候选生成器支持多文件、多阈值电压标准单元库。在ASAP7的7\,nm多阈值电压库下，评估对象为20,097实例的\texttt{aes\_cipher\_top}，包括19,534个逻辑与时序单元和563个阱接触单元。采用后布局合法化、全局布线、全局布线寄生估算和理想时钟STA，单次全芯片评估耗时8.4--9.3\,s。该阶段和寄生精度与前述SKY130详细重布线评估分别报告。
 
 \begin{table}[t]
 \centering
-\caption{ASAP7 7\,nm \texttt{aes\_cipher\_top}（20,097实例）跨工艺验证（基于全局布线寄生口径）}
+\caption{ASAP7 AES密码核的面积与时序（全局布线寄生估算，理想时钟）}
 \label{tab:asap7_aes}
 \scriptsize\setlength{\tabcolsep}{2.6pt}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrrrrr}
+\begin{tabular}{lrrrrrrr}
 \toprule
-\textbf{方案} & \textbf{改门数} & \textbf{总面积} & \textbf{面积降幅} & \textbf{$\Delta$WNS} & \textbf{$\Delta$TNS} & \textbf{SEC} \\
- & & \textbf{/\,\textmu m$^2$} & & \textbf{/ps} & \textbf{/ps} & \\
+\textbf{方案} & \textbf{改门数} & \textbf{总面积} & \textbf{降幅} & \textbf{$\Delta$WNS} & \textbf{TNS} & \textbf{$\Delta$TNS} & \textbf{SEC} \\
+ & & \textbf{/\textmu m$^2$} & & \textbf{/ps} & \textbf{/ps} & \textbf{/ps} & \\
 \midrule
-CONTROL基准 & 0 & 2136.42 & 0.000\% & 0.00 & 0.00 & 基准 \\
-OpenROAD原生恢复 & 341 & 2133.90 & 0.118\% & $-$0.00 & \textbf{$-$2516.01} & 未验 \\
-FAECO严格保序检查点 & 24 & 2135.69 & 0.034\% & $+$0.00 & $+$0.37 & PASS \\
-\textbf{FAECO（$B=10$\,ps）} & \textbf{191} & \textbf{2130.75} & \textbf{0.266\%} & \textbf{$+$0.00} & \textbf{$+$48.18} & \textbf{PASS} \\
+CONTROL & 0 & 2136.42 & 0.000\% & 0.00 & $-12405.20$ & 0.00 & 基准 \\
+原生回收 & 341 & 2133.90 & 0.118\% & 0.00 & $-14921.22$ & $-2516.01$ & 未验 \\
+FAECO严格检查点 & 24 & 2135.69 & 0.034\% & 0.00 & $-12404.83$ & $+0.37$ & 通过 \\
+FAECO（$B=10$\,ps） & 191 & 2130.75 & 0.266\% & 0.00 & $-12357.02$ & $+48.18$ & 通过 \\
 \bottomrule
 \end{tabular}%
 }
 \end{table}
 
-全库候选枚举在15.4\,s内从15个ASAP7库中发现10,010个合法降面积替换。实验表明：
-(1)~在包含部分正松弛支路的复杂工业设计（基准$\text{WNS}=-85.28$\,ps、$\text{TNS}=-12405.20$\,ps、$\text{hold}=+41.61$\,ps）上，OpenROAD原生功耗恢复虽能触发341次替换，但因缺乏联合约束与重布线后门控，仅回收0.118\%面积却引发TNS剧烈恶化\textbf{$-2516.01$\,ps}（$-20.3\%$；若额外放宽负裕度并允许违例，TNS更恶化至$-21866.84$\,ps）；
-(2)~FAECO通过$O(\log N)$微批次二分精准剥离出1个对hold微敏感的边界门，在零WNS损失（$+0.000$\,ps）、零hold退化（$+0.000$\,ps）与布局合法性全部通过下净提交191处等效降尺寸替换，实现\textbf{0.266\%}真实面积回收（原生基线的\textbf{2.25倍}），同步将总功耗由0.432\,W降至0.431\,W（$-0.23\%$）并\textbf{净改善TNS $+48.18$\,ps}，最终网表经Yosys对1252个内部等价节点全部完成形式等价证明。
+从15个ASAP7库枚举兼容替换耗时15.4\,s，得到10,010个候选。基准的建立时间WNS为$-85.28$\,ps，保持时间WNS为$+41.61$\,ps。原生功耗回收触发341次替换，面积下降0.118\%，全局布线寄生估算下TNS从$-12405.20$\,ps恶化至$-14921.22$\,ps。另一次放宽松弛裕量的原生回收读数为$-21866.84$\,ps，该值取自重布线前。
+
+FAECO的10\,ps预算搜索在44次评估内提交191处替换，报告精度下的建立和保持时间WNS均与参考一致。回收面积0.266\%，TNS改善48.18\,ps，功耗报告从0.432\,W变为0.431\,W，Yosys证明1,252个内部等价点。两种方法的面积与TNS结果来自共同的初始设计，FAECO与原生回收采用各自的评估预算。
 
 % ============================================================
 % §7 讨论
@@ -973,28 +1003,25 @@ FAECO严格保序检查点 & 24 & 2135.69 & 0.034\% & $+$0.00 & $+$0.37 & PASS \
 
 \subsection{覆盖优先是效率的来源}
 
-本文各核心机制——覆盖优先调度、可调预算、选择性恢复与脱离日志的微批次探索——共享一个核心原则：
-物理信号驱动的选择性。覆盖优先用STA报告中的端点覆盖区域
-限定候选搜索空间；可调预算用实际物理测量（非冻结估计）驱动组合选择；
-选择性恢复用逐门独立STA判定修改的必要性。
-其共同前提是：在当前物理实现点上，大多数非关键路径上的高驱动放大对最长路径延迟不产生影响，Resizer 69\%的无效放大为这一前提提供了直接证据。
+覆盖优先调度利用端点逻辑锥安排候选评估，可调预算用物理测量判定组合，选择性恢复由独立回退的STA结果引导。107处尺寸修改的独立回退诊断中有74处保持WNS不变。联合动作则可能改变路径排序和寄生参数，b22固定寄生联合回退和重布线后的对照都说明了复测的必要性。
 
 \subsection{与Resizer的关系：双向协同与独立延伸}
 
-在依托上游日志的选择性恢复模式下，覆盖优先机制并不以替代全局时序修复器的WNS收敛能力为目标，而是定位于事后清理：Resizer确保全局时序收敛，选择性恢复在预算约束内剥离不必要的面积代价。
-而在脱离上游日志的独立部署模式下，FAECO直接弥补了原生功耗回收在残留负松弛下完全失能（12/12为0.00\%）以及局部触发时缺乏TNS协同门控的不足，可作为后置功耗-性能-面积协同压缩模块接入任意标准单元物理流程后端。
+选择性恢复模式接在上游时序修复之后，利用修改记录搜索可回收的面积。独立模式直接处理已布线网表，以明确的时序预算在设计仍有残留负松弛时执行单元替换。原生回收在所测的十二个SKY130负松弛基准上未触发替换，在ASAP7的AES基准上触发替换并伴随TNS下降。
 
 \subsection{局限与未来工作}
 
 \begin{enumerate}
-\item \textbf{固有负松弛基线的相对保护边界。}
-      本文的预算门控保障机制聚焦于相对布线后基准起点的可控退化（$B=10$\,ps）与净面积回收，而非对存在固有约束违例的设计执行绝对时序闭合（$\text{WNS} \ge 0$）。
+\item \textbf{相对预算与绝对时序状态。}
+      建立时间预算以固定物理参考为基准。在原有违例未消除的情况下，即使相对预算满足，绝对WNS仍可能为负。十个SKY130正回收端点的IO+OCV复测均继承负的绝对保持时间余量。
 \item \textbf{最小尺寸电路的组合重构空间。}
       若待优化网表在前期综合或物理优化阶段已将常规组合单元全部映射至最小尺寸档（如b14），纯单元降尺寸替代空间将趋于枯竭，后续需引入逻辑重构或冗余门合并以拓展回收空间。
 \item \textbf{超大规模设计的邻域窗口加速。}
-      虽然局部直连线网增量绕线已将b15（3.37万\,\textmu m$^2$）单次评估压缩至约185\,s，但面向对象数倍于此的十万门级以上高拥塞设计时，结合局部边界框寄生提取与可迁移时序代理模型仍有较大加速空间。
-\item \textbf{更先进工艺与多角联合Vt-面积Pareto优化。}
-      本文已在SKY130 130\,nm全详细重布线流程与ASAP7 7\,nm两万门级多Vt基准上验证了机制的跨工艺有效性与参数鲁棒性；未来可进一步将多阈值电压等面积替换（SLVT/LVT向RVT降漏电）纳入统一离散微批次空间，并在十万门级以上设计上评估全详细重布线联合多工艺角的扩展性能。
+      b15的局部直连线网增量绕线在约185\,s内给出零DRC的候选。更拥塞或更大设计上的收敛成本需要在一致的输入、预算和DRC停止条件下进行比较。
+\item \textbf{跨工艺评估与多阈值电压替换。}
+      SKY130结果来自详细重布线与寄生重提取。ASAP7仅在一个AES密码核上采用全局布线寄生估算与理想时钟。多阈值电压等面积替换与更大设计的详细重布线联合评估仍待验证。
+\item \textbf{产物与测量溯源。}
+      历史数据的路由输入、STA参考和等价证明金标准分别绑定到物理快照。部分原始运行保留网表、SPEF、Tcl和日志，候选布线DEF未生成。上述记录支持回读已有结果，完整重跑还需要对应的工艺库、路由输入和工具版本。
 \end{enumerate}
 
 % ============================================================
@@ -1002,14 +1029,9 @@ FAECO严格保序检查点 & 24 & 2135.69 & 0.034\% & $+$0.00 & $+$0.37 & PASS \
 % ============================================================
 \section{结论}
 
-本文针对后布局门级ECO中的全局过修膨胀与负松弛回收失效问题，提出了覆盖优先调度与可调WNS预算面积回收框架FAECO。
-核心设计揭示了一项具有物理普遍性的结构规律：即使在布线后仍处于残留负松弛的设计中，大量非关键路径上的高驱动放大对最长路径延迟并无实质贡献，只要用真实重布线/寄生提取的在线反馈取代冻结静态估计，并在微小的可控时序预算（如10\,ps）下借助$O(\log N)$二分机制隔离多门耦合悬崖，便能安全释放可观的硅片面积与功耗余量，从而弥补传统原生功耗回收停摆（0/10）与经典冻结寄生LR方法重布线后大面积崩溃（10/10违例）的结构性不足。
+FAECO以相对WNS预算为布线后面积回收留出可调空间，并通过重布线、寄生重提取和等价性检查验证候选。覆盖优先在八个ISCAS89电路上减少了7.8\%--19.0\%的候选STA调用。以前缀二分定位越界动作并继续检查剩余回退，b22在固定寄生诊断中以10次验证STA回收33.1\%的上游净新增面积。
 
-主要实验证据与适用范围总结如下：
-(1)~覆盖优先与选择性回退在ISCAS89与ITC-99基准上分别清理61\%与88.3\%（加权27.8\%）的无贡献放大，将候选STA次数削减7.8\%--19.0\%，单位面积WNS效率达到Resizer的4.4倍，且仅用10次STA即完成大规模b22的耦合悬崖隔离；
-(2)~完全脱离上游日志的独立模式在SKY130跨族10个基准的15轮详细重布线与传播时钟签核下取得10/10净面积下降（0.67\%--5.58\%、组合功耗均降3.72\%）、10/10 SS慢角及IO+OCV达标与10/10全网表两态SEC通过，并借局部直连增量绕线将万门级b15评估提速7.7倍；
-(3)~在ASAP7 7\,nm两万门级\texttt{aes\_cipher\_top}（全局布线寄生口径）上实现0.266\%真实面积回收（原生恢复的2.25倍），同步将TNS净改善$+48.18$\,ps（原生恶化$-2516.01$\,ps）并完成1252个等价点的Yosys形式证明。
-上述方法及全流程脚本可在开源OpenROAD、Yosys与OpenSTA工具链上完整复现。
+独立模式在十个SKY130电路上均获得正的名义面积回收并通过全网表两态SEC。单门在线贪心的平均降幅为2.11\%，FAECO为2.01\%，两者分别覆盖9例和10例。对相同的正回收端点复测后，慢角和IO+OCV的建立时间预算分别有9例和8例满足。使用固定参考联合评估s713和s832时，两例的候选均存在负的IO+OCV绝对保持时间余量。局部增量绕线在b15上给出零DRC的正回收端点，ASAP7的AES案例在全局布线寄生估算下回收0.266\%面积、改善TNS 48.18\,ps。上述结果表明，在残留负松弛的设计上，面积回收范围取决于布线反馈和最终应用的时序视图。
 
 \vspace{0.3cm}
 \noindent\textbf{致谢。}
@@ -1018,8 +1040,9 @@ FAECO严格保序检查点 & 24 & 2135.69 & 0.034\% & $+$0.00 & $+$0.37 & PASS \
 % ============================================================
 % 参考文献
 % ============================================================
-\begingroup\footnotesize\setlength{\itemsep}{0.5pt}\setlength{\parskip}{0pt}
+\begingroup\footnotesize\linespread{0.94}\selectfont\setlength{\parskip}{0pt}
 \begin{thebibliography}{30}
+\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}
 
 \bibitem{openroad}
 Ajayi T, Chhabria V A, Foga\c{c}a M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C]//Proceedings of the 56th ACM/IEEE Design Automation Conference (DAC). 2019: 1--4.
