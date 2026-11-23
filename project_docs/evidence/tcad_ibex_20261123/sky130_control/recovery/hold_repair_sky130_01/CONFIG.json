@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "state": "prepared",
+  "control_source": "original SKY130 ORFS Ibex plus root dry hold-repair with 14 insertions",
+  "sources_sha256": {
+    "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/sky130_control/CONTROL.json": "f261513bcd005319b23169d509a25577419ea8605ea017b7846e8dbdc3f32fe9",
+    "/home/toylog/faeco_tcad_ibex_20261123/control_sky130/results/sky130hd/ibex/base/6_final.odb": "1eaadcd071f59cc9b9d1cb7bded205235122eab7184e9687e4352615d9c99b15",
+    "/home/toylog/faeco_tcad_ibex_20261123/control_sky130/results/sky130hd/ibex/base/6_final.sdc": "4e178c0c3469e33a244e3829b75ba473d1bae71dfd7c3765acb8847d63c508f5",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_dry_root/dry.odb": "755695216bec8e72e314ed11ffdf23997d910012624c6bdf7a3146458dd12dfa",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_dry_root/dry.tcl": "9ee669e1ad8b9e274d53a6e43acdd9b30dfda13932a902372114b9046e60728e",
+    "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad": "2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/setRC.tcl": "6aeade350bf498177ea61506db8849a064a71848b05c18ad6a6e1fc5d62c962a",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/fastroute.tcl": "a84110f70e0ff1540f4cfed6730d56b3011c6c06a6c897a4bd600522bb175dd3",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/rcx_patterns.rules": "d5bd9b1077ceac9929416abca272a6d52e51cd9a575453a31d129817bb286476",
+    "/home/toylog/faeco_eda/orfs/flow/scripts/util.tcl": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_01/inventory_utils.tcl": "e9e79e692b0a193bc9186e60f6d2d5ae7cc9ebeef08f681ff0c2e9af09c572e0",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_01/original_inventory.tcl": "6844ed42a9bf754eaee22f8f6e2a3c03018768667e072fa3e54c44aceb06f2d1",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_01/route_continue.tcl": "ba90e43f0a46c702c11192f9202db374bd953730606f1e9c1762a7842cde4eee"
+  },
+  "commands": {
+    "inventory": [
+      "/usr/bin/timeout",
+      "--kill-after=10s",
+      "120s",
+      "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+      "-threads",
+      "4",
+      "-no_splash",
+      "-exit",
+      "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_01/original_inventory.tcl"
+    ],
+    "route": [
+      "/usr/bin/timeout",
+      "--kill-after=15s",
+      "1500s",
+      "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+      "-threads",
+      "4",
+      "-no_splash",
+      "-exit",
+      "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_01/route_continue.tcl"
+    ]
+  },
+  "endpoint_dir": "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_01/endpoint"
+}

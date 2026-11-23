@@ -1,0 +1,106 @@
+[
+  {
+    "mode": "text guide DRT",
+    "raw_receipt": "/home/toylog/faeco_tcad_ibex_20261123/compare_sky130_v1/noop/receipt.json",
+    "receipt_sha256": "2f6e9b548475fc466b5da5ed86dde503dcdfbe25b146a994637c49fe03b484e0",
+    "drc": 0,
+    "new_drt": true,
+    "new_rcx": true,
+    "setup_hold_deltas": {
+      "FF": {
+        "setup_wns_ps": 0.0808242361927114,
+        "hold_wns_ps": -5.551115123125783e-05,
+        "setup_tns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      },
+      "TT": {
+        "setup_wns_ps": 0.42099657093785936,
+        "hold_wns_ps": 0.0,
+        "setup_tns_ps": 192.8661674810428,
+        "hold_tns_ps": 0.0
+      },
+      "SS": {
+        "setup_wns_ps": 2.48334686148155,
+        "hold_wns_ps": -0.07993605777301127,
+        "setup_tns_ps": 2983.1426218152046,
+        "hold_tns_ps": 0.0
+      }
+    },
+    "changed_nets": 13,
+    "moved_components": 0,
+    "failures": [
+      "SS:hold_regression"
+    ],
+    "seconds": 131.97426362100032
+  },
+  {
+    "mode": "embedded guide DRT",
+    "raw_receipt": "/home/toylog/faeco_tcad_ibex_20261123/compare_sky130_v2/noop/receipt.json",
+    "receipt_sha256": "bb69f3b50dc61ad9c9988048460efd59da48bb0aba199ac46496ea49f458a250",
+    "drc": 0,
+    "new_drt": true,
+    "new_rcx": true,
+    "setup_hold_deltas": {
+      "FF": {
+        "setup_wns_ps": 0.2078337502098293,
+        "hold_wns_ps": -5.551115123125783e-05,
+        "setup_tns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      },
+      "TT": {
+        "setup_wns_ps": -0.0026645352591003757,
+        "hold_wns_ps": 0.0,
+        "setup_tns_ps": 35.4845042238594,
+        "hold_tns_ps": 0.0
+      },
+      "SS": {
+        "setup_wns_ps": -0.6856737400084967,
+        "hold_wns_ps": -0.07993605777301127,
+        "setup_tns_ps": 749.4236342608929,
+        "hold_tns_ps": 0.0
+      }
+    },
+    "changed_nets": 16,
+    "moved_components": 0,
+    "failures": [
+      "SS:hold_regression"
+    ],
+    "seconds": 126.80810089500028
+  },
+  {
+    "mode": "frozen DRT re-extraction",
+    "raw_receipt": "/home/toylog/faeco_tcad_ibex_20261123/compare_sky130_v3/noop/receipt.json",
+    "receipt_sha256": "afbe8446a221124170514587d62983504df39cbe8be89b4d6055e5d0c678deac",
+    "drc": 0,
+    "new_drt": false,
+    "new_rcx": true,
+    "setup_hold_deltas": {
+      "FF": {
+        "setup_wns_ps": 0.0,
+        "hold_wns_ps": 0.0,
+        "setup_tns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      },
+      "TT": {
+        "setup_wns_ps": 0.0,
+        "hold_wns_ps": 0.0,
+        "setup_tns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      },
+      "SS": {
+        "setup_wns_ps": 0.0,
+        "hold_wns_ps": 0.0,
+        "setup_tns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      }
+    },
+    "changed_nets": 0,
+    "moved_components": 0,
+    "failures": [],
+    "seconds": 62.23859705299947,
+    "sec": [
+      13648,
+      0
+    ]
+  }
+]

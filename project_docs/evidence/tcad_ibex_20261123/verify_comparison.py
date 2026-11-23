@@ -54,6 +54,28 @@ def verify_endpoint(root, receipt, control, config):
     return {"sec": [sec["proven"], sec["unproven"]], "view_deltas_ps": view_deltas}
 
 
+def attempt_ledger(trials, trace):
+    return [
+        {
+            "endpoint": trial["endpoint_id"],
+            "actions": trial["actions"],
+            "accepted": step["accepted"],
+            "area_saved": trial.get("area_saved"),
+            "seconds": trial["wall_seconds"],
+            "drc": trial.get("drc_violations"),
+            "passed_drt": trial.get("routed_to_completion", False),
+            "passed_rcx": trial.get("extracted_to_completion", False),
+            "failures": trial["failures"],
+            "views_ps": {
+                view: {key: values[key] for key in
+                       ("setup_wns_ps", "hold_wns_ps", "setup_tns_ps", "hold_tns_ps")}
+                for view, values in trial["views"].items()
+            },
+        }
+        for trial, step in zip(trials, trace, strict=True)
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("raw_output", type=Path)
@@ -111,6 +133,7 @@ def main():
             "area_saved": saved,
             "common_wall_area_saved": common_saved,
             "common_wall_attempts": completed,
+            "attempts": attempt_ledger(trials, result["trace"]),
         }
         if selected["endpoint_id"] != "control":
             selected_trial = next(trial for trial in trials if trial["endpoint_id"] == selected["endpoint_id"])

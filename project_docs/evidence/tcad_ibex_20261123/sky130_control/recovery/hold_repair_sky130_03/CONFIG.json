@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "state": "prepared_second_hold_and_antenna_recovery",
+  "control_source": "_02 routed endpoint plus 10 incremental hold insertions in dry root 02",
+  "sources_sha256": {
+    "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/sky130_control/CONTROL.json": "f261513bcd005319b23169d509a25577419ea8605ea017b7846e8dbdc3f32fe9",
+    "/home/toylog/faeco_tcad_ibex_20261123/control_sky130/results/sky130hd/ibex/base/6_final.sdc": "4e178c0c3469e33a244e3829b75ba473d1bae71dfd7c3765acb8847d63c508f5",
+    "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad": "2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/setRC.tcl": "6aeade350bf498177ea61506db8849a064a71848b05c18ad6a6e1fc5d62c962a",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/fastroute.tcl": "a84110f70e0ff1540f4cfed6730d56b3011c6c06a6c897a4bd600522bb175dd3",
+    "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/rcx_patterns.rules": "d5bd9b1077ceac9929416abca272a6d52e51cd9a575453a31d129817bb286476",
+    "/home/toylog/faeco_eda/orfs/flow/scripts/util.tcl": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_02/endpoint/6_final.odb": "8018f00a04dd56ddac720ebbd46dd3828ec994314a95a8f060530a70886d5da6",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_02/endpoint/6_final.spef": "e38139b12bd7fd89ad5dc97b492071db06c1154e840a8a7a1459187a3dc42dba",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_dry_root_02/dry.odb": "091333a9a36415e687a4bf97d6b07929ea49a609ada0c8a0dcac362651d2049b",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_dry_root_02/dry.tcl": "4f2384ba5c4aedffd012f82690b9989c31e2e4a0b50b6fe279dd20a76509792c",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_03/inventory_utils.tcl": "e9e79e692b0a193bc9186e60f6d2d5ae7cc9ebeef08f681ff0c2e9af09c572e0",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_03/original_inventory.tcl": "ea213b1790391ff0c4832eb6b74588e26606f6eb12d3c3692bce674d891cdf37",
+    "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_03/route_continue.tcl": "8493be922cfc9afa7ba09afa77a41569efd0a9e880d628da26fb444cf920e523"
+  },
+  "commands": {
+    "inventory": [
+      "/usr/bin/timeout",
+      "--kill-after=15s",
+      "120s",
+      "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+      "-threads",
+      "4",
+      "-no_splash",
+      "-exit",
+      "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_03/original_inventory.tcl"
+    ],
+    "route": [
+      "/usr/bin/timeout",
+      "--kill-after=15s",
+      "1500s",
+      "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+      "-threads",
+      "4",
+      "-no_splash",
+      "-exit",
+      "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_03/route_continue.tcl"
+    ]
+  },
+  "endpoint_dir": "/home/toylog/faeco_tcad_ibex_20261123/hold_repair_sky130_03/endpoint",
+  "required_physical_gates": {
+    "drc_violations": 0,
+    "antenna_violations": 0,
+    "rcx_marker": "HOLD_REPAIR_RCX_COMPLETE"
+  },
+  "physical_method": "remove 21936 original filler cells; legalize; clear affected existing wires; GRT then DRT with at most 64 iterations; post-DRT native antenna diode repair with one iteration per cycle and at most two cycles, rerun DRT after each insertion; fill, verify and extract"
+}
