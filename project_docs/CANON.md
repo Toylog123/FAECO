@@ -4,6 +4,11 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-23 TCAD Ibex 双工艺原始起点核验
+
+- ASAP7 Ibex 原始 ORFS CONTROL 已完成 CTS、详细布线（DRC=0）和 RCX。按原约束独立 STA，FF/TT/SS 的 hold WNS 为 +35.956/+53.159/+77.237 ps，均非负。共享零动作通过三视图、电气与 SEC（17363/0），三臂对照在执行，目前完成单门臂。[ASAP7 收据](evidence/tcad_ibex_20261123/asap7_control/CONTROL.json)
+- SKY130HD Ibex 原始 ORFS CONTROL 的最终 DRC、天线违规均为零，RCX 完成。在原 I/O 与完整 ODB 下，SS hold WNS 为 −1379.766 ps，原始起点未达进入三臂的门限。统一 hold 修复已条件式登记；恢复后的资格、零动作和三臂结果待实测。[SKY130HD 收据](evidence/tcad_ibex_20261123/sky130_control/CONTROL.json)
+
 ## 2026-11-23 中文 v3 配图与实验口径修订
 
 中文活跃工作稿为 14 页，含六幅 ImageGen 示意图、十例 SKY130 逐端点对照与 s713/s832 联合评测。v22 标签锁定此前中文稿和工程基线。英文工作稿暂冻。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [联合评测](evidence/sky130_joint_constraints_20261123/REPORT.md) · [图件记录](../paper/zh/figures/imagegen_20261123/PROMPTS.json)

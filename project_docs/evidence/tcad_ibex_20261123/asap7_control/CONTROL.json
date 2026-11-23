@@ -1,0 +1,415 @@
+{
+  "schema_version": 1,
+  "design": "ORFS ASAP7 ibex / ibex_core",
+  "status": "hold_qualified",
+  "producer": {
+    "schema_version": 1,
+    "design": "ORFS ASAP7 ibex / ibex_core",
+    "status": "complete",
+    "started_utc": "2026-11-23T06:47:19.997424+00:00",
+    "work_home": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7",
+    "orfs_git_head": "da8f092a02a8e75658cc3100691aabff05f35629",
+    "openroad_binary_realpath": "/home/toylog/.cache/bazel/_bazel_toylog/c540bbdc4bbb635360729b4d7a91c803/execroot/_main/bazel-out/k8-opt/bin/openroad_unstamped",
+    "openroad_git_head": "b511b6a2bc936844b0319efc8b4972bb4ad7d911",
+    "candidate_runs": 0,
+    "sha256_pre": {
+      "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad": "2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19",
+      "/usr/local/bin/yosys": "4f8e613d835c248c63f0e487fb956e1667b9291ef87f0514fffb4dc07878d379",
+      "/home/toylog/faeco_eda/orfs/flow/designs/asap7/ibex/config.mk": "9649449735e38750d087026c4cceee2cac3069f3f5529f1de9bd28293c3384ef",
+      "/home/toylog/faeco_eda/orfs/flow/designs/asap7/ibex/constraint.sdc": "23e0ea9d7b72924fd06b07f012c77f44192c67fac92c215eece12dffb08b2346",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/rcx_patterns.rules": "32a117e5e866d3de1406e8f18d65b6f1857781f156638941a4769e25ef5252cc",
+      "/home/toylog/faeco_eda/orfs/flow/Makefile": "faa0fc8e42f459334d8dbf43643bcc44310a51e866dd783e51cccc6230f26bb5"
+    },
+    "command": [
+      "/usr/bin/timeout",
+      "--signal=TERM",
+      "--kill-after=15s",
+      "3600s",
+      "/usr/bin/make",
+      "--no-print-directory",
+      "-j1",
+      "-C",
+      "/home/toylog/faeco_eda/orfs/flow",
+      "DESIGN_CONFIG=/home/toylog/faeco_eda/orfs/flow/designs/asap7/ibex/config.mk",
+      "WORK_HOME=/home/toylog/faeco_tcad_ibex_20261123/control_asap7",
+      "FLOW_VARIANT=base",
+      "OPENROAD_EXE=/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+      "YOSYS_EXE=/usr/local/bin/yosys",
+      "NUM_CORES=4",
+      "SYNTH_HDL_FRONTEND=slang",
+      "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/logs/asap7/ibex/base/6_report.log"
+    ],
+    "returncode": 0,
+    "elapsed_seconds": 1140.755,
+    "ended_utc": "2026-11-23T07:06:20.763685+00:00",
+    "sha256_post": {
+      "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad": "2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19",
+      "/usr/local/bin/yosys": "4f8e613d835c248c63f0e487fb956e1667b9291ef87f0514fffb4dc07878d379",
+      "/home/toylog/faeco_eda/orfs/flow/designs/asap7/ibex/config.mk": "9649449735e38750d087026c4cceee2cac3069f3f5529f1de9bd28293c3384ef",
+      "/home/toylog/faeco_eda/orfs/flow/designs/asap7/ibex/constraint.sdc": "23e0ea9d7b72924fd06b07f012c77f44192c67fac92c215eece12dffb08b2346",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/rcx_patterns.rules": "32a117e5e866d3de1406e8f18d65b6f1857781f156638941a4769e25ef5252cc",
+      "/home/toylog/faeco_eda/orfs/flow/Makefile": "faa0fc8e42f459334d8dbf43643bcc44310a51e866dd783e51cccc6230f26bb5"
+    }
+  },
+  "control_output_paths": {
+    "odb": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/results/asap7/ibex/base/6_final.odb",
+      "bytes": 39319705,
+      "sha256": "d0b94b0a617f4004b693e71751f0d1db7f2ada4aa2deb5bceba393ec9e6d8153"
+    },
+    "def": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/results/asap7/ibex/base/6_final.def",
+      "bytes": 22313488,
+      "sha256": "5b6988613d02e619a25d242557c9c21abe88247e3d6a93b9ca8fab7f7029a20b"
+    },
+    "v": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/results/asap7/ibex/base/6_final.v",
+      "bytes": 2305470,
+      "sha256": "cb4b12d8cb0daf8de737b01d4d9239e293797781ff64699fd96537dbc5270933"
+    },
+    "sdc": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/results/asap7/ibex/base/6_final.sdc",
+      "bytes": 28336,
+      "sha256": "60f85a7e07165a4fc3373cf0957093bfadff175ee03b14c3fdc24632a4779ddc"
+    },
+    "spef": {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/results/asap7/ibex/base/6_final.spef",
+      "bytes": 28747825,
+      "sha256": "0e199c64d6313a514f8feba03067495542b2f5a10d64a310f31a99e7e45ca16f"
+    }
+  },
+  "source_sdc_semantics": {
+    "sdc_time_unit": "ps",
+    "period_sdc_units": 1000.0,
+    "io_delay_sdc_units": 200.0,
+    "virtual_latency_sdc_units": 161.775,
+    "source_core_latency_sdc_units": 161.775,
+    "period_ps": 1000.0,
+    "io_delay_ps": 200.0,
+    "virtual_latency_ps": 161.775,
+    "core_clock": "core_clock",
+    "clock_port": "clk_i",
+    "virtual_clock": "vclk_core_clock",
+    "expanded_port_counts": {
+      "input": 157,
+      "output": 106
+    },
+    "source_io_matches_all_nonclock_inputs_and_outputs": true,
+    "propagated_after_cts": "core_clock",
+    "other_exported_set_commands": [],
+    "core_clock_latency_semantics": "original ideal latency is replaced by actual propagated clock tree, virtual latency is retained"
+  },
+  "detailed_route_drc_count": 0,
+  "raw_reports": [
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/producer.log",
+      "bytes": 589574,
+      "sha256": "7faaf0d46e6c5e6f5c02d210f3f02803c81671a77807ab1da81389429bf449e6"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/producer_receipt.json",
+      "bytes": 2893,
+      "sha256": "ff329ccb8dfbbb14b71cd18b7c140fa3fd6a31732babffd8cae363af2de6ebc1"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/logs/asap7/ibex/base/5_2_route.log",
+      "bytes": 21440,
+      "sha256": "1cf29221bd354cbdec47b2b5af02849abe7581e74ba1854921aa0a42a924a2f0"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/logs/asap7/ibex/base/5_2_route.json",
+      "bytes": 1388,
+      "sha256": "459dd1008fa1d2f0247b715840373ea18df9ee5afce43e03eca3e0528404c5bd"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/logs/asap7/ibex/base/6_report.log",
+      "bytes": 4564,
+      "sha256": "fb0fc68bff4d8ee32cca423092869331ee3eb3557fd397714f9e70c09786fcc8"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/logs/asap7/ibex/base/6_report.json",
+      "bytes": 4034,
+      "sha256": "9c3925d53c8286f11ae6afd92971d7aa0dda9b8d2d4a9292147857babc1acb06"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/reports/asap7/ibex/base/5_route_drc.rpt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/reports/asap7/ibex/base/6_finish.rpt",
+      "bytes": 92112,
+      "sha256": "a7fc3b6a25caabd66d6a0ed85be74de9a729f0a1f449efd9137ea59d3c6b21d1"
+    }
+  ],
+  "views": {
+    "FF": {
+      "setup_wns_ps": 0.38036240823657863,
+      "hold_wns_ps": 35.95584940896401,
+      "setup_tns_ps": 0.0,
+      "hold_tns_ps": 0.0,
+      "elapsed_seconds": null,
+      "returncode": 0,
+      "receipt_reuses_saved_success_log": true,
+      "command": [
+        "/usr/bin/timeout",
+        "--kill-after=5s",
+        "120s",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/FF.tcl"
+      ],
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/FF.tcl",
+        "bytes": 1585,
+        "sha256": "3c991be05db7f33a5ff2c7c36ee1c427e57984e6924f4a8b90d089f667103c71"
+      },
+      "log": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/FF.log",
+        "bytes": 30521,
+        "sha256": "680c0d1302cefe676222f78af5a3ca6dc07a89c3f6e137ec93e3f946fbd0cfae"
+      },
+      "actual_port_counts": {
+        "input": 157,
+        "output": 106
+      }
+    },
+    "TT": {
+      "setup_wns_ps": -382.74816649419563,
+      "hold_wns_ps": 53.15878293110643,
+      "setup_tns_ps": -449949.7379129025,
+      "hold_tns_ps": 0.0,
+      "elapsed_seconds": null,
+      "returncode": 0,
+      "receipt_reuses_saved_success_log": true,
+      "command": [
+        "/usr/bin/timeout",
+        "--kill-after=5s",
+        "120s",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/TT.tcl"
+      ],
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/TT.tcl",
+        "bytes": 1585,
+        "sha256": "b854027f7f8a341d7b3f90aa1aaf8b2eae1e8ad93a481160b179478faeadd021"
+      },
+      "log": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/TT.log",
+        "bytes": 36268,
+        "sha256": "d5fa80a20ed65436e07f03f50770fff037742fb4f583483aa9247d1ba1c5283e"
+      },
+      "actual_port_counts": {
+        "input": 157,
+        "output": 106
+      }
+    },
+    "SS": {
+      "setup_wns_ps": -1085.1860521299272,
+      "hold_wns_ps": 77.23746642263052,
+      "setup_tns_ps": -1628197.1966236597,
+      "hold_tns_ps": 0.0,
+      "elapsed_seconds": null,
+      "returncode": 0,
+      "receipt_reuses_saved_success_log": true,
+      "command": [
+        "/usr/bin/timeout",
+        "--kill-after=5s",
+        "120s",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/SS.tcl"
+      ],
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/SS.tcl",
+        "bytes": 1585,
+        "sha256": "b976c0b7be395a75d21ad0183401fd8e957718adfc066db3c4ad1e4e68b99d0e"
+      },
+      "log": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification/SS.log",
+        "bytes": 94682,
+        "sha256": "1e68f179f53a7adb8d713c35f1dcb09299ce14fb78c74f54a38f0649b0a7eed4"
+      },
+      "actual_port_counts": {
+        "input": 157,
+        "output": 106
+      }
+    }
+  },
+  "library_paths": {
+    "FF": [
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib"
+    ],
+    "TT": [
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib"
+    ],
+    "SS": [
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+      "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib"
+    ]
+  },
+  "view_liberty_groups": {
+    "FF": [
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "bytes": 4256548,
+        "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "bytes": 69351,
+        "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "bytes": 3829689,
+        "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "bytes": 317193,
+        "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "bytes": 1510915,
+        "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      }
+    ],
+    "TT": [
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "bytes": 4181747,
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "bytes": 69356,
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "bytes": 3765433,
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "bytes": 446864,
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "bytes": 1512690,
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      }
+    ],
+    "SS": [
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "bytes": 4181198,
+        "sha256": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "bytes": 69301,
+        "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "bytes": 3760577,
+        "sha256": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+        "bytes": 444914,
+        "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "bytes": 1513373,
+        "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      }
+    ]
+  },
+  "sta_binary": {
+    "path": "/usr/local/bin/sta",
+    "bytes": 6800784,
+    "sha256": "4f0727aefff89b124f09f3a782d45bb8e96a895fd2425f87bdb6b56fdcc16628"
+  },
+  "sta_version": "3.1.0",
+  "ff_matches_native_producer_0p10_ps": false,
+  "ff_native_setup_difference_from_standalone_ps": 0.3917975917634213,
+  "ff_native_is_a_separate_diagnostic": true,
+  "ff_supplemental_readbacks": {
+    "pinned_odb_spef": {
+      "setup_wns_ps": 0.7721601136267964,
+      "hold_wns_ps": 35.95584940896401,
+      "log": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification_ff_diagnostic/pinned_odb_spef.log",
+        "bytes": 30713,
+        "sha256": "a7ce5bf33c9b44debbb4a6717b1cf0ab7b43774b990dbeaaca719f84048fd695"
+      },
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification_ff_diagnostic/pinned_odb_spef.tcl",
+        "bytes": 1560,
+        "sha256": "94ca3590023b19fa59692e4d9a57cbb9e4ab3a056c3cd549795dc3371697d11a"
+      }
+    },
+    "pinned_verilog_lef_spef": {
+      "setup_wns_ps": 0.6772360450213455,
+      "hold_wns_ps": 35.95584940896401,
+      "log": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification_ff_diagnostic/pinned_verilog_lef_spef.log",
+        "bytes": 31102,
+        "sha256": "4de3b701bea8ad9b99093bd738eba433c54a08a865910d515c50a4e55e4a801e"
+      },
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification_ff_diagnostic/pinned_verilog_lef_spef.tcl",
+        "bytes": 1770,
+        "sha256": "af725949d5ff6cccd174ca2954c7e72056b684fae90f6505b7a30ff2908a838c"
+      }
+    },
+    "earlier_verilog_no_tech_precondition_diagnostic": {
+      "log": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification_ff_diagnostic/pinned_verilog_spef.log",
+        "bytes": 1981,
+        "sha256": "89d98b557b6d70a3aee4fea250f0345947d31dc3cfe1b467129397017101d994"
+      },
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_ibex_20261123/control_asap7/qualification_ff_diagnostic/pinned_verilog_spef.tcl",
+        "bytes": 1585,
+        "sha256": "3c991be05db7f33a5ff2c7c36ee1c427e57984e6924f4a8b90d089f667103c71"
+      },
+      "report": "ORD-2010, no technology was read; no setup/hold measurement."
+    }
+  },
+  "native_finish_setup_wns_ps": 0.77216,
+  "native_finish_hold_wns_ps": 35.9558,
+  "native_finish_stdcell_area_um2": 2403.6,
+  "native_finish_stdcell_count": 20435,
+  "all_views_nonnegative_hold": true,
+  "corner_scope": "FF/TT/SS RVT Liberty and one common extracted OpenRCX SPEF, propagated clock and source-derived SDC.",
+  "counts": {
+    "qualification_sta": 3,
+    "qualification_sta_repeated_for_this_receipt": 0,
+    "ff_supplemental_successful_readbacks": 2,
+    "candidate_routes": 0,
+    "candidate_sta": 0,
+    "candidate_sec": 0
+  }
+}

@@ -2608,3 +2608,46 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - **状态** COMPLETED。使用 OpenSTA 3.1.0，直接读取已固定的 `6_final.v/.sdc/.spef`，每场景使用同一原 SPEF 和登记的五组 RVT NLDM Liberty。三进程均 rc 0，分别用时 1.766、1.578、1.531 s。FF setup/hold `−37.960829/+41.599637 ps`，TT `−166.709424/+59.198008 ps`，SS `−401.929379/+43.915302 ps`。FF 与原生产器 `6_report.json` 的 `−37.9608/+41.5996 ps` 在后者精度下一致。三视图 hold 非负，控制件通过本次测量及 hold 门。实测计数 3 STA、0 新布线、0 RCX、0 SEC。无候选评估。
 - [配置与输入指纹](tcad_preflight_20261123/CONFIG.json) SHA256 `bb1c84d59892f5dbab3da2eb9bf2ad294608bcd9067b6d66d42305930ee3eeab`，[结果及日志指纹](tcad_preflight_20261123/SUMMARY.json) SHA256 `8f57c80d4985edfce128c43f66404ace90cdc72f43ce7f557f0aadbdaa75b324`。ODB 读入诊断保存在同目录 `openroad26q3_odb_diagnostic/`。
+
+
+### 2026-11-23 TCAD-IBEX-P0-P1-DEFAULT-SKY130HD-ASAP7
+
+- **状态** PREREGISTERED。用户授权完整执行 Ibex 的 SKY130HD 与 ASAP7 P0/P1。每工艺先完成并验证原始 ORFS 基准 CONTROL，仅通过门控的起点可进入另行登记的三臂对照。实验起点 FAECO Git `c4b9fa37`。
+- **固定源码与工具** WSL Ubuntu `/home/toylog/faeco_eda/orfs`，Git `da8f092a02a8e75658cc3100691aabff05f35629`。两个普通 `base` 任务分别使用 `flow/designs/{sky130hd,asap7}/ibex/config.mk` 及其原始 `constraint.sdc`。保留源设计配置及 SDC，保持源时钟、I/O 和保持时间门限。OpenROAD 为 Bazel 构建 `/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad`，SHA256 `2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19`。综合用 `/usr/local/bin/yosys` 与 slang。
+- **执行边界** 各工艺 4 线程，整次构建外层限时 3600 s，最多并行 2 构建。WSL 原始运行目录为 `/home/toylog/faeco_tcad_ibex_20261123`，可携带记录为 `project_docs/evidence/tcad_ibex_20261123/`。需保存输入指纹、实际工具身份、命令、运行阶段日志及终点指纹。
+- **CONTROL 资格** 要求 CTS、详细布线最终 DRC=0 与 RCX 完成，保留可绑定的终点及最终 SDC、SPEF。用同一物理终点和传播时钟量测 FF、TT、SS 的有效 setup/hold，并要求各视图绝对 hold ≥ 0。未完成的工艺、工具失败和真实不合格分别记录。此条只登记 CONTROL 资格，三臂候选评估另行冻结并登记。
+
+- **源约束回读** 两工艺 `DESIGN_NAME=ibex_core`、核心端口 `clk_i`，各有同周期虚拟 I/O 时钟，按周期 20% 施加输入/输出延迟。SKY130HD 核心周期 10.0 ns、I/O 2.0 ns、两时钟的 latency 由源文件的 `set_clock_latency 1.095` 指定；ASAP7 周期 1000 ps、I/O 200 ps、对应 latency 参数 161.775 ps。ASAP7 `FLOW_VARIANT=base` 选原 `constraint.sdc`，另一个 `pos_slack` 变体不在本次登记内。
+- **输入 SHA256** SKY130HD `config.mk`=`df322ddec0186a25c1dea64df013d4b08c7e083329b3713fc1672b8d6b8a28fe`、`constraint.sdc`=`2fb819cb8e9bcd2ff0fe825ed3f7d5a96ebfeea301d53c83bcf5225121255151`。ASAP7 `config.mk`=`9649449735e38750d087026c4cceee2cac3069f3f5529f1de9bd28293c3384ef`、`constraint.sdc`=`23e0ea9d7b72924fd06b07f012c77f44192c67fac92c215eece12dffb08b2346`。两工艺共用 `/usr/local/bin/yosys`，SHA256 `4f8e613d835c248c63f0e487fb956e1667b9291ef87f0514fffb4dc07878d379`。
+
+- **状态** RUNNING。实查两个 WSL 限时进程分别为 SKY130HD PID 429 与 ASAP7 PID 1194，均对各自 `WORK_HOME` 的 `6_report.log` 目标执行 `make`，按登记使用 4 线程与 3600 s 超时。两边各自产出 `1_1_yosys_canonicalize.log`、`1_2_yosys.log` 并正在综合。
+
+
+### 2026-11-23 TCAD-IBEX-P1-MATCHED-LOCAL-DRT-THREE-ARM
+
+- **状态** 条件式预注册。候选尚未启动。每工艺须先有 `TCAD-IBEX-P0-P1-DEFAULT-SKY130HD-ASAP7` 的原始 CONTROL 合格收据，再绑定各自的冻结 SDC、ODB、DEF、Verilog 和 SPEF。每工艺各跑一次三臂共用的零动作对照，完成可重现核验和全网表两态 SEC 后启动候选对照。执行命令及零动作阈值另记。
+- **三臂与预算** 相同功能兼容候选池和顺序、共同物理评估器、每臂最多 6 次。单门逐次、固定批次大小 3、FAECO 自适应微批次大小 3。每次均从该工艺的共同起点执行同一局部触线 DRT 和新 RCX，复用 B-011 路线内核，保留未触线的走线。按同次数预算和公共墙钟前缀报告，仅分析达标的净面积回收。零动作对照为共享成本。
+- **判据** 每个候选在同一网表、SPEF 和原约束下回读三个 PVT 视图，setup 相对 CONTROL 的损失不超过 10 ps，绝对 hold 非负且相对 hold 差值在 0.001 ps 数值容差内不减。电气检查不得新增违规项，DRC=0，净面积须下降，最终交付为全网表两态 SEC 通过的端点。TNS 单列记录。
+- **限时** 每个 DRT/RCX 调用上限 1500 s；每个 STA 视图限 180 s，SEC 内部限 180 s。每工艺布线用 4 线程。最终命令、并发和零动作阈值以启动前确认记录为准。
+- **开发探针，单独计数** 主线已用等效/非等效小电路实查两态 SEC 分别为 `1/0`、`0/1`。SKY130HD 的异步触发器 SAT 模型用 `clk2fflogic` 规范化，初始综合网表自比为 `13517/0`。这些为 proof 工具探针，候选评估、面积结论及最终 SEC 另计。
+
+- **SEC 技术预检补充** ASAP7 的 `1_2_yosys.v` 自比使用 Yosys 0.70+255、`clk2fflogic` 及五组 ASAP7 RVT TT Liberty，耗时 78.976 s，`17235/0`，rc 0。gold/gate 同一合成文件及 SHA256 `e7363135f0a23856ef3c11f4552b3ff0546435c14f58cf84a1b283b783994f85`，收据 `/tmp/ibex-sec-asapsynth-clock-self/receipt.json`。它证实工具模型可处理初步综合网表，正式 P1 验收另绑定实际物理输入和候选。
+
+- **物理评估器及零动作启动门** 导入各 PDK 资格通过的 `6_final.odb` 与同一 ORFS 运行的原 `route.guide`，指纹入配置。清理换门直连信号网线并保留原放置，DRT 迭代上限 64，沿用生产器默认种子（无 `-or_seed`）。记录工具自动改变的邻近未触线路由，不将几何变化本身增列为拒绝门。两工艺各自独立资格通过后，可分别开始零动作，随后按本工艺共同起点比较三臂。
+- **零动作验收与开发探针** 零动作对照单列，使用和候选相同的三视图 setup 10 ps 限、绝对 hold 非负、hold 相对非退化（0.001 ps 容差）、无新增电气违规、DRC=0、全网表 SEC，另外保留网表、位置和路由几何变化记录。ASAP7 GCD 开发模型零动作重布线收敛 DRC=0 并完成 RCX，`Δsetup=+0.028560 ps`、`Δhold=+0.000323 ps`，两条时钟网几何改变且无组件移动。开发探针和 Ibex 验收分账。
+
+
+- **ASAP7 资格与 P1 零动作启动** `asap7_control/CONTROL.json` 为 `hold_qualified`，SHA256 `eee48dc4991206dcec1cf0e78d46356fdb1fb7accf19ccf9b786c8220007d137`。明确 DRC=0、原 SDC 的 1000 ps 周期和 200 ps I/O，三视图共用原 SPEF。独立 STA 的 FF/TT/SS setup/hold 顺序为 `+0.380362/+35.955849`、`−382.748166/+53.158783`、`−1085.186052/+77.237466 ps`。另记两次有效 FF 读回，原物理生产器的 ODB/SPEF 为 `+0.772160` ps setup，同一生产器 V/LEF/SPEF 为 `+0.677236` ps，独立 V/SPEF 为 `+0.380362` ps，hold 均 `+35.955849` ps。缺 LEF 的预置失败无时序计数。候选和零动作用共同独立 STA 参照。
+- **状态** ASAP7 共享零动作 RUNNING，工作目录 `/home/toylog/faeco_tcad_ibex_20261123/compare_asap7_v1`，实发命令 `scratch/tcad_ibex_20261123/compare_asap7_v1_command.txt`（SHA256 `09fd9e16021cd1f7d8ff8356e593f233c2c2f8b73451f1b06f505b0a48fe3f7f`），启动 `config.json` SHA256 `7bb1ffd0354fc9b349eb4d1f0f23825eaa68f4803ef3bb44b25fadb020df92af`。沿用每臂 6 次、批次 3、线程 4；单路由 1500 s、每视图 STA 180 s、SEC 外层 210 s 包内层 180 s。只有共享零动作通过后，同一驱动才进入三臂。SKY130HD 仍等待原始 CONTROL 资格。
+
+- **ASAP7 共享零动作通过** `compare_asap7_v1/noop/receipt.json` 确认一次 DRT/RCX 完成、DRC=0、三次 STA、电气与时序拒绝理由均为空、一次全网表两态 SEC `17363/0`（47.338 s）；整次 323.883 s。FF/TT/SS 的 setup 差为 `+0.002665/−0.322409/−0.541789 ps`，hold 差在 `±0.000028 ps` 内。零显式触线、10 条网几何改变、0 组件移动。TT Liberty 定义的功能单元面积基准为 `2129.78808 µm²`，沿用该分母。候选池为 4151 个，已转入 `single` 第 1/6 次候选。原始 CONTROL 五件及导引归档为 `scratch/tcad_ibex_20261123/asap7_control.tar.gz`，SHA256 `7d97ab8f3d6127e267d6c242dd0643dbae966743263559706d578bd16407786d`。
+
+- **SKY130HD 原始物理结果及资格复测方案** 原生 `make` rc 0，3141.28 s。经历初始详细布线和两次天线修复后重布线，最终 DRC 0、天线违规网和引脚为 0，RCX 15242 网，五件终点均保存。初次独立 FF STA 完成计算，但 `qualify_original_io/FF.log` 有 `ANTENNA_*` 的 SPEF 端点无法绑定。原 `6_report.json` 记 84 个天线单元，原 ORFS 导出按物理专用 master 过滤，独立 V/SPEF 两者实例集合不一致。本次读法的 FF 测量隔离为诊断。以相同原 I/O、`6_final.sdc` 和 `6_final.spef`，改用同生产器 Bazel OpenROAD 内置 STA 从 `6_final.odb` 测量 SKY130HD 三视图，并在后续 SKY 各臂保持同一测量路径。ASAP7 活动评估口径照旧。SKY 预备使用来自最终 ODB 的嵌入导引回读，SHA256 `fd4c2b3df466b7b129c5adc4001068d01a1e8fae79c642173fad2552be2530b1`；早期 GRT 文本导引 SHA256 `07e075c47e3a1b88d5b7f79ea634077589f4256c76781a87f3604f5c4ba1c3da`，两者各保原身份。
+
+
+- **SKY130HD 原始 CONTROL 资格结果** `sky130_control/CONTROL.json` 为 `hold_infeasible`，SHA256 `f261513bcd005319b23169d509a25577419ea8605ea017b7846e8dbdc3f32fe9`。原物理 ODB、同源 SDC/SPEF 与固定同一 OpenROAD 完成三次有效 STA。FF setup/hold `+1171.698294/+288.150503 ps`，TT `−456.739535/+466.105821 ps`，SS `−38754.158993/−1379.766079 ps`，SS hold TNS `−13035.098334 ps`。TT 与原生读数一致至报表精度。原版不进入三臂和零动作，旧 FF 缺物理单元诊断保留。
+
+### 2026-11-23 TCAD-IBEX-SKY130HD-COMMON-HOLD-REPAIR
+
+- **状态** 条件式预登记。SKY130HD 原始 ORFS CONTROL 的 SS 绝对 hold 未满足入选条件。保持原始 CONTROL 和原始 I/O/SDC，只从同一原始 ODB/SPEF 新建独立修复输出。先用原 OpenROAD 物理生产器，在 SS 视图下试做共享起点的 hold 修复，初始处方为 `repair_timing -hold`、允许 setup 已有违例路径、hold guard 0.05 ns、最大 buffer 比例 10%，具体命令及限时另在启动前锁定。完整物理路线将在早期探针支持后运行。
+- 新起点资格沿用原 P0 门，保留原始约束，要求物理路线与 RCX 实测、最终 DRC 与天线为零，并以物理 ODB 和同源 SDC/SPEF 获得 FF/TT/SS 下绝对 hold 非负。单列共同起点修复开销、动作与原始和修复后的 setup/hold。通过资格后方可开始共享零动作，三臂从完全相同的一个修复后 CONTROL 启动。此结果与原始 CONTROL、ASAP7 各自绑定，原始 3600 s 构建结果保留。

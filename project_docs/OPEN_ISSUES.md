@@ -1593,3 +1593,17 @@ check_record.sh返回rc0，仍警告4份obsolete文档。继续按现行AGENTS�
 ### OI-089 TCAD 准备状态（2026-11-23，open）
 
 用户已选定 TCAD 作为后布局 v3 投稿目标。直接近邻缺项、PCR 与 E-Layout 的作者和出处偏差仍待随稿件核验修订。启动可复现实装底稿、约束来源及近邻基线的准备检查。具体实验以正式预注册为准。
+
+
+## OI-090（2026-11-23，open）— SKY130HD 物理专用单元与独立 STA 寄生端口不一致
+
+SKY130HD Ibex 的原始布线及 RCX 已完成。ORFS 的 `6_report.json` 记 84 个天线单元，原 `write_verilog` 导出排除物理专用 master。独立 FF 以原 `6_final.v/.sdc/.spef` 读入时，`qualify_original_io/FF.log` 告警 `ANTENNA_*` SPEF 端点找不到。该会话的 FF 度量保留为模型诊断。资格复测使用保留物理单元的 `6_final.odb` 与同源 SDC/SPEF，并通过同生产器 OpenROAD 内置 STA 同口径测三个视图及后续 SKY 候选。待验证读取和门控收据。
+
+
+### OI-090 限定闭合（2026-11-23）
+
+按完整物理 ODB 和同源 SDC/SPEF 重测，三个视图均返回有效读数，TT 复现生产器，证据见 `sky130_control/CONTROL.json`。所得 SS hold 为实测违例，另归 OI-091 跟踪。
+
+## OI-091（2026-11-23，open）— SKY130HD Ibex 原始共同起点的 SS hold 违例
+
+原 ORFS 输入保持原 I/O 与时钟，虽然 DRC 和天线均为零，物理 ODB 三视图重测的 SS 绝对 hold 仍为 `−1379.766 ps`。原始 CONTROL 和资格不通过的记录一并保留。另起独立目录从同一原始快照诊断并修复 hold。修复后 CONTROL 须以原 SDC 在三视图闭合 hold、DRC、天线、RCX 和共享零动作资格，方可开始 SKY130HD 三臂。
