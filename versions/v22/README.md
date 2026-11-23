@@ -4,7 +4,7 @@
 |---|---|
 | 基线 ID | `v2026-11-23-cross-pdk-lr-baselines` |
 | 前置基线 | `v21`（`v2026-11-23-postroute-baselines-b15`，历史参照保持不可变） |
-| 当前论文（中文 v3） | `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（16 页，6 套 Nature 矢量图，LuaLaTeX 0 Error / 0 Overfull / 0 Undefined） |
+| 当前论文（中文 v3） | `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（15 页，6 套 Nature 矢量图，LuaLaTeX 0 Error / 0 Overfull / 0 Undefined，无孤儿尾页） |
 | 英文稿状态 | **暂冻**（按指令先专注中文版本，英文稿保留历史同步点） |
 
 ## 本轮新增冻结内容（相对 v21）

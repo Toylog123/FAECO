@@ -764,3 +764,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
   - 将 `logic_rewrite.py` 与 `physical_budget_adapter.py` 扩展至支持任意工艺多 Liberty 清单，在 MLCAD26 20,097 实例 ASAP7 7 nm `aes_cipher_top` 上实现全库 10,010 合法候选枚举与独立重布线/全局布线闭环，以 191 处替换回收 `0.266%` 面积（OpenROAD 原生的 `2.25×`）、`dwns = +0.000 ps`、`dtns = +48.181 ps`（原生 `-2516.01 ps` 恶化）与 Yosys `1252/1252 $equiv` SEC 通过；
   - 实测经典冻结 SPEF 拉格朗日松弛基线 `LR_DOWNSIZE` 在全部 10 个 SKY130 电路上重布线后 `10/10` 坍塌（`-79.60 ~ -706.03 ps`），有效降幅 `0.00%`；同时实证 `s382` 原生 `-setup_margin -1.0 -allow_setup_violations` 仍为 0 修改。
 - **论文定稿与去孤儿页**：扩展表 1 至 8 类代表工作并增补 4 篇文献（`OpenPhySyn`、`RL-Sizer`、`IR-Aware ECO`、`GoalEvolve`），更新摘要、§6.3 五方法对照、新增 §6.5 ASAP7 表 14、更新 §7.3 与 §8；收紧文献条间距消除 2 条参考文献孤儿页，双遍 LuaLaTeX 编译为 **16 页（0 Error / 0 Overfull / 0 Undefined）** 并同步三份 PDF；冻结 `versions/v22/`（`165 OK / 0 FAIL`）。
+
+- **学术写作规范通盘润色（按 `user-academic-writing-style` 落地）**：
+  - 依据 `背景/问题 → 技术路线 → 主要结果与口径边界` 重构中/英摘要，消除 25 处细粒度数字堆叠；重写 §1.3 四条贡献使其兼具`设计思想 + 解决困难 + 证据`三层信息并消除未验证"首次"/"突破"过强断言；
+  - 全局清除 CLI 参数名（如 `repair_timing -recover_power`）、内部工程实例名（如 `_160630_`、`rebuffer1`、`eval_trials`）及工程过程词（`Recovery v2`、`令人惊讶`），并按规范完成 DRC、RCX、CTS、SPEF、OCV、HVT/LVT/RVT/SLVT 等术语首次中文化展开；
+  - 重写 §8 结论提炼物理规律与适用边界（避免机械复读前文数字），并将参考文献字号调为标准 `\footnotesize` 使全篇齐整收敛为 **15 页（0 Error / 0 Overfull / 0 Undefined，第 15 页双栏均衡排满，三副本 PDF 同步，v22 清单 `165 OK / 0 FAIL`）**。

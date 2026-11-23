@@ -5661,3 +5661,8 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
    - **Track A（`LR_DOWNSIZE` 10 电路 SKY130）**：冻结 SPEF 宣称 `7.81%–14.14%`（17–60 门），重布线+RCX 后 **10/10 均坍塌**（`dwns = -79.60 ~ -706.03 ps`，`0.00%` 有效）；
    - **Track B（ASAP7 7 nm `aes_cipher_top`，20,097 实例）**：全库枚举 `10,010` 候选（`15.4 s`），OpenROAD 原生降 `0.118%` 且 **TNS 恶化 `-2516.01 ps`（`-20.3%`）**；FAECO `eval_059` 提交 191 门降 **`0.266%`（`2130.7504 µm²`，`2.25×` 原生）**、`dwns = +0.000 ps`、`dtns = +48.181 ps`、`dhold = +0.000 ps`、功耗 `0.432 -> 0.431 W`、Yosys SEC `1252/1252 $equiv` 全证明。
 3. **论文与基线收口**：扩展表 1 至 8 类代表工作并补全文献引用（`OpenPhySyn`、`RL-Sizer`、`IR-Aware ECO`、`GoalEvolve`），更新摘要、§6.3、新增 §6.5（表 14）、§7.3 与 §8；双遍编译 **16 页（0 Error / 0 Overfull / 0 Undefined，页均饱满无孤儿页）** 并同步三副本 PDF；生成并全验 `versions/v22/MANIFEST.sha256`（`165 OK / 0 FAIL`）。
+
+**LOG-20261123-03 / 依据 `user-academic-writing-style` 完成中文 v3 全篇学术化润色与 15 页定稿（2026-11-23）**：
+1. 重构摘要与 §1.3 贡献写法（精简数字堆叠，改为问题-路线-结果-限定结构），重写 §8 结论聚焦物理规律与跨设计/跨工艺边界；
+2. 清理 CLI 参数名、裸门实例号、`Recovery v2`/`eval_trials` 等工程词与"首次"/"突破"过强表述，规范首次中文术语展开；
+3. 将参考文献调为 `\footnotesize` 使第 15 页双栏饱满无孤儿尾页（**15 页 / 0 Error / 0 Overfull / 0 Undefined**），同步三副本 PDF、刷新 `versions/v22/MANIFEST.sha256`（`165 OK / 0 FAIL`），并同步更新 `HANDOFF_2026-11-23.md`、`README.md`、`CANON.md`、`BASELINE_INDEX.csv` 与 `.codex-handoff.json`。
