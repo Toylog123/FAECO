@@ -76,11 +76,103 @@ def _pin_blocks(block: str):
             raise ValueError(f"Unterminated Liberty pin block: {header.group(1)}")
 
 
+_GENERIC_CELL_RE = re.compile(r'^\s*cell\s*\(\s*"?([^"\n)]+)"?\s*\)\s*\{', re.M)
+_SKY130_PREFIX = "sky130_fd_sc_hd__"
+
+
 def _split_family_size(cell_name: str) -> tuple[str, int]:
     m = re.search(r"(.+)_(\d+)$", cell_name)
     if m:
         return m.group(1), int(m.group(2))
     return cell_name, 0
+
+
+def _split_generic_family(cell_name: str) -> str:
+    if cell_name.startswith(_SKY130_PREFIX):
+        return _split_family_size(cell_name[len(_SKY130_PREFIX) :])[0]
+    stem = re.sub(r"_ASAP7_[A-Za-z0-9_]+$", "", cell_name)
+    stem = re.sub(r"(?:x(?:\d+(?:p\d+)?|p\d+)(?:f|DC)?|_[Xx]?\d+)$", "", stem)
+    return stem
+
+
+def _parse_cell_block(full_name: str, family: str, size: int, block: str) -> LibCell:
+    input_pins: list[str] = []
+    output_pin = ""
+    function = ""
+    next_state = ""
+    clocked_on = ""
+    latch_enable = ""
+    clear = ""
+    preset = ""
+    state_var = ""
+    state_inv_var = ""
+    output_functions: dict[str, str] = {}
+    three_state_functions: dict[str, str] = {}
+    sequential_kind = ""
+    for pin, pblock in _pin_blocks(block):
+        direction = re.search(r'\bdirection\s*:\s*"?(\w+)"?\s*;', pblock)
+        if not direction:
+            continue
+        if direction.group(1) == "input":
+            input_pins.append(pin)
+            continue
+        if direction.group(1) == "output":
+            output_pin = pin
+            f = re.search(r'\bfunction\s*:\s*"([^"]+)"', pblock)
+            if f and "VPWR" not in f.group(1) and "VGND" not in f.group(1):
+                function = f.group(1)
+                output_functions[pin] = f.group(1).strip()
+            three_state = re.search(r'\bthree_state\s*:\s*"([^"]+)"', pblock)
+            if three_state:
+                three_state_functions[pin] = three_state.group(1).strip()
+    ff = re.search(r"\bff\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
+    if ff:
+        sequential_kind = "ff"
+        ff_body = ff.group(1)
+        ff_header = re.search(r"\bff\s*\(([^)]*)\)", block, re.S)
+        ff_vars = [v.strip().strip('"') for v in (ff_header.group(1) if ff_header else "").split(",") if v.strip()]
+        state_var = ff_vars[0] if ff_vars else ""
+        state_inv_var = ff_vars[1] if len(ff_vars) > 1 else ""
+        next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", ff_body)
+        clock_match = re.search(r"clocked_on\s*:\s*\"([^\"]+)\"", ff_body)
+        clear_match = re.search(r"clear\s*:\s*\"([^\"]+)\"", ff_body)
+        preset_match = re.search(r"preset\s*:\s*\"([^\"]+)\"", ff_body)
+        next_state = next_match.group(1).strip() if next_match else ""
+        clocked_on = clock_match.group(1).strip() if clock_match else ""
+        clear = clear_match.group(1).strip() if clear_match else ""
+        preset = preset_match.group(1).strip() if preset_match else ""
+    latch = re.search(r"\blatch\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
+    if latch:
+        sequential_kind = "latch"
+        latch_body = latch.group(1)
+        latch_header = re.search(r"\blatch\s*\(([^)]*)\)", block, re.S)
+        latch_vars = [v.strip().strip('"') for v in (
+            latch_header.group(1) if latch_header else ""
+        ).split(",") if v.strip()]
+        state_var = latch_vars[0] if latch_vars else ""
+        state_inv_var = latch_vars[1] if len(latch_vars) > 1 else ""
+        next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", latch_body)
+        enable_match = re.search(r"enable\s*:\s*\"([^\"]+)\"", latch_body)
+        next_state = next_match.group(1).strip() if next_match else ""
+        latch_enable = enable_match.group(1).strip() if enable_match else ""
+    return LibCell(
+        name=full_name,
+        family=family,
+        size=size,
+        output_pin=output_pin,
+        function=function,
+        input_pins=input_pins,
+        next_state=next_state,
+        clocked_on=clocked_on,
+        latch_enable=latch_enable,
+        clear=clear,
+        preset=preset,
+        state_var=state_var,
+        state_inv_var=state_inv_var,
+        output_functions=output_functions,
+        sequential_kind=sequential_kind,
+        three_state_functions=three_state_functions,
+    )
 
 
 def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
@@ -96,84 +188,33 @@ def parse_liberty_cells(liberty_text: str) -> dict[str, LibCell]:
         nxt = _CELL_RE.search(liberty_text, start)
         block = liberty_text[start: nxt.start() if nxt else len(liberty_text)]
         family, size = _split_family_size(cell_name)
-        input_pins: list[str] = []
-        output_pin = ""
-        function = ""
-        next_state = ""
-        clocked_on = ""
-        latch_enable = ""
-        clear = ""
-        preset = ""
-        state_var = ""
-        state_inv_var = ""
-        output_functions: dict[str, str] = {}
-        three_state_functions: dict[str, str] = {}
-        sequential_kind = ""
-        for pin, pblock in _pin_blocks(block):
-            direction = re.search(r'\bdirection\s*:\s*"?(\w+)"?\s*;', pblock)
-            if not direction:
-                continue
-            if direction.group(1) == "input":
-                input_pins.append(pin)
-                continue
-            if direction.group(1) == "output":
-                output_pin = pin
-                f = re.search(r'\bfunction\s*:\s*"([^"]+)"', pblock)
-                if f and "VPWR" not in f.group(1) and "VGND" not in f.group(1):
-                    function = f.group(1)
-                    output_functions[pin] = f.group(1).strip()
-                three_state = re.search(r'\bthree_state\s*:\s*"([^"]+)"', pblock)
-                if three_state:
-                    three_state_functions[pin] = three_state.group(1).strip()
-        ff = re.search(r"\bff\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
-        if ff:
-            sequential_kind = "ff"
-            ff_body = ff.group(1)
-            ff_header = re.search(r"\bff\s*\(([^)]*)\)", block, re.S)
-            ff_vars = [v.strip().strip('"') for v in (ff_header.group(1) if ff_header else "").split(",") if v.strip()]
-            state_var = ff_vars[0] if ff_vars else ""
-            state_inv_var = ff_vars[1] if len(ff_vars) > 1 else ""
-            next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", ff_body)
-            clock_match = re.search(r"clocked_on\s*:\s*\"([^\"]+)\"", ff_body)
-            clear_match = re.search(r"clear\s*:\s*\"([^\"]+)\"", ff_body)
-            preset_match = re.search(r"preset\s*:\s*\"([^\"]+)\"", ff_body)
-            next_state = next_match.group(1).strip() if next_match else ""
-            clocked_on = clock_match.group(1).strip() if clock_match else ""
-            clear = clear_match.group(1).strip() if clear_match else ""
-            preset = preset_match.group(1).strip() if preset_match else ""
-        latch = re.search(r"\blatch\s*\([^)]*\)\s*\{(.*?)\}", block, re.S)
-        if latch:
-            sequential_kind = "latch"
-            latch_body = latch.group(1)
-            latch_header = re.search(r"\blatch\s*\(([^)]*)\)", block, re.S)
-            latch_vars = [v.strip().strip('"') for v in (
-                latch_header.group(1) if latch_header else ""
-            ).split(",") if v.strip()]
-            state_var = latch_vars[0] if latch_vars else ""
-            state_inv_var = latch_vars[1] if len(latch_vars) > 1 else ""
-            next_match = re.search(r"next_state\s*:\s*\"([^\"]+)\"", latch_body)
-            enable_match = re.search(r"enable\s*:\s*\"([^\"]+)\"", latch_body)
-            next_state = next_match.group(1).strip() if next_match else ""
-            latch_enable = enable_match.group(1).strip() if enable_match else ""
-        cells[f"sky130_fd_sc_hd__{cell_name}"] = LibCell(
-            name=f"sky130_fd_sc_hd__{cell_name}",
-            family=family,
-            size=size,
-            output_pin=output_pin,
-            function=function,
-            input_pins=input_pins,
-            next_state=next_state,
-            clocked_on=clocked_on,
-            latch_enable=latch_enable,
-            clear=clear,
-            preset=preset,
-            state_var=state_var,
-            state_inv_var=state_inv_var,
-            output_functions=output_functions,
-            sequential_kind=sequential_kind,
-            three_state_functions=three_state_functions,
-        )
+        full_name = f"{_SKY130_PREFIX}{cell_name}"
+        cells[full_name] = _parse_cell_block(full_name, family, size, block)
     return cells
+
+
+def parse_generic_liberty_catalog(
+    liberty_text: str,
+) -> tuple[dict[str, LibCell], dict[str, float], set[str]]:
+    """Parse any PDK's Liberty text (quoted or unquoted cell names) into cells, areas, and dont_use."""
+    cells: dict[str, LibCell] = {}
+    areas: dict[str, float] = {}
+    dont_use: set[str] = set()
+    matches = list(_GENERIC_CELL_RE.finditer(liberty_text))
+    for i, m in enumerate(matches):
+        full_name = m.group(1)
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(liberty_text)
+        block = liberty_text[start:end]
+        family = _split_generic_family(full_name)
+        _, size = _split_family_size(full_name)
+        cells[full_name] = _parse_cell_block(full_name, family, size, block)
+        vals = re.findall(r"(?:^|[;\s])area\s*:\s*([\d.eE+-]+)\s*;", block)
+        if len(vals) == 1:
+            areas[full_name] = float(vals[0])
+        if re.search(r"(?:^|[;\s])dont_use\s*:\s*true\s*;", block):
+            dont_use.add(full_name)
+    return cells, areas, dont_use
 
 
 def function_vars(function: str) -> list[str]:

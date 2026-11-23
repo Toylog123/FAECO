@@ -253,3 +253,41 @@ def test_generate_compatible_candidates_slack_margins_and_local_tcl(tmp_path: Pa
         replacements=[("g_slack", "sky130_fd_sc_hd__buf_1")],
     )
     assert "CLEARED_TOUCHED_WIRES" in tcl and "global_route -allow_congestion" in tcl
+
+
+def test_generate_compatible_candidates_multi_liberty_asap7_style(tmp_path: Path):
+    lib_r = tmp_path / "r.lib"
+    lib_sl = tmp_path / "sl.lib"
+    lib_r.write_text(
+        """
+        library(asap_r) {
+          cell (AND2x4_ASAP7_75t_R) { area : 0.13122; pin (A) { direction : input; } pin (B) { direction : input; } pin (Y) { direction : output; function : "(A * B)"; } }
+          cell (AND2x2_ASAP7_75t_R) { area : 0.08748; pin (A) { direction : input; } pin (B) { direction : input; } pin (Y) { direction : output; function : "(A * B)"; } }
+          cell (AND2xp33_ASAP7_75t_R) { area : 0.05832; dont_use : true; pin (A) { direction : input; } pin (B) { direction : input; } pin (Y) { direction : output; function : "(A * B)"; } }
+          cell (TAPCELL_ASAP7_75t_R) { area : 0.04; }
+        }
+        """,
+        encoding="utf-8",
+    )
+    lib_sl.write_text(
+        """
+        library(asap_sl) {
+          cell (AND2x4_ASAP7_75t_SL) { area : 0.13122; pin (A) { direction : input; } pin (B) { direction : input; } pin (Y) { direction : output; function : "(A * B)"; } }
+          cell (AND2x2_ASAP7_75t_SL) { area : 0.08748; pin (A) { direction : input; } pin (B) { direction : input; } pin (Y) { direction : output; function : "(A * B)"; } }
+        }
+        """,
+        encoding="utf-8",
+    )
+    net = tmp_path / "aes.v"
+    net.write_text(
+        "module top(input a, input b, output y);\n"
+        "  AND2x4_ASAP7_75t_SL u0 (.A(a), .B(b), .Y(y));\n"
+        "  TAPCELL_ASAP7_75t_R t0 ();\n"
+        "endmodule\n",
+        encoding="utf-8",
+    )
+    cands = generate_compatible_candidates(net, [lib_r, lib_sl], one_per_instance=True)
+    assert len(cands) == 1
+    assert cands[0].instance == "u0"
+    assert cands[0].target_cell == "AND2x2_ASAP7_75t_SL"
+    assert abs(cands[0].estimated_area_saving - (0.13122 - 0.08748)) < 1e-5

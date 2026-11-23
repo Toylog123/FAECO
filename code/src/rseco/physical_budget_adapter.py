@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from .budgeted_recovery import Action, BudgetPolicy, Endpoint, assess
-from .logic_rewrite import parse_liberty_cells
+from .logic_rewrite import LibCell, parse_generic_liberty_catalog
 from .opensta import _to_sta_path
 from .placed_sta import DEFAULT_OPENROAD, DEFAULT_PLATFORM
 from .routed_sta import DEFAULT_ORFS, DEFAULT_STA, ROUTED_STA_TCL
@@ -94,20 +94,26 @@ def load_actions_from_space_audit(
     return actions
 
 
+def _is_skippable_cell(cell_name: str) -> bool:
+    low = cell_name.lower()
+    if any(prefix in low for prefix in SKIP_CANDIDATE_CELL_PREFIXES):
+        return True
+    return low.startswith(("tapcell", "fill", "decap", "antenna", "tiehi", "tielo"))
+
+
+def _cell_vt_tag(cell_name: str) -> str:
+    m = re.search(r"_(SL|UL|L|R|LVT|RVT|SLVT|HVT|ULVT)$", cell_name)
+    return m.group(1) if m else ""
+
+
 def _parse_liberty_areas(lib_text: str) -> dict[str, float]:
-    areas: dict[str, float] = {}
-    starts = list(re.finditer(r'^\s*cell\s*\(\s*"([^"\n]+)"\s*\)\s*\{', lib_text, re.M))
-    for i, match in enumerate(starts):
-        end = starts[i + 1].start() if i + 1 < len(starts) else len(lib_text)
-        vals = re.findall(r'^\s*area\s*:\s*([\d.eE+-]+)\s*;', lib_text[match.end() : end], re.M)
-        if len(vals) == 1:
-            areas[match.group(1)] = float(vals[0])
+    _, areas, _ = parse_generic_liberty_catalog(lib_text)
     return areas
 
 
 def generate_compatible_candidates(
     netlist_path: Path,
-    lib_path: Path = DEFAULT_LIBERTY,
+    lib_path: Path | Iterable[Path] = DEFAULT_LIBERTY,
     *,
     categories: tuple[str, ...] = ("combinational_other",),
     skip_instance_prefixes: tuple[str, ...] = DEFAULT_SKIP_INSTANCE_PREFIXES,
@@ -116,20 +122,26 @@ def generate_compatible_candidates(
     slack_margins_ps: dict[str, float] | None = None,
 ) -> list[PhysicalAction]:
     """Tool-agnostic candidate generator: enumerate area-reducing replacements
-    directly from a routed Verilog netlist and Liberty library (no Resizer log
-    or pre-repair baseline netlist required).
+    directly from a routed Verilog netlist and one or more Liberty libraries
+    across arbitrary PDKs (no Resizer log or pre-repair baseline netlist required).
     """
-    lib_text = lib_path.read_text(encoding="utf-8")
-    cells = parse_liberty_cells(lib_text)
-    areas = _parse_liberty_areas(lib_text)
+    lib_paths = [Path(lib_path)] if isinstance(lib_path, (str, Path)) else [Path(p) for p in lib_path]
+    cells: dict[str, LibCell] = {}
+    areas: dict[str, float] = {}
+    dont_use: set[str] = set()
+    for lp in lib_paths:
+        c_part, a_part, d_part = parse_generic_liberty_catalog(lp.read_text(encoding="utf-8"))
+        cells.update(c_part)
+        areas.update(a_part)
+        dont_use.update(d_part)
+
     by_sig: dict[tuple, list[tuple[str, float]]] = {}
     for cname, info in cells.items():
-        if any(prefix in cname for prefix in SKIP_CANDIDATE_CELL_PREFIXES):
+        if cname in dont_use or _is_skippable_cell(cname):
             continue
         c_area = areas.get(cname)
         if c_area is None or c_area <= 0:
             continue
-        family = re.sub(r"_\d+$", "", cname)
         sig = (
             info.family,
             info.sequential_kind,
@@ -145,9 +157,9 @@ def generate_compatible_candidates(
     text = netlist_path.read_text(encoding="utf-8")
     allowed = set(categories)
     actions: list[PhysicalAction] = []
-    for m in re.finditer(r"(sky130_fd_sc_hd__\w+)\s+(\\\S+|[A-Za-z_]\w*)\s*\(", text):
+    for m in re.finditer(r"(?:^|[;\s])([A-Za-z_][A-Za-z0-9_$]*)\s+(\\\S+|[A-Za-z_][A-Za-z0-9_$]*)\s*\(", text):
         ct, inst = m.group(1), m.group(2)
-        if any(prefix in ct for prefix in SKIP_CANDIDATE_CELL_PREFIXES) or ct not in cells:
+        if ct not in cells or _is_skippable_cell(ct):
             continue
         if skip_instance_prefixes and any(inst.startswith(p) for p in skip_instance_prefixes):
             continue
@@ -155,10 +167,9 @@ def generate_compatible_candidates(
         src_area = areas.get(ct)
         if src_area is None:
             continue
-        family = re.sub(r"_\d+$", "", ct)
         if src.sequential_kind:
             cat = "sequential"
-        elif re.search(r"__(clkbuf|clkinv)$", family):
+        elif re.search(r"(__clkbuf|__clkinv|^ckinv)", ct.lower()):
             cat = "clock_family"
         else:
             cat = "combinational_other"
@@ -187,17 +198,23 @@ def generate_compatible_candidates(
                         category=cat,
                     )
                 )
+
     def _sort_key(a: PhysicalAction) -> tuple:
-        zero_pen = 1 if (deprioritize_zero_drive and a.target_cell.endswith("_0")) else 0
-        buf_pref = 0 if (deprioritize_zero_drive and re.search(r"__(buf|inv)_\d+$", a.target_cell)) else 1
+        zero_pen = 1 if (
+            deprioritize_zero_drive and (a.target_cell.endswith("_0") or re.search(r"xp(?:25|33)(?:_|$)", a.target_cell))
+        ) else 0
+        buf_pref = 0 if (
+            deprioritize_zero_drive and re.search(r"(?:__(?:buf|inv)_\d+$|^(?:BUF|INV)x)", a.target_cell)
+        ) else 1
+        same_vt = 0 if _cell_vt_tag(a.target_cell) == _cell_vt_tag(a.source_cell) else 1
         if slack_margins_ps is not None:
             margin_ps = slack_margins_ps.get(a.instance, 0.0)
             off_crit = 0 if margin_ps > 5.0 else 1
             score = a.estimated_area_saving * (0.1 + min(max(margin_ps, 0.0), 200.0) / 200.0)
-            return (zero_pen, off_crit, -score, buf_pref, -a.estimated_area_saving, a.action_id)
+            return (zero_pen, off_crit, -score, buf_pref, -a.estimated_area_saving, same_vt, a.action_id)
         if deprioritize_zero_drive:
-            return (zero_pen, buf_pref, -a.estimated_area_saving, a.action_id)
-        return (-a.estimated_area_saving, a.action_id)
+            return (zero_pen, buf_pref, -a.estimated_area_saving, same_vt, a.action_id)
+        return (-a.estimated_area_saving, same_vt, a.action_id)
 
     actions.sort(key=_sort_key)
     if one_per_instance:

@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-23",
+  "scope": "Cross-method horizontal baselines (LR 10-circuit SKY130, OpenROAD margin-flag probe s382) and cross-PDK 20k-instance ASAP7 7nm aes_cipher_top validation",
+  "openroad_margin_flag_probe_s382": {
+    "base_wns_ns": -0.8484570823696913,
+    "recover_power_100_slack_margin_neg1": {
+      "resized": 0,
+      "area_change_pct": 0.0,
+      "wns_ns": -0.8484570823696913
+    },
+    "recover_power_100_setup_margin_neg1_allow_viol": {
+      "resized": 0,
+      "area_change_pct": 0.0,
+      "wns_ns": -0.8484570823696913
+    }
+  },
+  "track_a_lr_downsize_sky130_10_circuits": [
+    {"circuit": "s382", "committed_count": 21, "raw_area_pct": 10.46, "dwns_ps": -218.755, "dhold_ps": -0.083, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "s420", "committed_count": 19, "raw_area_pct": 10.62, "dwns_ps": -216.719, "dhold_ps": 0.042, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "s641", "committed_count": 22, "raw_area_pct": 9.93, "dwns_ps": -293.181, "dhold_ps": 7.973, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "s713", "committed_count": 17, "raw_area_pct": 9.73, "dwns_ps": -503.836, "dhold_ps": -1.97, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "s832", "committed_count": 24, "raw_area_pct": 10.93, "dwns_ps": -320.819, "dhold_ps": -4.171, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "s953", "committed_count": 59, "raw_area_pct": 14.14, "dwns_ps": -399.664, "dhold_ps": 29.56, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "b04", "committed_count": 60, "raw_area_pct": 12.3, "dwns_ps": -79.595, "dhold_ps": 1.692, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "b05", "committed_count": 60, "raw_area_pct": 12.13, "dwns_ps": -624.055, "dhold_ps": 0.994, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "b11", "committed_count": 60, "raw_area_pct": 12.86, "dwns_ps": -459.76, "dhold_ps": 0.6, "passes_b10_gate": false, "effective_area_pct": 0.0},
+    {"circuit": "b12", "committed_count": 60, "raw_area_pct": 7.81, "dwns_ps": -706.033, "dhold_ps": -0.037, "passes_b10_gate": false, "effective_area_pct": 0.0}
+  ],
+  "track_b_asap7_aes_cipher_top": {
+    "benchmark": "aes_cipher_top",
+    "pdk": "ASAP7_7nm_multi_Vt",
+    "evaluation_fidelity": "MLCAD26 post-placement global_route + estimate_parasitics -global_routing + check_placement + Yosys equiv_status",
+    "total_instances": 20097,
+    "logic_and_seq_instances": 19534,
+    "compatible_candidates_generated": 10010,
+    "candidate_gen_sec": 15.4,
+    "control": {
+      "area_all_um2": 2136.42198,
+      "area_logic_um2": 2120.0049,
+      "wns_ps": -85.278882,
+      "tns_ps": -12405.202248,
+      "hold_ps": 41.607454,
+      "power_total_W": 0.432,
+      "power_leakage_uW": 96.3,
+      "legal": true
+    },
+    "native_recover_power_100": {
+      "resized_reported": 341,
+      "area_all_um2": 2133.89964,
+      "area_saved_pct": 0.1181,
+      "dwns_ps": -0.0,
+      "dtns_ps": -2516.014,
+      "dhold_ps": 0.0,
+      "power_total_W": 0.432,
+      "power_leakage_uW": 95.1,
+      "legal": true,
+      "runtime_s": 22.36
+    },
+    "native_setup_margin_neg1000_allow_viol": {
+      "resized_reported": 282,
+      "area_all_approx_um2": 2134.0,
+      "tns_ps_pre_reroute": -21866.8418,
+      "dtns_ps_pre_reroute": -9461.64
+    },
+    "faeco_strict_tns_safe": {
+      "endpoint_id": "eval_016",
+      "committed_count": 24,
+      "evaluations": 16,
+      "area_um2": 2135.69298,
+      "area_saved_pct": 0.0341,
+      "dwns_ps": 0.0,
+      "dtns_ps": 0.373,
+      "dhold_ps": 0.0,
+      "power_total_W": 0.431,
+      "power_leakage_uW": 96.3,
+      "legal": true,
+      "sec_pass": true,
+      "sec_equiv_cells_proven": 1252
+    },
+    "faeco_b10": {
+      "endpoint_id": "eval_059",
+      "committed_count": 191,
+      "evaluations": 44,
+      "area_um2": 2130.75036,
+      "area_saved_pct": 0.2655,
+      "dwns_ps": 0.0,
+      "dtns_ps": 48.181,
+      "dhold_ps": 0.0,
+      "power_total_W": 0.431,
+      "power_leakage_uW": 96.3,
+      "legal": true,
+      "sec_pass": true,
+      "sec_equiv_cells_proven": 1252
+    }
+  }
+}

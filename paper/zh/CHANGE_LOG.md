@@ -757,3 +757,10 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
   - 完成全 10 电路同起点四方法强基线对照（原生 `0/10` / 固定 SPEF 预筛 `5/10` 均降 `0.14%` / 在线单门灵敏度贪心 `9/10` `s953=0.00%` / FAECO `10/10`）、10/10 完整功耗降低（组合功耗均 `-3.72%`）与 10/10 对称 IO+OCV 签核，以及 `b15`（`33,737.36 µm²`）`7.7×` 局部增量提速（`184.83 s`、`DRC=0`、`−0.26%` 面积、`SS +200.00 ps`、`SEC PASS`）。
 - **新增图表与结构重排**：`gen_v3_figures.py` 新增 Nature 风格 `fig_strong_baselines_zh.pdf`（`audit_pdf_text.py` $\ge 5.8\text{ pt}$、`audit_figure_collisions.py` **0 fail, 0 warn PASS**）；正文将原 §6 拆顺为 §6《在线物理闭环、强基线对照与规模突破》+ §7《讨论》+ §8《结论》，双遍编译 **15 页（0 Error / 0 Overfull / 0 Undefined，页均饱满无孤儿页）**，同步至 `paper/zh/` 与 `paper/zh/build/`。
 - **基线晋级**：新建并全验 `versions/v21/`（`162 OK / 0 FAIL`），更新 `BASELINE_INDEX.csv`、`HANDOFF`、`README` 与 `CANON`。
+
+## 2026-11-23（横向对比扩展：LR 10 电路 + 文献矩阵扩充 + ASAP7 7 nm `aes_cipher_top` + `v22` 定稿）
+
+- **实验与适配器扩展（65 项单测通过）**：
+  - 将 `logic_rewrite.py` 与 `physical_budget_adapter.py` 扩展至支持任意工艺多 Liberty 清单，在 MLCAD26 20,097 实例 ASAP7 7 nm `aes_cipher_top` 上实现全库 10,010 合法候选枚举与独立重布线/全局布线闭环，以 191 处替换回收 `0.266%` 面积（OpenROAD 原生的 `2.25×`）、`dwns = +0.000 ps`、`dtns = +48.181 ps`（原生 `-2516.01 ps` 恶化）与 Yosys `1252/1252 $equiv` SEC 通过；
+  - 实测经典冻结 SPEF 拉格朗日松弛基线 `LR_DOWNSIZE` 在全部 10 个 SKY130 电路上重布线后 `10/10` 坍塌（`-79.60 ~ -706.03 ps`），有效降幅 `0.00%`；同时实证 `s382` 原生 `-setup_margin -1.0 -allow_setup_violations` 仍为 0 修改。
+- **论文定稿与去孤儿页**：扩展表 1 至 8 类代表工作并增补 4 篇文献（`OpenPhySyn`、`RL-Sizer`、`IR-Aware ECO`、`GoalEvolve`），更新摘要、§6.3 五方法对照、新增 §6.5 ASAP7 表 14、更新 §7.3 与 §8；收紧文献条间距消除 2 条参考文献孤儿页，双遍 LuaLaTeX 编译为 **16 页（0 Error / 0 Overfull / 0 Undefined）** 并同步三份 PDF；冻结 `versions/v22/`（`165 OK / 0 FAIL`）。

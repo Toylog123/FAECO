@@ -5653,3 +5653,11 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
    - 全 10 电路总功耗均值 `-0.96%`、组合功耗均值 `-3.72%`（最高 `s420 -8.26%` / 漏电 `-8.68%`），补齐 `b04/b11/b12` 后显式 IO+OCV 达 **10/10（100%）**；
    - `b12` 局部增量绕线 `2.12×` 提速（`52.94 s` vs `112.02 s`）；`b15`（3.37 万 $\mu\text{m}^2$，5,494 组件）`6/6` 轮局部增量 `DRC=0`（`184.83–200.92 s`，相对全芯片重布线 `1426.14 s` 提速 `7.7×`），`RUN_006` 净回收 `-0.26%`、`TT +0.068 ps`、`SS +199.996 ps`、`FF hold 0.000 ps`、`IO+OCV +0.027 ps`、漏电 `-0.84%`、**全网表 SEC PASS**。
 3. **论文、图表与基线收口**：新增 `fig_strong_baselines_zh.pdf`（0 fail / 0 warn），重构中文 v3 论文 §6–§8 章节顺序（15 页，0 Error / 0 Overfull / 0 Undefined，双副本同步），新增并校验 `versions/v21/MANIFEST.sha256`（162 OK / 0 FAIL），同步更新 `BASELINE_INDEX.csv`、`HANDOFF_2026-11-22.md`、`README.md`、`paper/zh/README.md`、`.codex-handoff.json` 与 `CANON.md`。
+
+**LOG-20261123-02 / 跨方法横向基线扩展（LR 10 电路 + OpenROAD 负裕度证伪 + ASAP7 7 nm `aes_cipher_top` 两万门验证 + `v22` 定稿，2026-11-23）**：
+1. **通用多工艺库适配器升级**：`code/src/rseco/logic_rewrite.py` 新增 `parse_generic_liberty_catalog`；`code/src/rseco/physical_budget_adapter.py` 扩展 `generate_compatible_candidates` 支持任意 PDK 多 `.lib` 清单、`dont_use` 过滤及同 Vt 保持平局优先级；新增单测后核心 65 项通过（`10.31 s`）。
+2. **证据闭环入库（`project_docs/evidence/cross_pdk_lr_baselines_20261123/{REPORT.md, SUMMARY.json}`）**：
+   - OpenROAD `s382` 负裕度参数（`-slack_margin -1.0` / `-setup_margin -1.0 -allow_setup_violations`）仍返回 `0 Resized`（`+0.0%`）；
+   - **Track A（`LR_DOWNSIZE` 10 电路 SKY130）**：冻结 SPEF 宣称 `7.81%–14.14%`（17–60 门），重布线+RCX 后 **10/10 均坍塌**（`dwns = -79.60 ~ -706.03 ps`，`0.00%` 有效）；
+   - **Track B（ASAP7 7 nm `aes_cipher_top`，20,097 实例）**：全库枚举 `10,010` 候选（`15.4 s`），OpenROAD 原生降 `0.118%` 且 **TNS 恶化 `-2516.01 ps`（`-20.3%`）**；FAECO `eval_059` 提交 191 门降 **`0.266%`（`2130.7504 µm²`，`2.25×` 原生）**、`dwns = +0.000 ps`、`dtns = +48.181 ps`、`dhold = +0.000 ps`、功耗 `0.432 -> 0.431 W`、Yosys SEC `1252/1252 $equiv` 全证明。
+3. **论文与基线收口**：扩展表 1 至 8 类代表工作并补全文献引用（`OpenPhySyn`、`RL-Sizer`、`IR-Aware ECO`、`GoalEvolve`），更新摘要、§6.3、新增 §6.5（表 14）、§7.3 与 §8；双遍编译 **16 页（0 Error / 0 Overfull / 0 Undefined，页均饱满无孤儿页）** 并同步三副本 PDF；生成并全验 `versions/v22/MANIFEST.sha256`（`165 OK / 0 FAIL`）。
