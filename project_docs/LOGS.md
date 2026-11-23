@@ -5906,3 +5906,65 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - 用户要求先等，SKY130HD v3 控制进程 PID 35380 已暂停（SIGSTOP，Ts+）。观察到 fixed/02 子进程 PID 37206 已退出、尚待控制进程收集。fixed/02 没有最终收据，后续调用未启动。
 - 暂停前实查已验收记录覆盖单门六次与固定微批次第一次，均完成 DRT/RCX、DRC0 和三视图 STA，均被候选门拒绝，无候选 SEC。已完成部分为 7 次 DRT、7 次 RCX、21 次 STA。fixed/02 保留中间状态，等待用户决定是否恢复后再按最终收据与原预算核定成本。含暂停空档的观测时间需单独登记。
 - ASAP7 已完成的单门与 FAECO 均在第三次达到 0.26244 的同一回收量，累计实测 835.516/751.489 s。这是本次环境的时间描述。六次预算及公共墙钟前缀的结论仍见完整核验收据。[ASAP7 三臂核验](evidence/tcad_ibex_20261123/ASAP7_P1_VERIFIED.json)
+
+## LOG-20261123-43｜整理 Ibex B0 预算讨论草案
+
+- 按继续工作的指示整理拟案。草案在各自已合格的共同起点上以 B0 为主，另以各工艺原生周期的 0.1%/0.25%/0.5%/1% 扫描 setup 相对损失预算。CONTROL 已为非负的视图设 0 ps 绝对 setup 下限。hold、电气、DRC、全网表两态 SEC 门继续适用。
+- 每档三种策略各最多六次逻辑候选评估。按固定端点和完整动作在同一新实验内部去重物理执行，命中仍按一次逻辑评估收费，逻辑成本与物理调用单独记账。草案拟分别使用新输出，现有 ASAP7 −10 ps 与旧 SKY130HD v3 记录另存。旧 SKY130HD 控制进程保持暂停，等待根收尾保全旧输出。[预登记](evidence/EXPERIMENT_REGISTRY.md)
+
+## LOG-20261123-44｜封存旧 SKY130HD 阶段，整理拟用资源
+
+- 复核暂停的旧 v3 调度器 PID 35380 及唯一已结束的子进程后，停止旧调度器并确认两个旧进程均退出。保留七份完整候选收据。fixed/02 的旧 DRT/RCX 产物齐全，原始日志含 IBEX_RCX_COMPLETE 和 IBEX_ROUTE_COMPLETE，未开始 STA 或 SEC。中间收据 SHA256 73d5464cc7f368e4c699793e410318c5199efc7097f6daebf01dca37ed93bff1。旧部分调用与暂停时间独立留档。
+- setup 档位、原 SDC 单位和绝对下限相关的 15 项测试通过。拟用 WSL setup_budget_asap7_v1、setup_budget_sky130_v1 作为独立输出，两工艺可各四线程并行，单次 DRT/RCX、每视图 STA、SEC 外层限时 1500/180/210 s。实验命令与运行器指纹待绑定。
+
+## LOG-20261123-45｜Ibex setup 预算仅讨论
+
+- 用户明确目前只讨论，认为把零 setup 损失作为主门槛过严。B0 主比较及后续分档属于未批准的拟案。主预算、诊断档和候选策略继续开放讨论。实查两处拟用输出目录均未创建，新物理评估未启动。此前 ASAP7 完整结果与 SKY130HD 已封存阶段证据继续按原配置查阅。
+
+## LOG-20261123-46｜原论文评测口径核查与 FAECO 方法草案
+
+- 核对 Sizer 等工作的原论文。Sizer 表 6 的 −20 ps 是搜索阶段的单元 slack 阈值，论文将最终 MCMM setup WNS/TNS 与 hold 规则独立讨论，表 11 以 Sizer 中间结果作近似等时比较，表 12 另报时序分析器时间。方法草案提出按同一最终时序包络、同一实测墙钟比较回收面积，并报告同一面积目标首次通过全部验收的时间。setup 门限、墙钟窗、选择的实验对象及候选策略继续讨论，B0 拟案未批准。[Sizer 原文](https://vlsicad.ucsd.edu/Publications/Journals/j129.pdf) · [评测方法草案](planning/FAECO_EVALUATION_PROTOCOL_DRAFT_20261123.md)
+- 实查旧 ASAP7 的单门和 FAECO 在第三次以相同动作各回收 0.26244，ODB、DEF 和网表字节相同，SPEF 唯一区别为 DATE，三视图时序一致。共同端点的 FF setup 从 +0.380362 至 −4.379830 ps，TT/SS setup 相对变化 −2.049250/−0.536016 ps。含阶段开销的到达时间分别为 835.516/751.489 s，其中两次/一次 SEC 分别用 87.009/43.751 s，非 SEC 时间为 748.507/707.738 s。同一端点两次 DRT+RCX 已测得 231.226/205.338 s。该对照继续按旧 −10 ps 门解读，单次计时用于核对成本构成。本轮只查原文和已有证据，无新 EDA。[三臂核验](evidence/tcad_ibex_20261123/ASAP7_P1_VERIFIED.json)
+
+## LOG-20261123-47｜用户批准按评测协议开展 Ibex 新对照
+
+- 冻结 tradeoff@1% 主比较、protect 对照及原周期 0%/0.5%/1% 诊断档。各视图满足相对 WNS/TNS 包络。tradeoff 允许预算内 setup 跨零，protect 对原非负视图保零线。0% 仅参照，B0 主比较旧拟案保持未批准。
+- 两工艺使用各自原先合格起点，三策略各最多六次。主试验独立实跑，以完成 SEC 的端点计入 ASAP7 1200 s、SKY130HD 720 s 公共窗口，另记首次验证达到起点面积 0.01% 的实际时间。诊断按完整动作和冻结输入复用，等效计费与真实工具时间分账。原路由和 hold、DRC、电气、SEC 门沿用。每工艺四线程，实际启动命令与 CPU 亲和性待绑定。已登记，尚未启动。[新试验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-ibex-p1-setup-protocol-v1)
+
+## LOG-20261123-48｜Ibex 新评测双工艺并行启动
+
+- WSL 进程时间实查为 17:13:36（UTC+8）。ASAP7 PID 670、绑 CPU 0–5，输出 setup_protocol_asap7_v1。SKY130HD PID 673、绑 CPU 6–11，输出 setup_protocol_sky130_v1。可见 12 个逻辑 CPU，各进程四线程。实际参数核对包括 tradeoff 主档 1%、诊断 0/0.5/1%、共同窗口 1200/720 s、等面积 0.01%、各臂上限六次、单次限时 1500/180/210 s、启用 setup 违规端点盘点。根核验 93 项测试及端点审计探针通过。
+- 原始 config 的 tns_gate=false 是基础驱动遗留字段。新评测采用同一 config 的新 setup_tns_loss_budget 和 sweep 逐角门，超允许损失记 setup_tns_budget。共享零动作走原 10 ps setup 预检，和主档候选的 WNS/TNS 包络分别计。ASAP7 用冻结原文本导引，SKY130HD 用冻结 ODB 内嵌导引并从冻结布线零编辑复提取。[配置登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-ibex-p1-setup-protocol-v1)
+
+## LOG-20261123-49｜新评测双起点及共享零动作通过
+
+- ASAP7 共享零动作 1 DRT、1 RCX、3 STA、1 SEC 17363/0，墙钟 450.802 s。SKY130HD 为 0 新 DRT、1 RCX、3 STA、1 SEC 13648/0，墙钟 98.113 s。两工艺原约束 CONTROL 复测与冻结资格一致，三角 hold 全过。原 CONTROL 候选池 4151/1112。两工艺都已开始主档单门臂。独立端点清单三项回归通过。[报告](evidence/tcad_ibex_20261123/REPORT.md#共同起点与零动作预检)
+
+## LOG-20261123-50｜新评测早期端点与拒收归因
+
+- SKY130HD 主档单门六次均完成 DRT、RCX、三视图 STA，全部 DRC=0。每次尝试节省 16.2656 面积单位，六个 TT setup WNS 损失落在 377.550–763.920 ps，TT TNS 损失 21317.106–34125.833 ps，均超主门。六次的 SS hold 相对变化为 −0.079936 至 −0.111022 ps，绝对值均为正，仍触发相对非退化门。未运行候选 SEC，选回 CONTROL，固定批次已启动。原件路径 `setup_protocol_sky130_v1/primary_tradeoff_1pct/single/`。
+- ASAP7 主档首个合格端点为单门第二次，节省 0.13122，SEC 17363/0，FF setup WNS 从 +0.380362 变为 −4.379830 ps，TNS 从 0 变为 −37.870485 ps，新增 15 个负 setup 端点，TT/SS 新增均为零。当前只计已见候选，三臂与诊断尚未完成。原件路径 `setup_protocol_asap7_v1/primary_tradeoff_1pct/single/02_physical/`。
+
+## LOG-20261123-51｜ASAP7 单门与 SKY130HD 固定批次结束
+
+- ASAP7 单门主档 2129.686 s 完成六次 DRT/RCX、18 次 STA、3 次候选 SEC。1200 s 窗内完成三次，第三次于 1135.931 s 首达 0.01% 面积目标，回收 0.26244。六次回收 0.37908。SKY130HD 固定批次 1114.528 s 完成六次 DRT/RCX、18 次 STA，候选 SEC 0，720 s 窗内三次及六次终点的合格回收均为零。当前 ASAP7 固定批次和 SKY130HD 自适应继续独立实跑。
+
+## LOG-20261123-52｜新评测 SKY130HD 全矩阵结束并实查
+
+- SKY130HD 实跑 rc 0，独立核验 rc 0。三臂各六次 DRT/RCX，合计 54 次 STA，无候选 SEC。720 s 内各完成 3/3/5 次，三个方法在公共窗口及六次上限的合格回收均为零。18 个候选均未通过 TT WNS/TNS 门和 SS 相对 hold 门，绝对 hold 仍 ≥115.777 ps。108 次诊断均命中精确动作缓存，所有诊断配置亦无合格回收。五对独立执行的相同换门组合三视图 slack 与非日期物理产物一致，DRT+RCX 耗时差 27.155–57.118 s。ASAP7 继续实跑。[数据核验](evidence/tcad_ibex_20261123/SKY130_P1_SETUP_VERIFIED.json)
+
+## LOG-20261123-53｜ASAP7 固定批次结束并进入自适应
+
+- 主档固定批次独立实跑六次，完成 6 DRT、6 RCX、18 STA、0 候选 SEC，墙钟 1517.090 s。1200 s 内完成四次，窗口及六次终点的合格回收均为零。自适应首次构造三门批次并启动 DRT，诊断扫档随后执行。
+
+## LOG-20261123-54｜ASAP7 自适应结束，进入预算诊断
+
+- 主档 FAECO 独立完成 6 DRT、6 RCX、18 STA、1 候选 SEC，实测 1523.247 s。1200 s 内完成 4 次，回收 0.26244，在 810.920 s 首达面积目标。与单门第 3 次的完整动作、ODB/DEF/V、去日期 SPEF 和逐视图结果一致，均 FF 新增 15 个负 setup 端点，SEC 17363/0。单门与 FAECO 的同端点 DRT+RCX 为 317.697 s 和 234.139 s。到同面积目标的三次 DRT+RCX 累计 946.858 s/706.106 s，SEC 为 2/1 次共 115.325 s/45.499 s。SKY130HD 在单门时段并行，在自适应时段已结束。时间差按观测报告。三臂主档只读复核完成。诊断开始从精确动作缓存重判，必要时补跑未测端点。
+
+## LOG-20261123-55｜ASAP7 protect 诊断发现不同的正回收端点
+
+- 0% protect/tradeoff 的三臂均选回 CONTROL。0.5% protect 的单门第三次使用同一轮新测的 NOR3 单门端点 `physical/0019` 并通过 SEC 17363/0。节省 0.13122，FF setup WNS +0.383027 ps、TNS=0，三视图新增负 setup 端点均为零。TT/SS WNS 损失 0.322409/0.541789 ps。这个端点在 0% 档因相对 WNS/TNS 损失被拒，首次实跑物理步骤用于 0% 诊断，0.5% protect 复用物理收据后新增一次 SEC。后续候选与预算诊断继续。
+
+## LOG-20261123-56｜双工艺端点与时间证据归档
+
+- 两套完整矩阵与只读审计均 rc 0。主档合计 36 次独立候选 DRT/RCX 和 108 次逐视图 STA。另有 216 次诊断逻辑评估，实际新增 7 次 DRT/RCX、21 次 STA、2 次候选 SEC。0.5% 和 1% protect 均使 ASAP7 单门与 FAECO 各回收 0.24786 和 0.13122，三个视图无新增负 setup 端点，两个实际端点均 SEC 17363/0。两份完整归档通过目录检视和内部 config/results SHA-256 对齐。综合回归 96 项通过。check_record 的旧工作进度文件日期提醒继续按停用说明处理。[最终报告](evidence/tcad_ibex_20261123/REPORT.md#按原周期归一化的-setup-预算对照)

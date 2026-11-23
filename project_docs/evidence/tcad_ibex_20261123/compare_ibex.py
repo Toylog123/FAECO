@@ -164,8 +164,19 @@ def materialize_views(paths, out: Path) -> dict[str, list[Path]]:
     return result
 
 
-def render_sta(libraries, netlist: Path, sdc: Path, spef: Path) -> str:
+def render_sta(libraries, netlist: Path, sdc: Path, spef: Path, *, report_setup_endpoints=False) -> str:
     reads = "\n".join(f"read_liberty {tcl(path)}" for path in libraries)
+    setup_inventory = """
+puts IBEX_SETUP_NEG_BEGIN
+set paths [find_timing_paths -path_delay max -slack_max 0 -group_path_count 100000 -endpoint_path_count 1]
+if {[llength $paths] >= 100000} { error "setup endpoint inventory hit the path report cap" }
+foreach path $paths {
+    if {[get_property $path slack] < 0} {
+        puts "IBEX_SETUP_NEG [get_full_name [get_property $path endpoint]]"
+    }
+}
+puts IBEX_SETUP_NEG_END
+""" if report_setup_endpoints else ""
     return f"""{reads}
 read_verilog {tcl(netlist)}
 link_design {TOP}
@@ -188,6 +199,7 @@ check_setup -verbose
 report_parasitic_annotation
 report_checks -path_delay max -group_path_count 1
 report_checks -path_delay min -group_path_count 1
+{setup_inventory}
 puts IBEX_STA_COMPLETE
 exit
 """
@@ -229,6 +241,12 @@ def parse_sta(output: str) -> dict:
     }
     if not all(metrics["ports"].values()):
         raise TrialFailure("missing actual I/O port evidence")
+    if "IBEX_SETUP_NEG_BEGIN" in output:
+        inventory = re.search(r"(?ms)^IBEX_SETUP_NEG_BEGIN\n(.*?)^IBEX_SETUP_NEG_END$", output)
+        if not inventory:
+            raise TrialFailure("incomplete setup violation endpoint inventory")
+        endpoints = re.findall(r"(?m)^IBEX_SETUP_NEG (.+)$", inventory[1])
+        metrics["setup_negative_endpoints"] = sorted(set(endpoints))
     return metrics
 
 
@@ -236,18 +254,22 @@ def describe_sta(args, libraries, netlist, sdc, spef, out, operations) -> dict:
     views = {}
     for corner in CORNERS:
         script = out / f"sta_{corner}.tcl"
-        script.write_text(render_sta(libraries[corner], netlist, sdc, spef), encoding="utf-8")
+        script.write_text(render_sta(
+            libraries[corner], netlist, sdc, spef, report_setup_endpoints=args.report_setup_endpoints,
+        ), encoding="utf-8")
         result = run_process([args.sta, "-exit", script], out / f"sta_{corner}.log", args.sta_timeout)
         operations[f"STA_{corner}"] = asdict(result)
         views[corner] = parse_sta(checked_output(result, "IBEX_STA_COMPLETE"))
+        if args.report_setup_endpoints and "setup_negative_endpoints" not in views[corner]:
+            raise TrialFailure("missing setup violation endpoint inventory")
     return views
 
 
-def joint_failures(control: dict, candidate: dict) -> list[str]:
+def joint_failures(control: dict, candidate: dict, *, check_setup: bool = True) -> list[str]:
     reasons = []
     for corner in CORNERS:
         ref, trial = control[corner], candidate[corner]
-        if trial["setup_wns_ps"] < ref["setup_wns_ps"] - 10.0 - PS_TOLERANCE:
+        if check_setup and trial["setup_wns_ps"] < ref["setup_wns_ps"] - 10.0 - PS_TOLERANCE:
             reasons.append(f"{corner}:setup_budget")
         if trial["hold_wns_ps"] < 0:
             reasons.append(f"{corner}:negative_hold")
@@ -390,11 +412,11 @@ def select_pool(index, libraries, masters, instances) -> list[PhysicalAction]:
 
 def run_method(
     method: str, reference: Endpoint, actions: list[PhysicalAction],
-    evaluate: Callable[[tuple[str, ...]], Endpoint], budget: int, batch_size: int,
+    evaluate: Callable[[tuple[str, ...]], Endpoint], budget: int, batch_size: int, *, policy: BudgetPolicy = POLICY,
 ) -> dict:
     if method == "faeco":
         return adaptive_batch_recovery(
-            reference, actions, evaluate, POLICY, max_evaluations=budget, batch_size=batch_size,
+            reference, actions, evaluate, policy, max_evaluations=budget, batch_size=batch_size,
         )
     if method not in ("single", "fixed"):
         raise ValueError(f"unknown method {method}")
@@ -407,7 +429,7 @@ def run_method(
         chunk_ids = [action.action_id for action in chunk]
         trial = tuple(sorted((*committed, *chunk_ids)))
         ep = evaluate(trial)
-        gate = assess(reference, ep, POLICY)
+        gate = assess(reference, ep, policy)
         accepted = gate.feasible and ep.area < best.area - 1e-9
         trace.append({
             "actions": list(trial), "batch_len": len(chunk), "feasible": gate.feasible,
@@ -467,11 +489,25 @@ foreach net [[ord::get_db_block] getNets] {
 """
     )
     source_grt = fastroute(args)
-    grt = (
-        f"read_guides {tcl(args.route_guide)}"
-        if args.route_mode == "local" and args.route_guide
-        else "global_route" + (" -resistance_aware" if args.pdk == "asap7" else "")
-    )
+    if args.embedded_guides:
+        grt = 'if {![grt::have_routes]} {error "No embedded route guides"}'
+    elif args.route_mode == "local" and args.route_guide:
+        grt = f"read_guides {tcl(args.route_guide)}"
+    else:
+        grt = "global_route" + (" -resistance_aware" if args.pdk == "asap7" else "")
+    if args.zero_reextract and not actions:
+        routing = f"""if {{![design_is_routed]}} {{ error "Frozen CONTROL contains unrouted nets" }}
+file copy -- {tcl(args.control_drc)} {tcl(out / "drc.rpt")}
+puts "IBEX_DRT_VIOLATIONS 0"
+puts IBEX_REUSED_FROZEN_DRT"""
+    else:
+        routing = f"""pin_access
+{grt}
+detailed_route -output_drc {tcl(out / "drc.rpt")} -verbose 1 -droute_end_iter {args.droute_iters}
+puts "IBEX_DRT_VIOLATIONS [detailed_route_num_drvs]"
+if {{![design_is_routed]}} {{ error "Unrouted nets after DRT" }}
+check_placement -verbose
+puts IBEX_DRT_COMPLETE"""
     return f"""{read_db(libraries, control["odb"])}
 read_sdc {tcl(control["sdc"])}
 if {{[llength [all_clocks]] == 0}} {{ error "No clocks in saved SDC" }}
@@ -492,13 +528,7 @@ dict for {{name net}} $nets {{
     if {{$wire ne "NULL"}} {{ odb::dbWire_destroy $wire; incr cleared }}
 }}
 puts "IBEX_CLEARED_SIGNAL_WIRES $cleared"
-pin_access
-{grt}
-detailed_route -output_drc {tcl(out / "drc.rpt")} -verbose 1 -droute_end_iter {args.droute_iters}
-puts "IBEX_DRT_VIOLATIONS [detailed_route_num_drvs]"
-if {{![design_is_routed]}} {{ error "Unrouted nets after DRT" }}
-check_placement -verbose
-puts IBEX_DRT_COMPLETE
+{routing}
 set ::env(REPORTS_DIR) {tcl(out)}
 source {tcl(args.orfs / "scripts/util.tcl")}
 write_verilog {tcl(out / "routed.v")} -remove_cells [find_physical_only_masters]
@@ -589,7 +619,11 @@ class Evaluator:
         operations["SEC"] = asdict(result)
         return result.returncode == 0
 
-    def evaluate(self, action_ids: tuple[str, ...], out: Path, *, noop: bool = False) -> tuple[Endpoint, dict]:
+    def evaluate(
+        self, action_ids: tuple[str, ...], out: Path, *, noop: bool = False, envelope_only: bool = False,
+    ) -> tuple[Endpoint, dict]:
+        if noop and envelope_only:
+            raise ValueError("the no-op must be verified under its preflight policy")
         out.mkdir()
         start = time.monotonic()
         label = str(out.relative_to(self.args.out))
@@ -608,7 +642,8 @@ class Evaluator:
                 [self.args.openroad, "-threads", str(self.args.threads), "-exit", script],
                 out / "route.log", self.args.route_timeout,
             )
-            operations["DRT_RCX"] = asdict(route)
+            operation = "RCX_REEXTRACT" if noop and self.args.zero_reextract else "DRT_RCX"
+            operations[operation] = asdict(route)
             route_log = Path(route.log).read_text(encoding="utf-8", errors="replace").splitlines()
             record["routed_to_completion"] = "IBEX_DRT_COMPLETE" in route_log
             record["extracted_to_completion"] = "IBEX_RCX_COMPLETE" in route_log
@@ -647,11 +682,21 @@ class Evaluator:
                 out, operations,
             )
             record["views"] = views
+            if self.args.report_setup_endpoints:
+                record["setup_endpoint_counts"] = {}
+                for corner, view in views.items():
+                    baseline = set(self.ref_views[corner]["setup_negative_endpoints"])
+                    trial_endpoints = set(view["setup_negative_endpoints"])
+                    record["setup_endpoint_counts"][corner] = {
+                        "control_negative": len(baseline),
+                        "candidate_negative": len(trial_endpoints),
+                        "new_negative": len(trial_endpoints - baseline),
+                    }
             if bind(self.control["sdc"]) != record["control_sdc"]:
                 failures.append("changed_sdc")
-            failures.extend(joint_failures(self.ref_views, views))
+            failures.extend(joint_failures(self.ref_views, views, check_setup=not envelope_only))
             proven = False
-            if not failures:
+            if not failures and not envelope_only:
                 proven = self.proof(artifacts["v"], out, operations)
                 if not proven:
                     failures.append("sec")
@@ -707,7 +752,7 @@ def run_arm(args, evaluator: Evaluator, reference: Endpoint, pool, method: str) 
     return result, receipts
 
 
-def run(args) -> int:
+def run(args, *, matched_runner=None, config_overrides=None, extra_sources=()) -> int:
     control = {ext: args.control_dir / f"6_final.{ext}" for ext in CONTROL_FILES}
     assets = {
         "control": {ext: bind(path) for ext, path in control.items()},
@@ -735,6 +780,7 @@ def run(args) -> int:
         for path in (
             Path(__file__), ROOT / "code/src/rseco/budgeted_recovery.py",
             ROOT / "code/src/rseco/logic_rewrite.py", ROOT / "code/src/rseco/physical_budget_adapter.py",
+            *extra_sources,
         )
     }
     qualify_binding(qualification, assets)
@@ -747,15 +793,21 @@ def run(args) -> int:
         "methods_in_run_order": METHODS, "budget_attempts_per_arm": args.max_evals,
         "batch_size": args.batch_size, "methods_route_threads": args.threads,
         "route_mode": args.route_mode, "route_drt_iters": args.droute_iters,
+        "route_guide_source": "embedded in frozen CONTROL ODB" if args.embedded_guides else "external",
         "route_timeout_seconds": args.route_timeout, "sta_timeout_seconds_per_view": args.sta_timeout,
         "sec_timeout_seconds": args.sec_timeout, "same_area_acceptance": False,
         "setup_budget_ps_per_view": 10.0, "numerical_tolerance_ps": PS_TOLERANCE,
         "hold_threshold_ps": 0.0, "hold_nonregression_per_view": True, "tns_gate": False,
+        "report_setup_endpoints": args.report_setup_endpoints,
         "physical_area": "TT Liberty cell area sum of final routed functional netlist",
-        "no_op_budget": "one shared preflight DRT/RCX, excluded from equal per-arm budget",
+        "no_op_budget": ("one shared RCX re-extraction of frozen DRT" if args.zero_reextract else
+                         "one shared preflight DRT/RCX, excluded from equal per-arm budget"),
+        "no_op_preflight_setup_budget_ps": 10.0,
         "cached_physical_trials": False, "final_budget_slot": "singleton across all methods",
         "unrelated_route_changes": "report from routed DEF; common timing and electrical gates remain applicable",
     }
+    if config_overrides:
+        config.update(config_overrides)
     save(args.out / "config.json", config)
     baseline = args.out / "control"
     baseline.mkdir()
@@ -812,10 +864,23 @@ def run(args) -> int:
         return 2
     if args.probe_only:
         return 0
-    results, receipts = {}, {}
-    for method in METHODS:
-        results[method], receipts[method] = run_arm(args, evaluator, reference, pool, method)
-    limit = min(result["attempt_wall_seconds"] for result in results.values())
+    if matched_runner is not None:
+        phase_complete, payload = matched_runner(args, evaluator, reference, pool, baseline_record, noop)
+    else:
+        results, receipts = {}, {}
+        for method in METHODS:
+            results[method], receipts[method] = run_arm(args, evaluator, reference, pool, method)
+        limit = min(result["attempt_wall_seconds"] for result in results.values())
+        phase_complete = all(
+            result["evaluations_used"] == args.max_evals == result["route_attempts"]
+            for result in results.values()
+        )
+        payload = {
+            "results": results, "equal_wall_prefix_limit_seconds": limit,
+            "equal_wall_prefixes": {
+                method: accepted_prefix(reference, results[method], receipts[method], limit) for method in METHODS
+            },
+        }
     source_bindings = [
         *assets["control"].values(), *assets["tools"].values(), *assets["flow"].values(),
         *assets["driver_source"].values(), assets["qualification_receipt"], assets["original_sdc"],
@@ -825,23 +890,16 @@ def run(args) -> int:
         source_bindings.append(assets["route_guide"])
     if any(bind(Path(entry["path"])) != entry for entry in source_bindings):
         raise TrialFailure("one or more frozen inputs changed during matched runs")
-    phase_complete = all(
-        result["evaluations_used"] == args.max_evals == result["route_attempts"]
-        for result in results.values()
-    )
     save(args.out / "results.json", {
+        **payload,
         "status": "matched" if phase_complete else "incomplete budget",
         "scope": scope, "control": baseline_record, "shared_noop": noop,
-        "results": results, "equal_wall_prefix_limit_seconds": limit,
-        "equal_wall_prefixes": {
-            method: accepted_prefix(reference, results[method], receipts[method], limit) for method in METHODS
-        },
     })
     return 0 if phase_complete else 2
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+def create_parser(description=__doc__) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--pdk", choices=("sky130hd", "asap7"), required=True)
     parser.add_argument("--control-dir", type=Path, required=True)
     parser.add_argument("--original-sdc", type=Path, required=True)
@@ -857,15 +915,25 @@ def main() -> int:
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--route-mode", choices=("local", "full"), default="local")
     parser.add_argument("--route-guide", type=Path, help="guide emitted by the CONTROL producer")
+    parser.add_argument("--embedded-guides", action="store_true", help="retain the ODB guide metadata")
+    parser.add_argument("--zero-reextract", action="store_true", help="no-op uses the frozen DRT")
     parser.add_argument("--droute-iters", type=int, default=64)
     parser.add_argument("--route-timeout", type=float, default=1500)
     parser.add_argument("--sta-timeout", type=float, default=180)
     parser.add_argument("--sec-timeout", type=float, default=600)
+    parser.add_argument("--report-setup-endpoints", action="store_true")
     phases = parser.add_mutually_exclusive_group()
     phases.add_argument("--prepare-only", action="store_true", help="CONTROL and candidate pool only")
     phases.add_argument("--probe-only", action="store_true", help="CONTROL, pool and one shared no-op only")
-    args = parser.parse_args()
-    if args.route_mode == "local" and args.route_guide is None:
+    return parser
+
+
+def prepare_args(parser, args):
+    if args.embedded_guides and (args.route_mode != "local" or args.route_guide is not None):
+        parser.error("embedded guides require local routing with no guide override")
+    if args.zero_reextract and not args.embedded_guides:
+        parser.error("zero re-extraction requires embedded guides")
+    if args.route_mode == "local" and args.route_guide is None and not args.embedded_guides:
         args.route_guide = args.control_dir / "route.guide"
     for name in ("control_dir", "original_sdc", "control_drc", "views_json", "out", "sec", "orfs",
                  "openroad", "sta", "route_guide"):
@@ -875,6 +943,12 @@ def main() -> int:
     values = (args.max_evals, args.batch_size, args.threads, args.route_timeout, args.sta_timeout, args.sec_timeout)
     if any(not math.isfinite(value) or value <= 0 for value in values) or not 1 <= args.droute_iters <= 64:
         parser.error("budgets, stage timeouts and thread count must be positive, DRT iterations must be in [1, 64]")
+    return args
+
+
+def main() -> int:
+    parser = create_parser()
+    args = prepare_args(parser, parser.parse_args())
     try:
         return run(args)
     except (TrialFailure, OSError, ValueError, KeyError) as error:

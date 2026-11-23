@@ -3,9 +3,11 @@
 import argparse
 from hashlib import sha256
 from pathlib import Path
+import subprocess
 
 
 BASE_SHA = "c473e6d8a8bd478615689fa401bd501b9635602142e3650a15a7aeffba412321"
+BASE_REV = "a48dfda8"
 DRT_BODY = """pin_access
 {grt}
 detailed_route -output_drc {tcl(out / "drc.rpt")} -verbose 1 -droute_end_iter {args.droute_iters}
@@ -20,9 +22,14 @@ def main():
     parser.add_argument("output", type=Path)
     args = parser.parse_args()
     source = Path(__file__).resolve().with_name("compare_ibex.py")
-    if sha256(source.read_bytes()).hexdigest() != BASE_SHA:
+    source_bytes = source.read_bytes()
+    if sha256(source_bytes).hexdigest() != BASE_SHA:
+        root = source.parents[3]
+        relative_source = source.relative_to(root).as_posix()
+        source_bytes = subprocess.check_output(["git", "show", f"{BASE_REV}:{relative_source}"], cwd=root)
+    if sha256(source_bytes).hexdigest() != BASE_SHA:
         raise ValueError("unexpected comparison driver version")
-    text = source.read_text(encoding="utf-8")
+    text = source_bytes.decode("utf-8")
     changes = {
         "ROOT = Path(__file__).resolve().parents[3]": f"ROOT = Path({str(source.parents[3])!r})",
         '        f"read_guides {tcl(args.route_guide)}"': (
