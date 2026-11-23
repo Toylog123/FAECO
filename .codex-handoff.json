@@ -3,7 +3,7 @@
   "status": "v22 (v2026-11-23-cross-pdk-lr-baselines): Chinese v3 paper expanded with LR 10-circuit baseline (0/10 pass after reroute), OpenROAD margin-flag falsification, 8-row Table 1 literature matrix, and cross-PDK 20k-instance ASAP7 7nm aes_cipher_top validation (0.266% = 2.25x Native, dWNS=0, dTNS=+48.18ps, Yosys 1252/1252 SEC pass; 16p balanced, 0 Overfull); English frozen.",
   "project": "FAECO",
   "read_order": [
-    "project_docs/HANDOFF_2026-11-22.md",
+    "project_docs/HANDOFF_2026-11-23.md",
     "project_docs/CANON.md",
     "project_docs/evidence/cross_pdk_lr_baselines_20261123/REPORT.md",
     "project_docs/evidence/postroute_strong_baselines_20261122/REPORT.md",
@@ -39,7 +39,7 @@
     "last_frozen": "v21 (superseded)",
     "v22_manifest": "versions/v22/MANIFEST.sha256 (165 entries OK)"
   },
-  "tests": "1147 passed /156 subtests (128.96s),34 new dedicated tests included; entire code Python source snapshot unchanged; documented same-byte packaged Yosys mirror used",
+  "tests": "65 passed in 10.31s (core 4 test suites covering physical_budget_adapter, logic_rewrite, budgeted_recovery, recover_area); versions/v22/MANIFEST.sha256 165/165 OK",
   "environment": {
     "wsl": "Ubuntu v2 default; openroad 26Q3 at /home/toylog/faeco_eda/or26Q3/bin/openroad; sta 3.1.0",
     "windows_yosys": "requires oss-cad-suite bin AND lib on PATH, else 0xC0000139",
@@ -111,7 +111,7 @@
     "scope": "s382 existing clock-only model; no complete IO guarantee",
     "area_recovery_percent": 28.90625,
     "new_EDA": "0routes/0STA/1SEC; separate constraint diagnostic2STA",
-    "tests": "1147 passed /156 subtests (128.96s),34 new dedicated tests included; entire code Python source snapshot unchanged; documented same-byte packaged Yosys mirror used",
+    "tests": "65 passed in 10.31s (core 4 test suites covering physical_budget_adapter, logic_rewrite, budgeted_recovery, recover_area); versions/v22/MANIFEST.sha256 165/165 OK",
     "next": [
       "connect prospective physical evaluator to expanded candidate space",
       "complete intended constraints",

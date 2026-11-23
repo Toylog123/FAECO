@@ -1,7 +1,7 @@
 # FAECO：覆盖优先调度与可调预算的后布局门级时序 ECO 面积回收
 
-> **2026-11-23 当前总入口：[`project_docs/HANDOFF_2026-11-22.md`](project_docs/HANDOFF_2026-11-22.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
-> 当前处于 **`v21`（`v2026-11-23-postroute-baselines-b15`）** 中文 v3 后布局定稿态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，15 页 / 6 套 Nature 矢量图），新增同起点四方法强基线对照、10/10 完整 PPA 功耗与 IO+OCV 签核，以及万门级 `b15` 局部增量绕线 `7.7×` 提速闭合；英文稿 `paper/en/` 暂冻。
+> **2026-11-23 当前总入口：[`project_docs/HANDOFF_2026-11-23.md`](project_docs/HANDOFF_2026-11-23.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
+> 当前处于 **`v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 中文 v3 后布局定稿态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，16 页 / 6 套 Nature 矢量图），新增经典 LR 10 电路实测对照、OpenROAD 负裕度开关证伪、表 1 八类文献扩充，以及 ASAP7 7 nm 两万门 `aes_cipher_top` 跨工艺验证；英文稿 `paper/en/` 暂冻。
 
 <details>
 <summary>历史入口归档（2026-11-09 / 2026-11-13 预布局与单点过渡期说明，点击展开仅作溯源）</summary>
@@ -51,7 +51,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 ## 现行权威状态入口
 
-1. **三十秒现状 + 复现入口 + 自检 + 后续规划**：`project_docs/HANDOFF_2026-11-22.md`（接手者第一站）
+1. **三十秒现状 + 复现入口 + 自检 + 后续规划**：`project_docs/HANDOFF_2026-11-23.md`（接手者第一站）
 2. **唯一现行口径**：`project_docs/CANON.md`（任何文档与它冲突，以它为准）
 3. **目录 / 版本 / 数据资产 / 结构性坑**：`project_docs/PROJECT_MAP.md`
 4. **事实流水**：`project_docs/LOGS.md`（正序，可回溯）
@@ -66,7 +66,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 2. **测试**：`bash code/scripts/run_with_timeout.sh 300 .venv/Scripts/python.exe -m pytest code/tests -q`（须用 `.venv/Scripts/python.exe` 显式 Python，不能只写 `python`）。
 3. **实验**：`experiments/INVENTORY.md` 总索引、`experiments/RESULTS.md` 顶层汇总；复现入口脚本在 `code/scripts/`。
 4. **论文**：当前活跃中文 v3 主稿 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（归档 v2 稿与补充材料同在 `manuscript/`，详见 `paper/zh/README.md`）；**必须 `cd` 入 `manuscript/` 后显式选目标、LuaLaTeX 连跑两遍**（不能自动猜主文件）。洁净成品 PDF 在 `paper/zh/` 与 `paper/zh/build/`。
-5. **交接**：读 `project_docs/HANDOFF_2026-11-22.md`。
+5. **交接**：读 `project_docs/HANDOFF_2026-11-23.md`。
 
 ## 目录角色
 
