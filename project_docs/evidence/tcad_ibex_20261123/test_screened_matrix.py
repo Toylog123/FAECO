@@ -5,7 +5,7 @@ from types import SimpleNamespace
 import pytest
 
 from compare_ibex import Endpoint, PhysicalAction, create_parser, prepare_args, render_route, sha
-from run_screened_matrix import bind_screen_inputs, summarize_arm_times
+from run_screened_matrix import RELATIVE_HOLD_REASONS, bind_screen_inputs, comparison_arms, summarize_arm_times
 from run_setup_budget_sweep import BudgetGate, run_arm
 import screen_sky130_candidates as screening
 
@@ -124,3 +124,20 @@ def test_single_pin_access_rejects_unvalidated_routing_modes(pdk, embedded, caps
         prepare_args(create_parser(), args)
     assert caught.value.code == 2
     assert "single pin access requires embedded SKY130 guides" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    ("hold_aware_only", "screened_hold_aware", "pools", "methods", "defer"),
+    [
+        (False, False, ("legacy", "screened"), ("single", "fixed", "faeco"), set()),
+        (True, False, ("screened",), ("faeco",), RELATIVE_HOLD_REASONS),
+        (False, True, ("screened",), ("single", "fixed", "faeco"), RELATIVE_HOLD_REASONS),
+    ],
+)
+def test_screened_hold_aware_comparison_uses_same_pool_and_keeps_all_baselines(
+    hold_aware_only, screened_hold_aware, pools, methods, defer,
+):
+    args = SimpleNamespace(
+        hold_aware_only=hold_aware_only, screened_hold_aware=screened_hold_aware, pool_order="legacy-first",
+    )
+    assert comparison_arms(args) == (pools, methods, defer)

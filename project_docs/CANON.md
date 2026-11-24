@@ -4,6 +4,11 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 统一单次 pin access 的 Ibex 与 AES 正式对照
+
+- Ibex 原冻结起点、统一有序筛选池与单次 pin access，三臂各六次独立实跑并计入四路筛选的 77.493 RAW s。单门／固定／FAECO 在 720 s 窗内完成 5／4／4 次、回收 0／43.792／43.792 µm²；六次最终回收 7.5072／62.56／62.56 µm²。固定与 FAECO 都在第 3 次以 22.5216 µm² 达到 0.01% 目标，含筛选首达 452.492／454.058 RAW s，首达端点三角无新增负 setup，SEC 13648/0。两者六次轨迹和逐次物理结果均相同，观测时间对应一次串行次序。[Ibex 正式报告](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_REPORT.md)
+- AES 原冻结起点、原有序池，三方法共用保护与真实 DRC marker 放行规则。720 RAW s 硬窗内单门／固定／FAECO 分别完成 3／2／2 个逻辑评估，各启动 5 次物理 route，累计 12 次完成 DRT/RCX、36 视图 STA、3 候选 SEC。正式回收 11.2608／33.7824／33.7824 µm²。固定与 FAECO 在相同的第 2 次自动放行两数据邻网后通过原门与 SEC 11089/0，含筛选首达 532.099／529.887 RAW s。两臂前三个实际派发及已验收物理端点一样，首达差异按一次顺序观察。共同第 3 次六门重试被窗末截停，窗外完整诊断 67.5648 µm² 的候选仍因 FF/TT 相对 hold 退化拒收。先前手选六门证据和本次硬窗结果分别记录。[AES 正式报告](evidence/tcad_ibex_20261123/AES_PROTECTED_ONLINE_REPORT.md)
+
 ## 2026-11-24 单次 pin access 冻结搜索与 ODB 重入前置验证
 
 - GCD 原冻结起点 hold-aware 搜索在同机串行 A→B→B→A，各 6 次调用。A 为默认双次 pin access，B 为显式单次。四臂均在第 5 次达到同一 11.2608 µm² 面积回收，SEC 262/0。含同一历史筛选成本，顺序交换两对的双次／单次首达分别为 122.989／118.740 RAW s、118.933／113.860 RAW s，实测节省 4.249／5.073 s。24 个候选的动作、拒因、DEF/V、去日期 SPEF、三角全量时序和证明保持一致，单次原始 ODB 字节仍有差异。后续正式 SKY130 嵌入导引冻结起点对照对各方法统一显式启用 `--single-pin-access`，原默认值、外部导引入口和既有实验继续按各自对应配置。更广矩阵尚未开始。[搜索报告](evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_REPORT.md)

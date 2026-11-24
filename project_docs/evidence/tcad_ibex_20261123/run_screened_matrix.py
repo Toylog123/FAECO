@@ -141,6 +141,15 @@ def stage_report(trials, attempts):
             "relative_hold_only_rejections": relative_hold_only}
 
 
+def comparison_arms(args):
+    if args.hold_aware_only:
+        return ("screened",), ("faeco",), RELATIVE_HOLD_REASONS
+    if args.screened_hold_aware:
+        return ("screened",), comparison.METHODS, RELATIVE_HOLD_REASONS
+    pools = ("legacy", "screened") if args.pool_order == "legacy-first" else ("screened", "legacy")
+    return pools, comparison.METHODS, frozenset()
+
+
 def run_matrix(args, evaluator, reference, pool, baseline_record, noop):
     assert_screen_inputs(args.screen_bindings)
     screened = screened_actions(args, evaluator)
@@ -149,20 +158,18 @@ def run_matrix(args, evaluator, reference, pool, baseline_record, noop):
     cache = sweep.TrialCache(evaluator)
     results = {}
     arm_order = []
-    methods = ("faeco",) if args.hold_aware_only else comparison.METHODS
-    defer_split_reasons = frozenset(RELATIVE_HOLD_REASONS) if args.hold_aware_only else frozenset()
     for kind in args.pool_order:
         active = pool if kind == "legacy" else screened
         evaluator.actions = {action.action_id: action for action in active}
         directory = args.out / kind
         directory.mkdir()
         results[kind] = {}
-        for method in methods:
+        for method in args.methods:
             before = len(cache.measurements)
             start = raw_seconds()
             result, attempts = sweep.run_arm(
                 args, cache, reference, active, method, gate, directory / method, primary=True,
-                defer_split_reasons=defer_split_reasons,
+                defer_split_reasons=args.defer_split_reasons if method == "faeco" else frozenset(),
             )
             end = raw_seconds()
             arm_order.append({"pool": kind, "method": method, "raw_start": start, "raw_end": end})
@@ -202,8 +209,11 @@ def main():
     parser.add_argument("--helper-source", type=Path, action="append", default=[],
                         help="extra source dependency to bind for a generic STA or SEC wrapper")
     parser.add_argument("--pool-order", choices=("legacy-first", "screened-first"), default="legacy-first")
-    parser.add_argument("--hold-aware-only", action="store_true",
-                        help="run only screened FAECO with per-view relative hold split deferral")
+    scope = parser.add_mutually_exclusive_group()
+    scope.add_argument("--hold-aware-only", action="store_true",
+                       help="run only screened FAECO with per-view relative hold split deferral")
+    scope.add_argument("--screened-hold-aware", action="store_true",
+                       help="compare single, fixed and hold-aware FAECO on the same screened pool")
     parser.add_argument("--wall-limit-seconds", type=float, default=720.0)
     parser.add_argument("--target-area-pct", type=float, default=0.01)
     args = comparison.prepare_args(parser, parser.parse_args())
@@ -215,10 +225,7 @@ def main():
         parser.error("wall window and area target must be finite and positive")
     if not hasattr(time, CLOCK_NAME):
         parser.error("this matrix requires CLOCK_MONOTONIC_RAW")
-    if args.hold_aware_only:
-        args.pool_order = ("screened",)
-    else:
-        args.pool_order = ("legacy", "screened") if args.pool_order == "legacy-first" else ("screened", "legacy")
+    args.pool_order, args.methods, args.defer_split_reasons = comparison_arms(args)
     try:
         args.screen_pool, args.screen_receipt = (p.resolve(strict=True) for p in (args.screen_pool, args.screen_receipt))
         if args.routing_config is not None:
@@ -233,8 +240,8 @@ def main():
         with bind_runtime(args.top, args.routing_config):
             return comparison.run(args, matched_runner=run_matrix, config_overrides={
                 "pool_order": args.pool_order, "clock": CLOCK_NAME,
-                "methods_in_run_order": ("faeco",) if args.hold_aware_only else comparison.METHODS,
-                "split_deferral_reasons": sorted(RELATIVE_HOLD_REASONS) if args.hold_aware_only else [],
+                "methods_in_run_order": args.methods,
+                "split_deferral_reasons": sorted(args.defer_split_reasons),
                 "cpu_affinity": sorted(os.sched_getaffinity(0)),
                 "clock_resolution_seconds": time.clock_getres(time.CLOCK_MONOTONIC_RAW),
                 "setup_budget_ps_per_view": setup_budget, "primary_budget_pct": BUDGET_PCT,

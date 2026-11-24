@@ -1676,6 +1676,8 @@ Ibex 第三次 FAECO 已测物理端点面积减 17.5168，SS hold 与旧零编�
 
 后续四路筛选实测减少了相同探针前缀的组件时间，但原固定和修复调度的首达物理路径相同，筛选机制可由两方法共用。独立留出及采用优化配置的完整搜索比较仍为 open。[筛选报告](evidence/tcad_ibex_20261123/SCREEN_WORKERS_BENCHMARK.md)
 
+用于正式同池比较的 Ibex 三臂采用单次 pin access 和四路筛选实测成本。固定与 FAECO 六次轨迹相同，720 s 内均回收 43.792 µm²、六次 62.56 µm²，均在第 3 次首达。AES 三臂采用共同自动邻网释放规则，固定和 FAECO 的实际前三次派发均相同，第 2 次均回收 33.7824 µm²。至今同轨迹样本可支持相对单门的具体优势，FAECO 与固定的行为分离和跨独立样本的收益仍待实测。[Ibex 正式报告](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_REPORT.md) · [AES 正式报告](evidence/tcad_ibex_20261123/AES_PROTECTED_ONLINE_REPORT.md)
+
 ## OI-099（2026-11-24，open）— AES 主留出原始起点的 SS hold 违例
 
 SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 ps/720 ps SDC 与 I/O 均匹配，SS hold WNS 为 −975.978 ps、TNS 为 −124464.094 ps，原起点资格状态为 `hold_infeasible`。后续需从冻结原生端点在原约束下实际修复、重布线和复提取，并重做三角绝对 hold、DRC 与 SEC，才可作为留出矩阵共同起点。[留出报告](evidence/tcad_holdout_20261123/REPORT.md)
@@ -1693,6 +1695,8 @@ AES 的 18 个冻结筛选候选均完成 DRT/RCX，setup、DRC、电气与绝�
 真保护零编辑保持原布线并精确复现三视图四个 WNS/TNS。按实测 DRC 标记分别放行两个非时钟邻网后，原固定第 2 次修复端点面积降低 33.7824（0.028996%），15,646 条保护网未变，恢复 ROUTED 的全块 DRC、天线均为 0，原三角 hold 和 tradeoff setup 门、SEC 11089/0 通过。该端点新增 SS 负 setup 端点，原 slack +0.329958 ps 降到 −0.228706 ps。第 5 次释放其两个邻网后同样通过 DRC，三视图相对 hold 仍退化。其他动作、跨设计效果和可自动确定的开放网范围仍为 open。[AES 保护路由报告](evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)
 
 第 5 次的剩余退化经三视图交叉 STA 归因于寄生变化。三选二全部因原相对 hold 门被拒。将一门替换成已测有发射侧补偿趋势的等面积降档后，原三视图联合门、解锁态全块 DRC、天线及 SEC 全过，回收 33.7824，无新增负 setup 端点。合并上轮另一个合格端点实际通过以上各门，回收 67.5648，SS 新过零端点仍来自前一动作组，slack 为 −0.214495 ps。扩大放行网和补偿动作的自动选择及独立设计实测继续 open。[AES 残余 hold 优化](evidence/tcad_ibex_20261123/AES_RESIDUAL_HOLD_OPTIMIZATION.md)
+
+自动保护与按真实 DRC marker 放行的共享规则，在正式固定／FAECO 的第二组实际达到 33.7824 µm²，均有独立实际 SEC 11089/0，三角保持原 hold 门。两臂同一六门的第三次重试超出硬窗。窗外完成同一重试虽解锁态 DRC 为 0，仍有 FF/TT 相对 hold 下降 0.049849/0.077660 ps。捕获时钟网保持几何锁定时提取总电容仍增 0.0000792 pF。自动选出适合多门提交的组合、减少首轮与自动重试的实际开销，以及跨设计测试仍待完成。[AES 正式报告](evidence/tcad_ibex_20261123/AES_PROTECTED_ONLINE_REPORT.md)
 
 ## OI-101（2026-11-24，open）— 减少 pin access 次数改变 ODB 二进制身份
 
