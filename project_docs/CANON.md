@@ -4,6 +4,19 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 初次相对 hold 延后后的触达电容排序对照
+
+- 同一候选池内，原 FAECO 的两个相对 hold 拆分请求被延后，六次预算耗尽前未重访，实际仍走固定批次。新规则以真实相对 hold 触发，只按原冻 DEF/SPEF 触达网电容和面积一次重排未评估候选；保持共同起点、原 I/O 和三角联合门、单次 pin access、6 次调用、720 RAW s 与 0.01% 目标，实际准备时间计新臂。
+- Ibex 两臂新跑均在 720 RAW s 完成 4 次，均正式回收 43.792 µm²（0.030282%）。同一 22.5216 µm² 目标由固定第 3 次提前至新臂第 2 次，含筛选和新臂特征准备 435.254→368.345 RAW s（减少 66.909 s，15.37%）。新臂达标端点无新增负 setup。窗内同面积点的 SS hold WNS 高 3.330 ps、SS setup TNS 较固定低 78.129 ns，新增负 setup 固定 0、新臂 SS 1。六次最优 62.56→68.816 µm²，额外回收发生在 720 s 之后。[Ibex 独立核验](evidence/tcad_ibex_20261123/IBEX_INCIDENT_CAP_PAIR_VERIFIED.json)
+- GCD 转移中，两臂均在第 5 次达标，含筛选首达 94.279→94.451 RAW s，窗内均完成 6 次。新臂第 6 次换用一个不同单门，最优面积回收 11.2608→15.0144 µm²（0.234742%→0.312989%），三角 hold 和原 setup 预算通过、SEC 262/0，新增 TT 负 setup 一个。两设计均按固定→新臂各跑一次，同机各有分配的 CPU 组。首达耗时差用该顺序的实测值描述。[GCD 独立核验](evidence/tcad_ibex_20261123/GCD_INCIDENT_CAP_PAIR_VERIFIED.json) · [触达电容报告](evidence/tcad_ibex_20261123/INCIDENT_CAP_PRIORITY_REPORT.md)
+- AES 共同保护后端的 720 RAW s 硬窗对照 v2，两臂各派发 4、完成 3，固定第 2 次、新臂第 3 次首次回收 33.7824 µm²（0.028996%），含筛选和实测准备分别 447.229／622.069 RAW s。优化次组因 FF/TT 相对 hold 拒收，第 3 组重试后通过原 setup／hold、独立全块 DRC 与天线为 0、SEC 11089/0，且新增 SS 负 setup 1 个。v1 优化臂的截停异常保留为不完整记录。v2 的真实窗尾截停能生成核验终态，在计算时间和预算内回收时以 v2 整对为准。[AES 配对报告](evidence/tcad_ibex_20261123/AES_INCIDENT_PRIORITY_MATCHED_REPORT.md)
+- AES 后续按初始相对 hold 延后部分重试的 v3 单臂，保留原联合验收，在 524.181 RAW s 复现 v2 优化同一 33.7824 µm² 候选和 SEC 11089/0。观察比 v2 优化提前 97.888 s，仍晚于 v2 固定 76.952 s。实际省去 v2 已实测仍拒的第 2 组重试，新臂在窗内也访问了更多请求，最终合格面积相同。第 4 次六门重试未测，第 5 次的 65.0624 µm² 候选窗外独立补审发现 8 个 DRC 标记并拒收。v3 此次为已观测设计上的开发臂。[AES 配对和重试报告](evidence/tcad_ibex_20261123/AES_INCIDENT_PRIORITY_MATCHED_REPORT.md)
+
+## 2026-11-24 AES 正式排名 4–9 候选的独立等面积修复
+
+- 窗外完成后被拒的排名 4–9 六门，以正式合格的排名 4–6 三门作对照。12 次交叉 STA 显示，原候选的 SPEF 精确复现三角 hold 下降，FF/TT 同时发射提前、捕获延后。现场保护时钟网几何时，提取的捕获分支电容增加 0.0000792 pF。基于同层邻近性与已有单门的发射时钟趋势，把 `_13098_` 等面积换为 `_21033_`，其余五门保持。新端点从同冻结起点一次完成物理验收，回收 67.5648 µm²（0.057992%），相对冻结起点 FF/TT/SS hold 改善 +0.063172/+0.098699/+0.653255 ps，解锁态全块 DRC、天线为零，SEC 11089/0。
+- 替换保留原 setup 预算，TT 新增两个负 setup 端点，SS 新增一个。配对路径复检确认捕获分支原电容增量消失且发射分支电容增 0.0001006 pF。137.851 RAW s 为单次定向替换的真实验证，原 720 s 比较与原排位不变。该端点和此前等面积手选合并是不同动作证据。[排名 4–9 归因与修复](evidence/tcad_ibex_20261123/AES_RANK4_9_HOLD_REPAIR.md)
+
 ## 2026-11-24 统一单次 pin access 的 Ibex 与 AES 正式对照
 
 - Ibex 原冻结起点、统一有序筛选池与单次 pin access，三臂各六次独立实跑并计入四路筛选的 77.493 RAW s。单门／固定／FAECO 在 720 s 窗内完成 5／4／4 次、回收 0／43.792／43.792 µm²；六次最终回收 7.5072／62.56／62.56 µm²。固定与 FAECO 都在第 3 次以 22.5216 µm² 达到 0.01% 目标，含筛选首达 452.492／454.058 RAW s，首达端点三角无新增负 setup，SEC 13648/0。两者六次轨迹和逐次物理结果均相同，观测时间对应一次串行次序。[Ibex 正式报告](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_REPORT.md)

@@ -452,6 +452,8 @@ class Audit:
         ranked = [action["action_id"] for action in self.pool]
         queue, deferred, committed = [], [], []
         defer_reasons = set(self.config.get("split_deferral_reasons", ()))
+        ranking = self.config.get("incident_ranking") if method == "faeco" else None
+        reranked = False
         offset = 0
         for idx, receipt in enumerate(trace):
             if not queue:
@@ -465,6 +467,7 @@ class Audit:
             chunk = queue.pop(0)
             equal(receipt["actions"], sorted(committed + chunk), f"scheduled action order {directory} {idx + 1}")
             defer = False
+            reordered = False
             if receipt["accepted"]:
                 committed.extend(chunk)
             elif method == "faeco" and len(chunk) > 1 and idx + 1 < cap:
@@ -475,9 +478,15 @@ class Audit:
                     defer = not defer_reasons.isdisjoint(failure)
                 if defer:
                     deferred.append(children)
+                    if ranking is not None and not reranked:
+                        ranked[offset:] = sorted(
+                            ranked[offset:], key=lambda key: ranking["actions"][key]["priority"], reverse=True,
+                        )
+                        reordered = reranked = True
                 else:
                     queue[0:0] = children
             equal(receipt.get("split_deferred", False), defer, f"split deferral {directory} {idx + 1}")
+            equal(receipt.get("frontier_reranked", False), reordered, f"frontier priority {directory} {idx + 1}")
 
     def arm(self, directory, result, pct, protect, *, primary):
         equal(read(directory / "summary.json"), result, f"arm summary binding {directory}")

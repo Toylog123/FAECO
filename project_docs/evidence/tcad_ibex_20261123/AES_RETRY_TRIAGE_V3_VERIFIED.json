@@ -1,0 +1,65 @@
+{
+  "audit_source": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/verify_aes_incident_priority_matched.py",
+    "sha256": "8f4b3b5c78cdd08c117f21df82d7f2f4e651d6c86ef707bf4ae36ed751e3670f",
+    "bytes": 15936
+  },
+  "arms": {
+    "faeco": {
+      "logical_admitted": 5,
+      "logical_finished": 4,
+      "completed_retries": 1,
+      "triaged_retries": 2,
+      "first_relative_hold_defer": {
+        "request_id": 1,
+        "actions": [
+          "\\_10814_=sky130_fd_sc_hd__xor2_2",
+          "\\_10992_=sky130_fd_sc_hd__xor2_2",
+          "\\_11167_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "reasons": [
+          "SS:hold_regression"
+        ]
+      },
+      "priority_preparation": {
+        "start_raw": 6709.391475741,
+        "stop_raw": 6709.97062553,
+        "seconds": 0.5791497889995298
+      },
+      "raw_start": 6709.391466383,
+      "raw_stop": 7315.926414358,
+      "stop_reason": "end_to_end_wall_cap",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3/faeco/progress.json",
+        "sha256": "09ecb91f3063ee5b26cf84c6cefe4f514f5053150ee2443ab1414518bb847df8",
+        "bytes": 4814
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3/faeco/subprocesses.json",
+        "sha256": "d6b79cc81d88dca359fbc4313c0b0feb721ea24ff72e957aa7485477a5b72948",
+        "bytes": 20944
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 4,
+        "selected": {
+          "endpoint_id": "faeco/03/retry",
+          "area": 116474.208,
+          "wns_ns": -0.38063063811932807,
+          "tns_ns": -6.578034117410425,
+          "hold_wns_ns": 0.523991683376579,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3/faeco/03/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 33.782400000010966,
+        "area_saved_pct": 0.028995779503215056,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 524.1809219629995,
+        "target_reached_in_window": true
+      }
+    }
+  }
+}

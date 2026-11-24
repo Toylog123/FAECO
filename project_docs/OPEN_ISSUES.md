@@ -1678,6 +1678,10 @@ Ibex 第三次 FAECO 已测物理端点面积减 17.5168，SS hold 与旧零编�
 
 用于正式同池比较的 Ibex 三臂采用单次 pin access 和四路筛选实测成本。固定与 FAECO 六次轨迹相同，720 s 内均回收 43.792 µm²、六次 62.56 µm²，均在第 3 次首达。AES 三臂采用共同自动邻网释放规则，固定和 FAECO 的实际前三次派发均相同，第 2 次均回收 33.7824 µm²。至今同轨迹样本可支持相对单门的具体优势，FAECO 与固定的行为分离和跨独立样本的收益仍待实测。[Ibex 正式报告](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_REPORT.md) · [AES 正式报告](evidence/tcad_ibex_20261123/AES_PROTECTED_ONLINE_REPORT.md)
 
+新一轮先查实延后队列未被耗尽的原因，再冻结触达电容重排。Ibex 新配对改变派发，0.01% 首达从第 3 次到第 2 次，720 RAW s 的最优面积持平。GCD 转移第 5 次达标的时间相近，第 6 次新接受使窗内最优从 11.2608 到 15.0144 µm²。两设计窗内新臂最优各增加一处负 setup，但满足原预算。不同设计的共同时间或面积优势、排序效果和真实剩余窗消耗仍不确定，需要也保留 AES 和新族结果以及同面积时序细节。[触达电容报告](evidence/tcad_ibex_20261123/INCIDENT_CAP_PRIORITY_REPORT.md)
+
+AES 完整复跑 v2 中，电容重排使第 2 组多支付一次 DRC 返修仍因 FF/TT hold 拒，首达到第 3 次，固定第 2 次即达到相同合格面积。v3 开发臂避免一项已知徒劳重试，恢复部分时间，但仍慢于固定的实测首达。另一个初评 SS hold 失败的六门跳过真实重试，其可修性未知。要检验可迁移性，需维持独立设计／候选验证与已跳过候选的机会成本，并报告真实余量与原绝对、相对 hold 门。[AES 配对和重试报告](evidence/tcad_ibex_20261123/AES_INCIDENT_PRIORITY_MATCHED_REPORT.md)
+
 ## OI-099（2026-11-24，open）— AES 主留出原始起点的 SS hold 违例
 
 SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 ps/720 ps SDC 与 I/O 均匹配，SS hold WNS 为 −975.978 ps、TNS 为 −124464.094 ps，原起点资格状态为 `hold_infeasible`。后续需从冻结原生端点在原约束下实际修复、重布线和复提取，并重做三角绝对 hold、DRC 与 SEC，才可作为留出矩阵共同起点。[留出报告](evidence/tcad_holdout_20261123/REPORT.md)
@@ -1698,6 +1702,10 @@ AES 的 18 个冻结筛选候选均完成 DRT/RCX，setup、DRC、电气与绝�
 
 自动保护与按真实 DRC marker 放行的共享规则，在正式固定／FAECO 的第二组实际达到 33.7824 µm²，均有独立实际 SEC 11089/0，三角保持原 hold 门。两臂同一六门的第三次重试超出硬窗。窗外完成同一重试虽解锁态 DRC 为 0，仍有 FF/TT 相对 hold 下降 0.049849/0.077660 ps。捕获时钟网保持几何锁定时提取总电容仍增 0.0000792 pF。自动选出适合多门提交的组合、减少首轮与自动重试的实际开销，以及跨设计测试仍待完成。[AES 正式报告](evidence/tcad_ibex_20261123/AES_PROTECTED_ONLINE_REPORT.md)
 
+对该窗外排名 4–9 候选，12 次 ODB/SPEF 交叉复现了相对合格三门的三角寄生变化。定向用等面积 `_21033_` 替换 `_13098_`，保留其余五门，实际回收 67.5648 µm²（0.057992%），绝对和相对 hold、解锁态全块 DRC、天线及 SEC 11089/0 全部合格。原 setup 预算内，TT／SS 分别新增 2／1 个负 setup 端点。三角配对路径实测捕获分支的原电容增量消失，且发射侧延迟给 FF／TT 提供补偿。该定向选择属于独立于正式计时的控制性修复，原候选状态保留。候选替换的自动化、用完整成本验收、降低新增负 setup 端点与跨设计覆盖仍待验证。[AES 归因与修复](evidence/tcad_ibex_20261123/AES_RANK4_9_HOLD_REPAIR.md)
+
+新配对中另一个次组放行数据邻网解决 DRC 后尚有 FF/TT 相对 hold 退化，12 次交叉 STA 复现其 SPEF 效应。v3 第 5 个不同六门候选的三角可过，窗外同字节物理端点的独立全块 DRC 仍有 8 项。两种阻塞均须在未来自动选组时纳入，跳过重试后的未知可修性另列。当前最大定向合格端点和硬窗方法结果保持各自证据来源。[AES 配对与重试报告](evidence/tcad_ibex_20261123/AES_INCIDENT_PRIORITY_MATCHED_REPORT.md)
+
 ## OI-101（2026-11-24，open）— 减少 pin access 次数改变 ODB 二进制身份
 
 在 GCD、Ibex 各自固定且原可接受的一个三门端点，删去嵌入导引情形的显式 `pin_access` 语句、保留 DRT 内部默认步骤，顺序交换均减少单次候选耗时。两种方式的 DEF、V、去日期 SPEF、三视图时序、DRC、实际改线和证明点相同。仅 B 的 ODB 字节不同，且不满足预登记的全对象一致门。需定位 ODB 内部变化并用更完整的下游重复评估检验，暂保留原搜索配方。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
@@ -1709,3 +1717,9 @@ GCD 完整冻结路径四个六次搜索臂的候选接受与输出一致，单�
 ## OI-102（2026-11-24，open）— 冻结起点累计重布线与 ODB 重入改变验收
 
 GCD 相同累计四门原冻结路由未过 TT/SS 相对 hold，重入前一步合格 ODB 后追加同一门达 15.0144 µm²、SEC 262/0；Ibex 相同累计六门原冻结路由通过，重入却出现 TT 新电容违例与超预算 TNS 并拒收。两设计在各自所有单双次 pin access 组合下得到共同判定。后续需要单独对比路由起点、已有几何和目标改线范围，判断何时重入有益。现行方法比较继续使用同一冻结起点路由规则，重入结果单独登记。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+
+## OI-103（2026-11-24，限定闭合）— 硬墙钟裁剪的工具超时需运输为候选截停
+
+新 AES 触达电容配对 v1 优化臂第 3 次重试的独立恢复 ROUTED DRC 被剩余墙钟裁剪至 2.626940724 s。子进程的 `TrialFailure rc=None` 比硬墙钟早 0.005096355 s 返回，驱动以 1 退出，优化臂没有正式终态。前两次完成且拒，第三次无完整独立 DRC 和 SEC。v2 根据是否实际受剩余墙钟裁剪判定，保留普通工具超时与真正工具失败的异常路径。v1 的针对性回归复现，v2 三例通过。[实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-dispatch-optimization-and-aes-rank49-v1)
+
+v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独立 DRC 截停，真实终态通过独立核验。此次 AES 驱动在剩余窗超时前少量返回时的处理闭合。其它流程和更广负载不由本例认定，v1 原始异常保留。[AES 配对报告](evidence/tcad_ibex_20261123/AES_INCIDENT_PRIORITY_MATCHED_REPORT.md)

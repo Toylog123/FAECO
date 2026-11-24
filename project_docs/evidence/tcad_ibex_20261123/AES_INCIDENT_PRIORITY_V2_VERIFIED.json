@@ -1,0 +1,107 @@
+{
+  "audit_source": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/verify_aes_incident_priority_matched.py",
+    "sha256": "8f4b3b5c78cdd08c117f21df82d7f2f4e651d6c86ef707bf4ae36ed751e3670f",
+    "bytes": 15936
+  },
+  "arms": {
+    "fixed": {
+      "logical_admitted": 4,
+      "logical_finished": 3,
+      "completed_retries": 2,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 5478.731916903,
+      "raw_stop": 6083.879739229,
+      "stop_reason": "end_to_end_wall_cap",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/progress.json",
+        "sha256": "164bb488993a39344eef92769508f954721f3be384d892b2b205209fa8221766",
+        "bytes": 3525
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/subprocesses.json",
+        "sha256": "432f65209cd68a6eb4a5d354539936afab30a97c80f3266cce2cb1e782dc846a",
+        "bytes": 18899
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 3,
+        "selected": {
+          "endpoint_id": "fixed/02/retry",
+          "area": 116474.208,
+          "wns_ns": -0.3806581716503388,
+          "tns_ns": -6.575557875976301,
+          "hold_wns_ns": 0.5239148559432749,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/02/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 33.782400000010966,
+        "area_saved_pct": 0.028995779503215056,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 447.22874418099946,
+        "target_reached_in_window": true
+      }
+    },
+    "faeco": {
+      "logical_admitted": 4,
+      "logical_finished": 3,
+      "completed_retries": 2,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": {
+        "request_id": 1,
+        "actions": [
+          "\\_10814_=sky130_fd_sc_hd__xor2_2",
+          "\\_10992_=sky130_fd_sc_hd__xor2_2",
+          "\\_11167_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "reasons": [
+          "SS:hold_regression"
+        ]
+      },
+      "priority_preparation": {
+        "start_raw": 6083.881429214,
+        "stop_raw": 6084.467764629,
+        "seconds": 0.5863354150005762
+      },
+      "raw_start": 6083.881426138,
+      "raw_stop": 6690.353261598,
+      "stop_reason": "end_to_end_wall_cap",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/faeco/progress.json",
+        "sha256": "2c96231f62479169d26370360c3ad244b7a4fea29d3d63c82c341e7bfef73c8e",
+        "bytes": 3712
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/faeco/subprocesses.json",
+        "sha256": "6c3d318bb51796adeea8b1b9e9f720906f2bf2a0bc2b7dfe127b892ecc09629e",
+        "bytes": 21740
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 3,
+        "selected": {
+          "endpoint_id": "faeco/03/retry",
+          "area": 116474.208,
+          "wns_ns": -0.38063063811932807,
+          "tns_ns": -6.578034117410425,
+          "hold_wns_ns": 0.523991683376579,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/faeco/03/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 33.782400000010966,
+        "area_saved_pct": 0.028995779503215056,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 622.0693129289994,
+        "target_reached_in_window": true
+      }
+    }
+  }
+}

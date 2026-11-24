@@ -14,6 +14,7 @@ import time
 from types import SimpleNamespace
 
 import compare_ibex as comparison
+from incident_cap_priority import build_incident_priority
 import run_setup_budget_sweep as sweep
 
 
@@ -108,8 +109,9 @@ def screened_actions(args, evaluator):
     return actions
 
 
-def summarize_arm_times(args, reference, checkpoints, search_seconds, screen_seconds):
-    e2e = [{**row, "elapsed_seconds": row["elapsed_seconds"] + screen_seconds} for row in checkpoints]
+def summarize_arm_times(args, reference, checkpoints, search_seconds, screen_seconds, ranking_seconds=0.0):
+    front_end = screen_seconds + ranking_seconds
+    e2e = [{**row, "elapsed_seconds": row["elapsed_seconds"] + front_end} for row in checkpoints]
     opts = {"target_area_pct": args.target_area_pct}
     first_hit = sweep.summarize_wall_window(reference, checkpoints, wall_limit_seconds=search_seconds, **opts)
     first_hit = first_hit["time_to_target_seconds"]
@@ -117,9 +119,10 @@ def summarize_arm_times(args, reference, checkpoints, search_seconds, screen_sec
         "clock": CLOCK_NAME,
         "search_wall_seconds": search_seconds,
         "charged_screening_seconds": screen_seconds,
-        "end_to_end_wall_seconds": search_seconds + screen_seconds,
+        "charged_ranking_seconds": ranking_seconds,
+        "end_to_end_wall_seconds": search_seconds + front_end,
         "search_time_to_target_seconds": first_hit,
-        "end_to_end_time_to_target_seconds": first_hit + screen_seconds if first_hit is not None else None,
+        "end_to_end_time_to_target_seconds": first_hit + front_end if first_hit is not None else None,
         "search_only_wall_window": sweep.summarize_wall_window(
             reference, checkpoints, wall_limit_seconds=args.wall_limit_seconds, **opts,
         ),
@@ -142,6 +145,8 @@ def stage_report(trials, attempts):
 
 
 def comparison_arms(args):
+    if getattr(args, "screened_risk_pair", False):
+        return ("screened",), ("fixed", "faeco"), RELATIVE_HOLD_REASONS
     if args.hold_aware_only:
         return ("screened",), ("faeco",), RELATIVE_HOLD_REASONS
     if args.screened_hold_aware:
@@ -165,17 +170,21 @@ def run_matrix(args, evaluator, reference, pool, baseline_record, noop):
         directory.mkdir()
         results[kind] = {}
         for method in args.methods:
+            ranking = args.incident_ranking if method == "faeco" else None
+            priorities = {key: row["priority"] for key, row in ranking["actions"].items()} if ranking else None
             before = len(cache.measurements)
             start = raw_seconds()
             result, attempts = sweep.run_arm(
                 args, cache, reference, active, method, gate, directory / method, primary=True,
                 defer_split_reasons=args.defer_split_reasons if method == "faeco" else frozenset(),
+                priority_after_defer=priorities,
             )
             end = raw_seconds()
             arm_order.append({"pool": kind, "method": method, "raw_start": start, "raw_end": end})
             screened_seconds = args.screen_seconds if kind == "screened" else 0.0
             result.update(summarize_arm_times(args, reference, result["checkpoints"],
-                                              result["wall_seconds"], screened_seconds))
+                                              result["wall_seconds"], screened_seconds,
+                                              ranking["raw_seconds"] if ranking else 0.0))
             result.update(stage_report(cache.measurements[before:], attempts))
             comparison.save(directory / method / "summary.json", result)
             results[kind][method] = result
@@ -214,6 +223,8 @@ def main():
                        help="run only screened FAECO with per-view relative hold split deferral")
     scope.add_argument("--screened-hold-aware", action="store_true",
                        help="compare single, fixed and hold-aware FAECO on the same screened pool")
+    scope.add_argument("--screened-risk-pair", action="store_true",
+                       help="compare fixed and FAECO with one incident-capacitance reorder after hold rejection")
     parser.add_argument("--wall-limit-seconds", type=float, default=720.0)
     parser.add_argument("--target-area-pct", type=float, default=0.01)
     args = comparison.prepare_args(parser, parser.parse_args())
@@ -231,9 +242,18 @@ def main():
         if args.routing_config is not None:
             args.routing_config = args.routing_config.resolve(strict=True)
         args.screen_bindings, args.screen_seconds = bind_screen_inputs(args)
+        args.incident_ranking = None
+        if args.screened_risk_pair:
+            start = raw_seconds()
+            candidate_actions = [comparison.PhysicalAction(**row) for row in read(args.screen_pool)]
+            args.incident_ranking = build_incident_priority(
+                args.control_dir / "6_final.def", args.control_dir / "6_final.spef", candidate_actions,
+            )
+            args.incident_ranking["raw_seconds"] = raw_seconds() - start
         args.clock_period_ps = sweep.policy.original_period_ps(read(args.views_json), args.original_sdc)
         setup_budget = sweep.policy.setup_budget_ps(args.clock_period_ps, BUDGET_PCT)
         added_sources = (Path(__file__), Path(sweep.__file__), Path(sweep.policy.__file__),
+                         *((Path(build_incident_priority.__code__.co_filename),) if args.incident_ranking else ()),
                          *(path.resolve(strict=True) for path in args.helper_source))
         if len({path.name for path in added_sources}) != len(added_sources):
             raise ValueError("driver dependencies must have distinct basenames")
@@ -251,6 +271,7 @@ def main():
                 "final_budget_slot": "terminal top-level dispatch is a singleton; an in-flight bisection can use two edits",
                 "screen_inputs": args.screen_bindings, "charged_screening_seconds": args.screen_seconds,
                 "screening_cost_model": "one measured full scan charged to each screened arm",
+                **({"incident_ranking": args.incident_ranking} if args.incident_ranking else {}),
                 "shared_preflight_cost_in_arms": False,
             }, extra_sources=added_sources)
     except (comparison.TrialFailure, OSError, ValueError, KeyError, TypeError) as error:

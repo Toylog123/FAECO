@@ -8,6 +8,7 @@ import json
 import math
 
 import compare_ibex as comparison
+from incident_cap_priority import build_incident_priority
 from verify_setup_protocol import Audit, check_bindings, digest, equal, near, need, read
 
 
@@ -65,6 +66,10 @@ class MatrixAudit(Audit):
         equal(read(directory / "summary.json"), arm, f"arm summary binding {directory}")
         equal(arm["clock"], CLOCK, f"arm clock {directory}")
         near(arm["charged_screening_seconds"], screen_seconds, f"screen cost {directory}")
+        ranking = self.config.get("incident_ranking") if directory.name == "faeco" else None
+        ranking_seconds = ranking["raw_seconds"] if ranking else 0.0
+        near(arm.get("charged_ranking_seconds", 0.0), ranking_seconds, f"ranking cost {directory}")
+        front_end = screen_seconds + ranking_seconds
         count = self.config["budget_attempts_per_arm"]
         equal((arm["evaluations_used"], len(arm["trace"]), len(arm["checkpoints"]),
                len(arm["end_to_end_checkpoints"])), (count,) * 4, f"complete arm {directory}")
@@ -98,7 +103,7 @@ class MatrixAudit(Audit):
             last = search[-1][0] if search else 0.0
             need(math.isfinite(elapsed) and elapsed + 1e-8 >= last + attempt["wall_seconds"],
                  f"checkpoint precedes counted work {path}")
-            near(charged["elapsed_seconds"], elapsed + screen_seconds, f"charged checkpoint time {path}")
+            near(charged["elapsed_seconds"], elapsed + front_end, f"charged checkpoint time {path}")
             search.append((elapsed, accepted, ep))
             end_to_end.append((charged["elapsed_seconds"], accepted, ep))
             if accepted:
@@ -122,7 +127,7 @@ class MatrixAudit(Audit):
         near(arm["search_wall_seconds"], arm["wall_seconds"], f"search-only raw wall {directory}")
         need(math.isfinite(arm["search_wall_seconds"]) and arm["search_wall_seconds"] >= search[-1][0],
              f"arm duration precedes final checkpoint {directory}")
-        near(arm["end_to_end_wall_seconds"], arm["search_wall_seconds"] + screen_seconds, f"charged wall {directory}")
+        near(arm["end_to_end_wall_seconds"], arm["search_wall_seconds"] + front_end, f"charged wall {directory}")
         search_target, _ = self.wall_window(arm["search_only_wall_window"], search, directory)
         e2e_target, prefix = self.wall_window(arm["wall_window"], end_to_end, directory)
         equal(arm["search_time_to_target_seconds"], search_target, f"search-first area time {directory}")
@@ -132,6 +137,7 @@ class MatrixAudit(Audit):
             "attempts_inside_wall": prefix["completed_attempts"],
             "time_to_target_seconds": e2e_target, "search_time_to_target_seconds": search_target,
             "charged_screening_seconds": screen_seconds, "search_wall_seconds": arm["search_wall_seconds"],
+            "charged_ranking_seconds": ranking_seconds,
             "stage_seconds": stage, "failure_reasons": dict(failures), "relative_hold_only_rejections": hold_only,
             "operations": arm["operations"],
         }
@@ -158,6 +164,15 @@ class MatrixAudit(Audit):
         for kind in ("odb", "spef", "sdc"):
             equal(receipt["control_sha256"][kind], self.control[kind]["sha256"], f"screen reference {kind}")
         pool = {"legacy": self.pool, "screened": read(Path(screen["pool"]["path"]))}
+        ranking = self.config.get("incident_ranking")
+        if ranking is not None:
+            rebuilt = build_incident_priority(
+                Path(self.control["def"]["path"]), Path(self.control["spef"]["path"]),
+                [comparison.PhysicalAction(**row) for row in pool["screened"]],
+            )
+            equal({key: value for key, value in ranking.items() if key != "raw_seconds"}, rebuilt,
+                  "ranking from original capacitance and topology")
+            need(math.isfinite(ranking["raw_seconds"]) and ranking["raw_seconds"] >= 0, "ranking charge")
         equal(read(self.root / "screened_pool_used.json"), pool["screened"], "screened order consumed")
         equal((final["qualified_legacy_instances"], final["screened_instances"]),
               (len(pool["legacy"]), len(pool["screened"])), "pool sizes")

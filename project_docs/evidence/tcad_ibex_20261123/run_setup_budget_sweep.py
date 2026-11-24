@@ -214,6 +214,7 @@ def summarize_wall_window(reference, checkpoints, *, wall_limit_seconds: float, 
 def run_arm(
     args, cache, reference, pool, method, gate, arm, *, primary: bool,
     defer_split_reasons: frozenset[str] = frozenset(),
+    priority_after_defer: dict[str, float] | None = None,
 ):
     arm.mkdir()
     attempts = []
@@ -245,6 +246,7 @@ def run_arm(
     result = comparison.run_method(
         method, reference, pool, evaluate, args.max_evals, args.batch_size, policy=scheduler_policy,
         defer_split_for=defer_split_for if defer_split_reasons else None,
+        priority_after_defer=priority_after_defer,
     )
     total_wall = time.monotonic() - start
     result["selected"] = asdict(result["selected"])

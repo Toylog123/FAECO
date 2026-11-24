@@ -13,7 +13,7 @@ import re
 import subprocess
 import time
 from pathlib import Path
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Mapping
 
 from .budgeted_recovery import Action, BudgetPolicy, Endpoint, assess
 from .logic_rewrite import LibCell, parse_generic_liberty_catalog
@@ -237,6 +237,7 @@ def adaptive_batch_recovery(
     max_evaluations: int = 10,
     batch_size: int = 3,
     defer_split_for: Callable[[tuple[str, ...]], bool] | None = None,
+    priority_after_defer: Mapping[str, float] | None = None,
 ) -> dict:
     """Universal adaptive mini-batch post-route area recovery with bisection fallback.
 
@@ -246,6 +247,7 @@ def adaptive_batch_recovery(
     to isolate tipping gates and salvage safe subsets within ``max_evaluations``.
     An evaluator can prioritize unvisited batches by deferring the rejected trial's
     split. Deferred batches are split in dispatch order if budget remains.
+    Optional priorities rank only the unvisited suffix at the first deferral.
     """
     active_policy = policy or BudgetPolicy()
     if batch_size < 1:
@@ -264,6 +266,7 @@ def adaptive_batch_recovery(
     trace: list[dict] = []
     deferred: list[list[PhysicalAction]] = []
     idx = 0
+    reranked = False
 
     def split(chunk: list[PhysicalAction]) -> None:
         mid = len(chunk) // 2
@@ -271,7 +274,7 @@ def adaptive_batch_recovery(
         try_chunk(chunk[mid:])
 
     def try_chunk(chunk: list[PhysicalAction]) -> None:
-        nonlocal best, evals
+        nonlocal best, evals, reranked
         if not chunk or evals >= max_evaluations:
             return
         trial = tuple(sorted((*committed, *(a.action_id for a in chunk))))
@@ -298,6 +301,13 @@ def adaptive_batch_recovery(
             if idx < len(unique_actions) and defer_split_for is not None and defer_split_for(trial):
                 deferred.append(chunk)
                 trace[-1]["split_deferred"] = True
+                if priority_after_defer is not None and not reranked:
+                    unique_actions[idx:] = sorted(
+                        unique_actions[idx:], key=lambda action: priority_after_defer[action.action_id],
+                        reverse=True,
+                    )
+                    reranked = True
+                    trace[-1]["frontier_reranked"] = True
             else:
                 split(chunk)
 

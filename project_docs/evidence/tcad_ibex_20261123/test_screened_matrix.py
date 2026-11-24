@@ -7,6 +7,7 @@ import pytest
 from compare_ibex import Endpoint, PhysicalAction, create_parser, prepare_args, render_route, sha
 from run_screened_matrix import RELATIVE_HOLD_REASONS, bind_screen_inputs, comparison_arms, summarize_arm_times
 from run_setup_budget_sweep import BudgetGate, run_arm
+from verify_setup_protocol import Audit
 import screen_sky130_candidates as screening
 
 
@@ -25,6 +26,13 @@ def test_screen_time_can_exclude_an_accepted_endpoint_from_equal_wall_window():
     assert output["end_to_end_time_to_target_seconds"] == 11
     assert output["end_to_end_wall_seconds"] == 11.5
     assert checkpoints[0]["elapsed_seconds"] == 4
+    args.wall_limit_seconds = 11.5
+    without_ranking = summarize_arm_times(args, reference, checkpoints, 9.5, 2.0)
+    with_ranking = summarize_arm_times(args, reference, checkpoints, 9.5, 2.0, 1.0)
+    assert without_ranking["wall_window"]["area_saved"] == 3
+    assert with_ranking["wall_window"]["area_saved"] == 0
+    assert with_ranking["charged_screening_seconds"] == 2.0
+    assert with_ranking["charged_ranking_seconds"] == 1.0
 
 
 def test_screen_receipt_cannot_cross_controllers(tmp_path):
@@ -141,3 +149,33 @@ def test_screened_hold_aware_comparison_uses_same_pool_and_keeps_all_baselines(
         hold_aware_only=hold_aware_only, screened_hold_aware=screened_hold_aware, pool_order="legacy-first",
     )
     assert comparison_arms(args) == (pools, methods, defer)
+
+
+def test_prepared_priority_reorders_only_unvisited_after_first_hold(tmp_path):
+    ref = Endpoint("CONTROL", 100, -1.0, -2, 0.1, "test", "ref", True, True)
+    pool = [PhysicalAction(name, name, "large", "small", 1) for name in "abcdefgh"]
+    args = SimpleNamespace(max_evals=4, batch_size=3, wall_limit_seconds=720, target_area_pct=0.01)
+
+    class Cache:
+        measurements = ()
+
+        def request(self, actions, gate, *, fresh_directory):
+            failures = ["SS:hold_regression"] if len(actions) == 3 else []
+            valid = not failures
+            ep = Endpoint("trial", 100 - len(actions), -1, -2, 0.1, "test", "trial", valid, valid)
+            return ep, {"actions": list(actions), "failures": failures, "endpoint": asdict(ep)}
+
+    scores = {name: score for score, name in enumerate("abcdefgh")}
+    result, receipts = run_arm(
+        args, Cache(), ref, pool, "faeco", BudgetGate(10, {}, False), tmp_path / "faeco",
+        primary=True, defer_split_reasons=frozenset({"SS:hold_regression"}),
+        priority_after_defer=scores,
+    )
+    assert [row["actions"] for row in receipts[:2]] == [list("abc"), list("fgh")]
+    assert [i for i,row in enumerate(result["trace"]) if row.get("frontier_reranked")] == [0]
+    audit = SimpleNamespace(
+        pool=[asdict(action) for action in pool],
+        config={"batch_size": 3, "split_deferral_reasons": ["SS:hold_regression"],
+                "incident_ranking": {"actions": {key: {"priority": value} for key, value in scores.items()}}},
+    )
+    Audit.verify_order(audit, tmp_path / "faeco", result["trace"])
