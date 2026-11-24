@@ -6181,3 +6181,87 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 ## LOG-20261124-19｜完成归因核验与原件归档
 
 - 新增 AES 零编辑 1 DRT/RCX、3 视图 STA，共同起点重读 3 STA，交叉诊断 12 STA，候选和 SEC 计数均为 0。调度与 AES 参照投影复用已测收据。原件归档 `scratch/tcad_ibex_20261123/aes_hold_cause_diag_v1.tar.gz`，16,741,646 字节，SHA-256 `999f944c7925a90997b80eb446512685731a5cfb14a3d0513df829c9da9a5aab`，已从包内独立核对零编辑收据及交叉配置、结果指纹。记录脚本返回 0，告警引用的是四个停用路径，现行状态和未决事项已同步。[精简回执](evidence/tcad_ibex_20261123/AES_ZERO_REROUTE_VERIFIED.json) · [AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md) · [调度诊断](evidence/tcad_ibex_20261123/SCHEDULER_COVERAGE_DIAGNOSTIC.md)
+
+## LOG-20261124-20｜启动覆盖调度与 AES 时钟网保护修复
+
+- 从归因提交 `4469d6e9` 继续。调度侧实现显式启用选项，仅在三视图相对 hold 退化时延后当前拒绝整批的拆分，继续扩大后续整批覆盖。原 setup 拒因对应的拆分与所有联合验收门保持原口径。先做单元和流程回归，后在 CPU 6–11 串行实跑已用过的 SKY130HD Ibex 和 GCD 筛选池，记录六次调用、720 RAW s 和 0.01% 面积目标下的结果。该轮验证当前实现能否复现已知可行端点，跨设计外推另验。
+- AES 侧从原合格起点检验局部详细布线能否保留关键时钟网及 hold 余量，分开验证零编辑与原失败候选。仍用原 I/O、三视图、绝对 hold 和逐角相对 hold 门。独立 CPU 0–5，精确动作、保护口径与运行参数在启动前另绑。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+- AES 预设已明确。使用同一 `ss_hold_targeted_v2b` ODB 与内嵌导引，借增量 DEF 将已有走线的非目标网设为 `FIXED`，按去除标志后的几何逐网核回原 DEF。顺序为零编辑、原筛选固定批次第 2 次、第 5 次。CPU 0–5、四线程、最多 64 个 DRT 迭代，整批上限 1200 s；每例 DRT/RCX 上限 240 s、逐角 STA 180 s、SEC 210 s。两个候选按原 36 ps WNS 预算和原 TNS/hold 联合门逐角判定。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+
+## LOG-20261124-21｜修复调度回归并启动 GCD 实跑
+
+- 原矩阵流程接入可选调度，默认调度保持。只要被拒批次含逐角的 `hold_regression` 就先推进到未访问的整批；若候选池已用尽且仍有配额，再按进入队列的次序处理延后的批次。最后一个顶层评估槽保持单门。首批 16 项针对性检查通过，完整回归与物理核验随后另记。
+- GCD 于 08:06:46（UTC+8）启动，WSL 外层 timeout PID 344、驱动 PID 414，CPU 6–11，实际按 `run_hold_aware_sky130.sh gcd` 从原 GCD 筛选池、原路由配方开始。之后同一 CPU 组串行实跑 Ibex。每设计外层 2400 s、每候选 DRT/RCX 1500 s、逐角 STA 180 s、SEC 210 s，四线程和 64 个 DRT 迭代上限。调度对照只跑 `--hold-aware-only`，绝对/相对门与原矩阵一致，两种旧调度从已核实的既有矩阵引用。[执行入口](evidence/tcad_ibex_20261123/run_hold_aware_sky130.sh)
+- GCD 实跑配置 SHA-256 为 `367c379153493be773dc88a8e0f917c5465bfba5f0e50fe9e79f9774b66f5282`。
+
+## LOG-20261124-22｜AES 未编辑网保护试次启动
+
+- WSL 实查 08:06:58（UTC+8）按预设开始，外层 PID 505、Python PID 507，CPU 0–5。首个零编辑 OpenROAD 进程 PID 516，四线程。`probe_aes_selective_repair.py` 输出目录 `aes_selective_drt_repair_v1`，输入清单 SHA-256 `4da01601ebad9faf83dbf8c320a7f4e1a5f633080d123dbd7b02b23c5f7e6792`。每次详细布线后还单列全块 DRC（含 PDN）与天线检查，后续依实际收据核对联合验收。[执行入口](evidence/tcad_ibex_20261123/probe_aes_selective_repair.py)
+
+## LOG-20261124-23｜AES 首次零编辑完成 DRT 后遇到检查接口不兼容
+
+- `aes_selective_drt_repair_v1/zero` 成功导入增量 FIXED DEF 和原导引，详细布线日志达到 0 个 DRT 违规并输出 `IBEX_DRT_COMPLETE`。追加的全块 `check_drc` 在当前 OpenROAD 中不可按该名称调用，随后进程 rc 1。零编辑没有完成复提取或 STA。驱动随后开始第 2 次的换门候选，定位到相同工具接口故障后定向停止该未完成的实例，第 5 次未启动，候选 SEC 为 0。零编辑收据 SHA-256 `c90e04db63aa3a2b9555a65b09ac3ebeeba257fe224d287821910139abff0eb7`，阶段调用用时 135.687877 RAW s。保留首试原件。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+
+## LOG-20261124-24｜GCD 修复调度在第五次达到面积目标
+
+- `gcd_hold_aware_v1/results.json` 状态 `matched`，SHA-256 `06a792e375a59425d944ee161f83f7e2baddd9129cd66aa5e656bea290a21465`。前四次触发相对 hold 时标记延后拆分，第五次路由排名 13–15 的三处 `mux2_1` 降档并通过原门，面积减 11.2608（0.234742%），DRC=0，SEC 262/0。搜索首达 101.815727 RAW s，计原筛选 52.520673 s 后首达 154.336399 RAW s；720 s 内六次全部完成，最佳面积同第 5 次。总计 6 次 DRT/RCX、18 次 STA、1 次候选 SEC、0 次缓存。第 6 次追加第 16 名后被相对 hold 拒，回退到已接受第 5 次。原固定批次首达 146.249240 RAW s，新臂的回收与其相同，成本按各自运行负载的实测值记录。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+- 与原固定批次的第 5 次比较，末端 ODB、DEF、网表和去日期 SPEF 内容一致，三角 setup/hold WNS/TNS 精确相同。新收据核对 FF/TT/SS 无新增负 setup 端点，hold WNS 相对原 CONTROL 增量为 0/+0.231731/+0.937694 ps。新 SEC 收据 SHA-256 `bb06ee5678dd7562da00822cfef5199f6411e5f1c4cf1e66d7e7ac2d7340dceb`。
+
+## LOG-20261124-25｜Ibex 调度实跑与 AES 检查接口修正重跑
+
+- 两个 SKY130HD 调度验证按计划串行。GCD 独立物理核验返回 0，另逐次比较六个原固定批次与新臂的动作、合格状态、ODB/DEF/V 指纹和四项逐角 setup/hold，均对应一致。Ibex 于 08:10:07（UTC+8）从同一 CPU 6–11 启动，WSL 外层 PID 1412、Python PID 1413，配置 SHA-256 `9767375585468175167bceb42eea5a10e11e87e67d550986d3337604d0d2f85f`。额外读取两条原 ASAP7 串行轨迹，把原 setup-only 拒因输入现版本策略，序列、接受标志和 0.26244 达标面积与原收据精确一致，新增物理调用为 0。[GCD 核验](evidence/tcad_ibex_20261123/HOLD_AWARE_GCD_VERIFIED.json)
+- AES 新目录 `aes_selective_drt_repair_v2` 于 08:10:24（UTC+8）启动，WSL 外层 PID 1474、驱动 PID 1476，CPU 0–5。经工具源码核对，发起全块检查用 `drt::check_drc`，替换 v1 未限定名称的 Tcl 调用，继续测试同一保护配方、三例与各阶段限时。v2 输入 SHA-256 `eaefbf4b9bf25fd45edccfdd2cfc39888e7fac568f9b7c43df722e6baa8b9e25`，v1 源码副本 `producer_v1.py` SHA-256 `26a38b0d013e5d8ef90a1b8e42fe208931361bc8a76f76d6d75ea1c60314d183`。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+- 本轮完整的针对性回归共 104 项，19.21 s 全部通过，覆盖原 setup／端点／串行协议、物理评估及新增的拒因分支和延后拆分队列。GCD 六个新旧 SPEF 在仅去除 `*DATE` 后内容一致。该工程回执与 Ibex、AES 的物理验收分别记录。[调度报告](evidence/tcad_ibex_20261123/HOLD_AWARE_REPAIR_REPORT.md)
+
+## LOG-20261124-26｜AES 实测定位增量读 DEF 未应用保护线型
+
+- `aes_selective_drt_repair_v2/zero` 完成 DRT/RCX 和 3 个视图 STA，全块 DRC、DRT 及天线报告均为空。实际 DEF 的 NETS 区有 15,657 条 `ROUTED`、0 条 `FIXED`，而输入补丁 15,657 条均标为 `FIXED`。走线仍改变与原普通零编辑同样的六条网，三角 hold WNS 精确复现原普通重布线，SS 仍下降 0.676792 ps。v2 零编辑收据 SHA-256 `924f8a35376b79baa4fd2c4e23ae7ebc1536890b07b639ae1b770e09aff55c48`。v2 第 2 次后续候选仅部分执行，定位故障后停止，第 5 次未启动。源码副本 `producer_v2.py` SHA-256 `1cc1fd925be452a0d5dd2d2a9f97d0bd9f6089c559e8f95da324f3e1262c4cf4`。
+- 定位到 OpenDB 的 `read_def -incremental` 模式未注册 NETS/路径回调，可加载补丁文本却未改写保护状态。后续改用可向原块读回 NETS 路径的 FLOORPLAN 模式，先在 DRT 前从实际导出回读保护标记数量，再逐网对齐 DRT 后几何，原物理和时序验收门保持原口径。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+
+## LOG-20261124-27｜AES 改用 FLOORPLAN 读回保护后启动第三版
+
+- 核对 AES 实际 Bazel 二进制 SHA-256 `2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19` 的 execroot，源码实际指向 `b511b6a2bc936844b0319efc8b4972bb4ad7d911`。其 `src/odb/src/defin/definReader.cpp:1967` 的分支在 FLOORPLAN 注册 NETS 和布线路径回调，于 INCREMENTAL 不注册。`aes_selective_drt_repair_v3` 于 08:13:55（UTC+8）启动，外层 PID 2651、驱动 PID 2653、首个 OpenROAD PID 2661，输入清单 SHA-256 `4b5bdd408989a76552e72ce00843db6c43edf09e1ab0be012f15ac6d800d89e0`。在 DRT 前从 ODB 实际导出结果回读 15,657 条 `FIXED`，与零编辑清单一致。沿原限定时间、CPU 0–5、四线程继续评估 DRT 后保护与时序结果。
+- 源码审查显示全块 DRC 的部分几何规则对 `FIXED` 与 `FIXED` 组合跳过标记。单独登记原 ROUTED 状态的 CONTROL 全块 DRC 参照；若 v3 产生可能合格的候选，在副本仅恢复走线类型为 ROUTED 后按同一全块检查，比较实际标记与来源。只读审计 CPU 4–5、一线程、120 s，原件拟写入 `aes_unlocked_drc_audit`，不作为方法时间样本。
+- CONTROL 全块只读审计 08:15:19（UTC+8）启动，外层 PID 2830、驱动 PID 2832，CPU 4–5、单线程、外层限时 135 s。未修改 CONTROL 的全块 DRC 为 0，重新导出 DEF 与冻结起点字节一致。实际单次审计 28.687035 s（WSL 单调钟），收据 SHA-256 `e1083cdcaf3a420d928a6a6d586606ce13b184a71cea86d62c2c9781211df6c6`。[审计入口](evidence/tcad_ibex_20261123/audit_aes_unlocked_drc.py)
+
+## LOG-20261124-28｜AES 真保护零编辑复现三视图原时序
+
+- v3 零编辑重新完成 DRT/RCX，详细布线、全块 DRC、天线报告均为空，三个视图的 setup/hold WNS/TNS 与冻结起点精确一致。FF/TT/SS hold WNS 为 +336.273898/+523.914856/+55.295768 ps。零编辑 SEC 11089/0，证明输入为原 CONTROL 与字节相同的实际输出网表。主收据 SHA-256 `cd117d9f7c654a81e032f7b4172a833cbe58d64b1076b3eba16ab1381b1e99d5`，零编辑证据另计，候选验收尚在继续。
+- v3 的外层几何比较把读回后连接端子顺序变化报成保护线改动。单独将每网无序连接端子排序，并统一 `FIXED` 与 `ROUTED` 标记后，15,657 条网的完整布线几何及连接与冻结 CONTROL 逐项一致。待把该规范化用于现行审计后再复核原来两个候选的保护落地和物理门。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+
+## LOG-20261124-29｜AES 强保护第 2 次候选通过时序，全块 DRC 发现四处局部冲突
+
+- v3 原固定批次第 2 次，实测面积减 33.7824，FF/TT/SS hold WNS 相对原 CONTROL 增量 +0.000111/+0.000500/+0.053069 ps，原逐角 setup、绝对／相对 hold 和电气门通过。详细布线自身 DRC 与天线报告为空，但额外全块 DRC 在 met1 报 `net7963`–`net8407` 间一个间距问题，以及实例 `_11178_` 与 `net4840` 间三条短路标记。全块报告 SHA-256 `a71a8c915a1c8780042d4cd4684768410a35822336187bd94f4fc1a04cc151c1`，该候选未验收。
+- 根据四条实测标记登记局部修复。仅对原固定批次第 2 次允许标记涉及且原计划保护的两条非时钟邻网 `net8407`、`net4840` 连同九条候选直接触达网重新布线，其余网保持保护。将写入 `aes_selective_drt_repair_v4_02`，沿四线程、CPU 0–5 和原候选限时，实际验收包括恢复 ROUTED 状态后的全块 DRC 及非空两态 SEC。本次局部修复针对已见标记。[修复登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+
+## LOG-20261124-30｜Ibex 第三次达标与 AES 局部放行验证
+
+- Ibex 新臂第三次覆盖排名 7–9 的三门并实际通过原联合门，面积减 22.5216（0.015574%），DRC 为 0，SEC 13648/0，三视图均无新增负 setup 端点。TT WNS/TNS 较原 CONTROL 改善 +0.031086/+66.005867 ps，SS hold 改善 +0.084377 ps。候选配置与原冻结池一致，第三次收据 SHA-256 `2b07a6474f31d0e33da7774c2927d23485970cb392fe3d9222d5da8661422fdd`，SEC 收据 SHA-256 `cbd28dc53fdaf69aa347845d04f449fd5c1aceb0dac1680b0761871746d6c79d`。保持六次配额继续测试，终态时间由整臂检查点原件计算。
+- AES v3 第 5 次候选面积减 33.7824，FF/TT/SS hold 相对原 CONTROL 分别 −0.029921/−0.046019/−0.283107 ps，原逐角相对 hold 未通过。另发现 `_08784_`–`net7882` 的 met1 间距标记及实例 `_20897_`–`_03615_` 的三条 met1 短路标记。后续另做一个仅释放非时钟邻网 `_08784_` 与 `_03615_` 的有限对照，保持其余保护及原验收门。
+- 第 2 次局部放行 v4 08:21:54（UTC+8）实际启动，外层 PID 5064、驱动 PID 5066、首个 OpenROAD PID 5082，CPU 0–5，单例外层 990 s。输入 SHA-256 `1da63f98478b215ce7845b77c5323f522eea2f44c7b74b8cb69a89c6317eb1c0`。实查 DRT 前 15,646 条保护网与 11 条计划开放的数据网。v3 零编辑的后验校验另完成，规范化后的保护几何一致，恢复 ROUTED 状态后全块 DRC 为零、重导 DEF 与原 CONTROL 字节一致。新的零编辑复核结果 SHA-256 `10fd88081ea13f1d6930daec21039a7185c4f04bb088551b18748578cf4b8e9b`。
+
+## LOG-20261124-31｜AES 第 2 次局部放行消除初查冲突、保留时序裕量
+
+- v4 第 2 次的 DRT/RCX 和三视图 STA 已结束，DRT、保护状态全块 DRC、天线报告均为空。实测面积减 33.7824（0.028996%），相对原 CONTROL 的 FF/TT/SS setup WNS 变化 −0.084821/−0.157652/−0.007105 ps，hold WNS 变化 +0.000056/0/+0.610845 ps，hold TNS 皆为零。初步结果 SHA-256 `777f606a422634155b7214c1a15b4a91ebf6fc851f88c4c968c7c968f4e13ec0`，仍需实际保护几何、解锁态全块 DRC 与候选 SEC 完整回执。
+- 独立逐网比较确认 15,646 条保护网无变化，发生变线的 11 条网恰为 9 条候选直接触达网与 `net8407`、`net4840`。已开始恢复 ROUTED 状态的全块 DRC 与候选 SEC。正式第 2 次候选新增 1 个 SS 负 setup 端点 `text_out[83]$_DFF_P_/D`，原 tradeoff 包络允许此过零；另做两次原约束下的只读单线程 SS STA 分别定位原起点和候选的该端点 slack，每次 45 s 上限。
+
+## LOG-20261124-32｜AES 第 2 次定向修复通过原联合门、解锁态 DRC 与 SEC
+
+- v4 第 2 次恢复 ROUTED 类型后仍保持原候选实际几何，全块 DRC 0，天线 0。原 CONTROL 对 v4 实际输出网表完成非空两态 SEC 11089/0、rc 0，外层 SEC 24.608021 RAW s。定向修复回收 33.7824（0.028996%），保留三角绝对与相对 hold，SS setup TNS 相对原 CONTROL 变化 −103.000275 ps，新增 1 个 SS 负 setup 端点，位于已登记 tradeoff 口径内。已核对正式候选收据 `aes_selective_drt_repair_v4_02_qualified/results.json` SHA-256 `410d42e0258080e1df55918fcf53dda31f18807a71b452c782e86e49fb128ee5`，解锁态 DRC 收据 `f4b4d96c7953082f21ec43e92441d954eec5f013212f095ad6936975dbc4d8f0`，候选 SEC 收据 `a5046e65973d6fa6a3a6ef7ebdc5bd45990352de16bbd4f2db1d471da4b87082`。该结果属于按已见 DRC 标记定向放行两个邻网的追加试验，原 AES 六臂矩阵不混入此端点。
+- 两次 SS STA 实查同一发射 `u0.w[1][19]$_DFF_P_` 到 `text_out[83]$_DFF_P_/D`，报告总 slack 从 +0.329958 ps 到 −0.228706 ps，变化 −0.558664 ps。端点诊断原结果 SHA-256 `cc4c7a534542c23b091b9adc2f2e410c3c88371b2661f1cbe26c79ab9d1b2111`，六位 ps 小数由绑定的两个原始报告读取。
+
+## LOG-20261124-33｜AES 第 5 次邻网放行对照启动
+
+- `aes_selective_drt_repair_v4_05` 于 08:26:59（UTC+8）开始，外层 PID 7213、Python PID 7215、OpenROAD PID 7360，CPU 0–5 四线程，外层 620 s，原逐阶段物理、STA、SEC 限时保持。放行原九条候选触达网与两个从全块 DRC 定位的非时钟网 `_08784_`、`_03615_`。实际预检读回 15,646 条 FIXED。输入 SHA-256 `39d56084305710bb36de94351673e99b536ba33f674ad573643b65823d9e4303`。
+- 第 5 次完成 DRT/RCX 和三视图 STA。面积减量仍为 33.7824，DRT、保护态全块 DRC 与天线报告均为空。各角相对 hold WNS 变化为 −0.022204/−0.034306/−0.054623 ps，绝对 hold 仍为正。原非退化门继续拒收此例，未触发 SEC。原物理收据 SHA-256 `28c7cd09549eeaaa4243870009c05eab26886cf85a31da8bc8a36b9e4e30cf6c`，结果 SHA-256 `6ae8017f69f7826058fc94317a97fd2d73cd7a1abfdccf8e4c2b8c504af45da9`。
+- 第 5 次最终复核确认实际 11 条放行网改变，15,646 条保护网及组件位置无变化，恢复 ROUTED 状态后全块 DRC 为 0。最终拒因为原 FF/TT/SS 相对 hold，SEC 仍为 0。最终复核 SHA-256 `3ba9c7f56a4060138ea0982df7c71e15bdef525e97539f611815f9d3b0ab115b`。[AES 保护路由报告](evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)
+
+## LOG-20261124-34｜Ibex 六次实跑完成并比对原固定臂
+
+- `ibex_hold_aware_v1/results.json` 为 `matched`，SHA-256 `ad8c890e09f7c0dc7f37c47a102336044616da2432555fe3e98f6e96b78c894b`。6 次 DRT/RCX、18 次逐角 STA、3 次候选 SEC、0 缓存。第 3 次搜索首达 522.567420 RAW s，加原筛选 129.454710 s 后首达 652.022131 s，720 s 内完成 3 次并保留 22.5216（0.015574%）；六次配额实测最优 62.56（0.043260%），完成第 5 次验收后保留。原固定批次按其实际运行时间含筛选 562.522643 RAW s 达标。本轮的新臂与原固定臂六个动作组、接受/拒收决定、ODB/DEF/V 与去日期 SPEF、三角 setup/hold WNS/TNS 均逐次匹配。两种臂运行背景分开记录。[调度报告](evidence/tcad_ibex_20261123/HOLD_AWARE_REPAIR_REPORT.md)
+- AES 保护路由的 10 个运行与验收目录封存于 `scratch/tcad_ibex_20261123/aes_selective_drt_repair_20261124.tar.gz`，157,214,689 字节、252 个成员，224 个普通文件均已对原件核对。宿主归档 SHA-256 `e69ad275ab7f9636a4b0cef12f7438eb4fd584fffefc93d934926042bdb36dc5` 已复验。[AES 保护路由报告](evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)
+
+## LOG-20261124-35｜修复阶段核验、归档与现行口径同步
+
+- GCD 和 Ibex 均已通过独立的程序核验，两设计合计 12 次候选 DRT/RCX、36 次 STA、4 次候选 SEC、0 缓存。调度归档 `scratch/tcad_ibex_20261123/hold_aware_sky130_repair_20261124.tar.gz`，140,315,265 字节、368 个成员、330 个普通文件均对原件哈希。包 SHA-256 `d9116bfed26a0f11563ec3d6dafc1e8307ed43431ed6824828352996910318b8`，已从成员独立实查两个原结果的 SHA。最终针对性回归 104 项通过，13.37 s。[Ibex 核验](evidence/tcad_ibex_20261123/HOLD_AWARE_IBEX_VERIFIED.json) · [GCD 核验](evidence/tcad_ibex_20261123/HOLD_AWARE_GCD_VERIFIED.json)
+- AES 两个邻网修复端点均过恢复 ROUTED 状态后的 DRC，只有原第 2 次满足三视图原 hold 门并完成候选 SEC。当前已知调度覆盖与路由失效的修复范围已同步至 CANON 和 OI-098／100。项目记录脚本返回 0，仅提示已停用的四个记录路径。[当前口径](CANON.md#2026-11-24-调度覆盖与-aes-路由修复验证)

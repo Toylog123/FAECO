@@ -149,17 +149,20 @@ def run_matrix(args, evaluator, reference, pool, baseline_record, noop):
     cache = sweep.TrialCache(evaluator)
     results = {}
     arm_order = []
+    methods = ("faeco",) if args.hold_aware_only else comparison.METHODS
+    defer_split_reasons = frozenset(RELATIVE_HOLD_REASONS) if args.hold_aware_only else frozenset()
     for kind in args.pool_order:
         active = pool if kind == "legacy" else screened
         evaluator.actions = {action.action_id: action for action in active}
         directory = args.out / kind
         directory.mkdir()
         results[kind] = {}
-        for method in comparison.METHODS:
+        for method in methods:
             before = len(cache.measurements)
             start = raw_seconds()
             result, attempts = sweep.run_arm(
                 args, cache, reference, active, method, gate, directory / method, primary=True,
+                defer_split_reasons=defer_split_reasons,
             )
             end = raw_seconds()
             arm_order.append({"pool": kind, "method": method, "raw_start": start, "raw_end": end})
@@ -199,18 +202,23 @@ def main():
     parser.add_argument("--helper-source", type=Path, action="append", default=[],
                         help="extra source dependency to bind for a generic STA or SEC wrapper")
     parser.add_argument("--pool-order", choices=("legacy-first", "screened-first"), default="legacy-first")
+    parser.add_argument("--hold-aware-only", action="store_true",
+                        help="run only screened FAECO with per-view relative hold split deferral")
     parser.add_argument("--wall-limit-seconds", type=float, default=720.0)
     parser.add_argument("--target-area-pct", type=float, default=0.01)
     args = comparison.prepare_args(parser, parser.parse_args())
     if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", args.top):
         parser.error("top must be a Verilog identifier")
     if args.prepare_only or args.probe_only:
-        parser.error("the matrix must evaluate both pools")
+        parser.error("the comparison must evaluate candidate arms")
     if not all(math.isfinite(x) and x > 0 for x in (args.wall_limit_seconds, args.target_area_pct)):
         parser.error("wall window and area target must be finite and positive")
     if not hasattr(time, CLOCK_NAME):
         parser.error("this matrix requires CLOCK_MONOTONIC_RAW")
-    args.pool_order = ("legacy", "screened") if args.pool_order == "legacy-first" else ("screened", "legacy")
+    if args.hold_aware_only:
+        args.pool_order = ("screened",)
+    else:
+        args.pool_order = ("legacy", "screened") if args.pool_order == "legacy-first" else ("screened", "legacy")
     try:
         args.screen_pool, args.screen_receipt = (p.resolve(strict=True) for p in (args.screen_pool, args.screen_receipt))
         if args.routing_config is not None:
@@ -225,6 +233,8 @@ def main():
         with bind_runtime(args.top, args.routing_config):
             return comparison.run(args, matched_runner=run_matrix, config_overrides={
                 "pool_order": args.pool_order, "clock": CLOCK_NAME,
+                "methods_in_run_order": ("faeco",) if args.hold_aware_only else comparison.METHODS,
+                "split_deferral_reasons": sorted(RELATIVE_HOLD_REASONS) if args.hold_aware_only else [],
                 "cpu_affinity": sorted(os.sched_getaffinity(0)),
                 "clock_resolution_seconds": time.clock_getres(time.CLOCK_MONOTONIC_RAW),
                 "setup_budget_ps_per_view": setup_budget, "primary_budget_pct": BUDGET_PCT,

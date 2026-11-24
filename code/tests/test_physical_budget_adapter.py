@@ -203,6 +203,24 @@ def test_adaptive_batch_recovery_commits_batch_and_bisects_tipping_gate():
     assert res["evaluations_used"] == 4
 
 
+def test_deferred_split_uses_latest_committed_base_after_pool_is_covered():
+    reference = Endpoint("control", 100, -1, -2, 0.1, "s", "ref", True, True)
+    actions = [PhysicalAction(name, name, "large", "small", 1) for name in "abcd"]
+    rejected = ("a", "b", "c")
+
+    def evaluate(ids):
+        return Endpoint("trial", 100 - len(ids), -1, -2, 0.1, "s", "ev", ids != rejected, True)
+
+    result = adaptive_batch_recovery(
+        reference, actions, evaluate, max_evaluations=4, batch_size=3,
+        defer_split_for=lambda ids: ids == rejected,
+    )
+    assert [row["actions"] for row in result["trace"]] == [
+        ["a", "b", "c"], ["d"], ["a", "d"], ["a", "b", "c", "d"],
+    ]
+    assert result["selected"].area == 96
+
+
 def test_generate_compatible_candidates_safe_drive_first(tmp_path: Path):
     if not DEFAULT_LIBERTY.exists():
         return

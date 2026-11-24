@@ -4,8 +4,9 @@ from types import SimpleNamespace
 
 import pytest
 
-from compare_ibex import Endpoint, sha
+from compare_ibex import Endpoint, PhysicalAction, sha
 from run_screened_matrix import bind_screen_inputs, summarize_arm_times
+from run_setup_budget_sweep import BudgetGate, run_arm
 
 
 def test_screen_time_can_exclude_an_accepted_endpoint_from_equal_wall_window():
@@ -43,3 +44,36 @@ def test_screen_receipt_cannot_cross_controllers(tmp_path):
     (control / "6_final.spef").write_text("other SPEF", encoding="utf-8")
     with pytest.raises(ValueError, match="disagree on CONTROL spef"):
         bind_screen_inputs(args)
+
+
+@pytest.mark.parametrize(
+    ("initial_failure", "expected_actions"),
+    [
+        ("SS:hold_regression", [("a", "b", "c"), ("d", "e", "f"), ("d", "e", "f", "g")]),
+        ("TT:setup_budget", [("a", "b", "c"), ("a",), ("b", "c")]),
+    ],
+)
+def test_hold_aware_arm_uses_view_rejection_to_choose_split(tmp_path, initial_failure, expected_actions):
+    ref = Endpoint("CONTROL", 100, -1.0, -2, 0.1, "test", "ref", True, True)
+    pool = [PhysicalAction(name, name, "large", "small", 1) for name in "abcdefg"]
+    args = SimpleNamespace(max_evals=3, batch_size=3, wall_limit_seconds=720, target_area_pct=0.01)
+
+    class Cache:
+        measurements = ()
+
+        def request(self, actions, gate, *, fresh_directory):
+            failures = [initial_failure] if actions in (("a", "b", "c"), ("a",)) else []
+            # The collapsed minimum cannot tell the adapter about the SS loss.
+            endpoint = Endpoint(
+                "+".join(actions), 100 - len(actions), -1.0, -2, 0.1, "test", "trial",
+                not failures, not failures,
+            )
+            return endpoint, {"actions": list(actions), "failures": failures, "endpoint": asdict(endpoint)}
+
+    result, receipts = run_arm(
+        args, Cache(), ref, pool, "faeco", BudgetGate(10, {}, False),
+        tmp_path / "faeco", primary=True, defer_split_reasons=frozenset({"SS:hold_regression"}),
+    )
+    assert [tuple(row["actions"]) for row in receipts] == expected_actions
+    assert not result["trace"][0]["accepted"]
+    assert result["trace"][0].get("split_deferred", False) == initial_failure.endswith(":hold_regression")

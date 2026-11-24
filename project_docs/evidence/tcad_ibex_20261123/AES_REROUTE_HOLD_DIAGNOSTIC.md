@@ -42,6 +42,8 @@
 
 两轮诊断没有重跑策略轨迹或候选 SEC。正式结果继续使用原起点与原门，三种方法的 AES 正式面积收益均为 0。
 
+同一 CONTROL 上的后续走线保护和候选修复见[AES 修复报告](AES_SELECTIVE_DRT_REPAIR.md)。
+
 ## 复现和原件
 
 原矩阵位于 WSL `/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1`，使用 `config.json`、`control/receipt.json`、`noop/receipt.json` 和 `screened/{single,fixed,faeco}/` 下的逐试验记录。候选 DRT 日志读取的 `sky130hd/rcx_patterns.rules` 指向矩阵记录内的 `sky130hs/rcx_patterns.rules`，两路径 SHA-256 一致。诊断原件同父目录。

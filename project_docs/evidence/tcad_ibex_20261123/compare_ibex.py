@@ -413,10 +413,12 @@ def select_pool(index, libraries, masters, instances) -> list[PhysicalAction]:
 def run_method(
     method: str, reference: Endpoint, actions: list[PhysicalAction],
     evaluate: Callable[[tuple[str, ...]], Endpoint], budget: int, batch_size: int, *, policy: BudgetPolicy = POLICY,
+    defer_split_for: Callable[[tuple[str, ...]], bool] | None = None,
 ) -> dict:
     if method == "faeco":
         return adaptive_batch_recovery(
             reference, actions, evaluate, policy, max_evaluations=budget, batch_size=batch_size,
+            defer_split_for=defer_split_for,
         )
     if method not in ("single", "fixed"):
         raise ValueError(f"unknown method {method}")

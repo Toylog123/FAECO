@@ -211,7 +211,10 @@ def summarize_wall_window(reference, checkpoints, *, wall_limit_seconds: float, 
     }
 
 
-def run_arm(args, cache, reference, pool, method, gate, arm, *, primary: bool):
+def run_arm(
+    args, cache, reference, pool, method, gate, arm, *, primary: bool,
+    defer_split_reasons: frozenset[str] = frozenset(),
+):
     arm.mkdir()
     attempts = []
     elapsed = []
@@ -232,9 +235,16 @@ def run_arm(args, cache, reference, pool, method, gate, arm, *, primary: bool):
             elapsed.append(time.monotonic() - start)
         return endpoint
 
+    def defer_split_for(actions):
+        last = attempts[-1]
+        if tuple(last["actions"]) != actions:
+            raise comparison.TrialFailure("split decision does not match the latest physical receipt")
+        return not defer_split_reasons.isdisjoint(last["failures"])
+
     start = time.monotonic()
     result = comparison.run_method(
         method, reference, pool, evaluate, args.max_evals, args.batch_size, policy=scheduler_policy,
+        defer_split_for=defer_split_for if defer_split_reasons else None,
     )
     total_wall = time.monotonic() - start
     result["selected"] = asdict(result["selected"])

@@ -1672,6 +1672,8 @@ Ibex 第三次 FAECO 已测物理端点面积减 17.5168，SS hold 与旧零编�
 
 2026-11-24 补查，AES 的筛选 FAECO 同样只覆盖排名 1–4，不过覆盖至排名 16 的原固定臂也未找到合格端点。按相对 hold 拒因延后拆分的只读回放在三个 SKY130HD 设计上重现固定臂的六次动作，触及 Ibex/GCD 原已验收端点。两条 ASAP7 实测轨迹均保留 setup 失败后的原拆分。当前已定位六次配额下的覆盖损失，规则能否在独立对象上超过固定批次、减少实际验证耗时仍为 open。[调度诊断](evidence/tcad_ibex_20261123/SCHEDULER_COVERAGE_DIAGNOSTIC.md)
 
+显式启用的改进调度已在原 Ibex/GCD 筛选池各独立实跑六次，均弥补了原 FAECO 未覆盖的动作组，并复现各自原固定臂的验收端点、面积、时序和等价证明。两个旧样本上首达耗时由各自观察值报告，旧固定臂均用时更少；当前仍待测试新样本、预算和实际同负载比较，以判断触发策略何时有优势。[调度实跑](evidence/tcad_ibex_20261123/HOLD_AWARE_REPAIR_REPORT.md)
+
 ## OI-099（2026-11-24，open）— AES 主留出原始起点的 SS hold 违例
 
 SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 ps/720 ps SDC 与 I/O 均匹配，SS hold WNS 为 −975.978 ps、TNS 为 −124464.094 ps，原起点资格状态为 `hold_infeasible`。后续需从冻结原生端点在原约束下实际修复、重布线和复提取，并重做三角绝对 hold、DRC 与 SEC，才可作为留出矩阵共同起点。[留出报告](evidence/tcad_holdout_20261123/REPORT.md)
@@ -1685,3 +1687,5 @@ SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 p
 AES 的 18 个冻结筛选候选均完成 DRT/RCX，setup、DRC、电气与绝对 hold 全部通过。每个候选至少触发一角相对 hold 拒收，SS 17、TT 3、FF 3，候选可跨角。两个固定批次均实测面积减 33.7824，第 2 次只因 SS 下降 1.609379 ps 拒收；第 5 次 SS 改善 0.190514 ps，而 FF/TT 各下降 0.070222/0.108413 ps 并被拒。正式回收为零。[AES 核验](evidence/tcad_ibex_20261123/SCREEN_MATRIX_AES_VERIFIED.json)
 
 2026-11-24 新的同配方零编辑重布线改变了六条未触达网，SS 相对 hold 下降 0.676792 ps，绝对 SS hold 仍为 +54.618976 ps。更换相对参照的只读投影使 8/18 次评估通过其余物理和时序门，最大面积减量 0.009665%，六次面积减量为 33.7824 的三门评估均仍被拒。对其中两次的三个实际拒收视图做 12 次 ODB/SPEF 交叉 STA，确定这些 hold 变化由候选寄生复现，沿最差路径定位到发射或捕获的时钟到达变化。待检验减少未触达网变动、保护关键时钟寄生后，原正式联合门能否稳定保留回收，及在其他物理实现上的复现范围。[AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md)
+
+真保护零编辑保持原布线并精确复现三视图四个 WNS/TNS。按实测 DRC 标记分别放行两个非时钟邻网后，原固定第 2 次修复端点面积降低 33.7824（0.028996%），15,646 条保护网未变，恢复 ROUTED 的全块 DRC、天线均为 0，原三角 hold 和 tradeoff setup 门、SEC 11089/0 通过。该端点新增 SS 负 setup 端点，原 slack +0.329958 ps 降到 −0.228706 ps。第 5 次释放其两个邻网后同样通过 DRC，三视图相对 hold 仍退化。其他动作、跨设计效果和可自动确定的开放网范围仍为 open。[AES 保护路由报告](evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)

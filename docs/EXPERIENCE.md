@@ -3466,3 +3466,11 @@ SKY130HD Ibex 在修复后共同起点做零动作 DRT，以文本导引或保�
 六次物理预算下，Ibex 和 GCD 的原 FAECO 递归花四次拆分首次被拒整批，剩余一槽单门，只覆盖候选池头四名。两例各有较后排名的整批实际通过。先把命中相对 hold 的首批拆分延后，在只读回放中走到固定臂已经实测的合格端点。AES 的固定臂同样零回收，说明扩大覆盖本身无法解除这批相对 hold 拒因。验证调度改动时，固定起点、候选池、工艺门和物理配额，分别记录排序覆盖、实际工具成本和绝对时序。有实测收据的回放可确认已有物理端点，独立复跑才能测新调度及墙钟。[调度诊断](../project_docs/evidence/tcad_ibex_20261123/SCHEDULER_COVERAGE_DIAGNOSTIC.md)
 
 AES 一个同配方零编辑控制可产生 0.676792 ps 的 SS hold WNS 下降，未触达的六条网有改线。调换该参照可以诊断共同扰动与候选剩余变化，8/18 的投影仍没有达到原面积目标。要把寄生效应从候选单元切换分开，应在原 SDC 和对应 Liberty 下做 CONTROL/候选 ODB 和两套 SPEF 的四格 STA，先校验同源两格复现原指标，并核验寄生注解与最差路径身份。AES 两个固定批次的三个拒收视图由各自候选 SPEF 复现全部末端 hold WNS 变化。当前数据可定位这三例寄生因素，通用 hold 容差的制定还需独立路由样本。[实测登记](../project_docs/evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-aes-zero-edit-reroute-and-scheduler-diagnostic-v1)
+
+## 2026-11-24 — 保护路由需读回 ODB 实际走线类型，并对齐无序连接
+
+当前 AES 使用的 OpenROAD `b511b6a` 在 `read_def -incremental` 模式未注册 NETS 路径回调。成功读入 DEF 命令日志并不足以说明布线状态被改写。AES v2 的输入补丁含 15,657 条 `FIXED`，实际输出仍是 0 条 `FIXED`，重复了零编辑的六条改线和 SS −0.676792 ps。改用 `read_def -floorplan_initialize` 并在下一步前从 ODB 导出回读实际布线类型，确认 15,657 条保护状态生效。v3 零编辑的三角 setup/hold 指标与冻结起点精确一致，原 0.001 ps 判据仍可使用。
+
+读回会调整 DEF 各网的连接端子顺序。几何比较应将连接视为集合或多重集合，保留线段、过孔、层和线宽规则的完整表示，单列 `FIXED`／`ROUTED` 类型。v3 零编辑的 15,657 条网按此口径全部与 CONTROL 一致。另需注意 `drt::check_drc` 是该版本全块检查入口，部分检查会跳过 `FIXED` 与 `FIXED` 的组合。候选若要用同口径 DRC，应在保持几何不变的副本恢复原 ROUTED 状态重查。[修复试验](../project_docs/evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
+
+在真实布线上同时保护所有未编辑网可能留下已换门引脚与相邻固定线的间距或短路。AES 两个批次的 DRT 自带最终报告均为零，额外全块检查均发现四条标记。将各自标记涉及的两条非时钟邻网加入同批清线重布线，重新精确审计全部保护网，并在解锁副本做全块 DRC。两例全部通过 DRC，其中一例也通过原三角时序及 SEC，另一例仍触发三角相对 hold。即使保护时钟线的几何不变，邻近重布线后的新耦合仍可能改变 min timing，应按真实抽取结果逐角验收。[AES 保护路由报告](../project_docs/evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)

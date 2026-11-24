@@ -4,6 +4,11 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 调度覆盖与 AES 路由修复验证
+
+- 显式启用的原因感知调度在三角相对 hold 拒收时延后拆分，并保留原联合门。在原冻结筛选池实跑，Ibex 与 GCD 各六次，覆盖到原 FAECO 错过的合格动作。Ibex 在含筛选 652.022 RAW s 达到 22.5216 µm²（0.015574%，SEC 13648/0），六次内回收 62.56 µm²。GCD 在 154.336 RAW s 达到 11.2608 µm²（0.234742%，SEC 262/0），也是六次内最好。两者首达端点三视图均无新增负 setup 端点，六次动作和物理端点均与各自原固定臂相同。原固定臂在不同实验负载下分别用时 562.523 和 146.249 RAW s。两条原 ASAP7 setup-only 轨迹用现版本只读回放，保留原拆分和 0.26244 的面积减量。新调度尚需独立设计实测。[调度报告](evidence/tcad_ibex_20261123/HOLD_AWARE_REPAIR_REPORT.md)
+- AES 的未编辑网保护恢复了零编辑在三角的原 setup/hold WNS/TNS。对原第 2 次按实际全块 DRC 释放两条非时钟邻网，实测保护的 15,646 条网均未变，实际回收 33.7824 µm²（0.028996%）。FF/TT/SS hold 变化 +0.000056/0/+0.610845 ps，恢复 ROUTED 类型后的全块 DRC 与天线为零，SEC 11089/0。依据原 tradeoff setup 门验收，SS 新增一条负 setup 端点，slack 从 +0.329958 ps 到 −0.228706 ps。原第 5 次对照的三视图相对 hold 仍不合格。当前有一个定向修复的验收端点，原六臂矩阵的统计沿原报告。[AES 保护路由报告](evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)
+
 ## 2026-11-24 SKY130HD 候选筛选、同预算消融与留出验证
 
 - Ibex、GCD、AES 各完成两种排序 × 三种调度 × 六次物理验证。三套矩阵共 108 次 DRT/RCX、324 次视图 STA、5 次候选 SEC、0 次缓存。按原 I/O/SDC、三视图 1% 周期的 WNS 预算及登记的 TNS 门，正式验收仍要求 hold 非负且相对原 CONTROL 非退化、DRC=0、电气无新增违例和非空两态 SEC。清单包含每个候选的绝对裕度、原端点差值和新增负 setup 端点。各筛选臂的 720 RAW s 预算全额计入本设计的固定 SPEF TT 筛选时间。三设计的原面积排序均回收零。两种排序各 54 次，TT WNS 或 TNS 超预算的计数为 45／0。[总报告](evidence/tcad_ibex_20261123/SCREEN_ABLATION_REPORT.md) · [实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-23-tcad-sky130hd-screen-ablation-holdout-v1)

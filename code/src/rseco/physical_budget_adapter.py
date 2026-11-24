@@ -236,6 +236,7 @@ def adaptive_batch_recovery(
     *,
     max_evaluations: int = 10,
     batch_size: int = 3,
+    defer_split_for: Callable[[tuple[str, ...]], bool] | None = None,
 ) -> dict:
     """Universal adaptive mini-batch post-route area recovery with bisection fallback.
 
@@ -243,6 +244,8 @@ def adaptive_batch_recovery(
     If a whole mini-batch satisfies ``assess(reference, ep, policy)``, all its actions
     are committed in a single physical evaluation; otherwise, the batch is bisected
     to isolate tipping gates and salvage safe subsets within ``max_evaluations``.
+    An evaluator can prioritize unvisited batches by deferring the rejected trial's
+    split. Deferred batches are split in dispatch order if budget remains.
     """
     active_policy = policy or BudgetPolicy()
     if batch_size < 1:
@@ -259,6 +262,13 @@ def adaptive_batch_recovery(
     best = reference
     evals = 0
     trace: list[dict] = []
+    deferred: list[list[PhysicalAction]] = []
+    idx = 0
+
+    def split(chunk: list[PhysicalAction]) -> None:
+        mid = len(chunk) // 2
+        try_chunk(chunk[:mid])
+        try_chunk(chunk[mid:])
 
     def try_chunk(chunk: list[PhysicalAction]) -> None:
         nonlocal best, evals
@@ -285,18 +295,22 @@ def adaptive_batch_recovery(
             best = ep
             return
         if len(chunk) > 1 and evals < max_evaluations:
-            mid = len(chunk) // 2
-            try_chunk(chunk[:mid])
-            if evals < max_evaluations:
-                try_chunk(chunk[mid:])
+            if idx < len(unique_actions) and defer_split_for is not None and defer_split_for(trial):
+                deferred.append(chunk)
+                trace[-1]["split_deferred"] = True
+            else:
+                split(chunk)
 
-    idx = 0
     while idx < len(unique_actions) and evals < max_evaluations:
         rem_evals = max_evaluations - evals
         cur_batch = min(batch_size, len(unique_actions) - idx) if rem_evals >= 2 else 1
         chunk = unique_actions[idx : idx + cur_batch]
         idx += cur_batch
         try_chunk(chunk)
+    for chunk in deferred:
+        if evals >= max_evaluations:
+            break
+        split(chunk)
 
     return {
         "selected": best,

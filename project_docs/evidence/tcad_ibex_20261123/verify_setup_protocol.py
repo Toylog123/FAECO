@@ -450,20 +450,34 @@ class Audit:
         batch_size = 1 if method == "single" else self.config["batch_size"]
         cap = len(trace)
         ranked = [action["action_id"] for action in self.pool]
-        queue, committed = [], []
+        queue, deferred, committed = [], [], []
+        defer_reasons = set(self.config.get("split_deferral_reasons", ()))
         offset = 0
         for idx, receipt in enumerate(trace):
             if not queue:
-                count = min(batch_size, len(ranked) - offset) if cap - idx > 1 else 1
-                queue.append(ranked[offset:offset + count])
-                offset += count
+                if offset < len(ranked):
+                    count = min(batch_size, len(ranked) - offset) if cap - idx > 1 else 1
+                    queue.append(ranked[offset:offset + count])
+                    offset += count
+                else:
+                    need(bool(deferred), f"trace exceeds candidate pool {directory} {idx + 1}")
+                    queue.extend(deferred.pop(0))
             chunk = queue.pop(0)
             equal(receipt["actions"], sorted(committed + chunk), f"scheduled action order {directory} {idx + 1}")
+            defer = False
             if receipt["accepted"]:
                 committed.extend(chunk)
-            elif method == "faeco" and len(chunk) > 1:
+            elif method == "faeco" and len(chunk) > 1 and idx + 1 < cap:
                 mid = len(chunk) // 2
-                queue[0:0] = [chunk[:mid], chunk[mid:]]
+                children = [chunk[:mid], chunk[mid:]]
+                if offset < len(ranked) and defer_reasons:
+                    failure = read(directory / f"{idx + 1:02d}.json")["failures"]
+                    defer = not defer_reasons.isdisjoint(failure)
+                if defer:
+                    deferred.append(children)
+                else:
+                    queue[0:0] = children
+            equal(receipt.get("split_deferred", False), defer, f"split deferral {directory} {idx + 1}")
 
     def arm(self, directory, result, pct, protect, *, primary):
         equal(read(directory / "summary.json"), result, f"arm summary binding {directory}")
