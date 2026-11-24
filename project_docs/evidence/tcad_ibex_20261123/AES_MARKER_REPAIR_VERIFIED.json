@@ -1,0 +1,351 @@
+{
+  "audit_source": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/verify_aes_marker_repair.py",
+    "sha256": "e94076948105b3d256a9315a63d615021e1194d546982cac0246392f122b71ed",
+    "bytes": 11200
+  },
+  "configuration": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/config.json",
+    "sha256": "632fa75f80a4d21eeaab2cd667858c1191d2422765d711ed151928f54978e42e",
+    "bytes": 7390
+  },
+  "arms": {
+    "fixed": {
+      "logical_admitted": 4,
+      "logical_finished": 3,
+      "completed_retries": 2,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 332.78236292,
+      "raw_stop": 939.280285425,
+      "stop_reason": "end_to_end_wall_cap",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/fixed/progress.json",
+        "sha256": "c471f41b0a5c68542f953cf230a4267b03f77a3ad886e282b0fce7163b3f8f16",
+        "bytes": 3521
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/fixed/subprocesses.json",
+        "sha256": "973454855d11773bb5c0e49bdbcf999a6b15f1b333754d79d4f6b79130047797",
+        "bytes": 19622
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 3,
+        "selected": {
+          "endpoint_id": "fixed/02/retry",
+          "area": 116474.208,
+          "wns_ns": -0.3806581716503388,
+          "tns_ns": -6.575557875976301,
+          "hold_wns_ns": 0.5239148559432749,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/fixed/02/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 33.782400000010966,
+        "area_saved_pct": 0.028995779503215056,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 434.35554103199917,
+        "target_reached_in_window": true
+      },
+      "operation_counts": {
+        "route_tools": 6,
+        "unlocked_drc_tools": 5,
+        "sta_tools": 16,
+        "sec_tools": 1
+      }
+    },
+    "repair": {
+      "logical_admitted": 3,
+      "logical_finished": 3,
+      "completed_retries": 0,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 939.282064749,
+      "raw_stop": 1280.124600161,
+      "stop_reason": "logical_cap_or_pool_exhausted",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/progress.json",
+        "sha256": "b665d8f891d05623b6bb4fe75567f94200b596e16637cc7cf30eb6b69bc83d81",
+        "bytes": 3122
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/subprocesses.json",
+        "sha256": "6ae5eda2bc0a70b01f5135ee917f07f6d356edf0ef6feb7dce8eda7f5bfbb624",
+        "bytes": 12166
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 3,
+        "selected": {
+          "endpoint_id": "repair/03/initial",
+          "area": 116442.928,
+          "wns_ns": -0.38064307261720387,
+          "tns_ns": -6.591138745903891,
+          "hold_wns_ns": 0.5240073930323774,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/03/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 65.0624000000098,
+        "area_saved_pct": 0.05584372348766373,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 332.36468625099906,
+        "target_reached_in_window": true
+      },
+      "operation_counts": {
+        "route_tools": 3,
+        "unlocked_drc_tools": 3,
+        "sta_tools": 9,
+        "sec_tools": 2
+      }
+    }
+  },
+  "marker_plan": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/marker_plan.json",
+    "sha256": "b05645665318f1e49b8e78fb2d682111d7a1af69f225149035c5f137f0105d76",
+    "bytes": 6508
+  },
+  "recovered_hints": {
+    "three": {
+      "actions": [
+        "\\_11178_=sky130_fd_sc_hd__xor2_2",
+        "\\_11724_=sky130_fd_sc_hd__xor2_2",
+        "\\_12777_=sky130_fd_sc_hd__xor2_2"
+      ],
+      "incident_nets": [
+        "_01064_",
+        "_09601_",
+        "_10121_",
+        "net7963",
+        "net8003",
+        "net8009",
+        "net8173",
+        "net8179",
+        "net8203"
+      ],
+      "released_neighbors": [
+        "net4840",
+        "net8407"
+      ],
+      "marker_evidence": [
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/02/initial/unlocked_drc/full_drc.rpt",
+          "marker": "violation type: Metal Spacing\n\tsrcs: net:net7963 net:net8407\n\tbbox = (240.2050, 306.2850) - (240.4950, 306.3800) on Layer met1",
+          "neighbors": [
+            "net8407"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/02/initial/unlocked_drc/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (356.5850, 347.5800) - (356.8750, 347.7200) on Layer met1",
+          "neighbors": [
+            "net4840"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/02/initial/unlocked_drc/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (356.5850, 347.5800) - (357.7950, 347.7200) on Layer met1",
+          "neighbors": [
+            "net4840"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_incident_priority_matched_v2/fixed/02/initial/unlocked_drc/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (357.5050, 347.5800) - (357.7950, 347.7200) on Layer met1",
+          "neighbors": [
+            "net4840"
+          ]
+        }
+      ]
+    },
+    "six": {
+      "actions": [
+        "\\_11178_=sky130_fd_sc_hd__xor2_2",
+        "\\_12777_=sky130_fd_sc_hd__xor2_2",
+        "\\_13281_=sky130_fd_sc_hd__o31ai_2",
+        "\\_20124_=sky130_fd_sc_hd__xor2_2",
+        "\\_20883_=sky130_fd_sc_hd__xor2_2",
+        "\\_21033_=sky130_fd_sc_hd__xor2_2"
+      ],
+      "incident_nets": [
+        "_01064_",
+        "_01559_",
+        "_01561_",
+        "_08056_",
+        "_08793_",
+        "_08942_",
+        "_09601_",
+        "net5210",
+        "net6622",
+        "net7845",
+        "net7874",
+        "net7882",
+        "net7890",
+        "net7963",
+        "net8009",
+        "net8125",
+        "net8138",
+        "net8151",
+        "net8173",
+        "net8203"
+      ],
+      "released_neighbors": [
+        "_08784_",
+        "net4840",
+        "net8148",
+        "net8407"
+      ],
+      "marker_evidence": [
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_21033_ net:net8148\n\tbbox = (80.1250, 178.9400) - (80.4150, 179.0800) on Layer met1",
+          "neighbors": [
+            "net8148"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_21033_ net:net8148\n\tbbox = (80.1250, 178.9400) - (81.3350, 179.0800) on Layer met1",
+          "neighbors": [
+            "net8148"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_21033_ net:net8148\n\tbbox = (81.0450, 178.9400) - (81.3350, 179.0800) on Layer met1",
+          "neighbors": [
+            "net8148"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (356.5850, 347.5800) - (356.8750, 347.7200) on Layer met1",
+          "neighbors": [
+            "net4840"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (356.5850, 347.5800) - (357.7950, 347.7200) on Layer met1",
+          "neighbors": [
+            "net4840"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (357.5050, 347.5800) - (357.7950, 347.7200) on Layer met1",
+          "neighbors": [
+            "net4840"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Metal Spacing\n\tsrcs: net:_08784_ net:net7882\n\tbbox = (199.7250, 34.2850) - (200.0150, 34.3800) on Layer met1",
+          "neighbors": [
+            "_08784_"
+          ]
+        },
+        {
+          "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+          "marker": "violation type: Metal Spacing\n\tsrcs: net:net7963 net:net8407\n\tbbox = (240.2050, 306.2850) - (240.4950, 306.3800) on Layer met1",
+          "neighbors": [
+            "net8407"
+          ]
+        }
+      ]
+    }
+  },
+  "marker_preparation": {
+    "start_raw": 939.282194376,
+    "stop_raw": 939.32384921,
+    "seconds": 0.041654834000041774
+  },
+  "routed_scopes": [
+    {
+      "request_id": 1,
+      "scope": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/01/initial/routing_scope.json",
+        "sha256": "6e7a738e5fc3af2dc18a6e0c90519c0c2f6ca224160820d0f2072b2c20fb887b",
+        "bytes": 241198
+      },
+      "incident": [
+        "_09229_",
+        "_09238_",
+        "_09239_",
+        "_09415_",
+        "_09416_",
+        "_09589_",
+        "_09590_",
+        "net8196",
+        "net8204"
+      ],
+      "released": []
+    },
+    {
+      "request_id": 2,
+      "scope": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/02/initial/routing_scope.json",
+        "sha256": "8e76d2ddffb220760defeab27ab12ee81b9ba2c4623598ebd27eb56140597a30",
+        "bytes": 241230
+      },
+      "incident": [
+        "_01064_",
+        "_09601_",
+        "_10121_",
+        "net7963",
+        "net8003",
+        "net8009",
+        "net8173",
+        "net8179",
+        "net8203"
+      ],
+      "released": [
+        "net4840",
+        "net8407"
+      ]
+    },
+    {
+      "request_id": 3,
+      "scope": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_marker_repair_pair_20261124_v1/repair/03/initial/routing_scope.json",
+        "sha256": "e1f6900a584152a6061d4c4e4c2876f5e8a50ec0dbfec58ae404a1a7f9ee7469",
+        "bytes": 241260
+      },
+      "incident": [
+        "_01064_",
+        "_01559_",
+        "_01561_",
+        "_08056_",
+        "_08793_",
+        "_08942_",
+        "_09601_",
+        "net5210",
+        "net6622",
+        "net7845",
+        "net7874",
+        "net7882",
+        "net7890",
+        "net7963",
+        "net8009",
+        "net8125",
+        "net8138",
+        "net8151",
+        "net8173",
+        "net8203"
+      ],
+      "released": [
+        "_08784_",
+        "net4840",
+        "net8148",
+        "net8407"
+      ]
+    }
+  ]
+}
