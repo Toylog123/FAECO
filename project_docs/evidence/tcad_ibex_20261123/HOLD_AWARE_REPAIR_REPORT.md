@@ -23,3 +23,5 @@ Ibex 六次动作也与原固定批次逐项相同。逐端点的 ODB、DEF、Ve
 ## 核验与原件
 
 GCD 与 Ibex 的独立核验均返回 0。104 项程序回归通过。两份新原始目录已保存于 `scratch/tcad_ibex_20261123/hold_aware_sky130_repair_20261124.tar.gz`，SHA-256 为 `d9116bfed26a0f11563ec3d6dafc1e8307ed43431ed6824828352996910318b8`，共有 368 个成员，330 个文件均已和原始目录逐 SHA-256 核对。AES 的物理修复及独立验收见 [AES 报告](AES_SELECTIVE_DRT_REPAIR.md)。
+
+后续按阶段测量工程优化，结果见 [筛选并行化](SCREEN_WORKERS_BENCHMARK.md) 和 [重复 pin access 对照](PIN_ACCESS_AB_REPORT.md)。

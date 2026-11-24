@@ -45,6 +45,8 @@ v3 零编辑经过真实 DRT、RCX 和三视图 STA，15,657 条网几何全部�
 
 加入 `_08784_` 和 `_03615_` 后，实际只改动 11 条计划内的线，固定网和组件位置不变。DRT 自带 DRC、候选 ODB 的全块 DRC、恢复原线型后的全块 DRC 及天线违规均为 0，产生 33.7824 µm² 的面积收益候选。FF／TT／SS 的 hold WNS 分别为 +336.251693／+523.880550／+55.241145 ps，相对起点下降 0.022204／0.034306／0.054623 ps。三个视图均符合绝对 hold 门，hold TNS 均为 0，三个相对回退均超过 0.001 ps 容差。原 setup 门合格，候选未进入 SEC。
 
+后续寄生归因、等面积替换和六门联合端点见 [AES hold 优化](AES_RESIDUAL_HOLD_OPTIMIZATION.md)。
+
 ## 原件和入口
 
 原矩阵 `/home/toylog/faeco_tcad_sky_holdout_20261123/aes_matrix_v1`。各阶段物理收据、输入、绑定、DRC、RCX、STA、SEC 和独立审计位于同一父目录。旧技术试验原脚本以 `producer_v1.py`、`producer_v2.py`、`producer_v3.py` 分别保存在对应运行目录。

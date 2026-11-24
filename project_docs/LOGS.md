@@ -6265,3 +6265,126 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - GCD 和 Ibex 均已通过独立的程序核验，两设计合计 12 次候选 DRT/RCX、36 次 STA、4 次候选 SEC、0 缓存。调度归档 `scratch/tcad_ibex_20261123/hold_aware_sky130_repair_20261124.tar.gz`，140,315,265 字节、368 个成员、330 个普通文件均对原件哈希。包 SHA-256 `d9116bfed26a0f11563ec3d6dafc1e8307ed43431ed6824828352996910318b8`，已从成员独立实查两个原结果的 SHA。最终针对性回归 104 项通过，13.37 s。[Ibex 核验](evidence/tcad_ibex_20261123/HOLD_AWARE_IBEX_VERIFIED.json) · [GCD 核验](evidence/tcad_ibex_20261123/HOLD_AWARE_GCD_VERIFIED.json)
 - AES 两个邻网修复端点均过恢复 ROUTED 状态后的 DRC，只有原第 2 次满足三视图原 hold 门并完成候选 SEC。当前已知调度覆盖与路由失效的修复范围已同步至 CANON 和 OI-098／100。项目记录脚本返回 0，仅提示已停用的四个记录路径。[当前口径](CANON.md#2026-11-24-调度覆盖与-aes-路由修复验证)
+
+## LOG-20261124-36｜继续诊断首达成本与 AES 残余相对 hold
+
+- 从修复提交 `b0c8477f` 继续。先只读对齐 Ibex/GCD 原固定臂和修复调度到同一 0.01% 面积目标的物理调用及逐阶段时间，找出主要耗时来源。此前运行负载不同，阶段差值只用于诊断。实测优化将使用新的匹配基线，冻结原输入、筛选、终点和联合 setup/hold/DRC/电气/SEC 门，记录实际首达时间、面积与调用成本。
+- AES 从 v4 第 5 次保留的终点出发，定位保护布线后仍存在的三视图相对 hold 微降，探索有限物理替代。CPU 0–5，保留实际端点原约束和原验收门，先核对路径与候选寄生数据，再以新目录和明确物理修改范围开试。[继续试验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-target-cost-and-aes-residual-hold-v1)
+- AES 先做原 CONTROL 与 v4 第 5 次的 ODB/SPEF 四格交叉，三个视图共 12 次只读 STA，同名最差 hold 路径用九位小数展开，并核对时钟与数据网的寄生构成。单线程，CPU 0–5，整批 180 s、单次 90 s，原件目录 `aes_v4_05_residual_cross_v1`。从归因中择有界物理尝试，优先保留已合法原线或撤掉主要诱因的一门，保留两个兼容降档的目标面积 22.5216，足以达到原 0.01% 目标。
+
+## LOG-20261124-37｜首达时间分解定位物理调用为主要成本
+
+- 按原首达检查点逐项对齐候选动作、端点与工具收据。Ibex 原固定臂／修复调度到第 3 次的搜索时间 433.067933／522.567420 RAW s，其中 DRT/RCX 351.135123／414.826350，三视图 STA 44.078464／55.291760，SEC 33.666323／47.656388，其余开销 4.188022／4.792922。89.499488 s 的历史差值中 63.691227 s 出现在 DRT/RCX。GCD 到第 5 次分别 93.728567／101.815727 RAW s，8.087160 s 的历史差值中 5.552594 s 出现在 DRT/RCX。两设计两臂首达动作、工具次数和端点相同，旧差值按不同负载下的阶段耗时记账。下一轮先评估怎样缩短物理阶段或减少无效物理调用。[继续试验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-target-cost-and-aes-residual-hold-v1)
+
+## LOG-20261124-38｜AES 第 5 次残余 hold 交叉 STA 启动
+
+- WSL 进程表实查为 08:38:41（UTC+8），外层 PID 448、驱动 PID 450，CPU 0–5，单线程 STA，整批 180 s、单次 90 s。目录 `aes_v4_05_residual_cross_v1` 明确绑定原 CONTROL 与全部三角相对 hold 拒收的实际 v4 第 5 次物理收据。输入清单 SHA-256 `ae3ee9d11c344210a343dd913ce96246d3aaf45cab0bc7a51452c2263c64af30`。首个 FF 同源组合复现原 +336.273897616 ps。[交叉入口](evidence/tcad_ibex_20261123/probe_aes_residual_hold.py)
+
+## LOG-20261124-39｜登记确定性并行筛选的同机计时
+
+- 完成 8 项针对性回归后，拟用固定 SPEF TT 的独立候选探针验证串行与四路调度。每个 OpenROAD 仍单线程，每波最多调度距离 18 个通过及 32 次总上限的剩余调用数，按原候选次序依次归并，验收序列须与串行一致。Ibex 依 1→4 路运行，GCD 做 4→1、1→4 两组，同机 CPU 6–11 各臂串行。单臂外层 420 s、单次 STA 180 s，另记录 CPU 0–5 上 AES 并行工况。复核筛选池指纹、逐候选度量与通过/拒收次序，以及无额外探针。物理阶段另安排重复 pin access 的 A/B，使用同组 CPU 串在筛选矩阵之后。[筛选执行入口](evidence/tcad_ibex_20261123/run_screen_workers_benchmark.sh)
+- 首次命令因共用解析器必填的 `--sec` 路径遗漏而 rc 2，未创建臂输出或启动 STA。包装入口补上各设计原证明驱动参数，筛选过程本身不调用 SEC。修正后第一臂 `ibex_a1_w1` 于 08:40:21（UTC+8）启动，WSL 外层 PID 760、驱动 PID 763，CPU 6–11。8 项回归中的 4 条新用例覆盖 1、2、4 和 8 路，均保留准确串行试探前缀。
+
+## LOG-20261124-40｜AES 残余 hold 的寄生归因及双门对照规格
+
+- 12 次 ODB/SPEF 交叉 STA 完成。三角同源组合各复现原收据，沿同一最差路径。固定 CONTROL ODB 只换候选 SPEF 即复现 FF/TT/SS 损失 −0.022204460／−0.034305891／−0.054622973 ps，固定 CONTROL SPEF 只换候选 ODB 三例均无变化。`clknet_3_1__leaf_clk` 实际电容差 +0.0000345 pF。FF/TT 数据到达时刻显示不变，SS 数据到达晚约 +0.101567 ps，抵销一部分捕获要求变晚。交叉结果 SHA-256 `3cf2ea52a82fbf547fffd2c4b1b897a43113fe0327796f13f2bcd29262969bed`，已绑定路径网电容差 SHA-256 `a4ad73d6f303f273ad36523bb90426feb4d3fcd41320a36213f4332471581064`。
+- 根据路径电容和邻近线几何提出一项局部双门对照。撤掉 `_20883_` 降档及其邻网 `_08784_` 放行，保留 `_20893_`、`_20897_` 和短路所涉 `_03615_` 的放行。具体归因是整份候选寄生的效应，`_20883_` 是据此选取的对照项。目录 `aes_v4_05_subset_drop_20883_v1`，CPU 0–5、四线程、外层 650 s，原三角绝对/相对 hold 与 setup、DRC、天线和 SEC 门全部沿上一轮。
+
+## LOG-20261124-41｜登记移除重复 pin access 的同端点 DRT 对照
+
+- 原修复调度首达前，Ibex 第 1–3 次的显式 pin access 日志合计约 106 s，GCD 第 1–5 次约 16 s，均为工具日志的粗粒度值。后续在原 Ibex 第 3 次与 GCD 第 5 次的确切合格动作组上，各用 A→B→B→A 验证。A 采用默认 DRT 前另一次显式 `pin_access`，B 只去掉该显式 Tcl 行并保留 DRT 自带 pin access。每次实际重做 DRT/RCX、三视图 STA 及原门之后的 SEC，CPU 6–11 四线程且与筛选串行。两处理的动作、ODB/DEF/V/去日期 SPEF、三视图合格结果、改线或邻网若不一致，收据保留为物理差异诊断。启动次序、路径和核验入口另绑。
+
+## LOG-20261124-42｜AES 双门对照实跑与耦合近邻归属复核
+
+- `aes_v4_05_subset_drop_20883_v1` 按预设于 08:41:30（UTC+8）启动，WSL 外层 PID 991、驱动 PID 993、首个 OpenROAD PID 1018，CPU 0–5、四线程、外层 650 s。输入清单 SHA-256 `2f5e36557f58b29b4b360a8a0ea1d10c6402f53bb41aff808eefe41e4f96b3fd`。DRT 实际前置读回 15,650 条 `FIXED`，另清除两门的 6 条直接触达数据网及 `_03615_` 共 7 条。
+- 寄生表重读时发现部分耦合行的本地节点列在右边。保留第一版原表，修正近邻归属后，捕获时钟支路新增耦合分别指向 `net8069`（+0.000003600 pF）以及 `_20134_` 的 A 引脚（+0.000001090 pF）。新版表 SHA-256 `5e953bd49b63579aa1b669227606f46ce4313d44d0b708a45bf5a09429bc0126`，已实测的交叉 STA 与总电容读数保持原证据。[继续试验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-target-cost-and-aes-residual-hold-v1)
+
+## LOG-20261124-43｜AES 第一个双门端点仍受相对 hold 阻断
+
+- 撤掉 `_20883_` 的对照完成 DRT/RCX 与三视图 STA，实测面积减 22.5216（0.019331%），保护状态下的 DRT、全块 DRC 与天线报告均空。FF/TT/SS 相对 hold 仍分别变化 −0.008105／−0.012546／−0.166533 ps。较 v4 三门，FF/TT 损失减少，SS 损失增大，原门拒收且未调用 SEC。结果 SHA-256 `5026f2126c852685e4af1ba74890daf45aa67801fe509230deb9986b8f9c07e6`。后续对照改撤 `_20897_` 并保留 `_20883_`、`_20893_`，放行 `_08784_`，同时移除 `_03615_` 的放行，以隔离另一处局部邻域。计划 `aes_v4_05_subset_drop_20897_v1`，同 CPU 0–5、四线程及外层 650 s。
+
+## LOG-20261124-44｜Ibex 四路筛选复现串行前缀
+
+- Ibex 1 路与 4 路均恰检查 18 个候选且全通过。候选动作、扇出、指标、拒因、顺序与原 18 次串行逐项匹配，池 SHA-256 均为 `4c393545b7d356002bd4fc3bf534b686bf1ee3da170b70469359d796f1f984e0`。包含原库、网表准备、基线和候选探针在内的筛选耗时为 131.940646／77.493270 RAW s，相差 54.447376 s（41.27%）。该次 Ibex 运行顺序为 1→4，GCD 逆序和正序两对继续。[筛选执行入口](evidence/tcad_ibex_20261123/run_screen_workers_benchmark.sh)
+
+## LOG-20261124-45｜AES 双门对照的几何复核和第二组物理调用
+
+- 撤 `_20883_` 的第一组恢复 ROUTED 状态后全块 DRC 为 0，资格仍因三个相对 hold 拒收，无候选 SEC。资格收据 SHA-256 `a272f0875c90711553e76951e78d176e61ce6a19c7fc67a570c3a338fd0af683`。两项时钟耦合增量消失，捕获时钟网总电容变化缩小为 +0.0000127 pF。SS 数据网 `_07314_` 的总电容变化从原 v4 的 +4.3×10⁻⁶ pF 变成该候选的 −4.6×10⁻⁶ pF，说明改门子集会改变数据与时钟路径的寄生权衡。
+- 撤 `_20897_` 的第二组 08:44:43（UTC+8）启动，外层 PID 2233、驱动 PID 2235、首个 OpenROAD PID 2240。`aes_v4_05_subset_drop_20897_v1/inputs.json` SHA-256 `411cd9bb20cf6ac3d76189f44181d0d117d7c7cb1298470b8c44718ce850c4ba`，实际读回 15,650 条保护网并开放 7 条。若第二组仍拒收，则在同限时下试第三个互补双门组合，撤 `_20893_` 并同时放行 `_08784_` 和 `_03615_`，以补齐三选二物理对照。
+
+## LOG-20261124-46｜GCD 顺序交换筛选完成与 DRT 对照启动
+
+- GCD 两对原件均为 20 次实际筛选探针、18 个通过。4→1 的四路／单路时间为 37.271200／50.709156 RAW s，1→4 的单路／四路时间为 51.951921／39.206443 RAW s。分别节省 13.437956 和 12.745479 s，每次的动作、扇出、指标和拒因均与原池精确一致，筛选池 SHA-256 `ede7990f6f7f4c7ff26cd9c9bd9cc506d5bd4281258cc7118e8a66c33568f40b`。Ibex/GCD 总计 116 次候选 STA，四路与单路在各设计的探针数相同。此前 Ibex 单路→四路的候选子进程合计用时从 92.767607 s 变为 102.183062 s，墙钟减少来自重叠执行。[筛选执行入口](evidence/tcad_ibex_20261123/run_screen_workers_benchmark.sh)
+- GCD 重复 pin access 对照在筛选全部结束后获得 CPU 6–11，08:47:23（UTC+8）启动，外层 PID 3520、驱动 PID 3521，限制 720 s，四线程。`gcd_pin_access_ab_v1/config.json` SHA-256 `7d66fd51565e2b033b13d84ef76568130aea00a4b3465d404aacc90638a566d3`。OpenROAD 原 64 次迭代上限具有零 DRC 早停，之前 GCD 与 Ibex 实际不超过第 5 个索引，本对照保留原上限，仅比较是否删除重复显式 `pin_access`。[对照报告](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+## LOG-20261124-47｜AES 第二个双门端点保留 SS hold，FF/TT 仍被拒
+
+- 撤 `_20897_` 的第二个双门对照完成 DRT/RCX 和三视图 STA，实测面积减 22.5216（0.019331%），DRT、保护态全块 DRC、天线报告均空。FF/TT/SS 相对 hold 分别 −0.014100／−0.021705／+0.171640 ps，hold TNS 均为 0。FF/TT 仍超过原 0.001 ps 相对容差，未触发 SEC。主收据 SHA-256 `2e8fed57d5f5af9ca8853980bc62dc611125fdc1692d00a1330ff8f5d44ee5c2`，结果 SHA-256 `360785cbeb81eba99924399dccb7473c043e09ea9379c7ce20050e156bc5bec5`。恢复 ROUTED 状态后的几何和全块 DRC 另行检查。
+- 第二双门候选恢复 ROUTED 状态后全块 DRC 0，FF/TT 相对 hold 拒因保持，候选 SEC 为 0，最终资格 SHA-256 `bb924a849428fd6243f14b475bf7ee9165c47868f319da1a38f1059243b30031`。第三个互补对照撤 `_20893_`、保留另两门并放行 `_08784_` 与 `_03615_`，08:48:06（UTC+8）开始，外层 PID 3774、驱动 PID 3776、OpenROAD PID 3779。`aes_v4_05_subset_drop_20893_v1/inputs.json` SHA-256 `bc3de286d99ad2df44ec3e5baf0394b2570bb8421c802821518a351bfe03284b`。
+
+## LOG-20261124-48｜并行筛选核验封存与 GCD 物理驱动重试
+
+- 筛选六臂均独立返回 0，核验器返回 0。四路与单路的逐次指标、注解、动作和拒因均对齐到原筛选池。归档 `scratch/tcad_ibex_20261123/screen_workers_20261124.tar.gz` 1,466,414 字节，555 个成员，402 个普通文件逐项哈希一致。宿主归档 SHA-256 `cade6fdda4dd84a6f7cd0251ba88f19bd8e6ad81473d3e5372c084d510ba6148` 已复验。[筛选报告](evidence/tcad_ibex_20261123/SCREEN_WORKERS_BENCHMARK.md) · [独立核验](evidence/tcad_ibex_20261123/SCREEN_WORKERS_VERIFIED.json)
+- 首次 `gcd_pin_access_ab_v1` 已通过 CONTROL 和零编辑预检，随后回调参数数目不匹配以 rc 1 退出，未启动任何候选 DRT/RCX 或候选 STA/SEC。保存失败目录后，仅修正流程回调签名并按原参数在 `gcd_pin_access_ab_v2` 重开。WSL 08:48:13（UTC+8）启动，外层 PID 3812、驱动 PID 3813，配置 SHA-256 `9b8ac25e272cb4ad05cad3e0762a169daa1be33bd243156a972cd1d6d2e22d04`。该预检失败与后续候选计时分账。[对照报告](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+## LOG-20261124-49｜登记 AES 等面积门替换对照
+
+- 待三选二物理对照完结后，补一个面积相同的替换。保留有正 SS hold 裕度增量的 `_20883_`、`_20893_`，将 `_20897_` 换成原筛选固定第 6 次评估中的 `_21033_` 降档，预计回收 33.7824。历史普通重布线下，该单门相对普通零编辑的 FF/TT hold 分别 +0.063172／+0.099032 ps，SS 不变。对核查的 13 条最差路径网，只有发射支路 `clknet_3_0__leaf_clk` 的电容读数提高 0.0001006 pF。据此选定替换动作；联合寄生与时序变化待新端点实测。
+- 放行 `_08784_` 与新候选邻网 `net8148`。后者的历史 met1 线路穿过目标单元框，原该单门评估已有改线。新目录 `aes_v4_05_donor_launch_compensation_v1`，CPU 0–5 四线程、外层 650 s，保留原 IO、setup、hold、DRC、天线和非空 SEC 门。此项按已见路径选取，本轮作为单点验证。
+
+## LOG-20261124-50｜GCD 去重复 pin access 实测及 ODB 差异
+
+- GCD v2 四次 DRT/RCX、12 视图 STA、4 次候选 SEC 均完成，无缓存，四个端点都通过原联合门并回收 11.2608。A 实际两次 pin access，B 一次；两组单端点评估时间差 3.100760、3.448795 RAW s。A、B 均复现历史 DEF、网表、去日期 SPEF、三视图时序、DRC、改线清单与 SEC 证明点，B 的 ODB 字节不同，结果字段 `all_same_qualified_endpoints` 为 false。按登记范围暂以物理输出与时序合格的组件开销观察值记录，另查 ODB 差异来源。总收据 SHA-256 `417f2aa81cc7ea713d92b9b17647d065fa6889aff9a9dab1584354edd236b0d0`。[对照报告](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+- Ibex A/B 随后 08:50:29（UTC+8）在同一 CPU 组串行启动，WSL 外层 PID 4663、Python PID 4664。仍为四线程及外层 1350 s，`ibex_pin_access_ab_v1/config.json` SHA-256 `5a4060c8d7a35263b9b3e700547919d2455f92bf3f98e0a6fbe9f157c6282e6e`。
+
+## LOG-20261124-51｜AES 双门组完成并启动等面积替代候选
+
+- 三组三选二均完成新 DRT/RCX 与三视图 STA、全块 DRC 和恢复 ROUTED 状态的查验，DRC 与天线均为 0，均因原相对 hold 拒收。第三组撤 `_20893_`，实测面积减 22.5216，FF/TT/SS 相对 hold −0.022204／−0.034306／+0.099476 ps，SEC 为 0。其最终资格 SHA-256 `e1fb1c9c4bb4c35fb96f6f82d8642c3913ce5b1e739c1729e7d5974110322e8f`。
+- 执行等面积替换 `_20883_`、`_20893_`、`_21033_`，放行 `_08784_`、`net8148`，08:51:26（UTC+8）启动，外层 PID 4869、驱动 PID 4871、OpenROAD PID 5037。读回 15,646 条实际 `FIXED`、11 条清线重布。`aes_v4_05_donor_launch_compensation_v1/inputs.json` SHA-256 `a1d1893accb95ffea4581021af7fc439f31537dc4751a79ec59df59fc6663889`，用于选取新动作的旧参照审计 SHA-256 `4d79c58b8a36c001205ea3f7c107ccb52f9c91cbac78f35aeab0f752de1c1387`。
+
+## LOG-20261124-52｜AES 等面积替代通过物理与三视图时序初验
+
+- 等面积替换实际完成 DRT/RCX 与三视图 STA，净面积减 33.7824（0.028996%），保护状态 DRT 和全块 DRC、天线报告均为空。FF/TT/SS hold WNS 相对原 CONTROL 改善 +0.048961／+0.076883／+0.171640 ps。setup WNS 相应变化 −0.001332／−0.002220／−0.003553 ps，TT/SS setup TNS 改善 +9.683365／+464.297045 ps，三角均无新增负 setup 端点。实际物理收据 SHA-256 `fbdb05190606a10e5bfcf3735930c59571dc54efe8c2181e6fe0aef1380be820`，初步汇总 `3b257f29950a66ab0319d02f9175a3be4326f7ac7ef2a8697294a99fc1038fe1`。仍待恢复 ROUTED 状态后的几何检查、全块 DRC 和候选 SEC。
+- 计划对第二双门与等面积替换的真实 ODB/SPEF 组合各三角读一次同名最差路径，实测合计 6 次只读 STA，单线程，每次上限 45 s。在端点一致基础上对比发射、捕获和数据到达量；新替换的时钟发射支路电容差复现旧单门观察，最终归因以实际路径输出为准。
+
+## LOG-20261124-53｜AES 等面积替代正式验收并定位路径补偿
+
+- 在确认实际仅 11 条计划数据网几何改变、15,646 条固定网不变后，恢复 ROUTED 状态的全块 DRC 为 0。原 CONTROL 至实际等面积替代端点完成非空两态 SEC 11089/0、rc 0，外层 21.060984 RAW s。验收汇总 SHA-256 `2541b0d52fdccb53c1d11a419684955ee7ba83a705b74d000885d47c5f73d857`，实际候选网表 SHA-256 `55f2e09803d4d780bb2d42ee035b437c3f93480b6f5d53831bd5d17187c9fd51` 位于真实 SEC gate 绑定中。净面积 33.7824（0.028996%），三个视图相对 hold 改善、无新增负 setup 端点。
+- 两个实际端点各做三角 STA 的配对路径诊断已完成，较第二双门的 FF/TT hold WNS 提高约 0.063061／0.098588 ps，对应数据到达延后，要求到达时刻保持原读数；SS 路径和 hold 均保持第二双门的结果。发射支路电容增加 0.0001006 pF。`aes_v4_05_donor_paired_exact_v1/results.json` SHA-256 `f9789a535f8ecacd2476f94ea12e49bceec473129cfae1a8c61bb17f3a3bb26d`。此端点由已观测路径筛选得到，进入追加修复证据。[继续试验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-target-cost-and-aes-residual-hold-v1)
+
+## LOG-20261124-54｜登记 AES 两个已验收端点的六门联合对照
+
+- 回读 v4 第 2 次和本轮等面积替代两份资格收据，均通过原联合门和 SEC 11089/0，各自 3 个单元、11 条数据网无交集。从同一原 CONTROL 重新尝试六门 `_11178_`、`_11724_`、`_12777_`、`_20883_`、`_20893_`、`_21033_`，允许 22 条数据网重布（含 `_08784_`、`net4840`、`net8148`、`net8407`），保护其余 15,635 条网。目标面积减量 67.5648。两个动作组的时钟寄生和全块 DRC 仍可能相互影响，需重做联合实测。
+- 新目录 `aes_v4_05_qualified_union_six_v1`，CPU 0–5 四线程，整批 650 s，DRT/RCX 240 s、STA 180 s/角和 SEC 210 s。仅尝试一个确定组合。原联合门通过后，再检查保护几何、恢复 ROUTED 状态的全块 DRC 和候选两态 SEC。
+
+## LOG-20261124-55｜Ibex 首对物理耗时与 AES 六门实跑启动
+
+- Ibex 已实跑完 A→B 首对，同面积 22.5216，均通过原三视图门和 SEC 13648/0。两端点的 DEF、网表、DRC、去日期 SPEF、改线清单和逐角指标与历史逐项一致，B 的 ODB 字节不同。单端点评估 A/B 为 186.113393／139.386816 RAW s，DRT/RCX 为 129.659367／83.862256 s。等待逆序对照，当前归于同动作的组件时间观察。
+- AES 六门联合 `aes_v4_05_qualified_union_six_v1` 于 08:58:31（UTC+8）实跑，外层 PID 8202、驱动 PID 8204、OpenROAD PID 8209，CPU 0–5、外限 650 s。输入清单 SHA-256 `5fe523ab86aeb0715020728dc6cbae5df4b1c683f19bb54b0026e90869177193`。已将各联合动作绑定至两个真实验收原件。
+- 六门联合前的 13 个 AES 运行和核验目录已归档 `scratch/tcad_ibex_20261123/aes_residual_hold_optimization_20261124.tar.gz`，109,925,296 字节、233 个成员，207 个文件已与原件逐个 SHA 核对。宿主归档 SHA-256 `022cf082854c45cc1e4350b12841d505d063a2718cea9f448683c9dd1c3bc1b6` 实查一致。成对路径中 FF/TT 的实际发射时钟分别延后 0.062406/0.097751 ps，捕获和数据要求时刻不变，SS 路径精确相同。[AES 残余 hold 优化](evidence/tcad_ibex_20261123/AES_RESIDUAL_HOLD_OPTIMIZATION.md)
+
+## LOG-20261124-56｜AES 六门联合完成物理与三视图初验
+
+- 同一原 CONTROL 下完成六门的 DRT/RCX 和三角 STA，实测面积减 67.5648（0.057992%）。保护态 DRT、全块 DRC 与天线均无标记。FF/TT/SS 相对 hold WNS 增量 +0.049183／+0.076716／+0.782263 ps，setup WNS 变化 −0.086153／−0.155875／−0.008882 ps，TT/SS TNS 分别改善 +10.139001/+380.168785 ps。SS 仍新增 1 个负 setup 端点，原 tradeoff 包络内。初验物理收据 SHA-256 `bb47277ab03ccf19938c34cee4ae43accce3e330efb8b714f7b858106acb3e24`，初验汇总 `b194d2350356b59634a21411f9878ba9fb2309d8484c2d46b1d226a46084ba76`。待解锁状态的全块 DRC、实际几何、SEC 与同名端点 slack 检查闭合。
+
+## LOG-20261124-57｜AES 六门联合通过原门和候选等价证明
+
+- 保护的 15,635 条网几何一致，22 条实际变线与允许范围吻合。恢复 ROUTED 后全块 DRC 为 0，原三视图 setup/hold、电气、天线门通过，实际候选两态 SEC 11089/0、rc 0，SEC 外层 23.265324 RAW s。原资格 SHA-256 `662ded5cb91cd2eff5bd38ca2d02d0359f0532a22b01864a65f65044111d49c4`。实际联合面积回收 67.5648（0.057992%），SS 新过零仍为原 `text_out[83]$_DFF_P_/D`，另做同一路径原时序读回。[继续试验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-target-cost-and-aes-residual-hold-v1)
+- 该 SS 端点在原 CONTROL 与六门联合的同名路径上由 +0.329958 ps 变为 −0.214495 ps，变化 −0.544453 ps，实际路径读回结果 SHA-256 `681a492c6d5cd6d656bd531f844439f26d1081ac76ab745bba4f1eb784e8223c`。六门的实际 SEC gate 网表 SHA-256 `33e0dc9a4ef42cee14a9e4505840e64e09fcb0815d95e50e973e3cf6837e26d2`，内部证明收据 `64606c7c6f5686e0c701e3a88401ae7db96dc4856404b34f02d8b8517492a0d3`。
+
+## LOG-20261124-58｜Ibex pin access 顺序交换四臂完成
+
+- 四臂每次独立重做 DRT/RCX、三角 STA 与 SEC，无缓存，均回收 22.5216 且 SEC 13648/0。A→B 的 A／B 单端点评估 186.113393／139.386816 RAW s，B→A 的 B／A 为 158.566009／180.633022 RAW s，A−B 各 46.726577／22.067014 s。DRT/RCX 分别降 45.797112／33.884919 s。两次 B 均仅 ODB 字节不匹配原全对象一致条件，DEF、网表、DRC、去日期 SPEF、三视图、改线清单与 SEC 证明点均相同。结果 SHA-256 `e8088035b1a4055024c1a837ad023d4308f2c3a9b5a136d0b5b737c1995d4f5f`。原首达搜索流程保持原配方，这两对用于量化同一动作的组件时间差与 ODB 风险。[对照报告](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+## LOG-20261124-59｜AES 六门联合原件封存
+
+- 追加六门联合的四个目录封存于 `scratch/tcad_ibex_20261123/aes_qualified_union_repair_20261124.tar.gz`。29,028,405 字节、56 个成员，48 个普通文件已按原件逐项核对 SHA-256。宿主归档 SHA-256 `b351d794555e0f566bce0c83038104d91a9791eedfce12fa7823c9faaf418478` 实查一致。归档包含源资格及原驱动绑定、实际联合物理、新 SEC 和 SS 精确路径。一套追加三门等面积替代与一套六门联合通过原门，两者为独立端点，分别报告面积。原六臂矩阵仍按原件口径记录。[AES 残余 hold 优化](evidence/tcad_ibex_20261123/AES_RESIDUAL_HOLD_OPTIMIZATION.md)
+
+## LOG-20261124-60｜两种单次 pin access 的 GCD 对照和 ODB 归因
+
+- 追加 GCD C 方案，保留显式 `pin_access` 并关闭 DRT 内部重复执行，按 A→C→C→A 串行实跑原元组，4 DRT/RCX、12 STA、4 SEC、0 缓存。四臂原门通过，面积 11.2608，A−C 单端点评估耗时差 2.484664／3.237155 RAW s。C 的原始 ODB 与 B 完全相同，A 的原始 ODB 仍与单次方式不同。`gcd_pin_access_explicit_only_ab_v1/results.json` SHA-256 `45cd7830de86fcb39ac5c2648ee5b2e00705f4ea2f61f65d871930fcca3a0d49`。
+- ODB 读回审计去除临时枚举对象地址后，按所属 pin、坐标和层对比接入点多重集，GCD 2,415 个、Ibex 7,155 个逐项匹配。同设计的副本删除接入点与关联引用再导出后，四个 GCD A/B 和 Ibex A/B 均在其设计内字节相同，GCD A/C 也复现这一结果。诊断副本哈希分别为 GCD `8987da52d7918dc5d7d9fead3f24e734c9e7e269e63d8c26c154667474906034`、Ibex `56b575aae8f4e4b33aaeacac22bc221bff3d90e9201b12b218d91cdcc6525c29`。当前证据将分歧定位到接入点辅助状态，原始产物字节一致仍不满足，后续可对中间 ODB 重入后的搜索再评价。[对照报告](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+## LOG-20261124-61｜本轮优化试验核验与原件封存完成
+
+- pin access 归档 `scratch/tcad_ibex_20261123/pin_access_ab_20261124.tar.gz`，156,613,093 字节、494 个成员、438 个普通文件按原件逐项核验，包 SHA-256 `c7a043ee854c5ad862be8dd63f5afd63aff7f6f03bbb362fe09758558bb41d18`。A/B 及 GCD A/C 合计 12 次候选 DRT/RCX、36 次 STA、12 次候选 SEC、0 缓存，预检和 ODB 辅助状态诊断另计。生产物理脚本不启用单次方式。最终针对性回归 108 项通过、17.47 s，记录脚本 rc 0，仅报四个已停用路径。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md) · [当前口径](CANON.md#2026-11-24-筛选并行物理组件对照与-aes-残余-hold-优化)

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Rank legal modest edits, screen with frozen TT SPEF, and optionally route the Ibex pilot."""
 
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, replace
 import json
 from pathlib import Path
@@ -111,6 +112,28 @@ if {{![$inst swapMaster $target] || [[$inst getMaster] getName] ne {comparison.t
     return result, annotation, asdict(op)
 
 
+def run_ranked_screen(ranked, evaluate, workers):
+    """Probe independent edits in rank order with the same stopping prefix."""
+    shortlist = ranked[:SHORTLIST_LIMIT]
+    rows, passed = [], []
+
+    def evaluate_rank(index):
+        return evaluate(shortlist[index], f"screen_{index + 1:02d}")
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        while len(rows) < len(shortlist) and len(passed) < SCREEN_TARGET:
+            start = len(rows)
+            # Even if every probe in this wave passes, the target cannot be
+            # reached until its last probe. No measurements run past that point.
+            size = min(workers, len(shortlist) - start, SCREEN_TARGET - len(passed))
+            for index, row in zip(range(start, start + size),
+                                  executor.map(evaluate_rank, range(start, start + size)), strict=True):
+                rows.append(row)
+                if not row["failures"]:
+                    passed.append(shortlist[index])
+    return rows, passed
+
+
 def run_screen(args, qualification):
     begin = elapsed_clock()
     args.out.mkdir(parents=True)
@@ -168,20 +191,14 @@ def run_screen(args, qualification):
         print(label, action.action_id, "fanout", fanout[action.instance], failures, flush=True)
         return row
 
-    rows, passed = [], []
-    for index, action in enumerate(ranked[:SHORTLIST_LIMIT], 1):
-        row = test(action, f"screen_{index:02d}")
-        rows.append(row)
-        if not row["failures"]:
-            passed.append(action)
-            if len(passed) == SCREEN_TARGET:
-                break
+    rows, passed = run_ranked_screen(ranked, test, args.screen_workers)
     comparison.save(args.out / "screen_pool.json", [asdict(a) for a in passed])
     receipt = {"clock": "CLOCK_MONOTONIC_RAW", "wall_seconds": elapsed_clock() - begin,
                "pool_sha256": comparison.bind(args.out / "screen_pool.json")["sha256"],
                "top": comparison.TOP, "control": {k: comparison.bind(v) for k, v in control.items()},
                "control_sha256": {k: comparison.bind(control[k])["sha256"] for k in ("odb", "spef", "sdc")},
                "period_ps": args.clock_period_ps, "budgets_ps": {"wns": wns, "tns": tns}, "baseline": base_time,
+               "screen_workers": args.screen_workers, "threads_per_probe": 1,
                "screened": len(rows), "passed": len(passed), "rows": rows, "input_bindings": assets}
     comparison.save(args.out / "screen_receipt.json", receipt)
     if args.pilot:
@@ -223,10 +240,14 @@ def run_pilot(args, evaluator, reference, pool, baseline, noop):
 def main():
     parser = comparison.create_parser(description=__doc__)
     parser.add_argument("--top", default="ibex_core")
+    parser.add_argument("--screen-workers", type=int, default=1,
+                        help="maximum number of concurrent single-thread fixed-SPEF probes")
     phase = parser.add_mutually_exclusive_group()
     phase.add_argument("--pilot", action="store_true", help="add the two named Ibex frozen-SPEF probes")
     phase.add_argument("--pilot-receipt", type=Path, help="perform physical followthrough on the four frozen pilot cases")
     args = comparison.prepare_args(parser, parser.parse_args())
+    if args.screen_workers < 1:
+        parser.error("--screen-workers must be positive")
     comparison.TOP = args.top
     comparison.time = sweep.time = RawTime()
     try:

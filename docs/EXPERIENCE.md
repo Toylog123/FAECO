@@ -3474,3 +3474,15 @@ AES 一个同配方零编辑控制可产生 0.676792 ps 的 SS hold WNS 下降�
 读回会调整 DEF 各网的连接端子顺序。几何比较应将连接视为集合或多重集合，保留线段、过孔、层和线宽规则的完整表示，单列 `FIXED`／`ROUTED` 类型。v3 零编辑的 15,657 条网按此口径全部与 CONTROL 一致。另需注意 `drt::check_drc` 是该版本全块检查入口，部分检查会跳过 `FIXED` 与 `FIXED` 的组合。候选若要用同口径 DRC，应在保持几何不变的副本恢复原 ROUTED 状态重查。[修复试验](../project_docs/evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-scheduler-and-aes-clock-route-repair-v1)
 
 在真实布线上同时保护所有未编辑网可能留下已换门引脚与相邻固定线的间距或短路。AES 两个批次的 DRT 自带最终报告均为零，额外全块检查均发现四条标记。将各自标记涉及的两条非时钟邻网加入同批清线重布线，重新精确审计全部保护网，并在解锁副本做全块 DRC。两例全部通过 DRC，其中一例也通过原三角时序及 SEC，另一例仍触发三角相对 hold。即使保护时钟线的几何不变，邻近重布线后的新耦合仍可能改变 min timing，应按真实抽取结果逐角验收。[AES 保护路由报告](../project_docs/evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)
+
+## 2026-11-24 — 并行逐候选筛选保留顺序和串行停止前缀
+
+每个固定 SPEF 的候选 STA 独立执行，按原序消费结果。每波大小同时由并发数、未读候选数、剩余试探上限及离目标通过数的余量限制，当前波最早完成的结果不改变下一个波的位置。这样可验证每个实际试探都属于原串行前缀。Ibex/GCD 的 1 路和 4 路都复现原顺序和完整指标。报告墙钟与候选工具时间和，以识别总工具时间上升、阶段墙钟下降的情况。[筛选报告](../project_docs/evidence/tcad_ibex_20261123/SCREEN_WORKERS_BENCHMARK.md)
+
+## 2026-11-24 — FF/TT 与 SS 的残余 hold 需要同时读时钟和数据路径
+
+AES 三个两门子集的寄生代价不同，删掉一门可以减轻捕获侧的部分耦合，也可能去掉 SS 数据路径的延迟补偿。用等面积门替换保留 SS 原改善，又使 FF/TT 的发射时钟延后，实际三角通过。判断时先用 ODB/SPEF 交叉固定同一路径，再比发射、捕获和数据到达的变化。读 SPEF 双节点耦合行要先识别哪个端点属于当前网，避免把列顺序误作归属。多动作组即使直接网没有交集，也应合并后重新详细布线、抽取和三角验收。[AES 残余 hold 优化](../project_docs/evidence/tcad_ibex_20261123/AES_RESIDUAL_HOLD_OPTIMIZATION.md)
+
+## 2026-11-24 — 用只读 ODB 规范化定位 pin access 辅助状态差异
+
+嵌入导引线路里同时执行显式 `pin_access` 和 `detailed_route` 默认步骤会计算两次。去一次后，GCD 和 Ibex 的单端点 DEF、提取和时序验证等值，ODB 原始字节却不同。比对接入点时，应去掉临时对象句柄，按所属 pin、坐标和层读取多重集；把接入点和关联引用从另存的副本清理后再比较原数据库其余内容。两设计各自的副本字节一致。GCD 将两种单次调用各自运行，输出原始 ODB 也一致。此方法可以限定变化域，新增搜索/增量路径是否同样稳定需独立验证。[pin access 对照](../project_docs/evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)

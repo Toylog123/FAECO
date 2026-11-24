@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 筛选并行、物理组件对照与 AES 残余 hold 优化
+
+- Ibex/GCD 的冻结 SPEF TT 筛选使用单线程独立候选探针的有界四路并行，复现原有的精确探针序列和有序池。Ibex 1→4 路在新增一次配对中用时 131.941→77.493 RAW s，减少 41.27%。GCD 两组交换顺序分别为 50.709→37.271 s、51.952→39.206 s，减少 26.50% 和 24.53%。六臂各设计探针数不变，合计 116 次。该时间对应完整筛选预处理与探针，物理搜索另有其原实跑证据。[筛选报告](evidence/tcad_ibex_20261123/SCREEN_WORKERS_BENCHMARK.md)
+- 去掉显式重复 `pin_access` 并保留 DRT 自带步骤时，GCD 两对单个物理端点评估时间减少 3.101／3.449 RAW s，Ibex 减少 46.727／22.067 RAW s。各设计四臂均通过原联合门和 SEC，DEF、V、去日期 SPEF、DRC、逐角时序和实际改线一致。GCD 仅保留显式调用的补充方式产生相同的单次调用 ODB。读回的接入点多重集相同，仅在诊断副本删除接入点及其引用后两方式 ODB 才一致。原冻结搜索配方沿用，组件时间差与原对象不一致分别报告。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+- AES 原第 5 次的残余 hold 降幅经 12 次交叉 STA 确认为候选寄生变化。原三门的三个两门子集均未通过三视图相对门。以已有单门的发射支路时序为线索替换一门后，实际净回收 33.7824 µm²（0.028996%），三角 hold 均改善，无新增负 setup 端点，解锁态全块 DRC、天线均为 0，SEC 11089/0。再与前轮独立合格三门合并，重新实跑回收 67.5648 µm²（0.057992%），三视图 hold 变化 +0.049183/+0.076716/+0.782263 ps，解锁态全块 DRC、天线为 0，SEC 11089/0。六门在原 tradeoff 口径下新增一条 SS 负 setup 端点，slack 从 +0.329958 ps 到 −0.214495 ps，两项为追加定向修复端点。[AES 残余 hold 优化](evidence/tcad_ibex_20261123/AES_RESIDUAL_HOLD_OPTIMIZATION.md)
+
 ## 2026-11-24 调度覆盖与 AES 路由修复验证
 
 - 显式启用的原因感知调度在三角相对 hold 拒收时延后拆分，并保留原联合门。在原冻结筛选池实跑，Ibex 与 GCD 各六次，覆盖到原 FAECO 错过的合格动作。Ibex 在含筛选 652.022 RAW s 达到 22.5216 µm²（0.015574%，SEC 13648/0），六次内回收 62.56 µm²。GCD 在 154.336 RAW s 达到 11.2608 µm²（0.234742%，SEC 262/0），也是六次内最好。两者首达端点三视图均无新增负 setup 端点，六次动作和物理端点均与各自原固定臂相同。原固定臂在不同实验负载下分别用时 562.523 和 146.249 RAW s。两条原 ASAP7 setup-only 轨迹用现版本只读回放，保留原拆分和 0.26244 的面积减量。新调度尚需独立设计实测。[调度报告](evidence/tcad_ibex_20261123/HOLD_AWARE_REPAIR_REPORT.md)

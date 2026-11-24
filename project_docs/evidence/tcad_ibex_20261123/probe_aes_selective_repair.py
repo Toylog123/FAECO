@@ -175,6 +175,44 @@ def audit_timing(evaluator, receipt, gate, noop):
     return failures
 
 
+def qualified_union(paths, matrix, control_v):
+    """Bind two accepted routes and reject overlap before launching DRT."""
+    actions = []
+    routed_nets = set()
+    neighbors = set()
+    bound_inputs = []
+    for path in paths:
+        path = path.resolve(strict=True)
+        inputs = path.with_name("inputs.json")
+        if read(inputs)["matrix"] != comparison.bind(matrix):
+            raise ValueError("union components must use the same frozen matrix")
+        accept, = read(path).values()
+        if accept["failures"] or accept["unlocked_drc"]["drc_markers"] or not accept.get("sec"):
+            raise ValueError("union requires a qualified, SEC-proven endpoint")
+        receipt_path = verify(accept["physical_receipt"])
+        receipt = read(receipt_path)
+        scope_path = receipt_path.with_name("routing_scope.json")
+        scope = read(scope_path)
+        audit_path = verify(accept["physical_route_preflight"])
+        audit = read(audit_path)
+        trial_nets = set(scope["expected_touched_nets"])
+        if trial_nets != set(audit["observed_touched_nets"]) or audit["failures"]:
+            raise ValueError("union component has an inconsistent allowed routing scope")
+        proof_path = verify(accept["sec"]["log"]).parent / "sec/receipt.json"
+        proof = read(proof_path)
+        if (not proof["passed"] or proof["proven"] <= 0 or proof["unproven"] != 0
+                or verify(proof["gold"]) != control_v or proof["gate"] != receipt["artifacts"]["v"]):
+            raise ValueError("union proof does not bind the frozen control and routed candidate")
+        verify(proof["gate"])
+        if set(actions).intersection(receipt["actions"]) or routed_nets & trial_nets:
+            raise ValueError("union components share edits or allowed route nets")
+        actions.extend(receipt["actions"])
+        routed_nets.update(trial_nets)
+        neighbors.update(scope["released_neighbors"])
+        bound_inputs.extend((path, inputs, receipt_path, scope_path, audit_path, proof_path))
+    return tuple(actions), routed_nets, neighbors, bound_inputs
+
+
 def main():
     p = ArgumentParser(description=__doc__)
     p.add_argument("matrix", type=Path)
@@ -185,6 +223,12 @@ def main():
                    help="run only the selected case, default is zero, 02, 05")
     p.add_argument("--release-neighbor", action="append", default=[],
                    help="add one existing data net to the clear-and-reroute set for a single nonzero case")
+    p.add_argument("--omit-instance", action="append", default=[],
+                   help="exclude a named original edit from a single nonzero case")
+    p.add_argument("--add-singleton-slot",
+                   help="append the one action from a specified screened/fixed matrix slot")
+    p.add_argument("--qualifying-union", type=Path, nargs=2,
+                   help="combine two disjoint qualified routes using their accepted routing scopes")
     ns = p.parse_args()
     source = ns.matrix.resolve(strict=True)
     out = ns.out.resolve()
@@ -212,7 +256,51 @@ def main():
         raise ValueError("unexpected frozen DEF header")
     baseline_nets = comparison.def_section(control["def"], "NETS")
     case_order = ns.case or ["zero", *CASES]
+    omitted = set(map(comparison.canonical_odb_name, ns.omit_instance))
+    donor_inputs = []
     released = set(ns.release_neighbor)
+    if ns.qualifying_union:
+        if (len(case_order) != 1 or case_order[0] == "zero" or omitted or ns.add_singleton_slot or released
+                or ns.mode != "fixed-untouched"):
+            raise ValueError("qualifying union is a single nonzero, all-untouched-fixed case")
+        selected = case_order[0]
+        case_actions[selected], touched[selected], released, donor_inputs = qualified_union(
+            ns.qualifying_union, source / "config.json", control["v"],
+        )
+        instances = {action.action_id: comparison.canonical_odb_name(action.instance) for action in pool}
+        if len({instances[key] for key in case_actions[selected]}) != len(case_actions[selected]):
+            raise ValueError("union contains overlapping same-instance edits")
+    if omitted or ns.add_singleton_slot is not None:
+        if len(case_order) != 1 or case_order[0] == "zero":
+            raise ValueError("edit the original batch of one nonzero case")
+        selected = case_order[0]
+        identities = {
+            action.action_id: comparison.canonical_odb_name(action.instance)
+            for action in pool
+        }
+        if not omitted < {identities[key] for key in case_actions[selected]}:
+            raise ValueError("omissions must leave at least one edit in the original batch")
+        case_actions[selected] = tuple(key for key in case_actions[selected] if identities[key] not in omitted)
+        if ns.add_singleton_slot is not None:
+            if not re.fullmatch(r"\d{2}", ns.add_singleton_slot):
+                raise ValueError("donor slot must have a two-digit matrix identifier")
+            raw_donor = source / f"screened/fixed/{ns.add_singleton_slot}.json"
+            donor = read(raw_donor)
+            donor_action, = donor["actions"]
+            if identities[donor_action] in {identities[key] for key in case_actions[selected]}:
+                raise ValueError("donor singleton must change a different instance")
+            donor_layout = Path(donor["physical_receipt"]).with_name("layout_changes.json")
+            donor_inputs.extend((raw_donor, Path(donor["physical_receipt"]), donor_layout))
+            case_actions[selected] += (donor_action,)
+            touched[selected].update(read(donor_layout)["touched_nets"])
+        remaining = {identities[key] for key in case_actions[selected]}
+        incident = {
+            net for net, entry in baseline_nets.items()
+            if remaining.intersection(re.findall(r"\( (\S+) \S+ \)", entry.partition(" + ")[0]))
+        }
+        if not incident or not incident <= touched[selected]:
+            raise ValueError("edit incidence disagrees with the audited matrix trials")
+        touched[selected] = incident
     if released:
         if len(case_order) != 1 or case_order[0] == "zero":
             raise ValueError("run one nonzero case to test a specific neighbor relaxation")
@@ -234,12 +322,15 @@ def main():
         "matrix_config": comparison.bind(source / "config.json"),
         "reference_view_receipt": comparison.bind(orig_control), "used_pool": comparison.bind(edits),
         "prior_trials": {str(path): comparison.bind(path)
-                         for path in (*prior.values(), *old_physical.values(), *old_layout.values())},
+                         for path in (*prior.values(), *old_physical.values(), *old_layout.values(), *donor_inputs)},
         "driver": comparison.bind(Path(__file__).resolve()), "mode": ns.mode,
         "threads": args.threads, "affinity": sorted(os.sched_getaffinity(0)),
         "stage_timeouts_seconds": {"route_drc_rcx": args.route_timeout, "sta_per_view": args.sta_timeout,
                                   "sec": args.sec_timeout},
-        "case_order": case_order, "actions": case_actions, "released_neighbors": sorted(released),
+        "case_order": case_order, "actions": case_actions, "omitted_instances": sorted(omitted),
+        "donor_singleton_slot": ns.add_singleton_slot,
+        "qualifying_union": [str(path) for path in ns.qualifying_union] if ns.qualifying_union else None,
+        "released_neighbors": sorted(released),
         "target_area_pct": target, "candidate_sec": "deferred until status-normalized full DRC",
     })
     results = {}

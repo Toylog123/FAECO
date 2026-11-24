@@ -1674,6 +1674,8 @@ Ibex 第三次 FAECO 已测物理端点面积减 17.5168，SS hold 与旧零编�
 
 显式启用的改进调度已在原 Ibex/GCD 筛选池各独立实跑六次，均弥补了原 FAECO 未覆盖的动作组，并复现各自原固定臂的验收端点、面积、时序和等价证明。两个旧样本上首达耗时由各自观察值报告，旧固定臂均用时更少；当前仍待测试新样本、预算和实际同负载比较，以判断触发策略何时有优势。[调度实跑](evidence/tcad_ibex_20261123/HOLD_AWARE_REPAIR_REPORT.md)
 
+后续四路筛选实测减少了相同探针前缀的组件时间，但原固定和修复调度的首达物理路径相同，筛选机制可由两方法共用。独立留出及采用优化配置的完整搜索比较仍为 open。[筛选报告](evidence/tcad_ibex_20261123/SCREEN_WORKERS_BENCHMARK.md)
+
 ## OI-099（2026-11-24，open）— AES 主留出原始起点的 SS hold 违例
 
 SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 ps/720 ps SDC 与 I/O 均匹配，SS hold WNS 为 −975.978 ps、TNS 为 −124464.094 ps，原起点资格状态为 `hold_infeasible`。后续需从冻结原生端点在原约束下实际修复、重布线和复提取，并重做三角绝对 hold、DRC 与 SEC，才可作为留出矩阵共同起点。[留出报告](evidence/tcad_holdout_20261123/REPORT.md)
@@ -1689,3 +1691,11 @@ AES 的 18 个冻结筛选候选均完成 DRT/RCX，setup、DRC、电气与绝�
 2026-11-24 新的同配方零编辑重布线改变了六条未触达网，SS 相对 hold 下降 0.676792 ps，绝对 SS hold 仍为 +54.618976 ps。更换相对参照的只读投影使 8/18 次评估通过其余物理和时序门，最大面积减量 0.009665%，六次面积减量为 33.7824 的三门评估均仍被拒。对其中两次的三个实际拒收视图做 12 次 ODB/SPEF 交叉 STA，确定这些 hold 变化由候选寄生复现，沿最差路径定位到发射或捕获的时钟到达变化。待检验减少未触达网变动、保护关键时钟寄生后，原正式联合门能否稳定保留回收，及在其他物理实现上的复现范围。[AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md)
 
 真保护零编辑保持原布线并精确复现三视图四个 WNS/TNS。按实测 DRC 标记分别放行两个非时钟邻网后，原固定第 2 次修复端点面积降低 33.7824（0.028996%），15,646 条保护网未变，恢复 ROUTED 的全块 DRC、天线均为 0，原三角 hold 和 tradeoff setup 门、SEC 11089/0 通过。该端点新增 SS 负 setup 端点，原 slack +0.329958 ps 降到 −0.228706 ps。第 5 次释放其两个邻网后同样通过 DRC，三视图相对 hold 仍退化。其他动作、跨设计效果和可自动确定的开放网范围仍为 open。[AES 保护路由报告](evidence/tcad_ibex_20261123/AES_SELECTIVE_DRT_REPAIR.md)
+
+第 5 次的剩余退化经三视图交叉 STA 归因于寄生变化。三选二全部因原相对 hold 门被拒。将一门替换成已测有发射侧补偿趋势的等面积降档后，原三视图联合门、解锁态全块 DRC、天线及 SEC 全过，回收 33.7824，无新增负 setup 端点。合并上轮另一个合格端点实际通过以上各门，回收 67.5648，SS 新过零端点仍来自前一动作组，slack 为 −0.214495 ps。扩大放行网和补偿动作的自动选择及独立设计实测继续 open。[AES 残余 hold 优化](evidence/tcad_ibex_20261123/AES_RESIDUAL_HOLD_OPTIMIZATION.md)
+
+## OI-101（2026-11-24，open）— 减少 pin access 次数改变 ODB 二进制身份
+
+在 GCD、Ibex 各自固定且原可接受的一个三门端点，删去嵌入导引情形的显式 `pin_access` 语句、保留 DRT 内部默认步骤，顺序交换均减少单次候选耗时。两种方式的 DEF、V、去日期 SPEF、三视图时序、DRC、实际改线和证明点相同。仅 B 的 ODB 字节不同，且不满足预登记的全对象一致门。需定位 ODB 内部变化并用更完整的下游重复评估检验，暂保留原搜索配方。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+后续读回的 AP 接入点几何多重集一致；将诊断副本中的 AP 与其引用清理后，同一设计各臂字节一致。GCD 仅保留显式单次的 C 与仅保留 DRT 内置单次的 B 产生字节相同的原始 ODB，均与原双次方式不同。差异已定位至 AP 辅助数据，原对象次序及中间 ODB 重入后的下游行为仍待检验，原生产配方尚未改变。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)

@@ -7,6 +7,7 @@ import pytest
 from compare_ibex import Endpoint, PhysicalAction, sha
 from run_screened_matrix import bind_screen_inputs, summarize_arm_times
 from run_setup_budget_sweep import BudgetGate, run_arm
+import screen_sky130_candidates as screening
 
 
 def test_screen_time_can_exclude_an_accepted_endpoint_from_equal_wall_window():
@@ -77,3 +78,20 @@ def test_hold_aware_arm_uses_view_rejection_to_choose_split(tmp_path, initial_fa
     assert [tuple(row["actions"]) for row in receipts] == expected_actions
     assert not result["trace"][0]["accepted"]
     assert result["trace"][0].get("split_deferred", False) == initial_failure.endswith(":hold_regression")
+
+
+@pytest.mark.parametrize("workers", [1, 2, 4, 8])
+def test_screen_workers_preserve_order_and_stop_at_exact_success(workers, monkeypatch):
+    monkeypatch.setattr(screening, "SCREEN_TARGET", 4)
+    monkeypatch.setattr(screening, "SHORTLIST_LIMIT", 8)
+    requests = []
+
+    def evaluate(action, label):
+        requests.append(action)
+        return {"action": action, "label": label, "failures": ["blocked"] if action in "bd" else []}
+
+    rows, passed = screening.run_ranked_screen(list("abcdefghi"), evaluate, workers)
+    assert [row["action"] for row in rows] == list("abcdef")
+    assert sorted(requests) == list("abcdef")
+    assert [row["label"] for row in rows] == [f"screen_{seq:02d}" for seq in range(1, 7)]
+    assert passed == list("acef")
