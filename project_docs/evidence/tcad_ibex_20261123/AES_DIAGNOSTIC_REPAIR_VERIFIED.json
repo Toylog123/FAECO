@@ -1,0 +1,524 @@
+{
+  "audit_source": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/verify_aes_diagnostic_repair.py",
+    "sha256": "9f61fc2441f028de52f44e2bbeb1b82527812c092c8b15849b15bd11a9865b24",
+    "bytes": 15547
+  },
+  "configuration": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/config.json",
+    "sha256": "74b711f7052a2a271efa581d05eae22f583c945639bca2a412f1dccae5a74e2a",
+    "bytes": 7084
+  },
+  "candidate": [
+    "\\_11178_=sky130_fd_sc_hd__xor2_2",
+    "\\_12777_=sky130_fd_sc_hd__xor2_2",
+    "\\_13281_=sky130_fd_sc_hd__o31ai_2",
+    "\\_20124_=sky130_fd_sc_hd__xor2_2",
+    "\\_20883_=sky130_fd_sc_hd__xor2_2",
+    "\\_21033_=sky130_fd_sc_hd__xor2_2"
+  ],
+  "reconstructed_hint": {
+    "actions": [
+      "\\_11178_=sky130_fd_sc_hd__xor2_2",
+      "\\_12777_=sky130_fd_sc_hd__xor2_2",
+      "\\_13281_=sky130_fd_sc_hd__o31ai_2",
+      "\\_20124_=sky130_fd_sc_hd__xor2_2",
+      "\\_20883_=sky130_fd_sc_hd__xor2_2",
+      "\\_21033_=sky130_fd_sc_hd__xor2_2"
+    ],
+    "incident_nets": [
+      "_01064_",
+      "_01559_",
+      "_01561_",
+      "_08056_",
+      "_08793_",
+      "_08942_",
+      "_09601_",
+      "net5210",
+      "net6622",
+      "net7845",
+      "net7874",
+      "net7882",
+      "net7890",
+      "net7963",
+      "net8009",
+      "net8125",
+      "net8138",
+      "net8151",
+      "net8173",
+      "net8203"
+    ],
+    "released_neighbors": [
+      "_08784_",
+      "net4840",
+      "net8148",
+      "net8407"
+    ],
+    "marker_evidence": [
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Short\n\tsrcs: inst:_21033_ net:net8148\n\tbbox = (80.1250, 178.9400) - (80.4150, 179.0800) on Layer met1",
+        "neighbors": [
+          "net8148"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Short\n\tsrcs: inst:_21033_ net:net8148\n\tbbox = (80.1250, 178.9400) - (81.3350, 179.0800) on Layer met1",
+        "neighbors": [
+          "net8148"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Short\n\tsrcs: inst:_21033_ net:net8148\n\tbbox = (81.0450, 178.9400) - (81.3350, 179.0800) on Layer met1",
+        "neighbors": [
+          "net8148"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (356.5850, 347.5800) - (356.8750, 347.7200) on Layer met1",
+        "neighbors": [
+          "net4840"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (356.5850, 347.5800) - (357.7950, 347.7200) on Layer met1",
+        "neighbors": [
+          "net4840"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Short\n\tsrcs: inst:_11178_ net:net4840\n\tbbox = (357.5050, 347.5800) - (357.7950, 347.7200) on Layer met1",
+        "neighbors": [
+          "net4840"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Metal Spacing\n\tsrcs: net:_08784_ net:net7882\n\tbbox = (199.7250, 34.2850) - (200.0150, 34.3800) on Layer met1",
+        "neighbors": [
+          "_08784_"
+        ]
+      },
+      {
+        "report": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_retry_triage_v3_cutoff_completion_v1/restored_checks/full_drc.rpt",
+        "marker": "violation type: Metal Spacing\n\tsrcs: net:net7963 net:net8407\n\tbbox = (240.2050, 306.2850) - (240.4950, 306.3800) on Layer met1",
+        "neighbors": [
+          "net8407"
+        ]
+      }
+    ],
+    "marker_count": 8,
+    "status": "guided"
+  },
+  "arms": {
+    "retry_1": {
+      "logical_admitted": 1,
+      "logical_finished": 1,
+      "completed_retries": 1,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 254.081140635,
+      "raw_stop": 476.241596874,
+      "stop_reason": "logical_cap_or_pool_exhausted",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_1/progress.json",
+        "sha256": "e42e2ab3097e3f528a3d9f2edcbb115826bf6583a1f46100bd3cddd750a570cc",
+        "bytes": 1295
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_1/subprocesses.json",
+        "sha256": "4a118a22d6ec29aea2ce1f70a09134591b30af2b7d588a9b4afe5551913dbc08",
+        "bytes": 7890
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "retry_1/01/retry",
+          "area": 116442.928,
+          "wns_ns": -0.38064307261720387,
+          "tns_ns": -6.591138745903891,
+          "hold_wns_ns": 0.5240073930323774,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_1/01/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 65.0624000000098,
+        "area_saved_pct": 0.05584372348766373,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 335.52325825099916,
+        "target_reached_in_window": true
+      },
+      "operation_counts": {
+        "route_tools": 2,
+        "unlocked_drc_tools": 2,
+        "sta_tools": 6,
+        "sec_tools": 1
+      },
+      "routing_scopes": {
+        "initial": {
+          "scope": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_1/01/initial/routing_scope.json",
+            "sha256": "196bbd01a772c96dda9ace06c606afab0ac9e4eef723710fedba699ba3e041fc",
+            "bytes": 241203
+          },
+          "released": []
+        },
+        "retry": {
+          "scope": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_1/01/retry/routing_scope.json",
+            "sha256": "6e7d840aa4e19d136b4b4ab0af8af2bd63ff0de3b052764c218048cbb5b07fbc",
+            "bytes": 241263
+          },
+          "released": [
+            "_08784_",
+            "net4840",
+            "net8148",
+            "net8407"
+          ]
+        }
+      },
+      "endpoint_identity": {
+        "receipt": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_1/01/retry/receipt.json",
+          "sha256": "ec0ec719c4742bb56c65ffe81fda95884829ad999085787908f9ecc0409431ab",
+          "bytes": 54967
+        },
+        "files": {
+          "odb": "ecb05625c0f036f8661ce717978a5631757e6644f6fb7874f3f71d41a877112b",
+          "def": "033971601d4f3c3b94544464f100e23c518be76a777fee304911544233ea9dbd",
+          "v": "b7b69002d2cf3d096b778d8fff37197b9ce0f9321d0fa591fababb06b908216a"
+        },
+        "spef_except_date_sha256": "3b547b50aa1085582a0f9607100188dd0311dad51bfd879d831276d87efec29c",
+        "views_sha256": "e8abe743344966765e1bba0aa8bead2ebe4f4e8a033b127df2c162b3ba22719e",
+        "views": {
+          "FF": {
+            "setup_wns_ps": 678.1724071203143,
+            "setup_tns_ps": 0.0,
+            "hold_wns_ps": 336.33296148138925,
+            "hold_tns_ps": 0.0
+          },
+          "TT": {
+            "setup_wns_ps": -380.64307261720387,
+            "setup_tns_ps": -6591.138745903891,
+            "hold_wns_ps": 524.0073930323774,
+            "hold_tns_ps": 0.0
+          },
+          "SS": {
+            "setup_wns_ps": -13647.959207219174,
+            "setup_tns_ps": -2705107.362999115,
+            "hold_wns_ps": 56.23279619726418,
+            "hold_tns_ps": 0.0
+          }
+        }
+      }
+    },
+    "guided_1": {
+      "logical_admitted": 1,
+      "logical_finished": 1,
+      "completed_retries": 0,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 476.24317975,
+      "raw_stop": 594.496626401,
+      "stop_reason": "logical_cap_or_pool_exhausted",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_1/progress.json",
+        "sha256": "6a612aac8f45cd1f97b706df687b1b18ed42fe4c42a3560a48d020b88c917c8d",
+        "bytes": 1300
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_1/subprocesses.json",
+        "sha256": "55de8d36420d9bb51ae287313b50f450379838dea304611e275eca7312a9aad9",
+        "bytes": 4411
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "guided_1/01/initial",
+          "area": 116442.928,
+          "wns_ns": -0.38064307261720387,
+          "tns_ns": -6.591138745903891,
+          "hold_wns_ns": 0.5240073930323774,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_1/01/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 65.0624000000098,
+        "area_saved_pct": 0.05584372348766373,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 231.6161289849992,
+        "target_reached_in_window": true
+      },
+      "operation_counts": {
+        "route_tools": 1,
+        "unlocked_drc_tools": 1,
+        "sta_tools": 3,
+        "sec_tools": 1
+      },
+      "routing_scopes": {
+        "initial": {
+          "scope": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_1/01/initial/routing_scope.json",
+            "sha256": "03ef61af752a0d4d590286546c6ffebf6ab026f2f4edf6fcf181fd6000e21cfd",
+            "bytes": 241266
+          },
+          "released": [
+            "_08784_",
+            "net4840",
+            "net8148",
+            "net8407"
+          ]
+        }
+      },
+      "endpoint_identity": {
+        "receipt": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_1/01/initial/receipt.json",
+          "sha256": "c27c51ecca62e06979f1c15991626bcf55fcb0ec6754bd4be994fd9aabe9bab1",
+          "bytes": 55000
+        },
+        "files": {
+          "odb": "ecb05625c0f036f8661ce717978a5631757e6644f6fb7874f3f71d41a877112b",
+          "def": "033971601d4f3c3b94544464f100e23c518be76a777fee304911544233ea9dbd",
+          "v": "b7b69002d2cf3d096b778d8fff37197b9ce0f9321d0fa591fababb06b908216a"
+        },
+        "spef_except_date_sha256": "3b547b50aa1085582a0f9607100188dd0311dad51bfd879d831276d87efec29c",
+        "views_sha256": "e8abe743344966765e1bba0aa8bead2ebe4f4e8a033b127df2c162b3ba22719e",
+        "views": {
+          "FF": {
+            "setup_wns_ps": 678.1724071203143,
+            "setup_tns_ps": 0.0,
+            "hold_wns_ps": 336.33296148138925,
+            "hold_tns_ps": 0.0
+          },
+          "TT": {
+            "setup_wns_ps": -380.64307261720387,
+            "setup_tns_ps": -6591.138745903891,
+            "hold_wns_ps": 524.0073930323774,
+            "hold_tns_ps": 0.0
+          },
+          "SS": {
+            "setup_wns_ps": -13647.959207219174,
+            "setup_tns_ps": -2705107.362999115,
+            "hold_wns_ps": 56.23279619726418,
+            "hold_tns_ps": 0.0
+          }
+        }
+      }
+    },
+    "guided_2": {
+      "logical_admitted": 1,
+      "logical_finished": 1,
+      "completed_retries": 0,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 594.498964688,
+      "raw_stop": 712.259495581,
+      "stop_reason": "logical_cap_or_pool_exhausted",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_2/progress.json",
+        "sha256": "b9c042d3df16ba61ef527ddb74f7a566d7c5d6b1b5474ed3f021e1beb09dcda8",
+        "bytes": 1303
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_2/subprocesses.json",
+        "sha256": "506e5aa08bb18564f5e8ffed82a06b053ec547f627e0e6b8230eb991ba841b19",
+        "bytes": 4417
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "guided_2/01/initial",
+          "area": 116442.928,
+          "wns_ns": -0.38064307261720387,
+          "tns_ns": -6.591138745903891,
+          "hold_wns_ns": 0.5240073930323774,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_2/01/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 65.0624000000098,
+        "area_saved_pct": 0.05584372348766373,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 231.12326360299915,
+        "target_reached_in_window": true
+      },
+      "operation_counts": {
+        "route_tools": 1,
+        "unlocked_drc_tools": 1,
+        "sta_tools": 3,
+        "sec_tools": 1
+      },
+      "routing_scopes": {
+        "initial": {
+          "scope": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_2/01/initial/routing_scope.json",
+            "sha256": "2dcb6ade6f466f956e7479774e732d2253978d4b5e7600805fed1e6d6ce3333c",
+            "bytes": 241266
+          },
+          "released": [
+            "_08784_",
+            "net4840",
+            "net8148",
+            "net8407"
+          ]
+        }
+      },
+      "endpoint_identity": {
+        "receipt": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/guided_2/01/initial/receipt.json",
+          "sha256": "b0f933b50aa87eb897859b8ce770401be9504dc8dcd39b72762fefe6bc014c98",
+          "bytes": 55006
+        },
+        "files": {
+          "odb": "ecb05625c0f036f8661ce717978a5631757e6644f6fb7874f3f71d41a877112b",
+          "def": "033971601d4f3c3b94544464f100e23c518be76a777fee304911544233ea9dbd",
+          "v": "b7b69002d2cf3d096b778d8fff37197b9ce0f9321d0fa591fababb06b908216a"
+        },
+        "spef_except_date_sha256": "3b547b50aa1085582a0f9607100188dd0311dad51bfd879d831276d87efec29c",
+        "views_sha256": "e8abe743344966765e1bba0aa8bead2ebe4f4e8a033b127df2c162b3ba22719e",
+        "views": {
+          "FF": {
+            "setup_wns_ps": 678.1724071203143,
+            "setup_tns_ps": 0.0,
+            "hold_wns_ps": 336.33296148138925,
+            "hold_tns_ps": 0.0
+          },
+          "TT": {
+            "setup_wns_ps": -380.64307261720387,
+            "setup_tns_ps": -6591.138745903891,
+            "hold_wns_ps": 524.0073930323774,
+            "hold_tns_ps": 0.0
+          },
+          "SS": {
+            "setup_wns_ps": -13647.959207219174,
+            "setup_tns_ps": -2705107.362999115,
+            "hold_wns_ps": 56.23279619726418,
+            "hold_tns_ps": 0.0
+          }
+        }
+      }
+    },
+    "retry_2": {
+      "logical_admitted": 1,
+      "logical_finished": 1,
+      "completed_retries": 1,
+      "triaged_retries": 0,
+      "first_relative_hold_defer": null,
+      "priority_preparation": null,
+      "raw_start": 712.260879112,
+      "raw_stop": 932.064258715,
+      "stop_reason": "logical_cap_or_pool_exhausted",
+      "source_progress": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_2/progress.json",
+        "sha256": "80017d3a0dbf7ee9b485d4a6d92b9605ad5bf68f66a9cdfa5bd1646ac1e95040",
+        "bytes": 1294
+      },
+      "source_subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_2/subprocesses.json",
+        "sha256": "ac87885779167afcc820d4502ccefef38bcc90e3b983de3f19b51df9f21fcafa",
+        "bytes": 7888
+      },
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "retry_2/01/retry",
+          "area": 116442.928,
+          "wns_ns": -0.38064307261720387,
+          "tns_ns": -6.591138745903891,
+          "hold_wns_ns": 0.5240073930323774,
+          "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_2/01/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 65.0624000000098,
+        "area_saved_pct": 0.05584372348766373,
+        "target_area_pct": 0.01,
+        "target_area_saved": 11.65079904,
+        "time_to_target_seconds": 333.1661681889992,
+        "target_reached_in_window": true
+      },
+      "operation_counts": {
+        "route_tools": 2,
+        "unlocked_drc_tools": 2,
+        "sta_tools": 6,
+        "sec_tools": 1
+      },
+      "routing_scopes": {
+        "initial": {
+          "scope": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_2/01/initial/routing_scope.json",
+            "sha256": "d4fa3c8238cfbb3e3bb23488c46cea4cadb79c4402513adb8757dd4133b2387f",
+            "bytes": 241203
+          },
+          "released": []
+        },
+        "retry": {
+          "scope": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_2/01/retry/routing_scope.json",
+            "sha256": "0bd024c094ba087087fe071cc4f212ad49e447a847cd6e5f61886e7af2dd5aed",
+            "bytes": 241263
+          },
+          "released": [
+            "_08784_",
+            "net4840",
+            "net8148",
+            "net8407"
+          ]
+        }
+      },
+      "endpoint_identity": {
+        "receipt": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/aes_diagnostic_repair_abba_20261124_v1/retry_2/01/retry/receipt.json",
+          "sha256": "d3a6ea30f0555030109648fac367fedbff6917f4efec57e81512428ffab5ac1e",
+          "bytes": 54967
+        },
+        "files": {
+          "odb": "ecb05625c0f036f8661ce717978a5631757e6644f6fb7874f3f71d41a877112b",
+          "def": "033971601d4f3c3b94544464f100e23c518be76a777fee304911544233ea9dbd",
+          "v": "b7b69002d2cf3d096b778d8fff37197b9ce0f9321d0fa591fababb06b908216a"
+        },
+        "spef_except_date_sha256": "3b547b50aa1085582a0f9607100188dd0311dad51bfd879d831276d87efec29c",
+        "views_sha256": "e8abe743344966765e1bba0aa8bead2ebe4f4e8a033b127df2c162b3ba22719e",
+        "views": {
+          "FF": {
+            "setup_wns_ps": 678.1724071203143,
+            "setup_tns_ps": 0.0,
+            "hold_wns_ps": 336.33296148138925,
+            "hold_tns_ps": 0.0
+          },
+          "TT": {
+            "setup_wns_ps": -380.64307261720387,
+            "setup_tns_ps": -6591.138745903891,
+            "hold_wns_ps": 524.0073930323774,
+            "hold_tns_ps": 0.0
+          },
+          "SS": {
+            "setup_wns_ps": -13647.959207219174,
+            "setup_tns_ps": -2705107.362999115,
+            "hold_wns_ps": 56.23279619726418,
+            "hold_tns_ps": 0.0
+          }
+        }
+      }
+    }
+  }
+}

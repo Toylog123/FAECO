@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 已有 DRC 诊断输入的同六门 ECO 组件对照
+
+- 新入口用动作请求、物理收据及完整的独立全块 DRC 证据绑定原矩阵、SDC 和候选几何，由可归属的标记提取非时钟信号邻网。缺少任一标记的可操作邻网时回到常规初试及标记重试；真正新增标记仍可触发原有的一次重试。驱动根据输入计算动作和邻网，当前物理调用由已验证的 AES 后端执行。
+- 冻结同一六门、同机同核按常规→预放行→预放行→常规实跑，均保留 720 RAW s、0.01% 目标、原 I/O、三角时序及物理／SEC 门。含相同筛选，正序和反序首达分别 335.523→231.616 RAW s、333.166→231.123 RAW s（−30.97%、−30.63%）。每组从两轮 DRT/RCX、三角 STA 和独立全块 DRC 降为一轮。四臂均回收相同 65.0624 µm²（0.055844%），ODB／DEF／V、去日期 SPEF、三角结果相同，独立 DRC 与天线为 0，SEC 11089/0，TT 和 SS 各新增一个负 setup 端点，原预算通过。
+- 提前放行的证据来自已有同候选失败布线与独立检查，两次实际读取和映射耗 0.067 RAW s 左右，均进入计时。若开始时无诊断，须另计产生该布线和标记的代价。同输入四臂证明组件重复验证支出可减少，跨候选自动获取诊断与跨电路物理效果仍待检验。[组件对照报告](evidence/tcad_ibex_20261123/AES_DIAGNOSTIC_REPAIR_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/AES_DIAGNOSTIC_REPAIR_VERIFIED.json)
+
 ## 2026-11-24 AES 真实 DRC 标记定向修复与同硬窗对照
 
 - 上轮 v3 比 v2 固定首达多 76.952 RAW s。首达前多做一个失败中间批的初始物理验证；分项差异 DRT/RCX +51.921 s、三角 STA +8.969 s、独立全块 DRC +13.016 s。次序、阶段数和原收据可独立核对，秒数来自两次实际运行。
