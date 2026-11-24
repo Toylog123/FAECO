@@ -6910,3 +6910,126 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - `scratch/tcad_ibex_20261123/aes_cold_online_20261124.tar.gz` 收录三个早期检查对照、一体化前置诊断、正式新鲜三臂及独立验收、第五次原产物窗外补审。归档 457,281,993 字节、766 个成员、686 个普通文件逐项和 WSL 原件 SHA-256 一致。Windows 独立复核包摘要 `580541950ca6d1dd970e5e32579219c258ac26fd208881be02428a7d2d1c8fc1`，仓库核验 JSON 字节 SHA-256 `0dbe08db65c62b6815d1a850a682648414dc2d17355ee05ae750ae29e02deff7` 与原审核相同。核心 115 项（13.25 s）、AES 专项 18 项、3 个 Python 语法和 5 个报告相对链接通过。记录脚本退出 0，提示四份项目已归档停更文件。[三臂证据报告](evidence/tcad_ibex_20261123/AES_COLD_ONLINE_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/AES_COLD_ONLINE_VERIFIED.json)
 - 最终保留在线诊断和调度两项各自的对照。固定同派发在付诊断费后首达早 71.140202 RAW s，最优 33.7824 µm² 持平；同后端 FAECO 首达较迟，窗内合格为 67.5648 µm²，无新增负 setup。九门 98.8448 µm² 只作为独立窗外合格端点。后续未决为跨电路复现与在同窗完成更大端点的总成本。[实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-aes-cold-online-eco-v1)
+
+## LOG-20261124-169｜后布线定向面积回收长期实验路线
+
+- 形成 6 周主计划和 2 周缓冲。近期先补 AES 调度×物理后端对照并复跑计时，再在开发集冻结调度与验收开销优化，随后进行独立设计留出、时序预算敏感性与稿件证据核对。当前数值沿用已验收原件，此条为计划记录。[实验路线](planning/TCAD_EXPERIMENT_ROADMAP_20261124.md)
+
+## LOG-20261124-170｜预登记 AES 调度与在线物理诊断 2×2 正反序新跑
+
+- 从 `18a34c3c` 补齐两个因素的四个组合：固定派发／FAECO 派发，各配旧保护物理后端／冷启动实时 DRC 诊断后端。两个 FAECO 臂用完全相同已有触达电容公式，只在首次真实相对 hold 导致拆分延后时重排未访问后缀一次；两个固定臂用共同固定派发规则。两个后端分别保持当次实际 marker 重试、当场每候选前置诊断加有据后备，历史候选专用报告、候选物理/验收和 SEC 均不缓存。本轮与上一轮三臂是不同新进程、新物理运行。
+- 四个组合按一正一反两种顺序各新鲜实跑一次，设计内 CPU 0–5 串行，OpenROAD 四线程，在线诊断单线程。共用同冻原、原 I/O／SDC、筛选池与实测筛选费 113.363032440 RAW s，各臂 720 RAW s 硬窗、最多 6 个逻辑请求、0.01% 目标、原三角 setup／hold、电气、恢复 ROUTED 全块 DRC／天线／非空 SEC。比较两因素各自的真实首达、窗内最好验收、物理调用与时序变化；交换顺序用于检查壁钟变化，科学设计样本仍是 AES 一例。留出设计仅作只读资格预检规划，另行登记后再实际执行。[实验路线](planning/TCAD_EXPERIMENT_ROADMAP_20261124.md)
+
+## LOG-20261124-171｜留出设计原配方只读预检查
+
+- WSL ORFS HEAD `da8f092a02a8e75658cc3100691aabff05f35629`。路线列出的 SKY130HD `jpeg`／`microwatt` 及 ASAP7 `ethmac`／`uart`，以及四个替补，均有本机原 `config.mk` 和 `constraint.sdc`。源中 JPEG、Microwatt 主周期为 5、15 ns；Microwatt 声明逐端口的原 I/O 延时。ASAP7 UART 源周期 270 ps；Ethmac 有 1,000／300／300 ps 三个实际时钟及各自 I/O 虚拟时钟，需在资格预检查清多时钟 WNS/TNS 包络的定义与原 SDC 装载，而后冻结该设计执行规约。只读原配方，未打开该批设计的方法输出，未启动 EDA，尚未认定 CONTROL 资格。[留出名单与门](planning/TCAD_EXPERIMENT_ROADMAP_20261124.md)
+
+## LOG-20261124-172｜八个新鲜矩阵单元实际按正反序启动
+
+- `aes_factorial_20261124_v1` 19:07:25（UTC+8）实际启动，外层 PID 435、驱动 PID 437、外限 5,150 s、CPU 0–5。首个四线程正式路由 Tcl 于 19:07:33.841 发出、阶段最大 240 s，八个单元都在同一驱动下串行。正序 `fixed_legacy`→`fixed_online`→`faeco_legacy`→`faeco_online`，随后完全逆序。运行期间避免其它新 EDA 与本计时重叠，留出工作只读。
+- `factorial_protocol.json` SHA-256 `cc4d521ac900c001b72f285f53c0728ef04043cfde79e1dd86ddfebcdc56a1b0`，首单元配置 `38f37f0cddf0dd7856e71a248ec7a1c4228e494e0a61f77b0e92c758698a0267`，生产驱动 `9ffbb99145edff395f5c7b700fc21f31f0d04f99769fc8aea9d78d1d6d7c5376`，起点预检迁移 `8c0ce0a97bcfedc6246968e927f1ea563b434c2fb88de52eeeabf3ec3a78c774`。旧三臂模式缺 FAECO＋旧后端的回归按预期失败，新 WSL AES 专项 19 项通过。[矩阵驱动](evidence/tcad_ibex_20261123/run_aes_factorial.py)
+
+## LOG-20261124-173｜正序固定常规实际到达共同目标
+
+- `forward/fixed_legacy` 第 1 次含筛选 224.530626 RAW s 仍仅 SS 相对 hold 拒收。第 2 次排名 4–6 的新鲜初评独立 DRC 4，实际 marker 重试后独立 DRC 0、原三角时序／电气／天线及新 SEC 11089/0，回收 33.7824 µm²，含筛选首达 448.639061 RAW s。重试物理 SHA-256 `a9b3a2d4d1437995b0cd3e5ffafa915b1df2c4fb6f1da82634dbf534f23bd1b6`、新 SEC `de8c18e1fb2bc0ee0d40131d3dfd416db9c08f2431935bbe98ab6dd7219a7792`。第 3 次已发，正序首单元仍在窗口运行。
+
+## LOG-20261124-174｜正序固定常规收束，固定在线开始
+
+- 第 3 次在 656.661437 RAW s 完成，仍因 FF/TT 相对 hold 拒收。第 4 次 DRT 被最后 63.274601 s 有效硬窗裁剪，实际进程 60.139306 s 终止，未开展该组三角 STA。首单元 4 派发／3 完成、6 DRT 开始、15 STA、5 独立 DRC、1 SEC，合格最大 33.7824 µm²。汇总 SHA-256 `7088e0f210d0c4a67bd19ab3397f4a98fb1eee3f3a13d7e2aec010b5a1a59115`。
+- `forward/fixed_online` 配置 SHA-256 `bc32aa72088edd261efd3d3151145aa81747c9cafce4680374a590dff0b198f6`。首组诊断实测 14.881522 RAW s、0 marker，无放行，计入后继续正式 DRT。诊断收据 `a58428b8893c14ca7d99511ed8802a7482da198f631072562870a7c5bf86e70f`。
+
+## LOG-20261124-175｜正序固定在线复现更快的同物理首达
+
+- 正序固定在线第 2 次一次完整物理与新 SEC 11089/0 回收 33.7824 µm²，含筛选首达 364.633179 RAW s；固定常规同排名 4–6 首达 448.639061 s，实际少 84.005882 s。两次在线诊断 29.362355 RAW s 已计，合格 ODB／DEF／网表与同轮固定常规重试逐字相同。物理 SHA-256 `326ce541ca33001bcc847497a52a55e443a0062df2b2cb61f119b5410fe7d20c`、候选 SEC `e2510f2108cc623594de12da83f57a7ac1d7e634a4a9f1f6d54d770d7578197b`。第 3 次已派发。
+
+## LOG-20261124-176｜中文稿增补已验收冷启动证据与相关工作
+
+- 中文 v3 草稿补充已完成三臂冷启动及窗内外实际端点，明确触达电容后缀重排、相对 hold 延后和二分机制、AES 3.6 ns 原周期及逐角 1% 预算，并与旧 ASAP7 Ibex 的 10 ps 配方及原串行同端点结果分开。根据原作者论文补充 Sizer、DAGSizer，更新摘要、方法、实验与讨论。八个矩阵单元仍实跑，此处继续使用已验收证据。稿件编译及逐页复核另以交付结果记录。[中文稿变更记录](../paper/zh/CHANGE_LOG.md)
+
+## LOG-20261124-177｜正序固定在线收束，缺格 FAECO 常规实际起跑
+
+- 正序固定在线实派 6、完成 5，5 DRT／15 STA／5 独立 DRC／1 SEC。除首批 SS 拒、第二批合格，第 3–5 组均 FF／TT 相对 hold 拒。前置完整标记数 0／4／10／4／8，计 71.553828 RAW s；第 6 个预检子进程获 1.314242 s 后被硬窗截停，未开始正式 DRT。窗内回收仍 33.7824 µm²，`summary.json` SHA-256 `5741461474a3c9fea0d87658e4cc208928a67ee4af51f4c848ff96b91ca08b68`。
+- `forward/faeco_legacy` 配置 SHA-256 `de202ea44f5d10e70af76030a778f0beeccedc684f3091d1dc16348561dd0b01`，FAECO 触达电容重排和原相对 hold 反馈保留，`diagnostic_methods` 空。已派原首批，计划继续现场标记重试与同门验收。
+- 前两臂独立核验退出 0，`independent_verification_prefix_2.json` SHA-256 `86873fd13490945a994cf7666f750143f07416f903c2ab0c7dc74253fc4b8dd2`。首达动作、面积、ODB／DEF／网表／去日期 SPEF、完整时序皆一致，实际完整重试 2→0；在线臂另按计划支付六次诊断开始（第六次截停）。
+
+## LOG-20261124-178｜正序 FAECO 常规后端第三次通过共同目标
+
+- 关闭在线诊断但保持同 FAECO 调度，实际前四次派发的原排名为 1–3、9/10/15、6/13/16 和累计 6/7/11/13/14/16。计实际冻原触达电容准备 0.606531 RAW s，第 1 次 SS 相对 hold 拒，第 2 次现场 DRC 重试后 FF/TT 相对 hold 拒。第 3 次同样先初试再按当前 DRC 重试，独立 DRC／天线 0、三角原门、SEC 11089/0，计费 641.813831 RAW s 回收 33.7824 µm²，SS 新负 setup 1。候选物理 SHA-256 `6488f07dc2b4b395f016a7570e80342c5a1f9513926c79592ecd1eae976848cf`、SEC `1456aeba171d98376e6aebe7aaa0e414c47b98f438513d5302ff31dcb9b26099`。第 4 次进入窗口余量，实际验收另查。
+
+## LOG-20261124-179｜正序 FAECO 常规在第四组布线截停
+
+- 正序 FAECO 常规派发 4、完成 3，6 DRT 开始、15 STA、5 独立 DRC、1 SEC。第 4 组初次 DRT 有效墙钟 78.116372 s，实际进程 74.074382 s 被截停，未到该组三角评估。窗内最后可接受保留第三次 33.7824 µm²。汇总 SHA-256 `7e836295b49d6129b061889caa569f07e5628f991523d044f92f58eef9b1bc2e`。
+- 下一单元同 FAECO 调度配在线后端，实际配置 SHA-256 `b890d2c14fba17ea354a429203cf935f33cda7103e10f65faeaf2507405f77b9`。已启动前置首批，0 marker，计 14.322271 RAW s；随后原第一次正式布线继续。
+- 正序前三单元独立核验退出 0，`independent_verification_prefix_3.json` SHA-256 `8955c833255a0bc5ca9b96d3a0d80d388cc43890541e4fb9e49f4aacf0a719fc`。同常规后端看，不同调度的同目标面积相同、实际动作和物理不同，FAECO 在本次顺序下晚 193.174770 RAW s，两臂各 2 次完整重试、6 DRT／5 独立 DRC／15 STA／1 SEC。
+
+## LOG-20261124-180｜按原论文和物理记录修订中文稿表述
+
+- 修正任务图并行、PCR 局部布局后重映射和 E-Layout 引用及适用阶段。s953 的同预算正式接受仍为两方法同样回收 16.2656 µm²；束搜索实测的二门虽将 setup WNS 损失从单门 23.57 ps 降至组合 2.96 ps，但其 30.03 µm² 候选因相对 hold WNS 下降 1.09 ps 拒收。正文按已记录的不同端点和验收结果叙述。[历史 s953 物理报告](evidence/postroute_recovery_20261120/REPORT.md) · [中文稿变更记录](../paper/zh/CHANGE_LOG.md)
+
+## LOG-20261124-181｜正序 FAECO 在线第三次复现同物理首达
+
+- 同 FAECO 派发，正序常规→在线首达 641.813831→483.860280 RAW s（少 157.953551 s，24.61%），同为第 3 次、原排名 6/13/16 和 33.7824 µm²。在线先前三次诊断共 42.634696 RAW s 均已计。两合格 ODB／DEF／网表、去日期 SPEF、完整三角与负 setup 计数相同。在线端点实际物理 SHA-256 `16b13830bec3ea66b55d5643b2d3fdf4b7e526b74484bda7492aacb107c58177`、新 SEC 11089/0 算据 `33efebe2a5b056c972cfbf7eb3537c4cd353f761b1b0a52cbbc3f863a2a5f79f`。在线同样第 4 次派发六门，真实是否全门通过待收据。
+
+## LOG-20261124-182｜正序四组合完成与独立核验，反序已起跑
+
+- 正序 FAECO 在线第 4 次在 619.308802 RAW s 通过，回收 67.5648 µm²（0.057992%），三角无新增负 setup，独立 DRC／天线 0、新候选 SEC 11089/0。同后端固定相比，首达实际晚 119.227101 s，窗内多 33.7824 µm²。六门物理 SHA-256 `6fc51fc2e399f70b3ed5e1fc520f079d69fe879a6d03f84a5d3123f7828078f2`、SEC `99e64e565489e245c9986047971af6cc0b3dadd6d807371f001ccde32f928e71`。第 5 次实际 SS STA 被最后 0.214681 RAW s 有效墙钟截停，不能使用之前其它运行的已知九门结果。该臂 5 派发／4 完成、5 DRT、15 STA 开始、4 独立 DRC、2 SEC、5 诊断，窗口最大保留六门；汇总 `cfc092f1d1d4a19566b3c9abb1f237c5701a4b43cc1b9bf6fd39b0467a87b18d`。
+- 正序四组合独立核验退出 0，`independent_verification_prefix_4.json` SHA-256 `2161d1e7ea29d4df84babbe49c2de39a2cd3636abb5396282109f1f4a1144e8f`。反序约 19:48（UTC+8）从全新的 `reverse/faeco_online` 开始，配置 SHA-256 `258085a4811462f8517e58afb9f9646235d613c7f0304bc59354a08fe74cbd97`。保留原独立窗口，不用正序候选结果缓存。
+- 正序在线九门的 DRT、FF／TT STA 完成，SS STA 实际 0.201457 RAW s 后被窗截停，独立 DRC／SEC 未发。上一轮三臂实验中的九门已完成三角、在独立 DRC 处截停，且另有窗外补审收据。两个运行的完成时序分别保留。
+
+## LOG-20261124-183｜反序 FAECO 在线复现窗内同一合格六门
+
+- 反序在线 FAECO 第 3 次计费 483.866765 RAW s 首达 33.7824 µm²，第 4 次计费 620.070334 RAW s 回收 67.5648 µm²，原 setup／hold、独立全块 DRC／天线及新 SEC 11089/0 全过，三个视图无新增负 setup。独立实查与正序第 4 次的 ODB／DEF／网表、去日期 SPEF 与完整三角相同。反序六门物理 SHA-256 `6850557a2603cf59a16133494ad3bd89dc32b48a207f486d7dce7935cebb81c7`、SEC `1ee110ca4cd9ec19e47f9793232e43177aa1c7306b7cfc6784d4b4fa82a19862`。两顺序同六门检查点相差约 0.762 s，精确秒差作为本机观测。第 5 次已开始，窗口最终保留需由汇总核对。
+- 本臂终态 5 派发／4 完成，5 诊断、5 DRT、4 独立 DRC、14 STA 启动、2 SEC；反序第 5 次在 TT STA 被有效 2.991800 RAW s 硬窗截停（实际 2.842291 s），SS、独立 DRC、SEC 未发。反序在线汇总 `bef2fe7bdf5f4552e8dcb7daa0e9e8da0a7566ab9eafbc51e8ad92a160670822`，`independent_verification_prefix_5.json` 退出 0、SHA-256 `a41636800de39f8a383c2c453e3fed8a4fa2f97da96c6e553ba8b3ae64320117`。反序 FAECO 常规现开始，配置 `622b605b5a852de06e9977a5e5eac095b8a280b55b6705a67f29b55f49fd8b02`。
+
+## LOG-20261124-184｜预登记 AES 计时结束后制备原约束 JPEG 冻结起点
+
+- 完成八个 AES 计时窗后，串行启动 SKY130HD `jpeg` 原生 ORFS，顶层 `jpeg_encoder`，源实际和虚拟 I/O 时钟周期 5 ns、延时各 1 ns、源时钟延迟 1.175 ns。固定原配方、四线程、CPU 6–11，native producer 上限 3,600 s、资格读取 420 s，输出 `/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/sky130hd/jpeg`。入口对原 SDC、配置、技术及工具字节绑定。先验证原 SDC／DRT／RCX／三角实际资格，hold、DRC、电气、天线及非空证明分别留收据，必要项完成才冻结共同 CONTROL；不筛选候选或发出策略结果。这一记录为条件计划，尚未启动。[JPEG 原生起点入口](evidence/tcad_holdout_20261123/prepare_jpeg_control.sh)
+
+## LOG-20261124-185｜反序 FAECO 常规再次在第 4 次 DRT 时触及硬窗
+
+- 反序 FAECO 常规第 3 次后备重试和新 SEC 11089/0，含筛选首达 648.246971 RAW s，回收 33.7824 µm²。在线同调度首达 483.866765，相关首达端点继续按独立物理链核验，实测差 164.380206 s。常规第 4 次 DRT 仅剩 71.684032 RAW s 有效限时而截停，窗内最大仍 33.7824 µm²；4 派发／3 完成，6 DRT、15 STA、5 独立 DRC、1 SEC。反序常规汇总 `f4bc3e81201d3175e58b881ca597b1b445cd0af0ddfd2c4f7abb84d1a4e5e624`，首达物理 `7c21906d6c8714167a48085ca57e5e57dfa38f91b7f51de073d2bb2c33b9c162`、新 SEC `7c982d4665614e430eeec42146b30a22e610ccbb42270e17e26035c3a30eb696`。反序固定在线实际启动，配置 `f0d732a77508403ee5cdaf7e55fa1652dd3985c959a108bf2c448f4e0b546bc0`。
+- 独立核验截至六单元退出 0，`independent_verification_prefix_6.json` SHA-256 `aec6248e606c160be6fec3d4e88960d01a9c429abd497f7784a25c9228085950`。确认反序常规及在线在 FAECO 同调度下的首达是同动作和同物理；反序在线在窗内再获得 33.7824 µm²。反序常规与正序常规的同物理首达观测差 +6.433140 s。
+- JPEG 工具只读审核发现，所复用的 `holdout_tools.py` 顶层白名单当前只有 `aes_cipher_top` 和 `gcd`，调用 JPEG 原约束资格前需加入 `jpeg_encoder`；待 AES 八单元及源绑定独立检查完成后再改，避免运行期间改变本次冻结源码。未运行 JPEG 工具或改变资格。
+
+## LOG-20261124-186｜反序固定在线复现相同首达物理端点
+
+- 反序固定在线第 1 次实时诊断 0 marker、第 2 次 4 marker，两次开销合计 30.751658 RAW s。第 2 次初次完整验收后，含筛选首达 370.875315 RAW s，回收 33.7824 µm²，SEC 11089/0。其 ODB／DEF／网表和完整逐角与正序固定在线一致，首达较正序在线观测晚 6.242136 s。实际物理 SHA-256 `a1952f35487b83cb6c3b07cbf3bf532e979713f3aa760e3141c63a6d3ea557ff`、SEC `044f8ada5added79fe353395981bd796255ce3db28144d9948d0aedb647b88a3`，其余窗内请求继续。
+
+## LOG-20261124-187｜反序固定在线硬窗收束，最后固定常规开始
+
+- 在线固定第 3／4 次于 495.660924／616.678186 RAW s 完成，均 FF／TT 相对 hold 拒。第 5 次实际 DRT 与三角 STA 完成，恢复 ROUTED 独立 DRC 获 0.992095 RAW s 后截停（进程记录 1.008927 s 含终止），无第五次完整验收或候选 SEC。该臂 5 派发／4 完成、五次完整诊断计 77.255485 RAW s，5 DRT、15 STA、5 独立 DRC 开始、1 SEC，正式仍留第二次 33.7824 µm²。汇总 SHA-256 `d938a29f30ae5b08ad76974f60e97609d9f94443a1c37e56e5072404a24b051b`。最后 `reverse/fixed_legacy` 实际起跑，配置 `eb6197efcb41fcb45f179198f897b0c149716b23f87ef184dee0fa3aad691b14`，总独立验证等待其终态。
+
+## LOG-20261124-188｜反序固定再现在线物理后端的同端点首达改善
+
+- 最后反序常规固定第 1 次含筛选 217.000759 RAW s，第二次按当次标记完成邻线重试与原门，443.274307 RAW s 通过，回收 33.7824 µm²。与反序固定在线 370.875315 RAW s 的 ODB／DEF／网表／去日期 SPEF 和完整逐角一致，双方新 SEC 11089/0；实际早 72.398992 RAW s。常规重试物理 SHA-256 `8046ec46c47800a2c0dd09c4fe83b02e5ff93ca4d3c69e392374c92e7672c53c`、新 SEC `2e8afc077af295846a5aa2ebdae54f71e4e8425ded032ae431fc8677b126f286`。末臂第 3 次已发，最终窗内轨迹待收束。
+
+## LOG-20261124-189｜正反序八单元实际完成
+
+- 最后反序固定常规第 3 次 653.248444 RAW s 时 FF／TT 相对 hold 拒。第 4 次常规 DRT 以最后 66.682859 RAW s 有效限时截停，4 派发／3 完成，6 DRT、15 STA、5 独立全块 DRC、1 SEC，窗内仍 33.7824 µm²。末单元汇总 SHA-256 `ef301b4d440592950aec98dfd3bf4b1cf2ecf92d4442a5d42e4e209430e68ff9`。
+- 八单元正式 `results.json` SHA-256 `a9efe4ed1b2ed28674ec57be380b153528a6db321360a91f8fa5c3971ffb3510`。逐进程重算共派发 37、完成 29。启动／正常返回分别为 DRT 44／40、STA 119／117、独立全块 DRC 38／37、在线诊断 21／20、SEC 10／10。常规四单元第 4 次均在 DRT 截停。在线四单元的封窗点分别为正序固定的第 6 次预检、正序 FAECO 第 5 次 SS STA、反序 FAECO 第 5 次 TT STA、反序固定第 5 次独立 DRC。各候选按该轮真实阶段核验。正在独立审查全部八件。
+- 正序／反序同派发切换在线后端的同物理首达改善，固定为 84.005882／72.398992 RAW s，FAECO 为 157.953551／164.380206 s。改 FAECO 调度时，常规后端均未增加合格面积，在线后端窗内多 33.7824 µm²，首达比在线固定晚 119.227101／112.991450 s。正反序均按原共同硬窗、时序及物理门，仍是单电路比较。
+
+## LOG-20261124-190｜八单元全量独立核验得到相同跨序端点
+
+- 四个条件各自的正反序首达及合格最优的动作、ODB／DEF／网表、去日期 SPEF 与完整三角相同。在线 FAECO 六门在两序 619.308802／620.070334 RAW s 验收，合格 67.5648 µm²，三角无新增负 setup。共常规时改用 FAECO，正反序首达晚 193.174770／204.972664 s，面积相同。独立核验退出 0，实际 `independent_verification.json` 和仓库收据 SHA-256 `707ec4622cf563fb90fbda26594f8966e21f581b1db4a6f5acc7b9f9bcbbb335`。115 项核心、19 项 WSL AES 专项通过。[2×2 正反序报告](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/AES_FACTORIAL_VERIFIED.json)
+
+## LOG-20261124-191｜AES 计时结束后原生 JPEG 起点实际开跑
+
+- 八个 AES 窗及独立核验结束后，资格共享 `TOPS` 加入 `jpeg_encoder` 并通过入口冒烟。JPEG 原生制备 20:30:36（UTC+8）实际启动，外层 PID 334、启动器 PID 422、3,600 s producer PID 438、make PID 440，CPU 6–11 上四线程，整批外限 4,140 s。冻结原配置及工具版本写入 `input_manifest.log` SHA-256 `dc3052f4df848567ec8902ad35f9fe710a2f0aecd4ec6d15d52b06bc4b1d168c`。源 JPEG `config.mk`／原 SDC SHA-256 分别 `ed25747fae86be6f0f91812f4910c9ffe992f45e072ae2f891cfc4ab6f7dd365`、`287e631b6692a6887390f28def96cb3e812862a78d3a537fa005ceb3d1996868`。初段 Yosys 已实际执行，还无冻结端点或策略结果。[原生资格入口](evidence/tcad_holdout_20261123/prepare_jpeg_control.sh)
+
+## LOG-20261124-192｜AES 八单元配对归档核验
+
+- `scratch/tcad_ibex_20261123/aes_factorial_20261124.tar.gz` 保存八单元、协议、执行与核验源码及原工具收据。包 1,127,603,727 字节，1,659 个普通文件逐个 SHA-256 与真实原件匹配，Windows 包独立复核 SHA-256 `e99b28c640312cd384973414739fd85e2b1fda607ed2c9feee38c8dd1592f9ad`。AES 现行口径按八单元，JPEG 原生资格与中文稿编译分别跟踪。[实验编号](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-aes-factorial-reversed-order-v1)
+
+## LOG-20261124-193｜JPEG 完成原生 GRT，进入详细布线
+
+- 原生 JPEG 的 `5_1_grt.log` 于 20:37:00.719（UTC+8）落盘，SHA-256 `535dd29338179822f1d49dc086047117e4a8219fe56e2ccab66807779b4494ae`。随后 `5_2_route.tmp.log` 出现实际 DRT pin access 的进度。20:34 在 `5_1_grt.tmp.log` 的 DRT 前缀来自当时的引脚访问检查，正式详细布线阶段以 `5_2_route` 为准。尚未见详细布线最终 DRC、RCX 与资格三角，应等待实际端点，当前未运行候选。
+
+## LOG-20261124-194｜中文 v3 论文同步八臂结果并交付
+
+- 主文第 12 页更新为 AES 固定／FAECO × 常规／在线诊断正反序八臂结果，分开报告等面积首达时间与 720 s 窗内已验收面积。同步摘要、方法、讨论与结论。沿用六幅已验收 ImageGen 配图，保留旧三臂窗外九门的独立诊断口径。
+- `build04` LuaLaTeX 双遍通过。成稿 15 页、六幅图、21 条文献，全页视觉复查并直接核对最终变动的第 1、12 页。无编译错误、段落盒异常和未解析引用，记录了六条环境字体替代类提醒。TeX SHA-256 `30a768a09b446f9e497660a99b64c85030809933b032044e408f84da00e6c0ed`；三份 PDF 均 6,621,186 字节，SHA-256 `84fef3d50683d1966a5d8c69cf121bfa56cc1d5e38305fdad7d18745651c2781`。已独立读取工作区的主 TeX 与主 PDF 确认哈希。[论文变更记录](../paper/zh/CHANGE_LOG.md) · [正式八臂报告](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)
+
+## LOG-20261124-195｜八臂与论文阶段冻结，留出起点仍在运行
+
+- AES 八臂计时、独立验收、逐件归档和论文交付已完成。20:46:47（UTC+8）复读 JPEG 实际 `5_2_route.tmp.log`，DRT 第 0、1 轮的迭代末违例数为 22,331、12,270，第 2 轮在执行。这些是详细布线过程读数；最终 DRC、原生 RCX、三角回读与起点门仍待实际收据。该设计暂未开始候选。[JPEG 起点登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1)

@@ -776,3 +776,13 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - 双语摘要、正文、结论和图表说明同步十个 SKY130 实际端点及 s713/s832 固定参考联合试验。严格联合门 0/2。s832 的 0.322% 回收仅适用于相对诊断，IO+OCV 绝对 hold 为 −74.515 ps，SEC 162/0。同步校正贪心对照、b15 DRC 条件、二分复杂度适用条件与 ASAP7 TNS。
 - 六幅配图采用 [ImageGen 成图与提示词](figures/imagegen_20261123/PROMPTS.json)。正文和 LaTeX 表保留定量结果。证据见 [SKY130 报告](../../project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)。
 - LuaLaTeX 双遍通过，实嵌六幅图（338–353 ppi），14 页视觉复查，无编译错误、溢出和未解析引用。保留环境字体替代提示。TeX SHA-256 为 34b9f3b9e8fbb20c985ccc96f3887ba7c0c0a4a48f260847644c3902c9d6ef68，PDF 三副本 SHA-256 为 5ec838ac0821e257fd7548c93bb28693ca9028896c5b6ded8cd299c362e6ecae。
+
+
+## 2026-11-24 布线前诊断与等时窗回收
+
+- 中文 v3 的中英文摘要、引言、实验、讨论和结论纳入 SKY130HD AES 冷启动证据。正文说明以冻结布线几何和实时 DRC 标记确定首次局部重布范围，并给出原始 I/O、三视图 setup/hold、电气、独立 DRC、天线和 SEC 的联合验收口径。
+- 新增 720 s 同机串行三臂对照，分别报告同面积目标首达时间、窗内合格面积回收和完成评估次数。六门端点及其时序和物理检查纳入正式结果，九门端点作为窗外补审单独记录。早先十个 SKY130 名义端点、s713/s832 联合试验与 ASAP7 全局布线实验保留各自评价范围。 [AES 冷启动报告](../../project_docs/evidence/tcad_ibex_20261123/AES_COLD_ONLINE_REPORT.md)
+- 校正10 ps历史试验与AES逐角周期比例预算的范围，补充相对hold延后拆分、首次触发重排及候选耗尽后的二分规则。加入ASAP7 Ibex原约束下的DRT/RCX反序同端点试验，逐项区分SEC用时差和详细布线用时差。补齐s953二门诊断的hold拒收原因。 [ASAP7 Ibex报告](../../project_docs/evidence/tcad_ibex_20261123/ASAP7_SERIAL_REPORT.md) · [s953原报告](../../project_docs/evidence/postroute_recovery_20261120/REPORT.md)
+- 代表工作表改为数据来源可追溯的优化目标和反馈比较，纳入Sizer、DAGSizer以及TritonRoute-WXL。校正任务并行门尺寸、PCR及E-Layout的书目信息，移去未核实或与新表无关的旧条目。 [Sizer](https://vlsicad.ucsd.edu/Publications/Journals/j129.pdf) · [DAGSizer](https://vlsicad.ucsd.edu/Publications/Journals/j140.pdf) · [TritonRoute-WXL](https://vlsicad.ucsd.edu/Publications/Journals/j136.pdf)
+- AES 主表采用固定／FAECO × 常规／在线诊断的正反序八臂正式数据，按同一面积目标记录时间，按硬时窗记录已验收的最大面积。六门给出 FF/TT/SS 的 WNS、TNS、hold、DRC、天线与 SEC，九门留在窗外诊断。摘要、讨论与结论同步。 [正反序报告](../../project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)
+- LuaLaTeX 双遍编译，15 页、6 幅 ImageGen、21 个参考条目，无编译错误、文本溢出或未解析引用，保留原环境的字体替代提示。全页视觉核对，直接检查改动的首页、AES 主表和参考文献末页。TeX SHA-256 `30a768a09b446f9e497660a99b64c85030809933b032044e408f84da00e6c0ed`，三份 PDF 逐字节同步（6,621,186 B，SHA-256 `84fef3d50683d1966a5d8c69cf121bfa56cc1d5e38305fdad7d18745651c2781`）。

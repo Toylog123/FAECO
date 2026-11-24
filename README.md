@@ -1,9 +1,9 @@
 # FAECO：覆盖优先调度与可调预算的后布局门级时序 ECO 面积回收
 
-> **2026-11-23 中文活跃工作稿已修订**。见[中文 v3 PDF](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)（14 页、6 幅 ImageGen 示意图）及[两例联合评测](project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)。下方 v22 信息对应标签冻结稿。
+> **2026-11-24 中文活跃工作稿**。见[中文 v3 PDF](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)、[AES 调度与物理后端交叉实验](project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)、[SKY130 联合评测](project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)及[后续实验路线](project_docs/planning/TCAD_EXPERIMENT_ROADMAP_20261124.md)。下方 v22 信息对应标签冻结稿。
 
 > **2026-11-23 当前总入口：[`project_docs/HANDOFF_2026-11-23.md`](project_docs/HANDOFF_2026-11-23.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
-> 当前处于 **`v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 中文 v3 后布局定稿态：**聚焦中文主稿**（[`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，15 页 / 6 套 Nature 矢量图），新增经典 LR 10 电路实测对照、OpenROAD 负裕度开关证伪、表 1 八类文献扩充，以及 ASAP7 7 nm 两万门 `aes_cipher_top` 跨工艺验证；英文稿 `paper/en/` 暂冻。
+> **`v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 冻结了经典 LR 十电路对照及 ASAP7 AES 的全局布线寄生估算。中文 v3 源码在 [活跃稿件](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，英文工作稿暂冻。
 
 <details>
 <summary>历史入口归档（2026-11-09 / 2026-11-13 预布局与单点过渡期说明，点击展开仅作溯源）</summary>
@@ -23,9 +23,9 @@
 
 </details>
 
-## 当前状态（2026-11-22 复核）
+## 历史状态（2026-11-22 复核）
 
-- **活跃论文（中文 v3）**：`paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（**14 页 / 5 张 Nature 风格矢量图 / LuaLaTeX 0 Error / 0 Overfull / 0 Undefined references**），双副本 PDF 已同步至 `paper/zh/FAECO_v3_后布局可调预算面积回收.pdf` 与 `paper/zh/build/`。早期预布局 v1/v2 中文主稿与补充材料继续保留在 `paper/zh/manuscript/` 作历史归档；英文工作稿 `paper/en/` 暂冻。
+- **当时中文 v3**：14 页、5 张矢量图。历轮编译、配图和活跃稿件的交付记录见 [论文变更日志](paper/zh/CHANGE_LOG.md)。
 - **版本与目录**：`versions/v20/` 已落地（`BASELINE_INDEX.csv` `status=active` 指向 `v20`，原 `v19` 标为 `superseded`）；`paper/zh/` 下旧备份、编译日志与 QA 预览图已分别归整到 `paper/zh/archives/` 与 `paper/zh/figures/qa_previews/`。
 - **核心成果口径**（详见 `project_docs/evidence/postroute_recovery_20261120/REPORT.md`）：
   - **脱离上游日志纯独立重布线回收**：10/10（100%）跨族电路实现 `0.67%–5.58%` 总面积降幅（仅 6–10 次评估、全部 `DRC=0`、`Δhold >= 0`、10/10 SEC PASS），超越 12/12 为 `0.00%` 的原生 `recover_power 100`；

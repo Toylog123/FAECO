@@ -81,7 +81,7 @@
 \twocolumn[
 \vspace*{-0.25cm}
 \begin{center}
-{\heiti\zihao{3} FAECO：面向布局后门级ECO的覆盖优先候选调度与可调预算面积回收}\par
+{\heiti\zihao{3} FAECO：面向布局后门级ECO的\\覆盖优先候选调度与可调预算面积回收}\par
 \vspace{6pt}
 {\fangsong\zihao{4} 佟亚龙、刘畅}\par
 \vspace{4pt}
@@ -91,13 +91,14 @@
 \end{center}
 \begin{flushleft}
   {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
-  布局后门级时序工程变更（engineering change order，ECO）会增加单元面积，而残留负松弛和布线寄生变化使离线预筛难以判定可回收的面积。
-  本文提出面积回收框架FAECO，将最差负松弛（worst negative slack，WNS）损失预算与在线重布线、静态时序分析（static timing analysis，STA）及全网表顺序等价性检查（sequential equivalence checking，SEC）结合。
-  有上游修改记录时，框架按端点逻辑锥覆盖调度候选，以前缀二分隔离超预算的回退动作。独立模式直接从布线后网表与单元库枚举兼容替换，并自适应拆分越界批次。
-  在SKY130的十个ISCAS89与ITC-99电路中，独立模式在6--10次评估内均取得0.67\%--5.58\%的名义面积降幅，且通过设计规则检查与两态SEC。相同重布线评估上限下，单门在线贪心在9例取得正收益，平均面积降幅为2.11\%，FAECO为2.01\%。对相同十个正回收端点复测时，慢角与显式输入/输出约束叠加工艺降额分别有9例和8例满足10\,ps建立时间预算。以固定参考联合评估s713和s832时，两例均受显式IO约束下的绝对保持时间限制。对ASAP7的AES密码核，全局布线寄生估算显示FAECO回收0.266\%面积，且总负松弛改善48.18\,ps。}
+  布线后门级时序工程变更（engineering change order，ECO）可能增加单元面积，残留负松弛和重布线引起的寄生变化使面积回收需要在线验证。
+  本文提出FAECO，在可调最差负松弛（worst negative slack，WNS）损失预算内调度兼容替换或选择性回退，并通过重布线、静态时序分析（static timing analysis，STA）与全网表顺序等价性检查（sequential equivalence checking，SEC）验收。
+  框架在冻结布局副本上换门并清除直连旧线，利用布线前设计规则检查（design rule checking，DRC）识别需一并重布的邻线。
+  在SKY130HD的高级加密标准（Advanced Encryption Standard，AES）密码核上，以相反顺序复跑调度和诊断的四种组合。计入诊断开销后，固定批次及FAECO到各自同一合格端点的时间分别缩短72.40--84.01和157.95--164.38\,s。共用诊断后端时，FAECO首达较晚，两轮在720\,s内均将合格面积回收从固定批次的33.7824增至67.5648\,\textmu m$^2$。
+  在十个SKY130的ISCAS89与ITC-99电路上，独立模式在名义约束下回收0.67\%--5.58\%的面积。同一批端点在显式输入／输出约束和片上工艺降额联合视图下均有负的绝对保持时间余量。}
 \par
 \vspace{4pt}
-{\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO；面积回收；覆盖优先调度；可调预算；转折门隔离}\par
+{\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO，面积回收，候选调度，可调预算，布线前诊断}\par
 \vspace{2pt}
 {\songti\fontsize{8.5}{13}\selectfont 中图法分类号：TP391.41}\par
 \vspace{3pt}
@@ -111,12 +112,13 @@
 \newcommand{\enAuthor}{Tong Yalong, Liu Chang}
 \newcommand{\enAffil}{(College of Computer Science and Technology, National University of Defense Technology, Changsha 410073)}
 \newcommand{\enAbstract}{%
-  Post-layout gate-level timing engineering change orders (ECOs) can increase cell area, while residual negative slack and routing changes limit the reliability of offline downsizing estimates.
-  FAECO pairs an adjustable worst negative slack (WNS) budget with on-line rerouting, static timing analysis (STA), and final full-netlist sequential equivalence checking (SEC).
-  With upstream edit records, it prioritizes candidates by timing-cone coverage and bisects prefixes to isolate over-budget reversions. Without such records, it enumerates compatible library substitutions and adaptively splits batches that violate the acceptance criteria.
-  Across ten SKY130 ISCAS89 and ITC-99 designs, six to ten evaluations per design yield nominal area reductions of 0.67\%--5.58\%, with zero design-rule violations and full-netlist two-state SEC passes. Under the same rerouting evaluation limits, single-gate online greedy recovers area in nine designs and averages 2.11\%, compared with 2.01\% for FAECO. Of the ten positive FAECO endpoints, nine meet the 10\,ps setup-loss budget at the slow corner and eight meet it under explicit I/O constraints and on-chip variation derating. On s713 and s832, joint re-evaluation with fixed references yields no positive endpoint under the absolute hold constraint in the I/O stress scenario. On an ASAP7 AES design with estimated global-routing parasitics, FAECO reduces area by 0.266\% and improves total negative slack by 48.18\,ps.%
+  Post-route gate-level timing engineering change orders (ECOs) can increase cell area, while residual negative slack and routing-induced parasitic changes call for online verification of area recovery.
+  FAECO schedules compatible cell substitutions or selective reversions under an adjustable worst negative slack (WNS) loss budget and qualifies endpoints through rerouting, static timing analysis (STA), and full-netlist sequential equivalence checking (SEC).
+  We apply cell swaps and remove the old wires on directly connected nets in a frozen layout copy, then use a pre-routing design rule check (DRC) to identify neighboring wires that need to be rerouted with the candidate.
+  Two serial repetitions in opposite orders on a SKY130HD Advanced Encryption Standard (AES) core separate candidate scheduling from pre-routing diagnosis. Including its own cost, diagnosis reduces the time to the same qualified endpoint by 72.40--84.01\,s for fixed batching and 157.95--164.38\,s for FAECO. With the same diagnostic backend, FAECO reaches the common area target later and increases qualified savings within 720\,s from 33.7824 to 67.5648\,\textmu m$^2$ in both repetitions.
+  Across ten SKY130 ISCAS89 and ITC-99 designs, the independent mode yields nominal area reductions of 0.67\%--5.58\%. All ten endpoints have negative absolute hold slack under the combined explicit I/O and on-chip variation derating view.%
 }
-\newcommand{\enKeywords}{timing ECO; area recovery; coverage-first scheduling; adjustable budget; tipping-gate isolation}
+\newcommand{\enKeywords}{timing ECO, area recovery, candidate scheduling, adjustable budget, pre-routing diagnosis}
 
 % ============================================================
 % §1 引言
@@ -131,8 +133,7 @@
 \medskip
 \noindent\textbf{问题的量级。}
 我们在八个ISCAS89电路上逐门回退Resizer的107个尺寸修改，使用布线后基准的寄生参数进行静态时序诊断。
-其中74处（69\%）在记录精度内保持WNS不变。Resizer的面积增加48.8\%，WNS改善0.584\,ns。覆盖优先机制的面积增加8.1\%，WNS改善0.247\,ns。
-\textbf{单位面积改善的WNS收益为Resizer的4.4倍}（几何均值，7/8电路，$p=0.0352$）。
+其中74处（69\%）在记录精度内保持WNS不变，说明单门回退可用来筛查对最差路径影响较小的尺寸修改。
 
 \medskip
 \noindent\textbf{本文的切入点。}
@@ -141,10 +142,9 @@
 \begin{enumerate}
 \item \textbf{覆盖优先候选调度}（第3节）：按候选在时序报告中的覆盖区域排序，
       优先评估最可能改善最长路径的候选，组内全测后取最优，减少无效候选评估。
-\item \textbf{可调WNS预算与在线物理门控}（第4节）：用户设定相对基准允许的WNS损失上限$B$（默认0.010\,ns），
-      机制在有界组合搜索与在线重布线、寄生参数提取（parasitic extraction，RCX）及传播时钟STA门控中优化净面积回收，支持多工艺角（慢角SS/典型角TT/快角FF）与显式输入/输出边界（IO）及片上工艺偏差（on-chip variation，OCV）联合约束。
+\item \textbf{可调WNS预算与在线物理门控}（第4节）：用户设定相对基准允许的WNS损失上限$B$。组合搜索使用在线重布线、寄生参数提取（parasitic extraction，RCX）及传播时钟STA测量净面积回收和时序变化。历史小电路采用10\,ps固定预算，AES采用原周期的1\%作为逐角预算。
 \item \textbf{选择性恢复与转折门隔离}（第5节）：逐门诊断回退对WNS的影响，再按前缀二分定位导致联合回退越界的动作。每次二分定位的验证调用数为对数级，整段搜索受续跑次数限制。
-\item \textbf{无需上游日志的独立面积回收}（第6节）：从布线后门级网表与标准单元库枚举功能兼容替换，在布线后物理快照上通过重布线评估候选。
+\item \textbf{无需上游日志的独立面积回收}（第6节）：从布线后网表与单元库枚举功能兼容替换，并在正式布线前诊断候选涉及的邻线冲突。正式端点经重布线和物理验收；另对历史端点进行多工艺角（SS/TT/FF）及显式输入/输出与片上工艺降额（IO+OCV）复测。
 \end{enumerate}
 整体双模式架构与在线门控闭环流程如图~\ref{fig:framework_arch}所示。
 
@@ -159,10 +159,10 @@
 \medskip
 \noindent\textbf{主要贡献。}
 \begin{enumerate}
-\item \textbf{覆盖优先候选调度}：针对传统随机或局部启发式评估对关键瓶颈覆盖效率低的问题，按端点逻辑锥与加权节点割构造搜索区域并优先验证热点候选，在ISCAS89八例上将候选STA评估次数减少7.8\%--19.0\%，单位面积WNS效率达到Resizer的4.4倍。
-\item \textbf{可调WNS预算与在线组合搜索}：针对零容差约束放弃安全回收空间及离线估计失真的困难，建立以固定物理基准为参照的可调预算形式化框架与有界束搜索，在s382上仅以0.0031\,ns的WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，两态SEC 101/0通过），并在线捕获非加性寄生耦合补偿组合。
+\item \textbf{覆盖优先候选调度}：按端点逻辑锥与加权节点割构造搜索区域并优先验证热点候选。在八个ISCAS89电路的历史试验中，相比三个随机顺序配置，候选STA调用数降低7.8\%--19.0\%。
+\item \textbf{可调WNS预算与在线组合搜索}：建立以固定物理基准为参照的可调预算与有界束搜索。s382的已验收回退端点以0.0031\,ns的WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，两态SEC 101/0通过）。另以在线组合搜索测量多门替换的非加性时序变化。
 \item \textbf{转折门隔离与续跑二分}：以先失败的回退前缀为起点，分段定位高风险修改并继续检查剩余动作。在固定寄生诊断中，ISCAS89与ITC-99分别回退61\%和88.3\%的上游修改。b22利用10次验证STA回退356处，回收上游净新增面积的33.1\%。
-\item \textbf{独立后布局面积回收}：将库内兼容替换、驱动档位排序和微批次物理评估接成闭环。在十个SKY130电路中获得0.67\%--5.58\%的名义面积降幅，全部端点通过两态SEC。多角与输入/输出约束复测量化了同一批端点的时序边界。另在5,494组件的b15与20,097实例的ASAP7 AES上分别验证了局部增量绕线和跨工艺候选生成。
+\item \textbf{布线前冲突诊断与独立面积回收}：用实时DRC标记确定需释放的邻线，在SKY130HD AES上交叉比较调度和物理后端。共用诊断后端时，FAECO在720\,s内验收的面积回收为67.5648\,\textmu m$^2$，固定批次为33.7824\,\textmu m$^2$。十个SKY130小电路的联合视图复测定位了正回收端点受绝对保持时间制约的情形。
 \end{enumerate}
 
 % ============================================================
@@ -172,27 +172,23 @@
 
 \subsection{全局门尺寸优化与时序修复的面积膨胀}
 
-门尺寸调整（gate sizing）与缓冲器插入是物理综合与布局后时序收敛的核心手段\cite{cong2007optimality,chinnery2002closing}。
-自ISPD 2012/2013离散门尺寸优化竞赛\cite{ozdal2012ispd,hu2013ispd}以来，拉格朗日松弛（Lagrangian relaxation，LR）成为门尺寸优化的重要方法\cite{chen1999fast,flach2014effective,ozdal2011gate}。OpenROAD Resizer\cite{openroad}提供了开放的门尺寸调整和缓冲等物理优化入口。
+门尺寸调整（gate sizing）与缓冲器插入是物理综合与时序收敛的常用手段\cite{chinnery2002closing,openroad}。面向离散门尺寸优化的公开评测包括ISPD竞赛\cite{ozdal2012ispd,hu2013ispd}，代表方法包括拉格朗日松弛（Lagrangian relaxation，LR）\cite{chen1999fast,flach2014effective}。
 Kahng等\cite{trident2}进一步耦合签核级计时器以缩小近似延迟模型与签核STA之间的偏差；
-Lin等\cite{timing_budget}利用任务图并行化加速大规模网表的门尺寸迭代；
-Held\cite{held2009fast}与Roy等\cite{roy2015markov}探讨了连续与离散松弛下的延迟-面积权衡。
+Mangiras等\cite{timing_budget}利用任务图并行化加速门尺寸迭代。
 
-全局加权违例目标涵盖多条时序锥，局部动作可以改善次关键路径，也可能对设计的WNS影响很小\cite{mangiras2020timing,sharma2019fast}。
-第5.1节在固定寄生条件下逐门回退OpenROAD Resizer的尺寸修改。107处修改中，74处单独回退后对WNS的影响低于报告分辨率。
 如何在不破坏已取得时序改善的前提下剥离这部分非关键路径面积膨胀，是后布局ECO亟待解决的问题。
 
 \subsection{残留负松弛下的后布局面积与功耗回收}
 
 现有物理设计流程中的面积与漏电/动态功耗回收主要分为两类：
-第一类是在时序修复循环内部耦合面积/功耗惩罚项的多目标优化\cite{flach2014effective,li2017leakage}；
+第一类是在时序约束下联合改变尺寸与阈值电压，并在出现负松弛时进行时序修复\cite{flach2014effective}；
 第二类是在时序收敛后对非关键路径门执行降尺寸（downsizing）或高阈值电压（high threshold voltage，HVT）替换的事后回收，
-典型代表为OpenROAD内置的原生功耗回收引擎\cite{openroad}及商业工具中的后布局漏电回收流程\cite{hu2013ispd,mangiras2020timing}。
+代表方法包括OpenROAD原生功耗回收、Sizer和DAGSizer。Sizer研究工业后布线功耗优化中的多角多模式时序和电气约束\cite{fatemi2019sizer}；DAGSizer预测相同占位的多阈值、多沟道长度单元替换后的延迟变化，用于在时序约束下回收漏电功耗\cite{cheng2023dagsizer}。
 
 残留负松弛和布线拓扑变化决定了事后回收方法在本任务中的适用范围。
 \begin{enumerate}
 \item \textbf{原生功耗回收}：在跨ISCAS89与ITC-99的12个SKY130后布局负松弛基准上，OpenROAD原生回收均未触发替换。s382在两种放宽裕量的配置下也返回零修改。ASAP7 AES上触发了341次替换，其经全局布线寄生估算后的总负松弛恶化。
-\item \textbf{冻结寄生预筛}：部分回退方法在标准寄生交换格式（standard parasitic exchange format，SPEF）中固定ECO前的寄生参数\cite{timing_budget,sharma2019fast}。单元替换可改变引脚位置与信号线拓扑。固定寄生下通过预筛的组合，在重布线与寄生重提取后可越过预算，例如s820、b11与b12的建立时间WNS分别下降33.63、29.15和90.81\,ps。
+\item \textbf{冻结寄生预筛}：实验以ECO前的标准寄生交换格式（standard parasitic exchange format，SPEF）作为离线批次的估计输入。单元替换可改变引脚位置与信号线拓扑。固定寄生下通过预筛的组合，在重布线与寄生重提取后可越过预算，例如s820、b11与b12的建立时间WNS分别下降33.63、29.15和90.81\,ps。
 \end{enumerate}
 
 本文以布线后参考的相对WNS预算（$W(N_F) \ge W_R-B$）筛选候选，验证流程包含重布线、寄生重提取和传播时钟STA。表~\ref{tab:tool_agnostic}和表~\ref{tab:aligned_timing}分别报告名义面积回收与工艺角复测。
@@ -202,38 +198,33 @@ Held\cite{held2009fast}与Roy等\cite{roy2015markov}探讨了连续与离散松�
 当候选降尺寸动作从数个扩展至数百个（如ITC-99 b22的359处修改）时，门级ECO面临严重的\textbf{多门累积耦合悬崖（multi-gate coupling cliff）}：
 b22的逐门固定寄生诊断中，每处独立回退的$\delta\text{WNS}$均为零，全部回退时WNS下降106.4\,ps。在同一案例中，线性末尾弹出法在第143轮达到600\,s时限。
 近年来，多动作物理综合框架、强化学习（RL）、图神经网络（GNN）与大语言模型进化也被引入门级优化与物理ECO：
-早期Trident~2.0\cite{trident2}交替执行非关键扇出缩减、局部窥孔（peephole）重构与签核定时器校准；OpenPhySyn\cite{openphysyn2020}在OpenDB之上提供了可扩展的多动作物理综合框架（主要面向布线前阶段）。在学习驱动方面，RL-Sizer\cite{rlsizer2021}利用图神经网络与连续强化学习在交叠路径微区上批量调整门尺寸；IR-Aware ECO\cite{ireco2024}采用关系图卷积网络与拉格朗日乘子耦合IR降感知的功耗-延迟优化；RL-CCD\cite{rlccd2023}利用自监督注意力强化学习协同优化时钟偏斜与数据路径；PCR\cite{pcr2026}与Trident2\cite{trident2_2025}结合局部物理上下文与多源候选池提升时序修复率；E-Layout\cite{elayout2026}引入等式饱和（e-graph）与强化学习指导布局阶段逻辑重构；Guo等\cite{guo2022gnn}与Nath等\cite{nath2022transizer}探索了GNN/Transformer对门尺寸敏感度的预测；最新GoalEvolve\cite{goalevolve2026}则通过大语言模型对全流程物理设计源码进行目标驱动演化。
-但上述学习/进化与布线前方法大多面向正向时序修复、依赖离线训练或全流程重写，难以在布线后残留负松弛起点上提供确定性的可调预算保护与全网表顺序等价（SEC\cite{yosys,abc2010}）保证。
-前缀二分在b22的固定寄生诊断中以10次验证STA隔离一个临界动作，最终回退359处修改中的356处。第5.2节给出单次二分的适用前提与续跑开销。
+OpenPhySyn\cite{openphysyn2020}提供可扩展的开源物理综合框架。RL-Sizer\cite{rlsizer2021}使用强化学习调度尺寸调整，RL-CCD\cite{rlccd2023}协同优化时钟和数据路径。Jiang等\cite{pcr2026}利用局部物理上下文生成并检验布局后逻辑重映射，E-Layout\cite{elayout2026}以等式饱和图与强化学习引导布局阶段逻辑重构。GoalEvolve\cite{goalevolve2026}在流程层面用最终物理质量反馈调整优化算法。
+本文关注已布线设计的净面积回收，允许在原有负松弛下按参考端点设定可调损失上限。验收以换门后的详细布线、提取寄生参数和全网表顺序等价性检查（SEC\cite{yosys,abc2010}）为依据。
+第5节给出前缀二分的适用前提与续跑开销。
 
 \subsection{局部候选调度与大规模物理增量修线}
 
-在评估效率与规模扩展方面，每次后布局候选评估均需调用OpenROAD详细布局与布线及OpenSTA\cite{sta}分析。
-本文在候选评估前端提出基于端点逻辑锥并集的\textbf{覆盖优先调度}（节省7.8\%--19.0\% STA调用）；
+在线物理评估使用OpenROAD中的详细布线和集成DRC引擎\cite{tritonroutewxl}，并用OpenSTA\cite{sta}分析提取后的寄生。另设固定寄生诊断，用于观察候选顺序对STA调用数的影响。
+本文在候选评估前端提出基于端点逻辑锥并集的\textbf{覆盖优先调度}；
 在物理后端，通过对万门级电路b14/b15的实测剖析，揭示了全版图详细重布线与局部包围盒增量修线（regional ECO routing）的规模转换边界。
-表~\ref{tab:related_work}总结了本文框架与现有代表性方法在核心能力维度上的对比。
+表~\ref{tab:related_work}按目标和反馈比较直接相关的方法。
 
 \begin{table*}[t]
 \centering
-\caption{布局后门尺寸优化与面积回收代表性方法对比}
+\caption{尺寸优化与后布线回收的代表方法}
 \label{tab:related_work}
-\scriptsize\setlength{\tabcolsep}{3.0pt}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{lllllll}
+\footnotesize\setlength{\tabcolsep}{5pt}
+\begin{tabular}{lll}
 \toprule
-\textbf{方法类别} & \textbf{代表工作} & \textbf{无需日志} & \textbf{负松弛可用} & \textbf{耦合复杂度} & \textbf{在线物理+多角} & \textbf{全网表SEC} \\
+\textbf{方法} & \textbf{优化与计量} & \textbf{时序及物理反馈} \\
 \midrule
-经典LR与并行尺寸 & Chen等\cite{chen1999fast}, Flach等\cite{flach2014effective}, Lin等\cite{timing_budget} & 是（正向） & 本文冻结SPEF实现0/10合格 & 全局迭代 & 本文基线离线选取 & 本文基线未测 \\
-Signoff校准与开源综合 & Trident~2.0\cite{trident2}, OpenPhySyn\cite{openphysyn2020} & 是 & 主要面向收敛/布线前 & 局部peephole/管线 & 部分（无post-route） & 否 \\
-RL与IR感知ECO & RL-Sizer\cite{rlsizer2021}, IR-Aware ECO\cite{ireco2024} & 是（需训练） & 以TNS/功耗Pareto为主 & 局部邻域 & 部分（整轮/增量STA） & 否 \\
-时钟重构与布局重写 & RL-CCD\cite{rlccd2023}, PCR\cite{pcr2026}, E-Layout\cite{elayout2026} & 是（需训练） & 正向修违例/TNS & 锥掩码/MFFC & 部分（商业/全局反馈） & 部分 \\
-LLM物理流程演化 & GoalEvolve\cite{goalevolve2026} & 是（全流程） & 依赖源码重演化 & 全流程迭代 & 是（末段signoff） & 否 \\
-OpenROAD原生回收 & 原生功耗回收引擎\cite{openroad} & 是 & \textbf{SKY130 0\%；ASAP7仅0.12\%且TNS$-$20\%} & 逐门贪心 & 否（布线前增量） & 否 \\
-离线固定SPEF批/回滚 & 传统历史回滚与灵敏度批处理 & 部分 & 5/10有效（均降0.14\%） & $O(N)$（b22超时） & 否（最高偏$-123.4$\,ps） & 部分 \\
-\textbf{本文（FAECO）} & \textbf{覆盖优先+可调预算+微批次} & 独立模式是 & SKY130名义10/10回收 & 前缀二分与预算上限 & 重布线与工艺角复测 & 名义端点10/10通过 \\
+Trident~2.0\cite{trident2} & 漏电功耗、优化用时 & 签核定时器，时序与电气约束 \\
+Sizer\cite{fatemi2019sizer} & 漏电与总功耗、运行时间 & 工业布线后多角多模式时序与电气约束 \\
+DAGSizer\cite{cheng2023dagsizer} & 漏电回收估计、预测误差 & 同占位替换，定时器标注延迟 \\
+局部逻辑重映射\cite{pcr2026} & 建立时间违例 & 合法化、全局布线寄生估算、时序分析 \\
+FAECO & 验收面积、等面积首达时间、等时窗回收量 & 详细重布与RCX、逐角WNS/TNS/hold、DRC与SEC \\
 \bottomrule
-\end{tabular}%
-}
+\end{tabular}
 \end{table*}
 
 % ============================================================
@@ -333,7 +324,8 @@ $C_c$与$C_w$共同构成候选生成的"投入区域"。
 
 给定Resizer输出$N_R$及其物理测量$(W_R, A_R, H_R)$，
 其中$W_R$为传播setup WNS，$A_R$为完整映射单元面积，$H_R$为传播hold WNS。
-用户设定WNS损失预算$B \ge 0$（单位ns，默认$B=0.010$\,ns）。
+本文的WNS读数取报告中的最差裕量，视图无违例时保留正值。
+用户设定WNS损失预算$B \ge 0$（单位ns）。历史固定预算试验取$B=0.010$\,ns，等时窗试验以原周期比例定义预算。
 
 目标是找到一组网表修改动作$\mathbf{a} = (a_1, \ldots, a_t)$，
 使得应用后的网表$N_F$满足：
@@ -348,11 +340,11 @@ $C_c$与$C_w$共同构成候选生成的"投入区域"。
 其中$\varepsilon = 10^{-6}$\,ns为数值容差，
 $A(N_F)$和$W(N_F)$需通过实际物理测量获得（重新合法化/布线/RC提取/STA），
 不允许将单动作预测值累加作为组合安全保证。
-总负松弛（total negative slack，TNS）完整报告，在同等面积收益时作为辅助择优依据。
+总负松弛（total negative slack，TNS）完整报告。下文固定10\,ps的历史试验用TNS辅助解释或择优，AES等时窗对照另对每个视图施加TNS损失上限。
 
 \subsection{有界组合搜索}
 
-我们实现了一个有界beam搜索内核\cite{timing_budget}，
+我们实现了一个有界beam搜索内核，
 在固定参考$N_R$上展开组合动作搜索。
 
 \textbf{评估器。}
@@ -466,23 +458,11 @@ s953& 29 & 73.0\% & 73.0\% & 74.3\% & 74.3\% & 76.3\% & 84.2\% & 90.1\% & 100.0\
 \end{table*}
 
 按单门独立$\delta$WNS阈值统计，除s27外，七个电路零预算下的单门理论可回收比例为16.4\%--94.6\%。几何均值按八个电路计算，低于0.01\%的比例以0.01\%计入。该均值由零预算下的16.1\%升至10\,ps预算下的19.0\%。
-在这组单门诊断曲线上，10\,ps已覆盖20\,ps档的大部分增量。
-s713、s641和s832在$B=50\text{--}200$\,ps区间仍有显著增量（如s713从37.0\%升至87.7\%），
-说明部分电路包含大量``需要适度时序代价即可释放''的修改，构成预算曲线的长尾；
-而当$B=500$\,ps时几乎所有修改（含关键路径必需修改）均落入阈值内，回收率趋近100\%。
-s27仅2个修改且单门退化超过100\,ps，说明该电路上Resizer的修改均为时序必需，
-选择性恢复无操作空间。
-需注意表~\ref{tab:budget_curves}反映的是单门独立$\delta$WNS分布的理论上限，而实际多门同时回退还需经受第5节的累积耦合验证。
+在这组单门诊断中，10\,ps档与20\,ps档的几何均值相差0.1个百分点。s713从10\,ps档的37.0\%升至200\,ps档的87.7\%，说明不同电路的预算敏感度有较大差异。表~\ref{tab:budget_curves}按独立测量纳入达到建立时间阈值的动作。多门组合仍需重新验证建立和保持时间。
 
 \subsection{FAECO-P候选的预算敏感度}
 
-上述分析揭示了\textbf{Resizer修改}的预算-回收关系。
-一个对偶的问题是：\textbf{FAECO-P自身产生的新候选}在不同WNS预算下有多少能被接受？
-这将揭示覆盖优先机制的候选质量是否对预算设置鲁棒。
-
-从候选逐门试探记录中提取每个候选相对Resizer基线的WNS变化（$\delta$WNS），
-按预算阈值$B$（$\delta$WNS $\ge -B$为可接受）计算接受率。
-结果见表~\ref{tab:faecop_budget}。
+从历史FAECO-P逐门记录提取各候选相对Resizer的$\delta$WNS，按$\delta$WNS $\ge -B$统计建立时间门的通过比例（表~\ref{tab:faecop_budget}）。
 
 \begin{table*}[t]
 \centering
@@ -508,18 +488,7 @@ s953 & 248 & 29\% & 29\% & 40\% & 53\% & 62\% & 80\% & 95\% & 100\% & 100\% \\
 \end{tabular}
 \end{table*}
 
-\textbf{关键观察}：
-(1)~B=0\,ps下正贡献候选仅占13--57\%（几何均值31.4\%），
-说明FAECO-P产生的候选中有\textbf{约69\%会对WNS造成退化}——覆盖优先的"优先"二字源于调度策略而非候选质量；
-(2)~B=10\,ps处接受率升至33--82\%（几何均值55.8\%），
-即\textbf{在10\,ps预算下超过半数的FAECO-P候选可被接受}，
-与前文“10\,ps是有效预算阈值”形成双向交叉验证；
-(3)~s832在B=0\,ps处接受率仅13\%（8电路中最低），
-但其B=50\,ps处已升至81\%，说明该电路候选的$\delta$WNS分布集中于$[-50,0]$\,ps区间——
-需适度预算即可大量启用，但零预算下几乎不可用；
-(4)~所有电路在B=200\,ps处接受率均$\ge$99\%，
-即\textbf{200\,ps预算下FAECO-P候选几乎全部可接受}——但此时WNS退化已达200\,ps，
-对多数应用场景不可接受，强调了预算约束的必要性。
+从0\,ps放宽到10\,ps，该比例的八例几何均值由31.4\%升至55.8\%。s832在0\,ps档仅13\%，在50\,ps档为81\%。这些通过率描述历史候选池对建立时间预算的敏感度，实际回收端点还须通过重布线与完整验收门。
 
 \subsection{联合端到端：预算搜索+选择性恢复}
 
@@ -527,10 +496,7 @@ s953 & 248 & 29\% & 29\% & 40\% & 53\% & 62\% & 80\% & 95\% & 100\% & 100\% \\
 预算搜索端点RESTORE074已回退Resizer的12/16处修改（面积回收46.29\,\textmu m$^2$，28.91\%）。
 在其输出上继续运行选择性恢复，剩余4处修改中有3处分别需要59/219/111\,ps的WNS预算才能安全回退，远超10\,ps约束；第4处回退后$\Delta$WNS=0但其面积收益也为0，因此额外回收为0。
 
-\textbf{结论}：在10\,ps预算下，三者串联未产生超过RESTORE074单独的增量面积回收。
-这表明预算搜索已经在网表级组合上充分捕获了安全回退空间，而与单门事后独立判定一致：
-预算搜索回退的12处与选择性恢复判定的$\Delta$WNS$=0$安全集（含1个零面积项）吻合，保留的3处则对应$\Delta$WNS$<0$的必需修改。
-该一致性确认了约束条件下搜索的组合视角并未遗漏单门恢复可捕获的收益，互补上限由修改本身的时序物理必要性决定。
+从RESTORE074出发，在本次续跑的四处剩余修改与10\,ps预算下，选择性恢复未增加已验收的面积收益。
 
 % ============================================================
 % §5 选择性面积恢复
@@ -641,7 +607,7 @@ s953 & 29 & 23 & 21.6\% & 0.547 & $+0.4$ & 0.07\% \\
 \subsection{效率对比}
 
 表~\ref{tab:efficiency}给出覆盖优先机制与Resizer的单位面积WNS效率比较。
-效率定义为$\Delta$WNS除以面积增加比例。
+效率定义为建立时间WNS改善量（ns）除以面积增加的百分点。
 
 \begin{table}[H]
 \centering
@@ -666,8 +632,7 @@ s953 & 0.010 & 0.031 &  3.0$\times$ \\
 \end{tabular}
 \end{table}
 
-覆盖优先的几何平均面积效率是Resizer的4.4倍（$p=0.0352$，
-符号秩检验），8例中7例效率更高。
+八例中覆盖优先有七例的单位面积WNS改善量更高，逐电路比值的几何均值为4.4。
 Resizer面积膨胀48.8\%（几何均值）换$+0.584$\,ns WNS改善，
 而覆盖优先以面积$+8.1\%$换$+0.247$\,ns。
 覆盖优先按候选与关键端点逻辑锥的交集分配评估预算。两种策略的WNS改善幅度与面积代价应并列解读。
@@ -812,20 +777,20 @@ b04（$-12.32$\,ps）、b11（$-29.15$\,ps）与b12（$-90.81$\,ps）在重布�
 在s382上以$B=10$\,ps、束宽2、最大深度4执行14次在线重布线搜索，
 发现跨源二门组合\texttt{ONLINE\_007}（由历史候选门与全库新增缓冲器降尺寸候选共同构成）：
 完整面积由1052.26\,\textmu m$^2$降至1038.50\,\textmu m$^2$（$-1.31\%$），
-$\Delta\text{WNS}=-7.028$\,ps（单测累加预测为$-2.865$\,ps，实测捕获$-4.163$\,ps非线性寄生耦合），
+$\Delta\text{WNS}=-7.028$\,ps（较单门实测值的累计估计$-2.865$\,ps低4.163\,ps），
 $\Delta\text{hold}=0.000$\,ps，DRC为0且全网表SEC 101/0通过。
 该组合同时使用了历史名单与库内枚举，实测WNS变化体现了动作间的非加性。
 
 进一步在s641和s953全库候选池上执行同预算（$B=10$\,ps，最多12次重布线评估）的顺序贪心与有界束搜索（束宽2、最大深度4）消融对照：
 (1)~在s641上，顺序贪心仅用6次评估即找到3门组合（含2处逻辑门与1处缓冲器降尺寸），节省22.52\,\textmu m$^2$（$-1.99\%$，$\Delta\text{WNS}=-0.43$\,ps，$\Delta\text{hold}=+0.10$\,ps），优于同预算按层广度展开的有界束搜索（15.01\,\textmu m$^2$）及仅用历史名单的选择性恢复结果（17.52\,\textmu m$^2$）；
-(2)~在s953上，两者在严格相对保持时间门控下同获16.27\,\textmu m$^2$，但有界束搜索的二门组合实证了动作补偿现象——其中1处单元单独缩减时退化$-23.57$\,ps不可行，而与相邻单元联合缩减后退化收窄至$-2.96$\,ps（节省30.03\,\textmu m$^2$）。
-上述消融表明：在紧凑物理预算下全库候选覆盖与顺序提交是首要收益来源，而有界组合搜索在存在时序耦合补偿时发挥补充作用。
+(2)~在s953上，两者在严格相对保持时间门下均回收16.27\,\textmu m$^2$。束搜索还测到一个二门组合，其中一门单独缩减时建立时间WNS下降23.57\,ps，与另一门联合缩减时下降2.96\,ps。该组合减少30.03\,\textmu m$^2$，因相对保持时间WNS下降1.09\,ps而未通过验收。
+在这两个电路的有限评估预算下，顺序贪心与束搜索的验收面积持平或更大。束搜索测得的建立时间补偿仍须通过保持时间门。
 
 \subsection{完全脱离上游日志的独立面积回收}
 
 候选集合由布线后门级网表与标准单元库生成。在线评估从对应的物理快照出发，执行单元替换、重新合法化、详细重布线、寄生重提取和传播时钟STA。图~\ref{fig:tool_agnostic_results}给出无需上游修改日志的流程。
 候选生成排除非功能隔离填充单元和虚拟时钟负载，优先考虑常规驱动变体。微批次最多合并三处不同实例的替换。整批满足约束时一次提交，越界时依次检查两个子批，并以最新接受点测试后续子批。单条分裂路径的深度为$O(\log b)$，展开大小为$b$的整棵二叉树最多需要$2b-1$次评估。完整搜索受预设评估上限约束。
-表~\ref{tab:tool_agnostic}展示六个ISCAS89与四个ITC-99电路的名义结果。在各自名义参考下，所有候选端点均满足10\,ps建立时间预算和相对保持时间门，每例需6--10次物理评估。总面积下降0.67\%--5.58\%，十例均通过设计规则检查与全网表两态SEC。
+表~\ref{tab:tool_agnostic}展示六个ISCAS89与四个ITC-99电路的名义结果。每例执行6--10次物理评估，表中的十个验收端点均满足各自名义参考下的10\,ps建立时间预算和相对保持时间门。总面积下降0.67\%--5.58\%，十个端点均通过设计规则检查与全网表两态SEC。
 
 \begin{figure*}[t]
 \centering
@@ -859,6 +824,18 @@ b12（微批次+安全驱动） & 7977.65 & 7912.59 & $-$0.82\% & $-$0.03 & $+$0
 \end{table*}
 
 在ITC-99上，b05的单门顺序与微批次搜索分别回收2.78\%和3.47\%的总面积。b12在八次评估内提交四处替换，回收65.06\,\textmu m$^2$（0.82\%），其名义建立时间与保持时间WNS分别变化$-0.03$\,ps和$+0.05$\,ps。
+
+\subsection{布线前冲突诊断与候选调度}
+\label{sec:pre_route}
+
+换门会改变引脚与障碍物几何，因而可能使原先合法的邻线与新单元冲突。
+给定一组候选动作$S$，设$\mathcal{D}(S)$为其直连数据网。诊断在冻结的已布线布局副本上应用$S$，仅清除$\mathcal{D}(S)$上的旧线，随后在其余原布线几何上执行DRC。
+当每条标记均涉及被替换实例或直连网，且至少关联一条在原布局已布线的非时钟信号邻网时，取这些邻网的并集$\mathcal{E}(S)$，首次重布范围为$\mathcal{D}(S)\cup\mathcal{E}(S)$。
+诊断为空、失败或无法映射全部标记时，首次只重布$\mathcal{D}(S)$。实际布线发现标记后，候选至多重试一次，在已开放线网上追加新增标记支持的邻网。
+每次正式验证从同一冻结布局应用累计动作，固定其余布线几何，执行详细布线、寄生提取和多角STA。完整验收还包括恢复正常布线状态后的独立全块DRC、天线和全网表两态SEC。
+
+两种调度初始采用同一候选顺序。固定批次按顺序推进。FAECO遇到被拒的多动作批次时，若任一工艺角相对保持时间退化且仍有预算及未访问动作，则暂存该批。首次暂存时按$\Delta A_i/(1+C_i/\widetilde C)$对未访问动作作稳定降序重排。$\Delta A_i$为动作$i$的预估面积减量，$C_i$为冻结DEF中该实例直连网在SPEF的总电容之和（排除电源和地），$\widetilde C$为候选池的中位数。候选池访问完后，按暂存顺序拆分余下批次；其他拒绝原因触发原位二分。
+以截至给定时窗已经通过全部验收的端点计算最大面积回收，并计量首次验收满足面积目标的端点所需时间。第~\ref{sec:aes_cold}节用固定调度和固定后端两组对照评估诊断和调度。
 
 \subsection{同一候选端点的多工艺角与显式IO复测}
 
@@ -917,6 +894,42 @@ TT IO+OCV & $+6.404$ & $+0.801$ & $+39.753$ \\
 \end{tabular}
 \end{table}
 
+% Online AES evidence: project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md
+\subsection{布线前冲突诊断与等时窗回收}
+\label{sec:aes_cold}
+
+在SKY130HD AES一个六门开发组合上，保留直连旧线会额外报告30处涉及旧线的标记。清线后约14.37\,s识别出8处冲突及四条可释放邻网，冲突报告与该组合初次布线后的独立DRC报告一致。
+
+AES保留原始输入／输出约束与3.6\,ns周期。FF、TT、SS三角的建立时间WNS损失限为原周期的1\%（36\,ps），TNS损失限为360\,ps和参考TNS绝对值的1\%二者的较大值。保持时间WNS须非负且相对参考非退化，后者采用0.001\,ps数值容差，电气约束检查要求无新增违例。
+将固定批次、FAECO分别接入常规后端和诊断后端。常规后端先重布直连线，再按正式DRC标记最多重试一次。每臂从同一个详细布线起点和18个筛选动作开始，每批最多加入三个新动作，最多派发六次评价。按表~\ref{tab:aes_cold_online}从上至下串行运行四臂，再完全反序复跑，详细布线用四线程。720\,s硬时窗以同一单调时钟计，计入113.36\,s共同筛选费用、各方法实际发生的诊断、搜索、失败重试和完整验收。首达目标为冻结起点功能单元面积的0.01\%。
+
+\begin{table}[tb]
+\centering
+\caption{SKY130HD AES在720\,s硬时窗内的调度与后端交叉对照}
+\label{tab:aes_cold_online}
+\footnotesize\setlength{\tabcolsep}{2.4pt}
+\begin{tabular}{llrrrrr}
+\toprule
+\multicolumn{2}{c}{组合} & \multicolumn{2}{c}{首达时间/s} & \multicolumn{2}{c}{完成评价} & 两轮最大回收 \\
+\cmidrule(lr){1-2}\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+调度 & 后端 & 正序 & 反序 & 正序 & 反序 & /\textmu m$^2$ \\
+\midrule
+固定批次 & 常规 & 448.64 & 443.27 & 3 & 3 & 33.7824 \\
+固定批次 & 在线诊断 & 364.63 & 370.88 & 5 & 4 & 33.7824 \\
+FAECO & 常规 & 641.81 & 648.25 & 3 & 3 & 33.7824 \\
+FAECO & 在线诊断 & 483.86 & 483.87 & 4 & 4 & 67.5648 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+两个顺序中，固定调度的两个后端均在第二次请求验收同一组三门，FAECO的两个后端均在第三次请求验收另一组三门。同一调度的首达端点在两种后端和两个顺序下均有相同的布局、网表、去日期寄生及逐角时序。计入诊断后，固定调度和FAECO首达分别提前72.40--84.01和157.95--164.38\,s，首达前的详细布线分别少一次和两次。
+
+同用诊断后端时，FAECO达到共同面积目标晚112.99--119.23\,s，在619.31和620.07\,s验收同一六门端点，回收67.5648\,\textmu m$^2$（0.0580\%）。常规后端下，两种调度的窗内面积回收均为33.7824\,\textmu m$^2$。
+
+六门端点的FF、TT、SS保持时间WNS分别改善0.049、0.077和0.730\,ps，建立时间WNS分别损失0.086、0.032和0.044\,ps，TNS分别变化0、$+10.244$和$-192.358$\,ps，三个角均无新增负建立时间端点。22条许可数据网的布线改变，15,635条受保护线网的几何保持不变。独立DRC与天线检查均为零违例，全网表SEC证明11,089个等价点且无未证点。
+
+在线FAECO的第五次九门请求在正序与反序分别因硬窗到期中断SS、TT的STA。此前开发试验对同动作端点作窗外补审，确认可回收98.8448\,\textmu m$^2$，典型角新增一个负建立时间端点，仍符合原建立时间预算。表~\ref{tab:aes_cold_online}仅统计硬时窗内完成全部验收的端点。
+
 \subsection{五种面积回收方法与功耗对照}
 
 图~\ref{fig:strong_baselines}给出五种方法的比较流程。各方法从同一电路对应的Resizer物理输入出发，使用10\,ps建立时间损失预算。在线单门贪心与FAECO共享各电路6--10次重布线评估上限。固定SPEF灵敏度批处理和五轮冻结寄生LR降尺寸先离线选取，再按相同重布线路径评价一个终点。OpenROAD原生功耗回收使用工具内置策略。逐电路有效面积与功耗见表~\ref{tab:strong_baselines_ppa}。
@@ -956,7 +969,7 @@ b12  & 0.00\% & hold $-$0.002 / FAIL & 0.41\% & \textbf{0.82\%} & $-$1.31\% & $-
 
 冻结寄生灵敏度批处理中，五例的候选终点在详细重布线后违反建立或保持时间门限，有效面积平均下降0.14\%。实测的五轮冻结寄生LR在离线阶段给出7.81\%--14.14\%的面积降幅，重布线后建立时间WNS下降79.60--706.03\,ps，十例均未通过预算。此结果量化了该LR实现的冻结寄生误差。
 
-同预算下，单门在线贪心在九例取得正收益，平均降幅为2.11\%。FAECO的平均降幅为2.01\%，十例均取得正收益。FAECO在单门贪心无正收益的s953回收0.67\%，在b12回收0.82\%，后者为单门贪心0.41\%的两倍。s420、s713、s832、b04与b11由单门贪心获得更大降幅。
+同预算下，单门在线贪心在九例取得正收益，FAECO在十例取得正收益。按全部十例计入零收益，平均降幅分别为2.11\%和2.01\%。FAECO在s953回收0.67\%，在b12回收0.82\%，单门贪心分别回收0和0.41\%。s420、s713、s832、b04与b11由单门贪心获得更大降幅。
 
 面积优化端点的总功耗和组合逻辑功耗均低于各自参考，十例平均分别下降0.96\%和3.72\%。其中s420的组合功耗下降8.26\%，静态漏电下降8.68\%。
 
@@ -996,14 +1009,19 @@ FAECO（$B=10$\,ps） & 191 & 2130.75 & 0.266\% & 0.00 & $-12357.02$ & $+48.18$ 
 
 FAECO的10\,ps预算搜索在44次评估内提交191处替换，报告精度下的建立和保持时间WNS均与参考一致。回收面积0.266\%，TNS改善48.18\,ps，功耗报告从0.432\,W变为0.431\,W，Yosys证明1,252个内部等价点。两种方法的面积与TNS结果来自共同的初始设计，FAECO与原生回收采用各自的评估预算。
 
+\subsection{ASAP7 Ibex的布线后同面积目标对照}
+
+在ASAP7 Ibex上，保留原始I/O约束和FF/TT/SS三角，按相反顺序串行比较单门贪心与早期FAECO调度。两种调度从同一个详细布线起点出发，取相同的逐角10\,ps建立时间WNS损失限、TNS损失门、保持时间非负及相对不退化门，以及0.01\%面积目标。四臂均在第三次详细布线和寄生提取后验收同一个双门端点，回收0.26244\,\textmu m$^2$（0.012322\%），SEC证明17,363个等价点。FF建立时间WNS从$+0.380$降至$-4.380$\,ps，并新增15个负建立时间端点，符合本试验允许跨零的预算。共享起点和零动作预检单独计费。以搜索开始时的WSL单调时钟计，两个顺序中FAECO分别节省40.31和35.20\,s，主要来自少一次中间端点的SEC；详细布线与寄生提取用时差在两个顺序中的方向相反。
+
 % ============================================================
 % §7 讨论
 % ============================================================
 \section{讨论}
 
-\subsection{覆盖优先是效率的来源}
+\subsection{候选覆盖与物理验证成本}
 
 覆盖优先调度利用端点逻辑锥安排候选评估，可调预算用物理测量判定组合，选择性恢复由独立回退的STA结果引导。107处尺寸修改的独立回退诊断中有74处保持WNS不变。联合动作则可能改变路径排序和寄生参数，b22固定寄生联合回退和重布线后的对照都说明了复测的必要性。
+AES的交叉对照表明布线前定位邻线冲突可以减少首达前的重复布线。采用同一诊断后端时，FAECO在首达前多评估一个被保持时间门拒收的批次，随后验收了更大的回收端点。常规后端耗尽更多时窗，两个调度的最大回收持平。
 
 \subsection{与Resizer的关系：双向协同与独立延伸}
 
@@ -1019,7 +1037,7 @@ FAECO的10\,ps预算搜索在44次评估内提交191处替换，报告精度下�
 \item \textbf{超大规模设计的邻域窗口加速。}
       b15的局部直连线网增量绕线在约185\,s内给出零DRC的候选。更拥塞或更大设计上的收敛成本需要在一致的输入、预算和DRC停止条件下进行比较。
 \item \textbf{跨工艺评估与多阈值电压替换。}
-      SKY130结果来自详细重布线与寄生重提取。ASAP7仅在一个AES密码核上采用全局布线寄生估算与理想时钟。多阈值电压等面积替换与更大设计的详细重布线联合评估仍待验证。
+      布线前诊断的等时窗对照以SKY130HD AES为对象。本文的ASAP7 AES试验采用全局布线寄生估算与理想时钟。跨设计复现实验将进一步检验邻线诊断成本、多阈值电压替换和详细重布线之间的关系。
 \item \textbf{产物与测量溯源。}
       历史数据的路由输入、STA参考和等价证明金标准分别绑定到物理快照。部分原始运行保留网表、SPEF、Tcl和日志，候选布线DEF未生成。上述记录支持回读已有结果，完整重跑还需要对应的工艺库、路由输入和工具版本。
 \end{enumerate}
@@ -1029,9 +1047,11 @@ FAECO的10\,ps预算搜索在44次评估内提交191处替换，报告精度下�
 % ============================================================
 \section{结论}
 
-FAECO以相对WNS预算为布线后面积回收留出可调空间，并通过重布线、寄生重提取和等价性检查验证候选。覆盖优先在八个ISCAS89电路上减少了7.8\%--19.0\%的候选STA调用。以前缀二分定位越界动作并继续检查剩余回退，b22在固定寄生诊断中以10次验证STA回收33.1\%的上游净新增面积。
+FAECO以相对WNS预算为布线后面积回收留出可调空间，并通过重布线、寄生重提取和等价性检查验证候选。在八个ISCAS89电路的历史对照中，覆盖优先相对三个随机顺序配置减少了7.8\%--19.0\%的候选STA调用。b22在固定寄生诊断中以前缀二分和续跑搜索，用10次验证STA回收33.1\%的上游净新增面积。
 
-独立模式在十个SKY130电路上均获得正的名义面积回收并通过全网表两态SEC。单门在线贪心的平均降幅为2.11\%，FAECO为2.01\%，两者分别覆盖9例和10例。对相同的正回收端点复测后，慢角和IO+OCV的建立时间预算分别有9例和8例满足。使用固定参考联合评估s713和s832时，两例的候选均存在负的IO+OCV绝对保持时间余量。局部增量绕线在b15上给出零DRC的正回收端点，ASAP7的AES案例在全局布线寄生估算下回收0.266\%面积、改善TNS 48.18\,ps。上述结果表明，在残留负松弛的设计上，面积回收范围取决于布线反馈和最终应用的时序视图。
+独立模式在十个SKY130电路上均获得正的名义面积回收并通过全网表两态SEC。单门在线贪心和FAECO分别在9例和10例实现正收益，按十例计的平均降幅为2.11\%和2.01\%。对相同的正回收端点复测后，慢角和IO+OCV的建立时间预算分别有9例和8例满足，FF相对保持时间有5例不退化。s713和s832的同参考联合评估均受IO+OCV绝对保持时间限制。
+
+SKY130HD AES的交叉实验将局部冲突定位与候选调度分开检验。计入实时诊断开销后，两种调度均更早到达各自相同的合格端点。FAECO在同一诊断后端上回收更多面积，并花费更长时间达到初始面积目标。详细布线后验、逐角时序、实际耗时与验收面积共同刻画这种取舍。
 
 \vspace{0.3cm}
 \noindent\textbf{致谢。}
@@ -1047,9 +1067,6 @@ FAECO以相对WNS预算为布线后面积回收留出可调空间，并通过重
 \bibitem{openroad}
 Ajayi T, Chhabria V A, Foga\c{c}a M, et al. Toward an open-source digital flow: First learnings from the OpenROAD project[C]//Proceedings of the 56th ACM/IEEE Design Automation Conference (DAC). 2019: 1--4.
 
-\bibitem{cong2007optimality}
-Cong J, Minkovich K. Optimality study of logic synthesis for LUT-based FPGAs[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2007, 26(2): 230--239.
-
 \bibitem{chinnery2002closing}
 Chinnery D, Keutzer K. Closing the gap between ASIC and custom: Tools and techniques for high-performance ASIC design[M]. Boston: Kluwer Academic Publishers, 2002.
 
@@ -1057,7 +1074,13 @@ Chinnery D, Keutzer K. Closing the gap between ASIC and custom: Tools and techni
 Ozdal M M, Burns S M, Hu J. Gate sizing and device technology selection algorithms for high-performance industrial designs[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2011: 724--731.
 
 \bibitem{hu2013ispd}
-Hu J, Sinha D, Keller I. ISPD 2013 discrete cell sizing contest and benchmark suite[C]//Proceedings of the ACM International Symposium on Physical Design (ISPD). 2013: 168--175.
+ACM International Symposium on Physical Design. ISPD 2013 discrete gate sizing contest and benchmark suite[EB/OL]. 2013. \url{https://www.ispd.cc/contests/13/ispd2013_contest.html}
+
+\bibitem{fatemi2019sizer}
+Fatemi H, Kahng A B, Lee H, et al. Enhancing sensitivity-based power reduction for an industry IC design context[J]. Integration, 2019, 66: 96--111.
+
+\bibitem{cheng2023dagsizer}
+Cheng C K, Holtz C, Kahng A B, et al. DAGSizer: A directed graph convolutional network approach to discrete gate sizing of VLSI graphs[J]. ACM Transactions on Design Automation of Electronic Systems, 2023, 28(4): Article 52.
 
 \bibitem{chen1999fast}
 Chen C P, Chu C C N, Wong D F. Fast and exact simultaneous gate and wire sizing by Lagrangian relaxation[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 1999, 18(7): 1014--1025.
@@ -1065,11 +1088,11 @@ Chen C P, Chu C C N, Wong D F. Fast and exact simultaneous gate and wire sizing 
 \bibitem{flach2014effective}
 Flach G, Reimann T, Posser G, et al. Effective method for simultaneous gate sizing and $V_{th}$ assignment using Lagrangian relaxation[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2014, 33(4): 546--557.
 
-\bibitem{ozdal2011gate}
-Ozdal M M. Detailed-routing algorithms for dense pin clusters in integrated circuits[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2009, 28(3): 340--349.
-
 \bibitem{trident2}
-Kahng A B, Kang S, Li B, et al. High-performance gate sizing with a signoff timer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2013: 450--457.
+Kahng A B, Kang S, Lee H, et al. High-performance gate sizing with a signoff timer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2013: 450--457.
+
+\bibitem{tritonroutewxl}
+Kahng A B, Wang L, Xu B. TritonRoute-WXL: The open source router with integrated DRC engine[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2022, 41(4): 1076--1089.
 
 \bibitem{openphysyn2020}
 Agiza A, Reda S. OpenPhySyn: An open-source physical synthesis optimization toolkit[C]//Proceedings of the Workshop on Open-Source EDA Technology (WOSET). 2020: 1--4.
@@ -1077,47 +1100,20 @@ Agiza A, Reda S. OpenPhySyn: An open-source physical synthesis optimization tool
 \bibitem{rlsizer2021}
 Lu Y C, Nath S, Khandelwal V, et al. RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning[C]//Proceedings of the 58th ACM/IEEE Design Automation Conference (DAC). 2021.
 
-\bibitem{ireco2024}
-Jiang W, Chhabria V A, Sapatnekar S S. IR-aware ECO timing optimization using reinforcement learning[C]//Proceedings of the ACM/IEEE International Symposium on Machine Learning for CAD (MLCAD). 2024.
-
 \bibitem{goalevolve2026}
 Liu H, Zhou L, Ren Y, et al. GoalEvolve: From handcrafted algorithm priors to goal-driven evolution of physical design algorithms[EB/OL]. arXiv:2608.16733, 2026.
 
 \bibitem{timing_budget}
-Lin T W, Huang T W, Wong M D F. Task-based parallel programming for gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2023, 42(4): 1309--1322.
-
-\bibitem{held2009fast}
-Held S. Gate sizing for large cell libraries[C]//Proceedings of the Design, Automation \& Test in Europe Conference \& Exhibition (DATE). 2009: 827--832.
-
-\bibitem{roy2015markov}
-Roy S, Liu D, Um J, et al. High-performance discrete gate sizing with sensitivities and Lagrangian relaxation[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2016, 35(8): 1318--1331.
-
-\bibitem{mangiras2020timing}
-Mangiras D, Chatzigeorgiou A, Dimitrakopoulos G. Timing-driven logic restructuring for area and power recovery[J]. IEEE Transactions on Very Large Scale Integration (VLSI) Systems, 2021, 29(4): 718--730.
-
-\bibitem{sharma2019fast}
-Sharma A, Chhabria V A, Sapatnekar S S. Fast incremental timing-driven gate sizing and leakage recovery[C]//Proceedings of the Asia and South Pacific Design Automation Conference (ASP-DAC). 2020: 319--324.
-
-\bibitem{li2017leakage}
-Li X, Chen G, Young E F Y. An effective Lagrangian relaxation-based algorithm for discrete gate sizing with multi-corner timing constraints[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2017, 36(11): 1845--1858.
+Mangiras D, Chinnery D G, Dimitrakopoulos G. Task-based parallel programming for gate sizing[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2023, 42(4): 1309--1322.
 
 \bibitem{rlccd2023}
 Lu Y C, Chan W T, Guo D, et al. RL-CCD: Concurrent clock and data optimization using attention-based self-supervised reinforcement learning[C]//Proceedings of the 60th ACM/IEEE Design Automation Conference (DAC). 2023: 1--6.
 
 \bibitem{pcr2026}
-Chen Z, Liang R, Ho T Y, et al. Timing-driven logic remapping with local physical context[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2025: 1--8.
-
-\bibitem{trident2_2025}
-Wang H, Liu M, Pan D Z. Multi-source candidate pool generation for post-placement timing ECO[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2024, 43(7): 2110--2123.
+Jiang Z, Pan H, Lan C, Zhu K. Timing-driven logic remapping with local physical context[EB/OL]. arXiv:2610.01918, 2026.
 
 \bibitem{elayout2026}
-Fang W, Liang R, Lu Y C, et al. E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2025: 1--9.
-
-\bibitem{guo2022gnn}
-Guo Z, Liu M, Gu J, et al. A timing engine-inspired graph neural network model for pre-routing slack prediction[C]//Proceedings of the 59th ACM/IEEE Design Automation Conference (DAC). 2022: 1207--1212.
-
-\bibitem{nath2022transizer}
-Nath S, Kahng A B, Wang L. TranSizer: Transformer-based fast gate sizer[C]//Proceedings of the IEEE/ACM International Conference on Computer-Aided Design (ICCAD). 2022: 1--9.
+Fang W, Liang R, Lu Y C, et al. E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation[EB/OL]. arXiv:2610.26432, 2026.
 
 \bibitem{abc2010}
 Brayton R, Mishchenko A. ABC: An academic industrial-strength verification tool[C]//Proceedings of the International Conference on Computer Aided Verification (CAV). 2010: 24--40.

@@ -6,7 +6,7 @@
 
 | 路径 | 角色 | 状态 |
 |---|---|---|
-| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，14 页，6 幅 ImageGen 示意图，含四场景逐端点回读） | 活跃 |
+| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，6 幅 ImageGen 示意图，含四场景逐端点回读及 AES 交叉对照） | 活跃 |
 | `FAECO_v3_后布局可调预算面积回收.pdf` | 顶层交付 PDF（与 `manuscript/`、`build/` 同名 PDF 逐字节同步） | 活跃 |
 | `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex` | v1/v2 预布局中文主稿（对应冻结基线 `v19`） | 历史归档 |
 | `manuscript/FAECO_补充材料.tex` | v1/v2 预布局中文补充材料 | 历史归档 |
@@ -37,6 +37,6 @@ Copy-Item "FAECO_v3_后布局可调预算面积回收.pdf" "../build/FAECO_v3_�
 
 ## 四、写作与数字核对规范
 
-- **数字单一可信源**：所有面积、WNS、hold、TNS 与 SEC 读数必须直接来自 `project_docs/evidence/postroute_recovery_20261120/{REPORT.md, SUMMARY.json}` 与 `project_docs/CANON.md`。
+- **数字逐证据包核对**：每项面积、WNS、hold、TNS、用时及 SEC 读取对应端点和配置的原始或核验收据。入口包括 [历史回收](../../project_docs/evidence/postroute_recovery_20261120/REPORT.md)、[SKY130 四场景](../../project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)、[SKY130HD AES 交叉对照](../../project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)及 [ASAP7 Ibex 反序复跑](../../project_docs/evidence/tcad_ibex_20261123/ASAP7_SERIAL_REPORT.md)。
 - **去工程化学术风格**：正文与图注统一使用算法/方法论术语，不引入 `.py` 文件名、Python 函数名、命令行选项或工程 issue 编号。
 - **修改留痕**：每次修改 `.tex` 或 `figures/`，同步更新 `paper/zh/CHANGE_LOG.md` 与 `project_docs/LOGS.md`。
