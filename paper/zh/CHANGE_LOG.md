@@ -787,3 +787,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - AES 主表采用固定／FAECO × 常规／在线诊断的正反序八臂正式数据，按同一面积目标记录时间，按硬时窗记录已验收的最大面积。六门给出 FF/TT/SS 的 WNS、TNS、hold、DRC、天线与 SEC，九门留在窗外诊断。摘要、讨论与结论同步。 [正反序报告](../../project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)
 - LuaLaTeX 双遍编译，15 页、6 幅 ImageGen、21 个参考条目，无编译错误、文本溢出或未解析引用，保留原环境的字体替代提示。全页视觉核对，直接检查改动的首页、AES 主表和参考文献末页。TeX SHA-256 `30a768a09b446f9e497660a99b64c85030809933b032044e408f84da00e6c0ed`，三份 PDF 逐字节同步（6,621,186 B，SHA-256 `84fef3d50683d1966a5d8c69cf121bfa56cc1d5e38305fdad7d18745651c2781`）。
 - 新增 JPEG 原约束起点失败及 SS 负端点归因，列入第 7.3 节的适用范围。双遍复编仍为 15 页、6 幅 ImageGen、21 条参考文献，0 编译错误、0 溢出、0 未解析引用。终轮与上版相比只有第 14、15 页视觉变化，已复核新增文字及参考文献未跨栏拆条。TeX SHA-256 4aa5f80d57fc7fd3d7f45487c546150b146013daf24887ba724aa4198d97cc8b。三份 PDF 同步，6621870 字节，SHA-256 21f2e2445b30684d0713dfa131d2c0f2dcd9d10e4236177a04fab109b2c227d1。 [JPEG 资格报告](../../project_docs/evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md)
+
+## 2026-11-24 AES 面积与首达时间的报告次序
+
+- 摘要、方法、主表与结论统一采用等墙钟的最大合格面积为主指标，并报告等面积目标首达时间。十个 SKY130 小电路的比较写明共用重布线评估次数上限。实验数据取已核验八臂收据。
+- LuaLaTeX 双遍编译，15 页、0 错误、0 溢出、0 未解析引用。逐页对比上版并复核改动的 6 页，三份 PDF 同步。TeX SHA-256 7079317c2190c970514c68b6a89f47c8b62cc689d54cb1bab849717af6388efa，PDF 6621351 字节、SHA-256 6970fbe607dde0751192ac15a083cc37426c34140db912079e626d85cb40f751。
