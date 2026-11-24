@@ -4,6 +4,22 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 AES 同在线后端的 FAECO 与单门贪心正反序
+
+同一冻结起点、同一 18 动作池、同一在线诊断和物理后端。每臂计入共同筛选 113.363 RAW s、原 3.6 ns 与 I/O、720 RAW s 硬窗、6 次逻辑请求上限，应用相同三角 setup／hold、电气、独立 DRC、天线和 SEC 门。
+
+| 派发 | 正序／反序 0.01% 首达 / RAW s | 两序 720 RAW s 内最大合格面积回收 / µm² |
+|---|---:|---:|
+| 原序单门贪心 | 607.806／599.796 | 22.5216 |
+| FAECO | 469.963／471.424 | 67.5648 |
+
+两种策略各自跨序复现相同的首达和最优物理端点。FAECO 试到第 3 次达阈值、单门第 4 次达阈值，实际首达分别回收 33.7824／22.5216 µm²。两种策略均完成四次请求并接受两次，FAECO 的两次接受合计六个动作，单门接受两个。该结果支持 AES 上相对原序单门贪心的联合调度收益。同后端固定批次在前轮首达最快，独立设计和排序／批处理分量仍需配对量化。[配对报告](evidence/tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/AES_ONLINE_GREEDY_VERIFIED.json)
+
+## 2026-11-24 ASAP7 UART 原生起点资格
+
+- ORFS 原生 UART 完成详细布线、寄生提取和原约束三角检查，周期 270 ps、I/O 54 ps、虚拟时钟延迟 66.270 ps。FF／TT／SS hold WNS +50.315／+67.502／+54.053 ps，hold TNS 均为 0。setup WNS +25.853／−39.580／−199.705 ps；TT、SS 的负 setup 余量须在后续协议中以共同起点为参照。
+- 原生和独立检查的 DRC、天线均为 0，三角最大转换时间和最大电容违规均为 0，冻结网表自 SEC 567/0。原设定下的冻结 CONTROL 具备进入搜索比较的起点资格。候选派发、候选 DRT/STA/SEC 均为 0，跨设计性能仍待正式对照。[制备报告](evidence/tcad_holdout_20261123/UART_CONTROL_RUN.md) · [独立核验](evidence/tcad_holdout_20261123/UART_CONTROL_VERIFIED.json)
+
 ## 2026-11-24 原生 JPEG 起点资格
 
 - SKY130HD JPEG 原生制备实际完成详细布线、两轮原生天线修复及 RCX，最终 DRC 和天线为 0。原 5 ns、1 ns I/O 与原时钟关系在最终端点核对一致。FF／TT hold WNS +218.048／+357.532 ps；SS hold WNS/TNS −2,340.727／−41,475.257 ps，原生冻结起点资格拒收。最差为异步 reset removal，另一个常规输入 D 端 hold −1,256.375 ps。未启动候选、未计策略结果。[资格报告](evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md) · [资格登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1)

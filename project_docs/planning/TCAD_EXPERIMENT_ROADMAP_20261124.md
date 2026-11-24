@@ -38,6 +38,8 @@
 
 已制备 JPEG 的原始物理起点。三角回读在 SS 发现 26 个负最小时序端点，其中四个数据捕获引脚也有负的建立时间裕量。把 JPEG 计入起点不可行的预检，后续按原约束分别检查共同 hold 修复和计划中的 UART 资格。 [JPEG 起点证据](../evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md)
 
+AES 同在线后端单门对照已完成两轮反序，FAECO 在 720 s 内回收 67.5648 对 22.5216 µm²，达 0.01% 目标分别快 137.843／128.373 RAW s。ASAP7 UART 原约束 CONTROL 已完成 DRT/RCX、三角绝对 hold、独立 DRC/天线、电气和非空自证，可进入新设计对照队列。 [AES 与单门对照](../evidence/tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md) · [UART 起点证据](../evidence/tcad_holdout_20261123/UART_CONTROL_RUN.md)
+
 ## 判断整体完善的条件
 
 - **可以现在收口。** 明确输入、候选生成、局部 DRC 反馈、受预算调度、全物理验收和输出指标，整理成可运行的统一流程。现在可开始写问题、方法、规约和 AES 机制案例。补出同后端强基线前，论文可把现有性能数字按已实测的设计和运行顺序准确陈述。

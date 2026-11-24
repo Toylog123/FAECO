@@ -1,0 +1,307 @@
+{
+  "schema_version": 1,
+  "design": "uart",
+  "top": "uart",
+  "platform": "asap7",
+  "status": "hold_qualified",
+  "producer": {
+    "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/producer_receipt.json",
+    "bytes": 16809,
+    "sha256": "c7cb37215444fdba923f3c11cceebf19dfb6375c0ae0c35c8ced4e12f2b76e0f"
+  },
+  "launcher": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_holdout_20261123/prepare_uart_control.sh",
+    "bytes": 9563,
+    "sha256": "c73e262e301b3a3265945afe82b3094ff7fabb900ab1f743bade4cbbb78f3eeb"
+  },
+  "shared_qualifier": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/asap7_control/qualify_asap7_control.py",
+    "bytes": 15967,
+    "sha256": "7c3bb63cc3782729eceb1acabf5c4a266a1dc0858ed7922107c4ae64f5770b51"
+  },
+  "source_sdc": {
+    "path": "/home/toylog/faeco_eda/orfs/flow/designs/asap7/uart/constraint.sdc",
+    "bytes": 578,
+    "sha256": "73a46fba5414eb32d1fb24f2681eae9c1fdeba90a2a9762a73848f9c4edfef8b"
+  },
+  "control_output_paths": {
+    "odb": {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.odb",
+      "bytes": 2235398,
+      "sha256": "df9bb6fa68d690bbcc3d4a5a78953ab0f1246c41fa9b8406ec847c01fdcf9326"
+    },
+    "def": {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.def",
+      "bytes": 764501,
+      "sha256": "52e32f7d554fdf750784e554ed91f2eb4baaa7ab6b4497b3c83bd8b15070d236"
+    },
+    "v": {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.v",
+      "bytes": 82013,
+      "sha256": "3b50d975941e90f623fd38b55b86e4a7ed6e9de6160f50cc42b2fb97c735d338"
+    },
+    "sdc": {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.sdc",
+      "bytes": 4952,
+      "sha256": "d6a317c88e07abd1d6dcb9a8ac20d6b7aa2fceb1cdf69213b4c36dc4b49be6c9"
+    },
+    "spef": {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.spef",
+      "bytes": 707040,
+      "sha256": "9d332b0522f1003b2fee0c76ad14aa4cd0b776de9169e29044455357db43d67f"
+    }
+  },
+  "detailed_route_drc_count": 0,
+  "native_antenna": {
+    "nets": 0,
+    "pins": 0
+  },
+  "source_sdc_semantics": {
+    "sdc_time_unit": "ps",
+    "period_sdc_units": 270.0,
+    "io_delay_sdc_units": 54.0,
+    "virtual_latency_sdc_units": 66.27,
+    "source_core_latency_sdc_units": 66.27,
+    "period_ps": 270.0,
+    "io_delay_ps": 54.0,
+    "virtual_latency_ps": 66.27,
+    "core_clock": "clk",
+    "clock_port": "clk",
+    "virtual_clock": "vclk_clk",
+    "expanded_port_counts": {
+      "input": 28,
+      "output": 15
+    },
+    "source_io_matches_all_nonclock_inputs_and_outputs": true,
+    "propagated_after_cts": "clk"
+  },
+  "views": {
+    "FF": {
+      "setup_wns_ps": 25.852903151601936,
+      "hold_wns_ps": 50.314898081271764,
+      "setup_tns_ps": 0.0,
+      "hold_tns_ps": 0.0,
+      "elapsed_seconds": 1.376,
+      "returncode": 0,
+      "receipt_reuses_saved_success_log": false,
+      "command": [
+        "/usr/bin/timeout",
+        "--kill-after=5s",
+        "120s",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/FF.tcl"
+      ],
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/FF.tcl",
+        "bytes": 1631,
+        "sha256": "3b72d38aa7ae12a46ca9643e23fffd3d64a2b920810507c5d990f8b021d916de"
+      },
+      "log": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/FF.log",
+        "bytes": 9739,
+        "sha256": "4a485ec5fba78f7f28086bfb93dd96b4f8d7f73b852923f1024739512563353b"
+      },
+      "actual_port_counts": {
+        "input": 28,
+        "output": 15
+      }
+    },
+    "TT": {
+      "setup_wns_ps": -39.580255739579684,
+      "hold_wns_ps": 67.50211500872183,
+      "setup_tns_ps": -1893.1021195101039,
+      "hold_tns_ps": 0.0,
+      "elapsed_seconds": 1.429,
+      "returncode": 0,
+      "receipt_reuses_saved_success_log": false,
+      "command": [
+        "/usr/bin/timeout",
+        "--kill-after=5s",
+        "120s",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/TT.tcl"
+      ],
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/TT.tcl",
+        "bytes": 1631,
+        "sha256": "872d049b0b300735248d55960070dfe7400b79cc6c4268170aa9c4a9aad366c3"
+      },
+      "log": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/TT.log",
+        "bytes": 9967,
+        "sha256": "7c2817d941ac8e7713f505095893efc524c0ba858d2fc43d239c42f833ae2a32"
+      },
+      "actual_port_counts": {
+        "input": 28,
+        "output": 15
+      }
+    },
+    "SS": {
+      "setup_wns_ps": -199.70530784618745,
+      "hold_wns_ps": 54.05291492177611,
+      "setup_tns_ps": -13697.365019993413,
+      "hold_tns_ps": 0.0,
+      "elapsed_seconds": 1.467,
+      "returncode": 0,
+      "receipt_reuses_saved_success_log": false,
+      "command": [
+        "/usr/bin/timeout",
+        "--kill-after=5s",
+        "120s",
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/SS.tcl"
+      ],
+      "tcl": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/SS.tcl",
+        "bytes": 1631,
+        "sha256": "0efe31cc9440561148cad41774eceec4a01c3cd469eca676f4772020400b04d4"
+      },
+      "log": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/SS.log",
+        "bytes": 9621,
+        "sha256": "8892b2741027dc90423c48b3f860da0cb7cffcce5a2183e025e1f22d9040f332"
+      },
+      "actual_port_counts": {
+        "input": 28,
+        "output": 15
+      }
+    }
+  },
+  "view_liberty_groups": {
+    "FF": [
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+        "bytes": 4256548,
+        "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+        "bytes": 69351,
+        "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+        "bytes": 3829689,
+        "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+        "bytes": 317193,
+        "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+        "bytes": 1510915,
+        "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+      }
+    ],
+    "TT": [
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+        "bytes": 4181747,
+        "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+        "bytes": 69356,
+        "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+        "bytes": 3765433,
+        "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+        "bytes": 446864,
+        "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "bytes": 1512690,
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+      }
+    ],
+    "SS": [
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+        "bytes": 4181198,
+        "sha256": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+        "bytes": 69301,
+        "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+        "bytes": 3760577,
+        "sha256": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+        "bytes": 444914,
+        "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+      },
+      {
+        "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+        "bytes": 1513373,
+        "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+      }
+    ]
+  },
+  "sta_binary": {
+    "path": "/usr/local/bin/sta",
+    "bytes": 6800784,
+    "sha256": "4f0727aefff89b124f09f3a782d45bb8e96a895fd2425f87bdb6b56fdcc16628"
+  },
+  "all_views_nonnegative_hold": true,
+  "native_finish_stdcell_area_um2": 105.107,
+  "native_finish_stdcell_count": 875,
+  "native_tt_setup_wns_ps": -39.5803,
+  "native_tt_hold_wns_ps": 67.5021,
+  "raw_reports": [
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/producer.log",
+      "bytes": 202105,
+      "sha256": "111ddae7f90fa7db243ace2313ca154ef9b11acc60c57b8b8bcccf24ce95edae"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/logs/asap7/uart/base/5_2_route.log",
+      "bytes": 16309,
+      "sha256": "0daaf6cbb3caa0a0969148fceff72f494db7a147a06d9ee3e6b4f9d92d17fa74"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/logs/asap7/uart/base/5_2_route.json",
+      "bytes": 1119,
+      "sha256": "784cd284f1163d19289a1402e69b04bb4d96aedc18bf0e81e9ad0eaa2c6b0034"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/logs/asap7/uart/base/6_report.log",
+      "bytes": 4298,
+      "sha256": "ed87cfd025ffd9ef1b709123c9f5c9d89753adcc637903b9c91a12007abdd8e0"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/logs/asap7/uart/base/6_report.json",
+      "bytes": 3792,
+      "sha256": "5d18538b0ffaef5e784ce0d9fd4b0e996e919bc8ddd6048cbddddead6353ada1"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/reports/asap7/uart/base/5_route_drc.rpt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "counts": {
+    "qualification_sta": 3,
+    "candidate_routes": 0,
+    "candidate_sta": 0,
+    "candidate_sec": 0
+  }
+}

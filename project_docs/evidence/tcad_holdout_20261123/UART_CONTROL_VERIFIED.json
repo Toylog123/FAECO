@@ -1,0 +1,666 @@
+{
+  "status": "supplemental_passed",
+  "control": {
+    "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/CONTROL.json",
+    "sha256": "18b16f9f0ddcc7ddae3d6ef54b7ae55a4996fdcc8582213f4333d9070863d77b",
+    "bytes": 11968
+  },
+  "launcher": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/scratch/tcad_ibex_20261123/check_uart_control.py",
+    "sha256": "f756485a77ab39527939aa04e3a2e934841f6f9c5d6037d9d4769005dd18b3b1",
+    "bytes": 10450
+  },
+  "physical": {
+    "fixed_signal_wire_count": 0,
+    "reports": {
+      "full_drc": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/full_drc.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "antenna": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/antenna.rpt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "drc_markers": 0,
+    "drc_types": [],
+    "antenna_count": 0
+  },
+  "views": {
+    "FF": {
+      "setup_wns_ps": 25.852903151601936,
+      "hold_wns_ps": 50.314898081271764,
+      "setup_tns_ps": 0.0,
+      "hold_tns_ps": 0.0,
+      "electrical": {
+        "MAX_SLEW": {},
+        "MAX_CAPACITANCE": {}
+      },
+      "ports": {
+        "INPUT": [
+          "m_axis_tready",
+          "prescale[0]",
+          "prescale[10]",
+          "prescale[11]",
+          "prescale[12]",
+          "prescale[13]",
+          "prescale[14]",
+          "prescale[15]",
+          "prescale[1]",
+          "prescale[2]",
+          "prescale[3]",
+          "prescale[4]",
+          "prescale[5]",
+          "prescale[6]",
+          "prescale[7]",
+          "prescale[8]",
+          "prescale[9]",
+          "rst",
+          "rxd",
+          "s_axis_tdata[0]",
+          "s_axis_tdata[1]",
+          "s_axis_tdata[2]",
+          "s_axis_tdata[3]",
+          "s_axis_tdata[4]",
+          "s_axis_tdata[5]",
+          "s_axis_tdata[6]",
+          "s_axis_tdata[7]",
+          "s_axis_tvalid"
+        ],
+        "OUTPUT": [
+          "m_axis_tdata[0]",
+          "m_axis_tdata[1]",
+          "m_axis_tdata[2]",
+          "m_axis_tdata[3]",
+          "m_axis_tdata[4]",
+          "m_axis_tdata[5]",
+          "m_axis_tdata[6]",
+          "m_axis_tdata[7]",
+          "m_axis_tvalid",
+          "rx_busy",
+          "rx_frame_error",
+          "rx_overrun_error",
+          "s_axis_tready",
+          "tx_busy",
+          "txd"
+        ]
+      },
+      "setup_negative_endpoints": [],
+      "negative_setup_count": 0,
+      "electrical_violation_counts": {
+        "MAX_SLEW": 0,
+        "MAX_CAPACITANCE": 0
+      },
+      "qualification_deltas_ps": {
+        "setup_wns_ps": 0.0,
+        "setup_tns_ps": 0.0,
+        "hold_wns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      }
+    },
+    "TT": {
+      "setup_wns_ps": -39.580255739579684,
+      "hold_wns_ps": 67.50211500872183,
+      "setup_tns_ps": -1893.1021195101039,
+      "hold_tns_ps": 0.0,
+      "electrical": {
+        "MAX_SLEW": {},
+        "MAX_CAPACITANCE": {}
+      },
+      "ports": {
+        "INPUT": [
+          "m_axis_tready",
+          "prescale[0]",
+          "prescale[10]",
+          "prescale[11]",
+          "prescale[12]",
+          "prescale[13]",
+          "prescale[14]",
+          "prescale[15]",
+          "prescale[1]",
+          "prescale[2]",
+          "prescale[3]",
+          "prescale[4]",
+          "prescale[5]",
+          "prescale[6]",
+          "prescale[7]",
+          "prescale[8]",
+          "prescale[9]",
+          "rst",
+          "rxd",
+          "s_axis_tdata[0]",
+          "s_axis_tdata[1]",
+          "s_axis_tdata[2]",
+          "s_axis_tdata[3]",
+          "s_axis_tdata[4]",
+          "s_axis_tdata[5]",
+          "s_axis_tdata[6]",
+          "s_axis_tdata[7]",
+          "s_axis_tvalid"
+        ],
+        "OUTPUT": [
+          "m_axis_tdata[0]",
+          "m_axis_tdata[1]",
+          "m_axis_tdata[2]",
+          "m_axis_tdata[3]",
+          "m_axis_tdata[4]",
+          "m_axis_tdata[5]",
+          "m_axis_tdata[6]",
+          "m_axis_tdata[7]",
+          "m_axis_tvalid",
+          "rx_busy",
+          "rx_frame_error",
+          "rx_overrun_error",
+          "s_axis_tready",
+          "tx_busy",
+          "txd"
+        ]
+      },
+      "setup_negative_endpoints": [
+        "uart_rx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.busy$_SDFFE_PP0P_/D",
+        "uart_rx_inst.data_reg[0]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[1]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[2]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[3]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[4]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[5]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[6]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[7]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.frame_error$_SDFF_PP0_/D",
+        "uart_rx_inst.m_axis_tdata[0]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[1]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[2]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[3]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[4]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[5]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[6]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[7]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tvalid$_SDFF_PP0_/D",
+        "uart_rx_inst.overrun_error$_SDFF_PP0_/D",
+        "uart_rx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.busy$_SDFFE_PP0P_/D",
+        "uart_tx_inst.data_reg[0]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[1]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[2]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[3]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[4]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[5]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[6]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[7]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[8]$_DFFE_PP_/D",
+        "uart_tx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.s_axis_tready$_SDFFE_PP0P_/D",
+        "uart_tx_inst.txd$_SDFFE_PP1P_/D"
+      ],
+      "negative_setup_count": 77,
+      "electrical_violation_counts": {
+        "MAX_SLEW": 0,
+        "MAX_CAPACITANCE": 0
+      },
+      "qualification_deltas_ps": {
+        "setup_wns_ps": 0.0,
+        "setup_tns_ps": 0.0,
+        "hold_wns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      }
+    },
+    "SS": {
+      "setup_wns_ps": -199.70530784618745,
+      "hold_wns_ps": 54.05291492177611,
+      "setup_tns_ps": -13697.365019993413,
+      "hold_tns_ps": 0.0,
+      "electrical": {
+        "MAX_SLEW": {},
+        "MAX_CAPACITANCE": {}
+      },
+      "ports": {
+        "INPUT": [
+          "m_axis_tready",
+          "prescale[0]",
+          "prescale[10]",
+          "prescale[11]",
+          "prescale[12]",
+          "prescale[13]",
+          "prescale[14]",
+          "prescale[15]",
+          "prescale[1]",
+          "prescale[2]",
+          "prescale[3]",
+          "prescale[4]",
+          "prescale[5]",
+          "prescale[6]",
+          "prescale[7]",
+          "prescale[8]",
+          "prescale[9]",
+          "rst",
+          "rxd",
+          "s_axis_tdata[0]",
+          "s_axis_tdata[1]",
+          "s_axis_tdata[2]",
+          "s_axis_tdata[3]",
+          "s_axis_tdata[4]",
+          "s_axis_tdata[5]",
+          "s_axis_tdata[6]",
+          "s_axis_tdata[7]",
+          "s_axis_tvalid"
+        ],
+        "OUTPUT": [
+          "m_axis_tdata[0]",
+          "m_axis_tdata[1]",
+          "m_axis_tdata[2]",
+          "m_axis_tdata[3]",
+          "m_axis_tdata[4]",
+          "m_axis_tdata[5]",
+          "m_axis_tdata[6]",
+          "m_axis_tdata[7]",
+          "m_axis_tvalid",
+          "rx_busy",
+          "rx_frame_error",
+          "rx_overrun_error",
+          "s_axis_tready",
+          "tx_busy",
+          "txd"
+        ]
+      },
+      "setup_negative_endpoints": [
+        "uart_rx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.busy$_SDFFE_PP0P_/D",
+        "uart_rx_inst.data_reg[0]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[1]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[2]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[3]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[4]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[5]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[6]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.data_reg[7]$_SDFFCE_PP0P_/D",
+        "uart_rx_inst.frame_error$_SDFF_PP0_/D",
+        "uart_rx_inst.m_axis_tdata[0]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[1]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[2]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[3]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[4]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[5]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[6]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tdata[7]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.m_axis_tvalid$_SDFF_PP0_/D",
+        "uart_rx_inst.overrun_error$_SDFF_PP0_/D",
+        "uart_rx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+        "uart_rx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[0]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[1]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[2]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.bit_cnt[3]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.busy$_SDFFE_PP0P_/D",
+        "uart_tx_inst.data_reg[0]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[1]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[2]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[3]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[4]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[5]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[6]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[7]$_DFFE_PP_/D",
+        "uart_tx_inst.data_reg[8]$_DFFE_PP_/D",
+        "uart_tx_inst.prescale_reg[0]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[10]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[11]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[12]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[13]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[14]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[15]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[16]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[17]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[18]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[1]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[2]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[3]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[4]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[5]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[6]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[7]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[8]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.prescale_reg[9]$_SDFFE_PP0P_/D",
+        "uart_tx_inst.s_axis_tready$_SDFFE_PP0P_/D",
+        "uart_tx_inst.txd$_SDFFE_PP1P_/D"
+      ],
+      "negative_setup_count": 78,
+      "electrical_violation_counts": {
+        "MAX_SLEW": 0,
+        "MAX_CAPACITANCE": 0
+      },
+      "qualification_deltas_ps": {
+        "setup_wns_ps": 0.0,
+        "setup_tns_ps": 0.0,
+        "hold_wns_ps": 0.0,
+        "hold_tns_ps": 0.0
+      }
+    }
+  },
+  "operations": {
+    "physical": {
+      "returncode": 0,
+      "wall_seconds": 3.454160722999859,
+      "timeout_seconds": 120,
+      "log": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/physical.log",
+      "command": [
+        "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+        "-no_init",
+        "-no_splash",
+        "-threads",
+        "1",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/physical.tcl"
+      ],
+      "script": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/physical.tcl",
+        "sha256": "be6376920748abfb15020f7278bacfdc4f1daca13c54087a4b91b290154a7c39",
+        "bytes": 483
+      },
+      "log_binding": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/physical.log",
+        "sha256": "a26471097b606a739cae4a474925c97151b4bd1d7d89920ed3b8a35f3ef0e0a9",
+        "bytes": 2880
+      }
+    },
+    "sta_FF": {
+      "returncode": 0,
+      "wall_seconds": 1.4074076659999264,
+      "timeout_seconds": 120,
+      "log": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_FF.log",
+      "command": [
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_FF.tcl"
+      ],
+      "script": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_FF.tcl",
+        "sha256": "df9b0e0bb0cf57e91da7f16e4f1dfe13f1258f1bbbdc9a9ca8f31c6325acf92a",
+        "bytes": 2224
+      },
+      "log_binding": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_FF.log",
+        "sha256": "8bd02d2514adccf0176daa68beab3cd10ea6ee9babd8b9675408ab0c768b0c0e",
+        "bytes": 8007
+      }
+    },
+    "sta_TT": {
+      "returncode": 0,
+      "wall_seconds": 1.4548891689996708,
+      "timeout_seconds": 120,
+      "log": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_TT.log",
+      "command": [
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_TT.tcl"
+      ],
+      "script": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_TT.tcl",
+        "sha256": "562a711776b74661928a06d3056cfb8ae92ae2ae1d18f7f97e1b283bdf6d15f4",
+        "bytes": 2224
+      },
+      "log_binding": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_TT.log",
+        "sha256": "e478ac2e8bdd12dc9ef493c07fa233bf8b3cc305a3ff8b7182ed2d5676136d54",
+        "bytes": 12483
+      }
+    },
+    "sta_SS": {
+      "returncode": 0,
+      "wall_seconds": 1.4088312930002758,
+      "timeout_seconds": 120,
+      "log": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_SS.log",
+      "command": [
+        "/usr/local/bin/sta",
+        "-no_splash",
+        "-exit",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_SS.tcl"
+      ],
+      "script": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_SS.tcl",
+        "sha256": "9192993450b72abfd8dd12d7e55fcdf46d41e161e2099a234cb9f87ddbd5e2a2",
+        "bytes": 2224
+      },
+      "log_binding": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sta_SS.log",
+        "sha256": "13aebba16b1af1f3a44e2d839fd02a2e496dc193198886bc3cf3a82d830fc73c",
+        "bytes": 12353
+      }
+    },
+    "sec": {
+      "returncode": 0,
+      "wall_seconds": 1.1415390790002675,
+      "timeout_seconds": 220,
+      "log": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sec.log",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sec_worker.py",
+        "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_holdout_20261123",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.v",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.v",
+        "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sec"
+      ],
+      "script": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sec_worker.py",
+        "sha256": "b12a17dd86dd6eceebc86c04dd0162a8d53a44c00ef13bff62ee64feefa08116",
+        "bytes": 141
+      },
+      "log_binding": {
+        "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sec.log",
+        "sha256": "9b4becf4465d8d7567c57fdd2d407588eee71573bf2810871dd2fd71b84f6bda",
+        "bytes": 31
+      }
+    }
+  },
+  "sec": {
+    "requested": true,
+    "scope": "self-SEC of the frozen routed netlist",
+    "receipt": {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/supplemental_v1/sec/receipt.json",
+      "sha256": "8c4575a6faef85e90b5932c791014468f4a5a01964807cc9ecba1c17fd64a1ba",
+      "bytes": 4415
+    },
+    "passed": true,
+    "proven": 567,
+    "unproven": 0
+  },
+  "failures": [],
+  "input_bindings": [
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/qualification/CONTROL.json",
+      "sha256": "18b16f9f0ddcc7ddae3d6ef54b7ae55a4996fdcc8582213f4333d9070863d77b",
+      "bytes": 11968
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/producer_receipt.json",
+      "bytes": 16809,
+      "sha256": "c7cb37215444fdba923f3c11cceebf19dfb6375c0ae0c35c8ced4e12f2b76e0f"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/designs/asap7/uart/constraint.sdc",
+      "bytes": 578,
+      "sha256": "73a46fba5414eb32d1fb24f2681eae9c1fdeba90a2a9762a73848f9c4edfef8b"
+    },
+    {
+      "path": "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/bazel-bin/openroad",
+      "bytes": 118444744,
+      "sha256": "2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19"
+    },
+    {
+      "path": "/usr/local/bin/sta",
+      "bytes": 6800784,
+      "sha256": "4f0727aefff89b124f09f3a782d45bb8e96a895fd2425f87bdb6b56fdcc16628"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.odb",
+      "bytes": 2235398,
+      "sha256": "df9bb6fa68d690bbcc3d4a5a78953ab0f1246c41fa9b8406ec847c01fdcf9326"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.def",
+      "bytes": 764501,
+      "sha256": "52e32f7d554fdf750784e554ed91f2eb4baaa7ab6b4497b3c83bd8b15070d236"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.v",
+      "bytes": 82013,
+      "sha256": "3b50d975941e90f623fd38b55b86e4a7ed6e9de6160f50cc42b2fb97c735d338"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.sdc",
+      "bytes": 4952,
+      "sha256": "d6a317c88e07abd1d6dcb9a8ac20d6b7aa2fceb1cdf69213b4c36dc4b49be6c9"
+    },
+    {
+      "path": "/home/toylog/faeco_tcad_holdout_qualification_20261124_v1/asap7/uart/results/asap7/uart/base/6_final.spef",
+      "bytes": 707040,
+      "sha256": "9d332b0522f1003b2fee0c76ad14aa4cd0b776de9169e29044455357db43d67f"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "bytes": 4256548,
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "bytes": 69351,
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "bytes": 3829689,
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "bytes": 317193,
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "bytes": 1510915,
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "bytes": 4181747,
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "bytes": 69356,
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "bytes": 3765433,
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "bytes": 446864,
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "bytes": 1512690,
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+      "bytes": 4181198,
+      "sha256": "9ac9c70139da3c4c72b2ed6113f011d8d96de2b30f9b261a237d2ed58ffa1ff5"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "bytes": 69301,
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+      "bytes": 3760577,
+      "sha256": "6912520ffc1ae5bf69103d0286bcb7867fc90de80365dfc8ec0d6b55a9113f27"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+      "bytes": 444914,
+      "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+    },
+    {
+      "path": "/home/toylog/faeco_eda/orfs/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+      "bytes": 1513373,
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    {
+      "path": "/usr/local/bin/yosys",
+      "bytes": 729,
+      "sha256": "4f8e613d835c248c63f0e487fb956e1667b9291ef87f0514fffb4dc07878d379"
+    }
+  ]
+}

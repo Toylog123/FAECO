@@ -1690,6 +1690,8 @@ AES 定向配对复现固定第 2 批逐字相同的合格端点，事先用该�
 
 新的同电路 2×2 正反序补齐 FAECO 常规缺格，常规后端下 FAECO 两次均比固定首达晚、最终面积持平，在线后端下也较固定晚首达，两次在共同窗内多回收 33.7824 µm²，均为同组六门和同物理端点。两种调度各自开启诊断后，在保持同物理首达的配对中两次均节省时间。下一层未决是如何兼顾首达和未来大面积候选、与共在线后端的单门强基线比较，以及跨设计／工艺的效果。[2×2 正反序报告](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)
 
+同在线后端的单门比较已在 SKY130HD AES 完成两种运行顺序及四臂独立核验。FAECO 在 720 RAW s 的合格面积回收 67.5648 µm²，单门贪心 22.5216 µm²，两种顺序的共同目标首达分别早 137.843／128.373 RAW s。前四个完成请求中 FAECO 触及 12 个候选，单门触及 4 个候选，两种策略各接受两次。批量尝试和反馈排序同时变化，仍需让单门使用同反馈、在同时间和同验收门下分离两项作用，另需在独立设计／工艺上检验。前轮固定批次首达更快。ASAP7 UART 的原约束冻结起点已通过 hold、DRC、电气与自证，正式候选比较尚未启动。[贪心配对报告](evidence/tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md) · [UART 资格登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-asap7-uart-original-control-qualification-v1)
+
 ## OI-099（2026-11-24，open）— AES 主留出原始起点的 SS hold 违例
 
 SKY130HD AES 的原生 ORFS 流程已完成 DRT 和 RCX，DRC 为 0。原 3600 ps/720 ps SDC 与 I/O 均匹配，SS hold WNS 为 −975.978 ps、TNS 为 −124464.094 ps，原起点资格状态为 `hold_infeasible`。后续需从冻结原生端点在原约束下实际修复、重布线和复提取，并重做三角绝对 hold、DRC 与 SEC，才可作为留出矩阵共同起点。[留出报告](evidence/tcad_holdout_20261123/REPORT.md)
