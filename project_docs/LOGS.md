@@ -6550,5 +6550,5 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 ## LOG-20261124-96｜正式对照独立核验与封存
 
-- Ibex 独立矩阵核验 rc 0，绑定实际配置 `91099181f80fa287ce715c283f9ee7960ab2307f97c7f6eabee79018ba1ab7dc` 与原结果 `ddca77ab6400d3be743b1fabb05b2c419d18cee26a295b47f5bafdf8efbc6fb5`，确认 720 s 内固定与 FAECO 保留的同一最优端点各视图均无新增负 setup。原件归档 `scratch/tcad_ibex_20261123/ibex_screened_single_pa_three_way_20261124_v1.tar.gz`，354,402,976 字节、458 成员、420 普通文件按原件逐项 SHA-256 验证。包 SHA-256 `092219f99535c3fa59795b8c4f2cc7a28fdb1562ee0d735c4f507268441001de`。[Ibex 核验](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_VERIFIED.json)
+- Ibex 独立矩阵核验 rc 0，绑定实际配置 `91099181f80fa287ce715c283f9ee7960ab2307f97c7f6eabee79018ba1ab7dc` 与原结果 `ddca77ab6400d3be743b1fabb05b2c419d18cee26a295b47f5bafdf8efbc6fb5`，确认 720 s 内固定与 FAECO 保留的同一最优端点各视图均无新增负 setup。原件归档 `scratch/tcad_ibex_20261123/ibex_screened_single_pa_three_way_20261124.tar.gz`，354,402,976 字节、458 成员、420 普通文件按原件逐项 SHA-256 验证。包 SHA-256 `092219f99535c3fa59795b8c4f2cc7a28fdb1562ee0d735c4f507268441001de`。[Ibex 核验](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_VERIFIED.json)
 - 正式两设计共完成 30 次 DRT/RCX、90 视图 STA、10 次候选 SEC。AES 硬窗额外启动后截停的 3 次 route，预检和窗外一次诊断均分别计账。Ibex 按六次实跑回看共同窗口，AES 按实际硬窗停止，统计各自以设计内对照为范围。最终针对性回归 114 项全过、17.60 s；项目记录脚本 rc 0，只提示此前停用路径。现行数据与未决归因已同步。[现行口径](CANON.md#2026-11-24-统一单次-pin-access-的-ibex-与-aes-正式对照)
