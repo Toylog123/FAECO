@@ -7217,3 +7217,22 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - `scratch/tcad_ibex_20261123/uart_control_20261124.tar.gz` 13,673,108 字节，逐文件查验通过 121 件，包 SHA-256 `03ed8fc2b3525df0e312a489fc86563cdb8334e4306486fc4592079521dbb4b6`。工作树小收据和原 JSON 哈希一致。[原约束起点](evidence/tcad_holdout_20261123/UART_CONTROL.json) · [独立核验](evidence/tcad_holdout_20261123/UART_CONTROL_VERIFIED.json)
 - 本轮完成 AES 同后端正反序贪心对照和 ASAP7 UART 原生起点制备及独立资格。跨设计搜索与反馈排序／批处理拆分仍归 OI-098。
+
+
+## LOG-20261125-001｜启动中文 v3 稿修订与 TCAD 投稿评估
+
+- 本轮从 `c0a7266e` 开始，修订当前中文后布局 v3 主稿，回填已核验的 AES 同在线后端单门贪心与 FAECO 正反序、ASAP7 UART 原约束冻结起点资格。按等墙钟最大合格面积及共同面积阈值首达时间分别读取 AES 对照，保留固定批次和历史等评估次数对照各自口径。
+- TCAD 适配和投稿成熟度分别以该刊官方 scope、作者指南与项目现有证据评估。此次工作使用已冻结实验端点和收据，无新 EDA 计划。修订稿与验证完成后更新验收记录和现行稿件口径。[AES 配对](evidence/tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md) · [UART 资格](evidence/tcad_holdout_20261123/UART_CONTROL_RUN.md)
+
+
+## LOG-20261125-002｜中文 v3 主稿已回填 AES 与 UART 的已验收证据
+
+- 工作稿源码已将 AES 同在线后端的正反序单门配对单列表格，与固定批次的调度 × 后端交叉对照分开。摘要、贡献、讨论和结论明示固定墙钟回收与共同面积阈值首达，十例历史比较保留相同重布线评估次数口径。
+- 适用范围已写入 ASAP7 UART 原 270 ps／54 ps I/O，列出三角 hold WNS 及 TT／SS 负 setup 余量，限定为起点资格。待终稿编译、版面和证据一致性核对。[AES 配对](evidence/tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md) · [UART 资格](evidence/tcad_holdout_20261123/UART_CONTROL_RUN.md)
+
+
+## LOG-20261125-003｜中文 v3 终版验收与 TCAD 评估收尾
+
+- 修订稿将布线前冲突诊断与限时派发作为主线，增加 CoRe-ECO 原文机制边界、SKY130HD Ibex 时序退化归因、AES 同后端单门正反序、ASAP7 UART 原约束起点资格。沿用现有实验收据，本轮无新 EDA。
+- LuaLaTeX 双遍、逐页版面核对完成。终稿 15 页、6 幅既有 ImageGen 示意、18 表、22 条参考文献，0 编译错误、0 溢出、0 未解析引用，保留 6 条原有字体提示。TeX SHA-256 `648655fa14400d1b0e3478b7856446a19ee8c637dc8be2355febb4367e24cf5f`。三份 PDF 实读均为 6,624,410 字节、SHA-256 `0f283597dba6072c9bb7a39ad4c8f9cfd6195a4efaed61ebeb5429468d1a5387`。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)
+- 按 TCAD 官方范围、作者指南及现有证据完成成熟度评估。方向契合，建议先完成独立设计复现、同后端强单门及模块消融。英文稿待同步整合并按期刊格式核对，实验缺口登记 OI-105。[投稿成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md)

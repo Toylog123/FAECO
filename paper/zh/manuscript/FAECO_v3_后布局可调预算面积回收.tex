@@ -81,7 +81,7 @@
 \twocolumn[
 \vspace*{-0.25cm}
 \begin{center}
-{\heiti\zihao{3} FAECO：面向布局后门级ECO的\\覆盖优先候选调度与可调预算面积回收}\par
+{\heiti\zihao{3} FAECO：时限与时序约束下的布线后门级ECO面积回收}\par
 \vspace{6pt}
 {\fangsong\zihao{4} 佟亚龙、刘畅}\par
 \vspace{4pt}
@@ -91,11 +91,10 @@
 \end{center}
 \begin{flushleft}
   {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
-  布线后门级时序工程变更（engineering change order，ECO）可能增加单元面积，残留负松弛和重布线引起的寄生变化使面积回收需要在线验证。
-  本文提出FAECO，在可调最差负松弛（worst negative slack，WNS）损失预算内调度兼容替换或选择性回退，并通过重布线、静态时序分析（static timing analysis，STA）与全网表顺序等价性检查（sequential equivalence checking，SEC）验收。
-  框架在冻结布局副本上换门并清除直连旧线，利用布线前设计规则检查（design rule checking，DRC）识别需一并重布的邻线。
-  在SKY130HD的高级加密标准（Advanced Encryption Standard，AES）密码核上，以相反顺序复跑调度和诊断的四种组合。共用诊断后端时，两轮在720\,s内的合格面积回收均由固定批次的33.7824增至FAECO的67.5648\,\textmu m$^2$，FAECO达到共同面积目标多用112.99--119.23\,s。计入诊断开销后，固定批次及FAECO到各自同一合格端点的时间分别缩短72.40--84.01和157.95--164.38\,s。
-  在十个SKY130的ISCAS89与ITC-99电路上，独立模式在名义约束下回收0.67\%--5.58\%的面积。同一批端点在显式输入／输出约束和片上工艺降额联合视图下均有负的绝对保持时间余量。}
+  布线后门级时序工程变更（engineering change order，ECO）可能增加单元面积，而重复详细布线和时序验收限制了给定工期内可验证的候选数。
+  FAECO在可调时序损失预算内批量试探兼容替换或选择性回退，以相对保持时间失败为反馈调整候选顺序，并对累计端点执行详细布线、静态时序分析（static timing analysis，STA）和全网表顺序等价性检查（sequential equivalence checking，SEC）。
+  每次候选先在冻结布局副本上换门并清除直连旧线，再用布线前设计规则检查（design rule checking，DRC）选择需重布的邻线。
+  SKY130HD高级加密标准（Advanced Encryption Standard，AES）密码核的反序复跑表明，计入诊断费用后，同一调度到达同一物理端点所需的详细布线调用减少一至两次。共用在线后端时，FAECO在720\,s内回收67.5648\,\textmu m$^2$（0.0580\%），单门贪心回收22.5216\,\textmu m$^2$，FAECO到共同面积下限快128.37--137.84\,s。独立复跑中的固定批次首达更早，窗内回收33.7824\,\textmu m$^2$。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 时序ECO，面积回收，候选调度，可调预算，布线前诊断}\par
@@ -108,15 +107,14 @@
 % ============================================================
 % 英文首部（双语稿用；单语中文稿保留为空壳以使编译通过即可）
 % ============================================================
-\newcommand{\enTitle}{FAECO: Coverage-First Candidate Scheduling and Adjustable-Budget Area Recovery for Post-Layout Gate-Level ECO}
+\newcommand{\enTitle}{FAECO: Post-Route Gate-Level ECO Area Recovery Under Time and Timing Budgets}
 \newcommand{\enAuthor}{Tong Yalong, Liu Chang}
 \newcommand{\enAffil}{(College of Computer Science and Technology, National University of Defense Technology, Changsha 410073)}
 \newcommand{\enAbstract}{%
-  Post-route gate-level timing engineering change orders (ECOs) can increase cell area, while residual negative slack and routing-induced parasitic changes call for online verification of area recovery.
-  FAECO schedules compatible cell substitutions or selective reversions under an adjustable worst negative slack (WNS) loss budget and qualifies endpoints through rerouting, static timing analysis (STA), and full-netlist sequential equivalence checking (SEC).
-  We apply cell swaps and remove the old wires on directly connected nets in a frozen layout copy, then use a pre-routing design rule check (DRC) to identify neighboring wires that need to be rerouted with the candidate.
-  Two serial repetitions in opposite orders on a SKY130HD Advanced Encryption Standard (AES) core separate candidate scheduling from pre-routing diagnosis. With the same diagnostic backend, FAECO increases qualified area savings within 720\,s from 33.7824 to 67.5648\,\textmu m$^2$ in both repetitions and takes 112.99--119.23\,s longer to reach the common area target. Including its own cost, diagnosis reduces the time to the same qualified endpoint by 72.40--84.01\,s for fixed batching and 157.95--164.38\,s for FAECO.
-  Across ten SKY130 ISCAS89 and ITC-99 designs, the independent mode yields nominal area reductions of 0.67\%--5.58\%. All ten endpoints have negative absolute hold slack under the combined explicit I/O and on-chip variation derating view.%
+  Post-route gate-level engineering change orders (ECOs) can increase cell area, and repeated detailed routing and timing checks limit the number of recovery candidates that can be qualified within a given time budget.
+  FAECO batches compatible cell substitutions or selective reversions under adjustable timing-loss budgets, uses relative hold failures to reorder unvisited candidates, and qualifies endpoints using detailed routing, static timing analysis (STA), and full-netlist sequential equivalence checking (SEC).
+  Before routing each candidate, it applies the swaps in a copy of the frozen layout and removes the old wires on directly connected nets, then uses design rule checking (DRC) to select adjacent wires for rerouting.
+  On a SKY130HD Advanced Encryption Standard (AES) core, opposite-order repetitions show that diagnosis eliminates one or two detailed-routing calls on the way to the same qualified endpoint within each scheduler. With the same online backend, FAECO recovers 67.5648\,\textmu m$^2$ (0.0580\%) within 720\,s, compared with 22.5216\,\textmu m$^2$ for single-gate greedy, and reaches the common area threshold 128.37--137.84\,s earlier. In a separate comparison, fixed batching reaches the threshold sooner and recovers 33.7824\,\textmu m$^2$ within the window.%
 }
 \newcommand{\enKeywords}{timing ECO, area recovery, candidate scheduling, adjustable budget, pre-routing diagnosis}
 
@@ -125,28 +123,11 @@
 % ============================================================
 \section{引言}
 
-门级时序ECO是物理设计后端的关键步骤。
-当布局布线后发现时序违例，设计者需在不重跑综合与布局的前提下，
-通过局部门尺寸调整、缓冲器插入、等价替换等手段修复违例路径。
-现代物理设计工具中的时序修复器（如OpenROAD Resizer\cite{openroad}）通过放大单元、缓冲和其他局部动作改善违例路径。修复后，部分尺寸修改对最差路径的延迟影响很小，因而留下了面积回收空间。
+布线后发现时序违例时，设计者常通过调整门尺寸、插入缓冲或等价替换来修复路径。OpenROAD Resizer\cite{openroad}等修复器可通过放大单元或插入缓冲改善时序，同时增加单元面积。在八个ISCAS89电路的固定寄生诊断中，107处尺寸修改中有74处单独回退后，在报告精度内保持最差负松弛（worst negative slack，WNS）不变。这些动作给出候选来源，联合回退的收益仍取决于重布线后的实际路径。
 
-\medskip
-\noindent\textbf{问题的量级。}
-我们在八个ISCAS89电路上逐门回退Resizer的107个尺寸修改，使用布线后基准的寄生参数进行静态时序诊断。
-其中74处（69\%）在记录精度内保持WNS不变，说明单门回退可用来筛查对最差路径影响较小的尺寸修改。
+布线后面积回收有两个主要的验证成本。一次兼容换门可能使原本合法的邻线与新单元冲突，若要等首轮详细布线后才识别冲突，就可能重复布线。另一方面，逐门试探容易定位失败动作，但每个候选都占用一次物理评估。合并多个动作可摊薄评估成本，组合也可能因相对保持时间退化而被拒。本文研究在这两种成本下，给定墙钟时限内可以验收多少净面积回收。
 
-\medskip
-\noindent\textbf{本文的切入点。}
-本文不对前端时序修复器做侵入式修改，而是在布线后建立一套兼顾历史差异回退与脱离上游日志的独立面积回收框架。
-该框架由四个互补机制构成：
-\begin{enumerate}
-\item \textbf{覆盖优先候选调度}（第3节）：按候选在时序报告中的覆盖区域排序，
-      优先评估最可能改善最长路径的候选，组内全测后取最优，减少无效候选评估。
-\item \textbf{可调WNS预算与在线物理门控}（第4节）：用户设定相对基准允许的WNS损失上限$B$。组合搜索使用在线重布线、寄生参数提取（parasitic extraction，RCX）及传播时钟STA测量净面积回收和时序变化。历史小电路采用10\,ps固定预算，AES采用原周期的1\%作为逐角预算。
-\item \textbf{选择性恢复与转折门隔离}（第5节）：逐门诊断回退对WNS的影响，再按前缀二分定位导致联合回退越界的动作。每次二分定位的验证调用数为对数级，整段搜索受续跑次数限制。
-\item \textbf{无需上游日志的独立面积回收}（第6节）：从布线后网表与单元库枚举功能兼容替换，并在正式布线前诊断候选涉及的邻线冲突。正式端点经重布线和物理验收；另对历史端点进行多工艺角（SS/TT/FF）及显式输入/输出与片上工艺降额（IO+OCV）复测。
-\end{enumerate}
-整体双模式架构与在线门控闭环流程如图~\ref{fig:framework_arch}所示。
+FAECO处理已经布线的设计，以可调时序损失预算约束建立时间，并保持各视图的保持时间门。图~\ref{fig:framework_arch}给出两类候选来源和共用的物理验收。选择性回退使用上游变更记录，独立回收从网表和标准单元库枚举兼容替换。两者均通过详细重布线、寄生参数提取（parasitic extraction，RCX）和端点验收测量可交付收益。
 
 \begin{figure*}[t]
 \centering
@@ -154,15 +135,10 @@
 \caption{FAECO双模式架构。选择性回退与独立候选生成共用在线物理评估、时序预算判定与端点等价性检查。}
 \label{fig:framework_arch}
 \end{figure*}
-107处单门回退的诊断给出了候选筛选依据。联合回退造成的路径变化由后续时序评估检验。
-
-\medskip
-\noindent\textbf{主要贡献。}
 \begin{enumerate}
-\item \textbf{覆盖优先候选调度}：按端点逻辑锥与加权节点割构造搜索区域并优先验证热点候选。在八个ISCAS89电路的历史试验中，相比三个随机顺序配置，候选STA调用数降低7.8\%--19.0\%。
-\item \textbf{可调WNS预算与在线组合搜索}：建立以固定物理基准为参照的可调预算与有界束搜索。s382的已验收回退端点以0.0031\,ns的WNS退化回收Resizer净新增面积的28.91\%（总面积$-4.40\%$，两态SEC 101/0通过）。另以在线组合搜索测量多门替换的非加性时序变化。
-\item \textbf{转折门隔离与续跑二分}：以先失败的回退前缀为起点，分段定位高风险修改并继续检查剩余动作。在固定寄生诊断中，ISCAS89与ITC-99分别回退61\%和88.3\%的上游修改。b22利用10次验证STA回退356处，回收上游净新增面积的33.1\%。
-\item \textbf{布线前冲突诊断与独立面积回收}：用实时DRC标记确定需释放的邻线，在SKY130HD AES上交叉比较调度和物理后端。共用诊断后端时，FAECO在720\,s内验收的面积回收为67.5648\,\textmu m$^2$，固定批次为33.7824\,\textmu m$^2$。十个SKY130小电路的联合视图复测定位了正回收端点受绝对保持时间制约的情形。
+\item \textbf{相对预算下的物理面积回收。} 将候选筛选与端点验收相连，以冻结物理基准衡量面积及时序差值。在s382的正式回退端点上，建立时间WNS下降3.10\,ps，回收Resizer净新增面积的28.91\%，通过全网表两态SEC。十个小电路的联合视图复测进一步定位了绝对保持时间门对验收的限制。
+\item \textbf{布线前局部冲突诊断。} 在冻结布局副本上只清除被换门的直连旧线，由DRC标记选择需一起重布的邻线。在AES的四组合正反序试验中，计入诊断开销后，两种调度到各自同一物理端点的耗时均缩短。
+\item \textbf{保持时间反馈的批次调度。} 把被相对保持时间门拒绝的批次暂存，先评估重排后的未访动作。在AES共用在线后端的对照中，按相同评估上限和墙钟时窗比较，FAECO两轮都比单门贪心验收更多面积。固定批次在独立的交叉实验中更早达到共同面积下限，展现了阶段性交付与最终回收量的取舍。
 \end{enumerate}
 
 % ============================================================
@@ -202,11 +178,9 @@ OpenPhySyn\cite{openphysyn2020}提供可扩展的开源物理综合框架。RL-S
 本文关注已布线设计的净面积回收，允许在原有负松弛下按参考端点设定可调损失上限。验收以换门后的详细布线、提取寄生参数和全网表顺序等价性检查（SEC\cite{yosys,abc2010}）为依据。
 第5节给出前缀二分的适用前提与续跑开销。
 
-\subsection{局部候选调度与大规模物理增量修线}
+\subsection{局部布线修复与候选验证}
 
-在线物理评估使用OpenROAD中的详细布线和集成DRC引擎\cite{tritonroutewxl}，并用OpenSTA\cite{sta}分析提取后的寄生。另设固定寄生诊断，用于观察候选顺序对STA调用数的影响。
-本文在候选评估前端提出基于端点逻辑锥并集的\textbf{覆盖优先调度}；
-在物理后端，通过对万门级电路b14/b15的实测剖析，揭示了全版图详细重布线与局部包围盒增量修线（regional ECO routing）的规模转换边界。
+CoRe-ECO\cite{coreeco}联合调整局部摆放、详细布线及单元选型，修复已有的引脚访问违例。FAECO从已布线参考出发，对降面积候选新引入的冲突定位需重布的邻线，并比较固定时限内完成联合验收的面积收益。在线物理评估调用OpenROAD的详细布线及集成DRC引擎\cite{tritonroutewxl}，以OpenSTA\cite{sta}分析提取后的寄生。固定寄生诊断则测量候选覆盖顺序对STA调用数的影响。
 表~\ref{tab:related_work}按目标和反馈比较直接相关的方法。
 
 \begin{table*}[t]
@@ -222,6 +196,7 @@ Trident~2.0\cite{trident2} & 漏电功耗、优化用时 & 签核定时器，时
 Sizer\cite{fatemi2019sizer} & 漏电与总功耗、运行时间 & 工业布线后多角多模式时序与电气约束 \\
 DAGSizer\cite{cheng2023dagsizer} & 漏电回收估计、预测误差 & 同占位替换，定时器标注延迟 \\
 局部逻辑重映射\cite{pcr2026} & 建立时间违例 & 合法化、全局布线寄生估算、时序分析 \\
+CoRe-ECO\cite{coreeco} & 引脚访问违例、布线长度 & 局部摆放、详细布线与单元选型联合求解 \\
 FAECO & 验收面积、等面积首达时间、等时窗回收量 & 详细重布与RCX、逐角WNS/TNS/hold、DRC与SEC \\
 \bottomrule
 \end{tabular}
@@ -834,8 +809,8 @@ b12（微批次+安全驱动） & 7977.65 & 7912.59 & $-$0.82\% & $-$0.03 & $+$0
 诊断为空、失败或无法映射全部标记时，首次只重布$\mathcal{D}(S)$。实际布线发现标记后，候选至多重试一次，在已开放线网上追加新增标记支持的邻网。
 每次正式验证从同一冻结布局应用累计动作，固定其余布线几何，执行详细布线、寄生提取和多角STA。完整验收还包括恢复正常布线状态后的独立全块DRC、天线和全网表两态SEC。
 
-两种调度初始采用同一候选顺序。固定批次按顺序推进。FAECO遇到被拒的多动作批次时，若任一工艺角相对保持时间退化且仍有预算及未访问动作，则暂存该批。首次暂存时按$\Delta A_i/(1+C_i/\widetilde C)$对未访问动作作稳定降序重排。$\Delta A_i$为动作$i$的预估面积减量，$C_i$为冻结DEF中该实例直连网在SPEF的总电容之和（排除电源和地），$\widetilde C$为候选池的中位数。候选池访问完后，按暂存顺序拆分余下批次；其他拒绝原因触发原位二分。
-墙钟对照的主指标为给定时窗内通过全部验收的最大面积回收。配对指标为首次验收达到共同面积目标所需的时间。第~\ref{sec:aes_cold}节用固定调度和固定后端两组对照评估诊断和调度。
+三种调度共用初始候选池及其顺序。单门贪心每次只向已验收集合追加一个新动作。固定批次按初始顺序推进。FAECO遇到被拒的多动作批次时，若任一工艺角相对保持时间退化且仍有预算及未访问动作，则暂存该批。首次暂存时按$\Delta A_i/(1+C_i/\widetilde C)$对未访问动作作稳定降序重排。$\Delta A_i$为动作$i$的预估面积减量，$C_i$为冻结DEF中该实例直连网在SPEF的总电容之和（排除电源和地），$\widetilde C$为候选池的中位数。候选池访问完后，按暂存顺序拆分余下批次；其他拒绝原因触发原位二分。
+墙钟对照的主指标为给定时窗内通过全部验收的最大面积回收。配对指标为首次验收达到共同面积目标所需的时间。未达标的运行按时限截尾。第~\ref{sec:aes_cold}节先用固定批次和FAECO交叉比较两个后端，再固定在线诊断后端比较单门贪心和FAECO。
 
 \subsection{同一候选端点的多工艺角与显式IO复测}
 
@@ -930,7 +905,31 @@ FAECO & 在线诊断 & 67.5648 & 483.86 & 483.87 & 4 & 4 \\
 
 在线FAECO的第五次九门请求在正序与反序分别因硬窗到期中断SS、TT的STA。此前开发试验对同动作端点作窗外补审，确认可回收98.8448\,\textmu m$^2$，典型角新增一个负建立时间端点，仍符合原建立时间预算。表~\ref{tab:aes_cold_online}仅统计硬时窗内完成全部验收的端点。
 
-\subsection{五种面积回收方法与功耗对照}
+\paragraph{同一在线后端的单门对照}
+单门贪心与FAECO共用同一在线后端、18个初始候选、验收门和720\,s时窗，计入相同的113.36\,s筛选成本。两种方法以相反顺序串行复跑，每臂发出五次验证请求并完成四次。表~\ref{tab:aes_single_online}单列这组结果。
+
+\begin{table}[tb]
+\centering
+\caption{AES同在线后端的单门对照}
+\label{tab:aes_single_online}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrr}
+\toprule
+ & 窗内回收 & \multicolumn{2}{c}{首达0.01\%（s）} \\
+\cmidrule(lr){3-4}
+方法 & （\textmu m$^2$） & 正序 & 反序 \\
+\midrule
+单门贪心 & 22.5216 & 607.81 & 599.80 \\
+FAECO & 67.5648 & 469.96 & 471.42 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+FAECO比单门贪心提前128.37--137.84\,s达到面积门槛。两种方法首达时实际回收分别为33.7824和22.5216\,\textmu m$^2$。单门贪心在357.14--361.03\,s已验收首个单门端点，其回收量11.2608\,\textmu m$^2$略低于11.6508\,\textmu m$^2$的共同门槛。四次完成的验证内，FAECO评估12个不同的新动作，单门贪心评估4个。FAECO首批因SS保持时间退化被拒，其中一门在贪心运行中单独通过。
+
+窗内六门与双门端点的最大逐角建立时间WNS损失分别为0.086和0.026\,ps，SS TNS分别变化$-192.358$和$+105.274$\,ps。两个端点均通过保持时间、DRC、天线和SEC验收。六门端点与前一交叉实验中验收的端点一致。
+
+\subsection{五种面积回收方法的历史对照与功耗}
 
 图~\ref{fig:strong_baselines}给出五种方法的比较流程。各方法从同一电路对应的Resizer物理输入出发，使用10\,ps建立时间损失预算。在线单门贪心与FAECO共享各电路6--10次重布线评估上限。固定SPEF灵敏度批处理和五轮冻结寄生LR降尺寸先离线选取，再按相同重布线路径评价一个终点。OpenROAD原生功耗回收使用工具内置策略。逐电路有效面积与功耗见表~\ref{tab:strong_baselines_ppa}。
 
@@ -969,7 +968,7 @@ b12  & 0.00\% & hold $-$0.002 / FAIL & 0.41\% & \textbf{0.82\%} & $-$1.31\% & $-
 
 冻结寄生灵敏度批处理中，五例的候选终点在详细重布线后违反建立或保持时间门限，有效面积平均下降0.14\%。实测的五轮冻结寄生LR在离线阶段给出7.81\%--14.14\%的面积降幅，重布线后建立时间WNS下降79.60--706.03\,ps，十例均未通过预算。此结果量化了该LR实现的冻结寄生误差。
 
-在相同的重布线评估次数上限下，单门在线贪心在九例取得正收益，FAECO在十例取得正收益。按全部十例计入零收益，平均降幅分别为2.11\%和2.01\%。FAECO在s953回收0.67\%，在b12回收0.82\%，单门贪心分别回收0和0.41\%。s420、s713、s832、b04与b11由单门贪心获得更大降幅。
+在相同的重布线评估次数上限下，灵敏度排序的在线单门贪心在九例取得正收益，历史FAECO在十例取得正收益。两组各在五例回收更多，平均降幅为2.11\%和2.01\%。历史FAECO在s420、s713、s832和s953也采用逐门累积。s713的同一组三门在灵敏度顺序中第4次验收，在原顺序中第8次验收。s953由原面积顺序的首门带来0.67\%回收，该门未进入灵敏度顺序的前六次评估。b12同时改变候选顺序和批宽，回收0.82\%对0.41\%。该组历史数据用于比较名义角下的策略表现。
 
 面积优化端点的总功耗和组合逻辑功耗均低于各自参考，十例平均分别下降0.96\%和3.72\%。其中s420的组合功耗下降8.26\%，静态漏电下降8.68\%。
 
@@ -1021,7 +1020,9 @@ FAECO的10\,ps预算搜索在44次评估内提交191处替换，报告精度下�
 \subsection{候选覆盖与物理验证成本}
 
 覆盖优先调度利用端点逻辑锥安排候选评估，可调预算用物理测量判定组合，选择性恢复由独立回退的STA结果引导。107处尺寸修改的独立回退诊断中有74处保持WNS不变。联合动作则可能改变路径排序和寄生参数，b22固定寄生联合回退和重布线后的对照都说明了复测的必要性。
-AES的交叉对照表明布线前定位邻线冲突可以减少首达前的重复布线。采用同一诊断后端时，FAECO在首达前多评估一个被保持时间门拒收的批次，随后验收了更大的回收端点。常规后端耗尽更多时窗，两个调度的最大回收持平。
+AES在同一调度、同一物理端点下的交叉对照，将耗时收益定位到首达前的布线重试减少。共用诊断后端的调度对照改变了批宽、失败处理和后续排序。当前证据支持这套组合在该设计上提高窗内回收，三项因素的独立贡献仍待消融。首达排序随对照方法和面积目标而异。若只需获得首个小幅正回收，单门贪心可较早交付。
+
+候选次序也会集中暴露高风险动作。SKY130HD Ibex的18次三策略验证中，TT最差路径均经过由\texttt{buf\_12}缩至\texttt{buf\_1}的高扇出缓冲器。对两个代表候选交叉替换单元与SPEF后，固定原寄生的换门使WNS损失474.64和403.73\,ps，固定原单元而更换寄生时的WNS变化均小于1\,ps。由此可将该批的主要退化定位到高扇出驱动损失，并据此检验引入时序余量的候选顺序。
 
 \subsection{与Resizer的关系：双向协同与独立延伸}
 
@@ -1036,8 +1037,8 @@ AES的交叉对照表明布线前定位邻线冲突可以减少首达前的重�
       若待优化网表在前期综合或物理优化阶段已将常规组合单元全部映射至最小尺寸档（如b14），纯单元降尺寸替代空间将趋于枯竭，后续需引入逻辑重构或冗余门合并以拓展回收空间。
 \item \textbf{超大规模设计的邻域窗口加速。}
       b15的局部直连线网增量绕线在约185\,s内给出零DRC的候选。更拥塞或更大设计上的收敛成本需要在一致的输入、预算和DRC停止条件下进行比较。
-\item \textbf{跨工艺评估与多阈值电压替换。}
-      布线前诊断的等时窗对照以SKY130HD AES为对象。另一候选SKY130HD JPEG的原始I/O与5\,ns周期在详细布线和提取后保持，SS保持时间WNS为$-2.341$\,ns，共26个负端点，其中包括14个异步复位撤除检查。该设计按起点不合格记录。本文的ASAP7 AES试验采用全局布线寄生估算与理想时钟；新诊断的跨工艺效果仍需同规约验证。
+\item \textbf{起点资格与跨工艺验证。}
+      新诊断的等时窗结果来自SKY130HD AES，正反序衡量同一设计的复现性。SKY130HD JPEG在原I/O与5\,ns周期下完成详细布线和提取，SS保持时间WNS为$-2.341$\,ns，起点未达门槛。ASAP7 UART保留原270\,ps周期和54\,ps I/O延迟，完成详细布线和提取后，FF、TT、SS保持时间WNS分别为$+50.315$、$+67.502$、$+54.053$\,ps，TT和SS仍有负建立时间余量。UART目前只完成起点资格验证。新诊断的跨工艺效果需在原约束下进行候选级对照。
 \item \textbf{产物与测量溯源。}
       历史数据的路由输入、STA参考和等价证明金标准分别绑定到物理快照。部分原始运行保留网表、SPEF、Tcl和日志，候选布线DEF未生成。上述记录支持回读已有结果，完整重跑还需要对应的工艺库、路由输入和工具版本。
 \end{enumerate}
@@ -1047,15 +1048,14 @@ AES的交叉对照表明布线前定位邻线冲突可以减少首达前的重�
 % ============================================================
 \section{结论}
 
-FAECO以相对WNS预算为布线后面积回收留出可调空间，并通过重布线、寄生重提取和等价性检查验证候选。在八个ISCAS89电路的历史对照中，覆盖优先相对三个随机顺序配置减少了7.8\%--19.0\%的候选STA调用。b22在固定寄生诊断中以前缀二分和续跑搜索，用10次验证STA回收33.1\%的上游净新增面积。
+FAECO结合相对时序预算、布线前冲突诊断和保持时间反馈，在详细布线及寄生提取后验收降面积替换。SKY130HD AES上，在线诊断使固定批次和FAECO分别少做一次和两次首达前的详细布线，两种调度各自的首达物理端点保持一致。共用在线后端时，FAECO在720\,s内回收67.5648\,\textmu m$^2$（原面积的0.0580\%），超过两组对照中的固定批次和单门贪心。达到共同面积门槛时，FAECO比单门贪心快128.37--137.84\,s，在固定批次对照中慢112.99--119.23\,s。
 
-独立模式在十个SKY130电路上均获得正的名义面积回收并通过全网表两态SEC。单门在线贪心和FAECO分别在9例和10例实现正收益，按十例计的平均降幅为2.11\%和2.01\%。对相同的正回收端点复测后，慢角和IO+OCV的建立时间预算分别有9例和8例满足，FF相对保持时间有5例不退化。s713和s832的同参考联合评估均受IO+OCV绝对保持时间限制。
-
-SKY130HD AES的交叉实验将局部冲突定位与候选调度分开检验。计入实时诊断开销后，两种调度均更早到达各自相同的合格端点。共用诊断后端时，FAECO在同一720\,s时窗内回收更多合格面积，达到共同面积目标所需时间较长。两项指标分别对应固定工程时限下的回收量和交付指定面积收益的等待时间。
+历史SKY130名义端点的复测显示，十例均有负的IO+OCV绝对保持时间余量，s713和s832在联合压力视图下未找到合格的正回收端点。墙钟收益目前由AES同设计复跑支持，候选调度与诊断的跨设计效果仍需检验。
 
 \vspace{0.3cm}
 \noindent\textbf{致谢。}
 感谢OpenROAD、Yosys和OpenSTA开源项目提供的完整EDA工具链支持。
+图1--6的机制示意使用OpenAI ImageGen生成。摘要、引言、实验结果与讨论等部分的文字修订使用了OpenAI Codex。面积、时序与耗时取自相应实验记录。
 
 % ============================================================
 % 参考文献
@@ -1094,6 +1094,9 @@ Kahng A B, Kang S, Lee H, et al. High-performance gate sizing with a signoff tim
 
 \bibitem{tritonroutewxl}
 Kahng A B, Wang L, Xu B. TritonRoute-WXL: The open source router with integrated DRC engine[J]. IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems, 2022, 41(4): 1076--1089.
+
+\bibitem{coreeco}
+Cheng C K, Kahng A B, Kang I, et al. CoRe-ECO: Concurrent refinement of detailed place-and-route for an efficient ECO automation[C]//IEEE International Conference on Computer Design (ICCD). 2021: 366--373.
 
 \bibitem{openphysyn2020}
 Agiza A, Reda S. OpenPhySyn: An open-source physical synthesis optimization toolkit[C]//Proceedings of the Workshop on Open-Source EDA Technology (WOSET). 2020: 1--4.

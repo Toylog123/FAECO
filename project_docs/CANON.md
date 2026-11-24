@@ -4,6 +4,11 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 中文 v3 稿与 TCAD 投稿评估
+
+- 现行中文 v3 以布线后局部冲突诊断和限时面积回收为主线，分别报告 AES 同端点后端收益、同后端单门比较和固定批次首达。加入 CoRe-ECO 的机制对照、SKY130HD Ibex 时序退化归因和 ASAP7 UART 原约束起点资格。双遍 LuaLaTeX 后 15 页、6 幅现有 ImageGen 示意、18 表、22 条参考文献，三份 PDF 逐字节一致。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)
+- 选题符合 TCAD，建议补齐投稿前关键证据。以 UART 等独立设计复现现行诊断与调度，加入同后端灵敏度排序单门，分别量化候选批宽、反馈排序和诊断的收益。英文稿待同步并按现行作者指南排版，跨设计验证与强对照归 OI-105。[投稿成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md)
+
 ## 2026-11-24 AES 同在线后端的 FAECO 与单门贪心正反序
 
 同一冻结起点、同一 18 动作池、同一在线诊断和物理后端。每臂计入共同筛选 113.363 RAW s、原 3.6 ns 与 I/O、720 RAW s 硬窗、6 次逻辑请求上限，应用相同三角 setup／hold、电气、独立 DRC、天线和 SEC 门。

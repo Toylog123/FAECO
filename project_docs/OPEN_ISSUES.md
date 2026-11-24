@@ -1747,3 +1747,7 @@ v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独
 原生 SKY130HD JPEG 的 DRT、原生天线和 RCX 完成，保留原 5 ns、1 ns I/O 与原时钟语义。三次提取后 STA 证明 FF、TT hold 非负，SS hold WNS/TNS −2,340.727／−41,475.257 ps。最差为 `rst` 的异步 removal，另有 `qnt_val[0]` 输入到常规寄存器 D 的 −1,256.375 ps。若另做共同起点修复，须继续用同一 I/O 与绝对 hold 门并独立完成原物理和证明条件。原生不合格保留，候选和方法比较尚未启动。[资格登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1)
 
 独立 SS 清点 26 个负 min 端点，其中 14 个 `RESET_B`、12 个 `D`。同端 max 复核显示，14 个 reset 和 8 个 `qnr.divider` 的 D 端有理想等量延时余量，另 4 个 FDCT 数据端的 min/max 同时为负。最差 reset 端理想所需延时约 2.341 ns；原 SS 报告中另一 reset 分支仅余 1.451 ns recovery，不能用共享输入的全量延迟解决。局部分支、不同数据路径及采样钟需分别判断，尚无修复或新共同起点。
+
+## OI-105（2026-11-25，open）— 现行布线前诊断与调度的跨设计及强对照
+
+AES 现行在线后端已完成正反序单门对照和独立的后端交叉对照。同端点的诊断收益成立于 AES，候选调度的回收收益仍混合批宽、失败处理和排序。ASAP7 UART 保留原约束且起点三角 hold 合格，候选评估为零。优先在 UART 和一个独立 SKY130HD 非 AES 设计复现实验，比较同后端的灵敏度单门、固定批宽及同数量的几何邻网放行，持续记录零回收和时窗删失。英文稿仍待根据现行证据重建。 [TCAD 成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md)
