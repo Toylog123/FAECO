@@ -3526,3 +3526,7 @@ AES 的低触达电容次组在第一次有 DRC 时已出现相对 hold 退化�
 ## 2026-11-24 — 同派发比后端，同后端比派发
 
 原 AES 三臂还缺 FAECO 配常规后端，无法知道六门面积回收需要两项机制一起出现。补齐后做四组合交换顺序，并独立按完成的物理收据重算。固定和 FAECO 各自使用在线诊断后，同动作与同物理首达均实际节省时间。常规 FAECO 两次仍在第 4 次 DRT 耗尽预算；在线 FAECO 两次都及时完成同组六门，同时其首达到阈值仍晚于固定。分别报告同目标首达、窗内最优和截停阶段，避免以只看时间或只看最后面积替代全验收口径。[2×2 正反序报告](../project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)
+
+## 2026-11-24 — OpenSTA 跨查询只保留端点身份和标量
+
+JPEG 独立最小／最大时序定位中，首版在 `find_timing_paths` 的 min 结果循环内再执行 max 查询，访问下一条旧 PathEnd 时崩溃。固定 OpenSTA 的 `Sta::searchPreamble()` 会在新查询前删除上一组 PathEnd。先读出整组端点名和 min slack，再对这一组端点批量查询 max 并立即提取 slack，实跑复现 26 个端点。时序修复前同时核对同端 min/max 和共享支路的其它约束；四个 FDCT 数据端两侧都负，最差 reset 需要的延时超过公共支路其它端点的 recovery 余量。后续物理修复须按不同支路及路径判断，并重新验收原约束。[JPEG 资格报告](../project_docs/evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md)

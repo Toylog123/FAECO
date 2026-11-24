@@ -4,6 +4,10 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 原生 JPEG 起点资格
+
+- SKY130HD JPEG 原生制备实际完成详细布线、两轮原生天线修复及 RCX，最终 DRC 和天线为 0。原 5 ns、1 ns I/O 与原时钟关系在最终端点核对一致。FF／TT hold WNS +218.048／+357.532 ps；SS hold WNS/TNS −2,340.727／−41,475.257 ps，原生冻结起点资格拒收。最差为异步 reset removal，另一个常规输入 D 端 hold −1,256.375 ps。未启动候选、未计策略结果。[资格报告](evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md) · [资格登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1)
+
 ## 2026-11-24 AES 调度 × 物理后端 2×2 与交换顺序复跑
 
 同冻结起点和原筛选池，四组合按正反两种顺序全新实跑，各臂保留原 I/O、三角 setup/hold、电气、独立 DRC、天线和新 SEC，硬窗 720 RAW s、面积目标 0.01%、6 次请求上限。四个条件各自的首达与最优跨序都复现同动作、ODB／DEF／网表、去日期 SPEF 和完整三角验收。以下耗时含相同筛选收费与各臂真实准备、诊断及工具。

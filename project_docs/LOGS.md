@@ -7033,3 +7033,44 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 ## LOG-20261124-195｜八臂与论文阶段冻结，留出起点仍在运行
 
 - AES 八臂计时、独立验收、逐件归档和论文交付已完成。20:46:47（UTC+8）复读 JPEG 实际 `5_2_route.tmp.log`，DRT 第 0、1 轮的迭代末违例数为 22,331、12,270，第 2 轮在执行。这些是详细布线过程读数；最终 DRC、原生 RCX、三角回读与起点门仍待实际收据。该设计暂未开始候选。[JPEG 起点登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1)
+
+## LOG-20261124-196｜JPEG 原生 DRT 进入第 3 轮
+
+- 阶段提交 `cb4f1e9f59694c0205efe4299ab47cf5c1ee4da5` 后更新进行中的 JPEG。20:50:09（UTC+8）复读，详细布线第 2 轮末仍 11,375 个违例，第 3 轮已进到 10%。原 GRT 报表记录总需求 162,135／资源 543,742、全局溢出 0，GRT 后阶段仍报告 1 个天线网和 1 个天线引脚违例，需等详细布线的最终物理检查。这些阶段数据各按来源保留，进一步的最终 DRC／RCX 和原约束资格仍待完成。
+
+## LOG-20261124-197｜JPEG 首次详细布线归零，原生天线修复触发重布线
+
+- 20:54（UTC+8）实读 `5_2_route.tmp.log`。第一次 `detailed_route` 第 3 至第 6 轮末依次为 1,069／5／5／0 个违例。随后原生流程实报 33 处天线违例、插入 35 个二极管，并启动第二次引脚访问和详细布线。首次 DRC 0 已实测，等原生重布线结束后再读最终 DRC／天线和 RCX。
+
+## LOG-20261124-198｜JPEG 天线修复后 DRT 再次归零，尚有 2 个天线违例
+
+- 21:00:29（UTC+8）原生 producer 日志显示第二次详细布线在第 7 轮归零并完成后处理，随后实际检测报 2 个天线网／2 个天线引脚违例。最终原生物理、RCX 和三角仍以各自收据为准。天线残余已记录，需与 DRC 归零分别判断。
+- 复读同一阶段日志，原生流程随即为这两处插入另两个二极管，并实际启动第三次 pin access 和重布线。ORFS 此配方的天线修复来自 `detail_route.tcl` 内原生循环。
+
+## LOG-20261124-199｜JPEG 原生 DRT 与 RCX 完成，开始原约束三角回读
+
+- 第三次详细布线第 3 轮归零，随后两次原生天线检查均为 0 网／0 引脚。21:03（UTC+8）读取 producer rc=0，真实制备 1,951.17 s，最终面积报告约 445,223 µm²。`5_2_route.log`、`6_report.log`、实际 `6_final.spef` 的 SHA-256 分别为 `8688e7188537d079b6c163bf69c6b01c1caa8111bf783f7958a3463d5e747b58`、`0ade32c2ff87cca43eb0814f7604a825385e591c3932869152c74ae834bfb6b3`、`111374abce87f0700da477d535698c1a0603b499e566c262b5542d83d047897b`。原约束资格目录出现，三角结果尚未形成。
+
+## LOG-20261124-200｜JPEG 原生物理端点完成，SS hold 资格拒收
+
+- 原 SDC 的 5 ns 周期、1 ns I/O、1.175 ns 源延迟与虚拟 I/O 时钟在导出的端点逐项核对，19 个非时钟输入、27 个输出全部匹配。TT／FF／SS 三个 STA 分别实跑 7.637／8.147／7.443 RAW s 并退出 0；FF、TT hold WNS +218.048／+357.532 ps，hold TNS 均 0；SS hold WNS/TNS −2,340.727／−41,475.257 ps，SS setup WNS/TNS −19,881.405／−35,205,266.613 ps。资格裁定 `hold_infeasible`，`qualification/CONTROL.json` SHA-256 `f6c7c85363ffe2a7a8e3842d28d5425977399c8335aa23dea2d065a1159a0cc0`。原生 DRC／天线报表均为空，原生最终日志电气违例三个计数均 0。无候选、无 SEC。
+- 定位原 SS 日志最差最短路径为 `rst` 到 `qnr.qnt_cnt[1]$_DFFE_PN0P_/RESET_B` 的 removal。到达 5.004635 ns，需要 7.345361 ns，其中捕获树传播 4.024351 ns、库 removal 3.321010 ns。另一个 `qnt_val[0]` 到数据 D 端的时序检查为 −1.256375 ns，原端点还存在常规输入 hold 违例。路径来源 `qualification/SS.log` SHA-256 `cd7c9d5e7f321a7df6e67a67c21a2b99ec2f834a8f9c07fc42b35419c58ccf82`。[登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1) · [未决 OI-104](OPEN_ISSUES.md#oi-1042026-11-24open-jpeg-原生起点的-ss-hold-不可行)
+
+## LOG-20261124-201｜JPEG SS 端点清点与同端 max 探针首版异常
+
+- 同冻结 SS 端点独立只读一次 STA 清点出 26 个负最小时序端点，分为 14 个 `RESET_B` 和 12 个数据 `D`。独立重算 26 条打印 slack 的和约 −41.475258 ns，匹配原精度 TNS −41.475257 ns。`ss_hold_paths/inventory.json` SHA-256 `725806e9d54abd463fa0a1f010ab79eaa9a0569438f1d2b7ba61612066a2f097`。
+- 首版同端 max 探针打印第一条即出现 signal 11。已查固定 OpenSTA 实现 `src/sta/search/Sta.cc` 的 `findPathEnds`／`searchPreamble`：新查询释放前次 PathEnd 对象。本探针在持有 min path 对象的循环中调用新的 max 查询，后续循环访问已释放对象。保留首版日志，下一版先复制端点名称和 min 数值，再用独立查询读取 max。该异常限额外路径诊断，原生三角和独立端点清点均已正常完成。
+
+## LOG-20261124-202｜JPEG 同端最小／最大时序复核并定位局部修复余量
+
+- 同一 ODB、SPEF、SDC 上修正前次探针的 PathEnd 生命周期，批量一次 max 查询并重跑一次只读 SS STA。新版正常返回，26 个端点都取得 min 与 max slack。其中 22 个具备理想的等量延迟范围，包含 14 个 reset 端和 8 个 `qnr.divider` 数据端；FDCT 的另 4 个数据端两侧均负，往共同 D 端加等量延时无法同时令 min/max 合格。复核文件 `ss_hold_headroom_v2/minmax.json` SHA-256 `426a5c766ad90c9045b17f311ef9dcd30a696a38f141d7087b281540270e451b`。
+- 最差 reset 端 min −2.340727 ns、max +3.288455 ns，理想局部余量 +0.947728 ns；同一原 SS 报告中另一 `rst` 分支的 recovery +1.451411 ns，小于最差端全部需补的 2.340727 ns，不能全量推到共享输入。只读定位未涉及换门、重布线或改变 SDC。若继续修复须按分支和路径另做物理实证，原生端点仍拒收。
+
+## LOG-20261124-203｜JPEG 原生资格与 SS 诊断原件封存
+
+- 把冻结端点制备、实际三角、SS 端点清点和两版同端探针封存至 `scratch/tcad_ibex_20261123/jpeg_control_20261124.tar.gz`，169,170,108 字节。114 个普通文件逐个与 WSL 原件 SHA-256 核对一致，Windows 包 SHA-256 独立实读 `78c76cdb6dfe88a4c453fbd78e62f02fd8e88131010719d6c8c6f6428890fbce`。仓库三份小收据与 WSL `CONTROL.json`、`inventory.json`、`minmax.json` 的原哈希一致。原生结束后的 STA 启动 6／正常完成 5，候选 DRT／STA／SEC 均为零。[JPEG 报告和收据](evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md)
+
+## LOG-20261124-204｜JPEG 原生资格阶段收尾与中文稿复编
+
+- 中文 v3 第 7.3 节补入 JPEG 原生起点资格失败和 SS 端点归因，AES 正式实验仍采用八臂数据。终版 `build06` LuaLaTeX 双遍，15 页、6 幅 ImageGen、21 条文献，无编译错误、溢出或未解析引用，保留环境字体替代提示。与已验 `build04` 比较，第 14、15 页发生视觉变化并实查，三份 PDF 同步。独立复读主 TeX SHA-256 `4aa5f80d57fc7fd3d7f45487c546150b146013daf24887ba724aa4198d97cc8b`，主 PDF 6,621,870 字节、SHA-256 `21f2e2445b30684d0713dfa131d2c0f2dcd9d10e4236177a04fab109b2c227d1`。[论文变更记录](../paper/zh/CHANGE_LOG.md)
+- JPEG 阶段收尾于原生资格裁定、定向只读归因和核验后归档。未决 OI-104 保留，任何共同起点修复仍须原三角、原物理和等价门，尚无跨设计候选比较。[JPEG 资格报告](evidence/tcad_holdout_20261123/JPEG_CONTROL_REPORT.md)

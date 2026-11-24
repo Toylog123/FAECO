@@ -72,4 +72,4 @@ python3 -B "$e/verify_aes_factorial.py" "$raw/aes_factorial_replay"
 | 3 | ASAP7 Ethmac | 三个物理域周期分别为 1000、300、300 ps，另有对应虚拟时钟，原 SDC 含时钟群和 max-fanout。资格需按多时钟和实测 hold 预先制定。 |
 | 4 | SKY130HD Microwatt | 原 SDC 的主时钟和 JTAG 周期为 15 与 100 ns，按端口存在 I/O 例外。四类硬宏当前只见 TT Liberty，严格全块三 PVT 需补齐模型或事先登记替补。 |
 
-八臂计时结束后，使用 [JPEG 制备脚本](../tcad_holdout_20261123/prepare_jpeg_control.sh) 启动原始配方，保留 5 ns 周期和原 I/O，先核验起点。UART 处于输入准备阶段。其余按长期计划在方法输出产生前冻结资格与替补规则。
+八臂计时结束后，JPEG 原生详细布线、RCX 和原 I/O 三角回读已完成。最终原生 DRC 与天线均为零，SS hold 为 −2,340.727 ps，未过起点资格。SS 的 26 个负端点中含 14 个复位撤除端点，另有 4 个 FDCT 数据端点同时存在建立和保持违例。UART 处于输入准备阶段。 [JPEG 资格和失败归因](../tcad_holdout_20261123/JPEG_CONTROL_REPORT.md)

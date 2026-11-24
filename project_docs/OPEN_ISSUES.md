@@ -1739,3 +1739,9 @@ GCD 相同累计四门原冻结路由未过 TT/SS 相对 hold，重入前一步�
 新 AES 触达电容配对 v1 优化臂第 3 次重试的独立恢复 ROUTED DRC 被剩余墙钟裁剪至 2.626940724 s。子进程的 `TrialFailure rc=None` 比硬墙钟早 0.005096355 s 返回，驱动以 1 退出，优化臂没有正式终态。前两次完成且拒，第三次无完整独立 DRC 和 SEC。v2 根据是否实际受剩余墙钟裁剪判定，保留普通工具超时与真正工具失败的异常路径。v1 的针对性回归复现，v2 三例通过。[实验登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-dispatch-optimization-and-aes-rank49-v1)
 
 v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独立 DRC 截停，真实终态通过独立核验。此次 AES 驱动在剩余窗超时前少量返回时的处理闭合。其它流程和更广负载不由本例认定，v1 原始异常保留。[AES 配对报告](evidence/tcad_ibex_20261123/AES_INCIDENT_PRIORITY_MATCHED_REPORT.md)
+
+## OI-104（2026-11-24，open）— JPEG 原生起点的 SS hold 不可行
+
+原生 SKY130HD JPEG 的 DRT、原生天线和 RCX 完成，保留原 5 ns、1 ns I/O 与原时钟语义。三次提取后 STA 证明 FF、TT hold 非负，SS hold WNS/TNS −2,340.727／−41,475.257 ps。最差为 `rst` 的异步 removal，另有 `qnt_val[0]` 输入到常规寄存器 D 的 −1,256.375 ps。若另做共同起点修复，须继续用同一 I/O 与绝对 hold 门并独立完成原物理和证明条件。原生不合格保留，候选和方法比较尚未启动。[资格登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-jpeg-original-control-qualification-v1)
+
+独立 SS 清点 26 个负 min 端点，其中 14 个 `RESET_B`、12 个 `D`。同端 max 复核显示，14 个 reset 和 8 个 `qnr.divider` 的 D 端有理想等量延时余量，另 4 个 FDCT 数据端的 min/max 同时为负。最差 reset 端理想所需延时约 2.341 ns；原 SS 报告中另一 reset 分支仅余 1.451 ns recovery，不能用共享输入的全量延迟解决。局部分支、不同数据路径及采样钟需分别判断，尚无修复或新共同起点。
