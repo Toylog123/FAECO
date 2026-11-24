@@ -9,6 +9,15 @@ sky130=/home/toylog/faeco_tcad_sky_holdout_20261123
 flow=/home/toylog/faeco_eda/orfs/flow
 
 design=${1:-}
+pin_access=()
+case "${2:-double}" in
+  double) ;;
+  single) pin_access+=(--single-pin-access) ;;
+  *)
+    echo 'usage: run_hold_aware_sky130.sh {ibex|gcd} [double|single] [out]' >&2
+    exit 2
+    ;;
+esac
 case "$design" in
   ibex)
     control="$ibex/hold_repair_sky130_03/endpoint"
@@ -48,4 +57,4 @@ exec timeout --kill-after=10s 2400s taskset -c 6-11 python3 -B "${driver[@]}" \
   --embedded-guides --zero-reextract --threads 4 --max-evals 6 --batch-size 3 \
   --droute-iters 64 --route-timeout 1500 --sta-timeout 180 --sec-timeout 210 \
   --report-setup-endpoints --wall-limit-seconds 720 --target-area-pct .01 \
-  --hold-aware-only --out "$out"
+  --hold-aware-only "${pin_access[@]}" --out "${3:-$out}"

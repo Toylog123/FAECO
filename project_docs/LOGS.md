@@ -6388,3 +6388,59 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 ## LOG-20261124-61｜本轮优化试验核验与原件封存完成
 
 - pin access 归档 `scratch/tcad_ibex_20261123/pin_access_ab_20261124.tar.gz`，156,613,093 字节、494 个成员、438 个普通文件按原件逐项核验，包 SHA-256 `c7a043ee854c5ad862be8dd63f5afd63aff7f6f03bbb362fe09758558bb41d18`。A/B 及 GCD A/C 合计 12 次候选 DRT/RCX、36 次 STA、12 次候选 SEC、0 缓存，预检和 ODB 辅助状态诊断另计。生产物理脚本不启用单次方式。最终针对性回归 108 项通过、17.47 s，记录脚本 rc 0，仅报四个已停用路径。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md) · [当前口径](CANON.md#2026-11-24-筛选并行物理组件对照与-aes-残余-hold-优化)
+
+## LOG-20261124-62｜扩大矩阵之前先验证搜索速度与 ODB 重入
+
+- 从 `4f28ada3` 开始。先在同一个已冻结的 GCD 搜索任务，串行比较默认 pin access 和显式启用的单次 pin access，CPU 6–11。保留原筛选池、候选搜索、物理设置、时间和调用预算、0.01% 面积目标与原联合 setup/hold/DRC/电气/SEC 门。分别核对实际候选顺序、面积、时序、布局对象及首达到同一目标的真实时间。旧组件 A/B 只作为启动依据，新的端到端首达与未来全矩阵分账。
+- GCD 与 Ibex 另用 CPU 0–5，试验从实际保存的 ODB 重新加载后继续下一步候选，覆盖双次和单次 pin access 首次端点。按各自原输入、时序与物理门完整核对第二步 DRT/RCX、三视图、等价证明和 ODB 差异。完成此项前不改变默认物理方式。确切输入、第二步动作、启动顺序和限时在各自入口另绑。[前置验证登记](evidence/EXPERIMENT_REGISTRY.md#2026-11-24-tcad-sky130hd-single-pin-search-and-odb-reentry-v1)
+- 重入矩阵已明确各设计的 A→A、B→B、A→B、B→A 四个组合，A 为原双次，B 为单次。GCD 从排名 13–15 的合格保存端点重入，只加排名 16 的 `_095_→mux2_1`。Ibex 从排名 7–9 的合格端点重入，只加排名 10–12 的 `_14570_→nor4_1`、`_464_→xor2_1`、`_476_→xnor2_1`。第二步更换实际保存的 ODB 及其几何参照 DEF，时序门和 SEC gold 仍绑原 CONTROL。CPU 0–5、四线程，GCD/Ibex 外限 600/1600 s，单次 DRT/RCX、逐角 STA、SEC 限时 1500/180/210 s。原 GCD 同动作直接累计评估因 TT/SS 相对 hold 拒收，保留原门以检验重入的真实判定。
+
+## LOG-20261124-63｜GCD 原冻结搜索四臂串行启动
+
+- 采用 A→B→B→A 顺序，各臂为同一 hold-aware 搜索，从原 GCD CONTROL 和原筛选池各自独立跑满 6 个候选。A 是默认双次，B 显式 `--single-pin-access`。每臂按原 720 RAW s、0.01% 面积目标及联合门验收，计入同一原筛选 52.520673 RAW s，原始收据目录 `/home/toylog/faeco_tcad_pin_search_20261124_v1/{a1,b1,b2,a2}`。CPU 6–11 上各臂串行，四线程，外限每臂 2400 s，单次 DRT/RCX、单角 STA、SEC 分别 1500/180/210 s。两轮次序分别核对实际首达，CPU 0–5 的 ODB 重入与其并发工况另记。单次分支测试先复现未支持，再实现并通过针对性 9 项检查。
+- 首臂 `a1` 于 09:15:15（UTC+8）开始，WSL 外层 PID 350、驱动 PID 428。使用更新的 `run_hold_aware_sky130.sh` 包装入口，实际配置随生成后逐臂绑定。[冻结搜索启动器](evidence/tcad_ibex_20261123/run_hold_aware_sky130.sh)
+- 首臂 `a1/config.json` SHA-256 `b600d03d2b946f097d2b44954d4eb0c196bb72c7f7a2fafa336d3bd01307f94d` 已生成并核对。
+
+## LOG-20261124-64｜GCD 已保存 ODB 重入实跑启动
+
+- `gcd_pin_access_reentry_v1` 于 09:15:42（UTC+8）运行，WSL 外层 PID 614、驱动 PID 615，CPU 0–5、四线程、外限 600 s。输入为 `gcd_pin_access_ab_v2` 的真实 A/B 两个不同 ODB，在各自第 1 步合格端点重入追加同一第 16 名动作。实际配置 SHA-256 `30ba27763994fcddc3301310338ea8424724c52b72f361e913fd95dfbb8f4735`，从 A→A 开始，四组合各自执行。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+
+## LOG-20261124-65｜GCD 四种 ODB 重入得到同一验收判定
+
+- 四组合均完成 DRT/RCX、三角 STA 与候选 SEC，合计 4 次 DRT/RCX、12 次 STA、4 次 SEC、0 缓存。各自相对第一步多回收 3.7536，相对原 CONTROL 共回收 15.0144（0.312989%）。四端点保持相同 DEF、网表、去日期 SPEF、逐角 WNS/TNS、改线清单、电气/DRC 门与 SEC 262/0，FF/TT/SS hold WNS 相对原 CONTROL +0.009270／+0.125983／+0.443368 ps，均无新增负 setup 端点。ODB 原始字节比较仍保留不同。结果 SHA-256 `7863ca59f2d956466cb9d76cb2aafc4e290b2b2f7860db1d9117c615a74aa1a5`。
+- 原从冻结 CONTROL 一次性执行相同累计四门的端点，TT/SS 相对 hold 分别 −1.084438／−4.336809 ps 并被拒。走已提交 ODB 的下一步与冻结起点累计重放具有不同物理轨迹；前者的四种 pin access 组合给出相同验收。两族时间与结果各自登记。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+- 与原冻结累计评估的最终功能网表逐字节相同，最终 DEF 与 SPEF 不同。四种重入的 ODB 有 3 种原始哈希，A→B 与 B→A 相同。A→A、B→B、A→B、B→A 的实际第二步时间分别 14.895、12.531、13.167、15.669 RAW s，为固定次序的物理观察。
+
+## LOG-20261124-66｜Ibex 重入入口修复后恢复原配方
+
+- Ibex v1 的第一组合在换门前退出。此前从设计专用 FastRoute 路径反推 ORFS 根少向上一层，`source` 指向不存在的 `flow/designs/platforms/sky130hd/setRC.tcl`，工具 rc 1、没有完成 DRT/RCX 或调用候选 STA、SEC。保留 `ibex_pin_access_reentry_v1`，配置 SHA-256 `79a739b1fd0558ab3fc70cd60cfcac8341946645c25ffe07e75ae14b496a0ac9`，失败收据 SHA-256 `6436c2041b0032feeb345a590fb3172eb0293e242457d0af3fa3b7d3da14c9fa`。
+- 从已绑定的原 `setRC.tcl` 确定 ORFS 根与原 FastRoute 文件后，在 `ibex_pin_access_reentry_v2` 按同四组合及原门重跑。WSL 09:17:39（UTC+8）启动，外层 PID 1685、驱动 PID 1686，首个 OpenROAD PID 1800，CPU 0–5 四线程，外层 1600 s。配置 SHA-256 `8da172552e38320c4cfc5cd3029c7f9d3949164ba3d713917670abc1b773dc75`。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+
+## LOG-20261124-67｜GCD 冻结搜索首对通过物理和候选轨迹对齐
+
+- A→B 首对两臂均跑满 6 次 DRT/RCX、18 次视图 STA、1 次候选 SEC、0 缓存。两次均在第 5 次以 11.2608 达到目标，候选失败与接受序列、三角 STA 全字段、去日期 SPEF 与原历史逐次精确匹配。实际每例 pin access 次数 A 为 2、B 为 1，单次运行的 ODB 字节仍有区别。含同一筛选成本的首达 A/B 122.988636／118.739976 RAW s，搜索首达 70.467963／66.219303 s，第一对差 4.248660 s。`a1/results.json` 与 `b1/results.json` SHA-256 分别 `c1836189c1a16641167abca1adaa50cc695c64be4e160200a5d80b4f780c90a9`、`38da6e4bf5ced86eaf4903b0d559307fc120c78cf9b6f61fd591b95335fa5bda`。逆序对照继续。
+- 首对各自独立矩阵核验 rc 0，逐次对齐 DEF/V/DRC、实际改线和提交证明，路由 Tcl 归一后只差显式 `pin_access` 一行。六次搜索耗时 84.989319／80.462802 RAW s，首达前五次 DRT/RCX 56.896474／51.969708 s。`b1/config.json` SHA-256 `d4b59fe0b29e8e18d42e29429719f723a2f9f2d6befcf0f7123c309248552e0a`。补原模式选择和边界测试后，针对性回归 11 项通过。
+
+## LOG-20261124-68｜Ibex 首个重入组合出现 TT 电气和 TNS 拒收
+
+- A→A 第二步 DRT/RCX、三角 STA 完成，面积相对原 CONTROL 实测减少 43.792。新端点有 TT `_12540_/Y` 的最大电容违例，TT setup TNS 相对原 CONTROL 下降 1029.633268 ps，超过原 1000 ps 限额；TT 新增 6 个负 setup 端点。第一步保存端点仍保持原验收，实际新网表另做诊断 SEC 13648/0。原从冻结 CONTROL 做相同累计六门的阶段通过且 TT TNS 改善 60.058625 ps。当前第一组合显示 Ibex 重入会改变物理验收，其他三种仍待实测。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+- 只读对齐最差 core_clock setup 路径，原冻结累计与 A→A 重入均经过实例 `_12540_/Y`，master、连接及其输出网 `_02456_` 的 DEF 项一致。该网在冻结累计和 A→A 的 SPEF 总电容分别为 0.0659667／0.0661425 pF，A→A 的引脚电容 0.075289480 pF 超过限制 0.074167997 pF。此读数给出电气拒因的寄生线索，TNS 的全部变化仍需按各端点归因。
+
+## LOG-20261124-69｜GCD 冻结搜索两组顺序交换实跑结束
+
+- 四臂均完成 6 次真实 DRT/RCX、18 次视图 STA、1 次候选 SEC、0 缓存，均在第 5 次达到面积回收 11.2608（0.234742%）。含同筛选成本，A→B 为 122.988636→118.739976 RAW s，B→A 为 113.860043→118.933382 RAW s，分别节省 4.248660／5.073339 s。未含筛选的全六次时序为 A/B 84.989319／80.462802 s 与 82.729677／75.669656 s，达标前五次 DRT/RCX 费用差 A−B 为 4.926766／7.134141 s。
+- 独立只读回看 24 个物理收据，全部动作和拒因、DEF/V、去日期 SPEF、DRC、改线、三角 STA/端点统计精确复现原冻结结果，每个 A 试次报告两次 pin access、B 报告一次。逆序原结果 `b2/results.json`、`a2/results.json` SHA-256 分别 `5d488623a1db6451360fa4668125506f55d23ba29698808393dafdd888d71fa9`、`19c6baeb096c7f3469cf624947a1053de12a7b90fd86a3cf42965590318e6943`。此次实际时间为两次配对的 GCD 冻结搜索证据，和另一 CPU 组的重入实验运行重叠。
+
+## LOG-20261124-70｜GCD 冻结搜索验证封存
+
+- 独立验证四臂各自 rc 0，六次动作和原联合门保持，归一化后的路由 Tcl 仅差显式 `pin_access` 一行，所有 DEF/V/SPEF/DRC/三角物理读数/改线/SEC 对齐。归档 `scratch/tcad_ibex_20261123/pin_access_search_20261124.tar.gz`，27,401,310 字节、713 个成员，640 个文件与原件逐项 SHA-256 核对。压缩包 SHA-256 `6df7e677640aa27488ca8cdd80acf7ced0a996854e3a4d17d10fcfda2c364b1c` 已从宿主复验。[搜索报告](evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_REPORT.md) · [独立验证](evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_VERIFIED.json)
+- 后续正式 SKY130 嵌入导引的同起点冻结搜索对比，若 Ibex 重入四种模式的验收判定一致，则各方法可统一显式启用单次 pin access。原冻结或重入的路由起点继续按各自实验选择，原 ASAP7 口径按原入口。此为后续较全设计矩阵的配置决策依据，已保存实验继续按原实际设置引用。
+
+## LOG-20261124-71｜Ibex 四种重入判定一致并完成配置前置验证
+
+- A→A、B→B、A→B、B→A 四组合均完成 DRT/RCX 与三视图 STA，总计 4 次、12 视图 STA、0 正式候选 SEC、0 缓存。四组均因 TT 新电容违例和 TNS 超限拒收，实测面积候选减量相对原 CONTROL 为 43.792，较第一步 21.2704，未计合格面积。各 ODB 的 3 种字节指纹保留，混合两组合字节相同。四组合 DEF/V、去日期 SPEF、DRC、三视图时序、电气、改线和 TT 6 个新增负 setup 端点均一致。四份实际候选网表对原 CONTROL 的诊断 SEC 均 13648/0，独立于候选接受与搜索耗时。原结果 SHA-256 `2154326d5aad18a0b4082c8a62038d549b3633d5096fb46e9ee23871a33f7c2b`。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+- GCD 冻结搜索和 GCD/Ibex 重入各自按原输入及路由起点对齐后，通过/拒收均不受此处单双次 pin access 的选择影响。后续正式 SKY130 嵌入导引的冻结起点对比，各方法统一显式启用单次方式。冻结起点与提交快照重入分开，保留历史设置、原默认入口与外部导引路径。[当前口径](CANON.md#2026-11-24-单次-pin-access-冻结搜索与-odb-重入前置验证)
+
+## LOG-20261124-72｜前置验证收尾、归档与实验配置冻结
+
+- GCD/Ibex 重入归档 `scratch/tcad_ibex_20261123/pin_access_reentry_20261124.tar.gz`，91,607,384 字节、240 个成员、213 个普通文件逐项与原件 SHA-256 核对，含失败的 Ibex v1。包 SHA-256 `b97f444fcd0bc272f88e94afe060ef8fc3a9ed2029c22736c9c1449e2b96850d`。本轮针对性回归 111 项全过，16.29 s，记录脚本 rc 0，仅提示四个停用路径。此次完成范围为四臂 GCD 冻结搜索和两个设计的两步重入前置验证。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md) · [搜索报告](evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_REPORT.md)

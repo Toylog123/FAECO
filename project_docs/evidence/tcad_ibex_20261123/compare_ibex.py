@@ -503,8 +503,8 @@ file copy -- {tcl(args.control_drc)} {tcl(out / "drc.rpt")}
 puts "IBEX_DRT_VIOLATIONS 0"
 puts IBEX_REUSED_FROZEN_DRT"""
     else:
-        routing = f"""pin_access
-{grt}
+        pin_access = "" if getattr(args, "single_pin_access", False) else "pin_access\n"
+        routing = f"""{pin_access}{grt}
 detailed_route -output_drc {tcl(out / "drc.rpt")} -verbose 1 -droute_end_iter {args.droute_iters}
 puts "IBEX_DRT_VIOLATIONS [detailed_route_num_drvs]"
 if {{![design_is_routed]}} {{ error "Unrouted nets after DRT" }}
@@ -796,6 +796,7 @@ def run(args, *, matched_runner=None, config_overrides=None, extra_sources=()) -
         "batch_size": args.batch_size, "methods_route_threads": args.threads,
         "route_mode": args.route_mode, "route_drt_iters": args.droute_iters,
         "route_guide_source": "embedded in frozen CONTROL ODB" if args.embedded_guides else "external",
+        "single_pin_access": getattr(args, "single_pin_access", False),
         "route_timeout_seconds": args.route_timeout, "sta_timeout_seconds_per_view": args.sta_timeout,
         "sec_timeout_seconds": args.sec_timeout, "same_area_acceptance": False,
         "setup_budget_ps_per_view": 10.0, "numerical_tolerance_ps": PS_TOLERANCE,
@@ -918,6 +919,8 @@ def create_parser(description=__doc__) -> argparse.ArgumentParser:
     parser.add_argument("--route-mode", choices=("local", "full"), default="local")
     parser.add_argument("--route-guide", type=Path, help="guide emitted by the CONTROL producer")
     parser.add_argument("--embedded-guides", action="store_true", help="retain the ODB guide metadata")
+    parser.add_argument("--single-pin-access", action="store_true",
+                        help="use only DRT's internal pin access with embedded SKY130 guides")
     parser.add_argument("--zero-reextract", action="store_true", help="no-op uses the frozen DRT")
     parser.add_argument("--droute-iters", type=int, default=64)
     parser.add_argument("--route-timeout", type=float, default=1500)
@@ -933,6 +936,8 @@ def create_parser(description=__doc__) -> argparse.ArgumentParser:
 def prepare_args(parser, args):
     if args.embedded_guides and (args.route_mode != "local" or args.route_guide is not None):
         parser.error("embedded guides require local routing with no guide override")
+    if getattr(args, "single_pin_access", False) and (args.pdk != "sky130hd" or not args.embedded_guides):
+        parser.error("single pin access requires embedded SKY130 guides")
     if args.zero_reextract and not args.embedded_guides:
         parser.error("zero re-extraction requires embedded guides")
     if args.route_mode == "local" and args.route_guide is None and not args.embedded_guides:

@@ -4,6 +4,11 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-24 单次 pin access 冻结搜索与 ODB 重入前置验证
+
+- GCD 原冻结起点 hold-aware 搜索在同机串行 A→B→B→A，各 6 次调用。A 为默认双次 pin access，B 为显式单次。四臂均在第 5 次达到同一 11.2608 µm² 面积回收，SEC 262/0。含同一历史筛选成本，顺序交换两对的双次／单次首达分别为 122.989／118.740 RAW s、118.933／113.860 RAW s，实测节省 4.249／5.073 s。24 个候选的动作、拒因、DEF/V、去日期 SPEF、三角全量时序和证明保持一致，单次原始 ODB 字节仍有差异。后续正式 SKY130 嵌入导引冻结起点对照对各方法统一显式启用 `--single-pin-access`，原默认值、外部导引入口和既有实验继续按各自对应配置。更广矩阵尚未开始。[搜索报告](evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_REPORT.md)
+- 保存中间 ODB 后，各设计按 A→A、B→B、A→B、B→A 续做一个固定动作组，同一设计的四组 DEF/V、去日期 SPEF、三视图时序、电气和验收相同。GCD 四组均回收 15.0144 µm²（0.312989%，SEC 262/0），三角 hold 均改善，原从冻结起点直接累计相同动作的端点因 TT/SS 相对 hold 拒收。Ibex 四组均因 TT 新电容违例及 TNS 损失 1029.633 ps 超出 1000 ps 限额而拒，6 个新增负 setup 端点，另做诊断 SEC 13648/0；原冻结起点累计同六门通过。保持路由起点策略对照独立，后续全矩阵沿同一冻结起点评估。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+
 ## 2026-11-24 筛选并行、物理组件对照与 AES 残余 hold 优化
 
 - Ibex/GCD 的冻结 SPEF TT 筛选使用单线程独立候选探针的有界四路并行，复现原有的精确探针序列和有序池。Ibex 1→4 路在新增一次配对中用时 131.941→77.493 RAW s，减少 41.27%。GCD 两组交换顺序分别为 50.709→37.271 s、51.952→39.206 s，减少 26.50% 和 24.53%。六臂各设计探针数不变，合计 116 次。该时间对应完整筛选预处理与探针，物理搜索另有其原实跑证据。[筛选报告](evidence/tcad_ibex_20261123/SCREEN_WORKERS_BENCHMARK.md)

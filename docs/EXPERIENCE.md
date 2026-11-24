@@ -3486,3 +3486,7 @@ AES 三个两门子集的寄生代价不同，删掉一门可以减轻捕获侧�
 ## 2026-11-24 — 用只读 ODB 规范化定位 pin access 辅助状态差异
 
 嵌入导引线路里同时执行显式 `pin_access` 和 `detailed_route` 默认步骤会计算两次。去一次后，GCD 和 Ibex 的单端点 DEF、提取和时序验证等值，ODB 原始字节却不同。比对接入点时，应去掉临时对象句柄，按所属 pin、坐标和层读取多重集；把接入点和关联引用从另存的副本清理后再比较原数据库其余内容。两设计各自的副本字节一致。GCD 将两种单次调用各自运行，输出原始 ODB 也一致。此方法可以限定变化域，新增搜索/增量路径是否同样稳定需独立验证。[pin access 对照](../project_docs/evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+## 2026-11-24 — 验证接入点配置时把路由起点作为独立变量
+
+在 GCD 原冻结搜索中，把单次与双次 pin access 各独立运行两臂并交换顺序，检查完整六次候选轨迹及相同面积目标；两组均保持验收和物理指标，含筛选首达实测各缩短 4.249、5.073 RAW s。另以真实保存的 A/B ODB 为输入，四格组合第二步的 pin access 配方，能把输入 ODB 差异与第二步配置分开。两设计各自的四格判定一致，但从冻结起点累计重布线与中间 ODB 重入的结果在两个设计上出现相反的接受改判。Ibex 有一个被违反的电容限制位于未改变自身连接和几何的输出网，真实 SPEF 电容仍变大。完整实验应固定起点策略并明确计时范围。加载通用工艺脚本从哈希绑定的 `setRC.tcl` 定位 ORFS 根，设计专用 FastRoute 路径可能多一层目录。[冻结搜索](../project_docs/evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_REPORT.md) · [两步重入](../project_docs/evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)

@@ -60,4 +60,6 @@ GCD 首次诊断将 Tcl 的坐标二元表当成对象调用，未写诊断 ODB�
 
 这些结果支持把重复 pin access 作为运行时间优化目标。原始 ODB 字节门未达到，生产配方保持原默认。当前范围是两个已合格端点的独立单次评估，尚未测完整搜索或从 B/C 的 ODB 继续做下一次 ECO。
 
+后续验证见 [完整搜索耗时](PIN_ACCESS_SEARCH_REPORT.md) 和 [保存 ODB 后的 ECO 重入](PIN_ACCESS_REENTRY_REPORT.md)。
+
 完整原件保存在 `scratch/tcad_ibex_20261123/pin_access_ab_20261124.tar.gz`，含八个运行和诊断目录及四个脚本。SHA-256 `c7a043ee854c5ad862be8dd63f5afd63aff7f6f03bbb362fe09758558bb41d18`，156,613,093 字节，494 个成员，438 个文件按成员与原始 SHA-256 逐个核对。

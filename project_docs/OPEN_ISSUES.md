@@ -1699,3 +1699,9 @@ AES 的 18 个冻结筛选候选均完成 DRT/RCX，setup、DRC、电气与绝�
 在 GCD、Ibex 各自固定且原可接受的一个三门端点，删去嵌入导引情形的显式 `pin_access` 语句、保留 DRT 内部默认步骤，顺序交换均减少单次候选耗时。两种方式的 DEF、V、去日期 SPEF、三视图时序、DRC、实际改线和证明点相同。仅 B 的 ODB 字节不同，且不满足预登记的全对象一致门。需定位 ODB 内部变化并用更完整的下游重复评估检验，暂保留原搜索配方。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
 
 后续读回的 AP 接入点几何多重集一致；将诊断副本中的 AP 与其引用清理后，同一设计各臂字节一致。GCD 仅保留显式单次的 C 与仅保留 DRT 内置单次的 B 产生字节相同的原始 ODB，均与原双次方式不同。差异已定位至 AP 辅助数据，原对象次序及中间 ODB 重入后的下游行为仍待检验，原生产配方尚未改变。[pin access 对照](evidence/tcad_ibex_20261123/PIN_ACCESS_AB_REPORT.md)
+
+GCD 完整冻结路径四个六次搜索臂的候选接受与输出一致，单次方式在两对顺序各缩短 4.249、5.073 RAW s 的含筛选首达时间。两步重入的 GCD/Ibex 分别在全部四种模式组合复现共同判定。限于受验路径，当前已支持下一阶段同范围 SKY130 冻结起点比较统一显式启用单次，默认双次仍可复现历史配置。ODB 原始字节身份与更多重入步数、候选和流程的稳定性仍需继续跟踪。[搜索报告](evidence/tcad_ibex_20261123/PIN_ACCESS_SEARCH_REPORT.md) · [重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)
+
+## OI-102（2026-11-24，open）— 冻结起点累计重布线与 ODB 重入改变验收
+
+GCD 相同累计四门原冻结路由未过 TT/SS 相对 hold，重入前一步合格 ODB 后追加同一门达 15.0144 µm²、SEC 262/0；Ibex 相同累计六门原冻结路由通过，重入却出现 TT 新电容违例与超预算 TNS 并拒收。两设计在各自所有单双次 pin access 组合下得到共同判定。后续需要单独对比路由起点、已有几何和目标改线范围，判断何时重入有益。现行方法比较继续使用同一冻结起点路由规则，重入结果单独登记。[重入报告](evidence/tcad_ibex_20261123/PIN_ACCESS_REENTRY_REPORT.md)

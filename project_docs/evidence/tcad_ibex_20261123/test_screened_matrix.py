@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from compare_ibex import Endpoint, PhysicalAction, sha
+from compare_ibex import Endpoint, PhysicalAction, create_parser, prepare_args, render_route, sha
 from run_screened_matrix import bind_screen_inputs, summarize_arm_times
 from run_setup_budget_sweep import BudgetGate, run_arm
 import screen_sky130_candidates as screening
@@ -95,3 +95,32 @@ def test_screen_workers_preserve_order_and_stop_at_exact_success(workers, monkey
     assert sorted(requests) == list("abcdef")
     assert [row["label"] for row in rows] == [f"screen_{seq:02d}" for seq in range(1, 7)]
     assert passed == list("acef")
+
+
+def test_embedded_single_pin_access_only_omits_redundant_tcl(tmp_path):
+    args = SimpleNamespace(
+        orfs=tmp_path, pdk="sky130hd", embedded_guides=True, route_mode="local",
+        route_guide=None, zero_reextract=True, control_drc=tmp_path / "drc.rpt",
+        droute_iters=64, single_pin_access=False,
+    )
+    ctrl = {ext: tmp_path / f"control.{ext}" for ext in ("odb", "sdc")}
+    libraries = [tmp_path / "tt.lib"]
+    edits = [PhysicalAction("gate=small", "gate", "large", "small", 1)]
+    original = render_route(args, libraries, ctrl, tmp_path, edits)
+    original_noop = render_route(args, libraries, ctrl, tmp_path, [])
+    args.single_pin_access = True
+    optimized = render_route(args, libraries, ctrl, tmp_path, edits)
+    assert original.count("\npin_access\n") == 1
+    assert optimized == original.replace("\npin_access\n", "\n", 1)
+    assert render_route(args, libraries, ctrl, tmp_path, []) == original_noop
+
+
+@pytest.mark.parametrize(("pdk", "embedded"), [("sky130hd", False), ("asap7", True)])
+def test_single_pin_access_rejects_unvalidated_routing_modes(pdk, embedded, capsys):
+    args = SimpleNamespace(
+        pdk=pdk, embedded_guides=embedded, route_mode="local", route_guide=None, single_pin_access=True,
+    )
+    with pytest.raises(SystemExit) as caught:
+        prepare_args(create_parser(), args)
+    assert caught.value.code == 2
+    assert "single pin access requires embedded SKY130 guides" in capsys.readouterr().err
