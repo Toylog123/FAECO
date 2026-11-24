@@ -3072,3 +3072,36 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **四臂终态** 总结果 SHA-256 `b3f49344a094be568b92c359d66018a7cb2771f9d5e58512429b569527aec79d`。两序 FAECO 正式 67.5648 µm²、单门 22.5216 µm²，共同目标配对首达差 137.842509／128.372622 RAW s。反序单门窗口终止在第 5 次 SEC，正序在第 5 次独立 DRC。合并 20 派发／16 完成，工具启／正常返分别为诊断 20／20、DRT/RCX 20／20、逐角 STA 60／60、独立 DRC 20／19、SEC 11／8。
 - **独立验收** 覆盖四臂，`full_audit=true`，首达和最优跨序各自同动作同物理端点。共同阈值首达 FAECO 469.963／471.424、单门贪心 607.806／599.796 RAW s。固定 720 RAW s 下两序合格最优 FAECO 67.5648、单门贪心 22.5216 µm²。核验收据 SHA `588495c2b9cd4b60fa284c3c20acfb7e4e8cb31a706f80eabc8b1bff315bd69b`。[配对报告](tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md) · [独立核验](tcad_ibex_20261123/AES_ONLINE_GREEDY_VERIFIED.json)
 - **原件封存** `scratch/tcad_ibex_20261123/aes_online_greedy_matched_20261124.tar.gz` 563,116,476 字节，逐文件验证 883 件，包 SHA-256 `a86a25537bdcbd37fadfeb93c57268e9e1295c5f683e09c13cb69b374b5b37e1`.
+
+
+### 2026-11-25 TCAD-ASAP7-UART-ORIGINAL-CONSTRAINT-ONLINE-ADAPTATION（意图登记）
+
+- 基线 `c8b9e0fd`，尝试将现行布线前冲突诊断和端点验收适配到 ASAP7 UART。依据已通过资格的原生 CONTROL，保留原 SDC 的 270 ps 周期、54 ps I/O、66.270 ps 虚拟时钟延迟和 FF／TT／SS，报告已有 setup 负余量。清点候选来源及面积口径，检查适配是否保留 DRT／RCX、独立 DRC／天线、三角电气、时序及非空候选 SEC。计划与 AES 强单门正式实物测试串行。实际冻结配置与证据待登记。[起点报告](tcad_holdout_20261123/UART_CONTROL_RUN.md) · [独立验收](tcad_holdout_20261123/UART_CONTROL_VERIFIED.json)
+- **起点适配与预筛已执行** 原生收据缺少 runner 所用 `library_paths`，ASAP7 FF SIMPLE 库软链接和实体的路径字串不同，内容哈希相同。由适配脚本逐一绑定原资格的 15 个 Liberty。冻结 TT SPEF 预筛 18／18 通过，共同计费 81.563830427 RAW s。原件在 `/home/toylog/faeco_tcad_uart_online_20261125_screen_v2`，池 SHA-256 `73bc816db40e5ca76e4a1dd34392dc1ab9bfeba3a7b9c0cff196ce2188b8fdff`，筛选收据 `e3f6003fd6a0c97c8132798c75282308d02550e24eeec26999c58fb104419f56`。正进行零动作实物预检，候选实物仍为零。
+- **实际六臂规约** `/home/toylog/faeco_tcad_uart_online_20261125_matrix_v2`，协议 SHA-256 `90bf70bb080d5544d51265e575c3ec94ff72f6342fe6b9aaf452c5476d374a4f`。单门、在线固定、FAECO 串行后完全反序。同一 720 RAW s 和 6 逻辑请求，均计筛选 81.563830427 s。原三角每角 setup WNS 限 2.7 ps，TNS 限 FF／TT 27、SS 136.973650200 ps，绝对 hold 非负、相对 hold 容差 0.001 ps。冻结 TT Liberty 功能面积 79.00902 µm²，0.01% 阈值 0.007900902 µm²。
+- **strict-zero 后正式运行** v1 因评估目录相对 seed 错配在第一物理子进程前退出，保留原件。v2 分离目录，实际零动作 16.773417292 RAW s 完整通过，独立 DRC 0，网表同哈希，自 SEC 567/0，收据 SHA-256 `8ea78b314aa9ec130f37cf138421047e115c05c1cf477cc05afcdadee8a22b85`。正序单门前两次仅 SS 相对 hold 拒，第 3 次 @152.164514538 RAW s 验收单门 0.08748 µm²并首次达阈值。
+- **正序单门终态** 6 派发／6 完成、2 接受，最大回收 0.17496 µm²，累计 `_0886_`／`_1027_` 于请求 5 @199.707520308 RAW s 验收。第 4 次仅 FF setup 门拒，第 6 次仅 SS 相对 hold 门拒，停在逻辑上限。正序在线固定开始。
+- **正序在线固定终态** 6 派发／6 完成、2 接受，请求 3 三门首达 0.17496 µm² @152.777640878 RAW s，请求 6 四门终态 0.23328 µm² @223.565693580 RAW s。拒收为请求 1 的 SS 相对 hold、2 的 SS 相对 hold 与 FF setup、4／5 的 TT 与 SS 相对 hold。正序 FAECO 首个相对 hold 拒收、第二个 FF setup 拒收。
+- **正序 FAECO 终态** 6／6、2 接受，单门 `_1027_` 第 3 次以 0.08748 µm² @151.795224386 RAW s 首达，两门请求 6 回收 0.14580 µm² @222.512908783 RAW s。请求 2、4 累计同三门、均 FF setup 拒，ODB、DEF、网表逐项哈希相同，正式物理尝试分别耗 19.420318518 和 19.574381910 RAW s。反序 FAECO 开始。
+- **反序 FAECO 终态** 6／6、2 接受。相同单门首达 0.08748 µm² @152.288565333 RAW s，同两门最优 0.14580 µm² @222.660176836 RAW s。重复请求 2、4 仍为 FF setup 拒，两次候选 ODB、DEF、网表与正序对应逐项同哈希，正反序最优端点的三份工件也相同。反序在线固定已派请求。
+- **反序在线固定终态** 6／6、2 接受。首达 0.17496 µm² @152.066594903 RAW s，四门最优 0.23328 µm² @221.946674999 RAW s。正反序墙钟首达方向未能在在线固定与 FAECO 间重复，FAECO 窗内最优面积两轮均较低。最后单门反序已派。
+- **六臂原结果** 反序单门首达 0.08748 µm² @151.161324416 RAW s，最优 0.17496 µm² @198.260869548 RAW s。六臂均完整判定 6 次、接受 2 次、停在请求上限；候选 DRT／独立 DRC／逐角 STA／SEC 合计 36／36／108／12。两序合格最大面积为单门 0.17496、固定 0.23328、FAECO 0.14580 µm²。共同目标首达的六个观察值均在 151.161–152.778 RAW s，各方法的时间差方向跨序不稳定。矩阵原结果 SHA-256 `1bc709c4a2429e2ed0276a0c37f4c0b2ba0e830cb8ea0350371c3e82ee843da8`，完整独立核验另计。[实验报告](tcad_holdout_20261123/UART_ONLINE_REPORT.md)
+- **独立核验** v2 原结果完整检查 6／6 臂，原件与仓库验收收据 SHA-256 同为 `51dbf9eb4ed0c950717d88350d179a71c5d343672c2abe9ebbc55c6fed3a5777`。三法最优端点的最大逐角 setup WNS 损失为 0.0428／1.3380／0.0251 ps，SS TNS 相对起点 +0.565／+10.113／−0.332 ps（单门／固定／FAECO）。全过原门、独立 DRC 与天线为零、SEC 567/0。36 次在线诊断无 marker、无额外邻网释放及重试。FAECO 正反序各重复一次 FF setup 失败动作，含诊断分别耗 23.221／23.318 RAW s。[独立核验](tcad_holdout_20261123/UART_ONLINE_VERIFIED.json)
+
+### 2026-11-25 TCAD-ASAP7-UART-EXACT-CUMULATIVE-TRIAL-DEDUPLICATION（意图登记）
+
+- 正序实物证实被拒完整批拆分后可在累计接受部分时恢复原失败动作集合。单独评估 opt-in 去重，限同一臂、同一冻结起点和评价配置下已取得完整物理结果和判定的累计动作身份。复用既有判定后继续真实二分，重复事件与六次真实评估配额分列。保留原六臂配置与实际轨迹，正式规约、源码和回归收据待记录。[问题 OI-106](../OPEN_ISSUES.md)
+- **隔离原型与离线回放** 旧结构回归先因未知 opt-in 参数失败，补回调后 scratch 隔离模块的 adapter 专项 14／14。已验证默认行为精确重放 UART 两序真实轨迹。启用去重后分别跳过一次相同三门拒收，剩余第 6 次实际请求拟派 `_0703_`／`_0814_`／`_1027_`，按单元面积预计最多 0.20412 µm²，低于原固定批次 0.23328 µm²。新候选实物次数为零，当前 AES 绑源码保持同一字节。
+
+### 2026-11-25 TCAD-SKY130HD-AES-ONLINE-SENSITIVITY-SINGLE-COMPARISON（意图登记）
+
+- 基线 `c8b9e0fd`，在先前在线诊断比较的 SKY130HD AES 中引入灵敏度排序单门作为强基线。延续共享筛选池、原 I/O／三角时序、同一物理后端与联合验收，按共同墙钟与面积目标报告，实付排序成本单列。计划与 UART 正式实物测试串行。实际排序来源、计费、窗口、运行顺序和配置收据待登记。[既有对照](tcad_ibex_20261123/AES_ONLINE_GREEDY_REPORT.md)
+- **排序预检** 在冻结 CONTROL、原 SDC／SPEF 与 TT Liberty 上查询 18 个实例的输出最小 setup slack。候选相对 TT WNS 的裕量为 297.415–515.914 ps，历史公式 200 ps 截顶使全部饱和，复现原清单顺序。正式预设保留其它排序条件、去掉截顶，前六重排，预检端到端 3.454 RAW s，独立读回 18 条。每轮单门的新查询拟在 720 RAW s 内实付，所有臂计相同历史筛选 113.363032440 s，原 36 ps WNS 限、6 次请求及 0.01% 面积首达阈值沿用。预检正式物理候选 0。[排序与实跑规约](tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_PREFLIGHT.md)
+
+- **实际启动** UART 六臂完整结束后，07:26:25（UTC+8）单机串行启动，`taskset -c 0-5` 及外限 3,100 s，输出 `/home/toylog/faeco_tcad_sky_holdout_20261123/aes_online_sensitivity_greedy_20261125_v1`。协议 SHA-256 `197e0a4c6b796570e9ffbff8cb888b8d8b87d693110471824e39a9b2ce16ba3f`，驱动 `26c1ede54b2aeb228c00bb43a871c0f5e08b4f4edff4dd3feaa8800007f58df5`。正序灵敏度单门→FAECO、完全反序。单门每臂实际重做且计费 TT 去顶查询，命令限 40 s。正序单门实发配置 SHA-256 `28e1ccc45e31d27946224c70340524601c295aa8de839ad2437d802acb6309bc`，实发顺序 `1bd07df9ff7d5f0679f46968a19f09be4543ce2692af6e5c362b636cfd6177ce`。首请求为 `_20893_→sky130_fd_sc_hd__xor2_2`。
+
+
+### 2026-11-25 TCAD-SKY130HD-GCD-SAME-PROPOSAL-ONLINE-MARKER-MECHANISM（静态预检）
+
+- 沿用 `gcd_incident_cap_pair_20261124_v1` 的已布线嵌入导引起点和筛选 39.206442669 RAW s。原 1100 ps 周期、220 ps I/O、290 ps 虚拟时钟延迟，原三角 WNS 限 11 ps 和完整验收。固定原排名 13–15 的 `_092_`／`_093_`／`_094_` 三门，已静态核对 9 条直连网、486 条原有线网、两条时钟网，诊断及正式 Tcl 预检和两项专项测试通过。实物进程为零。
+- 计划 strict-zero 后，常规→实时诊断→实时诊断→常规串行，每臂一个固定提议和 720 RAW s，实际计费并保留零回收、截停和验收。后续另做按冻结几何和同数量邻网放行对照。[静态预检与复现](tcad_ibex_20261123/GCD_MARKER_MECHANISM_PREFLIGHT.md)

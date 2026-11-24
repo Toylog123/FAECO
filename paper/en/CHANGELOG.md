@@ -1,0 +1,9 @@
+# English manuscript changes
+
+## 2026-11-25
+
+- Synced the active IEEEtran manuscript to Chinese revision `c8b9e0fd` and the matched physical evidence. The core results now report maximum qualified area at a fixed deadline and first qualification at a common area threshold. Fixed batches, original-order greedy, and sensitivity-ranked greedy retain their actual comparison protocols.
+- Preserved the ten SKY130 same-endpoint rechecks, the s713/s832 joint-gate outcomes, and the distinction between detailed-route, global-route, and frozen-parasitic evidence. Added the independently verified six-run ASAP7 UART comparison separately from the SKY130HD JPEG qualification outcome. At equal candidate and time limits, fixed batching and single-gate greedy both recover more UART area than FAECO. Counts and duplicate-evaluation costs appear with the comparison.
+- Retained all six original ImageGen illustrations, supplied English explanatory captions, and added the generation and editing disclosure in Acknowledgments. Added primary comparisons with Sizer, CoRe-ECO, DAGSizer, and the 2025 TCAD LearnSize paper.
+- Static verification checked the AES timing and recovery tables against independently verified JSON records, each SKY130 row against the bound endpoint data, and the UART starting point and six timed runs against independent receipts. The source uses five keywords, six original illustrations, and eleven cited bibliography entries.
+- Compiled twice in a separate directory with TeX Live 2025 pdfLaTeX and visually checked all eight Letter pages. Final output has no overfull boxes or unresolved references. Underfull spacing notices remain in the log. The [dated local PDF](build/FAECO_postroute_recovery_tcad_20261125.pdf) has SHA-256 `7152acd5778f8a21116d4d0a3a2426a02e1bf0777047d0d5bca31f4bbfd476fe`. Both pre-existing PDF copies retain their original hash.

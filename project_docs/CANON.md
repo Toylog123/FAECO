@@ -4,10 +4,26 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 中文与英文现行工作稿
+
+两种稿件均已根据独立证据回填 ASAP7 UART 六臂结果，保留固定批次面积最大、FAECO 重复评估及诊断零标记。中文稿为 15 页双遍 LuaLaTeX，三份 PDF 一致。英文为 8 页 IEEEtran 双遍排版工作稿，沿用六幅原图并提供英文图注和 AI 使用说明。两版已逐页核对。TCAD 所需的独立有冲突设计、强贪心和机制对照继续归 OI-105。[中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [英文稿](../paper/en/build/FAECO_postroute_recovery_tcad_20261125.pdf)
+
+## 2026-11-25 ASAP7 UART 原约束下完成三种在线调度正反序比较
+
+三法共用原约束的已布线冻结起点、18 个预筛候选和在线物理后端。每臂计筛选 81.564 RAW s，使用 720 RAW s 与六次实际请求上限。各臂均到达六次上限，720 s 时限均有剩余。FF／TT／SS 使用原三角，setup WNS 允许损失 2.7 ps，绝对与相对 hold、电气、独立 DRC、天线和 SEC 沿共同门。
+
+| 派发 | 正序／反序 0.01% 首达 / RAW s | 两序各自窗内最大合格回收 / µm² |
+|---|---:|---:|
+| 原序单门 | 152.165／151.161 | 0.17496 |
+| 在线固定批次 | 152.778／152.067 | 0.23328 |
+| FAECO | 151.795／152.289 | 0.14580 |
+
+三种最优端点跨序复现，均逐角过门、独立 DRC 与天线为零、SEC 567/0。36 次在线诊断均无 marker、邻网释放或重试。FAECO 的回收低于两种基线，首达次序跨序变化；两次均重复验证同一个 FF setup 拒收三门，二分后累计身份还原是明确的候选配额损耗，已登记 OI-106。此轮表明现行后端与验收可迁移至 UART，UART 没有触发可测的诊断重试收益。[实验报告](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md) · [独立核验](evidence/tcad_holdout_20261123/UART_ONLINE_VERIFIED.json)
+
 ## 2026-11-25 中文 v3 稿与 TCAD 投稿评估
 
 - 现行中文 v3 以布线后局部冲突诊断和限时面积回收为主线，分别报告 AES 同端点后端收益、同后端单门比较和固定批次首达。加入 CoRe-ECO 的机制对照、SKY130HD Ibex 时序退化归因和 ASAP7 UART 原约束起点资格。双遍 LuaLaTeX 后 15 页、6 幅现有 ImageGen 示意、18 表、22 条参考文献，三份 PDF 逐字节一致。[中文工作稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)
-- 选题符合 TCAD，建议补齐投稿前关键证据。以 UART 等独立设计复现现行诊断与调度，加入同后端灵敏度排序单门，分别量化候选批宽、反馈排序和诊断的收益。英文稿待同步并按现行作者指南排版，跨设计验证与强对照归 OI-105。[投稿成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md)
+- 选题符合 TCAD，建议补齐投稿前关键证据。以独立设计继续检验现行诊断与调度，加入同后端灵敏度排序单门，分别量化候选批宽、反馈排序和诊断的收益。跨设计验证与强对照归 OI-105。[投稿成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md)
 
 ## 2026-11-24 AES 同在线后端的 FAECO 与单门贪心正反序
 

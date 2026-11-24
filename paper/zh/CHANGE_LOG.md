@@ -800,3 +800,10 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - 分列 AES 后端交叉对照与新鲜同在线后端单门对照。补录首达实际面积、窗内最大合格面积、WNS/TNS 和候选覆盖轨迹，区分历史名义结果中的排序差异。加入 Ibex 固定寄生归因和 UART 起点资格，记录 [TCAD 成熟度评估](review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md)。
 - 保留已有六幅 ImageGen 示意图，在致谢声明生图与文字 AI 使用。LuaLaTeX 双遍编译，15 页、22 条参考文献，0 错误、0 溢出、0 未解析引用。保留六处沿用的字体替代提示，完成 15 页视觉复查及首页、单门对照、讨论和参考文献的全尺寸检查。
 - TeX SHA-256 648655fa14400d1b0e3478b7856446a19ee8c637dc8be2355febb4367e24cf5f。PDF 三副本同步，6624410 字节，SHA-256 0f283597dba6072c9bb7a39ad4c8f9cfd6195a4efaed61ebeb5429468d1a5387。
+
+
+## 2026-11-25 ASAP7 UART 同后端负例
+
+- 补入原约束 UART 正反序六臂和每臂筛选成本。同步摘要、局限与结论，报告三法首达时间接近、固定批次回收最多、布线前诊断零触发，以及 FAECO 两序重复正式验证同一个三门集合的问题。 [UART 六臂与端点](../../project_docs/evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
+- 保留六幅现有图件，LuaLaTeX 双遍通过，15 页、0 编译错误、0 溢出、0 未解析引用。保留 6 条环境字体替代提示，完成全部页面及 UART 相关段落的视觉复查。
+- TeX SHA-256 fee9c45495ecb8915eeee6d9b38c7e6b76f1d2b0d216a025265d53d9d886e0c5。三份 PDF 均为 6626424 字节，SHA-256 30e4973c98a7625199608ab5d808c5c02e70f08b38f67367c9780bc695337623。

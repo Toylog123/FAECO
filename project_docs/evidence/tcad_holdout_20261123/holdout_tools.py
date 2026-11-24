@@ -7,7 +7,7 @@ import sys
 
 
 IBEX = Path(__file__).resolve().parents[1] / "tcad_ibex_20261123"
-TOPS = {"aes_cipher_top", "gcd", "jpeg_encoder"}
+TOPS = {"aes_cipher_top", "gcd", "jpeg_encoder", "uart"}
 
 
 def selected_top():
