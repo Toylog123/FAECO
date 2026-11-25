@@ -246,6 +246,28 @@ def test_adaptive_batch_skips_known_rejection_recreated_by_a_commit():
     assert result["committed"] == ["a", "b", "d"]
 
 
+def test_last_physical_dispatch_can_prioritize_a_deferred_singleton():
+    reference = Endpoint("control", 100, -1, -2, 0.1, "s", "ref", True, True)
+    actions = [PhysicalAction(key, key, "large", "small", area)
+               for key, area in zip("abcdefg", (1, 2, 2, 1, 1, 1, 1), strict=True)]
+    hold_rejection = ("a", "b", "c")
+    priority = {"a": 1, "b": 1, "c": 2, "d": 3, "e": 3, "f": 3, "g": 3}
+
+    def evaluate(ids):
+        return Endpoint("trial", 100 - len(ids), -1, -2, 0.1, "s", "ev", ids != hold_rejection, True)
+
+    settings = dict(max_evaluations=3, batch_size=3,
+                    defer_split_for=lambda ids: ids == hold_rejection, priority_after_defer=priority)
+    regular = adaptive_batch_recovery(reference, actions, evaluate, **settings)
+    reserved = adaptive_batch_recovery(reference, actions, evaluate, reserve_deferred_singleton=True, **settings)
+
+    assert regular["evaluations_used"] == reserved["evaluations_used"] == 3
+    assert regular["trace"][:2] == reserved["trace"][:2]
+    assert regular["trace"][-1]["actions"] == ["d", "e", "f", "g"]
+    assert reserved["trace"][-1]["actions"] == ["c", "d", "e", "f"]
+    assert reserved["trace"][-1]["reserved_deferred_singleton"] == "c"
+
+
 def test_generate_compatible_candidates_safe_drive_first(tmp_path: Path):
     if not DEFAULT_LIBERTY.exists():
         return

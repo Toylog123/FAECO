@@ -4,6 +4,14 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 ASAP7 UART 末次预留的同预算六臂对照
+
+在同一冻结原约束起点、18 候选和在线后端，将现行去重、末次预留、在线固定按正反序各跑一次。各臂计共同筛选 81.564 RAW s，均完成六次实际候选评估，0.01% 均在第三次达到。两序的最大合格回收为在线固定 0.23328、去重 0.20412、末次预留 0.14580 µm²。
+
+末次预留按冻结规则把一次机会给原相对 hold 拒收后延迟的候选。面积同分时，既有电容优先级使两序均选 `_0562_`，累计候选能减少 0.23328 µm² 面积，但 SS hold WNS 相对损失 0.008424 ps 超过 0.001 ps 原容差。两次正式拒收，面积以此前已通过的两门计算。规则在已读 UART 开发设计上复现了劣化，后验 `_0886_` 的合格端点仍是下文的定向证据。[六臂报告](evidence/tcad_holdout_20261123/UART_DEFERRED_RESERVATION_REPORT.md) · [独立核验](evidence/tcad_holdout_20261123/UART_DEFERRED_RESERVATION_VERIFIED.json)
+
+独立的七次 SS STA 用原 SDC、同 SS RVT 库，将候选网表和实际 SPEF 在同两门参考处交换。只换候选网表时，两组 SS hold WNS 均为参考 54.060298 ps；只换 SPEF 就分别复现 `_0562_` 的 54.044491 ps 和 `_0886_` 的 54.061783 ps。原约束的 54.051915 ps 门可区分真实结果，此处冻结参考寄生的指标把两候选均判通过。原调度和验收门沿用。低成本几何风险或增量寄生反馈的排序收益需同预算实证。[交换探针原件](evidence/tcad_holdout_20261123/UART_HOLD_EXCHANGE_RESULTS.json)
+
 ## 2026-11-25 ASAP7 UART 后验定向三门达到既有固定面积
 
 使用同冻结布线、原三角时序、同在线物理后端，单独验证 `_0814_`／`_0886_`／`_1027_`。该候选实际回收 0.23328 µm²，等于既有固定四门面积，最大逐角 setup WNS 损失 0.042272 ps，无新增负 setup，独立 DRC 和天线 0，SEC 567/0。在读取既有轨迹后，仅做一个事后定向验证。自动调度的同预算结果仍见去重 ABBA。[物理核验](evidence/tcad_holdout_20261123/UART_FIXED_AREA_PROBE_VERIFIED.json)

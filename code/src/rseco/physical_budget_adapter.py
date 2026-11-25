@@ -239,6 +239,7 @@ def adaptive_batch_recovery(
     defer_split_for: Callable[[tuple[str, ...]], bool] | None = None,
     priority_after_defer: Mapping[str, float] | None = None,
     known_split_rejection: Callable[[tuple[str, ...]], bool] | None = None,
+    reserve_deferred_singleton: bool = False,
 ) -> dict:
     """Universal adaptive mini-batch post-route area recovery with bisection fallback.
 
@@ -252,6 +253,8 @@ def adaptive_batch_recovery(
     ``known_split_rejection`` may recognize a completed deterministic rejection
     measured on the same frozen input with the same cumulative edits. A hit
     follows the split path without spending a physical evaluation.
+    With ``reserve_deferred_singleton``, the last evaluation may try one
+    untested singleton from the hold-deferred batches on the accepted base.
     """
     active_policy = policy or BudgetPolicy()
     if batch_size < 1:
@@ -271,6 +274,22 @@ def adaptive_batch_recovery(
     deferred: list[list[PhysicalAction]] = []
     idx = 0
     reranked = False
+    singletons_tested: set[str] = set()
+    initial_order = ({action.action_id: rank for rank, action in enumerate(unique_actions)}
+                     if reserve_deferred_singleton else {})
+
+    def last_deferred_action() -> PhysicalAction | None:
+        touched = {tuple(row["actions"]) for row in trace}
+        excluded = set(committed) | singletons_tested
+        priorities = priority_after_defer or {}
+        return min(
+            (action for group in deferred for action in group
+             if action.action_id not in excluded
+             and tuple(sorted((*committed, action.action_id))) not in touched),
+            key=lambda action: (-action.estimated_area_saving, -priorities.get(action.action_id, 0.0),
+                                initial_order[action.action_id]),
+            default=None,
+        )
 
     def split(chunk: list[PhysicalAction]) -> None:
         mid = len(chunk) // 2
@@ -281,12 +300,17 @@ def adaptive_batch_recovery(
         nonlocal best, evals, reranked
         if not chunk or evals >= max_evaluations:
             return
+        reserved = last_deferred_action() if reserve_deferred_singleton and evals + 1 == max_evaluations else None
+        if reserved is not None:
+            chunk = [reserved]
         trial = tuple(sorted((*committed, *(a.action_id for a in chunk))))
         if known_split_rejection is not None and known_split_rejection(trial):
             if len(chunk) > 1:
                 split(chunk)
             return
         ep = evaluate(trial)
+        if reserve_deferred_singleton and len(chunk) == 1:
+            singletons_tested.add(chunk[0].action_id)
         evals += 1
         gate = assess(reference, ep, active_policy)
         accepted = gate.feasible and (ep.area < best.area - 1e-9)
@@ -301,6 +325,8 @@ def adaptive_batch_recovery(
                 "hold_wns_ns": ep.hold_wns_ns,
             }
         )
+        if reserved is not None:
+            trace[-1]["reserved_deferred_singleton"] = reserved.action_id
         if accepted:
             committed.extend(a.action_id for a in chunk)
             best = ep
