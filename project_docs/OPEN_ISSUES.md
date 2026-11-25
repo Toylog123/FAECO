@@ -1776,6 +1776,8 @@ GCD 同机换序的完整后端已复现同面积候选的原标签。dirty GRT 
 
 只读复核保留两项分别检查的门：逐角绝对 hold WNS 非负、相对冻结起点的 0.001 ps 容差。AES／Ibex 零编辑重布线已有 SS 回退，AES／GCD 代表点的 SPEF 交叉可重现回退。AES 同机换序可复现后端同点省时与 FAECO 对强单门的面积收益；固定先到共同小面积，Ibex FAECO 与固定同轨迹，UART 去重改善后仍低于固定。GCD 的已测低成本预筛误判，UART 继续限域追加验证成本增加而无净回收。现有结果按原门冻结，待明确相对 hold 余量应作为何种研究目标及当下验收边界。本轮无新增 EDA。[AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md) · [AES 交叉对照](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md) · [GCD 预筛](evidence/tcad_ibex_20261123/GCD_LOCAL_HOLD_PREVIEW_REPORT.md) · [UART 去重](evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_REPORT.md)
 
+UART 开发现已独验同后端 720 RAW s 纯墙钟八臂。现行去重 FAECO 两序均回收 0.83106 µm²，强单门 0.77274，固定 0.33534，交错 0.75816。共同实际回收 0.77274 µm² 到达时间中，现行两序早 105.569／103.522 s，预设的三档较小门槛均由单门先达。交错扩大了 hold 拒收代价，保留为开发负例。已按原门冻结留出仅比较现行、固定和灵敏度单门。SKY130HD `riscv32i` 已完成原约束起点资格，ASAP7 `ethmac` 待起点资格，两工艺的同时间算法收益仍未验证。[纯墙钟报告](evidence/tcad_wallclock_schedule_20261125/REPORT.md) · [UART 完整独验](evidence/tcad_wallclock_schedule_20261125/UART_WALLCLOCK_VERIFIED.json)
+
 ## OI-106（2026-11-25，限定闭合）— 累计动作在二分后被重复物理验证
 
 UART 正序 FAECO 的第 2 次累计三门因 FF setup 拒，二分后第 3 次先接受左支单门 `_1027_`，右支加上已接受动作使第 4 次再次评估三门 `_0814_`、`_0893_`、`_1027_`。两次同冻结起点的 ODB、DEF、网表、独立 DRC 与三角 STA 相同，SPEF 30,890 行仅 `*DATE` 不同。正式物理各耗 19.420／19.574 RAW s，重复占一个实际验证配额。反序进度的前缀也已派发两次该累计集合。待记录完整基线后，单独对试探身份去重进行回归和实物配对，保留原始轨迹及六次实际评价上限。[UART 实验](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)

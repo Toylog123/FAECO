@@ -7958,3 +7958,164 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - AES 正反序的固定调度在线后端到同物理点分别省 84.006／72.399 RAW s，首达前各少一次 DRT/RCX。在同一在线后端，FAECO 较强单门同窗为 67.5648 对 33.7824 µm²，但相较在线固定批次，到 33.7824 µm² 又晚 119.227／112.991 RAW s。SKY130HD Ibex 固定与 hold-aware FAECO 六次动作和物理产物一致，720 s 均回收 43.792 µm²。ASAP7 UART 去重使两序从 0.14580 增到 0.20412 µm²，仍低于固定的 0.23328 µm²。分别保留后端、候选覆盖和面积目标的比较口径。[AES 交叉对照](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md) · [强单门](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md) · [UART 去重](evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_REPORT.md)
 - GCD 已测等面积对中，便宜的 GRT／直接网增量估计误收，早停 DRT 误拒合格点且超过可省成本。UART 窄域补救含清叶诊断累计 35.383／36.118 RAW s，超过全解锁的 33.790／33.028 s，净回收为零。冻结已验收结果及原门，待明确保留多少相对 hold 余量属于研究目标、哪些属于当前验收边界，再决定后续实验。本轮为只读复核，无新 EDA、实验登记、代码或论文变更。[GCD 预筛](evidence/tcad_ibex_20261123/GCD_LOCAL_HOLD_PREVIEW_REPORT.md) · [UART 窄域补救](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md)
 - UART 两组六门的 TT 最差路径是同一触发器自反馈，发射和捕获共用 CLK。全解锁实际改善 SS 约 0.221 ps，TT 基本不动，两组 TT WNS 都约 +67.5 ps 且 hold TNS 为零，分别低于原相对门 0.001547／0.000422 ps。主动只重布共有叶网后两角 hold 都下降。当前限域规则能约束改线范围，实测没有给出能让这两个候选朝过门方向变化的具体操作。[六门局部补救](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md) · [全解锁原件](evidence/tcad_holdout_20261123/UART_RESCUE_EXISTING_ODB_RESULTS.json)
+
+
+## LOG-20261125-126｜登记 720 RAW 秒纯墙钟调度对照
+
+- 基线 `b73d92b8`。按用户批准方案，先在开发设计验证计时与派发，再将冻结规则原样用于两个 PDK 的未调参留出设计。方法共用每个设计的起点、候选池、在线物理后端及原完整验收，并使用同一个 720 `CLOCK_MONOTONIC_RAW` 秒硬窗。实际调用次数作为结果记录，取消既有六次评估上限。
+- 对照为现行去重 FAECO、固定批次、灵敏度排序单门；变体只改失败后的拆分优先级，每个失败批至多立即试一次子批，随后优先派发未试新批。计入共同筛选、策略特有排序、全部失败及窗尾工作，分别报告固定时窗里的最大合格回收与共同面积目标的首达时间。已登记意图，确切命令、绑定和验收证据待实发。[协议与结果骨架](evidence/tcad_wallclock_schedule_20261125/REPORT.md)
+
+
+## LOG-20261125-127｜冻结失败队列规则并登记留出起点资格
+
+- 沿用首次相对 hold 触发的旧重排。有未试新批时，失败多门批最多立即派发一次左子组；待处理右组与更深拆分入队，直到新批耗尽。立即试后失败的单门，只有累计接受集合实际改变后可重试一次；没有未试新批时沿用旧拆分。纯墙钟模式 `max_evaluations=None`，共同物理层负责截止。
+- 留出拟 SKY130HD `riscv32i` 与 ASAP7 `ethmac`，先分别制备并验证原约束冻结起点，通过资格才进入纯墙钟计时。证据统一放入 `tcad_wallclock_schedule_20261125/`。
+
+
+## LOG-20261125-128｜调度实现专项验证与 riscv32i 资格开跑
+
+- 适配器新增 opt-in；初始两个新增测试在参数缺失时按预期失败。实现后 `test_physical_budget_adapter.py` 与 `test_budgeted_recovery.py` 合计 51 项通过，14.65 s。UART 开发四臂采用同一冻结 18 项池，共同筛选绑定的 81.563830427 RAW s 每臂等额计入；共享零动作验收单列，候选物理不跨臂复用。
+- 15:05:33（UTC+8），SKY130HD `riscv32i` 原生起点制备配置冻结，输入沿用原 6.0 ns 主／虚拟时钟、1.2 ns 非时钟 I/O 延迟和 0.775 ns 时钟延迟。CPU 6–11，四线程，ORFS 目标 `6_report.log`，外限 1,800 s。工作目录 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i`，执行脚本 `command.sh` SHA-256 `77a6e53024d76b91cbf615a84192b466d9c5fe1d7a703b44e56e5e34efe942fc`、`input_manifest.log` SHA-256 `1d1e79668ab25047ce72e98d42df3d37482b48bb8895d079ce06f6d445add14e`。已启动 CTS，候选计时尚未开始。
+
+
+## LOG-20261125-129｜UART 历史前缀只读验证两套派发分岔
+
+- `PYTHONPATH=code/src python3 -B scratch/replay_wallclock_prefix.py` 读取 18 个同范围且已核的唯一 UART 物理点。纯墙钟现行去重前五步为三门 SS 拒、另三门 FF setup 拒、`_1027_` 过、二门 FF 拒、`_0814_/_1027_` 过，第六次完整批缺物理收据。旧六次上限令第六次截为单门。
+- 交错臂先同三门 SS 拒，立即试 `_0562_` 单门仍因 SS 拒，再给下一组三门 FF setup 拒和 `_1027_` 通过，第五次新累计四门缺物理收据。两条轨迹均在首个未知请求停止。预检确认调度确有分岔，也确认历史账缺少取消六次上限后的新候选；本预检没有新增物理或实验输赢。
+
+
+## LOG-20261125-130｜UART 开发矩阵锁定命令和八臂次序
+
+- 拟正序固定批次→灵敏度单门→现行去重 FAECO→交错去重 FAECO，第二组完全反转。CPU 0–5、每臂 720 RAW s、外层限 6,500 s；原在线矩阵提供已冻结输入，新输出 `/home/toylog/faeco_tcad_uart_wallclock_20261125_v1`。实读入口 SHA-256 `62c69d4e4525df7dce1042ee6ecaa19df6594dd49b5aa61d0021005cd77c7d5c`、适配器 `c56825f954b2d88fa082728e6c92f45baf1268cc47301a02a98c24e101fc3967`、源协议 `90bf70bb080d5544d51265e575c3ec94ff72f6342fe6b9aaf452c5476d374a4f`。
+- 0.01% 为共同面积阈值，另从同轨迹回读 0.15% 和 0.25%。灵敏度单门臂实际执行并计入排序查询；两 FAECO 臂均计 incident priority。此条只锁定已准备命令，实际启动另记。[开发配置](evidence/tcad_wallclock_schedule_20261125/REPORT.md)
+
+
+## LOG-20261125-131｜生产解释器回归与验收器完成
+
+- Windows Python 3.11 收集既有证据脚本时遇到需 Python 3.12 的 f-string 语法。改用正式实验同一 WSL Python 3.12.3，并以临时安装的 pytest 重跑适配器、预算和已有 factorial／screened／holdout 专项，68 项通过，14.66 s。独立验收器 `verify_wallclock_matrix.py` 已准备，验收逐臂正式物理收据后才记录通过。
+
+
+## LOG-20261125-132｜默认派发与历史实现的模拟等价复核
+
+- `python -B scratch/check_adaptive_legacy_parity.py` 对不同候选池、有限次数上限、批宽、hold 延后、setup 去重及末次预留的 500 个确定模拟用例核对 `b73d92b8`。新选项关闭时全部派发轨迹和端点逐项一致。此项核查兼容性，没有物理评估或新增面积结果。
+
+
+## LOG-20261125-133｜冻结纯墙钟调度实现
+
+- 适配器与测试提交 `50aced718ace7d6016fcac22ba2d367704ca7e09`，已推至 `origin/main`，包含 opt-in 交错拆分与纯墙钟支持。已登记实验协议与将生成的证据另行提交。
+
+
+## LOG-20261125-134｜SKY130HD riscv32i 原生起点资格通过
+
+- 原 ORFS 流程用时 784.87 s、rc0。实读 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/qualification/CONTROL.json`；87,033 字节已逐字节复制，SHA-256 `5c85e150d8d8073af9dfef15fa59467b91b678a84e0dadff20ba0fed4902e9e9`。源／导出 SDC 的 104 条规范命令匹配，独立全块 DRC 与天线均零，电气无违例，起点 SEC 4559/0。[原资格收据](evidence/tcad_wallclock_schedule_20261125/RISCV32I_CONTROL.json)
+- FF／TT／SS hold WNS 为 +373.364173／+579.221338／+2019.309830 ps，hold TNS 全零。setup WNS 为 +1855.053／−474.192／−20633.326 ps，保留 TT、SS 残余 setup 违例并以原冻结点计相对预算。此收据包含三次资格 STA、零候选 EDA。UART 开发获准在资格任务结束后先行，另记实际启跑。[规约与资格](evidence/tcad_wallclock_schedule_20261125/REPORT.md)
+
+
+## LOG-20261125-135｜UART 八臂开发矩阵实发
+
+- 15:19:46（UTC+8）由本仓库 6,500 s 包装启动，CPU 0–5，包装 PID 334、Python PID 412，exec session 44907。标准输出 `/home/toylog/faeco_tcad_uart_wallclock_20261125_v1.stdout.log`，原件根 `/home/toylog/faeco_tcad_uart_wallclock_20261125_v1`。启动日志确认原 18 项池和每臂 81.563830427 RAW s 共同筛选计费。
+- 实发协议 15:20:28 落盘，SHA-256 `6d36c36ac5e764ed28e5c77f72ed8c167c19083930e2f220575f3f4e34773aab`，首次检查处在资格与共享预检阶段，候选结果另随实收据登记。[执行规约](evidence/tcad_wallclock_schedule_20261125/REPORT.md)
+
+
+## LOG-20261125-136｜UART 共享严格零动作过门并进入正序固定臂
+
+- 实读共享 `preflight/zero/result.json`，17.328252706 RAW s，功能面积 79.00902 µm²，原门失败空集，独立全块 DRC 0，SEC567/0。零动作收据 SHA-256 `f76436278bc46d83e2f34b16a0c681154061191790b87757db021e2d5ab582be`，共享费用单列。实发 `logical_dispatch_cap=null`、三门批宽、单次 pin access、FF／TT／SS 原 TNS 预算 27／27／136.9736502 ps，绝对 hold 下限 0、相对容差 0.001 ps。固定臂已实际派发。
+
+
+## LOG-20261125-137｜UART 正序固定批次耗尽池，验收回收 0.33534 µm²
+
+- 6 次实物验证覆盖全部 18 个新动作，池自然耗尽。第三次过门，155.609207824 RAW s 实收 0.17496 µm²，达 0.01% 及 0.15%。第六次验证未被旧次数上限截为单门，以累计整组六门过门，230.144711114 RAW s 达 0.25%，窗内最佳 0.33534 µm²（0.424433%）。`cell_01/arm.json` SHA-256 `2ee47d78dd01e931f5ed5d1be68af6f89772fba642b97778a0468c79594c1f60`，完整矩阵独验待全数落盘。灵敏度单门正序已进入候选物理。
+
+
+## LOG-20261125-138｜UART 正序灵敏度单门完成 18 次验收，回收 0.77274 µm²
+
+- 18 个请求全完成并自然耗尽池，其中 12 次获得 SEC。TT 排序实付 1.361633380 RAW s。共同 0.01%／0.15%／0.25% 首达分别为 108.269052663／134.134048210／159.554748240 RAW s，对应实收 0.08748／0.17496／0.26244 µm²。第 18 次最好合格回收 0.77274 µm²（0.978040%），正序现行去重 FAECO 已启动。`cell_02/arm.json` SHA-256 `20de06306cac2ecbbbf5b5043d6e03e8ee95f8038fb4e7a8e6bc7b01bfe7ac6c`。
+- 独立验收通过正序前两臂，实读 `/home/toylog/faeco_tcad_uart_wallclock_20261125_v1/verification_prefix_02.json` 的 `verified_prefix=2`，确认固定 0.33534、灵敏度单门 0.77274 µm²。SHA-256 `c886e7d5673a7d5a5ed36e7802be853f702d713e9ecb6ff175dd8ecae246f598`。其余臂仍运行。
+
+
+## LOG-20261125-139｜UART 正序现行去重 FAECO 自然耗尽，独验前缀通过
+
+- 完成 19/19，避免一次同臂重复 setup-only 评估，窗内最好为第 16 次的 0.83106 µm²（1.051855%），较同序灵敏度单门多 0.05832 µm²。0.01%／0.15%／0.25% 首达 155.122484639／204.317873377／229.496407565 RAW s，实收 0.08748／0.14580／0.32076 µm²。三个阈值均晚于同序灵敏度单门。
+- `cell_03/arm.json` SHA-256 `3a7da05bf19904f67ef97bfae3747b0c1e1f80e682a4ae4404e0fe136fb2e5b3`。独验 `verification_prefix_03.json` 为 158,199 字节，`verified_prefix=3`，SHA-256 `c59ab0316a3fda63bd369fb19a1aa21a2514ea336943a1928983072ce18c8e75`。该差为一个顺序的开发证据。
+
+
+## LOG-20261125-140｜UART 正序交错耗尽硬窗，反序已进入首臂
+
+- 正序交错共派发 26 次、完成 25 次，最后一次 DRT/RCX 由总墙钟裁剪，无重复 setup-only 命中。第 25 次最好 0.75816 µm²（0.959587%），较同序现行去重少 0.07290 µm²，较同序灵敏度单门少 0.01458 µm²。0.01% 首达 180.382296276 RAW s，实收 0.08748 µm²；0.15% 与 0.25% 均由第五次在 205.501912054 RAW s 实收 0.26244 µm² 达成。比较按原窗验收前缀，截尾请求不计收益。
+- `cell_04/arm.json` SHA-256 `c0c9ea43e562381939b7cd30bb804cb35822f3c57276c4115c15da233765727d`。状态原件已进入反序首臂，仍需整矩阵核验。
+- 正序逐请求实读，两种 FAECO 都有 8 个验收检查点。现行有 9 次 hold 拒和 2 次 FF setup 拒，交错为 14 次 hold 拒和 3 次 FF setup 拒。交错第 2 次独立试 `_0562_` 被 SS 拒，第 25 次在不同累计前缀下通过。额外完成调用用于被拒候选，保留该观察的单序范围。
+
+
+## LOG-20261125-141｜UART 正序四臂独验及交错额外拒收归因
+
+- `verification_prefix_04.json` 的 `verified_prefix=4`，237,219 字节，SHA-256 `f5fb0cfade757a11baa770f6722e2692f48fc1caba78d14cb0ee527f22109a3e`。实读现行 #13／#15 的 TT/SS 纯 hold 拒收与交错 #10／#12 的 SS 纯 hold 拒收，两组分别是范围、累计动作、物理 ODB／DEF／V、去日期 SPEF 与逐角时序全同的重复。双方各一对重复，六次完成数差还来自其它失败提议。
+- 从交错 `26/request.json` 与冻结 pool 重算 12 个动作的静态回收合计 0.81648 µm²，低于现行已验的 0.83106 µm²；即使第 26 次赶在窗内完成且通过，这一提议的面积潜力仍不足以反转排序。此项只读，反序需要另核。
+- 将正序每个已完成请求的 `finished_raw−admitted_raw` 按结论合计。现行／交错的 hold 拒收耗时为 221.061／344.106 s，其他拒收 48.631／74.197 s，通过完整验收的请求 203.241／204.384 s。同一顺序里 hold 拒收合计增加 123.044 s，合格请求只多 1.144 s。截窗的未完成请求不进这一分解。
+
+
+## LOG-20261125-142｜UART 反序交错复现相同物理最优端点
+
+- 反序交错 26 派发、25 完成、最后被墙钟裁剪，无 setup-only 重用。0.01% 首达 180.004371361 RAW s（0.08748 µm²），0.15%／0.25% 都在 205.269785507 RAW s（0.26244 µm²）。第 25 次最好 0.75816 µm²，两序的该端点动作、ODB／DEF／网表及逐角视图逐项同一。`cell_05/arm.json` SHA-256 `d71f13ae6e3b92acb6c7f7ad0b2eb3671d20cc90808b505faf73a2541c3699ad`。
+- 反序交错仍为 8 过、14 hold 拒、3 FF setup 拒，三类完整请求分别用 204.308／343.006／73.753 RAW s。现行去重反序已派发，正式跨臂比较待完成。
+- `verification_prefix_05.json` 的 `verified_prefix=5`，316,240 字节，SHA-256 `1069d80ed775b644b35ebc1cfe2746395bfd09130718ec3540f53ac479218946`。反序的 `cell_05/faeco/26/request.json` 与正序尾次动作为同一 12 门，静态面积潜力同为 0.81648 µm²。反序预诊断完成并用 3.755856345 RAW s；DRT/RCX 的配置限时 240 s 被剩余墙钟裁至 13.554883190 s，工具实际执行 13.011244724 s 后截止，未进入后续 STA／DRC／SEC。交错两序都按开发负例保留，留出规则等反序完结再冻结。
+
+
+## LOG-20261125-143｜留出三方法入口完成资格 dry-run
+
+- 入口 `run_qualified_wallclock.py` 增显式 `--confirmed-only`。正序固定批次→灵敏度单门→现行去重 FAECO，继而完全反序，均保留 720 RAW s、实际筛选计费与原物理验收；UART 四臂 runner 与现行数据不受此入口影响。新入口 SHA-256 `07ee25e24cc2e294bb8db9275abe412d4b38774f6e238650d02ee53fd6dce446`。
+- 已用合格 `riscv32i` 输入 dry-run，回执 `/tmp/riscv_confirmed_only_r8rUq2/validate/qualified_inputs.json`。正式留出启动须待 UART 全开发矩阵收束与现行反序确认；目前零留出候选物理评估。若正式使用三方法集合，交错开发负例完整保留并在留出发出前记录修改范围。
+
+
+## LOG-20261125-144｜UART 现行去重 FAECO 反序再验收 0.83106 µm²
+
+- 19/19 自然结束，同臂 setup-only 去重一次，0.01%／0.15%／0.25% 分别在 156.072974744／205.412775640／230.475692382 RAW s 首达，实收 0.08748／0.14580／0.32076 µm²。第 16 次最好 0.83106 µm²，两序最优动作、ODB／DEF／V 与三角时序逐项相同。`cell_06/arm.json` SHA-256 `3bc43aae0711edd1c7c57e5da0da57cb2f18c7e7384db7b10b1bffc175bb8471`。
+- 对照反序的 8 过、9 hold 拒、2 FF setup 拒，完整请求分别花 204.810／220.567／48.987 RAW s。与反序交错相比，hold 拒收少 5 次、约 122.439 s；两臂合格检查点均为 8。反序灵敏度单门与固定批次待齐。
+
+
+## LOG-20261125-145｜现行与交错两序均独验，锁定三方法留出
+
+- `verification_prefix_06.json` 实读 `verified_prefix=6`，382,208 字节，SHA-256 `d224b92481a83a322bffdb0eb9f10085481e4c89b523f5c1f860d0dd58b2ef43`。现行两序均 0.83106 µm²，交错两序均 0.75816 µm²。正式留出冻结为现行去重 FAECO、固定批次及灵敏度单门三方法，交错保留为开发负例。留出验收门与 720 RAW s 继续沿用，待 UART 八臂结束才启动。
+- 按已验收原前缀回读共同实收 0.77274 µm²。正序单门第 18 次在 535.552737946 RAW s 到达，现行正序第 14 次在 429.983412054 s 到达，早 105.569325892 s；现行反序第 14 次为 431.481643690 s，反序单门未结束。此目标按共同实收端点补充于三个预设面积阈值之外。
+
+
+## LOG-20261125-146｜ASAP7 ethmac 原生多时钟资格登记
+
+- 已核源 SDC SHA-256 `d65f3d82bda85026f007983fb49a16779fdfa8707a33f54c8ad3ee4b831d89a1`、原配置 SHA-256 `a2cfe0258f6bc2cd984746ab8b8959423613d9e6ece22614f2af38312cb3d373`。WB／TX／RX 原周期 1000／300／300 ps，各 I/O 为 200／60／60 ps，虚拟时钟延迟 229.195／55.660／76.515 ps，保存三个各含物理与虚拟时钟的逻辑独占组与 `MAX_FANOUT=10`。原流程配置保留 `HOLD_SLACK_MARGIN=-10`，候选研究预算须单独冻结。
+- 拟 CPU 6–11、4 线程，原 DRT/RCX 流程限 1,800 s，后续三角资格限 500 s。生产脚本 `produce_ethmac.sh` SHA-256 `06e65f773a10eb90aead5198c1e5d3fe5121a9f9374cafb0ef2720dbe3775e05`，资格脚本 `qualify_native.py` SHA-256 `3614247ff1aa65f93bde62499de3695516c5ec175f01eabb7fa91b9e1c0384ee`。原 SDC 等价、三角绝对 hold、电气、原生及独立 DRC／天线、真实 RCX 与非空 SEC 均检查。准备输出 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/asap7/ethmac`，尚未启动，等现行物理任务退出。
+
+
+## LOG-20261125-147｜预登记 riscv32i 原资格上的实际筛选
+
+- UART 八臂及物理进程完全退出后，以已通过的 SKY130HD `riscv32i` 资格输入运行 `run_qualified_wallclock.py --screen-only --screen-workers 1 --confirmed-only --top riscv --pdk sky130hd`。预定 CPU 0–5、统一总限 1,800 s、每子工具限 180 s，写入原 `riscv32i` 工作根的 `screen_qualified_v1`。这次只生成留出冻结池及实际筛选费用，留出六臂另按批准配置启动，当前两者均未实发。
+
+
+## LOG-20261125-148｜UART 反序强单门复现 0.77274 µm²，匹配高面积目标时间
+
+- 灵敏度单门反序完成 18/18 并耗尽池，TT 排序实付 1.358792412 RAW s。0.01%／0.15%／0.25% 首达 108.366319576／134.077469689／159.633272864 RAW s，对应实收 0.08748／0.17496／0.26244 µm²。最优 0.77274 µm²。`cell_07/arm.json` SHA-256 `a201b4b8d2a44c40d3523e7845b25441f55deedbc5094e30d4cfe99c65ea33ad`。
+- 反序按同实收 0.77274 µm² 回读，单门 535.003943588 RAW s，现行去重 FAECO 431.481643690 s，早 103.522299898 s。两序均为单门在三个预设小目标更早，现行 FAECO 在该较高实收量更早且窗内终点多 0.05832 µm²。反序固定已进入最后一臂。
+
+
+## LOG-20261125-149｜UART 八臂生产收束，留出筛选待实发
+
+- 反序固定批次 6/6 自然耗尽，最佳 0.33534 µm²。三阈值首达 154.824248192／154.824248192／227.539684209 RAW s，实收 0.17496／0.17496／0.33534 µm²。`cell_08/arm.json` SHA-256 `2194318138f06d23fe23d79a6b3c5389af0d68a879c119817d377aa2fe00b06c`。
+- `status.json` 为 `complete` 且 8 臂。产物合计 138 次实际派发／136 次完整，138 次预诊断、138 次 DRT/RCX 启动、408 次候选角 STA、136 次独立 DRC、60 次候选 SEC、2 次单门排序 STA。两个截止都在交错末次 DRT/RCX。`results.json` SHA-256 `f05eba825679d0a15660d0cba60fd090dd5a778536ce58173f6043ece0989954`。完整独验、原件封存及后续 `riscv32i` 实发另记。
+
+
+## LOG-20261125-150｜UART 纯钟开发完整独验，冻结两序结论
+
+- 八臂生产 rc0，外包实耗 3,486 s。独立验收 rc0、`verified_prefix=8`。协议、生产结果、核验原件逐字节复制至证据目录，分别为 12,446／39,635／473,964 字节。验收 SHA-256 `515aecdae7b892bfb4fdfa65d283064026799842d37dfa262c4ee4421dab59b9`。[正式结果](evidence/tcad_wallclock_schedule_20261125/UART_WALLCLOCK_RESULTS.json) · [全八臂独验](evidence/tcad_wallclock_schedule_20261125/UART_WALLCLOCK_VERIFIED.json)
+- 两序的固定／强单门／现行／交错分别为 0.33534／0.77274／0.83106／0.75816 µm²。现行比强单门多 7.547%，同实收 0.77274 µm² 早 105.569／103.522 s，单门先到三个小门槛。最佳端点全过原门，现行最大 setup WNS 损失 1.363215 ps，SS TNS 改善 6.594725 ps，无新增负 setup 端点。交错保留为开发负例。独立留出只比较当前、固定及强单门，当前没有留出性能结果。[开发报告](evidence/tcad_wallclock_schedule_20261125/REPORT.md)
+
+
+## LOG-20261125-151｜riscv32i 单份真实筛选结束，冻结 18 项池
+
+- UART 八臂和物理工具退出后，按原定义执行 SKY130HD `riscv32i` 留出筛选。统一包装 PID 469、Python PID 471、exec session 16146，CPU 0–5、总限 1,800 s、1 worker，每次子工具限 180 s。命令原件为 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/screen_qualified_v1.stdout.log` 首行。资格绑定 SHA-256 `6aab7445cad94c543428fc7ace316a84f423e0f7f7b56d96d1e26707ad1bdca3`。
+- 包装 rc0／67 s，原 TT 冻结寄生筛选 20 入 18，两拒均为 `TT:setup_tns_budget`。原周期 6,000 ps，对应 WNS／TNS 60／600 ps。真实筛选 64.099573641 RAW s，基线及候选 TT 子进程共 33.168903898 RAW s。原池 SHA-256 `748d2a2866764f71672e95b968dd1122cf1faf3ecdd92f8246e781c66c01826f`，筛选收据 `ea7d5a1a9a3ed519f387aa2ce83b33386d4a1f39a7800b62278134cd027570c2`，状态 `screened`、已完成物理臂为 0。
+- 独验 `screen_qualified_v1/independent_verification.json` rc0，SHA-256 `445a0d6fd3be225d25acb93278a8c7365c527c73aeb3a549ab536ce995463c61`。最初的核验脚本误把原始 Liberty 都视为筛选目录内的物化拷贝，改为以 P0 原库绑定识别压缩或原路径。只重跑核验，筛选与原件未重跑。
+
+
+## LOG-20261125-152｜SKY130HD riscv32i 三方法换序留出实发
+
+- 16:21:32（UTC+8），CPU 0–5、四线程、统一外限 6,500 s，包装 PID 343、Python PID 423、exec session 42647。输出 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v1`，同名 `.stdout.log` 首行保存完整命令。资格绑定 `qualified_inputs.json` SHA-256 `b4c71fde9d9f1f429b5f093382a379b9445aaf4bbd2d8da7e8c3e11c10615f2a`，原 P0、原三角与独验 18 项池绑定，64.099573641 RAW s 等额计入。
+- `--confirmed-only`，顺序固定批／灵敏度单门／现行去重，再完全反序。DRT 64 轮上限，路由／每角 STA／SEC 限 240／180／210 s，候选共同外部硬窗 720 RAW s。首次检查仍为共享零动作前置阶段。ASAP7 `ethmac` 排在该矩阵实计时结束后，避免重叠 EDA。
+- 正式 `protocol.json` SHA-256 `8b979b6931ca9f5a9f5eb0a20638f5a12dbdc8a6d2a169785fd407e0fb95f419`。`seed/control/receipt.json` SHA-256 `7f77c245d216b45d0e9b8301c55aab778b24ae78e98338a2d9d186366fc1c8fe`，源库、原约束及现场三角 hold 匹配 P0，正执行新鲜共享零动作。

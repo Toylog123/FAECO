@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 UART 纯墙钟开发对照
+
+原约束 UART 共用 18 项池、在线后端和完整验收。等额计入 81.564 RAW s 筛选，每臂 720 RAW s，取消六次评估上限，四种调度正反序独验 8/8。两序的固定批次／灵敏度单门／现行去重 FAECO／交错去重 FAECO 最大合格回收分别为 0.33534／0.77274／0.83106／0.75816 µm²。现行比灵敏度单门多回收 7.547%，到同实收 0.77274 µm² 两序早 105.569／103.522 s。三个预设较小面积目标均由灵敏度单门先达。现行最佳端点两序同一，回收原功能面积的 1.051855%，最大 setup WNS 损失 1.363215 ps，原三角 hold、独立 DRC／天线及 SEC 567/0 通过。
+
+交错两序均在第 26 次请求的 DRT/RCX 超窗，25 次完成中 14 次由 hold 拒收，比现行的 9 次多，两法都验收八个检查点。开发结果限定在所测 UART，就地冻结现行去重、固定和灵敏度单门的留出对照。独立留出收益待验证。[开发报告](evidence/tcad_wallclock_schedule_20261125/REPORT.md) · [完整独验](evidence/tcad_wallclock_schedule_20261125/UART_WALLCLOCK_VERIFIED.json)
+
 ## 2026-11-25 UART 两组六门的窄域 hold 补救
 
 从两个原拒收 ODB 分别只开放 TT 捕获叶及两条窗内反馈网。保留原线和只清末级反馈两种做法均复现原几何、三角及 TT／SS 拒因。主动清除同一时钟叶使两项实布仅改变该叶，TT／SS hold 均下降，原门仍拒。所有实跑独立 DRC／天线零，诊断 SEC 567/0。
