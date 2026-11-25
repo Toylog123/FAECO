@@ -1752,6 +1752,14 @@ v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独
 
 AES 现行在线后端已完成正反序原序单门对照和独立的后端交叉对照。同端点的诊断收益成立于 AES，候选调度的回收收益仍混合批宽、失败处理和排序。ASAP7 UART 已在原约束下完成三法正反序，在线固定、单门、FAECO 两序各回收 0.23328、0.17496、0.14580 µm²。UART 实际 36 次在线诊断均无 marker 或重试，因此仍需在出现诊断事件的独立设计估算净收益。下一层包括同后端灵敏度单门、固定批宽、同数量几何邻网放行和独立 SKY130HD 非 AES 设计，保留零回收和时窗删失。中英文工作稿均补至已核验的 UART 结果。[TCAD 成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md) · [UART 六臂](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
 
+2026-11-25 已在 AES 独立复核 TT 裕量灵敏度单门四臂。相较此前原序配对，新配对里 FAECO 首达领先缩小至 17.117／20.151 RAW s，窗内比较变为 67.5648 对 33.7824 µm²。静态灵敏度排序基线已补，仍需比较固定批宽、在线更新排序、邻网释放及独立设计。[灵敏度单门配对](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md)
+
 ## OI-106（2026-11-25，open）— 累计动作在二分后被重复物理验证
 
 UART 正序 FAECO 的第 2 次累计三门因 FF setup 拒，二分后第 3 次先接受左支单门 `_1027_`，右支加上已接受动作使第 4 次再次评估三门 `_0814_`、`_0893_`、`_1027_`。两次同冻结起点的 ODB、DEF、网表、独立 DRC 与三角 STA 相同，SPEF 30,890 行仅 `*DATE` 不同。正式物理各耗 19.420／19.574 RAW s，重复占一个实际验证配额。反序进度的前缀也已派发两次该累计集合。待记录完整基线后，单独对试探身份去重进行回归和实物配对，保留原始轨迹及六次实际评价上限。[UART 实验](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
+
+## OI-107（2026-11-25，open）— GCD 固定提议在布线前预检无标记但正式布线后出现短路
+
+同一三门提议和冻结 GCD 起点，常规与首次实时在线的初轮 ODB 和独立 DRC 相同。布线前实测 0 marker，保护路由结束后独立检查发现 3 个 met1 Short，涉及 `net242`／`net266`。两臂放行同一个邻网后独立 DRC 清零，TT 相对 hold 仍退 0.022621 ps，按 0.001 ps 容差拒收。继续检查四臂复现、同数量几何邻网基线和保护约束来源。与此前同动作 11.2608 µm² 合格的历史链相比，本轮新增加载并读回 476 条 `FIXED` 线，也新增独立解锁 DRC。旧 endpoint 与本轮不能混列。[GCD 规约](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_PREFLIGHT.md)
+
+四臂独立核验现已确认请求、重试、实际端点和 TT 拒因复现，保护模式下全为零回收。候选诊断漏报与最终 hold 拒因属于两个可查现象。下一步待用几何邻网基线和保护路由对照辨别重布来源，同时保留原 TT 判定口径。[正式报告](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_VERIFIED.json)

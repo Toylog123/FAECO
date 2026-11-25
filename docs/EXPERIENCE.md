@@ -3540,3 +3540,9 @@ JPEG 独立最小／最大时序定位中，首版在 `find_timing_paths` 的 mi
 ASAP7 UART 的资格收据原以哈希组记录库。将其接到筛选入口时逐成员核对字节及 SHA-256，再派生路径表，保留原始收据和符号链接身份。将清点和物理候选分别绑定到 seed 和运行根，以防评估标签从错误的根目录计算。UART 零编辑实际走完整保护布线、RCX、时序、DRC 和 SEC 后，保留原网表并重现原时序，随后才开始计时。 [UART 对照](../project_docs/evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
 
 冻结真实候选池后先检验灵敏度排序的分辨率。AES 的 18 个输出裕量均高于历史 200 ps 截顶，原公式产生同一个动作顺序。去顶的预检规则确实改变了顺序，排序 STA 和解析按每臂实计。 [AES 强对照预检](../project_docs/evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_PREFLIGHT.md)
+
+## 2026-11-25 — 等回收门槛、预检覆盖与实际重布线成本
+
+AES 两次同后端配对改用灵敏度排序后，FAECO 首达预设小门槛早约 17–20 s，实查两法均进行三次 DRT/RCX，等价证明次数由 2 次降为 1 次占了主要时间差。使用同一日志回读 33.7824 µm² 时，两法在不同请求结束后达标，时间差约 147–152 s。记录首达实际回收、逐阶段耗时与时限内最优面积，可避免用一个门槛外推整个搜索过程。 [AES 强对照](../project_docs/evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md)
+
+GCD 固定候选两轮预检均未见标记，同一三门在四臂正式首轮重布后均产生三处短路。释放标记支持的同一邻网后独立 DRC 清零，TT 相对 hold 仍拒收。新冲突的预判需要覆盖直连网重新生成后的几何。首轮 DRT 耗时在同一物理产物下波动明显，应分别计量预检的直接开销和后端的实际次数，保存验证范围。 [GCD 诊断边界](../project_docs/evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md)

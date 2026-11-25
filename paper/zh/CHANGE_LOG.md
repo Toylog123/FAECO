@@ -807,3 +807,11 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - 补入原约束 UART 正反序六臂和每臂筛选成本。同步摘要、局限与结论，报告三法首达时间接近、固定批次回收最多、布线前诊断零触发，以及 FAECO 两序重复正式验证同一个三门集合的问题。 [UART 六臂与端点](../../project_docs/evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
 - 保留六幅现有图件，LuaLaTeX 双遍通过，15 页、0 编译错误、0 溢出、0 未解析引用。保留 6 条环境字体替代提示，完成全部页面及 UART 相关段落的视觉复查。
 - TeX SHA-256 fee9c45495ecb8915eeee6d9b38c7e6b76f1d2b0d216a025265d53d9d886e0c5。三份 PDF 均为 6626424 字节，SHA-256 30e4973c98a7625199608ab5d808c5c02e70f08b38f67367c9780bc695337623。
+
+
+## 2026-11-25 中文稿补入灵敏度强对照及诊断边界
+
+- 摘要、结果和结论补入 AES 同后端灵敏度排序单门：两序窗内回收 33.7824 对 67.5648 µm²；分别报告共同门槛首达与等实际回收量的时间，保留原顺序基线。 [AES 强对照](../../project_docs/evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md)
+- 讨论新增 GCD 固定三门对照，记录在线预检漏掉重布线产生的三个短路，重试消除后仍因 TT 相对 hold 被拒。 [GCD 诊断边界](../../project_docs/evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md)
+- 中文稿双遍 LuaLaTeX、15 页、六幅现有配图，逐页视觉核对，0 编译错误、0 溢出、0 未解析引用。保留原六处字体替代提示。
+- TeX SHA-256 10434205189c0141cba035fed4013dbf7f98f27b9bb936bf23e5a42bf921ee23。三份 PDF 均为 6629683 字节，SHA-256 df2ae432e3cb98eb413c206b027c7bc4b5f7959fd905c8a545141f7d182467cd。

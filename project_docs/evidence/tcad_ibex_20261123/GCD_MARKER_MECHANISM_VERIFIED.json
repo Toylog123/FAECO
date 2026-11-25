@@ -1,0 +1,407 @@
+{
+  "protocol": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/protocol.json",
+    "sha256": "be1e8b5e6aa0fe00554346f506d0fdd5bdf1a378402d4d8908822eddbbec4c6c",
+    "bytes": 5719
+  },
+  "shared_zero": {
+    "actions": [],
+    "passes": [
+      "initial"
+    ],
+    "scope_id": "d9ddba6f451abf0e0e0158246cbd7f7d8eb632067cad9e4db836731cc7e27338:gcd_marker_mechanism",
+    "physical_receipt": {
+      "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial/receipt.json",
+      "sha256": "d7285ba4923707af211f88ca7d8646b4cc3e773e57bb7eb691c35da94c2b3a26",
+      "bytes": 16004
+    },
+    "failures": [],
+    "endpoint": {
+      "endpoint_id": "preflight/zero/initial",
+      "area": 4797.1008,
+      "wns_ns": -1.287504769464931,
+      "tns_ns": -57.02546346242343,
+      "hold_wns_ns": 0.4307267043035523,
+      "scope_id": "d9ddba6f451abf0e0e0158246cbd7f7d8eb632067cad9e4db836731cc7e27338:gcd_marker_mechanism",
+      "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial",
+      "valid": true,
+      "sec_pass": true
+    },
+    "proof_operations": {
+      "SEC": {
+        "returncode": 0,
+        "wall_seconds": 0.6665012749999732,
+        "timeout_seconds": 210.0,
+        "log": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial/sec.log"
+      }
+    },
+    "elapsed_seconds": 7.59398654800043
+  },
+  "checked": [
+    {
+      "cell": 1,
+      "method": "ordinary",
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "preflight/zero/initial",
+          "area": 4797.1008,
+          "wns_ns": -1.287504769464931,
+          "tns_ns": -57.02546346242343,
+          "hold_wns_ns": 0.4307267043035523,
+          "scope_id": "d9ddba6f451abf0e0e0158246cbd7f7d8eb632067cad9e4db836731cc7e27338:gcd_marker_mechanism",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 0.0,
+        "area_saved_pct": 0.0,
+        "target_area_pct": 0.01,
+        "target_area_saved": 0.47971008000000004,
+        "time_to_target_seconds": null,
+        "target_reached_in_window": false
+      },
+      "request": {
+        "id": 1,
+        "actions": [
+          "\\_092_=sky130_fd_sc_hd__mux2_1",
+          "\\_093_=sky130_fd_sc_hd__mux2_1",
+          "\\_094_=sky130_fd_sc_hd__mux2_1"
+        ],
+        "diagnosis": null,
+        "physical": {
+          "initial": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_01/ordinary/01/initial/routing_scope.json",
+              "sha256": "d85d10ba583faedb0122c883ddde2482ac6acbc104bfce88898ddbcb71a21957",
+              "bytes": 8919
+            },
+            "released": [],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_01/ordinary/01/initial/routing_audit.json",
+              "sha256": "00aa711d4980ceeb2158e1ccc525ef2fd5d982af9c9c5053fcc45038bb23ead0",
+              "bytes": 745
+            }
+          },
+          "retry": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_01/ordinary/01/retry/routing_scope.json",
+              "sha256": "2904e0aa2f02778adc18edd339bc2ecfa2d2419743ddf514dbf850bfcbfb53df",
+              "bytes": 8933
+            },
+            "released": [
+              "net242"
+            ],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_01/ordinary/01/retry/routing_audit.json",
+              "sha256": "ee64d5762e81005bf0c43539ad20d8aa6f900452231fe2b332534e577b6b384b",
+              "bytes": 787
+            }
+          }
+        },
+        "logical_finished": true
+      },
+      "subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_01/ordinary/subprocesses.json",
+        "sha256": "eb23a428e1c8a681c2911569be45d6769d89308088f8703d02aa72c93aa51220",
+        "bytes": 7145
+      },
+      "failure_reasons": [
+        "TT:hold_regression"
+      ],
+      "final_physical": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_01/ordinary/01/retry/receipt.json",
+        "sha256": "f79561e1e838343ba8d09afe836d5a82d60de8342b66f20ada9efb8b76099f89",
+        "bytes": 16138
+      },
+      "endpoint": null
+    },
+    {
+      "cell": 2,
+      "method": "online",
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "preflight/zero/initial",
+          "area": 4797.1008,
+          "wns_ns": -1.287504769464931,
+          "tns_ns": -57.02546346242343,
+          "hold_wns_ns": 0.4307267043035523,
+          "scope_id": "d9ddba6f451abf0e0e0158246cbd7f7d8eb632067cad9e4db836731cc7e27338:gcd_marker_mechanism",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 0.0,
+        "area_saved_pct": 0.0,
+        "target_area_pct": 0.01,
+        "target_area_saved": 0.47971008000000004,
+        "time_to_target_seconds": null,
+        "target_reached_in_window": false
+      },
+      "request": {
+        "id": 1,
+        "actions": [
+          "\\_092_=sky130_fd_sc_hd__mux2_1",
+          "\\_093_=sky130_fd_sc_hd__mux2_1",
+          "\\_094_=sky130_fd_sc_hd__mux2_1"
+        ],
+        "diagnosis": {
+          "receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/diagnosis/01/diagnosis.json",
+            "sha256": "8d4184addb0a80bde7259fdb40b8583888382a6f345e88b902a0dcdfd6aa12f0",
+            "bytes": 1022
+          },
+          "log": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/diagnosis/01/preview.log",
+            "sha256": "93d5ce7bfb61f6ccbc3d931e56c6281f229fd8bb5a8e093531579453da55496c",
+            "bytes": 3439
+          },
+          "report": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/diagnosis/01/full_drc.rpt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          "status": "no_complete_guidance",
+          "markers": 0,
+          "released": [],
+          "completed": true,
+          "preview_tool_started": true,
+          "seconds": 0.7148954030008099
+        },
+        "physical": {
+          "initial": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/01/initial/routing_scope.json",
+              "sha256": "89b17e63f4df3e74ae86e5491d8991b537bfdcb4e05d7c2945f9fc97942bdce7",
+              "bytes": 8917
+            },
+            "released": [],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/01/initial/routing_audit.json",
+              "sha256": "ad63bdc228668070898164143db8706928ee5ecb08bf6c2e31a53877d3d262c6",
+              "bytes": 743
+            }
+          },
+          "retry": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/01/retry/routing_scope.json",
+              "sha256": "d9e934faa367e66c9cc9f516987d7bf9207dab53e075b1c36ea4ec5fe191b7b6",
+              "bytes": 8931
+            },
+            "released": [
+              "net242"
+            ],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/01/retry/routing_audit.json",
+              "sha256": "fbd139b6f66fe9308c5d1bab6aa8d33717f5faa3d82b3314c9799cf606e16a1f",
+              "bytes": 785
+            }
+          }
+        },
+        "logical_finished": true
+      },
+      "subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/subprocesses.json",
+        "sha256": "8179a53b316dceb3c7c1f0ec3260cc1047f256b5bd92dc56e4a666b95fd1b428",
+        "bytes": 7875
+      },
+      "failure_reasons": [
+        "TT:hold_regression"
+      ],
+      "final_physical": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_02/online/01/retry/receipt.json",
+        "sha256": "96a1012694195494a8137b3621e86f4cf473d6c9c68c1fae613c890d2e3e8dc8",
+        "bytes": 16116
+      },
+      "endpoint": null
+    },
+    {
+      "cell": 3,
+      "method": "online",
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "preflight/zero/initial",
+          "area": 4797.1008,
+          "wns_ns": -1.287504769464931,
+          "tns_ns": -57.02546346242343,
+          "hold_wns_ns": 0.4307267043035523,
+          "scope_id": "d9ddba6f451abf0e0e0158246cbd7f7d8eb632067cad9e4db836731cc7e27338:gcd_marker_mechanism",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 0.0,
+        "area_saved_pct": 0.0,
+        "target_area_pct": 0.01,
+        "target_area_saved": 0.47971008000000004,
+        "time_to_target_seconds": null,
+        "target_reached_in_window": false
+      },
+      "request": {
+        "id": 1,
+        "actions": [
+          "\\_092_=sky130_fd_sc_hd__mux2_1",
+          "\\_093_=sky130_fd_sc_hd__mux2_1",
+          "\\_094_=sky130_fd_sc_hd__mux2_1"
+        ],
+        "diagnosis": {
+          "receipt": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/diagnosis/01/diagnosis.json",
+            "sha256": "bb99fc8c11d8ef5d1f4ca3f5249a1ad1e783499cb9cadf3e536d63bae6b767a8",
+            "bytes": 1022
+          },
+          "log": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/diagnosis/01/preview.log",
+            "sha256": "93d5ce7bfb61f6ccbc3d931e56c6281f229fd8bb5a8e093531579453da55496c",
+            "bytes": 3439
+          },
+          "report": {
+            "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/diagnosis/01/full_drc.rpt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          "status": "no_complete_guidance",
+          "markers": 0,
+          "released": [],
+          "completed": true,
+          "preview_tool_started": true,
+          "seconds": 0.910451249000289
+        },
+        "physical": {
+          "initial": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/01/initial/routing_scope.json",
+              "sha256": "4c462d2d3166d53aa78ec0744e31539f4b23ce02b02a533f774aceb271bef516",
+              "bytes": 8917
+            },
+            "released": [],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/01/initial/routing_audit.json",
+              "sha256": "47491c2103ce9609c37218d406f342a8a9135ca626b75c2bd0a369522b09eb99",
+              "bytes": 743
+            }
+          },
+          "retry": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/01/retry/routing_scope.json",
+              "sha256": "935b0194cbe4cba83787d0da6a3128a74f40b5c833f6ed998638bca57bf9be72",
+              "bytes": 8931
+            },
+            "released": [
+              "net242"
+            ],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/01/retry/routing_audit.json",
+              "sha256": "042c4e2b825f42cdd127fc79b2edaede7733296aa832b7c4cf586f6bc4432f0a",
+              "bytes": 785
+            }
+          }
+        },
+        "logical_finished": true
+      },
+      "subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/subprocesses.json",
+        "sha256": "f217cf4808d5d4d899ad56310703dde086fa4978392f27d7450e50f771fd0e90",
+        "bytes": 7881
+      },
+      "failure_reasons": [
+        "TT:hold_regression"
+      ],
+      "final_physical": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_03/online/01/retry/receipt.json",
+        "sha256": "3b4f219ba3a863107abfdf2402d35ea69c2588e1700a82792a62a90440c71397",
+        "bytes": 16115
+      },
+      "endpoint": null
+    },
+    {
+      "cell": 4,
+      "method": "ordinary",
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 1,
+        "selected": {
+          "endpoint_id": "preflight/zero/initial",
+          "area": 4797.1008,
+          "wns_ns": -1.287504769464931,
+          "tns_ns": -57.02546346242343,
+          "hold_wns_ns": 0.4307267043035523,
+          "scope_id": "d9ddba6f451abf0e0e0158246cbd7f7d8eb632067cad9e4db836731cc7e27338:gcd_marker_mechanism",
+          "evidence_id": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/preflight/zero/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 0.0,
+        "area_saved_pct": 0.0,
+        "target_area_pct": 0.01,
+        "target_area_saved": 0.47971008000000004,
+        "time_to_target_seconds": null,
+        "target_reached_in_window": false
+      },
+      "request": {
+        "id": 1,
+        "actions": [
+          "\\_092_=sky130_fd_sc_hd__mux2_1",
+          "\\_093_=sky130_fd_sc_hd__mux2_1",
+          "\\_094_=sky130_fd_sc_hd__mux2_1"
+        ],
+        "diagnosis": null,
+        "physical": {
+          "initial": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_04/ordinary/01/initial/routing_scope.json",
+              "sha256": "733bb4ec79033832c8be8814b96b70e2e18028e06e03446e527b7eb84c52acfc",
+              "bytes": 8919
+            },
+            "released": [],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_04/ordinary/01/initial/routing_audit.json",
+              "sha256": "f4e60290a95536957a9bf7cc042e172ddf3e02a552a3f222b127689a7ed272dd",
+              "bytes": 745
+            }
+          },
+          "retry": {
+            "scope": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_04/ordinary/01/retry/routing_scope.json",
+              "sha256": "de2638af61ed660d63e3bf6afc406f8daec9c18dc91002a833dd0cdb1206ea77",
+              "bytes": 8933
+            },
+            "released": [
+              "net242"
+            ],
+            "routing_audit": {
+              "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_04/ordinary/01/retry/routing_audit.json",
+              "sha256": "54a4ea5f07124750983fa2e6ef99cf04cc2fe6aae202b5a0c3a49d87668f7bcf",
+              "bytes": 787
+            }
+          }
+        },
+        "logical_finished": true
+      },
+      "subprocesses": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_04/ordinary/subprocesses.json",
+        "sha256": "f4d12d9b1ef05c92ce006fca46df9e62c77b9d2ea6af76f2d9ac733a1a73b4f3",
+        "bytes": 7146
+      },
+      "failure_reasons": [
+        "TT:hold_regression"
+      ],
+      "final_physical": {
+        "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_marker_mechanism_20261125_v1/cell_04/ordinary/01/retry/receipt.json",
+        "sha256": "33d2b195fe902f3df04b5878a785738cbaf6c831189a004348f4c2db64343070",
+        "bytes": 16138
+      },
+      "endpoint": null
+    }
+  ],
+  "verifier": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/verify_gcd_marker_mechanism.py",
+    "sha256": "d99224b7ab66344ca432f4caa685c522cdba30b84e1693ddd0d805c3743cef1f",
+    "bytes": 4381
+  }
+}

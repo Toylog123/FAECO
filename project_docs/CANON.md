@@ -4,9 +4,26 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
-## 2026-11-25 中文与英文现行工作稿
+## 2026-11-25 SKY130HD GCD 固定提议的保护路由对照
 
-两种稿件均已根据独立证据回填 ASAP7 UART 六臂结果，保留固定批次面积最大、FAECO 重复评估及诊断零标记。中文稿为 15 页双遍 LuaLaTeX，三份 PDF 一致。英文为 8 页 IEEEtran 双遍排版工作稿，沿用六幅原图并提供英文图注和 AI 使用说明。两版已逐页核对。TCAD 所需的独立有冲突设计、强贪心和机制对照继续归 OI-105。[中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [英文稿](../paper/en/build/FAECO_postroute_recovery_tcad_20261125.pdf)
+常规、在线、在线、常规四臂各正式评估同一三门，各两次实际 DRT/RCX，其中一次为重试。两次在线预诊断耗 0.715／0.910 RAW s，均无标记。初次实际布线后四臂独立全块 DRC 均有相同 3 处 `net242`／`net266` met1 短路。按标记放行同一 `net242` 重布后均清零，TT 相对 hold WNS 损失 0.022621 ps，超过预设 0.001 ps 容差。四臂最终合格回收均为 0。[正式报告](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md) · [四臂独立核验](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_VERIFIED.json)
+
+现行保护流程与早期 GCD 合格配对共用三门提议和原约束，本轮增加固定邻线与独立 DRC。两种流程的物理版图不同。在线预诊断可识别某些候选替换直接引起的冲突，GCD 多次复跑表明后续详细布线引起的冲突仍需正式检查。[历史对照](evidence/tcad_ibex_20261123/INCIDENT_CAP_PRIORITY_REPORT.md)
+
+## 2026-11-25 AES 同在线后端的灵敏度单门扩展
+
+同一 18 门、原 I/O、冻结布线起点、720 RAW s 与六次逻辑请求上限。灵敏度单门按冻结 TT 输出引脚裕量的去顶权重排序，每臂重新查询且计入硬窗；FAECO 采用原批宽、相对 hold 反馈与触达电容顺序。正反序四臂独立核验。
+
+| 派发 | 正序／反序 0.01% 首达 / RAW s | 正序／反序首次回收至少 33.7824 µm² / RAW s | 两序各自最大合格回收 / µm² |
+|---|---:|---:|---:|
+| TT 灵敏度单门 | 489.515／497.493 | 619.296／629.378 | 33.7824 |
+| FAECO | 472.398／477.342 | 472.398／477.342 | 67.5648 |
+
+0.01% 为预设共同阈值，两臂都在请求 3 首达，FAECO 主要少做一次 SEC。33.7824 µm² 是从相同验收前缀重读的共同绝对面积，FAECO 早 146.899／152.036 RAW s。窗口最优单门新增一个 SS 负 setup，FAECO 无新增，均符合原验收门及 SEC 11089/0。批宽、反馈与排序的独立贡献仍需消融。[配对报告](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_VERIFIED.json)
+
+## 2026-11-25 中文 v3 工作稿阶段记录
+
+现行中文稿在 UART 六臂基础上加入 AES 灵敏度单门以及 GCD 保护路由下的诊断边界。LuaLaTeX 双遍后逐页核对，15 页、6 幅既有图，三份 PDF 一致。按用户要求，本阶段交付中文，后续独立有冲突设计及机制对照继续归 OI-105、OI-107。[中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)
 
 ## 2026-11-25 ASAP7 UART 原约束下完成三种在线调度正反序比较
 
