@@ -8267,3 +8267,27 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - `_6019_` 原 TT 输出裕量近 WNS。单试该门 TT TNS 损失 174.524 ps，加 `_3714_` 后 797.460 ps 被拒，改加 `_4134_` 为 174.126 ps 过门。两序首个整批约 67 s 后 setup 拒，每臂只复用一次确定的 setup-only 拒收，无重复物理及 hold 重排。
 - 固定 #3 和现行 #6 同新增三门、首次同 10 个 DRC 标记、重试同新增许可 `net1234`，各自实际变 8／18 条网。终态差两处单元、16 条网及寄生，固定通过，现行 TT TNS／SS WNS 拒。独立初次 DRC 后到现行 #6 拒收只剩 61.128／61.521 RAW s，避免重试至多对应这段观察成本。36 次完整预诊断零标记，合计 352.133444 RAW s，为共用后端开销。全池静态 147.6416 µm²，达不到 0.25% 的 178.568136 µm²。
 - 下一轮先用同一原灵敏度起始排序比较单门、固定三门与 FAECO，以同排名固定判断反馈收益。再按需要检验累计预测和重试，原验收不变。此次只读，未运行 EDA 或修改代码。[归因小节](evidence/tcad_wallclock_schedule_20261125/REPORT.md#riscv32i-调度差距的只读归因)
+
+
+## LOG-20261125-178｜冻结 riscv32i 排名对齐的两阶段实物比较
+
+- 基线 `1c3e17ad`。第一阶段只从同一冻结起点新做灵敏度前 9 项的精确累计候选，沿原在线 DRT/RCX、三角时序、电气、独立 DRC／天线及非空 SEC 逐项记账。既有前 3／6 的后验合格端点仍是参考。第一阶段与第二阶段的候选结果隔离，第二阶段各臂重新物理验证。
+- 第二阶段让三法共用冻结 18 项的强单门灵敏度起序，各臂新做同一排名查询并计实耗。同原后端、原约束和 720 RAW s 硬窗，均计 64.099573641 RAW s 原筛选费用；依次正反序三法，保留 FAECO 的 hold 反馈和确定的 setup-only 精确去重。比较冻结 0.01%（7.14272544 µm²）、26.2752、45.0432、52.5504、57.5552 µm² 的首达和实际交付量，未达保留删失，并与旧 v2 相同方法和顺序配对。两阶段实际命令、工具绑定及开始状态另记。[规约](evidence/tcad_rank_alignment_20261125/REPORT.md)
+
+
+## LOG-20261125-179｜排名前九门实物诊断已发出
+
+- 18:55:36（UTC+8），CPU 0–5、四线程、外层限 800 s、策略限 720 RAW s，包装 PID 511、Python PID 513、exec session 27817。输出 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/probe_ranked_nine_20261125_v1`，入口 SHA-256 `fba97b8007ac8526f891b9feac47cb5d747a8438ea6029bd4f738312f6bc1322`，实发预登记 SHA-256 `6fe3dfe22f073d395e7a6271ffe3c8d24d735577c12c22b3ea00f996c73893b8`。九项绑定 46 条直接信号网，预估合减 75.072 µm²。预诊断已完成且标记为零，原物理候选继续。
+- 若候选 DRT/RCX 完成而普通 SEC 未因失格启动，则对实际网表单独补诊断证明，原验收门保持且诊断费用不混入正式阶段二。阶段二 runner SHA-256 `1138f1c0f43a83d1934b8753d0faef491fdc5c7cd4a51b62ffbf48e1ec2fa00d`，无物理验证通过，状态 `protocol_and_inputs_validated`、0 臂。`preflight_rank_aligned_v1/rank_alignment_inputs.json` SHA-256 `6dc2b91bf5ac659e75af4aba009e10515c056c66af83931a1738bcfafd47721d`，筛选和资格输入 SHA 与旧 v2 一致。待第一阶段收束。[运行规约](evidence/tcad_rank_alignment_20261125/REPORT.md)
+- 初次详细布线、RCX 和三角 STA 完成，完整／解锁 DRC 门拒收。独立报告实见 `_0995_` 与 `net1234` 的 9 个 Short 和 1 个 Cut Short，报告 SHA-256 `ad421440c499ede9e96a1f830afbb638fdc0e8b7c897d3cba86f23ec157eb0b9`。原在线规则只增加 `net1234` 放行并启动一次重试，最终门状态待核验。
+
+## LOG-20261125-180｜前九门精确累计候选通过原门
+
+- 实布回收 75.072 µm²，收据无失败，重试全块 DRC／天线 0，SEC 4,559／0。按 FF／TT／SS 顺序，setup WNS 变化 −0.435652／−0.329958／−0.376588 ps，setup TNS 变化 0／−308.133963／−6,293.703336 ps，hold WNS 变化 +0.003664／+0.003941／+0.017986 ps，三个视图均无新增负 setup。重试许可 47 网、保护 5,501 网。根以既有 `audit_logical` 重新检查动作、绑定与原验收。
+- 候选端到端 325.449205905 RAW s，外包 346 s／rc0，预诊断 10.544134 RAW s、初次及重试 DRT／RCX 221.039090／48.168780 RAW s、普通 SEC 9.564701 RAW s。候选诊断复用冻结筛选、排名和共享零端点，本时间不含该三笔。`results.json` SHA-256 `223fd08596d4a766e16f315f4ed3d70976f85f154807252c202ce3b639b638ab`。九门端点仅作前缀可行性证据，下一阶段单独从零累计并现场重新评分。[报告](evidence/tcad_rank_alignment_20261125/REPORT.md)
+
+## LOG-20261125-181｜前九门入证据、同排名六臂实发
+
+- 前九门协议、结果和独验逐字节入仓，`cmp` 均通过。独验 SHA-256 `5c11f0b7a7ffe9c2ec8e23fa47f4cdcedc934ea5d3873c27b1ca02c6d09c16ca`。[协议](evidence/tcad_rank_alignment_20261125/RISCV_RANKED_NINE_PROTOCOL.json) · [结果](evidence/tcad_rank_alignment_20261125/RISCV_RANKED_NINE_RESULTS.json) · [独验](evidence/tcad_rank_alignment_20261125/RISCV_RANKED_NINE_VERIFIED.json)
+- 前九门工具均退出后，19:02:11（UTC+8）按原同机串行要求实发六臂，包装 PID 433、Python 435、session 32766。CPU 0–5、四线程、总限 6,500 s、每臂 720 RAW s，旧 18 项池立即生效，资格和排名绑定的实际摘要与无物理预检一致。输出 `matrix_rank_aligned_v1`，命令与前九门产物隔离，原起点即刻复验。[实发配置](evidence/tcad_rank_alignment_20261125/REPORT.md#比较矩阵实发)
+- 正式协议 `49ef72e393042902d844fb846df8045747d7a2adfc0dea47c2001f95c7259392`，共享严格零端点 `6254e637c53f89d3f76ab9d6df99bd479dbf60c53d824d29ed0c77ea18815eb6` 通过，独立全块 DRC 0、SEC 通过。正序固定各臂第一笔工具费用为现场重排，实耗 1.571247283 RAW s，同冻结 18 项逐项一致，排名收据 `2c1d935e1286bf9f276c1e8dba82955e7938949d1c6655e2e775cf85785cff86`。首次正式派发前 3 项 `_4134_`／`_4713_`／`_4162_`。

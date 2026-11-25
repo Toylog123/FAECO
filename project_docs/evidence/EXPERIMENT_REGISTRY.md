@@ -3435,3 +3435,14 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **资格进行中** FF／TT／SS hold +28.591324／+43.821717／+55.663543 ps。独立全块检查被原 45 s 子工具限时裁剪，记录 `returncode=null` 和 45.846606863 RAW s；完成 512,346 guides 的加载后仍缺独立最终报告。资格未确认。
 
 - **原起点资格失败** `qualification_incomplete`／rc1，三角绝对 hold 非负、hold TNS 零，SEC 52287/0；FF／TT／SS max slew 超限 0／9／1017，max-cap 均零。独立全块检查超时，原生与独立检查分列。原件 `CONTROL.json` 358,712 字节逐字节入仓，SHA-256 `249a4a5274ff217d2a21f049cf0f318935d54af28a80bc85b1ff7c5b256b2ba6`。候选及收益读数均无。[资格原件](tcad_wallclock_schedule_20261125/ETHMAC_CONTROL_INCOMPLETE.json)
+
+
+### 2026-11-25 TCAD-SKY130HD-RISCV32I-SENSITIVITY-RANK-ALIGNMENT（预登记）
+
+- 基线 `1c3e17ad`。阶段一在原冻结物理起点真实试验排名前 9 的精确累计动作，沿用原三角、原联合门、独立 DRC／天线与 SEC。前 3／6 的已测前缀作为既往证据，阶段一的物理结果不供阶段二复用。
+- 阶段二以原 18 项灵敏度排名对齐同后端单门、固定三门和 FAECO，执行正反序六臂。各臂 720 RAW s、共同筛选 64.099573641 RAW s、现场同排名查询各自实付，FAECO 原 hold 反馈和 setup-only 精确去重保持。冻结 0.01%（7.14272544 µm²）、26.2752、45.0432、52.5504、57.5552 µm² 作为比较下限，记录实收、完成前缀和未达删失。旧 v2 以同方法和顺序配对，具体运行命令待实发绑证。[规约](tcad_rank_alignment_20261125/REPORT.md)
+
+- **第一阶段实发** 18:55:36（UTC+8），CPU 0–5、四线程、限 800 s 外包和 720 RAW s 候选窗，PID 511／513、session 27817。九项绑定 46 条直连信号网，静态减量 75.072 µm²。实发 `preregistration.json` SHA-256 `6fe3dfe22f073d395e7a6271ffe3c8d24d735577c12c22b3ea00f996c73893b8`，脚本 `fba97b8007ac8526f891b9feac47cb5d747a8438ea6029bd4f738312f6bc1322`。完整 DRT/RCX 若因其它门拒而普通 SEC 未执行，则补做、单列诊断 SEC。首次在线预诊断零标记，阶段二待实发。
+- **第一阶段验收通过** 75.072 µm²，候选端到端 325.449205905 RAW s（筛选、排序与共享零端点复用），包装 346 s／rc0。初布独立 DRC 10 个，按证据只放行 `net1234` 复做一次，最终 DRC／天线 0、SEC 4,559／0、FF／TT／SS 新负 setup 均为 0，原联合门全过。根按旧 `audit_logical` 独验。结果 SHA-256 `223fd08596d4a766e16f315f4ed3d70976f85f154807252c202ce3b639b638ab`。[细项](tcad_rank_alignment_20261125/REPORT.md#前九门验收)
+- **第二阶段实发** 19:02:11（UTC+8），包装 PID 433、Python 435、session 32766，CPU 0–5 顺序独占、外包 6,500 s。资格输入 `e7e29999…`、排名对齐输入 `6dc2b91b…` 与无物理预检完全一致。新的 `matrix_rank_aligned_v1` 从同一冻结起点重新验证，不读第一阶段候选产物。第一阶段协议／结果／独验已逐字节入仓。[实发及原件](tcad_rank_alignment_20261125/REPORT.md#比较矩阵实发)
+- **正式绑定与首派** `protocol.json` SHA-256 `49ef72e393042902d844fb846df8045747d7a2adfc0dea47c2001f95c7259392`，共享严格零端点通过（`6254e637…`），首臂新鲜排名 1.571247283 RAW s、池内 18 项逐项同序，随后派前三门。
