@@ -3298,3 +3298,25 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **逐项结果** 输出 ODB、DEF、功能网表、去日期 SPEF、逐角时序与原门判定三项全一致，独立 DRC／天线零、SEC 567/0。依次追加 35.817057374／33.789948992／33.028336698 RAW s；总计 102.635343064 s，比原两段少 8.728959299 s（7.84%）。合格仍为 `uart_01` 回收 0.26244 µm²。结果 SHA-256 `c3562b97b8f44318fd6db9b0c011d261f3a8a3a71251e58ccc601ff4be36ea5f`。
 
 - **封存** GCD、UART 两段及 UART 直接复用原件均归档至 `scratch/tcad_ibex_20261123/hold_reentry_rescue_20261125_v1.tar.gz`，494 项、18,095,482 字节，SHA-256 `31a5f0da724b6655cb9fc4e84960d62fc53df93b7445aa4d82d3e772e650e466`，重新比较 rc0。[总报告](tcad_ibex_20261123/HOLD_REENTRY_RESCUE_REPORT.md) · [复用原件](tcad_holdout_20261123/UART_RESCUE_EXISTING_ODB_RESULTS.json)
+
+
+### 2026-11-25 TCAD-ASAP7-UART-TT-HOLD-CAPTURE-CLOCK-LOCAL-RESCUE（意图登记）
+
+- 基线 `9e675fd4`。固定 UART `uart_04`、`uart_05` 的原拒收预 RCX ODB，动作、冻结原约束、三角库与工具沿用。围绕原 TT 最差 hold 的捕获时钟支路开放限域重布，其余既有网几何锁定并独立核对。用原 setup／hold、电气、独立全块 DRC／天线及 SEC 验收。范围与启动参数在执行前补记。
+- 配对原全解锁重入两组六门，分别仍因 TT 拒收，追加 33.789948992／33.028336698 RAW s。拟回收均为 0.34992 µm²，当前已验收 0.26244 µm²。预先约定比较完整追加 RAW 墙钟、原门和净超过前沿的实际回收，所有失败成本计入，两个共享动作候选不累加。[原证据](tcad_holdout_20261123/UART_RESCUE_EXISTING_ODB_RESULTS.json)
+
+- **原件路径读取** 两份 TT 最差 hold 同为 `uart_rx_inst.busy$_SDFFE_PP0P_` 自反馈，共用同一 launch/capture `/CLK`。原 DEF 捕获网均为 `clknet_3_7__leaf_clk`，覆盖 12 个 CLK 负载，其中包括原 SS 最差路径 `uart_rx_inst.rxd_reg`。候选范围与测试前冻结的工具设定另记。
+
+- **冻结补救规则** 允许原 TT 捕获叶网及闭合反馈网。反馈边界为捕获 FF 原点 ±1 µm 与叶网 bbox 外扩三条有效轨距的交集，M2 合并偏移轨；其余网和时钟 FIXED。先保留原线只开放，失败才从同一 ODB 重启，只擦除允许数据网中接捕获 D 的一网；两级均 75 s DRT 上限，沿用 pin access，不扩域。对前后 DEF 核查几何、接线、元件、guide 和新线／via 锚点，在验收副本仅解除 FIXED 做原独立全块 DRC／天线／原门／SEC。
+
+- **实际发出** 12:46:07（UTC+8），CPU 0–5、四线程、外限 520 s，`/home/toylog/faeco_tcad_uart_tt_capture_window_20261125_v1`。协议 `6eb751b8f54a1274ca203f1a2c4e26b5905d95b4c24bd0348087b6c8ffcfc045`，入口 `37790f802fd5476d8b32ecb81dea36f353d041998bad83bf4707efaf8ceaec6d`。两候选同三网 `clknet_3_7__leaf_clk`、`_0103_`、`_0120_`，二级只擦 `_0103_`，`net38` 锁定。锚点 `(11826,10530)` DBU，叶域 `[10773,9765,14661,15579]`，数据域 `[10826,9765,12826,11530]`，实际外扩 144 DBU。固定 `uart_04`→`uart_05`。[报告](tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md)
+
+- **四次主试终态** 两级和两候选均产出完整实物，789 保护网几何未变，最终全网规范几何变化 0。二级 `_0103_` 重布后几何复原，逐角原指标复现。两组六门两级均拒 TT／SS，独立 DRC／天线零、诊断 SEC 567/0。含范围计算的两级追加 20.912214224／21.217278479 RAW s，原全解锁 33.789948992／33.028336698 s（SS 通过、仅 TT 拒）。实际净回收 0；前沿保留 0.26244 µm²。结果 SHA-256 `2268fb69daf059c14d3d29ac322f30597dc79d676db9b619fe679ca71710460b`。
+
+- **补充诊断 C 预登记** 主两级最终几何均未改。复用同一原拒收 ODB 和完全相同的三网范围，另只清除捕获叶网 `clknet_3_7__leaf_clk`，保持两反馈网原线。沿用 pin access，单次 DRT 限 75 s，仍做范围核查、原三角和独立全块 DRC／天线及 SEC。成本独立列，并按三段依次触发计算累计费用。
+
+- **诊断 C 实发** 12:48:10（UTC+8），CPU 0–5、四线程、外限 410 s，`/home/toylog/faeco_tcad_uart_tt_capture_leaf_reroute_20261125_v1`。协议 `30572bc52ce38d008d99a62511f9866843788ec95116b3e4618b3edfd7d84b39`，入口 `8c51b5cf62f755c84e9077ee872770bee9d8bcb865a6c6c571e878e05e01d164`。
+
+- **诊断 C 终态** 只改捕获叶几何，其余网、功能网表和最差路径保持，独立 DRC／天线 0，诊断 SEC 567/0。叶 C 1.47498→1.57315／1.46184→1.56014 fF，TT 变 −0.046504／−0.006196 ps，SS −0.128397／−0.139014 ps，均仍由 TT／SS 拒收。C 两次追加 14.470563506／14.900985247 RAW s，主+C 条件累计 35.382777730／36.118263726 s，高于全放开。净回收增加 0。结果 `6f190314d9a1a51795e15267f368c28ebd248d09939f4a4564b9609232ef8765`。
+
+- **封存** 主试和诊断原件均归档 `scratch/tcad_ibex_20261123/uart_tt_capture_window_20261125_v1.tar.gz`，220 项、8,478,782 字节，SHA-256 `ec6083f9d01d374c1cb482251b8cb97852b49f2605decdaa26a76f4d790f797b`，与原始目录比较通过。[主试结果](tcad_holdout_20261123/UART_TT_CAPTURE_WINDOW_RESULTS.json) · [诊断结果](tcad_holdout_20261123/UART_TT_CAPTURE_LEAF_REROUTE_RESULTS.json)

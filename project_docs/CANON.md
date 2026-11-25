@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 UART 两组六门的窄域 hold 补救
+
+从两个原拒收 ODB 分别只开放 TT 捕获叶及两条窗内反馈网。保留原线和只清末级反馈两种做法均复现原几何、三角及 TT／SS 拒因。主动清除同一时钟叶使两项实布仅改变该叶，TT／SS hold 均下降，原门仍拒。所有实跑独立 DRC／天线零，诊断 SEC 567/0。
+
+含范围计算，主两级追加 20.912／21.217 RAW s，连主动清叶累计 35.383／36.118 RAW s，高于旧全解锁的 33.790／33.028 s。两窄域路径及全解锁均无六门合格端点，已验收最大回收 0.26244 µm²。当前窄域规则结束于这两个固定提议的诊断，原验收门及在线部署保持。[试验报告](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md)
+
 ## 2026-11-25 检查点重入补救的四候选验证
 
 两个原约束设计中预先锁定四个仅因 hold 拒收、且面积潜力超过各自已核历史前沿的实布候选。从头新鲜布线均复现纯 hold 拒收，再触发两轮限域检查点重入，并按原门做完整验收。SKY130HD GCD 的一项仍为 TT／SS 拒，追加 35.227 RAW s，历史最佳保持 15.0144 µm²。ASAP7 UART 三项中，三门 `_0562_/_0601_/_0886_` 通过并复现，独立 DRC／天线零、SEC 567/0。两项六门的 SS 均过、TT 仍低于原门。
