@@ -4,11 +4,17 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 SKY130HD riscv32i 灵敏度排序对齐
+
+同冻结 18 项、原门与 720 RAW s，三法逐臂现场重排且同付筛选成本。正反序六臂独验通过。同榜固定三门与 FAECO 两序均回收 75.072 µm²（0.10510%），强单门均为 57.5552 µm²（0.08058%）。同实收 48.7968 µm² 时，两种批处理较单门早约 297–304 RAW s。各批处理提交四个相同累计动作，三次完整全过，末次截窗。九门最大端点的 ODB、去日期 SPEF 及三角指标一致，独立全块 DRC／天线零、SEC 4559/0。
+
+同榜固定与 FAECO 在任何共同实收上的首达差均在 0.67 RAW s 内，两次 FAECO 未触发 hold 延后、二分或拒收缓存复用。旧 v2 现行 FAECO 从 45.0432 增至 75.072 µm²，共用排名的固定也由 52.5504 增至 75.072 µm²。该开发对照支持先统一灵敏度起序，再逐项评估调度，反馈的独立优势与跨设计迁移仍待验证。[两阶段报告](evidence/tcad_rank_alignment_20261125/REPORT.md) · [六臂独验](evidence/tcad_rank_alignment_20261125/RISCV_RANK_ALIGNED_VERIFIED.json)
+
 ## 2026-11-25 纯墙钟留出：SKY130HD riscv32i 与 ASAP7 ethmac
 
 `riscv32i` v2 采用原约束、同在线后端、18 项冻结池和 720 RAW s 纯墙钟。六臂独验通过，两序灵敏度单门／固定批次／现行去重 FAECO 的最大合格回收均为 57.5552／52.5504／45.0432 µm²，分别占初始功能面积 0.08058%／0.07357%／0.06306%。0.01% 预设小目标由单门先到，约 139–140 RAW s；其余两法约 204–205 s。以至少 45.0432 µm² 为另一个共同阈值，现行两序约 418–419 s 先到，两种基线约 508–514 s。现行最佳端点的 SS setup TNS 退化 1287.844 ps，低于两种基线，三法最优均通过原门、独立 DRC／天线和 SEC 4559/0。
 
-现行去重两序在第 1、3、6 次因原 setup 门拒收，约消耗 431–432 RAW s，均未触发相对 hold 重排。单动作冻结 TT TNS 相加在两个已核组合上分别高估和低估实际损失。后续先对齐灵敏度起始顺序，再分离批宽和反馈。`ethmac` 原生末段恢复 DRT/RCX，源约束一致且三角 hold 与 SEC 合格，原 TT／SS max slew 违规 9／1017 项且独立 DRC 止于限时，起点资格未通过，未派候选。两工艺的独立同预算优势仍未建立。[实验报告](evidence/tcad_wallclock_schedule_20261125/REPORT.md) · [SKY 完整独验](evidence/tcad_wallclock_schedule_20261125/RISCV_WALLCLOCK_VERIFIED.json) · [Ethmac 资格](evidence/tcad_wallclock_schedule_20261125/ETHMAC_CONTROL_INCOMPLETE.json)
+现行去重两序在第 1、3、6 次因原 setup 门拒收，约消耗 431–432 RAW s，均未触发相对 hold 重排。单动作冻结 TT TNS 相加在两个已核组合上分别高估和低估实际损失。上述排序对齐复测由该失效证据提出。`ethmac` 原生末段恢复 DRT/RCX，源约束一致且三角 hold 与 SEC 合格，原 TT／SS max slew 违规 9／1017 项且独立 DRC 止于限时，起点资格未通过，未派候选。两工艺的独立同预算优势仍未建立。[实验报告](evidence/tcad_wallclock_schedule_20261125/REPORT.md) · [SKY 完整独验](evidence/tcad_wallclock_schedule_20261125/RISCV_WALLCLOCK_VERIFIED.json) · [Ethmac 资格](evidence/tcad_wallclock_schedule_20261125/ETHMAC_CONTROL_INCOMPLETE.json)
 
 ## 2026-11-25 UART 纯墙钟开发对照
 
