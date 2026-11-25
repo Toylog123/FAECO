@@ -108,6 +108,13 @@ project_docs/evidence/tcad_holdout_20261123/adapt_uart_qualification.py -text
 project_docs/evidence/tcad_holdout_20261123/holdout_tools.py -text
 project_docs/evidence/tcad_holdout_20261123/run_uart_online.py -text
 project_docs/evidence/tcad_holdout_20261123/verify_uart_online.py -text
+# Match the source bytes consumed by the WSL UART rejection-reuse run.
+code/src/rseco/physical_budget_adapter.py text eol=crlf
+project_docs/evidence/tcad_holdout_20261123/run_uart_rejection_dedup.py -text
+project_docs/evidence/tcad_holdout_20261123/verify_uart_rejection_dedup.py -text
+project_docs/evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_VERIFIED.json -text
+project_docs/evidence/tcad_holdout_20261123/probe_uart_fixed_area.py -text
+project_docs/evidence/tcad_holdout_20261123/UART_FIXED_AREA_PROBE_VERIFIED.json -text
 project_docs/evidence/tcad_ibex_20261123/run_aes_sensitivity_greedy.py -text
 project_docs/evidence/tcad_ibex_20261123/verify_aes_sensitivity_greedy.py -text
 project_docs/evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_VERIFIED.json -text

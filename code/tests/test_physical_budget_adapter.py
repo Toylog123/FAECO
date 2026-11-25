@@ -221,6 +221,31 @@ def test_deferred_split_uses_latest_committed_base_after_pool_is_covered():
     assert result["selected"].area == 96
 
 
+def test_adaptive_batch_skips_known_rejection_recreated_by_a_commit():
+    reference = Endpoint("control", 100, -1, -2, 0.1, "s", "ref", True, True)
+    actions = [PhysicalAction(name, name, "large", "small", 1) for name in "abcd"]
+    evaluated = []
+    known = set()
+
+    def evaluate(ids):
+        evaluated.append(ids)
+        fails_setup = "c" in ids
+        if fails_setup:
+            known.add(ids)
+        return Endpoint("trial", 100 - len(ids), -1.05 if fails_setup else -1,
+                        -2, 0.1, "s", "ev", True, True)
+
+    result = adaptive_batch_recovery(
+        reference, actions, evaluate, BudgetPolicy.from_ps(10.0), max_evaluations=5, batch_size=3,
+        known_split_rejection=known.__contains__,
+    )
+
+    assert evaluated == [("a", "b", "c"), ("a",), ("a", "b"), ("a", "b", "d")]
+    assert result["evaluations_used"] == len(evaluated)
+    assert [tuple(row["actions"]) for row in result["trace"]] == evaluated
+    assert result["committed"] == ["a", "b", "d"]
+
+
 def test_generate_compatible_candidates_safe_drive_first(tmp_path: Path):
     if not DEFAULT_LIBERTY.exists():
         return

@@ -4,6 +4,16 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 ASAP7 UART 后验定向三门达到既有固定面积
+
+使用同冻结布线、原三角时序、同在线物理后端，单独验证 `_0814_`／`_0886_`／`_1027_`。该候选实际回收 0.23328 µm²，等于既有固定四门面积，最大逐角 setup WNS 损失 0.042272 ps，无新增负 setup，独立 DRC 和天线 0，SEC 567/0。在读取既有轨迹后，仅做一个事后定向验证。自动调度的同预算结果仍见去重 ABBA。[物理核验](evidence/tcad_holdout_20261123/UART_FIXED_AREA_PROBE_VERIFIED.json)
+
+## 2026-11-25 ASAP7 UART 去重的正反序实物验证
+
+原 FAECO 与去重 FAECO 共用冻结 UART 起点、原三角与 18 候选，每臂计同一筛选和 720 RAW s，均完成 6 次实际物理评估。去重只复用同臂具备完整物理测量且仅因 setup 超预算的累计拒收。两轮各复用一次，第 6 次均新验收同一三门，面积从原调度的 0.14580 提升至 0.20412 µm²（总功能单元面积的 0.25835%），仍比历史在线固定四门 0.23328 µm² 少 0.02916 µm²。
+
+对应 0.14580 µm² 的同两门端点，去重第 5 次比原调度第 6 次早 24.147／23.504 RAW s。预设 0.01% 阈值各臂均在第 3 次，位于首次复用之前。新三门符合原时序、电气、独立 DRC、天线与 SEC，各序独立复核，SEC 567/0。[配对报告](evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_REPORT.md) · [独立核验](evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_VERIFIED.json)
+
 ## 2026-11-25 SKY130HD GCD 固定提议的保护路由对照
 
 常规、在线、在线、常规四臂各正式评估同一三门，各两次实际 DRT/RCX，其中一次为重试。两次在线预诊断耗 0.715／0.910 RAW s，均无标记。初次实际布线后四臂独立全块 DRC 均有相同 3 处 `net242`／`net266` met1 短路。按标记放行同一 `net242` 重布后均清零，TT 相对 hold WNS 损失 0.022621 ps，超过预设 0.001 ps 容差。四臂最终合格回收均为 0。[正式报告](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md) · [四臂独立核验](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_VERIFIED.json)
@@ -23,7 +33,7 @@
 
 ## 2026-11-25 中文 v3 工作稿阶段记录
 
-现行中文稿在 UART 六臂基础上加入 AES 灵敏度单门以及 GCD 保护路由下的诊断边界。LuaLaTeX 双遍后逐页核对，15 页、6 幅既有图，三份 PDF 一致。按用户要求，本阶段交付中文，后续独立有冲突设计及机制对照继续归 OI-105、OI-107。[中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)
+本地 16 页中文草稿已纳入 UART 去重 ABBA、AES 灵敏度单门和 GCD 诊断边界。LuaLaTeX 双遍后逐页核对，草稿源码、PDF 和补丁保存在 `scratch/tcad_ibex_20261123/manuscript_uart_dedup_20261125/zh/`。按用户最新要求先推进实验，仓库主稿源码和三份 PDF 保持 `6a79448b` 的 15 页版本；实验阶段提交实验文件和证据。[仓库中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)
 
 ## 2026-11-25 ASAP7 UART 原约束下完成三种在线调度正反序比较
 

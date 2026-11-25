@@ -238,6 +238,7 @@ def adaptive_batch_recovery(
     batch_size: int = 3,
     defer_split_for: Callable[[tuple[str, ...]], bool] | None = None,
     priority_after_defer: Mapping[str, float] | None = None,
+    known_split_rejection: Callable[[tuple[str, ...]], bool] | None = None,
 ) -> dict:
     """Universal adaptive mini-batch post-route area recovery with bisection fallback.
 
@@ -248,6 +249,9 @@ def adaptive_batch_recovery(
     An evaluator can prioritize unvisited batches by deferring the rejected trial's
     split. Deferred batches are split in dispatch order if budget remains.
     Optional priorities rank only the unvisited suffix at the first deferral.
+    ``known_split_rejection`` may recognize a completed deterministic rejection
+    measured on the same frozen input with the same cumulative edits. A hit
+    follows the split path without spending a physical evaluation.
     """
     active_policy = policy or BudgetPolicy()
     if batch_size < 1:
@@ -278,6 +282,10 @@ def adaptive_batch_recovery(
         if not chunk or evals >= max_evaluations:
             return
         trial = tuple(sorted((*committed, *(a.action_id for a in chunk))))
+        if known_split_rejection is not None and known_split_rejection(trial):
+            if len(chunk) > 1:
+                split(chunk)
+            return
         ep = evaluate(trial)
         evals += 1
         gate = assess(reference, ep, active_policy)
