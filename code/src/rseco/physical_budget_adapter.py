@@ -234,12 +234,13 @@ def adaptive_batch_recovery(
     evaluate: Callable[[tuple[str, ...]], Endpoint],
     policy: BudgetPolicy | None = None,
     *,
-    max_evaluations: int = 10,
+    max_evaluations: int | None = 10,
     batch_size: int = 3,
     defer_split_for: Callable[[tuple[str, ...]], bool] | None = None,
     priority_after_defer: Mapping[str, float] | None = None,
     known_split_rejection: Callable[[tuple[str, ...]], bool] | None = None,
     reserve_deferred_singleton: bool = False,
+    interleave_failed_splits: bool = False,
 ) -> dict:
     """Universal adaptive mini-batch post-route area recovery with bisection fallback.
 
@@ -255,10 +256,17 @@ def adaptive_batch_recovery(
     follows the split path without spending a physical evaluation.
     With ``reserve_deferred_singleton``, the last evaluation may try one
     untested singleton from the hold-deferred batches on the accepted base.
+    With ``interleave_failed_splits``, a failed batch gets one immediate
+    attempt at its left half while fresh batches remain. Remaining subgroups
+    are tried after the fresh batches. A failed immediate singleton is only
+    retried if more actions have since been accepted. ``max_evaluations=None``
+    lets a deadline-aware evaluator enforce a wall-clock-only budget.
     """
     active_policy = policy or BudgetPolicy()
     if batch_size < 1:
         raise ValueError("batch_size must be >= 1")
+    if reserve_deferred_singleton and max_evaluations is None:
+        raise ValueError("reserving the last evaluation requires a finite evaluation limit")
 
     unique_actions: list[PhysicalAction] = []
     seen_inst: set[str] = set()
@@ -272,11 +280,16 @@ def adaptive_batch_recovery(
     evals = 0
     trace: list[dict] = []
     deferred: list[list[PhysicalAction]] = []
+    pending_splits: list[list[PhysicalAction]] = []
+    pending_singletons: list[tuple[list[PhysicalAction], int]] = []
     idx = 0
     reranked = False
     singletons_tested: set[str] = set()
     initial_order = ({action.action_id: rank for rank, action in enumerate(unique_actions)}
                      if reserve_deferred_singleton else {})
+
+    def has_budget() -> bool:
+        return max_evaluations is None or evals < max_evaluations
 
     def last_deferred_action() -> PhysicalAction | None:
         touched = {tuple(row["actions"]) for row in trace}
@@ -296,17 +309,50 @@ def adaptive_batch_recovery(
         try_chunk(chunk[:mid])
         try_chunk(chunk[mid:])
 
-    def try_chunk(chunk: list[PhysicalAction]) -> None:
-        nonlocal best, evals, reranked
-        if not chunk or evals >= max_evaluations:
+    def handle_rejection(chunk, trial, *, immediate_attempt, row=None) -> None:
+        nonlocal reranked
+        if not has_budget():
+            return
+        if immediate_attempt:
+            if len(chunk) == 1:
+                pending_singletons.append((chunk, len(committed)))
+            else:
+                mid = len(chunk) // 2
+                pending_splits.extend((chunk[:mid], chunk[mid:]))
+            return
+        if len(chunk) == 1:
+            return
+        has_fresh_batch = idx < len(unique_actions)
+        defer_for_hold = (row is not None and has_fresh_batch and defer_split_for is not None
+                          and defer_split_for(trial))
+        if defer_for_hold and priority_after_defer is not None and not reranked:
+            unique_actions[idx:] = sorted(
+                unique_actions[idx:], key=lambda action: priority_after_defer[action.action_id], reverse=True,
+            )
+            reranked = True
+            row["frontier_reranked"] = True
+        if interleave_failed_splits and has_fresh_batch:
+            if row is not None:
+                row["split_interleaved"] = True
+            mid = len(chunk) // 2
+            try_chunk(chunk[:mid], immediate_attempt=True)
+            pending_splits.append(chunk[mid:])
+        elif defer_for_hold:
+            deferred.append(chunk)
+            row["split_deferred"] = True
+        else:
+            split(chunk)
+
+    def try_chunk(chunk: list[PhysicalAction], *, immediate_attempt: bool = False) -> None:
+        nonlocal best, evals
+        if not chunk or not has_budget():
             return
         reserved = last_deferred_action() if reserve_deferred_singleton and evals + 1 == max_evaluations else None
         if reserved is not None:
             chunk = [reserved]
         trial = tuple(sorted((*committed, *(a.action_id for a in chunk))))
         if known_split_rejection is not None and known_split_rejection(trial):
-            if len(chunk) > 1:
-                split(chunk)
+            handle_rejection(chunk, trial, immediate_attempt=immediate_attempt)
             return
         ep = evaluate(trial)
         if reserve_deferred_singleton and len(chunk) == 1:
@@ -327,34 +373,32 @@ def adaptive_batch_recovery(
         )
         if reserved is not None:
             trace[-1]["reserved_deferred_singleton"] = reserved.action_id
+        if immediate_attempt:
+            trace[-1]["immediate_split_trial"] = True
         if accepted:
             committed.extend(a.action_id for a in chunk)
             best = ep
             return
-        if len(chunk) > 1 and evals < max_evaluations:
-            if idx < len(unique_actions) and defer_split_for is not None and defer_split_for(trial):
-                deferred.append(chunk)
-                trace[-1]["split_deferred"] = True
-                if priority_after_defer is not None and not reranked:
-                    unique_actions[idx:] = sorted(
-                        unique_actions[idx:], key=lambda action: priority_after_defer[action.action_id],
-                        reverse=True,
-                    )
-                    reranked = True
-                    trace[-1]["frontier_reranked"] = True
-            else:
-                split(chunk)
+        handle_rejection(chunk, trial, immediate_attempt=immediate_attempt, row=trace[-1])
 
-    while idx < len(unique_actions) and evals < max_evaluations:
-        rem_evals = max_evaluations - evals
-        cur_batch = min(batch_size, len(unique_actions) - idx) if rem_evals >= 2 else 1
-        chunk = unique_actions[idx : idx + cur_batch]
-        idx += cur_batch
+    while idx < len(unique_actions) and has_budget():
+        width = 1 if max_evaluations is not None and max_evaluations - evals == 1 else batch_size
+        chunk = unique_actions[idx : idx + width]
+        idx += len(chunk)
         try_chunk(chunk)
     for chunk in deferred:
-        if evals >= max_evaluations:
+        if not has_budget():
             break
         split(chunk)
+    for chunk in pending_splits:
+        if not has_budget():
+            break
+        try_chunk(chunk)
+    for chunk, accepted_before in pending_singletons:
+        if not has_budget():
+            break
+        if len(committed) > accepted_before:
+            try_chunk(chunk)
 
     return {
         "selected": best,

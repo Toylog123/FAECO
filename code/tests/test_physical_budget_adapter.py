@@ -221,6 +221,44 @@ def test_deferred_split_uses_latest_committed_base_after_pool_is_covered():
     assert result["selected"].area == 96
 
 
+def test_interleaved_split_only_spends_one_immediate_trial_and_revisits_on_new_base():
+    reference = Endpoint("control", 100, -1, -2, 0.1, "s", "ref", True, True)
+    actions = [PhysicalAction(name, name, "large", "small", 1) for name in "abcdef"]
+    failures = {("a", "b", "c"), ("a",)}
+
+    def evaluate(ids):
+        return Endpoint("trial", 100 - len(ids), -1, -2, 0.1, "s", "ev", ids not in failures, True)
+
+    result = adaptive_batch_recovery(
+        reference, actions, evaluate, max_evaluations=None, batch_size=3,
+        interleave_failed_splits=True, defer_split_for=lambda ids: ids == ("a", "b", "c"),
+        priority_after_defer={"d": 1.0, "e": 2.0, "f": 3.0},
+    )
+
+    assert [row["actions"] for row in result["trace"]] == [
+        ["a", "b", "c"], ["a"], ["d", "e", "f"], ["b", "c", "d", "e", "f"],
+        ["a", "b", "c", "d", "e", "f"],
+    ]
+    assert result["trace"][0]["frontier_reranked"]
+    assert result["selected"].area == 94
+
+
+def test_interleaved_singleton_is_not_repeated_without_new_commit():
+    reference = Endpoint("control", 100, -1, -2, 0.1, "s", "ref", True, True)
+    actions = [PhysicalAction(name, name, "large", "small", 1) for name in "abcd"]
+
+    def reject(ids):
+        return Endpoint("trial", 100 - len(ids), -1, -2, 0.1, "s", "ev", False, True)
+
+    result = adaptive_batch_recovery(
+        reference, actions, reject, max_evaluations=None, interleave_failed_splits=True,
+    )
+
+    assert [row["actions"] for row in result["trace"]] == [
+        ["a", "b", "c"], ["a"], ["d"], ["b", "c"], ["b"], ["c"],
+    ]
+
+
 def test_adaptive_batch_skips_known_rejection_recreated_by_a_commit():
     reference = Endpoint("control", 100, -1, -2, 0.1, "s", "ref", True, True)
     actions = [PhysicalAction(name, name, "large", "small", 1) for name in "abcd"]
