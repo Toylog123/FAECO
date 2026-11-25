@@ -7950,3 +7950,11 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - 实核 `scratch/tcad_ibex_20261123/uart_tt_capture_window_20261125_v1.tar.gz` 共 220 项、8,478,782 字节，SHA-256 `ec6083f9d01d374c1cb482251b8cb97852b49f2605decdaa26a76f4d790f797b`，原件 `tar -d` 比较 rc0。仓库两结果 JSON 与 WSL 原件逐 SHA 同一，叶网提取总电容已从各原始 SPEF `*D_NET` 核查。[完整报告](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md)
 - 两候选六次限域正式物理均因原 hold 门拒收，已验收前沿 0.26244 µm²。主动清叶测到局部影响，但对本两点的 hold 不利。生产调度和论文保持现状。
+
+
+## LOG-20261125-125｜只读核对跨设计收益与 hold 验收边界
+
+- FF／TT／SS 绝对 hold WNS 非负和相对冻结起点的原 0.001 ps 容差是两项分别检查的门。早期 AES 新筛 18 次实布的绝对 hold 均通过，最低 +53.686389 ps、各角 hold TNS 为零，18 次仍被原相对门拒。AES 同网表零编辑重布使 SS hold 下降 0.676792 ps，Ibex 的零编辑 SS 下降 0.079936 ps，与同池后来三次单门拒收的回退逐值一致。AES 代表性违约可由交叉读入的候选 SPEF 重现；GCD 等面积候选的 TT／SS 差也可由只换 SPEF 重现。现有证据定位这些病例中的重布线寄生效应，正式面积沿用原联合门。[AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md) · [Ibex 三方](evidence/tcad_ibex_20261123/IBEX_SCREENED_THREE_WAY_REPORT.md) · [GCD 同分归因](evidence/tcad_holdout_20261123/UART_HOLD_GEOMETRY_REPORT.md)
+- AES 正反序的固定调度在线后端到同物理点分别省 84.006／72.399 RAW s，首达前各少一次 DRT/RCX。在同一在线后端，FAECO 较强单门同窗为 67.5648 对 33.7824 µm²，但相较在线固定批次，到 33.7824 µm² 又晚 119.227／112.991 RAW s。SKY130HD Ibex 固定与 hold-aware FAECO 六次动作和物理产物一致，720 s 均回收 43.792 µm²。ASAP7 UART 去重使两序从 0.14580 增到 0.20412 µm²，仍低于固定的 0.23328 µm²。分别保留后端、候选覆盖和面积目标的比较口径。[AES 交叉对照](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md) · [强单门](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md) · [UART 去重](evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_REPORT.md)
+- GCD 已测等面积对中，便宜的 GRT／直接网增量估计误收，早停 DRT 误拒合格点且超过可省成本。UART 窄域补救含清叶诊断累计 35.383／36.118 RAW s，超过全解锁的 33.790／33.028 s，净回收为零。冻结已验收结果及原门，待明确保留多少相对 hold 余量属于研究目标、哪些属于当前验收边界，再决定后续实验。本轮为只读复核，无新 EDA、实验登记、代码或论文变更。[GCD 预筛](evidence/tcad_ibex_20261123/GCD_LOCAL_HOLD_PREVIEW_REPORT.md) · [UART 窄域补救](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md)
+- UART 两组六门的 TT 最差路径是同一触发器自反馈，发射和捕获共用 CLK。全解锁实际改善 SS 约 0.221 ps，TT 基本不动，两组 TT WNS 都约 +67.5 ps 且 hold TNS 为零，分别低于原相对门 0.001547／0.000422 ps。主动只重布共有叶网后两角 hold 都下降。当前限域规则能约束改线范围，实测没有给出能让这两个候选朝过门方向变化的具体操作。[六门局部补救](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md) · [全解锁原件](evidence/tcad_holdout_20261123/UART_RESCUE_EXISTING_ODB_RESULTS.json)

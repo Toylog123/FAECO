@@ -1774,6 +1774,8 @@ GCD 同机换序的完整后端已复现同面积候选的原标签。dirty GRT 
 
 两个固定 UART 六门的 TT 捕获叶与反馈窄域测试已完成。两级保线／清末级反馈均复现原几何和 TT／SS 拒因；主动清叶仅改变该叶，仍降低 TT／SS 裕量。加试累计成本超过全解锁，UART 既有 0.26244 µm² 前沿保持。试过的三种窄域规则未提供新的合格端点。后续若需定位修复杠杆，先以受控物理变化区分共享捕获叶与数据反馈的寄生贡献，再设同预算候选规则。独立设计上的触发有效性继续 open。[局部补救报告](evidence/tcad_ibex_20261123/UART_TT_CAPTURE_WINDOW_RESCUE_REPORT.md)
 
+只读复核保留两项分别检查的门：逐角绝对 hold WNS 非负、相对冻结起点的 0.001 ps 容差。AES／Ibex 零编辑重布线已有 SS 回退，AES／GCD 代表点的 SPEF 交叉可重现回退。AES 同机换序可复现后端同点省时与 FAECO 对强单门的面积收益；固定先到共同小面积，Ibex FAECO 与固定同轨迹，UART 去重改善后仍低于固定。GCD 的已测低成本预筛误判，UART 继续限域追加验证成本增加而无净回收。现有结果按原门冻结，待明确相对 hold 余量应作为何种研究目标及当下验收边界。本轮无新增 EDA。[AES 归因](evidence/tcad_ibex_20261123/AES_REROUTE_HOLD_DIAGNOSTIC.md) · [AES 交叉对照](evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md) · [GCD 预筛](evidence/tcad_ibex_20261123/GCD_LOCAL_HOLD_PREVIEW_REPORT.md) · [UART 去重](evidence/tcad_holdout_20261123/UART_REJECTION_DEDUP_REPORT.md)
+
 ## OI-106（2026-11-25，限定闭合）— 累计动作在二分后被重复物理验证
 
 UART 正序 FAECO 的第 2 次累计三门因 FF setup 拒，二分后第 3 次先接受左支单门 `_1027_`，右支加上已接受动作使第 4 次再次评估三门 `_0814_`、`_0893_`、`_1027_`。两次同冻结起点的 ODB、DEF、网表、独立 DRC 与三角 STA 相同，SPEF 30,890 行仅 `*DATE` 不同。正式物理各耗 19.420／19.574 RAW s，重复占一个实际验证配额。反序进度的前缀也已派发两次该累计集合。待记录完整基线后，单独对试探身份去重进行回归和实物配对，保留原始轨迹及六次实际评价上限。[UART 实验](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
