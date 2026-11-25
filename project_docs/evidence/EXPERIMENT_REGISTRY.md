@@ -3452,3 +3452,21 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **反序 FAECO 终态** 4 派／3 成全过、最高 75.072 µm²，原件 `e0f68ba009a9b515ed5000bc53aadd08aff654c6434006aecfbec1a373d30153`。首达三实收 141.475853083／217.274253568／531.074738135 RAW s，无 hold 延后、二分、缓存复用。反序单门已启动。
 - **反序单门终态** 8 派／7 成全过，最大实收 57.5552 µm²，用 597.310479761 RAW s。正反序面积复现，RAW 止时超量 0.090423441 s。`cell_05/arm.json` SHA-256 `fdca598d198194781dec435da7064a70e6f782457def503af5dda1133297dda2`，末臂反序固定已启动。
 - **全六臂终态** 反序固定 4 派／3 成，75.072 µm²。生产 rc0／4,043 s，独验 rc0／6 臂，32 派／26 成全过、6 次末次裁剪。两序同榜固定、FAECO 与强单门最高 75.072／75.072／57.5552 µm²；固定和 FAECO 同动作同物理，同实收首达差不超过 0.67 RAW s，无 hold 延后、二分或拒收缓存复用。保留 WSL 原始目录和已逐字节入仓三件。[完整比较](tcad_rank_alignment_20261125/REPORT.md#720-raw-s-完整比较) · [协议](tcad_rank_alignment_20261125/RISCV_RANK_ALIGNED_PROTOCOL.json) · [结果](tcad_rank_alignment_20261125/RISCV_RANK_ALIGNED_RESULTS.json) · [独验](tcad_rank_alignment_20261125/RISCV_RANK_ALIGNED_VERIFIED.json)
+
+
+### 2026-11-26 TCAD-EXTERNAL-BASELINES-NATIVE-RECOVER-POWER-AND-TRITONSIZER
+
+- **对象与协议**：SKY130HD AES / `riscv32i`、ASAP7 UART / AES 共四设计，沿用同版本 OpenROAD `b511b6a`（`openroad_unstamped`）、冻结 `CONTROL`、原 SDC 与 FF/TT/SS 三角验收门，测试原生 `remove_fillers` → `repair_timing -recover_power 100`（标准档与 `-allow_setup_violations` 宽松档）并走完整合法化、DRT、RCX、三角 STA、DRC/天线检验；同步以 `report_power -digits 9 -format json` 测四设计 `CONTROL` 与 FAECO 最优端点的同口径 TT 功耗；并对归档仓库 `The-OpenROAD-Project/TritonSizer`（`31c4a04`）完成源码级依赖审计。
+- **结果与收据**：四设计 OpenROAD 原生回收合格面积全为 `0.0000 µm²`（AES 120 门 SS setup −761.82 ps 且三角 hold 全退化；UART 16 门同面积替换且 FF/TT hold 退化；`riscv32i` 24 门 TT TNS −5,621.11 ps 超 600 ps 预算且新增 1 处天线；ASAP7 AES 179 门 720 s 内重布线超时 `rc=124` 且报 `checkConnectivity break`）。四设计 FAECO 已验收端点总/组合/漏电功耗三降。独立原始日志核验 SHA-256 `9e274d6bececb7e7e5d0156da34605a39ca3492bfc71f634218949705289818b`。[总报告](tcad_external_baselines_20261125/REPORT.md) · [核验收据](tcad_external_baselines_20261125/NATIVE_RECOVER_POWER_VERIFIED.json) · [TritonSizer 审计](tcad_external_baselines_20261125/TRITONSIZER_COMPAT_AUDIT.md)
+
+
+### 2026-11-26 TCAD-SKY130HD-AES-GEOMETRIC-NEIGHBOR-ABLATION
+
+- **对象与协议**：SKY130HD AES 冻结起点、18 项池、同一 FAECO 调度、720 RAW s 硬时窗（含 113.363 s 筛选与现场索引/诊断计费）、CPU 0–5 独占串行、4 线程、共享当前代码指纹下新鲜严格零动作预检（`shared_preflight`，SEC 11,089/0）。正反序 6 臂对照等放行规模最近邻 `geo_m1_k1`（只读召回 12/26 = 46.2%）、全覆盖接触几何 `geo_m1_r0`（只读召回 26/26 = 100.0%，放行 3.19×）与 FAECO 现场 DRC 标记归因 `online`。
+- **结果与收据**：两几何基线正反序合格回收均为 `0.0000 µm²`，`online` 两序均回收 `67.5648 µm²`（首达 490.07/501.25 RAW s，ODB/DEF/V/去日期 SPEF 跨序一致，SEC 11,089/0）。完全相同三门提议（Request 3）下，`geo_m1_k1`（3 网）触发重试 208.73 s 且 SS hold −10.482 ps；`geo_m1_r0`（9 网）免重试 105.60 s 仍因多放 6 条保护网令 SS hold −10.482 ps 拒收；`online`（精确 3 网，122.75 s）三角 hold 全改善并通过。原始根 `/home/toylog/faeco_tcad_sky_holdout_20261123/aes_geo_vs_online_faeco_20261125_v1`，独立核验 SHA-256 `48304ef41b9006f717b836bc46e186a9b2b3ff09c6b3f262047f3ae9e5de3da1`。[消融报告](tcad_geo_neighbor_20261125/REPORT.md) · [核验收据](tcad_geo_neighbor_20261125/AES_GEO_VS_ONLINE_VERIFIED.json)
+
+
+### 2026-11-26 TCAD-ASAP7-AES-INDEPENDENT-HOLDOUT
+
+- **对象与协议**：全新 7 nm 独立留出设计 `asap7/aes`（`aes_cipher_top`，22,819 实例，72% 利用率，380 ps 单时钟原 SDC，无硬宏）。原生制备 575 s，经 21 条局部 M3 非时钟网保护修复（`repaired_control_v4`，`write_db` 置于 `extract_parasitics` 之前保留全部 24,521 个 ASAP7 `RECT` 补丁）取得 `hold_qualified` 共同起点（FF/TT/SS hold +35.358/+52.071/+24.664 ps、零电气、独立 DRC/天线 0、原生至修复 SEC 10,027/0）。冻结 TT 筛选 156.27 RAW s 得 18 项候选；共享实时灵敏度排序正反序 6 臂（`fixed_online`、`single_sensitivity`、`faeco_dedup`，720 RAW s 纯墙钟，CPU 0–5 独占串行，4 线程）。
+- **结果与收据**：批处理（`fixed_online` 与 `faeco_dedup`）正反序均回收 `0.612360 µm²`（0.0518%，6 门，SEC 10,027/0），为强单门 `0.204120 µm²`（0.0173%，2 门）的 **3.00×**；到达共同实收 `0.204120 µm²` 提前 220–252 RAW s（414.55/417.00 & 418.55/401.62 vs 667.13/637.02 s）。三策略跨序 ODB/DEF/V/去日期 SPEF 逐字节一致。前两批直接通过未触发 hold 反馈，固定三门与 FAECO 逐字节同端点；16 次全块预诊断均为 0 marker（均耗 44.02 s）。原始根 `/home/toylog/faeco_tcad_asap7_aes_20261125_v1/asap7/aes/matrix_rank_aligned_v1`，独立核验 SHA-256 `d2df3be99b701b97b63db87ec1c2a20c01702958582b590415d7fa3b1a59a5da`。[留出报告](tcad_asap7_aes_holdout_20261125/REPORT.md) · [核验收据](tcad_asap7_aes_holdout_20261125/ASAP7_AES_HOLDOUT_VERIFIED.json)

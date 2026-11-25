@@ -1,0 +1,506 @@
+{
+  "raw_root": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1",
+  "designs": {
+    "sky130hd_aes": {
+      "pdk": "sky130hd",
+      "top": "aes_cipher_top",
+      "wns_budget_ps": 36.0,
+      "tns_budget_ps": {
+        "FF": 360.0,
+        "TT": 360.0,
+        "SS": 27049.177333537955
+      },
+      "ref_views": {
+        "FF": {
+          "setup_wns_ps": 678.2492345536184,
+          "setup_tns_ps": 0.0,
+          "hold_wns_ps": 336.2738976164792
+        },
+        "TT": {
+          "setup_wns_ps": -380.500519980842,
+          "setup_tns_ps": -6574.560895700188,
+          "hold_wns_ps": 523.9148559432749
+        },
+        "SS": {
+          "setup_wns_ps": -13648.042695990625,
+          "setup_tns_ps": -2704917.7333537955,
+          "hold_wns_ps": 55.29576796448055
+        }
+      },
+      "faeco_best_area_saved_um2": 67.5648,
+      "control_total_power_W": 0.06653948873,
+      "control_comb_power_W": 0.04701905325,
+      "control_leakage_W": 4.844007861e-08,
+      "faeco_total_power_W": 0.06651543826,
+      "faeco_comb_power_W": 0.04699604586,
+      "faeco_leakage_W": 4.842958745e-08,
+      "faeco_total_power_delta_pct": -0.036144657043557266,
+      "faeco_comb_power_delta_pct": -0.04893205713366012,
+      "faeco_leakage_delta_pct": -0.021658016050034506,
+      "arms": {
+        "native_default": {
+          "rsz_reported_resized": 120,
+          "rsz_runtime_s": 9.33,
+          "final_area_saved_um2": 426.65920000000915,
+          "final_area_saved_pct": 0.36620595594790134,
+          "final_resized_count": 120,
+          "drc_markers": 0,
+          "antenna_violations": 0,
+          "views_ps": {
+            "FF": {
+              "setup_wns_ps": 677.2080000000001,
+              "hold_wns_ps": 335.874,
+              "setup_tns_ps": 0.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "8c4fd15d7dafa0c407d471759abee4fd54b457be15658cc9828b6e9fe9d202e4"
+            },
+            "TT": {
+              "setup_wns_ps": -423.26599999999996,
+              "hold_wns_ps": 523.419,
+              "setup_tns_ps": -22810.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "78ea31b2e1bb7f89d52da474c4203c9e1cc7e4a81640b13fe278dc908ee875ea"
+            },
+            "SS": {
+              "setup_wns_ps": -14409.863,
+              "hold_wns_ps": 35.295,
+              "setup_tns_ps": -3006640.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "60b0ef19c69346a190c9751108a9b7d3964763704f9e9dca0def8c37f7373517"
+            }
+          },
+          "deltas_vs_control_ps": {
+            "FF": {
+              "d_setup_wns_ps": -1.0412345536183238,
+              "d_setup_tns_ps": 0.0,
+              "d_hold_wns_ps": -0.39989761647916566,
+              "abs_hold_wns_ps": 335.874
+            },
+            "TT": {
+              "d_setup_wns_ps": -42.76548001915796,
+              "d_setup_tns_ps": -16235.439104299812,
+              "d_hold_wns_ps": -0.49585594327493254,
+              "abs_hold_wns_ps": 523.419
+            },
+            "SS": {
+              "d_setup_wns_ps": -761.820304009374,
+              "d_setup_tns_ps": -301722.2666462045,
+              "d_hold_wns_ps": -20.000767964480545,
+              "abs_hold_wns_ps": 35.295
+            }
+          },
+          "gate_failures": [
+            "FF:rel_hold",
+            "TT:setup_wns",
+            "TT:setup_tns",
+            "TT:rel_hold",
+            "SS:setup_wns",
+            "SS:setup_tns",
+            "SS:rel_hold"
+          ],
+          "qualified_area_saved_um2": 0.0,
+          "native_total_power_W": 0.06628596783,
+          "native_total_power_delta_pct": -0.38100818752713955
+        },
+        "native_allow_setup": {
+          "rsz_reported_resized": 120,
+          "rsz_runtime_s": 9.11,
+          "final_area_saved_um2": 426.65920000000915,
+          "final_area_saved_pct": 0.36620595594790134,
+          "final_resized_count": 120,
+          "drc_markers": 0,
+          "antenna_violations": 0,
+          "views_ps": {
+            "FF": {
+              "setup_wns_ps": 677.2080000000001,
+              "hold_wns_ps": 335.874,
+              "setup_tns_ps": 0.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "8c4fd15d7dafa0c407d471759abee4fd54b457be15658cc9828b6e9fe9d202e4"
+            },
+            "TT": {
+              "setup_wns_ps": -423.26599999999996,
+              "hold_wns_ps": 523.419,
+              "setup_tns_ps": -22810.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "78ea31b2e1bb7f89d52da474c4203c9e1cc7e4a81640b13fe278dc908ee875ea"
+            },
+            "SS": {
+              "setup_wns_ps": -14409.863,
+              "hold_wns_ps": 35.295,
+              "setup_tns_ps": -3006640.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "60b0ef19c69346a190c9751108a9b7d3964763704f9e9dca0def8c37f7373517"
+            }
+          },
+          "deltas_vs_control_ps": {
+            "FF": {
+              "d_setup_wns_ps": -1.0412345536183238,
+              "d_setup_tns_ps": 0.0,
+              "d_hold_wns_ps": -0.39989761647916566,
+              "abs_hold_wns_ps": 335.874
+            },
+            "TT": {
+              "d_setup_wns_ps": -42.76548001915796,
+              "d_setup_tns_ps": -16235.439104299812,
+              "d_hold_wns_ps": -0.49585594327493254,
+              "abs_hold_wns_ps": 523.419
+            },
+            "SS": {
+              "d_setup_wns_ps": -761.820304009374,
+              "d_setup_tns_ps": -301722.2666462045,
+              "d_hold_wns_ps": -20.000767964480545,
+              "abs_hold_wns_ps": 35.295
+            }
+          },
+          "gate_failures": [
+            "FF:rel_hold",
+            "TT:setup_wns",
+            "TT:setup_tns",
+            "TT:rel_hold",
+            "SS:setup_wns",
+            "SS:setup_tns",
+            "SS:rel_hold"
+          ],
+          "qualified_area_saved_um2": 0.0,
+          "native_total_power_W": 0.06628596783,
+          "native_total_power_delta_pct": -0.38100818752713955
+        }
+      }
+    },
+    "asap7_uart": {
+      "pdk": "asap7",
+      "top": "uart",
+      "wns_budget_ps": 2.7,
+      "tns_budget_ps": {
+        "FF": 27.0,
+        "TT": 27.0,
+        "SS": 136.97365019993413
+      },
+      "ref_views": {
+        "FF": {
+          "setup_wns_ps": 25.852903151601936,
+          "setup_tns_ps": 0.0,
+          "hold_wns_ps": 50.314898081271764
+        },
+        "TT": {
+          "setup_wns_ps": -39.580255739579684,
+          "setup_tns_ps": -1893.1021195101039,
+          "hold_wns_ps": 67.50211500872183
+        },
+        "SS": {
+          "setup_wns_ps": -199.70530784618745,
+          "setup_tns_ps": -13697.365019993413,
+          "hold_wns_ps": 54.05291492177611
+        }
+      },
+      "faeco_best_area_saved_um2": 0.83106,
+      "control_total_power_W": 0.00104051095,
+      "control_comb_power_W": 0.0002722800709,
+      "control_leakage_W": 1.249526917e-07,
+      "faeco_total_power_W": 0.001033649081,
+      "faeco_comb_power_W": 0.0002664478088,
+      "faeco_leakage_W": 1.239817777e-07,
+      "faeco_total_power_delta_pct": -0.6594710992709812,
+      "faeco_comb_power_delta_pct": -2.142008440324675,
+      "faeco_leakage_delta_pct": -0.7770252779596544,
+      "arms": {
+        "native_default": {
+          "rsz_reported_resized": 16,
+          "rsz_runtime_s": 0.2,
+          "final_area_saved_um2": 0.0,
+          "final_area_saved_pct": 0.0,
+          "final_resized_count": 0,
+          "drc_markers": 0,
+          "antenna_violations": 0,
+          "views_ps": {
+            "FF": {
+              "setup_wns_ps": 25.804747,
+              "hold_wns_ps": 50.220989,
+              "setup_tns_ps": 0.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "93d9232f83b57e6a54d19ed5f93a0a261f0c80981736ba11d3bfcfdeced44078"
+            },
+            "TT": {
+              "setup_wns_ps": -39.612064,
+              "hold_wns_ps": 67.391853,
+              "setup_tns_ps": -1904.08,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "cbb72fbfdd66ae37cd0bef26452f27a353c5383131acfa238431fb04e38d8eb5"
+            },
+            "SS": {
+              "setup_wns_ps": -199.710526,
+              "hold_wns_ps": 54.252865,
+              "setup_tns_ps": -13724.36,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "95ee7e664b4503a12f1bd0b04ff20a592d5494c7c8aef8bea02f6be5cdd0e163"
+            }
+          },
+          "deltas_vs_control_ps": {
+            "FF": {
+              "d_setup_wns_ps": -0.04815615160193687,
+              "d_setup_tns_ps": 0.0,
+              "d_hold_wns_ps": -0.0939090812717609,
+              "abs_hold_wns_ps": 50.220989
+            },
+            "TT": {
+              "d_setup_wns_ps": -0.031808260420312706,
+              "d_setup_tns_ps": -10.977880489896052,
+              "d_hold_wns_ps": -0.11026200872183267,
+              "abs_hold_wns_ps": 67.391853
+            },
+            "SS": {
+              "d_setup_wns_ps": -0.00521815381253532,
+              "d_setup_tns_ps": -26.994980006587866,
+              "d_hold_wns_ps": 0.19995007822389255,
+              "abs_hold_wns_ps": 54.252865
+            }
+          },
+          "gate_failures": [
+            "no_positive_area_recovery",
+            "FF:rel_hold",
+            "TT:rel_hold"
+          ],
+          "qualified_area_saved_um2": 0.0,
+          "native_total_power_W": 0.00103998906,
+          "native_total_power_delta_pct": -0.05015708868801284
+        },
+        "native_allow_setup": {
+          "rsz_reported_resized": 16,
+          "rsz_runtime_s": 0.2,
+          "final_area_saved_um2": 0.0,
+          "final_area_saved_pct": 0.0,
+          "final_resized_count": 0,
+          "drc_markers": 0,
+          "antenna_violations": 0,
+          "views_ps": {
+            "FF": {
+              "setup_wns_ps": 25.804747,
+              "hold_wns_ps": 50.220989,
+              "setup_tns_ps": 0.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "93d9232f83b57e6a54d19ed5f93a0a261f0c80981736ba11d3bfcfdeced44078"
+            },
+            "TT": {
+              "setup_wns_ps": -39.612064,
+              "hold_wns_ps": 67.391853,
+              "setup_tns_ps": -1904.08,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "cbb72fbfdd66ae37cd0bef26452f27a353c5383131acfa238431fb04e38d8eb5"
+            },
+            "SS": {
+              "setup_wns_ps": -199.710526,
+              "hold_wns_ps": 54.252865,
+              "setup_tns_ps": -13724.36,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "95ee7e664b4503a12f1bd0b04ff20a592d5494c7c8aef8bea02f6be5cdd0e163"
+            }
+          },
+          "deltas_vs_control_ps": {
+            "FF": {
+              "d_setup_wns_ps": -0.04815615160193687,
+              "d_setup_tns_ps": 0.0,
+              "d_hold_wns_ps": -0.0939090812717609,
+              "abs_hold_wns_ps": 50.220989
+            },
+            "TT": {
+              "d_setup_wns_ps": -0.031808260420312706,
+              "d_setup_tns_ps": -10.977880489896052,
+              "d_hold_wns_ps": -0.11026200872183267,
+              "abs_hold_wns_ps": 67.391853
+            },
+            "SS": {
+              "d_setup_wns_ps": -0.00521815381253532,
+              "d_setup_tns_ps": -26.994980006587866,
+              "d_hold_wns_ps": 0.19995007822389255,
+              "abs_hold_wns_ps": 54.252865
+            }
+          },
+          "gate_failures": [
+            "no_positive_area_recovery",
+            "FF:rel_hold",
+            "TT:rel_hold"
+          ],
+          "qualified_area_saved_um2": 0.0,
+          "native_total_power_W": 0.00103998906,
+          "native_total_power_delta_pct": -0.05015708868801284
+        }
+      }
+    },
+    "sky130hd_riscv32i": {
+      "pdk": "sky130hd",
+      "top": "riscv",
+      "wns_budget_ps": 60.0,
+      "tns_budget_ps": {
+        "FF": 600.0,
+        "TT": 600.0,
+        "SS": 208627.91643594392
+      },
+      "ref_views": {
+        "FF": {
+          "setup_wns_ps": 1855.0527780547554,
+          "setup_tns_ps": 0.0,
+          "hold_wns_ps": 373.3641729120052
+        },
+        "TT": {
+          "setup_wns_ps": -474.19224102895896,
+          "setup_tns_ps": -44148.894318141174,
+          "hold_wns_ps": 579.2213375599431
+        },
+        "SS": {
+          "setup_wns_ps": -20633.32615875879,
+          "setup_tns_ps": -20862791.64359439,
+          "hold_wns_ps": 2019.3098304588375
+        }
+      },
+      "faeco_best_area_saved_um2": 75.072,
+      "control_total_power_W": 0.01933871955,
+      "control_comb_power_W": 0.004112191964,
+      "control_leakage_W": 2.716091529e-08,
+      "faeco_total_power_W": 0.01933057979,
+      "faeco_comb_power_W": 0.004103782587,
+      "faeco_leakage_W": 2.713607472e-08,
+      "faeco_total_power_delta_pct": -0.0420904805975181,
+      "faeco_comb_power_delta_pct": -0.2044986487406067,
+      "faeco_leakage_delta_pct": -0.09145704308847513,
+      "arms": {
+        "native_default": {
+          "rsz_reported_resized": 24,
+          "rsz_runtime_s": 5.98,
+          "final_area_saved_um2": 86.33280000000377,
+          "final_area_saved_pct": 0.1208681486152767,
+          "final_resized_count": 24,
+          "drc_markers": 0,
+          "antenna_violations": 1,
+          "views_ps": {
+            "FF": {
+              "setup_wns_ps": 1840.1209999999999,
+              "hold_wns_ps": 374.901,
+              "setup_tns_ps": 0.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "e9f26295f70d1933bb54e5e71db3cf7c1e396c30d7d069979607eaaac2c99cfc"
+            },
+            "TT": {
+              "setup_wns_ps": -490.24,
+              "hold_wns_ps": 581.219,
+              "setup_tns_ps": -49770.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "a5b89f147090d760c9fb16902fbc8b1df811e805c8e0430f7270c22dea6a2e00"
+            },
+            "SS": {
+              "setup_wns_ps": -20652.821,
+              "hold_wns_ps": 2027.902,
+              "setup_tns_ps": -20963900.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "ec0fdef901b792edfd0f31aed21a2c3637deeec941bb2b7672b3213333d7f4d1"
+            }
+          },
+          "deltas_vs_control_ps": {
+            "FF": {
+              "d_setup_wns_ps": -14.931778054755569,
+              "d_setup_tns_ps": 0.0,
+              "d_hold_wns_ps": 1.5368270879948227,
+              "abs_hold_wns_ps": 374.901
+            },
+            "TT": {
+              "d_setup_wns_ps": -16.04775897104105,
+              "d_setup_tns_ps": -5621.105681858826,
+              "d_hold_wns_ps": 1.9976624400569563,
+              "abs_hold_wns_ps": 581.219
+            },
+            "SS": {
+              "d_setup_wns_ps": -19.494841241208633,
+              "d_setup_tns_ps": -101108.35640560836,
+              "d_hold_wns_ps": 8.592169541162548,
+              "abs_hold_wns_ps": 2027.902
+            }
+          },
+          "gate_failures": [
+            "antenna=1",
+            "TT:setup_tns"
+          ],
+          "qualified_area_saved_um2": 0.0,
+          "native_total_power_W": 0.01933211274,
+          "native_total_power_delta_pct": -0.03416363727142617
+        },
+        "native_allow_setup": {
+          "rsz_reported_resized": 24,
+          "rsz_runtime_s": 5.88,
+          "final_area_saved_um2": 86.33280000000377,
+          "final_area_saved_pct": 0.1208681486152767,
+          "final_resized_count": 24,
+          "drc_markers": 0,
+          "antenna_violations": 1,
+          "views_ps": {
+            "FF": {
+              "setup_wns_ps": 1840.1209999999999,
+              "hold_wns_ps": 374.901,
+              "setup_tns_ps": 0.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "e9f26295f70d1933bb54e5e71db3cf7c1e396c30d7d069979607eaaac2c99cfc"
+            },
+            "TT": {
+              "setup_wns_ps": -490.24,
+              "hold_wns_ps": 581.219,
+              "setup_tns_ps": -49770.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "a5b89f147090d760c9fb16902fbc8b1df811e805c8e0430f7270c22dea6a2e00"
+            },
+            "SS": {
+              "setup_wns_ps": -20652.821,
+              "hold_wns_ps": 2027.902,
+              "setup_tns_ps": -20963900.0,
+              "hold_tns_ps": 0.0,
+              "has_slew_cap_viol": false,
+              "sha256": "ec0fdef901b792edfd0f31aed21a2c3637deeec941bb2b7672b3213333d7f4d1"
+            }
+          },
+          "deltas_vs_control_ps": {
+            "FF": {
+              "d_setup_wns_ps": -14.931778054755569,
+              "d_setup_tns_ps": 0.0,
+              "d_hold_wns_ps": 1.5368270879948227,
+              "abs_hold_wns_ps": 374.901
+            },
+            "TT": {
+              "d_setup_wns_ps": -16.04775897104105,
+              "d_setup_tns_ps": -5621.105681858826,
+              "d_hold_wns_ps": 1.9976624400569563,
+              "abs_hold_wns_ps": 581.219
+            },
+            "SS": {
+              "d_setup_wns_ps": -19.494841241208633,
+              "d_setup_tns_ps": -101108.35640560836,
+              "d_hold_wns_ps": 8.592169541162548,
+              "abs_hold_wns_ps": 2027.902
+            }
+          },
+          "gate_failures": [
+            "antenna=1",
+            "TT:setup_tns"
+          ],
+          "qualified_area_saved_um2": 0.0,
+          "native_total_power_W": 0.01933211274,
+          "native_total_power_delta_pct": -0.03416363727142617
+        }
+      }
+    }
+  }
+}

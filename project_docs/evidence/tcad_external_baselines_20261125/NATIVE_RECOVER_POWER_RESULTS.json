@@ -1,0 +1,1534 @@
+{
+  "openroad_bin": "/home/toylog/.cache/bazel/_bazel_toylog/c540bbdc4bbb635360729b4d7a91c803/execroot/_main/bazel-out/k8-opt/bin/openroad_unstamped",
+  "designs": {
+    "sky130hd_aes": {
+      "pdk": "sky130hd",
+      "top": "aes_cipher_top",
+      "wns_budget_ps": 36.0,
+      "tns_budget_ps": {
+        "FF": 360.0,
+        "TT": 360.0,
+        "SS": 27049.177333537955
+      },
+      "faeco_best_area_saved_um2": 67.5648,
+      "control_power": {
+        "Sequential": {
+          "internal": 0.007581136655,
+          "switching": 0.001344396616,
+          "leakage": 4.915962748e-09,
+          "total": 0.008925537579
+        },
+        "Combinational": {
+          "internal": 0.0182662271,
+          "switching": 0.02875278704,
+          "leakage": 4.170302859e-08,
+          "total": 0.04701905325
+        },
+        "Clock": {
+          "internal": 0.005997066386,
+          "switching": 0.004597792868,
+          "leakage": 1.821974793e-09,
+          "total": 0.01059486158
+        },
+        "Macro": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Pad": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Total": {
+          "internal": 0.03184439987,
+          "switching": 0.03469504043,
+          "leakage": 4.844007861e-08,
+          "total": 0.06653948873
+        }
+      },
+      "faeco_best_power": {
+        "Sequential": {
+          "internal": 0.007581145037,
+          "switching": 0.001343116048,
+          "leakage": 4.915962748e-09,
+          "total": 0.008924265392
+        },
+        "Combinational": {
+          "internal": 0.01825523376,
+          "switching": 0.02874077111,
+          "leakage": 4.169253742e-08,
+          "total": 0.04699604586
+        },
+        "Clock": {
+          "internal": 0.005997070577,
+          "switching": 0.004598042462,
+          "leakage": 1.821974793e-09,
+          "total": 0.0105951149
+        },
+        "Macro": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Pad": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Total": {
+          "internal": 0.03183341399,
+          "switching": 0.03468197212,
+          "leakage": 4.842958745e-08,
+          "total": 0.06651543826
+        }
+      },
+      "native_default": {
+        "mode": "recover_power_100",
+        "extra_flags": "",
+        "rsz_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 10.804505676000076,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_default/rsz.log"
+        },
+        "netlist_diff": {
+          "ref_instances": 15487,
+          "cand_instances": 15544,
+          "ref_area_um2": 116507.99040000001,
+          "cand_area_um2": 116223.96800000001,
+          "area_saved_um2": 284.02240000000165,
+          "area_saved_pct": 0.24377933137880442,
+          "resized_count": 120,
+          "added_count": 57,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "input129",
+              "sky130_fd_sc_hd__clkbuf_2",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input133",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input145",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input152",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input196",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input204",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input219",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input223",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input230",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input234",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "route_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 489.78573605300005,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_default/route_rcx.log"
+        },
+        "status": "rejected_by_gates",
+        "drc_markers": 0,
+        "antenna_violations": 0,
+        "views": {
+          "FF": {
+            "setup_wns_ps": 677208.0000000001,
+            "hold_wns_ps": 335874.0,
+            "setup_tns_ps": 0.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 4.1699068140001145,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_default/sta_FF.log"
+            }
+          },
+          "TT": {
+            "setup_wns_ps": -423265.99999999994,
+            "hold_wns_ps": 523419.0,
+            "setup_tns_ps": -22810000.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 3.456265368000004,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_default/sta_TT.log"
+            }
+          },
+          "SS": {
+            "setup_wns_ps": -14409863.0,
+            "hold_wns_ps": 35295.0,
+            "setup_tns_ps": -3006640000.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 3.3972450179999214,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_default/sta_SS.log"
+            }
+          }
+        },
+        "deltas_vs_control": {
+          "FF": {
+            "d_setup_wns_ps": 676529.7507654465,
+            "d_setup_tns_ps": 0.0,
+            "d_hold_wns_ps": 335537.7261023835,
+            "abs_hold_wns_ps": 335874.0
+          },
+          "TT": {
+            "d_setup_wns_ps": -422885.4994800191,
+            "d_setup_tns_ps": -22803425.4391043,
+            "d_hold_wns_ps": 522895.0851440567,
+            "abs_hold_wns_ps": 523419.0
+          },
+          "SS": {
+            "d_setup_wns_ps": -14396214.95730401,
+            "d_setup_tns_ps": -3003935082.2666464,
+            "d_hold_wns_ps": 35239.70423203552,
+            "abs_hold_wns_ps": 35295.0
+          }
+        },
+        "gate_failures": [
+          "TT:setup_wns",
+          "TT:setup_tns",
+          "SS:setup_wns",
+          "SS:setup_tns"
+        ],
+        "final_netlist_diff": {
+          "ref_instances": 15487,
+          "cand_instances": 15487,
+          "ref_area_um2": 116507.99040000001,
+          "cand_area_um2": 116081.3312,
+          "area_saved_um2": 426.65920000000915,
+          "area_saved_pct": 0.36620595594790134,
+          "resized_count": 120,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "input129",
+              "sky130_fd_sc_hd__clkbuf_2",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input133",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input145",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input152",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input196",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input204",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input219",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input223",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input230",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input234",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "power": {
+          "Sequential": {
+            "internal": 0.007579891011,
+            "switching": 0.001327270875,
+            "leakage": 4.915575502e-09,
+            "total": 0.00890716631
+          },
+          "Combinational": {
+            "internal": 0.01807505824,
+            "switching": 0.02871451713,
+            "leakage": 4.131754849e-08,
+            "total": 0.04678961635
+          },
+          "Clock": {
+            "internal": 0.005997656379,
+            "switching": 0.004591603298,
+            "leakage": 1.821974793e-09,
+            "total": 0.01058926154
+          },
+          "Macro": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Pad": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Total": {
+            "internal": 0.03165253624,
+            "switching": 0.03463339061,
+            "leakage": 4.805421128e-08,
+            "total": 0.06628596783
+          }
+        },
+        "total_elapsed_raw_seconds": 511.61365892900017
+      },
+      "native_allow_setup": {
+        "mode": "recover_power_100_allow_setup",
+        "extra_flags": "-allow_setup_violations",
+        "rsz_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 10.65584436999984,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_allow_setup/rsz.log"
+        },
+        "netlist_diff": {
+          "ref_instances": 15487,
+          "cand_instances": 15544,
+          "ref_area_um2": 116507.99040000001,
+          "cand_area_um2": 116223.96800000001,
+          "area_saved_um2": 284.02240000000165,
+          "area_saved_pct": 0.24377933137880442,
+          "resized_count": 120,
+          "added_count": 57,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "input129",
+              "sky130_fd_sc_hd__clkbuf_2",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input133",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input145",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input152",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input196",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input204",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input219",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input223",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input230",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input234",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "route_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 488.2037662770001,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_allow_setup/route_rcx.log"
+        },
+        "status": "rejected_by_gates",
+        "drc_markers": 0,
+        "antenna_violations": 0,
+        "views": {
+          "FF": {
+            "setup_wns_ps": 677208.0000000001,
+            "hold_wns_ps": 335874.0,
+            "setup_tns_ps": 0.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 4.258408860999907,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_allow_setup/sta_FF.log"
+            }
+          },
+          "TT": {
+            "setup_wns_ps": -423265.99999999994,
+            "hold_wns_ps": 523419.0,
+            "setup_tns_ps": -22810000.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 3.4989987820001716,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_allow_setup/sta_TT.log"
+            }
+          },
+          "SS": {
+            "setup_wns_ps": -14409863.0,
+            "hold_wns_ps": 35295.0,
+            "setup_tns_ps": -3006640000.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 3.502483235999989,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_aes/native_allow_setup/sta_SS.log"
+            }
+          }
+        },
+        "deltas_vs_control": {
+          "FF": {
+            "d_setup_wns_ps": 676529.7507654465,
+            "d_setup_tns_ps": 0.0,
+            "d_hold_wns_ps": 335537.7261023835,
+            "abs_hold_wns_ps": 335874.0
+          },
+          "TT": {
+            "d_setup_wns_ps": -422885.4994800191,
+            "d_setup_tns_ps": -22803425.4391043,
+            "d_hold_wns_ps": 522895.0851440567,
+            "abs_hold_wns_ps": 523419.0
+          },
+          "SS": {
+            "d_setup_wns_ps": -14396214.95730401,
+            "d_setup_tns_ps": -3003935082.2666464,
+            "d_hold_wns_ps": 35239.70423203552,
+            "abs_hold_wns_ps": 35295.0
+          }
+        },
+        "gate_failures": [
+          "TT:setup_wns",
+          "TT:setup_tns",
+          "SS:setup_wns",
+          "SS:setup_tns"
+        ],
+        "final_netlist_diff": {
+          "ref_instances": 15487,
+          "cand_instances": 15487,
+          "ref_area_um2": 116507.99040000001,
+          "cand_area_um2": 116081.3312,
+          "area_saved_um2": 426.65920000000915,
+          "area_saved_pct": 0.36620595594790134,
+          "resized_count": 120,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "input129",
+              "sky130_fd_sc_hd__clkbuf_2",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input133",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input145",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input152",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input196",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input204",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input219",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input223",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input230",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "input234",
+              "sky130_fd_sc_hd__buf_1",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "power": {
+          "Sequential": {
+            "internal": 0.007579891011,
+            "switching": 0.001327270875,
+            "leakage": 4.915575502e-09,
+            "total": 0.00890716631
+          },
+          "Combinational": {
+            "internal": 0.01807505824,
+            "switching": 0.02871451713,
+            "leakage": 4.131754849e-08,
+            "total": 0.04678961635
+          },
+          "Clock": {
+            "internal": 0.005997656379,
+            "switching": 0.004591603298,
+            "leakage": 1.821974793e-09,
+            "total": 0.01058926154
+          },
+          "Macro": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Pad": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Total": {
+            "internal": 0.03165253624,
+            "switching": 0.03463339061,
+            "leakage": 4.805421128e-08,
+            "total": 0.06628596783
+          }
+        },
+        "total_elapsed_raw_seconds": 510.119501526
+      }
+    },
+    "asap7_uart": {
+      "pdk": "asap7",
+      "top": "uart",
+      "wns_budget_ps": 2.7,
+      "tns_budget_ps": {
+        "FF": 27.0,
+        "TT": 27.0,
+        "SS": 136.97365019993413
+      },
+      "control_power": {
+        "Sequential": {
+          "internal": 0.0004162503174,
+          "switching": 1.81645155e-05,
+          "leakage": 3.750659161e-08,
+          "total": 0.0004344523477
+        },
+        "Combinational": {
+          "internal": 0.0001599765674,
+          "switching": 0.0001122200847,
+          "leakage": 8.342436075e-08,
+          "total": 0.0002722800709
+        },
+        "Clock": {
+          "internal": 0.0001942716917,
+          "switching": 0.0001395026047,
+          "leakage": 4.021691868e-09,
+          "total": 0.0003337783273
+        },
+        "Macro": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Pad": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Total": {
+          "internal": 0.0007704988238,
+          "switching": 0.0002698872413,
+          "leakage": 1.249526917e-07,
+          "total": 0.00104051095
+        }
+      },
+      "faeco_best_area_saved_um2": 0.83106,
+      "faeco_best_power": {
+        "Sequential": {
+          "internal": 0.0004162372206,
+          "switching": 1.741745473e-05,
+          "leakage": 3.750659161e-08,
+          "total": 0.0004336921847
+        },
+        "Combinational": {
+          "internal": 0.0001560119126,
+          "switching": 0.0001103534596,
+          "leakage": 8.245344674e-08,
+          "total": 0.0002664478088
+        },
+        "Clock": {
+          "internal": 0.000194269378,
+          "switching": 0.0001392355916,
+          "leakage": 4.021691868e-09,
+          "total": 0.0003335090005
+        },
+        "Macro": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Pad": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Total": {
+          "internal": 0.000766518584,
+          "switching": 0.0002670065151,
+          "leakage": 1.239817777e-07,
+          "total": 0.001033649081
+        }
+      },
+      "native_default": {
+        "mode": "recover_power_100",
+        "extra_flags": "",
+        "rsz_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 1.5747698300001503,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_default/rsz.log"
+        },
+        "rsz_reported_resized": 16,
+        "netlist_diff": {
+          "ref_instances": 531,
+          "cand_instances": 531,
+          "ref_area_um2": 79.00901999999999,
+          "cand_area_um2": 79.00901999999999,
+          "area_saved_um2": 0.0,
+          "area_saved_pct": 0.0,
+          "resized_count": 0,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": []
+        },
+        "route_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 17.21742909700015,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_default/route_rcx.log"
+        },
+        "status": "rejected_by_gates",
+        "drc_markers": 0,
+        "antenna_violations": 0,
+        "views": {
+          "FF": {
+            "setup_wns_ps": 25.804747,
+            "hold_wns_ps": 50.220989,
+            "setup_tns_ps": 0.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.3687338969998564,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_default/sta_FF.log"
+            }
+          },
+          "TT": {
+            "setup_wns_ps": -39.612064,
+            "hold_wns_ps": 67.391853,
+            "setup_tns_ps": -1904.08,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.4189309670000512,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_default/sta_TT.log"
+            }
+          },
+          "SS": {
+            "setup_wns_ps": -199.710526,
+            "hold_wns_ps": 54.252865,
+            "setup_tns_ps": -13724.36,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.4190095970002403,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_default/sta_SS.log"
+            }
+          }
+        },
+        "deltas_vs_control": {
+          "FF": {
+            "d_setup_wns_ps": -0.04815615160193687,
+            "d_setup_tns_ps": 0.0,
+            "d_hold_wns_ps": -0.0939090812717609,
+            "abs_hold_wns_ps": 50.220989
+          },
+          "TT": {
+            "d_setup_wns_ps": -0.031808260420312706,
+            "d_setup_tns_ps": -10.977880489896052,
+            "d_hold_wns_ps": -0.11026200872183267,
+            "abs_hold_wns_ps": 67.391853
+          },
+          "SS": {
+            "d_setup_wns_ps": -0.00521815381253532,
+            "d_setup_tns_ps": -26.994980006587866,
+            "d_hold_wns_ps": 0.19995007822389255,
+            "abs_hold_wns_ps": 54.252865
+          }
+        },
+        "gate_failures": [
+          "FF:rel_hold",
+          "TT:rel_hold"
+        ],
+        "final_netlist_diff": {
+          "ref_instances": 531,
+          "cand_instances": 531,
+          "ref_area_um2": 79.00901999999999,
+          "cand_area_um2": 79.00901999999999,
+          "area_saved_um2": 0.0,
+          "area_saved_pct": 0.0,
+          "resized_count": 0,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": []
+        },
+        "power": {
+          "Sequential": {
+            "internal": 0.0004162483092,
+            "switching": 1.81512878e-05,
+            "leakage": 3.750659161e-08,
+            "total": 0.0004344370973
+          },
+          "Combinational": {
+            "internal": 0.0001595803042,
+            "switching": 0.0001121283058,
+            "leakage": 8.095666004e-08,
+            "total": 0.0002717895841
+          },
+          "Clock": {
+            "internal": 0.0001942751842,
+            "switching": 0.0001394829887,
+            "leakage": 4.021691868e-09,
+            "total": 0.0003337622038
+          },
+          "Macro": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Pad": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Total": {
+            "internal": 0.0007701040595,
+            "switching": 0.0002697625896,
+            "leakage": 1.224849768e-07,
+            "total": 0.00103998906
+          }
+        },
+        "total_elapsed_raw_seconds": 22.998873388000447
+      },
+      "native_allow_setup": {
+        "mode": "recover_power_100_allow_setup",
+        "extra_flags": "-allow_setup_violations",
+        "rsz_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 1.569206290999773,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_allow_setup/rsz.log"
+        },
+        "rsz_reported_resized": 16,
+        "netlist_diff": {
+          "ref_instances": 531,
+          "cand_instances": 531,
+          "ref_area_um2": 79.00901999999999,
+          "cand_area_um2": 79.00901999999999,
+          "area_saved_um2": 0.0,
+          "area_saved_pct": 0.0,
+          "resized_count": 0,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": []
+        },
+        "route_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 16.971639456000048,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_allow_setup/route_rcx.log"
+        },
+        "status": "rejected_by_gates",
+        "drc_markers": 0,
+        "antenna_violations": 0,
+        "views": {
+          "FF": {
+            "setup_wns_ps": 25.804747,
+            "hold_wns_ps": 50.220989,
+            "setup_tns_ps": 0.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.3968663699997705,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_allow_setup/sta_FF.log"
+            }
+          },
+          "TT": {
+            "setup_wns_ps": -39.612064,
+            "hold_wns_ps": 67.391853,
+            "setup_tns_ps": -1904.08,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.389388906000022,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_allow_setup/sta_TT.log"
+            }
+          },
+          "SS": {
+            "setup_wns_ps": -199.710526,
+            "hold_wns_ps": 54.252865,
+            "setup_tns_ps": -13724.36,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.397694920000049,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/asap7_uart/native_allow_setup/sta_SS.log"
+            }
+          }
+        },
+        "deltas_vs_control": {
+          "FF": {
+            "d_setup_wns_ps": -0.04815615160193687,
+            "d_setup_tns_ps": 0.0,
+            "d_hold_wns_ps": -0.0939090812717609,
+            "abs_hold_wns_ps": 50.220989
+          },
+          "TT": {
+            "d_setup_wns_ps": -0.031808260420312706,
+            "d_setup_tns_ps": -10.977880489896052,
+            "d_hold_wns_ps": -0.11026200872183267,
+            "abs_hold_wns_ps": 67.391853
+          },
+          "SS": {
+            "d_setup_wns_ps": -0.00521815381253532,
+            "d_setup_tns_ps": -26.994980006587866,
+            "d_hold_wns_ps": 0.19995007822389255,
+            "abs_hold_wns_ps": 54.252865
+          }
+        },
+        "gate_failures": [
+          "FF:rel_hold",
+          "TT:rel_hold"
+        ],
+        "final_netlist_diff": {
+          "ref_instances": 531,
+          "cand_instances": 531,
+          "ref_area_um2": 79.00901999999999,
+          "cand_area_um2": 79.00901999999999,
+          "area_saved_um2": 0.0,
+          "area_saved_pct": 0.0,
+          "resized_count": 0,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": []
+        },
+        "power": {
+          "Sequential": {
+            "internal": 0.0004162483092,
+            "switching": 1.81512878e-05,
+            "leakage": 3.750659161e-08,
+            "total": 0.0004344370973
+          },
+          "Combinational": {
+            "internal": 0.0001595803042,
+            "switching": 0.0001121283058,
+            "leakage": 8.095666004e-08,
+            "total": 0.0002717895841
+          },
+          "Clock": {
+            "internal": 0.0001942751842,
+            "switching": 0.0001394829887,
+            "leakage": 4.021691868e-09,
+            "total": 0.0003337622038
+          },
+          "Macro": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Pad": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Total": {
+            "internal": 0.0007701040595,
+            "switching": 0.0002697625896,
+            "leakage": 1.224849768e-07,
+            "total": 0.00103998906
+          }
+        },
+        "total_elapsed_raw_seconds": 22.724795942999663
+      }
+    },
+    "sky130hd_riscv32i": {
+      "pdk": "sky130hd",
+      "top": "riscv",
+      "wns_budget_ps": 60.0,
+      "tns_budget_ps": {
+        "FF": 600.0,
+        "TT": 600.0,
+        "SS": 208627.91643594392
+      },
+      "control_power": {
+        "Sequential": {
+          "internal": 0.008297634311,
+          "switching": 7.417524466e-05,
+          "leakage": 1.088778756e-08,
+          "total": 0.008371820673
+        },
+        "Combinational": {
+          "internal": 0.001543342951,
+          "switching": 0.002568834694,
+          "leakage": 1.454083609e-08,
+          "total": 0.004112191964
+        },
+        "Clock": {
+          "internal": 0.003846021136,
+          "switching": 0.003008689266,
+          "leakage": 1.732352706e-09,
+          "total": 0.006854712032
+        },
+        "Macro": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Pad": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Total": {
+          "internal": 0.01368699502,
+          "switching": 0.005651696119,
+          "leakage": 2.716091529e-08,
+          "total": 0.01933871955
+        }
+      },
+      "faeco_best_area_saved_um2": 75.072,
+      "faeco_best_power": {
+        "Sequential": {
+          "internal": 0.008297634311,
+          "switching": 7.418344467e-05,
+          "leakage": 1.088778756e-08,
+          "total": 0.008371829055
+        },
+        "Combinational": {
+          "internal": 0.001538785058,
+          "switching": 0.002564982977,
+          "leakage": 1.45159964e-08,
+          "total": 0.004103782587
+        },
+        "Clock": {
+          "internal": 0.003846009262,
+          "switching": 0.003008963307,
+          "leakage": 1.732352706e-09,
+          "total": 0.006854974665
+        },
+        "Macro": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Pad": {
+          "internal": 0.0,
+          "switching": 0.0,
+          "leakage": 0.0,
+          "total": 0.0
+        },
+        "Total": {
+          "internal": 0.01368242409,
+          "switching": 0.005648128223,
+          "leakage": 2.713607472e-08,
+          "total": 0.01933057979
+        }
+      },
+      "native_default": {
+        "mode": "recover_power_100",
+        "extra_flags": "",
+        "rsz_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 6.630656788000124,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_default/rsz.log"
+        },
+        "rsz_reported_resized": 24,
+        "netlist_diff": {
+          "ref_instances": 5511,
+          "cand_instances": 5511,
+          "ref_area_um2": 71427.2544,
+          "cand_area_um2": 71340.9216,
+          "area_saved_um2": 86.33280000000377,
+          "area_saved_pct": 0.1208681486152767,
+          "resized_count": 24,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "_4961_",
+              "sky130_fd_sc_hd__a31o_2",
+              "sky130_fd_sc_hd__a31o_1"
+            ],
+            [
+              "_6879_",
+              "sky130_fd_sc_hd__mux2i_2",
+              "sky130_fd_sc_hd__mux2i_1"
+            ],
+            [
+              "place1128",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1132",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1159",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1191",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1194",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1196",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1199",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1200",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "route_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 172.84481898099966,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_default/route_rcx.log"
+        },
+        "status": "rejected_by_gates",
+        "drc_markers": 0,
+        "antenna_violations": 1,
+        "views": {
+          "FF": {
+            "setup_wns_ps": 1840.1209999999999,
+            "hold_wns_ps": 374.901,
+            "setup_tns_ps": 0.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 2.1072278169999663,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_default/sta_FF.log"
+            }
+          },
+          "TT": {
+            "setup_wns_ps": -490.24,
+            "hold_wns_ps": 581.219,
+            "setup_tns_ps": -49770.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.4552965840002798,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_default/sta_TT.log"
+            }
+          },
+          "SS": {
+            "setup_wns_ps": -20652.821,
+            "hold_wns_ps": 2027.902,
+            "setup_tns_ps": -20963900.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.4094276459995854,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_default/sta_SS.log"
+            }
+          }
+        },
+        "deltas_vs_control": {
+          "FF": {
+            "d_setup_wns_ps": -14.931778054755569,
+            "d_setup_tns_ps": 0.0,
+            "d_hold_wns_ps": 1.5368270879948227,
+            "abs_hold_wns_ps": 374.901
+          },
+          "TT": {
+            "d_setup_wns_ps": -16.04775897104105,
+            "d_setup_tns_ps": -5621.105681858826,
+            "d_hold_wns_ps": 1.9976624400569563,
+            "abs_hold_wns_ps": 581.219
+          },
+          "SS": {
+            "d_setup_wns_ps": -19.494841241208633,
+            "d_setup_tns_ps": -101108.35640560836,
+            "d_hold_wns_ps": 8.592169541162548,
+            "abs_hold_wns_ps": 2027.902
+          }
+        },
+        "gate_failures": [
+          "antenna=1",
+          "TT:setup_tns"
+        ],
+        "final_netlist_diff": {
+          "ref_instances": 5511,
+          "cand_instances": 5511,
+          "ref_area_um2": 71427.2544,
+          "cand_area_um2": 71340.9216,
+          "area_saved_um2": 86.33280000000377,
+          "area_saved_pct": 0.1208681486152767,
+          "resized_count": 24,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "_4961_",
+              "sky130_fd_sc_hd__a31o_2",
+              "sky130_fd_sc_hd__a31o_1"
+            ],
+            [
+              "_6879_",
+              "sky130_fd_sc_hd__mux2i_2",
+              "sky130_fd_sc_hd__mux2i_1"
+            ],
+            [
+              "place1128",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1132",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1159",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1191",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1194",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1196",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1199",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1200",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "power": {
+          "Sequential": {
+            "internal": 0.008297610097,
+            "switching": 7.388451922e-05,
+            "leakage": 1.088778756e-08,
+            "total": 0.008371505886
+          },
+          "Combinational": {
+            "internal": 0.001531060436,
+            "switching": 0.002570936922,
+            "leakage": 1.446594222e-08,
+            "total": 0.004102011677
+          },
+          "Clock": {
+            "internal": 0.003846123349,
+            "switching": 0.003012462519,
+            "leakage": 1.732352706e-09,
+            "total": 0.006858587731
+          },
+          "Macro": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Pad": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Total": {
+            "internal": 0.01367480122,
+            "switching": 0.005657283589,
+            "leakage": 2.708601698e-08,
+            "total": 0.01933211274
+          }
+        },
+        "total_elapsed_raw_seconds": 184.44742781599962
+      },
+      "native_allow_setup": {
+        "mode": "recover_power_100_allow_setup",
+        "extra_flags": "-allow_setup_violations",
+        "rsz_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 6.65795874000014,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_allow_setup/rsz.log"
+        },
+        "rsz_reported_resized": 24,
+        "netlist_diff": {
+          "ref_instances": 5511,
+          "cand_instances": 5511,
+          "ref_area_um2": 71427.2544,
+          "cand_area_um2": 71340.9216,
+          "area_saved_um2": 86.33280000000377,
+          "area_saved_pct": 0.1208681486152767,
+          "resized_count": 24,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "_4961_",
+              "sky130_fd_sc_hd__a31o_2",
+              "sky130_fd_sc_hd__a31o_1"
+            ],
+            [
+              "_6879_",
+              "sky130_fd_sc_hd__mux2i_2",
+              "sky130_fd_sc_hd__mux2i_1"
+            ],
+            [
+              "place1128",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1132",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1159",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1191",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1194",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1196",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1199",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1200",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "route_op": {
+          "returncode": 0,
+          "elapsed_raw_seconds": 171.99132106199977,
+          "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_allow_setup/route_rcx.log"
+        },
+        "status": "rejected_by_gates",
+        "drc_markers": 0,
+        "antenna_violations": 1,
+        "views": {
+          "FF": {
+            "setup_wns_ps": 1840.1209999999999,
+            "hold_wns_ps": 374.901,
+            "setup_tns_ps": 0.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 2.04727868100008,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_allow_setup/sta_FF.log"
+            }
+          },
+          "TT": {
+            "setup_wns_ps": -490.24,
+            "hold_wns_ps": 581.219,
+            "setup_tns_ps": -49770.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.4501569290000589,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_allow_setup/sta_TT.log"
+            }
+          },
+          "SS": {
+            "setup_wns_ps": -20652.821,
+            "hold_wns_ps": 2027.902,
+            "setup_tns_ps": -20963900.0,
+            "hold_tns_ps": 0.0,
+            "has_slew_cap_viol": false,
+            "op": {
+              "returncode": 0,
+              "elapsed_raw_seconds": 1.407521244000236,
+              "log": "/home/toylog/faeco_tcad_native_recover_power_20261125_v1/sky130hd_riscv32i/native_allow_setup/sta_SS.log"
+            }
+          }
+        },
+        "deltas_vs_control": {
+          "FF": {
+            "d_setup_wns_ps": -14.931778054755569,
+            "d_setup_tns_ps": 0.0,
+            "d_hold_wns_ps": 1.5368270879948227,
+            "abs_hold_wns_ps": 374.901
+          },
+          "TT": {
+            "d_setup_wns_ps": -16.04775897104105,
+            "d_setup_tns_ps": -5621.105681858826,
+            "d_hold_wns_ps": 1.9976624400569563,
+            "abs_hold_wns_ps": 581.219
+          },
+          "SS": {
+            "d_setup_wns_ps": -19.494841241208633,
+            "d_setup_tns_ps": -101108.35640560836,
+            "d_hold_wns_ps": 8.592169541162548,
+            "abs_hold_wns_ps": 2027.902
+          }
+        },
+        "gate_failures": [
+          "antenna=1",
+          "TT:setup_tns"
+        ],
+        "final_netlist_diff": {
+          "ref_instances": 5511,
+          "cand_instances": 5511,
+          "ref_area_um2": 71427.2544,
+          "cand_area_um2": 71340.9216,
+          "area_saved_um2": 86.33280000000377,
+          "area_saved_pct": 0.1208681486152767,
+          "resized_count": 24,
+          "added_count": 0,
+          "removed_count": 0,
+          "sample_resized": [
+            [
+              "_4961_",
+              "sky130_fd_sc_hd__a31o_2",
+              "sky130_fd_sc_hd__a31o_1"
+            ],
+            [
+              "_6879_",
+              "sky130_fd_sc_hd__mux2i_2",
+              "sky130_fd_sc_hd__mux2i_1"
+            ],
+            [
+              "place1128",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1132",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1159",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1191",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1194",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1196",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1199",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ],
+            [
+              "place1200",
+              "sky130_fd_sc_hd__buf_4",
+              "sky130_fd_sc_hd__clkbuf_1"
+            ]
+          ]
+        },
+        "power": {
+          "Sequential": {
+            "internal": 0.008297610097,
+            "switching": 7.388451922e-05,
+            "leakage": 1.088778756e-08,
+            "total": 0.008371505886
+          },
+          "Combinational": {
+            "internal": 0.001531060436,
+            "switching": 0.002570936922,
+            "leakage": 1.446594222e-08,
+            "total": 0.004102011677
+          },
+          "Clock": {
+            "internal": 0.003846123349,
+            "switching": 0.003012462519,
+            "leakage": 1.732352706e-09,
+            "total": 0.006858587731
+          },
+          "Macro": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Pad": {
+            "internal": 0.0,
+            "switching": 0.0,
+            "leakage": 0.0,
+            "total": 0.0
+          },
+          "Total": {
+            "internal": 0.01367480122,
+            "switching": 0.005657283589,
+            "leakage": 2.708601698e-08,
+            "total": 0.01933211274
+          }
+        },
+        "total_elapsed_raw_seconds": 183.55423665600028
+      }
+    }
+  }
+}
