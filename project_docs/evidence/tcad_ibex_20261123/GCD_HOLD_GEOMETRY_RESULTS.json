@@ -1,0 +1,887 @@
+{
+  "audit": {
+    "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_ibex_20261123/GCD_INCIDENT_CAP_PAIR_VERIFIED.json",
+    "sha256": "cff49aab5e53203fc2f144e44f899f6ed777465c33d0816f6b194de39ae283ac",
+    "bytes": 11864
+  },
+  "score_receipt": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_transfer_20261125_v1/scores.json",
+    "sha256": "8527489b14ffab64e14cb975edd7f64861e48d69d8a597ed322213075dde93f7",
+    "bytes": 274335
+  },
+  "original_results": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/results.json",
+    "sha256": "8bafa83cfdc57d9eccc52ecbf6050a3b5425fbb9fd21033af2fbd33d022f37fa",
+    "bytes": 66516
+  },
+  "physical_occurrences": 12,
+  "unique_physical_count": 9,
+  "unique_action_tuples": 9,
+  "metrics": {
+    "FF": {
+      "clock": {
+        "reject": 1,
+        "accept": 8,
+        "greater": 8,
+        "equal": 0,
+        "less": 0,
+        "auc": 1.0
+      },
+      "all_path": {
+        "reject": 1,
+        "accept": 8,
+        "greater": 7,
+        "equal": 0,
+        "less": 1,
+        "auc": 0.875
+      },
+      "data": {
+        "reject": 1,
+        "accept": 8,
+        "greater": 7,
+        "equal": 0,
+        "less": 1,
+        "auc": 0.875
+      },
+      "incident_pf": {
+        "reject": 1,
+        "accept": 8,
+        "greater": 1,
+        "equal": 0,
+        "less": 7,
+        "auc": 0.125
+      },
+      "area": {
+        "reject": 1,
+        "accept": 8,
+        "greater": 8,
+        "equal": 0,
+        "less": 0,
+        "auc": 1.0
+      },
+      "actions": {
+        "reject": 1,
+        "accept": 8,
+        "greater": 0,
+        "equal": 6,
+        "less": 2,
+        "auc": 0.375
+      }
+    },
+    "TT": {
+      "clock": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 9,
+        "equal": 9,
+        "less": 0,
+        "auc": 0.75
+      },
+      "all_path": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 10,
+        "equal": 3,
+        "less": 5,
+        "auc": 0.6388888888888888
+      },
+      "data": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 10,
+        "equal": 3,
+        "less": 5,
+        "auc": 0.6388888888888888
+      },
+      "incident_pf": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 10,
+        "equal": 0,
+        "less": 8,
+        "auc": 0.5555555555555556
+      },
+      "area": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 10,
+        "equal": 5,
+        "less": 3,
+        "auc": 0.6944444444444444
+      },
+      "actions": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 2,
+        "equal": 11,
+        "less": 5,
+        "auc": 0.4166666666666667
+      }
+    },
+    "SS": {
+      "clock": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 9,
+        "equal": 9,
+        "less": 0,
+        "auc": 0.75
+      },
+      "all_path": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 9,
+        "equal": 6,
+        "less": 3,
+        "auc": 0.6666666666666666
+      },
+      "data": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 9,
+        "equal": 6,
+        "less": 3,
+        "auc": 0.6666666666666666
+      },
+      "incident_pf": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 10,
+        "equal": 0,
+        "less": 8,
+        "auc": 0.5555555555555556
+      },
+      "area": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 10,
+        "equal": 5,
+        "less": 3,
+        "auc": 0.6944444444444444
+      },
+      "actions": {
+        "reject": 6,
+        "accept": 3,
+        "greater": 2,
+        "equal": 11,
+        "less": 5,
+        "auc": 0.4166666666666667
+      }
+    }
+  },
+  "known_equal_area_pair": {
+    "rejected": {
+      "actions": [
+        "\\_089_=sky130_fd_sc_hd__mux2_1",
+        "\\_090_=sky130_fd_sc_hd__mux2_1",
+        "\\_091_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "ab28eed51a95d66f8cd26aaed8695ee1bf63182b8ba748ad3d3cbed34cc03e36",
+        "090de7fc97458d6f02d2bd556d13721e99fd12edce2d9a6ab8c8ca983f19e16e",
+        "49f0eb6b64bd0411468b16911132875544ca7e681e9425dee207cc55819294e7",
+        "99f8762b792e5be48f919c9c79cb20a1de1f55bd46b53e369b72bc0f1efdf503"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.94814898185246,
+        "TT": 430.39255492871575,
+        "SS": 341.97311649108997
+      },
+      "failures": [
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 11.260800000000017,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.039299602,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.039299602,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.039299602,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/04_physical/receipt.json",
+          "sha256": "d361afeade95a79fd9bf38717af78677892499091241cac10a7db045a13f6b0b",
+          "bytes": 16157
+        }
+      ]
+    },
+    "passed": {
+      "actions": [
+        "\\_089_=sky130_fd_sc_hd__mux2_1",
+        "\\_090_=sky130_fd_sc_hd__mux2_1",
+        "\\_093_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "97c8b6038b4a6c2622521609e8f8680342dadae20fcfb562f58fb34c10b73a8e",
+        "75b887b2d74585743c49e8224b36067d5841964107d51d22e47d709300f9ac93",
+        "1825571ab73663d49d3db7521b2e6be0a4924878a6dc3012b71ca10998a7663a",
+        "eb8f00a12c76765f9b447513c9a0d55db6f8a7fd4ad46d442d38791a2a7cba4f"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": false,
+        "SS": false
+      },
+      "hold_wns_ps": {
+        "FF": 358.9480934707012,
+        "TT": 430.88962953241605,
+        "SS": 343.8430096203149
+      },
+      "failures": [],
+      "area_saved_um2": 11.260800000000017,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.038909301,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.038909301,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.038909301,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/05_physical/receipt.json",
+          "sha256": "cbae533f078af9b4211347f057c83ccbf77a6213e932843eae04378450ba9f8c",
+          "bytes": 16099
+        }
+      ]
+    }
+  },
+  "rows": [
+    {
+      "actions": [
+        "\\_087_=sky130_fd_sc_hd__o21bai_2",
+        "\\_169_/_230_=sky130_fd_sc_hd__nand4_2",
+        "\\_169_/_233_=sky130_fd_sc_hd__o221ai_2"
+      ],
+      "fingerprint": [
+        "e64d2c380738380ea0f688d2be03ae8710816cfd57399fe1ddefca27a484838e",
+        "0ea5ed202552f9037f26113a8b4a905f8a022a70e3a8f41646739f835caed956",
+        "01d70cc0ee1be490df859b8ee5bdc4d3e2c63939ade8e606040ce9eb6b95c51c",
+        "301afb9fb8fa89e408b9f7ddd3c7a4b61e2feacfb1f21ef9641b01e482867b7a"
+      ],
+      "hold_reject": {
+        "FF": true,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.9382679969333,
+        "TT": 430.1259071137764,
+        "SS": 340.7637505503658
+      },
+      "failures": [
+        "FF:hold_regression",
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 27.52639999999974,
+      "frozen_score": {
+        "FF": {
+          "clock": 8.914855072463768,
+          "data": 14.371057118499573,
+          "all_path": 23.28591219096334,
+          "incident_pf": 0.032238703,
+          "area": 27.5264,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 8.914855072463768,
+          "data": 14.371057118499573,
+          "all_path": 23.28591219096334,
+          "incident_pf": 0.032238703,
+          "area": 27.5264,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 8.914855072463768,
+          "data": 14.371057118499573,
+          "all_path": 23.28591219096334,
+          "incident_pf": 0.032238703,
+          "area": 27.5264,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/01_physical/receipt.json",
+          "sha256": "5d7ba11de13609a997e319a29f977740a8299f2af717a21cc4b6c8c15b72b991",
+          "bytes": 16238
+        },
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/01_physical/receipt.json",
+          "sha256": "b786d192f4f009b892d598d26cc800085fc70fb66478330338da87f86d73b09f",
+          "bytes": 16239
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_169_/_151_=sky130_fd_sc_hd__nor2_2",
+        "\\_169_/_178_=sky130_fd_sc_hd__nor3_2",
+        "\\_169_/_223_=sky130_fd_sc_hd__o21ai_2"
+      ],
+      "fingerprint": [
+        "69023ffca0c2626b150042aae2c1870caf6f07853ee6e4d36a8515f0c7bedbac",
+        "49e55f6bccc65a495e73500596c429b9c43b5e90b6a6d1c67fa2741e9789931f",
+        "7588be6b99777ee30200f5c4bcc73f465e4dc6ec5e98b273d523842204c5b424",
+        "81c6652fccce269dd699e95e6b55e8c39c5dd7d7cb718e2213c368744b73859a"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.9482044930037,
+        "TT": 430.4316902903338,
+        "SS": 341.9369787316384
+      },
+      "failures": [
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 18.76800000000003,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 0.0,
+          "all_path": 0.0,
+          "incident_pf": 0.023794281,
+          "area": 18.768,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 0.0,
+          "all_path": 0.0,
+          "incident_pf": 0.023794281,
+          "area": 18.768,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 0.0,
+          "all_path": 0.0,
+          "incident_pf": 0.023794281,
+          "area": 18.768,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/02_physical/receipt.json",
+          "sha256": "ace287e94fd69124c74714544064e623fa1ed2ae2edf55f019eb75025f4c33a1",
+          "bytes": 16214
+        },
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/02_physical/receipt.json",
+          "sha256": "1aa2b760dd0ef77c767b480887b480ddd3f1e31898666250dabf3dc48cf5ac1e",
+          "bytes": 16216
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_088_=sky130_fd_sc_hd__mux2_1",
+        "\\_169_/_159_=sky130_fd_sc_hd__nand2_2",
+        "\\_169_/_166_=sky130_fd_sc_hd__nor3_1"
+      ],
+      "fingerprint": [
+        "f8288e41b0caef2d4cb49bd25e73792a4f4e706dd647e6920f5565a2cfa46ea2",
+        "71803aefe9b75c8f3f75843c53db4fb76545f216db1458c7ce27f75d4b8ce38c",
+        "5f63f3ea87c4c9912547841b74882229aaca7ddf14cf6954da2f0d14d7f99ccd",
+        "c6d24c1b4e865ab5c4254cd2f9d3427af98dd23b54a6902716f487d582944097"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.9482044930037,
+        "TT": 430.1176914633942,
+        "SS": 340.5863369110307
+      },
+      "failures": [
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 13.763200000000325,
+      "frozen_score": {
+        "FF": {
+          "clock": 1.8963128729752772,
+          "data": 13.386615515771528,
+          "all_path": 15.282928388746805,
+          "incident_pf": 0.046206888,
+          "area": 13.763200000000001,
+          "actions": 3,
+          "intersects_min_data": true
+        },
+        "TT": {
+          "clock": 1.8963128729752772,
+          "data": 13.386615515771528,
+          "all_path": 15.282928388746805,
+          "incident_pf": 0.046206888,
+          "area": 13.763200000000001,
+          "actions": 3,
+          "intersects_min_data": true
+        },
+        "SS": {
+          "clock": 1.8963128729752772,
+          "data": 13.386615515771528,
+          "all_path": 15.282928388746805,
+          "incident_pf": 0.046206888,
+          "area": 13.763200000000001,
+          "actions": 3,
+          "intersects_min_data": true
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/03_physical/receipt.json",
+          "sha256": "efec6e94f69d06f459af0233bafa70dabeb0c72ee149e584983e4b9f964cb2b0",
+          "bytes": 16209
+        },
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/03_physical/receipt.json",
+          "sha256": "244cbe4f04bd4f322df6b7e08a1e762a5db31f487a6ea1585d9655caa8ca3248",
+          "bytes": 16209
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_089_=sky130_fd_sc_hd__mux2_1",
+        "\\_090_=sky130_fd_sc_hd__mux2_1",
+        "\\_091_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "ab28eed51a95d66f8cd26aaed8695ee1bf63182b8ba748ad3d3cbed34cc03e36",
+        "090de7fc97458d6f02d2bd556d13721e99fd12edce2d9a6ab8c8ca983f19e16e",
+        "49f0eb6b64bd0411468b16911132875544ca7e681e9425dee207cc55819294e7",
+        "99f8762b792e5be48f919c9c79cb20a1de1f55bd46b53e369b72bc0f1efdf503"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.94814898185246,
+        "TT": 430.39255492871575,
+        "SS": 341.97311649108997
+      },
+      "failures": [
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 11.260800000000017,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.039299602,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.039299602,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.039299602,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/04_physical/receipt.json",
+          "sha256": "d361afeade95a79fd9bf38717af78677892499091241cac10a7db045a13f6b0b",
+          "bytes": 16157
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_092_=sky130_fd_sc_hd__mux2_1",
+        "\\_093_=sky130_fd_sc_hd__mux2_1",
+        "\\_094_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "dc581fe98e54f67d580f0c4c0b7db4dd56f490220012a3e5fffa608f9728c70f",
+        "4269f24c2c9d538f549c4b460a117f3256a060ff2abc5419cf9ed66d24a7ded1",
+        "f43d87a25e74890f6118cb51ca321ed02fc450bec32bf0e7a8158f3d31a2e755",
+        "6eb64168855ae007fcf2c07350e63750ba8914c434db1c558b738b17bf8e3a13"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": false,
+        "SS": false
+      },
+      "hold_wns_ps": {
+        "FF": 358.9480934707012,
+        "TT": 430.9584356043672,
+        "SS": 343.8430096203149
+      },
+      "failures": [],
+      "area_saved_um2": 11.260800000000017,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 2.2549019607843137,
+          "all_path": 2.2549019607843137,
+          "incident_pf": 0.042536559,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.042536559,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.042536559,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/05_physical/receipt.json",
+          "sha256": "fcfbfcfece35b24d61297971bd70d851dbac4f23a98637cc01d7053e70a91bd1",
+          "bytes": 16099
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_092_=sky130_fd_sc_hd__mux2_1",
+        "\\_093_=sky130_fd_sc_hd__mux2_1",
+        "\\_094_=sky130_fd_sc_hd__mux2_1",
+        "\\_095_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "c83e8fbfce2c1755fb5dcd2b81918b4fd8980726d6ab51a07efdf82fd2ad408f",
+        "5b94f8bf485c30d58549636de35f581c8dce2db7be57866c2c8f2403492cdd91",
+        "4d3d0dccb326e85e529c72cfd65d7e7788af375b22f4b88820898ef2a7a2e094",
+        "f6be65d50e7188a1084e971e094a0f66d0afe136fcfd90ca123cab71bf0d1811"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.9483710264574,
+        "TT": 429.6422662086741,
+        "SS": 338.56850656377446
+      },
+      "failures": [
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 15.014400000000023,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 2.2549019607843137,
+          "all_path": 2.2549019607843137,
+          "incident_pf": 0.052467189,
+          "area": 15.0144,
+          "actions": 4,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.052467189,
+          "area": 15.0144,
+          "actions": 4,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.052467189,
+          "area": 15.0144,
+          "actions": 4,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/fixed/06_physical/receipt.json",
+          "sha256": "576edd2c30fd43c40f2c4bb7f1d1039cfed586f5d36727fc2b9edb5b9fc72ae0",
+          "bytes": 16152
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_092_=sky130_fd_sc_hd__mux2_1",
+        "\\_096_=sky130_fd_sc_hd__mux2_1",
+        "\\_097_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "da8d49338561bf142d49262f3ece505d8a6f377ae921954600faa14fde3533ec",
+        "c923a2b2aa49616ccbb3e661bcf4c6809d7bd43ed699d6be6cbeab29c0e6c0a4",
+        "eedb90b5b97e6ae8feab16118ca94037ebe1f6b6a27861fed412abb07a38a023",
+        "67c27b9850340bccd8c1b139405ff1ecffca2e7976be210cf76a3b00f194a9fe"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": true,
+        "SS": true
+      },
+      "hold_wns_ps": {
+        "FF": 358.95669769914207,
+        "TT": 430.4956391365522,
+        "SS": 341.99154619329875
+      },
+      "failures": [
+        "TT:hold_regression",
+        "SS:hold_regression"
+      ],
+      "area_saved_um2": 11.260800000000017,
+      "frozen_score": {
+        "FF": {
+          "clock": 5.637254901960784,
+          "data": 24.58913043478261,
+          "all_path": 30.226385336743395,
+          "incident_pf": 0.06995949,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": true
+        },
+        "TT": {
+          "clock": 5.637254901960784,
+          "data": 24.58913043478261,
+          "all_path": 30.226385336743395,
+          "incident_pf": 0.06995949,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": true
+        },
+        "SS": {
+          "clock": 5.637254901960784,
+          "data": 24.58913043478261,
+          "all_path": 30.226385336743395,
+          "incident_pf": 0.06995949,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": true
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/04_physical/receipt.json",
+          "sha256": "70f0c16b88490482780176a1a062ca9173cc084f741725d827f0376a87ab7a7b",
+          "bytes": 16155
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_089_=sky130_fd_sc_hd__mux2_1",
+        "\\_090_=sky130_fd_sc_hd__mux2_1",
+        "\\_093_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "97c8b6038b4a6c2622521609e8f8680342dadae20fcfb562f58fb34c10b73a8e",
+        "75b887b2d74585743c49e8224b36067d5841964107d51d22e47d709300f9ac93",
+        "1825571ab73663d49d3db7521b2e6be0a4924878a6dc3012b71ca10998a7663a",
+        "eb8f00a12c76765f9b447513c9a0d55db6f8a7fd4ad46d442d38791a2a7cba4f"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": false,
+        "SS": false
+      },
+      "hold_wns_ps": {
+        "FF": 358.9480934707012,
+        "TT": 430.88962953241605,
+        "SS": 343.8430096203149
+      },
+      "failures": [],
+      "area_saved_um2": 11.260800000000017,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.038909301,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.038909301,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.038909301,
+          "area": 11.2608,
+          "actions": 3,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/05_physical/receipt.json",
+          "sha256": "cbae533f078af9b4211347f057c83ccbf77a6213e932843eae04378450ba9f8c",
+          "bytes": 16099
+        }
+      ]
+    },
+    {
+      "actions": [
+        "\\_089_=sky130_fd_sc_hd__mux2_1",
+        "\\_090_=sky130_fd_sc_hd__mux2_1",
+        "\\_091_=sky130_fd_sc_hd__mux2_1",
+        "\\_093_=sky130_fd_sc_hd__mux2_1"
+      ],
+      "fingerprint": [
+        "4e1b1ec44dc8f6ca9ae6501cf6efaf3db0d78a16f88d201d1d99d0d17ec0a4fa",
+        "d364c13ca0281bd6533c4088e4529e52c2832c0b97402a5adb455484fe4d9b09",
+        "6aca217f8da7353557906da09ee8dd0d93de3745e8a0133dc96e6d25877c4746",
+        "8231a6a2052f06c6a47b387b86fea3f6d0cd3b89e4aa6d279eb9a7ba54093bd8"
+      ],
+      "hold_reject": {
+        "FF": false,
+        "TT": false,
+        "SS": false
+      },
+      "hold_wns_ps": {
+        "FF": 358.9480934707012,
+        "TT": 430.92654444798484,
+        "SS": 343.8430096203149
+      },
+      "failures": [],
+      "area_saved_um2": 15.014400000000023,
+      "frozen_score": {
+        "FF": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.046159404,
+          "area": 15.0144,
+          "actions": 4,
+          "intersects_min_data": false
+        },
+        "TT": {
+          "clock": 0.0,
+          "data": 3.607843137254902,
+          "all_path": 3.607843137254902,
+          "incident_pf": 0.046159404,
+          "area": 15.0144,
+          "actions": 4,
+          "intersects_min_data": false
+        },
+        "SS": {
+          "clock": 0.0,
+          "data": 2.7058823529411766,
+          "all_path": 2.7058823529411766,
+          "incident_pf": 0.046159404,
+          "area": 15.0144,
+          "actions": 4,
+          "intersects_min_data": false
+        }
+      },
+      "sources": [
+        {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incident_cap_pair_20261124_v1/screened/faeco/06_physical/receipt.json",
+          "sha256": "ec5f70ab2aa0aea2c347c19bd6a43c0243296b2f99b7c71c4c925d42902ea07b",
+          "bytes": 16183
+        }
+      ]
+    }
+  ],
+  "routing_or_candidate_sta_calls": 0
+}

@@ -1,0 +1,816 @@
+{
+  "protocol": {
+    "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/protocol.json",
+    "sha256": "71bec9d783f23f119d349d99af52e257f45696e2c22702173be17b991c9cf7dc",
+    "bytes": 2349
+  },
+  "views": {
+    "TT": {
+      "passed__passed": {
+        "metrics": {
+          "hold_wns_ps": 430.88962953241605,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -1287.6328892019728,
+          "setup_tns_ps": -57089.76758000972
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "reset (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[1]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 430.88961792,
+          "nets": [
+            "reset",
+            "net36",
+            "_012_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_0__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.7180395169998519,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_passed__passed/hold.tcl",
+          "sha256": "89344380d6c6b91edc5844467b0eba568c4d20602bfac075c03e89ddf9ed40ec",
+          "bytes": 1594
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_passed__passed/hold.log",
+          "sha256": "7f385819c3e4af81dee2e9cacddcb22f29f7fc6c4722b68f553d2afecca154ee",
+          "bytes": 11969
+        }
+      },
+      "passed__rejected": {
+        "metrics": {
+          "hold_wns_ps": 430.39255492871575,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -1287.5871480133583,
+          "setup_tns_ps": -57074.74315386207
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "reset (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[1]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 430.392547607,
+          "nets": [
+            "reset",
+            "net36",
+            "_012_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_0__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.5176991349999298,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_passed__rejected/hold.tcl",
+          "sha256": "fe8b87a1d0d90311ecca891b73d67634887dbc65f6e1f464eaa144b630c3b094",
+          "bytes": 1594
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_passed__rejected/hold.log",
+          "sha256": "4691af4a46a040a0045faed26df3c90619ee09ee571be3a0bf1e7cec7081fbcb",
+          "bytes": 11969
+        }
+      },
+      "rejected__passed": {
+        "metrics": {
+          "hold_wns_ps": 430.88962953241605,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -1287.6328892019728,
+          "setup_tns_ps": -57074.970527537516
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "reset (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[1]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 430.88961792,
+          "nets": [
+            "reset",
+            "net36",
+            "_012_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_0__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.5176653459998306,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_rejected__passed/hold.tcl",
+          "sha256": "423d1a5d8d738d6626f702d3d5ea38cfdd884973edab399a318c5c3dc6f728b2",
+          "bytes": 1594
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_rejected__passed/hold.log",
+          "sha256": "69f558956232dc43466d60a87ba22d67d4b27d96046917b84fd7db47db9e4161",
+          "bytes": 11970
+        }
+      },
+      "rejected__rejected": {
+        "metrics": {
+          "hold_wns_ps": 430.39255492871575,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -1287.5871480133583,
+          "setup_tns_ps": -57069.06947011703
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "reset (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[1]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 430.392547607,
+          "nets": [
+            "reset",
+            "net36",
+            "_012_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_0__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.5169750619998013,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_rejected__rejected/hold.tcl",
+          "sha256": "aa40c600b5c494fd7d017ff3c4742a8e26b19d69a7716bd31f4b9f5eb24c7c10",
+          "bytes": 1594
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/TT_rejected__rejected/hold.log",
+          "sha256": "705a1a1c770b12a7ea1fa0e42695857bc29ac9a65f6ebab9b603d624300c4949",
+          "bytes": 11969
+        }
+      }
+    },
+    "SS": {
+      "passed__passed": {
+        "metrics": {
+          "hold_wns_ps": 343.8430096203149,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -9961.092395371907,
+          "setup_tns_ps": -535748.9953894401
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "resp_rdy (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[0]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 343.843017578,
+          "nets": [
+            "resp_rdy",
+            "net37",
+            "_011_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_2__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.5671743520001655,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_passed__passed/hold.tcl",
+          "sha256": "a3026444882ef84a75fbd027023f85b7cf8dc422e476e174fd5b40799bf8824e",
+          "bytes": 1602
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_passed__passed/hold.log",
+          "sha256": "c537f1c32e4a138ec8d2565a7fe0fbdf93d8e1815a963569607dd367b27d968b",
+          "bytes": 11985
+        }
+      },
+      "passed__rejected": {
+        "metrics": {
+          "hold_wns_ps": 341.97311649108997,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -9960.920976936904,
+          "setup_tns_ps": -535646.6772354906
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "resp_rdy (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[0]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 341.973114014,
+          "nets": [
+            "resp_rdy",
+            "net37",
+            "_011_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_2__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.565597359000094,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_passed__rejected/hold.tcl",
+          "sha256": "9bc68309a95fd80710f9de3891d01ad8bd7b24bfd26f6e1e20cf5384ef76bc23",
+          "bytes": 1602
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_passed__rejected/hold.log",
+          "sha256": "ec873bd0c9c86d1adc97281c451ee2fd55d2b15ac50b60369a817c3b752f3ba6",
+          "bytes": 11986
+        }
+      },
+      "rejected__passed": {
+        "metrics": {
+          "hold_wns_ps": 343.8430096203149,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -9961.092395371907,
+          "setup_tns_ps": -535724.2685022356
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "resp_rdy (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[0]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 343.843017578,
+          "nets": [
+            "resp_rdy",
+            "net37",
+            "_011_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_2__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.5661641560000135,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_rejected__passed/hold.tcl",
+          "sha256": "dda9ec5dd289ba41a6d81f8de70e25de27b21f74942ec0199984021cec344781",
+          "bytes": 1602
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_rejected__passed/hold.log",
+          "sha256": "17b74e0a3c9e47ea89676ffb65ff7278ffc9bfb6401a30b7384206cbc0102176",
+          "bytes": 11985
+        }
+      },
+      "rejected__rejected": {
+        "metrics": {
+          "hold_wns_ps": 341.97311649108997,
+          "hold_tns_ps": 0.0,
+          "setup_wns_ps": -9960.920976936904,
+          "setup_tns_ps": -535642.6981961704
+        },
+        "ports": {
+          "INPUT": [
+            "req_msg[0]",
+            "req_msg[10]",
+            "req_msg[11]",
+            "req_msg[12]",
+            "req_msg[13]",
+            "req_msg[14]",
+            "req_msg[15]",
+            "req_msg[16]",
+            "req_msg[17]",
+            "req_msg[18]",
+            "req_msg[19]",
+            "req_msg[1]",
+            "req_msg[20]",
+            "req_msg[21]",
+            "req_msg[22]",
+            "req_msg[23]",
+            "req_msg[24]",
+            "req_msg[25]",
+            "req_msg[26]",
+            "req_msg[27]",
+            "req_msg[28]",
+            "req_msg[29]",
+            "req_msg[2]",
+            "req_msg[30]",
+            "req_msg[31]",
+            "req_msg[3]",
+            "req_msg[4]",
+            "req_msg[5]",
+            "req_msg[6]",
+            "req_msg[7]",
+            "req_msg[8]",
+            "req_msg[9]",
+            "req_val",
+            "reset",
+            "resp_rdy"
+          ],
+          "OUTPUT": [
+            "req_rdy",
+            "resp_msg[0]",
+            "resp_msg[10]",
+            "resp_msg[11]",
+            "resp_msg[12]",
+            "resp_msg[13]",
+            "resp_msg[14]",
+            "resp_msg[15]",
+            "resp_msg[1]",
+            "resp_msg[2]",
+            "resp_msg[3]",
+            "resp_msg[4]",
+            "resp_msg[5]",
+            "resp_msg[6]",
+            "resp_msg[7]",
+            "resp_msg[8]",
+            "resp_msg[9]",
+            "resp_val"
+          ]
+        },
+        "annotation": {
+          "unannotated drivers": 5,
+          "partially unannotated drivers": 0
+        },
+        "minimum_path": {
+          "fields": {
+            "Startpoint": "resp_rdy (input port clocked by vclk_core_clock)",
+            "Endpoint": "ctrl.state.out[0]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clock)",
+            "Path Group": "core_clock"
+          },
+          "slack_ps": 341.973114014,
+          "nets": [
+            "resp_rdy",
+            "net37",
+            "_011_",
+            "clk",
+            "clknet_0_clk",
+            "clknet_2_2__leaf_clk"
+          ]
+        },
+        "elapsed_raw_seconds": 0.515314453999963,
+        "script": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_rejected__rejected/hold.tcl",
+          "sha256": "84eca5e10847aa991d99c2bf72769db790098d86806fb41fca3c1eee73f552f7",
+          "bytes": 1602
+        },
+        "log": {
+          "path": "/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1/SS_rejected__rejected/hold.log",
+          "sha256": "0a3ffb59b76d925f5e0c5677fe50bc9e8ffbd0e230f8d2b4bceb2a6f98675888",
+          "bytes": 11986
+        }
+      }
+    }
+  },
+  "effects": {
+    "TT": {
+      "original_floor_ps": 430.72570430355233,
+      "actual_delta_ps": -0.4970746037002982,
+      "only_spef_delta_ps": -0.4970746037002982,
+      "only_netlist_delta_ps": 0.0,
+      "interaction_ps": 0.0
+    },
+    "SS": {
+      "original_floor_ps": 342.9043152537165,
+      "actual_delta_ps": -1.86989312922492,
+      "only_spef_delta_ps": -1.86989312922492,
+      "only_netlist_delta_ps": 0.0,
+      "interaction_ps": 0.0
+    }
+  },
+  "sta_calls": 8,
+  "drt_rcx_sec_calls": 0,
+  "elapsed_raw_seconds": 4.576997116999792
+}

@@ -3187,3 +3187,32 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **独立核验完成** 实读六臂核验收据 SHA-256 `fef8a92de178140bbf00f330834743c799c56ae9d2f50618998396a2773f82fd`，两序最大合格面积复现，末次预留均在第 6 次实际评估选相同动作并被相同 SS hold 门拒收。[正式报告](tcad_holdout_20261123/UART_DEFERRED_RESERVATION_REPORT.md)
 
 - **原件归档** `scratch/tcad_ibex_20261123/uart_reservation_20261125_v1.tar.gz`，实读 1,595 项、44,191,625 字节，SHA-256 `b2dae97e343ef78363eb688f7197963d68ccb3b5dcf0da1f51f1297d4d3db14d`。tar 与原件比较 rc0，含六臂正式运行、SS v1 停止原件和 v2 完整七组。[正式结果核验](tcad_holdout_20261123/UART_DEFERRED_RESERVATION_VERIFIED.json) · [SS 专项原件摘要](tcad_holdout_20261123/UART_HOLD_EXCHANGE_RESULTS.json)
+
+
+### 2026-11-25 TCAD-ASAP7-UART-PRE-DISPATCH-GEOMETRY-DISCRIMINATION（事前登记）
+
+- 基线 `7b1ca348`，使用已冻结正反序派发之前可获得的原始物理几何和先前合格路径。待核各特征的输入身份、缺失与可计算覆盖、风险方向及 AUC。候选正式布线产生的独立拒收/合格标签和物理签名用于审计与去重。保留阶段、实际窗口及各端点 provenance。
+- 开发检验的入围条件包括同时区分同两门追加 `_0562_` 的已知 SS 相对 hold 拒收和追加 `_0886_` 的已知通过，且在其他可比较候选上有方向一致性。符合条件再冻结规则供独立对象验证。默认调度与论文保持既有版本，具体规约、用时及结果另记。[六臂核验](tcad_holdout_20261123/UART_DEFERRED_RESERVATION_VERIFIED.json) · [七组 SS 交换](tcad_holdout_20261123/UART_HOLD_EXCHANGE_RESULTS.json)
+
+- **详细规约冻结** 输入用原 DEF／Liberty／SDC，以及同起点零编辑 FF／TT／SS 每组四条最小路径；末次补用事前已验收两门路径。主项在拟重布直连信号网和时钟路径网同层平行重叠时，以三轨间距内的“重叠长／轨距 ÷（1＋间距／轨距）”逐段累计，取路径最大值；全路径、仅数据路径为机制对照，原直连电容为基线。正式 UART 三批去重、定向非正式证据另列，分别读取 SS 与其它角 hold 标签。门为关键次序正确、全体 SS AUC ≥0.65、剔除两已知应力点后 SS AUC >0.50 且至少三正三负。
+
+- **UART v1 已读取** 协议 `8e362c128fe1c380a0b526d96e60e6e16b2f364ce5499a028305761dee3ac6c5`、先冻结的评分 `ab175ba706ca510fa94db19e200e1169e89564897bc6e29b0f8664344c4141ac`、结果 SHA-256 `20ee3974ee4f9ad54b88628cd03b2ea652ba35246e869b4eb2f2d01b26240992`。六次事前 STA 耗 7.941024849 RAW s、每视图八条路径，18 门的 54 条直连网有几何。96 正式实布与 1 定向合并为 18 正式、19 合计，无缺视图。正式 SS 8 拒 10 过，主 AUC 0.9125、全路径 0.875、数据 0.900、直连电容 0.7625。参考两门下 `_0562_` 主分 0.8325779863、`_0886_` 为 0。去掉已知对照后正式 7 拒 10 过，主 AUC 0.9142857。开发诊断入围，异设计独立核验和自动收益另计。
+
+- **只读末次重放** 按原候选资格，两序均有三项等预估面积 0.08748 µm²。面积后接电容选出的 `_0562_` 与实跑同，面积后接几何选 `_0886_`（0；既有定向验收），其余 `_0562_` 0.8325779863（正式拒收）、`_0601_` 3.268820862（同前缀无物理标签）。同宽度下单门几何／电容为 4/4／3/4，三门为 12/12／10/12，其它宽度无跨类对。末次只读重放 SHA-256 `18ee4b7142ece70f349fffbfaed3dacb27eae8d93efb490582f0a59f6e6b8383`，新物理评估 0。
+- **UART 原件封存** `scratch/tcad_ibex_20261123/uart_hold_geometry_20261125_v1.tar.gz`，实读 19 项、48,070 字节，SHA-256 `bdbc52222882d301e2766c57b09735dcff51475212577c3ab42ea98f9f21ff6a`。正式工作树的评分、标签合并及末次重放见报告索引。[几何开发报告](tcad_holdout_20261123/UART_HOLD_GEOMETRY_REPORT.md)
+
+
+### 2026-11-25 TCAD-SKY130HD-GCD-PRE-DISPATCH-GEOMETRY-TRANSFER（历史物理对照）
+
+- 冻结 UART 几何公式转移到 GCD 历史触达电容对照，12 个同流程已实布记录合并为 9 个独立物理身份，TT／SS 各 6 拒 3 过。三次参考 STA 耗约 2.524520 RAW s，新候选 STA／DRT 为 0。协议 `4699d8d92090f065dbe7e31f81d47552a774e1127c9f3153777f1aeacc269e2d`、评分 `8527489b14ffab64e14cb975edd7f64861e48d69d8a597ed322213075dde93f7`、结果 SHA-256 `77b0a6812bd6634139b9f97a1f96149259e845c2cec2157e1bfe23b36deff400`。
+- 主几何 AUC 0.75（9 对方向正确、9 对同分、0 对反向），电容 0.5556。零几何分同时包含 3 拒和 3 过。等面积同宽度的 `_089_/_090_/_091_` 拒与 `_089_/_090_/_093_` 过在主几何、全路径与数据路径上均同分，电容有正确次序。暂缓独立在线比较，待同分风险和可部署基线进一步核验。 [历史 GCD 原配对](tcad_ibex_20261123/INCIDENT_CAP_PRIORITY_REPORT.md)
+
+- **几何同分电容回退复查** GCD 全池 TT／SS AUC 0.7500→0.7222，九个几何同分打破后 4 对正确、5 对反向。GCD 等面积五对几何、电容、组合各 0.70／0.80／0.80；UART SS 等面积十对三者均 0.70。以既有分值与标签计算，未增加物理试探。原 `gcd_hold_geometry_tie_20261125_v1/score_tiebreak.json` SHA-256 `3ba74df1fc2166b4c6205943052c8c42f091d29bc3394525b3e51f609afa3c33`。
+
+### 2026-11-25 TCAD-SKY130HD-GCD-TT-SS-HOLD-ACTION-SPEF-EXCHANGE（意图登记）
+
+- 使用历史同一后端的两支实配端点。两者共同动作 `_089_`、`_090_`，追加 `_091_` 已因 TT／SS hold 拒、追加 `_093_` 已过，物理面积均 11.2608 µm²。保持原 SDC 和 TT／SS 各自 Liberty，每角实跑两组原 V／SPEF 和两个双向混配，共计划 8 次 STA，候选 DRT／RCX／SEC 为 0。
+- 逐角读回原配标量复现、最差 min 路径、寄生注释数量和分量；不同 V／SPEF 的混配限物理归因。新派发规则和正式收益另计。[历史原对照](tcad_ibex_20261123/INCIDENT_CAP_PRIORITY_REPORT.md)
+
+- **实际交换结果** 输出 `/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1`，协议 `71bec9d783f23f119d349d99af52e257f45696e2c22702173be17b991c9cf7dc`，结果 `49a63d12615359ed8f11b53680022f0dc6007f4f5e2d68c840f83ec07277c0e0`。8 次 STA 合计 4.576997117 RAW s，DRT/RCX/SEC 均 0。TT／SS 实配拒对过的 WNS 差为 −0.497074604／−1.869893129 ps，只换 SPEF 精确重现，V 效应与交互均 0。各视图四组最差路径相同，八组注释计数均为未注释 5、部分注释 0。独立正式派发未启动。
+- **GCD 原件封存与覆盖** 实查 `scratch/tcad_ibex_20261123/gcd_hold_geometry_20261125_v1.tar.gz`，含 GCD 冻结评分与交换原件 51 项、33,357 字节，SHA-256 `d9875c82b697bea8a6bd52cd3d2bec6e6c47c4ad80d10fdc760571f310f0a8ba`，tar 对原件比较 rc0。冻结转移 64 条触达网全覆盖，三角各 8 路径。等面积实配产生的 `clk`／`clknet_0_clk` 几何变化位于预计直连网输入范围外。GCD 评分、标签、交换和同分复查均在仓库逐项绑定原 SHA。[总报告](tcad_holdout_20261123/UART_HOLD_GEOMETRY_REPORT.md) · [GCD 交换结果](tcad_ibex_20261123/GCD_HOLD_GEOMETRY_EXCHANGE.json)
