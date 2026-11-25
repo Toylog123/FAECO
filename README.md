@@ -1,9 +1,8 @@
-# FAECO：覆盖优先调度与可调预算的后布局门级时序 ECO 面积回收
+# FAECO 布线后局部冲突诊断与限时面积回收
 
-> **2026-11-24 中文活跃工作稿**。见[中文 v3 PDF](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)、[AES 调度与物理后端交叉实验](project_docs/evidence/tcad_ibex_20261123/AES_FACTORIAL_REPORT.md)、[SKY130 联合评测](project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md)及[后续实验路线](project_docs/planning/TCAD_EXPERIMENT_ROADMAP_20261124.md)。下方 v22 信息对应标签冻结稿。
+> **2026-11-25 当前总入口**见 [交接](project_docs/HANDOFF_2026-11-25.md) 与 [现行口径](project_docs/CANON.md)。项目面向 IEEE TCAD，研究布线后局部冲突诊断与限时面积回收。现有 [中文 v3 PDF](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) 为 15 页工作稿。 [投稿贡献与证据评估](project_docs/evidence/tcad_publication_assessment_20261125/REPORT.md)
 
-> **2026-11-23 当前总入口：[`project_docs/HANDOFF_2026-11-23.md`](project_docs/HANDOFF_2026-11-23.md) 与 [`project_docs/CANON.md`](project_docs/CANON.md)。**
-> **`v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 冻结了经典 LR 十电路对照及 ASAP7 AES 的全局布线寄生估算。中文 v3 源码在 [活跃稿件](paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex)，英文工作稿暂冻。
+> **历史冻结 `v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 收录经典 LR 十电路对照及 ASAP7 AES 的全局布线寄生估算。 [11 月 23 日交接快照](project_docs/HANDOFF_2026-11-23.md)
 
 <details>
 <summary>历史入口归档（2026-11-09 / 2026-11-13 预布局与单点过渡期说明，点击展开仅作溯源）</summary>
@@ -36,12 +35,12 @@
 
 ## 项目简介
 
-本工程实现并验证 **FAECO**（方法名）——面向预布局门级时序 ECO 的**候选探索与失效刻画**框架：在已映射网表的违例路径局部逻辑上，按多种结构特征构造并统一排序修改候选以扩展有效候选空间；将候选失效归纳为若干类型，用于诊断搜索过程并引导后续控制；候选按轮提交，并依次通过时序分析与等价性检查验证，覆盖设计、实验、论文全流程。
+FAECO 在已布线设计上生成等价的降面积候选，利用布线前冲突标记定位可放行的邻线，并按墙钟预算回收面积。当前有效端点的验收包含重布线与寄生提取、多角时序、独立 DRC 和 SEC。 [现行范围与证据](project_docs/CANON.md)
 
 - 项目类型：算法研究（EDA / 时序优化）
-- 技术栈：Python 3.11 + Yosys/OSS-CAD 0.67 + OpenSTA 3.1.0 + OpenROAD 2.0 + SKY130 HD PDK + LuaLaTeX（ctexart 双栏）
+- 技术栈：Python、Yosys、OpenSTA、OpenROAD 26Q3、SKY130HD、ASAP7 和 LuaLaTeX。
 
-## 整体设计
+## 历史预布局设计
 
 FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证与接受）：
 
@@ -53,7 +52,7 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 ## 现行权威状态入口
 
-1. **三十秒现状 + 复现入口 + 自检 + 后续规划**：`project_docs/HANDOFF_2026-11-23.md`（接手者第一站）
+1. **接手、复现、自检与后续实验**见 [交接](project_docs/HANDOFF_2026-11-25.md)。
 2. **唯一现行口径**：`project_docs/CANON.md`（任何文档与它冲突，以它为准）
 3. **目录 / 版本 / 数据资产 / 结构性坑**：`project_docs/PROJECT_MAP.md`
 4. **事实流水**：`project_docs/LOGS.md`（正序，可回溯）
@@ -66,9 +65,9 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 
 1. **环境**：读 `docs/environment.md`；Python 依赖见根 `pyproject.toml`（`pip install -e .`）；WSL2 内 Yosys/OpenSTA 按 environment.md 安装。Windows 侧跑 yosys 需 OSS-CAD `bin` + `lib` 同时入 PATH。
 2. **测试**：`bash code/scripts/run_with_timeout.sh 300 .venv/Scripts/python.exe -m pytest code/tests -q`（须用 `.venv/Scripts/python.exe` 显式 Python，不能只写 `python`）。
-3. **实验**：`experiments/INVENTORY.md` 总索引、`experiments/RESULTS.md` 顶层汇总；复现入口脚本在 `code/scripts/`。
+3. **实验**见 [现行交接](project_docs/HANDOFF_2026-11-25.md) 的复现命令与 [实验登记](project_docs/evidence/EXPERIMENT_REGISTRY.md)。
 4. **论文**：当前活跃中文 v3 主稿 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`（归档 v2 稿与补充材料同在 `manuscript/`，详见 `paper/zh/README.md`）；**必须 `cd` 入 `manuscript/` 后显式选目标、LuaLaTeX 连跑两遍**（不能自动猜主文件）。洁净成品 PDF 在 `paper/zh/` 与 `paper/zh/build/`。
-5. **交接**：读 `project_docs/HANDOFF_2026-11-23.md`。
+5. **交接**见 [2026-11-25 交接](project_docs/HANDOFF_2026-11-25.md)。
 
 ## 目录角色
 
@@ -100,13 +99,13 @@ FAECO 三阶段流水线（映射准备 → 加权割与候选生成 → 验证�
 |------|------|
 | `data/` | 数据治理：`cases/` 构造用例（跟踪）+ `raw/benchmarks/` 原始基准（raw 不跟踪，manifests 登记 SHA） |
 | `paper/` | 论文：`zh/` 中文主版；`en/` 英文工作初稿（`build/FAECO.pdf` 为已保存预览） |
-| `project_docs/` | 过程文档：交接（`HANDOFF_2026-11-09.md`）/ 基线（`baselines/`）/ 证据（`evidence/`）/ 日志（`LOGS.md`）/ 未决（`OPEN_ISSUES.md`）/ 现状（`CANON.md`、`PROJECT_MAP.md`）/ 设计规范 / 归档（`archive/`） |
+| `project_docs/` | 过程文档：交接（`HANDOFF_2026-11-25.md`）/ 基线（`baselines/`）/ 证据（`evidence/`）/ 日志（`LOGS.md`）/ 未决（`OPEN_ISSUES.md`）/ 现状（`CANON.md`、`PROJECT_MAP.md`）/ 设计规范 / 归档（`archive/`） |
 
 ### 版本与辅助
 
 | 目录 | 角色 |
 |------|------|
-| `versions/` | 历史冻结版本集合（**v19 是最后一个冻结基线 = r28 + r94 口径修订**；v20 待建以收录 r95–r116。见 `project_docs/versioning.md`） |
+| `versions/` | 冻结版本集合。各冻结版与当前工作稿的对应关系见 [交接](project_docs/HANDOFF_2026-11-25.md) 与 [版本规范](project_docs/versioning.md)。 |
 | `skills/` | 项目级技能（ARS 学术技能 + academic-paper 写作技能） |
 | `scratch/` | 临时脚本 / 探针 / 运行日志（git-ignored） |
 

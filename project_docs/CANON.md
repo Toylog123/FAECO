@@ -4,6 +4,10 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 投稿判断与交接
+
+中文稿可围绕候选换门引入的冲突、现场 DRC 诊断与限时合格面积展开。已有工作覆盖后期换门、多角与等时限评测、局部详细布线，论文增量落在按候选实际冲突选择放行网、减少完整物理重试，以及对合格回收曲线的影响。最直接的现有机制证据是 AES 同调度同物理端点省时。UART 支撑开发设计上的面积与时间收益，riscv32i 在同榜对照中分离了批宽和未触发的反馈。跨设计同端点省时及同口径外部基线仍待验证。中文主稿和配图本轮未改。[文献与投稿判断](evidence/tcad_publication_assessment_20261125/REPORT.md) · [接手入口](HANDOFF_2026-11-25.md)
+
 ## 2026-11-25 SKY130HD riscv32i 灵敏度排序对齐
 
 同冻结 18 项、原门与 720 RAW s，三法逐臂现场重排且同付筛选成本。正反序六臂独验通过。同榜固定三门与 FAECO 两序均回收 75.072 µm²（0.10510%），强单门均为 57.5552 µm²（0.08058%）。同实收 48.7968 µm² 时，两种批处理较单门早约 297–304 RAW s。各批处理提交四个相同累计动作，三次完整全过，末次截窗。九门最大端点的 ODB、去日期 SPEF 及三角指标一致，独立全块 DRC／天线零、SEC 4559/0。

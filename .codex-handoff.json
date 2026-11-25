@@ -1,15 +1,14 @@
 {
-  "timestamp": "2026-11-23",
-  "status": "v22 engineering baseline. Active Chinese v3 aligns the SKY130 endpoints, records the s713/s832 joint reruns, and embeds six ImageGen illustrations across 14 pages. English working manuscript remains frozen.",
+  "timestamp": "2026-11-25",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。中文 v3 为 15 页工作稿。研究口径和下一轮验证见现行交接。",
   "project": "FAECO",
   "read_order": [
-    "project_docs/HANDOFF_2026-11-23.md",
+    "project_docs/HANDOFF_2026-11-25.md",
     "project_docs/CANON.md",
-    "project_docs/evidence/sky130_joint_constraints_20261123/REPORT.md",
-    "project_docs/evidence/cross_pdk_lr_baselines_20261123/REPORT.md",
-    "project_docs/evidence/postroute_strong_baselines_20261122/REPORT.md",
-    "project_docs/evidence/postroute_recovery_20261120/REPORT.md",
-    "project_docs/OPEN_ISSUES.md"
+    "project_docs/evidence/tcad_publication_assessment_20261125/REPORT.md",
+    "project_docs/OPEN_ISSUES.md",
+    "project_docs/PROJECT_MAP.md",
+    "project_docs/LOGS.md"
   ],
   "git": {
     "head_source": "git log -1 --format=%H",
@@ -17,18 +16,18 @@
     "push_status": "query git status -sb and git ls-remote origin refs/heads/main"
   },
   "paper_state": {
-    "note": "中文 v3 活跃工作稿已完成端点口径与配图修订。英文工作稿暂冻。",
+    "note": "中文 v3 为面向 TCAD 的 15 页工作稿，英文工作稿暂冻。现有实验的裁决和待验证主张见 CANON。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "34b9f3b9e8fbb20c985ccc96f3887ba7c0c0a4a48f260847644c3902c9d6ef68",
-      "bytes": 79912,
-      "pages": 14
+      "sha256": "10434205189c0141cba035fed4013dbf7f98f27b9bb936bf23e5a42bf921ee23",
+      "bytes": 85140,
+      "pages": 15
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "5ec838ac0821e257fd7548c93bb28693ca9028896c5b6ded8cd299c362e6ecae",
-      "bytes": 6623791,
-      "pages": 14
+      "sha256": "df2ae432e3cb98eb413c206b027c7bc4b5f7959fd905c8a545141f7d182467cd",
+      "bytes": 6629683,
+      "pages": 15
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
     "zh_archived_supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
@@ -60,10 +59,7 @@
     }
   },
   "next_steps": [
-    "route A+B combo: learning-driven recovery + problem definition narrative",
-    "push git commits",
-    "expand benchmarks (ASAP7/OpenCores)",
-    "add power/wirelength metrics"
+    "按 project_docs/HANDOFF_2026-11-25.md 的后续实验顺序执行。"
   ],
   "records": {
     "canon_rulings": "\u00a71 \u88c1\u5b9a 15\uff08\u65b9\u5411\u8f6c\u6298\uff09/ 16\uff08P1 FAIL\uff09/ 17\uff08Hybrid FAIL\uff09/ 18\uff08P1\u2032 pre-CTS pilot PASS\uff09/ 19\uff08P1\u2032 post-CTS FAIL\uff09",

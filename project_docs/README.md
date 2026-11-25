@@ -1,5 +1,10 @@
 # project_docs 入口
 
+> **2026-11-25 当前入口**见 [交接](HANDOFF_2026-11-25.md) 和 [CANON](CANON.md)。投稿贡献、与相关工作的区别及证据边界见 [投稿评估](evidence/tcad_publication_assessment_20261125/REPORT.md)。
+
+<details>
+<summary>2026-11-13 过渡期入口（历史）</summary>
+
 > **2026-11-13 当前入口：可调时序预算机制。** 优先读 `project_docs/evidence/timing_budget_20261113/REPORT.md` 与 `project_docs/CANON.md`。保留Resizer前端；默认允许WNS最多损失10ps，TNS辅助、hold保持原门。s382既有端点在该预算下已补SEC101/0：回收Resizer净新增面积28.90625%（总面积−4.399524%，WNS−3.098077ps，TNS−0.231982231ns）。这是已有物理端点重筛，不是新搜索算法收益。新 `code/src/rseco/budgeted_recovery.py` 实现纯策略/有界组合搜索，在线物理评估器、完整IO约束、强基线/跨设计尚待建立；下方strict政策与旧状态均保留历史。
 
 
@@ -8,18 +13,21 @@
 
 > **历史表述：本目录只有 6 个现行文件，其余全为历史。** 历史不是删掉了，是归档了——见 `ARCHIVE_INDEX.md`。
 
+</details>
+
 ## 必读（按序）
 
 当前补充入口：[SKY130 逐端点对齐与联合评测](evidence/sky130_joint_constraints_20261123/REPORT.md) · [中文 v3 修订稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)。
 
-0. **`HANDOFF_2026-11-09.md`** —— 三十秒现状 + 复现入口 + 自检命令 + 后续规划 + 六个坑。**接手先读这一份。**
-1. **`CANON.md`** —— 唯一现行口径：论文定版、8 条声称的强度裁决、冻结数字、待决项、已否决路线。
+0. **接手先读 [现行交接](HANDOFF_2026-11-25.md)**，其中包含现状、复现、自检和后续工作。
+1. **[CANON](CANON.md)** 给出唯一现行口径、证据数字和待决项。
 2. **`PROJECT_MAP.md`** —— 目录职责、版本三层对应、数据资产归属、6 条结构性坑。
 3. **`LOGS.md`**（事实流水，只追加）/ **`OPEN_ISSUES.md`**（未决容器）。
 
 `ARCHIVE_INDEX.md` 记录所有归档去向，含「这份为什么不见了」。
 
-## 一句话现状（2026-11-09 实测，r116）
+<details>
+<summary>2026-11-09 实测 r116（历史）</summary>
 
 论文已到 **r116**：主稿 **11 页 / 17 `\bibitem` / 7 图 / 5 表**（`.tex` SHA 前缀 `d5bbc9bd`、PDF `47c5964c`），
 补充 **15 页 / 22 表 / 5 图**（`c9c73242`、`04df3914`），英文 **26 页**（`327987d2`，**自 r96 起未同口径**，见 CANON §8 P12）。
@@ -35,22 +43,24 @@ git：HEAD `faa533a`、工作区 clean、**30 条提交未 push**。基线 `acti
 测试：全量 `pytest code/tests` 需把 OSS-CAD 的 `bin` 与 `lib` 放在 PATH 最前（原因见 `PROJECT_MAP.md` §7），
 否则 5 个依赖真实 yosys 的用例会因 DLL 串位假红。
 
+</details>
+
 ## 论文入口
 
-- 主稿：`../paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex`
-- 补充：`../paper/zh/manuscript/FAECO_补充材料.tex`
-- PDF：`../paper/zh/build/`（两处副本 SHA 须一致）
+- 活跃中文工作稿为 [后布局 v3 源码](../paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex) 与 [15 页 PDF](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf)。
+- 历史预布局主稿及补充材料保留在 `../paper/zh/manuscript/`。
 - 编译：`cd paper/zh/manuscript/`，**显式选目标** `lualatex -interaction=nonstopmode <n>.tex` ×2，再 `cp` 到 `paper/zh/`
 - 质量门：`paper/zh/scripts/checks/latex_quality_gate.py` —— Errors / Overfull / Underfull 全 0
 - **行尾**：`.tex` 与 `OPEN_ISSUES.md` **纯 LF**、`LOGS.md` **纯 CRLF**、`.sh` 由 `.gitattributes` 强制 LF；
   任何被跟踪文本文件都**不得含 `\r\r\n`**（`code/scripts/fix_crcrlf.py` 自查；r13 事故即 `\r\r\n` ⇒ 83 Errors）
-- 英文稿：`../paper/en/manuscript/FAECO.tex`，**未随中文同口径**，不得据它反推中文数字
+- 英文工作稿暂冻。现行稿件路径和指纹见 [交接配置](../.codex-handoff.json)。
 
 ## 目录
 
 | 目录 / 文件 | 角色 | 状态 |
 |---|---|---|
-| `HANDOFF_2026-11-09.md` | 交接入口（现状 / 复现 / 自检 / 后续规划） | **现行** |
+| `HANDOFF_2026-11-25.md` | 交接入口（现状 / 复现 / 自检 / 后续规划） | **现行** |
+| `HANDOFF_2026-11-23.md`、`HANDOFF_2026-11-09.md` | 交接快照 | 历史 |
 | `CANON.md` | 唯一口径 | **现行** |
 | `PROJECT_MAP.md` | 目录 / 版本 / 数据地图 | **现行** |
 | `ARCHIVE_INDEX.md` | 归档去向 | **现行** |
@@ -63,7 +73,7 @@ git：HEAD `faa533a`、工作区 clean、**30 条提交未 push**。基线 `acti
 | `review_history/` | 审稿历史 | 历史 |
 | `design_specs/` | 设计规格 | 约束 `code/` |
 | `planning/` | 仅存 V2 三份 + README | 半活 |
-| `baselines/` | 具名基线 | 活跃（`active` = v19 / r28；v20 待建） |
+| `baselines/` | 具名基线 | 见交接与版本规范 |
 | `archive/` | 退役 | 历史 |
 | `migration/`、`worktrees/` | 迁移记录、工作树 | 历史 |
 
