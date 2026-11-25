@@ -11,6 +11,7 @@ from types import SimpleNamespace
 
 import run_wallclock_matrix as matrix
 from run_wallclock_matrix import comparison, read, verify
+import raw_timed_process
 from run_aes_cold_online import ColdOnlineComparison
 from run_aes_incident_priority_matched_v2 import process_ledger
 import run_setup_budget_sweep as sweep
@@ -19,6 +20,11 @@ import screen_sky130_candidates as screening
 
 
 CONFIRMED_STRATEGIES = ("fixed_online", "single_sensitivity", "faeco_dedup")
+NATIVE_RANK_ACTIONS = matrix.sensitivity.rank_actions
+UNCONSTRAINED_RANK_RULE = (
+    "Use the same TT sensitivity formula on finite output-pin slack. Keep actions with only +Inf output slacks "
+    "at the tail in frozen input order. An absent, duplicate, NaN or -Inf output record fails ranking."
+)
 
 
 @contextmanager
@@ -30,6 +36,71 @@ def strategy_scope(confirmed_only):
         yield
     finally:
         matrix.FORWARD = original
+
+
+def rank_qualified_actions(pool, text, expected_wns_ps):
+    by_instance = {action.instance: action for action in pool}
+    if len(by_instance) != len(pool):
+        raise ValueError("qualified ranking pool has repeated instances")
+    observed = {name: {} for name in by_instance}
+    usable_lines = []
+    for line in text.splitlines():
+        if not line.startswith("RANK_PIN "):
+            usable_lines.append(line)
+            continue
+        _, name, pin, raw = line.split()
+        value = float(raw)
+        if name not in observed or pin in observed[name] or (not math.isfinite(value) and value != math.inf):
+            raise ValueError(f"invalid output ranking observation {name}/{pin} = {raw}")
+        observed[name][pin] = value
+        if math.isfinite(value):
+            usable_lines.append(line)
+    missing = [name for name, pins in observed.items() if not pins]
+    if missing:
+        raise ValueError(f"missing output ranking coverage: {missing}")
+
+    finite = [action for action in pool if any(math.isfinite(value) for value in observed[action.instance].values())]
+    tail = [action for action in pool if all(value == math.inf for value in observed[action.instance].values())]
+    ranking = NATIVE_RANK_ACTIONS(finite, "\n".join(usable_lines), expected_wns_ps)
+    rows = ranking["rows"]
+    for action in tail:
+        rows[action.action_id] = {
+            "instance": action.instance, "pins_setup_slack_ps": {},
+            "min_output_setup_slack_ps": None, "margin_ps": None, "area": action.estimated_area_saving,
+            "off_critical": None, "score": None, "historical_score": None,
+        }
+    for action in pool:
+        rows[action.action_id]["pins_without_finite_setup_slack"] = sorted(
+            pin for pin, value in observed[action.instance].items() if value == math.inf
+        )
+    appended = [action.action_id for action in tail]
+    ranking["ordered_action_ids"].extend(appended)
+    ranking["historical_ordered_action_ids"].extend(appended)
+    ranking["unconstrained_tail_action_ids"] = appended
+    return ranking
+
+
+@contextmanager
+def qualified_ranking():
+    original_rule = matrix.sensitivity.RANK_RULE
+    original_rank = matrix.sensitivity.rank_actions
+    matrix.sensitivity.RANK_RULE = f"{original_rule}. {UNCONSTRAINED_RANK_RULE}"
+    matrix.sensitivity.rank_actions = rank_qualified_actions
+    try:
+        yield
+    finally:
+        matrix.sensitivity.RANK_RULE = original_rule
+        matrix.sensitivity.rank_actions = original_rank
+
+
+@contextmanager
+def qualified_process_clock():
+    original = comparison.run_process
+    comparison.run_process = raw_timed_process.run_process
+    try:
+        yield
+    finally:
+        comparison.run_process = original
 
 
 def budget_basis(semantics, saved_sdc, preregistered_ps):
@@ -152,7 +223,7 @@ class QualifiedWallclockComparison(ColdOnlineComparison):
             "affinity": sorted(os.sched_getaffinity(0)), "single_pin_access": args.single_pin_access,
             "endpoint_checks": "DRT, RCX, FF/TT/SS STA, protected geometry, independent whole-block DRC, antenna, SEC",
             "sources": {path.name: comparison.bind(path) for path in (
-                Path(__file__).resolve(), *args.helper_source,
+                Path(__file__).resolve(), Path(raw_timed_process.__file__).resolve(), *args.helper_source,
                 *(matrix.EVIDENCE / "tcad_ibex_20261123" / filename for filename in (
                     "audit_aes_unlocked_drc.py", "probe_aes_selective_repair.py", "prove_ibex.py", "setup_budget.py",
                 )),
@@ -228,6 +299,9 @@ def main():
             "screening_source": comparison.bind(Path(screening.__file__)),
             "screen_workers": args.screen_workers if args.screen_only else None,
             "strategy_order": planned_order, "confirmed_only": args.confirmed_only,
+            "qualified_ranking_policy": UNCONSTRAINED_RANK_RULE,
+            "timed_process_clock": "CLOCK_MONOTONIC_RAW",
+            "timed_process_poll_seconds": raw_timed_process.POLL_SECONDS,
         })
         if args.validate_only:
             comparison.save(state, {"status": "protocol_and_inputs_validated", "completed_arms": 0})
@@ -242,7 +316,7 @@ def main():
             })
             return 0
         seed_args = SimpleNamespace(**(vars(args) | {"out": output / "seed", "prepare_only": True, "probe_only": False}))
-        with bind_runtime(args.top, args.routing_config), strategy_scope(args.confirmed_only):
+        with bind_runtime(args.top, args.routing_config), strategy_scope(args.confirmed_only), qualified_ranking():
             if comparison.run(seed_args, config_overrides={
                 "budget_attempts_per_arm": None, "original_clock_period_ps": args.clock_period_ps,
                 "setup_budget_ps_per_view": clock["absolute_wns_loss_budget_ps"], "tns_gate": True,
@@ -252,6 +326,9 @@ def main():
             runner = QualifiedWallclockComparison(args, seed_args.out, output, bindings, seconds)
             runner.config["period_basis"] = clock
             runner.config["confirmed_only"] = args.confirmed_only
+            runner.config["qualified_rank_scope"] = UNCONSTRAINED_RANK_RULE
+            runner.config["timed_process_clock"] = "CLOCK_MONOTONIC_RAW"
+            runner.config["timed_process_poll_seconds"] = raw_timed_process.POLL_SECONDS
             matrix.preregister(runner, args.views_json, output)
             if args.prepare_only:
                 comparison.save(state, {"status": "seed_validated", "completed_arms": 0})
@@ -260,7 +337,8 @@ def main():
             if args.probe_only:
                 comparison.save(state, {"status": "shared_zero_qualified", "completed_arms": 0})
                 return 0
-            matrix.run_matrix(runner, reference, output, runner.config)
+            with qualified_process_clock():
+                matrix.run_matrix(runner, reference, output, runner.config)
     except Exception as error:
         prior = read(state) if state.exists() else {}
         comparison.save(state, {**prior, "status": "failed", "error": str(error), "stop_raw": raw_seconds()})

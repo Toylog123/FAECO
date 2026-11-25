@@ -4,10 +4,11 @@
 from argparse import ArgumentParser
 from contextlib import contextmanager
 from dataclasses import asdict
-from math import inf, isclose
+from math import inf, isclose, isfinite
 from pathlib import Path
+import re
 
-from run_wallclock_matrix import comparison, read, verify
+from run_wallclock_matrix import comparison, read, sensitivity, verify
 import verify_aes_cold_online as cold
 from verify_aes_factorial import accepted_checkpoints
 from verify_aes_protected_online import audit_logical, check
@@ -21,8 +22,65 @@ FORWARD = list(METHODS)
 TARGETS_PCT = [0.01, 0.15, 0.25]
 
 
+def validate_qualified_ranking(arm, assets, views, pool, tool, rule):
+    ranking = read(arm / "sensitivity/ranking.json")
+    log, script = verify(ranking["log"]), verify(ranking["script"])
+    control = {name: assets["control"][name] for name in ("odb", "sdc", "spef")}
+    libraries = assets["used_libraries"]["TT"]
+    command = [str(verify(assets["tools"]["openroad"])), "-no_init", "-no_splash", "-threads", "1", "-exit", str(script)]
+    progress = read(arm / "progress.json")
+    span = ranking["preparation"]
+    check(ranking["control"] == control and ranking["libraries"] == libraries and ranking["rule"] == rule
+          and ranking["view"] == "TT" and ranking["threads"] == 1 and log == arm / RANK_LOG
+          and script == log.with_name("rank.tcl") and tool["command"] == command and tool["returncode"] == 0
+          and tool["configured_timeout_seconds"] == 40.0 and ranking["tool_wall_seconds"] == tool["wall_seconds"],
+          "qualified rank inputs, tool and ledger differ")
+    check(script.read_text() == sensitivity.render_rank_tcl([verify(binding) for binding in libraries],
+                                                          {name: verify(binding) for name, binding in control.items()}, pool)
+          and progress["start_raw"] <= span["start_raw"] <= tool["start_raw"] <= tool["stop_raw"] <= span["stop_raw"]
+          <= progress["logical_requests"][0]["admitted_raw"] and span["seconds"] == span["stop_raw"] - span["start_raw"],
+          "qualified rank script or charged placement differs")
+    text = log.read_text()
+    wns = views["TT"]["setup_wns_ps"]
+    raw_wns = re.findall(r"(?m)^RANK_WNS_PS (\S+)$", text)
+    check(sensitivity.RANK_COMPLETE in text.splitlines() and len(raw_wns) == 1
+          and isclose(float(raw_wns[0]), wns, rel_tol=0, abs_tol=0.001) and ranking["control_setup_wns_ps"] == wns,
+          "rank query did not recover qualified TT WNS")
+    pins = {action.instance: {} for action in pool}
+    for instance, pin, value in re.findall(r"(?m)^RANK_PIN (\S+) (\S+) (\S+)$", text):
+        slack = float(value)
+        check(instance in pins and pin not in pins[instance] and (isfinite(slack) or slack == inf), "invalid output slack")
+        pins[instance][pin] = slack
+    check(all(pins.values()), "a candidate is missing every output pin")
+    finite_scores, tail, rows = [], [], {}
+    for action in pool:
+        key = action.action_id
+        real = {pin: slack for pin, slack in pins[action.instance].items() if isfinite(slack)}
+        unmeasured = sorted(pin for pin, slack in pins[action.instance].items() if slack == inf)
+        area = action.estimated_area_saving
+        row = {"instance": action.instance, "pins_setup_slack_ps": real, "area": area,
+               "pins_without_finite_setup_slack": unmeasured}
+        if real:
+            slack = min(real.values())
+            margin = slack - wns
+            score = area * (0.1 + max(margin, 0) / 200)
+            historical = area * (0.1 + min(max(margin, 0), 200) / 200)
+            row.update(min_output_setup_slack_ps=slack, margin_ps=margin, off_critical=margin > 5,
+                       score=score, historical_score=historical)
+            finite_scores.append((margin <= 5, -score, -area, key))
+        else:
+            tail.append(key)
+            row.update(min_output_setup_slack_ps=None, margin_ps=None, off_critical=None, score=None, historical_score=None)
+        rows[key] = row
+    order = [row[-1] for row in sorted(finite_scores)] + tail
+    check(rows == ranking["rows"] and tail == ranking["unconstrained_tail_action_ids"]
+          and order == ranking["ordered_action_ids"], "qualified sensitivity order does not reconstruct")
+    index = {action.action_id: action for action in pool}
+    return [index[key] for key in order], ranking
+
+
 @contextmanager
-def replay_resources(arm, strategy, assets, views, pool):
+def replay_resources(arm, strategy, assets, views, pool, protocol):
     previous_read, previous_online = cold.read, cold.ONLINE
     adaptive = comparison.adaptive_batch_recovery
     ledger = arm / "subprocesses.json"
@@ -32,7 +90,10 @@ def replay_resources(arm, strategy, assets, views, pool):
     ranking = None
     if rank:
         check(rank[0] == tools[0], "ranking did not precede physical requests")
-        pool, ranking = validate_ranking(arm, assets, views, pool, rank[0])
+        if "qualified_rank_scope" in protocol:
+            pool, ranking = validate_qualified_ranking(arm, assets, views, pool, rank[0], protocol["single_sensitivity_rule"])
+        else:
+            pool, ranking = validate_ranking(arm, assets, views, pool, rank[0])
 
     def uncapped(*args, max_evaluations, **kwargs):
         check(max_evaluations == inf, "unexpected replay evaluation limit")
@@ -111,7 +172,7 @@ def audit(root, prefix, confirmed_only=False):
               and verify(entry["summary"]) == arm / "summary.json" and read(verify(entry["summary"])) == entry["result"],
               "cross-arm result or ledger")
         check(entry["charged_screening_seconds"] == screen["wall_seconds"], "screening charge differs")
-        with replay_resources(arm, strategy, assets, views, pool) as (ordered, tools, ranking):
+        with replay_resources(arm, strategy, assets, views, pool, protocol) as (ordered, tools, ranking):
             requests = cold.audit_requests(arm, assets, ordered, nets)
             inputs = (frozen, views, nets, ordered, reference)
             if method == "faeco":
@@ -123,6 +184,11 @@ def audit(root, prefix, confirmed_only=False):
         check(preceding_stop <= audited["raw_start"] < audited["raw_stop"], "timed cells were not serial")
         preceding_stop = audited["raw_stop"]
         check(len(skips) == entry["reused_setup_only_rejections"], "rejection reuse did not reconstruct")
+        if protocol.get("timed_process_clock") == "CLOCK_MONOTONIC_RAW":
+            deadline = read(arm / "progress.json")["deadline_raw"]
+            for tool in tools:
+                if tool["returncode"] is None and tool["timeout_bound"] == "wall":
+                    check(tool["stop_raw"] >= deadline, "wall-limited child ended before the RAW deadline")
         check(sum(row["started"] for row in entry["stage_costs"].values()) == len(tools)
               and isclose(sum(row["tool_wall_seconds"] for row in entry["stage_costs"].values()),
                           sum(row["wall_seconds"] for row in tools), rel_tol=0, abs_tol=1e-6), "tool totals differ")

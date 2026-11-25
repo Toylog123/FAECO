@@ -8119,3 +8119,48 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - 16:21:32（UTC+8），CPU 0–5、四线程、统一外限 6,500 s，包装 PID 343、Python PID 423、exec session 42647。输出 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v1`，同名 `.stdout.log` 首行保存完整命令。资格绑定 `qualified_inputs.json` SHA-256 `b4c71fde9d9f1f429b5f093382a379b9445aaf4bbd2d8da7e8c3e11c10615f2a`，原 P0、原三角与独验 18 项池绑定，64.099573641 RAW s 等额计入。
 - `--confirmed-only`，顺序固定批／灵敏度单门／现行去重，再完全反序。DRT 64 轮上限，路由／每角 STA／SEC 限 240／180／210 s，候选共同外部硬窗 720 RAW s。首次检查仍为共享零动作前置阶段。ASAP7 `ethmac` 排在该矩阵实计时结束后，避免重叠 EDA。
 - 正式 `protocol.json` SHA-256 `8b979b6931ca9f5a9f5eb0a20638f5a12dbdc8a6d2a169785fd407e0fb95f419`。`seed/control/receipt.json` SHA-256 `7f77c245d216b45d0e9b8301c55aab778b24ae78e98338a2d9d186366fc1c8fe`，源库、原约束及现场三角 hold 匹配 P0，正执行新鲜共享零动作。
+
+
+## LOG-20261125-153｜UART 开发提交与 SKY130HD 严格零动作通过
+
+- UART 开发、SKY130HD 资格／筛选及留出入口冻结到 `bbc28dba91f6907a079b919466531cc2e2dd2357`，本地 `main` 和 `origin/main` 到同一提交。
+- SKY130HD `riscv32i` 共享严格零动作新鲜完整验收 59.361742441 RAW s，功能面积 71,427.2544 µm²，原门失败空，独立 DRC／天线 0、SEC 4559/0。收据 `preflight/zero/result.json` SHA-256 `064e0d35be6b8509741f4a8d1f8158fa85ea94a6a534653a7329d4e85ddc8a4e`。此费用单列，首个固定批已实际派发三项动作。
+
+
+## LOG-20261125-154｜riscv32i 首个固定批合格端点已通过生产验收
+
+- 正序固定第一次只触发 TT TNS 拒，第二次在 211.831371594 RAW s 验收 26.2752 µm²（0.036786%），超过正式 0.01% 面积下限。独立全块 DRC／天线 0，SEC 4559/0，实际 `cell_01/fixed/02/result.json` SHA-256 `557abad2bb0e16005735a77254a4eee03147bc6596bf3a2765e50bec5e9b961b`。当前为候选级收据，等该臂和完整矩阵独验。
+
+
+## LOG-20261125-155｜riscv32i 实布出现预诊断未见的 DRC，重试后合格
+
+- 正序固定第 3 次累计六门，布线前诊断 0 marker、无邻网提前释放。首次 DRT／RCX 用 227.897 RAW s，独立全块发现 10 处 Short／Cut Short。真实邻网重试 DRT／RCX 用 47.023 RAW s，解除后的独立 DRC 为 0，原联合门及非空 SEC 通过，539.183750966 RAW s 验收 52.5504 µm²。结果 SHA-256 `2d0396274bd993e25a8c2de5d82ea9724ae46bd56187dda1fc48d3ecd66f66f4`。这是独立设计确有物理诊断事件、但预诊断未提前检出的候选，早诊断净节省没有在该候选上发生。
+
+
+## LOG-20261125-156｜riscv32i 正序固定以第 3 次通过端点收束
+
+- 固定正序派发 4、完成 3，最佳 52.5504 µm²（0.073572%），0.01% 在 211.831371594 RAW s 首达，0.15% 和 0.25% 未达。总 5 次 DRT/RCX 启动，第四请求的初次 DRT/RCX 是唯一被截断的工具。其有效限时 170.524884548 s，实耗 162.754319285 RAW s；该臂记录搜索 648.131400003 RAW s 加筛选 64.099573641 s，共 712.230973644 RAW s。末尾保留裁剪及实际提前返回，未按 720 秒虚填耗时。原件 `cell_01/arm.json` SHA-256 `e8172bba56f3687ae56c95e2efdefd8c0900989a122991a938ae20f88cd54a9e`。灵敏度单门正序已启动。
+
+
+## LOG-20261125-157｜riscv32i v1 在强单门排序处遇到未定时引脚
+
+- v1 包装 758 s 后 rc1，保留一个完整正序固定臂。第 2 臂排序 STA 本身成功，原 TT WNS 与 P0 一致并返回 18 个池项的唯一真实引脚。其中 `_5736_/Y`、`_6414_/Y`、`_6788_/Y` 为 `+Inf`，旧 AES 严格有限值检查终止驱动，第二臂候选派发 0。原 TT 有 995 个未约束端点、0 个部分未注释驱动，保留原 SDC，不将非有限引脚用于有限灵敏度计算。
+- 授权只在通用留出排序端处理合法 `+Inf`：有有限 slack 的动作沿用原公式，全 `+Inf` 动作按冻结池序放在尾部。候选池、原门和 720 RAW s 均沿用，独立核验和完整新根另记。旧 `results.json` SHA-256 `57055442966f46c3186e61905d3d3a79e52c69840064b97951ac2569314e841b`。v1 的正序固定记录保留为有限前缀，不作三法成绩。
+
+
+## LOG-20261125-158｜SKY v1 全机退出后实发 ethmac 原生制备
+
+- ASAP7 `ethmac` 原生制备 16:35:19（UTC+8）启动，包装 PID 459、限时 PID 468、Make PID 470，CPU 6–11、四线程、总限 1,800 s。原件根 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/asap7/ethmac`。实发 `command.sh` SHA-256 `4bc4b6ab2c16af6409a6d4c337cf17c806884e8197753eedddb0f56df10c185f`，`input_manifest.log` SHA-256 `e837ef1534b2ca046f0696b74f9844e59b1e8f694d21d2b9c482d4015f13e7ec`，RTL Git tree `9ce44bb8e318d6d0ab4bf5f84667072f6726a6fd`，源 SDC SHA 与预登记一致。已进入原 ORFS 综合与物理流程，起点资格仍待后续。
+
+
+## LOG-20261125-159｜SKY v2 通用排序与同一墙钟源核验
+
+- 重放 v1 排名的 18 个动作，15 个有有限 slack 的动作保持原公式和次序，3 个全 `+Inf` 动作按冻结池的原序放在末尾。继续拒绝非法、重复与缺失记录。排序与入口 7 项无 EDA 核查通过，另两项 RAW 工具限时验证通过。
+- 仅在正式策略窗口中将截止和进程轮询统一到 `CLOCK_MONOTONIC_RAW`，轮询间隔 100 ms。共享资格复测、零动作和筛选仍用原方法，原 SDC、验收门、720 RAW s 与 18 项冻结池保持。入口 SHA-256 `a8324e5b94747193c742d5174c8e71fac89918f1ea699988aea4ca3e5d3e9c35`，RAW 计时工具 `03de2e39b8c178d205e5e80f1857040af7f8270a9e062120524cb145a8f2eb8d`。等 `ethmac` 运行退出再从新根完整跑六臂，v1 证据保留。
+- v1 第四请求 DRT 账面 RAW 起止 5240.548369362→5403.303191393 s，有效限时 170.524884548 s，等效比所绑定的 RAW 截止早 7.770062517 s 返回。证据定位原子进程等待与 RAW 截止不一致，未定位系统时钟偏差来源。WSL Python 3.12 的组合专项回归 70 项通过，16.91 s，含两项 RAW 回归。实际排名重放的 7 项另计。
+
+
+## LOG-20261125-160｜以最终原始字节核对 SKY v2 入参
+
+- 早一份 dry-run 的资格绑定使用开发中间版本，没有作为当前入口的源身份收据。最终重核 `/tmp/riscv_v2_dry_final_ENPGT6/validate/qualified_inputs.json`，SHA-256 `e7e29999721a0373f80bfc5c2507ee0f39025aff6d043b475ba228186ffa9a3f`，确认最终入口 SHA `a8324e5b94747193c742d5174c8e71fac89918f1ea699988aea4ca3e5d3e9c35`、RAW 轮询 0.1 s、实筛选费用 64.099573641 RAW s、三方法正反序。状态 `protocol_and_inputs_validated`，完成物理臂 0。`ethmac` 继续原生独占制备。
+- 可复现测试 `test_qualified_ranking.py` 覆盖有限与 `+Inf` 的排序，以及五类非法记录。与两项 RAW 限时测试合并执行，8 项通过、2.00 s。

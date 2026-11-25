@@ -151,4 +151,26 @@ bash "$repo/code/scripts/run_with_timeout.sh" 6500 taskset -c 0-5 python3 \
 
 实际 `qualified_inputs.json` SHA-256 `b4c71fde9d9f1f429b5f093382a379b9445aaf4bbd2d8da7e8c3e11c10615f2a`，每臂等额计 64.099573641 RAW s。初读为共享前置资格阶段。ASAP7 `ethmac` 起点制备在该矩阵全机计时停止后启动。
 
-正式 `protocol.json` SHA-256 `8b979b6931ca9f5a9f5eb0a20638f5a12dbdc8a6d2a169785fd407e0fb95f419`，`logical_dispatch_cap=null`、setup WNS 60 ps。资格复测 `seed/control/receipt.json` SHA-256 `7f77c245d216b45d0e9b8301c55aab778b24ae78e98338a2d9d186366fc1c8fe`，三角 hold 与 P0 一致。共享严格零动作进行中。
+正式 `protocol.json` SHA-256 `8b979b6931ca9f5a9f5eb0a20638f5a12dbdc8a6d2a169785fd407e0fb95f419`，`logical_dispatch_cap=null`、setup WNS 60 ps。资格复测 `seed/control/receipt.json` SHA-256 `7f77c245d216b45d0e9b8301c55aab778b24ae78e98338a2d9d186366fc1c8fe`，三角 hold 与 P0 一致。
+
+新鲜共享严格零动作通过，59.361742441 RAW s，面积 71,427.2544 µm²，独立全块 DRC／天线零，SEC 4559/0。`preflight/zero/result.json` SHA-256 `064e0d35be6b8509741f4a8d1f8158fa85ea94a6a534653a7329d4e85ddc8a4e`。固定首臂的第 1 批实际派发三门，候选耗时计入各自窗口。开发证据及留出入口已提交 `bbc28dba`。
+
+固定正序首个合格候选是第 2 次，在 211.831371594 RAW s 验收 26.2752 µm²（0.036786%），独立全块 DRC／天线零，SEC 4559/0。第一次仅 TT TNS 拒收。候选 `cell_01/fixed/02/result.json` SHA-256 `557abad2bb0e16005735a77254a4eee03147bc6596bf3a2765e50bec5e9b961b`，完整臂及矩阵验收待后续。
+
+固定正序第 3 次累计六门的预诊断为 0 marker，首次 DRT/RCX 用 227.897 RAW s 后独立全块 DRC 发现 10 处 Short 或 Cut Short。真实重试的 DRT/RCX 用 47.023 RAW s，独立 DRC 清零，原门及非空 SEC 均过，在 539.183750966 RAW s 验收 52.5504 µm²。`cell_01/fixed/03/result.json` SHA-256 `2d0396274bd993e25a8c2de5d82ea9724ae46bd56187dda1fc48d3ecd66f66f4`。
+
+固定正序 3/4 完整，最终采用第 3 次的 52.5504 µm²（0.073572%），0.01% 在 211.831 RAW s 首达，0.15%／0.25% 未达。尾次初始 DRT/RCX 以 170.524885 s 的剩余时限启动，实测 162.754319 RAW s 后终止，整臂含筛选实际 712.230974 RAW s。`cell_01/arm.json` SHA-256 `e8172bba56f3687ae56c95e2efdefd8c0900989a122991a938ae20f88cd54a9e`。
+
+v1 在第二臂原排序检查处退出，包装 758 s，rc1。新鲜排名 STA 的 TT WNS 与 P0 相同，读取了完整的 18 项。原 SDC 下 `_5736_/Y`、`_6414_/Y`、`_6788_/Y` 均报告 `+Inf`，原 AES 排序要求每个引脚有限，因而第二臂没有实际候选派发。原 TT STA 共记录 995 个未约束端点与 0 个部分未注释驱动。通用留出入口按相同有限公式先处理有有限 slack 的动作，将全 `+Inf` 动作以冻结池序留到队尾。保持原物理与时序门，新根会重新执行完整正反序。v1 原件 SHA-256 `57055442966f46c3186e61905d3d3a79e52c69840064b97951ac2569314e841b`。
+
+v2 对 v1 真实 18 项排名作无 EDA 重放，确认 15 项有限 slack 的评分结果和次序保持，3 项全 `+Inf` 位于池尾，非法或缺失仍终止。还将策略窗口中计时、可用预算和工具截止统一到 `CLOCK_MONOTONIC_RAW`，以 100 ms 为轮询间隔。资格复测、筛选和共享零动作保留原执行方法。入口及排序核查 7 项、RAW 计时核查 2 项均过。新入口 SHA-256 `a8324e5b94747193c742d5174c8e71fac89918f1ea699988aea4ca3e5d3e9c35`，计时工具 SHA-256 `03de2e39b8c178d205e5e80f1857040af7f8270a9e062120524cb145a8f2eb8d`。v2 将在 `ethmac` 现有原生任务和资格完成后从新根完整重跑，不混合 v1 和 v2 的臂。
+
+原 `+Inf` 表示该动作没有可用有限 setup 路径读数，保留标签并排在有限值之后。`NaN`、`−Inf`、缺失、重复或未知记录仍使排名失败。v1 固定尾次 DRT 子进程等待没有与 RAW 截止对齐，实际约早 7.770 RAW s 返回，具体系统时钟原因未独立证实。WSL Python3.12 回归 70 项通过，耗时 16.91 s，其中包括两项新的 RAW 限时测试。上述七项模拟与实日志排名核查单列。
+
+最终源重新通过无 EDA 入参检查。`/tmp/riscv_v2_dry_final_ENPGT6/validate/qualified_inputs.json` SHA-256 `e7e29999721a0373f80bfc5c2507ee0f39025aff6d043b475ba228186ffa9a3f`，其 driver 字节绑定为 `a8324e5b94747193c742d5174c8e71fac89918f1ea699988aea4ca3e5d3e9c35`，RAW 轮询 0.1 s，实际计筛选 64.099573641 s。状态 `protocol_and_inputs_validated`，0 个物理臂完成。中间版本的 dry-run 留作开发记录。
+
+最终可复现测试 `test_qualified_ranking.py` 涵盖有限与正无穷排序及五类非法记录，结合 `test_raw_timed_process.py` 共 8 项通过，2.00 s。
+
+### ASAP7 ethmac 原生资格实发
+
+SKY v1 所有物理进程退出后，`ethmac` 原生制备于 16:35:19（UTC+8）开始。CPU 6–11、四线程、原生 1,800 s。包装、进程限时与 Make PID 为 459／468／470。原目录 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/asap7/ethmac`，实发 `command.sh` SHA-256 `4bc4b6ab2c16af6409a6d4c337cf17c806884e8197753eedddb0f56df10c185f`，`input_manifest.log` 为 `e837ef1534b2ca046f0696b74f9844e59b1e8f694d21d2b9c482d4015f13e7ec`。源码树 `9ce44bb8e318d6d0ab4bf5f84667072f6726a6fd`，源 SDC SHA 与预登记同。当前为原 ORFS 起点制备，资格原件待实收。

@@ -3386,3 +3386,22 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **筛选独验及矩阵实发** 独验 SHA-256 `445a0d6fd3be225d25acb93278a8c7365c527c73aeb3a549ab536ce995463c61`。16:21:32（UTC+8）`matrix_qualified_v1` 实发，CPU 0–5、4 线程、外限 6,500 s、PID 343／423、session 42647。原 P0 及筛选收据同一，资格绑定 SHA-256 `b4c71fde9d9f1f429b5f093382a379b9445aaf4bbd2d8da7e8c3e11c10615f2a`。三法正反序共六臂、720 RAW s、每候选由共同阶段截止控制。`ethmac` 等待 SKY130HD 计时完毕再发。[运行规约](tcad_wallclock_schedule_20261125/REPORT.md)
 
 - **正式配置及资格复测** `protocol.json` SHA-256 `8b979b6931ca9f5a9f5eb0a20638f5a12dbdc8a6d2a169785fd407e0fb95f419`，`seed/control/receipt.json` SHA-256 `7f77c245d216b45d0e9b8301c55aab778b24ae78e98338a2d9d186366fc1c8fe`。现场三角 hold 匹配原 P0，实际配置 60 ps 的 setup WNS 门和 `logical_dispatch_cap=null`，待新鲜零动作结束。
+
+- **共同严格零动作已验收** 59.361742441 RAW s、面积 71,427.2544 µm²，独立 DRC／天线 0，SEC 4559/0，无原门失败，费用单列。零动作收据 SHA-256 `064e0d35be6b8509741f4a8d1f8158fa85ea94a6a534653a7329d4e85ddc8a4e`。固定首臂已实际派发三门；阶段代码与原 UART 证据提交 `bbc28dba`。
+
+- **正序首个合格候选** 固定第 2 次在 211.831371594 RAW s 回收 26.2752 µm²（0.036786%），DRC／天线零、SEC 4559/0。此前第 1 次仅 TT TNS 拒。仅为候选级收据，当前臂进行中，后续独验。
+
+- **原诊断边界候选** 正序固定第 3 次累计六门，预诊断 0 marker，实际首次独立发现 10 处 Short／Cut Short，重复 DRT/RCX 后清零并过原门与 SEC，在 539.183750966 RAW s 验收 52.5504 µm²。生产候选收据 SHA-256 `2d0396274bd993e25a8c2de5d82ea9724ae46bd56187dda1fc48d3ecd66f66f4`。
+
+- **正序固定完成** 3/4 完成，最好 52.5504 µm²（0.073572%）。0.01% 首达 211.831371594 RAW s，0.15%／0.25% 未达。第四次初始 DRT/RCX 被剩余墙钟裁剪，整臂含筛选实际 712.230973644 RAW s。同臂生产 SHA-256 `e8172bba56f3687ae56c95e2efdefd8c0900989a122991a938ae20f88cd54a9e`。正序灵敏度单门运行。
+
+- **v1 中止及归因** 758 s 后 rc1，第二臂真实排序 STA 返回 18 个已绑实例，3 个输出为 `+Inf`（`_5736_/Y`、`_6414_/Y`、`_6788_/Y`），旧 AES 严格有限值校验拒绝，候选派发 0。原 TT WNS 精确复现、原约束保留。通用入口拟让全 `+Inf` 动作按冻结序放末位，有限公式与验收门保留。原件结果 SHA-256 `57055442966f46c3186e61905d3d3a79e52c69840064b97951ac2569314e841b`，另做 v2 完整结果。
+
+- **v2 入口核验** 实际排名重放中 15 项有限保持原公式次序，3 个全 `+Inf` 候选排在池尾，非法身份与缺失记录仍拒。7 项核对独立于包含 RAW 计时两项的 70 项 WSL 回归（16.91 s）。正式窗口使用 100 ms 轮询的同一 RAW 时钟，其他阶段保留原执行。v1 固定尾次子进程等待与绑定的 RAW 截止相差约 7.770 s。入口 SHA-256 `a8324e5b94747193c742d5174c8e71fac89918f1ea699988aea4ca3e5d3e9c35`，工具 SHA-256 `03de2e39b8c178d205e5e80f1857040af7f8270a9e062120524cb145a8f2eb8d`，待 `ethmac` 当前计时完毕发出。
+
+- **最终源 dry-run** 最终 `a8324e5b` 字节重新绑定原 P0、三角库、实际池和阶段配置。合格输入原件 `/tmp/riscv_v2_dry_final_ENPGT6/validate/qualified_inputs.json` SHA-256 `e7e29999721a0373f80bfc5c2507ee0f39025aff6d043b475ba228186ffa9a3f`，RAW 轮询 0.1 s，`protocol_and_inputs_validated`，0 个候选物理臂。新增可复现排名测试与 RAW 独立组合共 8 项通过，2.00 s。
+
+
+### 2026-11-25 TCAD-ASAP7-ETHMAC-NATIVE-QUALIFICATION
+
+- SKY v1 退出且无其余计时后启动，16:35:19（UTC+8）、CPU 6–11、四线程、总限 1,800 s、PID 459／468／470。原目录 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/asap7/ethmac`，实发 `command.sh` SHA-256 `4bc4b6ab2c16af6409a6d4c337cf17c806884e8197753eedddb0f56df10c185f`，输入清单 `e837ef1534b2ca046f0696b74f9844e59b1e8f694d21d2b9c482d4015f13e7ec`。原本多时钟 P0 资格未结果，候选 0。
