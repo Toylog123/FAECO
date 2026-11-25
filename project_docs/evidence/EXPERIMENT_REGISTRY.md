@@ -3269,3 +3269,32 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - **八单元终态** 两序全链完整，独立 DRC／天线全 0，SEC 均 262/0。091 两序从头 TT/SS 拒，恢复均验收 11.2608 µm² 且跨序相同 ODB。093 四次均过门，恢复与从头的网表、去日期 SPEF、三角相同，ODB／DEF 物理身份不同。全账两序从头 27.474597443／27.474492467 RAW s，恢复 29.556607516／29.571648851 s，两个顺序均额外约 2.09 s。不满足等原门判定与净时间双门。原结果 SHA-256 `3fa5f0274501b5beb0066c5d154421202653a943d5025d2d14e0c4967e46e1bb`。
 
 - **独立核验与归档** 两个矩阵共核 8 个检查点，452 条固定线均在几何、接线、元件和导引相同下解锁，第二段无重复 PA，DRT 日志分别从第 3 轮读取 7／17 个 marker。091 两序新物理端点同一，功能网表与从头一致，10 网几何改变，TT／SS hold WNS 提高 0.533990／1.869893 ps。093 规范化几何相同。独验 SHA-256 `2c835e720884536a38fc167cdbb64e9a8a0b62b368f6b34af0f10d0fa2751204`。保留备用物理端点，未达到净加速门。原件封存于 `scratch/tcad_ibex_20261123/gcd_route_reentry_20261125_v1.tar.gz`，515 项、19,397,599 字节，SHA-256 `9122868d7edf7c9e1fd9ca40dceef556805801449d14b9b6429e0fa2e5c8e6e5`，tar 比较 rc0。[正式报告](tcad_ibex_20261123/GCD_LOCAL_ROUTE_REENTRY_REPORT.md) · [独立核验](tcad_ibex_20261123/GCD_ROUTE_CHECKPOINT_AUDIT.json)
+
+
+### 2026-11-25 TCAD-POSTROUTE-CHECKPOINT-HOLD-SALVAGE（意图登记）
+
+- 基线 `593fb9fa`。按已完整原预算台账筛选同冻结起点、同后端、仅因 hold 拒收且回收潜力严格超过该台账全部合格端点的候选。预先固定来源、动作、原验收及该来源既有最佳，不随补救结果调整。旧 GCD `_091_` 与已合格 `_093_` 同面积，提供补救机制依据。若已登记各矩阵入选不够，先实查其余已登记台账，再作有限扩展并登记来源。
+- 每个入选候选做同机串行 fresh 从头和两轮实际检查点保存后新进程重入。原门全链均保留，逐项记录触发后的追加秒数、失败／超时、合格端点相对历史最佳的净增和共享动作。详细输入、门、触发规则、超时和执行顺序在启动前补齐。[前轮配对](tcad_ibex_20261123/GCD_LOCAL_ROUTE_REENTRY_REPORT.md)
+
+- **锁定输入与触发** GCD `gcd_incident_cap_pair_20261124_v1/screened/fixed/02`，18.768 µm²、TT／SS 纯 hold，历史最佳 15.0144 µm²，CPU 6–11，原 11 ps setup WNS 门。UART `faeco_tcad_uart_online_20261125_matrix_v2/cell_02/fixed_online/01,04,05`，潜力 0.26244／0.34992／0.34992 µm²，原拒因为 SS／TT+SS／TT+SS hold，历史已验收最佳 0.23328 µm²，CPU 0–5，原 270 ps、2.7 ps setup WNS、原逐角 TNS 和 0.001 ps hold 容差。先做 fresh，复现纯 hold 拒才进入补救；GCD 用上轮几何规则确定限域，UART 用原报告的保护网，两轮保存并新进程读回、先解锁再跳 PA，用原三角与全块 DRC、天线、非空 SEC。主试每项最多一次补救，补救两段 DRT 共用 100 s，成功项同配置另复跑一次。补救费用为触发后实际追加 RAW 秒，包含失败；复核不计入触发成本。[预登记明细](tcad_ibex_20261123/HOLD_REENTRY_RESCUE_REPORT.md)
+
+- **GCD 实际运行** `/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_reentry_rescue_20261125_v1`，CPU 6–11、外限 470 s。协议 `b6639029e73cd7c27ac02ee381d4dcbec498ebc5181c4acbef2d4a61debba672`，驱动 `bbd5429c80708313290c20a1acc740bbe720f9d0266212ba31b232e275ddbba9`。新鲜从头复现 TT／SS hold 拒收（430.431690290／341.936978732 ps），重入两角仍拒（427.816782000／330.468041820 ps）。两条均 DRC／天线零，诊断 SEC 262/0。补救收费 35.226741728 RAW s，含诊断 SEC 35.923469381 s；历史最佳保留，净增 0。原件结果 SHA-256 `e19d1c41cbcc7240dd10fc3cd82e6bb6dde07859321fafbc715fe9a3ce602eef`.
+
+- **GCD 失败归因** 两法功能网表与 TT／SS 最差路径身份相同。重入后规范 DEF 有 8 条网变化，`clknet_0_clk` 提取总 C 13.3128→14.7743 fF，TT／SS hold 下降 2.614908／11.468937 ps。两段 DRT 实测约 8.995／22.050 s。多网同时改变，证据为物理变化与退化共同出现。
+
+- **UART 实际发出** 11:28:33（UTC+8），`/home/toylog/faeco_tcad_uart_hold_reentry_rescue_20261125_v1`，CPU 0–5、四线程、外限 1,100 s，固定执行 `uart_01`、`uart_04`、`uart_05`。协议 SHA-256 `99fc2f66eca5291be7664f97088ae2895d339cae08dc1b1af61509796d899405`，入口与 GCD 相同。三角 TNS 预算 27／27／136.973650200 ps，TT／SS 相对 hold 下限 67.501115009／54.051914922 ps。
+
+- **UART 首项及确认** `uart_01` 从头全链 28.851505557 RAW s，仅 SS hold 拒（54.038593045 ps）。重入及同配置确认通过，SS 54.066501276 ps，独立 DRC／天线零，SEC567/0，回收 0.26244 µm²，较历史前沿净增 0.02916 µm²。触发后的追加墙钟 38.100835381 RAW s，确认 37.785812397 s 单计。检查点有 0 个 marker，第二进程从第 0 轮开始；两次重入 ODB 同为 `accf471c5bc92bc7a819965b6829357d9561cb10a2c76a44c60908b18e0f77db`。
+
+- **UART 六门及主试终态** `uart_04`、`uart_05` 均复现 TT／SS 拒，重入 SS 过门，TT 仍分别低于原门 0.001546574／0.000422473 ps。两者独立 DRC／天线零，诊断 SEC 567/0，补救各付 36.618141055／36.645325927 RAW s。UART 共 3 触发、1 合格、追加 111.364302363 RAW s，净增 0.02916 µm²。两设计合计 4 触发、1 合格、追加 146.591044091 RAW s。UART 结果 SHA-256 `40daffaba15317649145f66f6e69324edba5678f409cae8f545ef7aafd428c87`。
+
+
+### 2026-11-25 TCAD-ASAP7-UART-REUSE-REJECTED-ROUTED-ODB（意图登记）
+
+- 原 UART 三个 fresh 预 RCX routed ODB 与各自两轮检查点 ODB 逐字节同一，规范 DEF 同一、均无 checkpoint marker。SHA-256 分别 `5198369e3fef56a6e81812370fd009e3790a109e3b2eec9f43a0cabb668544c3`、`952d74eebb984a71faeb8e0ae3c760ae8f660dd6d2ab9a93c1d5326a00473bc8`、`3a0d631a7feeb2b2543bcd2a3ac74baeae20110da006833e85286ac8f58ae413`。GCD 无此同一证据，不进入本消融。先锁定 UART 原三项与预 RCX ODB、各项既有配对结果，再直接读回该原 ODB，用原新进程解锁和 `-no_pin_access`。按原门及独立 DRC／天线／SEC 验收，实测触发后全部时间；逐项比较 ODB、DEF、网表、去日期 SPEF、逐角时序与原门判定。
+
+- **实发** 11:35:40（UTC+8），`/home/toylog/faeco_tcad_uart_rescue_existing_odb_20261125_v1`，CPU 0–5、四线程、外限 470 s，固定原序三项。协议 SHA-256 `27ed8866f23f98e9ba346b5720e3d428453aed546d053b49a07791e6d43dc936`，入口 `f4fe1429aabe8559112f304695f4ccbb5a55a556334d13f3e9146fae6f690c47`。
+
+- **逐项结果** 输出 ODB、DEF、功能网表、去日期 SPEF、逐角时序与原门判定三项全一致，独立 DRC／天线零、SEC 567/0。依次追加 35.817057374／33.789948992／33.028336698 RAW s；总计 102.635343064 s，比原两段少 8.728959299 s（7.84%）。合格仍为 `uart_01` 回收 0.26244 µm²。结果 SHA-256 `c3562b97b8f44318fd6db9b0c011d261f3a8a3a71251e58ccc601ff4be36ea5f`。
+
+- **封存** GCD、UART 两段及 UART 直接复用原件均归档至 `scratch/tcad_ibex_20261123/hold_reentry_rescue_20261125_v1.tar.gz`，494 项、18,095,482 字节，SHA-256 `31a5f0da724b6655cb9fc4e84960d62fc53df93b7445aa4d82d3e772e650e466`，重新比较 rc0。[总报告](tcad_ibex_20261123/HOLD_REENTRY_RESCUE_REPORT.md) · [复用原件](tcad_holdout_20261123/UART_RESCUE_EXISTING_ODB_RESULTS.json)
