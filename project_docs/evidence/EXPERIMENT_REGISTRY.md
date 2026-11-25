@@ -3216,3 +3216,31 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - **实际交换结果** 输出 `/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_geometry_tie_20261125_v1`，协议 `71bec9d783f23f119d349d99af52e257f45696e2c22702173be17b991c9cf7dc`，结果 `49a63d12615359ed8f11b53680022f0dc6007f4f5e2d68c840f83ec07277c0e0`。8 次 STA 合计 4.576997117 RAW s，DRT/RCX/SEC 均 0。TT／SS 实配拒对过的 WNS 差为 −0.497074604／−1.869893129 ps，只换 SPEF 精确重现，V 效应与交互均 0。各视图四组最差路径相同，八组注释计数均为未注释 5、部分注释 0。独立正式派发未启动。
 - **GCD 原件封存与覆盖** 实查 `scratch/tcad_ibex_20261123/gcd_hold_geometry_20261125_v1.tar.gz`，含 GCD 冻结评分与交换原件 51 项、33,357 字节，SHA-256 `d9875c82b697bea8a6bd52cd3d2bec6e6c47c4ad80d10fdc760571f310f0a8ba`，tar 对原件比较 rc0。冻结转移 64 条触达网全覆盖，三角各 8 路径。等面积实配产生的 `clk`／`clknet_0_clk` 几何变化位于预计直连网输入范围外。GCD 评分、标签、交换和同分复查均在仓库逐项绑定原 SHA。[总报告](tcad_holdout_20261123/UART_HOLD_GEOMETRY_REPORT.md) · [GCD 交换结果](tcad_ibex_20261123/GCD_HOLD_GEOMETRY_EXCHANGE.json)
+
+
+### 2026-11-25 TCAD-SKY130HD-GCD-BOUNDED-ROUTE-INCREMENTAL-RC-SCREEN（意图登记）
+
+- 基线 `f91df069`，同历史已冻结 GCD、同两组等面积三门 `_089_/_090_/_091_`（原拒）和 `_089_/_090_/_093_`（原过）。以限域布线和增量寄生估计读取 TT/SS 原 SDC 下绝对与相对 hold。共享冻结起点和原门，正式接受仍以完整物理、时序与证明验收。
+- 记录同机下真假候选的实际筛选费用和完整后端费用。预设 go 条件为 TT、SS 两角均正确区分两组，并且两份筛选加通过候选的一份完整验收所用墙钟小于对两组都完整验收。否则保留失败或代价并诊断，暂缓同预算派发比较。具体技术范围和资产哈希待冻结。[GCD 真实物理来源](tcad_ibex_20261123/GCD_HOLD_GEOMETRY_RESULTS.json)
+
+- **历史完整后端参照** `screened/fixed/04.json` 拒收 10.884134710 RAW s（DRT/RCX 8.575996567，三角实际 STA，候选 SEC 未起）；`screened/faeco/05.json` 通过 12.219985378 RAW s（DRT/RCX 9.089512727，三角 STA，SEC 0.805111041）。合计 23.104120088 RAW s。源 CPU 6–11、4 线程、local、单次 pin access、嵌入导引、64 轮，OpenROAD 二进制 SHA `2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19`。这组历史花费作为参照，新净成本门使用新比较。
+
+- **细化规约冻结** 同历史 GCD ODB/guide/SDC 与库，CPU 6–11、4线程；两顺序 `_091_`→`_093_` 再反序。完整后端 64 轮 DRT、单 pin access、RCX、三角和正式证。预筛 A 为 dirty GRT 增量估计，配同估计法零编辑与原 RCX 底座校准；B 为外部 FIXED 的 2 轮 DRT，允许网是直连、冻结几何至多 20 条三轨内同或邻层近邻及 TT／SS 原最小路径时钟网，只清直连线。本机原生 RCX 无按网／按框入口，B 计实际全块耦合 RCX。失去路径注释、未布通、抽取中止及锁区几何改动均保留失败。[现场规约](tcad_ibex_20261123/GCD_LOCAL_HOLD_PREVIEW_REPORT.md)
+
+- **v1 工具绑定修正与 v2 发出** v1 在 GCD TOP 绑定前解析 masters，默认 `ibex_core` 检查失败，实际 EDA 0。将解析移入既有 GCD 运行绑定后，v2 于 10:42:33（UTC+8）启动，CPU 6–11、外限 700 s。实发协议 `8b4f3caeef2733dc22fbc9179151592b45a50c37854b79de5cf34b02595683a3`。首轮零编辑 GRT 和两候选的原始估计同分，首轮限域 DRT 形成已读的 TT/SS 数据，正式对照另计。
+- **v2 两序原结果** `_091_` 完整后端拒收 9.696863891／9.773684028 RAW s，`_093_` 完整后端过门 11.871181930／11.854773017 s，合计 21.568045821／21.628457045 s。dirty GRT 两候选原门 TT／SS 全判通过，按每种顺序计零编辑校准并加通过项完整验收为 16.650995534／16.481877340 s，标签错误。限域两轮 DRT 的 TT/SS 两候选均拒，合成相同计费为 30.117233470／29.949757805 s。原结果 SHA-256 `ed38b357f80149014dd60ede24434d307d05f6e6208fd38914363a29e5869e22`，两种预筛均未达到双门。
+
+
+### 2026-11-25 TCAD-SKY130HD-GCD-EARLY-DRT-UNRESTRICTED-ABLATION
+
+- 在已观察的首轮限域失败后，复用同一历史 GCD 冻结嵌入导引和原后端路由范围，诊断仅改变 DRT 结束轮次，预先固定 0、2 两值。对 `_091_` 与 `_093_` 两候选执行同一单轮比较，读回原 TT/SS、早停 DRC、时钟线变化、实际路由范围与 RAW 墙钟。按原门及既有完整实耗判断，限制端点与只改早停的结果分别登记。
+- **实读结果** `/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_hold_route_cutoff_20261125_v1`，规约 `8680c9de906dadaa1ec769a9ebdca58845d2ba55ea777ed97713c53fb89793a9`，结果 `4a82cb02991ab1252288fa3f8f65363a19dfdc4087fec1bb7f25045443f2c131`。两序共 8 组。0 轮候选原生 DRC 11／21，2 轮为 7／17，两个设置和限域 2 轮的各候选 TT／SS WNS 逐项相同，皆拒。两筛各序合计 0 轮 11.563057165／11.501283020 RAW s，2 轮 17.820620441／17.644273994 s，都大于相应可避免的完整拒收开销 9.696863891／9.773684028 s。
+
+
+### 2026-11-25 TCAD-SKY130HD-GCD-TOUCHED-NET-GRT-DELTA-SPEF
+
+- 以实际 dirty GRT 候选和零编辑产生的导引、路由估计为输入。在原冻结 SPEF 对应的直连网块施加候选对零编辑的 ΔC 与估计电阻比例，保留其他寄生和耦合。两候选各做 TT／SS 一次，原 SDC，原门，差量预测的构建和原有估计实耗均单列。该探针用于区分直连估计修正和全量 GRT 估计；正式各角 STA 和物理验收按原后端。
+- **v1 输入域失败与 v2 构建** `_017_` 原 RCX 的 ground C 为 0.001609684 pF，GRT 估计总 C 从 0.00428110 变 0.00189957 pF，将估计总 C 差直接叠加会产生负 ground C，v1 在 EDA 启动前退出。v2 使用候选／零编辑 GRT 估计 C 和 R 比值缩放原 SPEF 的候选直接网 ground C 和电阻，耦合保留。v1 protocol `a0ea4ea2f027e0b9491a22478cb95b8ee5e2b071b4ec7b343acb21748ec1e4b`。
+- **v2 原结果** `/home/toylog/faeco_tcad_sky_holdout_20261123/gcd_incremental_hold_rc_20261125_v2`，协议 `7dc081f10106dc121961948981057c1ff9b1e2ea34b5aba2015bf6a6b7ca03e6`，结果 `34190097904b8858adb3ab609f1bbe69e7fc2412e9ba0dff0859badd21672fb9`。各变更 10 条直接网、无缺估计网，候选导引改 6／5 条，均无时钟网。四次 TT/SS STA 返回 0。两候选均得到与原参考相同 TT／SS hold 430.726704304／342.905315254 ps，误收历史与新鲜完整均拒的 `_091_`。既有 GRT 完成后的增量构建和 STA 附加 1.312271761／1.108678603 RAW s，GRT、校准费用仍需计入完整路径。
+
+- **阶段归档与关闭判定** `scratch/tcad_ibex_20261123/gcd_local_hold_preview_20261125_v2.tar.gz` 390 项、20,073,635 字节，SHA-256 `fd8cfd207442ae6476631f93299eeb584bc1dbbaeb3677fa2f25cdb280fc3a42`，tar 比较 rc0。包含主 v2 同机对照、裸早停、直连增量成功执行原件及两个 0 EDA 失败版本。正序 `_093_` 在 2 轮到完整后 `clk` 和 `clknet_0_clk` 总 C 分别 10.79950→9.91285 和 13.35230→13.09290 fF。所有预筛方案均未过正确性／净成本双门，未进入预筛策略矩阵。[物理诊断报告](tcad_ibex_20261123/GCD_LOCAL_HOLD_PREVIEW_REPORT.md)
