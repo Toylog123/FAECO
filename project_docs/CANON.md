@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 GCD 两轮限域布线状态重入
+
+同一冻结 GCD 起点、原门、两项同面积候选，正反序与从头完整布线配对。同进程续跑四次均无最终可验收产物。新进程由检查点重入，452 条保护网解锁前后几何与导引一致，沿用 pin access，第二次 DRT 从第 3 轮恢复初始标记。新进程矩阵八次均完成三角、独立全块 DRC 与天线检查和 SEC，DRC／天线均零、SEC 262/0。
+
+含全部检查的正／反序从头用时 27.475／27.474 RAW s，重入用时 29.557／29.572 RAW s，分别多 2.082／2.097 s。`_091_` 两序从 TT／SS 相对 hold 拒收转为通过，重复得到同一新物理端点，回收 11.2608 µm²，TT／SS hold WNS 分别提高 0.533990／1.869893 ps。`_093_` 两法均过原门，规范化几何、去日期 SPEF、三角结果一致。检查点重入作为备用物理实现保留，部署条件和触发成本待独立验证。[配对报告](evidence/tcad_ibex_20261123/GCD_LOCAL_ROUTE_REENTRY_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/GCD_ROUTE_CHECKPOINT_AUDIT.json)
+
 ## 2026-11-25 GCD 限域与增量寄生预筛未过放行门
 
 在历史同冻结起点和原门下，新鲜完整后端正反序复现 `_091_` 的 TT／SS 相对 hold 拒收和 `_093_` 的正式验收，两完整评估用时 21.568／21.628 RAW s。dirty GRT 原估计经零编辑校准与直接网比例写回冻结 SPEF 均误收 `_091_`。两轮保护外网的限域 DRT，以及不保护外网的 0／2 轮早停，均误拒 `_093_`。限域两筛加完整验收用时 30.117／29.950 RAW s；不保护外网的两次初始 DRT 预览也超过可省的完整拒收花费。
