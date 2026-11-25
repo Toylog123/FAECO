@@ -1,0 +1,862 @@
+[
+  {
+    "cell": 1,
+    "direction": "forward",
+    "strategy": "fixed_online",
+    "status": "end_to_end_wall_cap",
+    "binding": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/protocol.json",
+      "sha256": "a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae",
+      "bytes": 14320
+    },
+    "summary": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_01/fixed/summary.json",
+      "sha256": "26b802ab6c9385656765d0dc12ff3db0464cf2cd13772db127056d6f09e6b9a6",
+      "bytes": 1167
+    },
+    "progress": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_01/fixed/progress.json",
+      "sha256": "48df8eab7b8ad1e70c3c17057efdb12637d01b69773658973bdafdab9263bb8a",
+      "bytes": 3621
+    },
+    "tool_ledger": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_01/fixed/subprocesses.json",
+      "sha256": "7bbeee9e91ca3467d357eb4083b342463459953146ccfa6f090b5c047d3f8d84",
+      "bytes": 20022
+    },
+    "window_targets_pct": {
+      "0.01": {
+        "required_area": 7.14272544,
+        "time_raw_seconds": 205.27189385600013,
+        "first_realized_area": 26.27520000000368,
+        "endpoint": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_01/fixed/02/initial"
+      },
+      "0.15": {
+        "required_area": 107.14088160000001,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      },
+      "0.25": {
+        "required_area": 178.568136,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      }
+    },
+    "reused_setup_only_rejections": 0,
+    "stage_costs": {
+      "candidate_sta": {
+        "started": 12,
+        "completed_zero_rc": 12,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 21.377406537000752
+      },
+      "drt_rcx": {
+        "started": 5,
+        "completed_zero_rc": 4,
+        "wall_timeout": 1,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 534.2005505460002
+      },
+      "independent_drc": {
+        "started": 4,
+        "completed_zero_rc": 4,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 39.656334960000095
+      },
+      "preview_drc": {
+        "started": 4,
+        "completed_zero_rc": 4,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 39.577236119999725
+      },
+      "ranking_sta": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      },
+      "sec": {
+        "started": 2,
+        "completed_zero_rc": 2,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 15.198508404000677
+      },
+      "other": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      }
+    },
+    "charged_screening_seconds": 64.09957364100046,
+    "result": {
+      "method": "fixed",
+      "stop_reason": "end_to_end_wall_cap",
+      "search_raw_seconds": 655.987135675,
+      "stop_raw": 8288.47574254,
+      "logical_admitted": 4,
+      "logical_finished": 3,
+      "route_tools": 5,
+      "unlocked_drc_tools": 4,
+      "sta_tools": 12,
+      "sec_tools": 2,
+      "tool_seconds": 650.0100365670014,
+      "priority_preparation": null,
+      "first_relative_hold_defer": null,
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 3,
+        "selected": {
+          "endpoint_id": "cell_01/fixed/03/retry",
+          "area": 71374.704,
+          "wns_ns": -0.47487436205528866,
+          "tns_ns": -44.293283707474984,
+          "hold_wns_ns": 0.5792253343628317,
+          "scope_id": "a552ade9be6382811b292e4f8d6d313732af3d667a27738eefc9dae53f67d2ce",
+          "evidence_id": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_01/fixed/03/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 52.55040000000736,
+        "area_saved_pct": 0.07357191654843638,
+        "target_area_pct": 0.01,
+        "target_area_saved": 7.14272544,
+        "time_to_target_seconds": 205.27189385600013,
+        "target_reached_in_window": true
+      }
+    }
+  },
+  {
+    "cell": 2,
+    "direction": "forward",
+    "strategy": "single_sensitivity",
+    "status": "end_to_end_wall_cap",
+    "binding": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/protocol.json",
+      "sha256": "a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae",
+      "bytes": 14320
+    },
+    "summary": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_02/single/summary.json",
+      "sha256": "fb1744ecff9a0dee0ae75f96c579c18b067bd6178cfd9821883be857006e059d",
+      "bytes": 1178
+    },
+    "progress": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_02/single/progress.json",
+      "sha256": "d4a9492dcec12e2e406c53d0a7f7241317907779785c2c3fa2c3de1f654862f3",
+      "bytes": 7360
+    },
+    "tool_ledger": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_02/single/subprocesses.json",
+      "sha256": "b988cf07c0ec5abf16571d97d03eb159032e7eb978f84914102c3d74bdcc84ef",
+      "bytes": 39537
+    },
+    "window_targets_pct": {
+      "0.01": {
+        "required_area": 7.14272544,
+        "time_raw_seconds": 139.93406757700177,
+        "first_realized_area": 8.758400000006077,
+        "endpoint": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_02/single/01/initial"
+      },
+      "0.15": {
+        "required_area": 107.14088160000001,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      },
+      "0.25": {
+        "required_area": 178.568136,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      }
+    },
+    "reused_setup_only_rejections": 0,
+    "stage_costs": {
+      "candidate_sta": {
+        "started": 21,
+        "completed_zero_rc": 21,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 37.430010593998304
+      },
+      "drt_rcx": {
+        "started": 8,
+        "completed_zero_rc": 7,
+        "wall_timeout": 1,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 406.8747788360015
+      },
+      "independent_drc": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 67.8122062079965
+      },
+      "preview_drc": {
+        "started": 8,
+        "completed_zero_rc": 8,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 78.42863084700184
+      },
+      "ranking_sta": {
+        "started": 1,
+        "completed_zero_rc": 1,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 1.4941352469995763
+      },
+      "sec": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 53.54296038400025
+      },
+      "other": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      }
+    },
+    "charged_screening_seconds": 64.09957364100046,
+    "result": {
+      "method": "single",
+      "stop_reason": "end_to_end_wall_cap",
+      "search_raw_seconds": 655.9830884530002,
+      "stop_raw": 8944.658451873,
+      "logical_admitted": 8,
+      "logical_finished": 7,
+      "route_tools": 8,
+      "unlocked_drc_tools": 7,
+      "sta_tools": 22,
+      "sec_tools": 7,
+      "tool_seconds": 645.582722115998,
+      "priority_preparation": null,
+      "first_relative_hold_defer": null,
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 7,
+        "selected": {
+          "endpoint_id": "cell_02/single/07/initial",
+          "area": 71369.6992,
+          "wns_ns": -0.4741234072014322,
+          "tns_ns": -44.133727783446375,
+          "hold_wns_ns": 0.5792213375599431,
+          "scope_id": "a552ade9be6382811b292e4f8d6d313732af3d667a27738eefc9dae53f67d2ce",
+          "evidence_id": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_02/single/07/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 57.555200000002515,
+        "area_saved_pct": 0.0805787657435178,
+        "target_area_pct": 0.01,
+        "target_area_saved": 7.14272544,
+        "time_to_target_seconds": 139.93406757700177,
+        "target_reached_in_window": true
+      }
+    }
+  },
+  {
+    "cell": 3,
+    "direction": "forward",
+    "strategy": "faeco_dedup",
+    "status": "end_to_end_wall_cap",
+    "binding": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/protocol.json",
+      "sha256": "a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae",
+      "bytes": 14320
+    },
+    "summary": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_03/faeco/summary.json",
+      "sha256": "5b25154a81c3aed4bed525dd697ee718057693eb11ea5679e8252d5e0c548a94",
+      "bytes": 1275
+    },
+    "progress": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_03/faeco/progress.json",
+      "sha256": "370c5e788cbd74b2030d8f5b211818626ece11fde4dff1bd817146027f223255",
+      "bytes": 6391
+    },
+    "tool_ledger": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_03/faeco/subprocesses.json",
+      "sha256": "1390a217315463e67a7c4d653493765b621e50136591e057c570b1b06e85f6a0",
+      "bytes": 33478
+    },
+    "window_targets_pct": {
+      "0.01": {
+        "required_area": 7.14272544,
+        "time_raw_seconds": 204.7444962060017,
+        "first_realized_area": 10.009600000004866,
+        "endpoint": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_03/faeco/02/initial"
+      },
+      "0.15": {
+        "required_area": 107.14088160000001,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      },
+      "0.25": {
+        "required_area": 178.568136,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      }
+    },
+    "reused_setup_only_rejections": 1,
+    "stage_costs": {
+      "candidate_sta": {
+        "started": 21,
+        "completed_zero_rc": 21,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 37.222918733998085
+      },
+      "drt_rcx": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 455.459185275
+      },
+      "independent_drc": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 67.49989869300043
+      },
+      "preview_drc": {
+        "started": 7,
+        "completed_zero_rc": 6,
+        "wall_timeout": 1,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 62.23690427600013
+      },
+      "ranking_sta": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      },
+      "sec": {
+        "started": 3,
+        "completed_zero_rc": 3,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 22.998394297999766
+      },
+      "other": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      }
+    },
+    "charged_screening_seconds": 64.09957364100046,
+    "result": {
+      "method": "faeco",
+      "stop_reason": "end_to_end_wall_cap",
+      "search_raw_seconds": 655.9399833250009,
+      "stop_raw": 9600.81085847,
+      "logical_admitted": 7,
+      "logical_finished": 6,
+      "route_tools": 7,
+      "unlocked_drc_tools": 7,
+      "sta_tools": 21,
+      "sec_tools": 3,
+      "tool_seconds": 645.4173012759984,
+      "priority_preparation": {
+        "start_raw": 8944.870878511,
+        "stop_raw": 8945.116766026,
+        "seconds": 0.2458875150005042
+      },
+      "first_relative_hold_defer": null,
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 6,
+        "selected": {
+          "endpoint_id": "cell_03/faeco/05/initial",
+          "area": 71382.2112,
+          "wns_ns": -0.45702286399773584,
+          "tns_ns": -44.238696261800214,
+          "hold_wns_ns": 0.5792213375599431,
+          "scope_id": "a552ade9be6382811b292e4f8d6d313732af3d667a27738eefc9dae53f67d2ce",
+          "evidence_id": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_03/faeco/05/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 45.04320000000007,
+        "area_saved_pct": 0.06306164275579389,
+        "target_area_pct": 0.01,
+        "target_area_saved": 7.14272544,
+        "time_to_target_seconds": 204.7444962060017,
+        "target_reached_in_window": true
+      }
+    }
+  },
+  {
+    "cell": 4,
+    "direction": "reverse",
+    "strategy": "faeco_dedup",
+    "status": "end_to_end_wall_cap",
+    "binding": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/protocol.json",
+      "sha256": "a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae",
+      "bytes": 14320
+    },
+    "summary": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_04/faeco/summary.json",
+      "sha256": "1a1ba42a66b8011e7259b5267f0a37fc603a02984542a48c3c3b9bcdb3210483",
+      "bytes": 1277
+    },
+    "progress": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_04/faeco/progress.json",
+      "sha256": "e342fa1c2d7b695cb21afd96502e319475fe0a1e17b54f8130e8b8258d7b6c22",
+      "bytes": 6397
+    },
+    "tool_ledger": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_04/faeco/subprocesses.json",
+      "sha256": "bd68b1f67ce90bf69fcceeae6a1e0c686ac7ed702f512fd6580f423ec03c2896",
+      "bytes": 33489
+    },
+    "window_targets_pct": {
+      "0.01": {
+        "required_area": 7.14272544,
+        "time_raw_seconds": 205.3217240619997,
+        "first_realized_area": 10.009600000004866,
+        "endpoint": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_04/faeco/02/initial"
+      },
+      "0.15": {
+        "required_area": 107.14088160000001,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      },
+      "0.25": {
+        "required_area": 178.568136,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      }
+    },
+    "reused_setup_only_rejections": 1,
+    "stage_costs": {
+      "candidate_sta": {
+        "started": 21,
+        "completed_zero_rc": 21,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 36.966632024996215
+      },
+      "drt_rcx": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 456.57027886800097
+      },
+      "independent_drc": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 67.59486650200051
+      },
+      "preview_drc": {
+        "started": 7,
+        "completed_zero_rc": 6,
+        "wall_timeout": 1,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 60.87173160600105
+      },
+      "ranking_sta": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      },
+      "sec": {
+        "started": 3,
+        "completed_zero_rc": 3,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 23.39073541399921
+      },
+      "other": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      }
+    },
+    "charged_screening_seconds": 64.09957364100046,
+    "result": {
+      "method": "faeco",
+      "stop_reason": "end_to_end_wall_cap",
+      "search_raw_seconds": 655.9297229909989,
+      "stop_raw": 10256.948774596,
+      "logical_admitted": 7,
+      "logical_finished": 6,
+      "route_tools": 7,
+      "unlocked_drc_tools": 7,
+      "sta_tools": 21,
+      "sec_tools": 3,
+      "tool_seconds": 645.394244414998,
+      "priority_preparation": {
+        "start_raw": 9601.019088005,
+        "stop_raw": 9601.258367439,
+        "seconds": 0.23927943400121876
+      },
+      "first_relative_hold_defer": null,
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 6,
+        "selected": {
+          "endpoint_id": "cell_04/faeco/05/initial",
+          "area": 71382.2112,
+          "wns_ns": -0.45702286399773584,
+          "tns_ns": -44.238696261800214,
+          "hold_wns_ns": 0.5792213375599431,
+          "scope_id": "a552ade9be6382811b292e4f8d6d313732af3d667a27738eefc9dae53f67d2ce",
+          "evidence_id": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_04/faeco/05/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 45.04320000000007,
+        "area_saved_pct": 0.06306164275579389,
+        "target_area_pct": 0.01,
+        "target_area_saved": 7.14272544,
+        "time_to_target_seconds": 205.3217240619997,
+        "target_reached_in_window": true
+      }
+    }
+  },
+  {
+    "cell": 5,
+    "direction": "reverse",
+    "strategy": "single_sensitivity",
+    "status": "end_to_end_wall_cap",
+    "binding": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/protocol.json",
+      "sha256": "a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae",
+      "bytes": 14320
+    },
+    "summary": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_05/single/summary.json",
+      "sha256": "5aa9319d889953b6b19abc350253d3911e426eeae2d88875a281edb1f73b14c9",
+      "bytes": 1180
+    },
+    "progress": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_05/single/progress.json",
+      "sha256": "d32a08815b1a488402db76a8c352f43999b88bfc5231b5034769678d576fed34",
+      "bytes": 7367
+    },
+    "tool_ledger": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_05/single/subprocesses.json",
+      "sha256": "7b1756ad8ddfbe96c38b6c7f830638bbb7334be811778b7fa3bfa424a3a89368",
+      "bytes": 39625
+    },
+    "window_targets_pct": {
+      "0.01": {
+        "required_area": 7.14272544,
+        "time_raw_seconds": 139.23668094599998,
+        "first_realized_area": 8.758400000006077,
+        "endpoint": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_05/single/01/initial"
+      },
+      "0.15": {
+        "required_area": 107.14088160000001,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      },
+      "0.25": {
+        "required_area": 178.568136,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      }
+    },
+    "reused_setup_only_rejections": 0,
+    "stage_costs": {
+      "candidate_sta": {
+        "started": 21,
+        "completed_zero_rc": 21,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 36.8715509720023
+      },
+      "drt_rcx": {
+        "started": 8,
+        "completed_zero_rc": 7,
+        "wall_timeout": 1,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 407.3891275270016
+      },
+      "independent_drc": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 67.4022893099991
+      },
+      "preview_drc": {
+        "started": 8,
+        "completed_zero_rc": 8,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 77.99169052300203
+      },
+      "ranking_sta": {
+        "started": 1,
+        "completed_zero_rc": 1,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 1.48898552799983
+      },
+      "sec": {
+        "started": 7,
+        "completed_zero_rc": 7,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 54.448395428005824
+      },
+      "other": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      }
+    },
+    "charged_screening_seconds": 64.09957364100046,
+    "result": {
+      "method": "single",
+      "stop_reason": "end_to_end_wall_cap",
+      "search_raw_seconds": 655.9861275940002,
+      "stop_raw": 10913.142391092,
+      "logical_admitted": 8,
+      "logical_finished": 7,
+      "route_tools": 8,
+      "unlocked_drc_tools": 7,
+      "sta_tools": 22,
+      "sec_tools": 7,
+      "tool_seconds": 645.5920392880107,
+      "priority_preparation": null,
+      "first_relative_hold_defer": null,
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 7,
+        "selected": {
+          "endpoint_id": "cell_05/single/07/initial",
+          "area": 71369.6992,
+          "wns_ns": -0.4741234072014322,
+          "tns_ns": -44.133727783446375,
+          "hold_wns_ns": 0.5792213375599431,
+          "scope_id": "a552ade9be6382811b292e4f8d6d313732af3d667a27738eefc9dae53f67d2ce",
+          "evidence_id": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_05/single/07/initial",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 57.555200000002515,
+        "area_saved_pct": 0.0805787657435178,
+        "target_area_pct": 0.01,
+        "target_area_saved": 7.14272544,
+        "time_to_target_seconds": 139.23668094599998,
+        "target_reached_in_window": true
+      }
+    }
+  },
+  {
+    "cell": 6,
+    "direction": "reverse",
+    "strategy": "fixed_online",
+    "status": "end_to_end_wall_cap",
+    "binding": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/protocol.json",
+      "sha256": "a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae",
+      "bytes": 14320
+    },
+    "summary": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_06/fixed/summary.json",
+      "sha256": "0b21316b1ee770198d7c7c928af44a032b27e28d4263359a1c57342813eb01a5",
+      "bytes": 1173
+    },
+    "progress": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_06/fixed/progress.json",
+      "sha256": "554785c3ca6382f06e1602753f74375d3ce71cb509eabc6f30274de12996aa28",
+      "bytes": 3632
+    },
+    "tool_ledger": {
+      "path": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_06/fixed/subprocesses.json",
+      "sha256": "bcbae75fc684312903f2093ccc0cbf5dea8116abe8370543bf4739df467f5d6a",
+      "bytes": 20069
+    },
+    "window_targets_pct": {
+      "0.01": {
+        "required_area": 7.14272544,
+        "time_raw_seconds": 204.68683585799954,
+        "first_realized_area": 26.27520000000368,
+        "endpoint": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_06/fixed/02/initial"
+      },
+      "0.15": {
+        "required_area": 107.14088160000001,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      },
+      "0.25": {
+        "required_area": 178.568136,
+        "time_raw_seconds": null,
+        "first_realized_area": null,
+        "endpoint": null
+      }
+    },
+    "reused_setup_only_rejections": 0,
+    "stage_costs": {
+      "candidate_sta": {
+        "started": 12,
+        "completed_zero_rc": 12,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 21.771416756995677
+      },
+      "drt_rcx": {
+        "started": 5,
+        "completed_zero_rc": 4,
+        "wall_timeout": 1,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 533.611455324999
+      },
+      "independent_drc": {
+        "started": 4,
+        "completed_zero_rc": 4,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 38.89714292899953
+      },
+      "preview_drc": {
+        "started": 4,
+        "completed_zero_rc": 4,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 39.01861310800268
+      },
+      "ranking_sta": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      },
+      "sec": {
+        "started": 2,
+        "completed_zero_rc": 2,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 16.634085865998713
+      },
+      "other": {
+        "started": 0,
+        "completed_zero_rc": 0,
+        "wall_timeout": 0,
+        "stage_timeout": 0,
+        "other_nonzero_rc": 0,
+        "tool_wall_seconds": 0.0
+      }
+    },
+    "charged_screening_seconds": 64.09957364100046,
+    "result": {
+      "method": "fixed",
+      "stop_reason": "end_to_end_wall_cap",
+      "search_raw_seconds": 655.9931707840005,
+      "stop_raw": 11569.353544064,
+      "logical_admitted": 4,
+      "logical_finished": 3,
+      "route_tools": 5,
+      "unlocked_drc_tools": 4,
+      "sta_tools": 12,
+      "sec_tools": 2,
+      "tool_seconds": 649.9327139849956,
+      "priority_preparation": null,
+      "first_relative_hold_defer": null,
+      "window": {
+        "wall_limit_seconds": 720.0,
+        "completed_attempts": 3,
+        "selected": {
+          "endpoint_id": "cell_06/fixed/03/retry",
+          "area": 71374.704,
+          "wns_ns": -0.47487436205528866,
+          "tns_ns": -44.293283707474984,
+          "hold_wns_ns": 0.5792253343628317,
+          "scope_id": "a552ade9be6382811b292e4f8d6d313732af3d667a27738eefc9dae53f67d2ce",
+          "evidence_id": "/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/matrix_qualified_v2/cell_06/fixed/03/retry",
+          "valid": true,
+          "sec_pass": true
+        },
+        "area_saved": 52.55040000000736,
+        "area_saved_pct": 0.07357191654843638,
+        "target_area_pct": 0.01,
+        "target_area_saved": 7.14272544,
+        "time_to_target_seconds": 204.68683585799954,
+        "target_reached_in_window": true
+      }
+    }
+  }
+]

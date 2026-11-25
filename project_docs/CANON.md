@@ -4,6 +4,12 @@
 
 用户选定 IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems（TCAD）作为 FAECO 后布局 v3 的投稿目标。此前 2026-10-12 的 Integration 决策对应预布局历史稿。 [投稿实验计划](planning/TCAD_SUBMISSION_PLAN_20261123.md) · [GCD 资格预检](evidence/tcad_preflight_20261123/REPORT.md)
 
+## 2026-11-25 纯墙钟留出：SKY130HD riscv32i 与 ASAP7 ethmac
+
+`riscv32i` v2 采用原约束、同在线后端、18 项冻结池和 720 RAW s 纯墙钟。六臂独验通过，两序灵敏度单门／固定批次／现行去重 FAECO 的最大合格回收均为 57.5552／52.5504／45.0432 µm²，分别占初始功能面积 0.08058%／0.07357%／0.06306%。0.01% 预设小目标由单门先到，约 139–140 RAW s；其余两法约 204–205 s。以至少 45.0432 µm² 为另一个共同阈值，现行两序约 418–419 s 先到，两种基线约 508–514 s。现行最佳端点的 SS setup TNS 退化 1287.844 ps，低于两种基线，三法最优均通过原门、独立 DRC／天线和 SEC 4559/0。
+
+现行去重两序在第 1、3、6 次因原 setup 门拒收，约消耗 431–432 RAW s，均未触发相对 hold 重排。单动作冻结 TT TNS 相加在两个已核组合上分别高估和低估实际损失。后续先对齐灵敏度起始顺序，再分离批宽和反馈。`ethmac` 原生末段恢复 DRT/RCX，源约束一致且三角 hold 与 SEC 合格，原 TT／SS max slew 违规 9／1017 项且独立 DRC 止于限时，起点资格未通过，未派候选。两工艺的独立同预算优势仍未建立。[实验报告](evidence/tcad_wallclock_schedule_20261125/REPORT.md) · [SKY 完整独验](evidence/tcad_wallclock_schedule_20261125/RISCV_WALLCLOCK_VERIFIED.json) · [Ethmac 资格](evidence/tcad_wallclock_schedule_20261125/ETHMAC_CONTROL_INCOMPLETE.json)
+
 ## 2026-11-25 UART 纯墙钟开发对照
 
 原约束 UART 共用 18 项池、在线后端和完整验收。等额计入 81.564 RAW s 筛选，每臂 720 RAW s，取消六次评估上限，四种调度正反序独验 8/8。两序的固定批次／灵敏度单门／现行去重 FAECO／交错去重 FAECO 最大合格回收分别为 0.33534／0.77274／0.83106／0.75816 µm²。现行比灵敏度单门多回收 7.547%，到同实收 0.77274 µm² 两序早 105.569／103.522 s。三个预设较小面积目标均由灵敏度单门先达。现行最佳端点两序同一，回收原功能面积的 1.051855%，最大 setup WNS 损失 1.363215 ps，原三角 hold、独立 DRC／天线及 SEC 567/0 通过。

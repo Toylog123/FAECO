@@ -3401,7 +3401,37 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - **最终源 dry-run** 最终 `a8324e5b` 字节重新绑定原 P0、三角库、实际池和阶段配置。合格输入原件 `/tmp/riscv_v2_dry_final_ENPGT6/validate/qualified_inputs.json` SHA-256 `e7e29999721a0373f80bfc5c2507ee0f39025aff6d043b475ba228186ffa9a3f`，RAW 轮询 0.1 s，`protocol_and_inputs_validated`，0 个候选物理臂。新增可复现排名测试与 RAW 独立组合共 8 项通过，2.00 s。
 
+- **v2 实发** `ethmac` 资格物理进程退出后，17:09:34（UTC+8）包裹 PID 437、Python PID 439、exec session 85034 进入新根 `matrix_qualified_v2`。同原 P0、18 项池、64.099573641 RAW s，CPU 0–5、外限 6,500 s。现场 `qualified_inputs.json` 与最终 dry-run 逐字节同，实际协议 SHA-256 `a768316f012f7386c2c1d31e43829b9490c0da82174ab884dc3b6634ea5f2dae`。每臂 720 RAW s，并以 RAW 子进程限时，完整正反序与 v1 分开。候选待物理前置资格。
+
+- **v2 严格零动作** 57.497508272 RAW s，原门全过、面积 71,427.2544 µm²。收据 SHA-256 `9e8769707fac96fca71dc8a9ea2e4ebbeb92f0b92b8d77b5489a70699a323d4b`，随后固定正序实际派发。
+
+- **v2 正序固定与实际强单门排名** 固定 3/4 完整，0.01% 205.271893856 RAW s，最高 52.5504 µm²。尾次工具停止时间记录超过 RAW 截止 0.085670931 s，在 0.1 s 轮询尺度内，不计为通过。独验 `verification_prefix_01.json` SHA-256 `bc7c456102c04a723bdf6614d4cdcb658a7230e3d7eb9084595cc19888618b51`。强单门新鲜排名保留 18 项，原三个 `+Inf` 实际排池尾，工具 1.494135247 RAW s，进入候选评估。
+
+- **v2 正序强单门** 8 派发／7 完整且全部通过，0.01% 首达 139.934067577 RAW s、实收 8.7584 µm²，最高 57.5552 µm² 在 582.955503649 RAW s。尾次 DRT/RCX 停止晚于 RAW 截止 0.081223718 s。0.15%／0.25% 未达。原件 SHA-256 `fc9e38c9dffd8087dec911b31ab31129d3777e917677a9a5d820a4a5942bb2e1`，前缀独验 `c48c78bc9e5f2288945bad64a87c5d5ff0431cd0a4953464eb68dae404f05a07`。
+
+- **v2 正序现行去重** 7 派发／6 完整、setup-only 重用 1，首达 204.744496206 RAW s、实收 10.0096 µm²，最高 45.0432 µm²。第 6 次先出现 10 个独立 DRC，真实重试清零后仍因 TT TNS／SS WNS 拒，单请求约 298.486 RAW s。尾次预诊断截止。`cell_03/arm.json` SHA-256 `31f2feaca2a9f700fdef0742b1c1c176a22755f46698027b071553e5b870b9ab`。反序已发。
+
+- **v2 正序三臂独验** SHA-256 `22241070a1817552e48fbf0246a2b09e89121c96979a941461bda9399c1134c2`。现行 3 个完整 setup 拒收共 431.868 RAW s，无 hold 拒收触发。固定第三组和现行首组分项冻结 TNS 直接加和分别偏悲观、偏乐观，不能替代整组实布验收。
+
+- **只读既有排名前缀** 同冻结 scope 的灵敏度前 3、前 6 动作组分别匹配原单门第 3、6 次实际通过，回收 26.2752、48.7968 µm²。9 项处首次缺验收收据。单请求独立成本只作原件，未作新跑累计耗时。SHA-256 `537edd533ad45f93287c428c5383120700e4b342fb7274e84f3e17ce369f1f95`。[复核](tcad_wallclock_schedule_20261125/RISCV_RANKED_PREFIX_REPLAY.json)
+
+- **v2 反序现行去重** 7 派发、6 完成、setup-only 复用 1 次，0.01% 首达 205.321724062 RAW s 实收 10.0096 µm²，第 5 次最高 45.0432 µm²，最优实物和三角与正序同。第 7 预诊断到了 RAW 截止后 0.028278466 s 停止。三 setup 拒收约 430.808 RAW s，无 hold 反馈。`cell_04/arm.json` SHA-256 `0a76ee9e65cc965d8315c8bedccc24ffbab941c8bdbd44e21f1fdaa16a1b15e3`。
+
+- **v2 反序强单门** 8 派发、7 完成全过，0.01% 首达 139.236680946 RAW s 实收 8.7584 µm²、第 7 次 584.308231534 RAW s 最高 57.5552 µm²，最优实物及三角与正序相同。末次 DRT/RCX 于 RAW 截止后 0.084407044 s 停止。`cell_05/arm.json` SHA-256 `c51faa27c1c49726a277d0bc357fc789043fafe7bb7ae1f7bf5974820439b8ba`。
+
+- **v2 反序固定及完整独验** 反序固定 4 派／3 完，0.01% 首达 204.686835858 RAW s（实收 26.2752 µm²），最高 52.5504 µm²。全部六臂生产 rc0／4,039 s，38 派发、32 完整。两序单门／固定／现行去重最高分别为 57.5552／52.5504／45.0432 µm²，三法都未达 0.15% 和 0.25%。主小目标单门先到，后验至少 45.0432 µm² 时现行先到。独验 rc0、6/6，SHA-256 `ef949a66f62d5645ddbef1876e338484ecededbe0896b2efba467ca09814ed04`。[协议](tcad_wallclock_schedule_20261125/RISCV_WALLCLOCK_PROTOCOL.json) · [结果](tcad_wallclock_schedule_20261125/RISCV_WALLCLOCK_RESULTS.json) · [独验](tcad_wallclock_schedule_20261125/RISCV_WALLCLOCK_VERIFIED.json)
+
+- **阶段结论** 本留出支持有限时间的面积与时序权衡，现行最高面积低于两基线。两序非通过原因以 setup 为主且没有触发相对 hold 重排，三个完成拒收约 431–432 RAW s。下一步先统一强单门初始排序，再对固定与现行调度分离批宽和反馈。既有冻结 TT TNS 单项变化线性相加已在两组合分别高估与低估实布损失。原三角和物理门保留。
+
 
 ### 2026-11-25 TCAD-ASAP7-ETHMAC-NATIVE-QUALIFICATION
 
 - SKY v1 退出且无其余计时后启动，16:35:19（UTC+8）、CPU 6–11、四线程、总限 1,800 s、PID 459／468／470。原目录 `/home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/asap7/ethmac`，实发 `command.sh` SHA-256 `4bc4b6ab2c16af6409a6d4c337cf17c806884e8197753eedddb0f56df10c185f`，输入清单 `e837ef1534b2ca046f0696b74f9844e59b1e8f694d21d2b9c482d4015f13e7ec`。原本多时钟 P0 资格未结果，候选 0。
+
+- **原包装超时与原根复位** 原生 rc124 截在 RCX 16%，详细布线已完成 DRT 零违例，原生 DRC／天线均零。保留部分报告 `recovery_finish_v1/6_report.initial_timeout.log`。17:04:55（UTC+8）仍用原根与输入只恢复 `6_report.log`，CPU 6–11、四线程，限 600 s。恢复 `command.sh` SHA `e38c4320f18ef61afc26ca280bd62e5f30e295b2fbf05e3c3a5642871efd2120`，输入前置 SHA 清单 `b1ecf6b78f802227d0d05defdb3e2cb6d7da9ca12dc10ce4e675fbbca8163733`。回执资格待后续。
+
+- **末段完成、资格实发** rc0、原 `final_report.tcl` 用 68.64 s，原 SDC、DRT 和 fill 快照均同。RCX 60,697 网、77,878,734 字节 SPEF。恢复日志 SHA `99e32c632384a5c4e1e22ecac99931def577bbb6d08089de060e2d1cf5a9138c`。独立资格 `qualify_native_recovered.py` SHA `c416e2115946fe93fadd5e5dce2eabb0f7c75c025ee8793f3722324f51823cba`，限 500 s，候选 0。
+
+- **资格进行中** FF／TT／SS hold +28.591324／+43.821717／+55.663543 ps。独立全块检查被原 45 s 子工具限时裁剪，记录 `returncode=null` 和 45.846606863 RAW s；完成 512,346 guides 的加载后仍缺独立最终报告。资格未确认。
+
+- **原起点资格失败** `qualification_incomplete`／rc1，三角绝对 hold 非负、hold TNS 零，SEC 52287/0；FF／TT／SS max slew 超限 0／9／1017，max-cap 均零。独立全块检查超时，原生与独立检查分列。原件 `CONTROL.json` 358,712 字节逐字节入仓，SHA-256 `249a4a5274ff217d2a21f049cf0f318935d54af28a80bc85b1ff7c5b256b2ba6`。候选及收益读数均无。[资格原件](tcad_wallclock_schedule_20261125/ETHMAC_CONTROL_INCOMPLETE.json)
