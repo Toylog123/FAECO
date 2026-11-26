@@ -1,5 +1,10 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 Stage 4 两设计六个正探针预算完成
+
+- ASAP7 AES 的 60／120／240 s 全池探针均达到子预算，前两档截停于 DRT，240 s 档截停于 RCX。回退合格面积依次为 0.61236／0.61236／0.30618 µm²，AUC 为 0.208023／0.158731／0.064844 µm²。SKY130HD AES 的 240 s 探针则完整交付 18 项。六个新测臂收据 SHA-256 `63f13fd71ed84954246f4b13ce35064f11d4ec0f5558e4839ef6a9e390b5b763`。双 AES 同协议 0 s 对照排队，作为回退性能的直接比较。[Stage 4 收据](evidence/tcad_v5_revision_20261126/V5_STEP4_PROBE_SENS_VERIFIED.json)
+- 带 15% 电容裕量与 10% 转换时间裕量的 40 ns 重建于 02:19:51 (UTC+08:00) 接过 EDA 锁，保持三个库角、2 ns 绝对 I/O 与原有时序验收门。参考资格及在线候选臂待实测。[V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+
 ## 2026-11-27 Stage 4 SKY130HD AES 三个正探针预算完成
 
 - 60／120 s 探针分别截停在详细布线与 SEC，均回退交付 6 项、67.5648 µm²，终态物理产物一致，AUC 分别为 14.143977／9.264451 µm²。240 s 探针约 134.036 s 完成，同窗交付 18 项、197.6896 µm²，AUC 为 129.761367 µm²，终态与历史默认探针读数的物理产物一致。ASAP7 AES 新测在运行。历史 0 s 臂的派发上限或拒收复用规则有差异，已登记两个同 V5 回退协议的 0 s 对照，另保留历史参照。[Stage 4 收据](evidence/tcad_v5_revision_20261126/V5_STEP4_PROBE_SENS_VERIFIED.json) · [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)

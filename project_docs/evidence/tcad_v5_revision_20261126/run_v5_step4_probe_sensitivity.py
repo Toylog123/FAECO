@@ -4,6 +4,7 @@ Hybrid Probe Sub-Budget Sensitivity: tau_probe in {0, 60, 120, 180, 240} s
 on BOTH sky130hd_aes and asap7_aes under identical 1.0*H_row boxed DRC & 720 s wall-clock.
 - Imports already-verified 0 s (Pure FAECO) & default 180 s / 169.1 s (Hybrid FAECO) receipts.
 - Runs fresh controlled experiments for tau_probe in {60, 120, 240} s on BOTH AES designs.
+- With --matched-zero, runs only fresh 0 s controls with the same fallback implementation.
 """
 from __future__ import annotations
 
@@ -108,7 +109,7 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
     ref_area = runner.eval.ref_area
     pool = list(runner.pool)
     pool_ceiling = sum(a.estimated_area_saving for a in pool)
-    all_ids = tuple(sorted(a.action_id for a in pool))
+    pool_ids = sorted(a.action_id for a in pool)
     config_path = rdir / "stage4_config.json"
     cmp.save(config_path, {
         "design": kind,
@@ -119,7 +120,7 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
         "setup_wns_budget_ps": budget_ps,
         "batch_size": 3,
         "halo_rows": 1.0,
-        "pool_actions": list(all_ids),
+        "pool_actions": pool_ids,
         "source": cmp.bind(Path(__file__)),
         "runner_source": cmp.bind(Path(lr_mod.__file__)),
         "boxed_backend": cmp.bind(Path(lr_mod.boxed_drc.__file__)),
@@ -141,44 +142,48 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
 
         arm_start = raw_seconds()
         total_deadline = arm_start + (LIMIT_S - screen_s)
-        probe_deadline = min(total_deadline, arm_start + probe_budget_s)
         effective_probe_budget_s = min(LIMIT_S - screen_s, probe_budget_s)
         checkpoints = []
         best_ep = reference
         best_saved = 0.0
         best_gates = 0
 
-        # Phase 1: Bounded Optimistic Full-Pool Probe
-        probe_dir = rdir / "phase1_probe"
-        probe_dir.mkdir(parents=True)
-        p_start = raw_seconds()
-        probe_endpoint = None
-        probe_status = "failed"
+        probe_status = "disabled"
+        probe_elapsed = 0.0
         probe_failures = []
-        try:
-            with process_ledger(probe_dir / "subprocesses.json", probe_deadline):
-                _, incident_p = runner.direct_nets(all_ids)
-                neighbors_p = runner.diagnose(all_ids, probe_dir / "diag")
-                ep1, row1, fails1, _ = runner.physical(all_ids, probe_dir / "initial", incident_p, neighbors_p)
-                if not fails1:
-                    cand_v = Path(row1["artifacts"]["v"]["path"]) if isinstance(row1["artifacts"]["v"], dict) else Path(row1["artifacts"]["v"])
-                    if not runner.eval.proof(cand_v, probe_dir / "initial", {}):
-                        fails1.append("sec")
-                ep1 = dc_replace(ep1, valid=not fails1, sec_pass=not fails1)
-                probe_failures = list(fails1)
-                if cmp.assess(reference, ep1, runner.policy).feasible and ep1.area < best_ep.area - 1e-9 and ep1.sec_pass:
-                    probe_endpoint = ep1
-                    probe_status = "passed"
-                else:
-                    probe_status = "rejected"
-        except WallWindowEnded:
-            probe_status = "sub_budget_timeout"
+        if probe_budget_s > 0.0:
+            all_ids = tuple(pool_ids)
+            probe_deadline = min(total_deadline, arm_start + probe_budget_s)
+            # Phase 1: Bounded Optimistic Full-Pool Probe
+            probe_dir = rdir / "phase1_probe"
+            probe_dir.mkdir(parents=True)
+            p_start = raw_seconds()
+            probe_endpoint = None
+            probe_status = "failed"
+            try:
+                with process_ledger(probe_dir / "subprocesses.json", probe_deadline):
+                    _, incident_p = runner.direct_nets(all_ids)
+                    neighbors_p = runner.diagnose(all_ids, probe_dir / "diag")
+                    ep1, row1, fails1, _ = runner.physical(all_ids, probe_dir / "initial", incident_p, neighbors_p)
+                    if not fails1:
+                        cand_v = Path(row1["artifacts"]["v"]["path"]) if isinstance(row1["artifacts"]["v"], dict) else Path(row1["artifacts"]["v"])
+                        if not runner.eval.proof(cand_v, probe_dir / "initial", {}):
+                            fails1.append("sec")
+                    ep1 = dc_replace(ep1, valid=not fails1, sec_pass=not fails1)
+                    probe_failures = list(fails1)
+                    if cmp.assess(reference, ep1, runner.policy).feasible and ep1.area < best_ep.area - 1e-9 and ep1.sec_pass:
+                        probe_endpoint = ep1
+                        probe_status = "passed"
+                    else:
+                        probe_status = "rejected"
+            except WallWindowEnded:
+                probe_status = "sub_budget_timeout"
 
-        p_end = raw_seconds()
-        probe_elapsed = p_end - p_start
-        elapsed_after_probe = screen_s + (p_end - arm_start)
-        if p_end > probe_deadline:
-            probe_status = "sub_budget_timeout"
+            p_end = raw_seconds()
+            probe_elapsed = p_end - p_start
+            elapsed_after_probe = screen_s + (p_end - arm_start)
+            if p_end > probe_deadline:
+                probe_status = "sub_budget_timeout"
 
         if probe_status == "passed":
             best_ep = probe_endpoint
@@ -186,7 +191,9 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
             best_gates = len(all_ids)
             checkpoints.append({"phase": "phase1", "elapsed_s": elapsed_after_probe, "accepted": True, "gates": best_gates, "area_saved_um2": best_saved})
         else:
-            checkpoints.append({"phase": "phase1", "elapsed_s": elapsed_after_probe, "accepted": False, "gates": len(all_ids), "area_saved_um2": 0.0, "status": probe_status})
+            if probe_status != "disabled":
+                checkpoints.append({"phase": "phase1", "elapsed_s": elapsed_after_probe, "accepted": False,
+                                    "gates": len(all_ids), "area_saved_um2": 0.0, "status": probe_status})
             # Phase 2 fallback
             p2_dir = rdir / "phase2_fallback"
             p2_dir.mkdir(parents=True)
@@ -264,6 +271,7 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
 
 def main() -> int:
     force = "--force" in sys.argv
+    probe_budgets = (0.0,) if "--matched-zero" in sys.argv else (60.0, 120.0, 240.0)
     OUT_ROOT.mkdir(parents=True, exist_ok=True)
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     data = json.loads(OUT_JSON.read_text()) if OUT_JSON.is_file() else {"runs": {}, "imported_references": {}}
@@ -272,7 +280,7 @@ def main() -> int:
     cmp.save(OUT_JSON, data)
 
     for kind in ("sky130hd_aes", "asap7_aes"):
-        for tau in (60.0, 120.0, 240.0):
+        for tau in probe_budgets:
             key = f"{kind}::{int(tau)}s"
             if key in data["runs"] and not force:
                 print(f"[Stage 4] Skipping existing {key}", flush=True)
