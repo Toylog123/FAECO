@@ -8718,3 +8718,9 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - 从项目关联的 Google Antigravity 记录找到图 1–2 生图调用、原始 JPEG 与裁切命令，重新裁切所得 PNG 与入稿文件逐字节相同。两图均由 `generate_image` 生成，具体后端模型版本未随调用落盘。按确证工具更新中文致谢，开始重编与版面对比。
 - 两遍 LuaLaTeX 完成，PDF 仍为 13 页。逐页比较仅第 13 页致谢区域变化，150 dpi 末页目检通过。中文 TeX SHA-256 为 `56d0e4add9d0143284c056dd97f8895215268d81c806f89b855fe076261c90d2`，三份 PDF 同为 `7fb37c1b55178c2e66f43e51e3c58bdb1ad5288d38701b8c61f44083a1150950`。离线复算再核通过 297＋37 份原件。 [定稿验收](../paper/zh/review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
 - 更新英文投稿入口，区分 V5 与早期 IEEEtran、Integration 稿，核对 TCAD 正式制式及作者资料待办。正式英文转译仍待作者确认。 [英文投稿入口](../paper/en/README.md)
+
+## LOG-20261127-42｜登记 UART 三角 STA 的独立目录重放
+
+- 终审 V6 留有冻结物理输入和工具路径依赖。先验 R3-1 的实际包装器将 Verilog 读入改写为 ODB 读入。以公开原件绑定两个已布线 ODB、两份 SPEF、原 15 份 Liberty、470.5 ps SDC 及 OpenROAD 二进制，用不同路径重放两态三角。比较完整 STA 输出（仅消去路径前缀和历史包装器标头）及解析数据。先验证错误输入在派发前被拒。 [预登记](evidence/EXPERIMENT_REGISTRY.md)
+- 同大小候选 SPEF 单字节改写被拒，未产生运行输出。独立路径重放的两态三角 6 份报告和解析数据全部匹配，外层返回 0。追加最小源码提取、仓库外启动核验。
+- 从 Git 最小提取后在 `/tmp` 启动，第二组 6 份报告和解析数据同样全部匹配，外层返回 0。两次原件与负对照已封装并复核 29 份成员。当前 V6 仍为部分解决。 [异址 STA 与证据](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)

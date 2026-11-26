@@ -1856,6 +1856,8 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 
 13 页 V5 中文稿通过内部小修核验。图 1–2 的 Google Antigravity `generate_image` 工具身份已通过原始记录与裁切回算确认，中文致谢已更正。待作者确认完整英文转译及正式署名、通信作者、每位作者的 ORCID 和投稿声明，并在拟投英文包验收 IEEE 版式、修回篇幅与最终致谢。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。 [英文投稿入口](../paper/en/README.md) · [终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
 
+复现中已推进 R3-1 的已布线端点 STA。两套代码路径和独立根上的六视图分别全部重放成功。同主机的范围内，已验 ODB／SPEF、库角和工具路径可映射。跨主机与全流程物理重建仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
+
 ## OI-114（2026-11-27，闭合）— 近临界 STA 复验缺顶层运行时绑定
 
 470.5 ps 补测首次已核输入身份，首个 FF 调用因 STA 包装器未收到 `FAECO_DESIGN_TOP` 退出，未产生可用 STA 读数。保留首次日志和协议。复用既有 `bind_runtime("uart", None)`，在新目录以同一输入复跑；六视图的日志和门槛决定全部复算一致。修复只影响调用，未改周期或验收规则。[补证报告](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)

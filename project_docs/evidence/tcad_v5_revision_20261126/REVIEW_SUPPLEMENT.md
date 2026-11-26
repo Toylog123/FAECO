@@ -28,6 +28,8 @@
 
 运行入口见 [近边界 STA 驱动](run_review_setup_floor.py)，[原始总收据](V5_REVIEW_SETUP_FLOOR_VERIFIED.json) SHA-256 为 `c6d17dc273a693cc0666ef97c77f24336ee9feebb026f830de7ce13c0d91b4df`。[补证原件包](V5_REVIEW_SUPPLEMENT_ORIGINALS.zip) SHA-256 为 `b5b94043223ad269ec735ceea32ab2fa4ea5b96efe08868bce900e8f36d4e712`，含 37 份原始文件及清单。公开复算脚本同时核补证联合动作、时序读数、两个 gate 及冻结 SDC 文本差异。
 
+随后在同一 WSL 主机分别从两个仓库路径，以独立目录中的 ODB／SPEF、Liberty 和原 OpenROAD 二进制重跑六视图。两次读数及路径归一的完整报告均与当时吻合。 [异址 STA 入口与原件](REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
+
 ## 计费与工具资源
 
 实验统一使用现场规定的 CPU 亲和范围和线程数。诊断与候选按同一设计串行派发。公共筛选对各策略计费，参考构建及资格验证是前处理。面积指标只使用在总截止前已完成全部验收的检查点。TT 功耗作为已交付端点的补充估计。

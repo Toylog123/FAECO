@@ -34,3 +34,20 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 40 ns 处理器 | 独立重建，同一 18 项池和新鲜 TT 灵敏度起序。单门、固定三门、FAECO 微批次；均关闭探针。公共预筛 58.474014 s，参考构建与资格作为前处理单列。 | 绝对 Setup/Hold 与相对 400 ps Setup WNS、逐角 TNS 及 Hold 非退化。全角最大电容和转换时间报告、DRC、天线、SEC 完整。 |
 
 各组共用单一工作模式。FF/TT/SS 对应标准单元库通过各冻结协议中的 Liberty 指纹定位，详细布线名义 SPEF 跨三个库角共用。Stage 5 的 SDC、公共预筛和三角报告见 ZIP 内相应协议和原件。功耗基于 OpenSTA TT 默认活动。已计费墙钟及工具子步骤台账保留，旧运行没有系统的进程树 CPU 时间、峰值 RSS 或下游文件第一次可读时刻。
+
+## R3-1 冻结 UART 端点的异址 STA 重放
+
+新版 [重放驱动](replay_uart_setup_floor.py) 从 V5 补证包及 UART 参考资格收据定位 20 份外部输入。先列出相对于输入根的文件路径。准备对应的已布线 ODB／SPEF、15 份 Liberty 和原 OpenROAD 可执行文件，并保留其相对层次。工具需在目标 Linux 环境中能够启动。470.5 ps SDC 由驱动从补证包中校验后写入新的输出根。
+
+从仓库根执行以下命令，将 `/path/to/pinned-inputs` 和 `/path/to/new-results` 替换为实际路径。
+
+```bash
+driver=project_docs/evidence/tcad_v5_revision_20261126/replay_uart_setup_floor.py
+python3 -E -s -B "$driver" --list-inputs
+bash code/scripts/run_with_timeout.sh 120 python3 -E -s -B "$driver" \
+    --inputs-root /path/to/pinned-inputs --output /path/to/new-results
+```
+
+同一 WSL 主机上的两组试验分别使用原仓库与从 `a01e1262` 提取的最小依赖树，第二组在仓库外启动。两组均使用独立目录下的 20 份输入副本。每组重跑参考与候选各 FF／TT／SS 三角。在原报告中移去包装器的 ODB 路径头，在新报告中映射回原路径，然后比较全文及解析的时序数据。两组各 6 份报告全部一致，确认参考 SS Setup WNS 为 +0.794642 ps、候选为 −0.568545 ps，仍由绝对下限独立拒收。同大小候选 SPEF 改一个字节的反例在启动 STA 前退出。此项覆盖同一主机的已布线端点分析。跨主机 PDK／工具兼容性、重新布线、寄生提取、DRC 与 SEC 的重建仍待验。
+
+两组原始收据、SDC、Tcl、实际 STA 日志和拒收反例封装为 29 份原件及一份清单，ZIP SHA-256 为 `2f88fbf9f9ddaac023cbe473613a39a1770191e69f2d164aa4654f3f3f439a3e`。 [异址重放原件](V5_UART_STA_RELOCATED_ORIGINALS.zip)
