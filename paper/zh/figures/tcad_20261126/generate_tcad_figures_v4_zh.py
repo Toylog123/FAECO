@@ -14,12 +14,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 
-SKILL_SCRIPTS = Path(r"C:\Users\16225\.gemini\config\skills\nature-figure\scripts")
-if str(SKILL_SCRIPTS) not in sys.path:
+SKILL_SCRIPTS = Path.home() / ".codex" / "skills" / "nature-figure" / "scripts"
+if SKILL_SCRIPTS.is_dir() and str(SKILL_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(SKILL_SCRIPTS))
 from audit_panel_alignment import require_matplotlib_panel_alignment
 
-REPO = Path(r"d:\BaiduSyncdisk\01_Papers\03_FAECO")
+REPO = Path(__file__).resolve().parents[4]
 EVIDENCE = REPO / "project_docs" / "evidence"
 OUT_DIR = REPO / "paper" / "zh" / "figures" / "tcad_20261126"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -76,7 +76,10 @@ def save_pub(fig: plt.Figure, stem: str, *, check_alignment: bool = True) -> Non
             strict=True,
         )
     fig.savefig(str(base) + ".pdf", bbox_inches="tight", pad_inches=0.04)
-    fig.savefig(str(base) + ".svg", bbox_inches="tight", pad_inches=0.04)
+    svg = base.with_suffix(".svg")
+    fig.savefig(svg, bbox_inches="tight", pad_inches=0.04)
+    svg_lines = svg.read_text(encoding="utf-8").splitlines()
+    svg.write_text("\n".join(line.rstrip() for line in svg_lines) + "\n", encoding="utf-8", newline="\n")
     fig.savefig(str(base) + ".png", dpi=600, bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)
 
@@ -137,7 +140,7 @@ def build_fig3_anytime_v4_zh() -> None:
                 ("纯微批次 FAECO（窗口）", sky_boxed_pts("boxed"), C_HERO, "-", 1.8),
                 ("固定微批次（窗口）", ab_pts("sky130hd_aes::fixed_boxed"), C_FIXED, "--", 1.4),
                 ("灵敏度单门（窗口）", ab_pts("sky130hd_aes::single_sens_boxed"), C_SINGLE, "-.", 1.4),
-                ("几何放行与原生 (0)", [], C_FAIL, ":", 1.2),
+                ("几何放行与原生未交付", [], C_FAIL, ":", 1.2),
             ],
             "note": (708, 202.0, "197.7 µm² (100% 池)\n251 s 交付"),
             "note_col": C_HYBRID,
@@ -152,7 +155,7 @@ def build_fig3_anytime_v4_zh() -> None:
                 ("Hybrid FAECO（回退）", hyb_pts("sky130hd_riscv32i"), C_HYBRID, "--", 1.7),
                 ("固定微批次", riscv_pts("fixed_online"), C_FIXED, ":", 1.4),
                 ("灵敏度单门", riscv_pts("single_sensitivity"), C_SINGLE, "-.", 1.4),
-                ("原生与离线 LR (0)", [], C_FAIL, "-", 1.1),
+                ("原生/LR 未交付", [], C_FAIL, "-", 1.1),
             ],
             "note": (705, 78.5, "75.07 µm² (50.8% 池)\n双模式终态一致"),
             "note_col": C_HERO,
@@ -167,7 +170,7 @@ def build_fig3_anytime_v4_zh() -> None:
                 ("Hybrid FAECO（回退）", hyb_pts("asap7_uart"), C_HYBRID, "--", 1.7),
                 ("灵敏度单门", uart_pts("single_sensitivity"), C_SINGLE, "-.", 1.4),
                 ("固定微批次", uart_pts("fixed_online"), C_FIXED, ":", 1.4),
-                ("原生与离线 LR (0)", [], C_FAIL, "-", 1.1),
+                ("原生/LR 未交付", [], C_FAIL, "-", 1.1),
             ],
             "note": (705, 0.86, "0.831 µm² (70.4% 池)\n双模式终态一致"),
             "note_col": C_HERO,
@@ -182,9 +185,9 @@ def build_fig3_anytime_v4_zh() -> None:
                 ("固定微批次（窗口）", ab_pts("asap7_aes::fixed_boxed"), C_FIXED, "--", 1.5),
                 ("Hybrid FAECO（回退）", hyb_pts("asap7_aes"), C_HYBRID, "-.", 1.7),
                 ("灵敏度单门（窗口）", asap_boxed_pts("single_boxed_drc"), C_SINGLE, ":", 1.5),
-                ("原生与离线 LR (0)", [], C_FAIL, "-", 1.1),
+                ("原生/LR 未交付", [], C_FAIL, "-", 1.1),
             ],
-            "note": (710, 0.635, "0.612 µm² (2.0×)\nHybrid 零损失"),
+            "note": (710, 0.635, "0.612 µm²\n默认探针交付较迟"),
             "note_col": C_HERO,
             "leg_loc": "upper left",
             "leg_anchor": (0.22, 0.99),
@@ -221,7 +224,7 @@ def build_fig3_anytime_v4_zh() -> None:
         ax2.tick_params(axis="y", colors="#64748B", labelsize=6.2, width=0.5)
         ax2.set_ylabel("候选池捕获率 (%)", fontsize=6.3, color="#64748B", labelpad=3)
 
-    save_pub(fig, "fig3_anytime_curves_v4_zh", check_alignment=False)
+    save_pub(fig, "fig3_anytime_curves_v4_zh")
 
 
 def build_fig4_ablation_v4_zh() -> None:
@@ -297,7 +300,7 @@ def build_fig4_ablation_v4_zh() -> None:
     ax.axvspan(0.55, 2.45, color="#ECFDF5", zorder=0)
     ax.plot(x3, s_area, marker="o", markersize=4.4, color=C_HERO, linewidth=1.7, label="终态合格面积")
     ax.plot(x3, s_auc, marker="s", markersize=4.0, color=C_HYBRID, linestyle="--", linewidth=1.5, label="时间平均收益")
-    ax.text(1.5, 1.03, "b=2,3 峰值", ha="center", va="top", fontsize=5.6, color="#065F46", fontweight="bold")
+    ax.text(1.5, 1.03, "b=2,3 面积并列", ha="center", va="top", fontsize=5.6, color="#065F46", fontweight="bold")
     ax.set_xticks(x3)
     ax.set_xticklabels([str(b) for b in bs], fontsize=6.2)
     ax.set_xlabel("微批次宽度 b（K = 18）")
