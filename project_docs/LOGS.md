@@ -8498,3 +8498,24 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - 23:59 实查 40 ns 多角 reference-only 进程等待 Stage 3 释放同一 EDA 锁。等锁 12100 s，实际命令外壳 3100 s 与清理上限 60 s，ORFS 构建 1800 s，CPU 0–5。独立输出根 /home/toylog/faeco_v5_step5_riscv32i_tc40ns_mmmc_20261126_v1。参考脚本 SHA-256 2e2a49ef45fbaf5430034b821b178393f99b86f01aa5961b590e9a63c31e398e，候选及 CLI 脚本 SHA-256 d1fc0317f77832d804dcf8be9e596ccfb4a4a873ecae7ed368f0d94c094a379f。10 ns 原件保全。
 - 新试验独立重建同一 RTL。固定 I/O 两方向各 2 ns，保留 reset 的 removal 测试；ABC 40000 ps，ORFS CORNERS=tt ss ff，Setup/Hold 修复目标余量 0.50/0.30 ns。准入需在 CTS/GRT 的真实日志确认三个 Liberty 角均已载入，建立与保持修复实际调度，且最后按原全部物理、时序与 I/O 门独立验收。三角标准单元库共享布线提取的 SPEF。此次只是等待锁，尚无 40 ns 新构建。
 - 10 ns 完整控制原件、路径归因及 Stage 3 启动状态已推送 main，提交 9c1c93302bac3ae6443c53befd516aa18a6e8a37，远端同哈希已核。
+
+## LOG-20261127-01｜Stage 3 首臂完成，UART 零 Setup 损失档交付 5 门
+
+- ASAP7 UART 0% 档 27 派/27 成，队列结束时尚未触窗。0 ps WNS 及每角 TNS 损失预算均由运行协议确认，实际门保留 0.001 ps 数值容差。14 个候选含 Setup 拒因、12 个含相对 Hold 拒因，交叠 3 个。4 个接受检查点，终态 5/18 门、0.32076 µm²，首获终态 648.703234 s，AUC 0.121199 µm²。无新增负 Setup 端点；最终 FF/TT/SS ΔSetup 为 +0.000944/−0.000056/−0.000028 ps，ΔHold 为 −0.000010/−0.000007/−0.000763 ps，独立 DRC 与天线均 0、SEC 567/0。原件路径及哈希见报告。
+- Stage 3 首臂汇总快照 SHA-256 7388273b61ee9fcb19678f99c4ded9a32f5b22d04568fad2c3385530f80305a8。下一臂 UART 0.5% 已开始。
+- Stage 2A 去重重复集合实核。关闭臂请求 2/4 派发同一 3 门集合且均仅 FF Setup WNS 拒收；开启臂跳过重复。两臂均仍有一个 13 门集合重复被 TT/SS 相对 Hold 拒收，界定已测去重范围。
+
+## LOG-20261127-02｜Stage 3 UART 0.5% 档交付 12 门
+
+- UART 0.5% 档按 1.35 ps Setup WNS 及分角 TNS FF/TT/SS 为 13.5/13.5/68.486825 ps 运行。21 派/21 成， 队列耗尽，4 个 Setup 拒收、9 个相对 Hold 拒收，两类无交叠。8 个合格检查点，终态 12/18 门、0.77274 µm²，494.983810 s 首获终态，AUC 0.442559 µm²。终态三角无新增负 Setup 端点，独立 DRC / 天线均零，SEC 567/0。运行协议 SHA-256 5c7648037ca92b3c34d28b18ffbf4808651435310957fe2cd40c74ab676f7abc。汇总快照 SHA-256 e9acb4278148c71ac00d11dfed04c684d2014a1256d27f1b7fb6f808265587e0。1% 档已开始。
+- 40 ns 多角独立参考设置脚本及队列已推送 main，提交 a7553a68afe5521deb9ce2c325343d53697b28dc，远端同哈希已核。该参考仍等 Stage 3 释放同一 EDA 锁。
+
+## LOG-20261127-03｜Stage 3 UART 1% 档复现 13 门回收
+
+- UART 1% 档 2.70 ps Setup WNS 预算，FF/TT/SS TNS 预算 27/27/136.973650 ps。19 派/19 成、自然耗尽，2 个 Setup 拒收、9 个相对 Hold 拒收，二者无交叠。8 个合格检查点，终态 13/18 门、0.83106 µm²，461.066095 s 首获终态，AUC 0.496827 µm²。终态新增负 Setup 端点 0/0/0、独立 DRC/天线 0、SEC 567/0。面积与 Stage 2A 去重开启臂同值，时间与 AUC 为不同试验的实测读数。
+- 运行协议 SHA-256 0178df431cc9aaa40573384ef87e44d89658d435feffbaee230a0b450d6268aa。汇总快照 SHA-256 e29c57fd0833cc9ea56c437f91160265c56ed0c48b1b5f4d2ab1246f5a750729。UART 2% 已开。
+
+## LOG-20261127-04｜Stage 3 UART 四档齐，1% 至 2% 同路径同端点
+
+- UART 2% 档 WNS/TNS 预算为 5.40 ps 和 54/54/273.947300 ps。19 派/19 成、自然耗尽，2 个 Setup、9 个相对 Hold 拒收，无交叠。8 个合格交付检查点，终态 13/18 门、0.83106 µm²，455.056506 s 首达，AUC 0.504324 µm²。无新增负 Setup 端点、独立 DRC/天线零、SEC 567/0。运行协议 SHA-256 bb8cea39ecd69fe0755c69ed031e7cce62f42cff9ab51f4c949768002c18c3b5。四臂汇总快照 SHA-256 ed73ba28dfba163e554aa17370bcbdf9410b6a73ef390d7b5d0c203542314370。
+- 1% 与 2% 的全部 19 次派发动作顺序、拒因逐项相同，终态 ODB/DEF/Verilog/去日期 SPEF 均逐字节相同。终态 ODB SHA-256 2c3b3747b69faf1f27498e4e34875fa91409afed8129be0ba55f5a6f0e678059，去日期 SPEF SHA-256 bc6da2be05046ca60594418dd99c4c0bcefd66d372d22e148f227d54cb8afbc1。两档净回收持平，约 6.01 s 的首达差为两次运行用时差。SKY130HD AES 0% 已开始。

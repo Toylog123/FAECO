@@ -1,5 +1,9 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 Stage 3 UART 四档完成
+
+- 同一 270 ps ASAP7 UART 冻结参考和 720 s 计费窗下，Setup 预算 0／0.5／1／2% 的合格回收分别为 0.32076／0.77274／0.83106／0.83106 µm²，对应 5／12／13／13 项。四档终态三角均无新增负 Setup 端点。1% 与 2% 的 19 个候选身份及拒因完全相同，终态 ODB、DEF、网表及去日期 SPEF 一致。两档交付时间差留作计时波动。SKY130HD AES 四档继续实跑，40 ns 多角 `riscv32i` 独立参考等待 EDA 锁。[预算扫频实测收据](evidence/tcad_v5_revision_20261126/V5_STEP3_MULTIBUDGET_VERIFIED.json) · [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+
 ## 2026-11-26 V5 接手续跑
 
 - **已复核**：Stage 1 与 Stage 2 第一批的 SHA-256 和交接一致。Stage 1 的时序数据为 FF／TT／SS 三个 PVT 角各自的 Setup／Hold 读数，功耗为 TT 实布 SPEF 下工具默认活动估算。`ASAP7 UART-TC` 的 13 门端点功耗与原始 SDC 的 13 门端点分别追溯。Stage 2A 去重两臂的最大回收均为 0.83106 µm²，AUC 0.434369→0.476433，完成评估 20→19；最终面积首次交付 546.572→507.573 s，计费总墙钟 634.563→588.027 s。详见 [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)。
