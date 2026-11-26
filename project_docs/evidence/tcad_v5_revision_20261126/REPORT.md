@@ -8,8 +8,8 @@
 | 2A UART Setup 拒收去重 | 已实测，见 §2 | [Stage 2 收据](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) |
 | 2B 原生 `recover_power` 挂保护后端 | 所有完整提议及两条 AES 119 项辅助投影均已分类，见 §3 | [Stage 2 收据](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) |
 | 3 双设计四档预算 | 双设计八臂完成，见 §4 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
-| 4 双 AES 探针预算 | 已核对旧参照，六新测臂排队等锁 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
-| 5 同一处理器 RTL 的独立重建严格收敛参考 | 10 ns 独立起点完成构建，SS Setup/Hold 未闭合，候选臂未启动，见 §5 | [资格收据](V5_STEP5_TC10NS_QUALIFICATION.json) |
+| 4 双 AES 探针预算 | 六个新测臂已启动，先跑 SKY130HD AES 60 s | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
+| 5 同一处理器 RTL 的独立重建严格收敛参考 | 10 ns 有 SS 时序违例。40 ns 三角收敛但电气门失败。两次均未派候选，见 §5–6 | [资格收据](V5_STEP5_TC10NS_QUALIFICATION.json) |
 
 ## 1. Stage 1 实测与既有原件复核
 
@@ -132,7 +132,7 @@ SKY130HD AES 2% 档的分角 TNS 损失预算为 720 / 720 / 54098.354667 ps，�
 
 Stage 3 八臂于 01:09:23 完成，完整汇总 SHA-256 63234f456393e13124c321a0b91bc81c30536ba1b5af34de023c4f5caec714c3。UART 在 1–2% 观察到 0.83106 µm² 的面积平台，SKY130HD AES 在 0.5–2% 观察到 98.8448 µm² 的面积平台。相同动作序列对应的运行时间与 AUC 按实际用时分别记载。独立在线扫参的各档只含一次完整计费运行。
 
-Stage 4 将已有 0 s 与默认设置的收据和 60/120/240 s 新测结果并列记录，六个新测臂排在 40 ns 构建后等锁。
+Stage 4 将已有 0 s 与默认设置的收据和 60/120/240 s 新测结果并列记录，六个新测臂于 01:20:27 接锁启动，先执行 SKY130HD AES 的 60 s 档。
 
 ## 5. Stage 5 10 ns 参考资格测试
 
@@ -146,7 +146,7 @@ ORFS 528.958 s 完成（rc0），原生和独立 DRC/天线检查均为零，三
 | TT | +51.313620 | 0 | +616.950713 | 0 |
 | SS | −22392.384835 | −23993330.614758 | −126.298971 | −2154.927348 |
 
-SS Setup 与 Hold 均低于绝对收敛门，资格拒收，本参考未进入三臂面积回收。原始 SS 时序报告中最差 Setup 为 instr[15] 到 PC 寄存器（约 −22.39 ns），虚拟时钟组的 instr[20] 到 aluout[31] 亦为负（约 −20.46 ns）。最小松弛违例为 reset 到 dp.pcreg.q[20] 的异步 removal（约 −0.1263 ns）。普通 clk 组最差 Hold 仍为 +2.17 ns。已排队同一 RTL 独立重建的 40 ns 三角参考。I/O 两方向仍为绝对 2 ns，保留异步复位 removal；采用 ABC 40000 ps 及 TT/SS/FF 联合修复，Setup/Hold 目标余量 0.50/0.30 ns。01:09:24 已接过 Stage 3 的 EDA 锁启动独立构建，ABC 时间目标实际记录为 40000。三角修复与严格验收尚待终态。
+SS Setup 与 Hold 均低于绝对收敛门，资格拒收，本参考未进入三臂面积回收。原始 SS 时序报告中最差 Setup 为 instr[15] 到 PC 寄存器（约 −22.39 ns），虚拟时钟组的 instr[20] 到 aluout[31] 亦为负（约 −20.46 ns）。最小松弛违例为 reset 到 dp.pcreg.q[20] 的异步 removal（约 −0.1263 ns）。普通 clk 组最差 Hold 仍为 +2.17 ns。已排队同一 RTL 独立重建的 40 ns 三角参考。I/O 两方向仍为绝对 2 ns，保留异步复位 removal；采用 ABC 40000 ps 及 TT/SS/FF 联合修复，Setup/Hold 目标余量 0.50/0.30 ns。01:09:24 接过 Stage 3 的 EDA 锁启动独立构建，ABC 时间目标实际记录为 40000。40 ns 结果另见下节。
 
 | 资格原件 | 路径相对 `/home/toylog/faeco_v5_step5_riscv32i_tc_20261126_v1` | SHA-256 |
 |---|---|---|
@@ -155,3 +155,25 @@ SS Setup 与 Hold 均低于绝对收敛门，资格拒收，本参考未进入�
 | 资格收据（[入仓副本](V5_STEP5_TC10NS_QUALIFICATION.json)） | `qualification/CONTROL.json` | `b8522af55121f1fc0a4d2a66fc8900a6a92c9849373b40e2c7ba7faa8144e73a` |
 | SEC 模型自检 | `qualification/attempt_01/sec/receipt.json` | `6eff2e99990becc5217d2b2bc9f8d6b05a90466b5e76bb0c2d4fa1ab3d62aa5b` |
 | SS 路径日志 | `qualification/attempt_01/sta_SS.log` | `73d87c051b82f344a9dfce904ef1d39e6f0882a9c405b90ab5bd3f179166460a` |
+
+## 6. Stage 5 40 ns 三角参考资格测试
+
+同一 RTL 使用独立 ORFS 目录重新综合至详细布线，TT/SS/FF 标准单元库在 CTS 和 GRT 阶段都实际载入，Setup/Hold 修复目标余量 0.50 / 0.30 ns。CTS 找到 32 个保持违例端点，并插入 1 个保持缓冲。详细布线后独立使用三角 Liberty 和共用名义提取寄生检查。最终实际/虚拟时钟均 40 ns，全部 65 个非时钟输入与 99 个输出维持 2 ns 延迟。
+
+ORFS 构建 650.989 s、rc0，最终原生及独立 DRC 与天线为零。功能网表 5458 单元、69,635.5360 µm²（约 18,552 个 NAND2 等效门），DEF 组件 18,983、线网 5536。参考 SEC 模型自检 4559/0。
+
+| 工艺角 | Setup WNS（ps） | Setup TNS（ps） | Hold WNS（ps） | Hold TNS（ps） |
+|---|---:|---:|---:|---:|
+| FF | +31520.414723 | 0 | +396.756794 | 0 |
+| TT | +28980.888800 | 0 | +616.837470 | 0 |
+| SS | +6615.689330 | 0 | +1944.215899 | 0 |
+
+三角 Setup/Hold 均满足绝对时序门。TT 的同一输出脚 _3804_/Y（sky130_fd_sc_hd__a2111oi_0）同时触发最大转换时间与电容限制，实测与上限分别为 1.481687427 / 1.462190032 ns 和 0.022171792 / 0.021067001 pF。完整资格门因这两处电气违规拒收参考点。未运行候选臂。现准备独立的电气余量改进试验。
+
+| 资格原件 | 路径相对 `/home/toylog/faeco_v5_step5_riscv32i_tc40ns_mmmc_20261126_v1` | SHA-256 |
+|---|---|---|
+| 构建收据 | `build_receipt.json` | `defdff3bef51d04d0b60340e74d5fcbe2af86cd2aebf110e84a7508591d0ba05` |
+| 最终约束 | `orfs/results/sky130hd/riscv32i/tc40ns_mmmc/6_final.sdc` | `0be258911db6555392a5929f2a0c73c37ea9628439cd0bca6104be1a12bfdfc5` |
+| 资格收据（[入仓副本](V5_STEP5_TC40NS_MMMC_QUALIFICATION.json)） | `qualification/CONTROL.json` | `8dd1d882e908cdcf40d50807755d6dc7501c840ebb99e18b9401d8320700c586` |
+| CTS 日志 | `orfs/logs/sky130hd/riscv32i/tc40ns_mmmc/4_1_cts.log` | `5c1c09f633365453ad95fd0c6b7ea9ab85a5f75efee1ecae607475c293551247` |
+| GRT 日志 | `orfs/logs/sky130hd/riscv32i/tc40ns_mmmc/5_1_grt.log` | `225edf1922e3c770b02669d17a7a7dcccd0ff881b793974df7907b1bff5b8146` |

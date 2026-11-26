@@ -1,5 +1,10 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 Stage 5 多角参考的电气边界与 Stage 4 开跑
+
+- 40 ns 多角 `riscv32i` 完成独立重建，固定 2 ns I/O，65 个非时钟输入与 99 个输出均覆盖。FF／TT／SS Setup WNS 分别为 +31.520／+28.981／+6.616 ns，Hold WNS 为 +0.397／+0.617／+1.944 ns，六项 TNS 均为零。DRC 与天线为零，参考网表的 SEC 自检为 4,559/0。TT 同一 `_3804_/Y` 超过转换时间与电容上限，严格参考资格仍未通过，候选臂未启动。下一变体保留三角与绝对 I/O 条件，加入原生电气裕量。[40 ns 资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC40NS_MMMC_QUALIFICATION.json)
+- Stage 4 于 01:20:27 (UTC+08:00) 开跑，从 SKY130HD AES 的 60 s 探针子预算开始。五点对照中 0 s 与默认点为已绑定历史参照。两个 AES 的 60／120／240 s 为新测。[V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+
 ## 2026-11-27 Stage 3 两设计八臂完成
 
 - 同一 270 ps ASAP7 UART 冻结参考和 720 s 计费窗下，Setup 预算 0／0.5／1／2% 的合格回收分别为 0.32076／0.77274／0.83106／0.83106 µm²，对应 5／12／13／13 项。四档终态三角均无新增负 Setup 端点。1% 与 2% 的 19 个候选身份及拒因完全相同，终态 ODB、DEF、网表及去日期 SPEF 一致。两档交付时间差留作计时波动。[预算扫频实测收据](evidence/tcad_v5_revision_20261126/V5_STEP3_MULTIBUDGET_VERIFIED.json)
