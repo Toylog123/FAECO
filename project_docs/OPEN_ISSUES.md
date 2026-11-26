@@ -1750,6 +1750,8 @@ v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独
 
 ## OI-105（2026-11-25，open）— 现行布线前诊断与调度的跨设计及强对照
 
+2026-11-27 核对了 ICCAD 2026 AuDoPEDA 作者发布的 OpenROAD 功耗恢复补丁。其按实例当前功耗与 Setup 裕量乘积初排，可映射到 40 ns 处理器共同池的 TT 输入。已核冻结日志中 18 项都具有有限的单一数据输出裕量。还需从同一 TT ODB、SDC、SPEF 和库读取实际实例功耗，核对原排序规则并在同一动作、批宽、后端和时限下验证排序对照。作者原流程的全局布线功耗恢复、备选门选择与重排序保留独立归属。ECC Sizer 发布版的实例排除与全局门禁无法表达逐实例目标配对，可作为原生提议参考。两条均尚未执行新的物理对照。 [AuDoPEDA 作者论文](https://arxiv.org/html/2601.06268v2#S4.SS3) · [作者补丁](https://github.com/ABKGroup/AuDoPEDA/blob/d396422e27496b6836ecbc7229edff33f642525c/diffs/pwr/OpenROAD_pwr.patch#L308-L328) · [ECC Sizer 发布版](https://github.com/openecos-projects/ecc-sizer/releases/tag/v0.1.0-alpha.1)
+
 AES 现行在线后端已完成正反序原序单门对照和独立的后端交叉对照。同端点的诊断收益成立于 AES，候选调度的回收收益仍混合批宽、失败处理和排序。ASAP7 UART 已在原约束下完成三法正反序，在线固定、单门、FAECO 两序各回收 0.23328、0.17496、0.14580 µm²。UART 实际 36 次在线诊断均无 marker 或重试，因此仍需在出现诊断事件的独立设计估算净收益。下一层包括同后端灵敏度单门、固定批宽、同数量几何邻网放行和独立 SKY130HD 非 AES 设计，保留零回收和时窗删失。中英文工作稿均补至已核验的 UART 结果。[TCAD 成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md) · [UART 六臂](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
 
 2026-11-25 已在 AES 独立复核 TT 裕量灵敏度单门四臂。相较此前原序配对，新配对里 FAECO 首达领先缩小至 17.117／20.151 RAW s，窗内比较变为 67.5648 对 33.7824 µm²。静态灵敏度排序基线已补，仍需比较固定批宽、在线更新排序、邻网释放及独立设计。[灵敏度单门配对](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md)
@@ -1857,6 +1859,8 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 13 页 V5 中文稿通过内部小修核验。图 1–2 的 Google Antigravity `generate_image` 工具身份已通过原始记录与裁切回算确认，中文致谢已更正。待作者确认完整英文转译及正式署名、通信作者、每位作者的 ORCID 和投稿声明，并在拟投英文包验收 IEEE 版式、修回篇幅与最终致谢。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。 [英文投稿入口](../paper/en/README.md) · [终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
 
 复现中已推进 R3-1 的已布线端点 STA。两套代码路径和独立根上的六视图分别全部重放成功。同主机的范围内，已验 ODB／SPEF、库角和工具路径可映射。跨主机与全流程物理重建仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
+
+V4 资源补证已覆盖 40 ns 处理器的自然结束与时窗截停两臂，核验进程树 CPU、scope 内存高水位和独立读者读到进度、完成文件验证的实际时间。跨设计整棵进程树资源、重复方差和外层硬截止仍开放。 [V4 补证](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)
 
 ## OI-114（2026-11-27，闭合）— 近临界 STA 复验缺顶层运行时绑定
 

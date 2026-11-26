@@ -21,7 +21,7 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 去重、原生对照资格、在线 Setup 调节 | [Stage 2](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) · [Stage 3](V5_STEP3_MULTIBUDGET_VERIFIED.json) |
 | 双 AES 同协议探针 | [Stage 4](V5_STEP4_PROBE_SENS_VERIFIED.json)；原件包对应 `phase1_probe` 与 `phase2_fallback` |
 | 独立处理器参考与三臂 | [10 ns 资格](V5_STEP5_TC10NS_QUALIFICATION.json) · [40 ns 资格](V5_STEP5_TC40NS_MMMC_QUALIFICATION.json) · [40 ns 电气护栏资格](V5_STEP5_TC40NS_MMMC_DRV_QUALIFICATION.json) · [Stage 5](V5_STEP5_10K_TIMING_CLOSED_TC40NS_MMMC_DRV_VERIFIED.json) |
-| 同起序批宽、470.5 ps 零下限、资源与清理时间 | [审稿补证](REVIEW_SUPPLEMENT.md) · [同起序批宽收据](V5_REVIEW_MATCHED_BATCH_VERIFIED.json) · [近临界 STA 收据](V5_REVIEW_SETUP_FLOOR_VERIFIED.json) · [补证原件包](V5_REVIEW_SUPPLEMENT_ORIGINALS.zip) |
+| 同起序批宽、470.5 ps 零下限、资源与清理时间 | [审稿补证](REVIEW_SUPPLEMENT.md) · [同起序批宽收据](V5_REVIEW_MATCHED_BATCH_VERIFIED.json) · [近临界 STA 收据](V5_REVIEW_SETUP_FLOOR_VERIFIED.json) · [补证原件包](V5_REVIEW_SUPPLEMENT_ORIGINALS.zip) · [处理器资源复跑](V5_STAGE5_RESOURCE_REPLAY_ORIGINALS.zip) |
 
 ## 主要对照协议
 
@@ -33,7 +33,7 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 双 AES 探针 0/60/120/240 s | SKY130HD AES 3,600 ps／ASAP7 AES 380 ps，同一设计回退规则一致。完成的拒收可在该候选会话复用。双 0 s 新臂最后补测，旧默认及旧零臂有独立来源。 | 相对门，720 s 自已计费公共预筛开始。只有验收在窗内的端点计入曲线；工具停止、收尾和外层返回可更晚。 |
 | 40 ns 处理器 | 独立重建，同一 18 项池和新鲜 TT 灵敏度起序。单门、固定三门、FAECO 微批次；均关闭探针。公共预筛 58.474014 s，参考构建与资格作为前处理单列。 | 绝对 Setup/Hold 与相对 400 ps Setup WNS、逐角 TNS 及 Hold 非退化。全角最大电容和转换时间报告、DRC、天线、SEC 完整。 |
 
-各组共用单一工作模式。FF/TT/SS 对应标准单元库通过各冻结协议中的 Liberty 指纹定位，详细布线名义 SPEF 跨三个库角共用。Stage 5 的 SDC、公共预筛和三角报告见 ZIP 内相应协议和原件。功耗基于 OpenSTA TT 默认活动。已计费墙钟及工具子步骤台账保留，旧运行没有系统的进程树 CPU 时间、峰值 RSS 或下游文件第一次可读时刻。
+各组共用单一工作模式。FF/TT/SS 对应标准单元库通过各冻结协议中的 Liberty 指纹定位，详细布线名义 SPEF 跨三个库角共用。Stage 5 的 SDC、公共预筛和三角报告见 ZIP 内相应协议和原件。功耗基于 OpenSTA TT 默认活动。已计费墙钟及工具子步骤台账保留。Stage 5 固定和自适应两臂后续做了整棵进程树 CPU、内存高水位和独立读者补测。 [资源与读档补测](REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)
 
 ## R3-1 冻结 UART 端点的异址 STA 重放
 

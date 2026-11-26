@@ -3622,3 +3622,7 @@ Windows Git 的自动换行转换会改变已冻结 JSON 的 SHA，即使 Git bl
 ## 2026-11-27 — 重放 STA 应绑定包装器实际读取的 ODB
 
 R3-1 的公开 STA 收据含门级网表指纹，原包装器在运行时以同名 ODB 替换 Tcl 的网表加载命令。重放从参考资格和候选物理收据取得 ODB 指纹，同时绑定 SPEF、库视图、SDC 和原二进制。只用网表重建可能改变寄生及天线二极管语义。独立目录的重放在原件比对中保留逐角完整报告。 [R3-1 异址重放](../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
+
+## 2026-11-27 — 分别记录验收、产物读取与进程返回
+
+处理器两臂用独立 cgroup 计量搜索 CPU 和作业内存高水位，另由 scope 外的读者观察原子进度文件，读完四项物理/网表产物并验 SHA 后记时。独立轮询会先观察到停止快照或先观察到外层返回。后处理分别核原验收时刻与观测区间，按原件保留两种顺序。 [V4 补测](../project_docs/evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)

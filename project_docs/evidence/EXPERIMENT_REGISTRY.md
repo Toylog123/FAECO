@@ -3550,3 +3550,18 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - 在 `/home/toylog/faeco_v5_review_uart_relocated_inputs_20261127_v1` 复制 20 份真实输入。另用同大小单字节修改的候选 SPEF 验证出错路径，返回输入 SHA 不符，退出时尚无输出根。正式重放的结果根为 `/home/toylog/faeco_v5_review_uart_relocated_results_20261127_v1`。 [重放入口](tcad_v5_revision_20261126/replay_uart_setup_floor.py)
 - 正式运行在 120 s 包装器内返回 0，六份解析数据和完整 STA 报告全部匹配。完整报告的比较只映射文件路径并移去原包装器的 ODB 路径头。将相同驱动和最小依赖树复制到独立的 Git 提取目录，再从目录外重放，检查代码入口仍可移址。
 - 最小提取自 `a01e1262`，复制本轮驱动（SHA-256 `d6f0f2cc1959c6436b582da24235d4d89b3ba4be9693ed95cc7ee398742a7571`），以 `python3 -E -s -B` 从 `/tmp` 启动。第二组同样返回 0，6 份全文与解析数据都匹配。首组和第二组收据 SHA-256 分别为 `da3d1e865ec47e0453e2903d77c911e1cf83cfa7a0057ed7a45030d159b130d3`、`296324a882bd3cc675e3bf61eb7b1c2c6e43d934009a2101c2c669aa14a44abd`。29 份原件和清单已逐成员核验。 [异址重放原件](tcad_v5_revision_20261126/V5_UART_STA_RELOCATED_ORIGINALS.zip)
+
+### 2026-11-27 审稿 V4｜40 ns 处理器资源与交付时刻（预登记）
+
+- 复用 Stage 5 冻结对象 `af4f0fb7fa91ec8ef48f4072938c5774f2a68850765502db8f654c36c3f0c98f` 中的独立参考、18 项池、58.474014 s 已计费筛选、三角约束、保护后端和同一新鲜 TT 起序。保留 720 s 窗口，fixed_boxed → faeco_boxed 串行，CPU 0–5，原 DRT 四线程，串行持有 EDA 锁。复跑两个在线搜索及合格端点审计，参考重建、原公共筛选和赛后功耗采用旧记录。预期固定臂自然结束、自适应臂最后一次未完成，实际若变化按新停止状态记。仅用于资源与时刻覆盖。
+- 每臂使用 Linux cgroup v2 的独立 systemd scope。记初始及搜索前后 `cpu.stat`，将整棵作业的 `memory.peak` 与定期观察进程 RSS 之和分列。一个独立进程观察原子提交的 `progress.json`，对新合格端点进一步按物理收据读取 ODB/DEF/V/SPEF 并校验文件字节。记录验收、读到合格进度、读取文件结束、工具清理、搜索返回和命令返回；时间口径沿用 CLOCK_MONOTONIC_RAW。已用独立 session 的 64 MiB 合成子进程验 cgroup 继承及内存峰。采样近似与内核峰值、固定计费筛选与实际本次资源分别记录。
+- 薄驱动 SHA-256 `41a2d74447111fbdc0a9b9b5749b162284b1cd3ef31dc4174b234f9b44df47f7`。无 EDA 预检逐字段复核冻结配置、18 项池和 58.474014 s 计费；独立读者在旧可核原件上读取 fixed 4 份、FAECO 2 份检查点，重复与外目录输入对照通过。两臂新根为 `/home/toylog/faeco_v5_v4_resources_20261127_v1`。观察器置于 CPU 6、采样目标间隔 50 ms，单臂监督上限 735 s，总外壳上限 1530 s，搜索窗与原工具上限沿用各自配置。
+- v1 在 scope 建立后触发 Python 上下文管理器一元 `+` 类型错误，未绑定运行输入或派发工具。保留原根和返回码；修正为括号形式后在全新 `/home/toylog/faeco_v5_v4_resources_20261127_v2` 重试。
+- v2 驱动 SHA-256 `bb77c7d285c794bca8937a37ea263c175fedad6b5e7e8831c72c5a4838d09b0e`。固定三门臂正常结束，6 派／6 成／4 接受，终态 91.3376 µm²，计费搜索停止 661.954737 s，外层 scope 返回观测 662.044554 s，独立读者记录 4 个合格检查点。下一臂已启动，配对汇报待完整验收。
+- 自适应臂于 05:15:10（UTC+8）返回，6 派／5 成／2 接受，终态 31.2800 µm²。最后 DRT 退出 720.080274 s，搜索返回 720.082645 s，scope 外层返回观测 720.122790 s。两臂共 6 个合格产物由外部读者实际读取并校验。读停止快照的轮询时刻可能晚于观察到进程返回。已归档 48 份成员，SHA-256 `b3ad871273e223f50f8593816a13ca2cf6f9847c4d8371b38d09a6d87b4f34ed`。 [结果](tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)
+
+### 2026-11-27 OI-105｜AuDoPEDA 功耗恢复首轮排序投影（预登记）
+
+- 外部规则取作者补丁 `d396422e27496b6836ecbc7229edff33f642525c`（SHA-256 `b56acd68d698190c3be8d748ebd55f5912a5c06576d16ea877a6428670b5eefd`）。限定在冻结 40 ns 处理器共同池上，只按总功耗估计乘 Setup 裕量做首轮初排，次级键依次为总功耗、裕量及原 master 面积。参考 TT Setup WNS 为正，作者规则的下限取零。保持每实例的原冻结目标与受保护后端，作者原算法其余的全库备选选择、原生验收和后续重排序不进入投影。 [作者补丁](https://github.com/ABKGroup/AuDoPEDA/blob/d396422e27496b6836ecbc7229edff33f642525c/diffs/pwr/OpenROAD_pwr.patch#L308-L328)
+- 先以同一已布线 ODB、名义 SPEF、TT Liberty、SDC 和 OpenROAD 二进制读取两次实际实例功耗与单数据输出裕量。要求 18 项的身份与特征完整、功耗非负且至少一项非零、两次数据与顺序相同。若没有产生不同的三门派发组，则不运行重复候选后端。待 V4 释放同一 EDA 锁再启动，只读预检不派发 DRT/RCX。
+- 两次只读 TT 预检返回 0，18 项源门、冻结目标、功耗、裕量和排序一致。第一组三门由原 `_4713_/_4718_/_4696_` 变为 `_4713_/_4264_/_4696_`。收据 `RANK_PROBE.json` SHA-256 `d6ac3dc328028ce34b0ad7740072d71dbd93606b163a7cf2518997b891495d47`，存 `/home/toylog/faeco_v5_audopeda_rank_probe_20261127_v1`，候选尚未派发。
