@@ -1,8 +1,9 @@
 # FAECO 现行口径（CANON）
 
-## 2026-11-27 Stage 3 UART 四档完成
+## 2026-11-27 Stage 3 两设计八臂完成
 
-- 同一 270 ps ASAP7 UART 冻结参考和 720 s 计费窗下，Setup 预算 0／0.5／1／2% 的合格回收分别为 0.32076／0.77274／0.83106／0.83106 µm²，对应 5／12／13／13 项。四档终态三角均无新增负 Setup 端点。1% 与 2% 的 19 个候选身份及拒因完全相同，终态 ODB、DEF、网表及去日期 SPEF 一致。两档交付时间差留作计时波动。SKY130HD AES 四档继续实跑，40 ns 多角 `riscv32i` 独立参考等待 EDA 锁。[预算扫频实测收据](evidence/tcad_v5_revision_20261126/V5_STEP3_MULTIBUDGET_VERIFIED.json) · [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+- 同一 270 ps ASAP7 UART 冻结参考和 720 s 计费窗下，Setup 预算 0／0.5／1／2% 的合格回收分别为 0.32076／0.77274／0.83106／0.83106 µm²，对应 5／12／13／13 项。四档终态三角均无新增负 Setup 端点。1% 与 2% 的 19 个候选身份及拒因完全相同，终态 ODB、DEF、网表及去日期 SPEF 一致。两档交付时间差留作计时波动。[预算扫频实测收据](evidence/tcad_v5_revision_20261126/V5_STEP3_MULTIBUDGET_VERIFIED.json)
+- SKY130HD AES 的 0% 档完成 6 个候选，均触发 Setup 拒因，窗内无合格交付。0.5%、1%、2% 的五个完成候选同轨，最终相对预算下均合格回收 9 项、98.8448 µm²，并新增 1 个 TT 负 Setup 端点，终态物理与等价验收一致。八臂收据 SHA-256 `63234f456393e13124c321a0b91bc81c30536ba1b5af34de023c4f5caec714c3`。40 ns 多角 `riscv32i` 已启动物理构建，保持 2 ns 绝对 I/O 延时。Stage 4 双 AES 实验在其后等待同一 EDA 锁。[V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
 
 ## 2026-11-26 V5 接手续跑
 

@@ -1416,6 +1416,524 @@
           }
         }
       ]
+    },
+    "sky130hd_aes::0.0pct": {
+      "design": "sky130hd_aes",
+      "clock_period_ps": 3600.0,
+      "setup_budget_pct": 0.0,
+      "setup_budget_ps": 0.0,
+      "gate": {
+        "budget_ps": 0.0,
+        "protect_clean_setup_views": false,
+        "setup_floor_ps_by_view": {
+          "FF": 678.2492345536184,
+          "TT": -380.500519980842,
+          "SS": -13648.042695990625
+        },
+        "setup_tns_budget_ps_by_view": {
+          "FF": 0.0,
+          "TT": 0.0,
+          "SS": 0.0
+        }
+      },
+      "protocol": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/stage3_protocol.json",
+        "sha256": "2b596679cc250c11f3b948639665dc475c2299f3b20531370235075aa883d123",
+        "bytes": 58396
+      },
+      "raw_directory": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner",
+      "subprocess_ledger": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/subprocesses.json",
+        "sha256": "4c66e17364e6a4b991f14db5bc1719ab60845580a0c9c92b5844ef8b0f3bee4e",
+        "bytes": 28572
+      },
+      "window_ended": true,
+      "qualified_endpoint": {
+        "endpoint_id": "preflight/zero/initial",
+        "area": 116507.99040000001,
+        "wns_ns": -0.380500519980842,
+        "tns_ns": -6.574560895700188,
+        "hold_wns_ns": 0.5239148559432749,
+        "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+        "evidence_id": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky_shared_preflight/preflight/zero/initial",
+        "valid": true,
+        "sec_pass": true
+      },
+      "qualified_area_saved_um2": 0.0,
+      "qualified_gates": 0,
+      "area_saved_pct": 0.0,
+      "pool_capture_pct": 0.0,
+      "anytime_auc_um2": 0.0,
+      "logical_finished": 6,
+      "logical_started": 7,
+      "setup_rejections": 6,
+      "hold_rejections": 4,
+      "dedup_hits": 0,
+      "checkpoints": [
+        {
+          "id": 1,
+          "elapsed_s": 215.86248905999946,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression",
+            "SS:setup_budget",
+            "TT:setup_budget",
+            "TT:setup_tns_budget"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/trials/01/result.json",
+            "sha256": "cef8e033fa05b29089056893d6b79a875103d844e647e6472b093799a2f689d6",
+            "bytes": 1213
+          }
+        },
+        {
+          "id": 2,
+          "elapsed_s": 317.9305527389988,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:hold_regression",
+            "TT:hold_regression",
+            "TT:setup_budget",
+            "TT:setup_tns_budget"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/trials/02/result.json",
+            "sha256": "f25a61f7ab666d5c5eca1866434063652d8618cdb6ed7254ce7918b64402d09e",
+            "bytes": 1215
+          }
+        },
+        {
+          "id": 3,
+          "elapsed_s": 418.7924286509988,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:setup_budget",
+            "SS:setup_budget",
+            "SS:setup_tns_budget",
+            "TT:setup_budget",
+            "TT:setup_tns_budget"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/trials/03/result.json",
+            "sha256": "9e8449ee48ecd39c235501f05478fe6899cbccf8aacb91bc01b78d2515165466",
+            "bytes": 1236
+          }
+        },
+        {
+          "id": 4,
+          "elapsed_s": 517.7885297289995,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:setup_budget",
+            "TT:setup_budget"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/trials/04/result.json",
+            "sha256": "1bbf563b83720e7da215ce852bf6ab0dd3ba4f6e8e908375aaee7790c1e4a5ee",
+            "bytes": 1079
+          }
+        },
+        {
+          "id": 5,
+          "elapsed_s": 617.9131897209991,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:hold_regression",
+            "FF:setup_budget",
+            "SS:setup_budget",
+            "SS:setup_tns_budget",
+            "TT:hold_regression",
+            "TT:setup_budget",
+            "TT:setup_tns_budget"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/trials/05/result.json",
+            "sha256": "2e1b7cf09990bbb108bcd3c2e184581d1c756814207f7835dac5318d74c330f9",
+            "bytes": 1247
+          }
+        },
+        {
+          "id": 6,
+          "elapsed_s": 717.8358650779992,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:setup_budget",
+            "SS:hold_regression",
+            "SS:setup_budget"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p0/attempt_zpm7yvyk/runner/trials/06/result.json",
+            "sha256": "56724fa315bdc69ed83d9f258fd049ee0d4144d8891dd0482c7401285e8af7c2",
+            "bytes": 1184
+          }
+        }
+      ]
+    },
+    "sky130hd_aes::0.5pct": {
+      "design": "sky130hd_aes",
+      "clock_period_ps": 3600.0,
+      "setup_budget_pct": 0.5,
+      "setup_budget_ps": 18.0,
+      "gate": {
+        "budget_ps": 18.0,
+        "protect_clean_setup_views": false,
+        "setup_floor_ps_by_view": {
+          "FF": 660.2492345536184,
+          "TT": -398.500519980842,
+          "SS": -13666.042695990625
+        },
+        "setup_tns_budget_ps_by_view": {
+          "FF": 180.0,
+          "TT": 180.0,
+          "SS": 13524.588666768977
+        }
+      },
+      "protocol": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/stage3_protocol.json",
+        "sha256": "8d019e3f7c62f6e482eaf723bb6efcbce85dbf8e8ef7c3492e8532bb4b0665ea",
+        "bytes": 58416
+      },
+      "raw_directory": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner",
+      "subprocess_ledger": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/subprocesses.json",
+        "sha256": "56e944fdce35bd7f31e26e3d8e5ccc0d9c1ec872d67f071d68df0e29f9a34973",
+        "bytes": 26802
+      },
+      "window_ended": true,
+      "qualified_endpoint": {
+        "endpoint_id": "trials/05/initial",
+        "area": 116409.1456,
+        "wns_ns": -0.380544928901827,
+        "tns_ns": -6.577423494746881,
+        "hold_wns_ns": 0.5240073930323774,
+        "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+        "evidence_id": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/trials/05/initial",
+        "valid": true,
+        "sec_pass": true
+      },
+      "qualified_area_saved_um2": 98.84480000000622,
+      "qualified_gates": 9,
+      "area_saved_pct": 0.08483950299086629,
+      "pool_capture_pct": 50.00000000000315,
+      "anytime_auc_um2": 22.95132866221018,
+      "logical_finished": 5,
+      "logical_started": 6,
+      "setup_rejections": 0,
+      "hold_rejections": 2,
+      "dedup_hits": 0,
+      "checkpoints": [
+        {
+          "id": 1,
+          "elapsed_s": 215.8728814039996,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/trials/01/result.json",
+            "sha256": "c4f6c92e54c9646dbdb36601aeb415a963ac4a2f67b95ed97df48cb08f4e0c3c",
+            "bytes": 1141
+          }
+        },
+        {
+          "id": 2,
+          "elapsed_s": 317.22764571399875,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:hold_regression",
+            "TT:hold_regression"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/trials/02/result.json",
+            "sha256": "b30baf6568c7b9ce543b22921ec1935044f8d0c3f0769a0358e7fdf92fb73063",
+            "bytes": 1164
+          }
+        },
+        {
+          "id": 3,
+          "elapsed_s": 434.9791561359989,
+          "accepted": true,
+          "area_saved_um2": 33.782400000010966,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/trials/03/result.json",
+            "sha256": "82fc1a29b12cf09de491b904ac1da5395490acc78841261a13f4e3b24bc97f77",
+            "bytes": 1367
+          }
+        },
+        {
+          "id": 4,
+          "elapsed_s": 554.8043164669989,
+          "accepted": true,
+          "area_saved_um2": 67.56480000000738,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/trials/04/result.json",
+            "sha256": "1d20afbaad346dad6e1d0ee29fd26c54130d158a2d4ae1a289197aa8bbb96144",
+            "bytes": 1505
+          }
+        },
+        {
+          "id": 5,
+          "elapsed_s": 677.9423970059988,
+          "accepted": true,
+          "area_saved_um2": 98.84480000000622,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_0p5/attempt_p2g16yd9/runner/trials/05/result.json",
+            "sha256": "6a998a6cac69005339b50e9b98ef1dd5208d121b68200261740fb31fa76840aa",
+            "bytes": 1627
+          }
+        }
+      ]
+    },
+    "sky130hd_aes::1.0pct": {
+      "design": "sky130hd_aes",
+      "clock_period_ps": 3600.0,
+      "setup_budget_pct": 1.0,
+      "setup_budget_ps": 36.0,
+      "gate": {
+        "budget_ps": 36.0,
+        "protect_clean_setup_views": false,
+        "setup_floor_ps_by_view": {
+          "FF": 642.2492345536184,
+          "TT": -416.500519980842,
+          "SS": -13684.042695990625
+        },
+        "setup_tns_budget_ps_by_view": {
+          "FF": 360.0,
+          "TT": 360.0,
+          "SS": 27049.177333537955
+        }
+      },
+      "protocol": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/stage3_protocol.json",
+        "sha256": "24d60ffd50523bfa68e225b897b8d3fbaaa4c8f97c22cc1f233ad9ca7a1ec663",
+        "bytes": 58416
+      },
+      "raw_directory": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner",
+      "subprocess_ledger": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/subprocesses.json",
+        "sha256": "6337a3747ff6460bc20903854ddfd78625175899a90818413c5f5f1f817d39df",
+        "bytes": 26788
+      },
+      "window_ended": true,
+      "qualified_endpoint": {
+        "endpoint_id": "trials/05/initial",
+        "area": 116409.1456,
+        "wns_ns": -0.380544928901827,
+        "tns_ns": -6.577423494746881,
+        "hold_wns_ns": 0.5240073930323774,
+        "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+        "evidence_id": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/trials/05/initial",
+        "valid": true,
+        "sec_pass": true
+      },
+      "qualified_area_saved_um2": 98.84480000000622,
+      "qualified_gates": 9,
+      "area_saved_pct": 0.08483950299086629,
+      "pool_capture_pct": 50.00000000000315,
+      "anytime_auc_um2": 22.53531497065404,
+      "logical_finished": 5,
+      "logical_started": 6,
+      "setup_rejections": 0,
+      "hold_rejections": 2,
+      "dedup_hits": 0,
+      "checkpoints": [
+        {
+          "id": 1,
+          "elapsed_s": 215.67211891399893,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/trials/01/result.json",
+            "sha256": "def206e66d7c0f8407263e491f90b19e02a48e88f4bce551f667c3aebff5f4be",
+            "bytes": 1140
+          }
+        },
+        {
+          "id": 2,
+          "elapsed_s": 318.2875642629997,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:hold_regression",
+            "TT:hold_regression"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/trials/02/result.json",
+            "sha256": "8cb2c1e19e050410daa59976f5cd4dbeefc98516c9e169362800bf4db718ebb0",
+            "bytes": 1166
+          }
+        },
+        {
+          "id": 3,
+          "elapsed_s": 436.6977932969994,
+          "accepted": true,
+          "area_saved_um2": 33.782400000010966,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/trials/03/result.json",
+            "sha256": "a16af24c198f5a088a8ef377398e8c349e08fc7b672aaec8741162b87f49edca",
+            "bytes": 1367
+          }
+        },
+        {
+          "id": 4,
+          "elapsed_s": 557.9236890339989,
+          "accepted": true,
+          "area_saved_um2": 67.56480000000738,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/trials/04/result.json",
+            "sha256": "25aaf5c72e555356ff5b9e0a6e6beab060f7292ad549e634aa7124c26d6b213f",
+            "bytes": 1504
+          }
+        },
+        {
+          "id": 5,
+          "elapsed_s": 682.2931092209992,
+          "accepted": true,
+          "area_saved_um2": 98.84480000000622,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_1p0/attempt__wdz0ebn/runner/trials/05/result.json",
+            "sha256": "9776f87535508949004c65bc88552144619772a8c539c54525a353313222f321",
+            "bytes": 1628
+          }
+        }
+      ]
+    },
+    "sky130hd_aes::2.0pct": {
+      "design": "sky130hd_aes",
+      "clock_period_ps": 3600.0,
+      "setup_budget_pct": 2.0,
+      "setup_budget_ps": 72.0,
+      "gate": {
+        "budget_ps": 72.0,
+        "protect_clean_setup_views": false,
+        "setup_floor_ps_by_view": {
+          "FF": 606.2492345536184,
+          "TT": -452.500519980842,
+          "SS": -13720.042695990625
+        },
+        "setup_tns_budget_ps_by_view": {
+          "FF": 720.0,
+          "TT": 720.0,
+          "SS": 54098.35466707591
+        }
+      },
+      "protocol": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/stage3_protocol.json",
+        "sha256": "810082b51946624344c43f13925097bb9265b8c72decd1335c104634c624ac37",
+        "bytes": 58415
+      },
+      "raw_directory": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner",
+      "subprocess_ledger": {
+        "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/subprocesses.json",
+        "sha256": "2d3da79bb15b813b8219e50f10b3f108f791c8e90f65232ae68687661209dd17",
+        "bytes": 26802
+      },
+      "window_ended": true,
+      "qualified_endpoint": {
+        "endpoint_id": "trials/05/initial",
+        "area": 116409.1456,
+        "wns_ns": -0.380544928901827,
+        "tns_ns": -6.577423494746881,
+        "hold_wns_ns": 0.5240073930323774,
+        "scope_id": "43c8e4e8f36969716ab96fd50e5bef171e651d628e212187aea8232e5314d591:online_protection",
+        "evidence_id": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/trials/05/initial",
+        "valid": true,
+        "sec_pass": true
+      },
+      "qualified_area_saved_um2": 98.84480000000622,
+      "qualified_gates": 9,
+      "area_saved_pct": 0.08483950299086629,
+      "pool_capture_pct": 50.00000000000315,
+      "anytime_auc_um2": 22.07666940580176,
+      "logical_finished": 5,
+      "logical_started": 6,
+      "setup_rejections": 0,
+      "hold_rejections": 2,
+      "dedup_hits": 0,
+      "checkpoints": [
+        {
+          "id": 1,
+          "elapsed_s": 217.45731815199815,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/trials/01/result.json",
+            "sha256": "998c78f8fa485fecbfa281171f17aff00637730711385e1aa6946f66db8f8577",
+            "bytes": 1141
+          }
+        },
+        {
+          "id": 2,
+          "elapsed_s": 320.9911545919995,
+          "accepted": false,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:hold_regression",
+            "TT:hold_regression"
+          ],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/trials/02/result.json",
+            "sha256": "23642f1aa7b3b2516c145ee247130cbc070aac88c28cac54864ea0c90f3f37e8",
+            "bytes": 1166
+          }
+        },
+        {
+          "id": 3,
+          "elapsed_s": 439.81911872599903,
+          "accepted": true,
+          "area_saved_um2": 33.782400000010966,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/trials/03/result.json",
+            "sha256": "841a11fbf958c7bb6d0a86375bd9dd72c33c9efde6a23f09311a49724e8f2759",
+            "bytes": 1368
+          }
+        },
+        {
+          "id": 4,
+          "elapsed_s": 560.9934364489991,
+          "accepted": true,
+          "area_saved_um2": 67.56480000000738,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/trials/04/result.json",
+            "sha256": "d6ca8d0307c0815d2840bf932d82a3b649856a90aaf24524b50760d895f6a42e",
+            "bytes": 1506
+          }
+        },
+        {
+          "id": 5,
+          "elapsed_s": 686.1638095869994,
+          "accepted": true,
+          "area_saved_um2": 98.84480000000622,
+          "failures": [],
+          "result": {
+            "path": "/home/toylog/faeco_v5_step3_multibudget_20261126_v1/sky130hd_aes__pct_2p0/attempt_n4peoip1/runner/trials/05/result.json",
+            "sha256": "f662ecf23e70d81018d84f9eae8ecb57e4ed00624244a58c3fc2e9277835f66b",
+            "bytes": 1626
+          }
+        }
+      ]
     }
   }
 }
