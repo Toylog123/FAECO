@@ -1,0 +1,482 @@
+{
+  "designs": {
+    "sky130hd_aes": {
+      "design": "sky130hd_aes",
+      "pdk": "sky130hd",
+      "base_area_um2": 116507.99040000001,
+      "pool_size": 18,
+      "pool_ceiling_um2": 197.68959999999998,
+      "charged_screening_s": 113.363,
+      "probe_sub_budget_s": 180.0,
+      "phase1_probe": {
+        "status": "passed",
+        "elapsed_s": 137.6031098909998,
+        "total_s_at_probe_end": 250.96671521199977,
+        "passed": true,
+        "failures": []
+      },
+      "phase2_fallback": {
+        "invoked": false,
+        "reason": "phase1_committed_full_pool"
+      },
+      "total_wall_s_incl_screen": 250.96714039099987,
+      "qualified_area_saved_um2": 197.68960000001243,
+      "qualified_gates": 18,
+      "area_saved_pct": 0.16967900598173258,
+      "pool_capture_pct": 100.0000000000063,
+      "anytime_auc_um2": 128.7819478561551,
+      "max_setup_loss_ps": 0.034638958368304884,
+      "setup_budget_util_pct": 0.0962193288008469,
+      "unlocked_drc_markers": 0,
+      "sec_pass": true,
+      "views_delta_ps": {
+        "FF": {
+          "d_setup_wns_ps": 0.13455903058456897,
+          "d_hold_wns_ps": 0.010935696792557792
+        },
+        "TT": {
+          "d_setup_wns_ps": -0.034638958368304884,
+          "d_hold_wns_ps": 0.01759703494030873
+        },
+        "SS": {
+          "d_setup_wns_ps": 1.0222933610748441,
+          "d_hold_wns_ps": 0.45918824298496475
+        }
+      },
+      "checkpoints": [
+        {
+          "phase": "phase1_probe",
+          "elapsed_s": 250.96671521199977,
+          "accepted": true,
+          "gates": 18,
+          "area_saved_um2": 197.68960000001243
+        }
+      ],
+      "run_dir": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes"
+    },
+    "asap7_uart": {
+      "design": "asap7_uart",
+      "pdk": "asap7",
+      "base_area_um2": 79.00901999999999,
+      "pool_size": 18,
+      "pool_ceiling_um2": 1.18098,
+      "charged_screening_s": 81.56383042700003,
+      "probe_sub_budget_s": 180.0,
+      "phase1_probe": {
+        "status": "rejected",
+        "elapsed_s": 26.112018001999786,
+        "total_s_at_probe_end": 107.67650296399955,
+        "passed": false,
+        "failures": [
+          "TT:hold_regression",
+          "SS:hold_regression",
+          "FF:setup_budget"
+        ]
+      },
+      "phase2_fallback": {
+        "invoked": true,
+        "stop_reason": "pool_exhausted",
+        "logical_admitted": 18,
+        "logical_finished": 18,
+        "dedup_hits": 2
+      },
+      "total_wall_s_incl_screen": 547.7724913460002,
+      "qualified_area_saved_um2": 0.8310599999999937,
+      "qualified_gates": 13,
+      "area_saved_pct": 1.0518545857169141,
+      "pool_capture_pct": 70.37037037036984,
+      "anytime_auc_um2": 0.46618013122207697,
+      "max_setup_loss_ps": 1.363215096361614,
+      "setup_budget_util_pct": 50.48944801339311,
+      "unlocked_drc_markers": 0,
+      "sec_pass": true,
+      "views_delta_ps": {
+        "FF": {
+          "d_setup_wns_ps": 0.07405187574249794,
+          "d_hold_wns_ps": 0.0003400058012914542
+        },
+        "TT": {
+          "d_setup_wns_ps": -0.03877453913503359,
+          "d_hold_wns_ps": -0.00042327252813834093
+        },
+        "SS": {
+          "d_setup_wns_ps": -1.363215096361614,
+          "d_hold_wns_ps": 0.0008326672684688674
+        }
+      },
+      "checkpoints": [
+        {
+          "phase": "phase1_probe",
+          "elapsed_s": 107.67650296399955,
+          "accepted": false,
+          "gates": 18,
+          "area_saved_um2": 0.0,
+          "status": "rejected",
+          "failures": [
+            "TT:hold_regression",
+            "SS:hold_regression",
+            "FF:setup_budget"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 1,
+          "elapsed_s": 130.70786683699993,
+          "accepted": false,
+          "gates": 3,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 2,
+          "elapsed_s": 152.94558880100016,
+          "accepted": false,
+          "gates": 3,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:setup_budget"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 3,
+          "elapsed_s": 175.62754600299962,
+          "accepted": true,
+          "gates": 1,
+          "area_saved_um2": 0.08747999999999934,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 4,
+          "elapsed_s": 198.00038766100027,
+          "accepted": false,
+          "gates": 2,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "FF:setup_budget"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 5,
+          "elapsed_s": 220.88165444999998,
+          "accepted": true,
+          "gates": 2,
+          "area_saved_um2": 0.14579999999999416,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 6,
+          "elapsed_s": 245.03708205599963,
+          "accepted": true,
+          "gates": 5,
+          "area_saved_um2": 0.32075999999999283,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 7,
+          "elapsed_s": 268.8420548540002,
+          "accepted": false,
+          "gates": 8,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "TT:hold_regression",
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 8,
+          "elapsed_s": 291.8364032670001,
+          "accepted": false,
+          "gates": 8,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "TT:hold_regression",
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 9,
+          "elapsed_s": 316.9152474179995,
+          "accepted": true,
+          "gates": 8,
+          "area_saved_um2": 0.48113999999999635,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 10,
+          "elapsed_s": 341.3179028859999,
+          "accepted": false,
+          "gates": 9,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 11,
+          "elapsed_s": 367.3023706369999,
+          "accepted": true,
+          "gates": 10,
+          "area_saved_um2": 0.656099999999995,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 12,
+          "elapsed_s": 393.89806378399993,
+          "accepted": true,
+          "gates": 11,
+          "area_saved_um2": 0.7144199999999898,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 13,
+          "elapsed_s": 419.3035555190003,
+          "accepted": false,
+          "gates": 13,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "TT:hold_regression",
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 14,
+          "elapsed_s": 445.7618967089997,
+          "accepted": true,
+          "gates": 12,
+          "area_saved_um2": 0.7727399999999989,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 15,
+          "elapsed_s": 472.17151557300025,
+          "accepted": true,
+          "gates": 13,
+          "area_saved_um2": 0.8310599999999937,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 16,
+          "elapsed_s": 497.47248849600004,
+          "accepted": false,
+          "gates": 15,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 17,
+          "elapsed_s": 522.5047364460002,
+          "accepted": false,
+          "gates": 14,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "SS:hold_regression"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 18,
+          "elapsed_s": 547.7718603059998,
+          "accepted": false,
+          "gates": 14,
+          "area_saved_um2": 0.0,
+          "failures": [
+            "TT:hold_regression",
+            "SS:hold_regression"
+          ]
+        }
+      ],
+      "run_dir": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/asap7_uart"
+    },
+    "sky130hd_riscv32i": {
+      "design": "sky130hd_riscv32i",
+      "pdk": "sky130hd",
+      "base_area_um2": 71427.2544,
+      "pool_size": 18,
+      "pool_ceiling_um2": 147.6416,
+      "charged_screening_s": 64.09957364100046,
+      "probe_sub_budget_s": 180.0,
+      "phase1_probe": {
+        "status": "sub_budget_timeout",
+        "elapsed_s": 180.15371394199974,
+        "total_s_at_probe_end": 244.25398254500033,
+        "passed": false,
+        "failures": [
+          "probe_sub_budget_timeout"
+        ]
+      },
+      "phase2_fallback": {
+        "invoked": true,
+        "stop_reason": "end_to_end_wall_cap",
+        "logical_admitted": 4,
+        "logical_finished": 3,
+        "dedup_hits": 0
+      },
+      "total_wall_s_incl_screen": 720.0169632840007,
+      "qualified_area_saved_um2": 75.07200000000012,
+      "qualified_gates": 9,
+      "area_saved_pct": 0.10510273792632313,
+      "pool_capture_pct": 50.84745762711872,
+      "anytime_auc_um2": 25.80764665121697,
+      "max_setup_loss_ps": 0.4356515148629114,
+      "setup_budget_util_pct": 0.7260858581048524,
+      "unlocked_drc_markers": 0,
+      "sec_pass": true,
+      "views_delta_ps": {
+        "FF": {
+          "d_setup_wns_ps": -0.4356515148629114,
+          "d_hold_wns_ps": 0.0036637359812630166
+        },
+        "TT": {
+          "d_setup_wns_ps": -0.3299582829185965,
+          "d_hold_wns_ps": 0.003941291737419306
+        },
+        "SS": {
+          "d_setup_wns_ps": -0.3765876499528531,
+          "d_hold_wns_ps": 0.017985612998927536
+        }
+      },
+      "checkpoints": [
+        {
+          "phase": "phase1_probe",
+          "elapsed_s": 244.25398254500033,
+          "accepted": false,
+          "gates": 18,
+          "area_saved_um2": 0.0,
+          "status": "sub_budget_timeout",
+          "failures": [
+            "probe_sub_budget_timeout"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 1,
+          "elapsed_s": 315.2401785460006,
+          "accepted": true,
+          "gates": 3,
+          "area_saved_um2": 26.27520000000368,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 2,
+          "elapsed_s": 385.44823812100003,
+          "accepted": true,
+          "gates": 6,
+          "area_saved_um2": 48.79680000001099,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 3,
+          "elapsed_s": 704.3304953770003,
+          "accepted": true,
+          "gates": 9,
+          "area_saved_um2": 75.07200000000012,
+          "failures": []
+        }
+      ],
+      "run_dir": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_riscv32i"
+    },
+    "asap7_aes": {
+      "design": "asap7_aes",
+      "pdk": "asap7",
+      "base_area_um2": 1181.81106,
+      "pool_size": 18,
+      "pool_ceiling_um2": 1.76418,
+      "charged_screening_s": 156.26772495899968,
+      "probe_sub_budget_s": 169.1196825123001,
+      "phase1_probe": {
+        "status": "sub_budget_timeout",
+        "elapsed_s": 169.24083766999956,
+        "total_s_at_probe_end": 325.5096203809999,
+        "passed": false,
+        "failures": [
+          "probe_sub_budget_timeout"
+        ]
+      },
+      "phase2_fallback": {
+        "invoked": true,
+        "stop_reason": "end_to_end_wall_cap",
+        "logical_admitted": 3,
+        "logical_finished": 2,
+        "dedup_hits": 0
+      },
+      "total_wall_s_incl_screen": 720.0271171650002,
+      "qualified_area_saved_um2": 0.6123600000000806,
+      "qualified_gates": 6,
+      "area_saved_pct": 0.05181538917059048,
+      "pool_capture_pct": 34.71074380165746,
+      "anytime_auc_um2": 0.10655004522537731,
+      "max_setup_loss_ps": 0.2404743071338089,
+      "setup_budget_util_pct": 6.328271240363392,
+      "unlocked_drc_markers": 0,
+      "sec_pass": true,
+      "views_delta_ps": {
+        "FF": {
+          "d_setup_wns_ps": 0.01865174681370263,
+          "d_hold_wns_ps": 0.0
+        },
+        "TT": {
+          "d_setup_wns_ps": -0.13744561044859438,
+          "d_hold_wns_ps": 2.0816681711721685e-05
+        },
+        "SS": {
+          "d_setup_wns_ps": -0.2404743071338089,
+          "d_hold_wns_ps": -0.00011102230246251565
+        }
+      },
+      "checkpoints": [
+        {
+          "phase": "phase1_probe",
+          "elapsed_s": 325.5096203809999,
+          "accepted": false,
+          "gates": 18,
+          "area_saved_um2": 0.0,
+          "status": "sub_budget_timeout",
+          "failures": [
+            "probe_sub_budget_timeout"
+          ]
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 1,
+          "elapsed_s": 504.08338458399976,
+          "accepted": true,
+          "gates": 3,
+          "area_saved_um2": 0.3061800000000403,
+          "failures": []
+        },
+        {
+          "phase": "phase2_fallback",
+          "seq": 2,
+          "elapsed_s": 685.3580140630002,
+          "accepted": true,
+          "gates": 6,
+          "area_saved_um2": 0.6123600000000806,
+          "failures": []
+        }
+      ],
+      "run_dir": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/asap7_aes"
+    }
+  }
+}

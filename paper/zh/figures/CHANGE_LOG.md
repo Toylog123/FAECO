@@ -4,6 +4,14 @@
 
 ## 修改记录
 
+### 2026-11-26 V4 五图体系升级（2 幅高质感机制示意图 + 3 幅收据直驱 Python 矢量数据图）
+
+- **用户美学规范落地**：严格遵循“概念/机制示意图不采用脚本盒线图，仅定量数据图由 Python 从验证收据生成”。
+  1. **图 1（系统闭环架构示意图）**：`paper/zh/figures/tcad_20261126/fig1_framework_v4.png`（1355 × 421，300 DPI 无损裁切 PNG，由 `image-generator` 生成并人工视觉核验）——简洁白底炭黑/石油青/焦橙工业级配色，展示冻结已布线版图与标准单元库 → 兼容候选池 → 混合自适应调度 → 局部窗口冲突诊断与保护重布 → 多角时序与物理等价验证 → 合格低面积版图及顶部时序/保持时间反馈闭环。
+  2. **图 2（$1.0\times H_{\mathrm{row}}$ 局部窗口机制示意图）**：`paper/zh/figures/tcad_20261126/fig2_boxed_drc_mechanism_v4.png`（1334 × 498，300 DPI 无损裁切 PNG，同视觉体系）——三步递进展示原地降尺寸与直连擦除 → `1.0倍行高窗口` 精确归因冲突邻网 → 锁定无冲突外围线网的保护式局部重布线。
+  3. **图 3–5（Python 出版级定量矢量数据图）**：由 `paper/zh/figures/tcad_20261126/generate_tcad_figures_v4_zh.py` 直接读取 `project_docs/evidence/tcad_v4_revision_20261126/` 与既有收据生成 `fig3_anytime_curves_v4_zh.{pdf,svg,png}`（补入 Hybrid FAECO 4 设计曲线与同窗口基线）、`fig4_ablation_v4_zh.{pdf,svg,png}`（三面板：同三门邻网消融、同窗口五级组件消融、UART 批宽 $b$ 倒 U 敏感性曲线）、`fig5_boxed_drc_scaling_v4_zh.{pdf,svg,png}`（双工艺 1–18 门单次预检延迟与 720 s 累计削减）。
+- **质量门禁**：3/3 矢量 PDF 全部通过 `audit_pdf_text.py --min-pt 5.0`（实测最小字号 `5.7 / 5.4 / 5.6 pt`）与 `audit_figure_collisions.py`（3/3 均 `0 fail / 0 warn`），全部 5 幅图 600/300 DPI 图像人工视觉检查通过并嵌入 14 页 V4 中文主稿。
+
 ### 2026-11-26 中文 4 幅矢量图学术术语精修与灵敏度单门曲线补绘（`nature-figure` 复核）
 
 - **脚本与产物**：`paper/zh/figures/tcad_20261126/{generate_tcad_figures_zh.py, fig1_architecture_zh, fig2_anytime_curves_zh, fig3_geo_causal_ablation_zh, fig4_boxed_drc_scaling_zh}.{pdf,svg,png}`。
