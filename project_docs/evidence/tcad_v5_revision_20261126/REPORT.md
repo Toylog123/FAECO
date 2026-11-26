@@ -7,9 +7,9 @@
 | 1 非单调可行域、功耗与时序、7 nm 受控 DRC、4 线程确定性 | 已实测，见 §1 | [Stage 1 收据](V5_STEP1_POWER_7NM_DET_VERIFIED.json) |
 | 2A UART Setup 拒收去重 | 已实测，见 §2 | [Stage 2 收据](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) |
 | 2B 原生 `recover_power` 挂保护后端 | 所有完整提议及两条 AES 119 项辅助投影均已分类，见 §3 | [Stage 2 收据](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) |
-| 3 双设计四档预算 | 修正物理门绑定并完成离线反例核验，等待实跑 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
+| 3 双设计四档预算 | 已开始运行，先执行 UART 0% 档 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
 | 4 双 AES 探针预算 | 已核对旧参照，等待新测 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
-| 5 同一处理器 RTL 的独立重建严格收敛参考 | 新独立起点正在构建，候选臂未启动 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
+| 5 同一处理器 RTL 的独立重建严格收敛参考 | 10 ns 独立起点完成构建，SS Setup/Hold 未闭合，候选臂未启动，见 §5 | [资格收据](V5_STEP5_TC10NS_QUALIFICATION.json) |
 
 ## 1. Stage 1 实测与既有原件复核
 
@@ -99,6 +99,28 @@ riscv32i 原生标准档和允许 Setup 违规档均提出相同的 24 项 resiz
 
 23:41:56 Stage 2 结束。最终收据包含两个去重臂与 14 个原生提议键，SHA-256 b6ef9577384fdabe88f6b82baabfa9344a98f726c9881e6c1e7e5334e8963da4。与 7e5766f6 的快照逐项对比，已有 12 个完整提议键与两个去重臂内容一致。
 
-## 4. Stage 3–5 待实跑结果
+## 4. Stage 3 与 Stage 4
 
-Stage 3 用同一计费窗对两个设计分别改变 Setup 与逐角 TNS 预算。Stage 4 将已有 0 s 与默认设置的收据和 60/120/240 s 新测结果并列记录。Stage 5 从同一 riscv32i RTL 重新综合及布线，形成 10 ns 起点，修正原 ORFS 对非时钟输入端的选择，验证输入与输出均有 2 ns 延迟、三角严格时序收敛和完整物理资格，再比较三种搜索方法。规模按实际功能单元数和面积报告，账面 DEF 实例数另列。历史 6 ns 参考点的已存 SDC 确认有 99 条输出延迟、0 条输入延迟，且原 ORFS 将 6.0 的 ns 数值直接作为 ps 传给 ABC。新构建显式传入 10000 ps 并核验时钟目标文件。23:41:57 已从 Stage 2 接过 EDA 互斥锁启动起点构建，时钟目标文件实核为 10000。候选臂在资格验证完成后另行执行。[约束归因和实验范围](../../OPEN_ISSUES.md#oi-1112026-11-26openriscv32i-旧约束缺失输入延迟)
+Stage 3 于 23:52:37 启动，先执行 ASAP7 UART 的 0% Setup 档。两设计共八臂分别改变 Setup 与逐角 TNS 预算，各使用同一 720 s 计费窗。Stage 4 将已有 0 s 与默认设置的收据和 60/120/240 s 新测结果并列记录，尚未启动。
+
+## 5. Stage 5 10 ns 参考资格测试
+
+同一 riscv32i RTL 在新目录按完整 I/O 和显式 ABC 目标重新综合、布局和布线。旧 6 ns 参考 SDC 含 99 条输出延迟、0 条输入延迟，旧 ORFS 将 ns 数值直接传给以 ps 计的 ABC。新构建显式传入 10000 ps，ORFS 目标文件实读为 10000。最终 SDC 的实际时钟与虚拟时钟均为 10 ns，全部 65 个非时钟输入与 99 个输出各有 2 ns 延迟。[约束归因和实验范围](../../OPEN_ISSUES.md#oi-1112026-11-26openriscv32i-旧约束缺失输入延迟)
+
+ORFS 528.958 s 完成（rc0），原生和独立 DRC/天线检查均为零，三角电气无违规。逻辑网表有 5504 个功能单元、70,781.6352 µm²。按 TT 库 NAND2_X1 面积 3.7536 µm² 折算为 18,857 NAND2 等效门。DEF 组件 19,023、线网 5579。冻结输出网表与自身的 SEC 模型自检为 4559 证明、0 未证明。
+
+| 工艺角 | Setup WNS（ps） | Setup TNS（ps） | Hold WNS（ps） | Hold TNS（ps） |
+|---|---:|---:|---:|---:|
+| FF | +2313.584435 | 0 | +399.569100 | 0 |
+| TT | +51.313620 | 0 | +616.950713 | 0 |
+| SS | −22392.384835 | −23993330.614758 | −126.298971 | −2154.927348 |
+
+SS Setup 与 Hold 均低于绝对收敛门，资格拒收，本参考未进入三臂面积回收。原始 SS 时序报告中最差 Setup 为 instr[15] 到 PC 寄存器（约 −22.39 ns），虚拟时钟组的 instr[20] 到 aluout[31] 亦为负（约 −20.46 ns）。最小松弛违例为 reset 到 dp.pcreg.q[20] 的异步 removal（约 −0.1263 ns）。普通 clk 组最差 Hold 仍为 +2.17 ns。当前准备完全独立的替代构建并保留已确认的完整 I/O 约束。
+
+| 资格原件 | 路径相对 `/home/toylog/faeco_v5_step5_riscv32i_tc_20261126_v1` | SHA-256 |
+|---|---|---|
+| ORFS 完成收据 | `build_receipt.json` | `8e5709b77d08ed965933dc49de93d54152094b657125d0f51a45ed757b33d0c7` |
+| 最终约束 | `orfs/results/sky130hd/riscv32i/tc10ns/6_final.sdc` | `8e453e5cb2d07f35a21830d1820c8e863c282e2aeb64374e76daf33c21ba603b` |
+| 资格收据（[入仓副本](V5_STEP5_TC10NS_QUALIFICATION.json)） | `qualification/CONTROL.json` | `b8522af55121f1fc0a4d2a66fc8900a6a92c9849373b40e2c7ba7faa8144e73a` |
+| SEC 模型自检 | `qualification/attempt_01/sec/receipt.json` | `6eff2e99990becc5217d2b2bc9f8d6b05a90466b5e76bb0c2d4fa1ab3d62aa5b` |
+| SS 路径日志 | `qualification/attempt_01/sta_SS.log` | `73d87c051b82f344a9dfce904ef1d39e6f0882a9c405b90ab5bd3f179166460a` |
