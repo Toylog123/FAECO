@@ -44,6 +44,15 @@ from run_aes_protected_online import drc_neighbor_evidence
 from run_screened_matrix import bind_runtime, raw_seconds
 
 OR_BIN = "/home/toylog/.cache/bazel/_bazel_toylog/c540bbdc4bbb635360729b4d7a91c803/execroot/_main/bazel-out/k8-opt/bin/openroad_unstamped"
+# Canonical SKY130HD corner liberties used by every prior FAECO run:
+# TT lives in the ORFS platform dir, FF/SS only exist in the pinned OpenROAD-b511b6a test dir.
+SKY_LIB_ORFS = "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib"
+SKY_LIB_PINNED = "/home/toylog/rseco_timing/vendor/OpenROAD-b511b6a/test/sky130hd"
+SKY_CORNER_LIBS = {
+    "FF": [f"{SKY_LIB_PINNED}/sky130_fd_sc_hd__ff_n40C_1v95.lib"],
+    "TT": [f"{SKY_LIB_ORFS}/sky130_fd_sc_hd__tt_025C_1v80.lib"],
+    "SS": [f"{SKY_LIB_PINNED}/sky130_fd_sc_hd__ss_n40C_1v40.lib"],
+}
 OUT_ROOT = Path("/home/toylog/faeco_v5_step1_20261126_v1")
 OUT_JSON = EVID / "tcad_v5_revision_20261126/V5_STEP1_POWER_7NM_DET_VERIFIED.json"
 
@@ -85,10 +94,27 @@ def measure_tt_power(odb: Path, spef: Path, sdc: Path, tt_libs: list[str], out_d
     return json.loads(raw[raw.index("{"):])
 
 
+_TIME_UNIT_TO_PS = {"s": 1e12, "ms": 1e9, "us": 1e6, "ns": 1e3, "ps": 1.0, "fs": 1e-3}
+
+
+def lib_time_scale_ps(lib: str | Path) -> float:
+    """OpenSTA `sta::worst_slack` returns slacks in the liberty file's own time unit
+    (SKY130HD libs: 1ns, ASAP7 libs: 1ps). Parse the header to get the ps conversion."""
+    head = Path(lib).read_text(encoding="utf-8", errors="replace")[:200000]
+    m = re.search(r'time_unit\s*:\s*"\s*([0-9.]+)?\s*([a-z]+)\s*"', head)
+    if not m:
+        raise AssertionError(f"cannot parse time_unit from {lib}")
+    mult = float(m.group(1)) if m.group(1) else 1.0
+    unit = m.group(2)
+    assert unit in _TIME_UNIT_TO_PS, f"unsupported time unit {unit} in {lib}"
+    return mult * _TIME_UNIT_TO_PS[unit]
+
+
 def measure_3corner_wns(odb: Path, spef: Path, sdc: Path, corner_libs: dict[str, list[str]], out_dir: Path, tag: str) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     res = {}
     for corner, libs in corner_libs.items():
+        scale = lib_time_scale_ps(libs[0])
         tcl = out_dir / f"{tag}_{corner}.tcl"
         lines = [f"read_liberty {cmp.tcl(lib)}" for lib in libs]
         lines += [
@@ -103,12 +129,10 @@ def measure_3corner_wns(odb: Path, spef: Path, sdc: Path, corner_libs: dict[str,
         r = subprocess.run([OR_BIN, "-no_init", "-no_splash", "-threads", "1", "-exit", str(tcl)],
                            capture_output=True, text=True, timeout=180)
         assert r.returncode == 0, f"sta failed ({tag}/{corner}): {r.stderr[-400:]}"
-        # Determine time unit from liberty (sky130hd = ns, asap7 = ps)
-        # Check units by comparing against known reference scale
         sw = float(re.search(r"SETUP_WNS\s+([-+0-9.eE]+)", r.stdout).group(1))
         hw = float(re.search(r"HOLD_WNS\s+([-+0-9.eE]+)", r.stdout).group(1))
-        # OpenSTA worst_slack returns seconds! Convert to ps (*1e12)
-        res[corner] = {"setup_wns_ps": sw * 1e12, "hold_wns_ps": hw * 1e12}
+        # worst_slack is in the liberty time unit -> convert to ps
+        res[corner] = {"setup_wns_ps": sw * scale, "hold_wns_ps": hw * scale}
     return res
 
 
@@ -213,12 +237,8 @@ def part2_power_and_6corner() -> dict:
     res = {}
 
     # --- 1. SKY130HD AES Hybrid (18/18) ---
-    sky_tt = ["/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"]
-    sky_corners = {
-        "FF": ["/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib"],
-        "TT": sky_tt,
-        "SS": ["/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__ss_n40C_1v40.lib"],
-    }
+    sky_tt = SKY_CORNER_LIBS["TT"]
+    sky_corners = SKY_CORNER_LIBS
     sky_ctrl_dir = Path("/home/toylog/faeco_tcad_sky_holdout_20261123/aes/ss_hold_targeted_v2b")
     sky_hyb_dir = Path("/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes/phase1_optimistic_probe/initial")
     sky_ctrl_p = measure_tt_power(sky_ctrl_dir / "6_final.odb", sky_ctrl_dir / "6_final.spef", sky_ctrl_dir / "6_final.sdc", sky_tt, pwr_dir, "sky_aes_ctrl")
@@ -290,15 +310,17 @@ def part2_power_and_6corner() -> dict:
             a = load_json(aj)
             if a.get("failures"):
                 continue
-            # Count edits from routing_scope.json or layout_changes.json
-            n_ed = 0
-            for fn in ("layout_changes.json", "routing_scope.json"):
-                fp = d / fn
-                if fp.is_file():
-                    j = load_json(fp)
-                    for key in ("edited_instances", "edits", "resized", "actions"):
-                        if key in j and isinstance(j[key], list):
-                            n_ed = max(n_ed, len(j[key]))
+            # Count edits from the receipt's action list (fallback to scope files)
+            rd = load_json(d / "receipt.json") if (d / "receipt.json").is_file() else {}
+            n_ed = len(rd.get("actions", []))
+            if n_ed == 0:
+                for fn in ("layout_changes.json", "routing_scope.json"):
+                    fp = d / fn
+                    if fp.is_file():
+                        j = load_json(fp)
+                        for key in ("edited_instances", "edits", "resized", "actions"):
+                            if key in j and isinstance(j[key], list):
+                                n_ed = max(n_ed, len(j[key]))
             if n_ed <= best_n:
                 continue
             # Verify 3-corner WNS meets budget + hold non-regression
@@ -359,13 +381,23 @@ def part2_power_and_6corner() -> dict:
 
 
 def part3_asap7_controlled_nonzero_drc() -> dict:
-    """Construct 5 genuine controlled non-zero pre-DRT DRC violations (M1/M2/M3/M4 shorts & spacing)
-    on the 12,412-net ASAP7 AES layout by adding controlled metal wire encroachments on existing
-    non-clock neighbor nets within [0, r_drc) of edited target cells' bounding boxes, keeping all
-    non-target cells at zero displacement. Compare full-block check_drc vs 1.0*H_row boxed check_drc
-    for TP/FP/FN, exact conflicting neighbor net set E(S), and speedup.
+    """Controlled non-zero pre-DRT DRC benchmark on the 12.4k-instance ASAP7 AES layout.
+
+    Design note (methodological honesty):
+    - The original idea of appending metal onto an *existing* neighbour net is unsound:
+      odb::dbWireEncoder::begin() rewrites the whole wire (measured: net1060 length 67 -> 5,
+      ops 29 -> 1), which would silently destroy real routing and corrupt TP/FP/FN statistics.
+    - Therefore each violation is built from two synthetic wires on the *same real layer*:
+      (a) a stub belonging to the edited instance's own direct net, and
+      (b) a stub belonging to a dedicated synthetic aggressor net ("FAECO_NZ_*").
+      The aggressor is explicitly synthetic; no real net geometry is modified or deleted
+      other than the direct nets, which the standard FAECO/LR protocol clears anyway.
+    - Cases 1-5 place the conflict inside the 1.0*H_row window of the edited instance.
+      Case 6 is a deliberate out-of-window scope control (conflict at 1.05*H_row above the
+      cell), which is expected to be seen by the full-block check and missed by the boxed
+      check; it quantifies the method's scope boundary instead of claiming 100% recall.
     """
-    print("[Step 1.3] Running 7 nm ASAP7 Controlled Non-Zero DRC Conflict Benchmark (5 cases on asap7/aes)...")
+    print("[Step 1.3] Running 7 nm ASAP7 controlled non-zero DRC benchmark (asap7/aes)...", flush=True)
     drc_dir = OUT_ROOT / "asap7_controlled_nonzero_drc"
     if drc_dir.exists():
         shutil.rmtree(drc_dir)
@@ -377,291 +409,245 @@ def part3_asap7_controlled_nonzero_drc() -> dict:
     ref_odb = Path(runner.eval.control["odb"])
     pool = list(runner.pool)
 
-    # 5 controlled test specifications:
-    # (case_id, action_idx, layer_name, kind, offset_dbu_from_pin_edge, width_dbu)
-    # Note: ASAP7 DBU = 4000/um -> 1 nm = 4 DBU. H_row = 0.27 um = 1080 DBU.
-    # M1/M2/M3 min spacing = 0.018 um = 72 DBU. M4 min spacing = 0.024 um = 96 DBU.
-    # We locate an actual existing non-clock neighbor net near each target cell and inject a wire box
-    # overlapping a target cell's M1/M2 pin (short) or spaced 40 DBU = 0.010 um < 0.018 um (min-spacing)
-    # or on M2/M3/M4 within 1.0*H_row of the target cell!
+    # (case_id, pool_idx, layer, mode, gap_nm, out_of_window)
     specs = [
-        {"id": "asap7_nz_01_m1_short", "act_idx": 0, "layer": "M1", "mode": "short_pin", "gap_nm": 0},
-        {"id": "asap7_nz_02_m1_spacing", "act_idx": 2, "layer": "M1", "mode": "spacing_pin", "gap_nm": 10},
-        {"id": "asap7_nz_03_m2_short", "act_idx": 4, "layer": "M2", "mode": "short_wire_in_bbox", "gap_nm": 0},
-        {"id": "asap7_nz_04_m2_spacing", "act_idx": 7, "layer": "M2", "mode": "spacing_wire_in_bbox", "gap_nm": 12},
-        {"id": "asap7_nz_05_m3_spacing_boundary", "act_idx": 11, "layer": "M3", "mode": "spacing_near_bbox", "gap_nm": 14},
+        ("asap7_nz_01_m1_short", 0, "M1", "short", 0, False),
+        ("asap7_nz_02_m1_spacing", 2, "M1", "spacing", 10, False),
+        ("asap7_nz_03_m2_short", 4, "M2", "short", 0, False),
+        ("asap7_nz_04_m2_spacing", 7, "M2", "spacing", 12, False),
+        ("asap7_nz_05_m3_spacing", 11, "M3", "spacing", 14, False),
+        ("asap7_nz_06_m3_scope_control_oow", 13, "M3", "short", 93, True),
     ]
 
-    cases = []
-    for sp in specs:
-        cdir = drc_dir / sp["id"]
-        cdir.mkdir(parents=True)
-        act = pool[sp["act_idx"]]
-        inst_name = cmp.canonical_odb_name(act.instance)
-        new_master = act.target_cell
-
-        # Step A: Build perturbed ODB (in-place swap + clear direct nets + inject controlled neighbor encroachment)
-        # AND run BOTH full-block check_drc AND 1.0*H_row boxed check_drc on the EXACT same perturbed ODB!
-        mod_odb = cdir / "perturbed.odb"
-        full_rpt = cdir / "full_drc.rpt"
-        box_rpt = cdir / "box_0.rpt"
-        meta_txt = cdir / "meta.txt"
-
-        tcl_build = cdir / "build_and_check.tcl"
-        tcl_build.write_text(f"""read_db {cmp.tcl(ref_odb)}
+    build_tpl = """read_db @@REF@@
 set blk [ord::get_db_block]
 set tech [[ord::get_db] getTech]
 set dbu [$blk getDbUnitsPerMicron]
 set rows [$blk getRows]
 set rbb [[lindex $rows 0] getBBox]
-set row_h [expr {{[$rbb yMax] - [$rbb yMin]}}]
-set die [$blk getDieArea]
-set dx1 [$die xMin]; set dy1 [$die yMin]; set dx2 [$die xMax]; set dy2 [$die yMax]
-
-set inst [$blk findInst {{{inst_name}}}]
-if {{ $inst eq "NULL" }} {{ error "inst not found: {inst_name}" }}
-set old_bb [$inst getBBox]
-set ox1 [$old_bb xMin]; set oy1 [$old_bb yMin]
-set new_m [[ord::get_db] findMaster {{{new_master}}}]
-$inst swapMaster $new_m
+set row_h [expr {[$rbb yMax] - [$rbb yMin]}]
+set inst [$blk findInst @@INST@@]
+if { $inst eq "NULL" } { error "inst not found: @@INST@@" }
+set obb [$inst getBBox]
+set ox1 [$obb xMin]; set oy1 [$obb yMin]
+set newm [[ord::get_db] findMaster @@MASTER@@]
+$inst swapMaster $newm
 $inst setLocation $ox1 $oy1
 set bb [$inst getBBox]
 set ix1 [$bb xMin]; set iy1 [$bb yMin]; set ix2 [$bb xMax]; set iy2 [$bb yMax]
 
-# Collect direct signal nets of target instance and clear their wires
-set direct_nets {{}}
-foreach it [$inst getITerms] {{
-  set net [$it getNet]
-  if {{ $net eq "NULL" }} {{ continue }}
-  set st [$net getSigType]
-  if {{ $st eq "POWER" || $st eq "GROUND" }} {{ continue }}
-  lappend direct_nets [$net getName]
-}}
+set direct_nets {}
+foreach it [$inst getITerms] {
+  set n [$it getNet]
+  if { $n eq "NULL" } { continue }
+  if { [$n getSigType] ne "SIGNAL" } { continue }
+  lappend direct_nets [$n getName]
+}
 set direct_nets [lsort -unique $direct_nets]
-foreach nm $direct_nets {{
+if { [llength $direct_nets] == 0 } { error "no direct signal net on @@INST@@" }
+foreach nm $direct_nets {
   set n [$blk findNet $nm]
   set w [$n getWire]
-  if {{ $w ne "NULL" }} {{ odb::dbWire_destroy $w }}
-}}
+  if { $w ne "NULL" } { odb::dbWire_destroy $w }
+}
 
-# Find a real non-clock, non-direct neighbor signal net whose wire is near the target cell
-set target_layer [$tech findLayer "{sp['layer']}"]
-set gap_dbu [expr {{int(round({sp['gap_nm']} * $dbu / 1000.0))}}]
-set search_r [expr {{$row_h * 4}}]
-set chosen_net ""
-set victim_box ""
-set chosen_net2 ""
-set victim_box2 ""
+# anchor = placed-instance bbox centre (block coordinates, deterministic)
+set ax [expr {($ix1 + $ix2) / 2}]
+set ay [expr {($iy1 + $iy2) / 2}]
 
-# For M1 modes: find a target cell pin rect on M1; for M2/M3 modes: find an existing wire on that layer near bbox
-set pin_box {{}}
-if {{ "{sp['layer']}" eq "M1" }} {{
-  foreach it [$inst getITerms] {{
-    set mt [$it getMTerm]
-    set mps [$mt getMPins]
-    foreach mp $mps {{
-      foreach g [$mp getGeometry] {{
-        set gl [$g getTechLayer]
-        if {{ $gl ne "NULL" && [$gl getName] eq "M1" }} {{
-          # Transform master box to block coords via inst transform
-          set tr [$inst getTransform]
-          set rect [odb::Rect [$g xMin] [$g yMin] [$g xMax] [$g yMax]]
-          $tr apply $rect
-          set pin_box [list [$rect xMin] [$rect yMin] [$rect xMax] [$rect yMax]]
-          break
-        }}
-      }}
-      if {{ [llength $pin_box] > 0 }} {{ break }}
-    }}
-    if {{ [llength $pin_box] > 0 }} {{ break }}
-  }}
-}}
+set layer [$tech findLayer @@LAYER@@]
+set min_w [$layer getWidth]
+set gap [expr {int(round(@@GAP_NM@@ * $dbu / 1000.0))}]
+set L [expr {$min_w * 6}]
+if { @@OUTSIDE@@ } {
+  set cy [expr {$iy2 + int(1.05 * $row_h)}]
+} else {
+  set cy $ay
+}
 
-# Pick an existing routed non-clock non-direct signal net near the cell
-foreach n [$blk getNets] {{
-  set nm [$n getName]
-  if {{ $nm eq "clk" || [lsearch -exact $direct_nets $nm] >= 0 }} {{ continue }}
-  set st [$n getSigType]
-  if {{ $st ne "SIGNAL" }} {{ continue }}
-  set w [$n getWire]
-  if {{ $w eq "NULL" }} {{ continue }}
-  set wb [$w getBBox]
-  if {{ [$wb xMax] < $ix1 - $search_r || [$wb xMin] > $ix2 + $search_r }} {{ continue }}
-  if {{ [$wb yMax] < $iy1 - $search_r || [$wb yMin] > $iy2 + $search_r }} {{ continue }}
-  if {{ $chosen_net eq "" }} {{
-    set chosen_net $nm
-  }} elseif {{ $chosen_net2 eq "" && $nm ne $chosen_net }} {{
-    set chosen_net2 $nm
-    break
-  }}
-}}
-if {{ $chosen_net eq "" }} {{ error "no nearby neighbor net found" }}
+set dn [$blk findNet [lindex $direct_nets 0]]
+if { [$dn getWire] eq "NULL" } { odb::dbWire_create $dn }
+set wd [$dn getWire]
+set enc [odb::dbWireEncoder]
+$enc begin $wd
+$enc newPath $layer ROUTED
+$enc addPoint [expr {$ax - $L}] $cy
+$enc addPoint [expr {$ax + $L}] $cy
+$enc end
 
-# Helper: append a single wire segment on target_layer to an existing net's dbWire using dbWireEncoder
-proc add_seg {{net layer x1 y1 x2 y2 width}} {{
-  set w [$net getWire]
-  set enc [odb::dbWireEncoder]
-  $enc begin $w
-  $enc newPath $layer "ROUTED"
-  # Centerline path from (x1,y1) to (x2,y2)
-  set cx1 [expr {{int(($x1 + $x2) / 2)}}]
-  set cy1 [expr {{int(($y1 + $y2) / 2)}}]
-  $enc addPoint $x1 $y1
-  $enc addPoint $x2 $y2
-  $enc end
-}}
+set nz [odb::dbNet_create $blk "@@NZNAME@@"]
+$nz setSigType SIGNAL
+set wnz [odb::dbWire_create $nz]
+set enc2 [odb::dbWireEncoder]
+$enc2 begin $wnz
+$enc2 newPath $layer ROUTED
+if { "@@MODE@@" eq "short" } {
+  $enc2 addPoint $ax [expr {$cy - $L}]
+  $enc2 addPoint $ax [expr {$cy + $L}]
+} else {
+  set sy [expr {$cy + $min_w + $gap}]
+  $enc2 addPoint [expr {$ax - $L}] $sy
+  $enc2 addPoint [expr {$ax + $L}] $sy
+}
+$enc2 end
 
-set n1 [$blk findNet $chosen_net]
-set n2 [$blk findNet $chosen_net2]
-set min_w [$target_layer getWidth]
-if {{ $min_w <= 0 }} {{ set min_w 72 }}
-
-if {{ "{sp['mode']}" eq "short_pin" }} {{
-  lassign $pin_box px1 py1 px2 py2
-  set my [expr {{int(($py1 + $py2) / 2)}}]
-  # Draw a horizontal M1 segment of neighbor net n1 directly across the target cell's M1 pin
-  add_seg $n1 $target_layer [expr {{$px1 - $min_w}}] $my [expr {{$px2 + $min_w}}] $my $min_w
-}} elseif {{ "{sp['mode']}" eq "spacing_pin" }} {{
-  lassign $pin_box px1 py1 px2 py2
-  # Draw a parallel M1 segment of neighbor net n1 at distance gap_dbu (< 72 DBU min spacing) to the right of pin
-  set sx [expr {{$px2 + $gap_dbu + int($min_w / 2)}}]
-  add_seg $n1 $target_layer $sx [expr {{$py1 - $min_w}}] $sx [expr {{$py2 + $min_w}}] $min_w
-}} elseif {{ "{sp['mode']}" eq "short_wire_in_bbox" }} {{
-  # Two crossing segments of n1 (and a direct-pin-attached net / n2) inside target bbox on M2
-  set cx [expr {{int(($ix1 + $ix2) / 2)}}]
-  set cy [expr {{int(($iy1 + $iy2) / 2)}}]
-  set dnet [$blk findNet [lindex $direct_nets 0]]
-  # Create fresh wire on direct net dnet inside target bbox, and cross it with neighbor n1 on M2!
-  if {{ [$dnet getWire] eq "NULL" }} {{ odb::dbWire_create $dnet }}
-  add_seg $dnet $target_layer [expr {{$cx - 200}}] $cy [expr {{$cx + 200}}] $cy $min_w
-  add_seg $n1 $target_layer $cx [expr {{$cy - 200}}] $cx [expr {{$cy + 200}}] $min_w
-}} elseif {{ "{sp['mode']}" eq "spacing_wire_in_bbox" }} {{
-  set cx [expr {{int(($ix1 + $ix2) / 2)}}]
-  set cy [expr {{int(($iy1 + $iy2) / 2)}}]
-  set dnet [$blk findNet [lindex $direct_nets 0]]
-  if {{ [$dnet getWire] eq "NULL" }} {{ odb::dbWire_create $dnet }}
-  add_seg $dnet $target_layer [expr {{$cx - 240}}] $cy [expr {{$cx + 240}}] $cy $min_w
-  set sy [expr {{$cy + $min_w + $gap_dbu}}]
-  add_seg $n1 $target_layer [expr {{$cx - 240}}] $sy [expr {{$cx + 240}}] $sy $min_w
-}} elseif {{ "{sp['mode']}" eq "spacing_near_bbox" }} {{
-  # Right at the top edge of target cell bbox on M3
-  set cx [expr {{int(($ix1 + $ix2) / 2)}}]
-  set sy1 [expr {{$iy2 - int($min_w / 2)}}]
-  set sy2 [expr {{$sy1 + $min_w + $gap_dbu}}]
-  set dnet [$blk findNet [lindex $direct_nets 0]]
-  if {{ [$dnet getWire] eq "NULL" }} {{ odb::dbWire_create $dnet }}
-  add_seg $dnet $target_layer [expr {{$cx - 240}}] $sy1 [expr {{$cx + 240}}] $sy1 $min_w
-  add_seg $n1 $target_layer [expr {{$cx - 240}}] $sy2 [expr {{$cx + 240}}] $sy2 $min_w
-}}
-
-write_db {cmp.tcl(mod_odb)}
-set f [open {cmp.tcl(meta_txt)} w]
-puts $f "dbu=$dbu row_h=$row_h inst={inst_name} direct=[join $direct_nets ,] neighbor=$chosen_net bbox=$ix1,$iy1,$ix2,$iy2"
+write_db @@MODODB@@
+set f [open @@META@@ w]
+puts $f "dbu=$dbu row_h=$row_h inst=@@INST@@ nz=@@NZNAME@@ mode=@@MODE@@ layer=@@LAYER@@ gap_dbu=$gap min_w=$min_w direct=[join $direct_nets ,] bbox=$ix1,$iy1,$ix2,$iy2 conflict_y=$cy"
 close $f
 puts PERTURBED_OK
 exit
-""", encoding="utf-8")
+"""
 
+    def parse_keys(rpt: Path):
+        txt = rpt.read_text(encoding="utf-8")
+        blocks = [b.strip() for b in re.split(r"(?m)(?=^violation type: )", txt) if b.strip()]
+        keys, types, boxes = set(), [], []
+        for b in blocks:
+            vt = re.search(r"violation type:\s*(.+)", b)
+            bb = re.search(r"bbox\s*=\s*\(([\-0-9.]+),\s*([\-0-9.]+)\)\s*-\s*\(([\-0-9.]+),\s*([\-0-9.]+)\)", b)
+            sr = re.search(r"srcs:\s*(.+)", b)
+            vts = vt.group(1).strip() if vt else ""
+            types.append(vts)
+            keys.add((vts, bb.group(0) if bb else "", sr.group(1).strip() if sr else ""))
+            if bb:
+                boxes.append(tuple(float(bb.group(i)) for i in (1, 2, 3, 4)))
+        return keys, types, boxes
+
+    cases = []
+    for cid, act_idx, layer, mode, gap_nm, outside in specs:
+        cdir = drc_dir / cid
+        cdir.mkdir(parents=True)
+        act = pool[act_idx]
+        inst_name = cmp.canonical_odb_name(act.instance)
+        mod_odb = cdir / "perturbed.odb"
+        full_rpt = cdir / "full_drc.rpt"
+        box_rpt = cdir / "box_0.rpt"
+        meta_txt = cdir / "meta.txt"
+        tcl_build = cdir / "build_and_check.tcl"
+        tcl_build.write_text(
+            build_tpl
+            .replace("@@REF@@", cmp.tcl(ref_odb))
+            .replace("@@INST@@", inst_name)
+            .replace("@@MASTER@@", act.target_cell)
+            .replace("@@LAYER@@", layer)
+            .replace("@@GAP_NM@@", str(gap_nm))
+            .replace("@@MODE@@", mode)
+            .replace("@@OUTSIDE@@", "1" if outside else "0")
+            .replace("@@NZNAME@@", f"FAECO_NZ_{cid}")
+            .replace("@@MODODB@@", cmp.tcl(mod_odb))
+            .replace("@@META@@", cmp.tcl(meta_txt)),
+            encoding="utf-8",
+        )
         r0 = subprocess.run([OR_BIN, "-no_init", "-no_splash", "-threads", "1", "-exit", str(tcl_build)],
-                            capture_output=True, text=True, timeout=120)
-        assert r0.returncode == 0, f"build failed ({sp['id']}): {r0.stderr[-400:]} | {r0.stdout[-400:]}"
-
+                            capture_output=True, text=True, timeout=180)
+        assert r0.returncode == 0, f"build failed ({cid}): {r0.stderr[-600:]} | {r0.stdout[-300:]}"
         meta_kv = dict(tok.split("=", 1) for tok in meta_txt.read_text().strip().split())
         row_h = int(meta_kv["row_h"])
         bx1, by1, bx2, by2 = [int(x) for x in meta_kv["bbox"].split(",")]
 
-        # Run FULL-BLOCK check_drc
         tcl_full = cdir / "check_full.tcl"
         tcl_full.write_text(
-            f"read_db {cmp.tcl(mod_odb)}\n"
-            f"drt::check_drc -output_file {cmp.tcl(full_rpt)}\n"
-            f"exit\n", encoding="utf-8"
+            f"read_db {cmp.tcl(mod_odb)}\ndrt::check_drc -output_file {cmp.tcl(full_rpt)}\nexit\n",
+            encoding="utf-8",
         )
         t0 = raw_seconds()
         rf = subprocess.run([OR_BIN, "-no_init", "-no_splash", "-threads", "4", "-exit", str(tcl_full)],
-                            capture_output=True, text=True, timeout=180)
+                            capture_output=True, text=True, timeout=300)
         full_s = raw_seconds() - t0
-        assert rf.returncode == 0, f"full drc failed ({sp['id']}): {rf.stderr[-300:]}"
+        assert rf.returncode == 0, f"full drc failed ({cid}): {rf.stderr[-300:]}"
 
-        # Run 1.0*H_row BOXED check_drc
         tcl_box = cdir / "check_box.tcl"
         tcl_box.write_text(
             f"read_db {cmp.tcl(mod_odb)}\n"
             f"set die [[ord::get_db_block] getDieArea]\n"
-            f"set x1 [expr {{max([$die xMin], {bx1} - {row_h})}}]\n"
-            f"set y1 [expr {{max([$die yMin], {by1} - {row_h})}}]\n"
-            f"set x2 [expr {{min([$die xMax], {bx2} + {row_h})}}]\n"
-            f"set y2 [expr {{min([$die yMax], {by2} + {row_h})}}]\n"
+            f"set x1 [expr {{max([$die xMin], {bx1 - row_h})}}]\n"
+            f"set y1 [expr {{max([$die yMin], {by1 - row_h})}}]\n"
+            f"set x2 [expr {{min([$die xMax], {bx2 + row_h})}}]\n"
+            f"set y2 [expr {{min([$die yMax], {by2 + row_h})}}]\n"
             f"drt::check_drc -box [list $x1 $y1 $x2 $y2] -output_file {cmp.tcl(box_rpt)}\n"
-            f"exit\n", encoding="utf-8"
+            f"exit\n",
+            encoding="utf-8",
         )
         t0 = raw_seconds()
         rb = subprocess.run([OR_BIN, "-no_init", "-no_splash", "-threads", "4", "-exit", str(tcl_box)],
-                            capture_output=True, text=True, timeout=180)
+                            capture_output=True, text=True, timeout=300)
         box_s = raw_seconds() - t0
-        assert rb.returncode == 0, f"box drc failed ({sp['id']}): {rb.stderr[-300:]}"
+        assert rb.returncode == 0, f"box drc failed ({cid}): {rb.stderr[-300:]}"
 
-        # Parse markers & attribute neighbor nets identically via drc_neighbor_evidence
-        def parse_keys(rpt: Path):
-            txt = rpt.read_text(encoding="utf-8")
-            blocks = [b.strip() for b in re.split(r"(?m)(?=^violation type: )", txt) if b.strip()]
-            keys = set()
-            types = []
-            for b in blocks:
-                vt = re.search(r"violation type:\s*(.+)", b)
-                bb = re.search(r"bbox\s*=\s*(.+)", b)
-                sr = re.search(r"srcs:\s*(.+)", b)
-                vts = vt.group(1).strip() if vt else ""
-                types.append(vts)
-                keys.add((vts, bb.group(1).strip() if bb else "", sr.group(1).strip() if sr else ""))
-            return keys, types
-
-        full_keys, full_types = parse_keys(full_rpt)
-        box_keys, box_types = parse_keys(box_rpt)
+        full_keys, full_types, full_boxes = parse_keys(full_rpt)
+        box_keys, box_types, _ = parse_keys(box_rpt)
         tp = len(full_keys & box_keys)
         fn = len(full_keys - box_keys)
         fp = len(box_keys - full_keys)
 
-        direct_set = set(meta_kv["direct"].split(",")) if meta_kv["direct"] else set()
-        ev_full = drc_neighbor_evidence(full_rpt, {inst_name}, direct_set, {"clk"})
-        ev_box = drc_neighbor_evidence(box_rpt, {inst_name}, direct_set, {"clk"})
+        # how many full-block markers fall outside the 1.0*H_row window (unit: um in the report)
+        wx1, wy1 = (bx1 - row_h) / 1000.0, (by1 - row_h) / 1000.0
+        wx2, wy2 = (bx2 + row_h) / 1000.0, (by2 + row_h) / 1000.0
+        outside_n = 0
+        for (mx1, my1, mx2, my2) in full_boxes:
+            cx, cy = 0.5 * (mx1 + mx2), 0.5 * (my1 + my2)
+            if not (wx1 <= cx <= wx2 and wy1 <= cy <= wy2):
+                outside_n += 1
+
+        def nets_in(rpt: Path) -> set:
+            out = set()
+            for blk in re.split(r"(?m)(?=^violation type: )", rpt.read_text(encoding="utf-8")):
+                src = re.search(r"(?m)^\s*srcs:\s*(.+)$", blk)
+                if src:
+                    out.update(re.findall(r"\bnet:(\S+)", src.group(1)))
+            return out
+
+        full_nets = nets_in(full_rpt)
+        box_nets = nets_in(box_rpt)
+        aggressor = meta_kv["nz"]
 
         case_rec = {
-            "id": sp["id"],
-            "layer": sp["layer"],
-            "mode": sp["mode"],
-            "gap_nm": sp["gap_nm"],
+            "id": cid,
+            "layer": layer,
+            "mode": mode,
+            "gap_nm": gap_nm,
+            "out_of_window_control": outside,
             "edited_instance": inst_name,
-            "injected_neighbor_net": meta_kv["neighbor"],
+            "synthetic_aggressor_net": meta_kv["nz"],
             "full_markers": len(full_keys),
             "box_markers": len(box_keys),
             "tp": tp,
             "fp": fp,
             "fn": fn,
+            "markers_outside_window": outside_n,
             "exact_marker_match": (fn == 0 and fp == 0 and len(full_keys) > 0),
             "violation_types": sorted(set(full_types)),
-            "full_attributed_neighbors": sorted(ev_full["neighbors"]),
-            "box_attributed_neighbors": sorted(ev_box["neighbors"]),
-            "exact_neighbor_match": (ev_full["neighbors"] == ev_box["neighbors"]),
-            "injected_neighbor_captured": (meta_kv["neighbor"] in ev_box["neighbors"]),
+            "full_marker_nets": sorted(full_nets),
+            "box_marker_nets": sorted(box_nets),
+            "exact_neighbor_match": (full_nets == box_nets),
+            "aggressor_captured_by_boxed": aggressor in box_nets,
             "full_wall_s": round(full_s, 3),
             "box_wall_s": round(box_s, 3),
             "speedup_x": round(full_s / box_s, 2) if box_s > 0 else None,
         }
         cases.append(case_rec)
-        print(f"  [{sp['id']}] full={len(full_keys)} box={len(box_keys)} TP={tp} FP={fp} FN={fn} "
-              f"nbr_match={case_rec['exact_neighbor_match']} injected_cap={case_rec['injected_neighbor_captured']} "
-              f"full={full_s:.2f}s box={box_s:.2f}s ({case_rec['speedup_x']}x)")
+        print(f"  [{cid}] {layer}/{mode} full={len(full_keys)} box={len(box_keys)} TP={tp} FP={fp} FN={fn} "
+              f"out_win={outside_n} nbr_match={case_rec['exact_neighbor_match']} "
+              f"full={full_s:.2f}s box={box_s:.2f}s ({case_rec['speedup_x']}x)", flush=True)
 
+    in_window = [c for c in cases if not c["out_of_window_control"]]
+    scope = [c for c in cases if c["out_of_window_control"]]
     return {
         "design": "asap7_aes",
+        "note": "aggressor wires are synthetic (FAECO_NZ_*) on real layers; no real neighbour net geometry is modified",
         "total_cases": len(cases),
-        "all_nonzero": all(c["full_markers"] > 0 for c in cases),
-        "total_full_markers": sum(c["full_markers"] for c in cases),
-        "total_tp": sum(c["tp"] for c in cases),
-        "total_fp": sum(c["fp"] for c in cases),
-        "total_fn": sum(c["fn"] for c in cases),
-        "all_neighbor_sets_match": all(c["exact_neighbor_match"] for c in cases),
+        "in_window_cases": len(in_window),
+        "all_in_window_nonzero": all(c["full_markers"] > 0 for c in in_window),
+        "total_full_markers": sum(c["full_markers"] for c in in_window),
+        "total_tp": sum(c["tp"] for c in in_window),
+        "total_fp": sum(c["fp"] for c in in_window),
+        "total_fn": sum(c["fn"] for c in in_window),
+        "markers_outside_window": sum(c["markers_outside_window"] for c in in_window),
+        "all_in_window_marker_sets_identical": all(c["exact_marker_match"] for c in in_window),
+        "all_in_window_neighbor_sets_match": all(c["exact_neighbor_match"] for c in in_window),
+        "mean_speedup_x": round(sum(c["speedup_x"] for c in in_window) / len(in_window), 2),
+        "scope_control": scope[0] if scope else None,
         "cases": cases,
     }
 
@@ -679,15 +665,22 @@ def part4_4thread_drt_determinism() -> dict:
     results = {}
     for kind in ("asap7_uart", "sky130hd_aes"):
         kdir = det_dir / kind
-        runner, pdk, budget_ps, _, _ = lr_mod.make_boxed_runner(kind, kdir / "runner")
+        runner_dir = kdir / "runner"
+        runner, pdk, budget_ps, _, _ = lr_mod.make_boxed_runner(kind, runner_dir)
+        # sky130hd_aes resolves physical() to DiagnosticRepairComparison, which unions a guided
+        # hint set that is only created by prepare_case(); an unguided audit means an empty hint.
+        if not hasattr(runner, "initial_hint"):
+            runner.initial_hint = set()
         actions = tuple(sorted(a.action_id for a in runner.pool[:3]))
 
         with bind_runtime(runner.top, runner.flow["fastroute.tcl"]):
             edited, incident = runner.direct_nets(actions)
-            neighbors = runner.diagnose(actions, kdir / "diag")
+            # trial/diagnosis dirs must live under the runner output root (compare_ibex.evaluate
+            # calls out.relative_to(self.args.out))
+            neighbors = runner.diagnose(actions, runner_dir / "diag")
             runs = []
             for rep in range(1, 4):
-                rdir = kdir / f"rep_{rep}"
+                rdir = runner_dir / f"rep_{rep}"
                 t0 = raw_seconds()
                 ep, row, fails, _ = runner.physical(actions, rdir, incident, neighbors)
                 dt = raw_seconds() - t0

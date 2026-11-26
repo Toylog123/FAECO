@@ -1,5 +1,15 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-26 V5 实跑第一批：Stage 1 完成、Stage 2 部分完成（中断点）
+
+- **进度**：Stage 1 完成（`V5_STEP1_POWER_7NM_DET_VERIFIED.json`，SHA-256 `85bfc165…`）；Stage 2 完成 2A 两臂与 2B 第一遍八 key（`V5_STEP2_DEDUP_NATIVE_VERIFIED.json`，SHA-256 `917a6655…`），2B 第二遍（SKY 两设计 600 s 预算 `::rt600s`）中止未落盘；Stage 3/4/5 未启动。续跑命令、必查项与六处脚本修正见[执行交接](HANDOFF_2026-11-26_V5_EXEC.md)。
+- **功耗（TT 真实 SPEF，总／组合／漏电，均降）**：`SKY130HD AES` 18 门 −0.102%／−0.140%／−0.064%；`ASAP7 UART-TC` 13 门 −0.660%／−2.142%／−0.777%；`ASAP7 UART K=36` 19 门 −0.623%／−2.234%／−1.391%。**这是 V5 表 4 的功耗口径来源。**
+- **7 nm 受控非零 DRC（`asap7/aes`）**：窗内 5 例（M1/M2/M3 短路与间距）共 37 marker，TP/FP/FN = 37/0/0，marker 集合与网集合逐例完全相同，注入 aggressor 全部被 boxed 捕获，单次预检均值提速 17.34×；另有 1.05×$H_{\mathrm{row}}$ 窗外负对照 2 marker 仅全块可见。**写作要求**：必须声明 aggressor 为受控合成网（`FAECO_NZ_*`，真实层几何），不得表述为「真实邻居网被破坏性注入」；窗外对照如实作为作用域边界。
+- **4 线程确定性**：`asap7/uart` 与 `sky130hd/aes` 各 3× 重复完整 DRT+RCX+三角 STA，去日期 SPEF 逐字节一致、判据一致、WNS 极差 0.000 ps。**该 3 门批次本身是 `SS:hold_regression` 拒收**，结论严格限定为「产物与判据确定性」，不得外推为接受性再现。
+- **UART 去重消融（同窗口 720 s）**：`dedup_off` 0.83106 µm²／AUC 0.4344／20 次评估／634.6 s，`dedup_on` 0.83106 µm²／AUC 0.4764／19 次评估／588.0 s。**统一表述**：同终态面积下，去重提高 anytime AUC 9.7%、少一次物理评估、早 46.6 s；禁写「去重提高回收面积」。
+- **原生 `recover_power` 挂保护后端（240 s 第一遍）**：SKY 两设计（120／24 项）因触及 240 s 单次路由上限而 `rejected`，**属超时而非物理判定**；7 nm 两设计（16／174 项）判 `not_in_action_space`——原生改到 ORFS 端口缓冲实例（`output43`、`u6820` 等），不在冻结 runner 的 `ref_masters` 内。**不得**据此断言「原生回收为 0 故 FAECO 更优」，须待 600 s 第二遍补齐物理判定。
+- **口径校验锚点**（换算与库路径已对齐既有收据）：AES 控制点 FF／TT Setup 678.249／−380.501 ps、SS −13,648.043 ps、Hold 336.274／523.915／55.296 ps，与 `faeco_tcad_sky_holdout_20261123/aes/ss_hold_targeted_v2b/qualification/CONTROL.json` 逐位一致；UART-TC 端点三角 Setup 255.927／190.381／28.931 ps 与既有收据一致。
+
 ## 2026-11-26 V5 冲刺就绪（第二轮同行评审 85/100 后的脚本、预检与交接状态）
 
 - **第二轮模拟同行评审结论**：V4 14 页中文稿评为 **Major Revision 偏小修（接近 Minor Revision，85/100，较 V3 71.5 分明显提升）**；核心框架已稳固，无需推翻，下一轮聚焦两条证据链收口：① 命题 1 数学严密化 + 7 nm 非零受控 DRC 实证；② 非单调可行域形式化 + 补齐最后 5 项高杠杆实验（功耗/6角、4 线程 DRT 确定性、Setup 去重消融、原生挂载保护后端、双设计多档预算在线搜索、双 AES 探针敏感性、万门级独立 Timing-closed 基准）。

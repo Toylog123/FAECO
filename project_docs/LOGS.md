@@ -8396,3 +8396,25 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
   - `run_all_v5_experiments.sh`（支持 `--stage 1..5|all` 与 `--force`，内置 `taskset -c 0-5` 断点续跑与 SHA-256 汇总）及 `smoke_verify_v5.py`。
 - **无 EDA 预检验证**：`bash -n`（`BASH_SYNTAX_OK`，LF 行尾）、`python3 -m py_compile`（`PY_COMPILE_OK`）及 `smoke_verify_v5.py`（`ALL_5_MODULES_IMPORTED_OK`、`ALL_PREREQUISITE_PATHS_OK`、`SUBSET_T_FOUND: True`、`PREFLIGHT_SMOKE_PASS`）全数通过，产出 `V5_PREFLIGHT_PART1_AUDIT.json` 证实 SKY130HD AES 真实非单调反例 $T_3 \subset S_{18}$ 及全 4 设计 Hybrid 验收检查点严格 $\le 720.00\text{\,s}$。
 - **交接与记录同步**：新建 [HANDOFF_2026-11-26_V5.md](HANDOFF_2026-11-26_V5.md) 与 [evidence/tcad_v5_revision_20261126/README.md](evidence/tcad_v5_revision_20261126/README.md)，同步更新 `CANON.md`、`EXPERIMENT_REGISTRY.md`、`.codex-handoff.json` 与 `LOGS.md`。待用户跑完实验后即按交接清单完成 V5 中文定稿。
+## LOG-20261126-09｜V5 套组实跑：修正 4 处脚本缺陷并完成 Stage 1（功耗/6 角、7 nm 受控非零 DRC、4 线程确定性）
+
+- **接手与前置核对**：核对 WSL Ubuntu、OpenROAD bazel 构建（与 V4 同一二进制）及 5 个 Stage 先决路径，确认无并发 EDA 进程后按 `run_all_v5_experiments.sh --stage 1` 启动。
+- **实现层缺陷与修正（4 处，均非科学设定变更）**：
+  1. `sky130hd` 的 `FF`／`SS` liberty 被指向不存在的 `orfs/.../platforms/sky130hd/lib`；实际仅 `TT` 在该目录，`FF`／`SS` 位于 `rseco_timing/vendor/OpenROAD-b511b6a/test/sky130hd/`。改为与该 runner `eval.libraries` 完全一致的规范三元组。
+  2. `measure_3corner_wns` 原统一乘 `1e12`：`sta::worst_slack` 实际以 liberty 时间单位返回（sky130hd 为 ns、ASAP7 为 ps），导致 ASAP7 全部端点被放大 $10^{12}$ 而被误判拒收。改为解析 liberty `time_unit` 逐角换算；修正后 UART-TC 三角 Setup WNS 255.85／190.42／30.29 ps、Hold 50.32／67.50／54.05 ps 与既有收据逐位吻合，AES 控制点 FF／TT 亦与 `qualification/CONTROL.json` 一致（678.249／−380.501 ps）。
+  3. 7 nm 受控非零 DRC 原实现用 `odb::dbWireEncoder` 向既有邻居网追加金属。实测 `begin()` 会重写整条线（`net1060` 长度 67→5、op 29→1），将静默破坏真实布线并污染 TP/FP/FN。改为「受控合成 aggressor 网（`FAECO_NZ_*`，真实层 M1/M2/M3）＋目标实例自身直连网」同层成对注入，不改动任何真实邻居几何；并新增 1.05×$H_{\mathrm{row}}$ 窗外负对照显式量化作用域边界。
+  4. Stage 1.4 试验目录必须位于 runner 输出根内（`compare_ibex.evaluate` 调 `relative_to`）；`sky130hd/aes` 的 `physical` 走 `DiagnosticRepairComparison`，其 `initial_hint` 仅在 `prepare_case` 中建立，无引导审计需显式置空。
+- **Stage 1 收据**（`V5_STEP1_POWER_7NM_DET_VERIFIED.json`，SHA-256 `85bfc1657fbc0663649e417abbe7a9c9827d7d1cded05c121133bd150f28a235`，1060.11 s）：
+  - **TT 真实 SPEF 功耗（总／组合／漏电）**：`SKY130HD AES` 18 门 −0.102%／−0.140%／−0.064%；`ASAP7 UART-TC` 13 门 −0.660%／−2.142%／−0.777%；`ASAP7 UART K=36` 19 门 −0.623%／−2.234%／−1.391%，三者方向一致为降。
+  - **6 角**：UART-TC 端点 FF／TT／SS Setup 255.927／190.381／28.931 ps、Hold 50.315／67.502／54.054 ps，仍严格 Timing-closed；AES Hybrid 18 门相对控制点 FF／TT／SS Setup +0.135／−0.035／+1.022 ps、Hold +0.011／+0.018／+0.459 ps。
+  - **7 nm 受控非零 DRC**：窗内 5 例（M1/M2/M3 短路与间距）共 37 个真实 marker，`TP=37`、`FP=0`、`FN=0`，标记集合与网集合逐例完全相同，注入 aggressor 全部被 boxed 捕获，单次预检均值提速 **17.34×**；1.05×$H_{\mathrm{row}}$ 窗外负对照 2 个 marker 仅全块可见，作为方法作用域边界如实记录，不计入召回。
+  - **4 线程确定性**：`asap7/uart` 与 `sky130hd/aes` 各 3× 重复完整 DRT+RCX+三角 STA，去日期 SPEF 逐字节一致（`bbc304b8…`／`ee3ed948…`）、判据一致、Setup/Hold 极差 0.000 ps。该 3 门批次本身为 `SS:hold_regression` 拒收，故结论严格限定为「产物与判据确定性」，不外推接受性。
+
+## LOG-20261126-10｜V5 Stage 2 实跑（去重消融完成、原生挂载两遍）、再修 3 处脚本缺陷，按用户要求中止并交接
+
+- **Stage 2A `asap7/uart` Setup 去重开／关独立消融（同窗口 720 s，含筛选 81.564 s）**：`dedup_off` 回收 0.83106 µm²（13/18）、AUC 0.4344、20 次物理评估、计费墙钟 634.6 s；`dedup_on` 同为 0.83106 µm²（13/18）但 AUC 0.4764、19 次评估、1 次去重命中、588.0 s。口径为「同终态面积下，去重把 anytime AUC 提高 9.7%、少一次物理评估、早 46.6 s」，**不得**表述为去重提高回收面积。
+- **Stage 2B 第一遍（默认 240 s 单次路由预算，四设计）**：`sky130hd_aes` 原生提 120 项、`sky130hd_riscv32i` 提 24 项，两者 `native_std` 与 `-allow_setup_violations` 四臂均 `status=rejected`，原因是单次保护后端路由触及 240 s 上限（`rc=None`），**不是**时序或 hold 判定；`asap7/uart`（16 项）与 `asap7/aes`（174 项）判为 `status=not_in_action_space`——原生 `recover_power` 改的是 ORFS 端口缓冲实例（`output43`、`u6820` 等），不在冻结 runner 的 `ref_masters`（实测 531 项）内，属动作空间兼容性结论，非物理结论。
+- **新增三处实现修正**：① Stage 2B 评估目录移入 `<runner>/protected_eval`，并在构造后 `mkdir(parents=True, exist_ok=True)` 以满足 `qualify_zero()` 的非递归 `mkdir`；② 注册原生动前先比对 `runner.eval.ref_masters`，缺失实例记 `not_in_action_space` 并附样例，替代原先的 `KeyError` 冒泡；③ 为让 SKY 两设计的结论落在物理而非 240 s 上限，函数增参 `designs/route_timeout/key_suffix`，`main()` 追加 600 s 第二遍（key 后缀 `::rt600s`、窗口 840 s）。同时给 Stage 3/4 补 `initial_hint` 保护，把 Stage 5 的 ORFS 目标由不存在的 `detailed_route` 改为 `route finish`、`SKY_CORNERS` 改为复用规范三元组。
+- **中断点**：2B 第二遍（600 s）运行中被用户要求中止以便转交其他智能体执行，**该遍结果未落盘**；机器上已确认无 openroad／yosys／run_v5 残留进程。Stage 2 收据现含 2A 两臂与 2B 八个 240 s key，SHA-256 `917a6655…`；Stage 1 收据 SHA-256 `85bfc165…`。Stage 3/4/5 未启动。
+- **交接**：新建 [HANDOFF_2026-11-26_V5_EXEC.md](HANDOFF_2026-11-26_V5_EXEC.md)，逐条列出完成度、续跑命令、6 处脚本改动与核实方式、每阶段必查项、已知坑与跑完后的文档同步清单。后续论文修订仍按 [HANDOFF_2026-11-26_V5.md](HANDOFF_2026-11-26_V5.md) 第 4 节执行。
+

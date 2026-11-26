@@ -1,5 +1,7 @@
 # 行为准则
 
+> **2026-11-26 V5 实跑接手入口**：先读 [V5 执行交接](project_docs/HANDOFF_2026-11-26_V5_EXEC.md)（Stage 1 已完成、Stage 2 部分完成、Stage 3/4/5 待跑，含续跑命令与必查项）与 [CANON](project_docs/CANON.md) 顶部新增的实跑口径。V5 论文修订清单见 [HANDOFF_2026-11-26_V5.md](project_docs/HANDOFF_2026-11-26_V5.md) 第 4 节。
+
 > **2026-11-25 当前接手入口**见 [交接](project_docs/HANDOFF_2026-11-25.md) 和 [CANON](project_docs/CANON.md)。当前任务是面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。先核对现行证据、未决项与下一轮实验顺序。以下 11 月 13 日的三条状态作历史溯源。
 
 > **2026-11-13 当前入口：可调时序预算机制。** 优先读 `project_docs/evidence/timing_budget_20261113/REPORT.md` 与 `project_docs/CANON.md`。保留Resizer前端；默认允许WNS最多损失10ps，TNS辅助、hold保持原门。s382既有端点在该预算下已补SEC101/0：回收Resizer净新增面积28.90625%（总面积−4.399524%，WNS−3.098077ps，TNS−0.231982231ns）。这是已有物理端点重筛，不是新搜索算法收益。新 `code/src/rseco/budgeted_recovery.py` 实现纯策略/有界组合搜索，在线物理评估器、完整IO约束、强基线/跨设计尚待建立；下方strict政策与旧状态均保留历史。

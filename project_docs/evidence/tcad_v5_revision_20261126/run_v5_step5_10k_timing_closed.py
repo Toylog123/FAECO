@@ -48,11 +48,7 @@ ORFS_FLOW = Path("/home/toylog/faeco_eda/orfs/flow")
 OUT_ROOT = Path("/home/toylog/faeco_v5_step5_riscv32i_tc_20261126_v1")
 OUT_JSON = EVID / "tcad_v5_revision_20261126/V5_STEP5_10K_TIMING_CLOSED_VERIFIED.json"
 
-SKY_CORNERS = {
-    "FF": ["/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib"],
-    "TT": ["/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib"],
-    "SS": ["/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__ss_n40C_1v40.lib"],
-}
+SKY_CORNERS = s1.SKY_CORNER_LIBS
 SKY_RCX = "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/rcx_patterns.rules"
 SKY_SETRC = "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/setRC.tcl"
 SKY_FASTROUTE = "/home/toylog/faeco_eda/orfs/flow/platforms/sky130hd/fastroute.tcl"
@@ -93,7 +89,7 @@ def build_independent_riscv32i_tc() -> dict:
             "DESIGN_CONFIG=designs/sky130hd/riscv32i/config.mk",
             "FLOW_VARIANT=tc10ns",
             f"SDC_FILE={tc_sdc}",
-            "detailed_route", "finish",
+            "route", "finish",   # ORFS target names: route = global+detailed, finish = final reports/odb
         ]
         print("[Stage 5] Building fresh independently Timing-Closed SKY130HD riscv32i @ 10.0 ns via ORFS...", flush=True)
         logp = OUT_ROOT / "orfs_build_tc10ns.log"

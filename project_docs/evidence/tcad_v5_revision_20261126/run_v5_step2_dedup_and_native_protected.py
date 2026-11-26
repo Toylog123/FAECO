@@ -72,6 +72,8 @@ def run_uart_dedup_ablation(existing: dict, force: bool) -> dict:
         if rdir.exists():
             shutil.rmtree(rdir)
         runner, pdk, budget_ps, _, screen_s = lr_mod.make_boxed_runner("asap7_uart", rdir)
+        if not hasattr(runner, "initial_hint"):
+            runner.initial_hint = set()
         ref_area = runner.eval.ref_area
         pool = list(runner.pool)
         pool_ceiling = sum(a.estimated_area_saving for a in pool)
@@ -211,18 +213,28 @@ def extract_native_resizes(runner, extra_flags: str, out_dir: Path) -> tuple[lis
     return diffs, dt
 
 
-def run_native_on_protected_backend(existing: dict, force: bool) -> dict:
+def run_native_on_protected_backend(existing: dict, force: bool, designs=None, route_timeout=None, key_suffix="") -> dict:
     out = dict(existing)
-    for kind in ("sky130hd_aes", "sky130hd_riscv32i", "asap7_uart", "asap7_aes"):
+    designs = designs or ("sky130hd_aes", "sky130hd_riscv32i", "asap7_uart", "asap7_aes")
+    for kind in designs:
         for mode_label, flags in (("native_std", ""), ("native_allow_setup", "-allow_setup_violations")):
-            key = f"{kind}::{mode_label}"
+            key = f"{kind}::{mode_label}{key_suffix}"
             if key in out and not force:
                 print(f"[Stage 2B] Skipping existing {key}", flush=True)
                 continue
             rdir = OUT_ROOT / "native_protected" / kind / mode_label
             if rdir.exists():
                 shutil.rmtree(rdir)
-            runner, pdk, budget_ps, _, _ = lr_mod.make_boxed_runner(kind, rdir / "runner")
+            runner_root = rdir / "runner"
+            runner, pdk, budget_ps, _, _ = lr_mod.make_boxed_runner(kind, runner_root)
+            if not hasattr(runner, "initial_hint"):
+                runner.initial_hint = set()
+            # qualify_zero() creates <runner.output>/preflight with a non-recursive mkdir
+            Path(runner.output).mkdir(parents=True, exist_ok=True)
+            if route_timeout is not None:
+                for holder in (getattr(runner, "args", None), getattr(getattr(runner, "eval", None), "args", None)):
+                    if holder is not None and hasattr(holder, "route_timeout"):
+                        holder.route_timeout = float(route_timeout)
             diffs, ext_s = extract_native_resizes(runner, flags, rdir / "extract")
             print(f"  [Stage 2B/{key}] native proposed {len(diffs)} resizes in {ext_s:.2f}s", flush=True)
             if not diffs:
@@ -231,6 +243,23 @@ def run_native_on_protected_backend(existing: dict, force: bool) -> dict:
                     "extract_s": round(ext_s, 3), "qualified_area_saved_um2": 0.0,
                     "status": "zero_native_edits", "failures": ["zero_edits"],
                 }
+                continue
+
+            ref_masters = runner.eval.ref_masters
+            missing = sorted({inst for inst, _o, _n in diffs if inst not in ref_masters})
+            if missing:
+                out[key] = {
+                    "design": kind, "mode": mode_label,
+                    "native_proposed_count": len(diffs),
+                    "extract_s": round(ext_s, 3),
+                    "status": "not_in_action_space",
+                    "not_in_action_space_count": len(missing),
+                    "not_in_action_space_examples": missing[:10],
+                    "qualified_area_saved_um2": 0.0,
+                    "failures": ["not_in_action_space"],
+                }
+                print(f"  [Stage 2B/{key}] status=not_in_action_space ({len(missing)}/{len(diffs)} "
+                      f"instances outside the frozen netlist, e.g. {missing[:3]})", flush=True)
                 continue
 
             # Register native resizes as PhysicalAction objects and run through FAECO's 1.0*H_row protected backend!
@@ -261,7 +290,7 @@ def run_native_on_protected_backend(existing: dict, force: bool) -> dict:
                     runner.use_preview = True
 
                 t0 = raw_seconds()
-                deadline = t0 + 600.0
+                deadline = t0 + (float(route_timeout) + 240.0 if route_timeout else 600.0)
                 status = "evaluated"
                 fails = []
                 saved = 0.0
@@ -269,7 +298,7 @@ def run_native_on_protected_backend(existing: dict, force: bool) -> dict:
                 views_delta = {}
                 try:
                     with process_ledger(rdir / "subprocesses.json", deadline):
-                        ep, rec = runner.attempt(nat_tuple, rdir / "protected_eval")
+                        ep, rec = runner.attempt(nat_tuple, runner_root / "protected_eval")
                         fails = list(rec["failures"])
                         gate_ok = cmp.assess(reference, ep, runner.policy).feasible and ep.area < reference.area - 1e-9 and ep.sec_pass
                         if gate_ok and not fails:
@@ -279,7 +308,7 @@ def run_native_on_protected_backend(existing: dict, force: bool) -> dict:
                         else:
                             status = "rejected"
                         last_p = rec["passes"][-1]
-                        rp = rdir / "protected_eval" / last_p / "receipt.json"
+                        rp = runner_root / "protected_eval" / last_p / "receipt.json"
                         if rp.is_file():
                             rd = json.loads(rp.read_text())
                             views_delta = {
@@ -321,7 +350,17 @@ def main() -> int:
     data["uart_dedup_ablation"] = run_uart_dedup_ablation(data.get("uart_dedup_ablation", {}), force)
     OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
-    data["native_on_protected_backend"] = run_native_on_protected_backend(data.get("native_on_protected_backend", {}), force)
+    native = data.get("native_on_protected_backend", {})
+    native = run_native_on_protected_backend(native, force)
+    data["native_on_protected_backend"] = native
+    OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    # Second pass: the two SKY130HD designs get a 600 s per-trial route budget so the failure mode is
+    # attributable to physics rather than to the default 240 s cap shared by every FAECO arm.
+    native = run_native_on_protected_backend(
+        native, force, designs=("sky130hd_aes", "sky130hd_riscv32i"),
+        route_timeout=600.0, key_suffix="::rt600s",
+    )
+    data["native_on_protected_backend"] = native
     OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
     print("DONE Stage 2 ->", OUT_JSON, "sha256=", sha256(OUT_JSON), flush=True)

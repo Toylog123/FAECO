@@ -61,6 +61,8 @@ def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
     if rdir.exists():
         shutil.rmtree(rdir)
     runner, pdk, _, _, screen_s = lr_mod.make_boxed_runner(kind, rdir)
+    if not hasattr(runner, "initial_hint"):
+        runner.initial_hint = set()
     runner.gate = cmp.Gate(
         wns_ps=budget_ps,
         tns_ps=max(0.10 * clk_ps, 0.01 * abs(runner.eval.ref_views["TT"]["setup_tns_ps"])) if hasattr(runner.eval, "ref_views") else runner.gate.tns_ps,

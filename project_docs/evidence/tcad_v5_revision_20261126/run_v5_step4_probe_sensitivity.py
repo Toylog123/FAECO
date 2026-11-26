@@ -62,6 +62,8 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
     if rdir.exists():
         shutil.rmtree(rdir)
     runner, pdk, budget_ps, _, screen_s = lr_mod.make_boxed_runner(kind, rdir)
+    if not hasattr(runner, "initial_hint"):
+        runner.initial_hint = set()
     rdir.mkdir(parents=True, exist_ok=True)
     ref_area = runner.eval.ref_area
     pool = list(runner.pool)
