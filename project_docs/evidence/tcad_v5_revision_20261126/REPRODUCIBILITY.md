@@ -22,6 +22,8 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 双 AES 同协议探针 | [Stage 4](V5_STEP4_PROBE_SENS_VERIFIED.json)；原件包对应 `phase1_probe` 与 `phase2_fallback` |
 | 独立处理器参考与三臂 | [10 ns 资格](V5_STEP5_TC10NS_QUALIFICATION.json) · [40 ns 资格](V5_STEP5_TC40NS_MMMC_QUALIFICATION.json) · [40 ns 电气护栏资格](V5_STEP5_TC40NS_MMMC_DRV_QUALIFICATION.json) · [Stage 5](V5_STEP5_10K_TIMING_CLOSED_TC40NS_MMMC_DRV_VERIFIED.json) |
 | 同起序批宽、470.5 ps 零下限、资源与清理时间 | [审稿补证](REVIEW_SUPPLEMENT.md) · [同起序批宽收据](V5_REVIEW_MATCHED_BATCH_VERIFIED.json) · [近临界 STA 收据](V5_REVIEW_SETUP_FLOOR_VERIFIED.json) · [补证原件包](V5_REVIEW_SUPPLEMENT_ORIGINALS.zip) · [处理器资源复跑](V5_STAGE5_RESOURCE_REPLAY_ORIGINALS.zip) |
+| 40 ns 同池同后端的外部排序 | [AuDoPEDA 排序投影](REVIEW_SUPPLEMENT.md#40-ns-处理器同池同后端的外部排序对照) · [对照原件](V5_AUDOPEDA_RANK_CONTROL_ORIGINALS.zip) |
+| 小 UART、双 AES 的阶段成本和进程树峰值 | [三项冻结候选资源](REVIEW_SUPPLEMENT.md#小-uart-与两项最大代表设计的阶段资源) · [测量原件](V5_V4_STAGE_RESOURCE_CASES_ORIGINALS.zip) |
 
 ## 主要对照协议
 

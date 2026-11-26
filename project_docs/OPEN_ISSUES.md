@@ -1750,7 +1750,7 @@ v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独
 
 ## OI-105（2026-11-25，open）— 现行布线前诊断与调度的跨设计及强对照
 
-2026-11-27 核对了 ICCAD 2026 AuDoPEDA 作者发布的 OpenROAD 功耗恢复补丁。其按实例当前功耗与 Setup 裕量乘积初排，可映射到 40 ns 处理器共同池的 TT 输入。已核冻结日志中 18 项都具有有限的单一数据输出裕量。还需从同一 TT ODB、SDC、SPEF 和库读取实际实例功耗，核对原排序规则并在同一动作、批宽、后端和时限下验证排序对照。作者原流程的全局布线功耗恢复、备选门选择与重排序保留独立归属。ECC Sizer 发布版的实例排除与全局门禁无法表达逐实例目标配对，可作为原生提议参考。两条均尚未执行新的物理对照。 [AuDoPEDA 作者论文](https://arxiv.org/html/2601.06268v2#S4.SS3) · [作者补丁](https://github.com/ABKGroup/AuDoPEDA/blob/d396422e27496b6836ecbc7229edff33f642525c/diffs/pwr/OpenROAD_pwr.patch#L308-L328) · [ECC Sizer 发布版](https://github.com/openecos-projects/ecc-sizer/releases/tag/v0.1.0-alpha.1)
+2026-11-27 补做 AuDoPEDA 功耗恢复首轮排序投影。保持 40 ns 处理器的共同目标、固定三门、720 s 和后端，原灵敏度／功耗乘 Setup 裕量排序终态回收分别为 91.3376／43.7920 µm²，6 次完成中分别验收 4／2 次。该例形成了同池同后端的现代外部排序对照。全局布线原生算法、跨设计迁移和先进学习方法的共域测评仍开放。ECC Sizer 发布版的实例排除与全局门禁无法表达逐实例目标配对，可作为原生提议参考。 [对照证据](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器同池同后端的外部排序对照) · [AuDoPEDA 作者论文](https://arxiv.org/html/2601.06268v2#S4.SS3) · [ECC Sizer 发布版](https://github.com/openecos-projects/ecc-sizer/releases/tag/v0.1.0-alpha.1)
 
 AES 现行在线后端已完成正反序原序单门对照和独立的后端交叉对照。同端点的诊断收益成立于 AES，候选调度的回收收益仍混合批宽、失败处理和排序。ASAP7 UART 已在原约束下完成三法正反序，在线固定、单门、FAECO 两序各回收 0.23328、0.17496、0.14580 µm²。UART 实际 36 次在线诊断均无 marker 或重试，因此仍需在出现诊断事件的独立设计估算净收益。下一层包括同后端灵敏度单门、固定批宽、同数量几何邻网放行和独立 SKY130HD 非 AES 设计，保留零回收和时窗删失。中英文工作稿均补至已核验的 UART 结果。[TCAD 成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md) · [UART 六臂](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
 
@@ -1860,7 +1860,7 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 
 复现中已推进 R3-1 的已布线端点 STA。两套代码路径和独立根上的六视图分别全部重放成功。同主机的范围内，已验 ODB／SPEF、库角和工具路径可映射。跨主机与全流程物理重建仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
 
-V4 资源补证已覆盖 40 ns 处理器的自然结束与时窗截停两臂，核验进程树 CPU、scope 内存高水位和独立读者读到进度、完成文件验证的实际时间。跨设计整棵进程树资源、重复方差和外层硬截止仍开放。 [V4 补证](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)
+V4 资源补证覆盖 40 ns 处理器的自然结束与时窗截停两臂，也补齐小 UART 与两项最大网数代表双 AES 的阶段资源。已核验进程树 CPU、scope 内存高水位、实际读档与返回时刻。跨设计稳定速度、重复方差和外层硬返回接口仍待验证。 [处理器 V4](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取) · [三项阶段资源](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#小-uart-与两项最大代表设计的阶段资源)
 
 ## OI-114（2026-11-27，闭合）— 近临界 STA 复验缺顶层运行时绑定
 
