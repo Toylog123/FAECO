@@ -17,10 +17,11 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 图 3 已交付面积轨迹及历史默认探针 | [数据图生成器](../../../paper/zh/figures/tcad_20261126/generate_tcad_figures_v4_zh.py) · [历史 Hybrid 收据](../tcad_v4_revision_20261126/HYBRID_FAECO_4DESIGNS_VERIFIED.json) · [UART 墙钟](../tcad_wallclock_schedule_20261125/REPORT.md) |
 | 图 4 放行策略、部件、批宽与历史参数 | [邻网归因](../tcad_geo_neighbor_20261125/AES_GEO_VS_ONLINE_VERIFIED.json) · [2×2 后端交叉](../tcad_ibex_20261123/AES_FACTORIAL_REPORT.md) · [窗口消融](../tcad_v4_revision_20261126/WINDOWED_ABLATION_VERIFIED.json) · [批宽、池规模和 UART-TC](../tcad_v4_revision_20261126/TIMING_CLOSED_DRC_SENS_VERIFIED.json) |
 | 图 5 窗口化诊断、历史 56 标记与 7 nm 37 个注入标记 | [窗口对照](../tcad_boxed_drc_20261126/BOXED_DRC_VERIFIED.json) · [历史回放](../tcad_boxed_drc_20261126/BOXED_DRC_RECALL_AUDIT.json) · [V5 Stage 1](V5_STEP1_POWER_7NM_DET_VERIFIED.json) · [LEF 和检查器作用域](WINDOW_RULE_SCOPE.md) |
-| Hold 容差离线变化 | [既有试探计数与离线重判入口](../tcad_v4_revision_20261126/audit_hold_tolerance_and_table9.py)；以有时序收据的完成试探为计数单位，允许不同请求来自同一参考和试验臂 |
+| Hold 容差离线变化 | [既有试探计数与离线重判入口](../tcad_v4_revision_20261126/audit_hold_tolerance_and_table9.py)。UART 的 8 臂共有 200 份收据，排除 2 份预检和 62 份不具完整三视图的记录，余 136 次完成评估、62 个不同累计动作集。按请求计数，允许同一动作从不同臂进入。 |
 | 去重、原生对照资格、在线 Setup 调节 | [Stage 2](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) · [Stage 3](V5_STEP3_MULTIBUDGET_VERIFIED.json) |
 | 双 AES 同协议探针 | [Stage 4](V5_STEP4_PROBE_SENS_VERIFIED.json)；原件包对应 `phase1_probe` 与 `phase2_fallback` |
 | 独立处理器参考与三臂 | [10 ns 资格](V5_STEP5_TC10NS_QUALIFICATION.json) · [40 ns 资格](V5_STEP5_TC40NS_MMMC_QUALIFICATION.json) · [40 ns 电气护栏资格](V5_STEP5_TC40NS_MMMC_DRV_QUALIFICATION.json) · [Stage 5](V5_STEP5_10K_TIMING_CLOSED_TC40NS_MMMC_DRV_VERIFIED.json) |
+| 同起序批宽、470.5 ps 零下限、资源与清理时间 | [审稿补证](REVIEW_SUPPLEMENT.md) · [同起序批宽收据](V5_REVIEW_MATCHED_BATCH_VERIFIED.json) · [近临界 STA 收据](V5_REVIEW_SETUP_FLOOR_VERIFIED.json) · [补证原件包](V5_REVIEW_SUPPLEMENT_ORIGINALS.zip) |
 
 ## 主要对照协议
 

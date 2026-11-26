@@ -27,7 +27,16 @@ CORNERS = ("FF", "TT", "SS")
 TOLERANCE_PS = 0.001
 WINDOW_S = 720.0
 ARCHIVE = "V5_REVIEW_ORIGINALS.zip"
+ARCHIVE_SHA = "eec4d4bdc4911ec42aa31cb874c0fb9a1ebfa4a11508a19573858f9137d3237f"
 COLLECTED_ROOT = PurePosixPath("/home/toylog")
+REVIEW_ORIGINALS = "V5_REVIEW_SUPPLEMENT_ORIGINALS.zip"
+REVIEW_BATCH = "V5_REVIEW_MATCHED_BATCH_VERIFIED.json"
+REVIEW_FLOOR = "V5_REVIEW_SETUP_FLOOR_VERIFIED.json"
+REVIEW_HASHES = {
+    REVIEW_ORIGINALS: "b5b94043223ad269ec735ceea32ab2fa4ea5b96efe08868bce900e8f36d4e712",
+    REVIEW_BATCH: "e9f21fe328687694202d9c18220b3489c08a5def3c649f5765ccd56e331d0e64",
+    REVIEW_FLOOR: "c6d17dc273a693cc0666ef97c77f24336ee9feebb026f830de7ce13c0d91b4df",
+}
 
 
 def require(condition, message):
@@ -49,6 +58,17 @@ def original(archive, binding):
     check_bytes(data, binding["sha256"], name)
     require(len(data) == binding["bytes"], f"size mismatch: {name}")
     return data
+
+
+def check_raw_sta(text, view, label):
+    values = dict(re.findall(
+        r"^IBEX_(SETUP|HOLD|TNS|HOLD_TNS)_PS ([^\s]+)$", text, re.MULTILINE,
+    ))
+    metrics = {"SETUP": "setup_wns_ps", "HOLD": "hold_wns_ps",
+               "TNS": "setup_tns_ps", "HOLD_TNS": "hold_tns_ps"}
+    require(set(values) == set(metrics)
+            and all(equals(view[key], float(values[name])) for name, key in metrics.items()),
+            f"STA log and physical receipt disagree: {label}")
 
 
 def check_archive(archive):
@@ -115,7 +135,7 @@ def checkpoints(stage, label, row, records):
     auc = (integral + (WINDOW_S - last_time) * area) / WINDOW_S
     require(equals(area, row["qualified_area_saved_um2"]), f"terminal area mismatch: {label}")
     require(equals(auc, row["anytime_auc_um2"]), f"mean recovery mismatch: {label}")
-    terminal_time = f"{last_time:.3f}" if area else "—"
+    terminal_time = f"{last_time:.3f}" if area else "-"
     print(f"Stage {stage}: {label:28} {area:10.5f} {auc:10.6f} {terminal_time:>9}")
 
 
@@ -192,15 +212,7 @@ def check_processor(archive, stage):
                 view = physical["views"][corner]
                 base = qualification["views"][corner]
                 sta_log = PurePosixPath(physical["operations"][f"STA_{corner}"]["log"]).relative_to(COLLECTED_ROOT)
-                values = dict(re.findall(
-                    r"^IBEX_(SETUP|HOLD|TNS|HOLD_TNS)_PS ([^\s]+)$",
-                    archive.read(sta_log.as_posix()).decode(), re.MULTILINE,
-                ))
-                metrics = {"SETUP": "setup_wns_ps", "HOLD": "hold_wns_ps",
-                           "TNS": "setup_tns_ps", "HOLD_TNS": "hold_tns_ps"}
-                require(set(values) == set(metrics)
-                        and all(equals(view[key], float(values[name])) for name, key in metrics.items()),
-                        f"STA log and physical receipt disagree: {label}/{corner}")
+                check_raw_sta(archive.read(sta_log.as_posix()).decode(), view, f"{label}/{corner}")
                 require(all(view[key] == value for key, value in point["views"][corner].items())
                         and view["setup_wns_ps"] >= 0 and view["hold_wns_ps"] >= 0
                         and view["setup_tns_ps"] == view["hold_tns_ps"] == 0
@@ -220,16 +232,100 @@ def check_processor(archive, stage):
     print("Stage 5: 12 checkpoints checked against raw timing, DRC, antenna, and SEC records; same-area ODB/DEF/V hashes match")
 
 
+def check_review_batch(archive, batch):
+    protocol = json.loads(original(archive, batch["protocol"]))
+    require(protocol["pool_size"] == 18 and protocol["verification_horizon_s"] == WINDOW_S
+            and protocol["batch_widths"] == {"fixed": 3, "single": 1}
+            and not protocol["probe"] and not protocol["adaptive_feedback"] and not protocol["candidate_result_cache"],
+            "matched batch protocol changed")
+    arms = batch["arms"]
+    require(arms["single"]["order"] == arms["fixed"]["order"], "different initial rankings")
+    for label, row in arms.items():
+        ranking = json.loads(original(archive, row["ranking"]))
+        points = row["accepted_checkpoints"]
+        require(ranking["ordered_action_ids"] == row["order"], f"unbound ranking: {label}")
+        checkpoints("review", label,
+                    {"qualified_area_saved_um2": row["area_um2"], "anytime_auc_um2": row["time_average_um2"]},
+                    ({"elapsed_s": p["elapsed_s"], "area_saved_um2": p["area_um2"]} for p in points))
+        for point in points:
+            physical = json.loads(original(archive, point["physical"]))
+            proof = json.loads(original(archive, point["sec"]))
+            drc = json.loads(original(archive, point["drc"]))
+            require(not physical["failures"] and physical["actions"] == point["actions"]
+                    and drc["drc_markers"] == 0 and proof["passed"] and proof["proven"] == 11089
+                    and proof["unproven"] == 0 and proof["gate"] == physical["artifacts"]["v"],
+                    f"unqualified matched-batch result: {label}")
+    progress = json.loads(original(archive, arms["single"]["progress"]))
+    first_single = progress["logical_requests"][0]
+    first_fixed = arms["fixed"]["accepted_checkpoints"][0]
+    require(first_single["failures"] == ["SS:hold_regression"]
+            and set(first_single["actions"]) < set(first_fixed["actions"]),
+            "paired single rejection and containing batch acceptance disagree")
+
+
+def check_review_floor(archive, floor):
+    protocol = json.loads(original(archive, floor["protocol"]))
+    source = original(archive, protocol["source_sdc"]).decode()
+    adjusted = original(archive, protocol["analyzed_sdc"]).decode()
+    expected, count = re.subn(r"(?m)^(create_clock -name (?:clk|vclk_clk) -period )500\.0\b",
+                              r"\g<1>470.5", source)
+    require(adjusted == expected and count == 2 and equals(protocol["relative_setup_loss_ps"], 4.705),
+            "the near-closed SDC differs by more than the two prescribed clock periods")
+    for label, views in floor["views"].items():
+        for corner, view in views.items():
+            data = original(archive, floor["sta_logs"][label][corner])
+            check_raw_sta(data.decode(), view, f"{label}/{corner}")
+    control = floor["views"]["reference"]
+    trial = floor["views"]["candidate"]
+    require(all(v["setup_wns_ps"] >= 0 and v["hold_wns_ps"] >= 0
+                and all(not names for names in v["electrical"].values()) for v in control.values())
+            == floor["reference_qualified"], "reference eligibility mismatch")
+    require(all(control[c]["ports"] == trial[c]["ports"] for c in CORNERS), "UART port sets changed")
+    comparable = True
+    zero_floor = True
+    budget = protocol["relative_setup_loss_ps"]
+    for corner in CORNERS:
+        base, view = control[corner], trial[corner]
+        tns_allowance = max(10 * budget, 0.01 * abs(base["setup_tns_ps"]))
+        comparable &= (
+            view["setup_wns_ps"] >= base["setup_wns_ps"] - budget - TOLERANCE_PS
+            and view["setup_tns_ps"] >= base["setup_tns_ps"] - tns_allowance - TOLERANCE_PS
+            and view["hold_wns_ps"] >= max(0, base["hold_wns_ps"] - TOLERANCE_PS)
+            and view["hold_tns_ps"] >= base["hold_tns_ps"] - TOLERANCE_PS
+            and not any(view["electrical"].values())
+        )
+        zero_floor &= view["setup_wns_ps"] >= 0
+    require((comparable == (not floor["relative_reasons"]))
+            and ((comparable and zero_floor) == (not floor["absolute_reasons"]))
+            and ((floor["reference_qualified"] and comparable and not zero_floor) == floor["gates_split"]),
+            "relative and absolute timing decisions cannot be reproduced")
+    print(f"Review: SS WNS {control['SS']['setup_wns_ps']:+.6f} -> {trial['SS']['setup_wns_ps']:+.6f} ps, "
+          f"relative={floor['relative_reasons']}, absolute={floor['absolute_reasons']}")
+
+
+def check_review():
+    data = {}
+    for name, digest in REVIEW_HASHES.items():
+        data[name] = (EVIDENCE / name).read_bytes()
+        check_bytes(data[name], digest, name)
+    with ZipFile(EVIDENCE / REVIEW_ORIGINALS) as archive:
+        check_archive(archive)
+        check_review_batch(archive, json.loads(data[REVIEW_BATCH]))
+        check_review_floor(archive, json.loads(data[REVIEW_FLOOR]))
+
+
 def main():
     stages = {}
     for step, filename in NAMES.items():
         data = (EVIDENCE / filename).read_bytes()
         check_bytes(data, SHA256[step], filename)
         stages[step] = json.loads(data)
-    with ZipFile(EVIDENCE / ARCHIVE) as archive:
+    archive_path = EVIDENCE / ARCHIVE
+    check_bytes(archive_path.read_bytes(), ARCHIVE_SHA, ARCHIVE)
+    with ZipFile(archive_path) as archive:
         check_archive(archive)
         check_diagnosis(archive, stages[1])
-        print(f"{'stage and arm':37} {'area (um²)':>10} {'mean (um²)':>10} {'at (s)':>9}")
+        print(f"{'stage and arm':37} {'area (um^2)':>11} {'mean (um^2)':>11} {'at (s)':>9}")
         check_native(stages[2])
         for step, key in ((2, "uart_dedup_ablation"), (3, "runs"), (4, "runs")):
             require(len(stages[step][key]) == (2 if step == 2 else 8), f"Stage {step} arm inventory")
@@ -237,6 +333,7 @@ def main():
                 checkpoints(step, label, row, (item for item in row["checkpoints"] if item["accepted"]))
         check_probes(archive, stages[4])
         check_processor(archive, stages[5])
+    check_review()
 
 
 if __name__ == "__main__":

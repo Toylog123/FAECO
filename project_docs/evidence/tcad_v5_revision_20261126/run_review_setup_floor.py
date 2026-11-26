@@ -7,6 +7,7 @@ import re
 from types import SimpleNamespace
 
 from run_v5_step5_10k_timing_closed import STA, cmp, strict_timing_failures
+from run_screened_matrix import bind_runtime
 
 
 HOME = Path("/home/toylog")
@@ -80,15 +81,15 @@ def main():
     if args.prepare_only:
         print("Both original physical states, five libs per corner, and the two-clock change are bound")
         return
-    cmp.TOP = "uart"
     sta_args = SimpleNamespace(sta=STA, sta_timeout=15.0, report_setup_endpoints=True)
     views, operations, logs = {}, {}, {}
-    for name, netlist, spef in (("reference", golden, control_spef), ("candidate", candidate, candidate_spef)):
-        target = out / name
-        target.mkdir()
-        operations[name] = {}
-        views[name] = cmp.describe_sta(sta_args, libraries, netlist, sdc, spef, target, operations[name])
-        logs[name] = {corner: cmp.bind(target / f"sta_{corner}.log") for corner in cmp.CORNERS}
+    with bind_runtime("uart", None):
+        for name, netlist, spef in (("reference", golden, control_spef), ("candidate", candidate, candidate_spef)):
+            target = out / name
+            target.mkdir()
+            operations[name] = {}
+            views[name] = cmp.describe_sta(sta_args, libraries, netlist, sdc, spef, target, operations[name])
+            logs[name] = {corner: cmp.bind(target / f"sta_{corner}.log") for corner in cmp.CORNERS}
     base, result = views["reference"], views["candidate"]
     clean_reference = all(v["setup_wns_ps"] >= 0 and v["hold_wns_ps"] >= 0
                           and not any(v["electrical"].values()) for v in base.values())
