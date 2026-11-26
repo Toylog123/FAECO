@@ -1,5 +1,9 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 Stage 5 独立参考已获完整资格
+
+- 40 ns 带电气裕量的 `riscv32i` 独立重建通过三角 Setup／Hold、电气、DRC、天线与参考 SEC 自检。FF／TT／SS Setup WNS 为 +31.551／+29.021／+6.842 ns，Hold WNS 为 +0.386／+0.596／+1.925 ns，六项 TNS 为零。I/O 保持 65 个非时钟输入、99 个输出以及绝对 2 ns 延时，最终导出 SDC 与前一 40 ns 实现逐字节一致。参考包含 5,456 个功能单元，面积 69,750.6464 µm²，按 TT `nand2_1` 折合约 18,582 个 NAND2 等效门。Stage 5 预检已绑定 40,000 ps 冻结周期和 400 ps 相对 Setup 预算。三个同窗候选臂在双 AES 0 s 对照之后等待同一 EDA 锁。[参考资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC40NS_MMMC_DRV_QUALIFICATION.json) · [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+
 ## 2026-11-27 Stage 4 两设计六个正探针预算完成
 
 - ASAP7 AES 的 60／120／240 s 全池探针均达到子预算，前两档截停于 DRT，240 s 档截停于 RCX。回退合格面积依次为 0.61236／0.61236／0.30618 µm²，AUC 为 0.208023／0.158731／0.064844 µm²。SKY130HD AES 的 240 s 探针则完整交付 18 项。六个新测臂收据 SHA-256 `63f13fd71ed84954246f4b13ce35064f11d4ec0f5558e4839ef6a9e390b5b763`。双 AES 同协议 0 s 对照排队，作为回退性能的直接比较。[Stage 4 收据](evidence/tcad_v5_revision_20261126/V5_STEP4_PROBE_SENS_VERIFIED.json)
