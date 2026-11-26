@@ -228,6 +228,7 @@ def checked_commit(reference, row, requests, evaluator):
 
 def run_arm(runner, reference, arm, expected_rank, ref_power):
     name = STRATEGIES[arm]
+    runner.eval.args.out = runner.output
     print(f'[Stage 5] {arm} from {runner.output}', flush=True)
     summary, reuse = run_aligned_strategy(runner, name, reference, expected_rank, qualified.matrix.run_strategy)
     data = runner.output / summary['method']

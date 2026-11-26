@@ -1843,3 +1843,7 @@ Stage 4 接手版 0 s 导入 AUC 为硬编码正序四舍五入值。直接积�
 Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收集非时钟输入；导出后核对所有预期非时钟输入与输出的 2 ns 延迟、实际/虚拟时钟、独立三角时序及物理资格。若完整约束使 10 ns 起点无法闭合，保留实测失败分类和完整 I/O 约束；样本资格继续待解决。原 6 ns 数据保留其实际约束口径。[新实验登记](evidence/EXPERIMENT_REGISTRY.md#tcad-v5-revision-suite-续跑预登记)
 
 同一次源路径核查发现旧 ORFS 将 SDC 的 ns 数值 6.0 直接传入以 ps 计的 ABC 目标。旧生成 clock_period.txt 为 6.0，原 Yosys 日志明确为 ABC -D 6.0。新独立构建将映射目标显式设为 10000 ps，并核验构建产物 clock_period.txt。该修正与完整 I/O 同为新起点的预登记条件。独立构建已启动，实际新 clock_period.txt 显示 10000；最终 10 ns SDC 已验证所有 65 个非时钟输入与 99 个输出均附 2 ns 延迟。旧约束与 ABC 问题在新构建的配置修正通过。独立严格时序收敛仍受 OI-109 的 SS Setup/Hold 失败限制。
+
+## OI-112（2026-11-27，限定闭合）— Stage 5 阶段切换时的评价器输出根
+
+共享零动作原件通过后，Stage 5 的第一臂切至 arms/single_boxed/attempt_01，前端 runner.output 已改变，底层 runner.eval.args.out 仍为 runner/attempt_01。窗口预检后，Evaluator.evaluate 以旧根对当前试验路径做 relative_to 计算失败。实际初臂原件与搜索协议已留，阶段进度没有完成臂。统一本臂前端与评价器输出根，并用真实冻结参考复验。实验身份包含驱动文件散列，修复后的筛选和零动作写到独立尝试；合格参考无需重建。共同 run_arm 入口单行对齐后，三种真实路径的离线回归通过，初次四标记按清单无损保全（SHA-256 2296c5fbf438477fef787630ec7f68ca348e57df3723134c74c39ae1bbca3d9e）。修复后重跑的 single_boxed/attempt_02 首个实际候选完成 DRT/RCX、三角 STA、独立 DRC/天线及 SEC，候选原件 SHA-256 08b11cbac5274a3e2c1fc323cb4da52f8984c89544ce9d68ea79b8554515ce92。路径实现闭合，三臂完整结果仍待。
