@@ -1,6 +1,6 @@
 # 行为准则
 
-> **2026-11-26 V5 实跑接手入口**：先读 [V5 执行交接](project_docs/HANDOFF_2026-11-26_V5_EXEC.md)（Stage 1 已完成、Stage 2 部分完成、Stage 3/4/5 待跑，含续跑命令与必查项）与 [CANON](project_docs/CANON.md) 顶部新增的实跑口径。V5 论文修订清单见 [HANDOFF_2026-11-26_V5.md](project_docs/HANDOFF_2026-11-26_V5.md) 第 4 节。
+> **2026-11-27 V5 当前接手入口**：先读 [CANON](project_docs/CANON.md)、[终版模拟复审](paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) 与 [证据复算](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。Stage 1–5、两项评审补证及13页中文稿的科学小修核验已完成。正式英文 IEEE 投稿包待作者确认。原实跑中断点与续跑命令见 [V5 执行交接](project_docs/HANDOFF_2026-11-26_V5_EXEC.md)。
 
 > **2026-11-25 当前接手入口**见 [交接](project_docs/HANDOFF_2026-11-25.md) 和 [CANON](project_docs/CANON.md)。当前任务是面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。先核对现行证据、未决项与下一轮实验顺序。以下 11 月 13 日的三条状态作历史溯源。
 

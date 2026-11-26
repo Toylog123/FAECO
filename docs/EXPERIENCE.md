@@ -3606,3 +3606,11 @@ SKY130HD `riscv32i` 的六臂对照中，强单门在纯墙钟下取得最高回
 ## 2026-11-27 — 轮换比较臂时同时绑定评估产物的根目录
 
 Stage 5 的共享零动作资格在 runner 目录成功，首个单门实验切换到独立臂目录后，评价器仍用旧 runner 根计算相对路径，因而在候选物理评估前退出。离线夹具复现该异常，统一在臂入口同步两个目录后覆盖三种派发模式。原合格参考旧协议与关闭前日志保留，以新驱动重新绑定筛选、零动作和在线协议。真实首候选完成 DRT／RCX、DRC、三角时序和 SEC 4559/0，回收 8.7584 µm²。路径修复的验收可与三臂科学结果分别追溯。[Stage 5 报告](../project_docs/evidence/tcad_v5_revision_20261126/REPORT.md)
+
+## 2026-11-27 — 独立脚本需复用顶层运行时绑定
+
+直接写时序脚本中的 `link_design uart` 只绑定了 Tcl 顶层，STA 包装程序仍独立检查环境变量。470.5 ps 补测首次由包装器在 STA 前退出。复用 `bind_runtime` 同时绑定 Tcl、环境与时钟后，以同输入在新目录取得六份三角 STA，旧失败原件保留。[审稿补测](../project_docs/evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)
+
+## 2026-11-27 — 清洁证据复算按归档字节和命令行环境验收
+
+Windows Git 的自动换行转换会改变已冻结 JSON 的 SHA，即使 Git blob 正确。将这些收据显式设为 `-text`，用启用自动 CRLF 的新归档测试。命令行采用 ASCII 表头，避免 GBK 重定向报错。原 ZIP 的内部索引可被同一次篡改更新，故外层同时固定 ZIP SHA，再检查每个成员。对清洁包和篡改包分别测成功与非零退出。[离线复算脚本](../project_docs/evidence/tcad_v5_revision_20261126/verify_review_evidence.py)

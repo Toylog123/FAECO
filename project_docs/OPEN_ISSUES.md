@@ -1849,3 +1849,13 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 ## OI-112（2026-11-27，限定闭合）— Stage 5 阶段切换时的评价器输出根
 
 共享零动作原件通过后，Stage 5 的第一臂切至 arms/single_boxed/attempt_01，前端 runner.output 已改变，底层 runner.eval.args.out 仍为 runner/attempt_01。窗口预检后，Evaluator.evaluate 以旧根对当前试验路径做 relative_to 计算失败。实际初臂原件与搜索协议已留，阶段进度没有完成臂。统一本臂前端与评价器输出根，并用真实冻结参考复验。实验身份包含驱动文件散列，修复后的筛选和零动作写到独立尝试；合格参考无需重建。共同 run_arm 入口单行对齐后，三种真实路径的离线回归通过，初次四标记按清单无损保全（SHA-256 2296c5fbf438477fef787630ec7f68ca348e57df3723134c74c39ae1bbca3d9e）。修复后重跑的 single_boxed/attempt_02 首个实际候选完成 DRT/RCX、三角 STA、独立 DRC/天线及 SEC，候选原件 SHA-256 08b11cbac5274a3e2c1fc323cb4da52f8984c89544ce9d68ea79b8554515ce92。路径实现闭合，三臂完整结果仍待。
+
+后续三臂全部通过收据与终态复核，未再出现输出根错配。[Stage 5 最终收据](evidence/tcad_v5_revision_20261126/V5_STEP5_10K_TIMING_CLOSED_TC40NS_MMMC_DRV_VERIFIED.json)
+
+## OI-113（2026-11-27，open）— TCAD 英文投稿与正式材料
+
+13 页 V5 中文稿通过内部小修核验。正式英文 IEEE 稿、修回篇幅、作者与 ORCID 以及图 2 的具体工具出处待作者确认。图 1 有 `image-generator` 项目记录，图 2 的图件记录仅明确同批视觉体系。当前文字按可证实的出处披露。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。[终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
+
+## OI-114（2026-11-27，闭合）— 近临界 STA 复验缺顶层运行时绑定
+
+470.5 ps 补测首次已核输入身份，首个 FF 调用因 STA 包装器未收到 `FAECO_DESIGN_TOP` 退出，未产生可用 STA 读数。保留首次日志和协议。复用既有 `bind_runtime("uart", None)`，在新目录以同一输入复跑；六视图的日志和门槛决定全部复算一致。修复只影响调用，未改周期或验收规则。[补证报告](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)

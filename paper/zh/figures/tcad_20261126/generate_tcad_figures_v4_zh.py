@@ -47,7 +47,7 @@ mpl.rcParams.update({
     "axes.labelsize": 7.3,
     "xtick.labelsize": 6.6,
     "ytick.labelsize": 6.6,
-    "legend.fontsize": 6.0,
+    "legend.fontsize": 6.2,
     "axes.spines.right": False,
     "axes.spines.top": False,
     "axes.linewidth": 0.75,
@@ -172,7 +172,7 @@ def build_fig3_anytime_v4_zh() -> None:
                 ("固定微批次", uart_pts("fixed_online"), C_FIXED, ":", 1.4),
                 ("原生/LR 未交付", [], C_FAIL, "-", 1.1),
             ],
-            "note": (705, 0.86, "0.831 µm² (70.4% 池)\n双模式终态一致"),
+            "note": (705, 0.86, "0.831 µm²\n双模式终态一致"),
             "note_col": C_HERO,
             "leg_loc": "upper left",
             "leg_anchor": (0.12, 0.98),
@@ -198,7 +198,7 @@ def build_fig3_anytime_v4_zh() -> None:
         ax = p["ax"]
         ax.axvspan(0, p["screen"], color=C_SHADE, zorder=0)
         ax.text(p["screen"] * 0.5, p["ymax"] * 0.96, "预筛", ha="center", va="top",
-                fontsize=5.7, color="#64748B")
+                fontsize=6.2, color="#64748B")
         for name, pts, col, ls, lw in p["series"]:
             xs, ys = step_curve(pts, 720.0)
             ax.plot(xs, ys, color=col, linestyle=ls, linewidth=lw, label=name,
@@ -213,7 +213,7 @@ def build_fig3_anytime_v4_zh() -> None:
             ax.set_xlabel("含公共预筛的墙钟时间 (s)")
         ax.legend(loc=p["leg_loc"], bbox_to_anchor=p["leg_anchor"], handlelength=1.55, labelspacing=0.20, borderaxespad=0.1)
         nx, ny, ntxt = p["note"]
-        ax.text(nx, ny, ntxt, fontsize=5.8, color=p["note_col"], fontweight="bold", ha="right", va="bottom", linespacing=1.32)
+        ax.text(nx, ny, ntxt, fontsize=6.2, color=p["note_col"], fontweight="bold", ha="right", va="bottom", linespacing=1.32)
 
         ax2 = ax.twinx()
         ax2.spines["top"].set_visible(False)
@@ -246,12 +246,12 @@ def build_fig4_ablation_v4_zh() -> None:
     for b, v, lbl in zip(bars1, ss_hold, ["拒收\n−10.48 ps", "拒收\n−10.48 ps", "通过\n+0.88 ps"]):
         if v < 0:
             ax.text(b.get_x() + b.get_width() / 2, v - 0.55, lbl, ha="center", va="top",
-                    fontsize=5.8, fontweight="bold", color=C_FAIL)
+                    fontsize=6.2, fontweight="bold", color=C_FAIL)
         else:
             ax.text(b.get_x() + b.get_width() / 2, v + 0.45, lbl, ha="center", va="bottom",
-                    fontsize=5.8, fontweight="bold", color=C_HERO)
+                    fontsize=6.2, fontweight="bold", color=C_HERO)
     ax.set_xticks(x1)
-    ax.set_xticklabels(b_cats, fontsize=5.7)
+    ax.set_xticklabels(b_cats, fontsize=6.2)
     ax.set_ylim(-14.6, 4.5)
     ax.set_ylabel("慢角保持时间变化 (ps)")
     ax.set_title("同三门提议邻网放行消融", loc="left", fontsize=7.2, fontweight="bold", pad=6)
@@ -279,15 +279,15 @@ def build_fig4_ablation_v4_zh() -> None:
     bars2 = ax.bar(x2, c_areas, width=0.56, color=c_cols, edgecolor="#334155", linewidth=0.5)
     for b, v, auc in zip(bars2, c_areas, c_aucs):
         ax.text(b.get_x() + b.get_width() / 2, v + 4.5, f"{v:.1f}\n({auc:.1f})",
-                ha="center", va="bottom", fontsize=5.55,
+                ha="center", va="bottom", fontsize=6.2,
                 fontweight="bold" if v > 80 else "normal",
                 color=C_HYBRID if v > 150 else (C_HERO if v > 80 else C_TEXT))
     ax.set_xticks(x2)
-    ax.set_xticklabels(c_cats, fontsize=5.65)
+    ax.set_xticklabels(c_cats, fontsize=6.2)
     ax.set_ylim(0, 248)
     ax.set_ylabel("720 s 合格面积 (µm²)")
-    ax.set_title("同窗口后端组件逐级消融", loc="left", fontsize=7.2, fontweight="bold", pad=6)
-    ax.text(0.03, 0.94, "括号内为时间平均收益", transform=ax.transAxes, fontsize=5.4, color="#475569", va="top")
+    ax.set_title("SKY130HD AES 历史调度配置", loc="left", fontsize=7.2, fontweight="bold", pad=6)
+    ax.text(0.03, 0.94, "括号内为时间平均收益", transform=ax.transAxes, fontsize=6.2, color="#475569", va="top")
     ax.text(-0.23, 1.12, "b", transform=ax.transAxes, fontsize=9.4, fontweight="bold", va="top")
 
     # Panel c: Batch width b sensitivity on ASAP7 UART (K=18, 1.0x H_row boxed DRC)
@@ -297,17 +297,16 @@ def build_fig4_ablation_v4_zh() -> None:
     s_area = [sens_v[k]["qualified_area_saved_um2"] for k in b_keys]
     s_auc = [sens_v[k]["anytime_auc_um2"] for k in b_keys]
     x3 = np.arange(len(bs))
-    ax.axvspan(0.55, 2.45, color="#ECFDF5", zorder=0)
     ax.plot(x3, s_area, marker="o", markersize=4.4, color=C_HERO, linewidth=1.7, label="终态合格面积")
     ax.plot(x3, s_auc, marker="s", markersize=4.0, color=C_HYBRID, linestyle="--", linewidth=1.5, label="时间平均收益")
-    ax.text(1.5, 1.03, "b=2,3 面积并列", ha="center", va="top", fontsize=5.6, color="#065F46", fontweight="bold")
+    ax.text(1.5, 1.03, "b=2,3 面积并列", ha="center", va="top", fontsize=6.2, color="#065F46", fontweight="bold")
     ax.set_xticks(x3)
     ax.set_xticklabels([str(b) for b in bs], fontsize=6.2)
     ax.set_xlabel("微批次宽度 b（K = 18）")
     ax.set_ylabel("面积 / 均值 (µm²)")
     ax.set_ylim(0.14, 1.09)
     ax.set_title("批宽参数敏感性 (UART)", loc="left", fontsize=7.2, fontweight="bold", pad=6)
-    ax.legend(loc="lower left", bbox_to_anchor=(0.02, 0.02), fontsize=5.6, handlelength=1.4, labelspacing=0.18)
+    ax.legend(loc="lower left", bbox_to_anchor=(0.02, 0.02), fontsize=6.2, handlelength=1.4, labelspacing=0.18)
     ax.text(-0.23, 1.12, "c", transform=ax.transAxes, fontsize=9.4, fontweight="bold", va="top")
 
     save_pub(fig, "fig4_ablation_v4_zh", check_alignment=True)
@@ -342,14 +341,10 @@ def build_fig5_boxed_scaling_v4_zh() -> None:
     ax.plot(sx, sb, marker="D", markersize=4.0, color=C_HYBRID, linestyle="-", linewidth=1.65, label="SKY130 130 nm 局部窗口 (1.0 倍行高)")
 
     ax.annotate("16.7×", xy=(1.0, ab[0] + 0.8), xytext=(2.2, 9.5),
-                fontsize=6.0, fontweight="bold", color=C_HERO,
+                fontsize=6.2, fontweight="bold", color=C_HERO,
                 arrowprops=dict(arrowstyle="->", color=C_HERO, lw=0.6))
-    ax.text(9.0, ab[4] + 2.0, "4.6×", ha="center", va="bottom", fontsize=6.0, fontweight="bold", color=C_HERO)
-    ax.text(17.5, ab[-1] + 2.0, "2.8×", ha="center", va="bottom", fontsize=6.0, fontweight="bold", color=C_HERO)
-    ax.text(11.0, 26.8, "56/56 标记精确匹配 (130 nm)\n全部回放邻居位移 = 0",
-            ha="center", va="center", fontsize=5.8, color="#065F46",
-            bbox=dict(boxstyle="round,pad=0.3", fc="#ECFDF5", ec="#10B981", lw=0.6))
-
+    ax.text(9.0, ab[4] + 2.0, "4.6×", ha="center", va="bottom", fontsize=6.2, fontweight="bold", color=C_HERO)
+    ax.text(17.5, ab[-1] + 2.0, "2.8×", ha="center", va="bottom", fontsize=6.2, fontweight="bold", color=C_HERO)
     ax.set_xlim(0.2, 19.2)
     ax.set_ylim(0, 52)
     ax.set_xticks([1, 3, 6, 9, 18])
@@ -357,7 +352,7 @@ def build_fig5_boxed_scaling_v4_zh() -> None:
     ax.set_ylabel("单次预检耗时 (s)")
     ax.set_title("单次预检延迟与跨规模加速", loc="left", fontsize=7.4, fontweight="bold", pad=6)
     ax.text(-0.14, 1.11, "a", transform=ax.transAxes, fontsize=9.4, fontweight="bold", va="top")
-    ax.legend(loc="center left", bbox_to_anchor=(0.03, 0.70), fontsize=5.7, labelspacing=0.18)
+    ax.legend(loc="center left", bbox_to_anchor=(0.03, 0.63), fontsize=6.2, labelspacing=0.18)
 
     ax = axes[1]
     sky_arms = boxed_v["sky130hd_aes"]["arms"]
@@ -382,21 +377,21 @@ def build_fig5_boxed_scaling_v4_zh() -> None:
     ax.bar(x[:2] + w / 2, box_vals[:2], width=w, color=C_HERO, edgecolor="#334155", lw=0.5, label="局部窗口 (1.0 倍行高)")
     ax.bar(x[2:], box_vals[2:], width=0.46, color=C_HYBRID, edgecolor="#334155", lw=0.5, label="墙钟提前量")
 
-    ax.text(0 - w / 2, full_vals[0] + 2.5, f"{full_vals[0]:.1f} s", ha="center", va="bottom", fontsize=5.8)
-    ax.text(0 + w / 2 + 0.08, box_vals[0] + 2.5, f"{box_vals[0]:.1f} s\n−72%", ha="center", va="bottom", fontsize=5.6, color=C_HERO, fontweight="bold")
-    ax.text(1 - w / 2, full_vals[1] + 2.5, f"{full_vals[1]:.1f} s", ha="center", va="bottom", fontsize=5.8)
-    ax.text(1 + w / 2 + 0.08, box_vals[1] + 2.5, f"{box_vals[1]:.1f} s\n−75%", ha="center", va="bottom", fontsize=5.6, color=C_HERO, fontweight="bold")
-    ax.text(2, box_vals[2] + 2.5, f"−{box_vals[2]:.1f} s\n(+46% 面积)", ha="center", va="bottom", fontsize=5.7, color="#065F46", fontweight="bold")
-    ax.text(3, box_vals[3] + 2.5, f"−{box_vals[3]:.1f} s\n(+1 批次)", ha="center", va="bottom", fontsize=5.7, color="#065F46", fontweight="bold")
+    ax.text(0 - w / 2, full_vals[0] + 2.5, f"{full_vals[0]:.1f} s", ha="center", va="bottom", fontsize=6.2)
+    ax.text(0 + w / 2 + 0.08, box_vals[0] + 2.5, f"{box_vals[0]:.1f} s\n−72%", ha="center", va="bottom", fontsize=6.2, color=C_HERO, fontweight="bold")
+    ax.text(1 - w / 2, full_vals[1] + 2.5, f"{full_vals[1]:.1f} s", ha="center", va="bottom", fontsize=6.2)
+    ax.text(1 + w / 2 + 0.08, box_vals[1] + 2.5, f"{box_vals[1]:.1f} s\n−75%", ha="center", va="bottom", fontsize=6.2, color=C_HERO, fontweight="bold")
+    ax.text(2, box_vals[2] + 2.5, f"−{box_vals[2]:.1f} s\n(+46% 面积)", ha="center", va="bottom", fontsize=6.2, color="#065F46", fontweight="bold")
+    ax.text(3, box_vals[3] + 2.5, f"−{box_vals[3]:.1f} s\n(+1 批次)", ha="center", va="bottom", fontsize=6.2, color="#065F46", fontweight="bold")
 
     ax.axvline(1.5, color="#CBD5E1", linestyle="--", linewidth=0.7)
     ax.set_xticks(x)
-    ax.set_xticklabels(groups, fontsize=5.8)
+    ax.set_xticklabels(groups, fontsize=6.2)
     ax.set_ylim(0, 138)
     ax.set_ylabel("墙钟时间 (s)")
     ax.set_title("720 s 累计开销削减与提速", loc="left", fontsize=7.4, fontweight="bold", pad=6)
     ax.text(-0.14, 1.11, "b", transform=ax.transAxes, fontsize=9.4, fontweight="bold", va="top")
-    ax.legend(loc="upper right", bbox_to_anchor=(0.99, 0.99), fontsize=5.7, labelspacing=0.18)
+    ax.legend(loc="upper right", bbox_to_anchor=(0.99, 0.99), fontsize=6.2, labelspacing=0.18)
 
     save_pub(fig, "fig5_boxed_drc_scaling_v4_zh", check_alignment=True)
 

@@ -1,11 +1,13 @@
 {
   "timestamp": "2026-11-27",
-  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。V5 Stage 1–5 实验结束，独立重建的 40 ns 多角严格参考上，固定微批次的终态面积与时间平均收益最高。中文稿进入修订、编译、模拟审稿及复审。进度与原件以 project_docs/CANON.md 和 project_docs/evidence/tcad_v5_revision_20261126/REPORT.md 为准。",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。V5 Stage 1–5 和同起序批宽、绝对 Setup 门槛两项审稿补证完成；13 页中文稿完成模拟审稿与小修核验。正式英文 IEEE 投稿包待作者确认。进度与原件以 project_docs/CANON.md 和 project_docs/evidence/tcad_v5_revision_20261126/REPORT.md 为准。",
   "project": "FAECO",
   "read_order": [
-    "project_docs/HANDOFF_2026-11-26_V5_EXEC.md",
     "project_docs/CANON.md",
+    "paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md",
+    "project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md",
     "project_docs/evidence/tcad_v5_revision_20261126/REPORT.md",
+    "project_docs/HANDOFF_2026-11-26_V5_EXEC.md",
     "project_docs/HANDOFF_2026-11-26_V5.md",
     "project_docs/HANDOFF_2026-11-25.md",
     "project_docs/evidence/tcad_v5_revision_20261126/README.md",
@@ -19,18 +21,18 @@
     "push_status": "query git status -sb and git ls-remote origin refs/heads/main"
   },
   "paper_state": {
-    "note": "中文主稿已完成 V4 大修全面升级（14 页双栏均衡，新题名 + 分类号 TN402，2 幅手绘风格机制示意图 + 3 幅收据直驱矢量数据图，12 表，算法 1 回归 §4.3，命题 1 正式证明与真实 LEF 逐层核验，Hybrid FAECO/同窗口消融/Timing-closed/参数敏感性全入稿，0 编译错误，0 Overfull，22/22 参考文献严格递增，14/14 全页视觉 QA 通过）；按用户要求暂不转译英文。",
+    "note": "V5 中文定稿为13页、5图、12表、24条参考文献。完成五席模拟审稿后的补测、返修和小修核验；LuaLaTeX双遍、全13页视觉核验和三个PDF副本同SHA。保留原模板字体替代提醒。英文摘要现印于中文稿，完整英文转译及IEEE投稿制式待作者确认。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "0d226ac2555559e2b004e0344de362bc3d95ec05de65defbc4e7af9a59dfc528",
-      "bytes": 92828,
-      "pages": 14
+      "sha256": "0e5a5cc956aa766c72ae7e0a9d8c281c585afa8b5c54f5883626c8674c36217a",
+      "bytes": 83535,
+      "pages": 13
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "328336e2a1a84adbe76ffc7fabd778823c3e715be2681428df3671c2819ba420",
-      "bytes": 1584511,
-      "pages": 14
+      "sha256": "051fe7471593fdb1abd7a44ce853fd74d69a487c15f9131c7481066cdef3b17b",
+      "bytes": 1555469,
+      "pages": 13
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
     "zh_archived_supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
@@ -62,8 +64,8 @@
     }
   },
   "next_steps": [
-    "按已核验的 V5 实验报告与收据更新中文稿，对齐时序门、探针子预算、严格参考及限制条件，再开展模拟审稿与复审。",
-    "实验完成并核实后，按 project_docs/HANDOFF_2026-11-26_V5.md §4 修订 V5 中文主稿及图表，双遍编译并逐页核对，然后落实模拟审稿与复审。"
+    "作者确认完整英文转译后，按 IEEE TCAD 作者指南核对论文模板、修回页数、ORCID、AI工具披露与提交材料。",
+    "保留 OI-105 与 OI-108 的强外部基线和共域可执行性边界。若需迁移验证，另登记物理输入和工具路径映射。"
   ],
   "records": {
     "canon_rulings": "\u00a71 \u88c1\u5b9a 15\uff08\u65b9\u5411\u8f6c\u6298\uff09/ 16\uff08P1 FAIL\uff09/ 17\uff08Hybrid FAIL\uff09/ 18\uff08P1\u2032 pre-CTS pilot PASS\uff09/ 19\uff08P1\u2032 post-CTS FAIL\uff09",
