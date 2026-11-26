@@ -23,10 +23,13 @@ taskset -c 0-5 python3 -B run_v5_step5_10k_timing_closed.py --reference-only
 
 # 独立 40ns 多角重建，使用单独的原件目录与总收据
 taskset -c 0-5 python3 -B run_v5_step5_10k_timing_closed.py --variant tc40ns_mmmc --reference-only
+
+# 相同约束下带电气裕量的独立重建
+taskset -c 0-5 python3 -B run_v5_step5_10k_timing_closed.py --variant tc40ns_mmmc_drv --reference-only
 ```
 
 Stage 2–4 的已完成键可续接。Stage 2B 区分实例不在冻结网表、触及受保护时钟网、工具超时以及完成物理评估后的通过或拒收。AES 额外报告排除时钟网动作后的数据网投影。Stage 4 的纯微批次与默认探针是历史参照，双 AES 新测子预算为 60、120、240 s。Stage 5 的完整流程保留真实 ORFS 合成时钟目标、全部 I/O 延时和三角资格，参考点未合格时停止候选搜索。
 
-10 ns 参考点已完成布线，SS Setup 与异步 reset removal 未达严格时序资格。[10 ns 资格收据](V5_STEP5_TC10NS_QUALIFICATION.json) 记录了该次结果。40 ns 配置在 TT／SS／FF 单元角上执行原生时序修复，两种配置的 I/O 延迟均为绝对 2 ns。只在参考点通过严格资格后去掉 `--reference-only`，启动三个在线比较臂。
+10 ns 参考点已完成布线，SS Setup 与异步 reset removal 未达严格时序资格。[10 ns 资格收据](V5_STEP5_TC10NS_QUALIFICATION.json) 记录了该次结果。40 ns 配置在 TT／SS／FF 单元角上执行原生时序修复，三个角的 Setup 和 Hold 均非负，TT 的一处引脚同时超过转换时间与负载电容上限。[40 ns 资格收据](V5_STEP5_TC40NS_MMMC_QUALIFICATION.json) 电气变体在原生全局布线中为 `repair_design` 加入 15% 电容裕量和 10% 转换时间裕量，三个配置的 I/O 延迟均为绝对 2 ns。参考点通过严格资格后可去掉 `--reference-only`，启动三个在线比较臂。
 
 详细交接、实验与审稿条目映射及跑完后的 V5 改稿清单见 [HANDOFF_2026-11-26_V5.md](../../HANDOFF_2026-11-26_V5.md)。

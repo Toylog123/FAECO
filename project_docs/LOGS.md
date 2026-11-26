@@ -8547,3 +8547,9 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - 40 ns 独立新构建 ORFS rc0、650.989 s。CTS/GRT 原始日志均实读三角 TT/SS/FF Liberty，并调用 setup_margin 0.5 / hold_margin 0.3 / repair_tns 100。CTS 原生找到 32 个 Hold 端点并插入 1 个保持缓冲。CTS/GRT 日志 SHA-256 分别为 5c1c09f633365453ad95fd0c6b7ea9ab85a5f75efee1ecae607475c293551247 和 225edf1922e3c770b02669d17a7a7dcccd0ff881b793974df7907b1bff5b8146。最终 65 个非时钟输入、99 个输出两向均为 2 ns，原生及独立 DRC/天线 0、参考 SEC 模型自检 4559/0。
 - 最终 FF/TT/SS Setup WNS +31520.415/+28980.889/+6615.689 ps，Hold WNS +396.757/+616.837/+1944.216 ps，全部 Setup/Hold TNS 为 0。功能网表 5458 单元、69,635.5360 µm²。资格状态 qualification_incomplete，只出现 TT:absolute_electrical：同一引脚 _3804_/Y 的最大转换时间与电容均违规。当前无候选臂。原始 TT 日志中 _3804_/Y 属 a2111oi_0 驱动，最大转换时间限制/实测 1.462190032/1.481687427 ns，最大电容限制/实测 0.021067001/0.022171792 pF。资格原件已同字节保全。[入仓副本](evidence/tcad_v5_revision_20261126/V5_STEP5_TC40NS_MMMC_QUALIFICATION.json) 收据 SHA-256 8dd1d882e908cdcf40d50807755d6dc7501c840ebb99e18b9401d8320700c586，构建收据 SHA-256 defdff3bef51d04d0b60340e74d5fcbe2af86cd2aebf110e84a7508591d0ba05。
 - 01:20:27 Stage 4 取得相同 EDA 锁，首先启动 SKY130HD AES 60 s 探针档。两设计六个新测臂，CPU 0–5、每臂 720 s，外壳 10000 s 并留 60 s 清理。Stage 3 八臂已完整推送 main，提交 fd7933aea50116052be6af194278e6f714c0bf94，远端同哈希已核。
+
+## LOG-20261127-10｜登记 40 ns 三角电气修复变体
+
+- 01:24 实查 tc40ns_mmmc_drv reference-only 等待 Stage 4 同一 EDA 锁。等锁 10150 s，实际外壳 3300 s，ORFS 构建 1800 s，CPU 0–5，独立根 /home/toylog/faeco_v5_step5_riscv32i_tc40ns_mmmc_drv_20261127_v1。参考脚本 SHA-256 a0c944308b3596f1ad241ae6c8b019a113e42b22dc10e90b231ba36aa63847a5，候选/CLI 脚本 SHA-256 d1fc0317f77832d804dcf8be9e596ccfb4a4a873ecae7ed368f0d94c094a379f。
+- 变体保留 40 ns 时钟、两向绝对 2 ns I/O、三角库、原 Setup/Hold 修复余量及完整验收门，明确在全局布线阶段强制原生 repair_design 的 cap_margin 15 与 slew_margin 10。保留两份原参考和资格结果。该变体当前待实跑，候选臂仍需严格完整资格。
+- 已推送上一 40 ns 三角参考的资格反证，main 提交 638561ebed2b37a6865e8a0d53d2bf3b913d073a，远端同哈希已核。

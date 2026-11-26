@@ -2,7 +2,7 @@
 """Build and qualify an independent Stage 5 reference before any candidate trials."""
 
 import argparse
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 import fcntl
 import os
 from pathlib import Path
@@ -65,6 +65,7 @@ class ReferenceVariant:
     corners: tuple[str, ...] = ()
     setup_margin_ns: float = 0.0
     hold_margin_ns: float = 0.0
+    drv_margins_pct: tuple[float, float] | None = None  # capacitance, slew
 
     @property
     def clock_ps(self):
@@ -81,7 +82,12 @@ class ReferenceVariant:
 DEFAULT_VARIANT = ReferenceVariant(VARIANT, OUT_ROOT, CLOCK_NS, 0.2)
 MMMC_VARIANT = ReferenceVariant('tc40ns_mmmc', OUT_ROOT.with_name('faeco_v5_step5_riscv32i_tc40ns_mmmc_20261126_v1'),
                                 40.0, 0.05, ('tt', 'ss', 'ff'), 0.50, 0.30)
-VARIANTS = {variant.name: variant for variant in (DEFAULT_VARIANT, MMMC_VARIANT)}
+MMMC_DRV_VARIANT = replace(
+    MMMC_VARIANT, name='tc40ns_mmmc_drv',
+    output_root=OUT_ROOT.with_name('faeco_v5_step5_riscv32i_tc40ns_mmmc_drv_20261127_v1'),
+    drv_margins_pct=(15.0, 10.0),
+)
+VARIANTS = {variant.name: variant for variant in (DEFAULT_VARIANT, MMMC_VARIANT, MMMC_DRV_VARIANT)}
 
 
 def render_source_sdc(source, variant=DEFAULT_VARIANT):
@@ -114,13 +120,17 @@ def source_semantics(source, variant=DEFAULT_VARIANT):
 def orfs_timing_options(variant):
     if not variant.corners:
         return []
-    return [
+    options = [
         'CORNERS=' + ' '.join(variant.corners),
         *[f'{corner.upper()}_LIB_FILES=' + ' '.join(variant.liberty_paths(corner)) for corner in variant.corners],
         'LIB_FILES=' + ' '.join(variant.liberty_paths('tt')),
         f'SETUP_SLACK_MARGIN={variant.setup_margin_ns:g}', f'HOLD_SLACK_MARGIN={variant.hold_margin_ns:g}',
         'SKIP_CTS_REPAIR_TIMING=0', 'SKIP_INCREMENTAL_REPAIR=0',
     ]
+    if variant.drv_margins_pct is not None:
+        cap, slew = variant.drv_margins_pct
+        options.extend((f'CAP_MARGIN={cap:g}', f'SLEW_MARGIN={slew:g}'))
+    return options
 
 
 def validate_native_timing_logs(logs, variant):
@@ -132,10 +142,18 @@ def validate_native_timing_logs(logs, variant):
     for stage, log in logs.items():
         seen = {}
         commands = []
+        drv_commands = []
+        require_drv = stage == 'grt' and variant.drv_margins_pct is not None
         for line in log.splitlines():
             if line.startswith('read_liberty -corner '):
                 _, _, corner, path = shlex.split(line)
                 seen.setdefault(corner, set()).add(path)
+            elif require_drv and line.startswith('repair_design '):
+                words = shlex.split(line)
+                applied = (margin(words, '-cap_margin'), margin(words, '-slew_margin'))
+                if seen != expected or applied != variant.drv_margins_pct or commands:
+                    raise ValueError('GRT did not dispatch the pinned capacitance/slew repair before timing repair')
+                drv_commands.append(line)
             elif line.startswith('repair_timing '):
                 words = shlex.split(line)
                 if (margin(words, '-setup_margin') == variant.setup_margin_ns
@@ -148,6 +166,10 @@ def validate_native_timing_logs(logs, variant):
             raise ValueError(f'{stage} did not log the required corner loads and setup/hold repair invocation')
         evidence[stage] = {'loaded_corner_paths': {key: sorted(value) for key, value in seen.items()},
                            'commands': commands}
+        if require_drv:
+            if not drv_commands:
+                raise ValueError('GRT did not record guarded capacitance/slew repair')
+            evidence[stage]['drv_commands'] = drv_commands
     return evidence
 
 
@@ -238,6 +260,16 @@ def build_reference(root, variant=DEFAULT_VARIANT):
         }
         initial['inputs'].extend(cmp.bind(ORFS / 'scripts' / name) for name in (
             'read_liberty.tcl', 'load.tcl', 'util.tcl', 'cts.tcl', 'global_route.tcl', 'final_outputs.tcl',
+        ))
+    if variant.drv_margins_pct is not None:
+        cap, slew = variant.drv_margins_pct
+        initial['repair_protocol']['drv_repair'] = {
+            'cap_margin_pct': cap, 'slew_margin_pct': slew,
+            'native_stages': ['placement resize', 'GRT before setup/hold repair'],
+            'qualification': 'all independent FF/TT/SS maximum capacitance and transition checks remain absolute',
+        }
+        initial['inputs'].extend(cmp.bind(ORFS / 'scripts' / name) for name in (
+            'non_stage_variables.py', 'variables.json', 'resize.tcl',
         ))
     if previous is not None:
         if previous != initial:
