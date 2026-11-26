@@ -3,7 +3,7 @@
 ## 2026-11-27 V5 中文定稿与模拟复审
 
 - 同起序 SKY130HD AES 批宽补证中，固定三门和单门分别回收 67.5648 与 33.7824 µm²，时间平均收益为 34.809579 与 12.623294 µm²。首个合格三门组合包含单独评估时因 SS Hold 被拒的一项。同终态面积的两个首达点不共享动作或物理产物。470.5 ps UART 原候选的 SS Setup WNS 从 +0.794642 降至 −0.568545 ps，相对门通过，绝对零下限拒收。[补证及资源记录](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)
-- 13 页中文定稿、5 图、12 表及 24 条参考文献通过内部模拟复审小修核验。图 1–2 的原始生成已追溯至 Google Antigravity `generate_image`，中文致谢据此更正并经双遍编译和末页复查。三份 PDF SHA-256 均为 `7fb37c1b55178c2e66f43e51e3c58bdb1ad5288d38701b8c61f44083a1150950`。正式英文 IEEE 包、作者资料与 ORCID 待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [英文投稿入口](../paper/en/README.md)
+- 13 页中文定稿、5 图、12 表及 25 条参考文献通过模拟复审及本轮补证的定向核验。图 1–2 的原始生成追溯至 Google Antigravity `generate_image`，已按确证更新致谢。三份 PDF SHA-256 均为 `7c3bddbcdcaf0b74653f7f3053925b2e9269551e20190690ab0d901549a55ebb`。正式英文 IEEE 包、作者资料与 ORCID 待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [英文投稿入口](../paper/en/README.md)
 - V5 离线复算绑定 297 份实验原件和 37 份审稿原件；Windows 清洁提取及篡改拒收已验证。完整 EDA 物理复跑需要恢复冻结输入和工具映射。跨设计稳定速度和硬返回接口仍待验证，原生和先进方法的共域可执行性以未决项为准。 [公开证据索引](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
 - 40 ns 处理器固定三门／自适应各复跑一次，重现 91.3376／31.2800 µm² 的终态。两次补测获得进程树的搜索 CPU、scope 内存高水位与独立读者接受时刻。自适应臂末次 DRT 在 720.080274 s 退出，外层返回在 720.122790 s 被观察到。720 s 继续按候选验收解释。 [资源与读档补测](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)
 - 小 UART 和两项最大网数代表双 AES 的原候选分别重放了完整七阶段。候选墙钟 25.148／117.165／166.992 s，cgroup CPU 43.720／278.485／414.282 s，scope 内存峰 726.195／2594.973／4559.102 MiB。 [三项资源](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#小-uart-与两项最大代表设计的阶段资源)

@@ -894,3 +894,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 初次终审交付 `af07096c` 后追回图 1–2 的生成记录和 JPEG，裁切复算的 PNG 与两幅现有入稿图逐字节一致。致谢据此明确 Google Antigravity `generate_image`。修订只涉及致谢。 [图件溯源](figures/CHANGE_LOG.md)
 - 双遍编译仍为 13 页，前 12 页渲染逐像素一致，第 13 页再目检，完整参考文献仍同页结束。三个 PDF 的 SHA-256 均为 `7fb37c1b55178c2e66f43e51e3c58bdb1ad5288d38701b8c61f44083a1150950`，源稿及其他装订检查见验收。 [当前交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
+
+## 2026-11-27 V5 资源、读档和同后端外部排序复审
+
+- 正文补入正常及截停臂的进程树资源和独立读档，以及小 UART 与两种 AES 的单候选阶段资源。加入 AuDoPEDA 首轮排序投影对照和参考文献 [25]。针对代表性复跑陈述，720 s 按候选验收计费。版本化实验索引切至 `a10f314b`，原实验和机制示意图不变。
+- 首次增补版第 14 页只含单条尾文献。压缩讨论的重复句后 25 条文献落入 13 页，双遍 LuaLaTeX 与变动页复看通过。源 SHA-256 `25a94ef2a19746a5fcf145101d9a5f19c638fbd1f435b81727276b2184b65c7d`，PDF SHA-256 `7c3bddbcdcaf0b74653f7f3053925b2e9269551e20190690ab0d901549a55ebb`。 [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
