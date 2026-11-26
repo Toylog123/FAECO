@@ -889,3 +889,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 - 最终致谢只在图 1 确认使用 image-generator。图 2 的工具身份由作者确认，图 3–5 根据实验收据绘制。本条以最终查证结果为准，更新先前将两幅示意合并披露的历史记录。
 - 终版 TeX SHA-256 0e5a5cc956aa766c72ae7e0a9d8c281c585afa8b5c54f5883626c8674c36217a。paper/zh、manuscript 和 build 三份 13 页 PDF 逐字节一致，SHA-256 051fe7471593fdb1abd7a44ce853fd74d69a487c15f9131c7481066cdef3b17b。与终审小修快照比较，115 dpi 的前 12 页渲染一致，最后一页另按 150 dpi 实看。仍有字体形态替代提示，终版未见裁切或缺字。
 - 科学小修核验通过。资源度量仍限于现有 DRT 工具记录，完整进程树 CPU、峰值内存和下游首次可读时刻待测。跨主机完整物理重建仍需匹配冻结参考、PDK 和工具。英文 IEEE TCAD 投稿包及其格式、作者资料和披露待验。[最终复核](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md)
+
+## 2026-11-27 V5 图像生成披露更正
+
+- 初次终审交付 `af07096c` 后追回图 1–2 的生成记录和 JPEG，裁切复算的 PNG 与两幅现有入稿图逐字节一致。致谢据此明确 Google Antigravity `generate_image`。修订只涉及致谢。 [图件溯源](figures/CHANGE_LOG.md)
+- 双遍编译仍为 13 页，前 12 页渲染逐像素一致，第 13 页再目检，完整参考文献仍同页结束。三个 PDF 的 SHA-256 均为 `7fb37c1b55178c2e66f43e51e3c58bdb1ad5288d38701b8c61f44083a1150950`，源稿及其他装订检查见验收。 [当前交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)

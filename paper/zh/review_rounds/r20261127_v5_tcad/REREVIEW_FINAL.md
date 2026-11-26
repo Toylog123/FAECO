@@ -2,6 +2,8 @@
 
 **科学小修核验通过，13 页中文科研工作稿可交付。** 原复审要求的窗口回放分母、几何条件和当前稿排版已核对。V4 与 V6 仍分别保留资源度量和跨主机物理重建边界，按冻结阈值维持部分解决。**正式 IEEE TCAD 英文投稿资格待验。**
 
+初次终审交付发布于 `af07096c`。后续追回两幅机制图的原始生成记录，确认图 1–2 使用 Google Antigravity `generate_image`，并据此修正致谢。更新版仍为 13 页，前 12 页的渲染与初次交付逐像素相同，第 13 页致谢已复看。 [当前交付验收](DELIVERY_QA.md) · [图件溯源](../../figures/CHANGE_LOG.md)
+
 终审先查 13 页小修快照，其 TeX SHA-256 为 `4af53b2b28daf928c028c3e57b570d38301b43a64e0c5941bf768eaa2dc92da3`，PDF 为 `a398edd44a484db2d0928770f7a98c0994409bc82e9048d6360b6e9f076cbff9`。最终交付的 13 页快照位于 `scratch/v5_publish_build`，TeX SHA-256 为 `0e5a5cc956aa766c72ae7e0a9d8c281c585afa8b5c54f5883626c8674c36217a`，PDF 为 `051fe7471593fdb1abd7a44ce853fd74d69a487c15f9131c7481066cdef3b17b`。两快照的 TeX 只在第 803 行致谢有差异，115 dpi 下 PDF 前 12 页渲染像素一致。另以 150 dpi 核实交付版第 13 页。证据沿用提交 `4bfa762585bf83b507bd2d289245e05db67480f9`。本次复核没有新 EDA。 [最终交付 TeX](../../../../scratch/v5_publish_build/FAECO_v3_后布局可调预算面积回收.tex) · [最终交付 PDF](../../../../scratch/v5_publish_build/FAECO_v3_后布局可调预算面积回收.pdf)
 
 [冻结判据](REREVIEW_CRITERIA.md)和[原证据裁决](REREVIEW_EVIDENCE.md)的 SHA-256 重新核为 `0e59c6c48de2e29d4246a6c29a012dfbf9ef66418604d2b89f35d35e8efc6959` 和 `7231e663ba26858f77cfc27ec2febadcceed81906ee1494fc042610945f2d3ce`。
@@ -16,7 +18,7 @@
 | V4 | 部分解决，范围已披露 | 固定三门在 40 ns 处理器终态和时间均值均最高，表 12 保留三种策略的终态、共面积首达及失败轨迹。两个 AES 的失败探针机会成本仍在。720 s 结论按窗内验收时刻计算，外层返回另列。现有 CPU 和峰值读数是 DRT 内部工具度量，完整进程树 CPU、峰值内存及下游首次可读时刻未测。 |
 | V5 | 完全解决 | 第 8 页表 3 相邻注释保留旧 6 ns 的 I/O 与 ABC 单位缺口，表 4 原生独立行与有效共池比较区分清楚。§5.2 仍区分原生物理拒收、绑定失败、时钟网超域、截停与 119 项投影。终版讨论保留先进学习方法同后端对照尚待执行的范围。 |
 | V6 | 部分解决，范围已披露 | 固定证据版本的离线复算再次通过，涵盖 Stage 2–5、两组补证和处理器 12 个合格检查点原件。复跑入口此前在默认及新输出根 `--plan` 通过。完整重建仍需将旧固定参考、PDK 与工具路径在目标主机映射或恢复，公开材料支持记录复算及工件指纹核对。 |
-| V7 | 当前中文稿通过，正式投稿待验 | 第 13 页完整排入参考文献 [1]–[24]，此前第 14 页单条尾文献已消除。最终致谢按记录明确图 1 工具，图 2 工具身份列为待作者确认，图 3–5 明确源于实验收据。提交制式以未来同一拟投英文包为对象，需核 IEEE 双栏、字号和篇幅、作者资料与 ORCID，以及作者确认的 AI 工具和使用范围。 |
+| V7 | 当前中文稿通过，正式投稿待验 | 第 13 页完整排入参考文献 [1]–[24]。当前致谢标明图 1–2 的生成工具和图 3–5 的实验来源。还需在实际拟投英文版本核验 IEEE 双栏、字号、篇幅、作者资料、ORCID 和经作者确认的 AI 使用披露。 |
 
 V1 原始分母及 V2–V4、V6 的复算依据已核。 [历史回放逐组原件](../../../../project_docs/evidence/tcad_boxed_drc_20261126/BOXED_DRC_RECALL_AUDIT.json) · [离线复算入口](../../../../project_docs/evidence/tcad_v5_revision_20261126/verify_review_evidence.py) · [资源补证](../../../../project_docs/evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md) · [版本化实验索引](https://github.com/Toylog123/FAECO/blob/4bfa762585bf83b507bd2d289245e05db67480f9/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
 

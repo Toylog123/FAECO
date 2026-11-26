@@ -1,4 +1,6 @@
-# English preparation package
+# Archived Integration preparation package
+
+This package belongs to the October 2026 pre-layout manuscript. The post-route V5 TCAD manuscript and its submission requirements are indexed separately. [V5 TCAD submission status](../README.md#v5-tcad-submission)
 
 Paused at the user's request on 2026-10-14. This is an author-review draft; the historical correctness audit identified missing accepted-candidate proof bindings in A and structurally invalid endpoints in D and a checked subset of C. Scientific conclusions, tables and corresponding figures require evidence repair before submission. B's 28 complete SEC bindings remain supported. See `../../../project_docs/evidence/r22_historical_correctness_20261014/REPORT.md` and the current handoff. No corrected r22 C′ results have been produced.
 

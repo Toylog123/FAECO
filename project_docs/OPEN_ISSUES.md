@@ -1854,7 +1854,7 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 
 ## OI-113（2026-11-27，open）— TCAD 英文投稿与正式材料
 
-13 页 V5 中文稿通过内部小修核验。正式英文 IEEE 稿、修回篇幅、作者与 ORCID 以及图 2 的具体工具出处待作者确认。图 1 有 `image-generator` 项目记录，图 2 的图件记录仅明确同批视觉体系。当前文字按可证实的出处披露。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。[终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
+13 页 V5 中文稿通过内部小修核验。图 1–2 的 Google Antigravity `generate_image` 工具身份已通过原始记录与裁切回算确认，中文致谢已更正。待作者确认完整英文转译及正式署名、通信作者、每位作者的 ORCID 和投稿声明，并在拟投英文包验收 IEEE 版式、修回篇幅与最终致谢。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。 [英文投稿入口](../paper/en/README.md) · [终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
 
 ## OI-114（2026-11-27，闭合）— 近临界 STA 复验缺顶层运行时绑定
 

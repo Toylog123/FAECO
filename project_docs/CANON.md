@@ -3,7 +3,7 @@
 ## 2026-11-27 V5 中文定稿与模拟复审
 
 - 同起序 SKY130HD AES 批宽补证中，固定三门和单门分别回收 67.5648 与 33.7824 µm²，时间平均收益为 34.809579 与 12.623294 µm²。首个合格三门组合包含单独评估时因 SS Hold 被拒的一项。同终态面积的两个首达点不共享动作或物理产物。470.5 ps UART 原候选的 SS Setup WNS 从 +0.794642 降至 −0.568545 ps，相对门通过，绝对零下限拒收。[补证及资源记录](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)
-- 13 页中文定稿、5 图、12 表及 24 条参考文献经双遍编译和逐页目检，三份 PDF SHA-256 均为 `051fe7471593fdb1abd7a44ce853fd74d69a487c15f9131c7481066cdef3b17b`。内部模拟复审科学小修已核验。正式英文 IEEE 包、ORCID 与图 2 的生成工具确认仍开放。[中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md)
+- 13 页中文定稿、5 图、12 表及 24 条参考文献通过内部模拟复审小修核验。图 1–2 的原始生成已追溯至 Google Antigravity `generate_image`，中文致谢据此更正并经双遍编译和末页复查。三份 PDF SHA-256 均为 `7fb37c1b55178c2e66f43e51e3c58bdb1ad5288d38701b8c61f44083a1150950`。正式英文 IEEE 包、作者资料与 ORCID 待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [英文投稿入口](../paper/en/README.md)
 - V5 离线复算绑定 297 份实验原件和 37 份审稿原件；Windows 清洁提取及篡改拒收已验证。完整 EDA 物理复跑需要恢复冻结输入和工具映射。跨设计稳定速度、进程树峰值与硬返回接口均未确证，原生和先进方法的共域可执行性以未决项为准。[公开证据索引](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
 
 ## 2026-11-27 V5 实验与终态复核完成，中文稿进入修订

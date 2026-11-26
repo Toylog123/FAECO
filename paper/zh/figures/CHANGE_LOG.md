@@ -4,11 +4,22 @@
 
 ## 修改记录
 
+### 2026-11-27 V5 图 1–2 生成工具溯源
+
+图 1 与图 2 分别在 Google Antigravity 子任务 `4c452c1e-30c7-4f4f-a5e3-cdd46893bcb3`（日志第 14–15 行）与 `4a95b18e-1d38-4d83-acf0-c67b074e6b4b`（第 9–10 行）调用 `generate_image`。主任务 `2b7a4bd0-cd23-4794-a44b-94bfbcdaac4f` 的日志第 1286–1288 行保存裁切命令和输出尺寸。这些调用记录中的模型字段属于主对话，图像后端的模型版本未记录。 [Google Antigravity 工具说明](https://antigravity.google/docs/sdk/tools)
+
+按原命令对 JPEG 转 RGB，以白底差分的灰度值大于 12 取包围框，外扩 24 像素，按 300 dpi 保存 PNG。两次复算均与首次提交 `7f2226f9` 所用 PNG 逐字节一致。
+
+| 图 | 原始 JPEG 与 SHA-256 | 裁切框 | 入稿 PNG SHA-256 |
+| --- | --- | --- | --- |
+| 1 | `fig1_framework_v4_clean_1795683110536.jpg` · `0a43593a974337f5937e3fca64937b4fd436e03ec82c275326353299e31211b6` | (16, 166, 1371, 587) | `d997474e37af1d6f1c84bc78330bf3dad17b5417340d6857e6be9e59dd1da195` |
+| 2 | `fig2_boxed_drc_mechanism_v4_3_1795683075160.jpg` · `3948fcb6d7262a8bf8d707f430c6fee8fc1a23aa944928c5d213356952bd41a7` | (22, 147, 1356, 645) | `e1256a4d0fdb7f4e4f4866eb0df9b1604a3fdb02234b480ef66c326bf690454e` |
+
 ### 2026-11-27 V5 终版图 3–5 字号与几何验收
 
 - 根据 13 页终版布局增大计算图文字并重新导出。数据仍来自实验收据。图 3、4、5 源 PDF 的最小字号均为 6.20 pt，论文嵌入后分别为 6.16、6.07、6.02 pt。最终三份实际源 PDF 的严格碰撞审计均为 0 fail、0 warn，相同渲染源的对齐收据均通过。
 - 图 3 PDF SHA-256 c1acb2be43b7ddb33d2104a8b257f4a10adc1d413fa7db4f6e73b0a6927c4767；图 4 PDF SHA-256 638ebf577171281dd410d93ee9b55bc68633e80897aaea656c3c681cccb8551e；图 5 PDF SHA-256 fe59ec474a6804b0afe87be62b72a8280b87342a7b122eb163f32a0e29e8ae59。生成器 SHA-256 f2e86e1b4b7f5cfd1c26eebf3eb7e2d0bd40f4351cef1b0660a9151e1bd94e8d。
-- 图 2 图注明确为标记均可归因的机制示例。已查实图 1 采用 image-generator 辅助制作；图 2 的工具身份待作者确认。以本条为当前图件来源口径。最终图件与页面验收见[复核记录](../review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md)。
+- 图 2 图注明确为标记均可归因的机制示例。图 1–2 的最终工具溯源见上方条目。 [复核记录](../review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md)
 
 ### 2026-11-27 第一轮返修的图 4b 历史配置标注
 

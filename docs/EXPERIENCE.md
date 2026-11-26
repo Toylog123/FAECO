@@ -3614,3 +3614,7 @@ Stage 5 的共享零动作资格在 runner 目录成功，首个单门实验切�
 ## 2026-11-27 — 清洁证据复算按归档字节和命令行环境验收
 
 Windows Git 的自动换行转换会改变已冻结 JSON 的 SHA，即使 Git blob 正确。将这些收据显式设为 `-text`，用启用自动 CRLF 的新归档测试。命令行采用 ASCII 表头，避免 GBK 重定向报错。原 ZIP 的内部索引可被同一次篡改更新，故外层同时固定 ZIP SHA，再检查每个成员。对清洁包和篡改包分别测成功与非零退出。[离线复算脚本](../project_docs/evidence/tcad_v5_revision_20261126/verify_review_evidence.py)
+
+## 2026-11-27 — 由生成调用和裁切复算确认图件来源
+
+示意图的协作日志曾用 `image-generator` 泛称。通过生成调用、输出 JPEG 文件名及 SHA 和主会话的裁切命令建立对应，重新生成与入稿文件相同的 PNG。披露采用实际执行的工具名称。调用记录中对话模型字段无法用于确定图像后端版本。 [图件溯源](../paper/zh/figures/CHANGE_LOG.md)
