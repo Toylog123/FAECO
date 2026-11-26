@@ -8,9 +8,11 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
+import math
 import sys
+from dataclasses import asdict
 from pathlib import Path
+from tempfile import mkdtemp
 
 REPO = Path("/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO")
 EVID = REPO / "project_docs/evidence"
@@ -30,13 +32,15 @@ import compare_ibex as cmp
 import incident_cap_priority
 import run_lr_4designs as lr_mod
 import run_qualified_wallclock as qualified
+import run_setup_budget_sweep as sweep
 from run_aes_incident_priority_matched_v2 import WallWindowEnded, process_ledger
 from run_screened_matrix import RELATIVE_HOLD_REASONS, bind_runtime, raw_seconds
 
 OUT_ROOT = Path("/home/toylog/faeco_v5_step3_multibudget_20261126_v1")
 OUT_JSON = EVID / "tcad_v5_revision_20261126/V5_STEP3_MULTIBUDGET_VERIFIED.json"
 LIMIT_S = 720.0
-SETUP_REASONS = {"FF:setup_budget", "TT:setup_budget", "SS:setup_budget", "FF:tns_budget", "TT:tns_budget", "SS:tns_budget"}
+SETUP_REASONS = {f"{view}:{reason}" for view in cmp.CORNERS
+                 for reason in ("setup_budget", "setup_tns_budget", "setup_floor")}
 
 
 def sha256(path: Path) -> str:
@@ -54,24 +58,29 @@ def compute_auc(cps: list[dict], limit_s: float = 720.0) -> float:
     return sum(max(0.0, t1 - t0) * v0 for (t0, v0), (t1, _) in zip(pts, pts[1:])) / limit_s
 
 
+def apply_search_budget(runner, clk_ps: float, pct: float) -> None:
+    frozen_clock = runner.eval.args.clock_period_ps
+    if not math.isclose(frozen_clock, clk_ps, rel_tol=0, abs_tol=1e-6):
+        raise ValueError(f"frozen clock {frozen_clock} ps differs from the registered {clk_ps} ps")
+    runner.gate = sweep.budget_gate(runner.eval, pct, protect_clean=runner.gate.protect_clean)
+    runner.policy = cmp.BudgetPolicy.from_ps(runner.gate.wns_ps, tolerance_ns=cmp.PS_TOLERANCE / 1000)
+
+
 def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
-    budget_ps = clk_ps * pct / 100.0
     tag = f"{kind}__pct_{pct:.1f}".replace(".", "p")
-    rdir = OUT_ROOT / tag
-    if rdir.exists():
-        shutil.rmtree(rdir)
-    runner, pdk, _, _, screen_s = lr_mod.make_boxed_runner(kind, rdir)
+    attempts = OUT_ROOT / tag
+    attempts.mkdir(parents=True, exist_ok=True)
+    rdir = Path(mkdtemp(prefix="attempt_", dir=attempts)) / "runner"
+    runner, _, _, _, _ = lr_mod.make_boxed_runner(kind, rdir)
     if not hasattr(runner, "initial_hint"):
         runner.initial_hint = set()
-    runner.gate = cmp.Gate(
-        wns_ps=budget_ps,
-        tns_ps=max(0.10 * clk_ps, 0.01 * abs(runner.eval.ref_views["TT"]["setup_tns_ps"])) if hasattr(runner.eval, "ref_views") else runner.gate.tns_ps,
-    ) if hasattr(cmp, "Gate") else runner.gate
-    runner.policy = cmp.BudgetPolicy.from_ps(budget_ps, tolerance_ns=cmp.PS_TOLERANCE / 1000)
 
     ref_area = runner.eval.ref_area
     pool = list(runner.pool)
     pool_ceiling = sum(a.estimated_area_saving for a in pool)
+    screen_s = runner.screen
+    if len(pool) != 18 or not 0 < screen_s < LIMIT_S or pool_ceiling <= 0:
+        raise ValueError("the frozen pool or charged screening cost differs from the registered sweep")
 
     with (
         bind_runtime(runner.top, runner.flow["fastroute.tcl"]),
@@ -85,9 +94,22 @@ def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
             runner.use_preview = False
             reference = runner.qualify_zero()
             runner.use_preview = True
+            pf_res = rdir / "preflight/zero/result.json"
 
-        # Re-bind policy after prepare_online/qualify_zero in case runner overwrites it
-        runner.policy = cmp.BudgetPolicy.from_ps(budget_ps, tolerance_ns=cmp.PS_TOLERANCE / 1000)
+        # Transfer the frozen no-edit qualification under its original gate first.
+        apply_search_budget(runner, clk_ps, pct)
+        gate = sweep.gate_summary(runner.gate, runner.eval.ref_views)
+        protocol_path = rdir / "stage3_protocol.json"
+        cmp.save(protocol_path, {
+            "clock_period_ps": clk_ps, "setup_budget_pct": pct, "gate": gate,
+            "control": {name: cmp.bind(path) for name, path in runner.eval.control.items()},
+            "preflight": cmp.bind(pf_res), "base_views": runner.eval.ref_views,
+            "ordered_pool": [asdict(action) for action in pool],
+            "driver": cmp.bind(Path(__file__)), "wall_window_seconds": LIMIT_S,
+            "boxed_backend": cmp.bind(Path(lr_mod.boxed_drc.__file__)),
+            "charged_screening_seconds": screen_s, "route_threads": runner.eval.args.threads,
+        })
+        (rdir / "trials").mkdir()
 
         begun = raw_seconds()
         deadline = begun + (LIMIT_S - screen_s)
@@ -108,13 +130,15 @@ def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
                 raise WallWindowEnded()
             seq = len(reqs) + 1
             reqs.append({"id": seq, "actions": list(actions)})
-            ep, rec = runner.attempt(actions, rdir / "trials" / f"{seq:02d}")
+            trial_dir = rdir / "trials" / f"{seq:02d}"
+            ep, rec = runner.attempt(actions, trial_dir)
             fin = raw_seconds()
             if fin >= deadline:
                 raise WallWindowEnded()
-            acc = cmp.assess(reference, ep, runner.policy).feasible and ep.area < best_ep.area - 1e-9 and ep.sec_pass
+            acc = (not rec["failures"] and cmp.assess(reference, ep, runner.policy).feasible
+                   and ep.area < best_ep.area - 1e-9 and ep.sec_pass)
             fails = set(rec["failures"])
-            reqs[-1].update(failures=list(fails), accepted=acc)
+            reqs[-1].update(failures=sorted(fails), accepted=acc)
             if not acc:
                 if fails & SETUP_REASONS:
                     setup_rejs += 1
@@ -126,7 +150,9 @@ def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
                 best_ep = ep
                 best_saved = ref_area - ep.area
                 best_gates = len(actions)
-            cps.append({"elapsed_s": screen_s + (fin - begun), "accepted": acc, "area_saved_um2": (ref_area - ep.area) if acc else 0.0, "failures": list(fails)})
+            cps.append({"id": seq, "elapsed_s": screen_s + (fin - begun), "accepted": acc,
+                        "area_saved_um2": (ref_area - ep.area) if acc else 0.0,
+                        "failures": sorted(fails), "result": cmp.bind(trial_dir / "result.json")})
             return ep
 
         def defer_fn(actions):
@@ -139,7 +165,9 @@ def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
                 return True
             return False
 
-        with process_ledger(rdir / "subprocesses.json", deadline):
+        window_ended = False
+        ledger_path = rdir / "subprocesses.json"
+        with process_ledger(ledger_path, deadline):
             try:
                 rcap = incident_cap_priority.build_incident_priority(runner.eval.control["def"], runner.eval.control["spef"], pool)
                 prios = {k: row["priority"] for k, row in rcap["actions"].items()}
@@ -151,20 +179,27 @@ def run_one_budget(kind: str, clk_ps: float, pct: float) -> dict:
                     known_split_rejection=known_fn,
                 )
             except WallWindowEnded:
-                pass
+                window_ended = True
 
         auc = compute_auc(cps, LIMIT_S)
         return {
             "design": kind,
             "clock_period_ps": clk_ps,
             "setup_budget_pct": pct,
-            "setup_budget_ps": budget_ps,
+            "setup_budget_ps": runner.gate.wns_ps,
+            "gate": gate,
+            "protocol": cmp.bind(protocol_path),
+            "raw_directory": str(rdir),
+            "subprocess_ledger": cmp.bind(ledger_path) if ledger_path.is_file() else None,
+            "window_ended": window_ended,
+            "qualified_endpoint": asdict(best_ep),
             "qualified_area_saved_um2": best_saved,
             "qualified_gates": best_gates,
             "area_saved_pct": 100.0 * best_saved / ref_area,
             "pool_capture_pct": 100.0 * best_saved / pool_ceiling,
             "anytime_auc_um2": auc,
             "logical_finished": len(cps),
+            "logical_started": len(reqs),
             "setup_rejections": setup_rejs,
             "hold_rejections": hold_rejs,
             "dedup_hits": dedup_hits,
@@ -196,7 +231,7 @@ def main() -> int:
         print(f"\n=== [Stage 3] Running online FAECO {key} (B_W={clk_ps*pct/100:.2f} ps) ===", flush=True)
         row = run_one_budget(kind, clk_ps, pct)
         data["runs"][key] = row
-        OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+        cmp.save(OUT_JSON, data)
         print(f"  DONE {key}: saved={row['qualified_area_saved_um2']:.6f} um2 ({row['qualified_gates']}/18), "
               f"AUC={row['anytime_auc_um2']:.4f}, setup_rej={row['setup_rejections']}, hold_rej={row['hold_rejections']}", flush=True)
 

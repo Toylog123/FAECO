@@ -39,7 +39,7 @@ def boxed_diagnostic_tcl(
     if not edited_insts:
         raise ValueError("boxed_diagnostic_tcl requires at least one edited instance")
     prefix = route_script.split(CLEAR_EVENT, 1)[0] + CLEAR_EVENT
-    edited_tcl_list = " ".join("{" + name + "}" for name in sorted(edited_insts))
+    edited_tcl_list = " ".join(comparison.tcl(name) for name in sorted(edited_insts))
     box_prefix = str(out_dir / "box_")
     tail = f"""set _blk [ord::get_db_block]
 set _dbu [$_blk getDbUnitsPerMicron]
@@ -148,7 +148,7 @@ def diagnose_boxed(runner, actions, directory: Path, *, halo_rows: float = DEFAU
     script = directory / "preview.tcl"
     complete = comparison.render_route(runner.eval.args, runner.eval.libraries["TT"], runner.eval.control, directory, edits)
     script.write_text(
-        boxed_diagnostic_tcl(complete, sorted(edited), directory, halo_rows=halo_rows),
+        boxed_diagnostic_tcl(complete, [action.instance for action in edits], directory, halo_rows=halo_rows),
         encoding="utf-8",
     )
     result = comparison.run_process(

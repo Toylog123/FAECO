@@ -7,12 +7,11 @@ on BOTH sky130hd_aes and asap7_aes under identical 1.0*H_row boxed DRC & 720 s w
 """
 from __future__ import annotations
 
-import hashlib
 import json
-import shutil
 import sys
 from dataclasses import replace as dc_replace
 from pathlib import Path
+from tempfile import mkdtemp
 
 REPO = Path("/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO")
 EVID = REPO / "project_docs/evidence"
@@ -42,10 +41,6 @@ OUT_JSON = EVID / "tcad_v5_revision_20261126/V5_STEP4_PROBE_SENS_VERIFIED.json"
 LIMIT_S = 720.0
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def compute_auc(cps: list[dict], limit_s: float = 720.0) -> float:
     best = 0.0
     pts = [(0.0, 0.0)]
@@ -57,10 +52,55 @@ def compute_auc(cps: list[dict], limit_s: float = 720.0) -> float:
     return sum(max(0.0, t1 - t0) * v0 for (t0, v0), (t1, _) in zip(pts, pts[1:])) / limit_s
 
 
+def load_imported_references() -> dict:
+    boxed_path = EVID / "tcad_boxed_drc_20261126/BOXED_DRC_VERIFIED.json"
+    hybrid_path = EVID / "tcad_v4_revision_20261126/HYBRID_FAECO_4DESIGNS_VERIFIED.json"
+    boxed = json.loads(boxed_path.read_text(encoding="utf-8"))
+    hybrid = json.loads(hybrid_path.read_text(encoding="utf-8"))["designs"]
+    boxed_binding = cmp.bind(boxed_path)
+    hybrid_binding = cmp.bind(hybrid_path)
+    rows = {}
+    for kind, method_key, direction_key, default_key in (
+        ("sky130hd_aes", "cell", "order", "180s"),
+        ("asap7_aes", "strategy", "direction", "169s_default"),
+    ):
+        controls = {}
+        for direction in ("forward", "reverse"):
+            selector = {method_key: "faeco_boxed_drc", direction_key: direction}
+            (arm,) = [arm for arm in boxed[kind]["arms"] if all(arm[k] == v for k, v in selector.items())]
+            best = arm["best_endpoint"]
+            controls[direction] = {
+                "tau_probe_s": 0.0,
+                "nominal_tau_probe_s": 0.0,
+                "phase1_status": "disabled",
+                "qualified_area_saved_um2": best["area_saved_um2"],
+                "qualified_gates": best["num_gates"],
+                "anytime_auc_um2": compute_auc(arm["checkpoints"]),
+                "source": boxed_path.name,
+                "source_binding": boxed_binding,
+                "source_selector": selector,
+            }
+        rows[f"{kind}::0s"] = controls["forward"] | {"reverse_control": controls["reverse"]}
+
+        default = hybrid[kind]
+        rows[f"{kind}::{default_key}"] = {
+            "tau_probe_s": default["probe_sub_budget_s"],
+            "nominal_tau_probe_s": 180.0,
+            "phase1_status": default["phase1_probe"]["status"],
+            "phase1_elapsed_s": default["phase1_probe"]["elapsed_s"],
+            "qualified_area_saved_um2": default["qualified_area_saved_um2"],
+            "qualified_gates": default["qualified_gates"],
+            "anytime_auc_um2": default["anytime_auc_um2"],
+            "source": hybrid_path.name,
+            "source_binding": hybrid_binding,
+            "source_selector": {"designs": kind},
+        }
+    return rows
+
+
 def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
-    rdir = OUT_ROOT / f"{kind}__probe_{int(probe_budget_s)}s"
-    if rdir.exists():
-        shutil.rmtree(rdir)
+    attempt_root = Path(mkdtemp(prefix=f"{kind}__probe_{int(probe_budget_s)}s__", dir=OUT_ROOT))
+    rdir = attempt_root / "runner"
     runner, pdk, budget_ps, _, screen_s = lr_mod.make_boxed_runner(kind, rdir)
     if not hasattr(runner, "initial_hint"):
         runner.initial_hint = set()
@@ -68,6 +108,23 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
     ref_area = runner.eval.ref_area
     pool = list(runner.pool)
     pool_ceiling = sum(a.estimated_area_saving for a in pool)
+    all_ids = tuple(sorted(a.action_id for a in pool))
+    config_path = rdir / "stage4_config.json"
+    cmp.save(config_path, {
+        "design": kind,
+        "pdk": pdk,
+        "nominal_tau_probe_s": probe_budget_s,
+        "wall_budget_s": LIMIT_S,
+        "charged_screening_s": screen_s,
+        "setup_wns_budget_ps": budget_ps,
+        "batch_size": 3,
+        "halo_rows": 1.0,
+        "pool_actions": list(all_ids),
+        "source": cmp.bind(Path(__file__)),
+        "runner_source": cmp.bind(Path(lr_mod.__file__)),
+        "boxed_backend": cmp.bind(Path(lr_mod.boxed_drc.__file__)),
+        "fallback_rejection_cache": "completed rejections, as in V4 Hybrid",
+    })
 
     with (
         bind_runtime(runner.top, runner.flow["fastroute.tcl"]),
@@ -85,6 +142,7 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
         arm_start = raw_seconds()
         total_deadline = arm_start + (LIMIT_S - screen_s)
         probe_deadline = min(total_deadline, arm_start + probe_budget_s)
+        effective_probe_budget_s = min(LIMIT_S - screen_s, probe_budget_s)
         checkpoints = []
         best_ep = reference
         best_saved = 0.0
@@ -93,10 +151,10 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
         # Phase 1: Bounded Optimistic Full-Pool Probe
         probe_dir = rdir / "phase1_probe"
         probe_dir.mkdir(parents=True)
-        all_ids = tuple(sorted(a.action_id for a in pool))
         p_start = raw_seconds()
-        probe_passed = False
+        probe_endpoint = None
         probe_status = "failed"
+        probe_failures = []
         try:
             with process_ledger(probe_dir / "subprocesses.json", probe_deadline):
                 _, incident_p = runner.direct_nets(all_ids)
@@ -107,12 +165,10 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
                     if not runner.eval.proof(cand_v, probe_dir / "initial", {}):
                         fails1.append("sec")
                 ep1 = dc_replace(ep1, valid=not fails1, sec_pass=not fails1)
+                probe_failures = list(fails1)
                 if cmp.assess(reference, ep1, runner.policy).feasible and ep1.area < best_ep.area - 1e-9 and ep1.sec_pass:
-                    probe_passed = True
+                    probe_endpoint = ep1
                     probe_status = "passed"
-                    best_ep = ep1
-                    best_saved = ref_area - ep1.area
-                    best_gates = len(all_ids)
                 else:
                     probe_status = "rejected"
         except WallWindowEnded:
@@ -121,8 +177,13 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
         p_end = raw_seconds()
         probe_elapsed = p_end - p_start
         elapsed_after_probe = screen_s + (p_end - arm_start)
+        if p_end > probe_deadline:
+            probe_status = "sub_budget_timeout"
 
-        if probe_passed and elapsed_after_probe <= LIMIT_S:
+        if probe_status == "passed":
+            best_ep = probe_endpoint
+            best_saved = ref_area - best_ep.area
+            best_gates = len(all_ids)
             checkpoints.append({"phase": "phase1", "elapsed_s": elapsed_after_probe, "accepted": True, "gates": best_gates, "area_saved_um2": best_saved})
         else:
             checkpoints.append({"phase": "phase1", "elapsed_s": elapsed_after_probe, "accepted": False, "gates": len(all_ids), "area_saved_um2": 0.0, "status": probe_status})
@@ -141,10 +202,10 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
                 seq = len(reqs) + 1
                 reqs.append({"id": seq, "actions": list(actions)})
                 ep, rec = runner.attempt(actions, p2_dir / f"{seq:02d}")
+                acc = cmp.assess(reference, ep, runner.policy).feasible and ep.area < best_ep.area - 1e-9 and ep.sec_pass
                 fin = raw_seconds()
                 if fin >= total_deadline:
                     raise WallWindowEnded()
-                acc = cmp.assess(reference, ep, runner.policy).feasible and ep.area < best_ep.area - 1e-9 and ep.sec_pass
                 reqs[-1].update(failures=rec["failures"], accepted=acc)
                 if not acc:
                     known_rej.add(tuple(sorted(actions)))
@@ -152,7 +213,10 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
                     best_ep = ep
                     best_saved = ref_area - ep.area
                     best_gates = len(actions)
-                checkpoints.append({"phase": "phase2", "elapsed_s": screen_s + (fin - arm_start), "accepted": acc, "gates": len(actions), "area_saved_um2": (ref_area - ep.area) if acc else 0.0})
+                checkpoints.append({"phase": "phase2", "seq": seq, "elapsed_s": screen_s + (fin - arm_start),
+                                    "accepted": acc, "gates": len(actions),
+                                    "area_saved_um2": (ref_area - ep.area) if acc else 0.0,
+                                    "failures": rec["failures"]})
                 return ep
 
             def defer_p2(actions):
@@ -178,12 +242,18 @@ def run_hybrid_custom_probe(kind: str, probe_budget_s: float) -> dict:
                 except WallWindowEnded:
                     pass
 
+        total_wall_s = screen_s + (raw_seconds() - arm_start)
         auc = compute_auc(checkpoints, LIMIT_S)
         return {
             "design": kind,
-            "tau_probe_s": probe_budget_s,
+            "run_dir": str(rdir),
+            "run_config": cmp.bind(config_path),
+            "nominal_tau_probe_s": probe_budget_s,
+            "tau_probe_s": effective_probe_budget_s,
             "phase1_status": probe_status,
-            "phase1_elapsed_s": round(probe_elapsed, 3),
+            "phase1_elapsed_s": probe_elapsed,
+            "phase1_failures": probe_failures,
+            "total_wall_s_incl_screen": total_wall_s,
             "qualified_area_saved_um2": best_saved,
             "qualified_gates": best_gates,
             "pool_capture_pct": 100.0 * best_saved / pool_ceiling,
@@ -198,27 +268,8 @@ def main() -> int:
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     data = json.loads(OUT_JSON.read_text()) if OUT_JSON.is_file() else {"runs": {}, "imported_references": {}}
 
-    # Import already-verified 0s (Pure FAECO) & default Hybrid (180s / 169.1s) for clean 5-point table
-    hyb = json.loads((EVID / "tcad_v4_revision_20261126/HYBRID_FAECO_4DESIGNS_VERIFIED.json").read_text())
-    boxed = json.loads((EVID / "tcad_boxed_drc_20261126/BOXED_DRC_VERIFIED.json").read_text())
-    data["imported_references"] = {
-        "sky130hd_aes::0s": {"tau_probe_s": 0.0, "qualified_area_saved_um2": 98.8448, "qualified_gates": 9, "anytime_auc_um2": 19.37, "source": "BOXED_DRC_VERIFIED.json"},
-        "sky130hd_aes::180s": {
-            "tau_probe_s": 180.0,
-            "qualified_area_saved_um2": hyb["designs"]["sky130hd_aes"]["qualified_area_saved_um2"],
-            "qualified_gates": hyb["designs"]["sky130hd_aes"]["qualified_gates"],
-            "anytime_auc_um2": hyb["designs"]["sky130hd_aes"]["anytime_auc_um2"],
-            "source": "HYBRID_FAECO_4DESIGNS_VERIFIED.json",
-        },
-        "asap7_aes::0s": {"tau_probe_s": 0.0, "qualified_area_saved_um2": 0.61236, "qualified_gates": 6, "anytime_auc_um2": 0.254, "source": "BOXED_DRC_VERIFIED.json"},
-        "asap7_aes::169s_default": {
-            "tau_probe_s": round(hyb["designs"]["asap7_aes"]["probe_sub_budget_s"], 2),
-            "qualified_area_saved_um2": hyb["designs"]["asap7_aes"]["qualified_area_saved_um2"],
-            "qualified_gates": hyb["designs"]["asap7_aes"]["qualified_gates"],
-            "anytime_auc_um2": hyb["designs"]["asap7_aes"]["anytime_auc_um2"],
-            "source": "HYBRID_FAECO_4DESIGNS_VERIFIED.json",
-        },
-    }
+    data["imported_references"] = load_imported_references()
+    cmp.save(OUT_JSON, data)
 
     for kind in ("sky130hd_aes", "asap7_aes"):
         for tau in (60.0, 120.0, 240.0):
@@ -229,11 +280,11 @@ def main() -> int:
             print(f"\n=== [Stage 4] Running Hybrid probe sensitivity {key} ===", flush=True)
             row = run_hybrid_custom_probe(kind, tau)
             data["runs"][key] = row
-            OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
-            print(f"  DONE {key}: p1={row['phase1_status']} ({row['phase1_elapsed_s']}s) -> "
+            cmp.save(OUT_JSON, data)
+            print(f"  DONE {key}: p1={row['phase1_status']} ({row['phase1_elapsed_s']:.3f}s) -> "
                   f"saved={row['qualified_area_saved_um2']:.6f} um2 ({row['qualified_gates']}/18), AUC={row['anytime_auc_um2']:.4f}", flush=True)
 
-    print("DONE Stage 4 ->", OUT_JSON, "sha256=", sha256(OUT_JSON), flush=True)
+    print("DONE Stage 4 ->", OUT_JSON, "sha256=", cmp.sha(OUT_JSON), flush=True)
     return 0
 
 

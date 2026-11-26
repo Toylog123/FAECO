@@ -1,5 +1,12 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-26 V5 接手续跑
+
+- **已复核**：Stage 1 与 Stage 2 第一批的 SHA-256 和交接一致。Stage 1 的时序数据为 FF／TT／SS 三个 PVT 角各自的 Setup／Hold 读数，功耗为 TT 实布 SPEF 下工具默认活动估算。`ASAP7 UART-TC` 的 13 门端点功耗与原始 SDC 的 13 门端点分别追溯。Stage 2A 去重两臂的最大回收均为 0.83106 µm²，AUC 0.434369→0.476433，完成评估 20→19；最终面积首次交付 546.572→507.573 s，计费总墙钟 634.563→588.027 s。详见 [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)。
+- **续跑配置**：Stage 2B 的首轮续跑于 22:45:27 (UTC+08:00) 发现窗口预检误用规范化实例名，保留原件后于 22:56:37 续跑。AES 两个完整 120 项提案绑定到既有网表，但包含连接冻结时钟网的同一触发器替换，均超出只允许直接数据网和诊断邻网重布的保护范围。另设两臂 119 项数据网投影，独立报告。ASAP7 UART 的 16 个实例确实超出冻结动作空间。各臂逐键更新收据，EDA 串行绑定 CPU 0–5。[实验登记](evidence/EXPERIMENT_REGISTRY.md#tcad-v5-revision-suite-续跑预登记)
+- **Stage 2B 完整提案分类**：600 s 批次的四个完整 SKY130HD 提案全部分类。AES 两臂在保护范围预检阶段退出。`riscv32i` 两臂各 24 项，均通过严格零动作预检，保护详细布线到 600 s 截止时仍未完成，未获得候选 STA 与 SEC。AES 的 119 项投影继续运行。两种分类都无法用于合格回收的数值排序。[V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+- **长跑前验收**：Stage 3 逐档更新真实三角 Setup WNS／TNS 门，并复核两设计的冻结周期和 18 项候选池。Stage 4 从原始收据导入 0 s 和默认参照，ASAP7 AES 默认有效子窗约 169.12 s，迟于子窗的探针结果不交付。Stage 5 先独立验证 10 ns 构建和绝对时序收敛。旧 riscv32i 6 ns 原生导出 SDC 含 99 条输出延时和 0 条输入延时，新参考明确给非时钟输入和输出各施加 2 ns 延时，并核对逐端口覆盖。[未决项](OPEN_ISSUES.md#oi-1092026-11-26open-万门级独立对照的资格门与共用后端缺失)
+
 ## 2026-11-26 V5 实跑第一批：Stage 1 完成、Stage 2 部分完成（中断点）
 
 - **进度**：Stage 1 完成（`V5_STEP1_POWER_7NM_DET_VERIFIED.json`，SHA-256 `85bfc165…`）；Stage 2 完成 2A 两臂与 2B 第一遍八 key（`V5_STEP2_DEDUP_NATIVE_VERIFIED.json`，SHA-256 `917a6655…`），2B 第二遍（SKY 两设计 600 s 预算 `::rt600s`）中止未落盘；Stage 3/4/5 未启动。续跑命令、必查项与六处脚本修正见[执行交接](HANDOFF_2026-11-26_V5_EXEC.md)。

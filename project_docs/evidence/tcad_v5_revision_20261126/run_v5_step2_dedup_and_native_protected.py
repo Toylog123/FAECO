@@ -17,8 +17,8 @@ import re
 import shutil
 import subprocess
 import sys
-from dataclasses import replace as dc_replace
 from pathlib import Path
+from tempfile import mkdtemp
 
 REPO = Path("/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO")
 EVID = REPO / "project_docs/evidence"
@@ -213,7 +213,31 @@ def extract_native_resizes(runner, extra_flags: str, out_dir: Path) -> tuple[lis
     return diffs, dt
 
 
-def run_native_on_protected_backend(existing: dict, force: bool, designs=None, route_timeout=None, key_suffix="") -> dict:
+def bind_native_resizes(diffs, ref_masters):
+    # Keep raw OpenDB names for findInst; the frozen netlist uses canonical keys.
+    canonical, _ = cmp.align_db_instances({}, {inst: (old, new) for inst, old, new in diffs})
+    missing = sorted(name for name in canonical if name not in ref_masters)
+    mismatched = sorted(name for name, (_, (old, _)) in canonical.items()
+                        if name in ref_masters and ref_masters[name] != old)
+    return missing, mismatched
+
+
+def protected_net_conflicts(diffs, nets):
+    by_name = {cmp.canonical_odb_name(inst): inst for inst, _, _ in diffs}
+    conflicts = {}
+    for net, entry in nets.items():
+        if "+ USE SIGNAL" in entry:
+            continue
+        terminals = entry.partition(" + ")[0]
+        for name in re.findall(r"\( (\S+) \S+ \)", terminals):
+            raw = by_name.get(cmp.canonical_odb_name(name))
+            if raw is not None:
+                conflicts.setdefault(raw, []).append(net)
+    return {inst: sorted(nets) for inst, nets in sorted(conflicts.items())}
+
+
+def run_native_on_protected_backend(existing: dict, force: bool, checkpoint, designs=None,
+                                    route_timeout=None, key_suffix="", project_signal_only=False) -> dict:
     out = dict(existing)
     designs = designs or ("sky130hd_aes", "sky130hd_riscv32i", "asap7_uart", "asap7_aes")
     for kind in designs:
@@ -222,9 +246,9 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
             if key in out and not force:
                 print(f"[Stage 2B] Skipping existing {key}", flush=True)
                 continue
-            rdir = OUT_ROOT / "native_protected" / kind / mode_label
-            if rdir.exists():
-                shutil.rmtree(rdir)
+            attempts = OUT_ROOT / "native_protected" / kind / (mode_label + key_suffix)
+            attempts.mkdir(parents=True, exist_ok=True)
+            rdir = Path(mkdtemp(prefix="attempt_", dir=attempts))
             runner_root = rdir / "runner"
             runner, pdk, budget_ps, _, _ = lr_mod.make_boxed_runner(kind, runner_root)
             if not hasattr(runner, "initial_hint"):
@@ -236,17 +260,22 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
                     if holder is not None and hasattr(holder, "route_timeout"):
                         holder.route_timeout = float(route_timeout)
             diffs, ext_s = extract_native_resizes(runner, flags, rdir / "extract")
+            proposal_count = len(diffs)
+            proposal = cmp.bind(rdir / "extract/native_diffs.txt")
             print(f"  [Stage 2B/{key}] native proposed {len(diffs)} resizes in {ext_s:.2f}s", flush=True)
             if not diffs:
                 out[key] = {
                     "design": kind, "mode": mode_label, "native_proposed_count": 0,
                     "extract_s": round(ext_s, 3), "qualified_area_saved_um2": 0.0,
                     "status": "zero_native_edits", "failures": ["zero_edits"],
+                    "raw_directory": str(rdir),
                 }
+                checkpoint(out)
                 continue
 
-            ref_masters = runner.eval.ref_masters
-            missing = sorted({inst for inst, _o, _n in diffs if inst not in ref_masters})
+            missing, mismatched = bind_native_resizes(diffs, runner.eval.ref_masters)
+            if mismatched:
+                raise ValueError(f"native proposals do not bind frozen source masters: {mismatched[:10]}")
             if missing:
                 out[key] = {
                     "design": kind, "mode": mode_label,
@@ -257,17 +286,41 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
                     "not_in_action_space_examples": missing[:10],
                     "qualified_area_saved_um2": 0.0,
                     "failures": ["not_in_action_space"],
+                    "raw_directory": str(rdir),
+                    "proposal": proposal,
                 }
+                checkpoint(out)
                 print(f"  [Stage 2B/{key}] status=not_in_action_space ({len(missing)}/{len(diffs)} "
                       f"instances outside the frozen netlist, e.g. {missing[:3]})", flush=True)
                 continue
 
+            conflicts = protected_net_conflicts(diffs, runner.nets)
+            if conflicts and not project_signal_only:
+                out[key] = {
+                    "design": kind, "mode": mode_label, "native_proposed_count": proposal_count,
+                    "status": "unsupported_protected_scope", "failures": ["non_signal_incident_nets"],
+                    "protected_net_conflicts": conflicts, "qualified_area_saved_um2": 0.0,
+                    "extract_s": round(ext_s, 3), "raw_directory": str(rdir), "proposal": proposal,
+                }
+                print(f"  [Stage 2B/{key}] status=unsupported_protected_scope {conflicts}", flush=True)
+                checkpoint(out)
+                continue
+            if project_signal_only:
+                if not conflicts:
+                    raise ValueError(f"projected arm {key} must remove a protected non-signal action")
+                diffs = [row for row in diffs if row[0] not in conflicts]
+                if not diffs:
+                    raise ValueError(f"projected arm {key} has no eligible actions")
+
             # Register native resizes as PhysicalAction objects and run through FAECO's 1.0*H_row protected backend!
             areas = cmp.liberty_areas(runner.eval.libraries["TT"])
+            unknown = sorted({cell for _, old, new in diffs for cell in (old, new) if cell not in areas})
+            if unknown:
+                raise ValueError(f"native resize masters lack TT Liberty area: {unknown[:10]}")
             nat_ids = []
             for idx, (inst_odb, old_m, new_m) in enumerate(diffs):
                 aid = f"native_{idx:04d}_{inst_odb}"
-                sav = float(areas.get(old_m, 0.0) - areas.get(new_m, 0.0))
+                sav = areas[old_m] - areas[new_m]
                 pa = cmp.PhysicalAction(
                     action_id=aid, instance=inst_odb,
                     source_cell=old_m, target_cell=new_m,
@@ -296,6 +349,7 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
                 saved = 0.0
                 sec_ok = False
                 views_delta = {}
+                evaluation = None
                 try:
                     with process_ledger(rdir / "subprocesses.json", deadline):
                         ep, rec = runner.attempt(nat_tuple, runner_root / "protected_eval")
@@ -308,6 +362,7 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
                         else:
                             status = "rejected"
                         last_p = rec["passes"][-1]
+                        evaluation = cmp.bind(runner_root / "protected_eval" / "result.json")
                         rp = runner_root / "protected_eval" / last_p / "receipt.json"
                         if rp.is_file():
                             rd = json.loads(rp.read_text())
@@ -315,20 +370,30 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
                                 c: {
                                     "d_setup_wns_ps": rd["views"][c]["setup_wns_ps"] - runner.eval.ref_views[c]["setup_wns_ps"],
                                     "d_hold_wns_ps": rd["views"][c]["hold_wns_ps"] - runner.eval.ref_views[c]["hold_wns_ps"],
+                                    "d_setup_tns_ps": rd["views"][c]["setup_tns_ps"] - runner.eval.ref_views[c]["setup_tns_ps"],
+                                    "d_hold_tns_ps": rd["views"][c]["hold_tns_ps"] - runner.eval.ref_views[c]["hold_tns_ps"],
                                 }
                                 for c in ("FF", "TT", "SS") if c in rd.get("views", {})
                             }
                 except WallWindowEnded:
-                    status = "timeout_600s"
-                    fails = ["timeout_600s"]
-                except Exception as exc:
-                    status = "failed_exception"
-                    fails = [str(exc)[:200]]
+                    status = "outer_window_timeout"
+                    fails = ["outer_window_timeout"]
 
                 eval_s = raw_seconds() - t0
+                operations = rdir / "subprocesses.json"
+                timed_out = None
+                if operations.is_file():
+                    timed_out = next((row for row in json.loads(operations.read_text())
+                                      if "returncode" in row and row["returncode"] is None), None)
+                    if timed_out and status == "rejected":
+                        status = "evaluation_timeout"
+                diagnosis = runner_root / "diagnosis/protected_eval/diagnosis.json"
                 out[key] = {
                     "design": kind, "mode": mode_label,
-                    "native_proposed_count": len(diffs),
+                    "native_proposed_count": proposal_count,
+                    "protected_attempted_count": len(diffs),
+                    "signal_only_projection": project_signal_only,
+                    "protected_net_conflicts": conflicts,
                     "extract_s": round(ext_s, 3),
                     "protected_eval_s": round(eval_s, 3),
                     "status": status,
@@ -336,7 +401,17 @@ def run_native_on_protected_backend(existing: dict, force: bool, designs=None, r
                     "sec_pass": sec_ok,
                     "failures": fails,
                     "views_delta_ps": views_delta,
+                    "raw_directory": str(rdir),
+                    "proposal": proposal,
+                    "evaluation": evaluation,
+                    "diagnosis": cmp.bind(diagnosis) if diagnosis.is_file() else None,
+                    "subprocess_ledger": cmp.bind(operations) if operations.is_file() else None,
+                    "boxed_backend": cmp.bind(Path(lr_mod.boxed_drc.__file__)),
+                    "timeout_operation": timed_out,
+                    "route_timeout_seconds": runner.eval.args.route_timeout,
+                    "outer_window_seconds": deadline - t0,
                 }
+                checkpoint(out)
                 print(f"  [Stage 2B/{key}] status={status} saved={saved:.6f} um2 eval={eval_s:.1f}s fails={fails[:5]}", flush=True)
     return out
 
@@ -348,20 +423,23 @@ def main() -> int:
     data = json.loads(OUT_JSON.read_text()) if OUT_JSON.is_file() else {"uart_dedup_ablation": {}, "native_on_protected_backend": {}}
 
     data["uart_dedup_ablation"] = run_uart_dedup_ablation(data.get("uart_dedup_ablation", {}), force)
-    OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    cmp.save(OUT_JSON, data)
 
-    native = data.get("native_on_protected_backend", {})
-    native = run_native_on_protected_backend(native, force)
-    data["native_on_protected_backend"] = native
-    OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    def checkpoint(native):
+        data["native_on_protected_backend"] = native
+        cmp.save(OUT_JSON, data)
+
+    native = run_native_on_protected_backend(data.get("native_on_protected_backend", {}), force, checkpoint)
     # Second pass: the two SKY130HD designs get a 600 s per-trial route budget so the failure mode is
     # attributable to physics rather than to the default 240 s cap shared by every FAECO arm.
     native = run_native_on_protected_backend(
-        native, force, designs=("sky130hd_aes", "sky130hd_riscv32i"),
+        native, force, checkpoint, designs=("sky130hd_aes", "sky130hd_riscv32i"),
         route_timeout=600.0, key_suffix="::rt600s",
     )
-    data["native_on_protected_backend"] = native
-    OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    run_native_on_protected_backend(
+        native, force, checkpoint, designs=("sky130hd_aes",), route_timeout=600.0,
+        key_suffix="::rt600s::signal_only", project_signal_only=True,
+    )
 
     print("DONE Stage 2 ->", OUT_JSON, "sha256=", sha256(OUT_JSON), flush=True)
     return 0

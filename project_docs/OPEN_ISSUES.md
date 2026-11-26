@@ -1807,3 +1807,37 @@ UART 正序 FAECO 的第 2 次累计三门因 FF setup 拒，二分后第 3 次�
 同一三门提议和冻结 GCD 起点，常规与首次实时在线的初轮 ODB 和独立 DRC 相同。布线前实测 0 marker，保护路由结束后独立检查发现 3 个 met1 Short，涉及 `net242`／`net266`。两臂放行同一个邻网后独立 DRC 清零，TT 相对 hold 仍退 0.022621 ps，按 0.001 ps 容差拒收。继续检查四臂复现、同数量几何邻网基线和保护约束来源。与此前同动作 11.2608 µm² 合格的历史链相比，本轮新增加载并读回 476 条 `FIXED` 线，也新增独立解锁 DRC。旧 endpoint 与本轮不能混列。[GCD 规约](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_PREFLIGHT.md)
 
 四臂独立核验现已确认请求、重试、实际端点和 TT 拒因复现，保护模式下全为零回收。候选诊断漏报与最终 hold 拒因属于两个可查现象。下一步待用几何邻网基线和保护路由对照辨别重布来源，同时保留原 TT 判定口径。[正式报告](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_VERIFIED.json)
+
+## OI-108（2026-11-26，open）— 原生整批动作的实例身份与保护后端可评估性
+
+V5 Stage 2B 240 s 原收据中，SKY130HD 两设计因单次保护路由触及上限，ASAP7 两设计的部分原生动作落在冻结 runner 动作空间之外。中断批次的 master log 额外显示，两臂 SKY130HD AES 600 s 均在 120 项中遇到一个 `sa32_sr\[7\]$_DFF_P_` 查找失败，riscv32i 曾完成零动作预检；该遍未进已提交收据。先比对 OpenDB 与冻结网表的原始名字、Verilog 转义、master 和一一对应关系，确认是否是可修的名称映射；真正缺失的实例保留兼容性类别。600 s 物理跑通后再核原门及 SEC，按超时、动作不兼容和完整物理拒收分别解释。[原断点收据](evidence/tcad_v5_revision_20261126/V5_STEP2_DEDUP_NATIVE_VERIFIED.json) · [执行交接](HANDOFF_2026-11-26_V5_EXEC.md)
+
+已查中断批次 `native_diffs.txt` 与冻结 SKY130HD AES `6_final.v`。OpenDB `sa32_sr\[7\]$_DFF_P_` 对应网表 `\sa32_sr[7]$_DFF_P_`，两者旧 master 均为 `sky130_fd_sc_hd__dfxtp_4`，原生目标为 `sky130_fd_sc_hd__dfxtp_1`。已有 `compare_ibex.canonical_odb_name` 可用于逻辑校验，OpenDB 物理调用仍需原始名字。
+
+名称绑定已通过离线核验，AES 120/120 项匹配同一源 master，ASAP7 UART 的 16 条真缺保持。600 s 已续跑，物理可评估性等待四臂收据。[续跑记录](LOGS.md#log-20261126-12stage-2b-600-s-启动与后续阶段预审)
+
+窗口诊断还有第二处同类名称绑定缺陷。600 s 首臂在原名 swap 与 241 条直连走线清除后，预检以逻辑名查实例包围盒，触发 OpenDB 查找失败，随后主动中断。该次产物保存在 attempt_z9jgzkfx。预检日志 SHA-256 80807baa2b14f86109f62238be5323557a66c5507896ea16653f7beb66294316。使用原名查 OpenDB、保留规范名匹配归属后，须以同一 120 项原生真实预检复核，方可恢复完整试验。
+
+原名修复后，真实 120 项回放到达预检完成标志并生成 81 盒，仍被走线计数不变量拦截。多清除的 3 条网均由同一 DFF 引入，其中 clknet_leaf_3_clk 的 DEF 用途为 CLOCK。现行数据网保护协议保持时钟树冻结，完整提议应归 unsupported_protected_scope。新增只移除该 DFF 的 119 项投影，两臂同 600 s 路由与 840 s 评估上限，单列结果。回归诊断 SHA-256 e5e523080154b64f444772c5ef4f76159b6cc8a0af1c03f9923e0230f087a481。
+
+600 s 的四个完整提议键已落盘。AES 两臂为完整提议的窗口保护作用域不兼容，riscv32i 两臂均为单次路由触及 600 s 上限，未得物理时序和 SEC 终态。119 项数据网投影仍在运行。[阶段报告](evidence/tcad_v5_revision_20261126/REPORT.md#3-stage-2b原生-recover_power-保护后端对照)
+
+## OI-109（2026-11-26，open）— 万门级独立对照的资格门与共用后端缺失
+
+只读核查接手版 `run_v5_step5_10k_timing_closed.py`。候选验收只有 DRC 计数和 FF/TT/SS 的 Setup/Hold WNS；三角 TNS、电气、天线、SEC 与真实网表面积未绑定。窗口 DRC 产物没有进入邻网归因与放行，固定批拒收后也会二分。子进程未按外层剩余时间裁剪，单次路由超时可让整阶段异常退出。需先用可核对的新 10 ns 起点接入共用保护后端、完整资格门、三臂同定义与硬窗，再接受结果为合格回收。独立起点的严格时序门应保留。[当前脚本](evidence/tcad_v5_revision_20261126/run_v5_step5_10k_timing_closed.py)
+
+## OI-110（2026-11-26，open）— 多档 Setup 生效门与探针敏感性对照口径
+
+接手版 Stage 3 尝试实例化未定义的 `compare_ibex.Gate`，`hasattr` 使 `runner.gate` 静默保留原 1% 设置。后端 `audit_timing` 直接使用该门，外层 `BudgetPolicy` 的更新不足以落实宽松档，并且每角 TNS 仍为 1% 档。应复用 `run_setup_budget_sweep.budget_gate` 并绑定周期及 per-view 门，防止 2% 被预拒或将 1% 的 TNS 结果混入其他档。[位置](evidence/tcad_v5_revision_20261126/run_v5_step3_multibudget_online.py)
+
+Stage 4 接手版 0 s 导入 AUC 为硬编码正序四舍五入值。直接积分 [原检查点收据](evidence/tcad_boxed_drc_20261126/BOXED_DRC_VERIFIED.json) 得 SKY 正/反 19.368673/20.076147、ASAP7 正/反 0.254383/0.253990 µm²。0 s 导入须绑定取向；旧默认 $\tau$ 为 SKY 180 s、ASAP7 约 169.12 s。V4 与 V5 接手版 Hybrid 回退缓存全部已返回拒收，须在全族写作中与 UART 独立 Setup-only 消融区别，或以同一拒收规则新测成组对照。[V4 实现](evidence/tcad_v4_revision_20261126/run_v4_hybrid_faeco.py) · [Stage 4 接手脚本](evidence/tcad_v5_revision_20261126/run_v5_step4_probe_sensitivity.py)
+
+两项实现问题已做离线回归。Stage 3 的小松弛反例令 1% 与 2% 物理门发生预期分叉，并确认较差 TNS 与误绑周期会拒绝。Stage 4 绑定原检查点、探针截止和冻结回退，并保留历史缓存策略口径。正式比较继续待实测。
+
+## OI-111（2026-11-26，open）— riscv32i 旧约束缺失输入延迟
+
+原 ORFS designs/sky130hd/riscv32i/constraint.sdc 用 lappend $non_clock_inputs $input 拼接输入列表，变量名被先展开，non_clock_inputs 为空。实查旧 6 ns 起点 /home/toylog/faeco_tcad_anytime_holdouts_20261125_v1/sky130hd/riscv32i/results/sky130hd/riscv32i/base/6_final.sdc（SHA-256 74524c0bcc0e07bb1a43609125b5f7bfd03250ac47715ea492a73fb067229d7b），含 0 条 set_input_delay、99 条 set_output_delay，物理与虚拟时钟均为 6 ns。先前的两侧同源约束核验仍可复查原实验的一致性，覆盖范围限于实际生成的约束。
+
+Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收集非时钟输入；导出后核对所有预期非时钟输入与输出的 2 ns 延迟、实际/虚拟时钟、独立三角时序及物理资格。若完整约束使 10 ns 起点无法闭合，保留实测失败分类和完整 I/O 约束；样本资格继续待解决。原 6 ns 数据保留其实际约束口径。[新实验登记](evidence/EXPERIMENT_REGISTRY.md#tcad-v5-revision-suite-续跑预登记)
+
+同一次源路径核查发现旧 ORFS 将 SDC 的 ns 数值 6.0 直接传入以 ps 计的 ABC 目标。旧生成 clock_period.txt 为 6.0，原 Yosys 日志明确为 ABC -D 6.0。新独立构建将映射目标显式设为 10000 ps，并核验构建产物 clock_period.txt。该修正与完整 I/O 同为新起点的预登记条件。
