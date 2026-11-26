@@ -904,3 +904,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 文末实验索引固定到 `194e3858`。补写同主机从隔离输入重建 40 ns 处理器参考和固定首批，保留跨主机重建对 PDK、工具与基础环境的依赖。
 - 双遍 LuaLaTeX 后维持 13 页、5 图、12 表、25 条参考文献。115 dpi 比对仅末页实验说明段变化，末页 150 dpi 目检与三个 PDF 同指纹核对完成。 [定向复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
+
+## 2026-11-27｜三臂在线复现与 SEC 截止修订
+
+- §4.3 按验收时刻计入交付，触限后清理及返回另报。处理器实验新增同主机隔离三臂复跑、单门末次 SEC 截停和独立修复验证，表 12 仍对应原配置。
+- 相关工作补 TAPCO-G 的布局后时序图传播、候选排序与失败批次二分。收紧重复句后 13 页含 26 条参考文献。双遍编译、变动页目检和三个 PDF 副本核对完成。 [复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)

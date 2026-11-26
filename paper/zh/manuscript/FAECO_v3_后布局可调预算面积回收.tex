@@ -152,7 +152,7 @@ DAGSizer\cite{cheng2023dagsizer}预测同占位多$V_t$和多沟道长度替换�
 
 TritonRoute-WXL\cite{tritonroutewxl}在详细布线器中集成了DRC引擎。CoRe-ECO\cite{coreeco}用可满足性模理论（SMT）联合求解局部详细布局、布线和单元替换，以修复既有引脚接入违例。SLO-ECO\cite{sloeco2024}将单线开路热点纳入局部详细布局与布线的SMT模型。Xu等\cite{xu2026eco}从区域物理与时序信息学习ECO策略，并调整优化权重以兼顾总负松弛与DRC数量。
 
-OpenPhySyn\cite{openphysyn2020}提供开源物理综合与时序修复接口。RL-Sizer\cite{rlsizer2021}在商业实现流程中通过布线后组合单元尺寸调整降低TNS，RL-CCD\cite{rlccd2023}则在布局阶段为时钟与数据路径优化选择端点。局部物理重映射\cite{pcr2026}与E-Layout\cite{elayout2026}在布局后利用物理反馈选择逻辑实现，GoalEvolve\cite{goalevolve2026}用全流程反馈优化物理设计算法。表~\ref{tab:related_work}以布线状态、优化目标与验证环节对齐相关方法。FAECO从已详细布线的冻结参考出发，以降尺寸诱发的冲突标记约束重布线范围，并在固定墙钟内最大化经三工艺角验证的合格面积回收量。
+OpenPhySyn\cite{openphysyn2020}提供开源物理综合与时序修复。RL-Sizer\cite{rlsizer2021}优化布线后TNS，RL-CCD\cite{rlccd2023}在布局阶段选择时钟和数据路径端点。局部物理重映射\cite{pcr2026}与E-Layout\cite{elayout2026}以布局后物理反馈选择逻辑实现，GoalEvolve\cite{goalevolve2026}用全流程反馈优化设计算法。TAPCO-G\cite{tapcog2026}在布局后沿时序图传播时延变化，按时序和功耗排序并二分失败批次。表~\ref{tab:related_work}对齐代表方法的输入、目标与验证。FAECO用详细布线后的降尺寸冲突标记限定重布线范围，在固定墙钟内搜索经三工艺角验证的面积回收。
 
 \begin{table*}[t]
 \centering
@@ -365,7 +365,7 @@ Hybrid FAECO用单遍保护后端验证整个候选池$\mathcal{P}$，不复修�
 同臂以冻结输入和规范化累计动作元组为身份判断重复。纯建立时间拒收复用只登记完成布线、寄生提取、三角时序及独立物理检查且拒因仅为建立时间预算的候选，超时和物理不完整均排除。命中时直接进入二分路径。历史默认Hybrid和双AES探针扫描在回退阶段登记按时返回的完整拒收请求，涵盖非Setup拒因。UART去重消融的历史白名单含TNS标签拼写差异，该臂唯一复用命中是FF Setup WNS拒收。在线预算扫描使用实际产生的Setup WNS/TNS标签。
 
 \paragraph{计时与交付}
-以同一单调时钟追踪计费时间，子进程的有效超时为阶段限时与当前截止余量的较小值。触及探针截止或外层截止时，终止仍运行的子进程组并等待退出。物理、时序和SEC验收完成后，按截止内的验收时刻登记已具备产物的检查点，运行记录采用原子替换写入。已完成检查点的截止区别于进程清理及外层返回，四设计默认探针的最终合格检查点均在720\,s内，两次探针超时的返回比各自子预算多约$0.12$--$0.15$\,s。下游读档时间见第~\ref{sec:tc_processor}节。若接口也要求外层返回与检查点元数据写入共守截止，可为清理和写入显式预留$t_{\mathrm{cleanup}}$与$t_{\mathrm{ckpt}}$，以$\max(0,\tau_{\max}-t_{\mathrm{now}}-t_{\mathrm{cleanup}}-t_{\mathrm{ckpt}})$限定可派发余量。
+以单调时钟计费，工具时限取阶段限时与截止余量的较小值。触限后终止外层工具进程组，等待包装器退出。交付以物理、时序和SEC验收时刻为准，限于截止内通过的检查点。记录以原子替换写入，触限后的清理和返回另报。四设计默认探针的合格检查点均在720\,s内，两次探针超时返回比各自子预算多约$0.12$--$0.15$\,s。第~\ref{sec:tc_processor}节给出读档和SEC截停的补证。若接口要求清理及元数据写入也共守截止，可显式预留$t_{\mathrm{cleanup}}$与$t_{\mathrm{ckpt}}$，以$\max(0,\tau_{\max}-t_{\mathrm{now}}-t_{\mathrm{cleanup}}-t_{\mathrm{ckpt}})$限制派发余量。
 
 \begin{algorithm}[t]
 \caption{Hybrid FAECO的全池探针与保护式微批次}
@@ -759,9 +759,11 @@ ASAP7 AES时间均值 & 0.26101 & 0.20802 & 0.15873 & 0.06484 \\
 
 固定与自适应的前两次动作及拒因一致。第二批因布线和天线违规被拒，固定策略跳至后续三门批，FAECO二分后再次验证。自适应臂未触发Hold暂缓或命中Setup缓存。累计DRT/RCX工具墙钟为449.79、430.01与549.38\,s。
 
-固定三门与FAECO各复跑一次，分别重现原终态回收。进程树搜索CPU时间为1599.9与1988.6\,s，作业内存高水位为2.04与1.87\,GiB。独立读者在终态验收后约40与35\,ms完成四份产物的读取与校验。固定策略自然结束，FAECO末次DRT触限后于720.080\,s退出，外层返回在720.123\,s被观察到。
+固定三门与FAECO的资源复跑重现原终态。进程树CPU时间为1599.9与1988.6\,s，作业内存高水位为2.04与1.87\,GiB。终态验收后，独立读者约用40与35\,ms校验四份工件。固定臂自然结束，FAECO末次DRT于720.080\,s退出，外层返回在720.123\,s被观察到。
 
-在该参考上，另将AuDoPEDA的功耗恢复首轮排序\cite{ghose2026audopeda}投影到同一18项池，按TT估计功耗乘Setup裕量起序，保持候选目标、固定三门及验收后端。原灵敏度排序与投影排序均完成6次，分别验收4与2次，终态回收91.3376与43.7920\,\textmu m$^2$，时间平均回收37.68与17.83\,\textmu m$^2$。两序第一组相差一个实例，投影的首组出现一处天线违规。
+同主机隔离重建参考并复跑三臂，18次共同完成的请求重现动作、门判定与物理结果。固定三门和自适应重现原终态。单门第8次的SEC包装器触限，未形成合格检查点，回收止于40.0384\,\textmu m$^2$。原包装器截停后，Yosys与下一臂排序重叠。同一候选的独立回归中，修复版短窗截停后未观测到证明进程，足窗SEC为4,559/0。
+
+同一18项池上，将AuDoPEDA\cite{ghose2026audopeda}首轮排序投影为TT估计功耗乘Setup裕量，沿用固定三门和验收门。原序与投影序各完成6次，接受4与2次，终态91.3376与43.7920\,\textmu m$^2$，时间均值37.68与17.83\,\textmu m$^2$。首批相差一门，投影首批有一处天线违规。
 
 \begin{table}[t]
 \centering
@@ -791,25 +793,21 @@ TT漏电变化（\%） & $-0.0677$ & $-0.1152$ & $-0.0356$ \\
 % ============================================================
 \section{讨论与适用边界}
 
-\textbf{几何与规则。} 证明覆盖满足所列条件的局部几何见证，交付由全块终检保证。小版图上的诊断加速有限，ASAP7 UART窗口/全块速度比为0.60--1.22。
-
-\textbf{调度与比较范围。} 同后端对照采用共同动作集。先进学习方法仍需候选接口与物理复验。
-
-\textbf{时序、功耗与迁移。} 三库角共用名义寄生，采用单模式与默认活动。跨独立RC角、多模式或商业签核的交付需要复验。
+局部几何见证须满足命题条件，交付由全块终检判定。ASAP7 UART的窗口与全块用时比为0.60--1.22。同后端对照共用动作集，先进学习方法仍需候选接口与物理复验。三库角共享名义寄生，采用单模式与默认活动。跨独立RC角、多模式或商业签核须复验。
 
 % ============================================================
 % §7 结论
 % ============================================================
 \section{结论}
 
-FAECO以行高窗口诊断布线后降尺寸冲突，并在保护外围走线的条件下限时验收。实测比较量化了诊断前移、窗口扫描与批宽对交付的作用。相对Setup预算容许小幅负松弛，绝对零下限可在临界起点改变放行决定。双AES试验表明失败的全池探针会挤占回退时间。独立收敛的\texttt{riscv32i}上，固定微批次取得最高终态面积及时间平均收益。
+FAECO以行高窗口诊断降尺寸冲突，保护外围走线并限时验收。实测量化了诊断前移、窗口扫描和批宽的作用。绝对Setup零下限在临界起点改变验收，双AES的失败全池探针压缩回退时间。独立收敛处理器上固定三门的终态回收和时间均值最高。
 
 \vspace{0.16cm}
 \noindent\textbf{致谢。}
 感谢OpenROAD、OpenSTA与Yosys社区提供物理实现和验证工具。本文使用OpenAI Codex辅助文字修订、英文摘要、代码与实验收据核对。图1和图2的机制示意由Google Antigravity的 \texttt{generate\_image} 工具生成，经人工核对与裁切。图3至图5由实验收据绘制。
 
 \noindent\textbf{代码与实验记录。}
-实现、对照协议、离线复算与原件见\href{https://github.com/Toylog123/FAECO/blob/194e3858421e4da078fb82a5d46ed8fe226e90a0/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{版本化实验索引}。已在同一主机用隔离输入重建40\,ns处理器参考与首批。跨主机重建依赖相应PDK、工具与基础环境。
+实现、对照协议、离线复算与原件见\href{https://github.com/Toylog123/FAECO/blob/baab6f5fdde0dac5b6580dbdbba686185ec2e7a1/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{版本化实验索引}。40\,ns参考及三臂已在同主机隔离复跑。跨主机重建依赖相应PDK、工具与基础环境。
 
 % ============================================================
 % 参考文献
@@ -888,6 +886,9 @@ W. Fang \emph{et al.}, ``E-Layout: Layout-stage logic restructuring via RL-optim
 
 \bibitem{goalevolve2026}
 H. Liu, L. Zhou, Y. Ren, Y. Wu, and Z. Wang, ``GoalEvolve: From handcrafted algorithm priors to goal-driven evolution of physical design algorithms,'' \emph{arXiv:2608.16733}, 2026.
+
+\bibitem{tapcog2026}
+W. Tang \emph{et al.}, ``TAPCO-G: LLM-guided design-adaptive timing and power co-optimization with graph-based physical priors,'' \emph{arXiv:2611.13931}, 2026.
 
 \bibitem{sta}
 The OpenROAD Project, \emph{OpenSTA: Gate-level static timing analyzer}, version~3.1.0. [Online]. Available: \url{https://github.com/The-OpenROAD-Project/OpenSTA}
