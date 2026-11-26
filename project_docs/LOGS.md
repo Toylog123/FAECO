@@ -8368,3 +8368,9 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - **对抗审稿与收据核验**：脚本逐格回查 DEF/JSON 原始收据与参考文献次序，检出并一次性修复 5 处 P0 硬错误（表 2 四设计 DEF `NETS` 统一为 `15,657/5,588/797/12,412`；表 3 `uart` 门数 `12/13` 与 Setup 预算利用率 `49.9%/50.6%/50.5%`；表 3 `sky130hd/aes` 固定批次 `0.44%`；表 8 `s382` `FORWARD_096` `+1.71/+0.00 ps`；`\bibitem{sta}` 顺延至第 22 位实现 22/22 严格递增）及 5 处 P1/P2 审稿漏洞（表 3 补入 SKY130HD AES 灵敏度强单门 `33.7824 µm²` / AUC `10.82`、算法 1 与表 3 初始排序一致、补 18 项池规模依据、表 2/3 表注与 §5.5 口径过渡、中英文摘要精炼）。报告归档于 [REVIEW_REPORT.md](../paper/zh/review_rounds/r20261126_zh_audit/REVIEW_REPORT.md)。
 - **编译与末页孤儿修复**：初编因新增行溢出 3 条文献至第 14 页，微调 4 幅图宽（`0.94\textwidth`）与文献行距（`0.88`）后回归 **13 页双栏满页对齐**；0 错误、0 Overfull、0 未解析引用、0 元叙述词。TeX SHA-256 `2e8aad79…`（82,592 B），三副本 PDF 逐字节一致 `732b6896…`（867,749 B）。英文版暂不转译，待中文版最终确认。
+
+## LOG-20261126-06｜完成中文主稿与 4 幅矢量图学术化升格（12 页全页视觉 QA 通过）
+
+- **论文学术语体升格**：依 `user-academic-writing-style` 与 `anti-defensive-writing` 规范重写润色 `paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex`，正则复核工程/命令行词及口语词清零（`taskset`/`CLOCK_MONOTONIC_RAW`/`RAW s`/`rc=124`/commit SHA/`swapMaster`/`remove_fillers`/`ODB/DEF`/`DBU`/`check_drc`/`FIXED`/`ROUTED`/`sizer.tbc`/`Request 3`/内部端点名/兜底/救活/崩盘/归零/时间税等全部转为标准学术 EDA 表述）；在 §4.2 新增正式 **命题 1（局部窗口布线前冲突诊断的完备性）** 与几何不变式证明；收紧文字复述并强化 §5 假设驱动叙事，同时 100% 保持既有收据数值与 22/22 严格引用次序。
+- **中文 4 幅矢量图学术化精修**：依 `nature-figure` 规范清洗 `paper/zh/figures/tcad_20261126/generate_tcad_figures_zh.py` 图内工程标签，并在图 2a 补绘 `SKY130HD AES` 经核验的 `灵敏度单门` 阶梯曲线（`33.7824 µm²`）；4/4 通过 `audit_pdf_text.py`（最小字号 `5.6–5.8 pt`）、`audit_figure_collisions.py`（`0 fail / 0 warn`）及 600 DPI PNG 逐幅视觉检查。
+- **编译与 12/12 全页视觉 QA**：LuaLaTeX 双遍编译 `rc1=0, rc2=0`，收敛为 **12 页**（0 错误、0 Overfull hbox、0 未解析引用、0 hyperref 警告，末页双栏均衡无孤儿）；`pdftoppm` 渲染全 12 页逐页视觉复核无裁切/无重叠。TeX SHA-256 `d503014b…`（78,617 B），三副本 PDF 逐字节同步 `15c55a8b…`（852,657 B）。已同步更新 `paper/zh/CHANGE_LOG.md`、`paper/zh/figures/CHANGE_LOG.md`、`.codex-handoff.json` 与 `LOGS.md`；英文版暂不转译，待中文版最终审阅确认。

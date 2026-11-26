@@ -840,3 +840,12 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
   - §4.1 与算法 1 对齐初始排序接口（面积收益序或式 (3) 灵敏度序）并补明 18 项池规模（$6\times b=18$）依据；表 3 补同协议与功耗范围表注；§5.5 补明 6–10 次名义视角扩展协议与 720 s 多角协议的区分及 IO+OCV 复测边界；
   - 中英文摘要精简提炼；微调 4 幅图宽（`0.94\textwidth`）与文献行距（`0.88`）消除 14 页末页 3 条孤儿文献，回归 13 页双栏满页对齐。
 - **编译与核验**：LuaLaTeX 双遍通过，13 页、0 错误、0 Overfull、0 未解析引用、0 元叙述残留词，全页视觉复核通过。TeX SHA-256 `2e8aad7944669a8ff23adb3d89ce4b9e40058703a1f50333a0a2b16ac01a45b7`（82,592 字节）；三份 PDF 同步一致，867,749 字节，SHA-256 `732b68960a73cea80b3e8a256d0cfc6258753d4a428d9464874a65ef8c6a3766`。
+
+
+## 2026-11-26 中文主稿与矢量图学术化升格（12 页，`user-academic-writing-style` + `nature-figure`）
+
+- **去工程化与学术语体升格**：按 `user-academic-writing-style` 与 `anti-defensive-writing` 规范全文清洗工程实现与口语化表达，零残留消除命令开关、提交哈希、内部脚本/端点编号及口语词（如 `taskset`、`CLOCK_MONOTONIC_RAW`、`RAW s`、`rc=124`、`b511b6a`、`31c4a04`、`Request 3`、`swapMaster`、`remove_fillers`、`ODB/DEF`、`DBU`、`check_drc`、`FIXED`/`ROUTED`、`sizer.tbc`、`FORWARD_096`/`RESTORE074`、兜底、救活、崩盘、归零、时间税等），统一转为标准 EDA 学术术语（如原地单元替换、保护式局部重布线、标准单元行高缩放、灵敏度单门等）。
+- **理论形式化增强**：在 §4.2 新增正式 **命题 1（局部窗口布线前冲突诊断的完备性）** 及几何不变式证明，从起点无违例、原地替换零邻居位移与直连擦除单调性三条不变式严格推导合并局部窗口（半径 $r_{\mathrm{drc}} \le H_{\mathrm{row}}$）与全块扫描的等价完备性；重构 §5 各小节为假设驱动的实证结构并收紧表格文字复述。
+- **中文矢量图学术化重绘**：更新 `paper/zh/figures/tcad_20261126/generate_tcad_figures_zh.py` 与 4 幅中文矢量图（PDF/SVG/600 DPI PNG），同步替换全部工程标签为学术中文术语（图 2a 补绘经收据核验的 `灵敏度单门` 曲线 `33.7824 µm²`）；4/4 通过 `audit_pdf_text.py`（最小字号 `5.6–5.8 pt`）与 `audit_figure_collisions.py`（`0 fail / 0 warn`）及 600 DPI 人工视觉审查。
+- **编译与全 12 页视觉 QA**：LuaLaTeX 双遍编译 `rc1=0, rc2=0`，收敛至 **12 页**（末页双栏均衡覆盖 §6.4、§7 结论、致谢与全部 22 条参考文献，无孤儿页），0 编译错误、0 Overfull hbox、0 未解析引用、0 hyperref 警告；`pdftoppm` 渲染 12/12 全页逐页视觉复核通过，全部数值 100% 保持既有收据一致。
+- TeX SHA-256 `d503014bea84f8c9ee55106362883f0de5ef589dbd8d4b161e4fd4b6e23c9452`（78,617 字节）。三份 PDF（`paper/zh/`、`paper/zh/manuscript/`、`paper/zh/build/`）逐字节同步一致，852,657 字节，12 页，SHA-256 `15c55a8bfa5b48063e38d153c46734a19a2968434045055daaf499f166383a57`。

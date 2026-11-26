@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate publication-grade Chinese vector figures (PDF + SVG + 600 DPI PNG)
-matching the English TCAD figure suite from verified FAECO experimental receipts."""
+using formal academic EDA terminology from verified FAECO experimental receipts."""
 
 from __future__ import annotations
 
@@ -36,6 +36,7 @@ C_TEXT = "#1A202C"
 mpl.rcParams.update({
     "font.family": "sans-serif",
     "font.sans-serif": ["Microsoft YaHei", "Arial", "DejaVu Sans"],
+    "mathtext.fontset": "dejavusans",
     "axes.unicode_minus": False,
     "svg.fonttype": "none",
     "pdf.fonttype": 42,
@@ -44,7 +45,7 @@ mpl.rcParams.update({
     "axes.labelsize": 7.5,
     "xtick.labelsize": 6.8,
     "ytick.labelsize": 6.8,
-    "legend.fontsize": 6.3,
+    "legend.fontsize": 6.2,
     "axes.spines.right": False,
     "axes.spines.top": False,
     "axes.linewidth": 0.75,
@@ -94,7 +95,7 @@ def step_curve(points: list[tuple[float, float]], horizon: float = 720.0) -> tup
 
 
 def build_fig1_architecture_zh() -> None:
-    fig, ax = plt.subplots(figsize=(7.1, 2.75))
+    fig, ax = plt.subplots(figsize=(7.1, 2.78))
     ax.set_xlim(0, 100)
     ax.set_ylim(0, 38)
     ax.axis("off")
@@ -110,7 +111,7 @@ def build_fig1_architecture_zh() -> None:
                 fontsize=6.5, fontweight="bold", color=title_c, zorder=3)
         if body:
             ax.text(x + w / 2, y + h - 4.8, body, ha="center", va="top",
-                    fontsize=5.7, color="#334155", linespacing=1.32, zorder=3)
+                    fontsize=5.65, color="#334155", linespacing=1.34, zorder=3)
 
     def arrow(x0, y0, x1, y1, color="#334155", lw=0.95):
         ax.annotate(
@@ -119,24 +120,24 @@ def build_fig1_architecture_zh() -> None:
             zorder=2,
         )
 
-    box(0.8, 17.0, 16.4, 19.2, "1. 冻结物理基准",
-        "已布线 ODB/DEF\n原 SDC 与 SPEF (R)\nDRC=0, 天线=0\nFF/TT/SS Hold ≥ 0\n18项兼容候选池",
+    box(0.8, 17.0, 16.4, 19.2, "1. 冻结物理参考",
+        "已布线版图快照 R\n原约束与提取寄生\n全块DRC=0, 天线=0\n多角保持时间非负\n兼容降尺寸候选池",
         fc="#F1F5F9", ec="#475569")
 
     box(20.0, 17.0, 17.6, 19.2, "2. 自适应微批次调度",
-        "灵敏度起序微批(b=3)\n相对Hold失败暂缓拆批\n直连电容前沿重排\n同臂Setup拒收去重\n累计提议送入验证",
+        "初始排序微批 (b=3)\n保持时间失败暂缓拆批\n直连电容前沿重排\n建立时间拒收去重\n累计替换提议派发",
         fc="#EFF6FF", ec=C_HERO, title_c=C_HERO, lw=1.15)
 
-    box(40.4, 17.0, 21.2, 19.2, "3. 窗口化布线前DRC诊断",
-        "原地 swapMaster (0位移)\n仅擦除直连信号线 D(S)\n合并 1.0×H_row 局部窗口\n(2.72 / 0.27 µm 自动缩放)\n精确反查最小冲突邻网 E(S)",
+    box(40.4, 17.0, 21.2, 19.2, "3. 局部窗口化DRC诊断",
+        "原地单元替换（零位移）\n仅擦除直连信号网 D(S)\n合并 1.0 倍行高局部窗口\n行高自适应（2.72 / 0.27 µm）\n精确归因最小冲突邻网 E(S)",
         fc="#E0F2FE", ec=C_HERO, title_c=C_HERO, lw=1.3)
 
     box(64.4, 17.0, 15.6, 19.2, "4. 保护式局部重布",
-        "锁定99.9%旧网FIXED\n仅重布 D(S) + E(S)\n局部DRT + 真实RCX\n残留标记至多1次重试\n零全局扰动扩散",
+        "锁定外围保护线网\n仅重布 D(S) 与 E(S)\n局部详细重布与RCX\n次生违例定向复修\n抑制全局寄生扰动",
         fc="#F0FDFA", ec=C_FIXED, title_c="#115E59", lw=1.1)
 
-    box(82.8, 17.0, 16.4, 19.2, "5. 全项多角签核门",
-        "FF/TT/SS Setup WNS\n与 TNS ≤ 预算上限\n三角Hold非负且不退化\n独立全块 DRC = 0\n天线=0 与 Yosys SEC",
+    box(82.8, 17.0, 16.4, 19.2, "5. 多角物理签核",
+        "FF/TT/SS 建立时间\n损失满足预算上限\n多角保持时间不退化\n独立全块 DRC = 0\n零天线与全网表SEC",
         fc="#FEFCE8", ec="#B45309", title_c="#92400E", lw=1.1)
 
     arrow(17.5, 26.6, 19.7, 26.6)
@@ -144,18 +145,18 @@ def build_fig1_architecture_zh() -> None:
     arrow(61.9, 26.6, 64.1, 26.6)
     arrow(80.3, 26.6, 82.5, 26.6)
 
-    box(8.0, 1.4, 65.5, 10.6, "墙钟随时可交付反馈环（硬预算 T = 720 RAW s，共同筛选计入）",
-        "通过：提交累计物理端点（ODB/DEF/SPEF/SEC 全证）并推进下一批次\n"
-        "拒收（Hold）：暂缓拆批并按 ΔA/(1+C/C_med) 重排前沿  |  拒收（Setup）：原位二分并去重",
+    box(8.0, 1.4, 65.5, 10.6, "墙钟随时可交付闭环（预算 T = 720 s，含公共预筛开销）",
+        "通过：提交累计签核物理端点（版图、寄生与等价性全证）并推进前沿\n"
+        "保持时间拒收：暂缓拆批并按直连电容权重重排  |  建立时间拒收：原位二分并去重",
         fc="#FFF7ED", ec=C_SINGLE, title_c="#9A3412", lw=0.95)
 
     box(76.2, 1.4, 23.0, 10.6, "随时可交付签核版图",
-        "任意截断时刻 t ≤ T\n均交付全签核合格端点\n全块DRC=0, SEC未证=0",
+        "任意截断时刻 t ≤ T\n均交付全签核有效解\n全块DRC=0, SEC全证",
         fc="#ECFDF5", ec="#059669", title_c="#065F46", lw=0.95)
 
     ax.plot([87.5, 87.5, 42.0], [16.7, 14.5, 14.5], color="#B45309", lw=0.95, zorder=2)
     arrow(42.0, 14.5, 42.0, 12.3, color="#B45309")
-    ax.text(65.0, 14.9, "通过 / 失败类型反馈", ha="center", va="bottom", fontsize=5.8, color="#92400E")
+    ax.text(65.0, 14.9, "签核判定与失效类型反馈", ha="center", va="bottom", fontsize=5.8, color="#92400E")
 
     arrow(93.5, 16.7, 93.5, 12.3, color="#059669")
     ax.text(94.4, 14.5, "通过", ha="left", va="center", fontsize=5.6, fontweight="bold", color="#065F46")
@@ -171,6 +172,7 @@ def build_fig2_anytime_curves_zh() -> None:
     asap_h = load_json("tcad_asap7_aes_holdout_20261125/ASAP7_AES_HOLDOUT_VERIFIED.json")
     riscv_v = load_json("tcad_rank_alignment_20261125/RISCV_RANK_ALIGNED_VERIFIED.json")
     uart_v = load_json("tcad_wallclock_schedule_20261125/UART_WALLCLOCK_VERIFIED.json")
+    aes_sg = load_json("tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_VERIFIED.json")
 
     def sky_pts(mode: str, order: str = "forward"):
         arm = [a for a in boxed_v["sky130hd_aes"]["arms"] if a["diagnosis_mode"] == mode and a["order"] == order][0]
@@ -189,7 +191,7 @@ def build_fig2_anytime_curves_zh() -> None:
         return [(c["elapsed_seconds"], c["area_saved"]) for c in arm["accepted"]]
 
     sky_fixed_pts = [(364.63, 33.7824)]
-    sky_greedy_pts = [(357.14, 11.2608), (607.81, 22.5216)]
+    sky_sens_single_pts = [(c["elapsed_seconds"], c["area_saved"]) for c in aes_sg["arms"]["forward"]["single"]["accepted_checkpoints"]]
     asap_single_full_arm = [a for a in asap_h["arms"] if a["strategy"] == "single_sensitivity" and a["direction"] == "forward"][0]
     asap_single_full_pts = [(415.0, 0.10206), (asap_single_full_arm["first_matched_0p20412_s"], 0.20412)]
 
@@ -201,48 +203,48 @@ def build_fig2_anytime_curves_zh() -> None:
             "ax": axes[0, 0], "label": "a", "title": "SKY130HD AES（130 nm，高冲突）",
             "screen": 113.36, "ceiling": 197.6896, "ymax": 122.0, "ylabel": "合格回收面积 (µm²)",
             "series": [
-                ("FAECO (窗口1H)", sky_pts("boxed", "forward"), C_HERO, "-", 2.0),
-                ("FAECO (全块DRC)", sky_pts("full", "forward"), C_HERO_LT, "--", 1.5),
-                ("固定批次 (全块)", sky_fixed_pts, C_FIXED, "-.", 1.3),
-                ("单门贪心", sky_greedy_pts, C_SINGLE, ":", 1.3),
-                ("几何邻网与原生 (0)", [], C_FAIL, "-", 1.1),
+                ("窗口化 FAECO", sky_pts("boxed", "forward"), C_HERO, "-", 2.0),
+                ("全块诊断 FAECO", sky_pts("full", "forward"), C_HERO_LT, "--", 1.5),
+                ("固定微批次（全块）", sky_fixed_pts, C_FIXED, "-.", 1.3),
+                ("灵敏度单门（全块）", sky_sens_single_pts, C_SINGLE, ":", 1.4),
+                ("几何放行与原生 (0)", [], C_FAIL, "-", 1.1),
             ],
-            "note": (704, 100.5, "98.84 µm²\n(50.0% 池上界)"),
+            "note": (704, 100.5, "98.84 µm²\n(50.0% 候选池)"),
             "leg_x": 0.17,
         },
         {
-            "ax": axes[0, 1], "label": "b", "title": "SKY130HD riscv32i（130 nm，同排名）",
+            "ax": axes[0, 1], "label": "b", "title": "SKY130HD riscv32i（130 nm，同起序）",
             "screen": 64.10, "ceiling": 147.6416, "ymax": 95.0, "ylabel": "合格回收面积 (µm²)",
             "series": [
-                ("FAECO (同排名)", riscv_pts("faeco_dedup", "forward"), C_HERO, "-", 2.0),
-                ("固定批次 (同排名)", riscv_pts("fixed_online", "forward"), C_FIXED, "--", 1.5),
-                ("强单门 (同排名)", riscv_pts("single_sensitivity", "forward"), C_SINGLE, "-.", 1.4),
-                ("原生与LR (0)", [], C_FAIL, "-", 1.1),
+                ("FAECO（同起序）", riscv_pts("faeco_dedup", "forward"), C_HERO, "-", 2.0),
+                ("固定微批次（同起序）", riscv_pts("fixed_online", "forward"), C_FIXED, "--", 1.5),
+                ("灵敏度单门（同起序）", riscv_pts("single_sensitivity", "forward"), C_SINGLE, "-.", 1.4),
+                ("原生与 LR (0)", [], C_FAIL, "-", 1.1),
             ],
-            "note": (704, 77.5, "75.07 µm²\n(50.9% 池上界)"),
+            "note": (704, 77.5, "75.07 µm²\n(50.9% 候选池)"),
             "leg_x": 0.10,
         },
         {
-            "ax": axes[1, 0], "label": "c", "title": "ASAP7 UART（7 nm，纯墙钟）",
+            "ax": axes[1, 0], "label": "c", "title": "ASAP7 UART（7 nm，无评估上限）",
             "screen": 81.56, "ceiling": 1.18098, "ymax": 1.04, "ylabel": "合格回收面积 (µm²)",
             "series": [
-                ("FAECO (去重)", uart_pts("faeco_dedup", "forward"), C_HERO, "-", 2.0),
-                ("强单门 (灵敏度)", uart_pts("single_sensitivity", "forward"), C_SINGLE, "--", 1.5),
-                ("固定批次", uart_pts("fixed_online", "forward"), C_FIXED, "-.", 1.4),
-                ("原生与LR (0)", [], C_FAIL, "-", 1.1),
+                ("FAECO（含去重）", uart_pts("faeco_dedup", "forward"), C_HERO, "-", 2.0),
+                ("灵敏度单门", uart_pts("single_sensitivity", "forward"), C_SINGLE, "--", 1.5),
+                ("固定微批次", uart_pts("fixed_online", "forward"), C_FIXED, "-.", 1.4),
+                ("原生与 LR (0)", [], C_FAIL, "-", 1.1),
             ],
-            "note": (704, 0.855, "0.831 µm²\n(70.4% 池上界)"),
+            "note": (704, 0.855, "0.831 µm²\n(70.4% 候选池)"),
             "leg_x": 0.13,
         },
         {
-            "ax": axes[1, 1], "label": "d", "title": "ASAP7 AES（7 nm 独立留出，同排名）",
+            "ax": axes[1, 1], "label": "d", "title": "ASAP7 AES（7 nm 独立留出，同起序）",
             "screen": 156.27, "ceiling": 1.76418, "ymax": 0.80, "ylabel": "合格回收面积 (µm²)",
             "series": [
-                ("FAECO (窗口1H)", asap_boxed_pts("faeco_boxed_drc", "forward"), C_HERO, "-", 2.0),
-                ("FAECO (全块)", asap_boxed_pts("faeco_full_drc", "forward"), C_HERO_LT, "--", 1.5),
-                ("强单门 (窗口1H)", asap_boxed_pts("single_boxed_drc", "forward"), C_SINGLE, "-.", 1.4),
-                ("强单门 (全块)", asap_single_full_pts, C_SINGLE_LT, ":", 1.3),
-                ("原生与LR (0)", [], C_FAIL, "-", 1.1),
+                ("窗口化 FAECO", asap_boxed_pts("faeco_boxed_drc", "forward"), C_HERO, "-", 2.0),
+                ("全块诊断 FAECO", asap_boxed_pts("faeco_full_drc", "forward"), C_HERO_LT, "--", 1.5),
+                ("窗口化灵敏度单门", asap_boxed_pts("single_boxed_drc", "forward"), C_SINGLE, "-.", 1.4),
+                ("全块灵敏度单门", asap_single_full_pts, C_SINGLE_LT, ":", 1.3),
+                ("原生与 LR (0)", [], C_FAIL, "-", 1.1),
             ],
             "note": (704, 0.635, "0.612 µm² (2.0×)\n较全块早 65 s"),
             "leg_x": 0.22,
@@ -252,7 +254,7 @@ def build_fig2_anytime_curves_zh() -> None:
     for p in panels:
         ax = p["ax"]
         ax.axvspan(0, p["screen"], color=C_SHADE, zorder=0)
-        ax.text(p["screen"] * 0.5, p["ymax"] * 0.96, "筛选", ha="center", va="top",
+        ax.text(p["screen"] * 0.5, p["ymax"] * 0.96, "预筛", ha="center", va="top",
                 fontsize=5.8, color="#64748B")
         for name, pts, col, ls, lw in p["series"]:
             xs, ys = step_curve(pts, 720.0)
@@ -264,7 +266,7 @@ def build_fig2_anytime_curves_zh() -> None:
         ax.text(-0.15, 1.07, p["label"], transform=ax.transAxes, fontsize=9.5, fontweight="bold", va="top")
         ax.set_ylabel(p["ylabel"])
         if p["label"] in ("c", "d"):
-            ax.set_xlabel("含共享筛选的墙钟时间 (RAW s)")
+            ax.set_xlabel("含公共预筛的墙钟时间 (s)")
         ax.legend(loc="upper left", bbox_to_anchor=(p["leg_x"], 0.98), handlelength=1.6, labelspacing=0.22, borderaxespad=0.1)
         nx, ny, ntxt = p["note"]
         ax.text(nx, ny, ntxt, fontsize=6.0, color=C_HERO, fontweight="bold", ha="right", va="bottom", linespacing=1.35)
@@ -286,7 +288,7 @@ def build_fig3_geo_causal_zh() -> None:
     fig.subplots_adjust(left=0.075, right=0.985, top=0.86, bottom=0.25, wspace=0.40)
 
     ax = axes[0]
-    cats = ["k1\n(46%)", "r0\n(100%)", "low_r0\n(100%)", "现场DRC\n(100%)"]
+    cats = ["G(k1)\n(46%)", "G(r0)\n(100%)", "G(low)\n(100%)", "现场DRC\n(100%)"]
     mult = [48 / 26, 83 / 26, 410 / 26, 26 / 26]
     cols = [C_SINGLE, C_FAIL, "#94A3B8", C_HERO]
     x = np.arange(len(cats))
@@ -298,12 +300,12 @@ def build_fig3_geo_causal_zh() -> None:
     ax.set_xticks(x)
     ax.set_xticklabels(cats, fontsize=6.1)
     ax.set_ylim(0, 19.8)
-    ax.set_ylabel("放行邻网数 / 精确DRC (×)")
+    ax.set_ylabel("放行邻网数 / 精确归因 (×)")
     ax.set_title("冲突召回与邻网膨胀", loc="left", fontsize=7.4, fontweight="bold", pad=6)
     ax.text(-0.23, 1.12, "a", transform=ax.transAxes, fontsize=9.5, fontweight="bold", va="top")
 
     ax = axes[1]
-    b_cats = ["geo_m1_k1\n3网, 209 s\n(触发重试)", "geo_m1_r0\n9网, 106 s\n(0重试)", "现场DRC\n3网, 123 s\n(0重试)"]
+    b_cats = ["最近邻 G(k1)\n3网, 209 s\n(触发复修)", "接触邻网 G(r0)\n9网, 106 s\n(无复修)", "现场DRC归因\n3网, 123 s\n(无复修)"]
     ss_hold = [-10.482, -10.482, +0.885]
     b_cols = [C_FAIL, C_FAIL, C_HERO]
     x2 = np.arange(len(b_cats))
@@ -317,14 +319,14 @@ def build_fig3_geo_causal_zh() -> None:
             ax.text(b.get_x() + b.get_width() / 2, v + 0.45, lbl, ha="center", va="bottom",
                     fontsize=6.0, fontweight="bold", color=C_HERO)
     ax.set_xticks(x2)
-    ax.set_xticklabels(b_cats, fontsize=5.9)
+    ax.set_xticklabels(b_cats, fontsize=5.8)
     ax.set_ylim(-14.5, 4.4)
-    ax.set_ylabel("SS 角 ΔHold WNS (ps)")
-    ax.set_title("同一 Request 3（同三门）", loc="left", fontsize=7.4, fontweight="bold", pad=6)
+    ax.set_ylabel("慢角保持时间变化 (ps)")
+    ax.set_title("同一三门候选提议", loc="left", fontsize=7.4, fontweight="bold", pad=6)
     ax.text(-0.25, 1.12, "b", transform=ax.transAxes, fontsize=9.5, fontweight="bold", va="top")
 
     ax = axes[2]
-    c_cats = ["原生", "k1", "r0", "固定\n全块", "FAECO\n全块", "FAECO\n窗口"]
+    c_cats = ["原生", "G(k1)", "G(r0)", "固定\n全块", "FAECO\n全块", "FAECO\n窗口"]
     areas = [0.0, 0.0, 0.0, 33.7824, 67.5648, 98.8448]
     c_cols = [C_NEUTRAL, C_FAIL, C_FAIL, C_FIXED, C_HERO_LT, C_HERO]
     x3 = np.arange(len(c_cats))
@@ -363,28 +365,28 @@ def build_fig4_boxed_scaling_zh() -> None:
     sx, sf, sb = grp_means(audit["sky130hd_aes"])
     ax_x, af, ab = grp_means(audit["asap7_aes"])
 
-    ax.plot(ax_x, af, marker="s", markersize=4.4, color=C_SINGLE, linestyle="--", linewidth=1.4, label="ASAP7 7 nm 全块 DRC")
-    ax.plot(ax_x, ab, marker="o", markersize=4.6, color=C_HERO, linestyle="-", linewidth=1.8, label="ASAP7 7 nm 窗口 (1.0 H_row)")
-    ax.plot(sx, sf, marker="^", markersize=4.4, color=C_NEUTRAL, linestyle="--", linewidth=1.3, label="SKY130 130 nm 全块 DRC")
-    ax.plot(sx, sb, marker="D", markersize=4.2, color=C_FIXED, linestyle="-", linewidth=1.7, label="SKY130 130 nm 窗口 (1.0 H_row)")
+    ax.plot(ax_x, af, marker="s", markersize=4.4, color=C_SINGLE, linestyle="--", linewidth=1.4, label="ASAP7 7 nm 全块诊断")
+    ax.plot(ax_x, ab, marker="o", markersize=4.6, color=C_HERO, linestyle="-", linewidth=1.8, label="ASAP7 7 nm 局部窗口 (1.0 倍行高)")
+    ax.plot(sx, sf, marker="^", markersize=4.4, color=C_NEUTRAL, linestyle="--", linewidth=1.3, label="SKY130 130 nm 全块诊断")
+    ax.plot(sx, sb, marker="D", markersize=4.2, color=C_FIXED, linestyle="-", linewidth=1.7, label="SKY130 130 nm 局部窗口 (1.0 倍行高)")
 
     ax.annotate("16.7×", xy=(1.0, ab[0] + 0.8), xytext=(1.35, 9.8),
                 fontsize=6.2, fontweight="bold", color=C_HERO,
                 arrowprops=dict(arrowstyle="->", color=C_HERO, lw=0.6))
     ax.text(6.0, ab[3] + 2.1, "6.2×", ha="center", va="bottom", fontsize=6.2, fontweight="bold", color=C_HERO)
     ax.text(8.8, ab[4] + 1.5, "4.6×", ha="center", va="bottom", fontsize=6.2, fontweight="bold", color=C_HERO)
-    ax.text(4.8, 20.5, "56/56 精确标记一致 (100%)\n原地换门邻居位移 = 0",
+    ax.text(4.8, 20.5, "56/56 精确标记一致 (100%)\n原地替换邻居位移 = 0",
             ha="center", va="center", fontsize=6.0, color="#065F46",
             bbox=dict(boxstyle="round,pad=0.3", fc="#ECFDF5", ec="#10B981", lw=0.6))
 
     ax.set_xlim(0.5, 9.6)
     ax.set_ylim(0, 52)
     ax.set_xticks([1, 2, 3, 6, 9])
-    ax.set_xlabel("单次请求累计换门数")
+    ax.set_xlabel("单次验证累计换门数")
     ax.set_ylabel("单次预检耗时 (s)")
     ax.set_title("单次预检延迟与零漏报召回", loc="left", fontsize=7.5, fontweight="bold", pad=6)
     ax.text(-0.14, 1.11, "a", transform=ax.transAxes, fontsize=9.5, fontweight="bold", va="top")
-    ax.legend(loc="center left", bbox_to_anchor=(0.04, 0.67), fontsize=6.0, labelspacing=0.20)
+    ax.legend(loc="center left", bbox_to_anchor=(0.04, 0.67), fontsize=5.9, labelspacing=0.20)
 
     ax = axes[1]
     sky_arms = boxed_v["sky130hd_aes"]["arms"]
@@ -405,8 +407,8 @@ def build_fig4_boxed_scaling_zh() -> None:
 
     x = np.arange(4)
     w = 0.34
-    ax.bar(x[:2] - w / 2, full_vals, width=w, color=C_NEUTRAL, edgecolor="#333333", lw=0.5, label="全块 DRC 预检")
-    ax.bar(x[:2] + w / 2, box_vals[:2], width=w, color=C_HERO, edgecolor="#333333", lw=0.5, label="窗口 1.0 H_row")
+    ax.bar(x[:2] - w / 2, full_vals, width=w, color=C_NEUTRAL, edgecolor="#333333", lw=0.5, label="全块 DRC 诊断")
+    ax.bar(x[:2] + w / 2, box_vals[:2], width=w, color=C_HERO, edgecolor="#333333", lw=0.5, label="局部窗口 (1.0 倍行高)")
     ax.bar(x[2:], box_vals[2:], width=0.46, color=C_FIXED, edgecolor="#333333", lw=0.5, label="墙钟提前量")
 
     ax.text(0 - w / 2, full_vals[0] + 2.5, f"{full_vals[0]:.1f} s", ha="center", va="bottom", fontsize=5.9)
@@ -420,10 +422,10 @@ def build_fig4_boxed_scaling_zh() -> None:
     ax.set_xticks(x)
     ax.set_xticklabels(groups, fontsize=5.9)
     ax.set_ylim(0, 138)
-    ax.set_ylabel("墙钟时间 (RAW s)")
+    ax.set_ylabel("墙钟时间 (s)")
     ax.set_title("720 s 累计开销与里程碑提速", loc="left", fontsize=7.5, fontweight="bold", pad=6)
     ax.text(-0.14, 1.11, "b", transform=ax.transAxes, fontsize=9.5, fontweight="bold", va="top")
-    ax.legend(loc="upper right", bbox_to_anchor=(0.99, 0.99), fontsize=6.0, labelspacing=0.20)
+    ax.legend(loc="upper right", bbox_to_anchor=(0.99, 0.99), fontsize=5.9, labelspacing=0.20)
 
     save_pub(fig, "fig4_boxed_drc_scaling_zh", check_alignment=True)
 
@@ -433,7 +435,7 @@ def main() -> int:
     build_fig2_anytime_curves_zh()
     build_fig3_geo_causal_zh()
     build_fig4_boxed_scaling_zh()
-    print("GENERATED ALL 4 CHINESE VECTOR FIGURES")
+    print("GENERATED ALL 4 ACADEMIC CHINESE VECTOR FIGURES")
     return 0
 
 

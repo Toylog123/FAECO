@@ -4,6 +4,15 @@
 
 ## 修改记录
 
+### 2026-11-26 中文 4 幅矢量图学术术语精修与灵敏度单门曲线补绘（`nature-figure` 复核）
+
+- **脚本与产物**：`paper/zh/figures/tcad_20261126/{generate_tcad_figures_zh.py, fig1_architecture_zh, fig2_anytime_curves_zh, fig3_geo_causal_ablation_zh, fig4_boxed_drc_scaling_zh}.{pdf,svg,png}`。
+- **改动内容**：
+  1. 去除全部工程/命令行标签（`ODB/DEF`、`swapMaster`、`FIXED`、`RAW s`、`Request 3`、`geo_m1_k1`/`geo_m1_r0`/`C_med` 等），统一替换为标准学术中文 EDA 术语（`已布线版图快照`、`原地单元替换（零位移）`、`1.0 倍行高局部窗口`、`墙钟时间 (s)`、`同一三门候选提议`、`G(k1)/G(r0)/G(low)`、`灵敏度单门`、`同起序`、`无评估上限`）；
+  2. 图 2a 补绘经 `AES_SENSITIVITY_GREEDY_VERIFIED.json` 核验的 `灵敏度单门` 阶梯曲线（`(359.31 s, 11.2608)` → `(489.51 s, 22.5216)` → `(619.30 s, 33.7824 µm²)`），与正文表 3 严格一一对应；
+  3. 避免在 5.8 pt 小字标签中嵌套 Matplotlib mathtext 下标导致实测字号跌破 5 pt，改用清晰全字高符号表达。
+- **质量门禁**：全部 4 幅 PDF 通过 `audit_pdf_text.py --min-pt 5.0`（实测最小字号 `5.6 / 5.8 / 5.8 / 5.7 pt`）与 `audit_figure_collisions.py`（4/4 均 `0 fail / 0 warn`），600 DPI PNG 全幅人工视觉检查通过，已嵌入 12 页中文主稿。
+
 ### 2026-11-26 面向 TCAD 的中英双语 4 幅 Python 出版级矢量图（替代旧 ImageGen PNG）
 
 - **英文版**：`paper/en/figures/tcad_20261126/{generate_tcad_figures.py, fig1_architecture, fig2_anytime_curves, fig3_geo_causal_ablation, fig4_boxed_drc_scaling}.{pdf,svg,png}` 与 `figure_metrics_summary.json`（含四设计 0–720 s Anytime AUC）。全部通过 `audit_panel_alignment`、`audit_pdf_text.py`（≥5.6 pt）及 `audit_figure_collisions.py`（4/4 均 0 fail / 0 warn）。
