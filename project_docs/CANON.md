@@ -1,5 +1,10 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 Stage 4 同协议对照完成，Stage 5 候选阶段开始
+
+- 同一回退协议下，SKY130HD AES 的 0／60／120／240 s 分别交付 9／6／6／18 项，合格面积为 98.8448／67.5648／67.5648／197.6896 µm²。ASAP7 AES 分别交付 6／6／6／3 项，合格面积为 0.61236／0.61236／0.61236／0.30618 µm²。ASAP7 纯微批次与 60／120 s 终态等字节，AUC 由 0.261014 降至 0.208023／0.158731 µm²。失败探针可延迟首次交付，并减少窗内合格回收。最终八臂收据 SHA-256 `5a63f0adfc02a897f8e8fd6f18eea3a972eb635207164e427b23dadf0868299c`。[Stage 4 收据](evidence/tcad_v5_revision_20261126/V5_STEP4_PROBE_SENS_VERIFIED.json)
+- Stage 5 候选流程于约 02:52:26 (UTC+08:00) 接锁，实际预筛台账于 02:52:30 写入。将同一 18 项候选池，以及计入筛选和在线灵敏度排序的 720 s 墙钟，在合格的 40 ns 带电气裕量参考上对比单门、固定微批次和自适应 FAECO。终态待正向物理与等价验收。[V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+
 ## 2026-11-27 Stage 5 独立参考已获完整资格
 
 - 40 ns 带电气裕量的 `riscv32i` 独立重建通过三角 Setup／Hold、电气、DRC、天线与参考 SEC 自检。FF／TT／SS Setup WNS 为 +31.551／+29.021／+6.842 ns，Hold WNS 为 +0.386／+0.596／+1.925 ns，六项 TNS 为零。I/O 保持 65 个非时钟输入、99 个输出以及绝对 2 ns 延时，最终导出 SDC 与前一 40 ns 实现逐字节一致。参考包含 5,456 个功能单元，面积 69,750.6464 µm²，按 TT `nand2_1` 折合约 18,582 个 NAND2 等效门。Stage 5 预检已绑定 40,000 ps 冻结周期和 400 ps 相对 Setup 预算。三个同窗候选臂在双 AES 0 s 对照之后等待同一 EDA 锁。[参考资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC40NS_MMMC_DRV_QUALIFICATION.json) · [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
