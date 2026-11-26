@@ -1,5 +1,9 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 Stage 4 SKY130HD AES 三个正探针预算完成
+
+- 60／120 s 探针分别截停在详细布线与 SEC，均回退交付 6 项、67.5648 µm²，终态物理产物一致，AUC 分别为 14.143977／9.264451 µm²。240 s 探针约 134.036 s 完成，同窗交付 18 项、197.6896 µm²，AUC 为 129.761367 µm²，终态与历史默认探针读数的物理产物一致。ASAP7 AES 新测在运行。历史 0 s 臂的派发上限或拒收复用规则有差异，已登记两个同 V5 回退协议的 0 s 对照，另保留历史参照。[Stage 4 收据](evidence/tcad_v5_revision_20261126/V5_STEP4_PROBE_SENS_VERIFIED.json) · [V5 实验报告](evidence/tcad_v5_revision_20261126/REPORT.md)
+
 ## 2026-11-27 Stage 5 多角参考的电气边界与 Stage 4 开跑
 
 - 40 ns 多角 `riscv32i` 完成独立重建，固定 2 ns I/O，65 个非时钟输入与 99 个输出均覆盖。FF／TT／SS Setup WNS 分别为 +31.520／+28.981／+6.616 ns，Hold WNS 为 +0.397／+0.617／+1.944 ns，六项 TNS 均为零。DRC 与天线为零，参考网表的 SEC 自检为 4,559/0。TT 同一 `_3804_/Y` 超过转换时间与电容上限，严格参考资格仍未通过，候选臂未启动。下一变体保留三角与绝对 I/O 条件，加入原生电气裕量。[40 ns 资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC40NS_MMMC_QUALIFICATION.json)

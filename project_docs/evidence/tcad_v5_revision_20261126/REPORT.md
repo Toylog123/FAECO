@@ -8,7 +8,7 @@
 | 2A UART Setup 拒收去重 | 已实测，见 §2 | [Stage 2 收据](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) |
 | 2B 原生 `recover_power` 挂保护后端 | 所有完整提议及两条 AES 119 项辅助投影均已分类，见 §3 | [Stage 2 收据](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) |
 | 3 双设计四档预算 | 双设计八臂完成，见 §4 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
-| 4 双 AES 探针预算 | 六个新测臂已启动，先跑 SKY130HD AES 60 s | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
+| 4 双 AES 探针预算 | SKY130HD AES 三新档齐，ASAP7 AES 60 s 运行中，见 §7 | [执行交接](../../HANDOFF_2026-11-26_V5_EXEC.md) |
 | 5 同一处理器 RTL 的独立重建严格收敛参考 | 10 ns 有 SS 时序违例。40 ns 三角收敛但电气门失败。两次均未派候选，见 §5–6 | [资格收据](V5_STEP5_TC10NS_QUALIFICATION.json) |
 
 ## 1. Stage 1 实测与既有原件复核
@@ -177,3 +177,28 @@ ORFS 构建 650.989 s、rc0，最终原生及独立 DRC 与天线为零。功能
 | 资格收据（[入仓副本](V5_STEP5_TC40NS_MMMC_QUALIFICATION.json)） | `qualification/CONTROL.json` | `8dd1d882e908cdcf40d50807755d6dc7501c840ebb99e18b9401d8320700c586` |
 | CTS 日志 | `orfs/logs/sky130hd/riscv32i/tc40ns_mmmc/4_1_cts.log` | `5c1c09f633365453ad95fd0c6b7ea9ab85a5f75efee1ecae607475c293551247` |
 | GRT 日志 | `orfs/logs/sky130hd/riscv32i/tc40ns_mmmc/5_1_grt.log` | `225edf1922e3c770b02669d17a7a7dcccd0ff881b793974df7907b1bff5b8146` |
+
+## 7. Stage 4 探针子预算敏感性
+
+720 s 总窗口计入候选筛选，子预算限制阶段一的全池探测，失败后从冻结参考进入微批次回退。[Stage 4 收据](V5_STEP4_PROBE_SENS_VERIFIED.json)
+
+| 设计 | 子预算（s） | 探针状态 / 实测时长（s） | 回收（µm²） | 门数 | AUC（µm²） | 首获终态（s） |
+|---|---:|---|---:|---:|---:|---:|
+| SKY130HD AES | 60 | 子预算截停 / 60.072167 | 67.5648 | 6 / 18 | 14.143977 | 630.951120 |
+| SKY130HD AES | 120 | 子预算截停 / 120.001914 | 67.5648 | 6 / 18 | 9.264451 | 682.125501 |
+| SKY130HD AES | 240 | 通过 / 134.036043 | 197.6896 | 18 / 18 | 129.761367 | 247.399597 |
+
+60 s 试验的阶段一窗口诊断完成，详细布线在探针子预算余下 52.090223 s 时被截停。回退的两个合格时间点为 507.600098 s 与 630.951120 s，最终 SEC 11089/0。最晚合格交付时间在 720 s 内，外层返回时间为 720.015934 s。运行配置 SHA-256 f51b30a5e25c4436bb7921073db066bfe3ba4a731e241cd4e3658dd82074db5d，终态物理收据 SHA-256 b6dce6aa4194efd8f7365eb60f2a9da4df7e3cef115c78cd9728f110220978d1。
+
+120 s 试验的阶段一完成路由/RCX、三角 STA 和独立 DRC，启动 SEC 时仅余 0.581393 s，未完成而触子预算截停。回退两个合格时间点为 560.422424 s 与 682.125501 s，最终 SEC 11089/0，外层返回 720.062757 s。与 60 s 档各完整回退请求的动作与拒因逐项相同，终态 ODB/DEF/Verilog/去日期 SPEF 逐字节一致。运行配置 SHA-256 8e0571b7c28b487fd1bb34aafd2784d27ba84115b6a5956e1eeeb397c373775c，终态物理收据 SHA-256 7756e2f273fddeaee585f7389ec80677e5d1fa04b49aa89452e8a5eba0708d70。
+
+240 s 试验中，阶段一全池在 134.036043 s 完成路由、RCX、三角检查与 SEC，计筛选的合格检查点为 247.399597 s。18 项全部交付，独立 DRC/天线为 0，SEC 11089/0，无回退调用。与历史默认 180 s 全池端点的 ODB/DEF/Verilog/去日期 SPEF 逐字节一致。运行配置 SHA-256 f9eb06ba83ca907a7b2ebd0593b262c3e831b752a24449d48cf1295851a8aab9，物理收据 SHA-256 b4d82c05d181643fe49840096a2acacf5da69669c69433f2fb6cf8af27d7916a，SEC 收据 SHA-256 c748314b41dcacc44c3a5d36f9cdf9ce6ff64cbca48eb00ab6034bfa6a6cd956。
+
+| 设计 | 历史子预算（s） | 探针状态 / 实测时长（s） | 回收（µm²） | 门数 | AUC（µm²） |
+|---|---:|---|---:|---:|---:|
+| SKY130HD AES | 0 | 未启探针 | 98.8448 | 9 / 18 | 正 19.368673 / 反 20.076147 |
+| SKY130HD AES | 默认 180 | 通过 / 137.603110 | 197.6896 | 18 / 18 | 128.781948 |
+| ASAP7 AES | 0 | 未启探针 | 0.61236 | 6 / 18 | 正 0.254383 / 反 0.253990 |
+| ASAP7 AES | 默认 169.119683 | 子预算截停 / 169.240838 | 0.61236 | 6 / 18 | 0.106550 |
+
+历史 0 s 取自 [窗口化检查原收据](../tcad_boxed_drc_20261126/BOXED_DRC_VERIFIED.json)，默认档取自 [V4 Hybrid 原收据](../tcad_v4_revision_20261126/HYBRID_FAECO_4DESIGNS_VERIFIED.json)。SKY130HD 旧 0 s 试验有 6 派发上限且无拒收复用，ASAP7 旧 0 s 试验仅复用有效 Setup/TNS 拒收。V5 正预算各臂回退缓存所有完成拒收，派发数受 720 s 外窗约束。计划在正预算六臂完成后补同回退规则的两条 0 s 新测臂，完整跳过阶段一，保留相同筛选计费、候选起序、三角与物理门。
