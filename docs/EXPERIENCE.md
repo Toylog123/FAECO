@@ -3623,6 +3623,10 @@ Windows Git 的自动换行转换会改变已冻结 JSON 的 SHA，即使 Git bl
 
 R3-1 的公开 STA 收据含门级网表指纹，原包装器在运行时以同名 ODB 替换 Tcl 的网表加载命令。重放从参考资格和候选物理收据取得 ODB 指纹，同时绑定 SPEF、库视图、SDC 和原二进制。只用网表重建可能改变寄生及天线二极管语义。独立目录的重放在原件比对中保留逐角完整报告。 [R3-1 异址重放](../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
 
+## 2026-11-27 — 最小化 EDA 环境需验证持久 ABC 的交互协议
+
+一次私有环境的 RTL 综合生成了 BLIF，父 Yosys 却未收到可识别的结束序列。固定 Yosys 和长临时路径的小网表中，缺 `TERM` 时复现停滞，加入 `TERM=xterm-256color` 后正常导出；生产复跑在相同配置下通过。输入清单的版本应在文件写入结束并成功校验后采集摘要。 [隔离重建](../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考) · [Yosys 固定源码](https://github.com/YosysHQ/yosys/blob/72b0054f0/passes/techmap/abc.cc#L1097-L1168)
+
 ## 2026-11-27 — 分别记录验收、产物读取与进程返回
 
 处理器两臂用独立 cgroup 计量搜索 CPU 和作业内存高水位，另由 scope 外的读者观察原子进度文件，读完四项物理/网表产物并验 SHA 后记时。独立轮询会先观察到停止快照或先观察到外层返回。后处理分别核原验收时刻与观测区间，按原件保留两种顺序。 [V4 补测](../project_docs/evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)

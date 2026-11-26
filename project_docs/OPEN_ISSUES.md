@@ -1858,7 +1858,7 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 
 13 页 V5 中文稿通过内部小修核验。图 1–2 的 Google Antigravity `generate_image` 工具身份已通过原始记录与裁切回算确认，中文致谢已更正。待作者确认完整英文转译及正式署名、通信作者、每位作者的 ORCID 和投稿声明，并在拟投英文包验收 IEEE 版式、修回篇幅与最终致谢。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。 [英文投稿入口](../paper/en/README.md) · [终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
 
-复现中已推进 R3-1 的已布线端点 STA。两套代码路径和独立根上的六视图分别全部重放成功。同主机的范围内，已验 ODB／SPEF、库角和工具路径可映射。跨主机与全流程物理重建仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#r3-1-冻结-uart-端点的异址-sta-重放)
+复现中已完成 R3-1 的已布线端点 STA 异址重放，也在同一 WSL 主机的隔离输入副本上重建 40 ns 参考及原首批合格项。另一个物理主机环境上的完整构建、其他设计及完整多臂在线流程的异址复跑仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考)
 
 V4 资源补证覆盖 40 ns 处理器的自然结束与时窗截停两臂，也补齐小 UART 与两项最大网数代表双 AES 的阶段资源。已核验进程树 CPU、scope 内存高水位、实际读档与返回时刻。跨设计稳定速度、重复方差和外层硬返回接口仍待验证。 [处理器 V4](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取) · [三项阶段资源](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#小-uart-与两项最大代表设计的阶段资源)
 

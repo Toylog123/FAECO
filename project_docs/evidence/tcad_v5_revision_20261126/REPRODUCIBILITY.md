@@ -53,3 +53,50 @@ bash code/scripts/run_with_timeout.sh 120 python3 -E -s -B "$driver" \
 同一 WSL 主机上的两组试验分别使用原仓库与从 `a01e1262` 提取的最小依赖树，第二组在仓库外启动。两组均使用独立目录下的 20 份输入副本。每组重跑参考与候选各 FF／TT／SS 三角。在原报告中移去包装器的 ODB 路径头，在新报告中映射回原路径，然后比较全文及解析的时序数据。两组各 6 份报告全部一致，确认参考 SS Setup WNS 为 +0.794642 ps、候选为 −0.568545 ps，仍由绝对下限独立拒收。同大小候选 SPEF 改一个字节的反例在启动 STA 前退出。此项覆盖同一主机的已布线端点分析。跨主机 PDK／工具兼容性、重新布线、寄生提取、DRC 与 SEC 的重建仍待验。
 
 两组原始收据、SDC、Tcl、实际 STA 日志和拒收反例封装为 29 份原件及一份清单，ZIP SHA-256 为 `2f88fbf9f9ddaac023cbe473613a39a1770191e69f2d164aa4654f3f3f439a3e`。 [异址重放原件](V5_UART_STA_RELOCATED_ORIGINALS.zip)
+
+## 从独立输入副本重建 40 ns 处理器参考
+
+在同一 WSL 主机上用普通用户启动独立用户、挂载与网络命名空间。FAECO 驱动从 `c4ede33d` 清洁提取，ORFS 工作树绑定 `da8f092a02a8e75658cc3100691aabff05f35629`。对拷贝输入中的 25,656 个文件与 121 个符号链接检查路径和字节。外层遮蔽原 `/home`、`/mnt` 与原 `/usr/local/bin`，将冻结副本只读挂载到历史脚本使用的内部路径。运行中从活动 PID 验证三种命名空间不同、三个别名指向只读副本，并确认旧的 Stage 5 输出在该进程中不可见。隔离环境沿用这台主机的 Linux 内核、基础系统工具和系统库。
+
+| 从 RTL 新建的参考检查 | 新旧对照 |
+| --- | --- |
+| 合成、布局、布线和寄生提取 | ORFS 冷起点完整返回，原构建协议在替换输出根后逐字段一致 |
+| ODB、DEF、Verilog、SDC | 四项 SHA-256 完全一致 |
+| SPEF | 仅 `*DATE` 行不同，保留该行标签并统一内容后逐字节一致 |
+| 独立三角 STA、电气与 I/O | 数据全同，65 个非时钟输入和 99 个输出覆盖，Setup/Hold TNS 零 |
+| 原生物理、独立 DRC 与天线 | 全零，独立 DEF 读回指纹与原一致 |
+| 等价检查 | 参考自检，4559 个等价点、零未证 |
+
+归档包括重建物理产物、原始 SPEF、三角与终检收据、活动命名空间记录和输入清单，49 个索引成员及索引自身。ZIP SHA-256 为 `8941e1fde843880a3c701f1114a0b4ac48633080e4c42ead49e74e0ff656891e`。 [隔离重建原件](V5_STAGE5_ISOLATED_REBUILD_ORIGINALS.zip)
+
+在原有冻结安装上，用命名空间驱动捕获输入，在已挂载标签之外选择新目录。换一套 Linux 主机时可搬运捕获目录，再从新环境验证清单与工具启动；完整异机运行待验证。脚本使用 Linux rootless user/mount/net namespace、GNU 工具、Git、rsync、Python、make 和兼容的动态加载环境。
+
+```bash
+# 从 FAECO 仓库根运行，三个变量均使用 Linux 路径。
+driver=project_docs/evidence/tcad_v5_revision_20261126/stage5_rebuild_namespace.sh
+bundle=/var/tmp/faeco_stage5_input
+output=/var/tmp/faeco_stage5_reference
+bash "$driver" capture "$PWD" "$bundle"
+bash "$bundle/driver.sh" probe "$bundle"
+bash code/scripts/run_with_timeout.sh 2400 taskset -c 0-5 \
+    bash "$bundle/driver.sh" run "$bundle" "$output"
+```
+
+同时运行其他 FAECO 试验时沿用该安装的共享 EDA 锁。第一次隔离重建在 ABC 已生成 BLIF 后未返回，独立对照中缺少 `TERM` 的长临时路径同样停滞，恢复 `TERM=xterm-256color` 后小网表和完整构建均完成。归档保留中止收据和对照日志。固定版本的 Yosys 源码显示持久 ABC 流程等待命令回显及完成提示。 [Yosys 固定源码](https://github.com/YosysHQ/yosys/blob/72b0054f0/passes/techmap/abc.cc#L1097-L1168)
+
+### 重建参考后的固定首批
+
+以新参考的独立资格收据为输入，重新执行冻结版预筛、零改动资格和 TT 灵敏度排序。18 项候选、策略／门语义及全序与历史一致后，派发原固定三门的第一批。新候选完成 DRT、RCX、三角 STA、电气、独立 DRC／天线和候选相对新参考的 SEC，合格回收 23.7728 µm²，等价点为 4559／0。新旧候选的 ODB、DEF、Verilog 指纹完全相同，SPEF 仅日期行不同，时序和电气结果一致。原参考、首批来源和实际输出各自绑定。此重放覆盖物理验收，在线复跑包含首个固定批次。
+
+候选驱动放在挂载之外，复用上一节已经核验并完成参考资格的输入与输出。下方两个新路径使用同一主机的普通用户可写目录。
+
+```bash
+candidate_driver=/var/tmp/faeco_stage5_candidate.py
+candidate_output=/var/tmp/faeco_stage5_first_candidate
+cp project_docs/evidence/tcad_v5_revision_20261126/replay_stage5_fixed_first.py "$candidate_driver"
+bash code/scripts/run_with_timeout.sh 1540 taskset -c 0-5 \
+    bash "$bundle/driver.sh" candidate "$bundle" "$candidate_driver" "$output" "$candidate_output"
+python3 project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_isolated_evidence.py
+```
+
+候选原件包含 35 个索引成员及清单，包含新旧首批的完整 SEC 脚本与日志，ZIP SHA-256 为 `a64d850c924d79f1e2e8865f7368db447069d93465b382f685f19f2e301531af`。无 EDA 核查脚本校验两个包、四类物理字节、SPEF、三角报告和绑定到参考的候选 SEC。 [首批重建原件](V5_STAGE5_ISOLATED_FIRST_CANDIDATE_ORIGINALS.zip) · [两包复核脚本](verify_stage5_isolated_evidence.py)
