@@ -1820,7 +1820,7 @@ V5 Stage 2B 240 s 原收据中，SKY130HD 两设计因单次保护路由触及�
 
 原名修复后，真实 120 项回放到达预检完成标志并生成 81 盒，仍被走线计数不变量拦截。多清除的 3 条网均由同一 DFF 引入，其中 clknet_leaf_3_clk 的 DEF 用途为 CLOCK。现行数据网保护协议保持时钟树冻结，完整提议应归 unsupported_protected_scope。新增只移除该 DFF 的 119 项投影，两臂同 600 s 路由与 840 s 评估上限，单列结果。回归诊断 SHA-256 e5e523080154b64f444772c5ef4f76159b6cc8a0af1c03f9923e0230f087a481。
 
-600 s 的四个完整提议键已落盘。AES 两臂为完整提议的窗口保护作用域不兼容，riscv32i 两臂均为单次路由触及 600 s 上限，未得物理时序和 SEC 终态。119 项数据网投影仍在运行。[阶段报告](evidence/tcad_v5_revision_20261126/REPORT.md#3-stage-2b原生-recover_power-保护后端对照)
+600 s 的四个完整提议键已落盘。AES 两臂为完整提议的窗口保护作用域不兼容，riscv32i 两臂均为单次路由触及 600 s 上限，未得物理时序和 SEC 终态。119 项数据网投影两臂均已完成测试，实际结果为 600 s DRT 截停、无时序/SEC 终态。整批比较仍受动作空间与物理时限限制。[阶段报告](evidence/tcad_v5_revision_20261126/REPORT.md#3-stage-2b原生-recover_power-保护后端对照)
 
 ## OI-109（2026-11-26，open）— 万门级独立对照的资格门与共用后端缺失
 
@@ -1840,4 +1840,4 @@ Stage 4 接手版 0 s 导入 AUC 为硬编码正序四舍五入值。直接积�
 
 Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收集非时钟输入；导出后核对所有预期非时钟输入与输出的 2 ns 延迟、实际/虚拟时钟、独立三角时序及物理资格。若完整约束使 10 ns 起点无法闭合，保留实测失败分类和完整 I/O 约束；样本资格继续待解决。原 6 ns 数据保留其实际约束口径。[新实验登记](evidence/EXPERIMENT_REGISTRY.md#tcad-v5-revision-suite-续跑预登记)
 
-同一次源路径核查发现旧 ORFS 将 SDC 的 ns 数值 6.0 直接传入以 ps 计的 ABC 目标。旧生成 clock_period.txt 为 6.0，原 Yosys 日志明确为 ABC -D 6.0。新独立构建将映射目标显式设为 10000 ps，并核验构建产物 clock_period.txt。该修正与完整 I/O 同为新起点的预登记条件。
+同一次源路径核查发现旧 ORFS 将 SDC 的 ns 数值 6.0 直接传入以 ps 计的 ABC 目标。旧生成 clock_period.txt 为 6.0，原 Yosys 日志明确为 ABC -D 6.0。新独立构建将映射目标显式设为 10000 ps，并核验构建产物 clock_period.txt。该修正与完整 I/O 同为新起点的预登记条件。独立构建已启动，实际新 clock_period.txt 显示 10000；完成后继续核对最终导出的完整 I/O 和三角物理资格。

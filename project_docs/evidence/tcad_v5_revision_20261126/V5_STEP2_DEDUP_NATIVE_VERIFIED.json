@@ -639,6 +639,140 @@
       },
       "route_timeout_seconds": 600.0,
       "outer_window_seconds": 840.0000000000002
+    },
+    "sky130hd_aes::native_std::rt600s::signal_only": {
+      "design": "sky130hd_aes",
+      "mode": "native_std",
+      "native_proposed_count": 120,
+      "protected_attempted_count": 119,
+      "signal_only_projection": true,
+      "protected_net_conflicts": {
+        "sa32_sr\\[7\\]$_DFF_P_": [
+          "clknet_leaf_3_clk"
+        ]
+      },
+      "extract_s": 12.645,
+      "protected_eval_s": 633.035,
+      "status": "evaluation_timeout",
+      "qualified_area_saved_um2": 0.0,
+      "sec_pass": false,
+      "failures": [
+        "command rc=None, log=/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/runner/protected_eval/initial/route.log"
+      ],
+      "views_delta_ps": {},
+      "raw_directory": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5",
+      "proposal": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/extract/native_diffs.txt",
+        "sha256": "6bd29c749324b79d8aded1d9e136043472bfbd74935fcf57d94c4f9730652db8",
+        "bytes": 7087
+      },
+      "evaluation": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/runner/protected_eval/result.json",
+        "sha256": "e87fc9dc35908b5a621df33377a021c14a7c35bf1d36b4527f5511363d094fec",
+        "bytes": 4732
+      },
+      "diagnosis": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/runner/diagnosis/protected_eval/diagnosis.json",
+        "sha256": "c1f209e709cd477a93cf6a706fb4176632452bb52878f069fa020aed0c83102e",
+        "bytes": 9124
+      },
+      "subprocess_ledger": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/subprocesses.json",
+        "sha256": "68ba4d076619dd03b9a126bb384fd3881a0e0560a1e63992cf5fb26e619f89a2",
+        "bytes": 1738
+      },
+      "boxed_backend": {
+        "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_boxed_drc_20261126/boxed_drc.py",
+        "sha256": "ab759bfeaad014ccb923bccb90fc75153b1299bf871f0f981ce983a12b69d8b5",
+        "bytes": 8971
+      },
+      "timeout_operation": {
+        "command": [
+          "/home/toylog/.cache/bazel/_bazel_toylog/c540bbdc4bbb635360729b4d7a91c803/execroot/_main/bazel-out/k8-opt/bin/openroad_unstamped",
+          "-threads",
+          "4",
+          "-exit",
+          "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/runner/protected_eval/initial/route.tcl"
+        ],
+        "start_raw": 2464.50356612,
+        "effective_timeout_seconds": 600.0,
+        "configured_timeout_seconds": 600.0,
+        "timeout_bound": "stage",
+        "log": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_std::rt600s::signal_only/attempt_14aigmg5/runner/protected_eval/initial/route.log",
+        "returncode": null,
+        "wall_seconds": 600.3340869350004,
+        "timeout_seconds": 600.0,
+        "stop_raw": 3064.837930233
+      },
+      "route_timeout_seconds": 600.0,
+      "outer_window_seconds": 840.0
+    },
+    "sky130hd_aes::native_allow_setup::rt600s::signal_only": {
+      "design": "sky130hd_aes",
+      "mode": "native_allow_setup",
+      "native_proposed_count": 120,
+      "protected_attempted_count": 119,
+      "signal_only_projection": true,
+      "protected_net_conflicts": {
+        "sa32_sr\\[7\\]$_DFF_P_": [
+          "clknet_leaf_3_clk"
+        ]
+      },
+      "extract_s": 13.238,
+      "protected_eval_s": 632.867,
+      "status": "evaluation_timeout",
+      "qualified_area_saved_um2": 0.0,
+      "sec_pass": false,
+      "failures": [
+        "command rc=None, log=/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/runner/protected_eval/initial/route.log"
+      ],
+      "views_delta_ps": {},
+      "raw_directory": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw",
+      "proposal": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/extract/native_diffs.txt",
+        "sha256": "6bd29c749324b79d8aded1d9e136043472bfbd74935fcf57d94c4f9730652db8",
+        "bytes": 7087
+      },
+      "evaluation": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/runner/protected_eval/result.json",
+        "sha256": "015dff672a707bec153a844ebda5aa77d99b6f1f09bd7df70fa171e34734ba13",
+        "bytes": 4756
+      },
+      "diagnosis": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/runner/diagnosis/protected_eval/diagnosis.json",
+        "sha256": "f35b19e77b60c1404a224a5da0506e737f00367fb7ba87f42435a08e6cf67b58",
+        "bytes": 9140
+      },
+      "subprocess_ledger": {
+        "path": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/subprocesses.json",
+        "sha256": "75e1224d959111e9da9ad3bd2e35af9ca6fde62197d580c928d628581ffc75b6",
+        "bytes": 1769
+      },
+      "boxed_backend": {
+        "path": "/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_boxed_drc_20261126/boxed_drc.py",
+        "sha256": "ab759bfeaad014ccb923bccb90fc75153b1299bf871f0f981ce983a12b69d8b5",
+        "bytes": 8971
+      },
+      "timeout_operation": {
+        "command": [
+          "/home/toylog/.cache/bazel/_bazel_toylog/c540bbdc4bbb635360729b4d7a91c803/execroot/_main/bazel-out/k8-opt/bin/openroad_unstamped",
+          "-threads",
+          "4",
+          "-exit",
+          "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/runner/protected_eval/initial/route.tcl"
+        ],
+        "start_raw": 3116.11631804,
+        "effective_timeout_seconds": 600.0,
+        "configured_timeout_seconds": 600.0,
+        "timeout_bound": "stage",
+        "log": "/home/toylog/faeco_v5_step2_dedup_native_20261126_v1/native_protected/sky130hd_aes/native_allow_setup::rt600s::signal_only/attempt_3oplv6sw/runner/protected_eval/initial/route.log",
+        "returncode": null,
+        "wall_seconds": 600.3264786300001,
+        "timeout_seconds": 600.0,
+        "stop_raw": 3716.443058999
+      },
+      "route_timeout_seconds": 600.0,
+      "outer_window_seconds": 840.0
     }
   }
 }
