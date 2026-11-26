@@ -1,5 +1,10 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-26 V5 冲刺就绪（第二轮同行评审 85/100 后的脚本、预检与交接状态）
+
+- **第二轮模拟同行评审结论**：V4 14 页中文稿评为 **Major Revision 偏小修（接近 Minor Revision，85/100，较 V3 71.5 分明显提升）**；核心框架已稳固，无需推翻，下一轮聚焦两条证据链收口：① 命题 1 数学严密化 + 7 nm 非零受控 DRC 实证；② 非单调可行域形式化 + 补齐最后 5 项高杠杆实验（功耗/6角、4 线程 DRT 确定性、Setup 去重消融、原生挂载保护后端、双设计多档预算在线搜索、双 AES 探针敏感性、万门级独立 Timing-closed 基准）。
+- **脚本与预检状态**：全部 5 个可断点续跑脚本及一键启动器已落盘 `project_docs/evidence/tcad_v5_revision_20261126/` 并通过语法、LF 行尾、模块导入、先决路径及离线反例提取无 EDA 预检（`smoke_verify_v5.py` `PREFLIGHT_SMOKE_PASS`，已确认 SKY130HD AES 真实非单调可行域反例 $T_3 \subset S_{18}$ 与全部 4/4 Hybrid 验收检查点 $\le 720.00\text{\,s}$）；**本轮未启动长时 EDA 运行**，留待用户在空闲时段一键执行。详见 [V5 交接手册](HANDOFF_2026-11-26_V5.md)。
+
 ## 2026-11-26 V4 大修专项闭环：LEF 规则实证、同窗口组件消融、Hybrid FAECO 四设计实测、Timing-closed 基准与参数敏感性
 
 - **双工艺真实 `.tlef` 规则与 3× RCX/STA 确定性**：解析本地 `sky130_fd_sc_hd.tlef`（$H_{\mathrm{row}}=2.72\,\mu\text{m}$）与 `asap7_tech_1x_201209.lef`（$H_{\mathrm{row}}=0.27\,\mu\text{m}$）证实：SKY130HD 全栈 `li1–met5`/`mcon–via4`（$\le 1.60\,\mu\text{m}$）及 ASAP7 引脚与中下层 `V0–V7`/`M1–M7`（$\le 0.072\,\mu\text{m}$，引脚层 `M1–M3` 仅 `0.018 µm`）均严格小于 $1.0\times H_{\mathrm{row}}$；ASAP7 高层电源/全局层 `M8`/`M9`/`Pad` 超出 $H_{\mathrm{row}}$ 但不受原地单元替换影响，命题 1 现以集合论（$\Delta G(S)\oplus B(r_{\mathrm{drc}})$）与引脚层作用域 $\mathcal{L}_{\mathrm{pin}}$ 严格限定。3 次重复 RCX+三工艺角 STA 去日期 SPEF 逐字节一致、Hold 极差严格 `0.000 ps`。全 4 设计 18 项池均为 18/18 互异实例。[LEF 与确定性审计](evidence/tcad_v4_revision_20261126/LEF_AND_DETERMINISM_AUDIT.json) · [离线容差审计](evidence/tcad_v4_revision_20261126/OFFLINE_RECEIPT_AUDIT.json)

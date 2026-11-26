@@ -8383,3 +8383,16 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
   3. **Hybrid FAECO 四设计 720 s 全量实测**（`HYBRID_FAECO_4DESIGNS_VERIFIED.json`）：引入有界乐观全池探针 $\tau_{\mathrm{probe}}=\min(180\text{\,s},\,0.30(\tau_{\max}-t_{\mathrm{screen}}))$ 与无损微批次回退；SKY130HD AES 探针 137.6 s（含预筛 251.0 s）直达 **197.6896 µm²（18/18, 100% 池, AUC 128.78）**，其余三设计（`riscv32i`、`uart`、`asap7/aes`）均无损回退至完全相同终态面积（0 DRC, SEC 全证）。
   4. **绝对时序收敛基准、7 nm 扩展 DRC 与 $b/K$ 敏感性**（`TIMING_CLOSED_DRC_SENS_VERIFIED.json`）：新增 `asap7/uart @ 500 ps` 严格 Timing-closed 基准（三工艺角 Setup/Hold 全正），FAECO 交付 **0.83106 µm²（13/18, AUC 0.456）** 并保持 Timing-closed；14 组 7 nm 18–120 门及零重叠镜像引脚偏移测试 0 FN/0 FP（揭示万网大模块 1.14–7.05× 与 797 网小模块 0.60–1.22× 尺度分界）；批宽 $b\in\{1,2,3,6,9,18\}$ 呈经典倒 U 曲线峰值于 $b\in\{2,3\}$，扩展池 $K=36$ 达 **1.50174 µm²（1.901% 面积, AUC 0.722）**。[证据报告](evidence/tcad_v4_revision_20261126/REPORT.md)
 - **V4 五图升级与 14 页中文主稿视觉 QA**：按用户美学要求，图 1（`fig1_framework_v4.png`）与图 2（`fig2_boxed_drc_mechanism_v4.png`）采用高质感出版级机制示意图，图 3–5（`fig3..5_*_v4_zh.pdf`）采用收据直驱 Python 矢量数据图（`audit_pdf_text` 5.4–5.7 pt PASS，`audit_figure_collisions` 0 fail / 0 warn）。更新题名、中图法分类号 `TN402`、命题 1 正式对称差/闵可夫斯基证明、ECO-qualified vs Timing-closed 状态分层及全部 12 表与算法 1；LuaLaTeX 双遍 `rc1=0, rc2=0`，**14 页**（0 错误、0 Overfull、22/22 参考文献严格递增），14/14 逐页视觉 QA 通过。TeX SHA-256 `0d226ac2…`（92,828 B），三副本 PDF 逐字节同步 `328336e2…`（1,584,511 B）。同步更新 `CANON.md`、`EXPERIMENT_REGISTRY.md`、`paper/zh/CHANGE_LOG.md`、`paper/zh/figures/CHANGE_LOG.md`、`.codex-handoff.json` 与 `LOGS.md`；英文转译按要求继续暂缓，待中文 V4 审阅。
+
+## LOG-20261126-08｜完成第二轮评审（85/100）响应规划、全部 5 阶段 V5 实验脚本编写预检与交接手册
+
+- **用户决策与状态**：接收第二轮同行评审意见（85/100，Major Revision 偏小修，接近 Minor Revision），用户选定全套 V5 冲刺范围并指示**先写好全部实验脚本、做好交接与记录文档，待空闲时段自行执行**，因此本轮不启动长时 EDA 作业。
+- **V5 实验脚本套组与一键启动器（`project_docs/evidence/tcad_v5_revision_20261126/`）**：
+  - `run_v5_step1_power_7nm_det.py`（~5–8 min）：非单调可行域反例提取 + Hybrid/UART-TC/K=36 功耗与 6 角补测 + 7 nm `asap7/aes` 5 组受控非零 M1/M2/M3 短路/间距 DRC 实测 + 4 线程 DRT+RCX+三角 STA 3× 重复确定性审计；
+  - `run_v5_step2_dedup_and_native_protected.py`（~15 min）：`asap7/uart` Setup 去重开/关独立消融 + 四设计 OpenROAD 原生 `recover_power` 挂载 FAECO $1.0H_{\mathrm{row}}$ 保护后端解耦；
+  - `run_v5_step3_multibudget_online.py`（~45 min）：`asap7/uart` 与 `sky130hd/aes` 四档 Setup 预算（0/0.5/1/2%）独立在线搜索；
+  - `run_v5_step4_probe_sensitivity.py`（~40 min）：双 AES Hybrid 探针子预算 $\tau_{\mathrm{probe}}\in\{0,60,120,180,240\}\text{\,s}$ 五点敏感性；
+  - `run_v5_step5_10k_timing_closed.py`（~35 min）：全新 ORFS 从头构建的万门级独立绝对收敛基准 `SKY130HD riscv32i-TC @ 10.0 ns`（启用显式 Timing-closed 硬门控）；
+  - `run_all_v5_experiments.sh`（支持 `--stage 1..5|all` 与 `--force`，内置 `taskset -c 0-5` 断点续跑与 SHA-256 汇总）及 `smoke_verify_v5.py`。
+- **无 EDA 预检验证**：`bash -n`（`BASH_SYNTAX_OK`，LF 行尾）、`python3 -m py_compile`（`PY_COMPILE_OK`）及 `smoke_verify_v5.py`（`ALL_5_MODULES_IMPORTED_OK`、`ALL_PREREQUISITE_PATHS_OK`、`SUBSET_T_FOUND: True`、`PREFLIGHT_SMOKE_PASS`）全数通过，产出 `V5_PREFLIGHT_PART1_AUDIT.json` 证实 SKY130HD AES 真实非单调反例 $T_3 \subset S_{18}$ 及全 4 设计 Hybrid 验收检查点严格 $\le 720.00\text{\,s}$。
+- **交接与记录同步**：新建 [HANDOFF_2026-11-26_V5.md](HANDOFF_2026-11-26_V5.md) 与 [evidence/tcad_v5_revision_20261126/README.md](evidence/tcad_v5_revision_20261126/README.md)，同步更新 `CANON.md`、`EXPERIMENT_REGISTRY.md`、`.codex-handoff.json` 与 `LOGS.md`。待用户跑完实验后即按交接清单完成 V5 中文定稿。

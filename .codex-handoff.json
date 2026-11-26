@@ -1,11 +1,12 @@
 {
   "timestamp": "2026-11-26",
-  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。已完成响应大修意见的 V4 全面实验与中文主稿升级（Hybrid FAECO 四设计实测、同 1.0×H_row 窗口五级组件消融、命题 1 正式证明与双工艺真实技术 LEF 逐层核验、ASAP7 UART-TC 绝对时序收敛基准、b/K 敏感性、7 nm 扩展 DRC 与 3× RCX/STA 确定性审计）；中文 V4 主稿（14 页、5 图、12 表、1 算法，2 幅出版级示意图 + 3 幅矢量数据图，0 Overfull，14/14 全页视觉 QA 通过）已交付，待用户审阅确认后转译英文 IEEEtran 投稿稿。",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。V4 14 页中文稿已获第二轮同行评审 85/100（Major Revision 偏小修，接近 Minor Revision）；响应全套 V5 冲刺的 5 个可断点续跑实验脚本、一键启动器（run_all_v5_experiments.sh）与无 EDA 预检（smoke_verify_v5.py PASS）均已落盘就绪，等待用户空闲时段运行；实验跑完后按 project_docs/HANDOFF_2026-11-26_V5.md 完成 V5 中文定稿，再转译英文 IEEEtran 投稿稿。",
   "project": "FAECO",
   "read_order": [
+    "project_docs/HANDOFF_2026-11-26_V5.md",
     "project_docs/HANDOFF_2026-11-25.md",
     "project_docs/CANON.md",
-    "project_docs/evidence/tcad_publication_assessment_20261125/REPORT.md",
+    "project_docs/evidence/tcad_v5_revision_20261126/README.md",
     "project_docs/OPEN_ISSUES.md",
     "project_docs/PROJECT_MAP.md",
     "project_docs/LOGS.md"
@@ -59,7 +60,8 @@
     }
   },
   "next_steps": [
-    "按 project_docs/HANDOFF_2026-11-25.md 的后续实验顺序执行。"
+    "空闲时段在 WSL2 运行 bash /mnt/d/BaiduSyncdisk/01_Papers/03_FAECO/project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh（支持 --stage 1..5 分步或全量夜间跑完）。",
+    "实验 JSON 全部落盘后，按 project_docs/HANDOFF_2026-11-26_V5.md §4 修订 V5 中文主稿与数据图，完成编译与全页视觉 QA，确认后再转译英文 IEEEtran TCAD 投稿稿。"
   ],
   "records": {
     "canon_rulings": "\u00a71 \u88c1\u5b9a 15\uff08\u65b9\u5411\u8f6c\u6298\uff09/ 16\uff08P1 FAIL\uff09/ 17\uff08Hybrid FAIL\uff09/ 18\uff08P1\u2032 pre-CTS pilot PASS\uff09/ 19\uff08P1\u2032 post-CTS FAIL\uff09",

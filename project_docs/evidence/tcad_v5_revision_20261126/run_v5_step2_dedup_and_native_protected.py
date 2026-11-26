@@ -1,0 +1,332 @@
+#!/usr/bin/env python3
+"""V5 Stage 2 (resumable, pinned CPU 0-5):
+Part A: Setup Deduplication Independent Ablation on asap7/uart
+  - Compares dedup=OFF (known_split_rejection=None) vs dedup=ON under identical
+    1.0*H_row boxed DRC backend, 18-action pool, area initial rank, 720 s wall-clock.
+Part B: OpenROAD Native `repair_timing -recover_power` Mounted on FAECO's
+  1.0*H_row Protected Local-Reroute Backend across all 4 designs
+  (sky130hd_aes, sky130hd_riscv32i, asap7_uart, asap7_aes) for both standard and
+  `-allow_setup_violations` modes -> cleanly decouples native sizing selection from
+  unguarded full-block rerouting!
+"""
+from __future__ import annotations
+
+import hashlib
+import json
+import re
+import shutil
+import subprocess
+import sys
+from dataclasses import replace as dc_replace
+from pathlib import Path
+
+REPO = Path("/mnt/d/BaiduSyncdisk/01_Papers/03_FAECO")
+EVID = REPO / "project_docs/evidence"
+for sub in (
+    "tcad_ibex_20261123",
+    "tcad_holdout_20261123",
+    "tcad_wallclock_schedule_20261125",
+    "tcad_asap7_aes_holdout_20261125",
+    "tcad_boxed_drc_20261126",
+    "tcad_external_baselines_20261125",
+):
+    p = str(EVID / sub)
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
+import compare_ibex as cmp
+import incident_cap_priority
+import run_lr_4designs as lr_mod
+import run_qualified_wallclock as qualified
+from run_aes_incident_priority_matched_v2 import WallWindowEnded, process_ledger
+from run_screened_matrix import RELATIVE_HOLD_REASONS, bind_runtime, raw_seconds
+
+OR_BIN = "/home/toylog/.cache/bazel/_bazel_toylog/c540bbdc4bbb635360729b4d7a91c803/execroot/_main/bazel-out/k8-opt/bin/openroad_unstamped"
+OUT_ROOT = Path("/home/toylog/faeco_v5_step2_dedup_native_20261126_v1")
+OUT_JSON = EVID / "tcad_v5_revision_20261126/V5_STEP2_DEDUP_NATIVE_VERIFIED.json"
+LIMIT_S = 720.0
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def compute_auc(cps: list[dict], limit_s: float = 720.0) -> float:
+    best = 0.0
+    pts = [(0.0, 0.0)]
+    for c in sorted(cps, key=lambda x: x["elapsed_s"]):
+        if c["elapsed_s"] <= limit_s and c["accepted"] and c["area_saved_um2"] > best:
+            best = float(c["area_saved_um2"])
+            pts.append((float(c["elapsed_s"]), best))
+    pts.append((limit_s, best))
+    return sum(max(0.0, t1 - t0) * v0 for (t0, v0), (t1, _) in zip(pts, pts[1:])) / limit_s
+
+
+def run_uart_dedup_ablation(existing: dict, force: bool) -> dict:
+    out = dict(existing)
+    for mode, use_dedup in (("dedup_off", False), ("dedup_on", True)):
+        if mode in out and not force:
+            print(f"[Stage 2A] Skipping existing {mode}", flush=True)
+            continue
+        rdir = OUT_ROOT / "uart_dedup" / mode
+        if rdir.exists():
+            shutil.rmtree(rdir)
+        runner, pdk, budget_ps, _, screen_s = lr_mod.make_boxed_runner("asap7_uart", rdir)
+        ref_area = runner.eval.ref_area
+        pool = list(runner.pool)
+        pool_ceiling = sum(a.estimated_area_saving for a in pool)
+
+        with (
+            bind_runtime(runner.top, runner.flow["fastroute.tcl"]),
+            qualified.qualified_ranking(),
+            qualified.qualified_process_clock(),
+        ):
+            runner.use_preview = False
+            reference = runner.qualify_zero()
+            runner.use_preview = True
+
+            begun = raw_seconds()
+            deadline = begun + (LIMIT_S - screen_s)
+            reqs = []
+            cps = []
+            best_ep = reference
+            best_saved = 0.0
+            best_gates = 0
+            known_rej: set[tuple[str, ...]] = set()
+            dedup_hits = 0
+
+            def eval_fn(actions):
+                nonlocal best_ep, best_saved, best_gates
+                now = raw_seconds()
+                if now >= deadline:
+                    raise WallWindowEnded()
+                seq = len(reqs) + 1
+                reqs.append({"id": seq, "actions": list(actions)})
+                ep, rec = runner.attempt(actions, rdir / "trials" / f"{seq:02d}")
+                fin = raw_seconds()
+                if fin >= deadline:
+                    raise WallWindowEnded()
+                acc = cmp.assess(reference, ep, runner.policy).feasible and ep.area < best_ep.area - 1e-9 and ep.sec_pass
+                reqs[-1].update(failures=rec["failures"], accepted=acc)
+                if not acc:
+                    # Only record pure-setup complete-measurement rejections (excluding timeouts/DRC/hold)
+                    fails = set(rec["failures"])
+                    if fails and fails.issubset({"FF:setup_budget", "TT:setup_budget", "SS:setup_budget", "FF:tns_budget", "TT:tns_budget", "SS:tns_budget"}):
+                        known_rej.add(tuple(sorted(actions)))
+                else:
+                    best_ep = ep
+                    best_saved = ref_area - ep.area
+                    best_gates = len(actions)
+                cps.append({"elapsed_s": screen_s + (fin - begun), "accepted": acc, "area_saved_um2": (ref_area - ep.area) if acc else 0.0, "failures": rec["failures"]})
+                return ep
+
+            def defer_fn(actions):
+                return bool(RELATIVE_HOLD_REASONS.intersection(reqs[-1].get("failures", [])))
+
+            def known_fn(trial):
+                nonlocal dedup_hits
+                if tuple(sorted(trial)) in known_rej:
+                    dedup_hits += 1
+                    return True
+                return False
+
+            with process_ledger(rdir / "subprocesses.json", deadline):
+                try:
+                    rcap = incident_cap_priority.build_incident_priority(runner.eval.control["def"], runner.eval.control["spef"], pool)
+                    prios = {k: row["priority"] for k, row in rcap["actions"].items()}
+                    cmp.adaptive_batch_recovery(
+                        reference, pool, eval_fn, runner.policy,
+                        max_evaluations=None, batch_size=3,
+                        defer_split_for=defer_fn,
+                        priority_after_defer=prios,
+                        known_split_rejection=(known_fn if use_dedup else None),
+                    )
+                except WallWindowEnded:
+                    pass
+
+            total_wall = screen_s + (raw_seconds() - begun)
+            auc = compute_auc(cps, LIMIT_S)
+            out[mode] = {
+                "use_dedup": use_dedup,
+                "qualified_area_saved_um2": best_saved,
+                "qualified_gates": best_gates,
+                "area_saved_pct": 100.0 * best_saved / ref_area,
+                "pool_capture_pct": 100.0 * best_saved / pool_ceiling,
+                "anytime_auc_um2": auc,
+                "logical_finished": len(cps),
+                "dedup_hits": dedup_hits,
+                "total_wall_s_incl_screen": total_wall,
+                "checkpoints": cps,
+            }
+            print(f"  [Stage 2A/{mode}] saved={best_saved:.6f} um2 ({best_gates}/18), AUC={auc:.4f}, evals={len(cps)}, dedup_hits={dedup_hits}, wall={total_wall:.1f}s", flush=True)
+    return out
+
+
+def extract_native_resizes(runner, extra_flags: str, out_dir: Path) -> tuple[list[tuple[str, str, str]], float]:
+    """Run OpenROAD native `repair_timing -recover_power 100` in-memory on frozen control ODB/SPEF
+    and extract the exact list of (inst_odb, old_master, new_master) resized cells."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    diff_txt = out_dir / "native_diffs.txt"
+    tcl = out_dir / "extract_native.tcl"
+    tt_libs = runner.eval.libraries["TT"]
+    ctrl = runner.eval.control
+    lines = [f"read_liberty {cmp.tcl(lib)}" for lib in tt_libs]
+    lines += [
+        f"read_db {cmp.tcl(ctrl['odb'])}",
+        f"read_sdc {cmp.tcl(ctrl['sdc'])}",
+        f"read_spef {cmp.tcl(ctrl['spef'])}",
+        f"source {cmp.tcl(runner.flow['setRC.tcl'])}",
+        "set blk [ord::get_db_block]",
+        "array set before_m {}",
+        "foreach inst [$blk getInsts] {",
+        "  if { ![$inst isFixed] } { set before_m([$inst getName]) [[$inst getMaster] getName] }",
+        "}",
+        "remove_fillers",
+        f"repair_timing -recover_power 100 {extra_flags}",
+        f"set f [open {cmp.tcl(diff_txt)} w]",
+        "foreach inst [$blk getInsts] {",
+        "  set nm [$inst getName]",
+        "  if { [info exists before_m($nm)] } {",
+        "    set am [[$inst getMaster] getName]",
+        "    if { $am ne $before_m($nm) } {",
+        "      puts $f \"$nm\\t$before_m($nm)\\t$am\"",
+        "    }",
+        "  }",
+        "}",
+        "close $f",
+        "puts NATIVE_EXTRACT_OK",
+        "exit",
+    ]
+    tcl.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    t0 = raw_seconds()
+    r = subprocess.run([OR_BIN, "-no_init", "-no_splash", "-threads", "1", "-exit", str(tcl)],
+                       capture_output=True, text=True, timeout=300)
+    dt = raw_seconds() - t0
+    assert r.returncode == 0, f"native extract failed: {r.stderr[-400:]}"
+    diffs = []
+    for ln in diff_txt.read_text(encoding="utf-8").splitlines():
+        parts = ln.strip().split("\t")
+        if len(parts) == 3:
+            diffs.append((parts[0], parts[1], parts[2]))
+    return diffs, dt
+
+
+def run_native_on_protected_backend(existing: dict, force: bool) -> dict:
+    out = dict(existing)
+    for kind in ("sky130hd_aes", "sky130hd_riscv32i", "asap7_uart", "asap7_aes"):
+        for mode_label, flags in (("native_std", ""), ("native_allow_setup", "-allow_setup_violations")):
+            key = f"{kind}::{mode_label}"
+            if key in out and not force:
+                print(f"[Stage 2B] Skipping existing {key}", flush=True)
+                continue
+            rdir = OUT_ROOT / "native_protected" / kind / mode_label
+            if rdir.exists():
+                shutil.rmtree(rdir)
+            runner, pdk, budget_ps, _, _ = lr_mod.make_boxed_runner(kind, rdir / "runner")
+            diffs, ext_s = extract_native_resizes(runner, flags, rdir / "extract")
+            print(f"  [Stage 2B/{key}] native proposed {len(diffs)} resizes in {ext_s:.2f}s", flush=True)
+            if not diffs:
+                out[key] = {
+                    "design": kind, "mode": mode_label, "native_proposed_count": 0,
+                    "extract_s": round(ext_s, 3), "qualified_area_saved_um2": 0.0,
+                    "status": "zero_native_edits", "failures": ["zero_edits"],
+                }
+                continue
+
+            # Register native resizes as PhysicalAction objects and run through FAECO's 1.0*H_row protected backend!
+            areas = cmp.liberty_areas(runner.eval.libraries["TT"])
+            nat_ids = []
+            for idx, (inst_odb, old_m, new_m) in enumerate(diffs):
+                aid = f"native_{idx:04d}_{inst_odb}"
+                sav = float(areas.get(old_m, 0.0) - areas.get(new_m, 0.0))
+                pa = cmp.PhysicalAction(
+                    action_id=aid, instance=inst_odb,
+                    source_cell=old_m, target_cell=new_m,
+                    estimated_area_saving=sav, category="native_recover_power",
+                )
+                runner.eval.actions[aid] = pa
+                nat_ids.append(aid)
+            nat_tuple = tuple(sorted(nat_ids))
+
+            with (
+                bind_runtime(runner.top, runner.flow["fastroute.tcl"]),
+                qualified.qualified_process_clock(),
+            ):
+                if kind == "sky130hd_aes":
+                    pf_res = Path("/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky_shared_preflight/preflight/result.json")
+                    reference = runner.prepare_online(pf_res.resolve(strict=True))
+                else:
+                    runner.use_preview = False
+                    reference = runner.qualify_zero()
+                    runner.use_preview = True
+
+                t0 = raw_seconds()
+                deadline = t0 + 600.0
+                status = "evaluated"
+                fails = []
+                saved = 0.0
+                sec_ok = False
+                views_delta = {}
+                try:
+                    with process_ledger(rdir / "subprocesses.json", deadline):
+                        ep, rec = runner.attempt(nat_tuple, rdir / "protected_eval")
+                        fails = list(rec["failures"])
+                        gate_ok = cmp.assess(reference, ep, runner.policy).feasible and ep.area < reference.area - 1e-9 and ep.sec_pass
+                        if gate_ok and not fails:
+                            status = "qualified_pass"
+                            saved = runner.eval.ref_area - ep.area
+                            sec_ok = True
+                        else:
+                            status = "rejected"
+                        last_p = rec["passes"][-1]
+                        rp = rdir / "protected_eval" / last_p / "receipt.json"
+                        if rp.is_file():
+                            rd = json.loads(rp.read_text())
+                            views_delta = {
+                                c: {
+                                    "d_setup_wns_ps": rd["views"][c]["setup_wns_ps"] - runner.eval.ref_views[c]["setup_wns_ps"],
+                                    "d_hold_wns_ps": rd["views"][c]["hold_wns_ps"] - runner.eval.ref_views[c]["hold_wns_ps"],
+                                }
+                                for c in ("FF", "TT", "SS") if c in rd.get("views", {})
+                            }
+                except WallWindowEnded:
+                    status = "timeout_600s"
+                    fails = ["timeout_600s"]
+                except Exception as exc:
+                    status = "failed_exception"
+                    fails = [str(exc)[:200]]
+
+                eval_s = raw_seconds() - t0
+                out[key] = {
+                    "design": kind, "mode": mode_label,
+                    "native_proposed_count": len(diffs),
+                    "extract_s": round(ext_s, 3),
+                    "protected_eval_s": round(eval_s, 3),
+                    "status": status,
+                    "qualified_area_saved_um2": saved,
+                    "sec_pass": sec_ok,
+                    "failures": fails,
+                    "views_delta_ps": views_delta,
+                }
+                print(f"  [Stage 2B/{key}] status={status} saved={saved:.6f} um2 eval={eval_s:.1f}s fails={fails[:5]}", flush=True)
+    return out
+
+
+def main() -> int:
+    force = "--force" in sys.argv
+    OUT_ROOT.mkdir(parents=True, exist_ok=True)
+    OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
+    data = json.loads(OUT_JSON.read_text()) if OUT_JSON.is_file() else {"uart_dedup_ablation": {}, "native_on_protected_backend": {}}
+
+    data["uart_dedup_ablation"] = run_uart_dedup_ablation(data.get("uart_dedup_ablation", {}), force)
+    OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+    data["native_on_protected_backend"] = run_native_on_protected_backend(data.get("native_on_protected_backend", {}), force)
+    OUT_JSON.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+    print("DONE Stage 2 ->", OUT_JSON, "sha256=", sha256(OUT_JSON), flush=True)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

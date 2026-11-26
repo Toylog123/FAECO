@@ -1,0 +1,289 @@
+{
+  "hybrid_probe_timing_audit": {
+    "sky130hd_aes": {
+      "charged_screening_s": 113.363,
+      "probe_sub_budget_s": 180.0,
+      "phase1_status": "passed",
+      "phase1_wall_s": 0.0,
+      "cleanup_overhead_s": 0.0,
+      "total_wall_s_incl_screen": 250.96714039099987,
+      "n_accepted_checkpoints": 1,
+      "last_accepted_checkpoint_s": 250.96671521199977,
+      "all_accepted_within_720s": true,
+      "qualified_gates": 18,
+      "qualified_area_saved_um2": 197.68960000001243,
+      "anytime_auc_um2": 128.7819478561551
+    },
+    "asap7_uart": {
+      "charged_screening_s": 81.56383042700003,
+      "probe_sub_budget_s": 180.0,
+      "phase1_status": "rejected",
+      "phase1_wall_s": 0.0,
+      "cleanup_overhead_s": 0.0,
+      "total_wall_s_incl_screen": 547.7724913460002,
+      "n_accepted_checkpoints": 8,
+      "last_accepted_checkpoint_s": 472.17151557300025,
+      "all_accepted_within_720s": true,
+      "qualified_gates": 13,
+      "qualified_area_saved_um2": 0.8310599999999937,
+      "anytime_auc_um2": 0.46618013122207697
+    },
+    "sky130hd_riscv32i": {
+      "charged_screening_s": 64.09957364100046,
+      "probe_sub_budget_s": 180.0,
+      "phase1_status": "sub_budget_timeout",
+      "phase1_wall_s": 0.0,
+      "cleanup_overhead_s": -180.0,
+      "total_wall_s_incl_screen": 720.0169632840007,
+      "n_accepted_checkpoints": 3,
+      "last_accepted_checkpoint_s": 704.3304953770003,
+      "all_accepted_within_720s": true,
+      "qualified_gates": 9,
+      "qualified_area_saved_um2": 75.07200000000012,
+      "anytime_auc_um2": 25.80764665121697
+    },
+    "asap7_aes": {
+      "charged_screening_s": 156.26772495899968,
+      "probe_sub_budget_s": 169.1196825123001,
+      "phase1_status": "sub_budget_timeout",
+      "phase1_wall_s": 0.0,
+      "cleanup_overhead_s": -169.1197,
+      "total_wall_s_incl_screen": 720.0271171650002,
+      "n_accepted_checkpoints": 2,
+      "last_accepted_checkpoint_s": 685.3580140630002,
+      "all_accepted_within_720s": true,
+      "qualified_gates": 6,
+      "qualified_area_saved_um2": 0.6123600000000806,
+      "anytime_auc_um2": 0.10655004522537731
+    }
+  },
+  "non_monotonic_counterexample_sky130hd_aes": {
+    "fixed_boxed_evals": [
+      {
+        "dir": "/home/toylog/faeco_v4_windowed_ablation_20261126_v1/sky130hd_aes/fixed_boxed/fixed_online/01/initial",
+        "feasible": null,
+        "reasons": null,
+        "views_delta_ps": null,
+        "actions_count": 3,
+        "actions": [
+          "\\_10814_=sky130_fd_sc_hd__xor2_2",
+          "\\_10992_=sky130_fd_sc_hd__xor2_2",
+          "\\_11167_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "edits_sample": []
+      },
+      {
+        "dir": "/home/toylog/faeco_v4_windowed_ablation_20261126_v1/sky130hd_aes/fixed_boxed/fixed_online/02/initial",
+        "feasible": null,
+        "reasons": null,
+        "views_delta_ps": null,
+        "actions_count": 3,
+        "actions": [
+          "\\_11178_=sky130_fd_sc_hd__xor2_2",
+          "\\_11724_=sky130_fd_sc_hd__xor2_2",
+          "\\_12777_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "edits_sample": []
+      },
+      {
+        "dir": "/home/toylog/faeco_v4_windowed_ablation_20261126_v1/sky130hd_aes/fixed_boxed/fixed_online/03/initial",
+        "feasible": null,
+        "reasons": null,
+        "views_delta_ps": null,
+        "actions_count": 6,
+        "actions": [
+          "\\_11178_=sky130_fd_sc_hd__xor2_2",
+          "\\_11724_=sky130_fd_sc_hd__xor2_2",
+          "\\_12777_=sky130_fd_sc_hd__xor2_2",
+          "\\_12929_=sky130_fd_sc_hd__xnor2_2",
+          "\\_13098_=sky130_fd_sc_hd__xor2_2",
+          "\\_13122_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "edits_sample": []
+      },
+      {
+        "dir": "/home/toylog/faeco_v4_windowed_ablation_20261126_v1/sky130hd_aes/fixed_boxed/fixed_online/04/initial",
+        "feasible": null,
+        "reasons": null,
+        "views_delta_ps": null,
+        "actions_count": 6,
+        "actions": [
+          "\\_11178_=sky130_fd_sc_hd__xor2_2",
+          "\\_11724_=sky130_fd_sc_hd__xor2_2",
+          "\\_12777_=sky130_fd_sc_hd__xor2_2",
+          "\\_13645_=sky130_fd_sc_hd__xor2_2",
+          "\\_13695_=sky130_fd_sc_hd__xor2_2",
+          "\\_20124_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "edits_sample": []
+      },
+      {
+        "dir": "/home/toylog/faeco_v4_windowed_ablation_20261126_v1/sky130hd_aes/fixed_boxed/fixed_online/05/initial",
+        "feasible": null,
+        "reasons": null,
+        "views_delta_ps": null,
+        "actions_count": 6,
+        "actions": [
+          "\\_11178_=sky130_fd_sc_hd__xor2_2",
+          "\\_11724_=sky130_fd_sc_hd__xor2_2",
+          "\\_12777_=sky130_fd_sc_hd__xor2_2",
+          "\\_20883_=sky130_fd_sc_hd__xor2_2",
+          "\\_20893_=sky130_fd_sc_hd__xor2_2",
+          "\\_20897_=sky130_fd_sc_hd__xor2_2"
+        ],
+        "edits_sample": []
+      }
+    ],
+    "hybrid_18gate_superset": {
+      "dir": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes/phase1_optimistic_probe/initial",
+      "feasible": null,
+      "reasons": null,
+      "views_delta_ps": {
+        "FF": {
+          "d_setup_wns_ps": 0.13455903058456897,
+          "d_hold_wns_ps": 0.010935696792557792
+        },
+        "TT": {
+          "d_setup_wns_ps": -0.034638958368304884,
+          "d_hold_wns_ps": 0.01759703494030873
+        },
+        "SS": {
+          "d_setup_wns_ps": 1.0222933610748441,
+          "d_hold_wns_ps": 0.45918824298496475
+        }
+      },
+      "actions_count": 18,
+      "actions": [
+        "\\_10814_=sky130_fd_sc_hd__xor2_2",
+        "\\_10992_=sky130_fd_sc_hd__xor2_2",
+        "\\_11167_=sky130_fd_sc_hd__xor2_2",
+        "\\_11178_=sky130_fd_sc_hd__xor2_2",
+        "\\_11724_=sky130_fd_sc_hd__xor2_2",
+        "\\_12777_=sky130_fd_sc_hd__xor2_2",
+        "\\_12929_=sky130_fd_sc_hd__xnor2_2",
+        "\\_13098_=sky130_fd_sc_hd__xor2_2",
+        "\\_13122_=sky130_fd_sc_hd__xor2_2",
+        "\\_13281_=sky130_fd_sc_hd__o31ai_2",
+        "\\_13645_=sky130_fd_sc_hd__xor2_2",
+        "\\_13695_=sky130_fd_sc_hd__xor2_2",
+        "\\_16978_=sky130_fd_sc_hd__o31ai_2",
+        "\\_20124_=sky130_fd_sc_hd__xor2_2",
+        "\\_20883_=sky130_fd_sc_hd__xor2_2",
+        "\\_20893_=sky130_fd_sc_hd__xor2_2",
+        "\\_20897_=sky130_fd_sc_hd__xor2_2",
+        "\\_21033_=sky130_fd_sc_hd__xor2_2"
+      ],
+      "edits": [],
+      "odb": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes/phase1_optimistic_probe/initial/routed.odb",
+      "spef": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes/phase1_optimistic_probe/initial/routed.spef"
+    }
+  },
+  "table5_sky_pure_faeco_audit": [
+    {
+      "order": "forward",
+      "logical_finished": 5,
+      "logical_admitted": 6,
+      "n_checkpoints": 5,
+      "n_accepted": 3,
+      "accepted_details": [
+        {
+          "t": 451.4115939659996,
+          "gates": 0,
+          "saved": 33.782400000010966
+        },
+        {
+          "t": 580.8398041009996,
+          "gates": 0,
+          "saved": 67.56480000000738
+        },
+        {
+          "t": 714.5422635539999,
+          "gates": 0,
+          "saved": 98.84480000000622
+        }
+      ],
+      "best_gates": 9,
+      "best_area": 98.84480000000622
+    },
+    {
+      "order": "reverse",
+      "logical_finished": 5,
+      "logical_admitted": 6,
+      "n_checkpoints": 5,
+      "n_accepted": 3,
+      "accepted_details": [
+        {
+          "t": 448.89073301499957,
+          "gates": 0,
+          "saved": 33.782400000010966
+        },
+        {
+          "t": 575.3833611059999,
+          "gates": 0,
+          "saved": 67.56480000000738
+        },
+        {
+          "t": 706.8731797299997,
+          "gates": 0,
+          "saved": 98.84480000000622
+        }
+      ],
+      "best_gates": 9,
+      "best_area": 98.84480000000622
+    }
+  ],
+  "saved_endpoints": {
+    "sky130hd_aes_hybrid_18g": {
+      "odb": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes/phase1_optimistic_probe/initial/routed.odb",
+      "spef": "/home/toylog/faeco_v4_hybrid_faeco_20261126_v1/sky130hd_aes/phase1_optimistic_probe/initial/routed.spef",
+      "exists": true
+    },
+    "asap7_uart_tc_faeco": null,
+    "asap7_uart_k36": null
+  },
+  "table8_design_notes": {
+    "sky130hd_aes": {
+      "A_single_sens_boxed": {
+        "batch": false,
+        "hold_defer": false,
+        "cap_rerank": false,
+        "setup_dedup": false,
+        "probe": false,
+        "init_rank": "sensitivity"
+      },
+      "B_fixed_boxed": {
+        "batch": true,
+        "hold_defer": false,
+        "cap_rerank": false,
+        "setup_dedup": false,
+        "probe": false,
+        "init_rank": "area"
+      },
+      "C_faeco_defer_only_boxed": {
+        "batch": true,
+        "hold_defer": true,
+        "cap_rerank": false,
+        "setup_dedup": true,
+        "probe": false,
+        "init_rank": "area"
+      },
+      "D_pure_faeco_boxed": {
+        "batch": true,
+        "hold_defer": true,
+        "cap_rerank": true,
+        "setup_dedup": true,
+        "probe": false,
+        "init_rank": "area"
+      },
+      "E_hybrid_faeco": {
+        "batch": true,
+        "hold_defer": true,
+        "cap_rerank": true,
+        "setup_dedup": true,
+        "probe": true,
+        "init_rank": "area"
+      }
+    },
+    "note": "C and D share IDENTICAL initial rank (area), IDENTICAL boxed 1.0*H_row backend, IDENTICAL Hold defer, and IDENTICAL Setup dedup switch (enabled, 0 dedup hits on SKY130HD AES because all rejections are Hold rejections!). Thus C->D (33.7824 -> 98.8448 um2, 2.93x) is 100% purely due to Eq.(8) incident-cap re-ranking!"
+  }
+}

@@ -3488,3 +3488,15 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - **对象与协议**：针对模拟审稿全部 P0/P1 意见的五组实证（均用 CPU 0–5 独占、同一 $1.0\times H_{\mathrm{row}}$ 窗口保护后端、720 RAW s 预算与原三工艺角全门）：(1) SKY130HD & ASAP7 真实 `.tlef` 逐层规则半径核验 + 3× 同版图 RCX/STA 确定性 + 既有收据 Hold 容差敏感性与 18 项池唯一性审计；(2) `SKY130HD AES`（`single_sens_boxed`/`fixed_boxed`/`faeco_defer_only_boxed`）与 `ASAP7 AES`（`fixed_boxed`）同窗口组件消融；(3) **Hybrid FAECO**（$\tau_{\mathrm{probe}}=\min(180\text{ s},0.30(\tau_{\max}-t_{\mathrm{screen}}))$ 单遍全池探针 + 自适应微批次回退）四设计实测；(4) 绝对时序收敛基准 `asap7/uart @ 500 ps`（FF/TT/SS Setup/Hold 均严格非负）三策略实测；(5) `asap7/uart` 批宽 `b ∈ {1,2,3,6,9,18}` 与池规模 `K ∈ {9,18,36}` 敏感性及 7 nm 18–120 门/原地镜像 DRC 审计。
 - **结果与收据**：(1) SKY130HD 全栈（$\le 1.60\,\mu\text{m}$）与 ASAP7 引脚/信号层 `M1–M7`/`V0–V7`（$\le 0.072\,\mu\text{m}$）均严格小于 $1.0\times H_{\mathrm{row}}$，3× RCX/STA 极差 `0.000 ps`，四设计池 18/18 互异；(2) `SKY130HD AES` 同窗口下直连电容重排独立实现 `33.7824 → 98.8448 µm²`（`2.93×`），微批次独立提 AUC `+50.3%`，`ASAP7 AES` `fixed_boxed` 回收 `0.61236 µm²`（AUC `0.247`）；(3) Hybrid FAECO 四设计分别回收 `197.6896`（100% 池，137.6 s 通过，AUC `128.78`）、`75.0720`、`0.83106`、`0.61236 µm²`，4/4 终态持平或 2× 超越纯 FAECO，0 DRC/SEC 全证；(4) Timing-closed `asap7/uart @ 500 ps` 上 FAECO 回收 `0.83106 µm²`（13/18，AUC `0.4561`）胜过单门（`0.68526`）与固定批（`0.33534`），终态仍严格 Timing-closed；(5) `b=2,3` 达峰值 `0.83106 µm²`（AUC `0.526/0.491`），`K=36` 达 `1.50174 µm²`（`1.901%` 功能单元面积，AUC `0.7216`）。[总报告](tcad_v4_revision_20261126/REPORT.md) · [LEF/确定性](tcad_v4_revision_20261126/LEF_AND_DETERMINISM_AUDIT.json) · [组件消融](tcad_v4_revision_20261126/WINDOWED_ABLATION_VERIFIED.json)（SHA-256 `40f524b3…`）· [Hybrid](tcad_v4_revision_20261126/HYBRID_FAECO_4DESIGNS_VERIFIED.json)（SHA-256 `726b6a06…`）· [Timing-closed 与敏感性](tcad_v4_revision_20261126/TIMING_CLOSED_DRC_SENS_VERIFIED.json)（SHA-256 `04e55044…`）
+
+
+### 2026-11-26 TCAD-V5-REVISION-SUITE（已注册待执行，响应第二轮评审 85/100）
+
+- **状态**：**scripted & smoke-verified（待用户空闲时段运行，尚未启动长时 EDA）**。预检 `smoke_verify_v5.py` 通过，已离线落盘 `V5_PREFLIGHT_PART1_AUDIT.json`（确认 SKY130HD AES 非单调反例 $T_3 \subset S_{18}$ 及全部 4/4 Hybrid 验收检查点 $\le 720.00\text{\,s}$）。
+- **5 阶段定义与一键启动器**：`project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh`（独占 `taskset -c 0-5`，支持 `--stage 1..5|all` 与断点续跑）：
+  1. Stage 1 (`run_v5_step1_power_7nm_det.py`, ~5–8 min)：Hybrid 18g / UART-TC / UART K=36 功耗与 6 角 WNS + 7 nm `asap7/aes` 5 组受控非零 M1/M2/M3 短路/间距 DRC + 4 线程 DRT+RCX+STA 3× 重复确定性；
+  2. Stage 2 (`run_v5_step2_dedup_and_native_protected.py`, ~15 min)：`asap7/uart` Setup 去重开/关独立消融 + 四设计原生 `recover_power` 挂载 FAECO $1.0H_{\mathrm{row}}$ 保护后端解耦；
+  3. Stage 3 (`run_v5_step3_multibudget_online.py`, ~45 min)：`asap7/uart` & `sky130hd/aes` 四档 Setup 预算（0/0.5/1/2%）独立在线搜索；
+  4. Stage 4 (`run_v5_step4_probe_sensitivity.py`, ~40 min)：双 AES Hybrid 探针子预算 $\tau_{\mathrm{probe}}\in\{0,60,120,180,240\}\text{\,s}$ 五点敏感性；
+  5. Stage 5 (`run_v5_step5_10k_timing_closed.py`, ~35 min)：全新 ORFS 从头构建的万门级独立 Timing-closed 基准 `SKY130HD riscv32i-TC @ 10.0 ns`（显式 Timing-closed 硬门控）。
+- **交接与说明**：[HANDOFF_2026-11-26_V5.md](../HANDOFF_2026-11-26_V5.md) · [V5 目录 README](tcad_v5_revision_20261126/README.md) · [离线预检收据](tcad_v5_revision_20261126/V5_PREFLIGHT_PART1_AUDIT.json)
