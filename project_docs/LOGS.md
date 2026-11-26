@@ -8492,3 +8492,9 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 - 从已有 SS 原始报告读取最差路径，无新增诊断 EDA。Setup 最差为非时钟输入 instr[15] 到 PC 寄存器（−22.39 ns），I/O 组的 instr[20] 到 aluout[31] 也未收敛（−20.46 ns）。最小松弛违例为 reset 到 dp.pcreg.q[20] FF 的异步 removal（−0.1263 ns）；普通 clk 组最差 Hold +2.17 ns。原始 SS 日志 SHA-256 73d87c051b82f344a9dfce904ef1d39e6f0882a9c405b90ab5bd3f179166460a。
 - 已保全 [Stage 5 10 ns 资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC10NS_QUALIFICATION.json)，与 WSL CONTROL 原件逐字节一致。23:52:37 启动 Stage 3，先跑 UART 0% 档，CPU 0–5 与 EDA 互斥、外壳 12000 s + 清理 60 s、各臂仍为 720 s。替代绝对收敛参考目前并行准备配置与代码，无并发 EDA。
 - Stage 2 完整收据与当时启动状态已推送 main，提交 b70f96b21dd2328b78f6fa00472aa03721a24c50，远端同哈希已核。
+
+## LOG-20261126-24｜登记 40 ns 多角独立参考的串行复验
+
+- 23:59 实查 40 ns 多角 reference-only 进程等待 Stage 3 释放同一 EDA 锁。等锁 12100 s，实际命令外壳 3100 s 与清理上限 60 s，ORFS 构建 1800 s，CPU 0–5。独立输出根 /home/toylog/faeco_v5_step5_riscv32i_tc40ns_mmmc_20261126_v1。参考脚本 SHA-256 2e2a49ef45fbaf5430034b821b178393f99b86f01aa5961b590e9a63c31e398e，候选及 CLI 脚本 SHA-256 d1fc0317f77832d804dcf8be9e596ccfb4a4a873ecae7ed368f0d94c094a379f。10 ns 原件保全。
+- 新试验独立重建同一 RTL。固定 I/O 两方向各 2 ns，保留 reset 的 removal 测试；ABC 40000 ps，ORFS CORNERS=tt ss ff，Setup/Hold 修复目标余量 0.50/0.30 ns。准入需在 CTS/GRT 的真实日志确认三个 Liberty 角均已载入，建立与保持修复实际调度，且最后按原全部物理、时序与 I/O 门独立验收。三角标准单元库共享布线提取的 SPEF。此次只是等待锁，尚无 40 ns 新构建。
+- 10 ns 完整控制原件、路径归因及 Stage 3 启动状态已推送 main，提交 9c1c93302bac3ae6443c53befd516aa18a6e8a37，远端同哈希已核。

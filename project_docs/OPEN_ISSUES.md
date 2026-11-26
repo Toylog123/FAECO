@@ -1826,7 +1826,7 @@ V5 Stage 2B 240 s 原收据中，SKY130HD 两设计因单次保护路由触及�
 
 只读核查接手版 `run_v5_step5_10k_timing_closed.py`。候选验收只有 DRC 计数和 FF/TT/SS 的 Setup/Hold WNS；三角 TNS、电气、天线、SEC 与真实网表面积未绑定。窗口 DRC 产物没有进入邻网归因与放行，固定批拒收后也会二分。子进程未按外层剩余时间裁剪，单次路由超时可让整阶段异常退出。需先用可核对的新 10 ns 起点接入共用保护后端、完整资格门、三臂同定义与硬窗，再接受结果为合格回收。独立起点的严格时序门应保留。[当前脚本](evidence/tcad_v5_revision_20261126/run_v5_step5_10k_timing_closed.py)
 
-10 ns 独立起点构建已经完成。最终 SDC 覆盖 65 个非时钟输入与 99 个输出、延迟同为 2 ns，无独立物理与原生电气拒因。SS 的 Setup/Hold WNS 分别为 −22392.385/−126.299 ps，起点未达到严格三角门，候选臂未启。CONTROL SHA-256 b8522af55121f1fc0a4d2a66fc8900a6a92c9849373b40e2c7ba7faa8144e73a。原 SS 日志（SHA-256 73d87c051b82f344a9dfce904ef1d39e6f0882a9c405b90ab5bd3f179166460a）已支持只读归因。最差 Setup 为 instr[15] 进 PC 寄存器（−22.39 ns），I/O 组还报告 instr[20] 到 aluout[31]（−20.46 ns）。最小松弛违例属 reset 到 FF 的异步 removal（−0.1263 ns），普通 clk 组 Hold +2.17 ns。下一独立新建参考设计拟以 40 ns 和 TT/SS/FF 联合实现，保留两向 2 ns I/O 以覆盖原异步复位边界，显式 ABC 40000 ps，预留 Setup 0.50 ns、Hold 0.30 ns。该配置尚在离线核对，未执行。[已保全资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC10NS_QUALIFICATION.json)
+10 ns 独立起点构建已经完成。最终 SDC 覆盖 65 个非时钟输入与 99 个输出、延迟同为 2 ns，无独立物理与原生电气拒因。SS 的 Setup/Hold WNS 分别为 −22392.385/−126.299 ps，起点未达到严格三角门，候选臂未启。CONTROL SHA-256 b8522af55121f1fc0a4d2a66fc8900a6a92c9849373b40e2c7ba7faa8144e73a。原 SS 日志（SHA-256 73d87c051b82f344a9dfce904ef1d39e6f0882a9c405b90ab5bd3f179166460a）已支持只读归因。最差 Setup 为 instr[15] 进 PC 寄存器（−22.39 ns），I/O 组还报告 instr[20] 到 aluout[31]（−20.46 ns）。最小松弛违例属 reset 到 FF 的异步 removal（−0.1263 ns），普通 clk 组 Hold +2.17 ns。下一独立新建参考设计拟以 40 ns 和 TT/SS/FF 联合实现，保留两向 2 ns I/O 以覆盖原异步复位边界，显式 ABC 40000 ps，预留 Setup 0.50 ns、Hold 0.30 ns。替代参考已进入共同 EDA 锁等待队列。只在实查三角库、建立与保持修复调用、完整 I/O 及严格资格后解释结果。[已保全资格收据](evidence/tcad_v5_revision_20261126/V5_STEP5_TC10NS_QUALIFICATION.json)
 
 ## OI-110（2026-11-26，open）— 多档 Setup 生效门与探针敏感性对照口径
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage 5 matched search on the independently routed 10 ns riscv32i."""
+"""Stage 5 matched search on an independently routed riscv32i reference."""
 
 import argparse
 from dataclasses import asdict, replace
@@ -10,7 +10,7 @@ import sys
 from types import SimpleNamespace
 
 from run_v5_stage5_reference import (
-    CLOCK_PS, EVIDENCE, OPENROAD, ORFS, OUT_ROOT, PDK, ROUTING, SEC, STA, TOP,
+    CLOCK_PS, DEFAULT_VARIANT, EVIDENCE, OPENROAD, ORFS, PDK, ROUTING, SEC, STA, TOP, VARIANTS,
     build_reference, qualify_reference,
 )
 
@@ -55,19 +55,20 @@ def comparable_auc(accepted):
     return (integral + (LIMIT_S - previous_t) * best) / LIMIT_S
 
 
-def strict_timing_failures(reference, views):
+def strict_timing_failures(reference, views, clock_ps=CLOCK_PS):
+    setup_budget_ps = qualified.sweep.policy.setup_budget_ps(clock_ps, SETUP_BUDGET_PCT)
     failures = []
     for corner in cmp.CORNERS:
         base, trial = reference[corner], views[corner]
         failures += qualified.sweep.policy.setup_gate_failures(
-            corner, base['setup_wns_ps'], trial['setup_wns_ps'], SETUP_BUDGET_PS,
+            corner, base['setup_wns_ps'], trial['setup_wns_ps'], setup_budget_ps,
             cmp.PS_TOLERANCE, protect_clean=False,
         )
         if trial['setup_wns_ps'] < 0:
             failures.append(f'{corner}:setup_floor')
         failures += qualified.sweep.policy.tns_gate_failures(
             corner, base['setup_tns_ps'], trial['setup_tns_ps'],
-            qualified.sweep.policy.setup_tns_budget_ps(CLOCK_PS, SETUP_BUDGET_PCT, base['setup_tns_ps']),
+            qualified.sweep.policy.setup_tns_budget_ps(clock_ps, SETUP_BUDGET_PCT, base['setup_tns_ps']),
             cmp.PS_TOLERANCE,
         )
         if trial['hold_wns_ps'] < 0:
@@ -86,9 +87,12 @@ def next_attempt(output):
     return attempt
 
 
-def candidate_args(root, control):
+def candidate_args(root, control, variant=DEFAULT_VARIANT):
+    clock_ps = control['source_sdc_semantics']['period_ps']
+    if clock_ps != variant.clock_ps:
+        raise ValueError('qualification clock does not match the selected Stage 5 variant')
     return SimpleNamespace(
-        top=TOP, pdk=PDK, clock_period_ps=CLOCK_PS, shortest_clock_period_ps=CLOCK_PS,
+        top=TOP, pdk=PDK, clock_period_ps=clock_ps, shortest_clock_period_ps=clock_ps,
         threads=4, droute_iters=64, max_evals=1, batch_size=3, route_mode='local',
         embedded_guides=True, single_pin_access=True, report_setup_endpoints=True,
         route_guide=None, route_timeout=240., sta_timeout=180., sec_timeout=210.,
@@ -105,7 +109,8 @@ def candidate_args(root, control):
 def prepare_search(root, args):
     marker = root / 'search_inputs.json'
     _, assets, clock = qualified.prepare_binding(args)
-    if clock['absolute_wns_loss_budget_ps'] != SETUP_BUDGET_PS:
+    setup_budget_ps = qualified.sweep.policy.setup_budget_ps(args.clock_period_ps, SETUP_BUDGET_PCT)
+    if clock['absolute_wns_loss_budget_ps'] != setup_budget_ps:
         raise ValueError('reference clock disagrees with Stage 5 budget')
     if marker.exists():
         prepared = read(marker)
@@ -128,8 +133,8 @@ def prepare_search(root, args):
         prepared_dir = next_attempt(root / 'seed') / 'checked_seed'
         seed_args = SimpleNamespace(**(vars(args) | {'out': prepared_dir}))
         rc = cmp.run(seed_args, config_overrides={
-            'budget_attempts_per_arm': None, 'original_clock_period_ps': CLOCK_PS,
-            'setup_budget_ps_per_view': SETUP_BUDGET_PS, 'tns_gate': True,
+            'budget_attempts_per_arm': None, 'original_clock_period_ps': args.clock_period_ps,
+            'setup_budget_ps_per_view': setup_budget_ps, 'tns_gate': True,
             'screen_inputs': bindings, 'charged_screening_seconds': seconds,
         }, extra_sources=(Path(qualified.__file__), *args.helper_source))
         if rc != 0:
@@ -148,7 +153,7 @@ def prepare_search(root, args):
     bindings, seconds = qualified.bind_screen_inputs(args)
     base = next_attempt(root / 'runner')
     runner = TimingClosedBoxedComparison(args, verify(files['seed']).parent, base, bindings, seconds)
-    if strict_timing_failures(runner.eval.ref_views, runner.eval.ref_views):
+    if strict_timing_failures(runner.eval.ref_views, runner.eval.ref_views, args.clock_period_ps):
         raise ValueError('live seed STA does not preserve absolute reference closure')
     runner.gate = replace(runner.gate, protect_clean=True)
     runner.config.update({
@@ -201,7 +206,7 @@ def checked_commit(reference, row, requests, evaluator):
         raise ValueError('checkpoint is not bound to an accepted dispatch and physical receipt')
     evidence = read(final_dir / 'receipt.json')
     views = evidence['views']
-    if set(views) != set(cmp.CORNERS) or strict_timing_failures(evaluator.ref_views, views):
+    if set(views) != set(cmp.CORNERS) or strict_timing_failures(evaluator.ref_views, views, evaluator.args.clock_period_ps):
         raise ValueError('accepted endpoint failed the explicit Stage 5 setup/TNS/hold conditions')
     audit = final_dir / 'unlocked_drc/audit.json'
     proof_path = final_dir / 'sec/receipt.json'
@@ -252,9 +257,9 @@ def run_arm(runner, reference, arm, expected_rank, ref_power):
     }
 
 
-def run_stage(root, reference_only=False):
-    build = build_reference(root)
-    control = qualify_reference(root, build)
+def run_stage(root, reference_only=False, variant=DEFAULT_VARIANT):
+    build = build_reference(root, variant)
+    control = qualify_reference(root, build, variant)
     status = root / 'stage5_progress.json'
     control_ref = cmp.bind(root / 'qualification/CONTROL.json')
     if control['status'] != 'hold_qualified' or not control['strictly_timing_closed']:
@@ -264,7 +269,7 @@ def run_stage(root, reference_only=False):
     if reference_only:
         return 0
 
-    args = candidate_args(root, control)
+    args = candidate_args(root, control, variant)
     with bind_runtime(TOP, ROUTING), qualified.qualified_ranking(), qualified.qualified_process_clock():
         runner = prepare_search(root, args)
         protocol = root / 'search_protocol.json'
@@ -275,8 +280,9 @@ def run_stage(root, reference_only=False):
             cmp.save(protocol, runner.config)
         reference = strict_zero(root, runner)
         state = read(status) if status.exists() else {
-            'status': 'running', 'clock_period_ps': CLOCK_PS, 'setup_budget_ps': SETUP_BUDGET_PS,
-            'design': 'sky130hd_riscv32i_tc10ns_independent',
+            'status': 'running', 'clock_period_ps': variant.clock_ps,
+            'setup_budget_ps': qualified.sweep.policy.setup_budget_ps(variant.clock_ps, SETUP_BUDGET_PCT),
+            'design': f'sky130hd_riscv32i_{variant.name}_independent',
             'qualification': control_ref, 'protocol': cmp.bind(protocol), 'reference': asdict(reference),
             'screened_pool_size': len(runner.pool), 'arms': {},
         }
@@ -314,24 +320,28 @@ def run_stage(root, reference_only=False):
             cmp.save(status, state)
         state.update(status='finished', reference_power=cmp.bind(power_path))
         cmp.save(status, state)
-        cmp.save(OUT_JSON, state)
-        print(f'[Stage 5] completed three arms; {OUT_JSON}, sha256 {cmp.sha(OUT_JSON)}', flush=True)
+        published = (OUT_JSON if variant == DEFAULT_VARIANT
+                     else OUT_JSON.with_name(f'V5_STEP5_10K_TIMING_CLOSED_{variant.name.upper()}_VERIFIED.json'))
+        cmp.save(published, state)
+        print(f'[Stage 5] completed three arms; {published}, sha256 {cmp.sha(published)}', flush=True)
     return 0
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--reference-only', action='store_true')
-    parser.add_argument('--output-root', type=Path, default=OUT_ROOT)
+    parser.add_argument('--variant', choices=VARIANTS, default=DEFAULT_VARIANT.name)
+    parser.add_argument('--output-root', type=Path)
     parser.add_argument('--force', action='store_true', help='run from a fresh child directory')
     args = parser.parse_args()
-    root = args.output_root.resolve()
+    variant = VARIANTS[args.variant]
+    root = (args.output_root or variant.output_root).resolve()
     if args.force:
         root = next_attempt(root / 'reruns')
     root.mkdir(parents=True, exist_ok=True)
     with (root / 'run.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        return run_stage(root, args.reference_only)
+        return run_stage(root, args.reference_only, variant)
 
 
 if __name__ == '__main__':

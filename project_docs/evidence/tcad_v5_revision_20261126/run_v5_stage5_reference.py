@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""Build and qualify the Stage 5 10 ns reference before any candidate trials."""
+"""Build and qualify an independent Stage 5 reference before any candidate trials."""
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 import fcntl
 import os
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import sys
 from types import SimpleNamespace
@@ -55,23 +56,99 @@ NATIVE_INPUT_LOOP = (
 EXPLICIT_DATA_INPUTS = 'set non_clock_inputs [all_inputs -no_clocks]\n'
 
 
-def render_source_sdc(source):
-    replacement, count = re.subn(r'(?m)^set clk_period 6\.0$', f'set clk_period {CLOCK_NS}', source)
+@dataclass(frozen=True)
+class ReferenceVariant:
+    name: str
+    output_root: Path
+    clock_ns: float
+    io_fraction: float
+    corners: tuple[str, ...] = ()
+    setup_margin_ns: float = 0.0
+    hold_margin_ns: float = 0.0
+
+    @property
+    def clock_ps(self):
+        return self.clock_ns * 1000.0
+
+    @property
+    def stage_path(self):
+        return Path(PDK, DESIGN, self.name)
+
+    def liberty_paths(self, corner):
+        return SKY_CORNER_LIBS[corner.upper()]
+
+
+DEFAULT_VARIANT = ReferenceVariant(VARIANT, OUT_ROOT, CLOCK_NS, 0.2)
+MMMC_VARIANT = ReferenceVariant('tc40ns_mmmc', OUT_ROOT.with_name('faeco_v5_step5_riscv32i_tc40ns_mmmc_20261126_v1'),
+                                40.0, 0.05, ('tt', 'ss', 'ff'), 0.50, 0.30)
+VARIANTS = {variant.name: variant for variant in (DEFAULT_VARIANT, MMMC_VARIANT)}
+
+
+def render_source_sdc(source, variant=DEFAULT_VARIANT):
+    replacement, count = re.subn(r'(?m)^set clk_period 6\.0$', f'set clk_period {variant.clock_ns}', source)
     if count != 1:
         raise ValueError('expected exactly one pinned 6.0 ns source period')
     if replacement.count(NATIVE_INPUT_LOOP) != 1:
         raise ValueError('unexpected riscv32i source SDC I/O expansion')
     # In the native list loop lappend is given the empty list value as its variable name.
     replacement = replacement.replace(NATIVE_INPUT_LOOP, EXPLICIT_DATA_INPUTS)
-    source_semantics(replacement)
+    if variant.io_fraction != DEFAULT_VARIANT.io_fraction:
+        replacement, count = re.subn(r'(?m)^set clk_io_pct 0\.2$', f'set clk_io_pct {variant.io_fraction}', replacement)
+        if count != 1:
+            raise ValueError('expected exactly one native 0.2 I/O delay fraction')
+    source_semantics(replacement, variant)
     return replacement
 
 
-def source_semantics(source):
+def source_semantics(source, variant=DEFAULT_VARIANT):
     try:
-        return expected_sdc(source, pinned=(CLOCK_NS, 0.2, 'clk', 'clk', 0.775), time_unit='ns')
+        semantics = expected_sdc(source, pinned=(variant.clock_ns, variant.io_fraction, 'clk', 'clk', 0.775),
+                                 time_unit='ns')
     except RuntimeError as error:
         raise ValueError(f'unexpected riscv32i source SDC: {error}') from error
+    if semantics['io_delay_sdc_units'] != 2.0:
+        raise ValueError('all Stage 5 controls must use a 2 ns absolute I/O delay')
+    return semantics
+
+
+def orfs_timing_options(variant):
+    if not variant.corners:
+        return []
+    return [
+        'CORNERS=' + ' '.join(variant.corners),
+        *[f'{corner.upper()}_LIB_FILES=' + ' '.join(variant.liberty_paths(corner)) for corner in variant.corners],
+        'LIB_FILES=' + ' '.join(variant.liberty_paths('tt')),
+        f'SETUP_SLACK_MARGIN={variant.setup_margin_ns:g}', f'HOLD_SLACK_MARGIN={variant.hold_margin_ns:g}',
+        'SKIP_CTS_REPAIR_TIMING=0', 'SKIP_INCREMENTAL_REPAIR=0',
+    ]
+
+
+def validate_native_timing_logs(logs, variant):
+    expected = {corner: set(variant.liberty_paths(corner)) for corner in variant.corners}
+    def margin(words, flag):
+        return float(words[words.index(flag) + 1]) if flag in words else None
+
+    evidence = {}
+    for stage, log in logs.items():
+        seen = {}
+        commands = []
+        for line in log.splitlines():
+            if line.startswith('read_liberty -corner '):
+                _, _, corner, path = shlex.split(line)
+                seen.setdefault(corner, set()).add(path)
+            elif line.startswith('repair_timing '):
+                words = shlex.split(line)
+                if (margin(words, '-setup_margin') == variant.setup_margin_ns
+                        and margin(words, '-hold_margin') == variant.hold_margin_ns
+                        and not {'-setup', '-hold', '-path_group', '-allow_setup_violations'}.intersection(words)):
+                    if seen != expected:
+                        raise ValueError(f'{stage} dispatched repair before loading the pinned views')
+                    commands.append(line)
+        if seen != expected or not commands:
+            raise ValueError(f'{stage} did not log the required corner loads and setup/hold repair invocation')
+        evidence[stage] = {'loaded_corner_paths': {key: sorted(value) for key, value in seen.items()},
+                           'commands': commands}
+    return evidence
 
 
 def reference_failures(views, native_drc, native_antenna, independent, proof):
@@ -107,48 +184,64 @@ def provenance_paths():
             *(Path(lib) for group in SKY_CORNER_LIBS.values() for lib in group)]
 
 
-def build_reference(root):
+def build_reference(root, variant=DEFAULT_VARIANT):
     root.mkdir(parents=True, exist_ok=True)
-    src_text = render_source_sdc(SOURCE_SDC.read_text(encoding='utf-8'))
+    src_text = render_source_sdc(SOURCE_SDC.read_text(encoding='utf-8'), variant)
     work = root / 'orfs'
-    sdc = root / 'constraint_tc10ns.sdc'
+    sdc = root / f'constraint_{variant.name}.sdc'
     protocol = root / 'build_protocol.json'
+    previous = read(protocol) if protocol.exists() else None
+    if previous is not None:
+        if (previous['clock_period_ps'] != variant.clock_ps or
+                f'FLOW_VARIANT={variant.name}' not in previous['command']):
+            raise ValueError('output root already belongs to another Stage 5 variant')
+    elif work.exists():
+        raise ValueError(f'ORFS artifacts have no Stage 5 protocol: {work}')
     if not sdc.exists():
         sdc.write_text(src_text, encoding='utf-8')
     elif sdc.read_text(encoding='utf-8') != src_text:
-        raise ValueError('copied 10 ns SDC changed; select an unused output root')
+        raise ValueError(f'copied {variant.name} SDC changed; select an unused output root')
     commit = subprocess.check_output(['git', '-C', ORFS, 'rev-parse', 'HEAD'], text=True, timeout=10).strip()
     if commit != ORFS_COMMIT or cmp.sha(OPENROAD) != cmp.OPENROAD_SHA:
         raise ValueError('ORFS or pinned OpenROAD provenance mismatch')
 
-    build_log = work / 'logs' / STAGE_PATH / '6_report.log'
-    result_dir = work / 'results' / STAGE_PATH
+    logs = work / 'logs' / variant.stage_path
+    build_log = logs / '6_report.log'
+    result_dir = work / 'results' / variant.stage_path
     control = {key: result_dir / f'6_final.{key}' for key in cmp.CONTROL_FILES}
     abc_clock = result_dir / 'clock_period.txt'
-    route_json = work / 'logs' / STAGE_PATH / '5_2_route.json'
-    route_drc = work / 'reports' / STAGE_PATH / '5_route_drc.rpt'
+    route_json = logs / '5_2_route.json'
+    route_drc = work / 'reports' / variant.stage_path / '5_route_drc.rpt'
     command = [
         'make', '--no-print-directory', '-j1', '-C', str(ORFS),
         f'DESIGN_CONFIG={DESIGN_DIR / "config.mk"}', f'WORK_HOME={work}',
-        f'FLOW_VARIANT={VARIANT}', f'SDC_FILE={sdc}',
+        f'FLOW_VARIANT={variant.name}', f'SDC_FILE={sdc}',
         'NUM_CORES=6', f'OPENROAD_EXE={OPENROAD}', f'YOSYS_EXE={YOSYS}',
-        f'ABC_CLOCK_PERIOD_IN_PS={CLOCK_PS:g}',
+        f'ABC_CLOCK_PERIOD_IN_PS={variant.clock_ps:g}', *orfs_timing_options(variant),
         'route', str(build_log), str(control['v']), str(control['sdc']),
     ]
     initial = {
-        'design': f'{PDK}/{DESIGN}', 'clock_period_ps': CLOCK_PS,
+        'design': f'{PDK}/{DESIGN}', 'clock_period_ps': variant.clock_ps,
         'orfs_commit': commit, 'command': command, 'build_timeout_s': BUILD_LIMIT_S,
-        'constraint_changes': ['set physical and virtual clocks to 10 ns via clk_period',
+        'constraint_changes': [f'set physical and virtual clocks to {variant.clock_ns:g} ns via clk_period',
                                'fix empty native input list and apply 2 ns input delay to non-clock inputs',
                                'set the ABC target explicitly in ps because ORFS reads the ns SDC scalar unchanged'],
         'affinity': sorted(os.sched_getaffinity(0)),
         'inputs': [cmp.bind(path) for path in (*provenance_paths(), sdc)],
     }
-    if protocol.exists():
-        if read(protocol) != initial:
+    if variant.corners:
+        initial['constraint_changes'].append('adjust clk_io_pct to preserve the existing 2 ns absolute I/O delays')
+        initial['repair_protocol'] = {
+            'phase_corners': list(variant.corners),
+            'setup_margin_ns': variant.setup_margin_ns, 'hold_margin_ns': variant.hold_margin_ns,
+            'checks': 'native CTS and GRT setup/hold repair including the original asynchronous reset checks',
+        }
+        initial['inputs'].extend(cmp.bind(ORFS / 'scripts' / name) for name in (
+            'read_liberty.tcl', 'load.tcl', 'util.tcl', 'cts.tcl', 'global_route.tcl', 'final_outputs.tcl',
+        ))
+    if previous is not None:
+        if previous != initial:
             raise ValueError('build configuration or inputs changed; select an unused output root')
-    elif work.exists():
-        raise ValueError(f'ORFS artifacts have no Stage 5 protocol: {work}')
     else:
         cmp.save(protocol, initial)
 
@@ -162,7 +255,7 @@ def build_reference(root):
     # Preserve every prior timeout stdout and permit make to resume the same input-bound build.
     run_number = len(list(root.glob('orfs_build_*.log'))) + 1
     log = root / f'orfs_build_{run_number:02d}.log'
-    print(f'[Stage 5] starting ORFS 10 ns P&R, stdout {log}', flush=True)
+    print(f'[Stage 5] starting ORFS {variant.name} P&R, stdout {log}', flush=True)
     result = cmp.run_process(command, log, BUILD_LIMIT_S)
     saved = {'status': 'finished' if result.returncode == 0 else 'build_failed',
              'operation': asdict(result), 'log': cmp.bind(log), 'protocol': cmp.bind(protocol)}
@@ -172,19 +265,25 @@ def build_reference(root):
             raise ValueError(f'inputs changed during ORFS build: {changed}')
         if any(not path.is_file() or not path.stat().st_size for path in control.values()):
             raise ValueError(f'ORFS completed without all five final physical artifacts: {log}')
-        if float(abc_clock.read_text(encoding='utf-8').strip()) != CLOCK_PS:
-            raise ValueError(f'ORFS ABC target differs from the 10 ns clock in ps: {abc_clock}')
+        if float(abc_clock.read_text(encoding='utf-8').strip()) != variant.clock_ps:
+            raise ValueError(f'ORFS ABC target differs from the pinned clock in ps: {abc_clock}')
         saved['control_output_paths'] = {key: cmp.bind(path) for key, path in control.items()}
         saved['native_reports'] = {key: cmp.bind(path) for key, path in
                                    {'finish': build_log, 'route_json': route_json, 'route_drc': route_drc,
                                     'abc_clock_target_ps': abc_clock}.items()}
+        if variant.corners:
+            repair_logs = {'cts': logs / '4_1_cts.log', 'grt': logs / '5_1_grt.log'}
+            saved['native_timing_repair'] = validate_native_timing_logs(
+                {stage: path.read_text(encoding='utf-8') for stage, path in repair_logs.items()}, variant,
+            )
+            saved['native_reports'].update({f'{stage}_repair': cmp.bind(path) for stage, path in repair_logs.items()})
     cmp.save(receipt, saved)
     if result.returncode != 0:
         raise cmp.TrialFailure(f'ORFS build rc={result.returncode}: {log}')
     return saved
 
 
-def qualify_reference(root, build):
+def qualify_reference(root, build, variant=DEFAULT_VARIANT):
     out = root / 'qualification'
     control = {kind: verify(item) for kind, item in build['control_output_paths'].items()}
     saved = out / 'CONTROL.json'
@@ -196,9 +295,11 @@ def qualify_reference(root, build):
     out.mkdir(exist_ok=True)
     trial = out / f'attempt_{len(list(out.glob("attempt_*"))) + 1:02d}'
     trial.mkdir()
-    source = root / 'constraint_tc10ns.sdc'
-    semantics = source_semantics(source.read_text(encoding='utf-8'))
+    source = root / f'constraint_{variant.name}.sdc'
+    semantics = source_semantics(source.read_text(encoding='utf-8'), variant)
     ports, extra = audit_final_sdc(control['sdc'].read_text(encoding='utf-8'), semantics)
+    if variant.corners and extra:
+        raise ValueError(f'new exported SDC contains unexpected constraint commands: {extra}')
     native = {key: verify(item) for key, item in build['native_reports'].items()}
     routing = read(native['route_json'])
     net_drc = routing['detailedroute__route__drc_errors']
@@ -218,7 +319,7 @@ def qualify_reference(root, build):
         physical = independent_physical(SimpleNamespace(args=args), build['control_output_paths'], trial / 'independent')
         masks = cmp.liberty_areas(libraries['TT'])
         masters = cmp.logical_masters(control['v'], masks)
-        evaluator = cmp.Evaluator(args, control, libraries, masters, views, (), 'stage5_tc10ns_reference')
+        evaluator = cmp.Evaluator(args, control, libraries, masters, views, (), f'stage5_{variant.name}_reference')
         proof_ok = evaluator.proof(control['v'], trial, operations)
     proof_log = trial / 'sec/receipt.json'
     proof = read(proof_log) if proof_log.is_file() else {}
@@ -252,6 +353,9 @@ def qualify_reference(root, build):
         'sec': cmp.bind(proof_log) if proof_log.is_file() else None,
         'logical_cell_count': len(masters), 'logical_cell_area_um2': evaluator.ref_area,
     }
+    if variant.corners:
+        data['flow_variant'] = variant.name
+        data['native_timing_repair'] = build['native_timing_repair']
     cmp.save(saved, data)
     print(f'[Stage 5] reference {saved}, failures={data["failures"]}', flush=True)
     return data
@@ -259,17 +363,19 @@ def qualify_reference(root, build):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output-root', type=Path, default=OUT_ROOT)
+    parser.add_argument('--variant', choices=VARIANTS, default=DEFAULT_VARIANT.name)
+    parser.add_argument('--output-root', type=Path)
     parser.add_argument('--build-only', action='store_true')
     args = parser.parse_args()
-    root = args.output_root.resolve()
+    variant = VARIANTS[args.variant]
+    root = (args.output_root or variant.output_root).resolve()
     root.mkdir(parents=True, exist_ok=True)
     with (root / 'run.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        build = build_reference(root)
+        build = build_reference(root, variant)
         if args.build_only:
             return 0
-        return 0 if not qualify_reference(root, build)['failures'] else 1
+        return 0 if not qualify_reference(root, build, variant)['failures'] else 1
 
 
 if __name__ == '__main__':

@@ -115,7 +115,7 @@ ORFS 528.958 s 完成（rc0），原生和独立 DRC/天线检查均为零，三
 | TT | +51.313620 | 0 | +616.950713 | 0 |
 | SS | −22392.384835 | −23993330.614758 | −126.298971 | −2154.927348 |
 
-SS Setup 与 Hold 均低于绝对收敛门，资格拒收，本参考未进入三臂面积回收。原始 SS 时序报告中最差 Setup 为 instr[15] 到 PC 寄存器（约 −22.39 ns），虚拟时钟组的 instr[20] 到 aluout[31] 亦为负（约 −20.46 ns）。最小松弛违例为 reset 到 dp.pcreg.q[20] 的异步 removal（约 −0.1263 ns）。普通 clk 组最差 Hold 仍为 +2.17 ns。当前准备完全独立的替代构建并保留已确认的完整 I/O 约束。
+SS Setup 与 Hold 均低于绝对收敛门，资格拒收，本参考未进入三臂面积回收。原始 SS 时序报告中最差 Setup 为 instr[15] 到 PC 寄存器（约 −22.39 ns），虚拟时钟组的 instr[20] 到 aluout[31] 亦为负（约 −20.46 ns）。最小松弛违例为 reset 到 dp.pcreg.q[20] 的异步 removal（约 −0.1263 ns）。普通 clk 组最差 Hold 仍为 +2.17 ns。已排队同一 RTL 独立重建的 40 ns 三角参考。I/O 两方向仍为绝对 2 ns，保留异步复位 removal；采用 ABC 40000 ps 及 TT/SS/FF 联合修复，Setup/Hold 目标余量 0.50/0.30 ns。构建等待 Stage 3 释放同一 EDA 锁，尚无新资格结果。
 
 | 资格原件 | 路径相对 `/home/toylog/faeco_v5_step5_riscv32i_tc_20261126_v1` | SHA-256 |
 |---|---|---|
