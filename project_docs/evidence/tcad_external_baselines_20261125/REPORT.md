@@ -44,3 +44,20 @@
 ## 2. TritonSizer 兼容性预检
 
 详见 [TRITONSIZER_COMPAT_AUDIT.md](TRITONSIZER_COMPAT_AUDIT.md)。克隆检出官方归档提交 `31c4a04`（2018-12-01）证实其强依赖 Tcl 8.4.20、2018 年私人 OpenSTA fork 与闭源字节码 `sizer.tbc` / `libtbcload1.7.so`，且自定义 ISPD13 Liberty 解析器不支持 SKY130HD，不具备在同工具链与多角详细重布线验收闭环下直接接入的条件。
+
+## 3. 经典 5 轮冻结寄生拉格朗日松弛（LR）四设计同门实测与保护后端解耦对照（2026-11-26）
+
+- 驱动：[run_lr_4designs.py](run_lr_4designs.py) 与全片重布对照 [run_lr_aes_fullroute_control.py](run_lr_aes_fullroute_control.py)；原始运行根 `/home/toylog/faeco_tcad_lr_4designs_20261126_v1`；核验收据：[LR_4DESIGNS_VERIFIED.json](LR_4DESIGNS_VERIFIED.json)。
+- 协议：按 Chen/Chu (TCAD'99) 与 Flach (TCAD'14) 范式，在完全相同的冻结 `CONTROL`、同 18 项筛选候选池与同 1% 周期 Setup 预算下，于冻结 TT SPEF 上执行 5 轮子梯度乘子更新与拉格朗日降尺寸决策；随后将 LR 收敛提交集送入完全相同的物理签核闭环（FF/TT/SS 三角、独立全块 DRC=0、天线=0、Yosys SEC）。为最严格公平对比，先慷慨将 **FAECO 的 `1.0 × H_row` 窗口化局部保护重布线后端**赋予 LR；对唯一通过的 `sky130hd/aes` 另跑不带保护后端的标准全片重布线对照以解耦因果。
+
+| 设计（PDK） | LR 冻结 SPEF 提交 | 物理后端 | 物理耗时（s） | 合格回收（原全门） | 验收判定与根因 |
+|---|---:|---|---:|---:|---|
+| SKY130HD `aes` | 18/18（197.69 µm²） | **标准全片重布（独立 LR）** | >600.0（超时） | **0.0000 µm²** | 600 s 详细布线超时（`rc=124`，未完成 DRT/RCX/STA/SEC） |
+| SKY130HD `aes` | 18/18（197.69 µm²） | **挂载 FAECO 窗口化保护后端** | **140.90** | **197.6896 µm²（100% 池）** | **通过**：窗口预检 8.22 s（18 盒→17 marker→精确 7 邻网）救活全部 18 门，0 DRC、SEC 11,089/0，三角 Hold 全改善 |
+| SKY130HD `riscv32i` | 18/18（147.64 µm²） | 挂载 FAECO 窗口化保护后端 | 245.62（超时） | **0.0000 µm²** | 一次性提交 18 门引发 240 s 局部 DRT 超时 |
+| ASAP7 `uart` | 18/18（1.1810 µm²） | 挂载 FAECO 窗口化保护后端 | 25.58 | **0.0000 µm²** | `FF:setup_budget`（−6.68 ps vs 2.70 ps）+ `TT/SS:hold_regression`（−0.008/−0.154 ps） |
+| ASAP7 `aes` | 18/18（1.7642 µm²） | 挂载 FAECO 窗口化保护后端 | 463.85 | **0.0000 µm²** | 触发 DRC 重试且 `SS:hold_regression`（−0.012 ps） |
+
+### 机制归因
+1. **窗口化保护后端是可插拔的通用使能器**：在 `sky130hd/aes` 上，脱离 FAECO 后端的独立 LR 在 600 s 标准全片重布中超时归零，而挂载我们的 `1.0 × H_row` 窗口化保护后端后 140.9 s 一次性验收全部 18 门（197.69 µm²），直接证明该保护后端可赋能外部优化器。
+2. **增量微批次与多角物理反馈同样不可替代**：即便慷慨挂载 FAECO 窗口化保护后端，一次性冻结寄生 LR 仍在 **3/4 设计上全部失败（0.0000 µm²）**（DRT 拥塞超时、多角 FF setup / TT+SS hold 崩盘与 SS hold 退化），而 FAECO 增量自适应微批次在 **4/4（100%）设计**上均稳定交付全签核正收益。
