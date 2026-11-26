@@ -4,6 +4,12 @@
 
 ## 修改记录
 
+### 2026-11-26 面向 TCAD 的中英双语 4 幅 Python 出版级矢量图（替代旧 ImageGen PNG）
+
+- **英文版**：`paper/en/figures/tcad_20261126/{generate_tcad_figures.py, fig1_architecture, fig2_anytime_curves, fig3_geo_causal_ablation, fig4_boxed_drc_scaling}.{pdf,svg,png}` 与 `figure_metrics_summary.json`（含四设计 0–720 s Anytime AUC）。全部通过 `audit_panel_alignment`、`audit_pdf_text.py`（≥5.6 pt）及 `audit_figure_collisions.py`（4/4 均 0 fail / 0 warn）。
+- **中文版**：`paper/zh/figures/tcad_20261126/{generate_tcad_figures_zh.py, fig1_architecture_zh, fig2_anytime_curves_zh, fig3_geo_causal_ablation_zh, fig4_boxed_drc_scaling_zh}.{pdf,svg,png}`。视觉复核捕获 SimHei 缺少 `µ/²/−` 字形与粗体字重，切换为 `Microsoft YaHei` 并调整图 2d 标注右对齐后重新导出，零缺失字形警告，4/4 通过 `audit_pdf_text.py`（≥5.6 pt）与 `audit_figure_collisions.py`（0 fail / 0 warn），600 DPI PNG 逐幅视觉复核通过并已嵌入 13 页中文主稿。
+- 所有数值直接读取 `project_docs/evidence/` 下经独立核验的 JSON 收据，零手工硬编码虚构点。
+
 ### 2026-11-23 中文 v3 六幅 ImageGen 示意图
 
 六图依次表示整体框架、WNS 损失预算、安全前缀与后缀复测、同一端点四视图和寄生更新、等效缩小与重布线、同起点基线评估。逐幅核对标签、流程及版面。原始模型 PNG 均为 2172 × 724。实验值转入正文和原生表格。提示词和 SHA-256 见 [PROMPTS.json](imagegen_20261123/PROMPTS.json)。
