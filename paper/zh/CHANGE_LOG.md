@@ -899,3 +899,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 正文补入正常及截停臂的进程树资源和独立读档，以及小 UART 与两种 AES 的单候选阶段资源。加入 AuDoPEDA 首轮排序投影对照和参考文献 [25]。针对代表性复跑陈述，720 s 按候选验收计费。版本化实验索引切至 `a10f314b`，原实验和机制示意图不变。
 - 首次增补版第 14 页只含单条尾文献。压缩讨论的重复句后 25 条文献落入 13 页，双遍 LuaLaTeX 与变动页复看通过。源 SHA-256 `25a94ef2a19746a5fcf145101d9a5f19c638fbd1f435b81727276b2184b65c7d`，PDF SHA-256 `7c3bddbcdcaf0b74653f7f3053925b2e9269551e20190690ab0d901549a55ebb`。 [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
+
+## 2026-11-27｜V5 复现范围更新
+
+- 文末实验索引固定到 `194e3858`。补写同主机从隔离输入重建 40 ns 处理器参考和固定首批，保留跨主机重建对 PDK、工具与基础环境的依赖。
+- 双遍 LuaLaTeX 后维持 13 页、5 图、12 表、25 条参考文献。115 dpi 比对仅末页实验说明段变化，末页 150 dpi 目检与三个 PDF 同指纹核对完成。 [定向复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
