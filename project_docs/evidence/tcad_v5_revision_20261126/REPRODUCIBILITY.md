@@ -100,3 +100,59 @@ python3 project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_isolated_e
 ```
 
 候选原件包含 35 个索引成员及清单，包含新旧首批的完整 SEC 脚本与日志，ZIP SHA-256 为 `a64d850c924d79f1e2e8865f7368db447069d93465b382f685f19f2e301531af`。无 EDA 核查脚本校验两个包、四类物理字节、SPEF、三角报告和绑定到参考的候选 SEC。 [首批重建原件](V5_STAGE5_ISOLATED_FIRST_CANDIDATE_ORIGINALS.zip) · [两包复核脚本](verify_stage5_isolated_evidence.py)
+
+### 重建参考后的三臂在线搜索
+
+同一 WSL 主机从新的物理参考复跑 720 s 的单门、固定三门和自适应臂。新预筛实测 59.791620 s，三臂各执行一次窗内 TT 排序并得到冻结的 18 项全序。输入清单与上一节相同。活动进程的用户、挂载和网络命名空间与观察者不同，旧 Stage 5 输出根在工作进程内不可见。外层运行 2100 s 并返回 0。 [复算收据](V5_STAGE5_ISOLATED_ONLINE_VERIFIED.json)
+
+| 调度 | 原运行派发/完成/接受 | 隔离复跑派发/完成/接受 | 原／新终态面积（µm²） | 原／新时间均值（µm²） |
+| --- | --- | --- | ---: | ---: |
+| 单门 | 9/8/6 | 8/7/5 | 48.7968／40.0384 | 23.0862／22.6610 |
+| 固定三门 | 6/6/4 | 6/6/4 | 91.3376／91.3376 | 38.4928／36.7427 |
+| 自适应 | 6/5/2 | 6/5/2 | 31.2800／31.2800 | 23.5088／23.3011 |
+
+18 次共同完成的请求逐次重现动作、拒收原因、复修及门判定。最终物理评估的 ODB、DEF、Verilog 和 DRC 指纹一致，SPEF 去除唯一 `*DATE` 行内容后相同。新运行 11 个已验收检查点的 44 份物理工件、时序、DRC、天线及非空 SEC 均进入独立核验。固定三门均自然耗尽，自适应两次均在第 6 次 DRT 被截停。新单门在第 8 次的 SEC 包装器触限，旧运行完成该请求并在第 9 次 DRT 触限。新第 8 次的路由、寄生、三角和独立 DRC 与对应旧端点一致，当时没有窗内 SEC 收据。端点计数和时间均值以各自实际窗口为准。
+
+| 归档 | 索引原件数 | ZIP SHA-256 |
+| --- | ---: | --- |
+| [公共输入与运行原件](V5_STAGE5_ISOLATED_ONLINE_COMMON.zip) | 125 | `8d41ca26aa2e6552ac851546722ffb257db2b79c4b1153c7dbeedb03b2c5e860` |
+| [单门](V5_STAGE5_ISOLATED_ONLINE_SINGLE_BOXED.zip) | 704 | `e94b27dcec4501785e0959913578550f504ab2a6e7f74b2ce81f721b8c360d86` |
+| [固定三门](V5_STAGE5_ISOLATED_ONLINE_FIXED_BOXED.zip) | 572 | `87bbd4657cae6226dc0de88eed5f9e5e0d36a8fc179867306abdae34291e0f1d` |
+| [自适应](V5_STAGE5_ISOLATED_ONLINE_FAECO_BOXED.zip) | 428 | `042e626fb3b2cf49ca022df25860af341ebdd570946ba85c585a66e547bb88b7` |
+
+以已经完成重建的 `output` 和经过预检的 `bundle` 作为输入，驱动及结果须位于命名空间可见的可写路径。运行以历史冻结 SEC 实现复现既有对照，修复验证另见下节。
+
+```bash
+e=project_docs/evidence/tcad_v5_revision_20261126
+drivers=$(mktemp -d /var/tmp/faeco_stage5_online_tools.XXXXXX)
+cp "$e/replay_stage5_online.py" "$e/replay_stage5_fixed_first.py" "$drivers/"
+online_output=/var/tmp/faeco_stage5_online_new
+lock=/home/toylog/faeco_v5_eda.lock
+bash code/scripts/run_with_timeout.sh 3020 flock -w 8 "$lock" \
+    timeout --signal=TERM --kill-after=8s 3000s taskset -c 0-5 \
+    bash "$bundle/driver.sh" candidate "$bundle" "$drivers/replay_stage5_online.py" "$output" "$online_output"
+```
+
+以下绝对路径是原始收据内的归档映射键。离线复算使用 Python 3.11 或更新版本，可在其他主机运行，无需这些 Linux 目录存在。Windows 原生 Python 复算与 WSL 现场复算的 JSON 各字段一致。
+
+```bash
+e=project_docs/evidence/tcad_v5_revision_20261126
+p="$e/V5_STAGE5_ISOLATED_ONLINE"
+python3 -B "$e/verify_stage5_isolated_online.py" \
+    --new-state /var/tmp/faeco_v6_stage5_online_20261127_v1/stage5_progress.json \
+    --replay-map /var/tmp/faeco_v6_stage5_rebuilt_20261127_v2/qualification=reference \
+    --replay-zip "${p}_COMMON.zip" \
+    --historical-zip "${p}_SINGLE_BOXED.zip" --replay-zip "${p}_SINGLE_BOXED.zip" \
+    --historical-zip "${p}_FIXED_BOXED.zip" --replay-zip "${p}_FIXED_BOXED.zip" \
+    --historical-zip "${p}_FAECO_BOXED.zip" --replay-zip "${p}_FAECO_BOXED.zip"
+```
+
+### SEC 截停和后置修复验证
+
+隔离单门第 8 次的外层 SEC 在剩余 1.717614 s 时返回超时，没有生成验收收据。原实现的内层 GNU timeout 建立另一进程组，Yosys 继续写完 4559/0 的原始证明日志。末次写入晚于下一固定三门 TT 排序日志约 2.420 s。固定排序发生过跨臂工序重叠，本轮固定时间均值为该运行的观测值。
+
+冻结三臂运行结束后，使用同一参考、同一第 8 次候选、同一 TT 库与 Yosys 做独立对照。原版在 1.717614 s 截停后仍观测到两进程并继续写日志，修复版在相同时限后未再观测到证明进程，日志大小保持 784,150 字节。两次短窗均未发布验收收据。修复版用 30 s 余量在 7.946 s 完成真实 SEC，输出 4559/0 的收据。修复将内层 `timeout --foreground` 留在外层 RAW 工具进程组。此项核验覆盖被测 SEC 链，修复后的整套在线计时与所有阶段硬返回仍待复测。 [29 份原件](V5_STAGE5_SEC_CUTOFF_ORIGINALS.zip) · [离线核对](verify_stage5_sec_cutoff.py)
+
+```bash
+python3 -B project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_sec_cutoff.py
+```

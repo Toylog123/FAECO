@@ -1752,6 +1752,10 @@ v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独
 
 2026-11-27 补做 AuDoPEDA 功耗恢复首轮排序投影。保持 40 ns 处理器的共同目标、固定三门、720 s 和后端，原灵敏度／功耗乘 Setup 裕量排序终态回收分别为 91.3376／43.7920 µm²，6 次完成中分别验收 4／2 次。该例形成了同池同后端的现代外部排序对照。全局布线原生算法、跨设计迁移和先进学习方法的共域测评仍开放。ECC Sizer 发布版的实例排除与全局门禁无法表达逐实例目标配对，可作为原生提议参考。 [对照证据](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器同池同后端的外部排序对照) · [AuDoPEDA 作者论文](https://arxiv.org/html/2601.06268v2#S4.SS3) · [ECC Sizer 发布版](https://github.com/openecos-projects/ecc-sizer/releases/tag/v0.1.0-alpha.1)
 
+2026-11-27 只读审查固定 OpenROAD 的 `repair_timing -setup -phases GLOBAL_SIZING`。原生 LR 在 WNS 达到配置目标后退出，搜索等价库主单元并以时序和漏电或面积决策。默认设置预期在正裕量的 40 ns 参考上没有迭代。人为调高目标可测原生时序修复，但原生门仍要求最终 WNS 不退化。全局 `dont_use` 同时影响源和目标，无法表达现有 NOR4 链的逐实例降尺寸集合。这与项目已测的冻结 TT SPEF 上五轮、18 个固定动作的经典 LR 构成不同配置。保留同后端的完整原生提议为可验候选，当前只有源码结论。 [固定停止条件](https://github.com/taizun-jj202/OpenROAD/blob/b511b6a2bc936844b0319efc8b4972bb4ad7d911/src/rsz/src/policy/GlobalSizingPolicy.cc#L1007-L1022) · [原生候选过滤](https://github.com/taizun-jj202/OpenROAD/blob/b511b6a2bc936844b0319efc8b4972bb4ad7d911/src/rsz/src/Resizer.cc#L2120-L2158) · [已测经典 LR](evidence/tcad_external_baselines_20261125/REPORT.md#3-经典-5-轮冻结寄生拉格朗日松弛lr四设计同门实测与保护后端解耦对照)
+
+TAPCO-G 提供布局后图时序传播、功耗评分及失败批次二分的直接相关工作。其时序收益按起点 TNS 绝对值归一，当前 40 ns 参考各角 TNS 均为零。移植前需先固定全零 TNS 的目标解释和功耗输入。公开论文与作者成果页尚未给出可直接固定的实现入口。 [TAPCO-G 原论文 §4](https://arxiv.org/html/2611.13931v1#S4) · [作者成果页](https://wqtang.com/)
+
 AES 现行在线后端已完成正反序原序单门对照和独立的后端交叉对照。同端点的诊断收益成立于 AES，候选调度的回收收益仍混合批宽、失败处理和排序。ASAP7 UART 已在原约束下完成三法正反序，在线固定、单门、FAECO 两序各回收 0.23328、0.17496、0.14580 µm²。UART 实际 36 次在线诊断均无 marker 或重试，因此仍需在出现诊断事件的独立设计估算净收益。下一层包括同后端灵敏度单门、固定批宽、同数量几何邻网放行和独立 SKY130HD 非 AES 设计，保留零回收和时窗删失。中英文工作稿均补至已核验的 UART 结果。[TCAD 成熟度评估](../paper/zh/review_rounds/r20261125_tcad_readiness/REVIEW_REPORT.md) · [UART 六臂](evidence/tcad_holdout_20261123/UART_ONLINE_REPORT.md)
 
 2026-11-25 已在 AES 独立复核 TT 裕量灵敏度单门四臂。相较此前原序配对，新配对里 FAECO 首达领先缩小至 17.117／20.151 RAW s，窗内比较变为 67.5648 对 33.7824 µm²。静态灵敏度排序基线已补，仍需比较固定批宽、在线更新排序、邻网释放及独立设计。[灵敏度单门配对](evidence/tcad_ibex_20261123/AES_SENSITIVITY_GREEDY_REPORT.md)
@@ -1858,10 +1862,16 @@ Stage 5 的独立 10 ns ORFS 新构建使用 [all_inputs -no_clocks] 明确收�
 
 13 页 V5 中文稿通过内部小修核验。图 1–2 的 Google Antigravity `generate_image` 工具身份已通过原始记录与裁切回算确认，中文致谢已更正。待作者确认完整英文转译及正式署名、通信作者、每位作者的 ORCID 和投稿声明，并在拟投英文包验收 IEEE 版式、修回篇幅与最终致谢。强外部对照及同后端准入仍见 OI-105/108，完整冻结物理重建仍需历史输入和工具路径映射。 [英文投稿入口](../paper/en/README.md) · [终版复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
 
-复现中已完成 R3-1 的已布线端点 STA 异址重放，也在同一 WSL 主机的隔离输入副本上重建 40 ns 参考及原首批合格项。另一个物理主机环境上的完整构建、其他设计及完整多臂在线流程的异址复跑仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考)
+复现中已完成 R3-1 的已布线端点 STA 异址重放，也在同一 WSL 主机的隔离输入副本上重建 40 ns 参考、原首批合格项并复跑完整三臂。另一物理主机环境的完整执行及其他设计的异址物理复跑仍开放。 [V6 运行说明](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考)
 
 V4 资源补证覆盖 40 ns 处理器的自然结束与时窗截停两臂，也补齐小 UART 与两项最大网数代表双 AES 的阶段资源。已核验进程树 CPU、scope 内存高水位、实际读档与返回时刻。跨设计稳定速度、重复方差和外层硬返回接口仍待验证。 [处理器 V4](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取) · [三项阶段资源](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md#小-uart-与两项最大代表设计的阶段资源)
 
 ## OI-114（2026-11-27，闭合）— 近临界 STA 复验缺顶层运行时绑定
 
 470.5 ps 补测首次已核输入身份，首个 FF 调用因 STA 包装器未收到 `FAECO_DESIGN_TOP` 退出，未产生可用 STA 读数。保留首次日志和协议。复用既有 `bind_runtime("uart", None)`，在新目录以同一输入复跑；六视图的日志和门槛决定全部复算一致。修复只影响调用，未改周期或验收规则。[补证报告](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)
+
+## OI-115（2026-11-27，SEC 链限定闭合）— 单次 SEC 截停后后代进程脱离墙钟窗
+
+40 ns 处理器隔离复跑中，单门第 8 个请求的 SEC 包装器在剩余 1.717614 s 时被截停，未生成验收收据。内部 Yosys 的证明日志却在下一固定三门排序日志之后约 2.420 s 才停止写入，含 4559／0 完成末行。此请求保持超时和未验收。固定臂起序与该后代重叠，影响未量化。外层 RAW 运行器只杀候选包装器的进程组，旧内层 GNU timeout 默认将 Yosys 放进另一组。冻结运行保留原代码与原始账本。
+
+假工具沿真实 SEC 和 RAW 运行入口可复现。当前共享 SEC 入口增加 `--foreground` 以保留外层进程组，已通过同一夹具。真实同网表短窗 A/B 与足窗证明通过。原版仍有后代和日志增长，修复版两次观察均零后代且字节稳定，足窗 SEC 4559/0。跨所有阶段的硬返回与修复后完整配对计时仍开放。[后置真实对照](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#sec-截停和后置修复验证) [超时执行入口](evidence/tcad_wallclock_schedule_20261125/raw_timed_process.py) · [SEC 启动器](evidence/tcad_ibex_20261123/prove_ibex.py) · [回归测试](../code/tests/test_tcad_sec_process_group.py)

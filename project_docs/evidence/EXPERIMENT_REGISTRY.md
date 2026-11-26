@@ -3593,3 +3593,40 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - 固定驱动 SHA-256 `98bab30663853096157cca2ce10775a5099ed9871ae5c20378a62eef90c5b321`。已在同一命名空间用缺资格文件的空根做负对照，拒在创建输出前。正式候选根 `/var/tmp/faeco_v6_stage5_fixed_first_20261127_v1`，首派工具流程上限 450 s，从预筛到结束外层限 1540 s，沿用同锁与 CPU 0–5。单候选用于复现物理而非比较完整调度时间。
 - 06:19:25（UTC+8）候选收据落盘，外层 229 s、rc0。带新参考的首批合格回收 23.7728 µm²，终检和天线均为零，SEC 对新参考为 4559/0。原物理 ODB／DEF／V 指纹重现，SPEF 日期行归一后一致，三角时序及电气与原物理端点完全一致。收据 SHA-256 `aa92bfb823805e428f2a005c28e1686b0017dd9722ed990a7ee05e06295149c8`，候选原件 ZIP SHA-256 `80ab3bace5b273ff780e5635f18fbd892d8e4db8ce5dcb9145c5ccc347cb4e39`，31 项索引。 [V6 档案](tcad_v5_revision_20261126/REPRODUCIBILITY.md#重建参考后的固定首批)
 - 独立复核确认新旧首批各 4559/0 的完整 SEC 脚本与日志，确认 TT 排名、三角 STA 实际读入新布线 ODB、独立 DRC/天线和 ODB／DEF／V／SPEF 比对。正式候选包追加双方完整 SEC 脚本和日志，SHA-256 `a64d850c924d79f1e2e8865f7368db447069d93465b382f685f19f2e301531af`，35 项索引，保留前版归档为本地快照。
+
+### 2026-11-27 审稿 V6｜隔离参考上的 Stage 5 三臂在线复跑（预登记）
+
+- `TCAD-V6-STAGE5-ISOLATED-ONLINE` 以此前独立重建并通过完整资格的 `tc40ns_mmmc_drv` 为参考。在同一 WSL 主机的私有环境中依次复跑原 `single_boxed`、`fixed_boxed` 和 `faeco_boxed`。三臂共享同一冻结参考、18 项候选池与保护后端，每臂按原流程重新计费执行 TT 灵敏度起序。保留原微批次规则并关闭全池探针。同一 EDA 互斥锁下串行，参考构建和资格计作前处理。原始对照和本次公共预筛分别记录实测账目，验收使用各自正式命令的原单位与精度。 [原 Stage 5 协议](tcad_v5_revision_20261126/REPRODUCIBILITY.md#主要对照协议) · [原 Stage 5 收据](tcad_v5_revision_20261126/V5_STEP5_10K_TIMING_CLOSED_TC40NS_MMMC_DRV_VERIFIED.json)
+- 派发前核对隔离状态、新参考身份、原 18 项池、共同初始顺序和候选验收门。与原协议相同，每臂 720 s 从已计费公共预筛起算，候选必须在窗内完成全部验收才计入。使用原三角 Setup/Hold 绝对门、400 ps 相对 Setup WNS 预算及逐角 TNS 和 Hold 门。记录电气、独立全块 DRC、天线与相对新参考的非空 SEC。记录各臂派发、完成、接受、拒因、终态面积、时间轨迹和截止／返回事件。物理端点按 ODB、DEF、Verilog 与 SPEF 指纹核对，附 SPEF 单行日期归一结果。
+- 证伪条件包括原路径旁路导致读取旧输出，参考、池、起序或门偏离冻结协议，以及任何计交付的检查点越过验收截止或未通过物理、时序或 SEC 门。通过输入门以后，如同一累计动作的验收、物理指纹或三臂终态有差异，记录不同，按真实派发与停止原因判定可复现范围。时间按本次账本重算，时间波动与端点身份分别判定。当前为预登记，实际环境、命令、原件位置与运行状态待确认。
+- 冻结输入根为 `/var/tmp/faeco_v6_stage5_input_20261127_v4`，`FILES.sha256` 的 SHA-256 为 `b9f81b2fa52492cacba8a84b2d715e24809daa50d2af5ab03197078e6cbe33ac`。参考为 `/var/tmp/faeco_v6_stage5_rebuilt_20261127_v2`，其 CONTROL SHA-256 为 `cee3a4fb2165d30d6ba37177da711e4a1e6b16a58383892870fee272a13288fc`。正式输出为 `/var/tmp/faeco_v6_stage5_online_20261127_v1`。驱动 `replay_stage5_online.py` 的 SHA-256 为 `2ec5b0e7c4845603e33c6f7925b6d327ad60e363adbc8b1438049455d9a827ce`。私有命名空间由同一共享 `flock` 下的 `taskset -c 0-5` 与 `timeout --signal=TERM --kill-after=8s 3000s` 包裹。公共预筛实测一次并分别计入原序三臂的 720 s 验收窗。
+- 06:32:22（UTC+8）启动正式进程。缺资格文件的负对照在进入 EDA 前以 rc1 拒绝，并且未创建指定输出。原件为 `/var/tmp/faeco_v6_stage5_online_tools_20261127/negative.log`。正式使用项目包装 3020 s、内层进程组 3000 s、等共享锁最多 8 s。启动前核对三项冻结指纹、54 个输入路径及重算 SDC。活动进程 539 的用户、挂载、网络命名空间均与观察者不同，CPU 0–5，`/home/toylog`、项目路径及 `/usr/local/bin` 由冻结副本只读绑定。历史输出根仅观察者可见。活动原件为 `/var/tmp/faeco_v6_stage5_online_tools_20261127/active_namespace.json`。启动后进入新参考预筛。
+- 正式输出的 `search_protocol.json` 记 18 项预筛及原门匹配，周期 40000.0 ps、Setup WNS 损失上限 400.0 ps、DRT 四线程，`CLOCK_MONOTONIC_RAW` 公共预筛为 59.791619571999945 s。严格零改动资格通过。06:35:09（UTC+8）`stage5_progress.json` 显示 `single_boxed/attempt_01` 正在运行，已派发第 1 次请求、当时无检查点。
+- 06:46（UTC+8）单门完成，开始固定三门首派。`single_boxed` 为 8 派／7 成／5 接受，终态为 40.03839999999036 µm²，时间均值为 22.660998738924153 µm²。第 8 请求完成三角与独立 DRC，SEC 在 1.7176138909999281 s 的剩余时窗截停，工具返回码为 null。原单门为 9 派／8 成／6 接受，终态 48.7968 µm²，第 9 请求截于 DRT。新摘要 SHA-256 `a3be689f0687155bfcb2b20edad5f35227c1030b0826e67b5061bcb6474cb723`，子进程账本 SHA-256 `6c7668785c9b72bd17779c12cc732361320f4e3f82d03f87a4235462d421d728`。
+- 单门独立逐动作及字节核验完成。前 8 次派发动作一致。共同完成的前 7 次含两次拒绝，门控、重试、接受判定一致。五个共同接受点的面积与时序逐值一致。共同物理原件的 ODB、DEF、Verilog 和 DRC 指纹一致，SPEF 在核验原 SHA 后做 DATE 归一与历史一致。保留本次终态与历史不同。独立原件 `scratch/v6_online_independent_single_boxed.json` SHA-256 `5d1b6d10019e9340766ed328bdadc6179b3803342d74887c10bae6586d2ffe7b`。
+- 单门第 8 请求的外层 SEC `stop_raw` 为 3525.443429179 s，固定臂首个 TT 排序 `start_raw` 为 3527.513254656 s。单门 `sec/receipt.json` 缺失，内部 `sec/prove.log` 后续才写出 Yosys 等价证明 4559/0 与程序结束行，文件 mtime 为 1795733167891889791 ns，晚于固定臂 `sensitivity/sta_rank.log` 的 1795733165472071101 ns。故在固定臂开始后仍有上一臂工具后代输出。第 8 请求维持窗内未验收判定，原耗时和其他收据保留。冻结 `prove_ibex.py` 的 GNU timeout 默认将内层命令放到独立进程组，外层 RAW 进程封装按包装器进程组终止，足以解释观察到的跨臂进程重叠。完整后代清理与对下一臂计时的影响须在独立运行中复核；本轮继续执行冻结协议。
+
+### 2026-11-27 审稿 V6｜SEC 超时后代清理回归（预登记）
+
+- 夹具复用真实 SEC 包装器，以 0.8 s 外层限时和 1.8 s 假 Yosys 复现旧版在截止后仍写出完成标记。旧入口在 `sec_fixture_old.log` 中失败。工作区 `prove_ibex.py` 只给内层 GNU timeout 增加 `--foreground`，普通入口与真实 Stage 5 RAW 入口的夹具分别在 `sec_fixture_fixed.log` 和 `sec_fixture_raw_fixed.log` 通过。日志均在 `/var/tmp/faeco_v6_stage5_online_tools_20261127`。冻结 v4 capsule 沿用旧版，三臂原数据继续保留。
+- 以三臂完整退出并释放共享锁为先决条件。用相同的新建参考和新单门第 8 请求的 `routed.v`、`sec_native`、同一 TT Liberty、已固定 OSS Yosys 及 Stage 5 RAW 入口，串行执行旧版 1.7176138909999281 s、新版同限、新版 30 s 三项。保持同一候选与参考，独立输出。
+- 验收时要求两次短窗均触发外层截停且无合格回执。旧版应保留截停后后代继续写入或完整证明的实际证据，新版须无后代越窗继续运行。新版 30 s 正对照须实证 SEC 4559/0。记录外层返回、实际产物及后代清理；若不复现旧版缺陷、新版仍泄漏或正对照失败，按具体阶段保留原件并分析。当前真实三项待启动。
+
+### 2026-11-27 审稿 V6｜隔离参考上的 Stage 5 三臂在线复跑（续记）
+
+- 固定三门新旧均 6 派／6 成／4 接受，六次同动作、门控、复修与物理指纹均一致，SPEF 以 DATE 归一结果比较。均自然穷尽且末次 SEC 返回 0。新终态 91.33759999999893 µm²，时间均值 36.742669592626704 µm²，原公开时间均值 38.49278670 µm²。新摘要 SHA-256 `cc3acd0d177932448ced321d36f3ba168c3d31213b4770b0860fa2f0b0911f08`，子进程账本 SHA-256 `989c359b66129fa014fd1f93d0f02a7d334e033d3a9d09ba0443952793fa3fbc`。独立核验 `scratch/v6_online_independent_fixed_boxed.json` SHA-256 `bbed91b6a22ed3a1346f453f5f1663a73f8a26f1f564c790a8823afdd4402691`。自适应微批次臂已启动。
+- 截停辅助收据核对单门第 8 请求的新旧四件物理工件、三角 STA 与 DRC，SPEF 仅在 DATE 归一后比较。工件等同支持判定差异来自候选当轮未完成窗内 SEC。保留第 8 请求截停分类。后置回归的原胶囊 Stage 5 RAW 入口红测也确认后代越窗写入，原件 `/var/tmp/faeco_v6_stage5_online_tools_20261127/sec_fixture_raw_old.log`。
+- 07:00:40.815756156（UTC+8）检查自适应第 3 次请求正在派发。通过 `/proc/539/root` 读取实际 `prove_ibex.py`，与 v4 胶囊原件的 SHA-256 同为 `9388a0c69c13ab2dc91352e3431ebcd5927d1884c79ed8db2b38ec0f67403e7b`。工作区修复版 SHA-256 为 `861d3549ea8f20f082c6b30e58e7c3bb4cf56adabd48a50f210cf749d86ddfd4`。活动原件 `/var/tmp/faeco_v6_stage5_online_tools_20261127/live_proof_sources.log`，证实正在运行的冻结代码未变。
+- 后置 SEC 回归确认使用 `/var/tmp/faeco_v6_stage5_online_tools_20261127/replay_sec_cutoff_ab.py`，实读其 SHA-256 为 `fa4c9c22b3799069a768ce628352bfec2998d1c13ca87a98a1e7103ec5fb3b9a`。指定新输出 `/var/tmp/faeco_v6_stage5_sec_cutoff_20261127_v1`，当前未创建。共享 EDA 锁内绑定 CPU 0–5，项目外限 115 s，内层 100 s。待三臂完成并确认释放锁后才派发和归档。
+- 三臂正式结束，`stage5_progress.json` 为 `finished`、无活动臂，其 SHA-256 为 `37913c1e0b99188607f46732e62e39a92b0c80fdbe31348927f71bb1a34688dd`，外层 2100 s、rc0。自适应臂新旧均 6 派／5 成／2 接受，终态为 31.279999999998836 µm²。新 AUC 23.301143850116322 µm²，原 AUC 23.50879022 µm²。第 6 次均因 DRT 截停，新剩余时限 121.1577583569997 s，原为约 137.346 s。独立核对六次累计动作、五次共同完成的门控、复修及物理指纹均一致，原件 `scratch/v6_online_independent_faeco_boxed.json` SHA-256 `147167a1673fdc9deaf59ffca825dcac066e833383e3f1ad057be190a6e65783`。保留单门终态差异与 SEC 后代重叠观测。
+- 07:07:52（UTC+8）三臂全部结束并释放锁后，按已绑定驱动及独立输出启动三条真实 SEC 后置诊断，原件与判据依单独预登记。结果待工具返回和复核。
+
+### 2026-11-27 审稿 V6｜SEC 超时后代清理回归（结果）
+
+- 后置真实三项外层耗时 20 s、rc0。正式收据 `/var/tmp/faeco_v6_stage5_sec_cutoff_20261127_v1/verified.json` SHA-256 为 `9860dce58f8b55ef493c7ee0e4180fe2cad55bb998208c48cb5b1a6d457e09c4`，逐项核对三份观察与其绑定。三组的 `prove.ys` SHA-256 同为 `de61f00a5325a3e19ea9190c8c0259b7413f293f7da112b561eedf8788dc90b3`，两短窗均以 1.7176138909999281 s 设置进入相同 RAW 入口，外层返回码均为 null。
+- 旧版短窗首采样仍有两个同组后代 PID 445／446，日志从 589550 增至 10202877 字节且写出完整 4559/0，无回执。修复版短窗两次均未观察到后代，日志保持 784150 字节且无回执。修复版 30 s 正对照外层工具为 7.9454963859998315 s、rc0，SEC 4559/0；回执 SHA-256 `9986e6478c96ba605592d7ba12cc6a675dfdfc668d83dcd731f30e03132f072e`，实际参考网表与候选网表指纹均与回执相符。独立后置回归达预设判据，冻结三臂仍按原协议和原始观测解释。
+
+### 2026-11-27 审稿 V6｜隔离三臂在线与 SEC 后置回归归档收尾
+
+- 在线四包由共同输入 125 项、单门 704 项、固定三门 572 项和自适应 428 项组成，共 1829 项索引原件。四个 ZIP 的 SHA-256 已与公开复现页逐项核对。独立 Windows 离线复算与 WSL 现场收据的 JSON 字段一致，覆盖 18 次共同完成、11 个本次合格检查点和第 8 次单门在 SEC 截停的原始判定。 [四包指纹与运行／复算命令](tcad_v5_revision_20261126/REPRODUCIBILITY.md#重建参考后的三臂在线搜索)
+- SEC 后置回归的 29 项归档 `V5_STAGE5_SEC_CUTOFF_ORIGINALS.zip` SHA-256 为 `60a6583339f527ccf444d53ee4a0be745da02d5a35d5dd867852f8729e4ff4ed`，发布验证器执行通过。冻结环境的三臂在线实验与 SEC 后置诊断均结束。单机独立环境下的物理与在线执行范围已核；修复后的全流程在线计时以及异机物理重建未覆盖。 [SEC 截停及后置复核](tcad_v5_revision_20261126/REPRODUCIBILITY.md#sec-截停和后置修复验证)

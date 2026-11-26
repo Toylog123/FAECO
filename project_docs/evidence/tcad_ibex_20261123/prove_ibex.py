@@ -81,7 +81,9 @@ equiv_status -assert
 """,
         encoding="utf-8",
     )
-    command = ["/usr/bin/timeout", "--kill-after=10s", "180s", str(YOSYS), "-Q", "-s", str(script)]
+    # Keep the prover in the enclosing candidate runner's killable process group.
+    command = ["/usr/bin/timeout", "--foreground", "--kill-after=10s", "180s",
+               str(YOSYS), "-Q", "-s", str(script)]
     log = output / "prove.log"
     start = time.monotonic()
     with log.open("wb") as stream:
