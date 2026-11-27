@@ -3710,3 +3710,21 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 ### 2026-11-27 第四轮｜ASAP7 UART 原生完整提议实测完成
 
 - `TCAD-R4-NATIVE-UART-PROTECTED-16` 约 89 s、rc0，零改动资格通过。唯一累计提议 23.188743 s，实际一次路由，零独立 DRC 和零天线。净回收 0，三工艺角相对 Hold 拒收，候选 SEC 无派发。raw 顶层结果 SHA-256 `f7f885d3548294ff1380d55b64ad05a808f8b2abc2d2dc8e88bf440c8713bfea`。
+
+### 2026-11-27 第五轮｜UART K9／K36 候选影响只读核验（预登记）
+
+- `TCAD-R5-UART-K9-K36` 绑定第四轮证据与 `tcad_v4_revision_20261126/run_v4_finish_step4.py::finish_bk_sensitivity`。输入为 `/home/toylog/faeco_v4_step4_finish_20261126_v1/bk_sens_finish/runner` 的历史 `protocol.json`、`b3_K9`、`b3_K36` 账本、seed 所钉 V／DEF／SPEF 与三工艺角 Liberty。对照历史解析和仅补齐面积字段分号的库视图，核对预算与筛选顺序，逐项回读实际派发和接受身份及池上界。只写 `scratch/r5_pool`，整轮外限 120 s，无 EDA 路由。任何历史复现、动作身份、顺序或池上界差异单独报告。
+
+### 2026-11-27 第五轮｜冻结交付端点的 OpenDB 直接面积核验（预登记）
+
+- `TCAD-R5-DIRECT-ODB-AREA` 固定 `R4_ASAP7_AREA_ENDPOINT_READBACK.json` 的 20 条记录与两参考、`V5_STAGE5_TABLE12.json` 的三实际端点与同轮参考，以及 SKY130HD AES 历史 9 门窗口、18 门 Hybrid 臂与共同参考。全部输入从原收据逐项绑定 ODB、独立映射网表和哈希。使用历史 `openroad_unstamped` SHA-256 `2d9662715130538b50e93b614c33099a5e183eef0cc31b642099daea8d203e19`，`/home/toylog/faeco_v5_eda.lock`，CPU 0–5，工具单线程，逐对象 8 s，整轮外限 120 s。只读取 ODB，导出实例、master 类型、宽高及 DBU；按类别并经冻结网表逐实例校验功能分类，保留逻辑 tie。核对全功能面积之差与接受动作的源／目标物理面积差合计，逐项报告任何非动作变化或不一致。无物理优化、路由或输入写回。
+
+### 2026-11-27 第五轮｜UART 资源匹配候选回放结案
+
+- `TCAD-R5-UART-K9-K36` 成功轮在 120 s 外限内约 24 s、rc0，审计 JSON SHA-256 `7c301cdb16d4bf292c81046293cfebbc5d80fb2d8a8cea775d469962a583c730`。K9 不变，历史 K36 真实使用的 23 次完整请求及第 24 次只完成诊断的请求均可用历史动作名单复现。归一化后的追加 18 项均改变，历史上界 2.72646 µm²，归一化静态上界 2.95974 µm²。历史收据的面积与捕获率归属其冻结池，不用于新扩展名单。 [证据与执行入口](tcad_v5_revision_20261126/R5_ASAP7_UART_POOL_AUDIT.md)
+
+### 2026-11-27 第五轮｜冻结交付端点的 OpenDB 直接面积核验结案
+
+- `TCAD-R5-DIRECT-ODB-AREA` 固定 29 条 ODB 记录（22 个去重对象），沿用已登记二进制、共享锁和时限。首轮读取均成功，在映射网表核验发现测试脚本对处理器顶层的假设有误，按冻结协议读取实际顶层 `riscv` 后独立运行成功，约 16 s、rc0。4 个参考与 25 条交付记录的 ODB 功能实例均和映射网表逐一对应。25 个完整面积差与其原接受动作的物理面积差之和在整数 DBU² 上相等，额外功能实例变化为零。ZIP SHA-256 `db38c119fa7a1a01c698cfdc4e60327f6866057d9ba0556bc5346d49033602b8`。 [复算与分类原件](tcad_v5_revision_20261126/R5_DIRECT_ODB_AREA_REPORT.md)
+
+- K9／K36 正式归档轮同协议约 25 s、rc0，额外绑定 R4 已审核的 K18 归档及成员证据。103 项原件及核验输出和一份清单在 ZIP 中，SHA-256 `64369cd7122ff084911b935bf2170d144b501a8316eb2f2e6c7aa8a2960c2f39`。 [正式版候选池报告](tcad_v5_revision_20261126/R5_ASAP7_UART_POOL_AUDIT.md)

@@ -40,7 +40,8 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 历史窗口比较 | 各自冻结参考与统一 18 项池。SKY130HD A 臂现场 TT 灵敏度排序，B/C/D 初始沿原序。ASAP7 AES 同榜。正反序仅见相应成对诊断实验。 | 参考相对逐角 Setup WNS/TNS 和 Hold WNS，源周期为 SKY130HD AES 3.6 ns、旧处理器 6 ns、ASAP7 UART 270 ps 与 ASAP7 AES 380 ps。终检物理门与 SEC 共用。 |
 | UART Setup 去重与双设计 Setup 预算 | 270 ps UART／3,600 ps SKY130HD AES。窗口后端中每次派发计时，微批次，关闭全池探针；去重按各自白名单。Stage 2A 实际仅一次 FF Setup WNS 命中。 | 真正逐角改 WNS/TNS 门，Hold 门保持；允许相对合格的新增负端点，额外记录。 |
 | 双 AES 探针 0/60/120/240 s | SKY130HD AES 3,600 ps／ASAP7 AES 380 ps，同一设计回退规则一致。完成的拒收可在该候选会话复用。双 0 s 新臂最后补测，旧默认及旧零臂有独立来源。 | 相对门，720 s 自已计费公共预筛开始。只有验收在窗内的端点计入曲线；工具停止、收尾和外层返回可更晚。 |
-| 40 ns 处理器 | 独立重建，同一 18 项池和新鲜 TT 灵敏度起序。单门、固定三门、FAECO 微批次；均关闭探针。公共预筛 58.474014 s，参考构建与资格作为前处理单列。 | 绝对 Setup/Hold 与相对 400 ps Setup WNS、逐角 TNS 及 Hold 非退化。全角最大电容和转换时间报告、DRC、天线、SEC 完整。 |
+| 40 ns 处理器初次正式运行（历史） | 独立重建，同一 18 项池和新鲜 TT 灵敏度起序。单门、固定三门、FAECO 微批次均关闭探针。公共预筛 58.474014 s，参考构建与资格单列。 [历史收据](V5_STEP5_10K_TIMING_CLOSED_TC40NS_MMMC_DRV_VERIFIED.json) | 绝对 Setup/Hold、相对 Setup WNS 预算 400 ps、逐角 TNS、Hold 非退化。全角电气、DRC、天线、SEC。 |
+| 40 ns 处理器 SEC 修复后隔离运行（表 12） | 从同一冻结参考重做预筛。三臂共享 18 项池，现场各计费 TT 起序并关闭探针。公共预筛 **61.149943 s** 分别计入三臂的 720 s。 [表 12 生成结果](V5_STAGE5_TABLE12.json) · [修复后完整记录](#sec-修复后的完整三臂验证) | 沿用前述验收门及原参考构建、资格单列口径。 |
 
 各组共用单一工作模式。FF/TT/SS 对应标准单元库通过各冻结协议中的 Liberty 指纹定位，详细布线名义 SPEF 跨三个库角共用。Stage 5 的 SDC、公共预筛和三角报告见 ZIP 内相应协议和原件。功耗基于 OpenSTA TT 默认活动。已计费墙钟及工具子步骤台账保留。Stage 5 固定和自适应两臂后续做了整棵进程树 CPU、内存高水位和独立读者补测。 [资源与读档补测](REVIEW_SUPPLEMENT.md#40-ns-处理器配对复跑的进程树与下游读取)
 
@@ -223,3 +224,13 @@ bash code/scripts/run_with_timeout.sh 3020 flock -w 8 /home/toylog/faeco_v5_eda.
 | 参考文献、历史派发限制、同起序批宽和图表配置 | [第四轮逐条复核](../../../paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md) · [同起序原件与收据](REVIEW_SUPPLEMENT.md) |
 
 R4 各入口按其所在 Git 提交定位。旧的统计、测试条件和物理运行通过对应归档、成员与 SHA-256 回读。论文附证中的同机冻结输入重放与另机完整物理重建的先决条件见各实验说明。
+
+## 第五轮定稿证据
+
+| 核验 | 入口 |
+| --- | --- |
+| ASAP7 UART K=9、K=36 及实际派发账本 | [扩展池复算结果](R5_ASAP7_UART_POOL_AUDIT.md) · [103 项证据](R5_ASAP7_UART_POOL_AUDIT.zip) · [执行入口](audit_r5_uart_pool.py) |
+| 冻结端点的独立 OpenDB 功能面积 | [面积和实例分类核验](R5_DIRECT_ODB_AREA_REPORT.md) · [只读清单与原始导出](R5_DIRECT_ODB_AREA_AUDIT.zip) · [可移植复核与现场入口](audit_r5_direct_odb_area.py) |
+| 稿件源、版图证据和运行程序的版本对应 | [第五轮逐条复核](../../../paper/zh/review_rounds/r20261127_r5_submission/R5_REVIEW_MAP.md) · [定稿版本清单](https://github.com/Toylog123/FAECO/blob/faeco-paper-final-20261127-r5/paper/zh/review_rounds/r20261127_r5_submission/R5_RELEASE_MANIFEST.json) |
+
+表 10 的 K=36 回收和捕获率取自原冻结池。面积字段规范化保留 K=9、K=18 及历史 K=36 的前 18 项，后 18 项发生变化。直接 OpenDB 复核覆盖 4 条参考记录与 25 条交付记录。两项审计通过保存的归档和冻结资产分别复算，沿用当前工具与 PDK 依赖说明。
