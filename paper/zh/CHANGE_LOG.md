@@ -914,3 +914,8 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - 补入修复前后 18 次共同完成请求、11 个接受点及一致的终态，分别表述窗内验收、自然截停与进程抽样结果。增补修复前 20 次原位预检及独立首轮 DRC 的处理器证据，表 12 与双摘要口径沿用原始对照。
 - 正文索引固定到 `52b1a8b`。13 页、26 条文献，两页变动视觉核验通过，三个 PDF 同指纹。 [复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
+
+## 2026-11-27｜GCD 同提议的检查阶段对照
+
+- §6 增补 SKY130HD GCD 三臂证据，明确两种预检均无标记、首轮独立 DRC 检出同三处窗内短路及复修后 TT 相对 Hold 拒收。实现与数据索引更新至 `958b56b5`。 [实验报告](../../project_docs/evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
+- 首版排至 14 页。收紧讨论、致谢和索引后恢复 13 页，保留各项 AI 使用披露。双遍编译和 115 dpi 比对仅第 13 页变化，150 dpi 目检通过。12 表、双摘要、结论和 26 条参考文献逐字核对，三个 PDF 副本同指纹。 [定向复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md#gcd-同提议补证的定向复审) · [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)

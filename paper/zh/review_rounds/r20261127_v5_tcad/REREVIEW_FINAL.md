@@ -2,7 +2,7 @@
 
 **科学小修及追加证据核验通过，13 页中文科研工作稿可交付。** 原复审要求的窗口回放分母、几何条件和当前稿排版已核对。V4 的自然结束、截停及三个代表设计的阶段资源补证通过。V6 通过同主机的隔离物理重建和三臂完整在线复跑，跨主机执行待验证。SEC 清理修复通过真实短窗回归及完整三臂重测。**正式 IEEE TCAD 英文投稿资格待验。**
 
-初次终审交付发布于 `af07096c`。随后追回两幅机制图的生成记录，在 `a01e1262` 明确图 1–2 使用 Google Antigravity `generate_image`。当前交付绑定证据提交 `52b1a8b`，覆盖 SEC 修复前后的隔离三臂、非 AES 标记普查及以前的资源、读档与外部排序。 [当前交付验收](DELIVERY_QA.md) · [图件溯源](../../figures/CHANGE_LOG.md)
+初次终审交付发布于 `af07096c`。随后追回两幅机制图的生成记录，在 `a01e1262` 明确图 1–2 使用 Google Antigravity `generate_image`。当前交付绑定 `958b56b5`，新增 SKY130HD GCD 同提议配对，沿用先前处理器隔离三臂、非 AES 标记普查及资源、读档与外部排序原件。 [当前交付验收](DELIVERY_QA.md) · [图件溯源](../../figures/CHANGE_LOG.md)
 
 首轮终审核对的 13 页小修快照，TeX SHA-256 为 `4af53b2b28daf928c028c3e57b570d38301b43a64e0c5941bf768eaa2dc92da3`，PDF 为 `a398edd44a484db2d0928770f7a98c0994409bc82e9048d6360b6e9f076cbff9`。初次交付 `af07096c` 的 TeX SHA-256 为 `0e5a5cc956aa766c72ae7e0a9d8c281c585afa8b5c54f5883626c8674c36217a`，PDF 为 `051fe7471593fdb1abd7a44ce853fd74d69a487c15f9131c7481066cdef3b17b`。该版只调整致谢，115 dpi 下两份 PDF 前 12 页渲染逐像素一致，另以 150 dpi 核末页，当时沿用 `4bfa7625` 实验。
 
@@ -20,11 +20,11 @@
 | V6 | 部分解决，范围已披露 | 固定证据版本的离线复算再次通过，涵盖 Stage 2–5、两组补证和处理器 12 个合格检查点原件。复跑入口此前在默认及新输出根 `--plan` 通过。终审后在同一 WSL 主机实测 R3-1 已布线 UART 双端点的输入与代码路径迁移，两个位置各 6 份 STA 报告全部重现。在同一 WSL 主机隔离并遮蔽旧根，从冻结 RTL 重建 40 ns 处理器参考和固定首批。参考和首批工件重现。随后完成同主机三臂复跑，18 次共同完成的请求重现物理与门判定，固定三门和自适应终态重现。隔离单门第 8 次在 SEC 截停处少一项交付。修复前后两个隔离运行的 18 次共同完成请求、11 个接受端点和三臂终态一致。新单门再次在第 8 次 SEC 截停，同组工具在下一臂起序前已不在采样中。跨主机与其他设计的隔离流程待验证。 |
 | V7 | 当前中文稿通过，正式投稿待验 | 第 13 页完整排入参考文献 [1]–[26]。当前致谢标明图 1–2 的生成工具和图 3–5 的实验来源。还需在实际拟投英文版本核验 IEEE 双栏、字号、篇幅、作者资料、ORCID 和经作者确认的 AI 使用披露。 |
 
-V1 原始分母及 V2–V4、V6 的复算依据已核。 [历史回放逐组原件](../../../../project_docs/evidence/tcad_boxed_drc_20261126/BOXED_DRC_RECALL_AUDIT.json) · [离线复算入口](../../../../project_docs/evidence/tcad_v5_revision_20261126/verify_review_evidence.py) · [资源补证](../../../../project_docs/evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md) · [版本化实验索引](https://github.com/Toylog123/FAECO/blob/52b1a8b6e60c6f4b35baac9f2e6ae69928af648f/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
+V1 原始分母及 V2–V4、V6 的复算依据已核。 [历史回放逐组原件](../../../../project_docs/evidence/tcad_boxed_drc_20261126/BOXED_DRC_RECALL_AUDIT.json) · [离线复算入口](../../../../project_docs/evidence/tcad_v5_revision_20261126/verify_review_evidence.py) · [资源补证](../../../../project_docs/evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md) · [版本化实验索引](https://github.com/Toylog123/FAECO/blob/958b56b5adc31bd432f13ba84bb24a4d9aa36e7d/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
 
 ## PDF、主表及正式英文投稿
 
-本轮以 115 dpi 逐页与前一交付对比，仅第 12、13 页变化，并以 150 dpi 复看。第 8 页主表保持密排，方法、单位、合格面积及不适用状态可辨。图 3–5 的原版嵌入字号为 6.16／6.07／6.02 pt，图源、缩放与对齐沿用通过严格审计的版本。核对 38 个唯一标签及 26 个按首用排序的参考文献键，并以 150 dpi 检查第 12–13 页、表 12 与文献 [26]。日志仍有字体形态替代，渲染中未发现裁切或缺字。 [当前 PDF](../../FAECO_v3_后布局可调预算面积回收.pdf)
+处理器补证版以 115 dpi 逐页与前一交付对比，仅第 12、13 页变化，并以 150 dpi 复看。第 8 页主表保持密排，方法、单位、合格面积及不适用状态可辨。图 3–5 的原版嵌入字号为 6.16／6.07／6.02 pt，图源、缩放与对齐沿用通过严格审计的版本。核对 38 个唯一标签及 26 个按首用排序的参考文献键，并以 150 dpi 检查第 12–13 页、表 12 与文献 [26]。日志仍有字体形态替代，渲染中未发现裁切或缺字。GCD 补证版的排版核对见下节。 [当前 PDF](../../FAECO_v3_后布局可调预算面积回收.pdf)
 
 上述排版验收针对中文工作稿。官方指南规定 IEEE 双栏及最小字号要求，Regular Paper 上限为 14 页，修回作者资料计入上限，每位作者需 ORCID，并须在致谢中披露具体生成式 AI 工具及相关内容。拟投英文版中的表图、作者资料、篇幅和披露须在同一最终提交包重新核验。V6 保留目标主机的完整重建，以及实验结论对不同环境和流程的适用范围。 [IEEE TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions)
 
@@ -39,3 +39,9 @@ V6 定向复审读取两个归档和现场原件，复核旧输出不可见、�
 V6 新一轮定向复审从独立收据核对三个策略的 18 次共同完成请求和 11 个新接受端点。Windows 离线与 WSL 现场的结果逐字段一致。SEC 证据区分历史窗口账本、实际后代执行及修复版真实回归。按验收时刻计入交付，触限清理及外层返回另报。表 12、双摘要和图件继续绑定原实验，新增段落单列隔离结果。TAPCO-G 的布局后时序图与批次二分表述核对原论文。 [三臂原件和复算](../../../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#重建参考后的三臂在线搜索) · [真实 SEC 对照](../../../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#sec-截停和后置修复验证) · [TAPCO-G §4](https://arxiv.org/html/2611.13931v1#S4)
 
 修复版三臂和处理器 DRC 原件再分析通过定向复审。修复前后单门均在第 8 次 SEC 触限并无验收收据。修复版自然截停后首个样本已无同组三进程，10,523 次观测未检出跨臂重叠。两轮 WSL 会话的时间均值分别报告。正文统计限定在修复前隔离回执的 13 个提议、20 次原位预检和 19 次独立首轮 DRC。表 12、双摘要和原始实验结论沿用冻结证据。 [修复后三臂](../../../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#sec-修复后的完整三臂验证) · [标记普查](../../../../project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_marker_census.py)
+
+## GCD 同提议补证的定向复审
+
+独立复核读取 321 份归档原件及现场几何回执，确认两种原位预检均无标记，三臂首轮布线后的独立 DRC 均检出相同的三处窗内 met1 短路。复修清零后，三臂均因 TT 相对 Hold 下降 0.022621 ps 拒收。§6 限定为一个固定提议的阶段对照。处理器的修复前普查与 UART 用时比仍各自绑定原证据。几何预放行和诊断的净速度收益留待相应的比较实验。 [GCD 对照与核验](../../../../project_docs/evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
+
+压缩后的最终 TeX `09be6940a99b1160ae4d1813d181af5dba7f9e48d080dc46351f513b8386f067` 通过独立复审。改动限于 §6、致谢和实验索引，12 张表、双语摘要、结论和 26 条参考文献保持原文。致谢保留两项具体 AI 工具及各自的使用范围。视觉核验保持 13 页，第 1–12 页逐像素一致。第 13 页通过 150 dpi 目检，表 12 和文献 [26] 完整。科学小修通过，正式英文投稿资格待验。 [本版交付](DELIVERY_QA.md)
