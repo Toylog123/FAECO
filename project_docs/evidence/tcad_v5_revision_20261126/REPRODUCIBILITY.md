@@ -4,6 +4,8 @@
 
 ```bash
 python3 project_docs/evidence/tcad_v5_revision_20261126/verify_review_evidence.py
+python3 project_docs/evidence/tcad_v5_revision_20261126/generate_stage5_table12.py
+python3 project_docs/evidence/tcad_v5_revision_20261126/verify_r3_final_physical_connectivity.py
 bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh --plan
 ```
 
@@ -19,6 +21,9 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 | 图 5 窗口化诊断、历史 56 标记与 7 nm 37 个注入标记 | [窗口对照](../tcad_boxed_drc_20261126/BOXED_DRC_VERIFIED.json) · [历史回放](../tcad_boxed_drc_20261126/BOXED_DRC_RECALL_AUDIT.json) · [V5 Stage 1](V5_STEP1_POWER_7NM_DET_VERIFIED.json) · [LEF 和检查器作用域](WINDOW_RULE_SCOPE.md) |
 | §6 同提议的等数量单邻网预放行 | [几何择一与事后已知邻网报告](../tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md) · [226 份原件](../tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_ORIGINALS.zip) · [离线复算](../tcad_ibex_20261123/verify_gcd_geometry_archive.py) |
 | §6 非 AES 固定提议的预检阶段对照 | [SKY130HD GCD 三臂](../tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md) · [321 份原件](../tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_ORIGINALS.zip) · [离线复算](../tcad_ibex_20261123/verify_gcd_window_archive.py) |
+| 表 4 历史端点 TT 功耗 | [33 份原 Tcl、报告、日志及 SDC](R3_TABLE4_TT_POWER_ORIGINALS.zip) · [端点绑定与图表复核](../../../paper/zh/review_rounds/r20261127_r3_submission/DISPLAY_EVIDENCE_AUDIT.md) |
+| 40 ns 处理器第三轮主表与历史口径 | [表 12 复算程序](generate_stage5_table12.py) · [同次运行指标](V5_STAGE5_TABLE12.json) · [第三轮规则与原生动作诊断](../../../paper/zh/review_rounds/r20261127_r3_submission/R3_EVIDENCE.md) · [历史臂配置](../../../paper/zh/review_rounds/r20261127_r3_submission/R3_HISTORICAL_CONFIG.md) |
+| 40 ns 处理器最终版图布局与供电连通 | [参考及三个最终 ODB 的核验](R3_FINAL_PHYSICAL_CONNECTIVITY_REPORT.md) · [51 份原件](R3_FINAL_PHYSICAL_CONNECTIVITY_ORIGINALS.zip) · [离线复算](verify_r3_final_physical_connectivity.py) |
 | Hold 容差离线变化 | [既有试探计数与离线重判入口](../tcad_v4_revision_20261126/audit_hold_tolerance_and_table9.py)。UART 的 8 臂共有 200 份收据，排除 2 份预检和 62 份不具完整三视图的记录，余 136 次完成评估、62 个不同累计动作集。按请求计数，允许同一动作从不同臂进入。 |
 | 去重、原生对照资格、在线 Setup 调节 | [Stage 2](V5_STEP2_DEDUP_NATIVE_VERIFIED.json) · [Stage 3](V5_STEP3_MULTIBUDGET_VERIFIED.json) |
 | 双 AES 同协议探针 | [Stage 4](V5_STEP4_PROBE_SENS_VERIFIED.json)；原件包对应 `phase1_probe` 与 `phase2_fallback` |
@@ -31,7 +36,7 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 
 | 对照 | 冻结参考、批操作与计费 | Setup/Hold、电气与交付 |
 |---|---|---|
-| 原生独立流程、挂保护后端准入 | 原生提议按其自身动作数；独立全片重布或保护窗口准入检查。保护后端最长试验为单次 DRT 600 s，投影另有外窗 840 s。 | 区分实例缺失、触及时钟作用域、超时未达 STA/SEC、完成后物理拒收和合格交付。 |
+| 原生独立流程、挂保护后端准入 | 原生提议按其自身动作数；独立全片重布或保护窗口准入检查。保护后端最长试验为单次 DRT 600 s，投影另有外窗 840 s。 | 区分动作绑定失败、触及时钟作用域、超时未达 STA/SEC、完成后物理拒收和合格交付。 |
 | 历史窗口比较 | 各自冻结参考与统一 18 项池。SKY130HD A 臂现场 TT 灵敏度排序，B/C/D 初始沿原序。ASAP7 AES 同榜。正反序仅见相应成对诊断实验。 | 参考相对逐角 Setup WNS/TNS 和 Hold WNS，源周期为 SKY130HD AES 3.6 ns、旧处理器 6 ns、ASAP7 UART 270 ps 与 ASAP7 AES 380 ps。终检物理门与 SEC 共用。 |
 | UART Setup 去重与双设计 Setup 预算 | 270 ps UART／3,600 ps SKY130HD AES。窗口后端中每次派发计时，微批次，关闭全池探针；去重按各自白名单。Stage 2A 实际仅一次 FF Setup WNS 命中。 | 真正逐角改 WNS/TNS 门，Hold 门保持；允许相对合格的新增负端点，额外记录。 |
 | 双 AES 探针 0/60/120/240 s | SKY130HD AES 3,600 ps／ASAP7 AES 380 ps，同一设计回退规则一致。完成的拒收可在该候选会话复用。双 0 s 新臂最后补测，旧默认及旧零臂有独立来源。 | 相对门，720 s 自已计费公共预筛开始。只有验收在窗内的端点计入曲线；工具停止、收尾和外层返回可更晚。 |

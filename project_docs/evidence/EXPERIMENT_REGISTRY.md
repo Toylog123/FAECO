@@ -3682,3 +3682,8 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 - 初始几何臂独立现场核验 `scratch/gcd_geometry_release_20261127/independent/v6_gcd_geometry_release_live.json` SHA-256 `0acc69003f234a613014d2290e4a0dfe9ec28668ea2b8968946a3e53c04855d2`；独立排名回执 `v6_gcd_geometry_release_rank.json` SHA-256 `24693ebce8aa95c8fee82932092f09d1a3fe4594c85d0b1a3c66f17254499576`。首轮仅释放 `_073_`、保护 475 条，独立 DRC 仍有三处相同短路。复修追加释放 `net242`、保护 474 条，独立 DRC 清零；计 2 次 DRT/RCX、2 次独立 DRC、6 次单角 STA、0 次候选 SEC，最终 TT 相对 Hold 差与事后臂同为 −0.022620794126737565 ps，两臂均无合格回收。归档尚待。
 
 - 两臂合并归档含 226 个索引原件，SHA-256 `acfd2f640597aadcf24c2777f5273e32c86c72c7f50b71817cad7aca1c144da1`。现场独立复核与 Windows／WSL 离线复算已完成。以原三臂归档为同起点物理参考。 [结果、边界与原件](tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md)
+
+### 2026-11-27 第三轮｜40 ns 参考和三个交付版图的只读核验
+
+- `TCAD-R3-FINAL-ODB-CONNECTIVITY`。按第三轮登记使用原 OpenROAD b511b6a 二进制、互斥锁、CPU 0–5 和单线程复核 SEC 修复后三臂的冻结参考与交付 ODB。逐对象 120 s、外层 610 s，运行约 5 s、rc0。四个对象的已布线状态、放置合法性、VDD 和 VSS 连通均通过，三候选无实例位移及保护走线变更。原始 ODB/DEF 保持各自指纹。逐对象命令、报告、终态与工具绑定见[检查报告及 51 份原件](tcad_v5_revision_20261126/R3_FINAL_PHYSICAL_CONNECTIVITY_REPORT.md)。
+- `TCAD-R3-NATIVE-LIBERTY-PARSE-DIAGNOSIS`。从 Stage 2B 原生清单、冻结网表和原 TT Liberty 复算。只在内存补足 37 行数字面积字段结尾后，两个 UART 臂未绑定动作均由 16 降为 0，两个 AES 臂均由 142 降为 0。没有新候选或物理验收。见[第三轮复算记录](../../paper/zh/review_rounds/r20261127_r3_submission/R3_EVIDENCE.md)。

@@ -61,6 +61,10 @@
 
 窗口与全块的标记集合一致需要一项实现层条件。全块结果中与 $Q$ 相交的每个目标标记，至少由一个 `drcBox` 与 $Q$ 相交且加载相同 `extBox` 上下文的检查器生成。`FlexGCWorker::Impl::addMarker` 自身只去重，因此不能仅由几何见证落在 $Q$ 或仅由工具筛选语句推出上述条件。报告已验证的实证范围时，使用 SKY130HD 已测换门回放与 ASAP7 合成扰动的标记匹配。窗外负对照的两个短路 bbox 在该请求盒之外。最终候选仍走状态归一后的全块 DRC。 [`FlexGC.cpp` 109–120 行](https://github.com/The-OpenROAD-Project/OpenROAD/blob/b511b6a2bc936844b0319efc8b4972bb4ad7d911/src/drt/src/gc/FlexGC.cpp#L109-L120) · [Stage 1 收据](V5_STEP1_POWER_7NM_DET_VERIFIED.json) · [全块终检脚本](../tcad_ibex_20261123/audit_aes_unlocked_drc.py)
 
+### ASAP7 M2 端头的查询上下文
+
+M2 的 `ENDOFLINE 0.025` 限定端头宽度，查找间距相关的导线边时沿端头两端各给出 20 nm，普通端头和相对端头的法向查询值分别含 18 nm 和 31 nm。取一条沿正 x 方向、朝下的横边，从 $(x_0,y_0)$ 到 $(x_1,y_0)$，以 nm 为单位。该端头的外侧间距查询盒为 $[x_0-20,x_1+20]\times[y_0-31,y_0]$。平行边触发条件另查边端点附近的矩形。例如东向端头低端点 $(x,y)$ 的一侧平行边查询盒为 $[x-25,x]\times[y-20,y+20]$。处于盒内的平行边改变时，原有端头与对面导线的形状可以保持不动，规则的适用性及标记仍可能变化。这是命题 1 要求旧图形对的规则上下文保持相同的具体例子。 [固定源码的方向分支](https://github.com/The-OpenROAD-Project/OpenROAD/blob/b511b6a2bc936844b0319efc8b4972bb4ad7d911/src/drt/src/gc/FlexGC_eol.cpp#L203-L285) · [端头间距查询盒](https://github.com/The-OpenROAD-Project/OpenROAD/blob/b511b6a2bc936844b0319efc8b4972bb4ad7d911/src/drt/src/gc/FlexGC_eol.cpp#L436-L506)
+
 ## §4.2 可直接采用的文字
 
 > **引脚接入层的局部几何覆盖。** 令 $B_i$ 为替换后实例的包围盒。参考状态在所考查规则下无违例。考虑替换引发的同层异网短路和简单成对间距违例，且至少一个参与图形发生变化，变更图形位于 $B_i$ 内。若交叠区域或成对间距的最短距离见证落在有效芯片范围内，且其到变更图形的距离不超过 $H_{\mathrm{row}}$，则该局部见证落在 $B_i$ 四向外扩一行高所得窗口内。多实例窗口合并保留各实例的覆盖范围。该条件用于定位局部几何交互。表 X 分别列出两套技术 LEF 的基本间距、端头条件与切孔规则。

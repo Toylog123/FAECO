@@ -8886,3 +8886,13 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - 证据提交 `6c0f99f2` 已推送。§6 加入几何择一及按历史标记预放行对照。独立复审发现上一版颠倒 ASAP7 UART 的用时比方向。原件 3.765／6.262 s 及 4.085／3.356 s 分别支持全块／窗口 0.60 和 1.22，已更正比值方向。
 - 修正后 TeX 为 `68e349db3f5d441b07ffeefd27ed7d278a55d887e05a66f745a109bd19c5f1db`。双遍 LuaLaTeX、13 页逐页比对和末页 150 dpi 目检完成。三份 PDF 为 `a25b036458667d1ef6830fe6c5e66f38591a2104b1b3da3262f8b5cbd581a4c6`。论文定向复审通过，正式英文投稿资格待验。记录自检返回 0，提示的旧进度文件已按项目约定停用。 [复审与交付](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md#gcd-等数量单网预放行补证复审)
+
+## LOG-20261127-63｜登记 R3 评审与终态物理检查
+
+- 归档第三轮评审原件，35065 字节、SHA-256 `834c5b1ffa1fbc90516759a08b17045c09bf9e3d888e958faa556b4d65a33cee`，本地保留 `REVIEWER_ORIGINAL.txt`，并将意见逐项对照当前稿及各阶段运行证据。 [评审对照](../paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md)
+- P0 预先登记修复后三臂的同一 40 ns 参考及三个交付 ODB 上的只读放置和电源连通性检查。固定 `b511b6a` 实际二进制、原共享 EDA 锁和时限，记录放置、VDD／VSS 检查及 DEF 特殊线网与端口；结果与全信号物理 LVS 的证据分别判定。 [预登记](../paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md#r3-p0-物理终态只读检查预登记)
+
+## LOG-20261127-64｜第三轮证据与稿件修订
+
+- 修复后三臂表 12 生成器重算同次终态、计费及 TT 默认活动。四份实际 ODB 完成只读已布线状态、放置及 VDD/VSS 检查，公开包包含 51 份原件。归档历史配置、ASAP7 六例、端头规则及原生动作解析的复核，保留同后端原生物理评估未决。 [证据索引](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
+- 表 4 用各历史冻结端点的功耗报告核对，表 9 与表 10 校正舍入。图 1–2 按作者指示由 OpenAI 图像生成工具制作，保留原文件并检查接线。选定版两图 PDF 目检清晰。表 1–12 与图 3–5 的数据源复核分层记录。 [图表复核](../paper/zh/review_rounds/r20261127_r3_submission/DISPLAY_EVIDENCE_AUDIT.md)
