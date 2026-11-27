@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 R11 文字与公式修订由标签 faeco-paper-focus-20261127-r11 绑定。[发布清单](../paper/zh/review_rounds/r20261127_r11_focus/R11_RELEASE_MANIFEST.json)。
+
 2026-11-27 中文开篇补修以上一技术核验标签为基线，当前主稿指纹见[交接配置](../.codex-handoff.json)。
 
 2026-11-27 第十轮投稿前中文技术核验由标签 `faeco-paper-checked-20261127-r10` 绑定。原实验只读复算保存在单独证据目录，正式英文及投稿事项独立处理。[工件清单](../paper/zh/review_rounds/r20261127_r10_final/R10_RELEASE_MANIFEST.json)。

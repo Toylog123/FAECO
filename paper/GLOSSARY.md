@@ -69,5 +69,8 @@
 | 中文主稿 | 英文稿 | 位置 |
 | --- | --- | --- |
 | 三工艺角静态时序分析 | three-corner static timing analysis (STA) | FF、TT、SS。 |
-| 合格检查点 | accepted checkpoint | 墙钟窗内通过全部验收的累计动作与交付版图。 |
+| 候选版图 | candidate layout | 从冻结参考重建并待验证的物理实现。 |
+| 合格检查点 | accepted checkpoint | 截止前通过规定验收的累计动作及候选版图。 |
+| 终态版图 | final layout | 运行结束时保留的最佳合格检查点。 |
+| 时序端点 | timing endpoint | STA路径终点。 |
 | 物理合法性 | physical validity (`PhysValid`) | 式（1）的修改网连通、放置合法与保护网几何联合谓词。 |
