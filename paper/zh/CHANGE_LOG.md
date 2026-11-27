@@ -919,3 +919,7 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 
 - §6 增补 SKY130HD GCD 三臂证据，明确两种预检均无标记、首轮独立 DRC 检出同三处窗内短路及复修后 TT 相对 Hold 拒收。实现与数据索引更新至 `958b56b5`。 [实验报告](../../project_docs/evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
 - 首版排至 14 页。收紧讨论、致谢和索引后恢复 13 页，保留各项 AI 使用披露。双遍编译和 115 dpi 比对仅第 13 页变化，150 dpi 目检通过。12 表、双摘要、结论和 26 条参考文献逐字核对，三个 PDF 副本同指纹。 [定向复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md#gcd-同提议补证的定向复审) · [交付验收](review_rounds/r20261127_v5_tcad/DELIVERY_QA.md)
+
+## 2026-11-27｜GCD 等数量单邻网预放行补证
+
+- §6 补几何择一与按历史标记预放行的重试及最终验收结果，并按原件更正 UART 全块／窗口用时比的方向。证据索引固定至 `6c0f99f2`。双遍 LuaLaTeX 仍为 13 页，115 dpi 逐页比较仅第 13 页变化，150 dpi 复看通过。三份 PDF 同指纹。 [实验原件](../../project_docs/evidence/tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md) · [定向复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md#gcd-等数量单网预放行补证复审)

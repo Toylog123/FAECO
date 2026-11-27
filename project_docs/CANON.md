@@ -3,7 +3,7 @@
 ## 2026-11-27 V5 中文定稿与模拟复审
 
 - 同起序 SKY130HD AES 批宽补证中，固定三门和单门分别回收 67.5648 与 33.7824 µm²，时间平均收益为 34.809579 与 12.623294 µm²。首个合格三门组合包含单独评估时因 SS Hold 被拒的一项。同终态面积的两个首达点不共享动作或物理产物。470.5 ps UART 原候选的 SS Setup WNS 从 +0.794642 降至 −0.568545 ps，相对门通过，绝对零下限拒收。[补证及资源记录](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)
-- 13 页中文定稿、5 图、12 表及 26 条参考文献通过模拟复审及本轮补证的定向核验。图 1–2 的原始生成追溯至 Google Antigravity `generate_image`，已按确证更新致谢。三份 PDF SHA-256 均为 `1f7589f4a8bf7496941a6aeafb44c6e2c03d05154753bf8b0ed6afcb61dc5744`。正式英文 IEEE 包、作者资料与 ORCID 待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [英文投稿入口](../paper/en/README.md)
+- 13 页中文定稿、5 图、12 表及 26 条参考文献通过模拟复审及本轮补证的定向核验。图 1–2 的原始生成追溯至 Google Antigravity `generate_image`，已按确证更新致谢。三份 PDF SHA-256 均为 `a25b036458667d1ef6830fe6c5e66f38591a2104b1b3da3262f8b5cbd581a4c6`。正式英文 IEEE 包、作者资料与 ORCID 待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [英文投稿入口](../paper/en/README.md)
 - V5 离线复算绑定 297 份实验原件和 37 份审稿原件；Windows 清洁提取及篡改拒收已验证。完整 EDA 物理复跑需要恢复冻结输入和工具映射。跨设计稳定速度和硬返回接口仍待验证，原生和先进方法的共域可执行性以未决项为准。 [公开证据索引](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
 - SKY130HD GCD 同一三门提议完成常规、窗口和全块预检对照。两种预检均无标记。三臂首轮独立全块 DRC 均检出同三处 met1 短路，位置全部在原诊断窗口中。仅放行 `net242` 复修后均清零，最终仍因 TT 相对 Hold 下降 0.022621 ps 拒收，回收均为零。该配对界定一个非 AES 提议的检查阶段。 [三臂同提议报告与复算](evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
 - GCD 冻结三门的等数量单邻网对照已核验。几何择一选 `_073_`，仍需追加 `net242` 复修。事后直接放行已知 `net242` 首轮独立 DRC 清零并省去一次 DRT/RCX。两臂的 TT 相对 Hold 均下降 0.022621 ps，合格回收为零。结论限这一同提议的两种选网。 [单网预放行报告](evidence/tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md)
