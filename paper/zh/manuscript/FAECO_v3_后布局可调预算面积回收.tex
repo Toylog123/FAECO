@@ -85,7 +85,7 @@
 
 \newcommand{\enTitle}{FAECO: Time-Budgeted Post-Route Gate Sizing with Localized Conflict Diagnosis and Protected Rerouting}
 \newcommand{\enAbstract}{%
-  After detailed routing, extracted parasitics can guide further cell-area reduction. FAECO uses row-height design-rule-checking (DRC) windows to identify conflicts before rerouting. It releases nets implicated by the markers and protects the remaining wires. A full-pool probe and hold-responsive microbatches search for layouts that pass timing, physical, and equivalence checks by a deadline. Windowed checks match 56 whole-block markers in SKY130HD replays and 37 in controlled ASAP7 injections. For the same three-cell change on SKY130HD AES, whole-block marker attribution releases three neighboring nets and passes validation with a 0.88\,ps improvement in worst hold slack at the slow corner. The geometric contact policy releases nine nets and fails after a 10.48\,ps regression. In paired 720\,s runs, windowed diagnosis increases accepted recovery by 46.3\% on SKY130HD AES. Individual checks in proposal replays achieve speedups of 3.04--16.69$\times$, and the two paired AES studies spend 72--75\% less time on diagnosis. Fixed-protocol tests show that a rejected subset can belong to an accepted batch, while failed probes consume time available for later trials.%
+  After detailed routing, extracted parasitics can guide further cell-area reduction. FAECO uses row-height design-rule-checking (DRC) windows to identify conflicts before rerouting. It releases nets implicated by the markers and protects the remaining wires. A full-pool probe and hold-responsive microbatches search for layouts that pass timing, physical, and equivalence checks by a deadline. Windowed checks match 56 whole-block markers in SKY130HD replays and 37 in controlled ASAP7 injections. For the same three-cell change on SKY130HD AES, whole-block marker attribution releases three neighboring nets and passes validation with a 0.88\,ps improvement in worst hold slack at the slow corner. The geometric contact policy releases nine nets and fails after a 10.48\,ps regression. In paired 720\,s runs, windowed diagnosis increases accepted recovery by 46.3\% on SKY130HD AES. Individual checks in proposal replays achieve speedups of 3.04--16.69 times, and the two paired AES studies spend 72--75\% less time on diagnosis. Fixed-protocol tests show that a rejected subset can belong to an accepted batch, while failed probes consume time available for later trials.%
 }
 \newcommand{\enKeywords}{post-route gate-level ECO, localized DRC diagnosis, protected rerouting, non-downward-closed feasibility, time-budgeted microbatch scheduling}
 
@@ -147,7 +147,7 @@
 
 离散门尺寸调整与阈值电压分配通过选择标准单元实现时序、面积和功耗之间的权衡\cite{ozdal2012ispd,hu2013ispd}。拉格朗日松弛将时序约束转化为局部尺寸决策的代价\cite{chen1999fast,flach2014effective}。Mangiras等\cite{timing_budget}利用任务图并行执行门尺寸迭代，Trident~2.0\cite{trident2}则在搜索中调用签核计时器。Lee与Gupta\cite{lee2012eco}用线性规划求解工艺变化后的增量门尺寸调整，以控制时序修复引起的版图变更代价。
 
-DAGSizer\cite{cheng2023dagsizer}预测同占位多$V_t$和多沟道长度替换引起的节点延迟变化，用于布线后漏电回收。Sizer\cite{fatemi2019sizer}以多角多模式（MCMM）灵敏度指导离散尺寸和$V_t$决策。其公开实现\href{https://github.com/The-OpenROAD-Project/TritonSizer}{TritonSizer}读取已布线设计并输出尺寸方案，由物理实现工具完成ECO。本文用冻结TT寄生运行OpenROAD的\texttt{recover\_power}\cite{openroad}生成原生提议，再于第~\ref{sec:main_results}节报告物理验证结果。Sharma\cite{sharma2026power}提出以基线裕量约束布线后功耗恢复，并以实测节省量限制修复成本，其学习式排序仍待实测。
+DAGSizer\cite{cheng2023dagsizer}预测同占位的多阈值电压和多沟道长度替换引起的节点延迟变化，用于布线后漏电回收。Sizer\cite{fatemi2019sizer}以多角多模式（MCMM）灵敏度指导离散尺寸和阈值电压决策。其公开实现\href{https://github.com/The-OpenROAD-Project/TritonSizer}{TritonSizer}读取已布线设计并输出尺寸方案，由物理实现工具完成ECO。本文用冻结TT寄生运行OpenROAD的\texttt{recover\_power}\cite{openroad}生成原生提议，再于第~\ref{sec:main_results}节报告物理验证结果。Sharma\cite{sharma2026power}提出以基线裕量约束布线后功耗恢复，并以实测节省量限制修复成本，其学习式排序仍待实测。
 
 \subsection{局部物理ECO与候选调度}
 
@@ -162,9 +162,9 @@ OpenPhySyn\cite{openphysyn2020}面向物理综合和时序修复。学习辅助�
 
 \subsection{冻结参考状态界定、可调预算与ECO验证约束}
 
-冻结参考$R$包括已布线版图、门级网表$N_R$、原始时序约束（Synopsys Design Constraints，SDC）及布线后提取的寄生参数。以$A_R$表示功能标准单元总面积，不计填充与阱接触单元。记$W_v$、$T_v$和$H_v$为工艺视图$v\in\mathcal{V}=\{\mathrm{FF},\mathrm{TT},\mathrm{SS}\}$的建立时间最差松弛（WNS）、建立时间总负松弛（TNS）及保持时间WNS。同一版图的各视图共用一份名义提取寄生（标准寄生交换格式，SPEF），并加载各自的标准单元库。参考时钟周期记为$P_{\mathrm{clk}}$。
+冻结参考$R$包括已布线版图、门级网表$N_R$、原始时序约束（Synopsys Design Constraints，SDC）及布线后提取的寄生参数。以$A_R$表示功能标准单元总面积，不计填充与阱接触单元。工艺视图集合$\mathcal V$包含FF、TT、SS。各角分别以$W_v$、$T_v$和$H_v$表示建立时间最差松弛（WNS）、建立时间总负松弛（TNS）及保持时间WNS。同一版图的各视图共用一份名义提取寄生（标准寄生交换格式，SPEF），并加载各自的标准单元库。参考时钟周期记为$P_{\mathrm{clk}}$。
 
-验收使用静态时序分析（Static Timing Analysis，STA）和时序等价性检查（Sequential Equivalence Checking，SEC）。设$\mathcal P$为有限兼容降尺寸动作池（第~\ref{sec:pool}节），$S\subseteq\mathcal P$为累计替换集合，$F(S)$表示运行中由$S$实际重建的待验证版图。给定墙钟预算$\tau_{\max}$及运行历史$\pi$，限时回收目标为
+验收使用静态时序分析（Static Timing Analysis，STA）和时序等价性检查（Sequential Equivalence Checking，SEC）。设$\mathcal P$为有限兼容降尺寸动作池（第~\ref{sec:pool}节），$S$为从候选池中选取的累计替换集合，$F(S)$为该集合实际重建的待验证版图。给定墙钟预算$\tau_{\max}$及运行历史$\pi$，限时回收目标为
 \begin{equation}
 \label{eq:obj}
 \begin{aligned}
@@ -182,7 +182,15 @@ OpenPhySyn\cite{openphysyn2020}面向物理综合和时序修复。学习辅助�
   & t_{\mathrm{complete}}(S;\pi)\le\tau_{\max}.
 \end{aligned}
 \end{equation}
-前三项约束适用于所有$v\in\mathcal V$。最差松弛（Worst Negative Slack，WNS）可为正。相对建立时间预算可用于参考已含负松弛的版图。主实验设$B_W=\beta P_{\mathrm{clk}}$、$B_{T,v}=\max\{10B_W,\beta|T_v(R)|\}$，默认$\beta=0.01$，数值容差$\varepsilon=\varepsilon_h=0.001$\,ps。启用绝对建立时间零下限时，第一项收紧为
+前三项时序约束适用于三个工艺角。最差松弛（Worst Negative Slack，WNS）可以为正。相对预算允许参考版图保留原有负松弛。主实验的默认预算和数值容差为
+\[
+\begin{aligned}
+B_W &= \beta P_{\mathrm{clk}},\\
+B_{T,v} &= \max\{10B_W,\,\beta|T_v(R)|\},\\
+\beta &= 0.01,\qquad \varepsilon=\varepsilon_h=0.001\,\mathrm{ps}.
+\end{aligned}
+\]
+启用绝对建立时间零下限时，第一项收紧为
 \begin{equation}
 \label{eq:setup_floor}
 \begin{aligned}
@@ -194,20 +202,28 @@ W_v(F(S)) &\ge \max\{0,\,W_v(R)-B_W-\varepsilon\},\\
 
 物理合法性要求修改网连通、放置合法并保护授权范围外的既有走线（第~\ref{sec:protected}节）。此外逐角检查新增电气违例，独立全块DRC及天线要求无标记，SEC要求两态等价且零未证。缺失或无法解析的验收报告导致拒收，实验门控细节见第~\ref{sec:protocol}节。
 
-$\pi$记录派发、验证与计时。对每次实际重建均在对应版图上执行验收。同一$S$重复验证时，限时评估取首次通过全部验收门的记录及其版图，记时为$t_{\mathrm{complete}}(S;\pi)$，未通过或未访问记为$+\infty$。默认预算720\,s，计入预筛、在线排序及成功和失败的验证。写入与外部读取另计。启发式调度保留截止前已验收的最大回收检查点，无合格修改时保留$R$。
+$\pi$记录派发、验证与计时。对每次实际重建均在对应版图上执行验收。同一$S$重复验证时，限时评估取首次通过全部验收门的记录及其版图，记时为$t_{\mathrm{complete}}(S;\pi)$，未通过或未访问时记为正无穷。默认预算720\,s，计入预筛、在线排序及成功和失败的验证。写入与外部读取另计。启发式调度保留截止前已验收的最大回收检查点，无合格修改时保留$R$。
 
 \subsection{限时回收的比较指标}
 
-芯片边界固定，面积以功能标准单元计。报告终态面积降幅与池捕获率$\rho_{\mathrm{pool}}=\Delta A(S^*)/\sum_{i\in\mathcal P}\Delta A_i$。池中每个实例至多含一项替换，静态面积差之和为同池回收上界。令$\mathcal S_{\mathrm{ok}}(t)$为截至$t$已完成合格验收的累计替换集合所构成的集合族，最大累计回收面积为
+芯片边界固定，面积按功能标准单元计。池中每个实例至多含一项替换，静态面积差之和为同池回收上界。终态回收量除以上界得到池捕获率。以$\mathcal S_{\mathrm{ok}}(t)$表示截至时刻$t$已合格的累计替换集合族，最大累计回收面积记为$a(t)$：
 \[
-a(t)=\max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
+\begin{aligned}
+A_{\mathrm{pool}} &= \sum_{i\in\mathcal P}\Delta A_i,\\
+\rho_{\mathrm{pool}} &= \frac{\Delta A(S^*)}{A_{\mathrm{pool}}},\\
+a(t) &= \max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
+\end{aligned}
 \]
 时间平均收益定义为
 \begin{equation}
 \label{eq:auc}
 \overline{A}_{[0,\tau_{\max}]}=\frac{1}{\tau_{\max}}\int_0^{\tau_{\max}}a(t)\,\mathrm{d}t .
 \end{equation}
-共同面积目标$A_c$的首达时间为$\inf\{t\in[0,\tau_{\max}]:a(t)\ge A_c\}$，空集记为未达到。补充材料报告建立时间预算利用率（各角最大WNS损失除以$B_W$）及使用相同默认活动率的TT功耗变化。$B_W=0$时预算利用率不适用。
+共同面积目标$A_c$的首达时间定义为
+\[
+t_{\mathrm{hit}}(A_c)=\inf\{t\in[0,\tau_{\max}]:a(t)\ge A_c\}.
+\]
+集合为空表示截止前未达到。附录另报告建立时间预算利用率和相同默认活动率下的TT功耗变化。预算利用率以各角最大WNS损失除以相对预算，零预算时不计算。
 
 \section{FAECO 方法设计}
 
@@ -223,14 +239,18 @@ a(t)=\max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
 \subsection{兼容降尺寸候选生成与初始排序}
 \label{sec:pool}
 
-本文从冻结网表和标准单元库枚举兼容降尺寸动作，过滤填充、阱接触、时钟树与虚拟负载单元。依据逻辑等价、端口映射、同站点行高与更小宽度选择目标。主实验的冻结TT预筛在每个实例的兼容降尺寸目标中优先保留TT库面积最大的较小目标，同面积按单元名定序。冻结寄生预筛滤除静态时序或电气拒收项，形成候选池$\mathcal{P}$。主实验取$K=18$，批宽默认$b=3$；预筛全额计入720\,s，池内静态减量上界为$\sum_{i\in\mathcal{P}}\Delta A_i$。
+本文从冻结网表和标准单元库枚举兼容降尺寸动作，过滤填充、阱接触、时钟树与虚拟负载单元。依据逻辑等价、端口映射、同站点行高与更小宽度选择目标。主实验的冻结TT预筛在每个实例的兼容降尺寸目标中优先保留TT库面积最大的较小目标，同面积按单元名定序。冻结寄生预筛滤除静态时序或电气拒收项，形成候选池$\mathcal{P}$。主实验保留18项，默认批宽为3。预筛全额计入720\,s。
 
-进入物理验证前，框架支持两类初始排序接口：沿用冻结预筛的面积收益降序，或基于冻结典型角输出引脚建立时间裕量执行轻量灵敏度起序（排序开销全额计入对应策略预算）。设$\mathcal O_i$为实例$i$的输出引脚集合，$s_{\mathrm{TT}}(p)$为冻结寄生下引脚$p$的TT建立时间松弛。相对裕量为$m_i=\min_{p\in\mathcal O_i}s_{\mathrm{TT}}(p)-W_{\mathrm{TT}}(R)$，单位为ps。灵敏度评分为
+进入物理验证前，框架支持两类初始排序接口：沿用冻结预筛的面积收益降序，或基于冻结典型角输出引脚建立时间裕量执行轻量灵敏度起序（排序开销全额计入对应策略预算）。设$\mathcal O_i$为实例$i$的输出引脚集合，$s_{\mathrm{TT}}(p)$为冻结寄生下引脚$p$的TT建立时间松弛。相对裕量以ps计，与初始灵敏度评分一并定义如下。
 \begin{equation}
 \label{eq:sens_rank}
-\mathrm{score}_{\mathrm{init}}(i) = \Delta A_i \cdot \left(0.1 + \frac{\max(m_i,\,0)}{200\text{\,ps}}\right).
+\begin{aligned}
+m_i &= \min_{p\in\mathcal O_i}s_{\mathrm{TT}}(p)-W_{\mathrm{TT}}(R),\\
+\mathrm{score}_{\mathrm{init}}(i)
+    &= \Delta A_i \left(0.1+\frac{\max(m_i,0)}{200\,\mathrm{ps}}\right).
+\end{aligned}
 \end{equation}
-候选按$m_i>5$\,ps分为优先组与其余组，两组都保留，组内按式~\eqref{eq:sens_rank}降序排列。200\,ps与0.1是经验排序常数，分别限定裕量项的尺度并为零相对裕量保留面积权重。该式用于已冻结寄生下的起序，逐角验收仍由式~\eqref{eq:obj}决定。
+相对裕量超过5\,ps的候选优先，两组都保留，组内按式~\eqref{eq:sens_rank}降序排列。200\,ps与0.1是经验排序常数，分别限定裕量项的尺度并为零相对裕量保留面积权重。该式用于已冻结寄生下的起序，逐角验收仍由式~\eqref{eq:obj}决定。
 
 \subsection{行高自适应局部DRC诊断}
 \label{sec:boxed_drc}
@@ -240,13 +260,17 @@ a(t)=\max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_imagegen_r13.png}
-\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。橙色斜线标出同层异网图元交叠处的短路见证。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；满足$Q\cap Q_{\mathrm{check}}\ne\varnothing$的工作单元从各自的上下文盒读入几何。标记$\nu$的包围盒为$M_\nu$，返回条件为$Q\cap M_\nu\ne\varnothing$。标记召回还要求对应工作单元保留相关规则上下文。}
+\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。橙色斜线标出同层异网图元交叠处的短路见证。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；检查盒与请求盒相交的工作单元从各自的上下文盒读入几何。仅返回包围盒与请求盒相交的标记。标记召回还要求对应工作单元保留相关规则上下文。}
 \label{fig:window_theory}
 \end{figure*}
 
 \medskip
 \noindent\textbf{命题 1（引脚层局部短路与成对间距的窗口覆盖）。}
-令$\widetilde p_i=(p_i,\ell_i,n_i,\alpha_i)$表示带标注的几何对象，其中$p_i$为平面区域，$\ell_i$为层号，$n_i$为网络，$\alpha_i$为规则相关属性。$G_R$和$G_{\mathrm{preview}}(S)$分别为参考和预览的对象集合。对满足相应规则适用条件的对象对，有
+带标注的几何对象表示为
+\[
+\widetilde p_i=(p_i,\ell_i,n_i,\alpha_i).
+\]
+四项依次为平面区域、层号、网络和规则相关属性。$G_R$和$G_{\mathrm{preview}}(S)$分别是参考与预览的对象集合。对满足规则适用条件的对象对，违例判定为
 \begin{align}
 V_{\mathrm{short}}(\widetilde p_1,\widetilde p_2)
  &=\mathbf{1}[p_1\cap p_2\ne\varnothing\wedge n_1\ne n_2], \label{eq:local_short}\\
@@ -263,27 +287,30 @@ V_{\mathrm{spacing}}(\widetilde p_1,\widetilde p_2)
 \end{equation}
 则预览在这些层上新增违例位于有效芯片内的局部几何见证均被合并窗口覆盖。
 
-\begin{samepage}
 \noindent\textbf{证明。}
-若新增违例的两个标注图形均在$G_R$中原样存在，由（iii），该违例的规则上下文不变，与（i）矛盾。因此至少一个图形属于$G_{\mathrm{preview}}(S)\setminus G_R$，并由（ii）位于被替换实例的包围盒内。短路见证为交叠部分，间距见证为半径内相互作用的边界片段。记违例$\nu$的局部见证为$\operatorname{supp}_{\mathrm{local}}(\nu)$。与规则距离一致的邻域$B(r)$在各坐标方向扩张不超过$r$，且$\oplus$表示闵可夫斯基和。于是
+若两个标注图形均在参考中原样存在，由（iii），该违例也会在参考中成立，与（i）矛盾。由（ii），至少一个新增或属性改变的图形位于目标实例的包围盒内。记违例$\nu$的局部见证为$\operatorname{supp}_{\mathrm{local}}(\nu)$。短路见证为交叠部分，间距见证为有限半径内的交互边界。规则邻域$B(r)$在各方向扩张不超过$r$。对目标包围盒取闵可夫斯基和，有
 \begin{equation}
 \label{eq:minkowski}
 \operatorname{supp}_{\mathrm{local}}(\nu)
 \subseteq \bigcup_{g\in\mathcal I(S)}
 \bigl(\operatorname{BBox}(g)\oplus B(r_{\mathrm{drc}}(\ell))\bigr).
 \end{equation}
-局部见证可来自延伸至窗外的导体。设目标实例$g$的包围盒为$[x_l,x_r]\times[y_b,y_t]$，芯片边界矩形为$\Omega_{\mathrm{die}}$。将包围盒四向各外扩$\delta=H_{\mathrm{row}}$并裁剪至芯片有效区域，得到
+局部见证可来自延伸至窗外的导体。目标包围盒的左、右边界坐标为$x_l$、$x_r$，下、上边界坐标为$y_b$、$y_t$。将各边外扩一行高并裁剪至芯片边界$\Omega_{\mathrm{die}}$，得到
 \begin{equation}
 \label{eq:box}
 \begin{aligned}
 \mathcal B(g)
  &=\bigl([x_l-\delta,x_r+\delta]\\
  &\quad {}\times[y_b-\delta,y_t+\delta]\bigr)
-   \cap\Omega_{\mathrm{die}} .
+   \cap\Omega_{\mathrm{die}},\qquad \delta=H_{\mathrm{row}}.
 \end{aligned}
 \end{equation}
-由于$B(r_{\mathrm{drc}}(\ell))\subseteq[-\delta,\delta]^2$，将式~\eqref{eq:minkowski}两侧与$\Omega_{\mathrm{die}}$相交，得到$\operatorname{supp}_{\mathrm{local}}(\nu)\cap\Omega_{\mathrm{die}}\subseteq\bigcup_{g\in\mathcal I(S)}\mathcal B(g)$。迭代合并相交或接触的矩形得到$\mathcal M(S)$，保留该覆盖范围。$\blacksquare$
-\end{samepage}
+规则邻域在各方向上的外扩量均不超过一行高。将式~\eqref{eq:minkowski}两侧裁剪至芯片边界，可得
+\[
+\operatorname{supp}_{\mathrm{local}}(\nu)\cap\Omega_{\mathrm{die}}
+\subseteq \bigcup_{g\in\mathcal I(S)}\mathcal B(g).
+\]
+合并相交或接触的矩形得到$\mathcal M(S)$，保留上述覆盖范围。\hfill$\blacksquare$
 
 \begin{figure*}[!tb]
 \centering
@@ -297,11 +324,18 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
 \subsection{冲突邻网归因与保护式重布线}
 \label{sec:protected}
 
-\textbf{冲突归因。} 对$\mathcal M(S)$逐窗查询，按类型、包围盒和源对象去重。先用标记的源实例与源网将其关联到目标实例或直连网，再从其余源网中识别冻结版图上已布线的非时钟信号网。只有每个标记都能关联到变更对象并指认至少一条合格邻网，才取这些邻网的并集$\mathcal E(S)$。几何接触仅表明邻近，标记中的对象身份将邻网选择绑定到实际观察到的冲突。预检为空、未返回或归因不完整时取$\mathcal E(S)=\varnothing$。首次放行范围为$\mathcal R_0(S)=\mathcal D(S)\cup\mathcal E(S)$。
+\textbf{冲突归因。} 对$\mathcal M(S)$逐窗查询，按类型、包围盒和源对象去重。先用标记的源实例与源网将其关联到目标实例或直连网，再从其余源网中识别冻结版图上已布线的非时钟信号网。只有每个标记都能关联到变更对象并指认至少一条合格邻网，才取这些邻网的并集$\mathcal E(S)$。几何接触仅表明邻近，标记中的对象身份将邻网选择绑定到实际观察到的冲突。预检无有效归因时，归因集合取空。初始放行范围为
+\[
+\mathcal R_0(S)=\mathcal D(S)\cup\mathcal E(S).
+\]
 
 \textbf{整网重布。} 窗口用于确定冲突位置和网身份。放行后清除整条相关网的旧走线，详细布线器按网表端点重新建立引脚接入和连接，范围可延伸到窗口之外。只重布直连网时，造成标记的既有邻线会保持锁定。按几何邻近放行则会增加合法路径被改写的机会。图~\ref{fig:drc_mech}中，三个重叠的met1标记归到同一条邻网。后端按整网重建该邻网。邻近的一条保护网曾被几何接触规则额外放行，在标记归因中则保留了原有连接、线段与过孔。这个例子说明，相同空间窗口内可同时存在需要重布与继续保护的走线。
 
-\textbf{外围保护与复修。} 每次验证从$R$重建，布线前固定非授权网的既有走线。若完整重布后仅剩可归因的DRC物理失败，且预算及配置允许，追加仍在保护集合中的合格邻网并至多复修一次。用$\mathcal E_{\mathrm{repair}}(S)$记实际追加的网，最终授权集合为$\mathcal R_{\mathrm{final}}(S)=\mathcal R_0(S)\cup\mathcal E_{\mathrm{repair}}(S)$。对范围之外的已布线网，比较归一化走线及引脚连接，并审计工具实际清线的网。该判据约束的是整个授权范围之外的互连，即使这些走线与查询窗相交也逐网核验。对移除保护标志的候选副本复核几何与连通性后，再执行独立全块终检。通过物理与时序门后再执行全网表SEC。
+\textbf{外围保护与复修。} 每次验证从$R$重建，布线前固定非授权网的既有走线。若完整重布后仅剩可归因的DRC物理失败，且预算及配置允许，追加仍在保护集合中的合格邻网并至多复修一次。用$\mathcal E_{\mathrm{repair}}(S)$记实际追加的网。最终授权范围为
+\[
+\mathcal R_{\mathrm{final}}(S)=\mathcal R_0(S)\cup\mathcal E_{\mathrm{repair}}(S).
+\]
+对范围之外的已布线网，比较归一化走线及引脚连接，并审计工具实际清线的网。该判据约束的是整个授权范围之外的互连，即使这些走线与查询窗相交也逐网核验。对移除保护标志的候选副本复核几何与连通性后，再执行独立全块终检。通过物理与时序门后再执行全网表SEC。
 
 \begin{figure*}[!tb]
 \centering
@@ -319,9 +353,9 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
 \Ensure 截止前验收的最佳检查点$(S^*,F^*)$
 \State $(S^*,F^*)\gets(\varnothing,R)$，$\mathcal Q_{\mathrm{def}},\mathcal K\gets\varnothing$
 \State $r\gets\mathrm{false}$ \Comment{是否已重排}
-\If{探针启用且$\mathcal P\ne\varnothing$、$\tau_{\mathrm{probe}}>0$}
+\If{探针启用、候选池非空且探针预算为正}
     \State $(s,F)\gets\operatorname{Validate}(R,\mathcal P,\tau_{\mathrm{probe}},0)$
-    \If{$s=\mathrm{accepted}$且未超时} \State \Return $(\mathcal P,F)$ \EndIf
+    \If{按时通过验收} \State \Return $(\mathcal P,F)$ \EndIf
     \State 清理未完成的探针，更新计时
 \EndIf
 \State 按初始排序和批宽$b$初始化$\mathcal Q$
@@ -329,19 +363,19 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
     \If{$\mathcal Q=\varnothing$}
         \State 取出最早暂缓批次，二分并加入$\mathcal Q$
     \EndIf
-    \State 取队首批次$B$，$S\gets S^*\cup B$，$k\gets\operatorname{sort}(S)$
+    \State $B\gets\operatorname{popFront}(\mathcal Q),\ S\gets S^*\cup B,\ k\gets\operatorname{sort}(S)$
     \If{$k\in\mathcal K$}
-        \State 若$|B|>1$则二分置于队首，转下一轮
+        \State 多门批次二分置于队首，转下一轮
     \EndIf
     \State $(s,F)\gets\operatorname{Validate}(R,S,\tau_{\max}-t_{\mathrm{now}},1)$
-    \If{$s=\mathrm{accepted}$且未超时、面积减小}
+    \If{按时通过验收且面积减小}
         \State 更新$(S^*,F^*)$并登记检查点
-    \ElsIf{$s=\mathrm{rejected}$且未超时}
+    \ElsIf{按时返回拒收}
         \State 若满足缓存条件则登记$k$
-        \If{Hold退化、$|B|>1$且仍有原始动作未派发}
+        \If{Hold退化、多门批次且仍有原始动作未派发}
             \State 将$B$加入$\mathcal Q_{\mathrm{def}}$
             \If{$r=\mathrm{false}$}
-                \State 按式~\eqref{eq:cap_rerank}重排并重分原始后缀，$r\gets\mathrm{true}$
+                \State 按式~\eqref{eq:cap_rerank}重排、重分原始后缀并置重排标志
             \EndIf
         \ElsIf{$|B|>1$}
             \State 二分$B$，两子批按序置于队首
@@ -355,9 +389,15 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
 \subsection{非向下封闭可行域与限时混合调度}
 \label{sec:sched}
 
-令$\mathcal H$表示固定的物理实现协议，$F_{\mathcal H}(R,S)$为从$R$重建的候选版图。$\Phi_{\mathcal H}(S)=1$当且仅当该版图通过式~\eqref{eq:obj}的物理、时序与等价门，并在启用绝对建立时间门时满足式~\eqref{eq:setup_floor}。该判定评估固定协议重建的候选版图，合格检查点另按墙钟截止判定。
+令$\mathcal H$表示固定的物理实现协议，$F_{\mathcal H}(R,S)$为从$R$重建的候选版图。可行性指示量$\Phi_{\mathcal H}(S)$仅在该版图通过式~\eqref{eq:obj}的物理、时序与等价门，且满足已启用的式~\eqref{eq:setup_floor}时取一，其余情况取零。该判定评估固定协议重建的候选版图，合格检查点另按墙钟截止判定。
 
-图~\ref{fig:search_mechanism}(a)的SKY130HD AES对照采用同一物理执行协议，均在首轮完成且未超时。实测$T_3\subsetneq S_{18}$，$\Phi_{\mathcal H}(T_3)=0$、$\Phi_{\mathcal H}(S_{18})=1$。三门触发SS Hold门，十八门通过全部验收。相同十八门版图也由另一限时协议的全池探针得到。\href{https://github.com/Toylog123/FAECO/blob/e191c4263db207e15c5420731c3b5163eac35171/project_docs/evidence/tcad_r10_counterexample_20261127/REPORT.md}{固定协议与验证记录}给出配置及判定细节。
+图~\ref{fig:search_mechanism}(a)的SKY130HD AES对照采用同一物理执行协议，均在首轮完成且未超时。三门子集触发SS Hold门，包含它的十八门集合通过全部验收：
+\[
+\begin{gathered}
+T_3\subsetneq S_{18},\\
+\Phi_{\mathcal H}(T_3)=0,\qquad\Phi_{\mathcal H}(S_{18})=1.
+\end{gathered}
+\]相同十八门版图也由另一限时协议的全池探针得到。\href{https://github.com/Toylog123/FAECO/blob/e191c4263db207e15c5420731c3b5163eac35171/project_docs/evidence/tcad_r10_counterexample_20261127/REPORT.md}{固定协议与验证记录}给出配置及判定细节。
 
 单次子集拒收不足以排除超集。全池探针在拆批前检验整池的联合可行性。图~\ref{fig:search_mechanism}(b)中的Queue与Deferred分别表示算法的工作队列$\mathcal Q$和暂缓队列$\mathcal Q_{\mathrm{def}}$。
 
@@ -366,9 +406,9 @@ Hybrid FAECO以单遍保护后端验证整个候选池$\mathcal P$，探针不�
 \label{eq:probe_budget}
 \tau_{\mathrm{probe}}=\min\{180\,\mathrm s,\;0.30[\tau_{\max}-t_{\mathrm{screen}}]_+\}.
 \end{equation}
-其中$t_{\mathrm{screen}}$为公共预筛耗时，$[x]_+=\max\{0,x\}$。若预算耗尽即结束。整池按时通过后保留该检查点并结束。若拒收或触及子截止，从冻结参考进入微批次，探针与清理计入共享墙钟。纯微批次跳过全池探针。
+其中$t_{\mathrm{screen}}$为公共预筛耗时，方括号下标加号表示负值按零处理。预算耗尽即结束。整池按时通过后保留该检查点并结束。若拒收或触及子截止，从冻结参考进入微批次，探针与清理计入共享墙钟。纯微批次跳过全池探针。
 
-微批次默认宽度$b=3$。Hold退化时，多门批次可暂缓，等待后续动作改变累计集合。首次暂缓只重排未访问的原始动作。以$C_i$表示冻结SPEF中实例$i$直连非电源信号网的总电容，$\widetilde C$为池内中位数。电容须完整且中位数为正。面积与电容加权的排序为
+微批次默认含三个替换动作。Hold退化时，多门批次可暂缓，等待后续动作改变累计集合。首次暂缓只重排未访问的原始动作。以$C_i$表示冻结SPEF中实例$i$直连非电源信号网的总电容，$\widetilde C$为池内中位数。电容须完整且中位数为正。面积与电容加权的排序为
 \begin{equation}
 \label{eq:cap_rerank}
 \operatorname{prio}(i)=\frac{\Delta A_i}{1+C_i/\widetilde C}.
@@ -410,7 +450,7 @@ SKY130HD \texttt{riscv32i}-TC & 5,537 & 69,750.65 & 40,000 & $+29{,}021$ & 400.0
 \subsection{局部冲突诊断的正确性与效率}
 \label{sec:boxed_eval}
 
-两种AES的14组互异换门提议在不同半径下形成37次配对回放，非目标实例均无位移。SKY130HD AES的9组中有8组产生标记，在$1.0H_{\mathrm{row}}$下56处标记及其归因邻网集合逐例匹配全块检查。ASAP7 UART与AES的14组自然扩展（含18--120门降尺寸及6--18门原地镜像）均为零标记，局部与全块判断一致。ASAP7 AES另在窗内注入5个真实布线规则下的合成扰动网，检出37处短路或间距标记，源对象关联网络集合一致，零误报、零漏报。距目标上缘$1.05H_{\mathrm{row}}$的独立M3注入产生两处仅被全块检出的短路，验证了窗外变更这一适用边界。逐例记录见补充材料附录B。
+两种AES的14组互异换门提议在不同半径下形成37次配对回放，非目标实例均无位移。SKY130HD AES的9组中有8组产生标记，在一行高的外扩尺度下56处标记及其归因邻网集合逐例匹配全块检查。ASAP7 UART与AES的14组自然扩展（含18--120门降尺寸及6--18门原地镜像）均为零标记，局部与全块判断一致。ASAP7 AES另在窗内注入5个真实布线规则下的合成扰动网，检出37处短路或间距标记，源对象关联网络集合一致，零误报、零漏报。距目标上缘1.05倍行高的独立M3注入产生两处仅被全块检出的短路，验证了窗外变更这一适用边界。逐例记录见补充材料附录B。
 
 图~\ref{fig:boxed_scaling}分别标出了历史配对与自然扩展的实测结果。中大规模AES减少的全块扫描足以抵消局部检查开销；在797条线网的UART上，全块检查约3.8\,s，实测全块/窗口用时比为0.60--1.22。120门ASAP7 AES扩展中的加速为1.14倍，表明放大变更集合会压缩局部诊断的收益。
 
@@ -477,7 +517,7 @@ FAECO & 全块DRC预检 & 67.5648 & 483.86 / 483.87 & 4 / 4 \\
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig4_anytime_r7_zh.pdf}
+\includegraphics[width=0.95\textwidth]{tcad_20261126/fig4_anytime_r7_zh.pdf}
 \caption{四个主基准的同池验收轨迹（正序，720\,s）。灰区计入公共预筛，曲线在通过全部验收时上升。SKY130HD AES的单门、固定、纯微批次及全块诊断臂各最多派发6次，单门与固定、纯微批次的起序见表~\ref{tab:comp_ablation}。双AES全块诊断对照见表~\ref{tab:boxed_drc}。}
 \label{fig:anytime}
 \end{figure*}
@@ -629,7 +669,7 @@ ASAP7 AES & 复修后Hold拒收 & 463.85 & 截停 & 169.24 \\
 
 表~\ref{tab:budget_v5}B显示，子预算须覆盖全池验证的关键阶段。SKY130HD AES在60和120\,s分别终止于布线和SEC，240\,s档通过。ASAP7 AES的240\,s探针终止于RCX，回退后仅验收3门。表中C给出全池直提与默认有界探针，各自采用独立时限和复修配置。
 
-UART的精确拒收复用使完整评估由20减至19次，终态一致。$b=2$与$b=3$也达到同一终态，前者时间平均收益更高。$K=36$的原结果对应旧冻结池，面积字段修正后新增部分的18项动作身份改变。完整扫描和预筛记录见附录C、E。
+UART的精确拒收复用使完整评估由20减至19次，终态一致。批宽为2和3时也达到同一终态，前者时间平均收益更高。36项的原结果对应旧冻结池，面积字段修正后新增部分的18项动作身份改变。完整扫描和预筛记录见附录C、E。
 
 \subsection{可调Setup预算与绝对收敛验证}
 \label{sec:budget_sweeps}
