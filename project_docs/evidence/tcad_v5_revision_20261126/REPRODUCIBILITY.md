@@ -153,7 +153,7 @@ python3 -B "$e/verify_stage5_isolated_online.py" \
 
 隔离单门第 8 次的外层 SEC 在剩余 1.717614 s 时返回超时，没有生成验收收据。原实现的内层 GNU timeout 建立另一进程组，Yosys 继续写完 4559/0 的原始证明日志。末次写入晚于下一固定三门 TT 排序日志约 2.420 s。固定排序发生过跨臂工序重叠，本轮固定时间均值为该运行的观测值。
 
-冻结三臂运行结束后，使用同一参考、同一第 8 次候选、同一 TT 库与 Yosys 做独立对照。原版在 1.717614 s 截停后仍观测到两进程并继续写日志，修复版在相同时限后未再观测到证明进程，日志大小保持 784,150 字节。两次短窗均未发布验收收据。修复版用 30 s 余量在 7.946 s 完成真实 SEC，输出 4559/0 的收据。修复将内层 `timeout --foreground` 留在外层 RAW 工具进程组。此项核验覆盖被测 SEC 链，修复后的整套在线计时与所有阶段硬返回仍待复测。 [29 份原件](V5_STAGE5_SEC_CUTOFF_ORIGINALS.zip) · [离线核对](verify_stage5_sec_cutoff.py)
+冻结三臂运行结束后，使用同一参考、同一第 8 次候选、同一 TT 库与 Yosys 做独立对照。原版在 1.717614 s 截停后仍观测到两进程并继续写日志，修复版在相同时限后未再观测到证明进程，日志大小保持 784,150 字节。两次短窗均未发布验收收据。修复版用 30 s 余量在 7.946 s 完成真实 SEC，输出 4559/0 的收据。修复将内层 `timeout --foreground` 留在外层 RAW 工具进程组。此项核验覆盖被测 SEC 链。修复后的完整在线复跑见下节，所有阶段的硬返回仍待验证。 [29 份原件](V5_STAGE5_SEC_CUTOFF_ORIGINALS.zip) · [离线核对](verify_stage5_sec_cutoff.py)
 
 ```bash
 python3 -B project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_sec_cutoff.py
