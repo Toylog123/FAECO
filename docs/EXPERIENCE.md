@@ -2,6 +2,10 @@
 
 > 解决问题后当天登记。历史坑位自 work_log 摘录高频项，完整记录见 `project_docs/LOGS.md`。
 
+## 2026-11-27 预检计时汇总应从原精度和完成状态计算
+
+正反序平均先在各臂纳入已完成预检的派发，再等权汇总臂均值与总和。后续验证达到截止的已完成预检仍计费。由已舍入总和除以调用数会把 14.3909435 和 7.0239904 分别误显为 14.40 和 7.03。另按运行臂区分纯微批次与探针后回退，避免沿用另一臂的预检值。 [第七轮复算](../paper/zh/review_rounds/r20261127_r7_editorial/R7_APPENDIX_DIAGNOSIS_AUDIT.json)
+
 ## 2026-10-16 字节SHA钉定的新证据须防Git换行转换
 
 本次新QA/B17proof/v6-v8/Cprime-v3包由root加.gitattributes -text，防core.autocrlf检出后SHA变化；仅新包、不重写旧证据。提交前仍须核index blob与working raw逐字节一致，属性本身不能替代该检查。后root实际核60新包index blob==working raw逐字节一致；git add --renormalize才使raw入index，单调用cr-at-eol diffcheck rc0，原件未改。属性保护与实际index校验均须完成，不把仅写属性当已保护。

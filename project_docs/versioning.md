@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 第七轮中文出版校对由标签 `faeco-paper-editorial-20261127-r7` 绑定。第六轮工件及既有实验快照保留，仅校对 R7 主稿、展示数据舍入、附录和图件。[第七轮发布清单](../paper/zh/review_rounds/r20261127_r7_editorial/R7_RELEASE_MANIFEST.json)。
+
 2026-11-27 出版工件里程碑：第六轮中文稿由标签 `faeco-paper-editorial-20261127-r6` 绑定，仅冻结论文、附录和绘图工件。实验快照继续使用 R5 对应证据提交 `f0fe992b9ce44b8368b620d06b8d95a56179347c`。工件 SHA-256 见 [R6 发布清单](../paper/zh/review_rounds/r20261127_r6_editorial/R6_RELEASE_MANIFEST.json)。
 
 2026-10-18执行注（LOG135）：main/origin固定f761ee1996a83fc4f0f3de0999b74d85a8237858是已push的source checkpoint，非新科学baseline。D最新37producer/56、冻结28已根+独立接受；完整raw3/8根post接受。必须D56独立+根全验收且8case archive/rootpost全部接受后才解锁HEAD/code并阶段收口；当前稿图/新证据dirty保留、不提前commit。之后OI049源修/整体回归/独立门与新cleanpin再登记B3/C。A8限定稿件门已根472b441b接受/当前ZH12-EN26副本同步，C′原runtime3ea及7231归档历史保留，v18不改/无新tag。
