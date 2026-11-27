@@ -227,7 +227,14 @@ t_{\mathrm{complete}}(S)\le t\}\bigr).
 \subsection{行高自适应\texorpdfstring{$1.0\times H_{\mathrm{row}}$}{1.0 H\_row}局部窗口化DRC诊断与理论分析}
 \label{sec:boxed_drc}
 
-降尺寸会改变目标实例的引脚和障碍几何，使其与附近保留的导线相互作用（图~\ref{fig:drc_mech}）。设$\mathcal{I}(S)$为累计替换$S$的目标实例，$\mathcal{D}(S)$为其直连非时钟信号网。在冻结参考的副本上原地替换实例并擦除$\mathcal{D}(S)$的旧线，得到布线前预览$G_{\mathrm{preview}}(S)$。
+降尺寸会改变目标实例的引脚和障碍几何，使其与附近保留的导线发生局部交互。设$\mathcal{I}(S)$为累计替换$S$的目标实例，$\mathcal{D}(S)$为其直连非时钟信号网。在冻结参考的副本上原地替换实例并擦除$\mathcal{D}(S)$的旧线，得到布线前预览$G_{\mathrm{preview}}(S)$。图~\ref{fig:window_theory}区分局部违例见证、请求盒与检查器读取的上下文。
+
+\begin{figure*}[!tb]
+\centering
+\includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_r8.pdf}
+\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) 新引脚与邻线的交叠给出局部短路见证。命题1的半径条件使规则交互域包含于行高请求盒，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$。与$Q$相交的检查盒决定工作单元是否调度，工作单元读取自身外扩的上下文盒，并以标记盒与$Q$相交作为返回条件。标记召回还要求有对应工作单元保留相关规则上下文。}
+\label{fig:window_theory}
+\end{figure*}
 
 \medskip
 \noindent\textbf{命题 1（引脚层局部短路与成对间距的窗口覆盖）。}
@@ -270,6 +277,8 @@ V_{\mathrm{spacing}}(p_1,p_2)
 
 对$\mathcal{M}(S)$逐窗检查，并按违例类型、包围盒和关联对象归并标记。当每个标记均关联目标实例或其直连网，且识别出至少一条已布线非时钟邻网时，将归因邻网取并集为$\mathcal{E}(S)$。空标记、无法完整归因或诊断未返回时取$\mathcal{E}(S)=\varnothing$，从直连网放行开始重布，并以独立全块检查决定是否接收该结果。第一次放行集合为$\mathcal R_0(S)=\mathcal D(S)\cup\mathcal E(S)$。
 
+图~\ref{fig:drc_mech}以归档三门提议展示实际标记归因及保护网几何。
+
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{tcad_20261126/fig2_aes_geometry_r7.pdf}
@@ -280,10 +289,17 @@ V_{\mathrm{spacing}}(p_1,p_2)
 \subsection{可行域的非向下封闭性与混合调度依据}
 \label{sec:nonmonotone}
 
-固定后端与工具参数，令$\Phi(S)=1$表示从$R$实际重建的$F(S)$通过式~\eqref{eq:obj}的全部物理、时序与等价约束，并在启用绝对建立时间门时满足式~\eqref{eq:setup_floor}。$\Phi$的定义排除墙钟约束，交付另以验收时刻和截止时间判断。冻结起点与验收门相同的SKY130HD AES实测给出$T_3\subsetneq S_{18}$且$\Phi(T_3)=0$、$\Phi(S_{18})=1$。相对参考点，三门子集$T_3$的SS保持时间WNS下降$0.157652$\,ps，触发相对保持门。完整十八门集合$S_{18}$的SS保持时间WNS提高$0.459188$\,ps，三工艺角时序及物理门通过，独立全块DRC为零，SEC证明11\,089点且零未证点。
+固定后端与工具参数，令$\Phi(S)=1$表示从$R$重建的$F(S)$通过式~\eqref{eq:obj}的全部物理、时序与等价门，并在启用绝对建立时间门时满足式~\eqref{eq:setup_floor}。交付另受墙钟截止约束。在同一冻结参考与验收门下，SKY130HD AES实测$T_3\subsetneq S_{18}$且$\Phi(T_3)=0$、$\Phi(S_{18})=1$。图~\ref{fig:search_mechanism}(a)给出两组相对参考的SS保持时间WNS变化。三门子集触发相对保持门，整池通过三工艺角时序与物理门，独立全块DRC为零，SEC证实11\,089点且零未证。
 % 证据：V5_STEP1_POWER_7NM_DET_VERIFIED.json，SHA-256 85bfc1657fbc0663649e417abbe7a9c9827d7d1cded05c121133bd150f28a235。
 % 键：part1_counterexample_and_timing_audit.counterexample_subset_T、counterexample_superset_S。原始物理及 SEC 回执见 V5 REPORT §1.1。
-该实测反例表明，布线后可行集合可以不满足向下封闭性。全池探针先验证可能可行的大组合。遇到相对保持时间退化时，先探索未访问前沿，再以届时的累计集合验证暂缓批次的子批。
+子集拒收无法判定超集的可行性。全池探针优先检验整池是否联合可行。图~\ref{fig:search_mechanism}(b)展示原始前沿耗尽后，暂缓批次如何在当时的累计集合下二分并重新验证。
+
+\begin{figure*}[!tb]
+\centering
+\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_r8.pdf}
+\caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 同一冻结参考及验收门上的SKY130HD AES实测反例，仅绘出两个已验证集合。(b) Hold退化时，若尚有未访问前沿，则暂缓多门批次；首次暂缓时按式~\eqref{eq:cap_rerank}重排未访问后缀。图示后续批次通过后，在前沿耗尽时取出暂缓批次，二分并按当前合格累计集验证子批，验收结果由当前验证决定。(c) 保持冻结输入与验收配置，仅对精确匹配且符合缓存条件的Setup拒收跳过重复物理验证。(b)、(c)为机制示意。}
+\label{fig:search_mechanism}
+\end{figure*}
 
 \subsection{保护式局部重布线与混合自适应调度}
 \label{sec:sched}
@@ -305,7 +321,7 @@ Hybrid FAECO以单遍保护后端验证整个候选池$\mathcal P$，探针不�
 \end{equation}
 优先验证面积收益较高、直连电容较低的提议。排序须通过电容完整性和中位数检查。算法~\ref{alg:faeco}给出暂缓、二分与重新派发的队列顺序。
 
-物理验证以冻结输入和累计动作的规范化元组为键。同一配置下仅复用相同累计组合的完整Setup拒收结果，配置或验收门改变时另建缓存。探针回退配置还可以登记按时返回的完整拒收，配置差异见补充材料附录G。超时及物理验证不完整的提议不入缓存。工具时限取阶段限时和截止余量的较小值，交付按全部验收完成计时，清理和返回的开销另行记录。
+物理验证以冻结输入和累计动作的规范化元组为键。图~\ref{fig:search_mechanism}(c)示意同一配置内的Setup拒收复用。换用累计动作组合时须检查其自身的键，配置或验收门改变时另建缓存。探针回退配置还可以登记按时返回的完整拒收，配置差异见补充材料附录G。超时及物理验证不完整的提议不入缓存。工具时限取阶段限时和截止余量的较小值，交付按全部验收完成计时，清理和返回的开销另行记录。
 
 \begin{algorithm}[H]
 \caption{Hybrid FAECO的全池探针与保护式微批次}
@@ -622,7 +638,7 @@ UART-TC沿用原版图并放宽周期，采用相对Setup门。两组各臂终�
 
 \vspace{0.16cm}
 \noindent\textbf{致谢。}
-感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助修订正文及英文摘要，并协助编写复算脚本与核对实验记录。OpenAI Codex内置的ImageGen用于图1的流程草图，图2依据归档布局布线与冲突标记重建，图3和图4由实验记录绘制。
+感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助修订正文及英文摘要，并协助编写复算脚本与核对实验记录。OpenAI Codex内置的ImageGen用于图1、图2和图4的构图草案，三图按方法与证据绘制为矢量图。图3依据归档布局布线与冲突标记重建，图5和图6由实验记录绘制。
 
 \noindent\textbf{代码与实验记录。}
 实现、协议、原件及复算见\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{FAECO 公开实验归档与复算说明}。\href{https://github.com/Toylog123/FAECO/blob/7ac9e86e6d8f1fc4a3003e129432f7b76fdcbe5a/paper/zh/manuscript/FAECO_R7_\%E8\%A1\%A5\%E5\%85\%85\%E6\%9D\%90\%E6\%96\%99.pdf}{随稿补充材料}的附录A--G提供规则、逐例数据、完整指标、配置与复算入口。异机重建需匹配工艺库与工具环境。
