@@ -11,6 +11,13 @@ bash project_docs/evidence/tcad_v5_revision_20261126/run_all_v5_experiments.sh -
 
 [原件压缩包](V5_REVIEW_ORIGINALS.zip) SHA-256 为 `eec4d4bdc4911ec42aa31cb874c0fb9a1ebfa4a11508a19573858f9137d3237f`，包含 297 份逐字节原件和一份 SHA-256/字节数清单。目录键源自原始运行路径，复算脚本直接读取 ZIP，无需按本机路径解包。已包含 7 nm 六组标记报告、130 nm 嵌套反例的原物理收据、双 AES 探针工序台账，以及处理器 12 个合格检查点的原物理和 SEC 收据、终检记录、三角 STA 与路由日志。三臂最终交付的门级网表和 Yosys 日志也在包内。大体积 ODB、DEF、完整 SPEF 和 PDK 仍由原始运行目录或依赖路径提供。相同处理器端点的公开复算检查收据中的 ODB/DEF 指纹，作者现场另读对应原件及去日期 SPEF。该包支持审核记录与复算指标；独立完整物理重建遵循 [运行依赖与路径](README.md)。
 
+## 第六轮中文稿图表映射
+
+R6 调整图表编号与论证顺序，冻结实验仍由原收据复算。当前主稿表 2 对应原表 9；表 3 对应原表 6、7；表 4 对应原全景表；表 5 对应原配置消融；表 6 合并原表 5、11；表 7 合并 UART-TC 与40 ns 处理器三臂。下方历史编号用于定位原证据。 [逐条映射和随稿补件](../../../paper/zh/review_rounds/r20261127_r6_editorial/R6_REVIEW_MAP.md)
+
+- [图 2 真实 DEF 与 DRC 标记、重建步骤](../../../paper/zh/figures/tcad_20261126/FIG2_AES_GEOMETRY_R6.md)
+- [图 3、4 冻结输入 SHA-256、可复绘数据和脚本](../../../paper/zh/figures/tcad_20261126/R6_FIG3_FIG4.md)
+
 ## 主张与证据入口
 
 | 图表或主张 | 收据、数据与重算入口 |

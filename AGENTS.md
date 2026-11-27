@@ -1,5 +1,7 @@
 # 行为准则
 
+> **2026-11-27 第六轮内容与图表专项修订入口**见 [CANON](project_docs/CANON.md)、[逐条复核](paper/zh/review_rounds/r20261127_r6_editorial/R6_REVIEW_MAP.md) 和 [随稿补充材料](paper/zh/manuscript/FAECO_R6_补充材料.pdf)。中文主稿为 11 页、4 图、7 表。图 2 根据归档版图及实际标记重绘，实验沿用冻结证据。正式英文 IEEE 投稿包仍待作者确认。
+
 > **2026-11-27 第五轮中文定稿入口**：先读[现行口径](project_docs/CANON.md)、[第五轮逐条复核](paper/zh/review_rounds/r20261127_r5_submission/R5_REVIEW_MAP.md)和[定稿清单](paper/zh/review_rounds/r20261127_r5_submission/R5_RELEASE_MANIFEST.json)。规整 Liberty 后 UART 的 K=36 追加项改变，稿件保留原冻结池的实测口径。25 条关键交付记录的 ODB 面积及接受动作已完整交叉核验。正式英文 IEEE 稿仍待作者确认。
 
 > **2026-11-27 第四轮修订接手入口**：先读[现行口径](project_docs/CANON.md)、[第四轮逐条复核](paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md)与[公开证据](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#第四轮专项证据)。ASAP7 参考面积采用完整功能实例，历史 K18 不变；已完成标准 UART 原生提议的保护后端重放。正式英文 IEEE 投稿包仍待作者确认。

@@ -6,9 +6,10 @@
 
 | 路径 | 角色 | 状态 |
 |---|---|---|
-| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，第五轮定稿 13 页，2 幅示意图、3 幅数据图、12 张表） | 活跃 |
+| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，第六轮专项修订 11 页、4 图、7 表） | 活跃 |
 | `FAECO_v3_后布局可调预算面积回收.pdf` | 顶层交付 PDF（与 `manuscript/`、`build/` 同名 PDF 逐字节同步） | 活跃 |
 | `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex` | v1/v2 预布局中文主稿（对应冻结基线 `v19`） | 历史归档 |
+| `manuscript/FAECO_R6_补充材料.tex/pdf` | 第六轮随稿补充材料，附录 A–G | 活跃 |
 | `manuscript/FAECO_补充材料.tex` | v1/v2 预布局中文补充材料 | 历史归档 |
 | `build/` | 洁净编译产物目录（仅保留活跃 v3 与归档 v2/补充 PDF，不含过程日志与临时 PNG） | 活跃 |
 | `figures/` | 矢量图源（`*.pdf`、`*.svg`）与生成器（`gen_v3_figures.py` 等）；QA 栅格图与对齐 JSON 统一置于 `figures/qa_previews/` | 活跃 |
@@ -33,7 +34,7 @@ Copy-Item "FAECO_v3_后布局可调预算面积回收.pdf" "../build/FAECO_v3_�
 
 ## 三、图表重绘与质检入口
 
-图 1–2 用 [ImageGen 生成并验收](review_rounds/r20261127_r3_submission/FIGURE_PROVENANCE.md)。图 3–5 由[现有脚本](figures/tcad_20261126/generate_tcad_figures_v4_zh.py)和实验数据生成。表 12 从修复后三臂的[公开复算入口](../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)生成。
+图 1 先经 ImageGen 生成草图，再依据算法用 [TikZ 源](figures/tcad_20261126/fig1_framework_r6.tex) 定稿。图 2 [追溯到归档 DEF、LEF 和 DRC 原始记录](figures/tcad_20261126/FIG2_AES_GEOMETRY_R6.md)。图 3、4 的 [数据、绘图入口及复核](figures/tcad_20261126/R6_FIG3_FIG4.md) 与 PDF 收在同目录。主稿表 7 的 40 ns 分区沿用[修复后三臂复算](../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。补充材料可在 `manuscript/` 内选中 `FAECO_R6_补充材料.tex` 单独编译，全部版本位置见[工件清单](review_rounds/r20261127_r6_editorial/R6_RELEASE_MANIFEST.json)。
 
 ## 四、写作与数字核对规范
 

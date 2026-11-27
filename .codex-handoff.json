@@ -1,9 +1,12 @@
 {
   "timestamp": "2026-11-27",
-  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。第五轮中文定稿及直接 OpenDB 面积、UART 扩展候选和版本交叉核验完成。K=36 表中指标绑定原冻结池；补全 Liberty 后追加项改变。正式英文稿与作者材料待确认。",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断及限时面积回收。第六轮内容与图表修订完成。正式英文稿与作者材料待确认。",
   "project": "FAECO",
   "read_order": [
     "project_docs/CANON.md",
+    "paper/zh/review_rounds/r20261127_r6_editorial/R6_REVIEW_MAP.md",
+    "paper/zh/review_rounds/r20261127_r6_editorial/R6_RELEASE_MANIFEST.json",
+
     "paper/zh/review_rounds/r20261127_r5_submission/R5_REVIEW_MAP.md",
     "paper/zh/review_rounds/r20261127_r5_submission/R5_RELEASE_MANIFEST.json",
     "paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md",
@@ -25,23 +28,29 @@
     "push_status": "query git status -sb and git ls-remote origin refs/heads/main"
   },
   "paper_state": {
-    "note": "第五轮中文定稿为13页、5图、12表、26条参考文献。图件及生产源树沿用第四轮。双遍 LuaLaTeX、全页目检、四处固定证据链接及三份 PDF 指纹均已核验。定稿 Git 标签 faeco-paper-final-20261127-r5，已绑定公开证据提交与工件清单。正式英文转译及 IEEE 投稿制式仍待作者确认。",
+    "note": "第六轮中文主稿 11 页、4 图、7 表、1 算法、26 条参考文献。随稿补件 7 页、13 表，涵盖附录 A–G。均已逐页渲染核对。正式英文与 IEEE 投稿仍待作者确认。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "ac6348e6e45e93751c483c75746dc83ceea59b5ccd2a19e0f656294b004a0099",
-      "bytes": 86276,
-      "pages": 13
+      "sha256": "32f0b4e8e8aa6d90b2e608da1857f457ff19d77caaf003f93d740edff5597b21",
+      "bytes": 56685,
+      "pages": 11
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "db474b5a949d12ddfce84e31647d18cec8f918320368818551dc6da798a36ad8",
-      "bytes": 2663520,
-      "pages": 13
+      "sha256": "e12b7fcf431d70aae12252c9b1c7a28459bc3b8a17a3024a297966d26919e8dc",
+      "bytes": 763969,
+      "pages": 11
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",
     "zh_archived_supplement_tex": "paper/zh/manuscript/FAECO_补充材料.tex",
     "compile": "cd paper/zh/manuscript && lualatex -interaction=nonstopmode \"FAECO_v3_后布局可调预算面积回收.tex\" (twice)",
-    "english": "frozen at prior sync point (paper/en/manuscript/FAECO_postroute_recovery.tex) per user instruction to focus on Chinese manuscript and repo cleanup"
+    "english": "frozen at prior sync point (paper/en/manuscript/FAECO_postroute_recovery.tex) per user instruction to focus on Chinese manuscript and repo cleanup",
+    "zh_r6_supplement_pdf": {
+      "path": "paper/zh/manuscript/FAECO_R6_补充材料.pdf",
+      "sha256": "368b33a8dca6b057be06301fec89b7541e8808b1016b1fe2f36bb3fcd5b09a9b",
+      "bytes": 258982,
+      "pages": 7
+    }
   },
   "versions": {
     "current_baseline": "v22",
