@@ -85,7 +85,7 @@
 
 \newcommand{\enTitle}{FAECO: Time-Budgeted Post-Route Gate Sizing with Localized Conflict Diagnosis and Protected Rerouting}
 \newcommand{\enAbstract}{%
-  Post-route gate downsizing changes pin and obstruction geometry and can create conflicts with neighboring wires. FAECO uses row-height windows to attribute shorts and pairwise spacing violations to implicated signals and protects other interconnect during detailed rerouting. Its acceptance protocol couples three-corner timing, whole-block physical checks, and sequential equivalence with a wall-clock deadline. Window checks match 56 whole-block markers in recorded SKY130HD proposals and 37 in controlled ASAP7 injections. In historical proposal replays, single-query speedups range from 3.04$\times$ to 16.69$\times$. Cumulative diagnosis time falls by about 72--75\% in the two matched AES comparisons. Under a 720\,s budget, a successful full-pool probe recovers 197.69\,\textmu m$^2$ of functional cell area on SKY130HD AES, twice the recovery with microbatching alone, while unsuccessful probes consume verification time. On an independently rebuilt, timing-closed SKY130HD processor, fixed microbatching recovers 91.34\,\textmu m$^2$ and leads the matched schedules. The results identify how wire protection, batch feasibility, and verification cost shape post-route recovery.%
+  Digital chip implementations can retain opportunities for cell-area reduction after timing closure, but downsizing cells after routing can conflict with existing wires. FAECO uses row-height windows to attribute shorts and pairwise spacing violations to implicated signals and protects other interconnect during detailed rerouting. Its acceptance protocol couples three-corner timing, whole-block physical checks, and sequential equivalence with a wall-clock deadline. Window checks match 56 whole-block markers in recorded SKY130HD proposals and 37 in controlled ASAP7 injections. In historical proposal replays, single-query speedups range from 3.04$\times$ to 16.69$\times$. Cumulative diagnosis time falls by about 72--75\% in the two matched AES comparisons. Under a 720\,s budget, a successful full-pool probe recovers 197.69\,\textmu m$^2$ of functional cell area on SKY130HD AES, twice the recovery with microbatching alone, while unsuccessful probes consume verification time. On an independently rebuilt, timing-closed SKY130HD processor, fixed microbatching recovers 91.34\,\textmu m$^2$ and leads the matched schedules. The results identify how wire protection, batch feasibility, and verification cost shape post-route recovery.%
 }
 \newcommand{\enKeywords}{post-route gate-level ECO, localized DRC conflict diagnosis, protected rerouting, adjustable timing budget, microbatch scheduling}
 
@@ -105,7 +105,7 @@
 \end{center}
 \begin{flushleft}
   {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
-  布线后跨占位降尺寸改变引脚和障碍几何，可能与既有邻线冲突。FAECO用行高窗口诊断设计规则检查（DRC）中的短路和成对间距冲突，并保护其余互连，在限时预算内以三工艺角时序、全块物理检查和时序等价验证交付合格版图。SKY130HD实际提议回放与ASAP7受控注入分别匹配全块检查的56和37处标记。回放中的单次诊断加速为3.04--16.69倍，双AES配对试验的累计诊断开销下降约72--75\%。720\,s内，SKY130HD AES的全池探针回收197.69\,\textmu m$^2$功能单元面积，为纯微批次的两倍；失败探针则消耗后续验证时间。独立重建并时序收敛的SKY130HD处理器上，固定微批次回收91.34\,\textmu m$^2$，高于同条件下的单门和自适应调度。结果揭示了外围布线保护、批次可行性和验证代价对限时回收的作用。}
+  数字芯片在满足时序目标后，仍可能通过换用较小的标准单元进一步压缩面积，而布线后的替换可能与既有走线冲突。FAECO用行高窗口诊断设计规则检查（DRC）中的短路和成对间距冲突，并保护其余互连，在限时预算内以三工艺角时序、全块物理检查和时序等价验证交付合格版图。SKY130HD实际提议回放与ASAP7受控注入分别匹配全块检查的56和37处标记。回放中的单次诊断加速为3.04--16.69倍，双AES配对试验的累计诊断开销下降约72--75\%。720\,s内，SKY130HD AES的全池探针回收197.69\,\textmu m$^2$功能单元面积，为纯微批次的两倍；失败探针则消耗后续验证时间。独立重建并时序收敛的SKY130HD处理器上，固定微批次回收91.34\,\textmu m$^2$，高于同条件下的单门和自适应调度。结果揭示了外围布线保护、批次可行性和验证代价对限时回收的作用。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 布线后门级ECO，局部窗口化DRC诊断，保护式重布线，可调时序预算，混合自适应微批次调度}\par
@@ -126,9 +126,11 @@
 % ============================================================
 \section{引言}
 
-详细布线后的互连寄生可改变驱动单元的时序敏感性。综合与物理修复阶段为满足建立时间和电气约束而增大的单元，可能在具体布线及多工艺角下留有面积回收空间\cite{chinnery2002closing,openroad}。布线后门级工程变更（engineering change order，ECO）通过定点替换利用这部分空间，同时避免全片重布大范围改写走线\cite{lee2012eco,fatemi2019sizer,cheng2023dagsizer}。
+数字芯片的物理实现需要在性能、功耗和面积之间取得平衡。调整标准单元尺寸是贯穿逻辑综合、布局和布线的优化手段。为满足关键路径时序与电气约束，实现工具会选用驱动能力更强、面积更大的单元\cite{chinnery2002closing,openroad}。布线完成后，提取的互连寄生参数为重新评估路径延迟提供了依据，部分为修复时序而增大的单元有机会换回较小尺寸。
 
-跨物理占位降尺寸即使不移动邻居，也会改变目标单元的引脚与障碍几何。若只重布直连网，新引脚与保留邻线的冲突可能触发复修；按几何邻近一律放行又会改变原本合法的信号路径及保持裕量。全块布线前检查可以归因冲突，重复扫描却会缩短剩余验证时间。冻结寄生上的大批次可摊销验证成本，但时序、物理拒收或截停可使整批无法交付。用于限时回收的ECO需要同时决定重布范围、每轮批次以及验收条件。
+到了设计后期，优化还必须控制对已完成版图的扰动和重新验证的开销。布线后门级工程变更（engineering change order，ECO）通过定点替换回收标准单元面积，并尽量保留其余互连\cite{lee2012eco,fatemi2019sizer,cheng2023dagsizer}。当替换改变单元占位时，引脚与布线障碍的几何位置也可能变化，使新引脚与既有邻线发生冲突。只重布直连网可能留下冲突，放开过多邻线又可能改变合法路径的保持裕量。
+
+寻找可实施的替换还受验证时间限制。全块布线前检查可用于定位冲突，但每轮重复扫描都会占用候选验证时间。将多项替换合并可以摊销验证开销，一旦整批因时序、物理约束或超时而无法交付，也会压缩后续尝试的机会。布线后面积回收由此需要同时确定重布哪些网络、每轮尝试哪些替换，以及如何在截止前交付满足物理、时序和功能约束的版图。
 
 本文提出布线后门级面积回收框架FAECO，主要贡献如下。
 \begin{enumerate}

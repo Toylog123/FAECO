@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 中文开篇补修以上一技术核验标签为基线，当前主稿指纹见[交接配置](../.codex-handoff.json)。
+
 2026-11-27 第十轮投稿前中文技术核验由标签 `faeco-paper-checked-20261127-r10` 绑定。原实验只读复算保存在单独证据目录，正式英文及投稿事项独立处理。[工件清单](../paper/zh/review_rounds/r20261127_r10_final/R10_RELEASE_MANIFEST.json)。
 
 2026-11-27 第九轮中文定稿校对由标签 `faeco-paper-proof-20261127-r9` 绑定，包含三幅局部更新的矢量图、同一冻结实验及 R7 独立补充材料。[工件清单](../paper/zh/review_rounds/r20261127_r9_proof/R9_RELEASE_MANIFEST.json)。
