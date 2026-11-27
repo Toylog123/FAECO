@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 第九轮中文定稿校对由标签 `faeco-paper-proof-20261127-r9` 绑定，包含三幅局部更新的矢量图、同一冻结实验及 R7 独立补充材料。[工件清单](../paper/zh/review_rounds/r20261127_r9_proof/R9_RELEASE_MANIFEST.json)。
+
 2026-11-27 第八轮中文机制稿由标签 `faeco-paper-mechanism-20261127-r8` 绑定。新工件为两张矢量机制图及正文主稿，继续使用第七轮独立补件与冻结实验。第七轮历史标签保留。 [工件清单](../paper/zh/review_rounds/r20261127_r8_mechanism/R8_RELEASE_MANIFEST.json)。
 
 2026-11-27 第七轮中文出版校对由标签 `faeco-paper-editorial-20261127-r7` 绑定。第六轮工件及既有实验快照保留，仅校对 R7 主稿、展示数据舍入、附录和图件。[第七轮发布清单](../paper/zh/review_rounds/r20261127_r7_editorial/R7_RELEASE_MANIFEST.json)。

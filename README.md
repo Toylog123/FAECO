@@ -1,6 +1,6 @@
 # FAECO 布线后局部冲突诊断与限时面积回收
 
-> **2026-11-27 第八轮机制图修订**见[现行口径](project_docs/CANON.md)。项目面向 IEEE TCAD，研究布线后局部冲突诊断与限时面积回收。[12 页中文主稿](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [7 页补充材料](paper/zh/manuscript/FAECO_R7_补充材料.pdf) · [第八轮审稿对照](paper/zh/review_rounds/r20261127_r8_mechanism/R8_REVIEW_MAP.md) · [公开复算入口](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。
+> **2026-11-27 第九轮中文定稿校对**见[现行口径](project_docs/CANON.md)。FAECO 面向 IEEE TCAD，研究布线后局部冲突诊断与限时面积回收。[12 页中文主稿](paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [7 页补充材料](paper/zh/manuscript/FAECO_R7_补充材料.pdf) · [复审对照](paper/zh/review_rounds/r20261127_r9_proof/R9_REVIEW_MAP.md) · [公开复算入口](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。
 
 > **历史冻结 `v22`（`v2026-11-23-cross-pdk-lr-baselines`）** 收录经典 LR 十电路对照及 ASAP7 AES 的全局布线寄生估算。 [11 月 23 日交接快照](project_docs/HANDOFF_2026-11-23.md)
 

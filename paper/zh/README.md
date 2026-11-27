@@ -6,7 +6,7 @@
 
 | 路径 | 角色 | 状态 |
 |---|---|---|
-| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，第八轮机制图修订 12 页、6 图、7 表） | 活跃 |
+| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，第九轮定稿校对 12 页、6 图、7 表） | 活跃 |
 | `FAECO_v3_后布局可调预算面积回收.pdf` | 顶层交付 PDF（与 `manuscript/`、`build/` 同名 PDF 逐字节同步） | 活跃 |
 | `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex` | v1/v2 预布局中文主稿（对应冻结基线 `v19`） | 历史归档 |
 | `manuscript/FAECO_R7_补充材料.tex/pdf` | 第七轮随稿补充材料，附录 A–G | 活跃 |
@@ -35,7 +35,7 @@ Copy-Item "FAECO_v3_后布局可调预算面积回收.pdf" "../build/FAECO_v3_�
 
 ## 三、图表重绘与质检入口
 
-第八轮新增 [窗口覆盖图源](figures/tcad_20261126/fig2_window_context_r8.tex) 与 [搜索机制图源](figures/tcad_20261126/fig4_nonmonotone_search_r8.tex)。原四幅图沿用 [R7 图件说明](figures/tcad_20261126/R7_FIGURE_NOTES.md)，正文图号为 1、3、5、6。独立补充材料可在 `manuscript/` 内选中 `FAECO_R7_补充材料.tex` 单独编译。发布工件及散列见[清单](review_rounds/r20261127_r8_mechanism/R8_RELEASE_MANIFEST.json)。
+第九轮更新[窗口覆盖图源](figures/tcad_20261126/fig2_window_context_r9.tex)、[真实版图局部放大脚本](figures/tcad_20261126/plot_fig2_aes_geometry_r9.py)及[搜索机制图源](figures/tcad_20261126/fig4_nonmonotone_search_r9.tex)。其余图件沿用 [R7 说明](figures/tcad_20261126/R7_FIGURE_NOTES.md)。补充材料在 `manuscript/` 内编译 `FAECO_R7_补充材料.tex`，最终散列见[工件清单](review_rounds/r20261127_r9_proof/R9_RELEASE_MANIFEST.json)。
 
 ## 四、写作与数字核对规范
 

@@ -1,5 +1,7 @@
 # 行为准则
 
+> **2026-11-27 第九轮中文定稿校对入口**见 [CANON](project_docs/CANON.md)、[审稿对照](paper/zh/review_rounds/r20261127_r9_proof/R9_REVIEW_MAP.md) 与 [补充材料](paper/zh/manuscript/FAECO_R7_补充材料.pdf)。12 页、6 图、7 表、1 算法，更新图 2、3、4 及相应图注。正式英文 IEEE 包仍待作者确认。
+
 > **2026-11-27 第八轮机制图入口**见 [CANON](project_docs/CANON.md)、[审稿对照](paper/zh/review_rounds/r20261127_r8_mechanism/R8_REVIEW_MAP.md) 与 [补充材料](paper/zh/manuscript/FAECO_R7_补充材料.pdf)。正文新增图 2（窗口覆盖与规则上下文）和图 4（非向下封闭性、Hold 暂缓与精确拒收复用）。图 3 的真实版图案例与图 4(a) 的子集反例是不同提议。正式英文 IEEE 包仍待作者确认。
 
 > **2026-11-27 第七轮出版校对入口**见 [CANON](project_docs/CANON.md)、[逐条复核](paper/zh/review_rounds/r20261127_r7_editorial/R7_REVIEW_MAP.md) 与 [补充材料](paper/zh/manuscript/FAECO_R7_补充材料.pdf)。主稿 11 页、4 图、7 表。窗口诊断在图 3，限时回收在图 4。正式英文 IEEE 包仍待作者确认。

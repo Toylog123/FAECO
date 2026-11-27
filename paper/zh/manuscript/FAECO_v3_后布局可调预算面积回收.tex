@@ -231,8 +231,8 @@ t_{\mathrm{complete}}(S)\le t\}\bigr).
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_r8.pdf}
-\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) 新引脚与邻线的交叠给出局部短路见证。命题1的半径条件使规则交互域包含于行高请求盒，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$。与$Q$相交的检查盒决定工作单元是否调度，工作单元读取自身外扩的上下文盒，并以标记盒与$Q$相交作为返回条件。标记召回还要求有对应工作单元保留相关规则上下文。}
+\includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_r9.pdf}
+\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。短路以同层异网图元交叠判定。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；满足$Q\cap Q_{\mathrm{check}}\ne\varnothing$的工作单元从各自的上下文盒读入几何。设$M$为已生成标记的包围盒，返回条件为$Q\cap M\ne\varnothing$。标记召回还要求对应工作单元保留相关规则上下文。}
 \label{fig:window_theory}
 \end{figure*}
 
@@ -281,8 +281,8 @@ V_{\mathrm{spacing}}(p_1,p_2)
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig2_aes_geometry_r7.pdf}
-\caption{SKY130HD AES三门提议的同尺度局部裁图。冻结及重布的线网中心线和过孔位置取自DEF，单元轮廓及引脚、障碍与电源轨的矩形取自LEF。按换门和擦线重建预览，原全块DRC报告的五处标记中，图示区域包含同一邻网的三处重叠met1短路标记。虚线框仅表示按新包围盒外扩一行高的冲突查询范围。所示保护网的完整DEF走线路径在重布前后相同。}
+\includegraphics[width=\textwidth]{tcad_20261126/fig2_aes_geometry_r9.pdf}
+\caption{SKY130HD AES三门提议的局部裁图，四个主面板尺度相同。冻结及重布的线网中心线和过孔位置取自DEF，单元轮廓及引脚、障碍与电源轨的矩形取自LEF。按换门和擦线重建预览，原全块DRC报告的五处标记中，图示区域包含同一邻网的三处重叠met1短路标记。(b)内嵌框按原坐标放大标记、障碍和邻网中心线。虚线框仅表示按新包围盒外扩一行高的冲突查询范围。所示保护网的完整DEF走线路径在重布前后相同。}
 \label{fig:drc_mech}
 \end{figure*}
 
@@ -296,8 +296,8 @@ V_{\mathrm{spacing}}(p_1,p_2)
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_r8.pdf}
-\caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 同一冻结参考及验收门上的SKY130HD AES实测反例，仅绘出两个已验证集合。(b) Hold退化时，若尚有未访问前沿，则暂缓多门批次；首次暂缓时按式~\eqref{eq:cap_rerank}重排未访问后缀。图示后续批次通过后，在前沿耗尽时取出暂缓批次，二分并按当前合格累计集验证子批，验收结果由当前验证决定。(c) 保持冻结输入与验收配置，仅对精确匹配且符合缓存条件的Setup拒收跳过重复物理验证。(b)、(c)为机制示意。}
+\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_r9.pdf}
+\caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 同一冻结参考及验收门上的SKY130HD AES实测反例，仅绘出两个已验证集合。(b) 各列为派发前或状态更新后的快照。图示首次暂缓后按式~\eqref{eq:cap_rerank}重排未访问后缀。原始前沿耗尽后取出暂缓批次并二分，子批与当前合格累计集一起验收。(c) 同一冻结输入和配置内，精确命中合格Setup拒收时跳过该组合的物理验证，多门批次二分，单门批次转入下一轮。(b)、(c)为机制示意。}
 \label{fig:search_mechanism}
 \end{figure*}
 
@@ -458,17 +458,17 @@ FAECO & 全块DRC预检 & 67.5648 & 483.86 / 483.87 & 4 / 4 \\
 \parbox{\textwidth}{\footnotesize 注：常规复修首轮仅放行直连网，关闭布线前归因，允许按重布后DRC标记至多复修一次。}
 \end{table*}
 
-表~\ref{tab:geo_causal}B在固定与自适应调度下分别切换有无布线前诊断。到达各自相同物理端点前，两种调度分别少做1次和2次详细布线，首达分别提前72.4--84.0\,s和158.0--164.4\,s。第~\ref{sec:boxed_eval}节的端到端试验再将同一诊断从全块查询替换为局部窗口，区分诊断前移与扫描范围缩小的作用。
-
-\subsection{限时面积回收总体性能}
-\label{sec:main_results}
-
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{tcad_20261126/fig4_anytime_r7_zh.pdf}
 \caption{四个主基准的同池验收轨迹（正序，720\,s）。灰区计入公共预筛，曲线在通过全部验收时上升。SKY130HD AES的单门、固定、纯微批次及全块诊断臂各最多派发6次，单门与固定、纯微批次的起序见表~\ref{tab:comp_ablation}。双AES全块诊断对照见表~\ref{tab:boxed_drc}。}
 \label{fig:anytime}
 \end{figure*}
+
+表~\ref{tab:geo_causal}B在固定与自适应调度下分别切换有无布线前诊断。到达各自相同物理端点前，两种调度分别少做1次和2次详细布线，首达分别提前72.4--84.0\,s和158.0--164.4\,s。第~\ref{sec:boxed_eval}节的端到端试验再将同一诊断从全块查询替换为局部窗口，区分诊断前移与扫描范围缩小的作用。
+
+\subsection{限时面积回收总体性能}
+\label{sec:main_results}
 
 \begin{table*}[!tb]
 \centering\small\setlength{\tabcolsep}{5pt}
@@ -646,12 +646,12 @@ UART-TC沿用原版图并放宽周期，采用相对Setup门。两组各臂终�
 % ============================================================
 % 参考文献
 % ============================================================
-\begingroup\small\linespread{1.02}\selectfont\setlength{\parskip}{0pt}
+\begingroup\normalsize\linespread{1.02}\selectfont\setlength{\parskip}{0pt}
 \interlinepenalty=10000
 \newcommand{\refdoi}[1]{doi: \href{https://doi.org/#1}{\nolinkurl{#1}}}
 \newcommand{\refarxiv}[2]{\href{https://arxiv.org/abs/#1#2}{\nolinkurl{arXiv:#1}}}
 \begin{thebibliography}{30}
-\setlength{\itemsep}{1.0pt}\setlength{\parsep}{0pt}
+\setlength{\itemsep}{2.5pt}\setlength{\parsep}{0pt}
 
 \bibitem{chinnery2002closing}
 D. Chinnery and K. Keutzer, \emph{Closing the Gap Between ASIC \& Custom: Tools and Techniques for High-Performance ASIC Design}. New York, NY, USA: Springer, 2002, \refdoi{10.1007/b105287}.
