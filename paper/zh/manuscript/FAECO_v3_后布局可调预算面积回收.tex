@@ -39,17 +39,17 @@
 % -----------------------------------------------------------------------------
 % 版面
 % -----------------------------------------------------------------------------
-\geometry{a4paper,left=2.0cm,right=2.0cm,top=2.1cm,bottom=2.1cm,columnsep=28pt}
+\geometry{a4paper,left=2.0cm,right=2.0cm,top=2.0cm,bottom=2.0cm,columnsep=28pt}
 \renewcommand{\eqref}[1]{\textup{（\ref{#1}）}}
 \graphicspath{{../figures/}}
 \setlength{\emergencystretch}{3em}
 \Urlmuskip=0mu plus 3mu\relax
 \raggedbottom
 \setlength{\floatsep}{6pt plus 2pt minus 2pt}
-\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{6pt plus 2pt minus 2pt}
 \setlength{\intextsep}{6pt plus 2pt minus 2pt}
 \setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
-\setlength{\dbltextfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{6pt plus 2pt minus 2pt}
 
 % -----------------------------------------------------------------------------
 % 标题层级
@@ -135,7 +135,7 @@
 针对上述问题，本文提出基于局部冲突诊断与保护式重布线的限时布线后门级面积回收框架\textbf{FAECO}。本文的核心贡献概括如下：
 \begin{enumerate}
 \item \textbf{基于行高的局部冲突诊断与保护式重布线。} 给出引脚接入层局部短路和成对间距规则的窗口覆盖条件，对SKY130HD与ASAP7技术LEF逐层核对。历史回放与受控注入分别检验真实换门冲突及7\,nm非零标记的一致性；在同一三门提议上，额外释放无冲突邻网伴随慢角Hold恶化10.48\,ps。
-\item \textbf{非向下封闭的物理可行域与限时搜索。} 实测三门子集被Hold拒收而十八门全集通过，说明批次大小会改变可行组合。双AES的预算扫描量化失败探针的机会成本，独立重建处理器的同后端比较区分批验证摊销与物理拒收后的二分开销。
+\item \textbf{物理可行域的非向下封闭反例与限时搜索。} 实测三门子集被Hold拒收而十八门全集通过，说明批次大小会改变可行组合。双AES的预算扫描量化失败探针的机会成本，独立重建处理器的同后端比较区分批验证摊销与物理拒收后的二分开销。
 \item \textbf{可调预算与限时交付协议。} 统一相对及绝对时序门、三工艺角验证、全块物理检查和时序等价。按验收时刻计入合格回收，区分终态面积与时间平均收益。在线预算扫描记录终态平台，临界UART案例揭示绝对零下限改变放行的条件。
 \end{enumerate}
 
@@ -152,9 +152,9 @@ DAGSizer\cite{cheng2023dagsizer}预测同占位多$V_t$和多沟道长度替换�
 
 \subsection{局部物理ECO与学习辅助优化}
 
-TritonRoute-WXL\cite{tritonroutewxl}在详细布线器中集成了DRC引擎。CoRe-ECO\cite{coreeco}用可满足性模理论（SMT）联合求解局部详细布局、布线和单元替换，以修复既有引脚接入违例。SLO-ECO\cite{sloeco2024}将单线开路热点纳入局部详细布局与布线的SMT模型。Xu等\cite{xu2026eco}从区域物理与时序信息学习ECO策略，并调整优化权重以兼顾总负松弛与DRC数量。
+TritonRoute-WXL\cite{tritonroutewxl}提供区域规则查询，并在逐网重布后增量更新和检查改网。CoRe-ECO\cite{coreeco}用可满足性模理论（SMT）联合求解局部详细布局、布线和单元替换，以修复既有引脚接入违例。SLO-ECO\cite{sloeco2024}将单线开路热点纳入局部详细布局与布线的SMT模型。Xu等\cite{xu2026eco}从区域物理与时序信息学习ECO策略，并调整优化权重以兼顾总负松弛与DRC数量。
 
-OpenPhySyn\cite{openphysyn2020}提供开源物理综合与时序修复。RL-Sizer\cite{rlsizer2021}优化布线后TNS，RL-CCD\cite{rlccd2023}在布局阶段选择时钟和数据路径端点。局部物理重映射\cite{pcr2026}与E-Layout\cite{elayout2026}以布局后物理反馈选择逻辑实现，GoalEvolve\cite{goalevolve2026}用全流程反馈优化设计算法。TAPCO-G\cite{tapcog2026}在布局后沿时序图传播时延变化，按时序和功耗排序并二分失败批次。表~\ref{tab:related_work}对齐代表方法的输入、目标与验证。FAECO用详细布线后的降尺寸冲突标记限定重布线范围，在固定墙钟内搜索经三工艺角验证的面积回收。
+OpenPhySyn\cite{openphysyn2020}提供开源物理综合与时序修复。RL-Sizer\cite{rlsizer2021}优化布线后TNS，RL-CCD\cite{rlccd2023}在布局阶段选择时钟和数据路径端点。局部物理重映射\cite{pcr2026}与E-Layout\cite{elayout2026}以布局后物理反馈选择逻辑实现，GoalEvolve\cite{goalevolve2026}用全流程反馈优化设计算法。TAPCO-G\cite{tapcog2026}在布局后沿时序图传播时延变化，按时序和功耗排序并二分失败批次。表~\ref{tab:related_work}对齐代表方法的输入、目标与验证。FAECO在候选换门后、详细重布前查询局部标记，用网归因选择需要解锁的既有邻网，其余互连保持冻结。第~\ref{sec:geo_ablation}节以同一换门提议比较邻网选择对保持时间、复修次数和交付的影响。
 
 \begin{table*}[t]
 \centering
@@ -187,7 +187,7 @@ OpenROAD原生\cite{openroad} & \texttt{recover\_power} & 功耗回收 & 本文�
 
 \subsection{冻结参考状态界定、可调预算与ECO验证约束}
 
-冻结参考$R$包括已布线版图、门级网表$N_R$、原始时序约束（SDC）及布线后提取的寄生参数。以$A_R$表示功能标准单元总面积，不计填充与阱接触单元。ASAP7的整设计面积按完整功能实例清单和物理主单元尺寸复算。记$W_v$、$T_v$和$H_v$为工艺视图$v\in\mathcal{V}=\{\mathrm{FF},\mathrm{TT},\mathrm{SS}\}$的建立时间最差松弛（WNS）、建立时间总负松弛（TNS）及保持时间WNS。同一版图的各视图共用一份名义提取寄生，并加载各自的标准单元库。参考时钟周期记为$P_{\mathrm{clk}}$。
+冻结参考$R$包括已布线版图、门级网表$N_R$、原始时序约束（SDC）及布线后提取的寄生参数。以$A_R$表示功能标准单元总面积，不计填充与阱接触单元。面积复核直接以OpenDB功能实例的主单元宽高积求和，并按冻结映射网表核对实例和单元身份。记$W_v$、$T_v$和$H_v$为工艺视图$v\in\mathcal{V}=\{\mathrm{FF},\mathrm{TT},\mathrm{SS}\}$的建立时间最差松弛（WNS）、建立时间总负松弛（TNS）及保持时间WNS。同一版图的各视图共用一份名义提取寄生，并加载各自的标准单元库。参考时钟周期记为$P_{\mathrm{clk}}$。
 
 给定墙钟预算$\tau_{\max}$，从互异实例的兼容降尺寸动作中选择累计替换集$S$，并记由冻结参考重建的候选版图为$F(S)$。ECO合格交付满足
 \begin{equation}
@@ -337,7 +337,7 @@ V_{\mathrm{spacing}}(p_1,p_2)
 固定后端与工具参数，令$\Phi(S)=1$表示从$R$实际重建的$F(S)$通过式~\eqref{eq:obj}的全部物理、时序与等价约束，并在启用绝对建立时间门时满足式~\eqref{eq:setup_floor}。$\Phi$的定义排除墙钟约束，交付另以验收时刻和截止时间判断。冻结起点与验收门相同的SKY130HD AES实测给出$T_3\subsetneq S_{18}$且$\Phi(T_3)=0$、$\Phi(S_{18})=1$。相对参考点，三门子集$T_3$的SS保持时间WNS下降$0.157652$\,ps，触发相对保持门。完整十八门集合$S_{18}$的SS保持时间WNS提高$0.459188$\,ps，三工艺角时序及物理门通过，独立全块DRC为零，SEC证明11\,089点且零未证点。
 % 证据：V5_STEP1_POWER_7NM_DET_VERIFIED.json，SHA-256 85bfc1657fbc0663649e417abbe7a9c9827d7d1cded05c121133bd150f28a235。
 % 键：part1_counterexample_and_timing_audit.counterexample_subset_T、counterexample_superset_S。原始物理及 SEC 回执见 V5 REPORT §1.1。
-这一反例表明，布线后可行集合对取子集不封闭。全池探针先验证可能可行的大组合。遇到相对保持时间退化时，先探索未访问前沿，再以届时的累计集合验证暂缓批次的子批。
+该实测反例表明，布线后可行集合可以不满足向下封闭性。全池探针先验证可能可行的大组合。遇到相对保持时间退化时，先探索未访问前沿，再以届时的累计集合验证暂缓批次的子批。
 
 \subsection{保护式局部重布线与混合自适应调度}
 \label{sec:sched}
@@ -361,7 +361,7 @@ Hybrid FAECO用单遍保护后端验证整个候选池$\mathcal{P}$，不复修�
 \end{equation}
 重排前校验电容数据完整且中位数为正，未通过校验时拒绝生成优先级。候选按实例去重一次，重排仅作用于未访问后缀，已提交、正在拆分与暂缓的动作均不重新入列。候选返回后，如未触发暂缓，立即二分未通过的多门批次。原始前沿耗尽后，暂缓批次按入队顺序取出，两半依次置于当前工作队列头部。
 
-同一运行臂内后端、规则和验收门固定，缓存以冻结输入及规范化累计动作元组判断重复。配置或验收门改变时，另建运行臂与缓存。纯建立时间拒收复用只登记完成布线、寄生提取、三工艺角时序及独立物理检查且拒因仅为建立时间预算的候选，超时和物理不完整均排除。命中时直接进入二分路径。历史默认Hybrid和双AES探针扫描在回退阶段登记按时返回的完整拒收请求，涵盖非Setup拒因。UART去重消融的历史白名单含TNS标签拼写差异，该臂唯一复用命中是FF Setup WNS拒收。在线预算扫描使用实际产生的Setup WNS/TNS标签。各实验配置与代码入口见复算索引。
+同一运行臂内后端、规则和验收门固定，缓存以冻结输入及规范化累计动作元组判断重复。配置或验收门改变时，另建运行臂与缓存。纯建立时间拒收复用只登记完成布线、寄生提取、三工艺角时序及独立物理检查且拒因仅为建立时间预算的候选，超时和物理不完整均排除。命中时跳过该候选的物理验证。多门批次二分后继续，单门批次直接转下一轮。历史默认Hybrid和双AES探针扫描在回退阶段登记按时返回的完整拒收请求，涵盖非Setup拒因。UART去重消融的历史白名单含TNS标签拼写差异，该臂唯一复用命中是FF Setup WNS拒收。在线预算扫描使用实际产生的Setup WNS/TNS标签。各实验配置与代码入口见复算索引。
 
 \paragraph{计时与交付}
 以单调时钟计费，工具时限取阶段限时与截止余量的较小值。触限后终止外层工具进程组，等待包装器退出。交付以物理、时序和SEC验收时刻为准，限于截止内通过的检查点。记录以原子替换写入，触限后的清理和返回另报。四设计默认探针的合格检查点均在720\,s内，两次探针超时返回比各自子预算多约$0.12$--$0.15$\,s。第~\ref{sec:tc_processor}节给出读档和SEC截停的补证。若接口要求清理及元数据写入也共守截止，可显式预留$t_{\mathrm{cleanup}}$与$t_{\mathrm{ckpt}}$，以$\max(0,\tau_{\max}-t_{\mathrm{now}}-t_{\mathrm{cleanup}}-t_{\mathrm{ckpt}})$限制派发余量。
@@ -384,7 +384,7 @@ Hybrid FAECO用单遍保护后端验证整个候选池$\mathcal{P}$，不复修�
     \If{$\mathcal Q$为空} \State 从$\mathcal Q_{\mathrm{def}}$取批，二分后两半依次置于$\mathcal Q$队首 \EndIf
     \State 从$\mathcal Q$队首取$B$，令$S\gets\operatorname{sort}(S^*\cup B)$
     \If{$S\in\mathcal K$}
-        \State 将多门$B$二分并将子批压至队首，转下一轮
+        \State 若$|B|>1$则按序二分入队首，随后转下一轮
     \EndIf
     \State 从$R$重建$S$并诊断。归因不足时仅放行直连网
     \State 限时保护重布、至多一次归因复修并执行全门验收
@@ -410,12 +410,6 @@ Hybrid FAECO用单遍保护后端验证整个候选池$\mathcal{P}$，不复修�
 
 \subsection{实验平台、复现配置与基准特征}
 
-双工艺实验使用Linux环境、AMD Ryzen~7 7435H与WSL2（内存11\,GiB），计费臂串行执行并绑定6个逻辑CPU，详细布线固定4线程。使用OpenROAD \texttt{b511b6a2}（含TritonRoute-WXL\cite{tritonroutewxl}与OpenRCX）、OpenSTA~3.1.0\cite{sta}、Yosys~0.70+255\cite{yosys}及OpenROAD-flow-scripts \texttt{da8f092a}。三工艺角STA分别加载SKY130HD或ASAP7 RVT的FF、TT、SS标准单元时序库，共享一份从详细布线提取的名义SPEF。ASAP7为预测工艺平台。功耗采用TT库和默认活动率估算。
-
-表~\ref{tab:benchmarks}前四个冻结参考均有残留TT Setup负松弛，按相对预算验收。保持绝对收敛的两组试验分别见第~\ref{sec:tc_sens}与~\ref{sec:tc_processor}节。同一窗口后端的计费对照共享预筛、候选池与验证门，墙钟包含排序、诊断、重布、提取、STA、终检与SEC。正反序重复仅用于明确标注的诊断对照。在线预算、探针和独立参考主试验每配置执行一次。参考重建和资格为前处理，公共筛选在各臂重新计费。处理器两臂另行复跑以计量进程树资源与读档。
-
-小UART和两种AES各复跑一项已有合格候选。三项全程物理验证的CPU时间为43.7、278.5和414.3\,s，作业内存峰为0.71、2.53和4.45\,GiB。逐阶段墙钟和CPU记入实验索引。
-
 \begin{table*}[t]
 \centering
 \caption{双工艺布线后冻结基准设计特征、时序状态与预算配置（18项互异实例候选池）}
@@ -440,12 +434,14 @@ ASAP7 UART-TC（7\,nm，\textbf{Timing-closed}） & 7\,nm / 0.27\,\textmu m & 10
 \parbox{\textwidth}{\footnotesize 注：全部基准均满足独立全块DRC=0、天线=0与门级SEC自检。主池每设计含18个互异实例。前四个参考TT Setup WNS依次为$-380.5$、$-474.2$、$-39.6$、$-153.1$\,ps。旧6\,ns处理器的SDC含0条输入及99条输出延时，旧流程将6.0数值传给以ps计的ABC目标，仅保留该冻结参考内的调度对照。UART-TC最小Setup WNS为$+30.29$\,ps。}
 \end{table*}
 
+双工艺实验使用Linux环境、AMD Ryzen~7 7435H与WSL2（内存11\,GiB），计费臂串行执行并绑定6个逻辑CPU，详细布线固定4线程。使用OpenROAD \texttt{b511b6a2}（含TritonRoute-WXL\cite{tritonroutewxl}与OpenRCX）、OpenSTA~3.1.0\cite{sta}、Yosys~0.70+255\cite{yosys}及OpenROAD-flow-scripts \texttt{da8f092a}。三工艺角STA分别加载SKY130HD或ASAP7 RVT的FF、TT、SS标准单元时序库，共享一份从详细布线提取的名义SPEF。ASAP7为预测工艺平台。功耗采用TT库和默认活动率估算。
+
+表~\ref{tab:benchmarks}前四个冻结参考均有残留TT Setup负松弛，按相对预算验收。保持绝对收敛的两组试验分别见第~\ref{sec:tc_sens}与~\ref{sec:tc_processor}节。同一窗口后端的计费对照共享预筛、候选池与验证门，墙钟包含排序、诊断、重布、提取、STA、终检与SEC。正反序重复仅用于明确标注的诊断对照。在线预算、探针和独立参考主试验每配置执行一次。参考重建和资格为前处理，公共筛选在各臂重新计费。处理器两臂另行复跑以计量进程树资源与读档。
+
+小UART和两种AES各复跑一项已有合格候选。三项全程物理验证的CPU时间为43.7、278.5和414.3\,s，作业内存峰为0.71、2.53和4.45\,GiB。逐阶段墙钟和CPU记入实验索引。
+
 \subsection{跨工艺全景对照、离线LR解耦与Hybrid FAECO实证}
 \label{sec:main_results}
-
-本节在双工艺四个主基准上系统对比原生功耗回收、离线五轮冻结寄生拉格朗日松弛（LR）、灵敏度单门、固定微批次、纯微批次FAECO及Hybrid FAECO。其中，参照拉格朗日松弛的尺寸优化思想\cite{chen1999fast,flach2014effective}，本文的冻结TT筛选器在冻结典型角SPEF上对同一18项池执行5轮次梯度迭代：初始拉格朗日乘子$\lambda_i^{(0)}=1.0$，每轮依引脚建立时间违例比$\nu_i = \bigl(W_{\mathrm{tgt}}-s_i\bigr)/\max(10,|W_{\mathrm{TT}}(R)|)$按$\lambda_i \leftarrow \mathrm{clip}\bigl(\lambda_i\exp(\mathrm{clip}(2\nu_i,-2,3)),\,0.05,\,1000\bigr)$更新，并以拉格朗日净收益$\Delta A_i - 0.01\lambda_i\max(0, W_{\mathrm{TT}}(R)-W_{\mathrm{TT}}^{\mathrm{new}})>0$且满足冻结Setup/Hold门控决定单元替换提交。预筛后，该实现于四基准皆选择全池18项（1.5--5.0\,s），下文以冻结TT全池直提表示该配置。
-
-图~\ref{fig:anytime}、表~\ref{tab:main_overview}与表~\ref{tab:lr_hybrid}汇总720\,s限时结果和前后端解耦对照。
 
 \begin{figure*}[t]
 \centering
@@ -453,6 +449,10 @@ ASAP7 UART-TC（7\,nm，\textbf{Timing-closed}） & 7\,nm / 0.27\,\textmu m & 10
 \caption{双工艺四个主基准在720\,s墙钟预算内的随时可交付ECO合格回收曲线（正序实测，阴影区为公共预筛开销，右轴为18项候选池捕获率）。（a）SKY130HD AES上同一$1.0\times H_{\mathrm{row}}$窗口后端对比，历史单门、固定微批及纯微批次各限6次派发。Hybrid FAECO在251\,s交付100\%池收益（197.7\,\textmu m$^2$）；（b）SKY130HD \texttt{riscv32i}；（c）ASAP7 UART；（d）7\,nm独立留出ASAP7 AES，展示默认探针配置下，Hybrid FAECO与纯微批次的终态面积相同、交付时间不同。}
 \label{fig:anytime}
 \end{figure*}
+
+本节在双工艺四个主基准上系统对比原生功耗回收、离线五轮冻结寄生拉格朗日松弛（LR）、灵敏度单门、固定微批次、纯微批次FAECO及Hybrid FAECO。其中，参照拉格朗日松弛的尺寸优化思想\cite{chen1999fast,flach2014effective}，本文的冻结TT筛选器在冻结典型角SPEF上对同一18项池执行5轮次梯度迭代：初始拉格朗日乘子$\lambda_i^{(0)}=1.0$，每轮依引脚建立时间违例比$\nu_i = \bigl(W_{\mathrm{tgt}}-s_i\bigr)/\max(10,|W_{\mathrm{TT}}(R)|)$按$\lambda_i \leftarrow \mathrm{clip}\bigl(\lambda_i\exp(\mathrm{clip}(2\nu_i,-2,3)),\,0.05,\,1000\bigr)$更新，并以拉格朗日净收益$\Delta A_i - 0.01\lambda_i\max(0, W_{\mathrm{TT}}(R)-W_{\mathrm{TT}}^{\mathrm{new}})>0$且满足冻结Setup/Hold门控决定单元替换提交。预筛后，该实现于四基准皆选择全池18项（1.5--5.0\,s），下文以冻结TT全池直提表示该配置。
+
+图~\ref{fig:anytime}、表~\ref{tab:main_overview}与表~\ref{tab:lr_hybrid}汇总720\,s限时结果和前后端解耦对照。
 
 \begin{table*}[t]
 \centering
@@ -506,7 +506,7 @@ ASAP7 UART-TC（7\,nm，\textbf{Timing-closed}） & 7\,nm / 0.27\,\textmu m & 10
 \begin{enumerate}
 \item \textbf{相同全池提议的物理后端。} SKY130HD AES的18项全片重布达到600\,s DRT上限，保护后端约140.90\,s完成验收。第~\ref{sec:nonmonotone}节的三门与18门反例由同一冻结参考和物理协议获得。其余设计的全池直提分别遇到路由截停或跨角时序拒收。
 \item \textbf{历史默认探针。} SKY130HD AES在251\,s交付197.6896\,\textmu m$^2$，占静态面积上界100\%。另三设计保留与对应纯微批次相同的终态面积；\texttt{riscv32i}及ASAP7 AES的时间平均收益分别由43.59降至25.81、由0.254降至0.107\,\textmu m$^2$。第~\ref{sec:budget_sweeps}节以同协议对照检验探针时间的影响。
-\item \textbf{原生提议的同后端运行资格。} \texttt{recover\_power}的全片重布结果见表~\ref{tab:main_overview}。迁移到保护后端时，ASAP7 UART的16/16项及AES的142/174项受面积解析限制。旧索引漏收Liberty中无行末分号的面积字段，候选筛选和面积统计均使用此索引。在三个工艺角规范这些字段后，两个基准的18项预筛前缀、顺序和动作面积差均与冻结结果一致。冻结网表和OpenDB单元尺寸复算得到表~\ref{tab:benchmarks}的完整功能面积。规范面积索引后，原生动作均可绑定。ASAP7 UART的16项同面积动作在保护后端完成布线，独立DRC和天线均为零，因无净面积增益及三个工艺角的相对Hold退化被拒，未进入候选SEC。ASAP7 AES完成绑定核验。SKY130HD AES的120项可绑定，但其中一个触发器接冻结时钟网，完整提议超出信号网作用域。去除此动作后的119项辅助投影，以及\texttt{riscv32i}的24项完整提议，在标准与允许Setup违规两种模式下均于600\,s单次详细布线上限被截停，未进入候选STA或SEC。这些臂的共同后端终态面积不可用于排序。
+\item \textbf{原生提议的同后端运行资格。} \texttt{recover\_power}的全片重布结果见表~\ref{tab:main_overview}。迁移到保护后端时，ASAP7 UART的16/16项及AES的142/174项受面积解析限制。旧索引漏收Liberty中无行末分号的面积字段，候选筛选和面积统计均使用此索引。在三个工艺角规范这些字段后，两个基准的18项预筛前缀、顺序和动作面积差均与冻结结果一致。UART扩展池的核验见第~\ref{sec:tc_sens}节。冻结网表和OpenDB单元尺寸复算得到表~\ref{tab:benchmarks}的完整功能面积。规范面积索引后，原生动作均可绑定。ASAP7 UART的16项同面积动作在保护后端完成布线，独立DRC和天线均为零，因无净面积增益及三个工艺角的相对Hold退化被拒，未进入候选SEC。ASAP7 AES完成绑定核验。原生提议按功耗目标产生，此处记录其在共同面积回收协议下的交付。SKY130HD AES的120项可绑定，但其中一个触发器接冻结时钟网，完整提议超出信号网作用域。去除此动作后的119项辅助投影，以及\texttt{riscv32i}的24项完整提议，在标准与允许Setup违规两种模式下均于600\,s单次详细布线上限被截停，未进入候选STA或SEC。这些臂的共同后端终态面积不可用于排序。
 \end{enumerate}
 
 \begin{table*}[t]
@@ -526,6 +526,8 @@ ASAP7 AES & 463.85\,s复修后仍Hold拒收 & 截停\,169.24 & 0.61236（6） & 
 \bottomrule
 \end{tabular}
 \end{table*}
+
+对表4、10及12的25条关键交付记录进行\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/R5_DIRECT_ODB_AREA_REPORT.md}{OpenDB面积复核}。冻结映射网表用于核对功能实例。各端点的整版图功能面积差$A_{\mathrm{ODB}}(R)-A_{\mathrm{ODB}}(F(S))$均等于其已接受动作的面积差合计$\sum_{i\in S}\Delta A_i$。
 
 \subsection{受控变量消融：邻网放行策略与同窗口调度组件分解}
 \label{sec:geo_ablation}
@@ -619,6 +621,7 @@ FAECO & 全块DRC诊断 & \textbf{67.5648} & \textbf{483.86} & \textbf{483.87} &
 \bottomrule
 \end{tabular}%
 }
+\parbox{\textwidth}{\footnotesize 注：SKY130HD AES历史配置C与D均关闭拒收缓存。}
 \end{table*}
 
 \subsection{\texorpdfstring{$1.0\times H_{\mathrm{row}}$}{1.0 H\_row}窗口诊断一致性验证、跨工艺尺度与数值确定性}
@@ -673,16 +676,7 @@ ASAP7 AES另布置5个窗内合成扰动网，用真实M1/M2/M3几何构造短�
 \subsection{绝对时序收敛基准、参数敏感性与扩展电路验证}
 \label{sec:tc_sens}
 
-\paragraph{绝对时序收敛的ASAP7 UART}
-UART-TC在原物理参考上将时钟周期从270调整至500\,ps，三工艺角Setup/Hold均非负。在同一窗口后端、720\,s和5.0\,ps相对Setup预算下，FAECO交付13门、0.83106\,\textmu m$^2$，单门及固定批分别交付0.68526和0.33534\,\textmu m$^2$（表~\ref{tab:tc_sens}）。FAECO终态三工艺角Setup/Hold WNS分别为$+255.927/+190.381/+28.931$和$+50.315/+67.502/+54.054$\,ps，零DRC、零天线，SEC为567/0。TT估计总/组合/漏电功耗分别变化$-0.660\%/-2.142\%/-0.777\%$。独立重建验证见下文40\,ns处理器实验。
-
-\paragraph{临界建立时间的门槛复验}
-复用UART-TC既有参考与13门候选的网表和提取SPEF，保持I/O延时，只将物理和虚拟时钟周期设为470.5\,ps。重测三工艺角STA时，SS Setup WNS由参考的\(+0.795\)变为候选的\(-0.569\)\,ps，候选SS Setup TNS为\(-0.569\)\,ps。两门采用相同4.705\,ps相对Setup损失预算及同一TNS、Hold、电气条件。相对门接受，绝对门仅因SS Setup负裕量拒收。该对照针对已有布线结果的时序验收。
-
-\paragraph{批宽与池规模}
-在270\,ps UART窗口协议上，$K=18$时，$b=2,3$均回收0.83106\,\textmu m$^2$，时间平均收益分别为0.526和0.491\,\textmu m$^2$（图~\ref{fig:ablation}(c)）。较大批宽增加Hold拒收与拆分，$b=6,9,18$的回收分别为0.72900、0.68526、0.74358\,\textmu m$^2$。这组扫描沿用原起序，表~\ref{tab:main_overview}的在线灵敏度单门另行排序。固定$b=3$时，$K=9,18,36$各回收0.49572、0.83106、1.50174\,\textmu m$^2$；$K=36$交付19门，功能面积下降1.474\%，TT估计总/组合/漏电功耗变化$-0.623\%/-2.234\%/-1.391\%$。
-
-\begin{table}[t]
+\begin{table}[tb]
 \centering
 \caption{绝对时序收敛基准实测（ASAP7 UART-TC）与$b$/$K$参数敏感性（720\,s，$1.0H_{\mathrm{row}}$窗口后端）}
 \label{tab:tc_sens}
@@ -690,8 +684,8 @@ UART-TC在原物理参考上将时钟周期从270调整至500\,ps，三工艺角
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{llrrrrr}
 \toprule
-\textbf{实验组} & \textbf{配置} & \textbf{合格面积/\textmu m$^2$} & \textbf{功能/池\%} & \textbf{时间平均} & \textbf{评估} & \textbf{去重} \\
- & & \textbf{（合格门数）} & & \textbf{收益/\textmu m$^2$} & \textbf{次数} & \textbf{命中} \\
+\textbf{实验组} & \textbf{配置} & \textbf{合格面积/\textmu m$^2$} & \textbf{功能/池\%} & \textbf{时间平均} & \textbf{完成} & \textbf{去重} \\
+ & & \textbf{（合格门数）} & & \textbf{收益/\textmu m$^2$} & \textbf{评估数} & \textbf{命中} \\
 \midrule
 \multirow{3}{*}{\shortstack[l]{Timing-closed\\(500\,ps)}}
  & 窗口单门 & 0.68526（11） & 0.672 / 58.0 & 0.363 & 18 & 0 \\
@@ -713,7 +707,17 @@ UART-TC在原物理参考上将时钟周期从270调整至500\,ps，三工艺角
 \bottomrule
 \end{tabular}%
 }
+\parbox{\columnwidth}{\footnotesize 注：$K=36$使用冻结扩展池，完成23次评估，第24次预检触及墙钟截止。\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/R5_ASAP7_UART_POOL_AUDIT.md}{候选池核验}。}
 \end{table}
+
+\paragraph{绝对时序收敛的ASAP7 UART}
+UART-TC在原物理参考上将时钟周期从270调整至500\,ps，三工艺角Setup/Hold均非负。在同一窗口后端、720\,s和5.0\,ps相对Setup预算下，FAECO交付13门、0.83106\,\textmu m$^2$，单门及固定批分别交付0.68526和0.33534\,\textmu m$^2$（表~\ref{tab:tc_sens}）。FAECO终态三工艺角Setup/Hold WNS分别为$+255.927/+190.381/+28.931$和$+50.315/+67.502/+54.054$\,ps，零DRC、零天线，SEC为567/0。TT估计总/组合/漏电功耗分别变化$-0.660\%/-2.142\%/-0.777\%$。独立重建验证见下文40\,ns处理器实验。
+
+\paragraph{临界建立时间的门槛复验}
+复用UART-TC既有参考与13门候选的网表和提取SPEF，保持I/O延时，只将物理和虚拟时钟周期设为470.5\,ps。重测三工艺角STA时，SS Setup WNS由参考的\(+0.795\)变为候选的\(-0.569\)\,ps，候选SS Setup TNS为\(-0.569\)\,ps。两门采用相同4.705\,ps相对Setup损失预算及同一TNS、Hold、电气条件。相对门接受，绝对门仅因SS Setup负裕量拒收。该对照针对已有布线结果的时序验收。
+
+\paragraph{批宽与池规模}
+在270\,ps UART窗口协议上，$K=18$时，$b=2,3$均回收0.83106\,\textmu m$^2$，时间平均收益分别为0.526和0.491\,\textmu m$^2$（图~\ref{fig:ablation}(c)）。较大批宽增加Hold拒收与拆分，$b=6,9,18$的回收分别为0.72900、0.68526、0.74358\,\textmu m$^2$。这组扫描沿用原起序，表~\ref{tab:main_overview}的在线灵敏度单门另行排序。固定$b=3$时，原$K=9,18,36$各回收0.49572、0.83106、1.50174\,\textmu m$^2$。$K=36$交付19门，功能面积下降1.474\%，TT估计总/组合/漏电功耗变化$-0.623\%/-2.234\%/-1.391\%$。规范三工艺角面积字段后，$K=9$及18的名单和顺序一致，$K=36$追加的18项均改变，静态面积上界由2.72646升至2.95974\,\textmu m$^2$。表~\ref{tab:tc_sens}的回收量与捕获率对应原冻结池。
 
 \subsection{在线Setup预算与探针子预算}
 \label{sec:budget_sweeps}
@@ -755,16 +759,6 @@ ASAP7 AES时间均值 & 0.26101 & 0.20802 & 0.15873 & 0.06484 \\
 \subsection{独立重建且绝对收敛的SKY130HD处理器}
 \label{sec:tc_processor}
 
-从同一\texttt{riscv32i} RTL独立重建参考，对65个非时钟输入及99个输出设绝对2\,ns I/O延时。10\,ns参考未通过绝对时序门，首个40\,ns参考仍有典型角电气违例。以15\%电容和10\%转换时间裕量完成全局布线修复后，得到5,456个功能单元、69,750.6464\,\textmu m$^2$的合格参考。FF/TT/SS Setup WNS为$+31.551/+29.021/+6.842$\,ns，Hold WNS为$+0.386/+0.596/+1.925$\,ns，TNS、电气违例、DRC和天线均为零。40\,ns为宽松收敛参考。
-
-表~\ref{tab:tc_processor}统一采用SEC超时清理修复后的隔离三臂。各臂共用18项、同一计费灵敏度起序、61.15\,s预筛和720\,s窗口，均关闭全池探针。设逐角400\,ps相对Setup WNS上限、逐角Setup TNS门，并保持绝对收敛及Hold WNS、TNS不退化。三臂均交付DRC和天线清零且SEC 4,559/0的候选。独立读回参考与三个最终ODB，放置及VDD/VSS物理连通性检查均通过。三臂达到23.7728\,\textmu m$^2$的检查点物理一致，固定三门的终态与时间均值最高。
-
-固定与自适应终态的三工艺角Setup及Hold WNS、TNS见\href{https://github.com/Toylog123/FAECO/blob/29daeeea82ef251c097f55446b04210814d1a020/project_docs/evidence/tcad_v5_revision_20261126/R4_STAGE5_POWER_TIMING_REPORT.md#终态三工艺角时序}{补充时序记录}。固定与自适应的前两次动作及拒因相同，第二批因布线及天线门被拒。固定策略跳到下一批，自适应继续二分，未触发Hold暂缓或命中Setup缓存。含触限调用的DRT/RCX累计分别为438.52和546.53\,s。这一分叉体现了物理拒收后二分的时间成本。
-
-首次运行的单门回收48.7968\,\textmu m$^2$。修复前的隔离复跑定位到第8次SEC截停后残留的Yosys曾跨入下一臂。修复后单门仍在第8次SEC触限，最终回收40.0384\,\textmu m$^2$。独立观察在包装器退出约35\,ms后的首个样本中已看不到证明进程组，距固定臂起序仍约1.85\,s，10,523个样本均未观测到跨臂重叠。首次运行、修复前诊断和资源测量分别归档。
-
-另在同一18项池上，将AuDoPEDA\cite{ghose2026audopeda}的功耗恢复思想投影为TT估计功耗乘Setup裕量，沿用固定三门和验收门。该独立排序对照的原序与投影序均完成6次，分别验收4和2次，终态回收91.3376和43.7920\,\textmu m$^2$。投影首批检出天线违例。
-
 \begin{table}[t]
 \centering
 \caption{40\,ns处理器的微批次对照（进程组修复后的隔离三臂）}
@@ -777,15 +771,25 @@ ASAP7 AES时间均值 & 0.26101 & 0.20802 & 0.15873 & 0.06484 \\
 \StageFiveResultRows
 \bottomrule
 \end{tabular}
-\parbox{\columnwidth}{\footnotesize 功耗为TT默认活动估计。参考与三个终态在50次上限内均未收敛，功耗仅作辅助估计。调度比较采用合格回收面积、时间均值和首达时间。}
+\parbox{\columnwidth}{\footnotesize 功耗为TT默认活动估计。参考与三个终态的活动传播在50次上限内均未收敛，功耗仅作辅助估计。调度比较采用合格回收面积、时间均值和首达时间。}
 \end{table}
+
+从同一\texttt{riscv32i} RTL独立重建参考，对65个非时钟输入及99个输出设绝对2\,ns I/O延时。10\,ns参考未通过绝对时序门，首个40\,ns参考仍有典型角电气违例。以15\%电容和10\%转换时间裕量完成全局布线修复后，得到5,456个功能单元、69,750.6464\,\textmu m$^2$的合格参考。FF/TT/SS Setup WNS为$+31.551/+29.021/+6.842$\,ns，Hold WNS为$+0.386/+0.596/+1.925$\,ns，TNS、电气违例、DRC和天线均为零。40\,ns为宽松收敛参考。
+
+表~\ref{tab:tc_processor}统一采用SEC超时清理修复后的隔离三臂。各臂共用18项、同一计费灵敏度起序、61.15\,s预筛和720\,s窗口，均关闭全池探针。设逐角400\,ps相对Setup WNS上限、逐角Setup TNS门，并保持绝对收敛及Hold WNS、TNS不退化。三臂均交付DRC和天线清零且SEC 4,559/0的候选。独立读回参考与三个最终ODB，放置及VDD/VSS物理连通性检查均通过。三臂达到23.7728\,\textmu m$^2$的检查点物理一致，固定三门的终态与时间均值最高。
+
+固定与自适应终态的三工艺角Setup及Hold WNS、TNS见\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/R4_STAGE5_POWER_TIMING_REPORT.md#终态三工艺角时序}{补充时序记录}。固定与自适应的前两次动作及拒因相同，第二批因布线及天线门被拒。固定策略跳到下一批，自适应继续二分，未触发Hold暂缓或命中Setup缓存。含触限调用的DRT/RCX累计分别为438.52和546.53\,s。这一分叉体现了物理拒收后二分的时间成本。
+
+首次运行的单门回收48.7968\,\textmu m$^2$。修复前的隔离复跑定位到第8次SEC截停后残留的Yosys曾跨入下一臂。修复后单门仍在第8次SEC触限，最终回收40.0384\,\textmu m$^2$。独立观察在包装器退出约35\,ms后的首个样本中已看不到证明进程组，距固定臂起序仍约1.85\,s，10,523个样本均未观测到跨臂重叠。首次运行、修复前诊断和资源测量分别归档。
+
+另在同一18项池上，将AuDoPEDA\cite{ghose2026audopeda}的功耗恢复思想投影为TT估计功耗乘Setup裕量，沿用固定三门和验收门。该独立排序对照的原序与投影序均完成6次，分别验收4和2次，终态回收91.3376和43.7920\,\textmu m$^2$。投影首批检出天线违例。
 
 % ============================================================
 % §6 讨论与适用边界
 % ============================================================
 \section{讨论与适用边界}
 
-交付以全块终检为准。SKY130HD GCD同一三门提议的窗口与全块预检均空，原三臂首轮重布后独立DRC均检出同三处窗内met1短路。几何同距择一仍需复修，按历史标记预放行则首轮清零。各臂最终均因TT相对Hold拒收。处理器修复前隔离复跑的20次预检均空（13个提议），19次独立首轮DRC在3个提议上检出违例。ASAP7 UART全块/窗口用时比为0.60--1.22。学习方法同池物理对照待验。三工艺角共用名义寄生，采用单模式与默认活动。独立RC角、多模式、全信号物理LVS及商业签核待验。
+SKY130HD GCD的三门提议在重布后才检出三处窗内met1短路。几何择一需要复修，预放行已知邻网首轮清零，各臂最终均因TT相对Hold拒收。处理器修复前隔离诊断另见3个提议的重布后违例。ASAP7 UART的全块/窗口用时比为0.60--1.22。实验采用单模式、三工艺角共用名义寄生及默认活动。独立RC角、多模式、全信号物理LVS、商业签核及学习方法同池物理对照待验。
 
 % ============================================================
 % §7 结论
@@ -798,17 +802,18 @@ FAECO将布线后降尺寸的冲突诊断限定到行高窗口，以标记归因
 
 \vspace{0.16cm}
 \noindent\textbf{致谢。}
-感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助文字修订、英文摘要及实验记录核对。图1--2的非数据示意由OpenAI Codex内置图像生成工具（ImageGen）制作，流程与拓扑按本文定义核验。图3--5由实验记录绘制。
+感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助修订正文及英文摘要，并协助编写复算脚本与核对实验记录。图1--2的非数据示意由OpenAI Codex内置的ImageGen制作，流程与拓扑按本文定义核验。图3--5由实验记录绘制。
 
 \noindent\textbf{代码与实验记录。}
-实现、协议、原件及复算见\href{https://github.com/Toylog123/FAECO/blob/29daeeea82ef251c097f55446b04210814d1a020/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{FAECO 公开实验归档与复算说明}。40\,ns参考及修复前后三臂在同主机隔离复跑。异机重建需匹配PDK与工具环境。
+实现、协议、原件及复算见\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{FAECO 公开实验归档与复算说明}。40\,ns参考及修复前后三臂在同主机隔离复跑。异机重建需匹配PDK与工具环境。
 
 % ============================================================
 % 参考文献
 % ============================================================
-\begingroup\footnotesize\linespread{0.88}\selectfont\setlength{\parskip}{0pt}
+\begingroup\footnotesize\linespread{0.83}\selectfont\setlength{\parskip}{0pt}
 \interlinepenalty=10000
 \newcommand{\refdoi}[1]{doi: \href{https://doi.org/#1}{\nolinkurl{#1}}}
+\newcommand{\refarxiv}[2]{\href{https://arxiv.org/abs/#1#2}{\nolinkurl{arXiv:#1}}}
 \begin{thebibliography}{30}
 \setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}
 
@@ -819,13 +824,13 @@ D. Chinnery and K. Keutzer, \emph{Closing the Gap Between ASIC \& Custom: Tools 
 T. Ajayi \emph{et al.}, ``Toward an open-source digital flow: First learnings from the OpenROAD project,'' in \emph{Proc. 56th ACM/IEEE Design Autom. Conf. (DAC)}, 2019, Art.~no.~76, pp.~1--4, \refdoi{10.1145/3316781.3326334}.
 
 \bibitem{lee2012eco}
-J. Lee and P. Gupta, ``ECO cost measurement and incremental gate sizing for late process changes,'' \emph{ACM Trans. Design Autom. Electron. Syst.}, vol.~18, no.~1, Jan.~2013, Art.~no.~16, \refdoi{10.1145/2390191.2390207}.
+J. Lee and P. Gupta, ``ECO cost measurement and incremental gate sizing for late process changes,'' \emph{ACM Trans. Des. Autom. Electron. Syst.}, vol.~18, no.~1, Jan.~2013, Art.~no.~16, \refdoi{10.1145/2390191.2390207}.
 
 \bibitem{fatemi2019sizer}
 H. Fatemi, A. B. Kahng, H. Lee, J. Li, and J. Pineda de Gyvez, ``Enhancing sensitivity-based power reduction for an industry IC design context,'' \emph{Integration}, vol.~66, pp.~96--111, May~2019, \refdoi{10.1016/j.vlsi.2019.01.008}.
 
 \bibitem{cheng2023dagsizer}
-C.-K. Cheng, C. Holtz, A. B. Kahng, B. Lin, and U. Mallappa, ``DAGSizer: A directed graph convolutional network approach to discrete gate sizing of VLSI graphs,'' \emph{ACM Trans. Design Autom. Electron. Syst.}, vol.~28, no.~4, May~2023, Art.~no.~52, \refdoi{10.1145/3577019}.
+C.-K. Cheng, C. Holtz, A. B. Kahng, B. Lin, and U. Mallappa, ``DAGSizer: A directed graph convolutional network approach to discrete gate sizing of VLSI graphs,'' \emph{ACM Trans. Des. Autom. Electron. Syst.}, vol.~28, no.~4, May~2023, Art.~no.~52, \refdoi{10.1145/3577019}.
 
 \bibitem{tritonroutewxl}
 A. B. Kahng, L. Wang, and B. Xu, ``TritonRoute-WXL: The open-source router with integrated DRC engine,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~41, no.~4, pp.~1076--1089, Apr.~2022, \refdoi{10.1109/TCAD.2021.3079268}.
@@ -846,13 +851,13 @@ C.-P. Chen, C. C. N. Chu, and D. F. Wong, ``Fast and exact simultaneous gate and
 G. Flach, T. Reimann, G. Posser, M. O. Johann, and R. Reis, ``Effective method for simultaneous gate sizing and $V_{th}$ assignment using Lagrangian relaxation,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~33, no.~4, pp.~546--557, Apr.~2014, \refdoi{10.1109/TCAD.2014.2305847}.
 
 \bibitem{timing_budget}
-D. Mangiras, D. G. Chinnery, and G. Dimitrakopoulos, ``Task-based parallel programming for gate sizing,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~42, no.~4, pp.~1309--1322, Apr.~2023, \refdoi{10.1109/TCAD.2022.3197490}.
+D. Mangiras, D. Chinnery, and G. Dimitrakopoulos, ``Task-based parallel programming for gate sizing,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~42, no.~4, pp.~1309--1322, Apr.~2023, \refdoi{10.1109/TCAD.2022.3197490}.
 
 \bibitem{trident2}
 A. B. Kahng, S. Kang, H. Lee, I. L. Markov, and P. Thapar, ``High-performance gate sizing with a signoff timer,'' in \emph{Proc. IEEE/ACM Int. Conf. Comput.-Aided Design (ICCAD)}, 2013, pp.~450--457, \refdoi{10.1109/ICCAD.2013.6691156}.
 
 \bibitem{sharma2026power}
-A. Sharma, ``AI-driven, timing-aware power optimization: Learned ranking of post-route power recovery and baseline-preserving repair,'' \emph{arXiv:2610.18890v1}, 2026.
+A. Sharma, ``AI-driven, timing-aware power optimization: Learned ranking of post-route power recovery and baseline-preserving repair,'' 2026, \refarxiv{2610.18890}{v1}.
 
 \bibitem{coreeco}
 C.-K. Cheng \emph{et al.}, ``CoRe-ECO: Concurrent refinement of detailed place-and-route for an efficient ECO automation,'' in \emph{Proc. IEEE Int. Conf. Comput. Design (ICCD)}, 2021, pp.~366--373, \refdoi{10.1109/ICCD53106.2021.00065}.
@@ -873,22 +878,22 @@ Y.-C. Lu, S. Nath, V. Khandelwal, and S. K. Lim, ``RL-Sizer: VLSI gate sizing fo
 Y.-C. Lu, W.-T. Chan, D. Guo, S. Kundu, V. Khandelwal, and S. K. Lim, ``RL-CCD: Concurrent clock and data optimization using attention-based self-supervised reinforcement learning,'' in \emph{Proc. 60th ACM/IEEE Design Autom. Conf. (DAC)}, 2023, pp.~1--6, \refdoi{10.1109/DAC56929.2023.10248008}.
 
 \bibitem{pcr2026}
-Z. Jiang, H. Pan, C. Lan, and K. Zhu, ``Timing-driven logic remapping with local physical context,'' \emph{arXiv:2610.01918}, 2026.
+Z. Jiang, H. Pan, C. Lan, and K. Zhu, ``Timing-driven logic remapping with local physical context,'' 2026, \refarxiv{2610.01918}{v1}.
 
 \bibitem{elayout2026}
-W. Fang \emph{et al.}, ``E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation,'' \emph{arXiv:2610.26432}, 2026.
+W. Fang \emph{et al.}, ``E-Layout: Layout-stage logic restructuring via RL-optimized equality-saturated graph retrieval-augmented generation,'' 2026, \refarxiv{2610.26432}{v1}.
 
 \bibitem{goalevolve2026}
-H. Liu, L. Zhou, Y. Ren, Y. Wu, and Z. Wang, ``GoalEvolve: From handcrafted algorithm priors to goal-driven evolution of physical design algorithms,'' \emph{arXiv:2608.16733}, 2026.
+H. Liu, L. Zhou, Y. Ren, Y. Wu, and Z. Wang, ``GoalEvolve: From handcrafted algorithm priors to goal-driven evolution of physical design algorithms,'' 2026, \refarxiv{2608.16733}{v1}.
 
 \bibitem{tapcog2026}
-W. Tang \emph{et al.}, ``TAPCO-G: LLM-guided design-adaptive timing and power co-optimization with graph-based physical priors,'' \emph{arXiv:2611.13931}, 2026.
+W. Tang \emph{et al.}, ``TAPCO-G: LLM-guided design-adaptive timing and power co-optimization with graph-based physical priors,'' 2026, \refarxiv{2611.13931}{v1}.
 
 \bibitem{sta}
 The OpenROAD Project, \emph{OpenSTA: Gate-level static timing analyzer}, version~3.1.0. [Online]. Available: \url{https://github.com/The-OpenROAD-Project/OpenSTA}
 
 \bibitem{ghose2026audopeda}
-A. Ghose, J. Jang, A. B. Kahng, and J. Lee, ``Automated QoR improvement in OpenROAD with coding agents,'' \emph{arXiv:2601.06268}, 2026, doi: 10.48550/arXiv.2601.06268.
+A. Ghose, J. Jang, A. B. Kahng, and J. Lee, ``Automated QoR improvement in OpenROAD with coding agents,'' 2026, \refarxiv{2601.06268}{v2}.
 
 \end{thebibliography}
 \endgroup

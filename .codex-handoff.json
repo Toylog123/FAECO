@@ -1,9 +1,11 @@
 {
   "timestamp": "2026-11-27",
-  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。第四轮中文稿终审修订已复核。校正 ASAP7 完整功能面积，历史两个 K18 保持一致。270 ps UART 原生 16 项的共同后端重放完成并拒收。处理器功耗回读为未收敛的辅助估计，补齐三工艺角时序与证据入口。正式英文 IEEE 包及作者信息待确认。",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。第五轮中文定稿及直接 OpenDB 面积、UART 扩展候选和版本交叉核验完成。K=36 表中指标绑定原冻结池；补全 Liberty 后追加项改变。正式英文稿与作者材料待确认。",
   "project": "FAECO",
   "read_order": [
     "project_docs/CANON.md",
+    "paper/zh/review_rounds/r20261127_r5_submission/R5_REVIEW_MAP.md",
+    "paper/zh/review_rounds/r20261127_r5_submission/R5_RELEASE_MANIFEST.json",
     "paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md",
     "paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md",
     "paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md",
@@ -23,17 +25,17 @@
     "push_status": "query git status -sb and git ls-remote origin refs/heads/main"
   },
   "paper_state": {
-    "note": "第四轮中文修订 13 页、5 图、12 表、26 条参考文献。补充原生 UART 固定提议的保护后端验证、ASAP7 完整功能面积、同起序批宽和表 12 功耗诊断。图 1–2 的 ImageGen 方案及图 3–5 数据图来源保留。两遍编译、逐页目检和正文取数复核通过，三个 PDF 副本同 SHA。保留既有字体替代。正式英文稿及 IEEE 投稿制式待核。",
+    "note": "第五轮中文定稿为13页、5图、12表、26条参考文献。图件及生产源树沿用第四轮。双遍 LuaLaTeX、全页目检、四处固定证据链接及三份 PDF 指纹均已核验。定稿 Git 标签 faeco-paper-final-20261127-r5，已绑定公开证据提交与工件清单。正式英文转译及 IEEE 投稿制式仍待作者确认。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "577ac53a61fbe5049504e8bb04440031d760c1237cb5557e9742e8888478efc4",
-      "bytes": 84843,
+      "sha256": "ac6348e6e45e93751c483c75746dc83ceea59b5ccd2a19e0f656294b004a0099",
+      "bytes": 86276,
       "pages": 13
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "b79696aa3cfc13ac3a0638e8add3fba2aa15899d56f1f0d243d695d4aa5b252d",
-      "bytes": 2662007,
+      "sha256": "db474b5a949d12ddfce84e31647d18cec8f918320368818551dc6da798a36ad8",
+      "bytes": 2663520,
       "pages": 13
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",

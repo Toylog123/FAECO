@@ -8957,3 +8957,8 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 ## LOG-20261127-77｜第五轮候选审计正式归档
 
 - UART 扩展候选正式归档轮补绑 R4 K18 原归档成员，沿用相同审计设置及 120 s 外限，约 25 s、rc0。归档包含 103 项原件及核验结果和一份清单。归档 SHA-256 `64369cd7122ff084911b935bf2170d144b501a8316eb2f2e6c7aa8a2960c2f39`，正式 `audit.json` SHA-256 `a87714a672b88401d3f4d3c5934eda044f8398f192ca7457b85a7d013603b25f`，结果与前一成功轮一致。 [正式复算原件](evidence/tcad_v5_revision_20261126/R5_ASAP7_UART_POOL_AUDIT.md)
+
+## LOG-20261127-78｜第五轮中文定稿发布核验
+
+- 第五轮证据冻结提交 `f0fe992b9ce44b8368b620d06b8d95a56179347c` 已推送，PDF 四处固定证据链接逐一匿名访问 HTTP 200，内容同 Git 对象。K36 归档 103 项成员指纹、OpenDB 29 条输入的离线复核及表 12 生成内容核对通过。保护后端缓存相关模块 17 项测试通过。记录自检退出 0，已停用的旧进度文件按项目约定仅保留历史。
+- 最终 LuaLaTeX 双遍、13 页目检、数值及文献复核通过。5 图 12 表 26 条文献，五份图源与第四轮同字节。TeX `ac6348e6e45e93751c483c75746dc83ceea59b5ccd2a19e0f656294b004a0099`，三份 PDF `db474b5a949d12ddfce84e31647d18cec8f918320368818551dc6da798a36ad8`。冻结标签 `faeco-paper-final-20261127-r5`。 [定稿清单](../paper/zh/review_rounds/r20261127_r5_submission/R5_RELEASE_MANIFEST.json)

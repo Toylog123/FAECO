@@ -1,6 +1,6 @@
 # project_docs 入口
 
-> **2026-11-27 第四轮修订入口**见 [CANON](CANON.md)、[逐条复核](../paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md) 与 [公开复算](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。此前阶段仍可通过 [11 月 25 日交接](HANDOFF_2026-11-25.md) 追溯。
+> **2026-11-27 第五轮中文定稿入口**见 [CANON](CANON.md)、[逐条复核](../paper/zh/review_rounds/r20261127_r5_submission/R5_REVIEW_MAP.md) 与 [公开复算](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。此前阶段仍可通过 [11 月 25 日交接](HANDOFF_2026-11-25.md) 追溯。
 
 <details>
 <summary>2026-11-13 过渡期入口（历史）</summary>

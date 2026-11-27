@@ -1,5 +1,11 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 第五轮中文定稿
+
+- UART 在补齐三工艺角 Liberty 面积字段后，K9 和 K18 的身份及顺序一致，K36 追加的 18 项均改变，静态池上界由 2.72646 升至 2.95974 µm²。表 10 的 1.50174 µm² 和 55.1% 对应原冻结 K36。原池 23 次完整评估与第 24 次预览截停均回读核对。[K36 核验](evidence/tcad_v5_revision_20261126/R5_ASAP7_UART_POOL_AUDIT.md)
+- OpenDB 逐对象复核 4 条参考和 25 条实际交付记录，输入指纹及完整功能实例与各自原网表一致。25 条记录的整版图功能面积差与已接受动作的 master 尺寸差之和按整数 DBU² 一致。[直接 OpenDB 核验](evidence/tcad_v5_revision_20261126/R5_DIRECT_ODB_AREA_REPORT.md)
+- 第五轮小修完成，13 页中文稿、5 图、12 表、26 条参考文献。三份 PDF SHA-256 `db474b5a949d12ddfce84e31647d18cec8f918320368818551dc6da798a36ad8`。证据 Git 提交 `f0fe992b9ce44b8368b620d06b8d95a56179347c`，论文冻结标签 `faeco-paper-final-20261127-r5`。正式英文稿与作者材料待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [逐条复核](../paper/zh/review_rounds/r20261127_r5_submission/R5_REVIEW_MAP.md) · [定稿清单](../paper/zh/review_rounds/r20261127_r5_submission/R5_RELEASE_MANIFEST.json)
+
 ## 2026-11-27 第四轮投稿前中文修订
 
 - 完整功能面积为 ASAP7 UART 101.89962 µm²、AES 1414.39122 µm²，冻结网表与 OpenDB master 尺寸逐项复核。旧索引同时影响预筛集合和面积分母。规范三个库角的字段后，两个历史 K18 的身份、顺序及动作面积差一致，20 个交付端点的净面积同原账本；表 3、4、10 使用完整分母。[Liberty 与端点证据](evidence/tcad_v5_revision_20261126/R4_ASAP7_LIBERTY_AUDIT.md)
