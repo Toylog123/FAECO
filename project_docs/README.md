@@ -1,6 +1,6 @@
 # project_docs 入口
 
-> **2026-11-27 第九轮中文稿入口**见 [CANON](CANON.md)、[审稿对照](../paper/zh/review_rounds/r20261127_r9_proof/R9_REVIEW_MAP.md)、[独立补件](../paper/zh/manuscript/FAECO_R7_补充材料.pdf) 与 [公开复算](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。
+> **2026-11-27 第十轮技术核验及稿件入口**见 [CANON](CANON.md)、[固定协议反例](evidence/tcad_r10_counterexample_20261127/REPORT.md)、[逐条对照](../paper/zh/review_rounds/r20261127_r10_final/R10_REVIEW_MAP.md) 与 [随稿补件](../paper/zh/manuscript/FAECO_R7_补充材料.pdf)。
 
 <details>
 <summary>2026-11-13 过渡期入口（历史）</summary>

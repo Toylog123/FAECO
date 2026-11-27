@@ -174,14 +174,14 @@ OpenPhySyn\cite{openphysyn2020}提供开源物理综合与时序修复。RL-Size
                  & \operatorname{PhysValid}(F(S),R)=1,\\
                  & \mathrm{ElecNew}(F(S))=0,\quad \mathrm{DRC}_{\mathrm{full}}(F(S))=0,\\
                  & \mathrm{Ant}(F(S))=0,\quad \mathrm{SEC}(N_R,N_{F(S)})=\mathrm{proven},\\
-                 & t_{\mathrm{complete}}(S)\le\tau_{\max}.
+                 & t_{\mathrm{complete}}(S;\pi)\le\tau_{\max}.
 \end{aligned}
 \end{equation}
-各视图均执行前三项时序约束。主实验设$B_W=\beta P_{\mathrm{clk}}$，$B_{T,v}=\max\{10B_W,\beta|T_v(R)|\}$，默认$\beta=0.01$。数值比较容差为$\varepsilon=\varepsilon_h=0.001$\,ps。相对电气门逐角检查最大转换时间、最大电容，按规则类别和引脚名比对新增违例。原有同名违例的幅度加重不由此集合比较识别。出现缺失、无法解析的报告或未解析的时序对象，候选不得验收。绝对收敛处理器另要求参考电气清零，并在三工艺角保持Hold TNS不退化。STA的最大、最小延时组依SDC包含启用的异步恢复或去除检查。$\operatorname{PhysValid}=\operatorname{Conn}\land\operatorname{PlaceLegal}\land\operatorname{Protected}$。$\operatorname{Conn}$要求详细布线器对修改信号网的引脚、线段和过孔连通性检查及\texttt{design\_is\_routed}通过。$\operatorname{PlaceLegal}$为\texttt{check\_placement}，$\operatorname{Protected}$逐网核验未放行的保护走线。SEC要求两态等价零未证点。默认$\tau_{\max}=720$\,s，计入公共预筛、在线排序和全部候选验证，包括失败尝试。$t_{\mathrm{complete}}(S)$为候选完成验收并可交付的时刻。
+各视图均执行前三项时序约束，WNS沿用工具术语，最差松弛可为正。主实验设$B_W=\beta P_{\mathrm{clk}}$，$B_{T,v}=\max\{10B_W,\beta|T_v(R)|\}$，默认$\beta=0.01$。数值比较容差为$\varepsilon=\varepsilon_h=0.001$\,ps。相对电气门逐角检查最大转换时间、最大电容，按规则类别和引脚名比对新增违例。原有同名违例的幅度加重不由此集合比较识别。出现缺失、无法解析的报告或未解析的时序对象，候选不得验收。绝对收敛处理器另要求参考电气清零，并在三工艺角保持Hold TNS不退化。STA的最大、最小延时组依SDC包含启用的异步恢复或去除检查。$\operatorname{PhysValid}=\operatorname{Conn}\land\operatorname{PlaceLegal}\land\operatorname{Protected}$。$\operatorname{Conn}$要求详细布线器对修改信号网的引脚、线段和过孔连通性检查及\texttt{design\_is\_routed}通过。$\operatorname{PlaceLegal}$为\texttt{check\_placement}，$\operatorname{Protected}$的核验以最终授权集合为准（第~\ref{sec:sched}节）。SEC要求两态等价零未证点。默认$\tau_{\max}=720$\,s，计入公共预筛、在线排序和全部候选验证，包括失败尝试。$\pi$记一次运行的调度与验证历史。$t_{\mathrm{complete}}(S;\pi)$取日志记录的物理与形式验证结束时刻，仅计入通过验收的候选。检查点写入和外部读取单列。式~\eqref{eq:obj}给出优化目标；算法~\ref{alg:faeco}以启发式访问组合，返回截止前已验收且回收量最大的检查点。全局最优性不作保证。
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig1_framework_r7.pdf}
+\includegraphics[width=\textwidth]{tcad_20261126/fig1_framework_r10.pdf}
 \caption{FAECO的限时回收流程。全池探针成功即交付，失败则从冻结参考进入微批次；关闭探针时直接运行微批次。探针不复修，微批次至多复修一次。两种调度共享总墙钟和验证后端。}
 \label{fig:arch}
 \end{figure*}
@@ -196,11 +196,9 @@ W_v(F(S))\ge\max\{0,\,W_v(R)-B_W-\varepsilon\}
 
 \subsection{限时交付的比较指标}
 
-芯片边界固定，面积以功能标准单元计。终态报告面积降幅与池捕获率$\rho_{\mathrm{pool}}=\Delta A(S^*)/\sum_{i\in\mathcal P}\Delta A_i$。池中每实例至多含一项替换，静态面积差之和为同池回收上界。两臂可直接比较时，以首次达到同一合格面积的墙钟表示共同目标首达。令$\mathcal S_{\mathrm{ok}}$为该次运行中通过式~\eqref{eq:obj}验收的累计替换集，则$t$前的最大累计回收面积为
+芯片边界固定，面积以功能标准单元计。终态报告面积降幅与池捕获率$\rho_{\mathrm{pool}}=\Delta A(S^*)/\sum_{i\in\mathcal P}\Delta A_i$。池中每实例至多含一项替换，静态面积差之和为同池回收上界。两臂可直接比较时，以首次达到同一合格面积的墙钟表示共同目标首达。令$\mathcal S_{\mathrm{ok}}(t)$为该次运行中截至$t$通过式~\eqref{eq:obj}验收的累计替换集，则最大累计回收面积为
 \[
-a(t)=\max\bigl(\{0\}\cup
-\{\Delta A(S): S\in\mathcal S_{\mathrm{ok}},\
-t_{\mathrm{complete}}(S)\le t\}\bigr).
+a(t)=\max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
 \]
 时间平均收益定义为
 \begin{equation}
@@ -232,7 +230,7 @@ t_{\mathrm{complete}}(S)\le t\}\bigr).
 \begin{figure*}[!tb]
 \centering
 \includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_r9.pdf}
-\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。短路以同层异网图元交叠判定。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；满足$Q\cap Q_{\mathrm{check}}\ne\varnothing$的工作单元从各自的上下文盒读入几何。设$M$为已生成标记的包围盒，返回条件为$Q\cap M\ne\varnothing$。标记召回还要求对应工作单元保留相关规则上下文。}
+\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。短路以同层异网图元交叠判定。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；满足$Q\cap Q_{\mathrm{check}}\ne\varnothing$的工作单元从各自的上下文盒读入几何。设$M_v$为已生成标记$v$的包围盒，返回条件为$Q\cap M_v\ne\varnothing$。标记召回还要求对应工作单元保留相关规则上下文。}
 \label{fig:window_theory}
 \end{figure*}
 
@@ -289,22 +287,23 @@ V_{\mathrm{spacing}}(p_1,p_2)
 \subsection{可行域的非向下封闭性与混合调度依据}
 \label{sec:nonmonotone}
 
-固定后端与工具参数，令$\Phi(S)=1$表示从$R$重建的$F(S)$通过式~\eqref{eq:obj}的全部物理、时序与等价门，并在启用绝对建立时间门时满足式~\eqref{eq:setup_floor}。交付另受墙钟截止约束。在同一冻结参考与验收门下，SKY130HD AES实测$T_3\subsetneq S_{18}$且$\Phi(T_3)=0$、$\Phi(S_{18})=1$。图~\ref{fig:search_mechanism}(a)给出两组相对参考的SS保持时间WNS变化。三门子集触发相对保持门，整池通过三工艺角时序与物理门，独立全块DRC为零，SEC证实11\,089点且零未证。
-% 证据：V5_STEP1_POWER_7NM_DET_VERIFIED.json，SHA-256 85bfc1657fbc0663649e417abbe7a9c9827d7d1cded05c121133bd150f28a235。
-% 键：part1_counterexample_and_timing_audit.counterexample_subset_T、counterexample_superset_S。原始物理及 SEC 回执见 V5 REPORT §1.1。
+令$\mathcal H$表示固定的物理实现协议，$F_{\mathcal H}(R,S)$为从$R$重建的候选版图。$\Phi_{\mathcal H}(S)=1$当且仅当该版图通过式~\eqref{eq:obj}的物理、时序与等价门，并在启用绝对建立时间门时满足式~\eqref{eq:setup_floor}。该判定评价协议生成的端点，交付另按墙钟截止判断。
+
+图~\ref{fig:search_mechanism}(a)使用SKY130HD AES的两个记录。两次验证共享冻结输入、验收门、行高预检、布线参数与实际阶段限时，均允许至多一次归因复修，且只执行首轮。两者外层预算不同，均未截断验证。实测$T_3\subsetneq S_{18}$，$\Phi_{\mathcal H}(T_3)=0$、$\Phi_{\mathcal H}(S_{18})=1$。三门触发SS相对Hold门；十八门的独立全块DRC为零，SEC证实11\,089点且零未证。用于计时对照的单遍全池探针采用独立的限时协议，生成同一十八门端点。\href{https://github.com/Toylog123/FAECO/blob/e191c4263db207e15c5420731c3b5163eac35171/project_docs/evidence/tcad_r10_counterexample_20261127/REPORT.md}{固定协议及原始回执}给出逐项核验。
+
 子集拒收无法判定超集的可行性。全池探针优先检验整池是否联合可行。图~\ref{fig:search_mechanism}(b)展示原始前沿耗尽后，暂缓批次如何在当时的累计集合下二分并重新验证。
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_r9.pdf}
-\caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 同一冻结参考及验收门上的SKY130HD AES实测反例，仅绘出两个已验证集合。(b) 各列为派发前或状态更新后的快照。图示首次暂缓后按式~\eqref{eq:cap_rerank}重排未访问后缀。原始前沿耗尽后取出暂缓批次并二分，子批与当前合格累计集一起验收。(c) 同一冻结输入和配置内，精确命中合格Setup拒收时跳过该组合的物理验证，多门批次二分，单门批次转入下一轮。(b)、(c)为机制示意。}
+\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_r10.pdf}
+\caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 固定协议下的SKY130HD AES实测反例。两次均为行高预检后的首轮结果。(b) 各列为派发前或状态更新后的快照。首次暂缓后按式~\eqref{eq:cap_rerank}重排未访问实例并重新分批，图中以整批换序示意。原始前沿耗尽后取出暂缓批次并二分，子批与当前合格累计集一起验收。(c) 同一冻结输入和配置内，精确命中符合登记条件的Setup拒收记录时跳过该组合的物理验证，多门批次二分，单门批次转入下一轮。(b)、(c)为机制示意。}
 \label{fig:search_mechanism}
 \end{figure*}
 
 \subsection{保护式局部重布线与混合自适应调度}
 \label{sec:sched}
 
-每次验证从同一冻结参考$R$重建累计动作集，锁定首次放行集合之外的原有走线，并执行引脚接入、详细重布线、RCX和三工艺角STA。放行基于整条网的几何，诊断窗口限于找出触发标记。若首轮的路由DRC或独立全块DRC有标记，后端在可指认新增且允许放行的非时钟网时至多复修一次。初次预检要求全部标记可归因；复修允许从可归因子集形成一次补救尝试。仍有物理违例的候选拒收。物理与时序门通过后，执行全网表SEC。
+每次验证从冻结参考$R$重建累计动作集，首轮锁定首次放行集合以外的走线，再执行引脚接入、详细重布线、RCX和三工艺角STA。放行基于整条网的几何，诊断窗口限于找出触发标记。若首轮的路由DRC或独立全块DRC有标记，后端在可指认新增且允许放行的非时钟网时至多复修一次。初次预检要求全部标记可归因；复修允许从可归因子集形成一次补救尝试。仍有物理违例的候选拒收。物理与时序门通过后，执行全网表SEC。设$\mathcal E_{\mathrm{repair}}(S)$为实际复修时追加放行的邻网，无复修时为空。最终授权集合为$\mathcal R_{\mathrm{final}}(S)=\mathcal R_0(S)\cup\mathcal E_{\mathrm{repair}}(S)$。$\operatorname{Protected}$逐网核验该集合之外的原有已布线网，核对其引脚连接与归一化走线几何。
 
 Hybrid FAECO以单遍保护后端验证整个候选池$\mathcal P$，探针不复修。默认子预算为
 \begin{equation}
@@ -319,9 +318,9 @@ Hybrid FAECO以单遍保护后端验证整个候选池$\mathcal P$，探针不�
 \operatorname{prio}(i)=\frac{\Delta A_i}{1+C_i/\widetilde C},
 \qquad \widetilde C=\operatorname{median}_{i\in\mathcal P}C_i>0
 \end{equation}
-优先验证面积收益较高、直连电容较低的提议。排序须通过电容完整性和中位数检查。算法~\ref{alg:faeco}给出暂缓、二分与重新派发的队列顺序。
+优先验证面积收益较高、直连电容较低的提议；这是实例排序启发式。排序须通过电容完整性和中位数检查。算法~\ref{alg:faeco}给出暂缓、二分与重新派发的队列顺序。
 
-物理验证以冻结输入和累计动作的规范化元组为键。图~\ref{fig:search_mechanism}(c)示意同一配置内的Setup拒收复用。换用累计动作组合时须检查其自身的键，配置或验收门改变时另建缓存。探针回退配置还可以登记按时返回的完整拒收，配置差异见补充材料附录G。超时及物理验证不完整的提议不入缓存。工具时限取阶段限时和截止余量的较小值，交付按全部验收完成计时，清理和返回的开销另行记录。
+物理验证以冻结输入和累计动作的规范化元组为键。图~\ref{fig:search_mechanism}(c)示意同一配置内的Setup拒收复用。换用累计动作组合时须检查其自身的键，配置或验收门改变时另建缓存。探针回退配置还可以登记按时返回的完整拒收，配置差异见补充材料附录G。超时及物理验证不完整的提议不入缓存。工具时限取阶段限时和截止余量的较小值，合格交付按验证结束的日志时刻计时，清理和返回开销单列。
 
 \begin{algorithm}[H]
 \caption{Hybrid FAECO的全池探针与保护式微批次}
@@ -421,12 +420,12 @@ ASAP7 AES & 全块 & 38.11 & 114.33 & 575.08 / 575.74 & 0.61236 \\
 \parbox{\textwidth}{\footnotesize 注：两个基准的共同面积目标分别为67.5648与0.61236\,\textmu m$^2$（均为6门）。每个运行先按已完成预检的派发计算单次均值与总和，再分别在正反序取平均。两项计时均纳入预检完成后验证触限的派发。完整10臂数据见补充材料附录B。}
 \end{table*}
 
-端到端对照（表~\ref{tab:boxed_drc}）保持调度、冻结参考和验收门一致。SKY130HD AES窗口臂在正反序均有余量验收额外的第5项完成试探，交付9门；ASAP7 AES两种后端交付相同6门。两设计共同目标平均提前42.8与65.3\,s。两项重复性试验在所用工具与候选上得到一致的提取和三角读数；保持时间容差的离线重判见补充材料附录D。
+端到端对照（表~\ref{tab:boxed_drc}）保持调度、冻结参考和验收门一致。SKY130HD AES窗口臂在正反序均有余量验收额外的第5项完成试探，交付9门；ASAP7 AES两种后端交付相同6门。两设计共同目标平均提前42.8与65.3\,s。两项重复性试验在所用工具与候选上得到一致的寄生提取与三工艺角时序读数；保持时间容差的离线重判见补充材料附录D。
 
 \subsection{保护式重布线的物理作用}
 \label{sec:geo_ablation}
 
-图~\ref{fig:drc_mech}展示同一换门提议中实际冲突网与保护网的局部几何。在10组历史请求上，按最近邻索引的规则仅召回26次现场邻网归因的46.2\%；按底层接触的规则完整覆盖，但将放行量扩大至3.19倍。表~\ref{tab:geo_causal}A固定三门提议比较两种静态规则和现场归因。最近邻漏放触发复修；底层接触额外放行6条无冲突邻网，虽然缩短了单轮用时，慢角Hold WNS退化10.48\,ps。现场归因选出的3条邻网一次通过，三工艺角Hold WNS均改善。在同一720\,s搜索中，两类静态规则都没有交付，现场归因则在两种运行顺序下均交付6门。逐臂配置与记录见补充材料附录G。
+图~\ref{fig:drc_mech}展示同一换门提议中实际冲突网与保护网的局部几何。在10组历史请求上，按最近邻索引的规则仅召回26次现场邻网归因的46.2\%；按底层接触的规则完整覆盖，但将放行量扩大至3.19倍。表~\ref{tab:geo_causal}A固定三门提议比较两种静态规则和现场归因。最近邻漏放触发复修；底层接触额外放行6条无冲突邻网，虽然缩短了单轮用时，慢角Hold WNS退化10.48\,ps。现场归因选出的3条邻网一次通过，三工艺角Hold WNS均改善。在同一720\,s搜索中，两类静态规则都没有交付，现场归因则在两种运行顺序下均交付6门。该对照识别放行策略的端点效应，尚缺少对单条线网或路径的寄生归因。逐臂记录见附录G。
 
 \begin{table*}[!tb]
 \centering\small\setlength{\tabcolsep}{5pt}
@@ -504,7 +503,7 @@ ASAP7 AES（留出） & 单门（全块） & 2 & 0.20412 & 0.014 & 11.6 & 0.051 
 \parbox{\textwidth}{\footnotesize 注：已交付端点的独立DRC与天线均为零，SEC全证。纯微批次FAECO与Hybrid FAECO采用窗口后端，Hybrid启用全池探针。SKY130HD AES的A、B、D见表~\ref{tab:comp_ablation}，三者与全块诊断臂各限6次派发。粗体标出各基准最大终态回收量与最高时间均值。\texttt{riscv32i}与ASAP7 AES统一现场计算TT起序。原生独立提议及全池拒收另见表~\ref{tab:budget_v5}和补充材料附录D。}
 \end{table*}
 
-SKY130HD AES的全池探针在子预算内通过，直接交付静态面积上界。独立的全池直提使用相同动作，采用保护后端约140.90\,s通过，而采用全片重布达到600\,s详细布线上限。其余三个设计中，Hybrid FAECO保留纯微批次FAECO的终态面积；两种较大设计的探针截停明显推迟合格交付，小UART的快速拒收影响较小（图~\ref{fig:anytime}、表~\ref{tab:main_overview}）。ASAP7 AES固定与自适应微批次交付相同端点，两批通过前均未触发反馈重排，收益主要来自批验证摊销。
+SKY130HD AES的全池探针在子预算内通过，直接交付静态面积上界。独立的全池直提使用相同动作，采用保护后端约140.90\,s通过，而采用全片重布达到600\,s详细布线上限。其余三个设计中，Hybrid FAECO保留纯微批次FAECO的终态面积；两种较大设计的探针截停明显推迟合格交付，小UART的快速拒收影响较小（图~\ref{fig:anytime}、表~\ref{tab:main_overview}）。6\,ns \texttt{riscv32i}的固定与纯微批次时间均值在单次测量中接近。ASAP7 AES固定与自适应微批次交付相同端点，两批通过前均未触发反馈重排，收益主要来自批验证摊销。
 
 OpenROAD原生\texttt{recover\_power}独立提出以功耗为目标的动作，其可绑定性、验证状态与终态诊断见补充材料附录D、E。ASAP7 Liberty面积字段规范化后，两个主基准的18项预筛前缀、动作顺序和面积差一致，所有原生动作均可绑定。小UART的16项原生动作完成保护重布和物理检查，面积无净增益且保持时间退化，故未进入候选SEC。以冻结网表和归档OpenDB逐对象复核25条关键终态记录，覆盖20条ASAP7结果、SKY130HD AES的9门与18门终态及40\,ns处理器三臂。功能实例一致，ODB面积差与已验收动作之和相等（补充材料附录E）。功耗用于辅助解读。
 
@@ -556,7 +555,7 @@ ASAP7 UART面积 & 0.3208 & 0.7727 & 0.8311 & 0.8311 \\
 时间均值 & 0.1212 & 0.4426 & 0.4968 & 0.5043 \\
 Setup/Hold拒收 & 14/12 & 4/9 & 2/9 & 2/9 \\
 SKY130HD AES面积 & 0 & 98.84 & 98.84 & 98.84 \\
-时间均值 & 0 & 22.951 & 22.535 & 22.077 \\
+时间均值 & 0 & 22.95 & 22.54 & 22.08 \\
 Setup/Hold拒收 & 6/4 & 0/2 & 0/2 & 0/2 \\
 \bottomrule
 \end{tabular}
@@ -641,7 +640,7 @@ UART-TC沿用原版图并放宽周期，采用相对Setup门。两组各臂终�
 感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助修订正文及英文摘要，并协助编写复算脚本与核对实验记录。OpenAI Codex内置的ImageGen用于图1、图2和图4的构图草案，三图按方法与证据绘制为矢量图。图3依据归档布局布线与冲突标记重建，图5和图6由实验记录绘制。
 
 \noindent\textbf{代码与实验记录。}
-实现、协议、原件及复算见\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{FAECO 公开实验归档与复算说明}。\href{https://github.com/Toylog123/FAECO/blob/7ac9e86e6d8f1fc4a3003e129432f7b76fdcbe5a/paper/zh/manuscript/FAECO_R7_\%E8\%A1\%A5\%E5\%85\%85\%E6\%9D\%90\%E6\%96\%99.pdf}{随稿补充材料}的附录A--G提供规则、逐例数据、完整指标、配置与复算入口。异机重建需匹配工艺库与工具环境。
+实现、协议、原件及复算见\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{FAECO 公开实验归档与复算说明}。\href{https://raw.githubusercontent.com/Toylog123/FAECO/7ac9e86e6d8f1fc4a3003e129432f7b76fdcbe5a/paper/zh/manuscript/FAECO_R7_\%E8\%A1\%A5\%E5\%85\%85\%E6\%9D\%90\%E6\%96\%99.pdf}{随稿补充材料}的附录A--G提供规则、逐例数据、完整指标、配置与复算入口。异机重建需匹配工艺库与工具环境。
 
 % ============================================================
 % 参考文献
@@ -705,7 +704,7 @@ J.-W. Jeon, A. B. Kahng, J.-H. Kang, J. Kim, and M. Woo, ``SLO-ECO: Single-line-
 J. Xu \emph{et al.}, ``Toward efficient ECO automation: Timing and DRCs concurrent optimization using reinforcement learning,'' \emph{IEEE Trans. Comput.-Aided Design Integr. Circuits Syst.}, vol.~45, no.~10, pp.~4666--4678, Oct.~2026, \refdoi{10.1109/TCAD.2026.3656764}.
 
 \bibitem{openphysyn2020}
-A. Agiza and S. Reda, ``OpenPhySyn: An open-source physical synthesis optimization toolkit,'' in \emph{Proc. Workshop Open-Source EDA Technol. (WOSET)}, 2020, Art.~no.~9.
+A. Agiza and S. Reda, ``OpenPhySyn: An open-source physical synthesis optimization toolkit,'' in \emph{Proc. Workshop Open-Source EDA Technol. (WOSET)}, 2020, Art.~no.~9. \href{https://woset-workshop.github.io/PDFs/2020/a09.pdf}{[Online]}.
 
 \bibitem{rlsizer2021}
 Y.-C. Lu, S. Nath, V. Khandelwal, and S. K. Lim, ``RL-Sizer: VLSI gate sizing for timing optimization using deep reinforcement learning,'' in \emph{Proc. 58th ACM/IEEE Design Autom. Conf. (DAC)}, 2021, pp.~733--738, \refdoi{10.1109/DAC18074.2021.9586138}.
@@ -726,7 +725,7 @@ H. Liu, L. Zhou, Y. Ren, Y. Wu, and Z. Wang, ``GoalEvolve: From handcrafted algo
 W. Tang \emph{et al.}, ``TAPCO-G: LLM-guided design-adaptive timing and power co-optimization with graph-based physical priors,'' 2026, \refarxiv{2611.13931}{v1}.
 
 \bibitem{sta}
-The OpenROAD Project, \emph{OpenSTA: Gate-level static timing analyzer}, version~3.1.0. [Online]. Available: \url{https://github.com/The-OpenROAD-Project/OpenSTA}
+Parallax Software, Inc., \emph{OpenSTA: Gate-level static timing analyzer}, version~3.1.0. [Online]. Available: \url{https://github.com/parallaxsw/OpenSTA}
 
 \bibitem{ghose2026audopeda}
 A. Ghose, J. Jang, A. B. Kahng, and J. Lee, ``Automated QoR improvement in OpenROAD with coding agents,'' 2026, \refarxiv{2601.06268}{v2}.
