@@ -113,6 +113,8 @@ python3 project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_isolated_e
 
 18 次共同完成的请求逐次重现动作、拒收原因、复修及门判定。最终物理评估的 ODB、DEF、Verilog 和 DRC 指纹一致，SPEF 去除唯一 `*DATE` 行内容后相同。新运行 11 个已验收检查点的 44 份物理工件、时序、DRC、天线及非空 SEC 均进入独立核验。固定三门均自然耗尽，自适应两次均在第 6 次 DRT 被截停。新单门在第 8 次的 SEC 包装器触限，旧运行完成该请求并在第 9 次 DRT 触限。新第 8 次的路由、寄生、三角和独立 DRC 与对应旧端点一致，当时没有窗内 SEC 收据。端点计数和时间均值以各自实际窗口为准。
 
+同一轮隔离原件中，20 次完成的原位诊断覆盖 13 个唯一累计提议，均无标记。首轮详细布线后，19 次完成独立 DRC 的请求有 5 次检出标记，涉及 3 个唯一提议和 6 个按提议去重的标记。其余 1 次在 DRT 截停。两次复修的独立 DRC 均清零，最终均因 SS 相对保持时间门拒收。这些标记出现在独立布线后检查，原位预检均为零。三臂共用窗口后端，结果覆盖诊断的阶段边界。 [原件普查脚本](verify_stage5_marker_census.py)
+
 | 归档 | 索引原件数 | ZIP SHA-256 |
 | --- | ---: | --- |
 | [公共输入与运行原件](V5_STAGE5_ISOLATED_ONLINE_COMMON.zip) | 125 | `8d41ca26aa2e6552ac851546722ffb257db2b79c4b1153c7dbeedb03b2c5e860` |
@@ -156,3 +158,48 @@ python3 -B "$e/verify_stage5_isolated_online.py" \
 ```bash
 python3 -B project_docs/evidence/tcad_v5_revision_20261126/verify_stage5_sec_cutoff.py
 ```
+
+### SEC 修复后的完整三臂验证
+
+新建隔离输入副本。25,656 项文件清单只有 `prove_ibex.py` 的 SHA 变化，路径和符号链接清单保持一致。负对照用未修复输入运行新入口，在 EDA 前拒收。正式运行仍从同一 40 ns 物理参考重新预筛和排序。61.149943 s 预筛费用计入各臂各自的 720 s 账本。独立观察器固定在不同核心，对工作进程的私有挂载命名空间采样。两轮是同一物理主机上的不同 WSL 会话，墙钟价值限于单次观察。 [修复复算收据](V5_STAGE5_SEC_FIXED_VERIFIED.json)
+
+| 调度 | 修复后派发/完成/接受 | 修复前后隔离运行终态（µm²） | 修复前／后隔离时间均值（µm²） | 修复后停止 |
+| --- | --- | ---: | ---: | --- |
+| 单门 | 8/7/5 | 40.0384／40.0384 | 22.6610／22.7497 | 第 8 次 SEC 触限 |
+| 固定三门 | 6/6/4 | 91.3376／91.3376 | 36.7427／37.3614 | 自然耗尽 |
+| 自适应 | 6/5/2 | 31.2800／31.2800 | 23.3011／23.3685 | 第 6 次 DRT 触限 |
+
+修复前后 18 次共同完成的请求逐一重现动作、验收、复修和物理结果，11 个新接受点均绑定实际候选动作及 SEC。单门第 8 次仍在 SEC 触限。其 ODB、DEF、Verilog、去日期 SPEF、三角 STA 和独立 DRC 与旧隔离运行一致。该次 SEC 的余量为 4.950455 s。包装器结束后首个样本在约 35.1 ms 时已看不到包装器、计时器和 Yosys，距固定三门起序还有约 1.849 s。该候选仍无 SEC 收据。全轮采样 10,523 次，最大采样间隙为 0.222 s，观察到的 13 组完整 SEC 三元组均同进程组，采样未见跨臂重叠。外层包装器约 2100 s 返回 0。硬返回保证仍需覆盖系统负载、调度与其他工具的边界。
+
+| 归档 | 新原件数 | ZIP SHA-256 |
+| --- | ---: | --- |
+| [公共账本、输入和观测](V5_STAGE5_SEC_FIXED_COMMON.zip) | 136 | `665d7fffa00fa2b5a858aff5e1da2a4da29f7180e600799c3c29a589b72120db` |
+| [单门](V5_STAGE5_SEC_FIXED_SINGLE_BOXED.zip) | 334 | `91af7083b475f2dea8e6e8f201102bfbf7c974130471b66a1cec3d95f19395a6` |
+| [固定三门](V5_STAGE5_SEC_FIXED_FIXED_BOXED.zip) | 280 | `e66ece78348ed9cdd16a9fd89f724173243a07fc3955a664eb4da3e959fb90f2` |
+| [自适应](V5_STAGE5_SEC_FIXED_FAECO_BOXED.zip) | 211 | `5f6a0e1a54c61ff622e861f0ec3e4fef966f172bf1068dc3ada8290508b4d852` |
+
+四包共 961 项新原件。36 个已发布相同物理文件以旧包成员、字节数和 SHA 引用，离线验证同时核对旧包与本轮实际收据。用 Python 3.11 或更新版本从仓库运行以下复算，命令中的候选根沿用收据内的路径键。
+
+```bash
+e=project_docs/evidence/tcad_v5_revision_20261126
+p="$e/V5_STAGE5_SEC_FIXED"
+python3 -B "$e/verify_stage5_sec_fixed_replay.py" \
+    --fixed-zip "${p}_COMMON.zip" --fixed-zip "${p}_SINGLE_BOXED.zip" \
+    --fixed-zip "${p}_FIXED_BOXED.zip" --fixed-zip "${p}_FAECO_BOXED.zip"
+```
+
+实跑复用上一节的 `bundle` 和已重建的 `output`。把新的副本与驱动、候选输出设在隔离命名空间可见路径，沿用同一 EDA 锁和分核观察。
+
+```bash
+fixed_bundle=/var/tmp/faeco_stage5_input_sec_fixed
+fixed_run=/var/tmp/faeco_stage5_online_sec_fixed
+dirs=$(mktemp -d /var/tmp/faeco_stage5_sec_fixed_tools.XXXXXX)
+bash "$e/prepare_stage5_sec_fixed_bundle.sh" "$bundle" "$fixed_bundle" \
+    project_docs/evidence/tcad_ibex_20261123/prove_ibex.py
+cp "$e/replay_stage5_sec_fixed.py" "$e/replay_stage5_online.py" "$e/replay_stage5_fixed_first.py" "$dirs/"
+bash code/scripts/run_with_timeout.sh 3020 flock -w 8 /home/toylog/faeco_v5_eda.lock \
+    timeout --signal=TERM --kill-after=8s 3000s taskset -c 0-5 \
+    bash "$fixed_bundle/driver.sh" candidate "$fixed_bundle" "$dirs/replay_stage5_sec_fixed.py" "$output" "$fixed_run"
+```
+
+在实跑派发之前，从另一个终端启动 `taskset -c 6 python3 -B "$e/observe_stage5_arm_processes.py" "$fixed_run" "$dirs/observations.jsonl"`。观察器先等运行协议，然后采样到退出尾段。

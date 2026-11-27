@@ -35,7 +35,7 @@ bash run_all_v5_experiments.sh --matched-zero --force --output-root /home/toylog
 
 ## 主机适配边界
 
-启动器从自身位置解析驱动。各阶段驱动与复用的前代评估器仍绑定本机的 /mnt/d/BaiduSyncdisk 仓库资产、/home/toylog 冻结输入与历史基准、ORFS/Liberty/OpenROAD 以及 STA/SEC 包装器。--output-root 只重定位本轮输出。40 ns 处理器另有已实跑的隔离捕获与重建入口，从独立输入副本执行 RTL 综合、参考资格、首批候选及完整三臂在线搜索。SEC 截停的进程组修复另有真实同输入回归。完整异机重建需要对应工具、冻结输入及 Linux 基础环境。计时比较说明运行主机和 CPU 条件。 [隔离捕获与重建](REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考) · [V5 实验报告](REPORT.md)
+启动器从自身位置解析驱动。各阶段驱动与复用的前代评估器仍绑定本机的 /mnt/d/BaiduSyncdisk 仓库资产、/home/toylog 冻结输入与历史基准、ORFS/Liberty/OpenROAD 以及 STA/SEC 包装器。--output-root 只重定位本轮输出。40 ns 处理器另有已实跑的隔离捕获与重建入口，从独立输入副本执行 RTL 综合、参考资格、首批候选及完整三臂在线搜索。SEC 截停的进程组修复由同输入短窗与足窗回归验证，并已完成修复后的三臂复跑和进程观测。完整异机重建需要对应工具、冻结输入及 Linux 基础环境。计时比较说明运行主机和 CPU 条件。 [隔离捕获与重建](REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考) · [V5 实验报告](REPORT.md)
 
 Stage 2–4 的已完成键可续接。Stage 2B 区分实例不在冻结网表、触及受保护时钟网、工具超时以及完成物理评估后的通过或拒收。AES 额外报告排除时钟网动作后的数据网投影。Stage 4 保留历史纯微批次和默认探针读数。双 AES 新测子预算为 0、60、120、240 s。历史 0 s 的派发或拒收复用规则与 V5 不同，使用同协议补测作为直接对照。Stage 5 的完整流程保留真实 ORFS 合成时钟目标、全部 I/O 延时和三角资格，参考点未合格时停止候选搜索。
 
