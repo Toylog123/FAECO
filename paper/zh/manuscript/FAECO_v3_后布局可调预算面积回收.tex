@@ -339,7 +339,7 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_imagegen_r13.png}
+\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_imagegen_r15.png}
 \caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 固定协议下的SKY130HD AES实测反例。两次均为行高预检后的首轮结果。(b) 各列为派发前或状态更新后的快照。首次暂缓后按式~\eqref{eq:cap_rerank}重排未访问实例并重新分批，图中以整批换序示意。原始前沿耗尽后取出暂缓批次并二分，子批与当前合格累计集一起验收。(c) 同一冻结输入和配置内，精确命中符合登记条件的Setup拒收记录时跳过该组合的物理验证，多门批次二分，单门批次转入下一轮。(b)、(c)为机制示意。}
 \label{fig:search_mechanism}
 \end{figure*}

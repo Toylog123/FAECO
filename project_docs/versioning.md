@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 R15 图4统一版由标签 faeco-paper-figure4-20261127-r15 绑定，现行稿件指纹见[交接配置](../.codex-handoff.json)。
+
 2026-11-27 R14 公式排版由标签 faeco-paper-equations-20261127-r14 绑定，现行稿件指纹见[交接配置](../.codex-handoff.json)。
 
 2026-11-27 R13 方法图版由标签 faeco-paper-imagegen-20261127-r13 绑定。[图件来源及主稿指纹](../paper/zh/figures/tcad_20261126/IMAGEGEN_R13.md)。

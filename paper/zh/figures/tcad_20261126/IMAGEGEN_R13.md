@@ -69,3 +69,27 @@ Targeted precise edit to the bottom text only in this exact scientific diagram. 
 - 源稿 SHA-256：0ba9dcd41eb5bd786c61cadfb50d20714a94840bcc358fe31f89cb540bd6f22d
 - 三份同步 PDF 的 SHA-256：5d36e6aba16af66db66a4e4ada8d9abc075c6e0bef9dd199bcb430ea2258fbe2
 - 版本标签：faeco-paper-imagegen-20261127-r13
+
+## R15 图4风格统一
+
+以此前图4为编辑目标，图1、图2为视觉参考。内置OpenAI ImageGen降低标题和列名的视觉重量，移除通栏底色和跨区分隔线，采用留白、藏蓝字、浅蓝和浅沙色标注。二次风格输出曾将左上标题误改为 Fixed-witness，定向修图恢复 Fixed-protocol 后逐项复核。最终原件 [fig4_nonmonotone_search_imagegen_r15.png](fig4_nonmonotone_search_imagegen_r15.png) 采用模型输出原始像素（2014 × 781 RGB，SHA-256 为 b71aeb7906e29b61f75252692b6430cafeb758bb769c99c0995d3a803096aa17）。
+
+实测差值核对为 +0.459188 ps 和 −0.157652 ps。保持严格子集、12 个队列单元及缓存命中条件。 [固定协议复算](../../../../project_docs/evidence/tcad_r10_counterexample_20261127/REPORT.md)
+
+### 风格与文字修正提示词
+
+~~~text
+Use case: precise scientific diagram style-transfer. Image 1 is the target Figure 4 for a two-column IC CAD manuscript. Images 2 and 3 are the established Figures 1 and 2, respectively, and are STYLE references only. Keep Image 1's three panels, panel geometry, wide aspect ratio about 2.58:1 and ALL labels and data in the same roles and positions. Make the styling feel like the same family as Image 3: clean white page, no tinted full-width title bars or colored title backgrounds, panel headers directly on white in medium-weight navy sans-serif of roughly Figure 2's relative size, normal-weight ink for intermediate headings and labels, consistent letter spacing, fine slate separators and generous breathing room. Use Image 2's pale slate blue and muted sand sparingly as fills for small cells only. Teal for accepted, muted ochre for rejected, using dark readable text and thin lines; the large inclusion box in panel (a) can have almost white teal fill, the small inner box pale warm sand. Emphasize structure with slim rules, not bold banners, bright blocks or gradients. Keep each numeric label regular-weight, very crisp and easily legible when reduced to manuscript width. The lower two decision statements should be regular-medium weight, not heavy type. No decorative lines across the entire canvas, shadows, icons, figure number or branding.
+
+Immutable scientific content, verify it after restyling: (a) nested accepted S18 label “+0.459188 ps” and rejected T3 label “−0.157652 ps”, T3 a strict subset of S18; “SS Hold WNS change” above. (b) four aligned columns “Dispatch”, “Defer B”, “Accept D, then C”, “Split B”. Queue row B C D | D C | ∅ | B1 B2. Deferred row ∅ | B | B | ∅. Accepted row ∅ | ∅ | C ∪ D | C ∪ D. Preserve subscripts in the original, keep empty-set symbols as mathematical empty sets. (c) “Exact rejection reuse”; “Same frozen input and validation settings”; “Eligible Setup rejection hit → reuse”; “No eligible hit → validate from R”. Panels, values, ordering and topology are locked; change visual style only. Keep all marks within image bounds, crisp enough for publication, with approximately the same height and width as Image 1.
+~~~
+
+~~~text
+Edit this exact academic diagram (Image 1) to bring it even closer to Image 2, the style reference. Content and layout locked. Apply these visible changes: (1) Remove the full-width horizontal rule above panel (c) and the long vertical divider between the top panels; separate panels with white gutters as in Image 2. (2) Use the same medium navy panel heading size and weight as Image 2, and reduce the weight of “Dispatch”, “Defer B”, “Accept D, then C”, “Split B”, “Queue”, “Deferred”, and “Accepted” from bold to medium. (3) In panel (a), make the big accepted rectangle near-white with a slim muted teal outline and the inner rejected rectangle soft light sand with a thin muted rust outline. Make “accepted” and “rejected” regular-medium, the same typography as the two numeric values. (4) Fade the queue rules to light slate and use quietly filled flat tiles, using the same thin outline style as Image 2. Keep the pure white backdrop and existing wide aspect ratio. Preserve every character and relation: S18 is accepted with +0.459188 ps; T3 is rejected with −0.157652 ps and is a strict subset of S18; queue matrix rows are B C D | D C | ∅ | B1 B2; ∅ | B | B | ∅; ∅ | ∅ | C ∪ D | C ∪ D. Bottom text remains “Same frozen input and validation settings”, “Eligible Setup rejection hit → reuse”, and “No eligible hit → validate from R”. No new objects, no text moved to the other panel, no shadows, no colored title backgrounds. Produce an uncluttered journal diagram.
+~~~
+
+~~~text
+Make exactly ONE text correction in the top-left heading of this supplied scientific image. Replace the whole heading “(a) Fixed-witness counterexample” with the exact heading “(a) Fixed-protocol counterexample”. The specified word is p-r-o-t-o-c-o-l. Match the existing medium navy sans-serif and placement, and keep the text clear of the right panel. Preserve every other pixel and all other labels, symbols, signs and numbers, especially +0.459188 ps and −0.157652 ps. No other edits. Preserve the original wide canvas and white background.
+~~~
+
+入稿核验：12页，仅第6页渲染像素有变化，正文提取文本逐页一致。图4在稿件中为300.93 dpi，嵌入像素与最终PNG一致。三份同步PDF的SHA-256为 b332c525acb54430d74210ac5beac78dde29e85dbd94e59ef00859c3b802d011。版本标签为 faeco-paper-figure4-20261127-r15。
