@@ -215,7 +215,7 @@ a(t)=\max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig1_framework_r10.pdf}
+\includegraphics[width=0.96\textwidth,trim=0 140bp 0 0,clip]{tcad_20261126/fig1_framework_imagegen_r13.png}
 \caption{FAECO的限时回收流程。全池探针通过即保留检查点并结束，失败则从冻结参考进入微批次。关闭探针时直接运行微批次。探针不复修，微批次至多复修一次。两种调度共享墙钟预算与验证后端。}
 \label{fig:arch}
 \end{figure*}
@@ -239,8 +239,8 @@ a(t)=\max\bigl(\{0\}\cup\{\Delta A(S):S\in\mathcal S_{\mathrm{ok}}(t)\}\bigr).
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_r9.pdf}
-\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。短路以同层异网图元交叠判定。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；满足$Q\cap Q_{\mathrm{check}}\ne\varnothing$的工作单元从各自的上下文盒读入几何。标记$\nu$的包围盒为$M_\nu$，返回条件为$Q\cap M_\nu\ne\varnothing$。标记召回还要求对应工作单元保留相关规则上下文。}
+\includegraphics[width=\textwidth]{tcad_20261126/fig2_window_context_imagegen_r13.png}
+\caption{行高窗口的局部违例覆盖与规则上下文（示意，未按比例绘制）。(a) $r_{\mathrm{drc}}(\ell)$是所考察规则的交互距离上界。橙色斜线标出同层异网图元交叠处的短路见证。命题1的半径条件保证局部见证落在行高请求盒内，邻线可延伸至盒外。(b) 重叠窗口合并为请求盒$Q$；满足$Q\cap Q_{\mathrm{check}}\ne\varnothing$的工作单元从各自的上下文盒读入几何。标记$\nu$的包围盒为$M_\nu$，返回条件为$Q\cap M_\nu\ne\varnothing$。标记召回还要求对应工作单元保留相关规则上下文。}
 \label{fig:window_theory}
 \end{figure*}
 
@@ -305,7 +305,7 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
 
 \begin{figure*}[!tb]
 \centering
-\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_r10.pdf}
+\includegraphics[width=\textwidth]{tcad_20261126/fig4_nonmonotone_search_imagegen_r13.png}
 \caption{布线后ECO可行域的非向下封闭性与微批次搜索。(a) 固定协议下的SKY130HD AES实测反例。两次均为行高预检后的首轮结果。(b) 各列为派发前或状态更新后的快照。首次暂缓后按式~\eqref{eq:cap_rerank}重排未访问实例并重新分批，图中以整批换序示意。原始前沿耗尽后取出暂缓批次并二分，子批与当前合格累计集一起验收。(c) 同一冻结输入和配置内，精确命中符合登记条件的Setup拒收记录时跳过该组合的物理验证，多门批次二分，单门批次转入下一轮。(b)、(c)为机制示意。}
 \label{fig:search_mechanism}
 \end{figure*}
@@ -359,7 +359,7 @@ OpenROAD仅调度检查盒与请求盒$Q$相交的工作单元，单元在外扩
 
 图~\ref{fig:search_mechanism}(a)的SKY130HD AES对照采用同一物理执行协议，均在首轮完成且未超时。实测$T_3\subsetneq S_{18}$，$\Phi_{\mathcal H}(T_3)=0$、$\Phi_{\mathcal H}(S_{18})=1$。三门触发SS Hold门，十八门通过全部验收。相同十八门版图也由另一限时协议的全池探针得到。\href{https://github.com/Toylog123/FAECO/blob/e191c4263db207e15c5420731c3b5163eac35171/project_docs/evidence/tcad_r10_counterexample_20261127/REPORT.md}{固定协议与验证记录}给出配置及判定细节。
 
-单次子集拒收不足以排除超集。全池探针在拆批前检验整池的联合可行性。图~\ref{fig:search_mechanism}(b)中$Q$和$Q_{\mathrm{def}}$简记算法的工作与暂缓队列。
+单次子集拒收不足以排除超集。全池探针在拆批前检验整池的联合可行性。图~\ref{fig:search_mechanism}(b)中的Queue与Deferred分别表示算法的工作队列$\mathcal Q$和暂缓队列$\mathcal Q_{\mathrm{def}}$。
 
 Hybrid FAECO以单遍保护后端验证整个候选池$\mathcal P$，探针不复修。默认子预算为
 \begin{equation}
@@ -659,7 +659,7 @@ FAECO将布线前局部DRC诊断用于选择重布邻网，并保护最终授权
 
 \vspace{0.16cm}
 \noindent\textbf{致谢。}
-感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助修订正文及英文摘要，并协助编写复算脚本与核对实验记录。OpenAI Codex内置的ImageGen用于图1、图2和图4的构图草案，三图按方法与证据绘制为矢量图。图3依据归档布局布线与冲突标记重建，图5和图6由实验记录绘制。
+感谢OpenROAD、OpenSTA与Yosys社区。OpenAI Codex辅助修订正文及英文摘要，并协助编写复算脚本与核对实验记录。图1、图2和图4的示意图由OpenAI ImageGen生成，按方法、算法及冻结实测记录逐项核对。图3依据归档布局布线与冲突标记重建，图5和图6由实验记录绘制。
 
 \noindent\textbf{代码与实验记录。}
 实现、协议、原件及复算见\href{https://github.com/Toylog123/FAECO/blob/f0fe992b9ce44b8368b620d06b8d95a56179347c/project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md}{FAECO 公开实验归档与复算说明}。\href{https://raw.githubusercontent.com/Toylog123/FAECO/7ac9e86e6d8f1fc4a3003e129432f7b76fdcbe5a/paper/zh/manuscript/FAECO_R7_\%E8\%A1\%A5\%E5\%85\%85\%E6\%9D\%90\%E6\%96\%99.pdf}{随稿补充材料}的附录A--G提供规则、逐例数据、完整指标、配置与复算入口。异机重建需匹配工艺库与工具环境。

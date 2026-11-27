@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 R13 方法图版由标签 faeco-paper-imagegen-20261127-r13 绑定。[图件来源及主稿指纹](../paper/zh/figures/tcad_20261126/IMAGEGEN_R13.md)。
+
 2026-11-27 R12 结构与篇幅修订由标签 faeco-paper-structure-20261127-r12 绑定。[发布清单](../paper/zh/review_rounds/r20261127_r12_structure/R12_RELEASE_MANIFEST.json)。
 
 2026-11-27 R11 文字与公式修订由标签 faeco-paper-focus-20261127-r11 绑定。[发布清单](../paper/zh/review_rounds/r20261127_r11_focus/R11_RELEASE_MANIFEST.json)。

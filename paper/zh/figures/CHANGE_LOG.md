@@ -4,6 +4,10 @@
 
 ## 修改记录
 
+### 2026-11-27 R13 ImageGen 方法图
+
+方法图1、2、4改为内置OpenAI ImageGen生成的原始PNG，经流程、重布窗口条件、队列状态和SS Hold实测差值复核。三张图在当前稿面的有效分辨率均超过300 dpi。图3及图5、6保留归档矢量件。[原件、提示词与验收](tcad_20261126/IMAGEGEN_R13.md)
+
 ### 2026-11-27 R10 图件与固定协议
 
 图 1 统一使用 Full-pool probe，初始放行标为 initial release。图 4(a) 用带协议下标的 $\Phi_{\mathcal H}$ 表达固定实现协议，实测 SS Hold 差值沿用经核验的原记录。图 2 的标记盒符号在主稿图注更新为 $M_v$。其余图件继续使用冻结矢量件。 [固定协议归档与审稿对照](../review_rounds/r20261127_r10_final/R10_REVIEW_MAP.md)
