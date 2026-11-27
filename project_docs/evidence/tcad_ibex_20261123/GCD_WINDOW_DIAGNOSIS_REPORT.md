@@ -45,3 +45,7 @@ timeout --signal=TERM --kill-after=8s 2550s bash code/scripts/run_with_timeout.s
   flock -w 8 /home/toylog/faeco_v5_eda.lock taskset -c 6-11 \
   python3 -u "$driver" "$seed" "$history" "$out"
 ```
+
+## 后续等数量放行对照
+
+几何择一与事后已知单网的实跑已完成。几何择一在同距候选中选中 `_073_`，仍需放行 `net242` 复修。直接放行已知 `net242` 首轮独立 DRC 清零，与本报告常规臂的复修物理结果一致。两臂最终仍由 TT 相对 Hold 门拒收。 [两臂报告与原件](GCD_GEOMETRY_RELEASE_REPORT.md)

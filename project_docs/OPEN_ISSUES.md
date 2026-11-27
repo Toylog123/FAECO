@@ -1822,7 +1822,7 @@ UART 正序 FAECO 的第 2 次累计三门因 FF setup 拒，二分后第 3 次�
 
 四臂独立核验现已确认请求、重试、实际端点和 TT 拒因复现，保护模式下全为零回收。候选诊断漏报与最终 hold 拒因属于两个可查现象。下一步待用几何邻网基线和保护路由对照辨别重布来源，同时保留原 TT 判定口径。[正式报告](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_VERIFIED.json)
 
-同提议三臂正式补入一行高窗口。窗口与全块预检均空，三个后置短路的位置完整落入 `_093_` 窗口。三个臂首轮和复修各自复现原 ABBA 端点，复修均只释放 `net242`，独立 DRC 清零后 TT Hold WNS 仍下降 0.022621 ps。窗口对照和检查阶段的证据已齐。等数量几何邻网预放行和保护范围干预仍待测。 [三臂原件与复算](evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
+同提议三臂正式补入一行高窗口。窗口与全块预检均空，三个后置短路的位置完整落入 `_093_` 窗口。三个臂首轮和复修各自复现原 ABBA 端点，复修均只释放 `net242`，独立 DRC 清零后 TT Hold WNS 仍下降 0.022621 ps。窗口对照和检查阶段的证据已齐。等数量单网预放行也已补测。几何择一同距选到 `_073_`，仍需追加 `net242` 复修。事后已知 `net242` 臂首轮无标记，省去一次 DRT/RCX，两臂最终仍因 TT 相对 Hold 拒收。更广保护范围干预、独立设计上的诊断净收益仍待验证。 [单网预放行补证](evidence/tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md) [三臂原件与复算](evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
 
 ## OI-108（2026-11-26，open）— 原生整批动作的实例身份与保护后端可评估性
 
