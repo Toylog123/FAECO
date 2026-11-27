@@ -8896,3 +8896,8 @@ ecover_power 100 对照：NATIVE 8/8 均 0% 回收；我方 6/8 实现 1.55%–4
 
 - 修复后三臂表 12 生成器重算同次终态、计费及 TT 默认活动。四份实际 ODB 完成只读已布线状态、放置及 VDD/VSS 检查，公开包包含 51 份原件。归档历史配置、ASAP7 六例、端头规则及原生动作解析的复核，保留同后端原生物理评估未决。 [证据索引](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
 - 表 4 用各历史冻结端点的功耗报告核对，表 9 与表 10 校正舍入。图 1–2 按作者指示由 OpenAI 图像生成工具制作，保留原文件并检查接线。选定版两图 PDF 目检清晰。表 1–12 与图 3–5 的数据源复核分层记录。 [图表复核](../paper/zh/review_rounds/r20261127_r3_submission/DISPLAY_EVIDENCE_AUDIT.md)
+
+## LOG-20261127-65｜第三轮中文稿发布复核
+
+- 证据索引提交 `0bd852d9bffa1a83d2a8e31011cfb54e79c29972` 已推送。匿名读取证据索引 HTTP 200、内容 SHA-256 同本地。处理器表体生成、正式版图四项离线核验和 V5 抽取复算均返回 0。
+- 第三轮中文稿完成双遍 LuaLaTeX、图表数值回读和版面复核。TeX SHA-256 `aa304f253caabf852babde33d0339107f90da71da4cd2672b39913ee8af101f6`。三份 13 页 PDF SHA-256 `2f90bd3ed54cd4824d42aa54678fac8e745daafed1013bad91ab06d4ff8ad71e`。主稿 5 图、12 表、26 条参考文献。英文正式稿及作者信息待确认。 [发布复核](../paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md#发布复核)

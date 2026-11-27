@@ -923,3 +923,9 @@ Undefined 仅字体替身）；`verify_fournum_tables.py` 六表逐格 **BAD=0**
 ## 2026-11-27｜GCD 等数量单邻网预放行补证
 
 - §6 补几何择一与按历史标记预放行的重试及最终验收结果，并按原件更正 UART 全块／窗口用时比的方向。证据索引固定至 `6c0f99f2`。双遍 LuaLaTeX 仍为 13 页，115 dpi 逐页比较仅第 13 页变化，150 dpi 复看通过。三份 PDF 同指纹。 [实验原件](../../project_docs/evidence/tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md) · [定向复审](review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md#gcd-等数量单网预放行补证复审)
+
+## 2026-11-27 第三轮修订
+
+- 表 12 改用 SEC 清理修复后隔离三臂的同次终态、墙钟积分、功耗及首达记录。首次运行与隔离诊断各保留其独立归属。表 4 功耗按冻结 SDC 的历史端点回算，表 9 与表 10 按原始精度舍入。
+- 补齐放置、修改网的 DRT 连通检查和专项 VDD/VSS 的覆盖。命题 1 保留规则上下文条件，补 ASAP7 M2 的查询例。归档五个内窗注入和一个窗外负对照。
+- 重写摘要、贡献与结论，历史基线、缓存、TNS 及 720 s 验收随实际协议标注。按作者约定更新图 1–2 和生成披露。 [逐条复核](review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md) · [图表取数](review_rounds/r20261127_r3_submission/DISPLAY_EVIDENCE_AUDIT.md)

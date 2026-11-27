@@ -1,9 +1,10 @@
 {
   "timestamp": "2026-11-27",
-  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。V5 Stage 1–5、同起序批宽、绝对 Setup 门槛、V4 资源与读档、同后端外部排序、V6 同主机隔离重建、SEC 修复及修复后三臂重测已完成并复核。SKY130HD GCD 已核验常规、窗口和全块预检及等数量单网放行对照。13 页中文稿完成内部模拟审稿与追加核验。正式英文 IEEE 投稿包待作者确认。进度与原件见 project_docs/CANON.md 及 V5 实验索引。",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。第三轮中文稿完成定向复核，处理器表 12 采用 SEC 修复后隔离三臂，原始参考及三个交付 ODB 完成只读放置、布线状态及电源连通检查。两张非数据示意按作者指示用 ImageGen 生成。正式英文 IEEE 包与投稿作者材料待确认。",
   "project": "FAECO",
   "read_order": [
     "project_docs/CANON.md",
+    "paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md",
     "paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md",
     "project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md",
     "project_docs/evidence/tcad_v5_revision_20261126/REPORT.md",
@@ -21,17 +22,17 @@
     "push_status": "query git status -sb and git ls-remote origin refs/heads/main"
   },
   "paper_state": {
-    "note": "V5 中文定稿为13页、5图、12表、26条参考文献。五席模拟审稿和追加证据定向复核完成。当前§6包含SKY130HD GCD的单提议阶段与单网预放行对照。LuaLaTeX双遍、13页逐页比对和三个PDF副本同SHA。保留原模板字体替代提醒。英文摘要现印于中文稿，完整英文转译及IEEE投稿制式待作者确认。",
+    "note": "第三轮中文修订 13 页、5 图、12 表、26 条参考文献。图 1–2 用 ImageGen 制作，图 3–5 沿用数据图。正文按修复后隔离运行生成表 12，双遍 LuaLaTeX、版面和取数复核通过，三个 PDF 副本同 SHA。保留既有字体替代。正式英文转译及 IEEE 投稿制式待作者确认。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "68e349db3f5d441b07ffeefd27ed7d278a55d887e05a66f745a109bd19c5f1db",
-      "bytes": 84285,
+      "sha256": "aa304f253caabf852babde33d0339107f90da71da4cd2672b39913ee8af101f6",
+      "bytes": 82718,
       "pages": 13
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "a25b036458667d1ef6830fe6c5e66f38591a2104b1b3da3262f8b5cbd581a4c6",
-      "bytes": 1557182,
+      "sha256": "2f90bd3ed54cd4824d42aa54678fac8e745daafed1013bad91ab06d4ff8ad71e",
+      "bytes": 2658068,
       "pages": 13
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",

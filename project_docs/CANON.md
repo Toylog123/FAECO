@@ -1,6 +1,12 @@
 # FAECO 现行口径（CANON）
 
-## 2026-11-27 V5 中文定稿与模拟复审
+## 2026-11-27 第三轮中文修订与定向复核
+
+- 现行中文稿 13 页、5 图、12 表、26 条参考文献。表 12 统一到 SEC 进程组清理修复后的隔离三臂。单门／固定三门／自适应终态分别 40.0384／91.3376／31.2800 µm²，时间均值分别 22.7497／37.3614／23.3685 µm²。首次正式单门的 48.7968 µm² 保留为历史。表 4 绑定历史 270 ps UART 和 6 ns 处理器，各功耗以匹配端点为准。[复算入口](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)
+- 参考及三个修复后交付 ODB 全部通过只读放置、VDD/VSS 连通和已布线状态检查。生产 DRT 的连通检查覆盖修改信号网，全信号物理 LVS 待验。ASAP7 原生动作失败归因于 TT Liberty 语法覆盖，生产适配器及共同物理后端待验证。 [专项原件](evidence/tcad_v5_revision_20261126/R3_FINAL_PHYSICAL_CONNECTIVITY_REPORT.md) · [未决项](OPEN_ISSUES.md)
+- 按作者指示，图 1–2 为图像模型示意，图 3–5 沿用数据图。双遍 LuaLaTeX、数值回读与版面目检完成。三份 PDF SHA-256 `2f90bd3ed54cd4824d42aa54678fac8e745daafed1013bad91ab06d4ff8ad71e`。正式英文 IEEE 投稿包及作者材料待确认。 [中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [第三轮复核](../paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md)
+
+## 2026-11-27 V5 第三轮之前的中文定稿与模拟复审
 
 - 同起序 SKY130HD AES 批宽补证中，固定三门和单门分别回收 67.5648 与 33.7824 µm²，时间平均收益为 34.809579 与 12.623294 µm²。首个合格三门组合包含单独评估时因 SS Hold 被拒的一项。同终态面积的两个首达点不共享动作或物理产物。470.5 ps UART 原候选的 SS Setup WNS 从 +0.794642 降至 −0.568545 ps，相对门通过，绝对零下限拒收。[补证及资源记录](evidence/tcad_v5_revision_20261126/REVIEW_SUPPLEMENT.md)
 - 13 页中文定稿、5 图、12 表及 26 条参考文献通过模拟复审及本轮补证的定向核验。图 1–2 的原始生成追溯至 Google Antigravity `generate_image`，已按确证更新致谢。三份 PDF SHA-256 均为 `a25b036458667d1ef6830fe6c5e66f38591a2104b1b3da3262f8b5cbd581a4c6`。正式英文 IEEE 包、作者资料与 ORCID 待确认。 [中文定稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [终版模拟复审](../paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) · [英文投稿入口](../paper/en/README.md)

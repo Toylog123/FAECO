@@ -51,3 +51,7 @@ V6 新一轮定向复审从独立收据核对三个策略的 18 次共同完成�
 独立复核从 226 份原件重算两臂的工序、标记与验收。几何择一仍需复修，按历史标记预放行在首轮清零并重现原常规臂的复修端点，最终都保留 TT Hold 拒收。§6 把比较限定在同一三门提议。复核还发现原 UART 句颠倒了用时比的分子和分母。用 `broad_60` 的 3.765／6.262 s 及 `pinshift_6` 的 4.085／3.356 s 核实，现按全块／窗口报告 0.60–1.22。 [GCD 证据](../../../../project_docs/evidence/tcad_ibex_20261123/GCD_GEOMETRY_RELEASE_REPORT.md) · [UART 原始计时](../../../../project_docs/evidence/tcad_v4_revision_20261126/TIMING_CLOSED_DRC_SENS_VERIFIED.json)
 
 最终 TeX SHA-256 `68e349db3f5d441b07ffeefd27ed7d278a55d887e05a66f745a109bd19c5f1db` 通过定向复审。改动限于 §6 与版本化索引，原 12 张表、双摘要、结论、26 条参考文献及 AI 使用披露保持原文。LuaLaTeX 双遍保持 13 页。115 dpi 逐页比较仅第 13 页变化，并通过 150 dpi 目检。 [交付验收](DELIVERY_QA.md)
+
+## 2026-11-27 随后第三轮修订
+
+本文件保留本轮中文模拟复审所针对的旧稿指纹。当前 PDF、图像生成披露、统一实验表、补充物理证据和修订验收以[第三轮逐条复核](../r20261127_r3_submission/R3_REVIEW_MAP.md#发布复核)为准。

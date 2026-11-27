@@ -6,7 +6,7 @@
 
 | 路径 | 角色 | 状态 |
 |---|---|---|
-| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，6 幅 ImageGen 示意图，含四场景逐端点回读及 AES 交叉对照） | 活跃 |
+| `manuscript/FAECO_v3_后布局可调预算面积回收.tex` | **当前唯一活跃中文主稿**（ctexart 双栏，第三轮 13 页，2 幅示意图、3 幅数据图、12 张表） | 活跃 |
 | `FAECO_v3_后布局可调预算面积回收.pdf` | 顶层交付 PDF（与 `manuscript/`、`build/` 同名 PDF 逐字节同步） | 活跃 |
 | `manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex` | v1/v2 预布局中文主稿（对应冻结基线 `v19`） | 历史归档 |
 | `manuscript/FAECO_补充材料.tex` | v1/v2 预布局中文补充材料 | 历史归档 |
@@ -33,7 +33,7 @@ Copy-Item "FAECO_v3_后布局可调预算面积回收.pdf" "../build/FAECO_v3_�
 
 ## 三、图表重绘与质检入口
 
-活跃中文 v3 主稿采用 [ImageGen PNG 与生成记录](figures/imagegen_20261123/PROMPTS.json)。配图说明机制，实验数值由正文和 LaTeX 表格呈现。v22 矢量图与生成器保留作历史复现。
+图 1–2 用 [ImageGen 生成并验收](review_rounds/r20261127_r3_submission/FIGURE_PROVENANCE.md)。图 3–5 由[现有脚本](figures/tcad_20261126/generate_tcad_figures_v4_zh.py)和实验数据生成。表 12 从修复后三臂的[公开复算入口](../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)生成。
 
 ## 四、写作与数字核对规范
 

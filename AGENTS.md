@@ -1,6 +1,8 @@
 # 行为准则
 
-> **2026-11-27 V5 当前接手入口**：先读 [CANON](project_docs/CANON.md)、[终版模拟复审](paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) 与 [证据复算](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。Stage 1–5、两项评审补证及13页中文稿的科学小修核验已完成。正式英文 IEEE 投稿包待作者确认。原实跑中断点与续跑命令见 [V5 执行交接](project_docs/HANDOFF_2026-11-26_V5_EXEC.md)。
+> **2026-11-27 第三轮修订接手入口**：先读 [现行口径](project_docs/CANON.md)、[第三轮逐条复核](paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md)与[公开证据](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。40 ns 处理器主表采用 SEC 清理修复后的单次三臂，流程和布线示意按作者指定使用图像生成工具。正式英文 IEEE 投稿包仍待作者确认。
+
+> **2026-11-27 V5 此前接手入口**：先读 [CANON](project_docs/CANON.md)、[终版模拟复审](paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) 与 [证据复算](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。Stage 1–5、两项评审补证及13页中文稿的科学小修核验已完成。正式英文 IEEE 投稿包待作者确认。原实跑中断点与续跑命令见 [V5 执行交接](project_docs/HANDOFF_2026-11-26_V5_EXEC.md)。
 
 > **2026-11-25 当前接手入口**见 [交接](project_docs/HANDOFF_2026-11-25.md) 和 [CANON](project_docs/CANON.md)。当前任务是面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。先核对现行证据、未决项与下一轮实验顺序。以下 11 月 13 日的三条状态作历史溯源。
 
