@@ -2,8 +2,8 @@
 
 | 交付物 | 字节数 | SHA-256 |
 |---|---:|---|
-| [中文 TeX](../../manuscript/FAECO_v3_后布局可调预算面积回收.tex) | 84,201 | 5be6a90226f08e10a1a0483ab093fec75a6f2dac36a64d66fb2cb963c55bd97d |
-| [中文 PDF](../../FAECO_v3_后布局可调预算面积回收.pdf) | 1,557,167 | 3e4b57195ec5bafd46b275a51f0458cdfca8e487e0bbb2ed63174396618f0b1f |
+| [中文 TeX](../../manuscript/FAECO_v3_后布局可调预算面积回收.tex) | 84,180 | fa612ccd550250d537fc55ce972bd31cbf5eba2ad72746c6dc72fabcd5709193 |
+| [中文 PDF](../../FAECO_v3_后布局可调预算面积回收.pdf) | 1,557,154 | 81922c6e73eb5788611ca536793fdc43abe148d94404838d98b7e941002c6e24 |
 | [图 3](../../figures/tcad_20261126/fig3_anytime_curves_v4_zh.pdf) | — | c1acb2be43b7ddb33d2104a8b257f4a10adc1d413fa7db4f6e73b0a6927c4767 |
 | [图 4](../../figures/tcad_20261126/fig4_ablation_v4_zh.pdf) | — | 638ebf577171281dd410d93ee9b55bc68633e80897aaea656c3c681cccb8551e |
 | [图 5](../../figures/tcad_20261126/fig5_boxed_drc_scaling_v4_zh.pdf) | — | fe59ec474a6804b0afe87be62b72a8280b87342a7b122eb163f32a0e29e8ae59 |
@@ -17,3 +17,5 @@
 - V6 隔离重建修订仅更新文末代码与实验记录段，链接到 `194e3858`。双遍编译保留既有字体形态替代提示。对前版 13 页以 115 dpi 逐页比对，只有第 13 页左栏该段变化。150 dpi 目检该段、表 12、双栏及最后一条文献，38 个唯一标签、25 条按首用排序的文献复核通过。主目录、源目录及本地 build 目录的三份 PDF 同 SHA-256。 [V6 原件](../../../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#从独立输入副本重建-40-ns-处理器参考)
 
 - 追加三臂与 SEC 修订绑定证据 `baab6f5f`，新增 TAPCO-G 预印本。第一遍布局有尾文献落入第 14 页，收紧重复文字后恢复 13 页。LuaLaTeX 双遍、13 页 115 dpi 比对和变动页目检通过，另以 150 dpi 核第 12–13 页、表 12 与文献 [26]。5 图、12 表、38 个唯一标签及 26 条文献复核通过，表 12 源逐字节一致。三份 PDF 副本同指纹，保留已记录的模板字体替代提示。 [实验索引](../../../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#重建参考后的三臂在线搜索)
+
+- 本轮绑定 `52b1a8b`。更新处理器修复前后隔离复跑与非 AES 标记范围。双遍 LuaLaTeX 保持 13 页。115 dpi 比较仅第 12、13 页有变化，150 dpi 核两页、表 12 和参考文献末条。5 图、12 表、38 个唯一交叉标签、26 条参考文献及三个 PDF 同指纹通过。旧模板字体替代提示仍在。 [修复后三臂](../../../../project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#sec-修复后的完整三臂验证)
