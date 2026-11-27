@@ -93,3 +93,32 @@ Make exactly ONE text correction in the top-left heading of this supplied scient
 ~~~
 
 入稿核验：12页，仅第6页渲染像素有变化，正文提取文本逐页一致。图4在稿件中为300.93 dpi，嵌入像素与最终PNG一致。三份同步PDF的SHA-256为 b332c525acb54430d74210ac5beac78dde29e85dbd94e59ef00859c3b802d011。版本标签为 faeco-paper-figure4-20261127-r15。
+
+## R16 机制图标注与反馈路径
+
+2026-11-27。采用 OpenAI ImageGen 引用 R13 与 R15 的图形资产进行局部生成。入稿 PNG 与模型生成文件逐字节一致。
+
+| 图号 | 参考文件 | 入稿文件 | 原始像素 | SHA-256 |
+| --- | --- | --- | --- | --- |
+| 1 | fig1_framework_imagegen_r13.png | [fig1_framework_imagegen_r16.png](fig1_framework_imagegen_r16.png) | 1944 × 809 | `fa6c8144133787743ca540b92f2ffae75c280233a2e2764a98cd104a6972cd17` |
+| 2 | fig2_window_context_imagegen_r13.png | [fig2_window_context_imagegen_r16.png](fig2_window_context_imagegen_r16.png) | 2172 × 724 | `00d53ab881c0be90b7a64889ca532fd2ce8e577f76e19a8dcb9a1d680147d7c0` |
+| 4 | fig4_nonmonotone_search_imagegen_r15.png | [fig4_nonmonotone_search_imagegen_r16.png](fig4_nonmonotone_search_imagegen_r16.png) | 2014 × 781 | `43a319f50be4b6e4b7c4ea5c0b8dca35a34c8e672d6eb2d66282d4ad34529e42` |
+
+图 1 的虚线从探针拒收或超时分支回到自适应微批次。点线从微批次结果按剩余预算返回派发。首张候选在探针分支多出一枚逆向箭头，放弃该输出（SHA-256 `d475d95c5581c61f4a98731688531d4f161b9adcfa7fc0d63f94630beeb17ef5`），用同一模型仅修正该箭头，再核对另外两组实线路径。图 2 的左图标注请求盒、规则作用半径与一行高外扩，右图保持并窗请求、检查盒和读取上下文三者的边界。图 4(c) 将排序键写成两种累计动作集合，并保留相同冻结输入和验证配置。右例在无其他合格缓存条目时重新验证。
+
+三幅为原生 RGB 栅格示意图。致谢在参考文献前列出绘图工具、用途及受影响的图号。正式英文 IEEE 版应按最终宽度重新核对有效分辨率。 [TCAD 投稿说明](https://ieee-ceda.org/publications/tcad/tcad-paper-submissions) · [IEEE 图件分辨率](https://journals.ieeeauthorcenter.ieee.org/create-your-ieee-journal-article/create-graphics-for-your-article/resolution-and-size/)
+### 图 1 增补路径
+
+> Edit Image 1, a validated scientific flowchart from a paper, to show two explicit feedback connectors. Preserve all existing text, colors, five main paths and nodes, and the current white 1944-by-809 style canvas. Use the currently blank footer for two separate thin return arrows. First, connect a muted dark teal dashed return path to the RIGHT EDGE of the upper “Probe outcome” box at the exact height of the existing “Reject or expire” row, around the outside RIGHT margin, then left along the footer, then UP into the BOTTOM edge of “Adaptive microbatches”. Put a small arrowhead only at the adaptive-microbatch destination and label the footer segment “Probe fallback”. Second, connect a muted blue dotted return path from the BOTTOM edge of the lower “Microbatch outcome” box into the footer, then left and UP into a distinct second point on “Adaptive microbatches” with a small arrowhead only at the destination. Label its footer segment “Remaining budget”. Use two separate vertically staggered tracks and no attached bounding boxes. The two return paths never share a segment and never leave the canvas. Restore no other arrows or boxes. Success in the probe exits as the existing text says. Match the existing restrained palette, line weight and typesetting. Exact node and arrow identities matter, preserve all forward arrows.
+
+### 图 2 增补数学符号
+
+> Edit only three text labels in the LEFT panel (a) of Image 1. Keep all geometry, current elbow/leader arrow endpoints, colors, titles, spacing, the right panel and the wide white canvas exactly as supplied. Replace “DRC request” with “DRC request 𝓑(g)” (math calligraphic capital B, ordinary italic lowercase g in parentheses). Replace “Bounded reach” with “Rule reach r_drc(ℓ)” (render drc together as a small upright subscript on italic r, then italic script ell in parentheses). Replace “Row height” with “Row height H_row” (render row together as a small upright subscript on H). Have the original original leaders continue to point at the same correct objects; the positive interaction extent is only a label for the teal dashed rule neighborhood. Do not add a dimension line. Render the three exact math labels in the same color as their original words, legible at print scale. No changes to any other text or objects. Preserve existing dimensions and margins.
+
+### 图 4 增补精确复用键
+
+> Edit only panel (c) of this validated journal diagram. All of panels (a) and (b) must stay visually and semantically unchanged, including “Fixed-protocol counterexample”, measured values +0.459188 ps and −0.157652 ps, strict subset relation, and the exact 12 queue entries. Preserve existing Figure 4 styling, dark navy labels on white, slim rules and gentle colors. In panel (c) keep the heading “(c) Exact rejection reuse” and the note “Same frozen input and validation settings”. Under it use the exact following centered TWO ROWS in each of two aligned halves. LEFT first row “sort(A ∪ B) = k” in clean dark italic math for A, B and k, upright sort; LEFT second row “Eligible Setup rejection hit → reuse” in smaller regular navy sans-serif. RIGHT first row “sort(A′ ∪ B) ≠ k” with a clearly visible prime on A and not-equal sign; RIGHT second row “No eligible hit → validate from R” in the same smaller navy sans-serif. The formulas must be exact and distinct. Keep the short central vertical divider in panel (c) separating the halves. Use the existing panel (c) blank white space, keep about the same wide aspect and effective size, no clipping and no new backgrounds. No notes, labels or changes elsewhere.
+
+### 图 1 箭头复修
+
+> Make one tightly localized scientific-diagram correction to the reference, preserving canvas size 1944x809, all its other pixels/layout/text and arrows. For the teal dashed 'Probe fallback' return path only, REMOVE the teal triangle touching the right border of the Probe outcome box, next to the 'Reject or expire' row. The dashed teal line is single-direction: it starts at that reject-or-expire row on the right, where the short horizontal segment touches the right border of the Probe outcome box with NO triangular head, then follows the same route right then down then left along the bottom then up into Adaptive microbatches. Keep its ONE arrowhead where it enters Adaptive microbatches from below, and keep the dotted blue Remaining budget return arrow exactly as given. The outcome box must have only its original dark incoming arrow from the left. Keep text, colors, positions, existing three-column layout and all other arrows identical. The sole edit is replace that one left-pointing teal triangle on the far right with a regular dashed teal line start. Everything else is identical.

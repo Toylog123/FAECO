@@ -1,5 +1,7 @@
 # 版本管理
 
+2026-11-27 R16 整体结构与篇幅复审小修由标签 `faeco-paper-proof-20261127-r16` 绑定。[发布清单](../paper/zh/review_rounds/r20261127_r16_final/R16_RELEASE_MANIFEST.json)。
+
 2026-11-27 R15 图4统一版由标签 faeco-paper-figure4-20261127-r15 绑定，现行稿件指纹见[交接配置](../.codex-handoff.json)。
 
 2026-11-27 R14 公式排版由标签 faeco-paper-equations-20261127-r14 绑定，现行稿件指纹见[交接配置](../.codex-handoff.json)。
