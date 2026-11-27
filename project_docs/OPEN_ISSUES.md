@@ -1756,6 +1756,8 @@ v2 重新串行两臂实际退出 0，优化第 4 次复现受硬窗裁剪的独
 
 TAPCO-G 提供布局后图时序传播、功耗评分及失败批次二分的直接相关工作。其时序收益按起点 TNS 绝对值归一，当前 40 ns 参考各角 TNS 均为零。移植前需先固定全零 TNS 的目标解释和功耗输入。公开论文与作者成果页尚未给出可直接固定的实现入口。 [TAPCO-G 原论文 §4](https://arxiv.org/html/2611.13931v1#S4) · [作者成果页](https://wqtang.com/)
 
+2026-11-27 补查相关公开入口。LearnSize 训练使用 ICC2 的优化信息，LEGO-Size 使用商业 3 nm 库和工业设计；查阅的原论文未提供可用于当前池的推理入口。DPH-Sizer 作者成果页列出论文，未附代码或权重。ISPD 2026 官方可执行基线以布局估计寄生、理想时钟下的 `repair_design` 和 `repair_timing -setup` 生成提议，后续评价用全局布线寄生。可作为独立原生流程参照，逐实例配对和冻结布线后三角验收仍需单独接入。 [LearnSize 原论文](https://arxiv.org/abs/2403.08193) · [LEGO-Size 原论文](https://research.nvidia.com/labs/electronic-design-automation/papers/yichen_LEGO_ispd25.pdf) · [DPH-Sizer 作者成果页](https://jinoh-cho.github.io/#publications) · [ISPD 2026 固定基线脚本](https://github.com/ABKGroup/ISPD26-Contest/blob/f7b29d242fc7d441f3b4eadc556f40099ccca067/scripts/evaluation_baseline.tcl#L26-L50)
+
 2026-11-27 核查两条公开学习实现的准入。ASP-DAC24 教程固定版本的 Nangate45 字典对冻结池 18 项无目标可绑定，原名称解析器对 36 个源与目标名均报错。换字典后，冻结 SKY130HD TT 库中仍有两项跨越相邻驱动档，教程单步动作最多覆盖 16/18。公开入口初始化网络后训练，未找到可固定的检查点。ResizerAgent 静态传输夹具将 18/18 个指定实例目标准确转换为 `replace_cell`，原执行器也接受池外目标和重复实例。完整作者流程以 post-CTS 和指定模型为入口。当前实验应保留精确候选池验证，并将同池排序与部分端点提议分别登记。以上为准入检查，未运行作者模型或测得物理结果。 [ASP-DAC24 训练入口](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/blob/7d25bfab195d95d8f41a0df1567d98a8578aa788/session1/demo2_gate_sizing.py#L139-L190) · [相邻档动作](https://github.com/ASU-VDA-Lab/ASP-DAC24-Tutorial/blob/7d25bfab195d95d8f41a0df1567d98a8578aa788/session1/demo2_gate_sizing_helpers.py#L258-L297) · [ResizerAgent 条件](https://github.com/ASU-VDA-Lab/ResizerAgent/blob/ae402b9bf00b5116b9f2743b3bd8f7c9aed52127/README.md#L3-L15) · [动作执行器](https://github.com/ASU-VDA-Lab/ResizerAgent/blob/ae402b9bf00b5116b9f2743b3bd8f7c9aed52127/scripts/python/executor.py#L345-L373)
 
 上轮 40 ns 隔离在线原件复算得到 20 次原位预检（13 个唯一提议）均为零。独立首轮 DRC 在 19 次已完成检查中检出 5 次，涉及 3 个唯一提议，另一次在 DRT 截停。两次复修均清除标记，最终仍受 SS 相对 Hold 拒收。该处理器观察对应同一窗口后端，提前诊断的跨设计净收益仍需同提议干预。此前 GCD 的常规与全块在线 ABBA 提供后生冲突对照，四臂仍需复修且均止于 TT 相对 Hold 拒收。 [处理器原件复算](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#重建参考后的三臂在线搜索) · [GCD 配对原件](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md)
@@ -1819,6 +1821,8 @@ UART 正序 FAECO 的第 2 次累计三门因 FF setup 拒，二分后第 3 次�
 同一三门提议和冻结 GCD 起点，常规与首次实时在线的初轮 ODB 和独立 DRC 相同。布线前实测 0 marker，保护路由结束后独立检查发现 3 个 met1 Short，涉及 `net242`／`net266`。两臂放行同一个邻网后独立 DRC 清零，TT 相对 hold 仍退 0.022621 ps，按 0.001 ps 容差拒收。继续检查四臂复现、同数量几何邻网基线和保护约束来源。与此前同动作 11.2608 µm² 合格的历史链相比，本轮新增加载并读回 476 条 `FIXED` 线，也新增独立解锁 DRC。旧 endpoint 与本轮不能混列。[GCD 规约](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_PREFLIGHT.md)
 
 四臂独立核验现已确认请求、重试、实际端点和 TT 拒因复现，保护模式下全为零回收。候选诊断漏报与最终 hold 拒因属于两个可查现象。下一步待用几何邻网基线和保护路由对照辨别重布来源，同时保留原 TT 判定口径。[正式报告](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_REPORT.md) · [独立核验](evidence/tcad_ibex_20261123/GCD_MARKER_MECHANISM_VERIFIED.json)
+
+同提议三臂正式补入一行高窗口。窗口与全块预检均空，三个后置短路的位置完整落入 `_093_` 窗口。三个臂首轮和复修各自复现原 ABBA 端点，复修均只释放 `net242`，独立 DRC 清零后 TT Hold WNS 仍下降 0.022621 ps。窗口对照和检查阶段的证据已齐。等数量几何邻网预放行和保护范围干预仍待测。 [三臂原件与复算](evidence/tcad_ibex_20261123/GCD_WINDOW_DIAGNOSIS_REPORT.md)
 
 ## OI-108（2026-11-26，open）— 原生整批动作的实例身份与保护后端可评估性
 
