@@ -1,5 +1,7 @@
 # 行为准则
 
+> **2026-11-27 第四轮修订接手入口**：先读[现行口径](project_docs/CANON.md)、[第四轮逐条复核](paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md)与[公开证据](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#第四轮专项证据)。ASAP7 参考面积采用完整功能实例，历史 K18 不变；已完成标准 UART 原生提议的保护后端重放。正式英文 IEEE 投稿包仍待作者确认。
+
 > **2026-11-27 第三轮修订接手入口**：先读 [现行口径](project_docs/CANON.md)、[第三轮逐条复核](paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md)与[公开证据](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。40 ns 处理器主表采用 SEC 清理修复后的单次三臂，流程和布线示意按作者指定使用图像生成工具。正式英文 IEEE 投稿包仍待作者确认。
 
 > **2026-11-27 V5 此前接手入口**：先读 [CANON](project_docs/CANON.md)、[终版模拟复审](paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md) 与 [证据复算](project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)。Stage 1–5、两项评审补证及13页中文稿的科学小修核验已完成。正式英文 IEEE 投稿包待作者确认。原实跑中断点与续跑命令见 [V5 执行交接](project_docs/HANDOFF_2026-11-26_V5_EXEC.md)。
@@ -205,7 +207,7 @@
 >
 > 归档去向见 `project_docs/ARCHIVE_INDEX.md`。
 >
-> 下方「r22 专项入口」及其后若干段是历史专项记录。现行中文 v3 工作稿 15 页，稿件路径和指纹见 [交接配置](.codex-handoff.json)。
+> 下方「r22 专项入口」及其后若干段是历史专项记录。现行中文 v3 工作稿 13 页，稿件路径和指纹见 [交接配置](.codex-handoff.json)。
 
 `project_docs/agent_handoff/` 下的文件全部停在 r30（2026-10-24）之前，**已加失效横幅**，只作溯源，
 现状与入口以 `project_docs/HANDOFF_2026-11-25.md` 与 `project_docs/CANON.md` 为准。

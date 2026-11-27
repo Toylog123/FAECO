@@ -1,5 +1,11 @@
 # FAECO 现行口径（CANON）
 
+## 2026-11-27 第四轮投稿前中文修订
+
+- 完整功能面积为 ASAP7 UART 101.89962 µm²、AES 1414.39122 µm²，冻结网表与 OpenDB master 尺寸逐项复核。旧索引同时影响预筛集合和面积分母。规范三个库角的字段后，两个历史 K18 的身份、顺序及动作面积差一致，20 个交付端点的净面积同原账本；表 3、4、10 使用完整分母。[Liberty 与端点证据](evidence/tcad_v5_revision_20261126/R4_ASAP7_LIBERTY_AUDIT.md)
+- 标准 270 ps UART 原生提议的 16 项完整同面积替换在共同后端完成布线、独立 DRC 和天线检查。净回收为零，三工艺角相对 Hold 拒收。ASAP7 AES 完成绑定核验，实际共同物理终态待验。[原生重放](evidence/tcad_v5_revision_20261126/R4_ASAP7_NATIVE_UART_PROTECTED.md)
+- 图 1–2 延用作者指定的 ImageGen 方案并澄清图 2(b) 引脚，数据图沿用原文件。表 12 仍取修复后的 40 ns 同次三臂。四份默认活动报告在固定 50 次未收敛，仅作辅助估计。现行 13 页中文稿双遍编译、逐页目检、取数和公开链接均通过。三份 PDF SHA-256 `b79696aa3cfc13ac3a0638e8add3fba2aa15899d56f1f0d243d695d4aa5b252d`。正式英文稿与投稿作者材料待确认。 [现行中文稿](../paper/zh/FAECO_v3_后布局可调预算面积回收.pdf) · [第四轮复核](../paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md) · [公开复算](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md#第四轮专项证据)
+
 ## 2026-11-27 第三轮中文修订与定向复核
 
 - 现行中文稿 13 页、5 图、12 表、26 条参考文献。表 12 统一到 SEC 进程组清理修复后的隔离三臂。单门／固定三门／自适应终态分别 40.0384／91.3376／31.2800 µm²，时间均值分别 22.7497／37.3614／23.3685 µm²。首次正式单门的 48.7968 µm² 保留为历史。表 4 绑定历史 270 ps UART 和 6 ns 处理器，各功耗以匹配端点为准。[复算入口](evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md)

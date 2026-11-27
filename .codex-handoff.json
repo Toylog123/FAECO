@@ -1,9 +1,10 @@
 {
   "timestamp": "2026-11-27",
-  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。第三轮中文稿完成定向复核，处理器表 12 采用 SEC 修复后隔离三臂，原始参考及三个交付 ODB 完成只读放置、布线状态及电源连通检查。两张非数据示意按作者指示用 ImageGen 生成。正式英文 IEEE 包与投稿作者材料待确认。",
+  "status": "面向 IEEE TCAD 的布线后局部冲突诊断与限时面积回收。第四轮中文稿终审修订已复核。校正 ASAP7 完整功能面积，历史两个 K18 保持一致。270 ps UART 原生 16 项的共同后端重放完成并拒收。处理器功耗回读为未收敛的辅助估计，补齐三工艺角时序与证据入口。正式英文 IEEE 包及作者信息待确认。",
   "project": "FAECO",
   "read_order": [
     "project_docs/CANON.md",
+    "paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md",
     "paper/zh/review_rounds/r20261127_r3_submission/R3_REVIEW_MAP.md",
     "paper/zh/review_rounds/r20261127_v5_tcad/REREVIEW_FINAL.md",
     "project_docs/evidence/tcad_v5_revision_20261126/REPRODUCIBILITY.md",
@@ -22,17 +23,17 @@
     "push_status": "query git status -sb and git ls-remote origin refs/heads/main"
   },
   "paper_state": {
-    "note": "第三轮中文修订 13 页、5 图、12 表、26 条参考文献。图 1–2 用 ImageGen 制作，图 3–5 沿用数据图。正文按修复后隔离运行生成表 12，双遍 LuaLaTeX、版面和取数复核通过，三个 PDF 副本同 SHA。保留既有字体替代。正式英文转译及 IEEE 投稿制式待作者确认。",
+    "note": "第四轮中文修订 13 页、5 图、12 表、26 条参考文献。补充原生 UART 固定提议的保护后端验证、ASAP7 完整功能面积、同起序批宽和表 12 功耗诊断。图 1–2 的 ImageGen 方案及图 3–5 数据图来源保留。两遍编译、逐页目检和正文取数复核通过，三个 PDF 副本同 SHA。保留既有字体替代。正式英文稿及 IEEE 投稿制式待核。",
     "zh_v3_main_tex": {
       "path": "paper/zh/manuscript/FAECO_v3_后布局可调预算面积回收.tex",
-      "sha256": "aa304f253caabf852babde33d0339107f90da71da4cd2672b39913ee8af101f6",
-      "bytes": 82718,
+      "sha256": "577ac53a61fbe5049504e8bb04440031d760c1237cb5557e9742e8888478efc4",
+      "bytes": 84843,
       "pages": 13
     },
     "zh_v3_main_pdf": {
       "path": "paper/zh/FAECO_v3_后布局可调预算面积回收.pdf",
-      "sha256": "2f90bd3ed54cd4824d42aa54678fac8e745daafed1013bad91ab06d4ff8ad71e",
-      "bytes": 2658068,
+      "sha256": "b79696aa3cfc13ac3a0638e8add3fba2aa15899d56f1f0d243d695d4aa5b252d",
+      "bytes": 2662007,
       "pages": 13
     },
     "zh_archived_preplacement_tex": "paper/zh/manuscript/FAECO_面向预布局门级时序ECO的候选探索与失效刻画.tex",

@@ -61,3 +61,11 @@
 ## r26 术语补充（2026-10-18）
 
 - 备用单元 / spare cells：预留用于ECO修改的标准单元资源，不译为稀疏单元；相关工作沿用此译名。
+
+## 第四轮布线后用语
+
+| 中文主稿 | 英文稿 | 位置 |
+| --- | --- | --- |
+| 三工艺角静态时序分析 | three-corner static timing analysis (STA) | FF、TT、SS。 |
+| 合格检查点 | accepted checkpoint | 墙钟窗内通过全部验收的累计动作与交付版图。 |
+| 物理合法性 | physical validity (`PhysValid`) | 式（1）的修改网连通、放置合法与保护网几何联合谓词。 |
