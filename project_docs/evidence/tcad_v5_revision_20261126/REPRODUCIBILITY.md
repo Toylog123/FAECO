@@ -210,3 +210,16 @@ bash code/scripts/run_with_timeout.sh 3020 flock -w 8 /home/toylog/faeco_v5_eda.
 ```
 
 在实跑派发之前，从另一个终端启动 `taskset -c 6 python3 -B "$e/observe_stage5_arm_processes.py" "$fixed_run" "$dirs/observations.jsonl"`。观察器先等运行协议，然后采样到退出尾段。
+
+## 第四轮专项证据
+
+第四轮沿用 SEC 清理修复的 40 ns 三臂和原 ASAP7 主试验。ASAP7 分母从完整功能实例与 OpenDB master 面积复算，历史运行账本保留其取数来源。第四轮回执及论文口径见[逐条复核](../../../paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md)。
+
+| 核验 | 入口 |
+| --- | --- |
+| ASAP7 参考面积与候选池 | [完整库字段、原 18 项和物理面积](R4_ASAP7_LIBERTY_AUDIT.md) · [复算原件](R4_ASAP7_LIBERTY_AUDIT.zip) · [审计程序](audit_r4_asap7_liberty.py) · [20 个已交付端点净面积](R4_ASAP7_AREA_ENDPOINT_READBACK.json) |
+| 40 ns 处理器终态三工艺角时序及功耗收敛 | [终态时序与传播轨迹](R4_STAGE5_POWER_TIMING_REPORT.md) · [13 份原件](R4_STAGE5_POWER_TRACE_ORIGINALS.zip) · [离线复核](verify_r4_stage5_power_trace.py) · [固定二进制诊断](replay_r4_stage5_power_trace.py) |
+| ASAP7 UART 原生标准提议的共同物理后端 | [16 项重放与拒因](R4_ASAP7_NATIVE_UART_PROTECTED.md) · [81 份原件](R4_ASAP7_NATIVE_UART_PROTECTED_ORIGINALS.zip) · [固定执行入口](replay_r4_asap7_native_uart.py) |
+| 参考文献、历史派发限制、同起序批宽和图表配置 | [第四轮逐条复核](../../../paper/zh/review_rounds/r20261127_r4_submission/R4_REVIEW_MAP.md) · [同起序原件与收据](REVIEW_SUPPLEMENT.md) |
+
+R4 各入口按其所在 Git 提交定位。旧的统计、测试条件和物理运行通过对应归档、成员与 SHA-256 回读。论文附证中的同机冻结输入重放与另机完整物理重建的先决条件见各实验说明。

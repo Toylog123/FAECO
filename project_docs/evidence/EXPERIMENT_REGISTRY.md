@@ -3687,3 +3687,26 @@ v2正确packaged Yosys镜像环境：1147passed/156subtests，pytest128.96s、wr
 
 - `TCAD-R3-FINAL-ODB-CONNECTIVITY`。按第三轮登记使用原 OpenROAD b511b6a 二进制、互斥锁、CPU 0–5 和单线程复核 SEC 修复后三臂的冻结参考与交付 ODB。逐对象 120 s、外层 610 s，运行约 5 s、rc0。四个对象的已布线状态、放置合法性、VDD 和 VSS 连通均通过，三候选无实例位移及保护走线变更。原始 ODB/DEF 保持各自指纹。逐对象命令、报告、终态与工具绑定见[检查报告及 51 份原件](tcad_v5_revision_20261126/R3_FINAL_PHYSICAL_CONNECTIVITY_REPORT.md)。
 - `TCAD-R3-NATIVE-LIBERTY-PARSE-DIAGNOSIS`。从 Stage 2B 原生清单、冻结网表和原 TT Liberty 复算。只在内存补足 37 行数字面积字段结尾后，两个 UART 臂未绑定动作均由 16 降为 0，两个 AES 臂均由 142 降为 0。没有新候选或物理验收。见[第三轮复算记录](../../paper/zh/review_rounds/r20261127_r3_submission/R3_EVIDENCE.md)。
+
+### 2026-11-27 R4｜Liberty 原文与语法归一化只读枚举审计（预登记）
+
+- 使用冻结 ASAP7 输入，比较原 Liberty 与仅语法归一化副本；固定网表、评估器和其余输入。外限 120 s，离线逐项核对本征候选、库面积与实际排序，并与历史 16／142 项解析漏收现象交叉核验。审计产物单列，保持第三轮原始收据和库字节。
+- 判据为语法归一化只恢复本应读取的字段；显式检查枚举差集、原可辨项目的面积／序关系及异常字段身份。任何无法解释的差异都阻断将归一化用于后续物理运行。该阶段不启动 EDA，也不测在线功耗、时序或合格回收。
+
+### 2026-11-27 R4｜TCAD-R4-TT-POWER-50 传播诊断（预登记）
+
+- 四个冻结对象为 40 ns 修复后表 12 参考及三个交付，读取原 TT Liberty、SDC、ODB、SPEF。固定 OpenROAD b511b6a（2d966271…e19）与嵌入 STA（2947a0ca…87c）。仅启用 sta::set_debug power_activity 1 以测量各轮最大相对活动量／占空比更新及引脚，不改实际传播上限、活动来源、候选或时序协议。严查与历史功耗 JSON 数值相同及冻结文件 SHA 同字节，若输出变动则先查调试路径。预期四点均触及 50 轮，晚轮仍有非零更新；以实际日志和提示为准。
+- 独立根 /var/tmp/faeco_r4_stage5_tt_power_20261127_v1，共享锁 /home/toylog/faeco_v5_eda.lock，taskset CPU 0–5、工具单线程。每点限 90 s，整轮外限 390 s 含等锁，锁等待 8 s。该试验核查估计所处的收敛状态，无法界定功耗误差，也不替代更高轮数对照或 VCD/SAIF。
+
+### 2026-11-27 第四轮｜40 ns TT 传播轨迹回放及 ASAP7 面积重算完成
+
+- `TCAD-R4-TT-POWER-50` 固定 OpenROAD b511b6a、四个既有端点及 TT Liberty、SDC、SPEF。共锁 CPU 0–5 单线程，逐对象 90 s，外限 390 s，外层 10 s、rc0。四份报告 JSON 主体与各原档逐字相同，四例同为 50 轮 STA-2402。 [13 项归档与离线核验](tcad_v5_revision_20261126/R4_STAGE5_POWER_TIMING_REPORT.md)
+- ASAP7 面积离线核验分别在 120 s 外限中完成：把原库及只规范面积字段的库带入原候选枚举和冻结排序核对，不改历史输入及结果。两个 18 项已筛选池的身份、顺序、动作面积差不变，完整面积由冻结网表实例与 OpenDB master 尺寸独立对齐复算。
+
+### 2026-11-27 第四轮｜ASAP7 UART 16 项原生提议重放（预登记）
+
+- `TCAD-R4-NATIVE-UART-PROTECTED-16` 固定 Stage 2B 的标准模式完整提议和原始 270 ps 控制 2.7 ps Setup WNS 预算。以相同冻结 18 项筛选初始化后，只在内存补全 TT 面积索引及功能实例清单。原保护后端零改动资格后只评估这 16 项一次，首轮行高窗口预检，按原限制至多复修一次。720 s 候选、450 s 零改动、1200 s 外限，单 DRT 240 s、STA 180 s／角及 SEC 210 s，4 路由线程、CPU 0–5 和原共享锁。本例 16 项均同面积，用于原生物理准入和拒因核验。
+
+### 2026-11-27 第四轮｜ASAP7 UART 原生完整提议实测完成
+
+- `TCAD-R4-NATIVE-UART-PROTECTED-16` 约 89 s、rc0，零改动资格通过。唯一累计提议 23.188743 s，实际一次路由，零独立 DRC 和零天线。净回收 0，三工艺角相对 Hold 拒收，候选 SEC 无派发。raw 顶层结果 SHA-256 `f7f885d3548294ff1380d55b64ad05a808f8b2abc2d2dc8e88bf440c8713bfea`。
