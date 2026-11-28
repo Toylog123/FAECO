@@ -9,6 +9,16 @@
 
 | 中文术语 | 英文术语 | 缩写 / 全称 | 名词解释（详细） | 位置（zh / en） |
 |----------|----------|-------------|------------------|-----------------|
+| 工程变更 | Engineering Change Order | ECO | 在现有设计上执行局部修改。 | §1 / 摘要关键词 |
+| 设计规则检查 | Design Rule Checking | DRC | 本文区分布线前冲突预检与重布后的独立全块终检。 | 摘要 / Abstract |
+| 多角多模式 | Multi-Corner Multi-Mode | MCMM | 在多个工艺视图与多个约束模式下进行分析或优化。 | §2.1 / 待整编 |
+| 最差松弛 | Worst Negative Slack | WNS | 本文保留最差松弛的实际符号，建立和保持分别评估。 | §3.1 / 待整编 |
+| 总负松弛 | Total Negative Slack | TNS | 汇总负松弛。本稿主验收约束建立时间 TNS，独立收敛处理器还要求保持时间 TNS 不退化。 | §2.2 / 待整编 |
+| 标准寄生交换格式 | Standard Parasitic Exchange Format | SPEF | 保存布线后提取的互连寄生参数。主实验三个工艺视图共用一份名义提取寄生。 | §3.1 / 待整编 |
+| 寄生参数提取 | RC Extraction | RCX | 从布线结果提取互连电阻和电容，用于后续时序验证。 | §4 / 待整编 |
+| 设计交换格式 | Design Exchange Format | DEF | 图 3 据此读取布线中心线和过孔。 | 图 3 / 待整编 |
+| 库交换格式 | Library Exchange Format | LEF | 图 3 据此读取单元轮廓、引脚、障碍与电源轨。 | 图 3 / 待整编 |
+| 快角、典型角与慢角 | Fast-Fast, Typical-Typical, Slow-Slow | FF, TT, SS | 物理验收加载相应工艺视图的标准单元库。 | §3.1 / 待整编 |
 | 全池探针 | Full-pool probe | — | 在子预算内单遍验证冻结候选池的完整组合。 | 图1、§4.4 / 待整编 |
 | 最终授权放行集合 | final authorized release set | $\mathcal R_{\mathrm{final}}$ | 首次放行及实际复修追加邻网之并集；其余原有线网受保护。 | §4.4 / 待整编 |
 | （示例）包分类 | packet classification | — | 根据报文头部字段对报文进行分类的过程 | §I / §I |
