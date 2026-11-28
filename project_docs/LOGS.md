@@ -9097,3 +9097,9 @@ R8 接手基线为 `77774e784a168dc04fe2b0bebfca2987d4cd98d1`（11 页、4 图�
 ## LOG-20261128-01 — R16 去防御性写作专项审稿
 
 按 `anti-defensive-writing` 的论文入口和 `user-academic-writing-style` 核查 R16 主稿与双语摘要。记录 4 处影响读者理解的表述和 5 处可压缩的说明，优先处理比较口径、探针子截止、窗口规模趋势及全块 DRC 的检出与复修分工。对照冻结 GCD、双 AES 窗口配对与 40 ns 计时记录。主稿、图件与实验保持 R16。 [专项审稿](../paper/zh/review_rounds/r20261128_anti_defensive/REVIEW.md)
+
+## LOG-20261128-02 — 按写作规范重写 FAECO 双语摘要
+
+按“背景与问题一句、技术路线两句、结果一句”重写中文及英文摘要。用表 2 的同调度全块预检对照收束，保留双 AES 累计诊断时间降幅和 SKY130HD AES 的 720 s 合格回收增益。标记匹配、邻网对照、回放加速范围、联合可行性反例及失败探针的实验细节留在各自章节。
+
+- 三遍 LuaLaTeX 编译及交叉引用检查通过，核对第 1–2 页，渲染对比第 3–12 页与 R16 逐像素一致。三份 PDF 同步，更新稿件指纹。 [R17 验证清单](../paper/zh/review_rounds/r20261128_anti_defensive/R17_RELEASE_MANIFEST.json)

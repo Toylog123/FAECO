@@ -86,7 +86,7 @@
 
 \newcommand{\enTitle}{FAECO: Time-Budgeted Post-Route Gate Sizing with Localized Conflict Diagnosis and Protected Rerouting}
 \newcommand{\enAbstract}{%
-  Extracted post-route parasitics reveal opportunities for cell-area recovery. FAECO uses row-height design-rule-checking (DRC) windows to identify conflicting nets before rerouting and protect the remaining wires. A full-pool probe and hold-responsive microbatches seek layouts that pass timing, physical, and equivalence checks under adjustable timing limits and a deadline. Windowed checks match 56 whole-block markers in SKY130HD replays and 37 in controlled ASAP7 injections. For the same three-cell change on SKY130HD AES, whole-block marker attribution releases three neighboring nets and passes with a 0.88\,ps gain in worst slow-corner hold slack. Geometric contact releases nine and fails after a 10.48\,ps loss. Replay checks are 3.04--16.69 times as fast, and cumulative diagnosis time falls by 72--75\% in the two paired AES studies. Windowed diagnosis increases accepted recovery by 46.3\% on SKY130HD AES within 720\,s. Under a fixed protocol, an accepted batch can contain a rejected subset. Failed probes consume time for later trials.%
+  Chip physical design must balance timing and area, but downsizing standard cells after routing can introduce interconnect conflicts and consume scarce verification time. FAECO sizes design rule checking (DRC) windows by the standard-cell row height to identify conflicting neighboring nets before detailed rerouting and preserve existing routes outside the authorized set. It combines a bounded full-pool probe with hold-responsive microbatches to search within a wall-clock deadline for replacements that meet configurable timing limits and pass physical and sequential equivalence checks. In paired runs on SKY130HD and ASAP7 AES, windowed prechecks cut cumulative diagnosis time relative to full-block prechecks by 72.2\% and 75.4\%, respectively, and increased accepted area recovery on SKY130HD AES by 46.3\% within 720\,s.%
 }
 \newcommand{\enKeywords}{post-route gate-level ECO, localized DRC diagnosis, protected rerouting, non-downward-closed feasibility, time-budgeted microbatch scheduling}
 
@@ -106,7 +106,7 @@
 \end{center}
 \begin{flushleft}
   {\heiti\fontsize{8.5}{13}\selectfont 摘\quad 要：}{\songti\fontsize{8.5}{13}\selectfont
-  详细布线后的寄生参数可指导标准单元面积回收。FAECO用行高窗口查询换门引发的设计规则检查（DRC）标记，据此放行冲突邻网并保护其余互连。有界全池探针和保持时间反馈微批次在可调时序预算和墙钟约束下搜索通过时序、物理和等价检查的版图。窗口诊断匹配SKY130HD换门回放的56处和ASAP7受控注入的37处全块标记。对SKY130HD AES同一三门替换，全块预检标记归因放行3条邻网，慢角保持时间最差松弛增加0.88\,ps，候选通过。几何接触放行9条邻网，慢角松弛减少10.48\,ps，候选拒收。提议回放的单次诊断加速3.04--16.69倍，两组AES配对实验的累计诊断时间下降约72\%--75\%。窗口诊断使SKY130HD AES在720\,s内的合格回收面积增加46.3\%。固定协议下，拒收子集可包含在合格批次中。失败探针占用后续验证时间。}
+  数字芯片的物理实现需要兼顾时序与面积，而布线后的标准单元降尺寸既要处理换门引发的互连冲突，又要在时限内完成验证。FAECO在换门后、详细重布前，以标准单元行高界定设计规则检查（Design Rule Checking，DRC）窗口，依据违例标记放行冲突邻网，保护授权范围外的既有走线。调度器结合有界全池探针与保持时间反馈微批次，在墙钟时限内寻找满足可调时序预算且通过物理与等价检查的替换组合。在SKY130HD与ASAP7的AES配对实验中，相对全块预检，窗口预检分别将累计诊断时间缩短72.2\%和75.4\%，并使SKY130HD AES在720\,s内的合格回收面积增加46.3\%。}
 \par
 \vspace{4pt}
 {\heiti\fontsize{8.5}{13}\selectfont 关键词：}{\songti\fontsize{8.5}{13}\selectfont 布线后门级ECO，局部窗口化DRC诊断，保护式重布线，非向下封闭可行域，限时微批次调度}\par
